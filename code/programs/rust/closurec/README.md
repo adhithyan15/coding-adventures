@@ -81,19 +81,18 @@ Short aliases the Java tool ships:
 | Code | Meaning |
 |------|---------|
 | 0    | Success. |
-| 1    | Parse error (unknown flag, invalid value, missing required flag, conflicting flags). |
+| 1    | CLI parse error, or SIMPLE/ADVANCED compilation failed during parse, typed-AST bridging, an optimization pass, or emission. |
+| 2    | Execution failure outside the typed pipeline, including input/output and glob errors. |
 | 70   | Internal error (`cli.spec.json` malformed — bug in *us*). `EX_SOFTWARE` per `sysexits.h`. |
 
-Future v2 codes:
-- 2 reserved for usage error.
-- 3 reserved for compilation error.
-- 4 reserved for I/O error.
+Compiler diagnostics are written to stderr. A failed SIMPLE/ADVANCED compile
+writes no JavaScript output and does not create the requested output file.
 
-## Known compatibility gaps in v0.1.0
+## Known compatibility gaps
 
 cli-builder doesn't currently support multiple long-form aliases
 per flag. These deprecated upstream aliases are **not
-implemented** in v0.1.0 — use the canonical name instead:
+implemented** — use the canonical name instead:
 
 | Deprecated alias    | Use instead              |
 |---------------------|--------------------------|
@@ -131,8 +130,8 @@ body fills in.**
 | Level | What it does |
 |-------|--------------|
 | `WHITESPACE_ONLY` | Strips comments and inter-token whitespace only. Token-level; never parses to a typed AST. |
-| `SIMPLE` | Runs the typed-AST optimization pipeline — parse → bridge → passes → emit. Today the pipeline is `constant-fold → fold-control-flow → dce → inline → remove-unused-vars → treeshake → rename` (e.g. `1 + 2` ⇒ `3`; `if (2 > 3) {a} else {b}` ⇒ `{b}`; code after a `return` is dropped; unused top-level `var`s with pure initializers and unused top-level `function`s are deleted; leaf-function parameters are shortened to `a`, `b`, …); more passes land one PR at a time. Falls back to `WHITESPACE_ONLY` if the source uses a not-yet-supported construct, so it never errors on valid input. |
-| `ADVANCED` | Runs the same typed optimization pipeline as `SIMPLE` (it is specified to be at least as aggressive). Advanced-only passes — aggressive property/global renaming, cross-module tree-shaking — layer on as they are implemented. |
+| `SIMPLE` | Runs `parse → bridge → constant-fold → fold-control-flow → dce → inline-variables → rename → emit`. It preserves top-level declarations under SIMPLE's open-world contract. |
+| `ADVANCED` | Runs the SIMPLE passes plus closed-world `inline`, `remove-unused-vars`, `treeshake`, and `rename-globals`; `rename-properties` runs only with an explicit externs boundary. More advanced-only passes remain planned. |
 | `BUNDLE` / `TRANSPILE_ONLY` | Identity passthrough for now — module bundling and language down-levelling are orthogonal to the optimization pipeline and land separately. |
 
 The SIMPLE pipeline:
@@ -148,32 +147,36 @@ closurec --compilation_level SIMPLE --js in.js
 #   var x = 1 + 2;   ⇒   var x=3;
 ```
 
+SIMPLE and ADVANCED are fail-closed. If closurec's typed AST cannot represent a
+valid construct yet, the command reports the `typed AST bridge` stage and the
+unsupported grammar rule instead of silently returning WHITESPACE_ONLY bytes.
+Malformed JavaScript likewise reports the `parse` stage and exits 1. This makes
+an exit-0 result trustworthy: the requested typed pipeline actually completed.
+
 ## Architecture
 
 ```text
   args ─► cli_builder::Parser::parse ──► ParserOutput
                                             │
-                                            ├─ Parse(r)   ──► run_pipeline(r)   (v1: banner)
+                                            ├─ Parse(r)   ──► wire config ──► run_compiler
                                             ├─ Help(h)    ──► h.text
                                             └─ Version(v) ──► v.version
 ```
 
-`parse_and_run(args)` is a **pure function** returning
-`(text, ExitCode)` so tests can exercise the whole pipeline
-without spawning the binary. `main` is a thin wrapper.
+`parse_and_run_with_streams(args)` returns `(stdout, stderr, ExitCode)` so tests
+can exercise routing without spawning the binary. `parse_and_run(args)` is the
+combined-stream compatibility helper; `main` only writes the returned streams.
 
 ## What's coming
 
-- v2: real lex → parse → typecheck → pipeline → emit wiring
-  once the AST grows variants. `--js` actually reads files;
-  `--js_output_file` actually writes one. Compilation failures
-  surface as exit code 3.
-- v2: route specific flags to pass configuration —
+- Complete typed-AST coverage so every JavaScript construct accepted upstream
+  can remain on the SIMPLE/ADVANCED pipeline.
+- Route remaining flags to pass configuration —
   `--jscomp_off`/`--jscomp_warning`/`--jscomp_error` populate
   the warning level map; `--define` populates a value map the
   passes consult; `--compilation_level` selects a canonical
   pass preset.
-- v0.2 alias enhancement: hyphenated long-form aliases when
+- Add hyphenated long-form aliases when
   cli-builder grows alias support.
 
 ## Dependency whitelist
