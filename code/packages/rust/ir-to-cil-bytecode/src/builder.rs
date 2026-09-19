@@ -192,6 +192,8 @@ pub enum CILOpcode {
     Xor       = 0x61,
     Shl       = 0x62,
     Shr       = 0x63,
+    ConvI4    = 0x69,
+    ConvI8    = 0x6A,
     CallVirt  = 0x6F,
     LdSFld    = 0x7E,
     StSFld    = 0x80,
@@ -606,6 +608,10 @@ impl CILBytecodeBuilder {
     pub fn emit_mul(&mut self) { self.emit_opcode(CILOpcode::Mul); }
     /// Emit `div`.
     pub fn emit_div(&mut self) { self.emit_opcode(CILOpcode::Div); }
+    /// Truncate to signed int32, explicitly discarding high bits.
+    pub fn emit_conv_i4(&mut self) { self.emit_opcode(CILOpcode::ConvI4); }
+    /// Sign-extend int32 to int64, or preserve an existing int64.
+    pub fn emit_conv_i8(&mut self) { self.emit_opcode(CILOpcode::ConvI8); }
     /// Emit `and`.
     pub fn emit_and(&mut self) { self.emit_opcode(CILOpcode::And); }
     /// Emit `or`.
