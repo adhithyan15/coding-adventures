@@ -119,6 +119,7 @@ export interface TempAnalysis {
 export interface OutputProbe {
   readonly kind: "voltage" | "current";
   readonly target: string;
+  readonly negativeTarget?: string;
 }
 
 export interface PrintAnalysis {
@@ -818,7 +819,7 @@ function selectedOutputProbes(parsed: ParsedNetlist, kind: AnalysisKind): Output
   const seen = new Set<string>();
   const add = (newProbes: readonly OutputProbe[]) => {
     for (const probe of newProbes) {
-      const key = `${probe.kind}:${probe.target.toLowerCase()}`;
+      const key = `${probe.kind}:${probe.target.toLowerCase()}:${probe.negativeTarget?.toLowerCase() ?? ""}`;
       if (!seen.has(key)) {
         probes.push(probe);
         seen.add(key);
@@ -1140,14 +1141,21 @@ function probeValue(
   context: string,
 ): SelectedOutputValue {
   if (probe.kind === "voltage") {
-    if (probe.target.toLowerCase() === "0" || probe.target.toLowerCase() === "gnd") {
-      return containsComplexValues(nodeVoltages) ? { real: 0.0, imag: 0.0 } : 0.0;
-    }
-    const value = caseInsensitiveGet(nodeVoltages, probe.target);
-    if (value === undefined) {
-      throw new NetlistParseError(`${context}: missing voltage probe V(${probe.target})`);
-    }
-    return value;
+    const voltage = (node: string): SelectedOutputValue => {
+      if (node.toLowerCase() === "0" || node.toLowerCase() === "gnd") {
+        return containsComplexValues(nodeVoltages) ? { real: 0.0, imag: 0.0 } : 0.0;
+      }
+      const value = caseInsensitiveGet(nodeVoltages, node);
+      if (value === undefined) throw new NetlistParseError(`${context}: missing voltage probe V(${node})`);
+      return value;
+    };
+    const positive = voltage(probe.target);
+    if (probe.negativeTarget === undefined) return positive;
+    const negative = voltage(probe.negativeTarget);
+    if (!isComplex(positive) && !isComplex(negative)) return positive - negative;
+    const left = isComplex(positive) ? positive : { real: positive, imag: 0 };
+    const right = isComplex(negative) ? negative : { real: negative, imag: 0 };
+    return { real: left.real - right.real, imag: left.imag - right.imag };
   }
   const key = probe.target.toLowerCase().startsWith("i(") ? probe.target : `I(${probe.target})`;
   const value = caseInsensitiveGet(branchCurrents, key);
@@ -1179,7 +1187,9 @@ function caseInsensitiveGet(
 }
 
 function probeLabel(probe: OutputProbe): string {
-  return probe.kind === "voltage" ? `V(${probe.target})` : `I(${probe.target})`;
+  return probe.kind === "voltage"
+    ? `V(${probe.target}${probe.negativeTarget === undefined ? "" : `,${probe.negativeTarget}`})`
+    : `I(${probe.target})`;
 }
 
 function isComplex(value: SelectedOutputValue): value is Complex {
@@ -3278,16 +3288,17 @@ function parseVoltageProbe(token: string, directive: string): string {
 }
 
 function parseOutputProbe(token: string, directive: string): OutputProbe {
-  const match = /^([vi])\(([^()\s]+)\)$/i.exec(token);
+  const match = /^([vi])\(([^()\s,]+)(?:,([^()\s,]+))?\)$/i.exec(token);
   if (match === null) {
     throw new NetlistParseError(
-      `${directive} probe must be V(node) or I(source), got ${JSON.stringify(token)}`,
+      `${directive} probe must be V(node[,node]) or I(source), got ${JSON.stringify(token)}`,
     );
   }
-  return {
-    kind: match[1].toLowerCase() === "v" ? "voltage" : "current",
-    target: match[2],
-  };
+  const kind = match[1].toLowerCase() === "v" ? "voltage" : "current";
+  if (kind === "current" && match[3] !== undefined) {
+    throw new NetlistParseError(`${directive} probe must be V(node[,node]) or I(source), got ${JSON.stringify(token)}`);
+  }
+  return { kind, target: match[2], ...(match[3] === undefined ? {} : { negativeTarget: match[3] }) };
 }
 
 function splitFields(line: string): string[] {

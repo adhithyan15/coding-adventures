@@ -587,7 +587,7 @@ fn parses_print_and_plot_output_cards() {
     let parsed = parse_netlist(
         r#"
 .print TRAN V(out) I(Vin)
-.plot ac V(in) V(out)
+.plot ac V(in,out) V(out)
 "#,
     )
     .unwrap();
@@ -609,8 +609,9 @@ fn parses_print_and_plot_output_cards() {
             Analysis::Plot(PlotAnalysis {
                 analysis: "ac".to_string(),
                 probes: vec![
-                    OutputProbe::Voltage {
-                        node: "in".to_string()
+                    OutputProbe::DifferentialVoltage {
+                        positive_node: "in".to_string(),
+                        negative_node: "out".to_string(),
                     },
                     OutputProbe::Voltage {
                         node: "out".to_string()
@@ -627,9 +628,9 @@ fn parses_print_and_plot_output_cards() {
 fn parses_save_probe_and_measure_cards() {
     let parsed = parse_netlist(
         r#"
-.save V(out) I(Vin)
-.probe tran V(out)
-.measure tran peak MAX V(out) FROM=0 TO=1m
+.save V(out,in) I(Vin)
+.probe tran V(out,in)
+.measure tran peak MAX V(out,in) FROM=0 TO=1m
 "#,
     )
     .unwrap();
@@ -639,8 +640,9 @@ fn parses_save_probe_and_measure_cards() {
         vec![
             Analysis::Save(SaveAnalysis {
                 probes: vec![
-                    OutputProbe::Voltage {
-                        node: "out".to_string()
+                    OutputProbe::DifferentialVoltage {
+                        positive_node: "out".to_string(),
+                        negative_node: "in".to_string(),
                     },
                     OutputProbe::Current {
                         source_name: "Vin".to_string()
@@ -649,16 +651,18 @@ fn parses_save_probe_and_measure_cards() {
             }),
             Analysis::Probe(ProbeAnalysis {
                 analysis: Some("tran".to_string()),
-                probes: vec![OutputProbe::Voltage {
-                    node: "out".to_string()
+                probes: vec![OutputProbe::DifferentialVoltage {
+                    positive_node: "out".to_string(),
+                    negative_node: "in".to_string(),
                 }],
             }),
             Analysis::Measure(MeasureAnalysis {
                 analysis: "tran".to_string(),
                 name: "peak".to_string(),
                 operation: MeasureOperation::Max,
-                probe: OutputProbe::Voltage {
-                    node: "out".to_string()
+                probe: OutputProbe::DifferentialVoltage {
+                    positive_node: "out".to_string(),
+                    negative_node: "in".to_string(),
                 },
                 at: None,
                 start: Some(0.0),
@@ -681,17 +685,22 @@ fn rejects_output_cards_with_missing_or_unknown_probes() {
     let probe_error = parse_netlist(".plot tran P(out)").unwrap_err();
     assert!(probe_error
         .to_string()
-        .contains(".plot probe must be V(node) or I(source)"));
+        .contains(".plot probe must be V(node[,node]) or I(source)"));
 
     let save_error = parse_netlist(".save P(out)").unwrap_err();
     assert!(save_error
         .to_string()
-        .contains(".save probe must be V(node) or I(source)"));
+        .contains(".save probe must be V(node[,node]) or I(source)"));
 
     let probe_error = parse_netlist(".probe tran").unwrap_err();
     assert!(probe_error
         .to_string()
-        .contains(".probe probe must be V(node) or I(source)"));
+        .contains(".probe probe must be V(node[,node]) or I(source)"));
+
+    let current_error = parse_netlist(".save I(Vin,Vout)").unwrap_err();
+    assert!(current_error
+        .to_string()
+        .contains(".save probe must be V(node[,node]) or I(source)"));
 
     let measure_at_error = parse_netlist(".measure tran final FIND V(out)").unwrap_err();
     assert!(measure_at_error
@@ -712,10 +721,12 @@ V1 in 0 DC 1 AC 1
 R1 in out 1k
 R2 out 0 1k
 C1 out 0 1u IC=0
-.save V(out)
+.save V(out) V(in,out) V(IN,OUT)
 .print dc V(in)
+.plot ac V(in)
 .probe tran I(V1)
 .measure dc half FIND V(out) AT=1
+.measure dc differential FIND V(in,out) AT=1
 .measure tran final FIND V(out) AT=1m
 .measure tran average AVG V(out)
 .op
@@ -742,6 +753,10 @@ C1 out 0 1u IC=0
         0.5,
     );
     assert_close(
+        selected_real(outputs[0].rows[0].values.get("V(in,out)").unwrap()),
+        0.5,
+    );
+    assert_close(
         selected_real(outputs[1].rows.last().unwrap().values.get("V(in)").unwrap()),
         1.0,
     );
@@ -749,6 +764,25 @@ C1 out 0 1u IC=0
         outputs[2].rows[0].values.get("V(out)").unwrap(),
         SelectedOutputValue::Complex(_)
     ));
+    assert!(matches!(
+        outputs[2].rows[0].values.get("V(in,out)").unwrap(),
+        SelectedOutputValue::Complex(_)
+    ));
+    let SelectedOutputValue::Complex(differential) =
+        outputs[2].rows[0].values.get("V(in,out)").unwrap()
+    else {
+        panic!("expected complex differential output")
+    };
+    let SelectedOutputValue::Complex(positive) = outputs[2].rows[0].values.get("V(in)").unwrap()
+    else {
+        panic!("expected complex positive output")
+    };
+    let SelectedOutputValue::Complex(negative) = outputs[2].rows[0].values.get("V(out)").unwrap()
+    else {
+        panic!("expected complex negative output")
+    };
+    assert_close(differential.real, positive.real - negative.real);
+    assert_close(differential.imag, positive.imag - negative.imag);
     assert!(outputs[3].rows.last().unwrap().values.contains_key("I(V1)"));
 
     let measures = parsed.measure_results(&results).unwrap();
@@ -757,9 +791,10 @@ C1 out 0 1u IC=0
             .iter()
             .map(|measure| measure.name.as_str())
             .collect::<Vec<_>>(),
-        vec!["half", "final", "average"]
+        vec!["half", "differential", "final", "average"]
     );
     assert_close(measures[0].value, 0.5);
+    assert_close(measures[1].value, 0.5);
     let final_voltage = selected_real(
         outputs[3]
             .rows
@@ -769,9 +804,9 @@ C1 out 0 1u IC=0
             .get("V(out)")
             .unwrap(),
     );
-    assert_close(measures[1].value, final_voltage);
-    assert!(measures[2].value > 0.0);
-    assert!(measures[2].value <= final_voltage);
+    assert_close(measures[2].value, final_voltage);
+    assert!(measures[3].value > 0.0);
+    assert!(measures[3].value <= final_voltage);
 }
 
 #[test]
@@ -805,7 +840,7 @@ fn rejects_four_cards_with_missing_or_unknown_probes() {
     let probe_error = parse_netlist(".four 1k P(out)").unwrap_err();
     assert!(probe_error
         .to_string()
-        .contains(".four probe must be V(node) or I(source)"));
+        .contains(".four probe must be V(node[,node]) or I(source)"));
 }
 
 #[test]
@@ -856,7 +891,7 @@ fn rejects_distortion_and_pole_zero_cards_with_invalid_shapes() {
     let probe_error = parse_netlist(".disto dec 5 1k 1meg P(out)").unwrap_err();
     assert!(probe_error
         .to_string()
-        .contains(".disto probe must be V(node) or I(source)"));
+        .contains(".disto probe must be V(node[,node]) or I(source)"));
 
     let output_error = parse_netlist(".pz out Vin").unwrap_err();
     assert!(output_error

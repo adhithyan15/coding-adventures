@@ -134,10 +134,11 @@ class TempAnalysis:
 
 @dataclass(frozen=True, slots=True)
 class OutputProbe:
-    """A voltage-node or branch-current output probe."""
+    """A voltage-node, differential-voltage, or branch-current output probe."""
 
     kind: Literal["voltage", "current"]
     target: str
+    negative_target: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -871,11 +872,14 @@ def _ac_sweep_mode(analysis: AcAnalysis) -> Literal["log", "lin"]:
 
 def _selected_output_probes(parsed: ParsedNetlist, kind: AnalysisKind) -> list[OutputProbe]:
     probes: list[OutputProbe] = []
-    seen: set[tuple[str, str]] = set()
+    seen: set[tuple[str, str, str | None]] = set()
 
     def add(new_probes: tuple[OutputProbe, ...]) -> None:
         for probe in new_probes:
-            key = (probe.kind, probe.target.lower())
+            negative_target = (
+                None if probe.negative_target is None else probe.negative_target.lower()
+            )
+            key = (probe.kind, probe.target.lower(), negative_target)
             if key not in seen:
                 probes.append(probe)
                 seen.add(key)
@@ -1202,12 +1206,21 @@ def _probe_value(
     context: str,
 ) -> SelectedOutputValue:
     if probe.kind == "voltage":
-        if probe.target.lower() in ("0", "gnd"):
-            return 0j if _contains_complex_values(node_voltages) else 0.0
-        value = _case_insensitive_get(node_voltages, probe.target)
-        if value is None:
-            raise NetlistParseError(f"{context}: missing voltage probe V({probe.target})")
-        return value
+        def voltage(node: str) -> SelectedOutputValue:
+            if node.lower() in ("0", "gnd"):
+                return 0j if _contains_complex_values(node_voltages) else 0.0
+            value = _case_insensitive_get(node_voltages, node)
+            if value is None:
+                raise NetlistParseError(f"{context}: missing voltage probe V({node})")
+            return value
+
+        positive = voltage(probe.target)
+        if probe.negative_target is None:
+            return positive
+        negative = voltage(probe.negative_target)
+        if isinstance(positive, complex) or isinstance(negative, complex):
+            return complex(positive) - complex(negative)
+        return positive - negative
     key = probe.target if probe.target.lower().startswith("i(") else f"I({probe.target})"
     value = _case_insensitive_get(branch_currents, key)
     if value is None:
@@ -1233,7 +1246,11 @@ def _case_insensitive_get(
 
 
 def _probe_label(probe: OutputProbe) -> str:
-    return f"V({probe.target})" if probe.kind == "voltage" else f"I({probe.target})"
+    if probe.kind == "voltage":
+        if probe.negative_target is None:
+            return f"V({probe.target})"
+        return f"V({probe.target},{probe.negative_target})"
+    return f"I({probe.target})"
 
 
 def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
@@ -2024,13 +2041,18 @@ def _parse_voltage_probe(token: str, directive: str) -> str:
 
 
 def _parse_output_probe(token: str, directive: str) -> OutputProbe:
-    match = re.fullmatch(r"(?i)([vi])\(([^()\s]+)\)", token)
+    match = re.fullmatch(r"(?i)([vi])\(([^()\s,]+)(?:,([^()\s,]+))?\)", token)
     if match is None:
         raise NetlistParseError(
-            f"{directive} probe must be V(node) or I(source), got {token!r}"
+            f"{directive} probe must be V(node[,node]) or I(source), got {token!r}"
         )
     kind = "voltage" if match.group(1).lower() == "v" else "current"
-    return OutputProbe(kind=kind, target=match.group(2))
+    negative_target = match.group(3)
+    if kind == "current" and negative_target is not None:
+        raise NetlistParseError(
+            f"{directive} probe must be V(node[,node]) or I(source), got {token!r}"
+        )
+    return OutputProbe(kind=kind, target=match.group(2), negative_target=negative_target)
 
 
 def _parse_model_card(fields: list[str]) -> ModelCard:

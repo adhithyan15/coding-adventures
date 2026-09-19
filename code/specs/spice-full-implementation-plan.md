@@ -286,7 +286,7 @@ model-card parameter, or a UI artifact is not a completion signal.
      and expose typed host/Mosaic add and remove controls. Keep scoped
      `.probe`, arbitrary expressions, passive-device currents, nested sweeps,
      and vendor-output controls for later phases.
-   - **Mosaic schematic scoped-output selection** (current phase): discovery after
+   - **Mosaic schematic scoped-output selection** (completed in PR #15536): discovery after
      PR #15513: global `.save` selection cannot express that a waveform matters
      only for one card in a multi-analysis plan. Add durable analysis-card IDs
      with legacy migration, then persist ordered scoped `.probe <analysis>`
@@ -295,6 +295,17 @@ model-card parameter, or a UI artifact is not a completion signal.
      its probes, and typed host/Mosaic controls must synchronize deterministic
      `.probe` cards. Keep arbitrary expressions, passive-device currents,
      nested sweeps, and vendor-output controls for later phases.
+   - **Differential-voltage output contract** (current phase): discovery after
+     PR #15536: the shared Python, Rust, and TypeScript output APIs already
+     evaluate named node voltages for every runnable result, but restrict each
+     output card to `V(node)` or executable-source `I(source)`. Add canonical
+     `V(positive,negative)` parsing, stable labels and deduplication, and real
+     and complex subtraction across `.save`, `.probe`, `.print`, `.plot`, and
+     measure consumers. Follow with differential selections in the schematic
+     document and Mosaic host controls, preserving labels/card scope across
+     history and lowering. Keep arbitrary arithmetic expressions,
+     passive-device currents, nested sweeps, and vendor-output controls for
+     later phases.
 
 ### Operating rules
 

@@ -249,8 +249,16 @@ pub struct TempAnalysis {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum OutputProbe {
-    Voltage { node: String },
-    Current { source_name: String },
+    Voltage {
+        node: String,
+    },
+    DifferentialVoltage {
+        positive_node: String,
+        negative_node: String,
+    },
+    Current {
+        source_name: String,
+    },
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1679,15 +1687,15 @@ fn probe_real_value(
 ) -> Result<SelectedOutputValue, NetlistParseError> {
     match probe {
         OutputProbe::Voltage { node } => {
-            if is_probe_ground(node) {
-                return Ok(SelectedOutputValue::Real(0.0));
-            }
-            case_insensitive_get_real(node_voltages, node)
-                .map(SelectedOutputValue::Real)
-                .ok_or_else(|| {
-                    NetlistParseError::new(format!("{context}: missing voltage probe V({node})"))
-                })
+            real_voltage_value(node_voltages, node, context).map(SelectedOutputValue::Real)
         }
+        OutputProbe::DifferentialVoltage {
+            positive_node,
+            negative_node,
+        } => Ok(SelectedOutputValue::Real(
+            real_voltage_value(node_voltages, positive_node, context)?
+                - real_voltage_value(node_voltages, negative_node, context)?,
+        )),
         OutputProbe::Current { source_name } => {
             let key = branch_current_key(source_name);
             case_insensitive_get_real(branch_currents, &key)
@@ -1709,15 +1717,15 @@ fn probe_complex_value(
 ) -> Result<SelectedOutputValue, NetlistParseError> {
     match probe {
         OutputProbe::Voltage { node } => {
-            if is_probe_ground(node) {
-                return Ok(SelectedOutputValue::Complex(Complex::zero()));
-            }
-            case_insensitive_get_complex(node_voltages, node)
-                .map(SelectedOutputValue::Complex)
-                .ok_or_else(|| {
-                    NetlistParseError::new(format!("{context}: missing voltage probe V({node})"))
-                })
+            complex_voltage_value(node_voltages, node, context).map(SelectedOutputValue::Complex)
         }
+        OutputProbe::DifferentialVoltage {
+            positive_node,
+            negative_node,
+        } => Ok(SelectedOutputValue::Complex(
+            complex_voltage_value(node_voltages, positive_node, context)?
+                - complex_voltage_value(node_voltages, negative_node, context)?,
+        )),
         OutputProbe::Current { source_name } => {
             let key = branch_current_key(source_name);
             case_insensitive_get_complex(branch_currents, &key)
@@ -1729,6 +1737,32 @@ fn probe_complex_value(
                 })
         }
     }
+}
+
+fn real_voltage_value(
+    node_voltages: &BTreeMap<String, f64>,
+    node: &str,
+    context: &str,
+) -> Result<f64, NetlistParseError> {
+    if is_probe_ground(node) {
+        return Ok(0.0);
+    }
+    case_insensitive_get_real(node_voltages, node).ok_or_else(|| {
+        NetlistParseError::new(format!("{context}: missing voltage probe V({node})"))
+    })
+}
+
+fn complex_voltage_value(
+    node_voltages: &BTreeMap<String, Complex>,
+    node: &str,
+    context: &str,
+) -> Result<Complex, NetlistParseError> {
+    if is_probe_ground(node) {
+        return Ok(Complex::zero());
+    }
+    case_insensitive_get_complex(node_voltages, node).ok_or_else(|| {
+        NetlistParseError::new(format!("{context}: missing voltage probe V({node})"))
+    })
 }
 
 fn case_insensitive_get_real(values: &BTreeMap<String, f64>, key: &str) -> Option<f64> {
@@ -1766,6 +1800,10 @@ fn is_probe_ground(node: &str) -> bool {
 fn probe_label(probe: &OutputProbe) -> String {
     match probe {
         OutputProbe::Voltage { node } => format!("V({node})"),
+        OutputProbe::DifferentialVoltage {
+            positive_node,
+            negative_node,
+        } => format!("V({positive_node},{negative_node})"),
         OutputProbe::Current { source_name } => format!("I({source_name})"),
     }
 }
@@ -1773,6 +1811,17 @@ fn probe_label(probe: &OutputProbe) -> String {
 fn probe_key(probe: &OutputProbe) -> (String, String) {
     match probe {
         OutputProbe::Voltage { node } => ("voltage".to_string(), node.to_ascii_lowercase()),
+        OutputProbe::DifferentialVoltage {
+            positive_node,
+            negative_node,
+        } => (
+            "voltage".to_string(),
+            format!(
+                "{},{}",
+                positive_node.to_ascii_lowercase(),
+                negative_node.to_ascii_lowercase()
+            ),
+        ),
         OutputProbe::Current { source_name } => {
             ("current".to_string(), source_name.to_ascii_lowercase())
         }
@@ -3953,27 +4002,46 @@ fn parse_output_probe(token: &str, directive: &str) -> Result<OutputProbe, Netli
     if !token.ends_with(')') {
         return Err(output_probe_error(token, directive));
     }
-    let target = &token[prefix_len..token.len() - 1];
-    if target.is_empty()
-        || target.contains('(')
-        || target.contains(')')
-        || target.chars().any(char::is_whitespace)
-    {
-        return Err(output_probe_error(token, directive));
-    }
     match kind {
-        "voltage" => Ok(OutputProbe::Voltage {
-            node: target.to_string(),
-        }),
-        _ => Ok(OutputProbe::Current {
-            source_name: target.to_string(),
-        }),
+        "voltage" => {
+            let target = &token[prefix_len..token.len() - 1];
+            let Some((positive_node, negative_node)) = target.split_once(',') else {
+                if !valid_output_probe_target(target) {
+                    return Err(output_probe_error(token, directive));
+                }
+                return Ok(OutputProbe::Voltage {
+                    node: target.to_string(),
+                });
+            };
+            if !valid_output_probe_target(positive_node) || !valid_output_probe_target(negative_node) {
+                return Err(output_probe_error(token, directive));
+            }
+            Ok(OutputProbe::DifferentialVoltage {
+                positive_node: positive_node.to_string(),
+                negative_node: negative_node.to_string(),
+            })
+        }
+        _ => {
+            let target = &token[prefix_len..token.len() - 1];
+            if !valid_output_probe_target(target) {
+                return Err(output_probe_error(token, directive));
+            }
+            Ok(OutputProbe::Current {
+                source_name: target.to_string(),
+            })
+        }
     }
+}
+
+fn valid_output_probe_target(target: &str) -> bool {
+    !target.is_empty()
+        && !target.contains(['(', ')', ','])
+        && !target.chars().any(char::is_whitespace)
 }
 
 fn output_probe_error(token: &str, directive: &str) -> NetlistParseError {
     NetlistParseError::new(format!(
-        "{directive} probe must be V(node) or I(source), got {token:?}"
+        "{directive} probe must be V(node[,node]) or I(source), got {token:?}"
     ))
 }
 
