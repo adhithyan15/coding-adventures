@@ -480,6 +480,13 @@ Before the concrete HTTPS adapter, replace `tls-platform`'s `rustls` and
 `webpki-roots` dependency chain with repository-owned TLS, certificate parsing,
 path validation, hostname verification, and a reviewed trust-root source. This
 is prerequisite work, not permission to weaken HTTPS or certificate checks.
+The first independently reviewable prerequisite is now shipped as
+`tls-server-identity`: a zero-external-dependency RFC 9525 matcher for already
+decoded DNS-ID and IP-ID subjectAltName values. It provides bounded ASCII DNS
+validation, exact typed IP comparison, case-insensitive label matching, strict
+one-label wildcards, and no Common Name input. It does not parse certificates,
+validate paths, load roots, open sockets, or integrate with `tls-platform`, so
+the concrete OAuth HTTPS boundary remains blocked on all remaining TLS work.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

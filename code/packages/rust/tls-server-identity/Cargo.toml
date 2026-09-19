@@ -1,0 +1,7 @@
+[package]
+name = "tls-server-identity"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded RFC 9525 DNS-ID and IP-ID matching with no external dependencies"
+
+[dependencies]
