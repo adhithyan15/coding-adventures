@@ -1,22 +1,31 @@
 # Coding Adventures Portuguese Assessment
 
-**Version:** 1.1 target contract, 2026-09-13
+**Version:** 1.2 target contract, 2026-09-19
 
 **Basis:** CAPLE from A1 upward; a project-defined precursor below it
 
-**Status:** target specified; the pre-A1 task inventory is checked in, while
-A1-C2 inventories, mocks, calibration, and human validation remain backlog
+**Status:** machine-readable target contracted; the pre-A1 and A1 task
+inventories are checked in, while A2-C2 inventories, mocks, calibration, and
+human validation remain backlog
 
 This specification names the assessment that the complete Portuguese book must
 eventually prepare a book-only learner to pass. At pre-A1 the learner-facing
 name is **Coding Adventures Portuguese pre-A1 Assessment — project-defined CAPLE
 ACESSO precursor**. It does not claim that the current book is exam-ready.
 
-No `assessment.json` is checked in for Portuguese yet, and that omission is
-deliberate. The machine-readable contract names required artifacts by path, and
-the artifact gate treats a path that leads nowhere as an error rather than as a
-promise. The contract is written after the inventories, mocks, rubrics and
-answer keys it points at, not before them.
+`assessment.json` now records all seven destinations, the independently scored
+four-skill project threshold, and CAPLE's additional **Competência Estrutural**
+paper from B2 upward. Existing pre-A1 and A1 task inventories resolve directly.
+The remaining inventory, mock, rubric, and answer-key paths are pinned as
+explicit unbuilt debt in the generated assessment-artifact ceiling. A new
+dangling path still fails the gate, and building a pinned artifact requires the
+ceiling to be regenerated so debt can fall but never grow unnoticed.
+
+The A1 task inventory is a project-defined executable envelope for the shared
+ladder, not a transcription of CAPLE content. The contract's external target
+name and the project's task shape are therefore separate claims: the first says
+where the complete track is going; the second says what this repository can
+currently administer without attributing its editorial prompts to CAPLE.
 
 ## The variety decision, and why the ladder makes it
 

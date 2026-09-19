@@ -85,39 +85,40 @@ describe("the committed Portuguese A1 inventory", () => {
     ]);
   });
 
-  it("says NO exam envelope exists here, while an external exam DOES exist", () => {
-    // Like italian/, portuguese/ ships no assessment.json, no task-shapes/ and
-    // no mocks — `npm run plan` still lists writing one as outstanding work —
-    // while exam-levels.json records a real published exam with no caveat. The
-    // file may claim neither an internal contract nor the external syllabus.
+  it("separates its project envelope from external CAPLE content evidence", () => {
+    // Portuguese now has the seven-rung machine contract and project-authored
+    // pre-A1/A1 task shapes. Those paths bound required work; they do not turn
+    // this editorial inventory into a CAPLE syllabus or claim mock readiness.
     expect(inventory.about).toMatch(/PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS/);
     expect(inventory.about).toMatch(/CAPLE/);
     expect(inventory.about).toMatch(/NOT SEARCHED, BY INSTRUCTION/);
     expect(inventory.source).toMatch(/^PROJECT-DEFINED\./);
-    expect(inventory.source).toMatch(/EXAM ENVELOPE: NONE EXISTS IN THIS REPOSITORY/);
+    expect(inventory.source).toMatch(/PROJECT EXAM ENVELOPE:/);
+    expect(inventory.source).toMatch(/A1 task shape is explicitly project-defined, not CAPLE content evidence/);
+    expect(inventory.source).toMatch(/every mock, rubric and answer key remain pinned unbuilt debt/);
     expect(isExamInventoryComplete(inventory)).toBe(false);
     for (const dimension of EXAM_CONTENT_DIMENSIONS) {
       expect(inventory.scope[dimension].status, dimension).toBe("partial");
     }
   });
 
-  it("derives its register column from lesson BODIES, because BOTH frontmatter fields are artefacts", () => {
-    // All 102 lessons declare `register: neutral` and all 102 declare
-    // `variety: standard-contemporary`, so neither field carries information —
-    // the same shape Bengali's has. exam-levels.json carries NO caveat for
-    // portuguese either, so there was nothing to import and nothing to defer to.
+  it("keeps register body-derived while recording the partial variety-label repair", () => {
+    // All 118 lessons still declare `register: neutral`. Three chapter-29
+    // reading lessons now declare `variety: european`, while the preceding 115
+    // retain a generic label and their bodies teach both major varieties.
     expect(inventory.about).toMatch(
-      /THE REGISTER COLUMN IS DERIVED FROM LESSON BODIES, NOT FROM FRONTMATTER, AND BOTH FRONTMATTER FIELDS ARE\s+ARTEFACTS/,
+      /THE REGISTER COLUMN IS DERIVED FROM LESSON BODIES, NOT FROM FRONTMATTER/,
     );
+    expect(inventory.about).toMatch(/115 lessons declare standard-contemporary and the three chapter-29 reading lessons declare European/);
     const register = inventory.points.filter((point) => point.category.startsWith("Registo"));
     expect(register).toHaveLength(4);
     expect(register.find((point) => point.id === "PT-A1-REG-04")!.note)
-      .toMatch(/both fields are artefacts and carry no information at all/);
-    // …and the finding the measurement produced that no field could have: the
-    // corpus teaches TWO major varieties at once and never says so.
+      .toMatch(/All 118 lessons still declare register: neutral/);
+    // …and the finding the measurement produced that the three new labels do
+    // not repair retrospectively: the older corpus teaches two major varieties.
     const variety = inventory.points.find((point) => point.id === "PT-A1-REG-03")!;
     expect(variety.probe).not.toBeNull();
-    expect(variety.note).toMatch(/being taught two dialects at once and has not been told/);
+    expect(variety.note).toMatch(/115 lessons still say standard-contemporary and the three chapter-29 reading lessons say European/);
   });
 
   it("names an anchor for every point, and says what kind of anchor it is", () => {
@@ -140,14 +141,14 @@ describe("the committed Portuguese A1 inventory", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(208);
-    expect(coverage.covered).toBe(121);
-    expect(coverage.unmapped).toBe(87);
+    expect(coverage.covered).toBe(122);
+    expect(coverage.unmapped).toBe(86);
     expect(coverage.partial).toBe(0);
     // 4 of 12, where eleven tracks before this one reported 0 or 1. `e` is
     // GLOSSED in chapter 2 — "the glue is e você?, and e continues Latin et" —
     // `que` is taught three separate times (ter que as "the link", Penso que
     // sim, Espero que sim), and `ou` is on the page inside mais ou menos. The
-    // hole is `mas`, which returns zero occurrences in 102 files: a learner can
+    // hole is `mas`, which returns zero occurrences in 118 files: a learner can
     // add, offer an alternative, report an opinion and state an obligation, and
     // cannot set one thing against another.
     expect(coverage.byCategory["Coordenacao e subordinacao (joining and subordination)"]!).toEqual({
@@ -175,27 +176,26 @@ describe("the committed Portuguese A1 inventory", () => {
     });
     expect(coverage.byCategory["O substantivo (the noun)"]!).toEqual({ enumerated: 7, covered: 7 });
     expect(formatExamCoverage(coverage)).toContain(
-      "portuguese A1 (partial inventory): 121/208 points covered (58%)",
+      "portuguese A1 (partial inventory): 122/208 points covered (59%)",
     );
   }, 60_000);
 
   it("keeps the findings a percentage would bury", () => {
-    // (1) NEGATION IS ONE SENTENCE. `não sei` is introduced in chapter 18 with
-    //     the note that it is the sentence a learner will need first — and it
-    //     is the whole of negation in 102 files. The operation is on the page,
-    //     attached to a verb, which is more than the Italian track can say.
+    // (1) NEGATION IS NOW TWO USEFUL SENTENCES. `não sei` is introduced in
+    //     chapter 18; chapter 19 explicitly teaches and recalls `Não entendo`.
     const negation = inventory.points.find((point) => point.id === "PT-A1-OS-02")!;
     expect(negation.probe).toEqual(["PT-LEX-SABER-CONHECER-02"]);
-    expect(negation.note).toMatch(/COVERED BY ONE SENTENCE AND IT IS THE RIGHT ONE/);
+    expect(negation.note).toMatch(/COVERED BY TWO USEFUL SENTENCES/);
     // (2) REPAIR is EMPTY here, and Italian's — the weaker track — is not.
     //     `como` is taught in chapter 2 as the question word, so a rising
     //     `Como?` is one line away from an existing lesson.
     const repair = inventory.points.find((point) => point.id === "PT-A1-F6-05")!;
     expect(repair.probe).toBeNull();
     expect(repair.note).toMatch(/NOTHING/);
-    // …and the understanding half is empty too, although entender AND
-    // compreender are both taught and `não` is taught attached to a verb.
-    expect(inventory.points.find((point) => point.id === "PT-A1-F2-16")!.probe).toBeNull();
+    // The understanding half was stale: the lesson explicitly teaches, asks
+    // for, and recalls `Não entendo`, so the existing lexical atom covers it.
+    expect(inventory.points.find((point) => point.id === "PT-A1-F2-16")!.probe)
+      .toEqual(["PT-LEX-ENTENDER-COMPREENDER-02"]);
     // (3) TWO OF THE THREE CONJUGATIONS ARE NEVER SET OUT. Nine -er and -ir
     //     verbs are taught as words and no lesson gives their endings.
     const conj = inventory.points.find((point) => point.id === "PT-A1-V-02")!;

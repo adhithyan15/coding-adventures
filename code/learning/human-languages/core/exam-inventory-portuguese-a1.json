@@ -2,8 +2,8 @@
   "version": 1,
   "language": "portuguese",
   "level": "A1",
-  "about": "A PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS. NOTHING IN THIS FILE MAY BE ATTRIBUTED TO CAPLE, which core/exam-levels.json names as this track's exam, nor to Centro de Avaliacao de Portugues Lingua Estrangeira, nor to Celpe-Bras. AND NOTHING IN IT MAY BE ATTRIBUTED TO DELE, THE INSTITUTO CERVANTES OR THE PLAN CURRICULAR ABOUT PORTUGUESE: they published a Spanish syllabus and have said nothing whatever about this language. READ THE THREE CLAIMS APART. (1) THE POINT SET is derived structurally from core/exam-inventory-es-a1.json, this project's restatement of the A1 inventories the Instituto Cervantes publishes behind DELE. That is the strongest thing here and all it establishes is a LEVEL. (2) THE PORTUGUESE EXPONENTS are editorial throughout. THE PROXY IS A SISTER LANGUAGE AND THAT IS ITS OWN HAZARD, the same hazard the Italian file names: two genders, pro-drop, ser and estar, written accents on the same alphabet, punctuation from the same tradition. The temptation is to let the Spanish sentence stand and call it Portuguese. Where the two diverge the divergence is recorded on the point itself and is usually the interesting part, and here it is unusually often the point where a Spanish speaker would go WRONG rather than merely differ: gostar keeps the liker as subject and demands de, where gustar inverts the frame (PT-A1-PRON-05); tenho falado does NOT mean I have spoken (PT-A1-V-09); Portuguese does not mark a personal object with a preposition where Spanish does (PT-A1-SV-03); obrigado agrees with the SPEAKER and not with the noun (PT-A1-ADJ-07); the weekdays are numbered rather than named (PT-A1-NG-10); and the cedilla Spanish dropped in 1815 is still here (PT-A1-ORT-04). The corpus teaches every one of those as a contrast, which is why they can be probed at all. (3) THE COVERAGE NUMBER is a measure of the corpus against this list, not an exam-readiness claim. THE REGISTER COLUMN IS DERIVED FROM LESSON BODIES, NOT FROM FRONTMATTER, AND BOTH FRONTMATTER FIELDS ARE ARTEFACTS: all 102 lessons declare register: neutral and all 102 declare variety: standard-contemporary, so neither field carries any information. exam-levels.json carries NO caveat for portuguese, so there was nothing to import either. What the bodies teach is a THREE-term address system (tu, voce, o senhor) and, undeclared, TWO major varieties at once -- me chamo beside chamo-me, acho que sim beside penso que sim, Onde voce mora? in a course that also teaches o senhor. PT-A1-REG-03 records that the contrasts are taught and the label is missing. NOT SEARCHED, BY INSTRUCTION: no external search for a CAPLE or Celpe-Bras content syllabus was performed for this file; code/learning/human-languages/BACKLOG.d records the sourcing question as settled and directs that it not be repeated per track (HL-C287, HL-C290).",
-  "source": "PROJECT-DEFINED. LEVEL PROXY: code/learning/human-languages/core/exam-inventory-es-a1.json, the DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Its own source is https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/niveles/02_gramatica_inventario_a1-a2.htm and the sibling function, notion and orthography inventories. Nothing about Portuguese is attributed to DELE, the Instituto Cervantes or the Plan Curricular, and nothing whatever to CAPLE. EXAM ENVELOPE: NONE EXISTS IN THIS REPOSITORY. Like italian/ and unlike latin/, marwadi/ and persian/, the portuguese/ track ships no assessment spec, no assessment.json, no task shapes and no mocks -- `npm run plan` still lists writing portuguese/assessment.json as outstanding work -- so no project-internal contract bounds the exponent choices or the gap notes below. That is separate from the EXTERNAL picture, where core/exam-levels.json records exam 'CAPLE', basis 'published', mapping 'identity' AND NO CAVEAT. italian and portuguese are the only two tracks in this batch with a published external exam and no caveat, and a published exam whose syllabus nobody here has read cannot bound anything either. PROFICIENCY BACKBONE: core/exam-levels.json, tracks.portuguese. CORPUS EVIDENCE: every probe was checked mechanically against the atoms declared by the 102 lesson files in code/learning/human-languages/portuguese/lessons/, which introduce 212 distinct atoms between them -- 85 ETYMON, 53 LEX, 35 GRAMMAR, 21 SOUND, 12 NOTICE, 3 PRAGMATICS, 2 PRAGMATIC and 1 PHONO. The last three kinds are the same kind under three spellings and the inventory probes all three. NOT SEARCHED, BY INSTRUCTION: see `about`.",
+  "about": "A PROJECT-DEFINED EDITORIAL EQUIVALENT, NOT AN EXTERNAL SYLLABUS. NOTHING IN THIS FILE MAY BE ATTRIBUTED TO CAPLE, which core/exam-levels.json names as this track's exam, nor to Centro de Avaliacao de Portugues Lingua Estrangeira, nor to Celpe-Bras. AND NOTHING IN IT MAY BE ATTRIBUTED TO DELE, THE INSTITUTO CERVANTES OR THE PLAN CURRICULAR ABOUT PORTUGUESE: they published a Spanish syllabus and have said nothing whatever about this language. READ THE THREE CLAIMS APART. (1) THE POINT SET is derived structurally from core/exam-inventory-es-a1.json, this project's restatement of the A1 inventories the Instituto Cervantes publishes behind DELE. That is the strongest thing here and all it establishes is a LEVEL. (2) THE PORTUGUESE EXPONENTS are editorial throughout. THE PROXY IS A SISTER LANGUAGE AND THAT IS ITS OWN HAZARD, the same hazard the Italian file names: two genders, pro-drop, ser and estar, written accents on the same alphabet, punctuation from the same tradition. The temptation is to let the Spanish sentence stand and call it Portuguese. Where the two diverge the divergence is recorded on the point itself and is usually the interesting part, and here it is unusually often the point where a Spanish speaker would go WRONG rather than merely differ: gostar keeps the liker as subject and demands de, where gustar inverts the frame (PT-A1-PRON-05); tenho falado does NOT mean I have spoken (PT-A1-V-09); Portuguese does not mark a personal object with a preposition where Spanish does (PT-A1-SV-03); obrigado agrees with the SPEAKER and not with the noun (PT-A1-ADJ-07); the weekdays are numbered rather than named (PT-A1-NG-10); and the cedilla Spanish dropped in 1815 is still here (PT-A1-ORT-04). The corpus teaches every one of those as a contrast, which is why they can be probed at all. (3) THE COVERAGE NUMBER is a measure of the corpus against this list, not an exam-readiness claim. THE REGISTER COLUMN IS DERIVED FROM LESSON BODIES, NOT FROM FRONTMATTER. Register remains an artefact: all 118 lessons declare register: neutral. Variety is PARTIALLY REPAIRED rather than authoritative: 115 lessons declare standard-contemporary and the three chapter-29 reading lessons declare European, while bodies have taught two major varieties since chapter 3. What the bodies teach is a THREE-term address system (tu, voce, o senhor) and TWO major varieties at once -- me chamo beside chamo-me, acho que sim beside penso que sim, Onde voce mora? in a course that also teaches o senhor. PT-A1-REG-03 records that the contrasts are taught and that the newer label does not retrospectively classify the earlier mixed corpus. NOT SEARCHED, BY INSTRUCTION: no external search for a CAPLE or Celpe-Bras content syllabus was performed for this file; code/learning/human-languages/BACKLOG.d records the sourcing question as settled and directs that it not be repeated per track (HL-C287, HL-C290).",
+  "source": "PROJECT-DEFINED. LEVEL PROXY: code/learning/human-languages/core/exam-inventory-es-a1.json, the DELE/PCIC-sourced Spanish A1 point set, used for the STRUCTURE of what an A1 learner must handle. Its own source is https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/niveles/02_gramatica_inventario_a1-a2.htm and the sibling function, notion and orthography inventories. Nothing about Portuguese is attributed to DELE, the Instituto Cervantes or the Plan Curricular, and nothing in this inventory is attributed to CAPLE. PROJECT EXAM ENVELOPE: portuguese/assessment-spec.md and portuguese/assessment.json now contract the project-defined pre-A1 precursor and external CAPLE destination names from A1 through C2; task-shapes/pre-a1.json and task-shapes/a1.json make the first two shared project envelopes executable. The A1 task shape is explicitly project-defined, not CAPLE content evidence. A2-C2 task shapes and every mock, rubric and answer key remain pinned unbuilt debt, so the contract bounds required work without claiming readiness. That is separate from the EXTERNAL picture, where core/exam-levels.json records exam 'CAPLE', basis 'published', mapping 'identity' AND NO CAVEAT. PROFICIENCY BACKBONE: core/exam-levels.json, tracks.portuguese. CORPUS EVIDENCE: every probe was checked mechanically against the atoms declared by the 118 lesson files in code/learning/human-languages/portuguese/lessons/, which introduce 235 distinct atoms between them -- 90 ETYMON, 63 LEX, 39 GRAMMAR, 21 SOUND, 13 NOTICE, 3 PRAGMATICS, 3 SKILL, 2 PRAGMATIC and 1 PHONO. PRAGMATICS and PRAGMATIC are the same kind under two spellings and the inventory probes both. NOT SEARCHED, BY INSTRUCTION: see `about`.",
   "anchors": [
     {
       "id": "ES-A1-PROXY",
@@ -20,20 +20,20 @@
     {
       "id": "PT-CORPUS",
       "kind": "project-owned",
-      "title": "code/learning/human-languages/portuguese/ -- 102 lessons across 26 chapters, curriculum.d and chapters.d",
+      "title": "code/learning/human-languages/portuguese/ -- 118 lessons across 29 chapters, curriculum.d and chapters.d",
       "note": "Our own work. It is what every probe resolves against and it is finite and auditable, but agreeing with it is not corroboration. Where a point's note says a word is missing, that absence was read out of this directory."
     },
     {
       "id": "PT-EXAM-LEVELS",
       "kind": "project-owned",
       "title": "code/learning/human-languages/core/exam-levels.json, tracks.portuguese",
-      "note": "Records Portuguese as exam 'CAPLE', basis 'published', mapping 'identity', with NO caveat. The absence of a caveat is why the register column of this file was measured from lesson bodies rather than imported from a sibling track's caveat -- and the measurement found that both frontmatter fields are artefacts."
+      "note": "Records Portuguese as exam 'CAPLE', basis 'published', mapping 'identity', with NO caveat. The absence of a caveat is why the register column of this file was measured from lesson bodies rather than imported from a sibling track's caveat. The measurement found a uniformly neutral register field and a variety field that labels only the newest three reading lessons European while the older corpus remains mixed."
     },
     {
       "id": "ED-PORTUGUESE",
       "kind": "editorial",
       "title": "This project's unaided judgement about Portuguese",
-      "note": "Every Portuguese exponent below. Deciding that ter que answers the infinitive-clause point, that Penso que sim and Espero que sim between them answer the finite-complement point, that the ou inside mais ou menos counts as covering disjunction while offering alternatives stays uncovered, and that nao sei covers negation while the note records that it is the whole of negation in 102 files -- all of that is chosen here. A working default to be corrected, not a standard."
+      "note": "Every Portuguese exponent below. Deciding that ter que answers the infinitive-clause point, that Penso que sim and Espero que sim between them answer the finite-complement point, that the ou inside mais ou menos counts as covering disjunction while offering alternatives stays uncovered, and that nao sei and Nao entendo together cover beginner negation -- all of that is chosen here. A working default to be corrected, not a standard."
     }
   ],
   "proxy": {
@@ -45,12 +45,12 @@
     "communicative-functions": {
       "status": "partial",
       "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's 54 A1 function points) and the Council of Europe CEFR Companion Volume A1 descriptors",
-      "note": "The proxy's functional column is finite and level-split, which is what would close a dimension -- for Spanish. It does not close this one, because the exponent that realises each function in Portuguese is our choice every time, and Portuguese ships no mock or task shape to pin an exponent against. One function is enumerated that the proxy has no A1 slot for: saying that you have understood and that you have not (PT-A1-F2-16), which is empty and is a near-miss -- entender AND compreender are both taught, and nao is taught attached to a verb, and no lesson says nao entendo."
+      "note": "The proxy's functional column is finite and level-split, which is what would close a dimension -- for Spanish. It does not close this one, because the exponent that realises each function in Portuguese is our choice every time. Portuguese now ships an A1 project task shape, but no mock: the shape bounds a shared project envelope and is not CAPLE content evidence. One function the proxy has no A1 slot for is now explicitly taught: saying that you have understood and that you have not (PT-A1-F2-16), through Nao entendo in chapter 19."
     },
     "grammar": {
       "status": "partial",
       "source": "code/learning/human-languages/core/exam-inventory-es-a1.json (the proxy's grammar, sentence and coordination columns)",
-      "note": "Walking the Spanish grammar column surfaced demands no reading of the Portuguese corpus alone would have named: that two of the three conjugations are never set out, that no imperative exists in 102 files, that que appears three times over and never as a relative, that mas returns zero. It does not close, because Portuguese makes demands Spanish cannot: the personal infinitive, the -ao ending, the enclitic pronoun with its hyphen, and a three-term address system. Those are enumerated on the project's judgement and, where the proxy has no slot at all, marked portugueseSpecific."
+      "note": "Walking the Spanish grammar column surfaced demands no reading of the Portuguese corpus alone would have named: that two of the three conjugations are never set out, that no imperative exists in 118 files, that que appears three times over and never as a relative, that mas returns zero. It does not close, because Portuguese makes demands Spanish cannot: the personal infinitive, the -ao ending, the enclitic pronoun with its hyphen, and a three-term address system. Those are enumerated on the project's judgement and, where the proxy has no slot at all, marked portugueseSpecific."
     },
     "phonology-orthography": {
       "status": "partial",
@@ -295,7 +295,7 @@
         "A1-ADJ-06",
         "A1-SADJ-01"
       ],
-      "note": "muito occurs eight times in 102 files, all inside muito prazer or English prose. No lesson puts a degree word in front of an adjective and -issimo is never mentioned."
+      "note": "muito occurs nine times in 118 files. Chapter 29 now puts it in front of bom inside a connected reading, but that lesson declares every word old and introduces only a reading-skill atom; no lesson or knowledge atom teaches the degree construction, and -issimo is never mentioned."
     },
     {
       "id": "PT-A1-ADJ-07",
@@ -412,7 +412,7 @@
       "derivedFrom": [
         "A1-DEM-01"
       ],
-      "note": "None of the three occurs. (Every raw match for esse in 102 files is the LATIN infinitive esse, discussed in chapter 16's account of where ser comes from.)"
+      "note": "None of the three occurs. Every standalone match for esse in 118 files is the LATIN infinitive esse, discussed in chapter 16's account of where ser comes from."
     },
     {
       "id": "PT-A1-DEM-02",
@@ -457,7 +457,7 @@
       "derivedFrom": [
         "A1-POS-01"
       ],
-      "note": "meu occurs thirteen times in 102 files and every one is English prose or an example sentence in a lesson about something else; no lesson teaches it. seu occurs three times, all in chapter 26's discussion of coracao. A learner can give their name and cannot say my name."
+      "note": "meu occurs fourteen times in 118 files. The newest learner-facing use is o meu quarto inside an ordinal lesson, where it is neither explained nor introduced as knowledge; the others remain prose or examples in lessons about something else. seu occurs three times, all in chapter 26's discussion of coracao. A learner can give their name and still has no taught possessive system for saying my name."
     },
     {
       "id": "PT-A1-POS-02",
@@ -735,7 +735,7 @@
       "derivedFrom": [
         "A1-PRON-06"
       ],
-      "note": "quem and quanto both return ZERO occurrences in 102 files. Como and onde are taught (PT-A1-ADV-07) and who, what and how much are not."
+      "note": "quem and quanto both return ZERO standalone occurrences in 118 files. Como and onde are taught (PT-A1-ADV-07) and who, what and how much are not."
     },
     {
       "id": "PT-A1-PRON-09",
@@ -900,7 +900,7 @@
       "derivedFrom": [
         "A1-ADV-08"
       ],
-      "note": "Portuguese splits this FOUR ways in writing -- por que, porque, por que, porque -- which is a larger demand than the Spanish point makes, and none of the four occurs in 102 files."
+      "note": "Portuguese splits this FOUR ways in writing -- por que, porque, por que, porque -- which is a larger demand than the Spanish point makes, and none of the four occurs in 118 files."
     },
     {
       "id": "PT-A1-V-01",
@@ -1095,7 +1095,7 @@
       "derivedFrom": [
         "A1-V-11"
       ],
-      "note": "No imperative anywhere in 102 files. Every request, instruction and direction in Portuguese is behind this point -- and see PT-A1-F4-02, where the missing por favor sits beside it."
+      "note": "No imperative anywhere in 118 files. Every request, instruction and direction in Portuguese is behind this point -- and see PT-A1-F4-02, where the missing por favor sits beside it."
     },
     {
       "id": "PT-A1-V-12",
@@ -1318,7 +1318,7 @@
       "derivedFrom": [
         "A1-OS-01"
       ],
-      "note": "COVERED BY ONE SENTENCE AND IT IS THE RIGHT ONE. nao sei, introduced in chapter 18 with the observation that it is the sentence a learner will need first. That is the whole of negation in 102 files -- nao entendo, nao falo and nao tenho are all unbuilt -- but the operation is on the page, attached to a verb, which is more than the Italian track (where non appears only inside a frozen phrase its own lesson defers) can say."
+      "note": "COVERED BY TWO USEFUL SENTENCES. nao sei is introduced in chapter 18 with the observation that it is the sentence a learner will need first; chapter 19 explicitly teaches and assesses Nao entendo. nao falo and nao tenho remain unbuilt, but negation is now practised with two verbs rather than inferred from one."
     },
     {
       "id": "PT-A1-OS-03",
@@ -1474,7 +1474,7 @@
       "derivedFrom": [
         "A1-CO-04"
       ],
-      "note": "mas returns ZERO occurrences in 102 files. The one hole in an otherwise unusually strong joining column: a learner can add, offer an alternative, report an opinion and state an obligation, and cannot set one thing against another."
+      "note": "mas returns ZERO standalone occurrences in 118 files. The one hole in an otherwise unusually strong joining column: a learner can add, offer an alternative, report an opinion and state an obligation, and cannot set one thing against another."
     },
     {
       "id": "PT-A1-CJ-05",
@@ -1600,7 +1600,7 @@
       "derivedFrom": [
         "A1-SUB-08"
       ],
-      "note": "quando returns ZERO occurrences in 102 files."
+      "note": "quando returns ZERO occurrences in 118 files."
     },
     {
       "id": "PT-A1-F1-01",
@@ -1946,7 +1946,9 @@
       "id": "PT-A1-F2-16",
       "category": "Funcoes: opinioes, atitudes e conhecimento",
       "label": "say that you have understood, and that you have not",
-      "probe": null,
+      "probe": [
+        "PT-LEX-ENTENDER-COMPREENDER-02"
+      ],
       "anchorIds": [
         "CEFR-CV",
         "PT-CORPUS",
@@ -1954,7 +1956,7 @@
       ],
       "derivedFrom": [],
       "portugueseSpecific": true,
-      "note": "THE REPAIR COLUMN, HALF OF IT, AND THE PIECES ARE SO CLOSE TOGETHER. Chapter 19 teaches entender AND compreender, with the difference named -- one stretches toward the thing, one seizes it whole -- and chapter 18 teaches nao attached to a verb in nao sei. nao entendo therefore needs no new machinery at all and no lesson says it. The proxy has no A1 slot for this and CEFR's A1 descriptors do."
+      "note": "THE REPAIR COLUMN, HALF OF IT. Chapter 19 teaches entender AND compreender, names their difference, explicitly presents Nao entendo, asks the learner to say it, and recalls it without a model. The proxy has no A1 slot for this and CEFR's A1 descriptors do."
     },
     {
       "id": "PT-A1-F3-01",
@@ -2065,7 +2067,7 @@
       "derivedFrom": [
         "A1-F4-01"
       ],
-      "note": "No imperative in 102 files; see PT-A1-V-11."
+      "note": "No imperative in 118 files; see PT-A1-V-11."
     },
     {
       "id": "PT-A1-F4-02",
@@ -3375,7 +3377,7 @@
         "A1-NE20-01",
         "A1-NE20-04"
       ],
-      "note": "Vai chover? -- is it going to rain -- in chapter 21, which is the only weather in 102 files and is there to demonstrate a hoped-for answer. Two proxy points, one question, no sun, no moon and no temperature."
+      "note": "Vai chover? -- is it going to rain -- in chapter 21, which is the only taught weather in 118 files and is there to demonstrate a hoped-for answer. lua appears only as an etymological sound-change example, with no lexical atom; there is no sun and no temperature."
     },
     {
       "id": "PT-A1-NE-28",
@@ -3535,7 +3537,7 @@
         "A1-O3-07",
         "A1-O3-09"
       ],
-      "note": "SEVEN PROXY POINTS AND NOTHING. No punctuation mark is taught anywhere in 102 files; every mark on every page is used correctly and none is named. The hyphen matters more here than in Spanish, because Portuguese hyphenates its enclitic pronouns (chamo-me, encontrar-se) and the corpus uses both without comment."
+      "note": "SEVEN PROXY POINTS AND NOTHING. No punctuation mark is taught anywhere in 118 files; every mark on every page is used correctly and none is named. The hyphen matters more here than in Spanish, because Portuguese hyphenates its enclitic pronouns (chamo-me, encontrar-se) and the corpus uses both without comment."
     },
     {
       "id": "PT-A1-ORT-09",
@@ -3637,7 +3639,7 @@
       ],
       "derivedFrom": [],
       "portugueseSpecific": true,
-      "note": "MEASURED, NOT IMPORTED, AND THIS IS THE ONE THE FRONTMATTER GETS WRONG. All 102 lessons declare variety: standard-contemporary, which is a single label -- and the BODIES teach both major varieties, deliberately and without ever naming what they are doing: chapter 3 gives me chamo (Brazilian order) AND chamo-me (European order); chapter 19 says everyday Brazilian speech prefers acho que sim to penso que sim; chapter 5 uses Onde voce mora?, which is the Brazilian question, in a course that also teaches o senhor. A learner is being taught two dialects at once and has not been told. Counted covered because the CONTRASTS are on the page and taught; what is missing is the label, and IT IS THE LABEL THAT MATTERS, because estar a + infinitive against estar + gerund (PT-A1-V-05) is the next thing they will meet and there is no frame to put it in."
+      "note": "MEASURED, NOT IMPORTED. The variety field is now PARTIALLY repaired: 115 lessons still say standard-contemporary and the three chapter-29 reading lessons say European. The BODIES have taught both major varieties since much earlier: chapter 3 gives me chamo (Brazilian order) AND chamo-me (European order); chapter 19 says everyday Brazilian speech prefers acho que sim to penso que sim; chapter 5 uses Onde voce mora?, which is the Brazilian question, in a course that also teaches o senhor. Counted covered because the CONTRASTS are on the page and taught; the new label does not retrospectively classify the mixed earlier corpus, and that frame still matters before estar a + infinitive meets estar + gerund (PT-A1-V-05)."
     },
     {
       "id": "PT-A1-REG-04",
@@ -3651,7 +3653,7 @@
       ],
       "derivedFrom": [],
       "portugueseSpecific": true,
-      "note": "MEASURED. core/exam-levels.json carries NO caveat for portuguese -- it records exam 'CAPLE', basis 'published', mapping 'identity' and nothing else -- so there was nothing to import and nothing to defer to. The measurement: ALL 102 lessons declare register: neutral and ALL 102 declare variety: standard-contemporary, so both fields are artefacts and carry no information at all, exactly as Bengali's do. Every register claim in PT-A1-REG-01 to PT-A1-REG-03 was read out of lesson BODIES. Tamil's register column was not imported here; this one was measured."
+      "note": "MEASURED. core/exam-levels.json carries NO caveat for portuguese -- it records exam 'CAPLE', basis 'published', mapping 'identity' and nothing else -- so there was nothing to import and nothing to defer to. All 118 lessons still declare register: neutral, so that field remains an artefact. Variety is only partly informative: 115 lessons say standard-contemporary and three chapter-29 reading lessons say European, while earlier bodies remain mixed. Every register claim in PT-A1-REG-01 to PT-A1-REG-03 was therefore read out of lesson BODIES."
     }
   ]
 }
