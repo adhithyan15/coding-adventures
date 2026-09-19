@@ -794,6 +794,7 @@ struct EmitContext<'a> {
     /// and therefore needs the component-scoped selectable Button subclass.
     needs_selectable_button_support: bool,
     needs_font_size_support: bool,
+    table_font_size: Option<LayoutPropValue>,
 }
 
 impl<'a> EmitContext<'a> {
@@ -842,6 +843,7 @@ impl<'a> EmitContext<'a> {
             needs_native_slider_support: false,
             needs_selectable_button_support: false,
             needs_font_size_support: false,
+            table_font_size: None,
         }
     }
 
@@ -3054,9 +3056,9 @@ fn indent_xaml_fragment(fragment: &str, extra_spaces: usize) -> String {
 /// [`emit_xaml_children`] which pairs an `If` with the following `Else`
 /// sibling. A bare `If` or `Else` reaching this function is an error
 /// (they should always come through `emit_xaml_children`).
-/// Layout typography supported by this projection. Table propagation is separate.
+/// Layout typography supported by this projection, including table descendants.
 pub fn has_native_font_size(node: &LayoutNode) -> bool {
-    if !matches!(node.tag.as_str(), "Text" | "HostInput" | "Input" | "HostButton") {
+    if !matches!(node.tag.as_str(), "Text" | "HostInput" | "Input" | "HostButton" | "HostTable") {
         return false;
     }
     match find_prop_value(node, "font-size") {
@@ -3067,22 +3069,51 @@ pub fn has_native_font_size(node: &LayoutNode) -> bool {
 }
 
 fn font_size_attr(node: &LayoutNode, ctx: &mut EmitContext<'_>) -> Result<String, PipelineEmitError> {
-    let Some(value) = find_prop_value(node, "font-size") else { return Ok(String::new()) };
+    let value = find_prop_value(node, "font-size").cloned().or_else(|| ctx.table_font_size.clone());
+    let Some(value) = value.as_ref() else { return Ok(String::new()) };
     let value = match value {
         LayoutPropValue::Number(n) if n.is_finite() && *n > 0.0 => n.to_string(),
-        LayoutPropValue::SlotRef(slot) if ctx.for_scope.is_empty()
-            && ctx.slot_types.get(slot).is_some_and(|t| t == "double")
+        LayoutPropValue::SlotRef(slot) if ctx.slot_types.get(slot).is_some_and(|t| t == "double")
             && is_safe_identifier(&ctx.slot_property_name(slot)) => {
                 format!("{{x:Bind {}, Mode=OneWay}}", ctx.slot_xbind_path(slot))
             }
         _ => return Err(PipelineEmitError::UnsupportedExpression(
-            "font-size requires a positive finite number or a page-scoped numeric slot".to_string())),
+            "font-size requires a positive finite number or a numeric component slot".to_string())),
     };
     ctx.needs_font_size_support = true;
     Ok(format!(" local:{}MosaicFontSize.Value=\"{}\"", ctx.component_name, value))
 }
 
+fn inherited_font_size_attr(node: &LayoutNode, style: &str, ctx: &mut EmitContext<'_>) -> Result<String, PipelineEmitError> {
+    // An authored child font wins over inherited table typography. Font family
+    // remains untouched, including the grid's monospaced design.
+    if find_prop_value(node, "font-size").is_none()
+        && parse_style_fragment(style).iter().any(|(name, _)| name == "FontSize") {
+        return Ok(String::new());
+    }
+    font_size_attr(node, ctx)
+}
+
 fn emit_xaml_node(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    let previous = ctx.table_font_size.clone();
+    // Container-authored text styles shadow an outer table's inherited size.
+    // Let the existing native resource styles retain that inheritance boundary.
+    if matches!(node.tag.as_str(), "Box" | "Row" | "Column" | "Stack")
+        && parse_style_fragment(&part_style_attr(node, part_styles))
+            .iter().any(|(name, _)| name == "FontSize") {
+        ctx.table_font_size = None;
+    }
+    let result = emit_xaml_node_contents(node, indent, part_styles, ctx);
+    ctx.table_font_size = previous;
+    result
+}
+
+fn emit_xaml_node_contents(
     node: &LayoutNode,
     indent: usize,
     part_styles: &PartStyleMap,
@@ -3979,7 +4010,8 @@ fn emit_text(
         .into_iter()
         .map(|(setter, value)| format!(" {setter}=\"{value}\""))
         .collect::<String>();
-    text_style.push_str(&font_size_attr(node, ctx)?);
+    let font_size = inherited_font_size_attr(node, &text_style, ctx)?;
+    text_style.push_str(&font_size);
 
     let mut accessibility_attrs = String::new();
     match find_prop_value(node, "a11y-label") {
@@ -8817,7 +8849,8 @@ fn emit_host_input(
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let mut style = part_style_attr(node, part_styles);
-    style.push_str(&font_size_attr(node, ctx)?);
+    let font_size = inherited_font_size_attr(node, &style, ctx)?;
+    style.push_str(&font_size);
     let x_name = host_x_name(node, "HostInput", ctx);
     register_host_visual_states(node, "TextBox", &x_name, part_styles, ctx);
 
@@ -9230,7 +9263,8 @@ fn emit_host_button(
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let mut style = content_control_style_attr(node, part_styles);
-    style.push_str(&font_size_attr(node, ctx)?);
+    let font_size = inherited_font_size_attr(node, &style, ctx)?;
+    style.push_str(&font_size);
     let x_name = host_x_name(node, "HostButton", ctx);
     register_host_visual_states(node, "Button", &x_name, part_styles, ctx);
 
@@ -11803,6 +11837,24 @@ fn emit_host_table(
     part_styles: &PartStyleMap,
     ctx: &mut EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
+    // Tables are Grids, which cannot own Control.FontSize. Carry the authored
+    // value to text-bearing descendants, including newly realized templates.
+    let previous = ctx.table_font_size.clone();
+    if let Some(value) = find_prop_value(node, "font-size") {
+        font_size_attr(node, ctx)?; // validate even an empty table
+        ctx.table_font_size = Some(value.clone());
+    }
+    let result = emit_host_table_contents(node, indent, part_styles, ctx);
+    ctx.table_font_size = previous;
+    result
+}
+
+fn emit_host_table_contents(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
     if let Some(shape) = xaml_native_table_shape(node) {
         return emit_native_host_table(node, shape, indent, part_styles, ctx);
     }
@@ -12320,7 +12372,7 @@ mod tests {
     }
 
     #[test]
-    fn font_size_rejects_page_slot_in_template_scope() {
+    fn font_size_uses_component_owner_in_template_scope() {
         let slots = vec![slot("text-size", SlotType::Number, false)];
         let mut ctx = EmitContext::new("Typography", &slots, &[]);
         ctx.for_scope.push(ForBinding { as_name: "row".into(), index_name: None,
@@ -12328,7 +12380,7 @@ mod tests {
         let mut node = box_root();
         node.tag = "Text".into();
         node.props.push(LayoutProp { name: "font-size".into(), value: LayoutPropValue::SlotRef("text-size".into()) });
-        assert!(font_size_attr(&node, &mut ctx).is_err());
+        assert!(font_size_attr(&node, &mut ctx).unwrap().contains("Owner.TextSize, Mode=OneWay"));
     }
 
     // ── version ──

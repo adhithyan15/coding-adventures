@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Recognize XAML HostTable numeric font-size projection now that native
+  header/cell/editor propagation is implemented and exercised (#15564).
+
+
 - Recognize implemented XAML numeric typography on text/input/button primitives;
   retain the unsupported font-size diagnostic for HostTable (#15556).
 

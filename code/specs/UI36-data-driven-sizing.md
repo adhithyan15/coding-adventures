@@ -42,13 +42,16 @@ authored font environment. Invalid live values retain that environment font,
 and resolved monospaced ancestors pass their design to scaled descendants.
 This avoids replacing a control with a conditional view when a value changes.
 
-XAML supports positive literals and page-scoped numeric slots on `Text`,
-`Input`/`HostInput` and `HostButton`. Live OneWay bindings use a component-scoped
-attached property; invalid values restore the original local font setting or
-clear the override to recover native styles/inheritance. Expressions and slot
-bindings inside templates are rejected. `HostTable` remains explicitly degraded
-pending template/header/editor propagation (#15564). Windows CI compiles two
-generated components together and exercises live scaling and fallback restoration.
+XAML supports positive literals and numeric component slots on `Text`,
+`Input`/`HostInput`, `HostButton` and `HostTable`. Template bindings use the typed
+row model's component `Owner`, so live updates reach existing and newly realized
+rows. Table sizes propagate to text and input descendants; explicit child sizes
+and container-authored typography take precedence. Font families are unchanged.
+A component-scoped attached property restores the original local font setting or
+clears its override to recover native styles/inheritance for invalid values.
+Expressions and nonnumeric slots are rejected. Windows CI compiles two generated
+components together and exercises table/header/editor scaling, fallback, focus,
+content retention, new rows and scope boundaries.
 
 Other backends report `typography.font-size-binding-unimplemented` in package
 degradation analysis. This foundation does not claim cross-backend typography acceptance,
