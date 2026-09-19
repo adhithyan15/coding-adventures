@@ -10,6 +10,21 @@ roadmap is reconciled.
 
 ## Encoded CLR input prerequisites (selected 2026-09-19 after VM-058)
 
+### CLR03 landed; arithmetic execution audit selected (2026-09-19)
+
+CLR03 merged in #15623 as `c52ecbc841052bdb1dc0f824703d1397adfe87a1`
+after all 46 checks completed (15 success, 31 skipped). Main is refreshed and
+open PR ownership has no encoded CLR overlap. Explicit conv.i4/conv.i8 now
+execute, but the recorded IIR 2147483647+1 overflow remains unresolved.
+
+Next bounded prerequisite: audit builder-emitted integer bitwise/shift opcodes
+against simulator execution before selecting CLR04. Builder exposes shl/shr;
+verify their actual execution and authoritative operand-width/count semantics,
+then commit a detailed spec before production changes. Preserve Int32, Int64,
+explicit conversions and mixed-width refusal. Keep structural indices/dispatch
+i32 and retain CLR01 wide-immediate/input refusal until the lowering ABI works.
+Do not infer simulator support from builder availability.
+
 ### CLR02 landed; encoded wide-lowering audit selected (2026-09-19)
 
 CLR02 merged in #15607 as `a616cafa5709b03dfd053cba0d9752b324ad79d3`
