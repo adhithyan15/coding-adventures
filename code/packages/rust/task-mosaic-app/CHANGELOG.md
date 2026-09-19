@@ -1,5 +1,12 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — complete native Board column rows (#15473)
+
+`board-columns` now supplies the count and theme-aware accent cells that the
+shared TaskApp layout reads. Native hosts previously received two-cell rows for
+a four-cell contract, so entering Board indexed past the row and terminated the
+WinUI process inside `Microsoft.UI.Xaml.dll`.
+
 ## [Unreleased] — the view switcher sends plain labels (UI86, #15420)
 
 `nav-options` is a `list<text>`: one label per view, instead of

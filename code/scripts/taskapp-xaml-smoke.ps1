@@ -94,6 +94,17 @@ function Find-ByName($root, $name, $controlType) {
     return $root.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $cond)
 }
 
+function Find-ByNameAndAutomationId($root, $name, $automationId, $controlType) {
+    $cond = New-Object System.Windows.Automation.AndCondition(
+        (New-Object System.Windows.Automation.PropertyCondition(
+            [System.Windows.Automation.AutomationElement]::NameProperty, $name)),
+        (New-Object System.Windows.Automation.PropertyCondition(
+            [System.Windows.Automation.AutomationElement]::AutomationIdProperty, $automationId)),
+        (New-Object System.Windows.Automation.PropertyCondition(
+            [System.Windows.Automation.AutomationElement]::ControlTypeProperty, $controlType)))
+    return $root.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $cond)
+}
+
 function Find-ByAutomationId($root, $automationId, $controlType) {
     $cond = New-Object System.Windows.Automation.AndCondition(
         (New-Object System.Windows.Automation.PropertyCondition(
@@ -135,6 +146,56 @@ try {
         $failures += "No summary text rendered. Visible text: $($before -join ' | ')"
     } else {
         Write-Host "  initial summary: $summaryBefore"
+    }
+
+    # TaskApp once crashed inside Microsoft.UI.Xaml.dll as soon as the Board
+    # option was invoked. The ordinary smoke stayed green because it exercised
+    # only the initial List view. Enter the Board through the same UI Automation
+    # path a user takes, require the selected state to reach the screen, and then
+    # return to List before continuing the task-flow assertions below.
+    $boardButton = Find-ByNameAndAutomationId $root 'Board' 'segmented-option' ([System.Windows.Automation.ControlType]::Button)
+    if (-not $boardButton) {
+        throw "Could not find the Board view option. Buttons present: $((Get-ButtonNames $root) -join ', ')"
+    }
+    $boardButton.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
+
+    $selectedView = $null
+    $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
+    while ((Get-Date) -lt $deadline) {
+        Start-Sleep -Milliseconds 500
+        $proc.Refresh()
+        if ($proc.HasExited) {
+            throw "TaskApp exited with code $($proc.ExitCode) while opening the Board view."
+        }
+        $selectedView = Find-ByAutomationId $root 'segmented-option-selected' ([System.Windows.Automation.ControlType]::Button)
+        if ($selectedView -and $selectedView.Current.Name -eq 'Board') { break }
+    }
+    if (-not $selectedView -or $selectedView.Current.Name -ne 'Board') {
+        $failures += 'The Board event did not render Board as the selected view.'
+    } else {
+        Write-Host '  Board view activated without a process exit'
+    }
+
+    $listButton = Find-ByNameAndAutomationId $root 'List' 'segmented-option' ([System.Windows.Automation.ControlType]::Button)
+    if (-not $listButton) {
+        throw 'Could not find the List view option after entering Board.'
+    }
+    $listButton.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
+
+    $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
+    while ((Get-Date) -lt $deadline) {
+        Start-Sleep -Milliseconds 500
+        $proc.Refresh()
+        if ($proc.HasExited) {
+            throw "TaskApp exited with code $($proc.ExitCode) while returning to the List view."
+        }
+        $selectedView = Find-ByAutomationId $root 'segmented-option-selected' ([System.Windows.Automation.ControlType]::Button)
+        if ($selectedView -and $selectedView.Current.Name -eq 'List') {
+            break
+        }
+    }
+    if (-not $selectedView -or $selectedView.Current.Name -ne 'List') {
+        $failures += 'Returning from Board did not render List as the selected view.'
     }
 
     # ── 3. A dispatched event changes what is on screen ──────────────────

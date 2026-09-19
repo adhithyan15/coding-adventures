@@ -380,20 +380,48 @@ impl TaskMosaicApp {
         let full = project.settings.complexity == ProjectComplexity::Full;
         let (_, project_rows) = self.project_rows();
         let task_rows = self.task_rows(&ids, schedule.as_ref());
+        let board_status = |id: &TaskId| {
+            let task = &project.tasks[id];
+            if task.completed {
+                "done"
+            } else if task.percent_complete > 0 {
+                "doing"
+            } else {
+                "next"
+            }
+        };
+        let board_columns = [
+            ("Up next", "next"),
+            ("In progress", "doing"),
+            ("Done", "done"),
+        ]
+        .into_iter()
+        .map(|(title, key)| {
+            let count = ids.iter().filter(|id| board_status(id) == key).count();
+            let accent = match (self.state.dark_theme, key) {
+                (true, "next") => "#867c70",
+                (true, "doing") => "#eaa63f",
+                (true, "done") => "#6fb489",
+                (false, "next") => "#9b9289",
+                (false, "doing") => "#e0942a",
+                (false, "done") => "#4f8e6a",
+                _ => unreachable!("board columns use a fixed status vocabulary"),
+            };
+            vec![
+                title.to_string(),
+                key.to_string(),
+                count.to_string(),
+                accent.to_string(),
+            ]
+        })
+        .collect::<Vec<_>>();
         let board_cards = if self.state.view == ViewMode::Board {
             ids.iter()
                 .map(|id| {
                     let task = &project.tasks[id];
                     vec![
                         task.name.clone(),
-                        if task.completed {
-                            "done"
-                        } else if task.percent_complete > 0 {
-                            "doing"
-                        } else {
-                            "next"
-                        }
-                        .to_string(),
+                        board_status(id).to_string(),
                         id.to_string(),
                         String::new(),
                     ]
@@ -474,7 +502,7 @@ impl TaskMosaicApp {
             "timeline-scale": timeline_scale,
             "timeline-rows": timeline_rows,
             "board-mode": if self.state.view == ViewMode::Board { "board" } else { "" },
-            "board-columns": [["Up next", "next"], ["In progress", "doing"], ["Done", "done"]],
+            "board-columns": board_columns,
             "board-cards": board_cards,
             "sheet-mode": if self.state.view == ViewMode::Sheet { "sheet" } else { "" },
             "sheet-viewport-rows": sheet_rows,
@@ -2049,10 +2077,25 @@ mod tests {
         };
 
         // A new project is Board tier: five views, no Timeline.
-        let board = app.dispatch(event(1, "showView", json!({"index":1}))).unwrap().props;
-        assert_eq!(labels(&board), ["List", "Board", "Sheet", "Calendar", "Notes"]);
+        let board = app
+            .dispatch(event(1, "showView", json!({"index":1})))
+            .unwrap()
+            .props;
+        assert_eq!(
+            labels(&board),
+            ["List", "Board", "Sheet", "Calendar", "Notes"]
+        );
         assert_eq!(board["nav-selected-index"], 1);
         assert_eq!(board["board-mode"], "board");
+        assert_eq!(
+            board["board-columns"],
+            json!([
+                ["Up next", "next", "0", "#9b9289"],
+                ["In progress", "doing", "0", "#e0942a"],
+                ["Done", "done", "0", "#4f8e6a"]
+            ]),
+            "every board column row must satisfy the four-cell layout contract"
+        );
 
         // Index 5 is Timeline, which a Board-tier project does not offer.
         let before = app.snapshot().unwrap();
@@ -2060,10 +2103,17 @@ mod tests {
             app.dispatch(event(2, "showView", json!({"index":5}))),
             Err(TaskAppError::InvalidPayload { field: "index", .. })
         ));
-        assert_eq!(app.snapshot().unwrap(), before, "a refused index changes nothing");
+        assert_eq!(
+            app.snapshot().unwrap(),
+            before,
+            "a refused index changes nothing"
+        );
 
         // Full tier adds Timeline last, so no other index moves.
-        let full = app.dispatch(event(3, "toggleProjectComplexity", json!({}))).unwrap().props;
+        let full = app
+            .dispatch(event(3, "toggleProjectComplexity", json!({})))
+            .unwrap()
+            .props;
         assert_eq!(
             labels(&full),
             ["List", "Board", "Sheet", "Calendar", "Notes", "Timeline"]
@@ -2078,7 +2128,11 @@ mod tests {
         ];
         for (index, (slot, value)) in modes.iter().enumerate() {
             let props = app
-                .dispatch(event(4 + index as u64, "showView", json!({ "index": index })))
+                .dispatch(event(
+                    4 + index as u64,
+                    "showView",
+                    json!({ "index": index }),
+                ))
                 .unwrap()
                 .props;
             assert_eq!(props["nav-selected-index"], index, "index {index}");
@@ -2096,7 +2150,10 @@ mod tests {
 
         // Dropping back to Board tier while on Timeline returns to List,
         // and the index follows.
-        let back = app.dispatch(event(20, "toggleProjectComplexity", json!({}))).unwrap().props;
+        let back = app
+            .dispatch(event(20, "toggleProjectComplexity", json!({})))
+            .unwrap()
+            .props;
         assert_eq!(back["nav-selected-index"], 0);
         assert_eq!(labels(&back).len(), 5);
     }
