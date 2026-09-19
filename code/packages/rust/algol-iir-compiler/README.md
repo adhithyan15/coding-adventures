@@ -246,9 +246,9 @@ return value.
 
 Statically bounded integer- or real-controlled `while` and finite `step`/`until`
 elements can retain the
-final snapshot of one simple local integer, real, or boolean recurrence. The
+final snapshots of pure local integer, real, or boolean recurrences. The
 analysis must prove a terminating false predicate within 4,096 evaluations and
-rejects dependency writes, nontrivial compound bodies, globals, arrays, by-name
+rejects predicate-dependency writes, dynamic compound bodies, globals, arrays, by-name
 targets, overflow, and non-finite numeric results.
 Boolean snapshot evaluation distinguishes exact bare variables from unary
 wrappers, so direct `not` recurrences preserve their negated value rather than
@@ -257,8 +257,15 @@ The recurrence assignment in either loop form may be wrapped in a compound
 body and may additionally have proven integer, real, or boolean identity
 assignments of ordinary local scalars or unlabeled dummy statements as inert
 siblings. Unlabeled nested compound statements may group those same recurrence,
-identity, and dummy statements; labels, conditionals, declarations, changing
-siblings, and other statements remain outside this bounded analysis.
+identity, and dummy statements; labels, conditionals, declarations,
+array/global/string siblings, and other effectful or dynamic statements remain
+outside this bounded analysis.
+Finite `step`/`until` and terminating static `while` loops may instead carry
+several pure local integer, real, or boolean recurrence assignments. Bounded
+abstract execution evaluates them in source order on every pass, so later
+assignments may consume snapshots written earlier in the same body. Arrays,
+globals, strings, by-name targets, labels, calls, and unknown expressions still
+fail closed.
 An exact controlled-scalar assignment in a single-iteration `step`/`until`
 loop may use the same wrapper while retaining its checked post-body exit value.
 The assignment may also derive that value from the known entry control; unknown

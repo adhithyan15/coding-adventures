@@ -3498,6 +3498,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("424211.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — bounded loop metadata evaluates several pure local scalar
+    // recurrences in source order, so y observes x's update in each pass.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; real x, y; x := 0.0; y := 0.0; for i := 1 step 1 until 3 do begin x := x + i; y := y + x end; print(x); print(y); i := 0; x := 0.0; y := 0.0; for i := i + 1 while i <= 3 do begin x := x + i; y := y + x end; print(x); print(y) end",
+        expect: Expect::Stdout("610610"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a list containing only single-value elements is straight-line
     // repetition with no zero-trip path or backedge. Its final static real
     // assignment therefore remains available to the portable output path.
@@ -13278,6 +13287,29 @@ fn algol_nested_compound_recurrences_run_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the nested-compound recurrences did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_multi_scalar_recurrences_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("y := y + x end; print(x); print(y)")
+        })
+        .expect("the multi-scalar recurrences must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the multi-scalar recurrences did not run"
             );
             continue;
         };
