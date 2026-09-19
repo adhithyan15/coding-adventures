@@ -58,7 +58,12 @@ Flutter supports positive literals and numeric component slots on `Text`,
 only the size, preserving static color/family and the native inherited fallback.
 Invalid live values retain the original style; invalid authored forms and
 nonnumeric slots are errors. Generated widget tests exercise updates and fallback,
-input events and button dispatch. Flutter `HostTable` inheritance remains pending.
+input events and button dispatch. Flutter `HostTable` bindings propagate to text
+and editors in native DataTable and structural table layouts (#15602). Explicit
+child sizes and container typography take precedence; font families and scope
+boundaries are preserved. Invalid live values restore the authored table fallback
+or native default. Generated widget tests cover headers, editors, new rows and
+component-slot bindings inside loops whose local names shadow those slots.
 Flutter Input/HostInput controllers survive presentation-only rebuilds (#15601),
 including text scale changes. Controlled value echoes retain selection and IME
 composition; external text replacement clamps selection to the new text and clears
