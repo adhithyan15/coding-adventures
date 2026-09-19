@@ -1,0 +1,17 @@
+{
+  "chapter": 107,
+  "title": "Medicine and Keeping Well",
+  "label": "ch:ml-medicine",
+  "canDo": "I can name medicine, treatment and cleanliness, and place them around the symptoms I can already say.",
+  "payoff": {
+    "lesson": "ML-R107-medicine-recall",
+    "kind": "production",
+    "summary": "From cold: three words around falling ill, and which one Malayalam did not have to borrow.",
+    "assesses": [
+      "ML-LEX-C107-MEDICINE-01",
+      "ML-LEX-C107-TREATMENT-01",
+      "ML-LEX-C107-CLEAN-01"
+    ],
+    "note": "THE NOTE HELD ON ALL FIVE CHECKS, AND THIS TIME I RAN THE FIFTH ONE. 'The symptoms are taught (ML-A1-LEX-27) and nothing that treats them is' is a claim about EXISTING MATERIAL, which is the shape that caught me on ML-A1-TIME-09 one tranche ago -- a note that anticipates your check is making a claim, not reporting a result. So LEX-27's five probe atoms were opened rather than trusted: cuma, pani, vEdana and kshiiNaM are all taught headwords in chapter 63. The claim is true. THE DOMAIN CHECK PAID OFF AGAIN AND IT SHAPES THE CHAPTER. vaidyan, the doctor, is taught at ML-C48-doctor (1310) -- so the learner has had the SYMPTOMS and the PERSON and nothing in between: no substance, no practice. That gap IS the chapter, the same way teacher-and-student-without-a-school was chapter 103's, and the chapter is built as a LINE: keep clean, fall ill, be treated, take the medicine. THREE WORDS, CHOSEN FOR ZERO SCRIPT DEBT. marunnu, cikitsa and vRtti cover the label's three halves -- medicine, treatment, hygiene -- and every glyph in all three is already script-taught and already in use in headwords. aashupatri (hospital) and guLika (tablet) were DROPPED, not because they are wrong but because each adds one more headword to an already-open never-taught character, U+0D36 and U+0D33, and neither is in the label. Refusing to deepen known debt for words the point does not ask for. vRtti IS GLOSSED HONESTLY AS THE EVERYDAY WORD. It is cleanliness -- what you say about a room or a person's hands -- not hygiene as a subject, and the lesson says so outright rather than letting the exam label's English word stand unexamined. Its Sanskrit sense is CONDUCT, a way of living, and the road from conduct to cleanliness is offered as the traditional account rather than asserted, which is the treatment paLLikkooTaM got in chapter 103 after review caught the first draft asserting it. THE NATIVE/BORROWED SPLIT IS THE CHAPTER'S SECOND THREAD AND IT IS CHECKABLE: marunnu is Dravidian and Tamil has marundhu; cikitsa and vRtti are both Sanskrit. The substance kept its own name, the practice and the virtue came in borrowed -- the same shape the school words showed. THE THREE CEILING GREPS RUN IN DRAFT CAUGHT TWO CHAPTER NUMBERS in the recall before they reached the gate, and the full suite passed on the FIRST run for the third chapter running."
+  }
+}

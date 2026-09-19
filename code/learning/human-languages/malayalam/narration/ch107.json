@@ -1,0 +1,661 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 107,
+  "title": "Medicine and Keeping Well",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c8925d9cff86fc60",
+  "lessons": [
+    {
+      "id": "ML-C107-marunnu",
+      "sequence": 3900,
+      "title": "മരുന്ന് (marunnŭ) — medicine",
+      "headword": "മരുന്ന്",
+      "romanization": "marunnŭ",
+      "gloss": "medicine — the thing that stands between the symptoms you can name and the doctor you can name",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:372bfeeb6ebe2aab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say fever. Say a doctor. You have had both for a long while, and nothing at all to put between them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മരുന്ന് (marunnŭ) — medicine."
+            },
+            {
+              "kind": "speech",
+              "text": "You can already name what is wrong — the cough, the pain, the tiredness, the fever — and you can name the person you would go to. മരുന്ന് (marunnŭ) is the thing that was missing in the middle."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This one is not borrowed. It is an old Dravidian word, and Tamil says marundhu for the same thing. The remedy has a native name."
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth holding on to, because the next word in this chapter — the one for the treatment itself — came from Sanskrit. The substance is named in Malayalam's own words; the practice is named in borrowed ones."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marunnŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *marunnŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the fever, then the medicine, then the doctor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the fever, then the medicine, then the doctor]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which language this word comes from, and what Tamil says",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which language this word comes from, and what Tamil says]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Medicine? (മരുന്ന് (marunnŭ).) Who would you go to for it? (വൈദ്യൻ.) Is this word borrowed? (No — it is Dravidian, and Tamil has it too.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C107-chikitsa",
+      "sequence": 3910,
+      "title": "ചികിത്സ (cikitsa) — treatment",
+      "headword": "ചികിത്സ",
+      "romanization": "cikitsa",
+      "gloss": "treatment — the borrowed word for the practice, beside the native word for the substance",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:44d2e93e9d82235b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say medicine. Say a doctor. One of those is a thing; the other is a person. Neither is what happens between them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചികിത്സ (cikitsa) — treatment."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "വൈദ്യൻ, vaidyan, the person.",
+                "ചികിത്സ, cikitsa, what the person does.",
+                "മരുന്ന്, marunnŭ, what the person gives."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sanskrit, where the last word was Dravidian. That split is ordinary in Malayalam and you have seen it before: the everyday thing keeps its native name, and the formal practice around it takes a borrowed one."
+            },
+            {
+              "kind": "speech",
+              "text": "The Sanskrit word has an unusual shape. Its grammarians build it from a root meaning to perceive, in a form that means wanting to — so the word is put together as something like a wish to see clearly. Treat that as the traditional account rather than a settled fact; what is certain is the borrowing, not the story inside it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cikitsa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cikitsa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three together — vaidyan, cikitsa, marunnŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three together — *vaidyan*, *cikitsa*, *marunnŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the three is the native word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the three is the native word]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Treatment? (ചികിത്സ (cikitsa).) Which of this chapter's two words is borrowed? (ചികിത്സ (cikitsa) — മരുന്ന് (marunnŭ) is Dravidian.) Which one is the substance? (മരുന്ന് (marunnŭ).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C107-vrtthi",
+      "sequence": 3920,
+      "title": "വൃത്തി (vṛtti) — cleanliness",
+      "headword": "വൃത്തി",
+      "romanization": "vṛtti",
+      "gloss": "cleanliness — a Sanskrit word for how a person conducts themselves, which in Malayalam became how clean a thing is",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:580739f0d10dcd56",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say medicine, then treatment. Both of those come after something has gone wrong."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വൃത്തി (vṛtti) — cleanliness."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the everyday word, and it is worth being plain about its range. It is what you use about a room, a kitchen, a person's hands. Malayalam has a more formal word for hygiene as a subject — the kind printed on a public notice — and this is not it. This is the one people say."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The Sanskrit it comes from does not mean clean at all. vṛtti is conduct — a way of living, how a person carries themselves."
+            },
+            {
+              "kind": "speech",
+              "text": "Malayalam narrowed it. The word for how you conduct yourself became the word for how clean you keep things, which is a short step if you have ever been told that keeping a clean house is a matter of character. Take that as the traditional account of the shift rather than a settled fact; the Sanskrit sense and the Malayalam sense are both well attested, and the road between them is the part that is told rather than proved."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vṛtti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vṛtti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marunnŭ, then vṛtti — the cure, and the thing that comes before needing one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *marunnŭ*, then *vṛtti* — the cure, and the thing that comes before needing one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the Sanskrit word behind it meant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the Sanskrit word behind it meant]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cleanliness? (വൃത്തി (vṛtti).) What did the Sanskrit word behind it mean? (Conduct — a way of living.) Which of this chapter's words is the native one? (മരുന്ന് (marunnŭ).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C107-before-and-after",
+      "sequence": 3930,
+      "title": "വൃത്തി (vṛtti), ചികിത്സ (cikitsa) — on either side of falling ill",
+      "headword": "വൃത്തി — ചികിത്സ",
+      "romanization": "vṛtti — cikitsa",
+      "gloss": "cleanliness and treatment — one word for keeping well and one for getting well, put on either side of falling ill",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3c01d3903681a386",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say fever. Say cough. Those are the middle of the story."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Lay this chapter out against what you already had and it makes a line:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "വൃത്തി, vṛtti, before — keeping well.",
+                "പനി, ചുമ, pani, cuma, the thing going wrong.",
+                "ചികിത്സ, മരുന്ന്, cikitsa, marunnŭ, after — getting well."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "You have had the middle of that line for a long while and neither end. You could say what was wrong and name nobody who would help and nothing that would."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the line in order — vṛtti, pani, cikitsa, marunnŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the line in order — *vṛtti*, *pani*, *cikitsa*, *marunnŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which end of it you had first",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which end of it you had first]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the person who stands at the far end — vaidyan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the person who stands at the far end — *vaidyan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which one of the four words is not borrowed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which one of the four words is not borrowed]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word comes before falling ill? (വൃത്തി (vṛtti).) Which two come after? (ചികിത്സ (cikitsa) and മരുന്ന് (marunnŭ).) Which of those two is the substance? (മരുന്ന് (marunnŭ).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R107-medicine-recall",
+      "sequence": 3940,
+      "title": "(medicine, treatment, cleanliness) (marunnŭ enna ōrmma) — from cold",
+      "headword": "(medicine, treatment, cleanliness)",
+      "romanization": "marunnŭ enna ōrmma",
+      "gloss": "cold retrieval of the three words, and of which one Malayalam did not have to borrow",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69867f35c523160e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say medicine, treatment and cleanliness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one native word among three",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "മരുന്ന്, marunnŭ, Dravidian — Tamil has it too.",
+                "ചികിത്സ, cikitsa, Sanskrit.",
+                "വൃത്തി, vṛtti, Sanskrit, and it meant conduct."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The thing you swallow kept its own name; the practice and the virtue came in from Sanskrit. That is a pattern, not a coincidence, and you saw the same shape in the school words: the building was assembled at home, the scholarly words arrived whole."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You had the symptoms and the person, and nothing in between. പനി and വേദന came with the other words for feeling unwell, and വൈദ്യൻ came with the words for what people do — so you could say what was wrong and who you would see, and not one word about what would actually be done."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the line runs end to end: keep clean, fall ill, be treated, take the medicine."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marunnŭ, cikitsa, vṛtti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *marunnŭ*, *cikitsa*, *vṛtti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which one is Dravidian",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which one is Dravidian]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what vṛtti meant in Sanskrit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *vṛtti* meant in Sanskrit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole line, from keeping well to taking the medicine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole line, from keeping well to taking the medicine]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Medicine, treatment, cleanliness? (മരുന്ന് (marunnŭ), ചികിത്സ (cikitsa), വൃത്തി (vṛtti).) Which one did Malayalam not have to borrow? (മരുന്ന് (marunnŭ).) What did വൃത്തി (vṛtti) mean before it meant clean? (Conduct.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

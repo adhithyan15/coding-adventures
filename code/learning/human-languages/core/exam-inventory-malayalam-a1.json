@@ -4032,7 +4032,11 @@
       "id": "ML-A1-LEX-42",
       "category": "Padakosham (lexicon by domain)",
       "label": "medicine, treatment and hygiene",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C107-MEDICINE-01",
+        "ML-LEX-C107-TREATMENT-01",
+        "ML-LEX-C107-CLEAN-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -4044,7 +4048,7 @@
         "A1-NE13-04"
       ],
       "malayalamSpecific": false,
-      "note": "The symptoms are taught (ML-A1-LEX-27) and nothing that treats them is."
+      "note": "CLOSED BY CHAPTER 107, AND THE NOTE HELD. 'The symptoms are taught (ML-A1-LEX-27) and nothing that treats them is' -- LEX-27's five probe atoms were OPENED rather than trusted, because a note's characterisation of existing material is a claim and not a result: cuma, pani, vEdana and kshiiNaM are all taught headwords in chapter 63, so the claim is true. What the note does not say, and what the domain check found, is that vaidyan is taught at ML-C48-doctor (1310): the learner had the SYMPTOMS and the PERSON and nothing in between. Chapter 107 supplies the three the label asks for -- marunnu (medicine, and the one word here Malayalam did not borrow), cikitsa (treatment) and vRtti (cleanliness). vRtti is the EVERYDAY word and the lesson says so; Malayalam's formal word for hygiene-as-a-subject is not taught and is not claimed. aashupatri and guLika were deliberately not added: each would deepen the known U+0D36 and U+0D33 script debt and neither is in this point's label."
     },
     {
       "id": "ML-A1-LEX-43",

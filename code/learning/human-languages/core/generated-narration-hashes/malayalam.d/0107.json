@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:c8925d9cff86fc60",
+  "lessonIds": [
+    "ML-C107-marunnu",
+    "ML-C107-chikitsa",
+    "ML-C107-vrtthi",
+    "ML-C107-before-and-after",
+    "ML-R107-medicine-recall"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch107.txt",
+  "json": "malayalam/narration/ch107.json",
+  "textHash": "fnv1a64:2161774b5b2b17c5",
+  "jsonHash": "fnv1a64:7ec6d22371ffcb1b",
+  "findings": []
+}
