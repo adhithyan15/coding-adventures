@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Numeric text and control typography (#15647)
+
+- Project positive literals and numeric component slots to text, buttons, inputs and textareas. Typed runtime values override static font size; invalid values restore authored fallback.
+- Add generated-host DOM tests and a browser acceptance wrapper, including loop shadowing and button dispatch.
+
+
 ### Added -- `HostButton` `selected` lowers to `aria-pressed` (UI86, #15420)
 
 - **Literal values:** `selected : true` / `false` writes `aria-pressed`

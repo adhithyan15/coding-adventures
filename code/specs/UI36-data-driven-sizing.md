@@ -69,6 +69,13 @@ including text scale changes. Controlled value echoes retain selection and IME
 composition; external text replacement clamps selection to the new text and clears
 stale composition. Controllers are disposed when their mounted fields disappear.
 
+HTML supports positive literals and numeric component slots on `Text`,
+`HostButton`, `Input` and `HostInput` (#15647). Generated hosts apply typed
+finite positive values after rendering, overriding static font size without
+replacing other typography. Invalid runtime values restore the authored
+fallback on the next render. Component slots remain distinct from loop locals.
+HTML `HostTable` inheritance and WebComponent typography remain pending.
+
 Unsupported backends and placements report `typography.font-size-binding-unimplemented` in package
 degradation analysis. This foundation does not claim cross-backend typography acceptance,
 startup context propagation, or application layout acceptance; those are tracked
