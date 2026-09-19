@@ -13,6 +13,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.Json;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
 using Windows.UI.Core;
 
@@ -140,6 +141,13 @@ public static class MosaicHost
             LastDownloadRequest = retained;
             DownloadRequested?.Invoke(retained);
         }
+        else if (type.GetString() == "write-clipboard"
+            && effect.TryGetProperty("text", out var text))
+        {
+            var package = new DataPackage();
+            package.SetText(text.GetString() ?? string.Empty);
+            Clipboard.SetContent(package);
+        }
     }
 
     public static void RunInteractionAcceptance(Window window, VentureChrome component)
@@ -174,6 +182,8 @@ public static class MosaicHost
                 var homeButton = await FindAutomationElementAsync<Button>(component, "home-button");
                 var reloadButton = await FindAutomationElementAsync<Button>(
                     component, "reload-button");
+                var copyAddressButton = await FindAutomationElementAsync<Button>(
+                    component, "copy-address-button");
                 var viewSourceButton = await FindAutomationElementAsync<Button>(
                     component, "view-source-button");
                 var goButton = await FindAutomationElementAsync<Button>(component, "go-button");
@@ -182,6 +192,7 @@ public static class MosaicHost
                     || forwardButton is null
                     || homeButton is null
                     || reloadButton is null
+                    || copyAddressButton is null
                     || viewSourceButton is null
                     || goButton is null)
                 {
@@ -266,6 +277,35 @@ public static class MosaicHost
                         backend = "xaml",
                         status = "error",
                         error = "native navigation controls did not update after navigation",
+                    });
+                    return;
+                }
+                var copyAddressProvider = new ButtonAutomationPeer(copyAddressButton)
+                    as IInvokeProvider;
+                copyAddressProvider?.Invoke();
+                var copiedAddress = string.Empty;
+                for (var remaining = 20; remaining >= 0; remaining--)
+                {
+                    var clipboard = Clipboard.GetContent();
+                    if (clipboard.Contains(StandardDataFormats.Text))
+                    {
+                        copiedAddress = await clipboard.GetTextAsync();
+                    }
+                    if (string.Equals(copiedAddress, targetUrl, StringComparison.Ordinal))
+                    {
+                        break;
+                    }
+                    await System.Threading.Tasks.Task.Delay(50);
+                }
+                if (copyAddressProvider is null
+                    || !string.Equals(copiedAddress, targetUrl, StringComparison.Ordinal))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        copiedAddress,
+                        error = "native Copy Address effect did not write the committed URL",
                     });
                     return;
                 }
@@ -849,6 +889,7 @@ public static class MosaicHost
             SetIfChanged(component.BookmarkLabel, props.GetProperty("bookmark-label").GetString(),
                 value => component.BookmarkLabel = value);
             component.BookmarkDisabled = props.GetProperty("bookmark-disabled").GetBoolean();
+            component.CopyAddressDisabled = props.GetProperty("copy-address-disabled").GetBoolean();
             component.ViewSourceDisabled = props.GetProperty("view-source-disabled").GetBoolean();
             component.FindOpen = props.GetProperty("find-open").GetBoolean();
             SetIfChanged(component.FindQuery, props.GetProperty("find-query").GetString(),

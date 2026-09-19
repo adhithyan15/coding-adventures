@@ -185,6 +185,18 @@ pub struct DegradationReport {
     /// Populated by each audited native emitter: XAML, SwiftUI, Compose, Qt,
     /// and Flutter. Each backend owns its own occurrence-aware lowering facts.
     pub style_degradations: Vec<Degradation>,
+    /// Platform behaviour limitations that remain after a primitive has a
+    /// real lowering. Unlike `degradations`, these do not mean the backend
+    /// failed to express the primitive, so they deliberately do not affect
+    /// `native_complete`. They are also not style drops: keeping them in a
+    /// separate inventory prevents an accepted platform limitation from
+    /// becoming either a permanent capability-gate failure or an invisible
+    /// allowlist entry.
+    ///
+    /// UI29-6 introduced the first entries. The specified Qt and Flutter
+    /// lowerings can express `HostNavigationSplit`, but cannot provide the
+    /// platform-owned adaptive collapse represented by `collapse: auto`.
+    pub behavior_degradations: Vec<Degradation>,
     /// Generated files this package's `[host_assets]` overwrote.
     ///
     /// Overwriting them is **supported** — the generated Qt README says so
@@ -1705,6 +1717,7 @@ fn analyze_package_degradations_with_runtime_and_tokens(
     let package_search_paths = default_package_search_paths(&opts.package_root);
     let mut degradations = Vec::new();
     let mut style_degradations = Vec::new();
+    let mut behavior_degradations = Vec::new();
 
     if !opts.backend.is_native() {
         degradations.push(Degradation {
@@ -1849,6 +1862,17 @@ fn analyze_package_degradations_with_runtime_and_tokens(
                 None,
                 &mut degradations,
             );
+            collect_native_behavior_degradations(
+                &NativeScan {
+                    backend: opts.backend,
+                    component,
+                    variant: variant.as_deref(),
+                    native_radio_groups: &native_radio_groups,
+                },
+                &composed.layout.def.root,
+                "root",
+                &mut behavior_degradations,
+            );
             // Issue #12022: audited native style-property drops. See
             // `DegradationReport::style_degradations` for why this remains a
             // separate non-gating list until the pinned losses are retired.
@@ -1934,6 +1958,7 @@ fn analyze_package_degradations_with_runtime_and_tokens(
         native_complete: degradations.is_empty(),
         degradations,
         style_degradations,
+        behavior_degradations,
         // Analysis emits nothing, so nothing has been replaced yet. The build
         // path fills this in from what it actually wrote; a caller using
         // `analyze_package_degradations` alone gets an empty list rather than a
@@ -1941,6 +1966,53 @@ fn analyze_package_degradations_with_runtime_and_tokens(
         // behaviour — which is exactly the drift this field is meant to avoid.
         replaced_generated_files: Vec::new(),
     })
+}
+
+/// Record platform limitations that survive a real lowering without making
+/// the backend capability-incomplete.
+///
+/// This walk is intentionally separate from `collect_native_degradations`.
+/// A `HostNavigationSplit` may currently appear in both inventories: before a
+/// Qt or Flutter lowering lands, the capability report says the primitive is
+/// unimplemented while this report also pins the platform limitation that
+/// must remain visible after that capability entry is removed. The latter is
+/// non-gating by design, not an allowlist exception.
+fn collect_native_behavior_degradations(
+    scan: &NativeScan<'_>,
+    node: &LayoutNode,
+    path: &str,
+    degradations: &mut Vec<Degradation>,
+) {
+    let collapse_is_never = node.props.iter().any(|prop| {
+        prop.name == "collapse"
+            && matches!(&prop.value, LayoutPropValue::Keyword(value) if value == "never")
+    });
+
+    if node.tag == "HostNavigationSplit"
+        && matches!(scan.backend, Backend::Qt | Backend::Flutter)
+        && !collapse_is_never
+    {
+        degradations.push(Degradation {
+            code: "interaction.navigation-split-collapse-static".to_string(),
+            backend: scan.backend.dir_name().to_string(),
+            component: scan.component.to_string(),
+            variant: scan.variant.map(str::to_string),
+            layout_path: path.to_string(),
+            primitive: Some(node.tag.clone()),
+            reason: match scan.backend {
+                Backend::Qt => "Qt SplitView is static, so collapse: auto cannot use a platform-owned adaptive collapse"
+                    .to_string(),
+                Backend::Flutter => "Flutter has no core adaptive split container, so the specified collapse: auto lowering requires a composed fallback rather than platform-owned adaptive collapse"
+                    .to_string(),
+                _ => unreachable!("navigation-split behavior degradation is Qt/Flutter scoped"),
+            },
+        });
+    }
+
+    for (index, child) in node.children.iter().enumerate() {
+        let child_path = format!("{path}.children[{index}]");
+        collect_native_behavior_degradations(scan, child, &child_path, degradations);
+    }
 }
 
 fn write_degradation_report(path: &Path, report: &DegradationReport) -> Result<(), BuildError> {
@@ -7614,6 +7686,10 @@ layout Shell {
             "XAML now has a native HostNavigationSplit lowering: {:?}",
             report.degradations
         );
+        assert!(
+            report.behavior_degradations.is_empty(),
+            "WinUI NavigationView owns the adaptive collapse"
+        );
     }
 
     /// UI29-6 (#15481): registered before any backend lowers it, so every
@@ -7673,6 +7749,70 @@ layout Shell {
             assert_eq!(
                 report.degradations[0].primitive.as_deref(),
                 Some("HostNavigationSplit")
+            );
+
+            if matches!(backend, Backend::Qt | Backend::Flutter) {
+                assert_eq!(
+                    report.behavior_degradations.len(),
+                    1,
+                    "{backend:?} must keep its permanent collapse limitation visible"
+                );
+                assert_eq!(
+                    report.behavior_degradations[0].code,
+                    "interaction.navigation-split-collapse-static"
+                );
+                assert_eq!(report.behavior_degradations[0].layout_path, "root");
+                assert_eq!(
+                    report.behavior_degradations[0].primitive.as_deref(),
+                    Some("HostNavigationSplit")
+                );
+            } else {
+                assert!(report.behavior_degradations.is_empty());
+            }
+        }
+    }
+
+    #[test]
+    fn host_navigation_split_never_does_not_report_adaptive_collapse() {
+        let pkg = make_package("mosaic-pkg-static-shell", &["Shell"]);
+        fs::write(
+            pkg.path().join("src/Shell.mll"),
+            r#"
+layout Shell {
+  HostNavigationSplit [ root ] (
+    pane-title: "Workbench",
+    pane-width: 236,
+    collapse: never
+  ) {
+    Column [ pane ] { }
+    Column [ detail ] { }
+  }
+}
+"#,
+        )
+        .unwrap();
+
+        for backend in [Backend::Qt, Backend::Flutter] {
+            let out = TempDir::new().unwrap();
+            let report = analyze_package_degradations(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend,
+                    emit_project: false,
+                    theme: None,
+                },
+                BuildProfile::NativeComplete,
+            )
+            .expect("static navigation-split capability analysis");
+
+            assert_eq!(
+                report.degradations[0].code,
+                "primitive.navigation-split-unimplemented"
+            );
+            assert!(
+                report.behavior_degradations.is_empty(),
+                "{backend:?} satisfies an explicitly static collapse contract"
             );
         }
     }
@@ -9772,6 +9912,7 @@ layout NativeEvents {
             json["degradations"][0]["code"],
             "accessibility.table-semantics-missing"
         );
+        assert_eq!(json["behaviorDegradations"], serde_json::json!([]));
     }
 
     #[test]

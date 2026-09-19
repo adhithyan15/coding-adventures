@@ -241,6 +241,9 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
       NotificationCenter.default.post(
         name: Notification.Name("VentureDownloadRequested"), object: self,
         userInfo: ["request": effect])
+    } else if type == "write-clipboard", let text = effect["text"] as? String {
+      NSPasteboard.general.clearContents()
+      NSPasteboard.general.setString(text, forType: .string)
     }
   }
 
@@ -645,6 +648,43 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     let bookmarkLabel = props?["bookmark-label"] as? String ?? ""
     let bookmarkEvents = chromeEventCounts["onToggleBookmark", default: 0]
     if bookmarkLabel == "Bookmark", bookmarkEvents == eventCount + 2 {
+      let copyAddressEvents = chromeEventCounts["onCopyAddress", default: 0]
+      guard performNativeButtonClick(identifier: "copy-address-button") else {
+        writeInteractionResult(
+          ["backend": "swiftui", "status": "error", "error": "copy-address-button not found"],
+          to: markerPath)
+        return
+      }
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
+        self?.verifyCopyAddress(
+          startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+          eventCount: copyAddressEvents, remaining: 50)
+      }
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error", "bookmarkLabel": bookmarkLabel,
+          "bookmarkEvents": String(bookmarkEvents),
+          "error": "native bookmark removal state did not update",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifyBookmarkRemoved(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        eventCount: eventCount, remaining: remaining - 1)
+    }
+  }
+
+  private func verifyCopyAddress(
+    startURL: String, targetURL: String, markerPath: String, eventCount: Int, remaining: Int
+  ) {
+    let copyAddressEvents = chromeEventCounts["onCopyAddress", default: 0]
+    let clipboardText = NSPasteboard.general.string(forType: .string) ?? ""
+    if copyAddressEvents == eventCount + 1, clipboardText == targetURL {
       let viewSourceEvents = chromeEventCounts["onViewSource", default: 0]
       guard performNativeButtonClick(identifier: "view-source-button") else {
         writeInteractionResult(
@@ -662,15 +702,15 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     guard remaining > 0 else {
       writeInteractionResult(
         [
-          "backend": "swiftui", "status": "error", "bookmarkLabel": bookmarkLabel,
-          "bookmarkEvents": String(bookmarkEvents),
-          "error": "native bookmark removal state did not update",
+          "backend": "swiftui", "status": "error", "clipboardText": clipboardText,
+          "copyAddressEvents": String(copyAddressEvents),
+          "error": "native Copy Address effect did not write the committed URL",
         ],
         to: markerPath)
       return
     }
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-      self?.verifyBookmarkRemoved(
+      self?.verifyCopyAddress(
         startURL: startURL, targetURL: targetURL, markerPath: markerPath,
         eventCount: eventCount, remaining: remaining - 1)
     }
@@ -1217,12 +1257,13 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private func nativeToolbarPoint(identifier: String) -> (NSPoint, NSWindow)? {
     let position: CGFloat
     switch identifier {
-    case "back-button": position = 0.06
-    case "forward-button": position = 0.21
-    case "home-button": position = 0.36
-    case "reload-button": position = 0.51
-    case "bookmark-button": position = 0.68
-    case "view-source-button": position = 0.88
+    case "back-button": position = 0.05
+    case "forward-button": position = 0.16
+    case "home-button": position = 0.28
+    case "reload-button": position = 0.40
+    case "bookmark-button": position = 0.54
+    case "copy-address-button": position = 0.70
+    case "view-source-button": position = 0.91
     default: return nil
     }
     var visited = Set<ObjectIdentifier>()

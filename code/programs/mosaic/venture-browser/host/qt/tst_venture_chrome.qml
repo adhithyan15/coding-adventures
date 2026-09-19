@@ -56,6 +56,9 @@ TestCase {
                 "statusText": "Ready",
                 "backDisabled": disabled,
                 "forwardDisabled": disabled,
+                "bookmarkLabel": "Bookmark",
+                "bookmarkDisabled": disabled,
+                "copyAddressDisabled": disabled,
                 "viewSourceDisabled": disabled,
                 "findOpen": false,
                 "findQuery": "",
@@ -79,6 +82,7 @@ TestCase {
         verify(!nativeControl("back-button").enabled)
         verify(!nativeControl("forward-button").enabled)
         verify(!nativeControl("reload-button").enabled)
+        verify(!nativeControl("copy-address-button").enabled)
         verify(!nativeControl("view-source-button").enabled)
         verify(!nativeControl("find-button").enabled)
         verify(nativeControl("address-input").readOnly)
@@ -90,6 +94,7 @@ TestCase {
         mouseClick(nativeControl("back-button"))
         mouseClick(nativeControl("forward-button"))
         mouseClick(nativeControl("reload-button"))
+        mouseClick(nativeControl("copy-address-button"))
         mouseClick(nativeControl("view-source-button"))
         mouseClick(nativeControl("find-button"))
         mouseClick(nativeControl("go-button"))
@@ -139,6 +144,18 @@ TestCase {
         wait(0)
         compare(recordingHost.events.length, 1)
         compare(recordingHost.events[0].event, "onViewSource")
+    }
+
+    function test_copy_address_crosses_the_mosaic_host_seam() {
+        hydrate(false)
+        recordingHost.reset()
+        const copyAddressButton = nativeControl("copy-address-button")
+        verify(copyAddressButton.enabled)
+        copyAddressButton.forceActiveFocus()
+        keyClick(Qt.Key_Space)
+        wait(0)
+        compare(recordingHost.events.length, 1)
+        compare(recordingHost.events[0].event, "onCopyAddress")
     }
 
     function test_find_actions_cross_the_mosaic_host_seam() {

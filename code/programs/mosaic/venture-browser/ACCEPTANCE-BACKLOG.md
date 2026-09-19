@@ -5,6 +5,14 @@ cross-platform proving application. Items are ordered by risk and dependency.
 
 ## Prioritized discoveries
 
+- [x] **P1 browser convergence - shared page-address clipboard transaction.**
+  Add one Mosaic-authored Copy Address control that resolves the committed
+  history URL in core and emits a typed clipboard-write effect. Serialize the
+  effect identically through the macOS, Windows, and Cairo bridges; keep only
+  the final platform clipboard write in SwiftUI, WinUI, Qt, Flutter, and
+  Compose; and lock the event, disabled state, canonical URL, and presenter
+  seams with deterministic acceptance.
+
 - [x] **P0 browser convergence - logical inline text and find spans.** Preserve
   collapsible spaces at parser text-node boundaries, match one logical visible
   phrase across inline formatting descendants, stop at block and fixed-position

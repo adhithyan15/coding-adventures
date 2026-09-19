@@ -13716,6 +13716,60 @@ The fresh branch is `codex/build-tool-diff-match-ceiling-20260919` from exact
 live main. After reconciliation the state has 811 owners: 214 merged, 596
 pending, and exactly this owner in progress.
 
+### Post-PR #15533 refresh and CI-gate match-work selection
+
+PR #15533 completed all 44 reported final-head checks acceptably: 11
+successes and 33 expected skips, with no failure or nonterminal result. GitHub
+reported the reviewed head conflict-free, guarded squash auto-merge was
+enabled, and GitHub merged the diff-selection ceiling as
+`a53ee1a98f62c58b09acb166d898eb5fbebf3ce0` without a manual merge command.
+
+After a later unrelated Brainfuck BEAM change advanced exact `origin/main` to
+`9710bf606086e7e01ae6f4577644e7f26e7ed4cf`, the collision-checked schema-3
+inventory remains unchanged: 15 established lanes, 1,441 implementation
+identities, 4,666 implementation slots, and 1,481 all-reported identities.
+Its completion bands remain 175/265, 123/934, 181/2,282, and 962/13,468;
+Rust has 782 singleton identities, emerging OCaml has five packages, and both
+canonical collisions and unknown language buckets remain zero.
+
+Before publication, the implementation branch rebased conflict-free onto exact
+`origin/main` `9f9e0876af87bece37a4792a9d5d0d00d240ed66`. The intervening OAuth,
+Malayalam, Mermaid, SPICE, ALGOL, Portuguese assessment, Rust closurec,
+spreadsheet-core, verified OAuth device-credential, WinUI Board-row, and Venture
+inline-text commits remain inside existing owners, add no package identity or
+build-tool contract, and have zero exact overlap with this tranche. The
+regenerated collision-checked schema-3 inventory is therefore structurally
+unchanged from the selection snapshot.
+
+The post-merge adoption audit registers eleven language-specific
+diff-selection ceiling owners for Go, shared C#/F#, Elixir, Haskell, Lua,
+Perl, Python, Ruby, Rust, Swift, and TypeScript, plus one selection-blocked
+aggregate that also requires the future JVM, Dart, and OCaml engines. The
+future JVM and Dart graph/diff cores and the OCaml native-build-tool foundation
+now depend directly on the neutral ceiling; the Haskell, Swift, and terminal
+all-language closures depend on their corresponding adoption evidence.
+
+The same audit found a second process-free security prerequisite. The
+validated CI-gate input shape permits a multiplicative gate-pattern/file
+workload, but neither the Python reference oracle nor the canonical Go engine
+preflights total match work. The Go globstar matcher also revisits equivalent
+states recursively, so a scalar ceiling alone would not bound accepted work.
+The selected `build-tool-ci-gate-selection-match-work-ceiling` owner therefore
+defines the same fixed 50,000,000 Unicode-scalar work budget over the complete
+gate-pattern/file Cartesian product, rejects overflow with the single stable
+`CI_GATE_MATCH_LIMIT_EXCEEDED` diagnostic before any matcher call, and pairs
+that ceiling with per-call memoization of Go globstar states. Structural and
+registry validation retains precedence; force, null snapshots, and recognized
+gating-machinery changes retain their reviewed run-all bypass.
+
+This owner is selected alone on fresh branch
+`codex/build-tool-ci-gate-match-ceiling-20260919`. Ten current CI-gate lane
+owners and the JVM, Dart, and OCaml current-contract gates now require it, as
+does the established-lane CI-gate aggregate. The reconciled state contains 824
+unique owners and 1,436 dependency edges: 215 merged, 608 pending, and exactly
+this owner in progress. The graph is dependency-complete, acyclic, and has no
+merged owner depending on unfinished work.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

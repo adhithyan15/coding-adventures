@@ -650,6 +650,66 @@ fn find_in_page_uses_one_shared_transaction_across_generated_hosts() {
 }
 
 #[test]
+fn copy_address_uses_one_typed_clipboard_effect_across_generated_hosts() {
+    let interface = read_package_file("src/VentureChrome.mil");
+    let layout = read_package_file("src/VentureChrome.mll");
+    assert!(interface.contains("slot copy-address-disabled"));
+    assert!(interface.contains("emit onCopyAddress"));
+    assert!(layout.contains("HostButton [ copy-address-button ]"));
+
+    let core = read_package_file("../../../packages/rust/venture-browser-core/src/lib.rs");
+    for symbol in [
+        "CopyPageAddress",
+        "WriteClipboard(String)",
+        "Page address copied",
+    ] {
+        assert!(core.contains(symbol), "shared copy-address core omits {symbol}");
+    }
+
+    for (name, path, presenter) in [
+        (
+            "SwiftUI",
+            "host/swiftui/MosaicHost.swift",
+            "NSPasteboard.general.setString",
+        ),
+        (
+            "XAML",
+            "host/xaml/MosaicHost.cs",
+            "Clipboard.SetContent",
+        ),
+        (
+            "Qt",
+            "host/qt/MosaicHost.cpp",
+            "QGuiApplication::clipboard()->setText",
+        ),
+        (
+            "Flutter",
+            "host/flutter/mosaic_host.dart",
+            "Clipboard.setData",
+        ),
+        (
+            "Compose",
+            "host/compose/MosaicHost.kt",
+            "systemClipboard.setContents",
+        ),
+    ] {
+        let host = read_package_file(path);
+        assert!(host.contains("write-clipboard"), "{name} omits the clipboard effect");
+        assert!(host.contains(presenter), "{name} omits its clipboard presenter");
+    }
+
+    for (name, path) in [
+        ("Cairo", "../../../packages/rust/venture-browser-cairo/src/lib.rs"),
+        ("macOS", "../../../packages/rust/venture-browser-macos/src/lib.rs"),
+        ("Windows", "../../../packages/rust/venture-browser-windows/src/lib.rs"),
+    ] {
+        let bridge = read_package_file(path);
+        assert!(bridge.contains("onCopyAddress"), "{name} omits the copy event");
+        assert!(bridge.contains("write-clipboard"), "{name} omits effect serialization");
+    }
+}
+
+#[test]
 fn real_page_visual_fixture_remains_a_package_acceptance_dependency() {
     let capture = venture_browser_visual_fixtures::capture("http://venture.test")
         .expect("capture Venture's deterministic real-page fixture");

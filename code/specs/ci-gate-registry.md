@@ -124,6 +124,27 @@ changed-file list means change detection was unavailable and MUST fail open;
 an empty list means change detection succeeded and found nothing. Implementations
 MUST evaluate every gate and MUST NOT omit false verdicts.
 
+When neither snapshot is `null`, `force` is false, and no changed path is one
+of the fixed gating-machinery sentinels below, evaluation applies one fixed
+operation-wide ceiling of 50,000,000 path-match work units. After registry,
+identifier, output-name, and glob validation, but before package intersection
+or any matcher call, implementations MUST preflight the complete Cartesian
+product of every declared gate path pattern and every changed file. Each pair
+costs `(pattern Unicode-scalar count + 1) * (changed-file Unicode-scalar count
++ 1)`. The full product is charged even when a package intersection or an
+earlier path match could determine the verdict. Checked arithmetic is required:
+exactly 50,000,000 units proceeds, while overflow or any larger total returns
+an empty result with exactly one error diagnostic
+`CI_GATE_MATCH_LIMIT_EXCEEDED` and performs zero matcher calls. A successful
+oracle expectation MUST reject an adapter error rather than treating it as an
+alternative outcome.
+
+Force, either `null` snapshot, and the fixed gating-machinery sentinels are
+reviewed run-all paths: they return every gate as true before match-work
+preflight. Invalid registries and invalid globs retain precedence over both
+that bypass and the ceiling. A limit error is a hard planning failure; the
+front door MUST write neither a partial plan nor partial gate outputs.
+
 The portable core owns exact package intersection, the repository-relative glob
 grammar implemented by `internal/globmatch`, output-name mapping, and these
 fixed machinery sentinels:
@@ -172,6 +193,10 @@ positive wastes one job, a false negative lets a regression through. Per
 `lessons.md`, *"when a gate is derived by pattern-matching a build script, the
 failure mode is silence — a package that matches nothing is indistinguishable
 from a package that passed."*
+
+The validated match-work ceiling is likewise a hard error rather than an
+ambiguous selection. Continuing would permit attacker-shaped matching work,
+and emitting partial outputs would make the gate set internally inconsistent.
 
 ## Outputs
 

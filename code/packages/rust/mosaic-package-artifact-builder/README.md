@@ -61,6 +61,15 @@ gating list today would break those builds rather than fix anything. Only
 XAML is wired so far — SwiftUI/Compose/Qt/Flutter's own style lowering
 hasn't been audited and gains no new degradations from this.
 
+Permanent *platform behaviour* limitations use a second non-gating list,
+`DegradationReport::behavior_degradations` (`behaviorDegradations` in JSON).
+This is not a capability allowlist: a backend still fails `nativeComplete`
+until it has a real lowering. Once it does, limitations intrinsic to that
+lowering remain visible without making the consumer impossible to build. The
+first such contract is UI29-6: Qt and Flutter report
+`interaction.navigation-split-collapse-static` for an automatic
+`HostNavigationSplit`, while `collapse: never` has no behaviour degradation.
+
 Flutter, Compose, Qt, SwiftUI, and XAML drag primitives are no longer reported as
 inert: those emitters use native pointer/touch drag targets plus the UI35
 keyboard, accepted-drop, component-scoping, and announcement contracts.

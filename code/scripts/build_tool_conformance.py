@@ -55,6 +55,7 @@ CLI_MAX_ARGUMENT_CHARACTERS = 256
 CLI_MAX_ARGUMENT_BYTES = 4096
 MAX_DECLARED_SOURCE_MATCH_WORK = 50_000_000
 MAX_DIFF_SELECTION_MATCH_WORK = 50_000_000
+MAX_CI_GATE_SELECTION_MATCH_WORK = 50_000_000
 CI_GATE_MACHINERY_EXACT = (
     ".github/workflows/ci.yml",
     "code/specs/data/ci-gates.json",
@@ -2832,7 +2833,9 @@ def _ci_gate_touches_machinery(changed_files: list[str]) -> bool:
     return False
 
 
-def _expected_ci_gate_selection(options: dict[str, Any]) -> list[dict[str, Any]]:
+def _expected_ci_gate_selection(
+    options: dict[str, Any],
+) -> list[dict[str, Any]] | str:
     affected_packages = options["affected_packages"]
     changed_files = options["changed_files"]
     run_everything = (
@@ -2841,11 +2844,31 @@ def _expected_ci_gate_selection(options: dict[str, Any]) -> list[dict[str, Any]]
         or changed_files is None
         or _ci_gate_touches_machinery(changed_files or [])
     )
+    gates = sorted(options["registry"]["gates"], key=lambda item: item["id"])
+    if run_everything:
+        return [
+            {
+                "id": gate["id"],
+                "required": True,
+                "output_name": "run_" + gate["id"].replace("-", "_"),
+            }
+            for gate in gates
+        ]
+
+    remaining_work = MAX_CI_GATE_SELECTION_MATCH_WORK
+    for gate in gates:
+        pattern_factor = sum(len(pattern) + 1 for pattern in gate["paths"])
+        for path in changed_files:
+            path_factor = len(path) + 1
+            if pattern_factor and path_factor > remaining_work // pattern_factor:
+                return "CI_GATE_MATCH_LIMIT_EXCEEDED"
+            remaining_work -= pattern_factor * path_factor
+
     affected = set(affected_packages or [])
     changed = changed_files or []
     verdicts = []
-    for gate in sorted(options["registry"]["gates"], key=lambda item: item["id"]):
-        required = run_everything or bool(affected.intersection(gate["packages"]))
+    for gate in gates:
+        required = bool(affected.intersection(gate["packages"]))
         if not required:
             required = any(
                 _portable_glob_matches(pattern, path)
@@ -3865,7 +3888,20 @@ def _validate_pure_result_semantics(
     diagnostic_codes = [item["code"] for item in result["diagnostics"]]
 
     if domain == "ci_gate_selection":
-        if outcome != "ok" or payload["gates"] != _expected_ci_gate_selection(options):
+        expected_gates = _expected_ci_gate_selection(options)
+        if isinstance(expected_gates, str):
+            if (
+                outcome != "error"
+                or payload
+                or result["diagnostics"]
+                != [{"code": expected_gates, "severity": "error"}]
+            ):
+                raise ConformanceError(
+                    f"{prefix}_CI_GATE_MATCH_LIMIT_INVALID",
+                    "CI gate selection requires an empty result and exactly its stable match-limit error",
+                )
+            return
+        if outcome != "ok" or payload.get("gates") != expected_gates:
             raise ConformanceError(
                 f"{prefix}_CI_GATE_SELECTION_MISMATCH",
                 "CI gate verdicts do not match the fail-open package/path oracle",
