@@ -134,6 +134,35 @@ layout SpiceWorkbench {
           onChange : emit: onSchematicAnalysisParameterThreeChange
         )
       }
+      Column [ schematic-saved-outputs ] {
+        Text [ schematic-saved-output-label ] ( content : slot: schematic-saved-output-label )
+        Text [ schematic-saved-output-voltage-label ] ( content : slot: schematic-saved-output-voltage-label )
+        Row [ schematic-saved-output-voltage-options ] {
+          For ( each: slot: schematic-saved-output-voltage-options , as: output , index: output-index ) {
+            HostButton [ schematic-saved-output-voltage-option ] (
+              label : ( output ) ,
+              onClick : emit: onAddSchematicSavedOutputVoltage
+            )
+          }
+        }
+        Text [ schematic-saved-output-current-label ] ( content : slot: schematic-saved-output-current-label )
+        Row [ schematic-saved-output-current-options ] {
+          For ( each: slot: schematic-saved-output-current-options , as: source , index: source-index ) {
+            HostButton [ schematic-saved-output-current-option ] (
+              label : ( source ) ,
+              onClick : emit: onAddSchematicSavedOutputCurrent
+            )
+          }
+        }
+        Row [ schematic-saved-output-actions ] {
+          For ( each: slot: schematic-saved-output-rows , as: probe , index: probe-index ) {
+            HostButton [ schematic-saved-output-remove ] (
+              label : ( probe ) ,
+              onClick : emit: onRemoveSchematicSavedOutput
+            )
+          }
+        }
+      }
       Text [ schematic-grid-label ] ( content : slot: schematic-grid-label )
       Stack [ schematic-grid ] {
         For ( each: slot: schematic-grid-lines , as: line , index: line-index ) {

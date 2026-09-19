@@ -18,11 +18,19 @@ SPICE token before synchronization; orthogonal wire/terminal geometry retains
 endpoint-only netlist semantics.
 
 The ordered analysis plan is also canonical schematic state. DC sweeps choose
-from independent voltage/current symbols, and DC, AC, and transient cards each
-expose their runnable Berkeley parameters before synchronization. Cards lower
-in source order, and old single-card snapshots load as a one-card plan. Those values
-remain one-token inputs and lower directly to `.dc`, `.ac dec`, or `.tran` in
-the same deck consumed by the parser and engine.
+from independent voltage/current symbols, and DC, AC, transient, and
+transfer-function cards each expose their runnable Berkeley parameters before
+synchronization. Cards lower in source order, and old single-card snapshots
+load as a one-card plan. Those values remain one-token inputs and lower
+directly to `.dc`, `.ac dec`, `.tran`, or `.tf` in the same deck consumed by
+the parser and engine.
+
+Schematic sessions also own an ordered global saved-output list. Hosts can add
+labelled non-ground voltage probes and executable voltage-source branch-current
+probes; the document lowers them as one deterministic `.save V(node) I(source)`
+card. Saved outputs persist in snapshots and follow voltage-source reference
+renames, while scoped probes and arbitrary expressions remain outside this
+capture contract.
 
 Hosts load, place, wire, select, edit component values, route, and synchronize that document through
 the Mosaic app event contract. They can also select a DC sweep source and edit

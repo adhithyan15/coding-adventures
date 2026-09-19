@@ -266,15 +266,26 @@ model-card parameter, or a UI artifact is not a completion signal.
      transactional wire creation, selection cleanup, and Mosaic host-contract
      coverage. Keep arbitrary wire geometry, bus notation, and vendor
      interchange for later product phases.
-   - **Mosaic schematic transfer-function analysis** (current phase): discovery
+   - **Mosaic schematic transfer-function analysis** (completed in PR #15115): discovery
      after PR #15097: the workbench's canonical schematic plan exposes only
      `.op`, `.dc`, `.ac`, and `.tran`, even though the frozen Berkeley v1
      runnable plan also includes `.tf`. Add a persisted transfer-function card
      with an independent-source selector and a labelled non-ground output-node
      probe, preserve its source binding across component renames and snapshots,
      lower the exact `.tf V(node) source` card, and cover the document, host,
-     and Mosaic control contracts. Keep arbitrary output expressions, current
-     probes, nested sweeps, and vendor-analysis controls for later phases.
+     and Mosaic control contracts. Keep arbitrary output expressions, scoped
+     output selection, nested sweeps, and vendor-analysis controls for later
+     phases.
+   - **Mosaic schematic saved-output selection** (current phase): discovery after
+     PR #15115: the canonical schematic can run its full analysis plan, but it
+     cannot persist the result signals a user wants to retain. Add one ordered
+     global `.save` selection over labelled non-ground voltage nodes and
+     executable voltage-source branch currents. Validate every target against the
+     canonical document, retain source bindings across component renames and
+     snapshots/history, lower a deterministic `.save V(node) I(source)` card,
+     and expose typed host/Mosaic add and remove controls. Keep scoped
+     `.probe`, arbitrary expressions, passive-device currents, nested sweeps,
+     and vendor-output controls for later phases.
 
 ### Operating rules
 
