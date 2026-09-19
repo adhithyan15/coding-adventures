@@ -1,0 +1,7 @@
+[package]
+name = "der-tlv"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded allocation-free DER identifier and definite-length framing"
+
+[dependencies]
