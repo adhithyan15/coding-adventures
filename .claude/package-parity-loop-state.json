@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 15559,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/15559",
+    "branch": "codex/build-tool-ci-gate-match-ceiling-20260919",
+    "implementation_revision": "9f921dedf37b3aeb981598306040c0b469f72ec5",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-09-19T10:18:36Z",
-    "pr_number": 15533,
-    "status": "merged",
-    "notes": "All 44 reported final-head checks completed acceptably: 11 successes and 33 expected skips, with zero failures or nonterminal checks. GitHub reported no merge conflict, guarded squash auto-merge was enabled, and GitHub merged PR #15533 as a53ee1a98f62c58b09acb166d898eb5fbebf3ce0 without a manual merge command."
+    "observed_at": "2026-09-19T11:26:51Z",
+    "pr_number": 15559,
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #15559 is open at exact implementation revision 9f921dedf37b3aeb981598306040c0b469f72ec5. GitHub reports the branch mergeable with no conflict, while the initial CI, CodeQL detection, and human-language detection checks are queued or in progress. Auto-merge remains disabled until every required check is terminal and acceptable."
   },
   "last_inventory": {
     "revision": "9f9e0876af87bece37a4792a9d5d0d00d240ed66",
@@ -1028,16 +1034,20 @@
     {
       "id": "build-tool-ci-gate-selection-match-work-ceiling",
       "title": "Bound language-neutral CI-gate selection match work",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-diff-selection-match-work-ceiling"],
       "branch": "codex/build-tool-ci-gate-match-ceiling-20260919",
-      "pr_number": null,
+      "pr_number": 15559,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/15559",
+      "opened_at": "2026-09-19T11:26:47Z",
+      "implementation_revision": "9f921dedf37b3aeb981598306040c0b469f72ec5",
       "selected_at": "2026-09-19T10:25:26Z",
       "selection_revision": "9710bf606086e7e01ae6f4577644e7f26e7ed4cf",
       "selection_notes": "Selected only after PR #15533 completed all 44 final-head checks acceptably and merged through guarded squash auto-merge. The collision-checked exact-main inventory remains 15 established lanes, 1,441 implementation identities, 4,666 slots, 1,481 all-reported identities, bands 175/265, 123/934, 181/2,282, and 962/13,468, 782 Rust singletons, five emerging OCaml packages, zero collisions, and zero unknown buckets. Parallel audits registered every newly discovered diff-ceiling adoption leaf and the CI-gate ceiling before selection. This smallest ready security prerequisite closes the same multiplicative matcher-work class in the neutral CI-gate oracle and canonical Go engine before ten current lane implementations and future JVM, Dart, and OCaml engines adopt the domain.",
       "rebase_notes": "Rebased conflict-free before publication onto exact origin/main 9f9e0876af87bece37a4792a9d5d0d00d240ed66. The intervening OAuth, Malayalam, Mermaid, SPICE, ALGOL, Portuguese assessment, Rust closurec, spreadsheet-core, verified OAuth device-credential, WinUI Board-row, and Venture inline-text commits remain inside existing owners, add no package identity or build-tool contract, and have zero exact overlap with this tranche. The regenerated collision-checked schema-3 inventory remains unchanged at 15 established lanes, 1,441 implementation identities, 4,666 slots, 1,481 all-reported identities, bands 175/265, 123/934, 181/2,282, and 962/13,468, 782 Rust singletons, five emerging OCaml packages, zero collisions, and zero unknown buckets.",
       "validation_notes": "Specification-first and red-test execution proved that the prior language-neutral CI-gate oracle and canonical Go engine admitted the schema's multiplicative gate-pattern/file workload without an operation-wide ceiling, while the Go globstar matcher could revisit equivalent states. The final 154-case, 285-file neutral corpus validates across 16 implementations and 15 established lanes. All 109 Python schema and semantic runner tests pass, including exact 50,000,000-unit admission, first-unit overflow failure, Unicode-scalar accounting, full-product charging, validation and run-all precedence, and no partial outputs. The complete Go suite passes under the race detector with coverage; internal/cigates reaches 88.8% and internal/globmatch 97.7%. Go vet, gofmt, trimpath build, the real front-door no-plan/no-GITHUB_OUTPUT mutation regression, neutral character-class differentials, package-parity inventory, strict state graph, repository documentation build and shard checks, JSON, npm high-severity audit, and diff hygiene pass. The exact-main schema-3 inventory remains collision-clean with zero unknown buckets at 15 established lanes, 1,441 implementation identities, 4,666 slots, and five emerging OCaml packages.",
       "security_notes": "Independent security review issued SHIP after four findings were corrected: native registry validation now precedes every bypass and ceiling decision, enforces neutral cardinality and scalar bounds plus the complete Windows reserved-name set, and rejects ambiguous or descending character classes; the Go engine uses checked remaining-budget arithmetic and returns no partial selection; the memoized globstar and segment matcher has no shared mutable state; and isolated neutral fixtures distinguish Python fnmatchcase character-class semantics from host filepath.Match behavior. The implementation adds no Git, filesystem, process, environment, network, credential, native-link, or execution authority and no dependency.",
+      "publication_notes": "Opened ready-for-review PR #15559 after a normal first push from exact origin/main 9f9e0876af87bece37a4792a9d5d0d00d240ed66. Immediately before publication, the worktree was clean, no other active parity PR or prior same-branch PR existed, and all 23 changed paths had zero exact overlap across the 12 other open PRs. GitHub reports the branch mergeable with initial CI, CodeQL detection, and human-language detection checks queued or in progress, so auto-merge remains disabled until every required check is terminal and acceptable.",
       "notes": "The validated CI-gate schema admits 128 gates times 4,096 path globs times 8,192 changed files, while the Python oracle and Go evaluator have no operation-wide preflight ceiling and Go globstar recursion is not memoized. Define a fixed 50,000,000 Unicode-scalar work-unit budget over the full gate-path and changed-file Cartesian product, preserve validated run-all bypasses and structural precedence, fail with exact CI_GATE_MATCH_LIMIT_EXCEEDED before any matcher call, memoize Go globstar states, add exact-at-limit and over-limit neutral fixtures, and update every current and future CI-gate consumer dependency without adding host or workflow authority."
     },
     {
