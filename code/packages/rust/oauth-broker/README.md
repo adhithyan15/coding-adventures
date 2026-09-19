@@ -174,6 +174,14 @@ identity evidence reaches no credential store. The identity profile must
 already be validated, and concrete policy loading, verification algorithms,
 clock, storage, transport, and waiting remain separate authorities.
 
+The device path can also load the exact static ID-token policy inside that
+composition. The opaque verification context, response, retained nonce,
+registered deployment client, provider, and trace are bound before source or
+later authority access. Policy loading, clock access, credential release,
+identity proof, custody creation, and both composite broker results retain
+separate audit gates. The caller supplies no decoded identity policy, and this
+adds no concrete source, verifier, algorithm, clock, storage, or transport.
+
 That `private_key_jwt` path can also load the exact static ID-token policy
 inside the composition. The retained provider/client/endpoint/algorithm/key
 profile, opaque verification context, and nonce are validated before the

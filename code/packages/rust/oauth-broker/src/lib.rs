@@ -953,6 +953,8 @@ pub enum BrokerAuditAction {
     DeviceCredentialCreate,
     /// Verify OIDC device identity and persist under its derived opaque key.
     OpenIdDeviceVerifiedCredentialCreate,
+    /// Load static identity policy, verify an OIDC device response, and persist.
+    OpenIdDeviceStaticIdentityCredentialCreate,
 }
 
 /// Closed privacy-safe broker result.
@@ -3539,6 +3541,74 @@ impl<S: CredentialStore> OAuthBroker<S> {
         )
     }
 
+    /// Load static identity policy, verify an authorized device response, and store it.
+    ///
+    /// The opaque verification context, authorized response, retained nonce,
+    /// registered deployment client, provider, and trace are bound before the
+    /// injected policy source, clock, credential release, identity authority,
+    /// or credential store can be used. The exact-schema policy remains
+    /// broker-owned and feeds the existing verified device custody path. No
+    /// decoded policy, token evidence, account identity, or storage key is
+    /// caller-selected, and no concrete authority is added.
+    pub fn store_openid_device_authorized_response_with_static_identity<D, V, C, A>(
+        &self,
+        authorized: OpenIdDeviceAuthorizedResponse,
+        context: IdentityVerificationId,
+        source: &mut D,
+        identity_authority: &AuditedAccountIdentityAuthority<V>,
+        clock: &mut C,
+        audit: &mut A,
+    ) -> Result<CredentialRevision, BrokerError>
+    where
+        D: IdentityProviderDataSource,
+        V: AccountIdentityAuthority,
+        C: BrokerClock,
+        A: OAuthOpenIdDeviceVerifiedCredentialBrokerAuditSink,
+    {
+        let provider = authorized.provider().clone();
+        let trace = authorized.trace();
+        publish_broker(
+            audit,
+            &provider,
+            trace,
+            BrokerAuditAction::OpenIdDeviceStaticIdentityCredentialCreate,
+            BrokerAuditOutcome::Attempted,
+        )?;
+        let result = (|| {
+            let client_id = self
+                .registered_provider(&provider)?
+                .config()
+                .client_id()
+                .to_owned();
+            let (response, nonce) = authorized.into_parts();
+            if context.provider() != &provider
+                || response.provider() != &provider
+                || response.trace() != trace
+                || nonce.provider() != &provider
+                || nonce.client_id() != client_id
+                || nonce.trace() != trace
+            {
+                return Err(BrokerError::BindingMismatch);
+            }
+            let identity_profile =
+                self.load_id_token_identity_profile(&provider, context, trace, source, audit)?;
+            self.store_openid_device_authorized_response(
+                OpenIdDeviceAuthorizedResponse { response, nonce },
+                &identity_profile,
+                identity_authority,
+                clock,
+                audit,
+            )
+        })();
+        finish_broker(
+            audit,
+            &provider,
+            trace,
+            BrokerAuditAction::OpenIdDeviceStaticIdentityCredentialCreate,
+            result,
+        )
+    }
+
     /// Advance one caller-timed device flow and persist an authorized response.
     ///
     /// The caller-selected opaque credential key must name the sequence provider
@@ -4789,6 +4859,18 @@ mod tests {
                         BrokerAuditAction::OpenIdDeviceVerifiedCredentialCreate,
                         BrokerAuditOutcome::Failed(_),
                     ) => "openid-device-verified-store-failed",
+                    (
+                        BrokerAuditAction::OpenIdDeviceStaticIdentityCredentialCreate,
+                        BrokerAuditOutcome::Attempted,
+                    ) => "openid-device-static-verified-store-attempted",
+                    (
+                        BrokerAuditAction::OpenIdDeviceStaticIdentityCredentialCreate,
+                        BrokerAuditOutcome::Succeeded,
+                    ) => "openid-device-static-verified-store-succeeded",
+                    (
+                        BrokerAuditAction::OpenIdDeviceStaticIdentityCredentialCreate,
+                        BrokerAuditOutcome::Failed(_),
+                    ) => "openid-device-static-verified-store-failed",
                     (BrokerAuditAction::CredentialCreate, BrokerAuditOutcome::Attempted) => {
                         "credential-create-attempted"
                     }
@@ -12070,6 +12152,175 @@ mod tests {
         assert_eq!(
             audit.broker.last().unwrap().outcome(),
             BrokerAuditOutcome::Failed(BrokerFailureClass::AccountIdentity)
+        );
+    }
+
+    #[test]
+    fn openid_device_static_identity_loads_before_proof_and_opaque_key_storage() {
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        let mut broker = OAuthBroker::new(custody);
+        broker
+            .register_provider(
+                policy("fixture", 300),
+                trace(80),
+                &mut RecordingAudit::default(),
+            )
+            .unwrap();
+        let context = IdentityVerificationId::new(
+            ProviderId::new("fixture").unwrap(),
+            IdentityVerificationReference::new([0x70; 32]),
+        );
+        let order = Rc::new(RefCell::new(Vec::new()));
+        let mut source = MockProviderDataSource::successful(identity_provider_data("fixture"));
+        source.order = Some(Rc::clone(&order));
+        let account = AccountId::new([0x71; 32]);
+        let authority = RecordingDeviceIdentityAuthority::succeeds(account);
+        let authority_inspection = authority.clone();
+        let verifier = AuditedAccountIdentityAuthority::from_audited_authority(authority);
+        let credential_key = CredentialKey::new(ProviderId::new("fixture").unwrap(), account);
+        let mut clock = CountingClock {
+            now: 1_000,
+            calls: 0,
+        };
+        let mut audit = RecordingAudit {
+            order: Some(Rc::clone(&order)),
+            ..RecordingAudit::default()
+        };
+
+        let revision = broker
+            .store_openid_device_authorized_response_with_static_identity(
+                authorized_openid_device_response(&broker, trace(80), true),
+                context,
+                &mut source,
+                &verifier,
+                &mut clock,
+                &mut audit,
+            )
+            .unwrap();
+
+        assert_eq!(source.calls, 1);
+        assert_eq!(source.requested, [ProviderId::new("fixture").unwrap()]);
+        assert_eq!(clock.calls, 1);
+        assert_eq!(authority_inspection.calls.load(Ordering::SeqCst), 1);
+        assert!(!format!("{revision:?}").contains("device-verified-access"));
+        assert_eq!(
+            order.borrow().as_slice(),
+            [
+                "openid-device-static-verified-store-attempted",
+                "identity-load-attempted",
+                "identity-source-read",
+                "identity-load-succeeded",
+                "openid-device-verified-store-attempted",
+                "identity-attempted",
+                "identity-succeeded",
+                "credential-store-attempted",
+                "credential-store-succeeded",
+                "openid-device-verified-store-succeeded",
+                "openid-device-static-verified-store-succeeded",
+            ]
+        );
+        let access = broker
+            .with_access_token(
+                &credential_key,
+                trace(80),
+                &mut FixedClock(1_001),
+                &mut MockTransport::new("device-verified-refresh", &[]),
+                &mut RecordingAudit::default(),
+                str::to_owned,
+            )
+            .unwrap();
+        assert_eq!(access, "device-verified-access");
+    }
+
+    #[test]
+    fn openid_device_static_identity_binding_and_source_fail_before_later_effects() {
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        let mut broker = OAuthBroker::new(custody);
+        broker
+            .register_provider(
+                policy("fixture", 300),
+                trace(81),
+                &mut RecordingAudit::default(),
+            )
+            .unwrap();
+        let order = Rc::new(RefCell::new(Vec::new()));
+        let mut source = MockProviderDataSource::successful(identity_provider_data("fixture"));
+        source.order = Some(Rc::clone(&order));
+        let authority = RecordingDeviceIdentityAuthority::succeeds(AccountId::new([0x72; 32]));
+        let authority_inspection = authority.clone();
+        let verifier = AuditedAccountIdentityAuthority::from_audited_authority(authority);
+        let mut clock = CountingClock {
+            now: 1_000,
+            calls: 0,
+        };
+        let mut audit = RecordingAudit {
+            order: Some(Rc::clone(&order)),
+            ..RecordingAudit::default()
+        };
+        let wrong_context = IdentityVerificationId::new(
+            ProviderId::new("other").unwrap(),
+            IdentityVerificationReference::new([0x73; 32]),
+        );
+
+        assert!(matches!(
+            broker.store_openid_device_authorized_response_with_static_identity(
+                authorized_openid_device_response(&broker, trace(81), true),
+                wrong_context,
+                &mut source,
+                &verifier,
+                &mut clock,
+                &mut audit,
+            ),
+            Err(BrokerError::BindingMismatch)
+        ));
+        assert_eq!(source.calls, 0);
+        assert_eq!(clock.calls, 0);
+        assert_eq!(authority_inspection.calls.load(Ordering::SeqCst), 0);
+        assert!(audit.oauth.is_empty());
+        assert!(audit.identity.is_empty());
+        assert!(audit.custody.is_empty());
+        assert_eq!(
+            order.borrow().as_slice(),
+            [
+                "openid-device-static-verified-store-attempted",
+                "openid-device-static-verified-store-failed",
+            ]
+        );
+
+        let context = IdentityVerificationId::new(
+            ProviderId::new("fixture").unwrap(),
+            IdentityVerificationReference::new([0x74; 32]),
+        );
+        let mut failed_source = MockProviderDataSource::failed();
+        failed_source.order = Some(Rc::clone(&order));
+        order.borrow_mut().clear();
+
+        assert!(matches!(
+            broker.store_openid_device_authorized_response_with_static_identity(
+                authorized_openid_device_response(&broker, trace(82), true),
+                context,
+                &mut failed_source,
+                &verifier,
+                &mut clock,
+                &mut audit,
+            ),
+            Err(BrokerError::ProviderDataSource)
+        ));
+        assert_eq!(failed_source.calls, 1);
+        assert_eq!(clock.calls, 0);
+        assert_eq!(authority_inspection.calls.load(Ordering::SeqCst), 0);
+        assert!(audit.oauth.is_empty());
+        assert!(audit.identity.is_empty());
+        assert!(audit.custody.is_empty());
+        assert_eq!(
+            order.borrow().as_slice(),
+            [
+                "openid-device-static-verified-store-attempted",
+                "identity-load-attempted",
+                "identity-source-read",
+                "identity-load-failed",
+                "openid-device-static-verified-store-failed",
+            ]
         );
     }
 
