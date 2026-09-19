@@ -4,7 +4,7 @@
   "chapter": 99,
   "title": "Songs and Stories",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0e0e077a4fef0f0b",
+  "sourceHash": "fnv1a64:dfaddc51117e4716",
   "lessons": [
     {
       "id": "ML-C99-paattu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:14c5f7e7db96280b",
+      "sourceHash": "fnv1a64:b6592af8832795ad",
       "notice": null,
       "blocks": [
         {
@@ -72,7 +72,7 @@
               "columns": 2,
               "rowCount": 2,
               "utterances": [
-                "word: നല്ലത്. joined to ആണ്: നല്ലതാണ് (nallathāṇŭ).",
+                "word: നല്ലത്. joined to ആണ്: നല്ലതാണ് (nallatāṇŭ).",
                 "word: പാട്ട് (pāṭṭŭ). joined to ആണ്: പാട്ടാണ് (pāṭṭāṇŭ)."
               ]
             },
@@ -114,11 +114,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "nallathāṇŭ, then pāṭṭāṇŭ, and hear that neither gains a letter",
+              "instruction": "nallatāṇŭ, then pāṭṭāṇŭ, and hear that neither gains a letter",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *nallathāṇŭ*, then *pāṭṭāṇŭ*, and hear that neither gains a letter]"
+              "source": "[YOU SAY: *nallatāṇŭ*, then *pāṭṭāṇŭ*, and hear that neither gains a letter]"
             }
           ]
         },

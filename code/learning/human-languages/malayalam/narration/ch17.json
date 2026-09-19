@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Noon and Midnight",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:1ef29e819884f2c4",
+  "sourceHash": "fnv1a64:bf7f70180a9c5dff",
   "lessons": [
     {
       "id": "ML-C17-ucha-paathira",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f42308e749d53e71",
+      "sourceHash": "fnv1a64:e22e1929c765bf66",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ഉച്ച (ucha) = \"noon, midday\" — and unlike Kannada's madhyāhna or Telugu's madhyāhnam, this is not a madhya (\"middle\") compound at all. It most likely shares its root with Tamil உச்சி (ucci, \"crown of the head, peak, summit, zenith\") and Kannada's own ಉಚ್ಚಿ (ucci). Here's the honest twist: per Wiktionary, that whole ucci family across Tamil and Kannada is itself documented as a Sanskrit borrowing, from उच्च (ucca, \"high\"). Malayalam's own ucha has no fully documented etymology yet, so treat the connection as likely rather than settled — but if it holds, this isn't a case of Malayalam avoiding Sanskrit at all. It's Malayalam reaching for a different Sanskrit root than its neighbors: ucca (\"high\") instead of madhya (\"middle\"). Noon becomes \"the sun at its peak\" rather than \"the middle of the day\" — the same zenith-based idea inside Arabic's aẓ-ẓuhr (from a root meaning \"to appear, become visible/apex\"), just arrived at from Sanskrit rather than Arabic."
+              "text": "ഉച്ച (ucca) = \"noon, midday\" — and unlike Kannada's madhyāhna or Telugu's madhyāhnam, this is not a madhya (\"middle\") compound at all. It most likely shares its root with Tamil உச்சி (ucci, \"crown of the head, peak, summit, zenith\") and Kannada's own ಉಚ್ಚಿ (ucci). Here's the honest twist: per Wiktionary, that whole ucci family across Tamil and Kannada is itself documented as a Sanskrit borrowing, from उच्च (ucca, \"high\"). Malayalam's own ucca has no fully documented etymology yet, so treat the connection as likely rather than settled — but if it holds, this isn't a case of Malayalam avoiding Sanskrit at all. It's Malayalam reaching for a different Sanskrit root than its neighbors: ucca (\"high\") instead of madhya (\"middle\"). Noon becomes \"the sun at its peak\" rather than \"the middle of the day\" — the same zenith-based idea inside Arabic's aẓ-ẓuhr (from a root meaning \"to appear, become visible/apex\"), just arrived at from Sanskrit rather than Arabic."
             }
           ]
         },
@@ -75,11 +75,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ucha\" — noon, \"the peak\" — compare Tamil's \"ucci\"",
+              "instruction": "\"ucca\" — noon, \"the peak\" — compare Tamil's \"ucci\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ucha\" — noon, \"the peak\" — compare Tamil's \"ucci\"]"
+              "source": "[YOU SAY: \"ucca\" — noon, \"the peak\" — compare Tamil's \"ucci\"]"
             },
             {
               "kind": "prompt",
@@ -123,9 +123,9 @@
     {
       "id": "ML-C17-paathira",
       "sequence": 460,
-      "title": "പാതിരാ (pāthirā) — midnight as “half-night”",
+      "title": "പാതിരാ (pātirā) — midnight as “half-night”",
       "headword": "പാതിരാ",
-      "romanization": "pāthirā",
+      "romanization": "pātirā",
       "gloss": "midnight, built on Malayalam paathi \"half\" rather than Sanskrit ardha",
       "script": "malayalam",
       "modality": "voice",
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4f2cfa27a8650569",
+      "sourceHash": "fnv1a64:64cab8e531a34f85",
       "notice": null,
       "blocks": [
         {
@@ -160,7 +160,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "പാതിരാ (pāthirā) (paathira) means “midnight.” It is built on പാതി (paathi), the everyday Malayalam word for “half”—as in paathi vila, “half price”—fused with a shortened form of “night.”"
+              "text": "പാതിരാ (pātirā) means “midnight.” It is built on പാതി (paathi), the everyday Malayalam word for “half”—as in paathi vila, “half price”—fused with a shortened form of “night.”"
             },
             {
               "kind": "speech",
@@ -186,11 +186,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "paathira — midnight",
+              "instruction": "pātirā — midnight",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *paathira* — midnight]"
+              "source": "[YOU SAY: *pātirā* — midnight]"
             },
             {
               "kind": "prompt",
@@ -234,7 +234,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does പാതിരാ (pāthirā) build on? (പാതി, “half,” plus a shortened night-word.) Is paathi the same root as Telugu ardha? (No. The two languages share the “half-night” logic but use unrelated half-words.)"
+              "text": "What does പാതിരാ (pātirā) build on? (പാതി, “half,” plus a shortened night-word.) Is paathi the same root as Telugu ardha? (No. The two languages share the “half-night” logic but use unrelated half-words.)"
             }
           ]
         }

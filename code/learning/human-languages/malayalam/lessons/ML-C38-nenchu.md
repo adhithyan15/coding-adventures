@@ -7,7 +7,7 @@ chapter: 38
 type: word
 headword: നെഞ്ച്
 gloss: chest — Malayalam's other heart, native this time, and the one everyday idiom reaches for
-romanization: nenchŭ
+romanization: neñcŭ
 concept_tag: ML-CHEST-NATIVE
 prerequisites: [ML-C38-hrudayam, ML-C13-shareera-bhaagangal, ML-C36-kutti]
 sounds: [malayalam-nya, malayalam-chandrakkala]
@@ -29,7 +29,7 @@ variety: standard-colloquial
 reviews_of: [ML-C38-hrudayam, ML-C13-shareera-bhaagangal, ML-C37-vaay]
 ---
 
-# നെഞ്ച് (nenchŭ) — "chest," Malayalam's other heart
+# നെഞ്ച് (neñcŭ) — "chest," Malayalam's other heart
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C38-HRUDAYAM-01] -->
@@ -40,9 +40,9 @@ ancestry. This chapter's second word is none of those three things.
 ## You'll want to know
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C38-NENCHU-01]; assesses=[] -->
 
-> **നെഞ്ച്** — *nenchŭ* — **chest**
+> **നെഞ്ച്** — *neñcŭ* — **chest**
 
-> **എന്റെ നെഞ്ച്.** — *ente nenchŭ.* — "My chest."
+> **എന്റെ നെഞ്ച്.** — *ente neñcŭ.* — "My chest."
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C38-NENCHU-02]; assesses=[ML-CONCEPT-C38-HRUDAYAM-02, ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01] -->
@@ -51,7 +51,7 @@ ancestry. This chapter's second word is none of those three things.
 (*nenju/nenjam*), "chest." Where **ഹൃദയം** names the organ and carries the
 Sanskrit-flavoured abstraction — a "heartfelt" thank-you, a broken heart in
 the literary sense — **നെഞ്ച്** is the word everyday idiom actually reaches
-for: **നെഞ്ചിടിപ്പ്** (*nenchiṭippŭ*), a heart pounding from fear or
+for: **നെഞ്ചിടിപ്പ്** (*neñciṭippŭ*), a heart pounding from fear or
 excitement, literally "chest-beat."
 
 Two hearts, then: one Sanskrit and formal, one native and physical. That is
@@ -67,19 +67,19 @@ carrying one word of each kind, side by side.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C38-NENCHU-01, ML-CONCEPT-C38-NENCHU-02, ML-CONCEPT-C38-HRUDAYAM-01, ML-CONCEPT-C38-HRUDAYAM-02, ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01, ML-CONCEPT-C37-VAAY-01, ML-CONCEPT-C37-VAAY-02, ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "ente nenchŭ" — my chest]
-- [YOU SAY: two hearts — "hṛdayaṁ," formal; "nenchŭ," everyday]
-- [YOU SAY: the idiom — "nenchiṭippŭ" — chest-beat, a pounding heart]
-- [YOU SAY: thala, kai, hṛdayaṁ, nenchŭ — the body words so far]
+- [YOU SAY: "ente neñcŭ" — my chest]
+- [YOU SAY: two hearts — "hṛdayaṁ," formal; "neñcŭ," everyday]
+- [YOU SAY: the idiom — "neñciṭippŭ" — chest-beat, a pounding heart]
+- [YOU SAY: tala, kai, hṛdayaṁ, neñcŭ — the body words so far]
 - [YOU SAY: mouth, once more — "vāy"]
 - [YOU RECALL: read **കുട്ടി**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C38-NENCHU-01, ML-CONCEPT-C38-NENCHU-02, ML-CONCEPT-C38-HRUDAYAM-01, ML-CONCEPT-C38-HRUDAYAM-02, ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01, ML-CONCEPT-C37-VAAY-01, ML-CONCEPT-C37-VAAY-02] -->
 
-[PAUSE 3s] Say "my chest." (*Ente nenchŭ*.) Which of this chapter's two
+[PAUSE 3s] Say "my chest." (*Ente neñcŭ*.) Which of this chapter's two
 heart-words is native, and which is borrowed? (**നെഞ്ച്** native; **ഹൃദയം**
-Sanskrit.) What does *nenchiṭippŭ* mean, literally? (**"Chest-beat"** — a
+Sanskrit.) What does *neñciṭippŭ* mean, literally? (**"Chest-beat"** — a
 pounding heart.) Which earlier pair showed this same native-plus-Sanskrit
 side-by-side pattern? (**സന്തോഷം beside നന്ദി**, back near the start of
 this book.)

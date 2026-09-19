@@ -4,7 +4,7 @@
   "chapter": 85,
   "title": "Held Sounds",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6639f8f3a725d25b",
+  "sourceHash": "fnv1a64:a598e0f6ff252623",
   "lessons": [
     {
       "id": "ML-C85-kudikkuka",
@@ -333,7 +333,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:67689d0a3d3a32a8",
+      "sourceHash": "fnv1a64:a342f0494bd1e82c",
       "notice": null,
       "blocks": [
         {
@@ -426,11 +426,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "namaskāram with the weight on its first syllable",
+              "instruction": "namaskāraṁ with the weight on its first syllable",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *namaskāram* with the weight on its first syllable]"
+              "source": "[YOU SAY: *namaskāraṁ* with the weight on its first syllable]"
             },
             {
               "kind": "prompt",

@@ -6,13 +6,13 @@ sequence: 600
 chapter: 28
 type: phrase
 headword: ഉച്ചകഴിഞ്ഞ്
-gloss: "afternoon" (uchakaḻiññ) — a transparent two-word phrase, not a single dictionary headword: ഉച്ച (ML-C17's "noon") + കഴിഞ്ഞ്, the past converb form of കഴിയുക (kaḻiyuka, Wiktionary-confirmed Proto-Dravidian *kaẓi, "to be over, spent") — Wiktionary itself directly shows only the finite past tense കഴിഞ്ഞു (kaḻiññu); the converb form used in this compound is a reasonable grammatical inference, not itself the form Wiktionary lists; literally "noon having passed" — a structurally different strategy than Telugu's, where the SAME noon-word (మధ్యాహ్నం) simply widened its own meaning rather than compounding with a second word
-romanization: "uchakaḻiññ"
+gloss: "afternoon" (uccakaḻiññŭ) — a transparent two-word phrase, not a single dictionary headword: ഉച്ച (ML-C17's "noon") + കഴിഞ്ഞ്, the past converb form of കഴിയുക (kaḻiyuka, Wiktionary-confirmed Proto-Dravidian *kaẓi, "to be over, spent") — Wiktionary itself directly shows only the finite past tense കഴിഞ്ഞു (kaḻiññu); the converb form used in this compound is a reasonable grammatical inference, not itself the form Wiktionary lists; literally "noon having passed" — a structurally different strategy than Telugu's, where the SAME noon-word (మధ్యాహ్నం) simply widened its own meaning rather than compounding with a second word
+romanization: "uccakaḻiññŭ"
 concept_tag: TIME-AFTERNOON
 prerequisites: [ML-C17-paathira, ML-C27-vaikunneram]
 sounds: [malayalam-geminate-cha, malayalam-zha]
 roots: [sanskrit-ucca-high, proto-dravidian-kazi-spent]
-etymology_hook: "ഉച്ചകഴിഞ്ഞ് (uchakaḻiññ, 'afternoon') is a transparent two-word phrase, not a single lexicalized dictionary entry (no Wiktionary page exists for the compound itself) — ഉച്ച (already met, ML-C17, 'noon,' likely from Sanskrit ucca 'high') plus കഴിഞ്ഞ്, the past converb form ('having passed') of കഴിയുക (kaḻiyuka), itself Wiktionary-confirmed as inherited from Proto-Dravidian *kaẓi ('to be over, spent, finished') — note that Wiktionary's own conjugation line shows only the finite past tense കഴിഞ്ഞു (kaḻiññu), not this converb form directly; the converb is the grammatically correct choice for chaining into a compound like this one, but treat the specific written form as the author's own grammatical inference, not a directly Wiktionary-sourced citation; so this phrase literally means 'noon having passed/elapsed' — a transparent, compositional way of naming the afternoon, genuinely different in STRATEGY from Telugu's, where the exact same noon-word (మధ్యాహ్నం) simply widened its own meaning to also cover 'afternoon' rather than reaching for a second word; Malayalam instead keeps 'noon' unwidened and builds a new phrase on top of it"
+etymology_hook: "ഉച്ചകഴിഞ്ഞ് (uccakaḻiññŭ, 'afternoon') is a transparent two-word phrase, not a single lexicalized dictionary entry (no Wiktionary page exists for the compound itself) — ഉച്ച (already met, ML-C17, 'noon,' likely from Sanskrit ucca 'high') plus കഴിഞ്ഞ്, the past converb form ('having passed') of കഴിയുക (kaḻiyuka), itself Wiktionary-confirmed as inherited from Proto-Dravidian *kaẓi ('to be over, spent, finished') — note that Wiktionary's own conjugation line shows only the finite past tense കഴിഞ്ഞു (kaḻiññu), not this converb form directly; the converb is the grammatically correct choice for chaining into a compound like this one, but treat the specific written form as the author's own grammatical inference, not a directly Wiktionary-sourced citation; so this phrase literally means 'noon having passed/elapsed' — a transparent, compositional way of naming the afternoon, genuinely different in STRATEGY from Telugu's, where the exact same noon-word (మధ్యాహ్నం) simply widened its own meaning to also cover 'afternoon' rather than reaching for a second word; Malayalam instead keeps 'noon' unwidened and builds a new phrase on top of it"
 duration:
   max_seconds: 260
 requires:
@@ -29,7 +29,7 @@ variety: standard-colloquial
 reviews_of: [ML-C17-paathira, ML-C17-ucha-paathira, ML-C27-vaikunneram]
 ---
 
-# ഉച്ചകഴിഞ്ഞ് (uchakaḻiññ) — "noon, having passed"
+# ഉച്ചകഴിഞ്ഞ് (uccakaḻiññŭ) — "noon, having passed"
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -41,7 +41,7 @@ different strategy: it builds a new phrase instead.
 ## You'll want to know
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C28-UCHAKAZHINJU-01]; assesses=[] -->
 
-**ഉച്ചകഴിഞ്ഞ്** (**uchakaḻiññ**) — "**afternoon**" — is a
+**ഉച്ചകഴിഞ്ഞ്** (**uccakaḻiññŭ**) — "**afternoon**" — is a
 transparent **two-word phrase**, not a single dictionary headword (no
 Wiktionary entry exists for the compound as a whole). It's built from
 **ഉച്ച** (already met, Chapter 17, "**noon**") plus **കഴിഞ്ഞ്**,
@@ -74,7 +74,7 @@ compositional phrase-building in Malayalam.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C28-UCHAKAZHINJU-01, ML-CONCEPT-C28-UCHAKAZHINJU-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "uchakaḻiññ" — "afternoon," literally "noon having passed"]
+- [YOU SAY: "uccakaḻiññŭ" — "afternoon," literally "noon having passed"]
 - [YOU SAY: the verb behind it — kaḻiyuka, "to be over, spent" —
   Proto-Dravidian *kaẓi]
 - [YOU SAY: the honest contrast — Telugu widens the same noon-word;

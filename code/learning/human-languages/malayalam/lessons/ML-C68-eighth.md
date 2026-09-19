@@ -48,7 +48,7 @@ reviews_of: [ML-C68-seventh, ML-C67-third, ML-C64-sometimes, ML-C52-kolam]
 virama between them. The ending lands after all of that, so the stack is
 untouched: **എട്ടാം**.
 
-**എട്ടാം ദിവസം** (*eṭṭāṁ divasam*), the eighth day.
+**എട്ടാം ദിവസം** (*eṭṭāṁ divasaṁ*), the eighth day.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C68-ORDINAL-03, ML-LEX-C68-ORDINAL-02] -->

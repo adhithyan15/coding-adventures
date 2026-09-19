@@ -71,7 +71,7 @@ Proto-Dravidian root, three different landing points.
 ## Grammar Lens: the stretch this chapter closes
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C40-OON-03]; assesses=[ML-CONCEPT-C09-KSHAMIKKANAM-01, ML-CONCEPT-C09-KSHAMIKKANAM-02, ML-CONCEPT-C09-KSHAMIKKANAM-03, ML-CONCEPT-C06-DATIVE-IKKU-01, ML-CONCEPT-C06-DATIVE-IKKU-02, ML-CONCEPT-C06-DATIVE-SUBJECT-03] -->
 
-**എനിക്ക് ഊണ് ഇഷ്ടമാണ്.** — *enikku ūṇ iṣṭamāṇŭ.* — "I like having a
+**എനിക്ക് ഊണ് ഇഷ്ടമാണ്.** — *enikkŭ ūṇ iṣṭamāṇŭ.* — "I like having a
 meal" — the familiar dative **‑ikku**, the *iṣṭaṁ* liking-frame, one more
 turn of the same machine.
 
@@ -87,9 +87,9 @@ this book.
 [PAUSE 1s]
 - [YOU SAY: "ñān ūṇ uṇṇunnu" — I am having a meal]
 - [YOU SAY: everyday against a proper meal — "tinnunnu … uṇṇunnu"]
-- [YOU SAY: "enikku ūṇ iṣṭamāṇŭ" — I like having a meal]
+- [YOU SAY: "enikkŭ ūṇ iṣṭamāṇŭ" — I like having a meal]
 - [YOU SAY: ask, then repair — "dayavāyi … kṣamikkaṇaṁ"]
-- [YOU SAY: this chapter's three drinks and its meal — "chāya, kāppi,
+- [YOU SAY: this chapter's three drinks and its meal — "cāya, kāppi,
   pāl … ūṇ"]
 
 ## Wrap-up Recall

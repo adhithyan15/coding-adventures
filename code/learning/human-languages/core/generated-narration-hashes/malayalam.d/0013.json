@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 13,
-  "sourceHash": "fnv1a64:4ea7b102499b66cd",
+  "sourceHash": "fnv1a64:e6cdbf4b21a11350",
   "lessonIds": [
     "ML-C13-shareera-bhaagangal",
     "ML-S08-letter-ta",
@@ -11,7 +11,7 @@
   "drivablePrefix": 1,
   "text": "malayalam/narration/ch13.txt",
   "json": "malayalam/narration/ch13.json",
-  "textHash": "fnv1a64:629a230fea017dd5",
-  "jsonHash": "fnv1a64:9ab9c4ca8a460a64",
+  "textHash": "fnv1a64:9fd8fef6ae98db21",
+  "jsonHash": "fnv1a64:420f24b07999ad1a",
   "findings": []
 }

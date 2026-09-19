@@ -81,13 +81,13 @@ Lesson 3 of 4.
 
 Warm-up.
 [pause 2 seconds]
-Say enikku malayāḷaṁ aṟiyāṁ. Say which word in it means I, and what shape that word is in.
+Say enikkŭ malayāḷaṁ aṟiyāṁ. Say which word in it means I, and what shape that word is in.
 [pause 2 seconds]
 Today's sentence is built the same way.
 
 You'll want to know.
-എനിക്ക് വായിക്കാൻ കഴിയും. enikku vāyikkāṉ kaḻiyuṁ — "I can read."
-Three pieces, and two of them you already had: enikku, the dative to me that the knowing sentence uses, and vāyikkāṉ, the -ആൻ (-āṉ) form from two pages ago. The new word is കഴിയും (kaḻiyuṁ), and what it says is that the thing is possible.
+എനിക്ക് വായിക്കാൻ കഴിയും. enikkŭ vāyikkāṉ kaḻiyuṁ — "I can read."
+Three pieces, and two of them you already had: enikkŭ, the dative to me that the knowing sentence uses, and vāyikkāṉ, the -ആൻ (-āṉ) form from two pages ago. The new word is കഴിയും (kaḻiyuṁ), and what it says is that the thing is possible.
 Ability arrives at you in Malayalam. It is not something you do. The knowing chapter said this in as many words — knowing arrives, so I leaves the subject slot and turns into to me. Can behaves identically:
 [a table of 2 rows, read aloud]
 എനിക്ക് മലയാളം അറിയാം, Malayalam is known to me.
@@ -103,7 +103,7 @@ Same ending, same swap, two different sentences — and the word after it decide
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: enikku vāyikkāṉ kaḻiyuṁ]
+[your turn — say: enikkŭ vāyikkāṉ kaḻiyuṁ]
 [pause 8 seconds for the answer]
 [your turn — say: the knowing sentence and the can sentence one after the other]
 [pause 8 seconds for the answer]
@@ -128,7 +128,7 @@ Grammar Lens: the swap, and what it buys.
 One swap: -ഉക off, -ആൻ (-āṉ) on, stem untouched.
 [a table of 2 rows, read aloud]
 what follows the -ആൻ (-āṉ) form: a verb that happened. what the sentence says: in order to — vāyikkāṉ pōkunnu.
-what follows the -ആൻ (-āṉ) form: കഴിയും. what the sentence says: can — enikku vāyikkāṉ kaḻiyuṁ.
+what follows the -ആൻ (-āṉ) form: കഴിയും. what the sentence says: can — enikkŭ vāyikkāṉ kaḻiyuṁ.
 Two sentences from one ending, and the word after it decides which. Neither needed a new verb: every verb in this chapter came out of the reading and going chapters, and the only genuinely new word is kaḻiyuṁ.
 The ability sentence also puts the person in the dative, the way the knowing sentence does. That is the second time this language has said the same thing: some things are done by you, and some arrive at you — and it marks which is which rather than leaving you to guess.
 
@@ -138,7 +138,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: ñān vāyikkāṉ pōkunnu]
 [pause 8 seconds for the answer]
-[your turn — say: enikku vāyikkāṉ kaḻiyuṁ]
+[your turn — say: enikkŭ vāyikkāṉ kaḻiyuṁ]
 [pause 8 seconds for the answer]
 [your turn — say: which of those two has the person in the dative, and why]
 [pause 8 seconds for the answer]

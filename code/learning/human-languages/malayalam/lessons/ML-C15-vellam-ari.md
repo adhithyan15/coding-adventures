@@ -7,7 +7,7 @@ chapter: 15
 type: word
 headword: വെള്ളം അരി ചോറ്
 gloss: water (a genuinely DIFFERENT word than Tamil's), and rice raw/cooked, closely matching Tamil
-romanization: "veḷḷaṁ ari cōṟu"
+romanization: "veḷḷaṁ ari cōṟŭ"
 concept_tag: ML-FOOD-BASIC
 prerequisites: [ML-C14-kaalangal, ML-C10-azhcha]
 sounds: [malayalam-geminate-lla, malayalam-vowel-sign-oo]
@@ -58,10 +58,10 @@ Rice, though, tells the familiar story:
 
 - **അരി** (*ari*) = "**rice**" (raw grain) — closely matching Tamil
   *arisi*.
-- **ചോറ്** (*cōṟu*) = "**cooked rice**" (the meal) — and here Malayalam
+- **ചോറ്** (*cōṟŭ*) = "**cooked rice**" (the meal) — and here Malayalam
   actually **does** have a Tamil cognate: Tamil keeps its own native
-  **சோறு** (also *cōṟu*), used alongside the Sanskrit-influenced *sātam*
-  as an everyday near-synonym. Malayalam simply made *cōṟu* its main
+  **சோறு** (also *cōṟŭ*), used alongside the Sanskrit-influenced *sātam*
+  as an everyday near-synonym. Malayalam simply made *cōṟŭ* its main
   word, where Tamil more often reaches for *sātam*.
 
 ## Guided Practice
@@ -70,8 +70,8 @@ Rice, though, tells the familiar story:
 [PAUSE 1s]
 - [YOU SAY: "veḷḷam" — water, NOT matching Tamil's neer]
 - [YOU SAY: "ari" — raw rice, matching Tamil closely]
-- [YOU SAY: "cōṟu" — cooked rice, Malayalam's own word]
-- [YOU RECALL: say *thiṅkaḷ covva budhan vyāzham veḷḷi śani ñāyar*]
+- [YOU SAY: "cōṟŭ" — cooked rice, Malayalam's own word]
+- [YOU RECALL: say *tiṅkaḷ covva budhan vyāzham veḷḷi śani ñāyar*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C15-VELLAM-ARI-01, ML-CONCEPT-C15-VELLAM-ARI-02] -->

@@ -4,22 +4,22 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:638007ae544a603b",
+  "sourceHash": "fnv1a64:b5326ea2803b28c4",
   "lessons": [
     {
       "id": "ML-C01-namaskaram",
       "sequence": 10,
       "title": "Namaskaram — first hear the greeting",
       "headword": "നമസ്കാരം",
-      "romanization": "namaskāram",
-      "gloss": "hello / greetings (namaskāram — a making of a bow)",
+      "romanization": "namaskāraṁ",
+      "gloss": "hello / greetings (namaskāraṁ — a making of a bow)",
       "script": "malayalam",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6b56c93a95ecb6be",
+      "sourceHash": "fnv1a64:8595dbf11a09d412",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Imagine meeting someone with your palms together and a small bow. First, only listen: namaskāram."
+              "text": "Imagine meeting someone with your palms together and a small bow. First, only listen: namaskāraṁ."
             }
           ]
         },
@@ -77,8 +77,8 @@
               "columns": 3,
               "rowCount": 5,
               "utterances": [
-                "Language: Malayalam. \"Hello\": namaskāram. Source: Sanskrit.",
-                "Language: Telugu. \"Hello\": namaskāram. Source: Sanskrit.",
+                "Language: Malayalam. \"Hello\": namaskāraṁ. Source: Sanskrit.",
+                "Language: Telugu. \"Hello\": namaskāraṁ. Source: Sanskrit.",
                 "Language: Kannada. \"Hello\": namaskāra. Source: Sanskrit.",
                 "Language: Hindi. \"Hello\": namaste. Source: Sanskrit.",
                 "Language: Tamil. \"Hello\": vaṇakkam. Source: native Dravidian."
@@ -98,11 +98,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "namaskāram once as a greeting",
+              "instruction": "namaskāraṁ once as a greeting",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *namaskāram* once as a greeting]"
+              "source": "[YOU SAY: *namaskāraṁ* once as a greeting]"
             },
             {
               "kind": "prompt",
@@ -158,7 +158,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d2f5d736a6a7c30f",
+      "sourceHash": "fnv1a64:8f37d77647472797",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -184,7 +184,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say na-ma — the first two beats of namaskāram. Your hand meets only those two familiar sounds today."
+              "text": "Say na-ma — the first two beats of namaskāraṁ. Your hand meets only those two familiar sounds today."
             }
           ]
         },
@@ -640,9 +640,9 @@
     {
       "id": "ML-W01-namaskaram-read",
       "sequence": 17,
-      "title": "നമസ്കാരം (namaskāram) — every shape is already yours",
+      "title": "നമസ്കാരം (namaskāraṁ) — every shape is already yours",
       "headword": "നമസ്കാരം",
-      "romanization": "namaskāram",
+      "romanization": "namaskāraṁ",
       "gloss": "assemble and read the known greeting with no new shape",
       "script": "malayalam",
       "modality": "pen",
@@ -652,7 +652,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:798422534f54186b",
+      "sourceHash": "fnv1a64:0dde53fdb51a89ad",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -678,7 +678,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say namaskāram. Now the written greeting may appear: it contains no unfamiliar shape."
+              "text": "Say namaskāraṁ. Now the written greeting may appear: it contains no unfamiliar shape."
             }
           ]
         },
@@ -689,7 +689,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ന + മ + സ + ് + ക + ാ + ര + ം becomes നമസ്കാരം (namaskāram)."
+              "text": "ന + മ + സ + ് + ക + ാ + ര + ം becomes നമസ്കാരം (namaskāraṁ)."
             },
             {
               "kind": "speech",
@@ -709,7 +709,7 @@
             },
             {
               "kind": "speech",
-              "text": "Together: നമസ്കാരം, namaskāram. The conjunct സ്ക is still just സ with its vowel removed by ്, joined to ക."
+              "text": "Together: നമസ്കാരം, namaskāraṁ. The conjunct സ്ക is still just സ with its vowel removed by ്, joined to ക."
             }
           ]
         },
@@ -720,7 +720,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Keep നമസ്കാരം (namaskāram) visible and copy it once in the three groups above. Look back whenever needed. Independent production waits for the next tiny lesson."
+              "text": "Keep നമസ്കാരം (namaskāraṁ) visible and copy it once in the three groups above. Look back whenever needed. Independent production waits for the next tiny lesson."
             }
           ]
         },
@@ -737,7 +737,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read നമസ്കാരം (namaskāram). How many new shapes did this lesson add? (None.) What does the greeting literally evoke? (The making of a bow.)"
+              "text": "Read നമസ്കാരം (namaskāraṁ). How many new shapes did this lesson add? (None.) What does the greeting literally evoke? (The making of a bow.)"
             }
           ]
         }
@@ -748,7 +748,7 @@
       "sequence": 18,
       "title": "One heard greeting — write the whole",
       "headword": "നമസ്കാരം",
-      "romanization": "namaskāram",
+      "romanization": "namaskāraṁ",
       "gloss": "write the complete known greeting from sound alone",
       "script": "malayalam",
       "modality": "pen",
@@ -757,7 +757,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:336d7d27b37f5be5",
+      "sourceHash": "fnv1a64:df5df2b308574853",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -786,15 +786,15 @@
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "namaskāram — “greetings”",
+              "instruction": "namaskāraṁ — “greetings”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *namaskāram* — “greetings”]"
+              "source": "[YOU HEAR: *namaskāraṁ* — “greetings”]"
             },
             {
               "kind": "speech",
-              "text": "Write the greeting from sound alone. Use the three remembered groups: na-ma, ska, ā-ram. Then uncover and compare: നമസ്കാരം (namaskāram). Repair one group if needed; do not rewrite the whole word."
+              "text": "Write the greeting from sound alone. Use the three remembered groups: na-ma, ska, ā-ram. Then uncover and compare: നമസ്കാരം (namaskāraṁ). Repair one group if needed; do not rewrite the whole word."
             }
           ]
         },
@@ -1005,7 +1005,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:789a1a73c37f04c4",
+      "sourceHash": "fnv1a64:be347c77bc888334",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1068,7 +1068,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "അതെ (athe) is native Malayalam, and it grows from അത് (athu), \"that.\" To say \"yes,\" Malayalam essentially says \"that [is so]\" — you affirm by pointing at the truth of what was said. Its natural partner is the negative alla, \"[it is] not that\" — the next lesson."
+              "text": "അതെ (athe) is native Malayalam, and it grows from അത് (atŭ), \"that.\" To say \"yes,\" Malayalam essentially says \"that [is so]\" — you affirm by pointing at the truth of what was said. Its natural partner is the negative alla, \"[it is] not that\" — the next lesson."
             }
           ]
         },
@@ -1124,11 +1124,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say namaskāram",
+              "instruction": "say namaskāraṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *namaskāram*]"
+              "source": "[YOU RECALL: say *namaskāraṁ*]"
             }
           ]
         },
@@ -1145,7 +1145,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read അതെ (athe). What everyday word is it built from, and so what does \"yes\" literally assert? (athu, \"that\" — so \"yes\" = \"that [is so]\".) Where does the \"e\" vowel sign sit, and where is it read? (Written before the consonant, read after.)"
+              "text": "Read അതെ (athe). What everyday word is it built from, and so what does \"yes\" literally assert? (atŭ, \"that\" — so \"yes\" = \"that [is so]\".) Where does the \"e\" vowel sign sit, and where is it read? (Written before the consonant, read after.)"
             }
           ]
         }
@@ -1193,7 +1193,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: നമസ്കാരം (namaskāram) — can you still read it back?"
+              "text": "Before the new one: നമസ്കാരം (namaskāraṁ) — can you still read it back?"
             },
             {
               "kind": "pause",
@@ -1271,7 +1271,7 @@
             },
             {
               "kind": "speech",
-              "text": "അതെ (athe), നന്ദി (nandi), നമസ്കാരം (namaskāram)."
+              "text": "അതെ (athe), നന്ദി (nandi), നമസ്കാരം (namaskāraṁ)."
             },
             {
               "kind": "prompt",
@@ -1486,9 +1486,9 @@
     {
       "id": "ML-C01-sari",
       "sequence": 50,
-      "title": "ശരി (sari) (śari) — \"okay,\" the whole-family word once more",
+      "title": "ശരി (śari) — \"okay,\" the whole-family word once more",
       "headword": "ശരി",
-      "romanization": "sari",
+      "romanization": "śari",
       "gloss": "okay / alright / correct (śari)",
       "script": "malayalam",
       "modality": "sight",
@@ -1496,7 +1496,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:752b6a899f1ff0b0",
+      "sourceHash": "fnv1a64:5d77ce2b9df68dbf",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1548,7 +1548,7 @@
             },
             {
               "kind": "speech",
-              "text": "ശരി (sari) = śari = \"okay / correct.\""
+              "text": "ശരി = śari = \"okay / correct.\""
             }
           ]
         },
@@ -1627,7 +1627,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read ശരി. What does it mean, and how do its Tamil, Kannada, and Telugu twins sound? (\"Okay, correct\"; sari, sari, sarē.) Why does Malayalam keep a separate ശ (ś) letter where Tamil uses one all-purpose sibilant? (It borrowed heavily from Sanskrit and kept Sanskrit's sibilant letters.)"
+              "text": "Read ശരി (śari). What does it mean, and how do its Tamil, Kannada, and Telugu twins sound? (\"Okay, correct\"; sari, sari, sarē.) Why does Malayalam keep a separate ശ (ś) letter where Tamil uses one all-purpose sibilant? (It borrowed heavily from Sanskrit and kept Sanskrit's sibilant letters.)"
             }
           ]
         }
@@ -1649,7 +1649,7 @@
         "sight-cue",
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:a059bb7bfe4b3790",
+      "sourceHash": "fnv1a64:d1f7af014669fdd8",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1738,20 +1738,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all five — namaskāram, nandi, athe, illa, śari",
+              "instruction": "all five — namaskāraṁ, nandi, athe, illa, śari",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all five — namaskāram · nandi · athe · illa · śari]"
+              "source": "[YOU SAY: all five — namaskāraṁ · nandi · athe · illa · śari]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "greet and thank — \"namaskāram!\" … \"nandi.\"",
+              "instruction": "greet and thank — \"namaskāraṁ!\" … \"nandi.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: greet and thank — \"namaskāram!\" … \"nandi.\"]"
+              "source": "[YOU SAY: greet and thank — \"namaskāraṁ!\" … \"nandi.\"]"
             }
           ]
         },
@@ -1762,7 +1762,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hide the model. Hear namaskāram once, write നമസ്കാരം, then uncover the word in the table and check one group at a time: നമ (na-ma), സ്ക, ാരം. A mismatch is a signal to repeat the earlier two-minute shape lesson, not to push faster."
+              "text": "Hide the model. Hear namaskāraṁ once, write നമസ്കാരം, then uncover the word in the table and check one group at a time: നമ (na-ma), സ്ക, ാരം. A mismatch is a signal to repeat the earlier two-minute shape lesson, not to push faster."
             }
           ]
         },
@@ -1809,7 +1809,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read all five aloud. Which one is Sanskrit, and which four are native Dravidian shared with Tamil? (Sanskrit: namaskāram. Native: nandi, athe, illa, śari.) Which word can mean both \"okay\" and a casual sign-off? (śari.)"
+              "text": "Read all five aloud. Which one is Sanskrit, and which four are native Dravidian shared with Tamil? (Sanskrit: namaskāraṁ. Native: nandi, athe, illa, śari.) Which word can mean both \"okay\" and a casual sign-off? (śari.)"
             },
             {
               "kind": "speech",

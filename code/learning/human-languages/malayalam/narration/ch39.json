@@ -4,14 +4,14 @@
   "chapter": 39,
   "title": "Tea, Coffee, Milk",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:035e607a8eb1d324",
+  "sourceHash": "fnv1a64:3724b8aa2ab7a37b",
   "lessons": [
     {
       "id": "ML-C39-chaaya",
       "sequence": 900,
-      "title": "ചായ (chaaya) (chāya) — \"tea,\" which walked to Kerala rather than sailed",
+      "title": "ചായ (cāya) — \"tea,\" which walked to Kerala rather than sailed",
       "headword": "ചായ",
-      "romanization": "chaaya",
+      "romanization": "cāya",
       "gloss": "tea — Chinese, carried overland through Persian and Hindi before it ever reached Kerala",
       "script": "malayalam",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e90f647d97f1ec95",
+      "sourceHash": "fnv1a64:7bc934ede2bc9202",
       "notice": null,
       "blocks": [
         {
@@ -46,11 +46,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ചായ (chaaya) — chāya — tea."
+              "text": "ചായ — cāya — tea."
             },
             {
               "kind": "speech",
-              "text": "ദയവായി ഒരു ചായ (chaaya). — dayavāyi oru chāya. — \"A tea, please.\""
+              "text": "ദയവായി ഒരു ചായ. — dayavāyi oru cāya. — \"A tea, please.\""
             },
             {
               "kind": "speech",
@@ -65,7 +65,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ചായ (chaaya) traces to Northern Chinese chá, carried overland along Central Asian trade routes into Persian چای (chāy), and from there into Hindi-Urdu chāy and Malayalam chāya alike — the same land route most of North and South India took for their word for tea. Tea that instead reached Europe by sea kept a different, southern Chinese form, which is why English says tea and French says thé — one leaf, two roads: chai by land, tea by sea."
+              "text": "ചായ traces to Northern Chinese chá, carried overland along Central Asian trade routes into Persian چای (chāy), and from there into Hindi-Urdu chāy and Malayalam cāya alike — the same land route most of North and South India took for their word for tea. Tea that instead reached Europe by sea kept a different, southern Chinese form, which is why English says tea and French says thé — one leaf, two roads: chai by land, tea by sea."
             }
           ]
         },
@@ -76,7 +76,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ദയവായി ഒരു ചായ (chaaya) leans on the very dative already named, ‑ikku/‑inu — the same suffix beside Tamil's ‑ukku, Telugu's ‑ku, and Kannada's ‑ge. This chapter carries both halves of the spine node ദയവായി and ഹൃദയം/നെഞ്ച് already opened: asking politely, and — if you ask for the wrong thing — repairing with ക്ഷമിക്കണം."
+              "text": "ദയവായി ഒരു ചായ (cāya) leans on the very dative already named, ‑ikku/‑inu — the same suffix beside Tamil's ‑ukku, Telugu's ‑ku, and Kannada's ‑ge. This chapter carries both halves of the spine node ദയവായി and ഹൃദയം/നെഞ്ച് already opened: asking politely, and — if you ask for the wrong thing — repairing with ക്ഷമിക്കണം."
             }
           ]
         },
@@ -94,20 +94,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"dayavāyi oru chāya\" — a tea, please",
+              "instruction": "\"dayavāyi oru cāya\" — a tea, please",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"dayavāyi oru chāya\" — a tea, please]"
+              "source": "[YOU SAY: \"dayavāyi oru cāya\" — a tea, please]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the road — \"chá … chāy … chāya\"",
+              "instruction": "the road — \"chá … chāy … cāya\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the road — \"chá … chāy … chāya\"]"
+              "source": "[YOU SAY: the road — \"chá … chāy … cāya\"]"
             },
             {
               "kind": "prompt",
@@ -130,11 +130,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "two hearts, once more — \"hṛdayaṁ … nenchŭ\"",
+              "instruction": "two hearts, once more — \"hṛdayaṁ … neñcŭ\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: two hearts, once more — \"hṛdayaṁ … nenchŭ\"]"
+              "source": "[YOU SAY: two hearts, once more — \"hṛdayaṁ … neñcŭ\"]"
             }
           ]
         },
@@ -151,7 +151,7 @@
             },
             {
               "kind": "speech",
-              "text": "Ask for tea, politely. (Dayavāyi oru chāya.) Name the three languages chāya passed through, in order. (Chinese, then Persian, then Hindi-Urdu, into Malayalam.) Why does English say \"tea\" instead of \"chai\"? (It arrived by sea, carrying a different Chinese form.) Which dative suffix does dayavāyi... enikku share with Tamil, Telugu and Kannada? (The dative — ‑ikku/‑ukku/‑ku/‑ge.) What is the repair half of this spine node's word pair? (ക്ഷമിക്കണം, sorry.)"
+              "text": "Ask for tea, politely. (Dayavāyi oru cāya.) Name the three languages cāya passed through, in order. (Chinese, then Persian, then Hindi-Urdu, into Malayalam.) Why does English say \"tea\" instead of \"chai\"? (It arrived by sea, carrying a different Chinese form.) Which dative suffix does dayavāyi... enikkŭ share with Tamil, Telugu and Kannada? (The dative — ‑ikku/‑ukku/‑ku/‑ge.) What is the repair half of this spine node's word pair? (ക്ഷമിക്കണം, sorry.)"
             }
           ]
         }
@@ -160,9 +160,9 @@
     {
       "id": "ML-C39-kaapi",
       "sequence": 910,
-      "title": "കാപ്പി (kaapi) (kāppi) — \"coffee,\" which sailed while tea walked",
+      "title": "കാപ്പി (kāppi) — \"coffee,\" which sailed while tea walked",
       "headword": "കാപ്പി",
-      "romanization": "kaapi",
+      "romanization": "kāppi",
       "gloss": "coffee — an English colonial-era loan, itself from Arabic by way of Turkish and Italian; tea and coffee arrived by opposite roads",
       "script": "malayalam",
       "modality": "voice",
@@ -170,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7cf8eb59e7c06177",
+      "sourceHash": "fnv1a64:a1f7ac9e31c097c7",
       "notice": null,
       "blocks": [
         {
@@ -197,11 +197,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "കാപ്പി (kaapi) — kāppi — coffee."
+              "text": "കാപ്പി — kāppi — coffee."
             },
             {
               "kind": "speech",
-              "text": "ദയവായി ഒരു കാപ്പി (kaapi). — dayavāyi oru kāppi. — \"A coffee, please.\""
+              "text": "ദയവായി ഒരു കാപ്പി. — dayavāyi oru kāppi. — \"A coffee, please.\""
             }
           ]
         },
@@ -212,11 +212,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "കാപ്പി (kaapi) comes from English coffee, borrowed during the colonial period and reshaped to Malayalam's own consonants and vowels. English's own word for the drink is itself a loan, several times over: Arabic قهوة (qahwah) became Turkish kahve, then Italian caffè, then English coffee, before finally landing in Kerala as kāppi."
+              "text": "കാപ്പി comes from English coffee, borrowed during the colonial period and reshaped to Malayalam's own consonants and vowels. English's own word for the drink is itself a loan, several times over: Arabic قهوة (qahwah) became Turkish kahve, then Italian caffè, then English coffee, before finally landing in Kerala as kāppi."
             },
             {
               "kind": "speech",
-              "text": "Set the two drinks side by side: ചായ (chaaya) walked overland from China, through Persia, into North and South Indian speech alike. കാപ്പി (kaapi) sailed from Arabia, through Ottoman Turkey and Renaissance Italy, into English, and only then into Malayalam. Two drinks, two opposite roads — one over land, one over sea — meeting on the very same tea-shop counter."
+              "text": "Set the two drinks side by side: ചായ (cāya) walked overland from China, through Persia, into North and South Indian speech alike. കാപ്പി (kāppi) sailed from Arabia, through Ottoman Turkey and Renaissance Italy, into English, and only then into Malayalam. Two drinks, two opposite roads — one over land, one over sea — meeting on the very same tea-shop counter."
             }
           ]
         },
@@ -252,20 +252,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "two drinks, two roads — \"chāya,\" overland; \"kāppi,\" by sea",
+              "instruction": "two drinks, two roads — \"cāya,\" overland; \"kāppi,\" by sea",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: two drinks, two roads — \"chāya,\" overland; \"kāppi,\" by sea]"
+              "source": "[YOU SAY: two drinks, two roads — \"cāya,\" overland; \"kāppi,\" by sea]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "two hearts, still — \"hṛdayaṁ … nenchŭ\"",
+              "instruction": "two hearts, still — \"hṛdayaṁ … neñcŭ\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: two hearts, still — \"hṛdayaṁ … nenchŭ\"]"
+              "source": "[YOU SAY: two hearts, still — \"hṛdayaṁ … neñcŭ\"]"
             },
             {
               "kind": "prompt",
@@ -300,9 +300,9 @@
     {
       "id": "ML-C39-paal",
       "sequence": 920,
-      "title": "പാൽ (paal) (pāl) — \"milk,\" where Tamil agrees completely",
+      "title": "പാൽ (pāl) — \"milk,\" where Tamil agrees completely",
       "headword": "പാൽ",
-      "romanization": "paal",
+      "romanization": "pāl",
       "gloss": "milk — native, matching Tamil exactly, and matching Kannada by the family's regular p-to-h shift",
       "script": "malayalam",
       "modality": "voice",
@@ -310,7 +310,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:913e2b73c5bd3b9c",
+      "sourceHash": "fnv1a64:5bbc76a0bf316f25",
       "notice": null,
       "blocks": [
         {
@@ -337,11 +337,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "പാൽ (paal) — pāl — milk."
+              "text": "പാൽ — pāl — milk."
             },
             {
               "kind": "speech",
-              "text": "ദയവായി ഒരു പാൽ (paal). — dayavāyi oru pāl. — \"A milk, please.\""
+              "text": "ദയവായി ഒരു പാൽ. — dayavāyi oru pāl. — \"A milk, please.\""
             }
           ]
         },
@@ -352,11 +352,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "പാൽ (paal) is native Dravidian, from Proto-South-Dravidian pāl, \"milk.\" Tamil keeps the shape unchanged: பால் (pāl), letter for letter the same as Malayalam. Kannada shows its own regular p‑to‑h sound law here too, giving ಹಾಲು (hālu) — the identical shift that turns Malayalam's pōkuka into Kannada's hōgu."
+              "text": "പാൽ is native Dravidian, from Proto-South-Dravidian pāl, \"milk.\" Tamil keeps the shape unchanged: பால் (pāl), letter for letter the same as Malayalam. Kannada shows its own regular p‑to‑h sound law here too, giving ಹಾಲು (hālu) — the identical shift that turns Malayalam's pōkuka into Kannada's hōgu."
             },
             {
               "kind": "speech",
-              "text": "Set beside the water-word's finding, this is the mirror image: വെള്ളം (water) broke from Tamil's nīr entirely, choosing a completely different root; പാൽ (paal) (milk) shows the opposite — perfect three-way agreement in shape, with only Kannada's regular sound law setting its form apart. Two everyday liquids, two entirely different outcomes."
+              "text": "Set beside the water-word's finding, this is the mirror image: വെള്ളം (water) broke from Tamil's nīr entirely, choosing a completely different root; പാൽ (pāl) (milk) shows the opposite — perfect three-way agreement in shape, with only Kannada's regular sound law setting its form apart. Two everyday liquids, two entirely different outcomes."
             }
           ]
         },
@@ -401,11 +401,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "three drinks, once more — \"chāya, kāppi, pāl\"",
+              "instruction": "three drinks, once more — \"cāya, kāppi, pāl\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: three drinks, once more — \"chāya, kāppi, pāl\"]"
+              "source": "[YOU SAY: three drinks, once more — \"cāya, kāppi, pāl\"]"
             },
             {
               "kind": "prompt",

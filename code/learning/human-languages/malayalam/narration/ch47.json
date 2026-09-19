@@ -4,7 +4,7 @@
   "chapter": 47,
   "title": "The Leg and the Tooth",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a13f2ff247352380",
+  "sourceHash": "fnv1a64:bcfff71578ee150b",
   "lessons": [
     {
       "id": "ML-C47-leg",
@@ -289,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:134cc5f90b29acb8",
+      "sourceHash": "fnv1a64:e31a561dc73f1152",
       "notice": null,
       "blocks": [
         {
@@ -375,11 +375,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "muṭi, then thala, so the head and what grows on it sit together",
+              "instruction": "muṭi, then tala, so the head and what grows on it sit together",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *muṭi*, then *thala*, so the head and what grows on it sit together]"
+              "source": "[YOU SAY: *muṭi*, then *tala*, so the head and what grows on it sit together]"
             },
             {
               "kind": "prompt",

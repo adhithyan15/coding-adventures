@@ -46,7 +46,7 @@ nouns of all: the people you would actually say it to.
 > **ഇത് എന്റെ കുടുംബമാണ്.** — *ithu ente kuṭumbamāṇŭ.* — "This is my family."
 
 *Ente*, "my," has been yours since your very first sentences; **‑ആണ്** is
-the same copula that closed *enikku malayāḷaṁ iṣṭamāṇŭ*.
+the same copula that closed *enikkŭ malayāḷaṁ iṣṭamāṇŭ*.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C35-KUDUMBAM-02]; assesses=[ML-CONCEPT-C12-KUDUMBAM-01, ML-CONCEPT-C12-KUDUMBAM-02] -->

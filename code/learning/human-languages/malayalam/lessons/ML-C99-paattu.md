@@ -51,7 +51,7 @@ ending comes: they step aside and let it land.
 
 | word | joined to **ആണ്** |
 |---|---|
-| **നല്ലത്** | **നല്ലതാണ്** (*nallathāṇŭ*) |
+| **നല്ലത്** | **നല്ലതാണ്** (*nallatāṇŭ*) |
 | **പാട്ട്** | **പാട്ടാണ്** (*pāṭṭāṇŭ*) |
 
 **You have done this before without a new word to do it on.** **നല്ലതാണ്** has
@@ -64,7 +64,7 @@ word you met a moment ago — no **യ**, no **വ**, nothing inserted.
 [PAUSE 1s]
 - [YOU SAY: *pāṭṭŭ*]
 - [YOU SAY: *itŭ nalla pāṭṭāṇŭ*]
-- [YOU SAY: *nallathāṇŭ*, then *pāṭṭāṇŭ*, and hear that neither gains a letter]
+- [YOU SAY: *nallatāṇŭ*, then *pāṭṭāṇŭ*, and hear that neither gains a letter]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C99-SONG-01, ML-GRAMMAR-C89-NOMINAL-01] -->

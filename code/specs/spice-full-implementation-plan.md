@@ -276,7 +276,7 @@ model-card parameter, or a UI artifact is not a completion signal.
      and Mosaic control contracts. Keep arbitrary output expressions, scoped
      output selection, nested sweeps, and vendor-analysis controls for later
      phases.
-   - **Mosaic schematic saved-output selection** (current phase): discovery after
+   - **Mosaic schematic saved-output selection** (completed in PR #15513): discovery after
      PR #15115: the canonical schematic can run its full analysis plan, but it
      cannot persist the result signals a user wants to retain. Add one ordered
      global `.save` selection over labelled non-ground voltage nodes and
@@ -286,6 +286,15 @@ model-card parameter, or a UI artifact is not a completion signal.
      and expose typed host/Mosaic add and remove controls. Keep scoped
      `.probe`, arbitrary expressions, passive-device currents, nested sweeps,
      and vendor-output controls for later phases.
+   - **Mosaic schematic scoped-output selection** (current phase): discovery after
+     PR #15513: global `.save` selection cannot express that a waveform matters
+     only for one card in a multi-analysis plan. Add durable analysis-card IDs
+     with legacy migration, then persist ordered scoped `.probe <analysis>`
+     selections over the same labelled voltage and executable voltage-source
+     current targets. Card moves must retain scope, removal must atomically drop
+     its probes, and typed host/Mosaic controls must synchronize deterministic
+     `.probe` cards. Keep arbitrary expressions, passive-device currents,
+     nested sweeps, and vendor-output controls for later phases.
 
 ### Operating rules
 

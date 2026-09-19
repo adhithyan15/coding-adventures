@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 72,
-  "sourceHash": "fnv1a64:82446fd73d585209",
+  "sourceHash": "fnv1a64:afbd4ea6e1e7e2b9",
   "lessonIds": [
     "ML-C72-ennu",
     "ML-C72-ennu-more",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "malayalam/narration/ch72.txt",
   "json": "malayalam/narration/ch72.json",
-  "textHash": "fnv1a64:d83e79fb121992f2",
-  "jsonHash": "fnv1a64:1106bb6d0baf6c9b",
+  "textHash": "fnv1a64:21856aa4c9da5f5c",
+  "jsonHash": "fnv1a64:dacc33762439c2ba",
   "findings": []
 }

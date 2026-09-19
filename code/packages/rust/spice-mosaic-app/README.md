@@ -29,8 +29,10 @@ Schematic sessions also own an ordered global saved-output list. Hosts can add
 labelled non-ground voltage probes and executable voltage-source branch-current
 probes; the document lowers them as one deterministic `.save V(node) I(source)`
 card. Saved outputs persist in snapshots and follow voltage-source reference
-renames, while scoped probes and arbitrary expressions remain outside this
-capture contract.
+renames. The selected analysis card can also own ordered `.probe <analysis>`
+outputs over those same targets; durable card IDs keep that scope attached when
+cards move, and removing a card removes its scoped probes. Arbitrary
+expressions remain outside this capture contract.
 
 Hosts load, place, wire, select, edit component values, route, and synchronize that document through
 the Mosaic app event contract. They can also select a DC sweep source and edit

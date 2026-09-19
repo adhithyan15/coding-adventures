@@ -4,22 +4,22 @@
   "chapter": 28,
   "title": "Afternoon",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d80e4e516ce86f51",
+  "sourceHash": "fnv1a64:6b5b40f7f6ace820",
   "lessons": [
     {
       "id": "ML-C28-uchakazhinju",
       "sequence": 600,
-      "title": "ഉച്ചകഴിഞ്ഞ് (uchakaḻiññ) — \"noon, having passed\"",
+      "title": "ഉച്ചകഴിഞ്ഞ് (uccakaḻiññŭ) — \"noon, having passed\"",
       "headword": "ഉച്ചകഴിഞ്ഞ്",
-      "romanization": "uchakaḻiññ",
-      "gloss": "\"afternoon\" (uchakaḻiññ) — a transparent two-word phrase, not a single dictionary headword: ഉച്ച (ML-C17's \"noon\") + കഴിഞ്ഞ്, the past converb form of കഴിയുക (kaḻiyuka, Wiktionary-confirmed Proto-Dravidian kaẓi, \"to be over, spent\") — Wiktionary itself directly shows only the finite past tense കഴിഞ്ഞു (kaḻiññu); the converb form used in this compound is a reasonable grammatical inference, not itself the form Wiktionary lists; literally \"noon having passed\" — a structurally different strategy than Telugu's, where the SAME noon-word (మధ్యాహ్నం) simply widened its own meaning rather than compounding with a second word",
+      "romanization": "uccakaḻiññŭ",
+      "gloss": "\"afternoon\" (uccakaḻiññŭ) — a transparent two-word phrase, not a single dictionary headword: ഉച്ച (ML-C17's \"noon\") + കഴിഞ്ഞ്, the past converb form of കഴിയുക (kaḻiyuka, Wiktionary-confirmed Proto-Dravidian kaẓi, \"to be over, spent\") — Wiktionary itself directly shows only the finite past tense കഴിഞ്ഞു (kaḻiññu); the converb form used in this compound is a reasonable grammatical inference, not itself the form Wiktionary lists; literally \"noon having passed\" — a structurally different strategy than Telugu's, where the SAME noon-word (మధ్యాహ్నం) simply widened its own meaning rather than compounding with a second word",
       "script": "malayalam",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:52c10e0cf64970cb",
+      "sourceHash": "fnv1a64:cc88833d8ad6c678",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ഉച്ചകഴിഞ്ഞ് (uchakaḻiññ) — \"afternoon\" — is a transparent two-word phrase, not a single dictionary headword (no Wiktionary entry exists for the compound as a whole). It's built from ഉച്ച (already met, Chapter 17, \"noon\") plus കഴിഞ്ഞ്, the past converb form of കഴിയുക (kaḻiyuka), itself Wiktionary-confirmed Proto-Dravidian kaẓi (\"to be over, spent, finished\"). Be honest about the citation: Wiktionary's own conjugation line shows only the finite past tense, കഴിഞ്ഞു (kaḻiññu) — not this converb form directly. The converb is the grammatically correct choice for chaining into a compound like this one, but treat the exact written form as a reasonable grammatical inference, not a directly Wiktionary-sourced citation. Put together: \"noon having passed\" — afternoon is, quite literally, the time after noon is done."
+              "text": "ഉച്ചകഴിഞ്ഞ് (uccakaḻiññŭ) — \"afternoon\" — is a transparent two-word phrase, not a single dictionary headword (no Wiktionary entry exists for the compound as a whole). It's built from ഉച്ച (already met, Chapter 17, \"noon\") plus കഴിഞ്ഞ്, the past converb form of കഴിയുക (kaḻiyuka), itself Wiktionary-confirmed Proto-Dravidian kaẓi (\"to be over, spent, finished\"). Be honest about the citation: Wiktionary's own conjugation line shows only the finite past tense, കഴിഞ്ഞു (kaḻiññu) — not this converb form directly. The converb is the grammatically correct choice for chaining into a compound like this one, but treat the exact written form as a reasonable grammatical inference, not a directly Wiktionary-sourced citation. Put together: \"noon having passed\" — afternoon is, quite literally, the time after noon is done."
             }
           ]
         },
@@ -75,11 +75,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"uchakaḻiññ\" — \"afternoon,\" literally \"noon having passed\"",
+              "instruction": "\"uccakaḻiññŭ\" — \"afternoon,\" literally \"noon having passed\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"uchakaḻiññ\" — \"afternoon,\" literally \"noon having passed\"]"
+              "source": "[YOU SAY: \"uccakaḻiññŭ\" — \"afternoon,\" literally \"noon having passed\"]"
             },
             {
               "kind": "prompt",
@@ -114,7 +114,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does ഉച്ചകഴിഞ്ഞ് (uchakaḻiññ) literally mean? (\"Noon having passed\" — ഉച്ച, \"noon,\" plus the past tense of കഴിയുക, \"to be over, spent.\") Is ഉച്ചകഴിഞ്ഞ് (uchakaḻiññ) a single dictionary word, like ഉച്ച itself? (No — it's a transparent two-word phrase; no Wiktionary entry exists for the compound as a whole.) How does Malayalam's strategy for naming \"afternoon\" differ from Telugu's? (Telugu widens its existing noon-word's meaning; Malayalam instead builds a new phrase, keeping the noon-word unchanged.)"
+              "text": "What does ഉച്ചകഴിഞ്ഞ് (uccakaḻiññŭ) literally mean? (\"Noon having passed\" — ഉച്ച, \"noon,\" plus the past tense of കഴിയുക, \"to be over, spent.\") Is ഉച്ചകഴിഞ്ഞ് (uccakaḻiññŭ) a single dictionary word, like ഉച്ച itself? (No — it's a transparent two-word phrase; no Wiktionary entry exists for the compound as a whole.) How does Malayalam's strategy for naming \"afternoon\" differ from Telugu's? (Telugu widens its existing noon-word's meaning; Malayalam instead builds a new phrase, keeping the noon-word unchanged.)"
             }
           ]
         }

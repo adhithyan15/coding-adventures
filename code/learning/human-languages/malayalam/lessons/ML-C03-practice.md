@@ -56,7 +56,7 @@ reviews_of: [ML-C03-engane, ML-C03-sukhamaano, ML-C03-njaan, ML-C03-sukham, ML-C
 [PAUSE 2s]
 - *eṅṅane* ← the interrogative *e-* (native Dravidian, like Tamil *eppaḍi*)
 - *ñān* ← Proto-Dravidian (unrelated to English *me*); possessive *enṟe*
-- *sukham* ← **Sanskrit** *sukha* "well-being" (the *su-* that is Greek *eu-*)
+- *sukhaṁ* ← **Sanskrit** *sukha* "well-being" (the *su-* that is Greek *eu-*)
 - *āṇŭ* / *illa* — "is" and "is-not"; *illa* shared with Tamil & Kannada
 - the question-marker *-ō* — turns any statement into a yes/no question
 

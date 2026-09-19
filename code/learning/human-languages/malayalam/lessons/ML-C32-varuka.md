@@ -97,7 +97,7 @@ tenses times six persons.
 - [YOU SAY: the three times — "varunnu … vannu … varuṁ"]
 - [YOU SAY: the pair, past against past — "pōyi … vannu"]
 - [YOU SAY: the goodbye you now understand — "pōyi varāṁ"]
-- [YOU RECALL: say *rāthri*]
+- [YOU RECALL: say *rātri*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C32-POKUKA-02, ML-CONCEPT-C32-VARUKA-01, ML-CONCEPT-C32-VARUKA-02] -->

@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "Describing Things",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:29675bdd36e9126e",
+  "sourceHash": "fnv1a64:8c47142519db33b4",
   "lessons": [
     {
       "id": "ML-C42-big",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3739d720662bea08",
+      "sourceHash": "fnv1a64:f320205972d9a9ac",
       "notice": null,
       "blocks": [
         {
@@ -90,11 +90,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say paal",
+              "instruction": "say pāl",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *paal*]"
+              "source": "[YOU RECALL: say *pāl*]"
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 76,
-  "sourceHash": "fnv1a64:a0498aa473990ab6",
+  "sourceHash": "fnv1a64:f25f0d658e5d0f6e",
   "lessonIds": [
     "ML-C76-veno",
     "ML-R76-want-recall"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "malayalam/narration/ch76.txt",
   "json": "malayalam/narration/ch76.json",
-  "textHash": "fnv1a64:24eeb4ad50ac0d5d",
-  "jsonHash": "fnv1a64:b5b0667afe955b78",
+  "textHash": "fnv1a64:b051afaa86453fcb",
+  "jsonHash": "fnv1a64:d7344243cef96921",
   "findings": []
 }

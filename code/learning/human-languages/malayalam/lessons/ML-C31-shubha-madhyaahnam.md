@@ -12,7 +12,7 @@ concept_tag: GREETING-AFTERNOON
 prerequisites: [ML-C17-paathira, ML-C28-uchakazhinju]
 sounds: [malayalam-conjunct-dhya, malayalam-anusvara]
 roots: [sanskrit-shubha-beautiful, sanskrit-madhya-middle]
-etymology_hook: "the formal greeting uses Sanskrit madhyāhna, a synonym of everyday ucha, rather than Malayalam's ucha-plus-passed afternoon phrase"
+etymology_hook: "the formal greeting uses Sanskrit madhyāhna, a synonym of everyday ucca, rather than Malayalam's ucca-plus-passed afternoon phrase"
 duration:
   max_seconds: 240
 requires:

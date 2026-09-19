@@ -7,7 +7,7 @@ chapter: 79
 type: review
 headword: (how much of it)
 gloss: cold retrieval of the two new degree words, the slot they stand in, and the third filler you already owned
-romanization: ethra enna ōrmma
+romanization: etra enna ōrmma
 concept_tag: ML-DEGREE-RECALL
 prerequisites: [ML-C79-degree-slot]
 sounds: []

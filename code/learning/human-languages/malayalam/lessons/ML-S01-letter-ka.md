@@ -49,7 +49,7 @@ Highly rounded and loopy — full circles, hooks and curls, with almost no
 straight lines. You wrote this one in the first chapter, inside the greeting;
 here it is again, loose in the middle of four words you now say every day.
 
-- **നമസ്കാരം** *namaskāram* — hello / greetings
+- **നമസ്കാരം** *namaskāraṁ* — hello / greetings
 - **നാളെ കാണാം** *nāḷe kāṇāṁ* — see you tomorrow
 - **താമസിക്കുക** *tāmasikkuka* — to live, to stay
 - **ജോലി ചെയ്യുക** *jōli ceyyuka* — to work

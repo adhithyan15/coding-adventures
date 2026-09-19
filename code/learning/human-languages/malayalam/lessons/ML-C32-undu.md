@@ -44,9 +44,9 @@ verb, "to be," do three jobs. Malayalam uses three words.
 
 > **ഇരിക്കുക** — *irikkuka* — **to be somewhere, to stay, to sit**
 
-Chapter 2 gave you **ആണ്** (*āṇŭ*), the "is" that links two nouns: *enṟe pēru
+Chapter 2 gave you **ആണ്** (*āṇŭ*), the "is" that links two nouns: *enṟe pēr
 Arun āṇŭ*, "my name is Arun." **ഉണ്ട്** does a different job — **existing** and
-**having**: *enikku oru sahōdaran uṇṭŭ*, "to-me one brother there-is," which is
+**having**: *enikkŭ oru sahōdaran uṇṭŭ*, "to-me one brother there-is," which is
 how Malayalam says "I have a brother." **ഇരിക്കുക** is being in a **place**:
 *ñān vīṭṭil irikkunnu*, "I am at home."
 
@@ -93,7 +93,7 @@ for no sister.
 
 [PAUSE 1s]
 - [YOU SAY: the three jobs — "āṇŭ" is, "uṇṭŭ" there-is, "irikkuka" be somewhere]
-- [YOU SAY: "enikku oru sahōdaran uṇṭŭ" — I have a brother]
+- [YOU SAY: "enikkŭ oru sahōdaran uṇṭŭ" — I have a brother]
 - [YOU SAY: the two pieces — "irikk … unnu"]
 - [YOU SAY: one verb, three people — "ñān, nī, avan … irikkunnu"]
 

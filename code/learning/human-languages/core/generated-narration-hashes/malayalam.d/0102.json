@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 102,
-  "sourceHash": "fnv1a64:c118a8e705de7a3f",
+  "sourceHash": "fnv1a64:1978ad039912c8d1",
   "lessonIds": [
     "ML-C102-manikku",
     "ML-C102-azhcha",
@@ -13,7 +13,7 @@
   "drivablePrefix": 3,
   "text": "malayalam/narration/ch102.txt",
   "json": "malayalam/narration/ch102.json",
-  "textHash": "fnv1a64:f360a6f8b00fdfd9",
-  "jsonHash": "fnv1a64:f9301214a0c54d98",
+  "textHash": "fnv1a64:38c446a4bf479e31",
+  "jsonHash": "fnv1a64:831c2ef2ce7e3f99",
   "findings": []
 }

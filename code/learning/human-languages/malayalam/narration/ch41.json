@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Pointing, and Asking",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:2035a00e1dae3222",
+  "sourceHash": "fnv1a64:9aa9b672c72da88b",
   "lessons": [
     {
       "id": "ML-C41-this",
@@ -454,7 +454,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4bf45f7df7d3cf93",
+      "sourceHash": "fnv1a64:a2d3d7716c0fa40f",
       "notice": null,
       "blocks": [
         {
@@ -525,11 +525,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say nenchŭ",
+              "instruction": "say neñcŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *nenchŭ*]"
+              "source": "[YOU RECALL: say *neñcŭ*]"
             }
           ]
         },
@@ -565,7 +565,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce340843258efede",
+      "sourceHash": "fnv1a64:1e059cfa8ebad8e4",
       "notice": null,
       "blocks": [
         {
@@ -636,11 +636,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read ചായ, then say kaapi",
+              "instruction": "read ചായ, then say kāppi",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ചായ**, then say *kaapi*]"
+              "source": "[YOU RECALL: read **ചായ**, then say *kāppi*]"
             }
           ]
         },

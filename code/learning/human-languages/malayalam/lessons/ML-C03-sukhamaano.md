@@ -56,8 +56,8 @@ mix — a Sanskrit noun, a Dravidian verb — is Malayalam in miniature.
 ## Grammar Lens: turning a statement into a question
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C03-QUESTION-PARTICLE-O-01]; assesses=[ML-PHRASE-C03-ARE-YOU-WELL-01] -->
 
-Malayalam makes a yes/no question by adding **-ō** to the end: *sukham āṇŭ* ("it
-is well") → *sukham āṇō?* ("is it well?"). No change of word order, no helper —
+Malayalam makes a yes/no question by adding **-ō** to the end: *sukhaṁ āṇŭ* ("it
+is well") → *sukhaṁ āṇō?* ("is it well?"). No change of word order, no helper —
 just the little *-ō*. You will use it to question any statement.
 
 ## Guided Practice

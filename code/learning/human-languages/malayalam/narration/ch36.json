@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "Child, Son, Daughter",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:52f63c2d1c648f02",
+  "sourceHash": "fnv1a64:9c6f61c3eaf817c6",
   "lessons": [
     {
       "id": "ML-C36-kutti",
@@ -295,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da4d5db117c446b0",
+      "sourceHash": "fnv1a64:577e0796fe5f1fda",
       "notice": null,
       "blocks": [
         {
@@ -341,7 +341,7 @@
             },
             {
               "kind": "speech",
-              "text": "Now that you have a son and a daughter, the age question comes back with someone new to ask it about: ninṟe makanŭ ethra vayassuṇṭŭ? — \"how old is your son?\" — the same dative-subject-plus-uṇṭŭ shape, unchanged."
+              "text": "Now that you have a son and a daughter, the age question comes back with someone new to ask it about: ninṟe makanŭ etra vayassuṇṭŭ? — \"how old is your son?\" — the same dative-subject-plus-uṇṭŭ shape, unchanged."
             }
           ]
         },
@@ -386,11 +386,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the age question, asked again — \"ninṟe makanŭ ethra vayassuṇṭŭ?\"",
+              "instruction": "the age question, asked again — \"ninṟe makanŭ etra vayassuṇṭŭ?\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the age question, asked again — \"ninṟe makanŭ ethra vayassuṇṭŭ?\"]"
+              "source": "[YOU SAY: the age question, asked again — \"ninṟe makanŭ etra vayassuṇṭŭ?\"]"
             },
             {
               "kind": "prompt",
@@ -425,7 +425,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"this is my daughter.\" (Ithu ente makaḷāṇŭ.) How closely does Tamil match this word, compared with makan? (Even closer — makaḷ is identical sound for sound, where makan only nearly matched.) Ask \"how old is your son?\" using the age question's shape. (Ninṟe makanŭ ethra vayassuṇṭŭ? — \"to your son, how much age exists?\") What is the general word for a child, before makan or makaḷ? (കുട്ടി, kuṭṭi.)"
+              "text": "Say \"this is my daughter.\" (Ithu ente makaḷāṇŭ.) How closely does Tamil match this word, compared with makan? (Even closer — makaḷ is identical sound for sound, where makan only nearly matched.) Ask \"how old is your son?\" using the age question's shape. (Ninṟe makanŭ etra vayassuṇṭŭ? — \"to your son, how much age exists?\") What is the general word for a child, before makan or makaḷ? (കുട്ടി, kuṭṭi.)"
             }
           ]
         }

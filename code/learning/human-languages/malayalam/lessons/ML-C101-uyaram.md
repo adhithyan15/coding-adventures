@@ -40,7 +40,7 @@ reviews_of: [ML-C32-undu, ML-C06-dative-subject]
 
 **ഉയരം** — *uyaraṁ* — **height.**
 
-> **എനിക്ക് ഉയരമുണ്ട്.** — *enikku uyaramuṇṭŭ* — "To me, height exists" — I am
+> **എനിക്ക് ഉയരമുണ്ട്.** — *enikkŭ uyaramuṇṭŭ* — "To me, height exists" — I am
 > tall.
 
 ## The word, taken apart
@@ -53,7 +53,7 @@ anyway.**
 adjective — it is a **noun**, *height* — so it takes the other machine you
 already own: the one where a thing **exists to someone**.
 
-> **എനിക്ക് ഉയരമുണ്ട്.** — *enikku uyaramuṇṭŭ* — to-me height there-is — *I
+> **എനിക്ക് ഉയരമുണ്ട്.** — *enikkŭ uyaramuṇṭŭ* — to-me height there-is — *I
 > am tall.*
 
 **That frame is not new.** The chapter that gave you **ഉണ്ട്** used it to say
@@ -72,7 +72,7 @@ chapter's own title proves it: **ഉയരം** + **ഉം** is **ഉയരവ�
 
 [PAUSE 1s]
 - [YOU SAY: *uyaraṁ*]
-- [YOU SAY: *enikku uyaramuṇṭŭ*]
+- [YOU SAY: *enikkŭ uyaramuṇṭŭ*]
 - [YOU SAY: why this one needs **ഉണ്ട്** and **കുറിയ** did not]
 
 ## Wrap-up Recall

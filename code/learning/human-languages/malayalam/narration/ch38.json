@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "The Two Hearts",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:0480c39874494e14",
+  "sourceHash": "fnv1a64:5f34f443ad6b8464",
   "lessons": [
     {
       "id": "ML-C38-hrudayam",
@@ -158,9 +158,9 @@
     {
       "id": "ML-C38-nenchu",
       "sequence": 890,
-      "title": "നെഞ്ച് (nenchŭ) — \"chest,\" Malayalam's other heart",
+      "title": "നെഞ്ച് (neñcŭ) — \"chest,\" Malayalam's other heart",
       "headword": "നെഞ്ച്",
-      "romanization": "nenchŭ",
+      "romanization": "neñcŭ",
       "gloss": "chest — Malayalam's other heart, native this time, and the one everyday idiom reaches for",
       "script": "malayalam",
       "modality": "voice",
@@ -168,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:44bff2f6be25441f",
+      "sourceHash": "fnv1a64:ce9cf03e8e320881",
       "notice": null,
       "blocks": [
         {
@@ -195,11 +195,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "നെഞ്ച് — nenchŭ — chest."
+              "text": "നെഞ്ച് — neñcŭ — chest."
             },
             {
               "kind": "speech",
-              "text": "എന്റെ നെഞ്ച്. — ente nenchŭ. — \"My chest.\""
+              "text": "എന്റെ നെഞ്ച്. — ente neñcŭ. — \"My chest.\""
             }
           ]
         },
@@ -210,11 +210,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "നെഞ്ച് (nenchŭ) is native Dravidian, cognate with Tamil's own நெஞ்சு/நெஞ்சம் (nenju/nenjam), \"chest.\" Where ഹൃദയം (hṛdayaṁ) names the organ and carries the Sanskrit-flavoured abstraction — a \"heartfelt\" thank-you, a broken heart in the literary sense — നെഞ്ച് (nenchŭ) is the word everyday idiom actually reaches for: നെഞ്ചിടിപ്പ് (nenchiṭippŭ), a heart pounding from fear or excitement, literally \"chest-beat.\""
+              "text": "നെഞ്ച് (neñcŭ) is native Dravidian, cognate with Tamil's own நெஞ்சு/நெஞ்சம் (nenju/nenjam), \"chest.\" Where ഹൃദയം (hṛdayaṁ) names the organ and carries the Sanskrit-flavoured abstraction — a \"heartfelt\" thank-you, a broken heart in the literary sense — നെഞ്ച് (neñcŭ) is the word everyday idiom actually reaches for: നെഞ്ചിടിപ്പ് (neñciṭippŭ), a heart pounding from fear or excitement, literally \"chest-beat.\""
             },
             {
               "kind": "speech",
-              "text": "Two hearts, then: one Sanskrit and formal, one native and physical. That is the same selective-borrowing pattern സന്തോഷം beside നന്ദി already showed, back near the start of this book — Malayalam does not simply prefer Sanskrit or prefer native; it keeps both, and lets register decide which one a given sentence reaches for. തല and കൈ, this stretch's first two body words, were native throughout; ഹൃദയം (hṛdayaṁ) and നെഞ്ച് (nenchŭ) show the same body carrying one word of each kind, side by side."
+              "text": "Two hearts, then: one Sanskrit and formal, one native and physical. That is the same selective-borrowing pattern സന്തോഷം beside നന്ദി already showed, back near the start of this book — Malayalam does not simply prefer Sanskrit or prefer native; it keeps both, and lets register decide which one a given sentence reaches for. തല and കൈ, this stretch's first two body words, were native throughout; ഹൃദയം (hṛdayaṁ) and നെഞ്ച് (neñcŭ) show the same body carrying one word of each kind, side by side."
             }
           ]
         },
@@ -232,38 +232,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ente nenchŭ\" — my chest",
+              "instruction": "\"ente neñcŭ\" — my chest",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ente nenchŭ\" — my chest]"
+              "source": "[YOU SAY: \"ente neñcŭ\" — my chest]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "two hearts — \"hṛdayaṁ,\" formal; \"nenchŭ,\" everyday",
+              "instruction": "two hearts — \"hṛdayaṁ,\" formal; \"neñcŭ,\" everyday",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: two hearts — \"hṛdayaṁ,\" formal; \"nenchŭ,\" everyday]"
+              "source": "[YOU SAY: two hearts — \"hṛdayaṁ,\" formal; \"neñcŭ,\" everyday]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the idiom — \"nenchiṭippŭ\" — chest-beat, a pounding heart",
+              "instruction": "the idiom — \"neñciṭippŭ\" — chest-beat, a pounding heart",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the idiom — \"nenchiṭippŭ\" — chest-beat, a pounding heart]"
+              "source": "[YOU SAY: the idiom — \"neñciṭippŭ\" — chest-beat, a pounding heart]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "thala, kai, hṛdayaṁ, nenchŭ — the body words so far",
+              "instruction": "tala, kai, hṛdayaṁ, neñcŭ — the body words so far",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: thala, kai, hṛdayaṁ, nenchŭ — the body words so far]"
+              "source": "[YOU SAY: tala, kai, hṛdayaṁ, neñcŭ — the body words so far]"
             },
             {
               "kind": "prompt",
@@ -298,7 +298,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"my chest.\" (Ente nenchŭ.) Which of this chapter's two heart-words is native, and which is borrowed? (നെഞ്ച് native; ഹൃദയം (hṛdayaṁ) Sanskrit.) What does nenchiṭippŭ mean, literally? (\"Chest-beat\" — a pounding heart.) Which earlier pair showed this same native-plus-Sanskrit side-by-side pattern? (സന്തോഷം beside നന്ദി, back near the start of this book.)"
+              "text": "Say \"my chest.\" (Ente neñcŭ.) Which of this chapter's two heart-words is native, and which is borrowed? (നെഞ്ച് native; ഹൃദയം (hṛdayaṁ) Sanskrit.) What does neñciṭippŭ mean, literally? (\"Chest-beat\" — a pounding heart.) Which earlier pair showed this same native-plus-Sanskrit side-by-side pattern? (സന്തോഷം beside നന്ദി, back near the start of this book.)"
             }
           ]
         }

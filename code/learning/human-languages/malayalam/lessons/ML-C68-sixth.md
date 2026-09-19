@@ -47,7 +47,7 @@ it stopped.
 **ആറാം** (*āṟāṁ*) — "**sixth**". **ആറ്** drops its **ŭ** and takes **ആം**, with
 nothing else to notice.
 
-**ആറാം ദിവസം** (*āṟāṁ divasam*), the sixth day.
+**ആറാം ദിവസം** (*āṟāṁ divasaṁ*), the sixth day.
 
 That "nothing else to notice" is the point of the whole chapter. Six to ten were
 a separate lesson from one to five when you learned to count, because the words
@@ -59,7 +59,7 @@ themselves had to be learned. For **ordering** they are not a separate anything.
 [PAUSE 1s]
 - [YOU SAY: *āṟŭ*, then *āṟāṁ*]
 - [YOU SAY: *añcāṁ, āṟāṁ*]
-- [YOU SAY: *āṟāṁ divasam* — the sixth day]
+- [YOU SAY: *āṟāṁ divasaṁ* — the sixth day]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C68-ORDINAL-01, ML-LEX-C67-ORDINAL-07] -->

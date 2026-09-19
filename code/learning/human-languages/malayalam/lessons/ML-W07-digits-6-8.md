@@ -33,15 +33,15 @@ reviews_of: [ML-C07-numbers-6-10]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-6-10-01] -->
 
-[PAUSE 2s] Say *aaru, ezhu, ettu*. Their sounds and quantities are familiar;
+[PAUSE 2s] Say *āṟŭ, ēḻŭ, eṭṭŭ*. Their sounds and quantities are familiar;
 only the shapes are new.
 
 ## Script
 <!-- hl-knowledge: introduces=[ML-SCRIPT-DIGITS-6-8-07]; assesses=[] -->
 
-- **൬** means 6: *aaru*.
-- **൭** means 7: *ezhu*.
-- **൮** means 8: *ettu*.
+- **൬** means 6: *āṟŭ*.
+- **൭** means 7: *ēḻŭ*.
+- **൮** means 8: *eṭṭŭ*.
 
 Point out of order: **൮ ൬ ൭**.
 

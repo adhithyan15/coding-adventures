@@ -7,7 +7,7 @@ chapter: 89
 type: grammar
 headword: "നല്ലത്"
 gloss: a good one — the ending that turns any quality you own into a thing you can talk about
-romanization: "nallathŭ"
+romanization: "nallatŭ"
 concept_tag: ML-NOMINALIZER
 prerequisites: [ML-R88-numbers-recall, ML-C42-good, ML-C42-adjective-system, ML-C41-that]
 sounds: []
@@ -28,7 +28,7 @@ variety: standard-colloquial
 reviews_of: [ML-C42-good, ML-C41-that]
 ---
 
-# നല്ലത് (nallathŭ) — a good one
+# നല്ലത് (nallatŭ) — a good one
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-03, ML-GRAMMAR-C42-ADJ-SYSTEM] -->
@@ -71,10 +71,10 @@ Five qualities, one ending, and **no exceptions among them.**
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C89-NOMINAL-01, ML-LEX-C42-ADJ-03, ML-LEX-C42-ADJ-01, ML-LEX-C41-DEIXIS-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: *nalla*, then *nallathŭ*]
+- [YOU SAY: *nalla*, then *nallatŭ*]
 - [YOU SAY: which of the two can stand without a noun after it]
-- [YOU SAY: the word for *that*, and where you can see it in *nallathŭ*]
-- [YOU SAY: *valiyathŭ*]
+- [YOU SAY: the word for *that*, and where you can see it in *nallatŭ*]
+- [YOU SAY: *valiyatŭ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C89-NOMINAL-01] -->

@@ -13,10 +13,10 @@ use coding_adventures_oauth::{
     prepare_openid_device_authorization, prepare_token_refresh, prepare_token_revocation,
     ConfidentialClientAuthenticationMethod, DeviceAuthorization, DeviceAuthorizationProfile,
     DeviceAuthorizationRequest, DevicePollResult, DevicePollingSession, DeviceTokenPollRequest,
-    EntropySource, OAuthAuditSink, OAuthError, OAuthTraceId, OpenIdAuthorizationNonce,
-    OpenIdDeviceAuthorization, ProviderConfig, ProviderId, RevocationTokenHint,
-    TokenExchangeRequest, TokenRefreshRequest, TokenResponse, TokenResponseFormat,
-    TokenRevocationRequest, TokenRevocationResponse, MAX_TOKEN_RESPONSE_BYTES,
+    DeviceVerification, EntropySource, OAuthAuditSink, OAuthError, OAuthTraceId,
+    OpenIdAuthorizationNonce, OpenIdDeviceAuthorization, ProviderConfig, ProviderId,
+    RevocationTokenHint, TokenExchangeRequest, TokenRefreshRequest, TokenResponse,
+    TokenResponseFormat, TokenRevocationRequest, TokenRevocationResponse, MAX_TOKEN_RESPONSE_BYTES,
     MAX_TOKEN_REVOCATION_RESPONSE_BYTES,
 };
 use coding_adventures_oauth_account_identity::{
@@ -630,6 +630,146 @@ impl Debug for DeviceFlowPollSequence {
             .field("expires_at_seconds", &self.expires_at_seconds)
             .field("next_poll_at_seconds", &self.next_poll_at_seconds)
             .finish()
+    }
+}
+
+/// Opaque OIDC device-flow sequence that keeps its nonce through every retry.
+///
+/// This state can only be created from a validated OIDC device authorization,
+/// so the polling session and nonce retain their exact provider, client, and
+/// trace relationship without exposing either secret to the caller.
+#[must_use = "retain the polling sequence and nonce for the later ID-token proof"]
+pub struct OpenIdDeviceFlowPollSequence {
+    sequence: DeviceFlowPollSequence,
+    nonce: OpenIdAuthorizationNonce,
+}
+
+impl OpenIdDeviceFlowPollSequence {
+    /// Start caller-owned scheduling from one validated OIDC device response.
+    ///
+    /// The user-facing verification data is returned separately for display;
+    /// the device code and nonce remain inside the opaque sequence.
+    pub fn from_authorization(
+        authorization: OpenIdDeviceAuthorization,
+        started_at_seconds: u64,
+    ) -> Result<(DeviceVerification, Self), BrokerError> {
+        let (verification, session, nonce) = authorization.into_parts();
+        let sequence = DeviceFlowPollSequence::new(session, started_at_seconds)?;
+        Ok((verification, Self { sequence, nonce }))
+    }
+
+    /// Return the provider bound to both the device code and nonce.
+    pub fn provider(&self) -> &ProviderId {
+        self.sequence.provider()
+    }
+
+    /// Return the trace shared by initiation, polling, and identity proof.
+    pub const fn trace(&self) -> OAuthTraceId {
+        self.sequence.trace()
+    }
+
+    /// Return the earliest caller-timeline instant at which a poll is allowed.
+    pub const fn next_poll_at_seconds(&self) -> u64 {
+        self.sequence.next_poll_at_seconds()
+    }
+
+    /// Return the caller-timeline instant at which local polling expires.
+    pub const fn expires_at_seconds(&self) -> u64 {
+        self.sequence.expires_at_seconds()
+    }
+}
+
+impl Debug for OpenIdDeviceFlowPollSequence {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("OpenIdDeviceFlowPollSequence")
+            .field("sequence", &self.sequence)
+            .field("nonce", &self.nonce)
+            .finish()
+    }
+}
+
+/// Authorized OIDC device response paired with its original one-use nonce.
+#[must_use = "consume the response and nonce in an audited ID-token proof"]
+pub struct OpenIdDeviceAuthorizedResponse {
+    response: TokenResponse,
+    nonce: OpenIdAuthorizationNonce,
+}
+
+impl OpenIdDeviceAuthorizedResponse {
+    /// Return the provider shared by the token response and retained nonce.
+    pub fn provider(&self) -> &ProviderId {
+        self.response.provider()
+    }
+
+    /// Return the trace shared by initiation, polling, and retained nonce.
+    pub const fn trace(&self) -> OAuthTraceId {
+        self.response.trace()
+    }
+
+    /// Transfer the audited token response and nonce without cloning secrets.
+    pub fn into_parts(self) -> (TokenResponse, OpenIdAuthorizationNonce) {
+        (self.response, self.nonce)
+    }
+}
+
+impl Debug for OpenIdDeviceAuthorizedResponse {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("OpenIdDeviceAuthorizedResponse")
+            .field("response", &self.response)
+            .field("nonce", &self.nonce)
+            .finish()
+    }
+}
+
+/// One audited OIDC device-flow step with nonce-safe continuation ownership.
+pub enum OpenIdDeviceFlowStepResult {
+    /// The caller-provided time has not reached the minimum polling interval.
+    Waiting(OpenIdDeviceFlowPollSequence),
+    /// The provider has not yet received the resource owner's decision.
+    Pending(OpenIdDeviceFlowPollSequence),
+    /// The provider increased the minimum delay for every later poll.
+    SlowDown(OpenIdDeviceFlowPollSequence),
+    /// A transient transport failure retained the exact sequence and nonce.
+    TransportFailed(OpenIdDeviceFlowPollSequence),
+    /// The provider returned tokens paired with the initiation nonce.
+    Authorized(OpenIdDeviceAuthorizedResponse),
+    /// The resource owner denied authorization; the nonce was discarded.
+    Denied,
+    /// Local or provider expiry discarded the nonce.
+    Expired,
+}
+
+impl OpenIdDeviceFlowStepResult {
+    /// Return the next absolute caller-timeline polling instant, when applicable.
+    pub const fn next_poll_at_seconds(&self) -> Option<u64> {
+        match self {
+            Self::Waiting(sequence)
+            | Self::Pending(sequence)
+            | Self::SlowDown(sequence)
+            | Self::TransportFailed(sequence) => Some(sequence.next_poll_at_seconds()),
+            Self::Authorized(_) | Self::Denied | Self::Expired => None,
+        }
+    }
+}
+
+impl Debug for OpenIdDeviceFlowStepResult {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Waiting(sequence) => formatter.debug_tuple("Waiting").field(sequence).finish(),
+            Self::Pending(sequence) => formatter.debug_tuple("Pending").field(sequence).finish(),
+            Self::SlowDown(sequence) => formatter.debug_tuple("SlowDown").field(sequence).finish(),
+            Self::TransportFailed(sequence) => formatter
+                .debug_tuple("TransportFailed")
+                .field(sequence)
+                .finish(),
+            Self::Authorized(response) => {
+                formatter.debug_tuple("Authorized").field(response).finish()
+            }
+            Self::Denied => formatter.write_str("Denied"),
+            Self::Expired => formatter.write_str("Expired"),
+        }
     }
 }
 
@@ -3225,6 +3365,74 @@ impl<S: CredentialStore> OAuthBroker<S> {
         )?;
         let result =
             self.advance_device_flow_inner(sequence, observed_at_seconds, transport, audit);
+        finish_broker(
+            audit,
+            &provider,
+            trace,
+            BrokerAuditAction::DeviceFlowStep,
+            result,
+        )
+    }
+
+    /// Advance one nonce-bound OIDC device sequence by at most one poll.
+    ///
+    /// Waiting, pending, slow-down, and transient transport outcomes retain the
+    /// same opaque device session and one-use nonce. Authorization releases the
+    /// audited token response only as a nonce-paired value for a later identity
+    /// proof. Denial and expiry discard the nonce. The caller still owns time
+    /// observations and this boundary adds no identity verifier or storage.
+    pub fn advance_openid_device_flow<T, A>(
+        &self,
+        sequence: OpenIdDeviceFlowPollSequence,
+        observed_at_seconds: u64,
+        transport: &mut T,
+        audit: &mut A,
+    ) -> Result<OpenIdDeviceFlowStepResult, BrokerError>
+    where
+        T: OAuthDeviceTokenTransport,
+        A: OAuthBrokerAuditSink,
+    {
+        let provider = sequence.provider().clone();
+        let trace = sequence.trace();
+        publish_broker(
+            audit,
+            &provider,
+            trace,
+            BrokerAuditAction::DeviceFlowStep,
+            BrokerAuditOutcome::Attempted,
+        )?;
+        let result = (|| {
+            let OpenIdDeviceFlowPollSequence { sequence, nonce } = sequence;
+            match self.advance_device_flow_inner(sequence, observed_at_seconds, transport, audit)? {
+                DeviceFlowStepResult::Waiting(sequence) => Ok(OpenIdDeviceFlowStepResult::Waiting(
+                    OpenIdDeviceFlowPollSequence { sequence, nonce },
+                )),
+                DeviceFlowStepResult::Pending(sequence) => Ok(OpenIdDeviceFlowStepResult::Pending(
+                    OpenIdDeviceFlowPollSequence { sequence, nonce },
+                )),
+                DeviceFlowStepResult::SlowDown(sequence) => {
+                    Ok(OpenIdDeviceFlowStepResult::SlowDown(
+                        OpenIdDeviceFlowPollSequence { sequence, nonce },
+                    ))
+                }
+                DeviceFlowStepResult::TransportFailed(sequence) => {
+                    Ok(OpenIdDeviceFlowStepResult::TransportFailed(
+                        OpenIdDeviceFlowPollSequence { sequence, nonce },
+                    ))
+                }
+                DeviceFlowStepResult::Authorized(response) => {
+                    if response.provider() != nonce.provider() || response.trace() != nonce.trace()
+                    {
+                        return Err(BrokerError::BindingMismatch);
+                    }
+                    Ok(OpenIdDeviceFlowStepResult::Authorized(
+                        OpenIdDeviceAuthorizedResponse { response, nonce },
+                    ))
+                }
+                DeviceFlowStepResult::Denied => Ok(OpenIdDeviceFlowStepResult::Denied),
+                DeviceFlowStepResult::Expired => Ok(OpenIdDeviceFlowStepResult::Expired),
+            }
+        })();
         finish_broker(
             audit,
             &provider,
@@ -11362,6 +11570,112 @@ mod tests {
         assert_eq!(response.provider().as_str(), "fixture");
         assert_eq!(response.trace(), trace(40));
         assert_eq!(transport.calls, 3);
+        assert_eq!(
+            audit
+                .broker
+                .iter()
+                .filter(|event| event.action() == BrokerAuditAction::DeviceFlowStep)
+                .count(),
+            10
+        );
+    }
+
+    #[test]
+    fn openid_device_sequence_retains_nonce_through_every_retry_outcome() {
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        let mut broker = OAuthBroker::new(custody);
+        let mut setup_audit = RecordingAudit::default();
+        broker
+            .register_provider(policy("fixture", 300), trace(75), &mut setup_audit)
+            .unwrap();
+        let profile = device_profile("fixture", trace(75), &mut setup_audit);
+        let mut entropy = FixedOpenIdEntropy([0x4d; 96]);
+        let mut initiation_transport = MockDeviceAuthorizationTransport::openid_json(
+            r#"{
+                "device_code":"device-secret",
+                "user_code":"ABCD-EFGH",
+                "verification_uri":"https://device.fixture.example/activate",
+                "expires_in":900,
+                "interval":5
+            }"#,
+        );
+        let authorization = broker
+            .begin_openid_device_authorization(
+                &profile,
+                &["openid", "files.read"],
+                trace(75),
+                &mut entropy,
+                &mut initiation_transport,
+                &mut setup_audit,
+            )
+            .unwrap();
+        let (verification, sequence) =
+            OpenIdDeviceFlowPollSequence::from_authorization(authorization, 100).unwrap();
+        assert_eq!(verification.user_code(), "ABCD-EFGH");
+        assert_eq!(sequence.provider().as_str(), "fixture");
+        assert_eq!(sequence.trace(), trace(75));
+        assert_eq!(sequence.next_poll_at_seconds(), 105);
+        assert_eq!(sequence.expires_at_seconds(), 1_000);
+        let debug = format!("{sequence:?}");
+        assert!(!debug.contains("device-secret"));
+        assert!(!debug.contains("fixture-public-client"));
+        assert!(!debug.contains("TU1N"));
+
+        let mut transport = MockDeviceTransport::new(vec![
+            MockDeviceTransport::json(400, r#"{"error":"authorization_pending"}"#),
+            MockDeviceTransport::json(400, r#"{"error":"slow_down"}"#),
+            Err(TokenTransportError),
+            MockDeviceTransport::json(
+                200,
+                r#"{"access_token":"device-access","token_type":"Bearer","expires_in":3600,"id_token":"header.payload.signature"}"#,
+            ),
+        ]);
+        let mut audit = RecordingAudit::default();
+
+        let waiting = broker
+            .advance_openid_device_flow(sequence, 104, &mut transport, &mut audit)
+            .unwrap();
+        assert_eq!(transport.calls, 0);
+        let OpenIdDeviceFlowStepResult::Waiting(sequence) = waiting else {
+            panic!("expected an early OIDC waiting result");
+        };
+        let pending = broker
+            .advance_openid_device_flow(sequence, 105, &mut transport, &mut audit)
+            .unwrap();
+        let OpenIdDeviceFlowStepResult::Pending(sequence) = pending else {
+            panic!("expected an OIDC pending result");
+        };
+        assert_eq!(sequence.next_poll_at_seconds(), 110);
+        let slow_down = broker
+            .advance_openid_device_flow(sequence, 110, &mut transport, &mut audit)
+            .unwrap();
+        let OpenIdDeviceFlowStepResult::SlowDown(sequence) = slow_down else {
+            panic!("expected an OIDC slow-down result");
+        };
+        assert_eq!(sequence.next_poll_at_seconds(), 120);
+        let transport_failed = broker
+            .advance_openid_device_flow(sequence, 120, &mut transport, &mut audit)
+            .unwrap();
+        let OpenIdDeviceFlowStepResult::TransportFailed(sequence) = transport_failed else {
+            panic!("expected an OIDC transport failure");
+        };
+        assert_eq!(sequence.next_poll_at_seconds(), 130);
+        let authorized = broker
+            .advance_openid_device_flow(sequence, 130, &mut transport, &mut audit)
+            .unwrap();
+        let OpenIdDeviceFlowStepResult::Authorized(authorized) = authorized else {
+            panic!("expected an authorized OIDC device result");
+        };
+        assert_eq!(authorized.provider().as_str(), "fixture");
+        assert_eq!(authorized.trace(), trace(75));
+        assert!(!format!("{authorized:?}").contains("header.payload.signature"));
+        let (response, nonce) = authorized.into_parts();
+        assert_eq!(response.provider().as_str(), "fixture");
+        assert_eq!(nonce.provider().as_str(), "fixture");
+        assert_eq!(nonce.client_id(), "fixture-public-client");
+        assert_eq!(nonce.trace(), trace(75));
+        assert_eq!(nonce.into_value().len(), 43);
+        assert_eq!(transport.calls, 4);
         assert_eq!(
             audit
                 .broker

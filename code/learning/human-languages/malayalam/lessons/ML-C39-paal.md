@@ -7,12 +7,12 @@ chapter: 39
 type: word
 headword: പാൽ
 gloss: milk — native, matching Tamil exactly, and matching Kannada by the family's regular p-to-h shift
-romanization: paal
+romanization: pāl
 concept_tag: ML-MILK
 prerequisites: [ML-C39-kaapi, ML-C15-vellam-ari, ML-C36-makal, ML-C37-kannu]
 sounds: [malayalam-vowel-sign-aa, malayalam-chillu-l]
 roots: [proto-south-dravidian-pal-milk]
-etymology_hook: "പാൽ is native Dravidian, from Proto-South-Dravidian *pal, 'milk' -- Tamil keeps the same shape unchanged, paal; Kannada shows its own regular p-to-h sound law here too, haalu, the identical shift already documented across the family in words like pogu/hogu. Where Chapter 15's vellam broke from Tamil's water-word entirely, paal shows the opposite: perfect agreement"
+etymology_hook: "പാൽ is native Dravidian, from Proto-South-Dravidian *pal, 'milk' -- Tamil keeps the same shape unchanged, pāl; Kannada shows its own regular p-to-h sound law here too, haalu, the identical shift already documented across the family in words like pogu/hogu. Where Chapter 15's vellam broke from Tamil's water-word entirely, pāl shows the opposite: perfect agreement"
 duration:
   max_seconds: 260
 requires:
@@ -68,7 +68,7 @@ everyday liquids, two entirely different outcomes.
 - [YOU SAY: unchanged, then shifted — "pāl … pāl … hālu" — Malayalam,
   Tamil, Kannada]
 - [YOU SAY: water against milk — "veḷḷam broke away; pāl agrees"]
-- [YOU SAY: three drinks, once more — "chāya, kāppi, pāl"]
+- [YOU SAY: three drinks, once more — "cāya, kāppi, pāl"]
 - [YOU SAY: the long road, once more — "qahwah … kahve … caffè … kāppi"]
 - [YOU RECALL: say *makaḷ*, then read **കണ്ണ്**]
 

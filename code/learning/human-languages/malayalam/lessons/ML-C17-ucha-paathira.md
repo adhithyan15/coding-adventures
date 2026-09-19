@@ -12,7 +12,7 @@ concept_tag: ML-TIME-NOON
 prerequisites: [ML-C16-kollavarsham-maasangal, ML-C12-kudumbam]
 sounds: [malayalam-virama-cha, malayalam-vowel-sign-aa]
 roots: [sanskrit-ucca-high]
-etymology_hook: "ഉച്ച (ucha, noon) most likely shares its root with Tamil உச்சி and Kannada ಉಚ್ಚಿ (ucci, 'peak, crown, zenith') — and per Wiktionary, THAT family is itself a Sanskrit borrowing, from ucca, 'high,' not a native Dravidian word; so Malayalam's noon may be just as Sanskrit-derived as Kannada's madhyāhna, only from a DIFFERENT Sanskrit root (height, not middle)"
+etymology_hook: "ഉച്ച (ucca, noon) most likely shares its root with Tamil உச்சி and Kannada ಉಚ್ಚಿ (ucci, 'peak, crown, zenith') — and per Wiktionary, THAT family is itself a Sanskrit borrowing, from ucca, 'high,' not a native Dravidian word; so Malayalam's noon may be just as Sanskrit-derived as Kannada's madhyāhna, only from a DIFFERENT Sanskrit root (height, not middle)"
 duration:
   max_seconds: 240
 requires:
@@ -41,13 +41,13 @@ careful before you call it "native."
 ## You'll want to know
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C17-UCHA-PAATHIRA-01]; assesses=[] -->
 
-**ഉച്ച** (*ucha*) = "**noon, midday**" — and unlike Kannada's *madhyāhna* or
+**ഉച്ച** (*ucca*) = "**noon, midday**" — and unlike Kannada's *madhyāhna* or
 Telugu's *madhyāhnam*, this is **not** a *madhya* ("middle") compound at
 all. It most likely shares its root with Tamil **உச்சி** (*ucci*, "**crown
 of the head, peak, summit, zenith**") and Kannada's own **ಉಚ್ಚಿ** (*ucci*).
 Here's the honest twist: per Wiktionary, that whole *ucci* family across
 Tamil and Kannada is itself documented as a **Sanskrit borrowing**, from
-**उच्च** (*ucca*, "**high**"). Malayalam's own *ucha* has no fully
+**उच्च** (*ucca*, "**high**"). Malayalam's own *ucca* has no fully
 documented etymology yet, so treat the connection as likely rather than
 settled — but if it holds, this isn't a case of Malayalam **avoiding**
 Sanskrit at all. It's Malayalam reaching for a **different** Sanskrit root
@@ -70,7 +70,7 @@ different is the **metaphor**, not necessarily the **language of origin**.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C17-UCHA-PAATHIRA-01, ML-CONCEPT-C17-UCHA-PAATHIRA-02, ML-CONCEPT-C12-KUDUMBAM-01, ML-CONCEPT-C12-KUDUMBAM-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "ucha" — noon, "the peak" — compare Tamil's "ucci"]
+- [YOU SAY: "ucca" — noon, "the peak" — compare Tamil's "ucci"]
 - [YOU SAY: the honest contrast — Kannada/Telugu's noon word means
   "middle"; Malayalam's most likely means "peak" — both probably still
   Sanskrit, just different Sanskrit roots]

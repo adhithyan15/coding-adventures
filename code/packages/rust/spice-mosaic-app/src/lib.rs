@@ -23,7 +23,7 @@ mod schematic;
 pub use schematic::{
     SchematicAnalysis, SchematicAnalysisCard, SchematicAnalysisSettings, SchematicComponent,
     SchematicComponentKind, SchematicDocument, SchematicError, SchematicNetLabel, SchematicPoint,
-    SchematicWire,
+    SchematicScopedOutputProbes, SchematicWire,
 };
 
 const SNAPSHOT_SCHEMA: &str = "spice-mosaic-app/state";
@@ -713,6 +713,9 @@ impl SpiceMosaicApp {
             schematic_saved_output_voltage_options,
             schematic_saved_output_current_options,
             schematic_saved_output_rows,
+            schematic_scoped_output_voltage_options,
+            schematic_scoped_output_current_options,
+            schematic_scoped_output_rows,
         ) = self
             .schematic
             .as_ref()
@@ -729,6 +732,19 @@ impl SpiceMosaicApp {
                         .map(str::to_owned)
                         .collect::<Vec<_>>(),
                     document.saved_output_probe_tokens(),
+                    document
+                        .transfer_function_output_nodes()
+                        .into_iter()
+                        .map(str::to_owned)
+                        .collect::<Vec<_>>(),
+                    document
+                        .branch_current_source_references()
+                        .into_iter()
+                        .map(str::to_owned)
+                        .collect::<Vec<_>>(),
+                    document
+                        .scoped_output_probe_tokens(selected_schematic_analysis_card)
+                        .unwrap_or_default(),
                 )
             })
             .unwrap_or_default();
@@ -831,6 +847,12 @@ impl SpiceMosaicApp {
             "schematic-saved-output-current-label": "Save source current",
             "schematic-saved-output-current-options": schematic_saved_output_current_options,
             "schematic-saved-output-rows": schematic_saved_output_rows,
+            "schematic-scoped-output-label": "Selected card outputs",
+            "schematic-scoped-output-voltage-label": "Probe voltage",
+            "schematic-scoped-output-voltage-options": schematic_scoped_output_voltage_options,
+            "schematic-scoped-output-current-label": "Probe source current",
+            "schematic-scoped-output-current-options": schematic_scoped_output_current_options,
+            "schematic-scoped-output-rows": schematic_scoped_output_rows,
             "schematic-grid-label": "Grid routing",
             "schematic-grid-lines": Self::schematic_grid_lines(),
             "schematic-wire-segments": schematic_wire_segments,
@@ -1194,6 +1216,7 @@ impl MosaicApp for SpiceMosaicApp {
                     wires: Vec::new(),
                     net_labels: Vec::new(),
                     output_probes: Vec::new(),
+                    scoped_output_probes: Vec::new(),
                     analysis: SchematicAnalysis::default(),
                     analysis_settings: SchematicAnalysisSettings::default(),
                     analysis_cards: Vec::new(),
@@ -1224,6 +1247,7 @@ impl MosaicApp for SpiceMosaicApp {
                     wires: Vec::new(),
                     net_labels: Vec::new(),
                     output_probes: Vec::new(),
+                    scoped_output_probes: Vec::new(),
                     analysis: SchematicAnalysis::default(),
                     analysis_settings: SchematicAnalysisSettings::default(),
                     analysis_cards: Vec::new(),
@@ -1428,6 +1452,66 @@ impl MosaicApp for SpiceMosaicApp {
                     .map_err(|error| invalid(error.to_string()))?;
                 self.record_schematic_edit(history);
                 self.diagnostics = format!("Removed {} from saved outputs.", removed.token());
+                Ok(self.announced(self.diagnostics.clone()))
+            }
+            "addSchematicScopedOutputVoltage" => {
+                let node = event.payload["output"].as_str().ok_or_else(|| {
+                    invalid("addSchematicScopedOutputVoltage requires a labelled node")
+                })?;
+                let history = self.schematic_history_entry();
+                let document = self.schematic.as_mut().ok_or_else(|| {
+                    invalid("addSchematicScopedOutputVoltage requires a loaded schematic")
+                })?;
+                let added = document
+                    .add_scoped_output_voltage_probe(self.selected_schematic_analysis_card, node)
+                    .map_err(|error| invalid(error.to_string()))?;
+                if added {
+                    self.record_schematic_edit(history);
+                    self.diagnostics =
+                        format!("Probed V({node}) for the selected schematic analysis card.");
+                } else {
+                    self.diagnostics =
+                        format!("V({node}) is already scoped to this analysis card.");
+                }
+                Ok(self.announced(self.diagnostics.clone()))
+            }
+            "addSchematicScopedOutputCurrent" => {
+                let source = event.payload["source"].as_str().ok_or_else(|| {
+                    invalid("addSchematicScopedOutputCurrent requires a source reference")
+                })?;
+                let history = self.schematic_history_entry();
+                let document = self.schematic.as_mut().ok_or_else(|| {
+                    invalid("addSchematicScopedOutputCurrent requires a loaded schematic")
+                })?;
+                let added = document
+                    .add_scoped_output_current_probe(self.selected_schematic_analysis_card, source)
+                    .map_err(|error| invalid(error.to_string()))?;
+                if added {
+                    self.record_schematic_edit(history);
+                    self.diagnostics =
+                        format!("Probed I({source}) for the selected schematic analysis card.");
+                } else {
+                    self.diagnostics =
+                        format!("I({source}) is already scoped to this analysis card.");
+                }
+                Ok(self.announced(self.diagnostics.clone()))
+            }
+            "removeSchematicScopedOutput" => {
+                let index = event.payload["index"].as_u64().ok_or_else(|| {
+                    invalid("removeSchematicScopedOutput requires a non-negative output index")
+                })? as usize;
+                let history = self.schematic_history_entry();
+                let document = self.schematic.as_mut().ok_or_else(|| {
+                    invalid("removeSchematicScopedOutput requires a loaded schematic")
+                })?;
+                let removed = document
+                    .remove_scoped_output_probe(self.selected_schematic_analysis_card, index)
+                    .map_err(|error| invalid(error.to_string()))?;
+                self.record_schematic_edit(history);
+                self.diagnostics = format!(
+                    "Removed {} from the selected analysis card outputs.",
+                    removed.token()
+                );
                 Ok(self.announced(self.diagnostics.clone()))
             }
             "schematicPlace" => {
@@ -2272,6 +2356,73 @@ mod tests {
             removed.props["schematic-saved-output-rows"],
             json!(["I(V1)"])
         );
+    }
+
+    #[test]
+    fn schematic_scoped_outputs_persist_move_with_selected_card_and_sync() {
+        let mut app = SpiceMosaicApp::default();
+        app.start(StartContext::new("en-US", Platform::Web))
+            .unwrap();
+        let document = json!({
+            "title": "Scoped outputs",
+            "components": [
+                {"reference":"V1","kind":"DcVoltage","value":"5","terminals":[{"x":0,"y":20},{"x":0,"y":0}]},
+                {"reference":"R1","kind":"Resistor","value":"1k","terminals":[{"x":0,"y":20},{"x":40,"y":20}]},
+                {"reference":"G1","kind":"Ground","value":"","terminals":[{"x":0,"y":0}]}
+            ],
+            "wires": [],
+            "net_labels": [{"point":{"x":40,"y":20},"name":"OUT"}]
+        });
+        dispatch(&mut app, "schematicLoad", json!({"document": document}));
+        dispatch(
+            &mut app,
+            "onAddSchematicAnalysis",
+            json!({"analysis":"AC sweep"}),
+        );
+        dispatch(
+            &mut app,
+            "onSelectSchematicAnalysisCard",
+            json!({"index": 1}),
+        );
+        dispatch(
+            &mut app,
+            "onAddSchematicScopedOutputVoltage",
+            json!({"output":"OUT"}),
+        );
+        let scoped = dispatch(
+            &mut app,
+            "onAddSchematicScopedOutputCurrent",
+            json!({"source":"V1"}),
+        );
+        assert_eq!(
+            scoped.props["schematic-scoped-output-rows"],
+            json!(["V(OUT)", "I(V1)"])
+        );
+        let snapshot = app.snapshot().unwrap().unwrap();
+        let mut restored = SpiceMosaicApp::default();
+        let mut context = StartContext::new("en-US", Platform::Web);
+        context.restored_snapshot = Some(snapshot);
+        let restored_update = restored.start(context).unwrap();
+        assert_eq!(
+            restored_update.props["schematic-scoped-output-rows"],
+            json!(["V(OUT)", "I(V1)"])
+        );
+        let moved = dispatch(&mut app, "onMoveSchematicAnalysisCardEarlier", json!({}));
+        assert_eq!(
+            moved.props["schematic-analysis-card-rows"],
+            json!([["1. AC sweep"], ["2. Operating point"]])
+        );
+        let synchronized = dispatch(&mut app, "onSynchronizeSchematic", json!({}));
+        assert!(synchronized.props["netlist-text"]
+            .as_str()
+            .unwrap()
+            .contains(".ac dec 10 10 10k\n.probe ac V(OUT) I(V1)\n.op"));
+        dispatch(&mut app, "onRemoveSchematicAnalysisCard", json!({}));
+        let after_remove = dispatch(&mut app, "onSynchronizeSchematic", json!({}));
+        assert!(!after_remove.props["netlist-text"]
+            .as_str()
+            .unwrap()
+            .contains(".probe"));
     }
 
     #[test]

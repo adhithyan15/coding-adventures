@@ -53,6 +53,12 @@ component SpiceWorkbench {
   slot schematic-saved-output-current-label : text ;
   slot schematic-saved-output-current-options : list<text> ;
   slot schematic-saved-output-rows : list<text> ;
+  slot schematic-scoped-output-label : text ;
+  slot schematic-scoped-output-voltage-label : text ;
+  slot schematic-scoped-output-voltage-options : list<text> ;
+  slot schematic-scoped-output-current-label : text ;
+  slot schematic-scoped-output-current-options : list<text> ;
+  slot schematic-scoped-output-rows : list<text> ;
   slot schematic-grid-label : text ;
   slot schematic-grid-lines : list<list<number>> ;
   slot schematic-wire-segments : list<list<number>> ;
@@ -122,6 +128,9 @@ component SpiceWorkbench {
   emit onAddSchematicSavedOutputVoltage ( output : text ) ;
   emit onAddSchematicSavedOutputCurrent ( source : text ) ;
   emit onRemoveSchematicSavedOutput ( index : number ) ;
+  emit onAddSchematicScopedOutputVoltage ( output : text ) ;
+  emit onAddSchematicScopedOutputCurrent ( source : text ) ;
+  emit onRemoveSchematicScopedOutput ( index : number ) ;
   emit onSelectSchematicComponent ( reference : text ) ;
   emit onSelectSchematicTerminal ( index : number ) ;
   emit onSchematicNetLabelChange ( value : text ) ;

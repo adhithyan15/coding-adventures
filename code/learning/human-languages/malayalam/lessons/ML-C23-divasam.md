@@ -6,13 +6,13 @@ sequence: 530
 chapter: 23
 type: word
 headword: ദിവസം
-gloss: "day" — everyday Sanskrit divasam beside the more literary Sanskrit dinam
-romanization: "divasam"
+gloss: "day" — everyday Sanskrit divasaṁ beside the more literary Sanskrit dinam
+romanization: "divasaṁ"
 concept_tag: TIME-DAY
 prerequisites: [ML-C04-naale-kaanaam, ML-C17-paathira, ML-C18-mani]
 sounds: [malayalam-vowel-sign-i, malayalam-anusvara]
 roots: [sanskrit-divasa-day, sanskrit-dina]
-etymology_hook: "divasam and dinam share PIE *dyew- through two different Sanskrit formations; Malayalam assigns them everyday and formal jobs"
+etymology_hook: "divasaṁ and dinam share PIE *dyew- through two different Sanskrit formations; Malayalam assigns them everyday and formal jobs"
 duration:
   max_seconds: 240
 requires:
@@ -29,7 +29,7 @@ variety: standard-colloquial
 reviews_of: [ML-C04-naale-kaanaam, ML-C17-paathira, ML-C17-ucha-paathira]
 ---
 
-# ദിവസം (divasam) — the everyday Sanskrit day-word
+# ദിവസം (divasaṁ) — the everyday Sanskrit day-word
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -41,8 +41,8 @@ Sanskrit rival, their own honest reckoning.
 ## You'll want to know
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C23-DIVASAM-01]; assesses=[] -->
 
-**ദിവസം** (**divasam**) — "**day**" — is Malayalam's common, everyday word
-for counting a day (as in **മൂന്ന് ദിവസം**, *mūnnu divasam*, "three days").
+**ദിവസം** (**divasaṁ**) — "**day**" — is Malayalam's common, everyday word
+for counting a day (as in **മൂന്ന് ദിവസം**, *mūnnu divasaṁ*, "three days").
 It's a Sanskrit **tatsama**, borrowed whole from **दिवस** (*divasa*), which
 itself traces to **Proto-Indo-European** ***\*dyew-*** ("**to shine**"),
 via the Sanskrit root **दिव्** (*div*). That's the **same ultimate PIE
@@ -59,16 +59,16 @@ itself one level deeper, inside Sanskrit.
 Malayalam also has **ദിനം** (**dinam**) — the **exact same** Sanskrit
 tatsama word as Kannada's plain, everyday *dina*. But in Malayalam,
 **dinam** is the more **literary, formal** alternate (think **ജന്മദിനം**,
-*janmadinam*, "birthday," the modern calque-style term) — **divasam** does
+*janmadinam*, "birthday," the modern calque-style term) — **divasaṁ** does
 the everyday counting work instead.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C23-DIVASAM-01, ML-CONCEPT-C23-DIVASAM-02, ML-CONCEPT-C17-PAATHIRA-01, ML-CONCEPT-C18-MANI-01, ML-CONCEPT-C18-MANI-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "divasam" — "day," the everyday counting word]
+- [YOU SAY: "divasaṁ" — "day," the everyday counting word]
 - [YOU SAY: "dinam" — the same Sanskrit word as Kannada's dina, but formal here]
-- [YOU RECALL: say *pāthirā*, then read **മണി**]
+- [YOU RECALL: say *pātirā*, then read **മണി**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C23-DIVASAM-01, ML-CONCEPT-C23-DIVASAM-02] -->
@@ -76,5 +76,5 @@ the everyday counting work instead.
 [PAUSE 3s] What PIE root does **ദിവസം** ultimately share with Hindi/Kannada's
 *dina* and Latin's *diēs*? (***\*dyew-***, "to shine" — though *divasa* and
 *dina* are different Sanskrit formations off it, not the same word.) Which is
-the everyday counting word? (**divasam**.) Which is more literary or formal?
+the everyday counting word? (**divasaṁ**.) Which is more literary or formal?
 (**dinam**.)

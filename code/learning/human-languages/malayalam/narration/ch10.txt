@@ -15,11 +15,11 @@ You'll want to know.
 There is a table here I cannot read to you — 4 columns and 7 rows, and it has more columns than can be held in the ear at once. Its columns are: Malayalam, planet-word, meaning, compare Tamil. Come back and look at it when you have stopped.
 
 Why it's said this way.
-This is the closest family match anywhere in Dravidian: thiṅkaḷ/thiṅgaḷ, veḷḷi/veḷḷi, and ñāyar/ñāyiṟu are essentially the same words, because Malayalam only became a distinct language from Tamil within roughly the last thousand years or so. Where Tamil says கிழமை (kizhamai) for "day," Malayalam says ஆழ்ச (āzhcha) — a different word for the same idea (the two aren't confirmed cognates; treat this as two languages solving the same naming problem separately, not necessarily one shared root). Like Tamil, Malayalam mixes native planet-words (Moon, Mars, Venus, Sun) with Sanskrit ones (Mercury, Jupiter, Saturn) — the same split, inherited from the same shared ancestor language.
+This is the closest family match anywhere in Dravidian: tiṅkaḷ/thiṅgaḷ, veḷḷi/veḷḷi, and ñāyar/ñāyiṟu are essentially the same words, because Malayalam only became a distinct language from Tamil within roughly the last thousand years or so. Where Tamil says கிழமை (kizhamai) for "day," Malayalam says ஆழ்ச (āḻca) — a different word for the same idea (the two aren't confirmed cognates; treat this as two languages solving the same naming problem separately, not necessarily one shared root). Like Tamil, Malayalam mixes native planet-words (Moon, Mars, Venus, Sun) with Sanskrit ones (Mercury, Jupiter, Saturn) — the same split, inherited from the same shared ancestor language.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "thiṅkaḷ" — moon — then "āzhcha," day/week]
+[your turn — say: "tiṅkaḷ" — moon — then "āḻca," day/week]
 [pause 8 seconds for the answer]
 [your turn — say: the shared words — "veḷḷi" (Venus), same in both Malayalam and Tamil]
 [pause 8 seconds for the answer]
@@ -28,7 +28,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Why do Malayalam and Tamil's day-names look so alike? (They were the same language until roughly a thousand years ago.) Which planet-names does Malayalam share almost word-for-word with Tamil? (thiṅkaḷ/Moon, veḷḷi/Venus, ñāyar/Sun — and covva/Mars, a worn variant of cevvāy.) Which three come from Sanskrit in both languages? (Mercury (Budha), Jupiter (vyāzham/viyāzhaṉ), Saturn (Śani).)
+Why do Malayalam and Tamil's day-names look so alike? (They were the same language until roughly a thousand years ago.) Which planet-names does Malayalam share almost word-for-word with Tamil? (tiṅkaḷ/Moon, veḷḷi/Venus, ñāyar/Sun — and covva/Mars, a worn variant of cevvāy.) Which three come from Sanskrit in both languages? (Mercury (Budha), Jupiter (vyāzham/viyāzhaṉ), Saturn (Śani).)
 
 
 Lesson 2 of 2.
@@ -46,10 +46,10 @@ Script you'll notice: ന.
 ന — na.
 It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not n, it is na.
 You already say these, and every one of them has ന (na) somewhere inside it:
-നമസ്കാരം namaskāram — hello / greetings (namaskāram — "a making of a bow").
+നമസ്കാരം namaskāraṁ — hello / greetings (namaskāraṁ — "a making of a bow").
 നന്ദി nandi — thank you.
 എന്റെ enṟe — my.
-സന്തോഷം santōṣam — joy / pleased to meet you.
+സന്തോഷം santōṣaṁ — joy / pleased to meet you.
 
 Writing: ന — copy what you see.
 Put your pen on ന (na) and follow its line. Copy the shape you can see — slowly, and larger than it is printed.

@@ -4,12 +4,12 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7f2b9c16d73e21c0",
+  "sourceHash": "fnv1a64:d125a3119239ee41",
   "lessons": [
     {
       "id": "ML-C02-peru",
       "sequence": 70,
-      "title": "പേര് (pēru) — \"name,\" the native Dravidian word",
+      "title": "പേര് (pēr) — \"name,\" the native Dravidian word",
       "headword": "പേര്",
       "romanization": "pēr",
       "gloss": "name",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e84e534ccf6bca89",
+      "sourceHash": "fnv1a64:7954de3104e40b91",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -55,7 +55,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Malayalam.) പ (pa) + േ (the ē-sign) becomes പേ (pē); ര് (bare r, chandrakkala). Read പേ, ര് becomes pēru."
+              "text": "(Skim if you read Malayalam.) പ (pa) + േ (the ē-sign) becomes പേ (pē); ര് (bare r, chillu). Read പേ, ര് becomes pēr."
             }
           ]
         },
@@ -66,7 +66,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "പേര് (pēru, \"name\") is native Dravidian, from Proto-Dravidian pēr — the same word as Tamil peyar and Telugu pēru, a cousin of Kannada hesaru (p becomes h). Being Tamil's closest sister, Malayalam keeps the native word, not Sanskrit nāma (Hindi nām, English name)."
+              "text": "പേര് (pēr, \"name\") is native Dravidian, from Proto-Dravidian pēr — the same word as Tamil peyar and Telugu pēru, a cousin of Kannada hesaru (p becomes h). Being Tamil's closest sister, Malayalam keeps the native word, not Sanskrit nāma (Hindi nām, English name)."
             }
           ]
         },
@@ -84,20 +84,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"pēru\"",
+              "instruction": "\"pēr\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"pēru\"]"
+              "source": "[YOU SAY: \"pēr\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "its cousins — pēru / peyar / pēr / hesaru",
+              "instruction": "its cousins — pēr / peyar / pēru / hesaru",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: its cousins — *pēru* / *peyar* / *pēr* / *hesaru*]"
+              "source": "[YOU SAY: its cousins — *pēr* / *peyar* / *pēru* / *hesaru*]"
             }
           ]
         },
@@ -902,7 +902,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:91dfdf8c6d706be2",
+      "sourceHash": "fnv1a64:b039fe9ce3377dee",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -953,7 +953,7 @@
             },
             {
               "kind": "speech",
-              "text": "Here's the point: Tamil, Kannada, and Telugu all use the zero copula — no word for \"is.\" Yet Malayalam, though it is Tamil's closest sister, grammaticalised a \"to be\" verb. So where Tamil says only eṉ peyar Arun, Malayalam adds āṇŭ: enṟe pēru Arun āṇŭ."
+              "text": "Here's the point: Tamil, Kannada, and Telugu all use the zero copula — no word for \"is.\" Yet Malayalam, though it is Tamil's closest sister, grammaticalised a \"to be\" verb. So where Tamil says only eṉ peyar Arun, Malayalam adds āṇŭ: enṟe pēr Arun āṇŭ."
             }
           ]
         },
@@ -991,11 +991,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the contrast — Tamil eṉ peyar Arun (no verb) vs. Malayalam enṟe pēru Arun āṇŭ",
+              "instruction": "the contrast — Tamil eṉ peyar Arun (no verb) vs. Malayalam enṟe pēr Arun āṇŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the contrast — Tamil *eṉ peyar Arun* (no verb) vs. Malayalam *enṟe pēru Arun āṇŭ*]"
+              "source": "[YOU SAY: the contrast — Tamil *eṉ peyar Arun* (no verb) vs. Malayalam *enṟe pēr Arun āṇŭ*]"
             },
             {
               "kind": "prompt",
@@ -1352,9 +1352,9 @@
     {
       "id": "ML-C02-enre-peru-aanu",
       "sequence": 100,
-      "title": "എന്റെ പേര് … ആണ് (enṟe pēru … āṇŭ) — \"my name is…\"",
+      "title": "എന്റെ പേര് … ആണ് (enṟe pēr … āṇŭ) — \"my name is…\"",
       "headword": "എന്റെ പേര് … ആണ്",
-      "romanization": "enṟe pēru … āṇŭ",
+      "romanization": "enṟe pēr … āṇŭ",
       "gloss": "my name is…",
       "script": "malayalam",
       "modality": "voice",
@@ -1362,7 +1362,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c59b362b724a12b7",
+      "sourceHash": "fnv1a64:516b7543ded023b4",
       "notice": null,
       "blocks": [
         {
@@ -1389,15 +1389,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "enṟe (my) + pēru (name) + your name + āṇŭ (is)."
+              "text": "enṟe (my) + pēr (name) + your name + āṇŭ (is)."
             },
             {
               "kind": "speech",
-              "text": "എന്റെ പേര് … ആണ് (enṟe pēru … āṇŭ) = \"my name … is\" = \"my name is…\""
+              "text": "എന്റെ പേര് … ആണ് (enṟe pēr … āṇŭ) = \"my name … is\" = \"my name is…\""
             },
             {
               "kind": "speech",
-              "text": "Enṟe pēru Arun āṇŭ. becomes \"My name is Arun.\""
+              "text": "Enṟe pēr Arun āṇŭ. becomes \"My name is Arun.\""
             }
           ]
         },
@@ -1426,11 +1426,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"enṟe pēru … āṇŭ\" with your name",
+              "instruction": "\"enṟe pēr … āṇŭ\" with your name",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"enṟe pēru … āṇŭ\" with your name]"
+              "source": "[YOU SAY: \"enṟe pēr … āṇŭ\" with your name]"
             },
             {
               "kind": "prompt",
@@ -1456,7 +1456,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give your name in Malayalam. (Enṟe pēru … āṇŭ.) What word does Malayalam add that Tamil omits? (The copula āṇŭ, \"is.\")"
+              "text": "Give your name in Malayalam. (Enṟe pēr … āṇŭ.) What word does Malayalam add that Tamil omits? (The copula āṇŭ, \"is.\")"
             }
           ]
         }
@@ -2037,9 +2037,9 @@
     {
       "id": "ML-C02-ninre-peru-entaanu",
       "sequence": 130,
-      "title": "നിന്റെ പേര് എന്താണ്? (ninṟe pēru entāṇŭ?) — \"what's your name?\"",
+      "title": "നിന്റെ പേര് എന്താണ്? (ninṟe pēr entāṇŭ?) — \"what's your name?\"",
       "headword": "നിന്റെ പേര് എന്താണ്?",
-      "romanization": "ninṟe pēru entāṇŭ?",
+      "romanization": "ninṟe pēr entāṇŭ?",
       "gloss": "what's your name?",
       "script": "malayalam",
       "modality": "voice",
@@ -2047,7 +2047,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:03c75db83c7f3b1f",
+      "sourceHash": "fnv1a64:07467bace883aed4",
       "notice": null,
       "blocks": [
         {
@@ -2082,7 +2082,7 @@
             },
             {
               "kind": "speech",
-              "text": "നിന്റെ പേര് എന്താണ്? (ninṟe pēru entāṇŭ?) = literally \"your name what is?\""
+              "text": "നിന്റെ പേര് എന്താണ്? (ninṟe pēr entāṇŭ?) = literally \"your name what is?\""
             },
             {
               "kind": "speech",
@@ -2097,7 +2097,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Answer with the sentence you built: Enṟe pēru Arun āṇŭ. The respectful \"your\" is niṅṅaḷuṭe: niṅṅaḷuṭe pēru entāṇŭ?"
+              "text": "Answer with the sentence you built: Enṟe pēr Arun āṇŭ. The respectful \"your\" is niṅṅaḷuṭe: niṅṅaḷuṭe pēr entāṇŭ?"
             }
           ]
         },
@@ -2115,11 +2115,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ninṟe pēru entāṇŭ?\"",
+              "instruction": "\"ninṟe pēr entāṇŭ?\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ninṟe pēru entāṇŭ?\"]"
+              "source": "[YOU SAY: \"ninṟe pēr entāṇŭ?\"]"
             },
             {
               "kind": "prompt",
@@ -2154,9 +2154,9 @@
     {
       "id": "ML-C02-santosham",
       "sequence": 140,
-      "title": "സന്തോഷം (santōṣam) — \"joy,\" and \"pleased to meet you\"",
+      "title": "സന്തോഷം (santōṣaṁ) — \"joy,\" and \"pleased to meet you\"",
       "headword": "സന്തോഷം",
-      "romanization": "santōṣam",
+      "romanization": "santōṣaṁ",
       "gloss": "joy / pleased to meet you",
       "script": "malayalam",
       "modality": "sight",
@@ -2164,7 +2164,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:eb5e1646a5e403e1",
+      "sourceHash": "fnv1a64:f6d9f6e35a7062bb",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -2200,7 +2200,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "സന്തോഷം (santōṣam) literally means \"joy.\" At the end of a short introduction, it can stand by itself for \"pleased to meet you.\" A fuller phrase exists, but it needs words and grammar you have not learned yet; the one-word version is complete and useful now."
+              "text": "സന്തോഷം (santōṣaṁ) literally means \"joy.\" At the end of a short introduction, it can stand by itself for \"pleased to meet you.\" A fuller phrase exists, but it needs words and grammar you have not learned yet; the one-word version is complete and useful now."
             }
           ]
         },
@@ -2211,7 +2211,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Keep സന്തോഷം (santōṣam) visible. Most of its shapes have already appeared in this chapter. Point to just two new ones:"
+              "text": "Keep സന്തോഷം (santōṣaṁ) visible. Most of its shapes have already appeared in this chapter. Point to just two new ones:"
             },
             {
               "kind": "speech",
@@ -2234,7 +2234,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "സന്തോഷം (santōṣam, \"joy\") is Sanskrit — the same loan Kannada and Telugu use. So even Malayalam, the great keeper of native words (recall nandi for \"thanks\" in Chapter 1), reaches for Sanskrit here. The loanwords spread selectively, word by word — which is exactly what these cognate notes trace: native for \"name\" and \"thanks,\" Sanskrit for \"pleased.\""
+              "text": "സന്തോഷം (santōṣaṁ, \"joy\") is Sanskrit — the same loan Kannada and Telugu use. So even Malayalam, the great keeper of native words (recall nandi for \"thanks\" in Chapter 1), reaches for Sanskrit here. The loanwords spread selectively, word by word — which is exactly what these cognate notes trace: native for \"name\" and \"thanks,\" Sanskrit for \"pleased.\""
             }
           ]
         },
@@ -2252,20 +2252,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"santōṣam\"",
+              "instruction": "\"santōṣaṁ\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"santōṣam\"]"
+              "source": "[YOU SAY: \"santōṣaṁ\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pattern — Malayalam keeps native nandi (thanks) but borrows Sanskrit santōṣam (pleased)",
+              "instruction": "the pattern — Malayalam keeps native nandi (thanks) but borrows Sanskrit santōṣaṁ (pleased)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pattern — Malayalam keeps native *nandi* (thanks) but borrows Sanskrit *santōṣam* (pleased)]"
+              "source": "[YOU SAY: the pattern — Malayalam keeps native *nandi* (thanks) but borrows Sanskrit *santōṣaṁ* (pleased)]"
             }
           ]
         },
@@ -2282,7 +2282,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is സന്തോഷം (santōṣam) native or Sanskrit, and what does that show about how Malayalam borrows? (Sanskrit; it borrows selectively — native for some words, Sanskrit for others.)"
+              "text": "Is സന്തോഷം (santōṣaṁ) native or Sanskrit, and what does that show about how Malayalam borrows? (Sanskrit; it borrows selectively — native for some words, Sanskrit for others.)"
             }
           ]
         }
@@ -2617,9 +2617,9 @@
     {
       "id": "ML-W02-santosham-guided-copy",
       "sequence": 145,
-      "title": "സന്തോഷം (santōṣam) — copy one known word with help",
+      "title": "സന്തോഷം (santōṣaṁ) — copy one known word with help",
       "headword": "സന്തോഷം",
-      "romanization": "santōṣam",
+      "romanization": "santōṣaṁ",
       "gloss": "copy the known word for joy once with the model visible",
       "script": "malayalam",
       "modality": "pen",
@@ -2630,7 +2630,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:302aa3f33ad582a2",
+      "sourceHash": "fnv1a64:a49a7407a70cb444",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -2651,7 +2651,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Point to സന്തോഷം and say santōṣam once. Keep the model on the page. Find ഷ near the end, then find the long ō sign ോ on the consonant before it. Those are the two shapes you will work with."
+              "text": "Point to സന്തോഷം and say santōṣaṁ once. Keep the model on the page. Find ഷ near the end, then find the long ō sign ോ on the consonant before it. Those are the two shapes you will work with."
             }
           ]
         },
@@ -2684,7 +2684,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Follow സന്തോഷം (santōṣam) from left to right with your finger. Then copy the whole word once directly below the visible model. Look back as often as you need."
+              "text": "Follow സന്തോഷം (santōṣaṁ) from left to right with your finger. Then copy the whole word once directly below the visible model. Look back as often as you need."
             },
             {
               "kind": "speech",
@@ -2699,7 +2699,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Compare your copy with സന്തോഷം while both remain visible. Check only the two shapes you noticed: ഷ and ോ. Repair one shape if you want, then stop and say santōṣam once more."
+              "text": "Compare your copy with സന്തോഷം while both remain visible. Check only the two shapes you noticed: ഷ and ോ. Repair one shape if you want, then stop and say santōṣaṁ once more."
             }
           ]
         }
@@ -2719,7 +2719,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:25f3de7d5f5a86c3",
+      "sourceHash": "fnv1a64:1528b381ee0e5e03",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -2762,10 +2762,10 @@
               "columns": 2,
               "rowCount": 4,
               "utterances": [
-                "എന്റെ പേര് മീരാ ആണ്. (enṟe pēru Mira āṇŭ) means My name is Mira.",
-                "നിന്റെ പേര് എന്താണ്? (ninṟe pēru entāṇŭ?) (ninṟe pēru entāṇŭ) means What's your name?",
-                "എന്റെ പേര് അരുൺ ആണ്. (enṟe pēru Arun āṇŭ) means My name is Arun.",
-                "സന്തോഷം. (santōṣam) means Pleased to meet you."
+                "എന്റെ പേര് മീരാ ആണ്. (enṟe pēr Mira āṇŭ) means My name is Mira.",
+                "നിന്റെ പേര് എന്താണ്? (ninṟe pēr entāṇŭ?) (ninṟe pēr entāṇŭ) means What's your name?",
+                "എന്റെ പേര് അരുൺ ആണ്. (enṟe pēr Arun āṇŭ) means My name is Arun.",
+                "സന്തോഷം. (santōṣaṁ) means Pleased to meet you."
               ]
             },
             {
@@ -2774,7 +2774,7 @@
             },
             {
               "kind": "speech",
-              "text": "pēru from Dravidian pēr (not name; twin of Tamil peyar)."
+              "text": "pēr from Dravidian pēr (not name; twin of Tamil peyar)."
             },
             {
               "kind": "speech",
@@ -2790,7 +2790,7 @@
             },
             {
               "kind": "speech",
-              "text": "santōṣam from Sanskrit (borrowed even in native-loving Malayalam)."
+              "text": "santōṣaṁ from Sanskrit (borrowed even in native-loving Malayalam)."
             },
             {
               "kind": "speech",
@@ -2821,20 +2821,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "your own introduction — \"enṟe pēru … āṇŭ\"",
+              "instruction": "your own introduction — \"enṟe pēr … āṇŭ\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: your own introduction — \"enṟe pēru … āṇŭ\"]"
+              "source": "[YOU SAY: your own introduction — \"enṟe pēr … āṇŭ\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ask it back — \"ninṟe pēru entāṇŭ?\"",
+              "instruction": "ask it back — \"ninṟe pēr entāṇŭ?\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: ask it back — \"ninṟe pēru entāṇŭ?\"]"
+              "source": "[YOU SAY: ask it back — \"ninṟe pēr entāṇŭ?\"]"
             }
           ]
         },
@@ -2845,7 +2845,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Keep the dialogue table open. Copy സന്തോഷം (santōṣam) once from its visible row, then compare your two new shapes, ഷ and ോ, with the model. This is supported checkpoint writing, not spelling from memory."
+              "text": "Keep the dialogue table open. Copy സന്തോഷം (santōṣaṁ) once from its visible row, then compare your two new shapes, ഷ and ോ, with the model. This is supported checkpoint writing, not spelling from memory."
             }
           ]
         },
@@ -2908,7 +2908,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give your name, ask someone else's, say you're pleased. (Enṟe pēru … āṇŭ. / Ninṟe pēru entāṇŭ? / Santōṣam.) What grammatical word does Malayalam have that Tamil, Kannada, and Telugu lack? (A copula — āṇŭ, \"is.\")"
+              "text": "Give your name, ask someone else's, say you're pleased. (Enṟe pēr … āṇŭ. / Ninṟe pēr entāṇŭ? / Santōṣam.) What grammatical word does Malayalam have that Tamil, Kannada, and Telugu lack? (A copula — āṇŭ, \"is.\")"
             },
             {
               "kind": "speech",

@@ -55,7 +55,7 @@ They end **-ിയ**, **-ഞ്ഞ** and **-ച്ച** — three different shap
 there is nothing for it to stand in front of. It uses the frame you were given
 for *having*:
 
-> **എനിക്ക് ഉയരമുണ്ട്.** — *enikku uyaramuṇṭŭ* — to-me height there-is — *I am
+> **എനിക്ക് ഉയരമുണ്ട്.** — *enikkŭ uyaramuṇṭŭ* — to-me height there-is — *I am
 > tall.*
 
 ## What you've built
@@ -74,7 +74,7 @@ almost the same word and do not mean the same thing — one is *small*, the othe
 [PAUSE 1s]
 - [YOU SAY: *kuṟiya*, *meliñña*, *taṭicca*, *uyaraṁ*]
 - [YOU SAY: *taṭicca kuṭṭi*, then *meliñña kuṭṭi*]
-- [YOU SAY: *enikku uyaramuṇṭŭ*]
+- [YOU SAY: *enikkŭ uyaramuṇṭŭ*]
 - [YOU SAY: which of the four cannot stand in front of a noun, and why]
 
 ## Wrap-up Recall

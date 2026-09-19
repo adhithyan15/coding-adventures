@@ -171,6 +171,14 @@ fn manifest_and_component_contract_are_complete() {
     assert!(component
         .emits
         .iter()
+        .any(|emit| emit.name == "onAddSchematicScopedOutputVoltage"));
+    assert!(component
+        .emits
+        .iter()
+        .any(|emit| emit.name == "onRemoveSchematicScopedOutput"));
+    assert!(component
+        .emits
+        .iter()
         .any(|emit| emit.name == "onSelectSchematicRouteTarget"));
     assert!(component
         .emits
@@ -320,6 +328,8 @@ fn emitted_web_workbench_preserves_the_multiline_editor_and_actions() {
                 assert!(output.contains("data-on-click=\"onMoveSchematicAnalysisCardEarlier\""));
                 assert!(output.contains("data-on-click=\"onMoveSchematicAnalysisCardLater\""));
                 assert!(output.contains("data-on-click=\"onRemoveSchematicAnalysisCard\""));
+                assert!(output.contains("data-on-click=\"onAddSchematicScopedOutputVoltage\""));
+                assert!(output.contains("data-on-click=\"onRemoveSchematicScopedOutput\""));
                 assert!(output.contains("data-on-click=\"onSelectSchematicAnalysisSource\""));
                 assert!(output.contains("data-on-change=\"onSchematicAnalysisParameterOneChange\""));
                 assert!(output.contains("data-on-change=\"onSchematicValueChange\""));
@@ -343,6 +353,8 @@ fn emitted_web_workbench_preserves_the_multiline_editor_and_actions() {
                 assert!(output.contains("type: \"selectSchematicAnalysis\""));
                 assert!(output.contains("type: \"moveSchematicAnalysisCardEarlier\""));
                 assert!(output.contains("type: \"moveSchematicAnalysisCardLater\""));
+                assert!(output.contains("type: \"addSchematicScopedOutputVoltage\""));
+                assert!(output.contains("type: \"removeSchematicScopedOutput\""));
                 assert!(output.contains("type: \"selectSchematicAnalysisSource\""));
                 assert!(output.contains("type: \"schematicAnalysisParameterOneChange\""));
                 assert!(output.contains("type: \"schematicValueChange\""));

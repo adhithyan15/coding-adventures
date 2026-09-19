@@ -7,7 +7,7 @@ chapter: 88
 type: grammar
 headword: "ഇരുപത്തിയൊന്ന്"
 gloss: twenty-one — how a ten and a digit join, and the stem change you have met twice before
-romanization: "irupatthiyonnŭ"
+romanization: "irupattiyonnŭ"
 concept_tag: ML-COMPOUND-NUMBERS
 prerequisites: [ML-C88-ninety-hundred, ML-C07-numbers-1-5]
 sounds: []
@@ -28,7 +28,7 @@ variety: standard-colloquial
 reviews_of: [ML-C88-tens, ML-C07-numbers-1-5]
 ---
 
-# ഇരുപത്തിയൊന്ന് (irupatthiyonnŭ) — twenty-one
+# ഇരുപത്തിയൊന്ന് (irupattiyonnŭ) — twenty-one
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C88-TENS-01, ML-CONCEPT-C07-NUMBERS-1-5-01] -->
@@ -39,7 +39,7 @@ them together.
 ## Grammar Lens: the ten changes shape before the digit
 <!-- hl-knowledge: introduces=[ML-GRAMMAR-C88-COMPOUND-01]; assesses=[] -->
 
-**ഇരുപത്തിയൊന്ന്** — *irupatthiyonnŭ* — twenty-one.
+**ഇരുപത്തിയൊന്ന്** — *irupattiyonnŭ* — twenty-one.
 
 The two halves are both yours. What is new is the join, and you have seen it
 before:
@@ -64,7 +64,7 @@ says *twenty-one* — so there is nothing to reverse in your head.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C88-COMPOUND-01, ML-CONCEPT-C88-TENS-01, ML-GRAMMAR-C83-OBLIQUE-AM-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: *irupathŭ*, then *irupatthiyonnŭ*]
+- [YOU SAY: *irupatŭ*, then *irupattiyonnŭ*]
 - [YOU SAY: what happened to the ten when the digit arrived]
 - [YOU SAY: the earlier word that changed shape the same way before its ending]
 - [YOU SAY: which comes first in the compound, the ten or the digit]

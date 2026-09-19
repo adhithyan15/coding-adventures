@@ -47,7 +47,7 @@ It is a **vowel sign**. It is not a letter and never stands alone: it attaches t
 
 You already say these, and every one of them has ◌ാ somewhere inside it:
 
-- **നമസ്കാരം** *namaskāram* — hello / greetings (namaskāram — "a making of a bow")
+- **നമസ്കാരം** *namaskāraṁ* — hello / greetings (namaskāraṁ — "a making of a bow")
 - **സാരമില്ല** *sāramilla* — it doesn't matter / no problem / you're welcome
 - **പോയി വരാം** *pōyi varāṁ* — goodbye (lit. "I'll go and come back")
 - **നാളെ കാണാം** *nāḷe kāṇāṁ* — see you tomorrow

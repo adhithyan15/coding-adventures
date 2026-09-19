@@ -38,8 +38,8 @@ reviews_of: [ML-W07-digits-6-8]
 ## Script
 <!-- hl-knowledge: introduces=[ML-SCRIPT-DIGITS-9-10-07]; assesses=[] -->
 
-- **൯** means 9: *ompathu*.
-- **൰** means 10: *pathu*.
+- **൯** means 9: *ombatŭ*.
+- **൰** means 10: *pattŭ*.
 
 Point through **൬ ൭ ൮ ൯ ൰** and say the words once.
 
@@ -48,7 +48,7 @@ Point through **൬ ൭ ൮ ൯ ൰** and say the words once.
 <!-- hl-writing-stage: observe-trace -->
 
 Trace **൯** once and **൰** once with their models visible. Circle the one you
-hear: [YOU HEAR: *ompathu*]. (**൯**.)
+hear: [YOU HEAR: *ombatŭ*]. (**൯**.)
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-6-10-01, ML-SCRIPT-DIGITS-9-10-07] -->

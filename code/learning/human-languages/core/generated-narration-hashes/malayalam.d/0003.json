@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 3,
-  "sourceHash": "fnv1a64:eff6fa7102598a35",
+  "sourceHash": "fnv1a64:769e43efd8486c68",
   "lessonIds": [
     "ML-C03-engane",
     "ML-S126-letter-oo",
@@ -18,7 +18,7 @@
   "drivablePrefix": 0,
   "text": "malayalam/narration/ch03.txt",
   "json": "malayalam/narration/ch03.json",
-  "textHash": "fnv1a64:e4c2f24905d944fc",
-  "jsonHash": "fnv1a64:96fa0787249fd35c",
+  "textHash": "fnv1a64:e29d8078ed7e4928",
+  "jsonHash": "fnv1a64:a4b15caf2b0ba47e",
   "findings": []
 }

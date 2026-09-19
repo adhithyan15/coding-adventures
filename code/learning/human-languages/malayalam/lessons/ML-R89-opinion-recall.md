@@ -45,7 +45,7 @@ reviews_of: [ML-C89-nallathu, ML-C89-mosham, ML-C89-opinion]
 
 **-അത്** is the word for *that*, and **നല്ലത്** is *the that-which-is-good*.
 The sense fits the shape, and the ending works on **every quality the book has
-given you** — *valiyathŭ*, *ceṟiyathŭ*, *puthiyathŭ*, *paḻayathŭ* — with no
+given you** — *valiyatŭ*, *ceṟiyatŭ*, *putiyatŭ*, *paḻayatŭ* — with no
 exceptions among them.
 
 **മോശം** filled the other hole. Five qualities and not one of them negative
@@ -78,7 +78,7 @@ finally uses it can be very small.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C89-NOMINAL-01, ML-LEX-C89-EVAL-01, ML-CONCEPT-C89-OPINION-01, ML-LEX-C42-ADJ-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: *nallathŭ*, then *valiyathŭ*]
+- [YOU SAY: *nallatŭ*, then *valiyatŭ*]
 - [YOU SAY: *mōśamāṇŭ*]
 - [YOU SAY: the whole opinion, with *good*]
 - [YOU SAY: the same opinion, with *bad*]
