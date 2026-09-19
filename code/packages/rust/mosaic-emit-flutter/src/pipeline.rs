@@ -5016,7 +5016,7 @@ fn emit_host_input(
     }
     writeln!(
         out,
-        "{input_pad}  value: {value_expr},\n{input_pad}  builder: (_mosaicController) => TextField(\n{input_pad}    controller: _mosaicController,"
+        "{input_pad}  value: {value_expr},\n{input_pad}  builder: (mosaicController) => TextField(\n{input_pad}    controller: mosaicController,"
     )
     .unwrap();
 
@@ -9752,7 +9752,7 @@ mod tests {
         let out = &r.output;
         assert!(out.contains("TextField("));
         assert!(out.contains("value: formula,"));
-        assert!(out.contains("controller: _mosaicController,"));
+        assert!(out.contains("controller: mosaicController,"));
         assert!(out.contains("hintText: \"Type a formula\""));
     }
 

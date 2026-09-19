@@ -47,6 +47,10 @@ fn generate_numeric_typography_fixture() {
         std::fs::create_dir_all(path.join("lib")).unwrap();
         std::fs::create_dir_all(path.join("test")).unwrap();
         std::fs::write(path.join("lib/typography.dart"), output).unwrap();
+        // Match the production Flutter lint that caught the controller callback
+        // regression in TaskApp's generated release, not just Dart type errors.
+        std::fs::write(path.join("analysis_options.yaml"),
+            "linter:\n  rules:\n    no_leading_underscores_for_local_identifiers: true\n").unwrap();
         std::fs::write(path.join("pubspec.yaml"), "name: mosaic_typography\nenvironment:\n  sdk: '>=3.5.0 <4.0.0'\ndependencies:\n  flutter:\n    sdk: flutter\ndev_dependencies:\n  flutter_test:\n    sdk: flutter\n").unwrap();
         std::fs::write(
             path.join("test/typography_test.dart"),
@@ -84,7 +88,7 @@ fn editor_fixture() -> String {
 fn table_editors_share_the_controller_lowering() {
     let output = editor_fixture();
     assert!(output.contains("value: ( row ),"));
-    assert!(output.contains("controller: _mosaicController,"));
+    assert!(output.contains("controller: mosaicController,"));
     assert!(!output.contains("TextEditingController(text: row)"));
 }
 
