@@ -1,14 +1,6 @@
-## HL-C410 — `unquote()` does not decode escapes, and no check compares a headword against anything
+## HL-C409 — `unquote()` does not decode escapes, and no check compares a headword against anything
 
-**Status: OPEN.** Renumbered from HL-C409 to HL-C410 after merge: #15578 and
-#15582 landed concurrently and both claimed `04980`/`HL-C409`, because shard
-ordinals are picked by reading the directory rather than allocated atomically.
-The other HL-C409 (the A1 reading envelope) keeps the id, since it is cited in a
-published `malayalam/CHANGELOG.md` heading. NOTE that the ordinal no longer
-tracks merge order for this pair: this file merged FIRST and now sorts as the
-newer of the two.
-
-Found by security review of the Malayalam punctuation chapter,
+**Status: OPEN.** Found by security review of the Malayalam punctuation chapter,
 after the defect had already passed validate, all twelve gates, the full suite,
 a strict book compile and the LaTeX warning scanner.
 
