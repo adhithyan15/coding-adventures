@@ -2,7 +2,10 @@
 
 **Status:** active  
 **Last reprioritized:** 2026-09-19  
-**Current selection:** CCR-001, Windows-native absolute glob expansion  
+**Current selection:** CCR-002, fail closed on incomplete SIMPLE/ADVANCED
+compilation ([#15534](https://github.com/adhithyan15/coding-adventures/issues/15534))<br>
+**Current local loop base:** `coding-adventures` at
+`a31b2ccc1a97917bcac70ac4b4b921a4c4dfb095`<br>
 **Local audit base:** `coding-adventures` at `06fc0524051a397ccc53c628b08c019b2bbf75ba`  
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
@@ -40,16 +43,24 @@ collapse-properties does not mutate the program.
 
 ### Local implementation
 
-- `closurec` is version `0.240.0` and declares 111 flags in `cli.spec.json`.
+- `closurec` is version `0.241.0` and declares 111 flags in `cli.spec.json`.
 - All 462 curated differential fixtures match their checked-in expected bytes.
   Most WHITESPACE_ONLY fixtures cite Closure `v20240317`; newer SIMPLE fixtures
   cite `v20260712`, so the corpus does not yet share one current oracle pin.
 - The conformance suite has 24 declared cases: 19 compare values and five are
   explicit unsupported-syntax declines. All three harness tests pass.
 - Both correlation-vector provenance tests pass.
-- On Windows, `cargo test --no-fail-fast` runs every later integration target
-  successfully but reports six unit failures. Every failure is an absolute
-  glob expansion returning `GlobError::NoMatches`; CCR-001 owns this defect.
+- CCR-001 fixed Windows-native absolute, drive-rooted, UNC, and
+  mixed-separator glob expansion in [#15529](https://github.com/adhithyan15/coding-adventures/pull/15529).
+  Its full Windows validation passed all 688 unit tests and every integration
+  target before CI passed on Windows, macOS, and Ubuntu.
+- A fresh `v20260915` oracle probe found a false-success compilation defect:
+  upstream rejects malformed `var = ;` with exit 1, `JSC_PARSE_ERROR`, and no
+  output, while `closurec --compilation_level SIMPLE` exits 0 and emits
+  `var=;`. For destructuring that upstream compiles successfully, `closurec`
+  silently emits whitespace-only output after the typed bridge declines it.
+  The exact oracle hash and reproduction are tracked in
+  [#15534](https://github.com/adhithyan15/coding-adventures/issues/15534).
 - The AST covers the main statement and expression families, including
   classes, modules, optional chains, generators, templates, and async nodes.
   Binding targets remain identifier-only, so destructuring and several
@@ -138,8 +149,8 @@ scope.
 
 | Rank | ID | Work item | Acceptance evidence | Status |
 |---:|---|---|---|---|
-| 1 | CCR-001 | Make absolute and relative `--js` globs use native Windows separators and roots without regressing POSIX behavior. | The six Windows failures pass; focused mixed-separator, exclusion, `*`, and `**` tests pass; full `closurec` suite is green on Windows. | Implemented; awaiting PR |
-| 2 | CCR-002 | Replace silent SIMPLE/ADVANCED typed-pipeline fallback with an explicit compatibility policy. Unsupported syntax must either be a hard error or an opt-in, diagnostic-bearing fallback. | Differential tests prove exit code, stderr, and output for parse, bridge, pass, and emit failures. | Ready |
+| 1 | CCR-001 | Make absolute and relative `--js` globs use native Windows separators and roots without regressing POSIX behavior. | The six Windows failures pass; focused mixed-separator, exclusion, `*`, and `**` tests pass; full `closurec` suite is green on Windows. | Complete — [#15529](https://github.com/adhithyan15/coding-adventures/pull/15529) |
+| 2 | CCR-002 | Replace silent SIMPLE/ADVANCED typed-pipeline fallback with an explicit compatibility policy. Unsupported syntax must either be a hard error or an opt-in, diagnostic-bearing fallback. | Differential tests prove exit code, stderr, and output for parse, bridge, pass, and emit failures. | Selected — [#15534](https://github.com/adhithyan15/coding-adventures/issues/15534) |
 | 3 | CCR-003 | Establish one reproducible oracle manifest pinned to upstream `v20260915` and commit `10ca677a`. Record Java version, commands, flags, hashes, licensing, and fixture provenance. | Offline manifest verifier passes and every checked-in fixture resolves to one pin and command. | Ready |
 | 4 | CCR-004 | Re-run all 462 golden fixtures against the new oracle, classify drift, and update only reviewed deltas. | Machine-readable report records equal/changed/declined counts and every changed byte has a linked reason. | Blocked by CCR-003 |
 | 5 | CCR-005 | Generate a CLI surface audit from current `CommandLineRunner.java` and `cli.spec.json`, separating upstream, generated, extension, deprecated-alias, and unsupported flags. | CI fails on unclassified flag drift; canonical `--typed_ast_output_file` is accepted with tested compatibility for the legacy typo. | Ready |
@@ -208,3 +219,4 @@ the loop moved.
 |---|---|---|
 | 2026-09-19 | Initial code/upstream audit. Full Windows test run found six failures sharing one root cause; no open Closure/CLOC PRs were found. | Selected CCR-001 because broken cross-platform tests and unusable native absolute globs outrank semantic expansion. |
 | 2026-09-19 | CCR-001 implementation verified locally: all 688 unit tests and every integration target pass under `--no-fail-fast` on Windows. | Keep CCR-001 selected until its PR is green and merged; then re-fetch, record completion, and reprioritize the full queue. |
+| 2026-09-19 | CCR-001 merged as [#15529](https://github.com/adhithyan15/coding-adventures/pull/15529) at `a31b2ccc`; upstream remained at commit `10ca677a` and release `v20260915`. Direct oracle probing then proved malformed input exits 1 upstream but exits 0 with emitted JS locally, and proved typed-bridge declines silently weaken SIMPLE output. | Selected CCR-002 ([#15534](https://github.com/adhithyan15/coding-adventures/issues/15534)). A false-success compiler result outranks oracle infrastructure and all semantic expansion work under priority rule 2. |
