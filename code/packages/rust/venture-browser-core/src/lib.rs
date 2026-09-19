@@ -354,7 +354,7 @@ pub struct BrowserFindDiagnostic {
 }
 
 #[derive(Clone, Debug, PartialEq)]
-struct BrowserFindMatch {
+struct BrowserFindFragment {
     x: f64,
     y: f64,
     width: f64,
@@ -362,61 +362,157 @@ struct BrowserFindMatch {
     fixed: bool,
 }
 
-fn collect_find_matches(
+#[derive(Clone, Debug, PartialEq)]
+struct BrowserFindMatch {
+    fragments: Vec<BrowserFindFragment>,
+    fixed: bool,
+}
+
+#[derive(Clone, Debug)]
+struct BrowserFindTextRun {
+    folded_start: usize,
+    folded_end: usize,
+    scalar_positions: Vec<(usize, usize)>,
+    scalar_count: usize,
+    fragment: BrowserFindFragment,
+}
+
+#[derive(Default)]
+struct BrowserFindTextStream {
+    folded: String,
+    runs: Vec<BrowserFindTextRun>,
+}
+
+impl BrowserFindTextStream {
+    fn separate(&mut self) {
+        if !self.folded.is_empty() && !self.folded.ends_with('\0') {
+            self.folded.push('\0');
+        }
+    }
+
+    fn push_text(&mut self, value: &str, fragment: BrowserFindFragment) {
+        let (folded, scalar_positions) = fold_find_text(value);
+        if folded.is_empty() {
+            return;
+        }
+        if self
+            .runs
+            .last()
+            .is_some_and(|previous| previous.fragment.fixed != fragment.fixed)
+        {
+            self.separate();
+        }
+        let folded_start = self.folded.len();
+        self.folded.push_str(&folded);
+        self.runs.push(BrowserFindTextRun {
+            folded_start,
+            folded_end: self.folded.len(),
+            scalar_count: value.chars().count().max(1),
+            scalar_positions,
+            fragment,
+        });
+    }
+}
+
+fn collect_find_text(
     node: &PositionedNode,
     parent_x: f64,
     parent_y: f64,
     inherited_fixed: bool,
-    folded_query: &str,
-    matches: &mut Vec<BrowserFindMatch>,
-    truncated: &mut bool,
+    stream: &mut BrowserFindTextStream,
 ) {
     let x = parent_x + node.x;
     let y = parent_y + node.y;
     let fixed = inherited_fixed || positioned_node_is_fixed(node);
+    let block_boundary = positioned_node_breaks_find_text(node);
+    if block_boundary {
+        stream.separate();
+    }
     if let Some(layout_ir::Content::Text(text)) = &node.content {
-        let (folded_text, scalar_positions) = fold_find_text(&text.value);
-        let scalar_count = text.value.chars().count().max(1);
-        let mut search_start = 0;
-        while let Some(relative) = folded_text[search_start..].find(folded_query) {
-            if matches.len() == MAX_FIND_MATCHES {
-                *truncated = true;
-                break;
-            }
-            let start = search_start + relative;
-            let end = start + folded_query.len();
-            let start_scalar = scalar_positions
-                .iter()
-                .find(|(byte, _)| *byte == start)
-                .map_or(0, |(_, scalar)| *scalar);
-            let end_scalar = scalar_positions
-                .iter()
-                .find(|(byte, _)| *byte == end)
-                .map_or(scalar_count, |(_, scalar)| *scalar)
-                .max(start_scalar + 1)
-                .min(scalar_count);
-            matches.push(BrowserFindMatch {
-                x: x + node.width * start_scalar as f64 / scalar_count as f64,
+        stream.push_text(
+            &text.value,
+            BrowserFindFragment {
+                x,
                 y,
-                width: (node.width * (end_scalar - start_scalar) as f64 / scalar_count as f64)
-                    .max(1.0),
+                width: node.width,
                 height: node.height.max(1.0),
                 fixed,
+            },
+        );
+    }
+    for child in &node.children {
+        collect_find_text(child, x, y, fixed, stream);
+    }
+    if block_boundary {
+        stream.separate();
+    }
+}
+
+fn find_matches_in_stream(
+    stream: &BrowserFindTextStream,
+    folded_query: &str,
+) -> (Vec<BrowserFindMatch>, bool) {
+    let mut matches = Vec::new();
+    let mut search_start = 0;
+    let mut truncated = false;
+    while let Some(relative) = stream.folded[search_start..].find(folded_query) {
+        if matches.len() == MAX_FIND_MATCHES {
+            truncated = true;
+            break;
+        }
+        let start = search_start + relative;
+        let end = start + folded_query.len();
+        let fragments = stream
+            .runs
+            .iter()
+            .filter_map(|run| find_fragment_for_overlap(run, start, end))
+            .collect::<Vec<_>>();
+        if let Some(first) = fragments.first() {
+            matches.push(BrowserFindMatch {
+                fixed: first.fixed,
+                fragments,
             });
-            search_start = end;
-            if search_start >= folded_text.len() {
-                break;
-            }
+        }
+        search_start = end;
+        if search_start >= stream.folded.len() {
+            break;
         }
     }
-    if !*truncated {
-        for child in &node.children {
-            collect_find_matches(child, x, y, fixed, folded_query, matches, truncated);
-            if *truncated {
-                break;
-            }
-        }
+    (matches, truncated)
+}
+
+fn find_fragment_for_overlap(
+    run: &BrowserFindTextRun,
+    match_start: usize,
+    match_end: usize,
+) -> Option<BrowserFindFragment> {
+    let start = match_start.max(run.folded_start);
+    let end = match_end.min(run.folded_end);
+    if start >= end {
+        return None;
     }
+    let relative_start = start - run.folded_start;
+    let relative_end = end - run.folded_start;
+    let start_scalar = run
+        .scalar_positions
+        .iter()
+        .find(|(byte, _)| *byte == relative_start)
+        .map_or(0, |(_, scalar)| *scalar);
+    let end_scalar = run
+        .scalar_positions
+        .iter()
+        .find(|(byte, _)| *byte == relative_end)
+        .map_or(run.scalar_count, |(_, scalar)| *scalar)
+        .max(start_scalar + 1)
+        .min(run.scalar_count);
+    Some(BrowserFindFragment {
+        x: run.fragment.x + run.fragment.width * start_scalar as f64 / run.scalar_count as f64,
+        y: run.fragment.y,
+        width: (run.fragment.width * (end_scalar - start_scalar) as f64 / run.scalar_count as f64)
+            .max(1.0),
+        height: run.fragment.height,
+        fixed: run.fragment.fixed,
+    })
 }
 
 fn fold_find_text(value: &str) -> (String, Vec<(usize, usize)>) {
@@ -439,6 +535,16 @@ fn positioned_node_is_fixed(node: &PositionedNode) -> bool {
         return false;
     };
     matches!(values.get("position"), Some(ExtValue::Str(value)) if value == "fixed")
+}
+
+fn positioned_node_breaks_find_text(node: &PositionedNode) -> bool {
+    let Some(ExtValue::Map(values)) = node.ext.get("block") else {
+        return false;
+    };
+    let Some(ExtValue::Str(display)) = values.get("display") else {
+        return false;
+    };
+    !display.starts_with("inline") && display != "line-break"
 }
 
 /// Mosaic `VentureChrome` slot names, in interface declaration order.
@@ -2185,15 +2291,9 @@ impl BrowserSession {
                 .as_ref()
                 .map(|viewport| &viewport.page().paint.positioned)
             {
-                collect_find_matches(
-                    positioned,
-                    0.0,
-                    0.0,
-                    false,
-                    &folded_query,
-                    &mut self.find_matches,
-                    &mut truncated,
-                );
+                let mut stream = BrowserFindTextStream::default();
+                collect_find_text(positioned, 0.0, 0.0, false, &mut stream);
+                (self.find_matches, truncated) = find_matches_in_stream(&stream, &folded_query);
             }
         }
         if truncated {
@@ -2266,9 +2366,9 @@ impl BrowserSession {
         else {
             return;
         };
-        if active.fixed {
+        let Some(active) = active.fragments.iter().find(|fragment| !fragment.fixed) else {
             return;
-        }
+        };
         let Some(viewport) = self.viewport.as_mut() else {
             return;
         };
@@ -2295,17 +2395,23 @@ impl BrowserSession {
                         id: Some(format!("{FIND_OVERLAY_PREFIX}{index}")),
                         metadata: (!metadata.is_empty()).then_some(metadata),
                     },
-                    children: vec![PaintInstruction::Rect(PaintRect::filled(
-                        result.x,
-                        result.y,
-                        result.width,
-                        result.height,
-                        if active == Some(index) {
-                            "rgba(245, 158, 11, 0.62)"
-                        } else {
-                            "rgba(250, 204, 21, 0.38)"
-                        },
-                    ))],
+                    children: result
+                        .fragments
+                        .iter()
+                        .map(|fragment| {
+                            PaintInstruction::Rect(PaintRect::filled(
+                                fragment.x,
+                                fragment.y,
+                                fragment.width,
+                                fragment.height,
+                                if active == Some(index) {
+                                    "rgba(245, 158, 11, 0.62)"
+                                } else {
+                                    "rgba(250, 204, 21, 0.38)"
+                                },
+                            ))
+                        })
+                        .collect(),
                     transform: None,
                     opacity: None,
                 })
@@ -6950,7 +7056,7 @@ mod tests {
                 url,
                 200,
                 Some("text/html".into()),
-                b"<p>Venture first</p><div style='height: 180px'></div><p>venture second</p>"
+                b"<p>Venture first</p><div style='height: 180px'></div><p>venture second</p><p>Cross <strong>inline</strong> phrase</p><p>Cross</p><p>block</p>"
                     .to_vec(),
             ))
         };
@@ -6997,6 +7103,15 @@ mod tests {
         assert!(!session.close_find());
         assert_eq!(find_overlay_count(session.viewport().unwrap()), 0);
 
+        assert!(session.find_in_page("cross inline phrase"));
+        assert_eq!(session.find_state().match_count, 1);
+        assert_eq!(
+            find_overlay_fragment_count(session.viewport().unwrap(), 0),
+            3
+        );
+        assert!(session.find_in_page("cross block"));
+        assert_eq!(session.find_state().match_count, 0);
+
         let many = format!("<p>{}</p>", "match ".repeat(MAX_FIND_MATCHES + 1));
         let many_fetcher = |url: &str| {
             Ok(BrowserFetchResponse::new(
@@ -7032,6 +7147,23 @@ mod tests {
                         if group.base.id.as_deref().is_some_and(|id| id.starts_with(FIND_OVERLAY_PREFIX)))
             })
             .count()
+    }
+
+    fn find_overlay_fragment_count(viewport: &BrowserViewport, index: usize) -> usize {
+        let id = format!("{FIND_OVERLAY_PREFIX}{index}");
+        viewport
+            .page()
+            .paint
+            .scene
+            .instructions
+            .iter()
+            .find_map(|instruction| match instruction {
+                PaintInstruction::Group(group) if group.base.id.as_deref() == Some(&id) => {
+                    Some(group.children.len())
+                }
+                _ => None,
+            })
+            .unwrap_or(0)
     }
 
     #[test]

@@ -17957,7 +17957,7 @@ fn collect_browser_content_nodes_with_mode(
                 let text = if preserve_whitespace {
                     value.data.clone()
                 } else {
-                    collapse_html_whitespace(&value.data)
+                    collapse_html_text_node_whitespace(&value.data)
                 };
                 if !text.is_empty() {
                     output.push(BrowserContentNode {
@@ -28896,6 +28896,26 @@ fn collapse_html_whitespace(text: &str) -> String {
     normalized
 }
 
+fn collapse_html_text_node_whitespace(text: &str) -> String {
+    let leading = text.chars().next().is_some_and(is_html_whitespace);
+    let trailing = text.chars().last().is_some_and(is_html_whitespace);
+    let mut collapsed = collapse_html_whitespace(text);
+    if collapsed.is_empty() {
+        return if leading || trailing {
+            " ".to_string()
+        } else {
+            String::new()
+        };
+    }
+    if leading {
+        collapsed.insert(0, ' ');
+    }
+    if trailing {
+        collapsed.push(' ');
+    }
+    collapsed
+}
+
 fn find_first_element_in_nodes<'a>(nodes: &'a [Node], name: &str) -> Option<&'a Element> {
     for node in nodes {
         let Node::Element(element) = node else {
@@ -31576,7 +31596,9 @@ mod tests {
             Some("2026-05-25T06:00:00Z")
         );
 
-        let deleted = &paragraph.children[6];
+        assert_eq!(paragraph.children[6].text.as_deref(), Some(" "));
+
+        let deleted = &paragraph.children[7];
         assert_eq!(deleted.role, "deleted");
         assert_eq!(deleted.edit_cite.as_deref(), Some("#old"));
         assert_eq!(
@@ -31585,7 +31607,9 @@ mod tests {
         );
         assert_eq!(deleted.edit_datetime.as_deref(), Some("2026-05-24"));
 
-        let mark = &paragraph.children[7];
+        assert_eq!(paragraph.children[8].text.as_deref(), Some(" "));
+
+        let mark = &paragraph.children[9];
         assert_eq!(mark.role, "mark");
         assert_eq!(mark.children[0].text.as_deref(), Some("Important"));
 
@@ -31593,8 +31617,8 @@ mod tests {
         assert_eq!(render_tree.children[0].children[1].display, "inline");
         assert_eq!(render_tree.children[0].children[3].display, "inline");
         assert_eq!(render_tree.children[0].children[5].display, "inline");
-        assert_eq!(render_tree.children[0].children[6].display, "inline");
         assert_eq!(render_tree.children[0].children[7].display, "inline");
+        assert_eq!(render_tree.children[0].children[9].display, "inline");
     }
 
     #[test]
@@ -34276,6 +34300,21 @@ mod tests {
             render_tree.children[0].children[1].event_handlers,
             vec!["onplay".to_string(), "onpause".to_string()]
         );
+    }
+
+    #[test]
+    fn browser_content_preserves_collapsible_whitespace_across_inline_markup() {
+        let tree =
+            parse_browser_content_tree("<body><p>Hello <strong>shared</strong> world</p></body>")
+                .expect("content tree should parse");
+        let paragraph = &tree.children[0];
+        assert_eq!(paragraph.children[0].text.as_deref(), Some("Hello "));
+        assert_eq!(paragraph.children[1].name.as_deref(), Some("strong"));
+        assert_eq!(
+            paragraph.children[1].children[0].text.as_deref(),
+            Some("shared")
+        );
+        assert_eq!(paragraph.children[2].text.as_deref(), Some(" world"));
     }
 
     #[test]

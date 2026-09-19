@@ -37,7 +37,7 @@
             "alt": null,
             "control_type": null,
             "children": [
-              { "role": "text", "name": null, "text": "Welcome to", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
+              { "role": "text", "name": null, "text": "Welcome to ", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
               {
                 "role": "link",
                 "name": "a",
@@ -363,10 +363,11 @@
             "alt": null,
             "control_type": null,
             "children": [
-              { "role": "text", "name": null, "text": "Alpha", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
+              { "role": "text", "name": null, "text": "Alpha ", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
               { "role": "inline", "name": "b", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "role": "text", "name": null, "text": "bold", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+              { "role": "text", "name": null, "text": " ", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
               { "role": "inline", "name": "i", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "role": "text", "name": null, "text": "italic", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
-              { "role": "text", "name": null, "text": "tail", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }
+              { "role": "text", "name": null, "text": " tail", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }
             ]
           }
         ]
@@ -541,7 +542,7 @@
                 "alt": null,
                 "control_type": null,
                 "children": [
-                  { "role": "text", "name": null, "text": "Quote", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
+                  { "role": "text", "name": null, "text": "Quote ", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
                   { "role": "quote", "name": "q", "text": null, "href": null, "src": null, "alt": null, "quote_cite": "#part", "resolved_quote_cite": "https://example.test/docs/page.html#part", "control_type": null, "children": [{ "role": "text", "name": null, "text": "part", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
                 ]
               }
@@ -751,13 +752,15 @@
             "alt": null,
             "control_type": null,
             "children": [
-              { "role": "text", "name": null, "text": "Version", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
+              { "role": "text", "name": null, "text": "Version ", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
               { "role": "data", "name": "data", "id": "version", "text": null, "href": null, "src": null, "alt": null, "data_value": "2.1", "control_type": null, "children": [{ "role": "text", "name": null, "text": "two point one", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
-              { "role": "text", "name": null, "text": "shipped", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
+              { "role": "text", "name": null, "text": " shipped ", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
               { "role": "time", "name": "time", "id": "date", "text": null, "href": null, "src": null, "alt": null, "datetime": "2026-05-25", "control_type": null, "children": [{ "role": "text", "name": null, "text": "today", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
-              { "role": "text", "name": null, "text": ".", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
+              { "role": "text", "name": null, "text": ". ", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
               { "role": "inserted", "name": "ins", "id": "add", "text": null, "href": null, "src": null, "alt": null, "edit_cite": "changes.html", "resolved_edit_cite": "https://example.test/docs/changes.html", "edit_datetime": "2026-05-25T06:00:00Z", "control_type": null, "children": [{ "role": "text", "name": null, "text": "Added", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+              { "role": "text", "name": null, "text": " ", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
               { "role": "deleted", "name": "del", "id": "remove", "text": null, "href": null, "src": null, "alt": null, "edit_cite": "#old", "resolved_edit_cite": "https://example.test/docs/page.html#old", "edit_datetime": "2026-05-24", "control_type": null, "children": [{ "role": "text", "name": null, "text": "Removed", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
+              { "role": "text", "name": null, "text": " ", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
               { "role": "mark", "name": "mark", "id": "highlight", "text": null, "href": null, "src": null, "alt": null, "control_type": null, "children": [{ "role": "text", "name": null, "text": "Important", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
             ]
           }
@@ -776,9 +779,9 @@
             { "role": "ruby_fallback", "name": "rp", "text": null, "href": null, "src": null, "alt": null, "ruby_kind": "fallback", "control_type": null, "children": [{ "role": "text", "name": null, "text": "(", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
             { "role": "ruby_text_container", "name": "rtc", "text": null, "href": null, "src": null, "alt": null, "ruby_kind": "text_container", "control_type": null, "children": [{ "role": "ruby_text", "name": "rt", "text": null, "href": null, "src": null, "alt": null, "ruby_kind": "text", "control_type": null, "children": [{ "role": "text", "name": null, "text": "group", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }] }
           ] },
-          { "role": "text", "name": null, "text": "then", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
+          { "role": "text", "name": null, "text": " then ", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
           { "role": "bidi_isolate", "name": "bdi", "id": "name", "dir": "auto", "text": null, "href": null, "src": null, "alt": null, "bidi_kind": "isolate", "control_type": null, "children": [{ "role": "text", "name": null, "text": "Name", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] },
-          { "role": "text", "name": null, "text": "and", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
+          { "role": "text", "name": null, "text": " and ", "href": null, "src": null, "alt": null, "control_type": null, "children": [] },
           { "role": "bidi_override", "name": "bdo", "id": "rtl", "dir": "rtl", "text": null, "href": null, "src": null, "alt": null, "bidi_kind": "override", "control_type": null, "children": [{ "role": "text", "name": null, "text": "abc", "href": null, "src": null, "alt": null, "control_type": null, "children": [] }] }
         ]
       }

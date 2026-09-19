@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+- Match visible phrases across inline formatting boundaries as one shared find
+  result, while preserving text-node edge spaces and painting every contributing
+  fragment without crossing block or fixed-position scopes.
+
 - Give the shared find bar a retained open/closed lifecycle, conditionally
   render it from Mosaic, and make Close Find remove both highlights and chrome
   consistently across every generated host.
