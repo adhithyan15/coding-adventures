@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 15596,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/15596",
+    "branch": "codex/build-tool-jvm-core-20260919",
+    "implementation_revision": "692385766b61a3790d7025cd8e205ce5396fb068",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-09-19T14:10:44Z",
-    "pr_number": 15580,
-    "status": "merged",
-    "notes": "PR #15580 completed both duplicate Ubuntu build and repository-metadata runs, both final CI gates, CodeQL, and the human-language gate acceptably at exact final head f8253a4b55c483a9e0a2ceab38c13f61e6bbee1a. GitHub reported no merge conflict; guarded squash auto-merge merged it as a95b08b373d4005420a35c5e27031426ea268bc2 without a plain manual merge command."
+    "observed_at": "2026-09-19T15:06:02Z",
+    "pr_number": 15596,
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #15596 is open at exact implementation revision 692385766b61a3790d7025cd8e205ce5396fb068. GitHub reports the branch mergeable with no conflict, while the initial CI, Kotlin application, CodeQL detection, human-language detection, and OCaml toolchain checks are queued. Auto-merge remains disabled until every required check is terminal and acceptable."
   },
   "last_inventory": {
     "revision": "a95b08b373d4005420a35c5e27031426ea268bc2",
@@ -9283,15 +9289,21 @@
     {
       "id": "build-tool-jvm-process-free-graph-diff-core",
       "title": "Implement Java and Kotlin build-tool graph and diff-selection cores",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling"],
       "branch": "codex/build-tool-jvm-core-20260919",
-      "pr_number": null,
+      "pr_number": 15596,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/15596",
+      "opened_at": "2026-09-19T15:05:58Z",
+      "opened_revision": "692385766b61a3790d7025cd8e205ce5396fb068",
       "selected_at": "2026-09-19T14:11:37Z",
       "selection_revision": "a95b08b373d4005420a35c5e27031426ea268bc2",
       "selection_notes": "Selected only after PR #15580 completed every final-head check acceptably and merged through guarded squash auto-merge. The exact merged-main schema-3 inventory remains collision-clean at 15 established lanes, 1,441 implementation identities, 4,666 slots, 1,481 all-reported identities, 782 Rust singletons, five emerging OCaml packages, and zero unknown buckets. Parallel preparation produced exact JVM and Dart implementation/validation packets and found three separate selection-blocked capability-policy owners. The JVM core is the highest-leverage ready bounded owner because one coherent fixture-driven tranche advances both missing established JVM build-tool lanes without claiming a front door, adapter, Git, filesystem, process, environment, network, credential, or execution authority. The fresh clean worktree starts from exact merge revision a95b08b373d4005420a35c5e27031426ea268bc2.",
       "notes": "Discovered by the post-#14615 all-language build-tool audit. Implement separate idiomatic Java and Kotlin process-free cores over the same closed graph/diff fixtures, with deterministic bounded topology and closure behavior, stable GRAPH_CYCLE and DIFF_UNKNOWN_PATH errors, strict portable globs, and no filesystem, Git, process, environment, network, credential, or execution authority. This bounded owner prevents both JVM lanes from waiting on the larger sandbox/execution chain and becomes a prerequisite of the full JVM build tools.",
-      "validation_notes": "Specification-first changes close the bounded JVM graph and diff-selection tranche without claiming a build-tool CLI, adapter, resolver, sandbox, or host authority. Tests-first compilation failed on the deliberately absent Java and Kotlin cores before implementation. Both independent native engines directly discover and consume the exact six graph and eight diff-selection neutral fixtures, including repository-boundary reverse selection, Unicode-scalar match-work accounting, deterministic topology and closures, portable glob character classes, unknown-path policy, and stable cycle behavior. Java and Kotlin clean checks and literal BUILD fronts pass with compiler warnings-as-errors and JaCoCo line coverage of 98.17% and 98.98%, above the required 95% gates. Defensive validation rejects oversized recursive-match inputs, unsafe or nested package roots, Unicode casefold collisions, cyclic diff graphs, unsafe paths and globs, and ambiguous or descending character classes. The neutral corpus validates all 157 cases and 285 retained files; the complete semantic runner passes 85 tests, and its 25 schema tests pass. The 15-test CI-gate registry, seven-test capability taxonomy, strict JSON, 828-owner/1,446-edge acyclic state graph, changelog shard, collision-clean schema-3 package-parity report, diff hygiene, and Go build-tool test/vet/trimpath build all pass. The real commit-based dry plan against 492a8e9a25969d48ca6998c8aacbd237226da48d evaluates 45 Starlark BUILD files, discovers 5,187 packages, keeps the five reviewed orphan exemptions clean, and selects exactly the two new Java and Kotlin build-tool programs; the final conflict-free rebase onto 94b47a167ffbda1727f53fc047edc7e14eab6f7a changes no touched path. Independent correctness and security reviews pass with no remaining authority, dependency, capability, CI-pinning, metadata, input-bounding, Unicode, graph, glob, digest, or fixture-coverage finding. Production Java resolves only java.base; Kotlin adds only its standard runtime; all Jackson and JUnit dependencies remain test-only and versioned; the capability manifests are empty and accurate."
+      "implementation_revision": "692385766b61a3790d7025cd8e205ce5396fb068",
+      "validation_revision": "692385766b61a3790d7025cd8e205ce5396fb068",
+      "validation_notes": "Specification-first changes close the bounded JVM graph and diff-selection tranche without claiming a build-tool CLI, adapter, resolver, sandbox, or host authority. Tests-first compilation failed on the deliberately absent Java and Kotlin cores before implementation. Both independent native engines directly discover and consume the exact six graph and eight diff-selection neutral fixtures, including repository-boundary reverse selection, Unicode-scalar match-work accounting, deterministic topology and closures, portable glob character classes, unknown-path policy, and stable cycle behavior. Java and Kotlin clean checks and literal BUILD fronts pass with compiler warnings-as-errors and JaCoCo line coverage of 98.17% and 98.98%, above the required 95% gates. Defensive validation rejects oversized recursive-match inputs, unsafe or nested package roots, Unicode casefold collisions, cyclic diff graphs, unsafe paths and globs, and ambiguous or descending character classes. The neutral corpus validates all 157 cases and 285 retained files; the complete semantic runner passes 85 tests, and its 25 schema tests pass. The 15-test CI-gate registry, seven-test capability taxonomy, strict JSON, 828-owner/1,446-edge acyclic state graph, changelog shard, collision-clean schema-3 package-parity report, diff hygiene, and Go build-tool test/vet/trimpath build all pass. The real commit-based dry plan against 492a8e9a25969d48ca6998c8aacbd237226da48d evaluates 45 Starlark BUILD files, discovers 5,187 packages, keeps the five reviewed orphan exemptions clean, and selects exactly the two new Java and Kotlin build-tool programs; the final conflict-free rebase onto 94b47a167ffbda1727f53fc047edc7e14eab6f7a changes no touched path. Independent correctness and security reviews pass with no remaining authority, dependency, capability, CI-pinning, metadata, input-bounding, Unicode, graph, glob, digest, or fixture-coverage finding. Production Java resolves only java.base; Kotlin adds only its standard runtime; all Jackson and JUnit dependencies remain test-only and versioned; the capability manifests are empty and accurate.",
+      "publication_notes": "Opened ready-for-review PR #15596 after a normal first push from exact rebased origin/main 94b47a167ffbda1727f53fc047edc7e14eab6f7a. Immediately before publication, the worktree was clean, no other parity PR or prior same-branch PR existed, the 26-path slice overlapped only the shared CI workflow with unrelated open PRs #15574 and #15548, and native JVM, neutral corpus, semantic runner, Go, real dry-plan, package-parity, state-DAG, capability, security, and diff gates were acceptable. GitHub reports the PR non-draft and mergeable with initial checks queued; auto-merge remains disabled until every required check is terminal and acceptable."
     },
     {
       "id": "build-tool-dart-process-free-graph-diff-core",
