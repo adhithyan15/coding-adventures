@@ -196,22 +196,23 @@ initialized local when finite static start, step, and limit values prove that
 its body executes at least once; zero-trip and dynamic bounds fail closed.
 Those static values may come from straight-line tracked numeric locals; their
 metadata is consumed before loop lowering disables snapshot propagation.
-For a statically bounded multi-iteration `step` loop, one simple local scalar
-assignment may depend on the control or its own prior snapshot: the compiler
-simulates it once per iteration and retains the exact integer, finite real, or
-boolean result. Its compound body may contain proven scalar identity siblings;
-writes to the control, dynamic bounds, and integer or real loops beyond the
-4,096-iteration analysis cap remain conservative.
+For a statically bounded multi-iteration `step` loop, pure local scalar
+assignments may depend on the control, their own prior snapshots, or earlier
+body assignments: the compiler simulates them in source order and retains the
+exact integer, finite real, or boolean results. Statically decidable statement
+conditions select one recursively supported assignment branch on each pass.
+Writes to the control, dynamic selectors or bounds, and integer or real loops
+beyond the 4,096-iteration analysis cap remain conservative.
 For a `while` element, a bounded static numeric comparison may likewise prove
 the initial body execution after abstractly assigning the controlled value;
 such known comparisons compose through ALGOL's boolean operators, while bare
 boolean literals, unsupported shapes, and dynamic operands remain conservative.
-A bounded control evolution may also simulate one simple local scalar
-assignment after every true predicate and retain its exact integer, finite real,
-or boolean result. That assignment may share a compound body with exact bare
-self-assignments of ordinary local scalars. Predicate-dependency writes,
-changing siblings, string targets, and loops that do not reach false within
-4,096 evaluations fail closed.
+A bounded control evolution may also simulate pure local scalar assignments in
+source order after every true predicate and retain their exact integer, finite
+real, or boolean results. Statically decidable statement conditions may select
+different recursively supported branches on successive passes. Predicate-
+dependency writes, dynamic selectors, string targets, and loops that do not
+reach false within 4,096 evaluations fail closed.
 A conditional predicate is also evaluated when its selector is statically
 known; only the selected branch participates in the proof.
 Local string slots carry an empty verifier seed, but this is not a source-level
@@ -257,9 +258,11 @@ The recurrence assignment in either loop form may be wrapped in a compound
 body and may additionally have proven integer, real, or boolean identity
 assignments of ordinary local scalars or unlabeled dummy statements as inert
 siblings. Unlabeled nested compound statements may group those same recurrence,
-identity, and dummy statements; labels, conditionals, declarations,
-array/global/string siblings, and other effectful or dynamic statements remain
-outside this bounded analysis.
+identity, and dummy statements. A conditional statement may participate when
+its selector is statically decidable from the current bounded snapshot and its
+selected branch recursively contains only those supported actions. Labels,
+declarations, array/global/string siblings, calls, dynamic selectors, and other
+effectful statements remain outside this bounded analysis.
 Finite `step`/`until` and terminating static `while` loops may instead carry
 several pure local integer, real, or boolean recurrence assignments. Bounded
 abstract execution evaluates them in source order on every pass, so later
