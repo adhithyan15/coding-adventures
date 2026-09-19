@@ -154,6 +154,24 @@ layout SpiceWorkbench {
             )
           }
         }
+        Text [ schematic-saved-output-differential-label ] ( content : slot: schematic-saved-output-differential-label )
+        Text [ schematic-saved-output-differential-positive-label ] ( content : slot: schematic-saved-output-differential-positive-label )
+        HostInput [ schematic-saved-output-differential-positive-input ] (
+          value : slot: schematic-saved-output-differential-positive ,
+          disabled : slot: schematic-saved-output-differential-disabled ,
+          onChange : emit: onSchematicSavedOutputDifferentialPositiveChange
+        )
+        Text [ schematic-saved-output-differential-negative-label ] ( content : slot: schematic-saved-output-differential-negative-label )
+        HostInput [ schematic-saved-output-differential-negative-input ] (
+          value : slot: schematic-saved-output-differential-negative ,
+          disabled : slot: schematic-saved-output-differential-disabled ,
+          onChange : emit: onSchematicSavedOutputDifferentialNegativeChange
+        )
+        HostButton [ schematic-saved-output-differential-add ] (
+          label : slot: schematic-saved-output-differential-add-label ,
+          disabled : slot: schematic-saved-output-differential-disabled ,
+          onClick : emit: onAddSchematicSavedOutputDifferential
+        )
         Row [ schematic-saved-output-actions ] {
           For ( each: slot: schematic-saved-output-rows , as: probe , index: probe-index ) {
             HostButton [ schematic-saved-output-remove ] (
@@ -183,6 +201,24 @@ layout SpiceWorkbench {
             )
           }
         }
+        Text [ schematic-scoped-output-differential-label ] ( content : slot: schematic-scoped-output-differential-label )
+        Text [ schematic-scoped-output-differential-positive-label ] ( content : slot: schematic-scoped-output-differential-positive-label )
+        HostInput [ schematic-scoped-output-differential-positive-input ] (
+          value : slot: schematic-scoped-output-differential-positive ,
+          disabled : slot: schematic-scoped-output-differential-disabled ,
+          onChange : emit: onSchematicScopedOutputDifferentialPositiveChange
+        )
+        Text [ schematic-scoped-output-differential-negative-label ] ( content : slot: schematic-scoped-output-differential-negative-label )
+        HostInput [ schematic-scoped-output-differential-negative-input ] (
+          value : slot: schematic-scoped-output-differential-negative ,
+          disabled : slot: schematic-scoped-output-differential-disabled ,
+          onChange : emit: onSchematicScopedOutputDifferentialNegativeChange
+        )
+        HostButton [ schematic-scoped-output-differential-add ] (
+          label : slot: schematic-scoped-output-differential-add-label ,
+          disabled : slot: schematic-scoped-output-differential-disabled ,
+          onClick : emit: onAddSchematicScopedOutputDifferential
+        )
         Row [ schematic-scoped-output-actions ] {
           For ( each: slot: schematic-scoped-output-rows , as: probe , index: probe-index ) {
             HostButton [ schematic-scoped-output-remove ] (

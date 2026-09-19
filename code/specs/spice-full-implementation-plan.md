@@ -295,7 +295,7 @@ model-card parameter, or a UI artifact is not a completion signal.
      its probes, and typed host/Mosaic controls must synchronize deterministic
      `.probe` cards. Keep arbitrary expressions, passive-device currents,
      nested sweeps, and vendor-output controls for later phases.
-   - **Differential-voltage output contract** (current phase): discovery after
+   - **Differential-voltage output contract** (completed in PR #15570): discovery after
      PR #15536: the shared Python, Rust, and TypeScript output APIs already
      evaluate named node voltages for every runnable result, but restrict each
      output card to `V(node)` or executable-source `I(source)`. Add canonical
@@ -304,6 +304,16 @@ model-card parameter, or a UI artifact is not a completion signal.
      measure consumers. Follow with differential selections in the schematic
      document and Mosaic host controls, preserving labels/card scope across
      history and lowering. Keep arbitrary arithmetic expressions,
+     passive-device currents, nested sweeps, and vendor-output controls for
+     later phases.
+   - **Mosaic schematic differential-output selection** (current phase): discovery after
+     PR #15570: the shared output contract can evaluate `V(positive,negative)`,
+     but the canonical schematic and workbench only author one-node voltage
+     probes. Add persisted, ordered differential probes to global `.save` and
+     card-scoped `.probe` selections. Validate two distinct labelled non-ground
+     nodes, preserve source order and analysis-card identity through history and
+     snapshots, lower canonical `V(positive,negative)` tokens, and expose
+     positive/negative Mosaic host controls. Keep arbitrary expressions,
      passive-device currents, nested sweeps, and vendor-output controls for
      later phases.
 

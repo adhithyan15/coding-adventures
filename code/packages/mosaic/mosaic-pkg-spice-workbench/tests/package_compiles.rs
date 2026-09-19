@@ -106,6 +106,14 @@ fn manifest_and_component_contract_are_complete() {
     assert!(component
         .slots
         .iter()
+        .any(|slot| slot.name == "schematic-saved-output-differential-positive"));
+    assert!(component
+        .slots
+        .iter()
+        .any(|slot| slot.name == "schematic-scoped-output-differential-negative"));
+    assert!(component
+        .slots
+        .iter()
         .any(|slot| slot.name == "schematic-value-disabled"));
     assert!(component
         .slots
@@ -167,11 +175,19 @@ fn manifest_and_component_contract_are_complete() {
     assert!(component
         .emits
         .iter()
+        .any(|emit| emit.name == "onAddSchematicSavedOutputDifferential"));
+    assert!(component
+        .emits
+        .iter()
         .any(|emit| emit.name == "onRemoveSchematicSavedOutput"));
     assert!(component
         .emits
         .iter()
         .any(|emit| emit.name == "onAddSchematicScopedOutputVoltage"));
+    assert!(component
+        .emits
+        .iter()
+        .any(|emit| emit.name == "onAddSchematicScopedOutputDifferential"));
     assert!(component
         .emits
         .iter()
@@ -329,6 +345,8 @@ fn emitted_web_workbench_preserves_the_multiline_editor_and_actions() {
                 assert!(output.contains("data-on-click=\"onMoveSchematicAnalysisCardLater\""));
                 assert!(output.contains("data-on-click=\"onRemoveSchematicAnalysisCard\""));
                 assert!(output.contains("data-on-click=\"onAddSchematicScopedOutputVoltage\""));
+                assert!(output.contains("data-on-click=\"onAddSchematicSavedOutputDifferential\""));
+                assert!(output.contains("data-on-change=\"onSchematicScopedOutputDifferentialNegativeChange\""));
                 assert!(output.contains("data-on-click=\"onRemoveSchematicScopedOutput\""));
                 assert!(output.contains("data-on-click=\"onSelectSchematicAnalysisSource\""));
                 assert!(output.contains("data-on-change=\"onSchematicAnalysisParameterOneChange\""));
