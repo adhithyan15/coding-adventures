@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "id": "diff-selection/exact-build-fronts",
+  "domain": "diff_selection",
+  "summary": "Only the five exact recursive BUILD-front basenames select strict-glob packages without source matches.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["diff_selection"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "diff_selection",
+    "options": {
+      "packages": [
+        {"name": "fixture/build", "rel_path": "p-build", "source_mode": "strict_globs", "source_globs": ["src/**/*.txt"]},
+        {"name": "fixture/build-linux", "rel_path": "p-linux", "source_mode": "strict_globs", "source_globs": ["src/**/*.txt"]},
+        {"name": "fixture/build-mac", "rel_path": "p-mac", "source_mode": "strict_globs", "source_globs": ["src/**/*.txt"]},
+        {"name": "fixture/build-mac-and-linux", "rel_path": "p-mac-linux", "source_mode": "strict_globs", "source_globs": ["src/**/*.txt"]},
+        {"name": "fixture/build-windows", "rel_path": "p-windows", "source_mode": "strict_globs", "source_globs": ["src/**/*.txt"]}
+      ],
+      "edges": [],
+      "forced_packages": [],
+      "unknown_path_policy": "error"
+    },
+    "changed_paths": [
+      "p-build/BUILD",
+      "p-linux/nested/BUILD_linux",
+      "p-mac/nested/BUILD_mac",
+      "p-mac-linux/nested/BUILD_mac_and_linux",
+      "p-windows/nested/BUILD_windows"
+    ]
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "diff-selection/exact-build-fronts",
+    "domain": "diff_selection",
+    "outcome": "ok",
+    "result": {
+      "changed_packages": [
+        "fixture/build",
+        "fixture/build-linux",
+        "fixture/build-mac",
+        "fixture/build-mac-and-linux",
+        "fixture/build-windows"
+      ],
+      "affected_packages": [
+        "fixture/build",
+        "fixture/build-linux",
+        "fixture/build-mac",
+        "fixture/build-mac-and-linux",
+        "fixture/build-windows"
+      ],
+      "prerequisite_packages": []
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

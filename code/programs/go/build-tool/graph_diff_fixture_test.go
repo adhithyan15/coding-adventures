@@ -72,7 +72,61 @@ func sortedSetValues(values map[string]bool) []string {
 	return result
 }
 
+func packagesFromNeutralFixture(
+	t *testing.T,
+	fixture neutralGraphDiffFixture,
+	repoRoot string,
+) []discovery.Package {
+	t.Helper()
+	packages := make([]discovery.Package, 0, len(fixture.Input.Options.Packages))
+	for _, raw := range fixture.Input.Options.Packages {
+		var pkg struct {
+			Name        string   `json:"name"`
+			RelPath     string   `json:"rel_path"`
+			SourceMode  string   `json:"source_mode"`
+			SourceGlobs []string `json:"source_globs"`
+		}
+		if err := json.Unmarshal(raw, &pkg); err != nil {
+			t.Fatal(err)
+		}
+		packages = append(packages, discovery.Package{
+			Name:         pkg.Name,
+			Path:         filepath.Join(repoRoot, filepath.FromSlash(pkg.RelPath)),
+			IsStarlark:   pkg.SourceMode == "strict_globs",
+			DeclaredSrcs: pkg.SourceGlobs,
+		})
+	}
+	return packages
+}
+
 func TestNeutralGraphDiffContractCoverage(t *testing.T) {
+	t.Run("empty graph", func(t *testing.T) {
+		fixture := loadNeutralGraphDiffFixture(t, "graph-empty.json")
+		graph := graphFromNeutralFixture(fixture)
+		if edges := graph.Edges(); len(edges) != 0 {
+			t.Fatalf("edges = %v, want empty", edges)
+		}
+		levels, err := graph.IndependentGroups()
+		if err != nil {
+			t.Fatal(err)
+		}
+		if len(levels) != 0 {
+			t.Fatalf("levels = %v, want empty", levels)
+		}
+	})
+
+	t.Run("partial cycle has no output", func(t *testing.T) {
+		fixture := loadNeutralGraphDiffFixture(t, "graph-partial-cycle-no-output.json")
+		graph := graphFromNeutralFixture(fixture)
+		levels, err := graph.IndependentGroups()
+		if err == nil {
+			t.Fatal("expected cycle error")
+		}
+		if len(levels) != 0 {
+			t.Fatalf("levels = %v, want empty", levels)
+		}
+	})
+
 	t.Run("canonical graph edge order", func(t *testing.T) {
 		fixture := loadNeutralGraphDiffFixture(t, "graph-canonical-edge-order.json")
 		graph := graphFromNeutralFixture(fixture)
@@ -110,6 +164,23 @@ func TestNeutralGraphDiffContractCoverage(t *testing.T) {
 			t.Fatalf("changed packages = %v, want %v", got, fixture.Expected.Result.ChangedPackages)
 		}
 	})
+
+	for _, name := range []string{
+		"diff-selection-exact-build-fronts.json",
+		"diff-selection-known-unmatched-near-build.json",
+		"diff-selection-strict-glob-character-classes.json",
+	} {
+		name := name
+		t.Run(name, func(t *testing.T) {
+			fixture := loadNeutralGraphDiffFixture(t, name)
+			repoRoot := filepath.Join(t.TempDir(), "repo")
+			packages := packagesFromNeutralFixture(t, fixture, repoRoot)
+			changed := gitdiff.MapFilesToPackages(fixture.Input.ChangedPaths, packages, repoRoot)
+			if got := sortedSetValues(changed); !slices.Equal(got, fixture.Expected.Result.ChangedPackages) {
+				t.Fatalf("changed packages = %v, want %v", got, fixture.Expected.Result.ChangedPackages)
+			}
+		})
+	}
 
 	t.Run("forced package closure", func(t *testing.T) {
 		fixture := loadNeutralGraphDiffFixture(t, "diff-selection-forced-package.json")

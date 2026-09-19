@@ -106,20 +106,44 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-working inventory was regenerated from `de58c11e` after the Elixir resolver
-branch rebased onto the latest main. The inventory contains 1,264 normalized
-implementation identities across 4,419 established-lane package slots and
-found zero canonical collisions or unknown language buckets:
+working inventory was regenerated from `6174c8c1ff` after PR #15596 merged and
+the dedicated parity worktree refreshed from exact `origin/main`. The inventory
+contains 1,441 normalized implementation identities across 4,666
+established-lane package slots and found zero canonical collisions or unknown
+language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 173 | 270 |
-| Present in 5-9 languages | 120 | 905 |
-| Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 813 | 11,382 |
+| Present in 10-15 languages | 175 | 265 |
+| Present in 5-9 languages | 123 | 934 |
+| Present in 2-4 languages | 181 | 2,282 |
+| Present in one language | 962 | 13,468 |
 
-The loop must not start by attempting 11,368 singleton ports. It should finish
+The loop must not start by attempting 13,468 singleton slots. It should finish
 the broadly established portable core, then classify the sparse majority.
+
+The post-#15596 refresh found no canonical collision or unknown bucket, but it
+did find concrete ownership and fixture gaps that must be recorded before the
+next implementation selection:
+
+- `build-tool-neutral-graph-diff-adversarial-corpus-hardening` is the selected
+  immediate successor. It promotes five JVM-local edge cases into the neutral
+  corpus and repairs the Go build tool's overbroad `BUILD_*` recognition before
+  Dart or later adapters claim complete graph/diff consumption.
+- Alpha AXP and PowerPC 601 simulator and gate-level identities now have four
+  exact Python/Rust classification owners, with each gate-level owner depending
+  on its functional simulator owner.
+- Rust singleton identities `diagram-layout-hierarchy`, `layout-backgrounds`,
+  `layout-effects`, and `oauth-broker` now have exact portable owners. OAuth
+  broker additionally depends on a newly explicit device-authorization and
+  OpenID identity conformance owner; concrete credential and host authority
+  remains in the existing selection-blocked review.
+
+The next dependency/leverage order is therefore neutral graph/diff adversarial
+hardening, then the Dart process-free graph/diff core. Perl `blib` registry
+repair remains the strongest small independent fallback; OCaml representative
+CI follows Dart once overlapping workflow work clears.
+
 Recently classified mixed Rust identities include `smart-home-camera-media`,
 `smart-home-onvif-integration`, `smart-home-shelly-integration`,
 `smart-home-wled-integration`, `smart-home-govee-lan-integration`,

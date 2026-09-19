@@ -1422,6 +1422,11 @@ pub fn from_pipeline(
         writeln!(out).unwrap();
     }
 
+    if layout_contains_tag(&layout.root, "HostInput") || layout_contains_tag(&layout.root, "Input")
+    {
+        out.push_str(INPUT_CONTROLLER_HELPER);
+    }
+
     // 3. The widget class itself.
     out.push_str(&emit_widget_class(
         name,
@@ -4882,12 +4887,59 @@ fn emit_image(node: &LayoutNode, indent: usize) -> String {
 // UI29 host primitives
 // =====================================================================
 
-/// `HostInput` → `TextField` with a `TextEditingController` initialised
-/// from the bound slot. Generated v1 shape is read-only-friendly:
-/// the field accepts the value slot via a `controller: TextEditingController
-/// (text: <slot>)`. Authors who need two-way binding will wrap the
-/// generated widget in their own `StatefulWidget` host — same caveat
-/// the SwiftUI backend documents.
+/// An input owns its controller for the lifetime of its mounted widget. Parent
+/// rebuilds synchronize changed text without replacing selection/composition.
+const INPUT_CONTROLLER_HELPER: &str = r#"
+class _MosaicInputController extends StatefulWidget {
+  final String value;
+  final Widget Function(TextEditingController) builder;
+  const _MosaicInputController({required this.value, required this.builder});
+
+  @override
+  State<_MosaicInputController> createState() => _MosaicInputControllerState();
+}
+
+class _MosaicInputControllerState extends State<_MosaicInputController> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.value);
+  }
+
+  @override
+  void didUpdateWidget(covariant _MosaicInputController oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // A presentation-only rebuild must not overwrite a local edit. An echoed
+    // onChange value must not clear the IME's active composing range either.
+    if (widget.value != oldWidget.value && widget.value != _controller.text) {
+      final selection = _controller.selection;
+      final length = widget.value.length;
+      _controller.value = TextEditingValue(
+        text: widget.value,
+        selection: selection.isValid
+            ? selection.copyWith(
+                baseOffset: selection.baseOffset.clamp(0, length),
+                extentOffset: selection.extentOffset.clamp(0, length),
+              )
+            : TextSelection.collapsed(offset: length),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.builder(_controller);
+}
+"#;
+
+/// Lower both Input spellings through the shared stateful controller owner.
 fn emit_host_input(
     node: &LayoutNode,
     indent: usize,
@@ -4950,21 +5002,21 @@ fn emit_host_input(
             writeln!(out, "{field_pad}child: Semantics(").unwrap();
             writeln!(out, "{field_pad}  label: {label},").unwrap();
             writeln!(out, "{field_pad}  textField: true,").unwrap();
-            writeln!(out, "{field_pad}  child: TextField(").unwrap();
+            writeln!(out, "{field_pad}  child: _MosaicInputController(").unwrap();
         } else {
-            writeln!(out, "{field_pad}child: TextField(").unwrap();
+            writeln!(out, "{field_pad}child: _MosaicInputController(").unwrap();
         }
     } else if let Some(label) = &accessibility_label {
         writeln!(out, "{field_pad}Semantics(").unwrap();
         writeln!(out, "{field_pad}  label: {label},").unwrap();
         writeln!(out, "{field_pad}  textField: true,").unwrap();
-        writeln!(out, "{field_pad}  child: TextField(").unwrap();
+        writeln!(out, "{field_pad}  child: _MosaicInputController(").unwrap();
     } else {
-        writeln!(out, "{field_pad}TextField(").unwrap();
+        writeln!(out, "{field_pad}_MosaicInputController(").unwrap();
     }
     writeln!(
         out,
-        "{input_pad}  controller: TextEditingController(text: {value_expr}),"
+        "{input_pad}  value: {value_expr},\n{input_pad}  builder: (mosaicController) => TextField(\n{input_pad}    controller: mosaicController,"
     )
     .unwrap();
 
@@ -5054,7 +5106,7 @@ fn emit_host_input(
         )
         .unwrap();
     }
-    writeln!(out, "{input_pad})").unwrap();
+    writeln!(out, "{input_pad}  ),\n{input_pad})").unwrap();
     if accessibility_label.is_some() {
         writeln!(out, "{field_pad})").unwrap();
     }
@@ -9699,7 +9751,8 @@ mod tests {
         let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         let out = &r.output;
         assert!(out.contains("TextField("));
-        assert!(out.contains("TextEditingController(text: formula)"));
+        assert!(out.contains("value: formula,"));
+        assert!(out.contains("controller: mosaicController,"));
         assert!(out.contains("hintText: \"Type a formula\""));
     }
 
@@ -9846,7 +9899,7 @@ mod tests {
         );
         let r = from_pipeline(&m, &l, &empty_style("BrowserChrome")).unwrap();
         assert!(
-            r.output.contains("Expanded(") && r.output.contains("child: TextField("),
+            r.output.contains("Expanded(") && r.output.contains("child: _MosaicInputController("),
             "a direct Row input must be flex-constrained:\n{}",
             r.output
         );

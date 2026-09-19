@@ -262,10 +262,13 @@ class BuildToolCoreTest {
     companion object {
         private val EXPECTED_CASES = setOf(
             "diff-selection/forced-package",
+            "diff-selection/exact-build-fronts",
+            "diff-selection/known-unmatched-near-build",
             "diff-selection/match-work-at-limit",
             "diff-selection/match-work-over-limit",
             "diff-selection/package-prefix",
             "diff-selection/repository-boundary-reverse-index",
+            "diff-selection/strict-glob-character-classes",
             "diff-selection/transitive-package-change",
             "diff-selection/unknown-path-all",
             "diff-selection/unknown-path-error",
@@ -273,8 +276,10 @@ class BuildToolCoreTest {
             "graph/chain",
             "graph/cycle",
             "graph/diamond",
+            "graph/empty",
             "graph/isolated",
             "graph/multiple-components",
+            "graph/partial-cycle-no-output",
         )
     }
 }

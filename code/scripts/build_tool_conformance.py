@@ -3909,10 +3909,15 @@ def _validate_pure_result_semantics(
     elif domain == "graph":
         expected_graph = _expected_graph(options)
         if expected_graph is None:
-            if outcome != "error" or payload or "GRAPH_CYCLE" not in diagnostic_codes:
+            if (
+                outcome != "error"
+                or payload
+                or result["diagnostics"]
+                != [{"code": "GRAPH_CYCLE", "severity": "error"}]
+            ):
                 raise ConformanceError(
                     f"{prefix}_GRAPH_CYCLE_INVALID",
-                    "cyclic graph requires an empty result and stable error",
+                    "cyclic graph requires an empty result and exactly its stable error",
                 )
             return
         canonical_levels = [sorted(level) for level in payload["levels"]]

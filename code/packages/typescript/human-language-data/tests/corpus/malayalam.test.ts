@@ -923,8 +923,31 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // English's "neither ... nor" hides that choice completely. So the tranche
   // is two lessons, not one: caayayum kaappiyum ILLA against adhyaapakanum
   // vaidyanum ALLA, identical on the left and different only in the last word.
-  expect(coverage.covered).toBe(217);
-  expect(coverage.unmapped).toBe(26);
+  // 217 -> 218: ML-A1-LEX-38, AND THE TRACK CROSSES 90 PER CENT: 218/243 is
+  // 89.7, which rounds up. The telephone, the post, the internet and an
+  // e-mail address. FIVE Spanish points behind one Malayalam point
+  // (A1-NE09-01..03, NE09-06, NE11-01) -- the largest single payoff left in
+  // this file.
+  // THE NOTE'S "Nothing" HELD, and the check that confirmed it is the one that
+  // has caught me before: kattu (a letter) appears to be taught, because
+  // grepping for it matches INSIDE akattu ("inside", ML-C95). Word-bounded
+  // against the Malayalam block it returns ZERO. Count the token.
+  // FOUR OF THE FIVE WORDS COST NO SCRIPT DEBT AT ALL. kattu, thapaal and
+  // imeyil use only glyphs already shown and directly owned; inrarneRRu
+  // deepens the already-open chillu-r and opens nothing new.
+  // THE TELEPHONE IS TAUGHT BY EAR, AND THAT IS NOT A SHORTCUT. phooN needs
+  // the chillu NN, which ML-S131 teaches at sequence 144 but
+  // data/scripts/malayalam.json omits, so writing it trips uncovered-glyphs
+  // and integration.test.ts turns that queue into a hard failure. HL-C398
+  // records why a curriculum chapter must not simply add it: each listed
+  // chillu is pinned to a SOURCED stroke-order animation, "a citation cannot
+  // be guessed", and the inventory is a different owner's surface by design
+  // (HL24). So the word is given in romanization with the lesson saying its
+  // written shape comes when its letter does -- chapter 88's precedent for
+  // eighty, and before that ML-C07-numbers-6-10's. The phone is the SECOND
+  // word the curriculum has wanted that contains the glyph.
+  expect(coverage.covered).toBe(218);
+  expect(coverage.unmapped).toBe(25);
   expect(coverage.partial).toBe(0);
   // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
   // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
@@ -936,6 +959,6 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
     covered: 8,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 217/243 points covered (89%)",
+    "malayalam A1 (partial inventory): 218/243 points covered (90%)",
   );
 }, 60_000);

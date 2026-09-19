@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:e01fe882f28ce42f",
+  "lessonIds": [
+    "ML-C110-phon",
+    "ML-C110-kattu",
+    "ML-C110-thapaal",
+    "ML-C110-imeyil",
+    "ML-R110-message-recall"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch110.txt",
+  "json": "malayalam/narration/ch110.json",
+  "textHash": "fnv1a64:1199f81fdaf4ad54",
+  "jsonHash": "fnv1a64:f190cba948b7a148",
+  "findings": []
+}

@@ -69,6 +69,41 @@ func TestMapFilesToPackages_StarlarkStrict(t *testing.T) {
 	}
 }
 
+func TestMapFilesToPackages_StarlarkBuildFrontsAreExact(t *testing.T) {
+	packages := []discovery.Package{
+		{
+			Name:         "python/foo",
+			Path:         "/repo/code/packages/python/foo",
+			Language:     "python",
+			IsStarlark:   true,
+			DeclaredSrcs: []string{"src/**/*.py"},
+		},
+	}
+
+	tests := []struct {
+		file string
+		want bool
+	}{
+		{"code/packages/python/foo/BUILD", true},
+		{"code/packages/python/foo/nested/BUILD_windows", true},
+		{"code/packages/python/foo/nested/BUILD_mac", true},
+		{"code/packages/python/foo/nested/BUILD_linux", true},
+		{"code/packages/python/foo/nested/BUILD_mac_and_linux", true},
+		{"code/packages/python/foo/BUILD_debug", false},
+		{"code/packages/python/foo/BUILD.bak", false},
+		{"code/packages/python/foo/nested/BUILD_windows.old", false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.file, func(t *testing.T) {
+			changed := MapFilesToPackages([]string{tt.file}, packages, "/repo")
+			if got := changed["python/foo"]; got != tt.want {
+				t.Fatalf("changed=%v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestMapFilesToPackages_StarlarkNoDeclaredSrcs(t *testing.T) {
 	// Starlark BUILD but with empty DeclaredSrcs: falls back to any-file behavior.
 	packages := []discovery.Package{

@@ -1,0 +1,706 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 110,
+  "title": "Reaching Somebody",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e01fe882f28ce42f",
+  "lessons": [
+    {
+      "id": "ML-C110-phon",
+      "sequence": 4050,
+      "title": "phōṇ — a telephone, by ear",
+      "headword": "phōṇ",
+      "romanization": "phōṇ",
+      "gloss": "a telephone — heard and said before its written shape, because one of its letters is not yet verified",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:329381f82ae1a588",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Think of the thing you would pick up to reach somebody far away."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You are about to find you can nearly say it already."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "phōṇ — a telephone."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it out loud and you will hear English. It is phone, borrowed whole, with the ending settled into Malayalam sounds: the n at the close is made with the tongue curled back, not at the teeth."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: why this one is not printed",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This word is given by ear, and the book owes you a reason."
+            },
+            {
+              "kind": "speech",
+              "text": "Its last sound is written with a letter that this book's script inventory has not yet verified to the standard it holds itself to — the stroke order for it has not been sourced, and an unsourced one is not written down here. The letter is taught elsewhere in the book; what is missing is the evidence the inventory requires before a word can be printed with it."
+            },
+            {
+              "kind": "speech",
+              "text": "So you get the word now and its written shape later, which is how this book has handled a number you learned to say before you could write it. Hearing and saying come first; the spelling follows when it can be given honestly."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phōṇ, with the tongue curled back at the end",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phōṇ*, with the tongue curled back at the end]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which language the word came from",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which language the word came from]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why this book has not printed it for you",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why this book has not printed it for you]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A telephone? (phōṇ.) Where does the word come from? (English.) Why is it given by ear? (Its last letter is not yet verified for printing.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C110-kattu",
+      "sequence": 4060,
+      "title": "കത്ത് (kattŭ) — a letter",
+      "headword": "കത്ത്",
+      "romanization": "kattŭ",
+      "gloss": "a letter — the written kind, built from a doubling you have read since the school chapter",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4819a909d8620aaa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the word for a telephone — the one given by ear."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now think of the older way of reaching somebody who is far off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കത്ത് (kattŭ) — a letter, the kind you write and send."
+            },
+            {
+              "kind": "speech",
+              "text": "Every piece of this word is one you can already read. The doubled ത്ത in the middle is the cluster you took apart in the school words, and the half-u at the end is the one you close dozens of words with."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: a shape that hides inside a word you know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have read these characters before, sitting inside another word."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "അകത്ത്, inside.",
+                "കത്ത് (kattŭ), a letter."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Cover the first character of അകത്ത് and what is left looks exactly like കത്ത് (kattŭ). The two words are not related, and the resemblance is worth meeting once so it cannot mislead you later."
+            },
+            {
+              "kind": "speech",
+              "text": "You were told how to read that pair when you learned it: read the ends and not the fronts — അകത്ത് and പുറത്ത് end alike and differ at the front, which is where their meaning sits. കത്ത് (kattŭ) is a whole word rather than one of that pair, so the advice that sorts inside from outside is the same advice that keeps this one separate from both."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kattŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kattŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at അകത്ത് and കത്ത് (kattŭ), and say which one means inside",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **അകത്ത്** and **കത്ത്**, and say which one means *inside*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a letter, and a telephone, one after the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a letter, and a telephone, one after the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A letter? (കത്ത് (kattŭ).) Does it have anything to do with അകത്ത്? (No — the shapes overlap and the words do not.) A telephone? (phōṇ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C110-thapaal",
+      "sequence": 4070,
+      "title": "തപാൽ (tapāl) — the post",
+      "headword": "തപാൽ",
+      "romanization": "tapāl",
+      "gloss": "the post — what carries the letter, and the word on the red box",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9828632007cac608",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the word for a letter."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then ask yourself what carries it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തപാൽ (tapāl) — the post: the service, and the word printed on the box you drop a letter into."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "കത്ത് (kattŭ), the thing you write.",
+                "തപാൽ (tapāl), the thing that carries it."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The ending is one you can already read. ൽ is the chillu you have met closing other words — a bare l with no vowel after it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tapāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tapāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the letter and the post, in that order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the letter and the post, in that order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at തപാൽ (tapāl) and name the character that closes it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **തപാൽ** and name the character that closes it]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The post? (തപാൽ (tapāl).) The thing you put in it? (കത്ത് (kattŭ).) What closes തപാൽ (tapāl)? (The chillu ൽ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C110-imeyil",
+      "sequence": 4080,
+      "title": "ഇമെയിൽ — ഇന്റർനെറ്റ് (imeyil — inṟarneṟṟŭ)",
+      "headword": "ഇമെയിൽ — ഇന്റർനെറ്റ്",
+      "romanization": "imeyil — inṟarneṟṟŭ",
+      "gloss": "e-mail and the internet, and what you already own for saying an address out loud",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8d791c6933068b1f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the post, and the thing it carries."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then say the mark that ends a written sentence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇമെയിൽ (imeyil) — e-mail."
+            },
+            {
+              "kind": "speech",
+              "text": "ഇന്റർനെറ്റ് (inṟarneṟṟŭ) — the internet."
+            },
+            {
+              "kind": "speech",
+              "text": "Both are English, borrowed whole and spelled in Malayalam letters, and both end the way you would expect: ഇമെയിൽ on the chillu ൽ you closed തപാൽ (tapāl) with, ഇന്റർനെറ്റ് on the half-u."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "തപാൽ (tapāl), carries കത്ത് (kattŭ).",
+                "ഇന്റർനെറ്റ്, carries ഇമെയിൽ."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: you can already say an address out loud",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "An examiner may ask you to say an e-mail address, and the pieces are in hand: the letters, and the full stop you were taught with the other marks. A Malayalam speaker reading an address aloud names that mark exactly where it sits."
+            },
+            {
+              "kind": "speech",
+              "text": "The mark before the domain is a different matter. This book has not given you a Malayalam name for it, for the same reason it gave you no Malayalam names for the punctuation marks: those names exist and are not written down here until they can be given with a source. What you can do already is spell the letters and place the stop."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "imeyil, then inṟarneṟṟŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *imeyil*, then *inṟarneṟṟŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the two carries the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the two carries the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the mark you name aloud when reading an address",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the mark you name aloud when reading an address]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "E-mail? (ഇമെയിൽ.) The internet? (ഇന്റർനെറ്റ്.) Which older pair do those two mirror? (തപാൽ (tapāl) carrying കത്ത് (kattŭ).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R110-message-recall",
+      "sequence": 4090,
+      "title": "(phone, letter, post, e-mail, internet) (sandesham enna oormma) — from cold",
+      "headword": "(phone, letter, post, e-mail, internet)",
+      "romanization": "sandesham enna oormma",
+      "gloss": "cold retrieval of the five, and of the one the book could not print",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:474f5b220c53009c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say telephone, letter and the post."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: two ways of reaching somebody, a century apart",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "കത്ത് (kattŭ) carried by തപാൽ (tapāl), the older pair.",
+                "ഇമെയിൽ carried by ഇന്റർനെറ്റ്, the newer one."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The newer pair is borrowed and the older one is not, which is the ordinary way a language takes in a new thing: the object arrives with its name attached. What is worth noticing is that the shape of the pair did not change — a thing written, and a service that carries it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four of these five you can write, and one you can only say. The telephone waits on a letter whose stroke order this book has not sourced, so it was given by ear rather than printed on a guess — the same bargain you were offered once before, with a number you could say before you could write it."
+            },
+            {
+              "kind": "speech",
+              "text": "You can now name the telephone, write and send a letter, and say an address aloud as far as the stop."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five words, in the order you met them",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five words, in the order you met them]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the five you cannot yet write, and why",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the five you cannot yet write, and why]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which pair is borrowed and which is not",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which pair is borrowed and which is not]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Telephone, letter, post? (phōṇ, കത്ത് (kattŭ), തപാൽ (tapāl).) E-mail and the internet? (ഇമെയിൽ, ഇന്റർനെറ്റ്.) Which of the five can you say but not yet write? (phōṇ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
