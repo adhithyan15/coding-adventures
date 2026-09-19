@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 7186,
+    "totalLessons": 7190,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -32,7 +32,7 @@
     "headwordsWithoutRomanization": 46,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
-    "atomsNeverRevisited": 489,
+    "atomsNeverRevisited": 490,
     "forwardReferences": 798,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 87,
@@ -40,7 +40,7 @@
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 243,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 5682,
+    "drivableLessons": 5686,
     "drivablePercent": 79,
     "chaptersWithoutDrivablePrefix": 231,
     "unexplainedModalityOverrides": 0
@@ -2850,7 +2850,8 @@
           105,
           106,
           107,
-          108
+          108,
+          109
         ],
         "bookChapters": [
           1,
@@ -2960,7 +2961,8 @@
           105,
           106,
           107,
-          108
+          108,
+          109
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -4188,9 +4190,9 @@
       {
         "language": "malayalam",
         "status": "version-2",
-        "lessonCount": 470,
+        "lessonCount": 474,
         "versions": {
-          "2": 470
+          "2": 474
         }
       },
       {
@@ -5002,8 +5004,8 @@
       },
       {
         "language": "malayalam",
-        "bookChapters": 108,
-        "declaredChapters": 108,
+        "bookChapters": 109,
+        "declaredChapters": 109,
         "missingCapability": 0,
         "findings": 8,
         "clean": false
@@ -5098,8 +5100,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 1602,
-      "declaredChapters": 1602,
+      "bookChapters": 1603,
+      "declaredChapters": 1603,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 87,
@@ -5111,10 +5113,10 @@
     }
   },
   "levels": {
-    "totalLessons": 7186,
+    "totalLessons": 7190,
     "byLevel": {
       "pre-A1": 3968,
-      "A1": 2474,
+      "A1": 2478,
       "A2": 660,
       "B1": 39,
       "B2": 17,
@@ -5291,10 +5293,10 @@
       },
       {
         "language": "malayalam",
-        "lessonCount": 470,
+        "lessonCount": 474,
         "byLevel": {
           "pre-A1": 247,
-          "A1": 206,
+          "A1": 210,
           "A2": 17,
           "B1": 0,
           "B2": 0,
@@ -6285,8 +6287,8 @@
       },
       {
         "language": "malayalam",
-        "lessonCount": 470,
-        "measurable": 460,
+        "lessonCount": 474,
+        "measurable": 464,
         "unmeasurable": 10,
         "lessonViolations": 2,
         "chapterViolations": 3
@@ -6844,7 +6846,7 @@
           "language": "malayalam",
           "script": "malayalam",
           "latinScript": false,
-          "lessonCount": 470,
+          "lessonCount": 474,
           "totalGlyphs": 68,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -11836,7 +11838,7 @@
         "atom": "ML-CONCEPT-C20-KALAVASTHA-01",
         "language": "malayalam",
         "introducedBy": "ML-C20-kalavastha",
-        "introducedAt": 111,
+        "introducedAt": 112,
         "missed": [
           "R1",
           "R2",
@@ -11849,7 +11851,7 @@
         "atom": "ML-CONCEPT-C23-NAAL-01",
         "language": "malayalam",
         "introducedBy": "ML-C23-naal",
-        "introducedAt": 117,
+        "introducedAt": 118,
         "missed": [
           "R1",
           "R2",
@@ -11862,7 +11864,7 @@
         "atom": "ML-CONCEPT-C24-NATIVE-NIGHT-WORDS-01",
         "language": "malayalam",
         "introducedBy": "ML-C24-native-night-words",
-        "introducedAt": 119,
+        "introducedAt": 120,
         "missed": [
           "R1",
           "R2",
@@ -11875,7 +11877,7 @@
         "atom": "ML-CONCEPT-C25-SHUBHA-RATHRI-02",
         "language": "malayalam",
         "introducedBy": "ML-C25-shubha-rathri",
-        "introducedAt": 120,
+        "introducedAt": 121,
         "missed": [
           "R1",
           "R2",
@@ -11888,7 +11890,7 @@
         "atom": "ML-CONCEPT-C26-RAAVILE-01",
         "language": "malayalam",
         "introducedBy": "ML-C26-raavile",
-        "introducedAt": 122,
+        "introducedAt": 123,
         "missed": [
           "R1",
           "R2",
@@ -11901,7 +11903,7 @@
         "atom": "ML-CONCEPT-C26-RAAVILE-02",
         "language": "malayalam",
         "introducedBy": "ML-C26-raavile",
-        "introducedAt": 122,
+        "introducedAt": 123,
         "missed": [
           "R1",
           "R2",
@@ -11914,7 +11916,7 @@
         "atom": "ML-CONCEPT-C26-RAAVILE-03",
         "language": "malayalam",
         "introducedBy": "ML-C26-raavile",
-        "introducedAt": 122,
+        "introducedAt": 123,
         "missed": [
           "R1",
           "R2",
@@ -11927,7 +11929,7 @@
         "atom": "ML-CONCEPT-C27-VAIKUNNERAM-01",
         "language": "malayalam",
         "introducedBy": "ML-C27-vaikunneram",
-        "introducedAt": 123,
+        "introducedAt": 124,
         "missed": [
           "R1",
           "R2",
@@ -11940,7 +11942,7 @@
         "atom": "ML-CONCEPT-C27-VAIKUNNERAM-02",
         "language": "malayalam",
         "introducedBy": "ML-C27-vaikunneram",
-        "introducedAt": 123,
+        "introducedAt": 124,
         "missed": [
           "R1",
           "R2",
@@ -11953,7 +11955,7 @@
         "atom": "ML-CONCEPT-C28-UCHAKAZHINJU-01",
         "language": "malayalam",
         "introducedBy": "ML-C28-uchakazhinju",
-        "introducedAt": 124,
+        "introducedAt": 125,
         "missed": [
           "R1",
           "R2",
@@ -11966,7 +11968,7 @@
         "atom": "ML-CONCEPT-C28-UCHAKAZHINJU-02",
         "language": "malayalam",
         "introducedBy": "ML-C28-uchakazhinju",
-        "introducedAt": 124,
+        "introducedAt": 125,
         "missed": [
           "R1",
           "R2",
@@ -11979,7 +11981,7 @@
         "atom": "ML-CONCEPT-C29-SUPRABHAATHAM-02",
         "language": "malayalam",
         "introducedBy": "ML-C29-suprabhaatham",
-        "introducedAt": 125,
+        "introducedAt": 126,
         "missed": [
           "R1",
           "R2",
@@ -11992,7 +11994,7 @@
         "atom": "ML-CONCEPT-C30-SHUBHA-SAYAAHNAM-02",
         "language": "malayalam",
         "introducedBy": "ML-C30-shubha-sayaahnam",
-        "introducedAt": 126,
+        "introducedAt": 127,
         "missed": [
           "R1",
           "R2",
@@ -12005,7 +12007,7 @@
         "atom": "ML-CONCEPT-C31-AFTERNOON-CONVERGENCE-01",
         "language": "malayalam",
         "introducedBy": "ML-C31-afternoon-convergence",
-        "introducedAt": 129,
+        "introducedAt": 130,
         "missed": [
           "R1",
           "R2",
@@ -12018,7 +12020,7 @@
         "atom": "ML-CONCEPT-C34-ISHTAM-01",
         "language": "malayalam",
         "introducedBy": "ML-C34-ishtam",
-        "introducedAt": 143,
+        "introducedAt": 144,
         "missed": [
           "R1",
           "R2",
@@ -12031,7 +12033,7 @@
         "atom": "ML-CONCEPT-C34-ISHTAM-02",
         "language": "malayalam",
         "introducedBy": "ML-C34-ishtam",
-        "introducedAt": 143,
+        "introducedAt": 144,
         "missed": [
           "R1",
           "R2",
@@ -12044,7 +12046,20 @@
         "atom": "ML-CONCEPT-C34-ISHTAM-03",
         "language": "malayalam",
         "introducedBy": "ML-C34-ishtam",
-        "introducedAt": 143,
+        "introducedAt": 144,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "ML-LEX-ORU-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C18-oru",
+        "introducedAt": 107,
         "missed": [
           "R1",
           "R2",
@@ -12080,23 +12095,10 @@
         "revisits": 1
       },
       {
-        "atom": "ML-SCRIPT-RECOG-120",
-        "language": "malayalam",
-        "introducedBy": "ML-S120-sign-anusvara",
-        "introducedAt": 104,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "ML-SCRIPT-RECOG-121",
         "language": "malayalam",
         "introducedBy": "ML-S121-letter-ssa",
-        "introducedAt": 108,
+        "introducedAt": 109,
         "missed": [
           "R1",
           "R2",
@@ -12109,7 +12111,7 @@
         "atom": "ML-SCRIPT-RECOG-132",
         "language": "malayalam",
         "introducedBy": "ML-S132-letter-ga",
-        "introducedAt": 160,
+        "introducedAt": 161,
         "missed": [
           "R1",
           "R2",
@@ -12122,7 +12124,7 @@
         "atom": "ML-SKILL-CONNECTED-READING",
         "language": "malayalam",
         "introducedBy": "ML-C69-adyathe-vaayana",
-        "introducedAt": 308,
+        "introducedAt": 309,
         "missed": [
           "R1",
           "R2",
@@ -33557,7 +33559,7 @@
         "atom": "ML-CONCEPT-C18-MANI-02",
         "language": "malayalam",
         "introducedBy": "ML-C18-mani",
-        "introducedAt": 107,
+        "introducedAt": 108,
         "missed": [
           "R1",
           "R3",
@@ -33569,7 +33571,7 @@
         "atom": "ML-CONCEPT-C20-KALAVASTHA-02",
         "language": "malayalam",
         "introducedBy": "ML-C20-kalavastha",
-        "introducedAt": 111,
+        "introducedAt": 112,
         "missed": [
           "R1",
           "R2",
@@ -33581,7 +33583,7 @@
         "atom": "ML-CONCEPT-C20-PATHINONNU-IRUPATHU-02",
         "language": "malayalam",
         "introducedBy": "ML-C20-pathinonnu-irupathu",
-        "introducedAt": 110,
+        "introducedAt": 111,
         "missed": [
           "R1",
           "R3",
@@ -33593,7 +33595,7 @@
         "atom": "ML-CONCEPT-C22-PACCHA-MANJA-01",
         "language": "malayalam",
         "introducedBy": "ML-C22-paccha-manja",
-        "introducedAt": 115,
+        "introducedAt": 116,
         "missed": [
           "R1",
           "R3",
@@ -33605,7 +33607,7 @@
         "atom": "ML-CONCEPT-C22-PACCHA-MANJA-02",
         "language": "malayalam",
         "introducedBy": "ML-C22-paccha-manja",
-        "introducedAt": 115,
+        "introducedAt": 116,
         "missed": [
           "R1",
           "R3",
@@ -33617,7 +33619,7 @@
         "atom": "ML-CONCEPT-C23-DIVASAM-01",
         "language": "malayalam",
         "introducedBy": "ML-C23-divasam",
-        "introducedAt": 116,
+        "introducedAt": 117,
         "missed": [
           "R1",
           "R3",
@@ -33629,7 +33631,7 @@
         "atom": "ML-CONCEPT-C23-DIVASAM-02",
         "language": "malayalam",
         "introducedBy": "ML-C23-divasam",
-        "introducedAt": 116,
+        "introducedAt": 117,
         "missed": [
           "R1",
           "R3",
@@ -33641,7 +33643,7 @@
         "atom": "ML-CONCEPT-C24-RATHRI-02",
         "language": "malayalam",
         "introducedBy": "ML-C24-rathri",
-        "introducedAt": 118,
+        "introducedAt": 119,
         "missed": [
           "R1",
           "R3",
@@ -33653,7 +33655,7 @@
         "atom": "ML-CONCEPT-C25-SHUBHA-RATHRI-01",
         "language": "malayalam",
         "introducedBy": "ML-C25-shubha-rathri",
-        "introducedAt": 120,
+        "introducedAt": 121,
         "missed": [
           "R1",
           "R2",
@@ -33665,7 +33667,7 @@
         "atom": "ML-CONCEPT-C29-SUPRABHAATHAM-01",
         "language": "malayalam",
         "introducedBy": "ML-C29-suprabhaatham",
-        "introducedAt": 125,
+        "introducedAt": 126,
         "missed": [
           "R1",
           "R2",
@@ -33677,7 +33679,7 @@
         "atom": "ML-CONCEPT-C30-SHUBHA-SAYAAHNAM-01",
         "language": "malayalam",
         "introducedBy": "ML-C30-shubha-sayaahnam",
-        "introducedAt": 126,
+        "introducedAt": 127,
         "missed": [
           "R1",
           "R2",
@@ -33689,7 +33691,7 @@
         "atom": "ML-CONCEPT-C31-SHUBHA-MADHYAAHNAM-01",
         "language": "malayalam",
         "introducedBy": "ML-C31-shubha-madhyaahnam",
-        "introducedAt": 127,
+        "introducedAt": 128,
         "missed": [
           "R1",
           "R2",
@@ -33701,7 +33703,7 @@
         "atom": "ML-CONCEPT-C40-OON-02",
         "language": "malayalam",
         "introducedBy": "ML-C40-oon",
-        "introducedAt": 161,
+        "introducedAt": 162,
         "missed": [
           "R1",
           "R3",
@@ -33713,7 +33715,7 @@
         "atom": "ML-CONCEPT-C40-OON-03",
         "language": "malayalam",
         "introducedBy": "ML-C40-oon",
-        "introducedAt": 161,
+        "introducedAt": 162,
         "missed": [
           "R1",
           "R3",
@@ -33725,7 +33727,7 @@
         "atom": "ML-CONCEPT-C50-PARAYUKA-01",
         "language": "malayalam",
         "introducedBy": "ML-C50-parayuka",
-        "introducedAt": 209,
+        "introducedAt": 210,
         "missed": [
           "R1",
           "R2",
@@ -33737,7 +33739,7 @@
         "atom": "ML-CONCEPT-C80-GENTILIC-01",
         "language": "malayalam",
         "introducedBy": "ML-C80-malayali",
-        "introducedAt": 346,
+        "introducedAt": 347,
         "missed": [
           "R2",
           "R3",
@@ -33749,7 +33751,7 @@
         "atom": "ML-CONCEPT-C82-GREETING-REGISTER-01",
         "language": "malayalam",
         "introducedBy": "ML-C82-greeting-register",
-        "introducedAt": 354,
+        "introducedAt": 355,
         "missed": [
           "R2",
           "R3",
@@ -33761,7 +33763,7 @@
         "atom": "ML-CONCEPT-C82-VOCATIVE-01",
         "language": "malayalam",
         "introducedBy": "ML-C82-chettaa",
-        "introducedAt": 352,
+        "introducedAt": 353,
         "missed": [
           "R2",
           "R3",
@@ -33773,7 +33775,7 @@
         "atom": "ML-CONCEPT-C83-WHERE-FROM-01",
         "language": "malayalam",
         "introducedBy": "ML-C83-evide-ninnu",
-        "introducedAt": 357,
+        "introducedAt": 358,
         "missed": [
           "R2",
           "R3",
@@ -33785,7 +33787,7 @@
         "atom": "ML-CONCEPT-C85-GEMINATION-01",
         "language": "malayalam",
         "introducedBy": "ML-C85-gemination",
-        "introducedAt": 365,
+        "introducedAt": 366,
         "missed": [
           "R2",
           "R3",
@@ -33797,7 +33799,7 @@
         "atom": "ML-CONCEPT-C85-STRESS-01",
         "language": "malayalam",
         "introducedBy": "ML-C85-stress",
-        "introducedAt": 366,
+        "introducedAt": 367,
         "missed": [
           "R2",
           "R3",
@@ -33809,7 +33811,7 @@
         "atom": "ML-CONCEPT-C88-HUNDRED-01",
         "language": "malayalam",
         "introducedBy": "ML-C88-ninety-hundred",
-        "introducedAt": 377,
+        "introducedAt": 378,
         "missed": [
           "R2",
           "R3",
@@ -33821,7 +33823,7 @@
         "atom": "ML-CONCEPT-C88-NINETY-01",
         "language": "malayalam",
         "introducedBy": "ML-C88-ninety-hundred",
-        "introducedAt": 377,
+        "introducedAt": 378,
         "missed": [
           "R2",
           "R3",
@@ -33833,7 +33835,7 @@
         "atom": "ML-CONCEPT-C88-TENS-02",
         "language": "malayalam",
         "introducedBy": "ML-C88-tens",
-        "introducedAt": 376,
+        "introducedAt": 377,
         "missed": [
           "R2",
           "R3",
@@ -33845,7 +33847,7 @@
         "atom": "ML-CONCEPT-C89-OPINION-01",
         "language": "malayalam",
         "introducedBy": "ML-C89-opinion",
-        "introducedAt": 382,
+        "introducedAt": 383,
         "missed": [
           "R2",
           "R3",
@@ -33857,7 +33859,7 @@
         "atom": "ML-CONCEPT-C90-NO-RELATIVE-01",
         "language": "malayalam",
         "introducedBy": "ML-C90-clause-in-front",
-        "introducedAt": 385,
+        "introducedAt": 386,
         "missed": [
           "R2",
           "R3",
@@ -33893,7 +33895,7 @@
         "atom": "ML-GRAMMAR-C41-DEIXIS-SYSTEM",
         "language": "malayalam",
         "introducedBy": "ML-C41-deixis-system",
-        "introducedAt": 168,
+        "introducedAt": 169,
         "missed": [
           "R1",
           "R2",
@@ -33905,7 +33907,7 @@
         "atom": "ML-GRAMMAR-C42-ADJ-SYSTEM",
         "language": "malayalam",
         "introducedBy": "ML-C42-adjective-system",
-        "introducedAt": 174,
+        "introducedAt": 175,
         "missed": [
           "R1",
           "R2",
@@ -33917,7 +33919,7 @@
         "atom": "ML-GRAMMAR-C68-ORDINAL-07",
         "language": "malayalam",
         "introducedBy": "ML-C68-eleventh",
-        "introducedAt": 304,
+        "introducedAt": 305,
         "missed": [
           "R2",
           "R3",
@@ -33929,7 +33931,7 @@
         "atom": "ML-GRAMMAR-C72-ENNU-VERBS-01",
         "language": "malayalam",
         "introducedBy": "ML-C72-ennu-more",
-        "introducedAt": 318,
+        "introducedAt": 319,
         "missed": [
           "R2",
           "R3",
@@ -33941,7 +33943,7 @@
         "atom": "ML-GRAMMAR-C73-BECAUSE-01",
         "language": "malayalam",
         "introducedBy": "ML-C73-enthukondennaal",
-        "introducedAt": 322,
+        "introducedAt": 323,
         "missed": [
           "R2",
           "R3",
@@ -33953,7 +33955,7 @@
         "atom": "ML-GRAMMAR-C74-AAN-01",
         "language": "malayalam",
         "introducedBy": "ML-C74-aan",
-        "introducedAt": 324,
+        "introducedAt": 325,
         "missed": [
           "R2",
           "R3",
@@ -33965,7 +33967,7 @@
         "atom": "ML-GRAMMAR-C74-PURPOSE-01",
         "language": "malayalam",
         "introducedBy": "ML-C74-purpose",
-        "introducedAt": 325,
+        "introducedAt": 326,
         "missed": [
           "R2",
           "R3",
@@ -33977,7 +33979,7 @@
         "atom": "ML-GRAMMAR-C75-UMBOL-01",
         "language": "malayalam",
         "introducedBy": "ML-C75-umbol",
-        "introducedAt": 329,
+        "introducedAt": 330,
         "missed": [
           "R2",
           "R3",
@@ -33989,7 +33991,7 @@
         "atom": "ML-GRAMMAR-C79-DEGREE-SLOT-01",
         "language": "malayalam",
         "introducedBy": "ML-C79-degree-slot",
-        "introducedAt": 342,
+        "introducedAt": 343,
         "missed": [
           "R2",
           "R3",
@@ -34001,7 +34003,7 @@
         "atom": "ML-GRAMMAR-C83-ABLATIVE-01",
         "language": "malayalam",
         "introducedBy": "ML-C83-ninnu",
-        "introducedAt": 356,
+        "introducedAt": 357,
         "missed": [
           "R2",
           "R3",
@@ -34013,7 +34015,7 @@
         "atom": "ML-GRAMMAR-C86-INSTRUMENTAL-01",
         "language": "malayalam",
         "introducedBy": "ML-C86-aal-instrumental",
-        "introducedAt": 370,
+        "introducedAt": 371,
         "missed": [
           "R2",
           "R3",
@@ -34025,7 +34027,7 @@
         "atom": "ML-GRAMMAR-C88-COMPOUND-01",
         "language": "malayalam",
         "introducedBy": "ML-C88-compound-numbers",
-        "introducedAt": 378,
+        "introducedAt": 379,
         "missed": [
           "R2",
           "R3",
@@ -34037,7 +34039,7 @@
         "atom": "ML-GRAMMAR-C90-PARTICIPLE-01",
         "language": "malayalam",
         "introducedBy": "ML-C90-participle",
-        "introducedAt": 384,
+        "introducedAt": 385,
         "missed": [
           "R2",
           "R3",
@@ -34049,7 +34051,7 @@
         "atom": "ML-GRAMMAR-C90-PAST-PARTICIPLE-01",
         "language": "malayalam",
         "introducedBy": "ML-C90-past-participle",
-        "introducedAt": 386,
+        "introducedAt": 387,
         "missed": [
           "R2",
           "R3",
@@ -34085,7 +34087,7 @@
         "atom": "ML-LEX-C58-WANT-01",
         "language": "malayalam",
         "introducedBy": "ML-C58-venam",
-        "introducedAt": 251,
+        "introducedAt": 252,
         "missed": [
           "R1",
           "R2",
@@ -34097,7 +34099,7 @@
         "atom": "ML-LEX-C65-ASK-05",
         "language": "malayalam",
         "introducedBy": "ML-C65-trust",
-        "introducedAt": 288,
+        "introducedAt": 289,
         "missed": [
           "R2",
           "R3",
@@ -34109,7 +34111,7 @@
         "atom": "ML-LEX-C68-ORDINAL-03",
         "language": "malayalam",
         "introducedBy": "ML-C68-eighth",
-        "introducedAt": 301,
+        "introducedAt": 302,
         "missed": [
           "R2",
           "R3",
@@ -34121,7 +34123,7 @@
         "atom": "ML-LEX-C68-ORDINAL-04",
         "language": "malayalam",
         "introducedBy": "ML-C68-ninth",
-        "introducedAt": 302,
+        "introducedAt": 303,
         "missed": [
           "R2",
           "R3",
@@ -34133,7 +34135,7 @@
         "atom": "ML-LEX-C68-ORDINAL-05",
         "language": "malayalam",
         "introducedBy": "ML-C68-tenth",
-        "introducedAt": 303,
+        "introducedAt": 304,
         "missed": [
           "R2",
           "R3",
@@ -34145,7 +34147,7 @@
         "atom": "ML-LEX-C68-ORDINAL-06",
         "language": "malayalam",
         "introducedBy": "ML-C68-eleventh",
-        "introducedAt": 304,
+        "introducedAt": 305,
         "missed": [
           "R2",
           "R3",
@@ -34157,7 +34159,7 @@
         "atom": "ML-LEX-C68-ORDINAL-08",
         "language": "malayalam",
         "introducedBy": "ML-C68-at-first",
-        "introducedAt": 305,
+        "introducedAt": 306,
         "missed": [
           "R1",
           "R2",
@@ -34169,7 +34171,7 @@
         "atom": "ML-LEX-C71-AVAR-01",
         "language": "malayalam",
         "introducedBy": "ML-C71-avar",
-        "introducedAt": 314,
+        "introducedAt": 315,
         "missed": [
           "R2",
           "R3",
@@ -34181,7 +34183,7 @@
         "atom": "ML-LEX-C71-NJANGAL-NAAM-01",
         "language": "malayalam",
         "introducedBy": "ML-C71-njangal-naam",
-        "introducedAt": 315,
+        "introducedAt": 316,
         "missed": [
           "R2",
           "R3",
@@ -34193,7 +34195,7 @@
         "atom": "ML-LEX-C73-KAARANAM-01",
         "language": "malayalam",
         "introducedBy": "ML-C73-kaaranam",
-        "introducedAt": 321,
+        "introducedAt": 322,
         "missed": [
           "R2",
           "R3",
@@ -34205,7 +34207,7 @@
         "atom": "ML-LEX-C73-WHY-01",
         "language": "malayalam",
         "introducedBy": "ML-C73-enthukondu",
-        "introducedAt": 320,
+        "introducedAt": 321,
         "missed": [
           "R2",
           "R3",
@@ -34217,7 +34219,7 @@
         "atom": "ML-LEX-C76-VENO-01",
         "language": "malayalam",
         "introducedBy": "ML-C76-veno",
-        "introducedAt": 332,
+        "introducedAt": 333,
         "missed": [
           "R2",
           "R3",
@@ -34229,7 +34231,7 @@
         "atom": "ML-LEX-C77-ALLE-01",
         "language": "malayalam",
         "introducedBy": "ML-C77-alle",
-        "introducedAt": 335,
+        "introducedAt": 336,
         "missed": [
           "R2",
           "R3",
@@ -34241,7 +34243,7 @@
         "atom": "ML-LEX-C80-ORIGIN-04",
         "language": "malayalam",
         "introducedBy": "ML-C80-malayali",
-        "introducedAt": 346,
+        "introducedAt": 347,
         "missed": [
           "R2",
           "R3",
@@ -34253,7 +34255,7 @@
         "atom": "ML-LEX-C81-DISTANCE-01",
         "language": "malayalam",
         "introducedBy": "ML-C81-aduthu",
-        "introducedAt": 348,
+        "introducedAt": 349,
         "missed": [
           "R2",
           "R3",
@@ -34265,7 +34267,7 @@
         "atom": "ML-LEX-C81-DISTANCE-02",
         "language": "malayalam",
         "introducedBy": "ML-C81-akale",
-        "introducedAt": 349,
+        "introducedAt": 350,
         "missed": [
           "R2",
           "R3",
@@ -34277,7 +34279,7 @@
         "atom": "ML-LEX-C82-ADDRESS-01",
         "language": "malayalam",
         "introducedBy": "ML-C82-chettaa",
-        "introducedAt": 352,
+        "introducedAt": 353,
         "missed": [
           "R2",
           "R3",
@@ -34289,7 +34291,7 @@
         "atom": "ML-LEX-C82-ADDRESS-02",
         "language": "malayalam",
         "introducedBy": "ML-C82-chechi-address",
-        "introducedAt": 353,
+        "introducedAt": 354,
         "missed": [
           "R2",
           "R3",
@@ -34301,7 +34303,7 @@
         "atom": "ML-LEX-C84-PLACE-01",
         "language": "malayalam",
         "introducedBy": "ML-C84-mukalil",
-        "introducedAt": 360,
+        "introducedAt": 361,
         "missed": [
           "R2",
           "R3",
@@ -34313,7 +34315,7 @@
         "atom": "ML-LEX-C84-PLACE-02",
         "language": "malayalam",
         "introducedBy": "ML-C84-thaazhe",
-        "introducedAt": 361,
+        "introducedAt": 362,
         "missed": [
           "R2",
           "R3",
@@ -34325,7 +34327,7 @@
         "atom": "ML-LEX-C84-PLACE-03",
         "language": "malayalam",
         "introducedBy": "ML-C84-munnil-pinnil",
-        "introducedAt": 362,
+        "introducedAt": 363,
         "missed": [
           "R2",
           "R3",
@@ -34337,7 +34339,7 @@
         "atom": "ML-LEX-C84-PLACE-04",
         "language": "malayalam",
         "introducedBy": "ML-C84-munnil-pinnil",
-        "introducedAt": 362,
+        "introducedAt": 363,
         "missed": [
           "R2",
           "R3",
@@ -34349,7 +34351,7 @@
         "atom": "ML-LEX-C86-WITH-01",
         "language": "malayalam",
         "introducedBy": "ML-C86-oppam",
-        "introducedAt": 368,
+        "introducedAt": 369,
         "missed": [
           "R2",
           "R3",
@@ -34361,7 +34363,7 @@
         "atom": "ML-LEX-C86-WITH-02",
         "language": "malayalam",
         "introducedBy": "ML-C86-koode",
-        "introducedAt": 369,
+        "introducedAt": 370,
         "missed": [
           "R2",
           "R3",
@@ -34373,7 +34375,19 @@
         "atom": "ML-LEX-C87-OBJECT-PRONOUN-01",
         "language": "malayalam",
         "introducedBy": "ML-C87-avane",
-        "introducedAt": 374,
+        "introducedAt": 375,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ML-LEX-C91-BUY-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C91-vaanguka",
+        "introducedAt": 392,
         "missed": [
           "R2",
           "R3",
@@ -34385,7 +34399,7 @@
         "atom": "ML-LEX-C91-MONEY-02",
         "language": "malayalam",
         "introducedBy": "ML-C91-vila-panam",
-        "introducedAt": 389,
+        "introducedAt": 390,
         "missed": [
           "R2",
           "R3",
@@ -34433,7 +34447,7 @@
         "atom": "ML-LEX-GIVE",
         "language": "malayalam",
         "introducedBy": "ML-C43-give",
-        "introducedAt": 178,
+        "introducedAt": 179,
         "missed": [
           "R1",
           "R3",
@@ -34451,7 +34465,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 6
+        "revisits": 9
       },
       {
         "atom": "ML-LEX-NANDI-01",
@@ -34814,10 +34828,22 @@
         "revisits": 1
       },
       {
+        "atom": "ML-SCRIPT-RECOG-120",
+        "language": "malayalam",
+        "introducedBy": "ML-S120-sign-anusvara",
+        "introducedAt": 104,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ML-SCRIPT-RECOG-123",
         "language": "malayalam",
         "introducedBy": "ML-S123-letter-da",
-        "introducedAt": 112,
+        "introducedAt": 113,
         "missed": [
           "R2",
           "R3",
@@ -34829,7 +34855,7 @@
         "atom": "ML-SCRIPT-RECOG-124",
         "language": "malayalam",
         "introducedBy": "ML-S124-letter-sa",
-        "introducedAt": 114,
+        "introducedAt": 115,
         "missed": [
           "R1",
           "R3",
@@ -34841,7 +34867,7 @@
         "atom": "ML-SCRIPT-RECOG-125",
         "language": "malayalam",
         "introducedBy": "ML-S125-letter-uu",
-        "introducedAt": 128,
+        "introducedAt": 129,
         "missed": [
           "R2",
           "R3",
@@ -34865,7 +34891,7 @@
         "atom": "ML-SCRIPT-RECOG-128",
         "language": "malayalam",
         "introducedBy": "ML-S128-vowel-sign-r",
-        "introducedAt": 146,
+        "introducedAt": 147,
         "missed": [
           "R1",
           "R3",
@@ -34877,7 +34903,7 @@
         "atom": "ML-SCRIPT-RECOG-129",
         "language": "malayalam",
         "introducedBy": "ML-S129-letter-bha",
-        "introducedAt": 121,
+        "introducedAt": 122,
         "missed": [
           "R1",
           "R3",
@@ -34889,7 +34915,7 @@
         "atom": "ML-SCRIPT-RECOG-130",
         "language": "malayalam",
         "introducedBy": "ML-S130-letter-tha",
-        "introducedAt": 154,
+        "introducedAt": 155,
         "missed": [
           "R1",
           "R3",
@@ -34973,7 +34999,7 @@
         "atom": "ML-SCRIPT-RECOG-147",
         "language": "malayalam",
         "introducedBy": "ML-S147-letter-ttha",
-        "introducedAt": 441,
+        "introducedAt": 442,
         "missed": [
           "R1",
           "R2",
@@ -34985,7 +35011,7 @@
         "atom": "ML-SKILL-READ-LINES",
         "language": "malayalam",
         "introducedBy": "ML-C69-lines",
-        "introducedAt": 307,
+        "introducedAt": 308,
         "missed": [
           "R2",
           "R3",
@@ -55199,7 +55225,7 @@
         "atom": "ML-CONCEPT-C102-BARE-DAY-01",
         "language": "malayalam",
         "introducedBy": "ML-C102-azhcha",
-        "introducedAt": 436,
+        "introducedAt": 437,
         "missed": [
           "R2",
           "R3"
@@ -55243,7 +55269,7 @@
         "atom": "ML-CONCEPT-C18-MANI-01",
         "language": "malayalam",
         "introducedBy": "ML-C18-mani",
-        "introducedAt": 107,
+        "introducedAt": 108,
         "missed": [
           "R1",
           "R4"
@@ -55254,7 +55280,7 @@
         "atom": "ML-CONCEPT-C19-VAYASSU-01",
         "language": "malayalam",
         "introducedBy": "ML-C19-vayassu",
-        "introducedAt": 109,
+        "introducedAt": 110,
         "missed": [
           "R1",
           "R2"
@@ -55265,7 +55291,7 @@
         "atom": "ML-CONCEPT-C20-PATHINONNU-IRUPATHU-01",
         "language": "malayalam",
         "introducedBy": "ML-C20-pathinonnu-irupathu",
-        "introducedAt": 110,
+        "introducedAt": 111,
         "missed": [
           "R1",
           "R3"
@@ -55276,7 +55302,7 @@
         "atom": "ML-CONCEPT-C21-NAAYA-POOCHA-01",
         "language": "malayalam",
         "introducedBy": "ML-C21-naaya-poocha",
-        "introducedAt": 113,
+        "introducedAt": 114,
         "missed": [
           "R1",
           "R3"
@@ -55287,7 +55313,7 @@
         "atom": "ML-CONCEPT-C21-NAAYA-POOCHA-02",
         "language": "malayalam",
         "introducedBy": "ML-C21-naaya-poocha",
-        "introducedAt": 113,
+        "introducedAt": 114,
         "missed": [
           "R1",
           "R3"
@@ -55298,7 +55324,7 @@
         "atom": "ML-CONCEPT-C24-RATHRI-01",
         "language": "malayalam",
         "introducedBy": "ML-C24-rathri",
-        "introducedAt": 118,
+        "introducedAt": 119,
         "missed": [
           "R1",
           "R4"
@@ -55309,7 +55335,7 @@
         "atom": "ML-CONCEPT-C32-ARIYUKA-02",
         "language": "malayalam",
         "introducedBy": "ML-C32-ariyuka",
-        "introducedAt": 135,
+        "introducedAt": 136,
         "missed": [
           "R3",
           "R4"
@@ -55320,7 +55346,7 @@
         "atom": "ML-CONCEPT-C32-KAANUKA-01",
         "language": "malayalam",
         "introducedBy": "ML-C32-kaanuka",
-        "introducedAt": 134,
+        "introducedAt": 135,
         "missed": [
           "R1",
           "R3"
@@ -55331,7 +55357,7 @@
         "atom": "ML-CONCEPT-C32-KAANUKA-02",
         "language": "malayalam",
         "introducedBy": "ML-C32-kaanuka",
-        "introducedAt": 134,
+        "introducedAt": 135,
         "missed": [
           "R3",
           "R4"
@@ -55342,7 +55368,7 @@
         "atom": "ML-CONCEPT-C32-POKUKA-01",
         "language": "malayalam",
         "introducedBy": "ML-C32-pokuka",
-        "introducedAt": 131,
+        "introducedAt": 132,
         "missed": [
           "R1",
           "R3"
@@ -55353,7 +55379,7 @@
         "atom": "ML-CONCEPT-C32-TINNUKA-01",
         "language": "malayalam",
         "introducedBy": "ML-C32-tinnuka",
-        "introducedAt": 133,
+        "introducedAt": 134,
         "missed": [
           "R1",
           "R4"
@@ -55364,7 +55390,7 @@
         "atom": "ML-CONCEPT-C32-TINNUKA-02",
         "language": "malayalam",
         "introducedBy": "ML-C32-tinnuka",
-        "introducedAt": 133,
+        "introducedAt": 134,
         "missed": [
           "R3",
           "R4"
@@ -55375,7 +55401,7 @@
         "atom": "ML-CONCEPT-C32-UNDU-01",
         "language": "malayalam",
         "introducedBy": "ML-C32-undu",
-        "introducedAt": 130,
+        "introducedAt": 131,
         "missed": [
           "R1",
           "R3"
@@ -55386,7 +55412,7 @@
         "atom": "ML-CONCEPT-C32-UNDU-02",
         "language": "malayalam",
         "introducedBy": "ML-C32-undu",
-        "introducedAt": 130,
+        "introducedAt": 131,
         "missed": [
           "R3",
           "R4"
@@ -55397,7 +55423,7 @@
         "atom": "ML-CONCEPT-C32-VARUKA-01",
         "language": "malayalam",
         "introducedBy": "ML-C32-varuka",
-        "introducedAt": 132,
+        "introducedAt": 133,
         "missed": [
           "R3",
           "R4"
@@ -55408,7 +55434,7 @@
         "atom": "ML-CONCEPT-C33-CINTIKKUKA-02",
         "language": "malayalam",
         "introducedBy": "ML-C33-cintikkuka",
-        "introducedAt": 136,
+        "introducedAt": 137,
         "missed": [
           "R3",
           "R4"
@@ -55419,7 +55445,7 @@
         "atom": "ML-CONCEPT-C33-EZHUTUKA-01",
         "language": "malayalam",
         "introducedBy": "ML-C33-ezhutuka",
-        "introducedAt": 139,
+        "introducedAt": 140,
         "missed": [
           "R3",
           "R4"
@@ -55430,7 +55456,7 @@
         "atom": "ML-CONCEPT-C33-EZHUTUKA-02",
         "language": "malayalam",
         "introducedBy": "ML-C33-ezhutuka",
-        "introducedAt": 139,
+        "introducedAt": 140,
         "missed": [
           "R3",
           "R4"
@@ -55441,7 +55467,7 @@
         "atom": "ML-CONCEPT-C33-MANASSILAAKKUKA-01",
         "language": "malayalam",
         "introducedBy": "ML-C33-manassilaakkuka",
-        "introducedAt": 137,
+        "introducedAt": 138,
         "missed": [
           "R3",
           "R4"
@@ -55452,7 +55478,7 @@
         "atom": "ML-CONCEPT-C33-MANASSILAAKKUKA-02",
         "language": "malayalam",
         "introducedBy": "ML-C33-manassilaakkuka",
-        "introducedAt": 137,
+        "introducedAt": 138,
         "missed": [
           "R3",
           "R4"
@@ -55463,7 +55489,7 @@
         "atom": "ML-CONCEPT-C33-MANASSILAAKKUKA-03",
         "language": "malayalam",
         "introducedBy": "ML-C33-manassilaakkuka",
-        "introducedAt": 137,
+        "introducedAt": 138,
         "missed": [
           "R3",
           "R4"
@@ -55474,7 +55500,7 @@
         "atom": "ML-CONCEPT-C33-VAAYIKKUKA-02",
         "language": "malayalam",
         "introducedBy": "ML-C33-vaayikkuka",
-        "introducedAt": 138,
+        "introducedAt": 139,
         "missed": [
           "R3",
           "R4"
@@ -55485,7 +55511,7 @@
         "atom": "ML-CONCEPT-C34-CODIKKUKA-02",
         "language": "malayalam",
         "introducedBy": "ML-C34-codikkuka",
-        "introducedAt": 141,
+        "introducedAt": 142,
         "missed": [
           "R3",
           "R4"
@@ -55496,7 +55522,7 @@
         "atom": "ML-CONCEPT-C34-EDUKKUKA-02",
         "language": "malayalam",
         "introducedBy": "ML-C34-edukkuka",
-        "introducedAt": 140,
+        "introducedAt": 141,
         "missed": [
           "R3",
           "R4"
@@ -55507,7 +55533,7 @@
         "atom": "ML-CONCEPT-C34-SAHAAYIKKUKA-02",
         "language": "malayalam",
         "introducedBy": "ML-C34-sahaayikkuka",
-        "introducedAt": 142,
+        "introducedAt": 143,
         "missed": [
           "R3",
           "R4"
@@ -55518,7 +55544,7 @@
         "atom": "ML-CONCEPT-C35-KUDUMBAM-01",
         "language": "malayalam",
         "introducedBy": "ML-C35-kudumbam",
-        "introducedAt": 144,
+        "introducedAt": 145,
         "missed": [
           "R3",
           "R4"
@@ -55529,7 +55555,7 @@
         "atom": "ML-CONCEPT-C35-KUDUMBAM-02",
         "language": "malayalam",
         "introducedBy": "ML-C35-kudumbam",
-        "introducedAt": 144,
+        "introducedAt": 145,
         "missed": [
           "R3",
           "R4"
@@ -55540,7 +55566,7 @@
         "atom": "ML-CONCEPT-C35-SUHRUTHU-02",
         "language": "malayalam",
         "introducedBy": "ML-C35-suhruthu",
-        "introducedAt": 145,
+        "introducedAt": 146,
         "missed": [
           "R3",
           "R4"
@@ -55551,7 +55577,7 @@
         "atom": "ML-CONCEPT-C36-KUTTI-02",
         "language": "malayalam",
         "introducedBy": "ML-C36-kutti",
-        "introducedAt": 147,
+        "introducedAt": 148,
         "missed": [
           "R3",
           "R4"
@@ -55562,7 +55588,7 @@
         "atom": "ML-CONCEPT-C36-MAKAL-01",
         "language": "malayalam",
         "introducedBy": "ML-C36-makal",
-        "introducedAt": 149,
+        "introducedAt": 150,
         "missed": [
           "R3",
           "R4"
@@ -55573,7 +55599,7 @@
         "atom": "ML-CONCEPT-C36-MAKAL-02",
         "language": "malayalam",
         "introducedBy": "ML-C36-makal",
-        "introducedAt": 149,
+        "introducedAt": 150,
         "missed": [
           "R3",
           "R4"
@@ -55584,7 +55610,7 @@
         "atom": "ML-CONCEPT-C36-MAKAN-01",
         "language": "malayalam",
         "introducedBy": "ML-C36-makan",
-        "introducedAt": 148,
+        "introducedAt": 149,
         "missed": [
           "R3",
           "R4"
@@ -55595,7 +55621,7 @@
         "atom": "ML-CONCEPT-C36-MAKAN-02",
         "language": "malayalam",
         "introducedBy": "ML-C36-makan",
-        "introducedAt": 148,
+        "introducedAt": 149,
         "missed": [
           "R3",
           "R4"
@@ -55606,7 +55632,7 @@
         "atom": "ML-CONCEPT-C37-CHEVI-01",
         "language": "malayalam",
         "introducedBy": "ML-C37-chevi",
-        "introducedAt": 151,
+        "introducedAt": 152,
         "missed": [
           "R3",
           "R4"
@@ -55617,7 +55643,7 @@
         "atom": "ML-CONCEPT-C37-CHEVI-02",
         "language": "malayalam",
         "introducedBy": "ML-C37-chevi",
-        "introducedAt": 151,
+        "introducedAt": 152,
         "missed": [
           "R3",
           "R4"
@@ -55628,7 +55654,7 @@
         "atom": "ML-CONCEPT-C37-KANNU-01",
         "language": "malayalam",
         "introducedBy": "ML-C37-kannu",
-        "introducedAt": 150,
+        "introducedAt": 151,
         "missed": [
           "R3",
           "R4"
@@ -55639,7 +55665,7 @@
         "atom": "ML-CONCEPT-C37-KANNU-02",
         "language": "malayalam",
         "introducedBy": "ML-C37-kannu",
-        "introducedAt": 150,
+        "introducedAt": 151,
         "missed": [
           "R3",
           "R4"
@@ -55650,7 +55676,7 @@
         "atom": "ML-CONCEPT-C37-MOOKKU-01",
         "language": "malayalam",
         "introducedBy": "ML-C37-mookku",
-        "introducedAt": 152,
+        "introducedAt": 153,
         "missed": [
           "R3",
           "R4"
@@ -55661,7 +55687,7 @@
         "atom": "ML-CONCEPT-C37-MOOKKU-02",
         "language": "malayalam",
         "introducedBy": "ML-C37-mookku",
-        "introducedAt": 152,
+        "introducedAt": 153,
         "missed": [
           "R3",
           "R4"
@@ -55672,7 +55698,7 @@
         "atom": "ML-CONCEPT-C37-VAAY-01",
         "language": "malayalam",
         "introducedBy": "ML-C37-vaay",
-        "introducedAt": 153,
+        "introducedAt": 154,
         "missed": [
           "R3",
           "R4"
@@ -55683,7 +55709,7 @@
         "atom": "ML-CONCEPT-C37-VAAY-02",
         "language": "malayalam",
         "introducedBy": "ML-C37-vaay",
-        "introducedAt": 153,
+        "introducedAt": 154,
         "missed": [
           "R3",
           "R4"
@@ -55694,7 +55720,7 @@
         "atom": "ML-CONCEPT-C38-HRUDAYAM-01",
         "language": "malayalam",
         "introducedBy": "ML-C38-hrudayam",
-        "introducedAt": 155,
+        "introducedAt": 156,
         "missed": [
           "R3",
           "R4"
@@ -55705,7 +55731,7 @@
         "atom": "ML-CONCEPT-C38-HRUDAYAM-02",
         "language": "malayalam",
         "introducedBy": "ML-C38-hrudayam",
-        "introducedAt": 155,
+        "introducedAt": 156,
         "missed": [
           "R3",
           "R4"
@@ -55716,7 +55742,7 @@
         "atom": "ML-CONCEPT-C38-NENCHU-01",
         "language": "malayalam",
         "introducedBy": "ML-C38-nenchu",
-        "introducedAt": 156,
+        "introducedAt": 157,
         "missed": [
           "R3",
           "R4"
@@ -55727,7 +55753,7 @@
         "atom": "ML-CONCEPT-C38-NENCHU-02",
         "language": "malayalam",
         "introducedBy": "ML-C38-nenchu",
-        "introducedAt": 156,
+        "introducedAt": 157,
         "missed": [
           "R3",
           "R4"
@@ -55738,7 +55764,7 @@
         "atom": "ML-CONCEPT-C39-CHAAYA-02",
         "language": "malayalam",
         "introducedBy": "ML-C39-chaaya",
-        "introducedAt": 157,
+        "introducedAt": 158,
         "missed": [
           "R3",
           "R4"
@@ -55749,7 +55775,7 @@
         "atom": "ML-CONCEPT-C39-KAAPI-02",
         "language": "malayalam",
         "introducedBy": "ML-C39-kaapi",
-        "introducedAt": 158,
+        "introducedAt": 159,
         "missed": [
           "R3",
           "R4"
@@ -55760,7 +55786,7 @@
         "atom": "ML-CONCEPT-C39-PAAL-02",
         "language": "malayalam",
         "introducedBy": "ML-C39-paal",
-        "introducedAt": 159,
+        "introducedAt": 160,
         "missed": [
           "R3",
           "R4"
@@ -55771,7 +55797,7 @@
         "atom": "ML-CONCEPT-C40-OON-01",
         "language": "malayalam",
         "introducedBy": "ML-C40-oon",
-        "introducedAt": 161,
+        "introducedAt": 162,
         "missed": [
           "R1",
           "R3"
@@ -55782,7 +55808,7 @@
         "atom": "ML-CONCEPT-C70-O-01",
         "language": "malayalam",
         "introducedBy": "ML-C70-o",
-        "introducedAt": 311,
+        "introducedAt": 312,
         "missed": [
           "R2",
           "R4"
@@ -55793,18 +55819,18 @@
         "atom": "ML-CONCEPT-C70-UM-01",
         "language": "malayalam",
         "introducedBy": "ML-C70-um",
-        "introducedAt": 309,
+        "introducedAt": 310,
         "missed": [
           "R2",
           "R3"
         ],
-        "revisits": 6
+        "revisits": 8
       },
       {
         "atom": "ML-CONCEPT-C70-UM-02",
         "language": "malayalam",
         "introducedBy": "ML-C70-um-more",
-        "introducedAt": 310,
+        "introducedAt": 311,
         "missed": [
           "R2",
           "R4"
@@ -55815,18 +55841,29 @@
         "atom": "ML-CONCEPT-C77-NEGATION-SPLIT-01",
         "language": "malayalam",
         "introducedBy": "ML-C77-alla",
-        "introducedAt": 334,
+        "introducedAt": 335,
         "missed": [
           "R2",
           "R3"
         ],
-        "revisits": 2
+        "revisits": 4
+      },
+      {
+        "atom": "ML-CONCEPT-C91-PRICE-QUESTION-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C91-ethra-rupa",
+        "introducedAt": 391,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
       },
       {
         "atom": "ML-CONCEPT-C92-FALSE-FRIEND-01",
         "language": "malayalam",
         "introducedBy": "ML-C92-hottal",
-        "introducedAt": 394,
+        "introducedAt": 395,
         "missed": [
           "R2",
           "R3"
@@ -55837,7 +55874,7 @@
         "atom": "ML-CONCEPT-C97-NOT-BEAUTIFUL-01",
         "language": "malayalam",
         "introducedBy": "ML-C97-alla-sundaram",
-        "introducedAt": 414,
+        "introducedAt": 415,
         "missed": [
           "R2",
           "R3"
@@ -55848,7 +55885,7 @@
         "atom": "ML-ETYMON-C67-ORDINAL-04",
         "language": "malayalam",
         "introducedBy": "ML-C67-second",
-        "introducedAt": 295,
+        "introducedAt": 296,
         "missed": [
           "R3",
           "R4"
@@ -55859,7 +55896,7 @@
         "atom": "ML-GRAMMAR-C104-NO-COPULA-01",
         "language": "malayalam",
         "introducedBy": "ML-C104-no-am",
-        "introducedAt": 448,
+        "introducedAt": 449,
         "missed": [
           "R2",
           "R3"
@@ -55870,7 +55907,7 @@
         "atom": "ML-GRAMMAR-C104-NOW-01",
         "language": "malayalam",
         "introducedBy": "ML-C104-ippol",
-        "introducedAt": 447,
+        "introducedAt": 448,
         "missed": [
           "R2",
           "R3"
@@ -55881,7 +55918,7 @@
         "atom": "ML-GRAMMAR-C104-ONE-PRESENT-01",
         "language": "malayalam",
         "introducedBy": "ML-C104-one-present",
-        "introducedAt": 446,
+        "introducedAt": 447,
         "missed": [
           "R2",
           "R3"
@@ -55892,7 +55929,7 @@
         "atom": "ML-GRAMMAR-C67-ORDINAL-02",
         "language": "malayalam",
         "introducedBy": "ML-C67-first",
-        "introducedAt": 294,
+        "introducedAt": 295,
         "missed": [
           "R3",
           "R4"
@@ -55903,7 +55940,7 @@
         "atom": "ML-GRAMMAR-C72-ENNU-01",
         "language": "malayalam",
         "introducedBy": "ML-C72-ennu",
-        "introducedAt": 317,
+        "introducedAt": 318,
         "missed": [
           "R2",
           "R3"
@@ -55914,7 +55951,7 @@
         "atom": "ML-GRAMMAR-C75-AAL-01",
         "language": "malayalam",
         "introducedBy": "ML-C75-aal",
-        "introducedAt": 330,
+        "introducedAt": 331,
         "missed": [
           "R2",
           "R4"
@@ -55925,7 +55962,7 @@
         "atom": "ML-GRAMMAR-C78-GENITIVE-NRE-01",
         "language": "malayalam",
         "introducedBy": "ML-C78-nre",
-        "introducedAt": 337,
+        "introducedAt": 338,
         "missed": [
           "R2",
           "R4"
@@ -55936,7 +55973,7 @@
         "atom": "ML-GRAMMAR-C78-GENITIVE-UDE-01",
         "language": "malayalam",
         "introducedBy": "ML-C78-ude",
-        "introducedAt": 338,
+        "introducedAt": 339,
         "missed": [
           "R2",
           "R4"
@@ -55947,7 +55984,7 @@
         "atom": "ML-GRAMMAR-C84-POSTPOSITION-01",
         "language": "malayalam",
         "introducedBy": "ML-C84-mukalil",
-        "introducedAt": 360,
+        "introducedAt": 361,
         "missed": [
           "R3",
           "R4"
@@ -55958,7 +55995,7 @@
         "atom": "ML-GRAMMAR-C87-ACCUSATIVE-01",
         "language": "malayalam",
         "introducedBy": "ML-C87-accusative",
-        "introducedAt": 372,
+        "introducedAt": 373,
         "missed": [
           "R2",
           "R4"
@@ -55969,7 +56006,7 @@
         "atom": "ML-GRAMMAR-C87-ANIMACY-01",
         "language": "malayalam",
         "introducedBy": "ML-C87-animacy",
-        "introducedAt": 373,
+        "introducedAt": 374,
         "missed": [
           "R2",
           "R4"
@@ -55980,7 +56017,7 @@
         "atom": "ML-GRAMMAR-C89-NOMINAL-01",
         "language": "malayalam",
         "introducedBy": "ML-C89-nallathu",
-        "introducedAt": 380,
+        "introducedAt": 381,
         "missed": [
           "R2",
           "R4"
@@ -55991,7 +56028,7 @@
         "atom": "ML-GRAMMAR-C93-PLURAL-01",
         "language": "malayalam",
         "introducedBy": "ML-C93-kal",
-        "introducedAt": 397,
+        "introducedAt": 398,
         "missed": [
           "R2",
           "R3"
@@ -56002,7 +56039,7 @@
         "atom": "ML-LEX-C100-CAP-01",
         "language": "malayalam",
         "introducedBy": "ML-C100-thoppi",
-        "introducedAt": 428,
+        "introducedAt": 429,
         "missed": [
           "R2",
           "R3"
@@ -56013,7 +56050,7 @@
         "atom": "ML-LEX-C100-MUNDU-01",
         "language": "malayalam",
         "introducedBy": "ML-C100-mundu",
-        "introducedAt": 425,
+        "introducedAt": 426,
         "missed": [
           "R2",
           "R3"
@@ -56024,7 +56061,7 @@
         "atom": "ML-LEX-C100-SANDAL-01",
         "language": "malayalam",
         "introducedBy": "ML-C100-cheruppu",
-        "introducedAt": 427,
+        "introducedAt": 428,
         "missed": [
           "R2",
           "R3"
@@ -56035,7 +56072,7 @@
         "atom": "ML-LEX-C100-SARI-01",
         "language": "malayalam",
         "introducedBy": "ML-C100-saari",
-        "introducedAt": 426,
+        "introducedAt": 427,
         "missed": [
           "R2",
           "R3"
@@ -56046,7 +56083,7 @@
         "atom": "ML-LEX-C101-HEIGHT-01",
         "language": "malayalam",
         "introducedBy": "ML-C101-uyaram",
-        "introducedAt": 433,
+        "introducedAt": 434,
         "missed": [
           "R2",
           "R3"
@@ -56057,7 +56094,7 @@
         "atom": "ML-LEX-C101-SHORT-01",
         "language": "malayalam",
         "introducedBy": "ML-C101-kuriya",
-        "introducedAt": 430,
+        "introducedAt": 431,
         "missed": [
           "R2",
           "R3"
@@ -56068,7 +56105,7 @@
         "atom": "ML-LEX-C101-STOUT-01",
         "language": "malayalam",
         "introducedBy": "ML-C101-thadicha",
-        "introducedAt": 432,
+        "introducedAt": 433,
         "missed": [
           "R2",
           "R3"
@@ -56079,7 +56116,7 @@
         "atom": "ML-LEX-C101-THIN-01",
         "language": "malayalam",
         "introducedBy": "ML-C101-melinja",
-        "introducedAt": 431,
+        "introducedAt": 432,
         "missed": [
           "R2",
           "R3"
@@ -56090,7 +56127,7 @@
         "atom": "ML-LEX-C103-EXAM-01",
         "language": "malayalam",
         "introducedBy": "ML-C103-pareeksha",
-        "introducedAt": 443,
+        "introducedAt": 444,
         "missed": [
           "R2",
           "R3"
@@ -56101,7 +56138,7 @@
         "atom": "ML-LEX-C103-LESSON-01",
         "language": "malayalam",
         "introducedBy": "ML-C103-paadam",
-        "introducedAt": 442,
+        "introducedAt": 443,
         "missed": [
           "R2",
           "R3"
@@ -56112,7 +56149,7 @@
         "atom": "ML-LEX-C103-MARKS-01",
         "language": "malayalam",
         "introducedBy": "ML-C103-maarkku",
-        "introducedAt": 444,
+        "introducedAt": 445,
         "missed": [
           "R2",
           "R3"
@@ -56120,10 +56157,32 @@
         "revisits": 1
       },
       {
+        "atom": "ML-LEX-C105-CITY-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C105-nagaram",
+        "introducedAt": 453,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-LEX-C105-COUNTRY-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C105-raajyam",
+        "introducedAt": 452,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ML-LEX-C41-DEIXIS-05",
         "language": "malayalam",
         "introducedBy": "ML-C41-who",
-        "introducedAt": 166,
+        "introducedAt": 167,
         "missed": [
           "R3",
           "R4"
@@ -56134,7 +56193,7 @@
         "atom": "ML-LEX-C42-ADJ-02",
         "language": "malayalam",
         "introducedBy": "ML-C42-small",
-        "introducedAt": 170,
+        "introducedAt": 171,
         "missed": [
           "R3",
           "R4"
@@ -56145,7 +56204,7 @@
         "atom": "ML-LEX-C42-ADJ-04",
         "language": "malayalam",
         "introducedBy": "ML-C42-new",
-        "introducedAt": 172,
+        "introducedAt": 173,
         "missed": [
           "R3",
           "R4"
@@ -56156,7 +56215,7 @@
         "atom": "ML-LEX-C42-ADJ-05",
         "language": "malayalam",
         "introducedBy": "ML-C42-old",
-        "introducedAt": 173,
+        "introducedAt": 174,
         "missed": [
           "R3",
           "R4"
@@ -56167,7 +56226,7 @@
         "atom": "ML-LEX-C46-ASK-01",
         "language": "malayalam",
         "introducedBy": "ML-C46-fruit",
-        "introducedAt": 187,
+        "introducedAt": 188,
         "missed": [
           "R3",
           "R4"
@@ -56178,7 +56237,7 @@
         "atom": "ML-LEX-C46-ASK-04",
         "language": "malayalam",
         "introducedBy": "ML-C46-salt",
-        "introducedAt": 190,
+        "introducedAt": 191,
         "missed": [
           "R3",
           "R4"
@@ -56189,7 +56248,7 @@
         "atom": "ML-LEX-C47-BODY-01",
         "language": "malayalam",
         "introducedBy": "ML-C47-leg",
-        "introducedAt": 192,
+        "introducedAt": 193,
         "missed": [
           "R3",
           "R4"
@@ -56200,7 +56259,7 @@
         "atom": "ML-LEX-C47-BODY-02",
         "language": "malayalam",
         "introducedBy": "ML-C47-tooth",
-        "introducedAt": 193,
+        "introducedAt": 194,
         "missed": [
           "R3",
           "R4"
@@ -56211,7 +56270,7 @@
         "atom": "ML-LEX-C47-BODY-03",
         "language": "malayalam",
         "introducedBy": "ML-C47-hair",
-        "introducedAt": 194,
+        "introducedAt": 195,
         "missed": [
           "R3",
           "R4"
@@ -56222,7 +56281,7 @@
         "atom": "ML-LEX-C47-BODY-04",
         "language": "malayalam",
         "introducedBy": "ML-C47-finger",
-        "introducedAt": 195,
+        "introducedAt": 196,
         "missed": [
           "R3",
           "R4"
@@ -56233,7 +56292,7 @@
         "atom": "ML-LEX-C47-BODY-05",
         "language": "malayalam",
         "introducedBy": "ML-C47-stomach",
-        "introducedAt": 196,
+        "introducedAt": 197,
         "missed": [
           "R3",
           "R4"
@@ -56244,18 +56303,18 @@
         "atom": "ML-LEX-C48-ROLE-03",
         "language": "malayalam",
         "introducedBy": "ML-C48-doctor",
-        "introducedAt": 199,
+        "introducedAt": 200,
         "missed": [
           "R3",
           "R4"
         ],
-        "revisits": 7
+        "revisits": 8
       },
       {
         "atom": "ML-LEX-C48-ROLE-04",
         "language": "malayalam",
         "introducedBy": "ML-C48-farmer",
-        "introducedAt": 200,
+        "introducedAt": 201,
         "missed": [
           "R3",
           "R4"
@@ -56266,7 +56325,7 @@
         "atom": "ML-LEX-C48-ROLE-05",
         "language": "malayalam",
         "introducedBy": "ML-C48-guest",
-        "introducedAt": 201,
+        "introducedAt": 202,
         "missed": [
           "R3",
           "R4"
@@ -56277,7 +56336,7 @@
         "atom": "ML-LEX-C49-REPLY-01",
         "language": "malayalam",
         "introducedBy": "ML-C49-true",
-        "introducedAt": 202,
+        "introducedAt": 203,
         "missed": [
           "R3",
           "R4"
@@ -56288,7 +56347,7 @@
         "atom": "ML-LEX-C49-REPLY-02",
         "language": "malayalam",
         "introducedBy": "ML-C49-enough",
-        "introducedAt": 203,
+        "introducedAt": 204,
         "missed": [
           "R3",
           "R4"
@@ -56299,7 +56358,7 @@
         "atom": "ML-LEX-C49-REPLY-03",
         "language": "malayalam",
         "introducedBy": "ML-C49-certainly",
-        "introducedAt": 204,
+        "introducedAt": 205,
         "missed": [
           "R3",
           "R4"
@@ -56310,7 +56369,7 @@
         "atom": "ML-LEX-C49-REPLY-04",
         "language": "malayalam",
         "introducedBy": "ML-C49-perhaps",
-        "introducedAt": 205,
+        "introducedAt": 206,
         "missed": [
           "R3",
           "R4"
@@ -56321,7 +56380,7 @@
         "atom": "ML-LEX-C49-REPLY-05",
         "language": "malayalam",
         "introducedBy": "ML-C49-just-so",
-        "introducedAt": 206,
+        "introducedAt": 207,
         "missed": [
           "R3",
           "R4"
@@ -56332,7 +56391,7 @@
         "atom": "ML-LEX-C50-LEAVE-02",
         "language": "malayalam",
         "introducedBy": "ML-C50-day-after",
-        "introducedAt": 208,
+        "introducedAt": 209,
         "missed": [
           "R3",
           "R4"
@@ -56343,7 +56402,7 @@
         "atom": "ML-LEX-C50-LEAVE-03",
         "language": "malayalam",
         "introducedBy": "ML-C50-journey",
-        "introducedAt": 210,
+        "introducedAt": 211,
         "missed": [
           "R3",
           "R4"
@@ -56354,7 +56413,7 @@
         "atom": "ML-LEX-C50-LEAVE-04",
         "language": "malayalam",
         "introducedBy": "ML-C50-set-out",
-        "introducedAt": 211,
+        "introducedAt": 212,
         "missed": [
           "R3",
           "R4"
@@ -56365,7 +56424,7 @@
         "atom": "ML-LEX-C50-LEAVE-05",
         "language": "malayalam",
         "introducedBy": "ML-C50-farewell",
-        "introducedAt": 212,
+        "introducedAt": 213,
         "missed": [
           "R3",
           "R4"
@@ -56376,7 +56435,7 @@
         "atom": "ML-LEX-C53-SKY-03",
         "language": "malayalam",
         "introducedBy": "ML-C53-moon",
-        "introducedAt": 225,
+        "introducedAt": 226,
         "missed": [
           "R3",
           "R4"
@@ -56387,7 +56446,7 @@
         "atom": "ML-LEX-C53-SKY-04",
         "language": "malayalam",
         "introducedBy": "ML-C53-star",
-        "introducedAt": 226,
+        "introducedAt": 227,
         "missed": [
           "R3",
           "R4"
@@ -56398,7 +56457,7 @@
         "atom": "ML-LEX-C53-SKY-05",
         "language": "malayalam",
         "introducedBy": "ML-C53-sunshine",
-        "introducedAt": 227,
+        "introducedAt": 228,
         "missed": [
           "R3",
           "R4"
@@ -56409,7 +56468,7 @@
         "atom": "ML-LEX-C54-TREE-02",
         "language": "malayalam",
         "introducedBy": "ML-C54-branch",
-        "introducedAt": 229,
+        "introducedAt": 230,
         "missed": [
           "R3",
           "R4"
@@ -56420,7 +56479,7 @@
         "atom": "ML-LEX-C54-TREE-03",
         "language": "malayalam",
         "introducedBy": "ML-C54-trunk",
-        "introducedAt": 230,
+        "introducedAt": 231,
         "missed": [
           "R3",
           "R4"
@@ -56431,7 +56490,7 @@
         "atom": "ML-LEX-C54-TREE-04",
         "language": "malayalam",
         "introducedBy": "ML-C54-root",
-        "introducedAt": 231,
+        "introducedAt": 232,
         "missed": [
           "R3",
           "R4"
@@ -56442,7 +56501,7 @@
         "atom": "ML-LEX-C54-TREE-05",
         "language": "malayalam",
         "introducedBy": "ML-C54-seed",
-        "introducedAt": 232,
+        "introducedAt": 233,
         "missed": [
           "R3",
           "R4"
@@ -56453,7 +56512,7 @@
         "atom": "ML-LEX-C55-GROUND-01",
         "language": "malayalam",
         "introducedBy": "ML-C55-river",
-        "introducedAt": 233,
+        "introducedAt": 234,
         "missed": [
           "R3",
           "R4"
@@ -56464,7 +56523,7 @@
         "atom": "ML-LEX-C55-GROUND-02",
         "language": "malayalam",
         "introducedBy": "ML-C55-rock",
-        "introducedAt": 234,
+        "introducedAt": 235,
         "missed": [
           "R3",
           "R4"
@@ -56475,7 +56534,7 @@
         "atom": "ML-LEX-C55-GROUND-04",
         "language": "malayalam",
         "introducedBy": "ML-C55-path",
-        "introducedAt": 236,
+        "introducedAt": 237,
         "missed": [
           "R3",
           "R4"
@@ -56486,7 +56545,7 @@
         "atom": "ML-LEX-C55-GROUND-05",
         "language": "malayalam",
         "introducedBy": "ML-C55-field",
-        "introducedAt": 237,
+        "introducedAt": 238,
         "missed": [
           "R3",
           "R4"
@@ -56497,7 +56556,7 @@
         "atom": "ML-LEX-C56-HOUSE-01",
         "language": "malayalam",
         "introducedBy": "ML-C56-mat",
-        "introducedAt": 238,
+        "introducedAt": 239,
         "missed": [
           "R3",
           "R4"
@@ -56508,7 +56567,7 @@
         "atom": "ML-LEX-C56-HOUSE-02",
         "language": "malayalam",
         "introducedBy": "ML-C56-basket",
-        "introducedAt": 239,
+        "introducedAt": 240,
         "missed": [
           "R3",
           "R4"
@@ -56519,7 +56578,7 @@
         "atom": "ML-LEX-C56-HOUSE-04",
         "language": "malayalam",
         "introducedBy": "ML-C56-vessel",
-        "introducedAt": 241,
+        "introducedAt": 242,
         "missed": [
           "R3",
           "R4"
@@ -56530,7 +56589,7 @@
         "atom": "ML-LEX-C56-HOUSE-05",
         "language": "malayalam",
         "introducedBy": "ML-C56-box",
-        "introducedAt": 242,
+        "introducedAt": 243,
         "missed": [
           "R3",
           "R4"
@@ -56541,7 +56600,7 @@
         "atom": "ML-LEX-C57-FRAME-01",
         "language": "malayalam",
         "introducedBy": "ML-C57-neck",
-        "introducedAt": 243,
+        "introducedAt": 244,
         "missed": [
           "R3",
           "R4"
@@ -56552,7 +56611,7 @@
         "atom": "ML-LEX-C57-FRAME-02",
         "language": "malayalam",
         "introducedBy": "ML-C57-back",
-        "introducedAt": 244,
+        "introducedAt": 245,
         "missed": [
           "R3",
           "R4"
@@ -56563,7 +56622,7 @@
         "atom": "ML-LEX-C57-FRAME-03",
         "language": "malayalam",
         "introducedBy": "ML-C57-lip",
-        "introducedAt": 245,
+        "introducedAt": 246,
         "missed": [
           "R3",
           "R4"
@@ -56574,7 +56633,7 @@
         "atom": "ML-LEX-C57-FRAME-04",
         "language": "malayalam",
         "introducedBy": "ML-C57-nail",
-        "introducedAt": 246,
+        "introducedAt": 247,
         "missed": [
           "R3",
           "R4"
@@ -56585,7 +56644,7 @@
         "atom": "ML-LEX-C57-FRAME-05",
         "language": "malayalam",
         "introducedBy": "ML-C57-bone",
-        "introducedAt": 247,
+        "introducedAt": 248,
         "missed": [
           "R3",
           "R4"
@@ -56596,7 +56655,7 @@
         "atom": "ML-LEX-C58-ANSWER-01",
         "language": "malayalam",
         "introducedBy": "ML-C58-more",
-        "introducedAt": 248,
+        "introducedAt": 249,
         "missed": [
           "R3",
           "R4"
@@ -56607,7 +56666,7 @@
         "atom": "ML-LEX-C58-ANSWER-02",
         "language": "malayalam",
         "introducedBy": "ML-C58-less",
-        "introducedAt": 249,
+        "introducedAt": 250,
         "missed": [
           "R3",
           "R4"
@@ -56618,7 +56677,7 @@
         "atom": "ML-LEX-C58-ANSWER-05",
         "language": "malayalam",
         "introducedBy": "ML-C58-that-will-do",
-        "introducedAt": 253,
+        "introducedAt": 254,
         "missed": [
           "R3",
           "R4"
@@ -56629,7 +56688,7 @@
         "atom": "ML-LEX-C59-AIR-01",
         "language": "malayalam",
         "introducedBy": "ML-C59-wind",
-        "introducedAt": 254,
+        "introducedAt": 255,
         "missed": [
           "R3",
           "R4"
@@ -56640,7 +56699,7 @@
         "atom": "ML-LEX-C59-AIR-02",
         "language": "malayalam",
         "introducedBy": "ML-C59-sand",
-        "introducedAt": 255,
+        "introducedAt": 256,
         "missed": [
           "R3",
           "R4"
@@ -56651,7 +56710,7 @@
         "atom": "ML-LEX-C59-AIR-03",
         "language": "malayalam",
         "introducedBy": "ML-C59-mud",
-        "introducedAt": 256,
+        "introducedAt": 257,
         "missed": [
           "R3",
           "R4"
@@ -56662,7 +56721,7 @@
         "atom": "ML-LEX-C59-AIR-04",
         "language": "malayalam",
         "introducedBy": "ML-C59-smoke",
-        "introducedAt": 257,
+        "introducedAt": 258,
         "missed": [
           "R3",
           "R4"
@@ -56673,7 +56732,7 @@
         "atom": "ML-LEX-C59-AIR-05",
         "language": "malayalam",
         "introducedBy": "ML-C59-ember",
-        "introducedAt": 258,
+        "introducedAt": 259,
         "missed": [
           "R3",
           "R4"
@@ -56684,7 +56743,7 @@
         "atom": "ML-LEX-C60-ANIMAL-02",
         "language": "malayalam",
         "introducedBy": "ML-C60-goat",
-        "introducedAt": 260,
+        "introducedAt": 261,
         "missed": [
           "R3",
           "R4"
@@ -56695,7 +56754,7 @@
         "atom": "ML-LEX-C60-ANIMAL-03",
         "language": "malayalam",
         "introducedBy": "ML-C60-hen",
-        "introducedAt": 261,
+        "introducedAt": 262,
         "missed": [
           "R3",
           "R4"
@@ -56706,7 +56765,7 @@
         "atom": "ML-LEX-C60-ANIMAL-04",
         "language": "malayalam",
         "introducedBy": "ML-C60-crow",
-        "introducedAt": 262,
+        "introducedAt": 263,
         "missed": [
           "R3",
           "R4"
@@ -56717,7 +56776,7 @@
         "atom": "ML-LEX-C60-ANIMAL-05",
         "language": "malayalam",
         "introducedBy": "ML-C60-elephant",
-        "introducedAt": 263,
+        "introducedAt": 264,
         "missed": [
           "R3",
           "R4"
@@ -56728,7 +56787,7 @@
         "atom": "ML-LEX-C61-SHELF-01",
         "language": "malayalam",
         "introducedBy": "ML-C61-coconut",
-        "introducedAt": 264,
+        "introducedAt": 265,
         "missed": [
           "R3",
           "R4"
@@ -56739,7 +56798,7 @@
         "atom": "ML-LEX-C61-SHELF-02",
         "language": "malayalam",
         "introducedBy": "ML-C61-oil",
-        "introducedAt": 265,
+        "introducedAt": 266,
         "missed": [
           "R3",
           "R4"
@@ -56750,7 +56809,7 @@
         "atom": "ML-LEX-C61-SHELF-03",
         "language": "malayalam",
         "introducedBy": "ML-C61-curd",
-        "introducedAt": 266,
+        "introducedAt": 267,
         "missed": [
           "R3",
           "R4"
@@ -56761,7 +56820,7 @@
         "atom": "ML-LEX-C61-SHELF-04",
         "language": "malayalam",
         "introducedBy": "ML-C61-jaggery",
-        "introducedAt": 267,
+        "introducedAt": 268,
         "missed": [
           "R3",
           "R4"
@@ -56772,7 +56831,7 @@
         "atom": "ML-LEX-C61-SHELF-05",
         "language": "malayalam",
         "introducedBy": "ML-C61-chilli",
-        "introducedAt": 268,
+        "introducedAt": 269,
         "missed": [
           "R3",
           "R4"
@@ -56783,7 +56842,7 @@
         "atom": "ML-LEX-C62-HAND-01",
         "language": "malayalam",
         "introducedBy": "ML-C62-rope",
-        "introducedAt": 269,
+        "introducedAt": 270,
         "missed": [
           "R3",
           "R4"
@@ -56794,7 +56853,7 @@
         "atom": "ML-LEX-C62-HAND-02",
         "language": "malayalam",
         "introducedBy": "ML-C62-thread",
-        "introducedAt": 270,
+        "introducedAt": 271,
         "missed": [
           "R3",
           "R4"
@@ -56805,7 +56864,7 @@
         "atom": "ML-LEX-C62-HAND-03",
         "language": "malayalam",
         "introducedBy": "ML-C62-needle",
-        "introducedAt": 271,
+        "introducedAt": 272,
         "missed": [
           "R3",
           "R4"
@@ -56816,7 +56875,7 @@
         "atom": "ML-LEX-C62-HAND-04",
         "language": "malayalam",
         "introducedBy": "ML-C62-broom",
-        "introducedAt": 272,
+        "introducedAt": 273,
         "missed": [
           "R3",
           "R4"
@@ -56827,7 +56886,7 @@
         "atom": "ML-LEX-C62-HAND-05",
         "language": "malayalam",
         "introducedBy": "ML-C62-winnowing-tray",
-        "introducedAt": 273,
+        "introducedAt": 274,
         "missed": [
           "R3",
           "R4"
@@ -56838,7 +56897,7 @@
         "atom": "ML-LEX-C65-ASK-03",
         "language": "malayalam",
         "introducedBy": "ML-C65-consent",
-        "introducedAt": 286,
+        "introducedAt": 287,
         "missed": [
           "R3",
           "R4"
@@ -56849,7 +56908,7 @@
         "atom": "ML-LEX-C65-ASK-04",
         "language": "malayalam",
         "introducedBy": "ML-C65-manners",
-        "introducedAt": 287,
+        "introducedAt": 288,
         "missed": [
           "R3",
           "R4"
@@ -56860,7 +56919,7 @@
         "atom": "ML-LEX-C66-PADDY-01",
         "language": "malayalam",
         "introducedBy": "ML-C66-paddy",
-        "introducedAt": 289,
+        "introducedAt": 290,
         "missed": [
           "R3",
           "R4"
@@ -56871,7 +56930,7 @@
         "atom": "ML-LEX-C66-PADDY-02",
         "language": "malayalam",
         "introducedBy": "ML-C66-grass",
-        "introducedAt": 290,
+        "introducedAt": 291,
         "missed": [
           "R3",
           "R4"
@@ -56882,7 +56941,7 @@
         "atom": "ML-LEX-C66-PADDY-03",
         "language": "malayalam",
         "introducedBy": "ML-C66-ear-of-grain",
-        "introducedAt": 291,
+        "introducedAt": 292,
         "missed": [
           "R3",
           "R4"
@@ -56893,7 +56952,7 @@
         "atom": "ML-LEX-C66-PADDY-04",
         "language": "malayalam",
         "introducedBy": "ML-C66-plough",
-        "introducedAt": 292,
+        "introducedAt": 293,
         "missed": [
           "R3",
           "R4"
@@ -56904,7 +56963,7 @@
         "atom": "ML-LEX-C66-PADDY-05",
         "language": "malayalam",
         "introducedBy": "ML-C66-harvest",
-        "introducedAt": 293,
+        "introducedAt": 294,
         "missed": [
           "R3",
           "R4"
@@ -56915,7 +56974,7 @@
         "atom": "ML-LEX-C67-ORDINAL-01",
         "language": "malayalam",
         "introducedBy": "ML-C67-first",
-        "introducedAt": 294,
+        "introducedAt": 295,
         "missed": [
           "R3",
           "R4"
@@ -56926,7 +56985,7 @@
         "atom": "ML-LEX-C67-ORDINAL-03",
         "language": "malayalam",
         "introducedBy": "ML-C67-second",
-        "introducedAt": 295,
+        "introducedAt": 296,
         "missed": [
           "R3",
           "R4"
@@ -56937,7 +56996,7 @@
         "atom": "ML-LEX-C67-ORDINAL-05",
         "language": "malayalam",
         "introducedBy": "ML-C67-third",
-        "introducedAt": 296,
+        "introducedAt": 297,
         "missed": [
           "R3",
           "R4"
@@ -56948,7 +57007,7 @@
         "atom": "ML-LEX-C67-ORDINAL-06",
         "language": "malayalam",
         "introducedBy": "ML-C67-fourth",
-        "introducedAt": 297,
+        "introducedAt": 298,
         "missed": [
           "R3",
           "R4"
@@ -56959,7 +57018,7 @@
         "atom": "ML-LEX-C67-ORDINAL-07",
         "language": "malayalam",
         "introducedBy": "ML-C67-fifth",
-        "introducedAt": 298,
+        "introducedAt": 299,
         "missed": [
           "R3",
           "R4"
@@ -56970,7 +57029,7 @@
         "atom": "ML-LEX-C68-ORDINAL-01",
         "language": "malayalam",
         "introducedBy": "ML-C68-sixth",
-        "introducedAt": 299,
+        "introducedAt": 300,
         "missed": [
           "R3",
           "R4"
@@ -56981,7 +57040,7 @@
         "atom": "ML-LEX-C68-ORDINAL-02",
         "language": "malayalam",
         "introducedBy": "ML-C68-seventh",
-        "introducedAt": 300,
+        "introducedAt": 301,
         "missed": [
           "R3",
           "R4"
@@ -56992,7 +57051,7 @@
         "atom": "ML-LEX-C71-AVAN-AVAL-01",
         "language": "malayalam",
         "introducedBy": "ML-C71-avan-aval",
-        "introducedAt": 313,
+        "introducedAt": 314,
         "missed": [
           "R2",
           "R3"
@@ -57003,7 +57062,7 @@
         "atom": "ML-LEX-C74-KAZHIYUM-01",
         "language": "malayalam",
         "introducedBy": "ML-C74-kazhiyum",
-        "introducedAt": 326,
+        "introducedAt": 327,
         "missed": [
           "R2",
           "R3"
@@ -57014,7 +57073,7 @@
         "atom": "ML-LEX-C75-EPPOL-01",
         "language": "malayalam",
         "introducedBy": "ML-C75-eppol",
-        "introducedAt": 328,
+        "introducedAt": 329,
         "missed": [
           "R2",
           "R3"
@@ -57025,18 +57084,18 @@
         "atom": "ML-LEX-C77-ALLA-01",
         "language": "malayalam",
         "introducedBy": "ML-C77-alla",
-        "introducedAt": 334,
+        "introducedAt": 335,
         "missed": [
           "R2",
           "R3"
         ],
-        "revisits": 4
+        "revisits": 6
       },
       {
         "atom": "ML-LEX-C79-DEGREE-01",
         "language": "malayalam",
         "introducedBy": "ML-C79-valare",
-        "introducedAt": 340,
+        "introducedAt": 341,
         "missed": [
           "R2",
           "R4"
@@ -57047,7 +57106,7 @@
         "atom": "ML-LEX-C79-DEGREE-02",
         "language": "malayalam",
         "introducedBy": "ML-C79-orupadu",
-        "introducedAt": 341,
+        "introducedAt": 342,
         "missed": [
           "R2",
           "R4"
@@ -57058,7 +57117,7 @@
         "atom": "ML-LEX-C81-DISTANCE-03",
         "language": "malayalam",
         "introducedBy": "ML-C81-dooram",
-        "introducedAt": 350,
+        "introducedAt": 351,
         "missed": [
           "R2",
           "R3"
@@ -57069,7 +57128,7 @@
         "atom": "ML-LEX-C85-DRINK-01",
         "language": "malayalam",
         "introducedBy": "ML-C85-kudikkuka",
-        "introducedAt": 364,
+        "introducedAt": 365,
         "missed": [
           "R2",
           "R4"
@@ -57080,7 +57139,7 @@
         "atom": "ML-LEX-C89-EVAL-01",
         "language": "malayalam",
         "introducedBy": "ML-C89-mosham",
-        "introducedAt": 381,
+        "introducedAt": 382,
         "missed": [
           "R2",
           "R4"
@@ -57088,21 +57147,10 @@
         "revisits": 3
       },
       {
-        "atom": "ML-LEX-C91-BUY-01",
-        "language": "malayalam",
-        "introducedBy": "ML-C91-vaanguka",
-        "introducedAt": 391,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "ML-LEX-C91-MONEY-01",
         "language": "malayalam",
         "introducedBy": "ML-C91-vila-panam",
-        "introducedAt": 389,
+        "introducedAt": 390,
         "missed": [
           "R3",
           "R4"
@@ -57113,7 +57161,7 @@
         "atom": "ML-LEX-C91-SHOP-01",
         "language": "malayalam",
         "introducedBy": "ML-C91-kada",
-        "introducedAt": 388,
+        "introducedAt": 389,
         "missed": [
           "R3",
           "R4"
@@ -57124,7 +57172,7 @@
         "atom": "ML-LEX-C92-BILL-01",
         "language": "malayalam",
         "introducedBy": "ML-C92-bill",
-        "introducedAt": 395,
+        "introducedAt": 396,
         "missed": [
           "R2",
           "R3"
@@ -57135,7 +57183,7 @@
         "atom": "ML-LEX-C92-FOOD-01",
         "language": "malayalam",
         "introducedBy": "ML-C92-bhakshanam",
-        "introducedAt": 393,
+        "introducedAt": 394,
         "missed": [
           "R2",
           "R3"
@@ -57146,7 +57194,7 @@
         "atom": "ML-LEX-C94-TODAY-01",
         "language": "malayalam",
         "introducedBy": "ML-C94-innu",
-        "introducedAt": 401,
+        "introducedAt": 402,
         "missed": [
           "R2",
           "R3"
@@ -57157,7 +57205,7 @@
         "atom": "ML-LEX-C94-YESTERDAY-01",
         "language": "malayalam",
         "introducedBy": "ML-C94-innale",
-        "introducedAt": 402,
+        "introducedAt": 403,
         "missed": [
           "R2",
           "R3"
@@ -57168,7 +57216,7 @@
         "atom": "ML-LEX-C95-CLOSE-01",
         "language": "malayalam",
         "introducedBy": "ML-C95-adaykkuka",
-        "introducedAt": 406,
+        "introducedAt": 407,
         "missed": [
           "R2",
           "R3"
@@ -57179,7 +57227,7 @@
         "atom": "ML-LEX-C95-INSIDE-01",
         "language": "malayalam",
         "introducedBy": "ML-C95-akathu-purathu",
-        "introducedAt": 407,
+        "introducedAt": 408,
         "missed": [
           "R2",
           "R3"
@@ -57190,7 +57238,7 @@
         "atom": "ML-LEX-C95-OPEN-01",
         "language": "malayalam",
         "introducedBy": "ML-C95-thurakkuka",
-        "introducedAt": 405,
+        "introducedAt": 406,
         "missed": [
           "R2",
           "R3"
@@ -57201,7 +57249,7 @@
         "atom": "ML-LEX-C95-OUTSIDE-01",
         "language": "malayalam",
         "introducedBy": "ML-C95-akathu-purathu",
-        "introducedAt": 407,
+        "introducedAt": 408,
         "missed": [
           "R2",
           "R3"
@@ -57212,7 +57260,7 @@
         "atom": "ML-LEX-C96-DIFFICULT-01",
         "language": "malayalam",
         "introducedBy": "ML-C96-prayaasam",
-        "introducedAt": 410,
+        "introducedAt": 411,
         "missed": [
           "R2",
           "R3"
@@ -57223,7 +57271,7 @@
         "atom": "ML-LEX-C98-PLAY-01",
         "language": "malayalam",
         "introducedBy": "ML-C98-kalikkuka",
-        "introducedAt": 417,
+        "introducedAt": 418,
         "missed": [
           "R2",
           "R3"
@@ -57234,7 +57282,7 @@
         "atom": "ML-LEX-C99-DANCE-01",
         "language": "malayalam",
         "introducedBy": "ML-C99-nrttham",
-        "introducedAt": 422,
+        "introducedAt": 423,
         "missed": [
           "R2",
           "R3"
@@ -57245,7 +57293,7 @@
         "atom": "ML-LEX-C99-SING-01",
         "language": "malayalam",
         "introducedBy": "ML-C99-paaduka",
-        "introducedAt": 421,
+        "introducedAt": 422,
         "missed": [
           "R2",
           "R3"
@@ -57256,7 +57304,7 @@
         "atom": "ML-LEX-C99-SONG-01",
         "language": "malayalam",
         "introducedBy": "ML-C99-paattu",
-        "introducedAt": 420,
+        "introducedAt": 421,
         "missed": [
           "R2",
           "R3"
@@ -57267,7 +57315,7 @@
         "atom": "ML-LEX-C99-STORY-01",
         "language": "malayalam",
         "introducedBy": "ML-C99-katha",
-        "introducedAt": 423,
+        "introducedAt": 424,
         "missed": [
           "R2",
           "R3"
@@ -57278,7 +57326,7 @@
         "atom": "ML-LEX-GRANDFATHER",
         "language": "malayalam",
         "introducedBy": "ML-C45-grandfather",
-        "introducedAt": 183,
+        "introducedAt": 184,
         "missed": [
           "R3",
           "R4"
@@ -57289,7 +57337,7 @@
         "atom": "ML-LEX-GRANDMOTHER",
         "language": "malayalam",
         "introducedBy": "ML-C45-grandmother",
-        "introducedAt": 184,
+        "introducedAt": 185,
         "missed": [
           "R3",
           "R4"
@@ -57300,7 +57348,7 @@
         "atom": "ML-LEX-HUSBAND",
         "language": "malayalam",
         "introducedBy": "ML-C45-husband",
-        "introducedAt": 185,
+        "introducedAt": 186,
         "missed": [
           "R3",
           "R4"
@@ -57333,7 +57381,7 @@
         "atom": "ML-LEX-RUN",
         "language": "malayalam",
         "introducedBy": "ML-C43-run",
-        "introducedAt": 175,
+        "introducedAt": 176,
         "missed": [
           "R3",
           "R4"
@@ -57344,7 +57392,7 @@
         "atom": "ML-LEX-SLEEP",
         "language": "malayalam",
         "introducedBy": "ML-C43-sleep",
-        "introducedAt": 176,
+        "introducedAt": 177,
         "missed": [
           "R3",
           "R4"
@@ -57355,7 +57403,7 @@
         "atom": "ML-LEX-SPEAK",
         "language": "malayalam",
         "introducedBy": "ML-C44-speak",
-        "introducedAt": 181,
+        "introducedAt": 182,
         "missed": [
           "R3",
           "R4"
@@ -57366,7 +57414,7 @@
         "atom": "ML-LEX-STAND",
         "language": "malayalam",
         "introducedBy": "ML-C43-stand",
-        "introducedAt": 177,
+        "introducedAt": 178,
         "missed": [
           "R3",
           "R4"
@@ -57388,7 +57436,7 @@
         "atom": "ML-LEX-WIFE",
         "language": "malayalam",
         "introducedBy": "ML-C45-wife",
-        "introducedAt": 186,
+        "introducedAt": 187,
         "missed": [
           "R3",
           "R4"
@@ -57399,7 +57447,7 @@
         "atom": "ML-LEX-WRITE",
         "language": "malayalam",
         "introducedBy": "ML-C44-write",
-        "introducedAt": 182,
+        "introducedAt": 183,
         "missed": [
           "R3",
           "R4"
@@ -57410,7 +57458,7 @@
         "atom": "ML-PHRASE-C102-WHAT-TIME-01",
         "language": "malayalam",
         "introducedBy": "ML-C102-ethra-manikku",
-        "introducedAt": 437,
+        "introducedAt": 438,
         "missed": [
           "R2",
           "R3"
@@ -57751,7 +57799,7 @@
         "atom": "ML-SKILL-READ-WORDS",
         "language": "malayalam",
         "introducedBy": "ML-C69-words",
-        "introducedAt": 306,
+        "introducedAt": 307,
         "missed": [
           "R2",
           "R3"
@@ -78079,16 +78127,6 @@
         "revisits": 1
       },
       {
-        "atom": "ML-CONCEPT-C07-NUMBERS-1-5-01",
-        "language": "malayalam",
-        "introducedBy": "ML-C07-numbers-1-5",
-        "introducedAt": 71,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 17
-      },
-      {
         "atom": "ML-CONCEPT-C07-NUMBERS-6-10-01",
         "language": "malayalam",
         "introducedBy": "ML-C07-numbers-6-10",
@@ -78142,7 +78180,7 @@
         "atom": "ML-CONCEPT-C32-ARIYUKA-01",
         "language": "malayalam",
         "introducedBy": "ML-C32-ariyuka",
-        "introducedAt": 135,
+        "introducedAt": 136,
         "missed": [
           "R3"
         ],
@@ -78152,7 +78190,7 @@
         "atom": "ML-CONCEPT-C32-POKUKA-02",
         "language": "malayalam",
         "introducedBy": "ML-C32-pokuka",
-        "introducedAt": 131,
+        "introducedAt": 132,
         "missed": [
           "R3"
         ],
@@ -78162,7 +78200,7 @@
         "atom": "ML-CONCEPT-C32-VARUKA-02",
         "language": "malayalam",
         "introducedBy": "ML-C32-varuka",
-        "introducedAt": 132,
+        "introducedAt": 133,
         "missed": [
           "R3"
         ],
@@ -78172,7 +78210,7 @@
         "atom": "ML-CONCEPT-C33-CINTIKKUKA-01",
         "language": "malayalam",
         "introducedBy": "ML-C33-cintikkuka",
-        "introducedAt": 136,
+        "introducedAt": 137,
         "missed": [
           "R3"
         ],
@@ -78182,7 +78220,7 @@
         "atom": "ML-CONCEPT-C33-VAAYIKKUKA-01",
         "language": "malayalam",
         "introducedBy": "ML-C33-vaayikkuka",
-        "introducedAt": 138,
+        "introducedAt": 139,
         "missed": [
           "R3"
         ],
@@ -78192,7 +78230,7 @@
         "atom": "ML-CONCEPT-C34-CODIKKUKA-01",
         "language": "malayalam",
         "introducedBy": "ML-C34-codikkuka",
-        "introducedAt": 141,
+        "introducedAt": 142,
         "missed": [
           "R3"
         ],
@@ -78202,7 +78240,7 @@
         "atom": "ML-CONCEPT-C34-EDUKKUKA-01",
         "language": "malayalam",
         "introducedBy": "ML-C34-edukkuka",
-        "introducedAt": 140,
+        "introducedAt": 141,
         "missed": [
           "R3"
         ],
@@ -78212,7 +78250,7 @@
         "atom": "ML-CONCEPT-C34-SAHAAYIKKUKA-01",
         "language": "malayalam",
         "introducedBy": "ML-C34-sahaayikkuka",
-        "introducedAt": 142,
+        "introducedAt": 143,
         "missed": [
           "R3"
         ],
@@ -78222,7 +78260,7 @@
         "atom": "ML-CONCEPT-C35-SUHRUTHU-01",
         "language": "malayalam",
         "introducedBy": "ML-C35-suhruthu",
-        "introducedAt": 145,
+        "introducedAt": 146,
         "missed": [
           "R3"
         ],
@@ -78232,7 +78270,7 @@
         "atom": "ML-CONCEPT-C36-KUTTI-01",
         "language": "malayalam",
         "introducedBy": "ML-C36-kutti",
-        "introducedAt": 147,
+        "introducedAt": 148,
         "missed": [
           "R3"
         ],
@@ -78242,27 +78280,27 @@
         "atom": "ML-CONCEPT-C39-CHAAYA-01",
         "language": "malayalam",
         "introducedBy": "ML-C39-chaaya",
-        "introducedAt": 157,
+        "introducedAt": 158,
         "missed": [
           "R3"
         ],
-        "revisits": 10
+        "revisits": 11
       },
       {
         "atom": "ML-CONCEPT-C39-KAAPI-01",
         "language": "malayalam",
         "introducedBy": "ML-C39-kaapi",
-        "introducedAt": 158,
+        "introducedAt": 159,
         "missed": [
           "R3"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "ML-CONCEPT-C39-PAAL-01",
         "language": "malayalam",
         "introducedBy": "ML-C39-paal",
-        "introducedAt": 159,
+        "introducedAt": 160,
         "missed": [
           "R3"
         ],
@@ -78272,27 +78310,17 @@
         "atom": "ML-CONCEPT-C88-TENS-01",
         "language": "malayalam",
         "introducedBy": "ML-C88-tens",
-        "introducedAt": 376,
+        "introducedAt": 377,
         "missed": [
           "R4"
         ],
         "revisits": 7
       },
       {
-        "atom": "ML-CONCEPT-C91-PRICE-QUESTION-01",
-        "language": "malayalam",
-        "introducedBy": "ML-C91-ethra-rupa",
-        "introducedAt": 390,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "ML-CONCEPT-C93-COUNTED-01",
         "language": "malayalam",
         "introducedBy": "ML-C93-counted",
-        "introducedAt": 399,
+        "introducedAt": 400,
         "missed": [
           "R2"
         ],
@@ -78302,7 +78330,7 @@
         "atom": "ML-CONCEPT-C94-THREE-DAYS-01",
         "language": "malayalam",
         "introducedBy": "ML-C94-three-days",
-        "introducedAt": 403,
+        "introducedAt": 404,
         "missed": [
           "R2"
         ],
@@ -78312,7 +78340,7 @@
         "atom": "ML-GRAMMAR-C102-HOUR-DATIVE-01",
         "language": "malayalam",
         "introducedBy": "ML-C102-manikku",
-        "introducedAt": 435,
+        "introducedAt": 436,
         "missed": [
           "R2"
         ],
@@ -78322,7 +78350,7 @@
         "atom": "ML-GRAMMAR-C83-OBLIQUE-AM-01",
         "language": "malayalam",
         "introducedBy": "ML-C83-keralathil",
-        "introducedAt": 358,
+        "introducedAt": 359,
         "missed": [
           "R2"
         ],
@@ -78332,7 +78360,7 @@
         "atom": "ML-GRAMMAR-C93-ANGAL-01",
         "language": "malayalam",
         "introducedBy": "ML-C93-angal",
-        "introducedAt": 398,
+        "introducedAt": 399,
         "missed": [
           "R3"
         ],
@@ -78342,7 +78370,7 @@
         "atom": "ML-LEX-C103-SCHOOL-01",
         "language": "malayalam",
         "introducedBy": "ML-C103-pallikkoodam",
-        "introducedAt": 440,
+        "introducedAt": 441,
         "missed": [
           "R3"
         ],
@@ -78352,37 +78380,17 @@
         "atom": "ML-LEX-C105-CAPITAL-01",
         "language": "malayalam",
         "introducedBy": "ML-C105-thalasthaanam",
-        "introducedAt": 453,
+        "introducedAt": 454,
         "missed": [
           "R2"
         ],
         "revisits": 1
       },
       {
-        "atom": "ML-LEX-C105-CITY-01",
-        "language": "malayalam",
-        "introducedBy": "ML-C105-nagaram",
-        "introducedAt": 452,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ML-LEX-C105-COUNTRY-01",
-        "language": "malayalam",
-        "introducedBy": "ML-C105-raajyam",
-        "introducedAt": 451,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "ML-LEX-C106-AFTER-01",
         "language": "malayalam",
         "introducedBy": "ML-C106-shesham",
-        "introducedAt": 456,
+        "introducedAt": 457,
         "missed": [
           "R2"
         ],
@@ -78392,7 +78400,7 @@
         "atom": "ML-LEX-C106-BEFORE-01",
         "language": "malayalam",
         "introducedBy": "ML-C106-munpu",
-        "introducedAt": 455,
+        "introducedAt": 456,
         "missed": [
           "R2"
         ],
@@ -78402,7 +78410,7 @@
         "atom": "ML-LEX-C107-CLEAN-01",
         "language": "malayalam",
         "introducedBy": "ML-C107-vrtthi",
-        "introducedAt": 461,
+        "introducedAt": 462,
         "missed": [
           "R2"
         ],
@@ -78412,7 +78420,7 @@
         "atom": "ML-LEX-C107-MEDICINE-01",
         "language": "malayalam",
         "introducedBy": "ML-C107-marunnu",
-        "introducedAt": 459,
+        "introducedAt": 460,
         "missed": [
           "R2"
         ],
@@ -78422,7 +78430,7 @@
         "atom": "ML-LEX-C107-TREATMENT-01",
         "language": "malayalam",
         "introducedBy": "ML-C107-chikitsa",
-        "introducedAt": 460,
+        "introducedAt": 461,
         "missed": [
           "R2"
         ],
@@ -78432,7 +78440,7 @@
         "atom": "ML-LEX-C41-DEIXIS-01",
         "language": "malayalam",
         "introducedBy": "ML-C41-this",
-        "introducedAt": 162,
+        "introducedAt": 163,
         "missed": [
           "R3"
         ],
@@ -78442,7 +78450,7 @@
         "atom": "ML-LEX-C41-DEIXIS-02",
         "language": "malayalam",
         "introducedBy": "ML-C41-that",
-        "introducedAt": 163,
+        "introducedAt": 164,
         "missed": [
           "R3"
         ],
@@ -78452,7 +78460,7 @@
         "atom": "ML-LEX-C41-DEIXIS-03",
         "language": "malayalam",
         "introducedBy": "ML-C41-here",
-        "introducedAt": 164,
+        "introducedAt": 165,
         "missed": [
           "R3"
         ],
@@ -78462,7 +78470,7 @@
         "atom": "ML-LEX-C41-DEIXIS-04",
         "language": "malayalam",
         "introducedBy": "ML-C41-there",
-        "introducedAt": 165,
+        "introducedAt": 166,
         "missed": [
           "R3"
         ],
@@ -78472,7 +78480,7 @@
         "atom": "ML-LEX-C41-DEIXIS-06",
         "language": "malayalam",
         "introducedBy": "ML-C41-where",
-        "introducedAt": 167,
+        "introducedAt": 168,
         "missed": [
           "R3"
         ],
@@ -78482,7 +78490,7 @@
         "atom": "ML-LEX-C42-ADJ-01",
         "language": "malayalam",
         "introducedBy": "ML-C42-big",
-        "introducedAt": 169,
+        "introducedAt": 170,
         "missed": [
           "R3"
         ],
@@ -78492,7 +78500,7 @@
         "atom": "ML-LEX-C42-ADJ-03",
         "language": "malayalam",
         "introducedBy": "ML-C42-good",
-        "introducedAt": 171,
+        "introducedAt": 172,
         "missed": [
           "R3"
         ],
@@ -78502,7 +78510,7 @@
         "atom": "ML-LEX-C46-ASK-02",
         "language": "malayalam",
         "introducedBy": "ML-C46-cloth",
-        "introducedAt": 188,
+        "introducedAt": 189,
         "missed": [
           "R3"
         ],
@@ -78512,7 +78520,7 @@
         "atom": "ML-LEX-C46-ASK-03",
         "language": "malayalam",
         "introducedBy": "ML-C46-lamp",
-        "introducedAt": 189,
+        "introducedAt": 190,
         "missed": [
           "R3"
         ],
@@ -78522,7 +78530,7 @@
         "atom": "ML-LEX-C46-ASK-05",
         "language": "malayalam",
         "introducedBy": "ML-C46-book",
-        "introducedAt": 191,
+        "introducedAt": 192,
         "missed": [
           "R3"
         ],
@@ -78532,17 +78540,17 @@
         "atom": "ML-LEX-C48-ROLE-01",
         "language": "malayalam",
         "introducedBy": "ML-C48-teacher",
-        "introducedAt": 197,
+        "introducedAt": 198,
         "missed": [
           "R3"
         ],
-        "revisits": 19
+        "revisits": 20
       },
       {
         "atom": "ML-LEX-C48-ROLE-02",
         "language": "malayalam",
         "introducedBy": "ML-C48-student",
-        "introducedAt": 198,
+        "introducedAt": 199,
         "missed": [
           "R3"
         ],
@@ -78552,7 +78560,7 @@
         "atom": "ML-LEX-C50-LEAVE-01",
         "language": "malayalam",
         "introducedBy": "ML-C50-now",
-        "introducedAt": 207,
+        "introducedAt": 208,
         "missed": [
           "R3"
         ],
@@ -78562,7 +78570,7 @@
         "atom": "ML-LEX-C51-COURTESY-01",
         "language": "malayalam",
         "introducedBy": "ML-C51-gratitude",
-        "introducedAt": 213,
+        "introducedAt": 214,
         "missed": [
           "R3"
         ],
@@ -78572,7 +78580,7 @@
         "atom": "ML-LEX-C51-COURTESY-02",
         "language": "malayalam",
         "introducedBy": "ML-C51-favour",
-        "introducedAt": 214,
+        "introducedAt": 215,
         "missed": [
           "R3"
         ],
@@ -78582,7 +78590,7 @@
         "atom": "ML-LEX-C51-COURTESY-03",
         "language": "malayalam",
         "introducedBy": "ML-C51-respect",
-        "introducedAt": 215,
+        "introducedAt": 216,
         "missed": [
           "R3"
         ],
@@ -78592,7 +78600,7 @@
         "atom": "ML-LEX-C51-COURTESY-04",
         "language": "malayalam",
         "introducedBy": "ML-C51-blessing",
-        "introducedAt": 216,
+        "introducedAt": 217,
         "missed": [
           "R3"
         ],
@@ -78602,7 +78610,7 @@
         "atom": "ML-LEX-C51-COURTESY-05",
         "language": "malayalam",
         "introducedBy": "ML-C51-salutation",
-        "introducedAt": 217,
+        "introducedAt": 218,
         "missed": [
           "R3"
         ],
@@ -78612,7 +78620,7 @@
         "atom": "ML-LEX-C52-WELCOME-01",
         "language": "malayalam",
         "introducedBy": "ML-C52-door",
-        "introducedAt": 218,
+        "introducedAt": 219,
         "missed": [
           "R3"
         ],
@@ -78622,7 +78630,7 @@
         "atom": "ML-LEX-C52-WELCOME-02",
         "language": "malayalam",
         "introducedBy": "ML-C52-chair",
-        "introducedAt": 219,
+        "introducedAt": 220,
         "missed": [
           "R3"
         ],
@@ -78632,7 +78640,7 @@
         "atom": "ML-LEX-C52-WELCOME-03",
         "language": "malayalam",
         "introducedBy": "ML-C52-kolam",
-        "introducedAt": 220,
+        "introducedAt": 221,
         "missed": [
           "R3"
         ],
@@ -78642,7 +78650,7 @@
         "atom": "ML-LEX-C52-WELCOME-04",
         "language": "malayalam",
         "introducedBy": "ML-C52-flower",
-        "introducedAt": 221,
+        "introducedAt": 222,
         "missed": [
           "R3"
         ],
@@ -78652,7 +78660,7 @@
         "atom": "ML-LEX-C52-WELCOME-05",
         "language": "malayalam",
         "introducedBy": "ML-C52-garland",
-        "introducedAt": 222,
+        "introducedAt": 223,
         "missed": [
           "R3"
         ],
@@ -78662,7 +78670,7 @@
         "atom": "ML-LEX-C53-SKY-01",
         "language": "malayalam",
         "introducedBy": "ML-C53-sky",
-        "introducedAt": 223,
+        "introducedAt": 224,
         "missed": [
           "R3"
         ],
@@ -78672,7 +78680,7 @@
         "atom": "ML-LEX-C53-SKY-02",
         "language": "malayalam",
         "introducedBy": "ML-C53-sun",
-        "introducedAt": 224,
+        "introducedAt": 225,
         "missed": [
           "R3"
         ],
@@ -78682,7 +78690,7 @@
         "atom": "ML-LEX-C54-TREE-01",
         "language": "malayalam",
         "introducedBy": "ML-C54-tree",
-        "introducedAt": 228,
+        "introducedAt": 229,
         "missed": [
           "R3"
         ],
@@ -78692,7 +78700,7 @@
         "atom": "ML-LEX-C55-GROUND-03",
         "language": "malayalam",
         "introducedBy": "ML-C55-homeland",
-        "introducedAt": 235,
+        "introducedAt": 236,
         "missed": [
           "R3"
         ],
@@ -78702,7 +78710,7 @@
         "atom": "ML-LEX-C56-HOUSE-03",
         "language": "malayalam",
         "introducedBy": "ML-C56-knife",
-        "introducedAt": 240,
+        "introducedAt": 241,
         "missed": [
           "R3"
         ],
@@ -78712,7 +78720,7 @@
         "atom": "ML-LEX-C58-ANSWER-03",
         "language": "malayalam",
         "introducedBy": "ML-C58-a-little",
-        "introducedAt": 250,
+        "introducedAt": 251,
         "missed": [
           "R3"
         ],
@@ -78722,7 +78730,7 @@
         "atom": "ML-LEX-C58-ANSWER-04",
         "language": "malayalam",
         "introducedBy": "ML-C58-no-need",
-        "introducedAt": 252,
+        "introducedAt": 253,
         "missed": [
           "R3"
         ],
@@ -78732,7 +78740,7 @@
         "atom": "ML-LEX-C60-ANIMAL-01",
         "language": "malayalam",
         "introducedBy": "ML-C60-cow",
-        "introducedAt": 259,
+        "introducedAt": 260,
         "missed": [
           "R3"
         ],
@@ -78742,7 +78750,7 @@
         "atom": "ML-LEX-C63-FEEL-01",
         "language": "malayalam",
         "introducedBy": "ML-C63-hunger",
-        "introducedAt": 274,
+        "introducedAt": 275,
         "missed": [
           "R4"
         ],
@@ -78752,7 +78760,7 @@
         "atom": "ML-LEX-C63-FEEL-02",
         "language": "malayalam",
         "introducedBy": "ML-C63-tiredness",
-        "introducedAt": 275,
+        "introducedAt": 276,
         "missed": [
           "R4"
         ],
@@ -78762,7 +78770,7 @@
         "atom": "ML-LEX-C64-SMALL-02",
         "language": "malayalam",
         "introducedBy": "ML-C64-soon",
-        "introducedAt": 280,
+        "introducedAt": 281,
         "missed": [
           "R4"
         ],
@@ -78772,7 +78780,7 @@
         "atom": "ML-LEX-C64-SMALL-03",
         "language": "malayalam",
         "introducedBy": "ML-C64-sometimes",
-        "introducedAt": 281,
+        "introducedAt": 282,
         "missed": [
           "R4"
         ],
@@ -78782,7 +78790,7 @@
         "atom": "ML-LEX-C64-SMALL-04",
         "language": "malayalam",
         "introducedBy": "ML-C64-only",
-        "introducedAt": 282,
+        "introducedAt": 283,
         "missed": [
           "R4"
         ],
@@ -78792,7 +78800,7 @@
         "atom": "ML-LEX-C64-SMALL-05",
         "language": "malayalam",
         "introducedBy": "ML-C64-but",
-        "introducedAt": 283,
+        "introducedAt": 284,
         "missed": [
           "R4"
         ],
@@ -78802,7 +78810,7 @@
         "atom": "ML-LEX-C65-ASK-02",
         "language": "malayalam",
         "introducedBy": "ML-C65-permission",
-        "introducedAt": 285,
+        "introducedAt": 286,
         "missed": [
           "R4"
         ],
@@ -78812,7 +78820,7 @@
         "atom": "ML-LEX-C80-ORIGIN-01",
         "language": "malayalam",
         "introducedBy": "ML-C80-uuru",
-        "introducedAt": 344,
+        "introducedAt": 345,
         "missed": [
           "R3"
         ],
@@ -78822,7 +78830,7 @@
         "atom": "ML-LEX-C80-ORIGIN-02",
         "language": "malayalam",
         "introducedBy": "ML-C80-keralam",
-        "introducedAt": 345,
+        "introducedAt": 346,
         "missed": [
           "R3"
         ],
@@ -78832,7 +78840,7 @@
         "atom": "ML-LEX-C80-ORIGIN-03",
         "language": "malayalam",
         "introducedBy": "ML-C80-keralam",
-        "introducedAt": 345,
+        "introducedAt": 346,
         "missed": [
           "R3"
         ],
@@ -78842,17 +78850,27 @@
         "atom": "ML-LEX-C81-HOW-MUCH-01",
         "language": "malayalam",
         "introducedBy": "ML-C81-dooram",
-        "introducedAt": 350,
+        "introducedAt": 351,
         "missed": [
           "R2"
         ],
         "revisits": 6
       },
       {
+        "atom": "ML-LEX-C91-MONEY-03",
+        "language": "malayalam",
+        "introducedBy": "ML-C91-ethra-rupa",
+        "introducedAt": 391,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 5
+      },
+      {
         "atom": "ML-LEX-C92-EATERY-01",
         "language": "malayalam",
         "introducedBy": "ML-C92-hottal",
-        "introducedAt": 394,
+        "introducedAt": 395,
         "missed": [
           "R2"
         ],
@@ -78862,7 +78880,7 @@
         "atom": "ML-LEX-C96-EASY-01",
         "language": "malayalam",
         "introducedBy": "ML-C96-eluppam",
-        "introducedAt": 409,
+        "introducedAt": 410,
         "missed": [
           "R3"
         ],
@@ -78872,7 +78890,7 @@
         "atom": "ML-LEX-C97-BEAUTIFUL-01",
         "language": "malayalam",
         "introducedBy": "ML-C97-sundaram",
-        "introducedAt": 412,
+        "introducedAt": 413,
         "missed": [
           "R3"
         ],
@@ -78882,7 +78900,7 @@
         "atom": "ML-LEX-C97-BEAUTY-01",
         "language": "malayalam",
         "introducedBy": "ML-C97-bhangi",
-        "introducedAt": 413,
+        "introducedAt": 414,
         "missed": [
           "R3"
         ],
@@ -78892,7 +78910,7 @@
         "atom": "ML-LEX-C98-CINEMA-01",
         "language": "malayalam",
         "introducedBy": "ML-C98-sinima",
-        "introducedAt": 418,
+        "introducedAt": 419,
         "missed": [
           "R3"
         ],
@@ -78902,7 +78920,7 @@
         "atom": "ML-LEX-C98-GAME-01",
         "language": "malayalam",
         "introducedBy": "ML-C98-kali",
-        "introducedAt": 416,
+        "introducedAt": 417,
         "missed": [
           "R3"
         ],
@@ -78912,7 +78930,7 @@
         "atom": "ML-LEX-LISTEN",
         "language": "malayalam",
         "introducedBy": "ML-C44-listen",
-        "introducedAt": 180,
+        "introducedAt": 181,
         "missed": [
           "R3"
         ],
@@ -78922,11 +78940,61 @@
         "atom": "ML-LEX-LOOK",
         "language": "malayalam",
         "introducedBy": "ML-C44-look",
-        "introducedAt": 179,
+        "introducedAt": 180,
         "missed": [
           "R3"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "ML-PUNCT-COMMA-01",
+        "language": "malayalam",
+        "introducedBy": "ML-W108-comma",
+        "introducedAt": 466,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-PUNCT-DASH-01",
+        "language": "malayalam",
+        "introducedBy": "ML-W108-quotation",
+        "introducedAt": 468,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ML-PUNCT-EXCLAM-01",
+        "language": "malayalam",
+        "introducedBy": "ML-W108-question-mark",
+        "introducedAt": 467,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ML-PUNCT-QUESTION-01",
+        "language": "malayalam",
+        "introducedBy": "ML-W108-question-mark",
+        "introducedAt": 467,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ML-PUNCT-QUOTATION-01",
+        "language": "malayalam",
+        "introducedBy": "ML-W108-quotation",
+        "introducedAt": 468,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
       },
       {
         "atom": "MR-A1-FORM-LABEL-AVDATE-PEY",
@@ -90959,7 +91027,7 @@
       {
         "lessonId": "ML-C32-tinnuka",
         "language": "malayalam",
-        "position": 133,
+        "position": 134,
         "word": "ഊണ്",
         "taughtBy": "ML-C40-oon",
         "lessonsEarly": 28
@@ -91143,7 +91211,7 @@
       {
         "lessonId": "ML-C19-vayassu",
         "language": "malayalam",
-        "position": 109,
+        "position": 110,
         "word": "ഉണ്ട്",
         "taughtBy": "ML-C32-undu",
         "lessonsEarly": 21
@@ -91207,7 +91275,7 @@
       {
         "lessonId": "ML-C35-kudumbam",
         "language": "malayalam",
-        "position": 144,
+        "position": 145,
         "word": "ഇത്",
         "taughtBy": "ML-C41-this",
         "lessonsEarly": 18
@@ -91239,7 +91307,7 @@
       {
         "lessonId": "ML-C35-suhruthu",
         "language": "malayalam",
-        "position": 145,
+        "position": 146,
         "word": "ഇത്",
         "taughtBy": "ML-C41-this",
         "lessonsEarly": 17
@@ -91335,7 +91403,7 @@
       {
         "lessonId": "ML-C36-kutti",
         "language": "malayalam",
-        "position": 147,
+        "position": 148,
         "word": "ഇത്",
         "taughtBy": "ML-C41-this",
         "lessonsEarly": 15
@@ -91391,7 +91459,7 @@
       {
         "lessonId": "ML-C36-makan",
         "language": "malayalam",
-        "position": 148,
+        "position": 149,
         "word": "ഇത്",
         "taughtBy": "ML-C41-this",
         "lessonsEarly": 14
@@ -91455,7 +91523,7 @@
       {
         "lessonId": "ML-C36-makal",
         "language": "malayalam",
-        "position": 149,
+        "position": 150,
         "word": "ഇത്",
         "taughtBy": "ML-C41-this",
         "lessonsEarly": 13
@@ -93079,7 +93147,7 @@
       {
         "lessonId": "ML-C19-vayassu",
         "language": "malayalam",
-        "position": 109,
+        "position": 110,
         "word": "ഇരുപത്",
         "taughtBy": "ML-C20-pathinonnu-irupathu",
         "lessonsEarly": 1
@@ -93087,7 +93155,7 @@
       {
         "lessonId": "ML-C41-here",
         "language": "malayalam",
-        "position": 164,
+        "position": 165,
         "word": "അവിടെ",
         "taughtBy": "ML-C41-there",
         "lessonsEarly": 1
@@ -93095,7 +93163,7 @@
       {
         "lessonId": "ML-C41-this",
         "language": "malayalam",
-        "position": 162,
+        "position": 163,
         "word": "അത്",
         "taughtBy": "ML-C41-that",
         "lessonsEarly": 1
@@ -93103,7 +93171,7 @@
       {
         "lessonId": "ML-C41-who",
         "language": "malayalam",
-        "position": 166,
+        "position": 167,
         "word": "എവിടെ",
         "taughtBy": "ML-C41-where",
         "lessonsEarly": 1
@@ -93558,12 +93626,12 @@
       },
       {
         "language": "malayalam",
-        "lessonCount": 470,
+        "lessonCount": 474,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 514,
-        "atomsNeverRevisited": 19,
+        "atomsTaught": 517,
+        "atomsNeverRevisited": 20,
         "forwardReferences": 12
       },
       {
@@ -93682,14 +93750,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 8842,
-      "atomsNeverRevisited": 489,
+      "atomsTaught": 8845,
+      "atomsNeverRevisited": 490,
       "neverRevisitedPercent": 6,
       "missedByWindow": {
-        "R1": 1748,
-        "R2": 4066,
-        "R3": 5710,
-        "R4": 4261
+        "R1": 1749,
+        "R2": 4071,
+        "R3": 5712,
+        "R4": 4265
       },
       "forwardReferences": 798
     }
@@ -93790,7 +93858,7 @@
       {
         "language": "malayalam",
         "script": "malayalam",
-        "lessonCount": 470,
+        "lessonCount": 474,
         "scriptLessons": 74,
         "taughtGlyphs": 68,
         "shownGlyphs": 68,
@@ -114344,8 +114412,8 @@
       },
       {
         "language": "malayalam",
-        "lessonCount": 470,
-        "atomMeasurableLessons": 460,
+        "lessonCount": 474,
+        "atomMeasurableLessons": 464,
         "atomMeasurementBlindLessons": 10,
         "durationViolations": 0,
         "atomLessonSpikes": 2,
@@ -114360,14 +114428,14 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 12,
-        "atomsTaught": 514,
-        "atomsNeverRevisited": 19,
-        "reinforcementWindowMisses": 1102,
+        "atomsTaught": 517,
+        "atomsNeverRevisited": 20,
+        "reinforcementWindowMisses": 1114,
         "reinforcementMissesByWindow": {
-          "R1": 122,
-          "R2": 180,
-          "R3": 445,
-          "R4": 355
+          "R1": 123,
+          "R2": 185,
+          "R3": 447,
+          "R4": 359
         },
         "payoffSurprises": 8,
         "writingPracticeLessons": 114,
@@ -114398,7 +114466,7 @@
           {
             "language": "malayalam",
             "kind": "reinforcement",
-            "count": 1102,
+            "count": 1114,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -115742,7 +115810,7 @@
       {
         "language": "malayalam",
         "kind": "reinforcement",
-        "count": 1102,
+        "count": 1114,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -116408,7 +116476,7 @@
             "shortfall": 45
           }
         ],
-        "vocabulary": 307
+        "vocabulary": 308
       },
       {
         "language": "marathi",
@@ -116696,11 +116764,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 7186,
-    "voice": 5141,
+    "totalLessons": 7190,
+    "voice": 5145,
     "sight": 797,
     "pen": 1248,
-    "coreVoice": 5682,
+    "coreVoice": 5686,
     "lessonsWithWritingSegments": 765,
     "drivablePercent": 79,
     "tracks": [
@@ -125115,13 +125183,13 @@
       },
       {
         "language": "malayalam",
-        "lessonCount": 470,
-        "voice": 323,
+        "lessonCount": 474,
+        "voice": 327,
         "sight": 70,
         "pen": 77,
-        "coreVoice": 362,
+        "coreVoice": 366,
         "drivablePercent": 77,
-        "drivablePrefixTotal": 302,
+        "drivablePrefixTotal": 306,
         "chapters": [
           {
             "language": "malayalam",
@@ -125389,17 +125457,17 @@
           {
             "language": "malayalam",
             "chapter": 18,
-            "lessonCount": 2,
-            "voice": 1,
+            "lessonCount": 3,
+            "voice": 2,
             "sight": 0,
             "pen": 1,
-            "coreVoice": 1,
+            "coreVoice": 2,
             "modalities": [
               "voice",
               "sight",
               "pen"
             ],
-            "drivablePrefix": 1,
+            "drivablePrefix": 2,
             "firstNonVoiceLesson": "ML-S121-letter-ssa"
           },
           {
@@ -126700,6 +126768,20 @@
             ],
             "drivablePrefix": 0,
             "firstNonVoiceLesson": "ML-W108-full-stop"
+          },
+          {
+            "language": "malayalam",
+            "chapter": 109,
+            "lessonCount": 3,
+            "voice": 3,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 3,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 3,
+            "firstNonVoiceLesson": null
           }
         ]
       },
@@ -140827,8 +140909,8 @@
       "1": 668,
       "2": 471,
       "3": 240,
-      "4": 108,
-      "5": 44,
+      "4": 107,
+      "5": 45,
       "6": 21,
       "7": 14,
       "8": 7,
@@ -140840,7 +140922,7 @@
     "underspentPercent": 90
   },
   "infoDump": {
-    "lessons": 7186,
+    "lessons": 7190,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -140848,7 +140930,7 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 7186,
+    "lessons": 7190,
     "measuredLessons": 3806,
     "idiomMeasuredLessons": 3806,
     "senseMeasuredLessons": 3807,
@@ -140861,10 +140943,10 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 6736,
-    "usesBeforeIntroduction": 22439,
-    "technicalUsesBeforeIntroduction": 5566,
-    "technicalLessons": 3115,
+    "lessonsUsingTerms": 6740,
+    "usesBeforeIntroduction": 22450,
+    "technicalUsesBeforeIntroduction": 5568,
+    "technicalLessons": 3117,
     "worstTerms": [
       {
         "term": "verb",
@@ -140872,7 +140954,7 @@
       },
       {
         "term": "noun",
-        "lessons": 1045
+        "lessons": 1047
       },
       {
         "term": "adjective",
@@ -140893,12 +140975,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 7186,
+    "lessonsScanned": 7190,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 1671,
+    "filesScanned": 1672,
     "mainCharacters": 133,
     "scriptCharacters": 799,
     "gaps": 0
