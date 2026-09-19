@@ -143,6 +143,8 @@ pub struct GraphNode {
     pub label: DiagramLabel,
     pub shape: Option<DiagramShape>,
     pub style: Option<DiagramStyle>,
+    pub classes: Vec<String>,
+    pub icon: Option<String>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -426,6 +428,8 @@ pub struct LayoutedGraphNode {
     pub width: f64,
     pub height: f64,
     pub style: ResolvedDiagramStyle,
+    pub classes: Vec<String>,
+    pub icon: Option<String>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -2170,6 +2174,8 @@ mod tests {
             label: DiagramLabel::new("Node A"),
             shape: None,
             style: None,
+            classes: Vec::new(),
+            icon: None,
         };
         let edge = GraphEdge {
             id: None,

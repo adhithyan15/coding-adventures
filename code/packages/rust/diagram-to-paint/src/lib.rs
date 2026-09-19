@@ -795,6 +795,30 @@ where
 // ============================================================================
 
 fn node_shape_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
+    let instruction = node_shape_geometry_instruction(node);
+    if node.classes.is_empty() && node.icon.is_none() {
+        return instruction;
+    }
+
+    let mut metadata = HashMap::new();
+    if !node.classes.is_empty() {
+        metadata.insert("diagram.classes".into(), node.classes.join(" "));
+    }
+    if let Some(icon) = &node.icon {
+        metadata.insert("diagram.icon".into(), icon.clone());
+    }
+    PaintInstruction::Group(PaintGroup {
+        base: PaintBase {
+            id: Some(node.id.clone()),
+            metadata: Some(metadata),
+        },
+        children: vec![instruction],
+        transform: None,
+        opacity: None,
+    })
+}
+
+fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
     match node.shape {
         DiagramShape::Ellipse => PaintInstruction::Ellipse(PaintEllipse {
             base: PaintBase::default(),
@@ -5000,6 +5024,8 @@ mod tests {
                     width: 96.0,
                     height: 52.0,
                     style: default_style(),
+                    classes: Vec::new(),
+                    icon: None,
                 },
                 LayoutedGraphNode {
                     id: "B".to_string(),
@@ -5010,6 +5036,8 @@ mod tests {
                     width: 96.0,
                     height: 52.0,
                     style: default_style(),
+                    classes: Vec::new(),
+                    icon: None,
                 },
             ],
             edges: vec![LayoutedGraphEdge {
