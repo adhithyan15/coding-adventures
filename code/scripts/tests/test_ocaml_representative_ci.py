@@ -30,6 +30,37 @@ class ManifestAndRepositoryTests(unittest.TestCase):
         validated = representative.validate_repository(REPO_ROOT)
         self.assertEqual(1, validated["schema_version"])
 
+    def test_tree_digest_uses_platform_neutral_byte_order(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "LICENSE").write_bytes(b"license\n")
+            (root / "coding-adventures.opam").write_bytes(b"opam\n")
+
+            self.assertEqual(
+                "dd322ad4356ee4312aba2d2eb19d95f983fa07cb8a3171ba1a72183a02f26faf",
+                representative._tree_sha256(root),
+            )
+
+    def test_tree_digest_rejects_generated_only_and_linked_trees(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            generated = root / "_build"
+            generated.mkdir()
+            (generated / "output").write_bytes(b"generated\n")
+            with self.assertRaisesRegex(representative.ContractError, "empty"):
+                representative._tree_sha256(root)
+
+            outside = root / "outside"
+            outside.mkdir()
+            (outside / "source.ml").write_bytes(b"let x = 1\n")
+            linked = root / "linked"
+            try:
+                linked.symlink_to(outside, target_is_directory=True)
+            except OSError as exc:
+                self.skipTest(f"directory symlinks are unavailable: {exc}")
+            with self.assertRaisesRegex(representative.ContractError, "linked path"):
+                representative._tree_sha256(root)
+
     def test_manifest_is_closed(self) -> None:
         document = copy.deepcopy(self.manifest)
         document["unexpected"] = True
@@ -156,6 +187,9 @@ class ArchiveTests(unittest.TestCase):
     def test_archive_rejects_traversal_links_duplicates_and_generated_files(self) -> None:
         cases = (
             [("../escape", b"x", "file")],
+            [("root/./README", b"x", "file")],
+            [("root//README", b"x", "file")],
+            [("./root/README", b"x", "file")],
             [("root/link", b"", "symlink")],
             [("root/README", b"a", "file"), ("root/README", b"b", "file")],
             [("root/_build/output", b"x", "file")],

@@ -217,16 +217,22 @@ def _tree_sha256(root: Path) -> str:
     if not root.is_dir() or root.is_symlink():
         raise ContractError(f"governed tree is missing or linked: {root}")
     digest = hashlib.sha256()
-    files = sorted(path for path in root.rglob("*") if path.is_file())
-    if not files:
-        raise ContractError(f"governed tree is empty: {root}")
-    for path in files:
-        if path.is_symlink():
-            raise ContractError(f"governed tree contains a linked file: {path}")
-        relative = path.relative_to(root).as_posix()
+    entries = sorted(
+        (
+            (path.relative_to(root).as_posix(), path)
+            for path in root.rglob("*")
+        ),
+        key=lambda entry: entry[0].encode("utf-8"),
+    )
+    included = 0
+    for relative, path in entries:
         if set(PurePosixPath(relative).parts) & BANNED_ARCHIVE_PARTS or relative.endswith(
             ".coverage"
         ):
+            continue
+        if path.is_symlink():
+            raise ContractError(f"governed tree contains a linked path: {path}")
+        if not path.is_file():
             continue
         content = path.read_bytes()
         digest.update(relative.encode("utf-8"))
@@ -234,6 +240,9 @@ def _tree_sha256(root: Path) -> str:
         digest.update(str(len(content)).encode("ascii"))
         digest.update(b"\0")
         digest.update(content)
+        included += 1
+    if included == 0:
+        raise ContractError(f"governed tree is empty: {root}")
     return digest.hexdigest()
 
 
@@ -453,7 +462,11 @@ def validate_archive_members(
         with tarfile.open(archive_path, "r:gz") as archive:
             for member in archive.getmembers():
                 path = PurePosixPath(member.name)
-                if path.is_absolute() or ".." in path.parts or "." in path.parts:
+                if (
+                    path.is_absolute()
+                    or ".." in path.parts
+                    or member.name != path.as_posix()
+                ):
                     raise ContractError(f"unsafe source archive path: {member.name}")
                 if not path.parts or path.parts[0] != expected_root:
                     raise ContractError("source archive entries must use one package root")

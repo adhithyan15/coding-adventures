@@ -120,12 +120,12 @@
     ]
   },
   "governed_trees": {
-    "code/packages/ocaml/logic-gates": "0f4dd41324114b6c3062aa53bbd4703507ca8448763b787c2114f4f2bccfee8f",
-    "code/packages/ocaml/graph": "a945ea509bafa9258eaad1326b156efccf0a6a72c6ca3e80c07f4e89888b88d4",
-    "code/packages/ocaml/directed-graph": "ad661926bac384832d67fd902dd256441c8efd83d98b101a884dc0f0b4b2bea8",
-    "code/packages/ocaml/state-machine": "57b8aa0fe9bf504a3644f8159bdaf0ff74c5797c62be4d4e1bf6ba393b14d014",
-    "code/packages/ocaml/ca-capability-analyzer": "3f4062987e12fb863c2dd7b92ad8bafe8ce1ebc0337a732c956dc4cfb9b8debf",
-    "code/specs/fixtures/ocaml-representative-downstream-v1": "046a188713218faac59c0bfbe0dc16c1798b44d7d2a62bb060d97ff012263c2a"
+    "code/packages/ocaml/logic-gates": "392d0adedec81494b683ce3b2b57a450e624405c5e2528c7831099a08a9ce81d",
+    "code/packages/ocaml/graph": "83e2b6f93e2aeb03cc6ad513dfdbb2cde02be5637a776a93c6423cc5bbee8eb1",
+    "code/packages/ocaml/directed-graph": "7112a53a488e8b58797c2a8618ae255cc6279f46e768132e6493912ea6793c06",
+    "code/packages/ocaml/state-machine": "a0cbeb9713a9cd497306ddcb61de5dec646acbf2314c1ac9319cb898bafa6a3c",
+    "code/packages/ocaml/ca-capability-analyzer": "8f05989174e59c95d1b61eecaae0d97d2071a189c127e5039ce988d76af1b55f",
+    "code/specs/fixtures/ocaml-representative-downstream-v1": "9fca51a47cacd9dc92f41e117eb1282b182b707472d9ef8f4fe58b188b550a40"
   },
   "workflow_sha256": "43b295c58401d8f399508c210cd77098f9f8d430216f7e6f55e5bab717965e30"
 }
