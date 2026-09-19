@@ -2389,6 +2389,7 @@ fn prepare_mindmap_source(source: &str) -> Result<String, ParseError> {
 
 fn parse_mindmap_node(source: &str) -> (Option<String>, String, DiagramShape) {
     for (open, close, shape) in [
+        ("{{", "}}", DiagramShape::Hexagon),
         ("((", "))", DiagramShape::Ellipse),
         ("[", "]", DiagramShape::Rect),
         ("(", ")", DiagramShape::RoundedRect),
@@ -10150,15 +10151,17 @@ mod tests_dg04 {
     #[test]
     fn mindmap_parses_indented_tree_shapes_and_unique_ids() {
         let diagram = parse_mindmap(
-            "mindmap\n  root((Native))\n    Parser[Grammar]\n      Paint(Scene)\n    Parser",
+            "mindmap\n  root((Native))\n    Parser[Grammar]\n      Paint(Scene)\n    output{{Hexagon}}\n    Parser",
         )
         .unwrap();
-        assert_eq!(diagram.nodes.len(), 4);
-        assert_eq!(diagram.edges.len(), 3);
+        assert_eq!(diagram.nodes.len(), 5);
+        assert_eq!(diagram.edges.len(), 4);
         assert_eq!(diagram.nodes[0].shape, Some(DiagramShape::Ellipse));
         assert_eq!(diagram.nodes[1].shape, Some(DiagramShape::Rect));
         assert_eq!(diagram.nodes[2].shape, Some(DiagramShape::RoundedRect));
-        assert_eq!(diagram.nodes[3].id, "parser");
+        assert_eq!(diagram.nodes[3].shape, Some(DiagramShape::Hexagon));
+        assert_eq!(diagram.nodes[3].label.text, "Hexagon");
+        assert_eq!(diagram.nodes[4].id, "parser");
     }
 
     #[test]

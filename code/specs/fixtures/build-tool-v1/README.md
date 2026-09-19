@@ -39,11 +39,14 @@ emerging OCaml lane. It records front-door and shared-engine state but contains
 no executable commands. Every adapter is currently marked missing, so a valid
 inventory is not reported as conformance success.
 
-The 151-case bootstrap corpus covers every process-free v1 domain:
+The 154-case bootstrap corpus covers every process-free v1 domain:
 
 - validated CI gate selection with exact package intersection, path and
-  globstar matching, explicit false verdicts, deterministic output names, and
-  force, unavailable-snapshot, and machinery-change fail-open behavior;
+  globstar matching, explicit false verdicts, deterministic output names,
+  force, unavailable-snapshot, and machinery-change fail-open behavior, plus
+  exact-at-limit and fail-closed operation-wide match-work accounting over the
+  full declared pattern/file product with Unicode-scalar lengths and stable
+  `CI_GATE_MATCH_LIMIT_EXCEEDED` failure before the first matcher call;
 - canonical package and program membership, language-registry classification
   with paired C#, F#, Haskell, Java, Kotlin, and OCaml package/program
   identities, a Dart program identity, plus Cabal `dist-newstyle`, Dune

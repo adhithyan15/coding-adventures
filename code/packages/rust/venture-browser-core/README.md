@@ -184,9 +184,9 @@ surfaces never instantiate toolkit-specific controls or own editing policy.
 
 `BrowserChromeController` is the matching host-neutral reducer for the shared
 Mosaic `VentureChrome` package. It preserves address edits as a draft, maps
-navigation, bookmark, and View Source events to host-neutral commands, synchronizes redirects
+navigation, bookmark, Copy Address, and View Source events to host-neutral commands, synchronizes redirects
 only after a successful load, and projects one coherent `BrowserChromeProps`
-snapshot for the nine MIL slots. `BrowserAuxiliaryDocument::view_source`
+snapshot for the declared MIL slots. `BrowserAuxiliaryDocument::view_source`
 escapes the already-retained response text into synthetic preformatted HTML,
 and `BrowserHostEventOutcome` carries the resulting platform-owned window
 effect without navigation, history mutation, or a network fetch. Generated Mosaic shells expose the native
@@ -195,6 +195,12 @@ to the live Metal renderer, WinUI mounts Direct2D pixels, and Qt, Flutter, and
 Compose share the Cairo bridge. Platform-native integration gates exercise the
 generated shells through those adapters rather than reimplementing browser
 state in each toolkit.
+
+Copy Address deliberately reads the committed history entry, not the mutable
+address draft. Core emits `BrowserHostEffect::WriteClipboard` and updates the
+shared status projection; native presenters perform only the final clipboard
+write, so redirects, fragments, disabledness, and effect payloads cannot drift
+between generated hosts.
 
 ## Development
 

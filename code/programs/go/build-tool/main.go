@@ -1041,7 +1041,11 @@ func emitBuildPlan(
 			fmt.Fprintf(os.Stderr, "Error loading CI gate registry: %v\n", err)
 			return 1
 		}
-		gateVerdicts = cigates.Evaluate(registry, affectedSet, changedFiles, force)
+		gateVerdicts, err = cigates.Evaluate(registry, affectedSet, changedFiles, force)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error evaluating CI gate registry: %v\n", err)
+			return 1
+		}
 		bp.CIJobs = gateVerdicts
 	}
 

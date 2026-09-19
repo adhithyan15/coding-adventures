@@ -167,6 +167,32 @@ an exit-0 result trustworthy: the requested typed pipeline actually completed.
 can exercise routing without spawning the binary. `parse_and_run(args)` is the
 combined-stream compatibility helper; `main` only writes the returned streams.
 
+## Reproducible upstream oracle
+
+[`tests/oracle/manifest.json`](./tests/oracle/manifest.json) is the
+machine-readable provenance registry for all 626 differential fixture
+directories. It pins Google Closure Compiler `v20260915`, its annotated tag and
+release commit, the exact Maven JAR URL, byte length and SHA-256, Java 21.0.12,
+licensing, deterministic capture settings, and normalized command templates.
+
+The registry deliberately distinguishes current checked-in provenance from the
+next capture target. The 462 `minify_*` goldens mostly still document
+`v20240317`; eight remain explicitly unverified. Local correlation-vector,
+help/version, and transitional print-tree contracts do not pretend to be
+upstream bytes. See [`tests/oracle/README.md`](./tests/oracle/README.md) for the
+artifact-verification and fixture-update procedure.
+
+The verifier is offline and does not execute Java:
+
+```sh
+cargo test --test oracle_manifest
+```
+
+It rejects unclassified or multiply classified fixtures, unknown schema data,
+bad pins, unsafe/stale paths, incomplete harness mappings, and false upstream
+claims. A new fixture therefore cannot inherit provenance merely because its
+directory happens to match a glob.
+
 ## What's coming
 
 - Complete typed-AST coverage so every JavaScript construct accepted upstream

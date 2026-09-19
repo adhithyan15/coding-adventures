@@ -4,6 +4,18 @@ All notable changes to the Go build tool will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Bounded ordinary CI-gate path evaluation to a complete 50,000,000-unit
+  Unicode-scalar preflight, returning stable
+  `CI_GATE_MATCH_LIMIT_EXCEEDED` failure before any glob call or partial plan
+  output. The globstar matcher now memoizes per-call states so accepted
+  recursive near misses cannot recompute the same suffix grid exponentially.
+  Native registry loading now enforces the neutral gate, entry, identity, and
+  portable-glob bounds before either run-all bypasses or match-work accounting,
+  and segment matching now follows the neutral Python `fnmatchcase`
+  character-class grammar instead of Go's incompatible host grammar.
+
 ### Fixed
 
 - A bare `set -e`/`set -eu` line at the top of a `BUILD` file — POSIX

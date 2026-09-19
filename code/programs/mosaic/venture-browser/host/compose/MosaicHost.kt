@@ -33,6 +33,8 @@ import com.sun.jna.ptr.DoubleByReference
 import com.sun.jna.ptr.IntByReference
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.UUID
+import java.awt.Toolkit
+import java.awt.datatransfer.StringSelection
 import javax.swing.JFileChooser
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
@@ -122,6 +124,8 @@ class MosaicHost private constructor(
     var lastBrowsingContextRequest: Map<String, Any?>? = null
         private set
     var lastDownloadRequest: Map<String, Any?>? = null
+        private set
+    var lastClipboardText: String? = null
         private set
     val renderedFrameCount = AtomicInteger(0)
 
@@ -306,6 +310,13 @@ class MosaicHost private constructor(
             lastBrowsingContextRequest = effect
         } else if (effect["type"] == "download") {
             lastDownloadRequest = effect
+        } else if (effect["type"] == "write-clipboard") {
+            lastClipboardText = effect["text"] as? String
+            lastClipboardText?.let { text ->
+                runCatching {
+                    Toolkit.getDefaultToolkit().systemClipboard.setContents(StringSelection(text), null)
+                }
+            }
         }
     }
 

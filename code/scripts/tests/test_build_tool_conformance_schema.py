@@ -323,6 +323,30 @@ class BuildToolConformanceSchemaTests(unittest.TestCase):
                 record["input"]["options"][field] = []
                 self.assertEqual(list(validator.iter_errors(record)), [])
 
+    def test_ci_gate_selection_schema_ties_outcome_to_result_shape(self) -> None:
+        import jsonschema
+
+        validator = jsonschema.Draft202012Validator(self.pure_schema)
+        example = next(
+            example
+            for example in self.examples
+            if example["id"] == "ci-gate-selection/unrelated-change"
+        )
+        record = {
+            "domain": example["domain"],
+            "outcome": "error",
+            "input": copy.deepcopy(example["input"]),
+            "result": {},
+        }
+        self.assertEqual(list(validator.iter_errors(record)), [])
+
+        record["result"] = copy.deepcopy(example["expected"]["result"])
+        self.assertNotEqual(list(validator.iter_errors(record)), [])
+
+        record["outcome"] = "ok"
+        record["result"] = {}
+        self.assertNotEqual(list(validator.iter_errors(record)), [])
+
     def test_graph_schema_is_closed_process_free_and_resource_bounded(self) -> None:
         graph_input = self.pure_schema["$defs"]["graph_input"]
         graph_options = graph_input["properties"]["options"]

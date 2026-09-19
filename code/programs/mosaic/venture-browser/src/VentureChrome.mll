@@ -36,6 +36,12 @@ layout VentureChrome {
         state-when-disabled : slot: bookmark-disabled ,
         onClick : emit: onToggleBookmark
       )
+      HostButton [ copy-address-button ] (
+        label : "Copy Address" ,
+        disabled : slot: copy-address-disabled ,
+        state-when-disabled : slot: copy-address-disabled ,
+        onClick : emit: onCopyAddress
+      )
       HostButton [ view-source-button ] (
         label : "View Source" ,
         disabled : slot: view-source-disabled ,

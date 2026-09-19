@@ -1,0 +1,16 @@
+{
+  "id": "ML-PATH-107-MEDICINE",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ML-C107-marunnu",
+    "ML-C107-chikitsa",
+    "ML-C107-vrtthi",
+    "ML-C107-before-and-after",
+    "ML-R107-medicine-recall"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-107-MEDICINE"
+  ],
+  "after": []
+}

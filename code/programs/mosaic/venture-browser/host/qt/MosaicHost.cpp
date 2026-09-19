@@ -1,6 +1,7 @@
 #include "MosaicHost.h"
 
 #include <QCoreApplication>
+#include <QClipboard>
 #include <QDir>
 #include <QFile>
 #include <QFileDialog>
@@ -8,6 +9,7 @@
 #include <QHoverEvent>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QGuiApplication>
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QMimeDatabase>
@@ -698,6 +700,9 @@ void MosaicHost::consumeEffect(const QVariantMap &response)
   } else if (effect.value(QStringLiteral("type")).toString()
              == QStringLiteral("download")) {
     emit downloadRequested(effect);
+  } else if (effect.value(QStringLiteral("type")).toString()
+             == QStringLiteral("write-clipboard")) {
+    QGuiApplication::clipboard()->setText(effect.value(QStringLiteral("text")).toString());
   }
 }
 
@@ -710,6 +715,7 @@ QVariantMap MosaicHost::normalizeProps(const QVariantMap &props)
     {QStringLiteral("forward-disabled"), QStringLiteral("forwardDisabled")},
     {QStringLiteral("bookmark-label"), QStringLiteral("bookmarkLabel")},
     {QStringLiteral("bookmark-disabled"), QStringLiteral("bookmarkDisabled")},
+    {QStringLiteral("copy-address-disabled"), QStringLiteral("copyAddressDisabled")},
     {QStringLiteral("view-source-disabled"), QStringLiteral("viewSourceDisabled")},
     {QStringLiteral("find-open"), QStringLiteral("findOpen")},
     {QStringLiteral("find-query"), QStringLiteral("findQuery")},

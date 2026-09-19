@@ -548,7 +548,7 @@ fn positioned_node_breaks_find_text(node: &PositionedNode) -> bool {
 }
 
 /// Mosaic `VentureChrome` slot names, in interface declaration order.
-pub const VENTURE_CHROME_SLOT_NAMES: [&str; 13] = [
+pub const VENTURE_CHROME_SLOT_NAMES: [&str; 14] = [
     "address",
     "page-title",
     "status-text",
@@ -556,6 +556,7 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 13] = [
     "forward-disabled",
     "bookmark-label",
     "bookmark-disabled",
+    "copy-address-disabled",
     "view-source-disabled",
     "find-open",
     "find-query",
@@ -568,12 +569,13 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 13] = [
 pub const VENTURE_CHROME_HOST_SURFACE_SLOT_NAME: &str = "content-surface";
 
 /// Mosaic `VentureChrome` event names, in interface declaration order.
-pub const VENTURE_CHROME_EVENT_NAMES: [&str; 13] = [
+pub const VENTURE_CHROME_EVENT_NAMES: [&str; 14] = [
     "onBack",
     "onForward",
     "onHome",
     "onReload",
     "onToggleBookmark",
+    "onCopyAddress",
     "onViewSource",
     "onFindOpen",
     "onFindChange",
@@ -1377,6 +1379,7 @@ pub enum BrowserHostEffect {
     OpenAuxiliaryDocument(BrowserAuxiliaryDocument),
     OpenBrowsingContext(BrowserBrowsingContextRequest),
     Download(BrowserDownloadRequest),
+    WriteClipboard(String),
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -1664,6 +1667,7 @@ pub enum BrowserNavigation {
 pub enum BrowserChromeAction {
     Navigate(BrowserNavigation),
     ToggleCurrentBookmark,
+    CopyPageAddress,
     ViewSource,
     OpenFind,
     FindQuery(String),
@@ -1680,6 +1684,7 @@ pub enum BrowserChromeEvent {
     Home,
     Reload,
     ToggleBookmark,
+    CopyAddress,
     ViewSource,
     FindOpen,
     FindChange(String),
@@ -1698,6 +1703,7 @@ impl BrowserChromeEvent {
             Self::Home => "onHome",
             Self::Reload => "onReload",
             Self::ToggleBookmark => "onToggleBookmark",
+            Self::CopyAddress => "onCopyAddress",
             Self::ViewSource => "onViewSource",
             Self::FindOpen => "onFindOpen",
             Self::FindChange(_) => "onFindChange",
@@ -1720,6 +1726,7 @@ pub struct BrowserChromeProps {
     pub forward_disabled: bool,
     pub bookmark_label: String,
     pub bookmark_disabled: bool,
+    pub copy_address_disabled: bool,
     pub view_source_disabled: bool,
     pub find_open: bool,
     pub find_query: String,
@@ -1797,6 +1804,9 @@ impl BrowserChromeController {
             BrowserChromeEvent::ToggleBookmark if session.history().current_url().is_some() => {
                 Some(BrowserChromeAction::ToggleCurrentBookmark)
             }
+            BrowserChromeEvent::CopyAddress if session.history().current_url().is_some() => {
+                Some(BrowserChromeAction::CopyPageAddress)
+            }
             BrowserChromeEvent::ViewSource if session.viewport().is_some() => {
                 Some(BrowserChromeAction::ViewSource)
             }
@@ -1817,6 +1827,7 @@ impl BrowserChromeController {
                 None
             }
             BrowserChromeEvent::ToggleBookmark
+            | BrowserChromeEvent::CopyAddress
             | BrowserChromeEvent::ViewSource
             | BrowserChromeEvent::FindOpen
             | BrowserChromeEvent::FindChange(_)
@@ -1825,7 +1836,7 @@ impl BrowserChromeController {
         }
     }
 
-    /// Project one coherent snapshot for all six Mosaic chrome slots.
+    /// Project one coherent snapshot for the shared Mosaic chrome slots.
     pub fn props(
         &self,
         session: &BrowserSession,
@@ -1853,6 +1864,7 @@ impl BrowserChromeController {
             }
             .to_string(),
             bookmark_disabled: navigation_disabled || session.history().current_url().is_none(),
+            copy_address_disabled: navigation_disabled || session.history().current_url().is_none(),
             view_source_disabled: navigation_disabled || session.viewport().is_none(),
             find_open: session.find_state().open,
             find_query: session.find_state().query.clone(),
@@ -1969,6 +1981,18 @@ impl BrowserHostController {
                         Err(BrowserCommandError::Bookmark(error))
                     }
                 }
+            }
+            BrowserChromeAction::CopyPageAddress => {
+                let address = self
+                    .session
+                    .history()
+                    .current_url()
+                    .expect("copy-address action requires a committed history entry")
+                    .to_string();
+                self.status_text = "Page address copied".to_string();
+                Ok(BrowserHostEventOutcome::effect(
+                    BrowserHostEffect::WriteClipboard(address),
+                ))
             }
             BrowserChromeAction::ViewSource => {
                 let page = self
@@ -6959,6 +6983,7 @@ mod tests {
                 forward_disabled: true,
                 bookmark_label: "Bookmark".into(),
                 bookmark_disabled: true,
+                copy_address_disabled: true,
                 view_source_disabled: true,
                 find_open: false,
                 find_query: String::new(),
@@ -7016,6 +7041,7 @@ mod tests {
                 forward_disabled: true,
                 bookmark_label: "Bookmark".into(),
                 bookmark_disabled: false,
+                copy_address_disabled: false,
                 view_source_disabled: false,
                 find_open: false,
                 find_query: String::new(),
@@ -7044,6 +7070,7 @@ mod tests {
         assert!(disabled.back_disabled);
         assert!(disabled.forward_disabled);
         assert!(disabled.bookmark_disabled);
+        assert!(disabled.copy_address_disabled);
         assert!(disabled.view_source_disabled);
         assert!(disabled.find_disabled);
         assert!(disabled.navigation_disabled);
@@ -7174,6 +7201,7 @@ mod tests {
             BrowserChromeEvent::Home,
             BrowserChromeEvent::Reload,
             BrowserChromeEvent::ToggleBookmark,
+            BrowserChromeEvent::CopyAddress,
             BrowserChromeEvent::ViewSource,
             BrowserChromeEvent::FindOpen,
             BrowserChromeEvent::FindChange(String::new()),
@@ -7296,6 +7324,25 @@ mod tests {
             .unwrap();
         let mut host = BrowserHostController::new(session);
         let mut bookmarks = MemoryBookmarkRepository::default();
+
+        host.handle_event_with_effect(
+            BrowserChromeEvent::AddressChange("http://draft.test/not-committed".into()),
+            &mut bookmarks,
+            |_, _| unreachable!("editing the address draft must not navigate"),
+        )
+        .unwrap();
+
+        let copied = host
+            .handle_event_with_effect(BrowserChromeEvent::CopyAddress, &mut bookmarks, |_, _| {
+                unreachable!("copy address must not navigate or refetch")
+            })
+            .unwrap();
+        assert!(!copied.changed);
+        assert_eq!(
+            copied.effect,
+            Some(BrowserHostEffect::WriteClipboard(url.to_string()))
+        );
+        assert_eq!(host.props().status_text, "Page address copied");
 
         let outcome = host
             .handle_event_with_effect(BrowserChromeEvent::ViewSource, &mut bookmarks, |_, _| {

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C107-marunnu",
+    "language": "malayalam",
+    "chapter": 107,
+    "sequence": 3900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:372bfeeb6ebe2aab"
+  },
+  "findings": []
+}

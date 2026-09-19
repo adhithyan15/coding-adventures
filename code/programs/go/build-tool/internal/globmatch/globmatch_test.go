@@ -1,6 +1,9 @@
 package globmatch
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 func TestMatchPath(t *testing.T) {
 	tests := []struct {
@@ -62,13 +65,23 @@ func TestMatchPath(t *testing.T) {
 		{"*.[ch]", "foo.c", true},
 		{"*.[ch]", "foo.h", true},
 		{"*.[ch]", "foo.py", false},
+		{"[!a]eta.txt", "beta.txt", true},
+		{"[!a]eta.txt", "aeta.txt", false},
+		{"[^a].txt", "^.txt", true},
+		{"[^a].txt", "b.txt", false},
+		{"[]a].txt", "].txt", true},
+		{"[-a].txt", "-.txt", true},
+		{"[a-].txt", "-.txt", true},
+		{"[a-c].txt", "b.txt", true},
+		{"[", "[", true},
+		{"prefix[", "prefix[", true},
 
 		// ── Edge cases ───────────────────────────────────────────
-		{"", "", true},       // empty matches empty
-		{"", "a", false},     // empty pattern doesn't match non-empty
-		{"a", "", false},     // non-empty pattern doesn't match empty
-		{"*", "", false},     // * needs at least one character in a segment
-		{"**", "", true},     // ** can match zero segments
+		{"", "", true},   // empty matches empty
+		{"", "a", false}, // empty pattern doesn't match non-empty
+		{"a", "", false}, // non-empty pattern doesn't match empty
+		{"*", "", false}, // * needs at least one character in a segment
+		{"**", "", true}, // ** can match zero segments
 		{"a/b/c", "a/b/c", true},
 		{"a/b/c", "a/b/d", false},
 
@@ -100,8 +113,8 @@ func TestSplitPath(t *testing.T) {
 		{"", 0},
 		{"a", 1},
 		{"a/b/c", 3},
-		{"/a/b/", 2},    // leading/trailing slashes ignored
-		{"a//b", 2},      // double slashes collapsed
+		{"/a/b/", 2}, // leading/trailing slashes ignored
+		{"a//b", 2},  // double slashes collapsed
 	}
 
 	for _, tt := range tests {
@@ -110,5 +123,20 @@ func TestSplitPath(t *testing.T) {
 			t.Errorf("splitPath(%q) returned %d segments, want %d: %v",
 				tt.input, len(got), tt.want, got)
 		}
+	}
+}
+
+func TestGlobstarNearMissVisitsEachStateAtMostOnce(t *testing.T) {
+	pattern := strings.TrimSuffix(strings.Repeat("**/a/", 12), "/") + "/z"
+	path := strings.TrimSuffix(strings.Repeat("a/", 24), "/") + "/y"
+	patternParts := splitPath(pattern)
+	pathParts := splitPath(path)
+	matched, visited := matchSegmentsWithVisitCount(patternParts, pathParts)
+	if matched {
+		t.Fatal("adversarial near miss unexpectedly matched")
+	}
+	maxStates := (len(patternParts) + 1) * (len(pathParts) + 1)
+	if visited > maxStates {
+		t.Fatalf("visited %d states, want at most %d", visited, maxStates)
 	}
 }
