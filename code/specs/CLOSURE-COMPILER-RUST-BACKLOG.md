@@ -2,7 +2,10 @@
 
 **Status:** active  
 **Last reprioritized:** 2026-09-19  
-**Current selection:** CCR-001, Windows-native absolute glob expansion  
+**Current selection:** CCR-002, fail closed on incomplete SIMPLE/ADVANCED
+compilation ([#15534](https://github.com/adhithyan15/coding-adventures/issues/15534))<br>
+**Current local loop base:** `coding-adventures` at
+`a31b2ccc1a97917bcac70ac4b4b921a4c4dfb095`<br>
 **Local audit base:** `coding-adventures` at `06fc0524051a397ccc53c628b08c019b2bbf75ba`  
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
@@ -31,25 +34,33 @@ remain the design and historical slicing record.
 The present implementation has a strong WHITESPACE_ONLY formatter, a real but
 partial SIMPLE/ADVANCED typed pipeline, and a large curated golden corpus. It
 is **not yet a drop-in Closure replacement**: successful flag parsing often
-does not imply semantics, unsupported typed syntax can fall back to whitespace
-minification, BUNDLE and TRANSPILE_ONLY are identity operations, emitted source
-maps are placeholders, the type checker is a passthrough scaffold, and
-collapse-properties does not mutate the program.
+does not imply semantics, unsupported typed syntax now fails closed rather than
+silently weakening output, BUNDLE and TRANSPILE_ONLY are identity operations,
+emitted source maps are placeholders, the type checker is a passthrough
+scaffold, and collapse-properties does not mutate the program.
 
 ## Evidence captured by the 2026-09-19 audit
 
 ### Local implementation
 
-- `closurec` is version `0.240.0` and declares 111 flags in `cli.spec.json`.
+- `closurec` is version `0.242.0` and declares 111 flags in `cli.spec.json`.
 - All 462 curated differential fixtures match their checked-in expected bytes.
   Most WHITESPACE_ONLY fixtures cite Closure `v20240317`; newer SIMPLE fixtures
   cite `v20260712`, so the corpus does not yet share one current oracle pin.
 - The conformance suite has 24 declared cases: 19 compare values and five are
   explicit unsupported-syntax declines. All three harness tests pass.
 - Both correlation-vector provenance tests pass.
-- On Windows, `cargo test --no-fail-fast` runs every later integration target
-  successfully but reports six unit failures. Every failure is an absolute
-  glob expansion returning `GlobError::NoMatches`; CCR-001 owns this defect.
+- CCR-001 fixed Windows-native absolute, drive-rooted, UNC, and
+  mixed-separator glob expansion in [#15529](https://github.com/adhithyan15/coding-adventures/pull/15529).
+  Its full Windows validation passed all 688 unit tests and every integration
+  target before CI passed on Windows, macOS, and Ubuntu.
+- A fresh `v20260915` oracle probe found a false-success compilation defect:
+  upstream rejects malformed `var = ;` with exit 1, `JSC_PARSE_ERROR`, and no
+  output, while `closurec --compilation_level SIMPLE` exits 0 and emits
+  `var=;`. For destructuring that upstream compiles successfully, `closurec`
+  silently emits whitespace-only output after the typed bridge declines it.
+  The exact oracle hash and reproduction are tracked in
+  [#15534](https://github.com/adhithyan15/coding-adventures/issues/15534).
 - The AST covers the main statement and expression families, including
   classes, modules, optional chains, generators, templates, and async nodes.
   Binding targets remain identifier-only, so destructuring and several
@@ -138,8 +149,8 @@ scope.
 
 | Rank | ID | Work item | Acceptance evidence | Status |
 |---:|---|---|---|---|
-| 1 | CCR-001 | Make absolute and relative `--js` globs use native Windows separators and roots without regressing POSIX behavior. | The six Windows failures pass; focused mixed-separator, exclusion, `*`, and `**` tests pass; full `closurec` suite is green on Windows. | Implemented; awaiting PR |
-| 2 | CCR-002 | Replace silent SIMPLE/ADVANCED typed-pipeline fallback with an explicit compatibility policy. Unsupported syntax must either be a hard error or an opt-in, diagnostic-bearing fallback. | Differential tests prove exit code, stderr, and output for parse, bridge, pass, and emit failures. | Ready |
+| 1 | CCR-001 | Make absolute and relative `--js` globs use native Windows separators and roots without regressing POSIX behavior. | The six Windows failures pass; focused mixed-separator, exclusion, `*`, and `**` tests pass; full `closurec` suite is green on Windows. | Complete — [#15529](https://github.com/adhithyan15/coding-adventures/pull/15529) |
+| 2 | CCR-002 | Replace silent SIMPLE/ADVANCED typed-pipeline fallback with an explicit compatibility policy. Unsupported syntax must either be a hard error or an opt-in, diagnostic-bearing fallback. | Differential tests prove exit code, stderr, and output for parse, bridge, pass, and emit failures. | Implemented locally; validation complete — [#15534](https://github.com/adhithyan15/coding-adventures/issues/15534) |
 | 3 | CCR-003 | Establish one reproducible oracle manifest pinned to upstream `v20260915` and commit `10ca677a`. Record Java version, commands, flags, hashes, licensing, and fixture provenance. | Offline manifest verifier passes and every checked-in fixture resolves to one pin and command. | Ready |
 | 4 | CCR-004 | Re-run all 462 golden fixtures against the new oracle, classify drift, and update only reviewed deltas. | Machine-readable report records equal/changed/declined counts and every changed byte has a linked reason. | Blocked by CCR-003 |
 | 5 | CCR-005 | Generate a CLI surface audit from current `CommandLineRunner.java` and `cli.spec.json`, separating upstream, generated, extension, deprecated-alias, and unsupported flags. | CI fails on unclassified flag drift; canonical `--typed_ast_output_file` is accepted with tested compatibility for the legacy typo. | Ready |
@@ -159,45 +170,46 @@ scope.
 | 14 | CCR-014 | Integrate the type checker's first real vertical slice: primitive literals, variables, assignments, calls, returns, and JSDoc annotations. | Diagnostics have stable groups/locations; upstream TypeCheck tests for the slice pass; `checks_only` emits no JS. | Ready |
 | 15 | CCR-015 | Implement diagnostics plumbing: levels, groups, warnings guards, error formatting, counts, JSON/error streams, and exit codes. | `--jscomp_*`, formatting, hide-warnings, summary detail, and output streams match selected CommandLineRunner tests. | Ready |
 | 16 | CCR-016 | Replace minimal numeric printing with a shortest-round-trip algorithm and audit special numeric property keys. | Exhaustive boundary/property tests plus upstream CodePrinter numeric vectors close residual CLOC12 numeric gaps. | Ready |
+| 17 | CCR-041 | Derive correlation-vector pass inventory from the scheduler's actual execution order instead of parallel constants. SIMPLE currently reports `inline` even though that pass is only registered for ADVANCED. | SIMPLE and ADVANCED provenance tests prove that every reported pass actually ran and that conditional passes appear only when scheduled. | Ready — [#15542](https://github.com/adhithyan15/coding-adventures/issues/15542) |
 
 ### P2 — strengthen SIMPLE and ADVANCED optimization semantics
 
 | Rank | ID | Work item | Acceptance evidence | Status |
 |---:|---|---|---|---|
-| 17 | CCR-017 | Implement collapse-properties mutation with namespace safety, alias, extern, getter/setter, and dynamic-access guards. | Ported `CollapsePropertiesTest` slices pass and fixed-point termination is proven. | Ready |
-| 18 | CCR-018 | Audit remove-unused-vars for nested scopes, exports, destructuring, side effects, classes, and module bindings; implement missing cases. | Ported `RemoveUnusedVarsTest` slices and runtime-effect tests pass. | Ready |
-| 19 | CCR-019 | Expand constant folding/peephole coverage and refresh its upstream pin. | All selected current `Peephole*` vectors are ported, passing, ignored with gap IDs, or skipped with reasons. | Survey |
-| 20 | CCR-020 | Expand control-flow folding and DCE for switch/try/finally/labels/loops/throw and unreachable lexical declarations. | Ported peephole/remove-dead tests plus runtime-equivalence tests pass. | Ready |
-| 21 | CCR-021 | Expand function/variable inlining with escape, recursion, evaluation-order, `this`, `arguments`, async/generator, and multi-statement safety. | Current upstream Inline test inventory is classified and selected cases pass. | Survey |
-| 22 | CCR-022 | Complete variable/global/property/label renaming semantics, maps, stable names, extern protection, reserved names, and shadowing. | Rename test families pass; input/output map round trips are deterministic. | Ready |
-| 23 | CCR-023 | Add missing ADVANCED passes in dependency order: normalization, call optimization, constructor optimization, dead assignments, devirtualization, property disambiguation/ambiguation, and final denormalization. | Each pass lands with a ported upstream slice and pipeline-order invariant. | Survey |
-| 24 | CCR-024 | Make pass configuration reflect upstream compilation levels and relevant option interactions instead of a fixed local list. | Generated schedule snapshots and end-to-end flag interaction tests match the pinned upstream configuration. | Blocked by CCR-015 and CCR-023 |
+| 18 | CCR-017 | Implement collapse-properties mutation with namespace safety, alias, extern, getter/setter, and dynamic-access guards. | Ported `CollapsePropertiesTest` slices pass and fixed-point termination is proven. | Ready |
+| 19 | CCR-018 | Audit remove-unused-vars for nested scopes, exports, destructuring, side effects, classes, and module bindings; implement missing cases. | Ported `RemoveUnusedVarsTest` slices and runtime-effect tests pass. | Ready |
+| 20 | CCR-019 | Expand constant folding/peephole coverage and refresh its upstream pin. | All selected current `Peephole*` vectors are ported, passing, ignored with gap IDs, or skipped with reasons. | Survey |
+| 21 | CCR-020 | Expand control-flow folding and DCE for switch/try/finally/labels/loops/throw and unreachable lexical declarations. | Ported peephole/remove-dead tests plus runtime-equivalence tests pass. | Ready |
+| 22 | CCR-021 | Expand function/variable inlining with escape, recursion, evaluation-order, `this`, `arguments`, async/generator, and multi-statement safety. | Current upstream Inline test inventory is classified and selected cases pass. | Survey |
+| 23 | CCR-022 | Complete variable/global/property/label renaming semantics, maps, stable names, extern protection, reserved names, and shadowing. | Rename test families pass; input/output map round trips are deterministic. | Ready |
+| 24 | CCR-023 | Add missing ADVANCED passes in dependency order: normalization, call optimization, constructor optimization, dead assignments, devirtualization, property disambiguation/ambiguation, and final denormalization. | Each pass lands with a ported upstream slice and pipeline-order invariant. | Survey |
+| 25 | CCR-024 | Make pass configuration reflect upstream compilation levels and relevant option interactions instead of a fixed local list. | Generated schedule snapshots and end-to-end flag interaction tests match the pinned upstream configuration. | Blocked by CCR-015 and CCR-023 |
 
 ### P3 — real build-graph and Closure workflows
 
 | Rank | ID | Work item | Acceptance evidence | Status |
 |---:|---|---|---|---|
-| 25 | CCR-025 | Implement dependency modes, entry points, `goog.provide`/`goog.require`, CommonJS processing, and ES module resolution/rewriting. | Multi-file graph fixtures match order, pruning, diagnostics, and output. | Ready |
-| 26 | CCR-026 | Implement chunks/modules, chunk wrappers, chunk maps, output prefixes, weak chunks, and cross-chunk motion. | DAG validation and selected upstream Chunk/Module tests pass on all hosts. | Blocked by CCR-025 |
-| 27 | CCR-027 | Make BUNDLE a real bundling mode with module resolution, ordering, wrappers, source maps, and diagnostics. | A representative multi-module application bundles and runs equivalently to upstream. | Blocked by CCR-025 and CCR-007 |
-| 28 | CCR-028 | Complete extern ingestion and built-in environment selection, including browser/custom extern interactions. | Extern diagnostics and property/variable protection match upstream cases. | Ready |
-| 29 | CCR-029 | Implement polyfill isolation/injection/rewrite and runtime-library selection. | Output and runtime behavior match upstream across language-out modes. | Blocked by CCR-009 |
-| 30 | CCR-030 | Implement manifests, dependency graphs, variable/property maps, renaming reports, exports, and name-reference reports. | Every report has deterministic golden and round-trip tests. | Blocked by CCR-022 and CCR-025 |
-| 31 | CCR-031 | Implement JSON input/output streams and stdin/stdout composition without mixing diagnostics into data streams. | Pipeline and malformed-stream tests match upstream exit/status behavior. | Blocked by CCR-015 |
+| 26 | CCR-025 | Implement dependency modes, entry points, `goog.provide`/`goog.require`, CommonJS processing, and ES module resolution/rewriting. | Multi-file graph fixtures match order, pruning, diagnostics, and output. | Ready |
+| 27 | CCR-026 | Implement chunks/modules, chunk wrappers, chunk maps, output prefixes, weak chunks, and cross-chunk motion. | DAG validation and selected upstream Chunk/Module tests pass on all hosts. | Blocked by CCR-025 |
+| 28 | CCR-027 | Make BUNDLE a real bundling mode with module resolution, ordering, wrappers, source maps, and diagnostics. | A representative multi-module application bundles and runs equivalently to upstream. | Blocked by CCR-025 and CCR-007 |
+| 29 | CCR-028 | Complete extern ingestion and built-in environment selection, including browser/custom extern interactions. | Extern diagnostics and property/variable protection match upstream cases. | Ready |
+| 30 | CCR-029 | Implement polyfill isolation/injection/rewrite and runtime-library selection. | Output and runtime behavior match upstream across language-out modes. | Blocked by CCR-009 |
+| 31 | CCR-030 | Implement manifests, dependency graphs, variable/property maps, renaming reports, exports, and name-reference reports. | Every report has deterministic golden and round-trip tests. | Blocked by CCR-022 and CCR-025 |
+| 32 | CCR-031 | Implement JSON input/output streams and stdin/stdout composition without mixing diagnostics into data streams. | Pipeline and malformed-stream tests match upstream exit/status behavior. | Blocked by CCR-015 |
 
 ### P4 — checks, policy, specialized passes, and operational proof
 
 | Rank | ID | Work item | Acceptance evidence | Status |
 |---:|---|---|---|---|
-| 32 | CCR-032 | Implement the JS conformance framework: config parsing, allow/deny lists, requirement matching, diagnostics, and reporting. | Selected upstream `Conformance*Test` cases pass and local five declines are reviewed. | Blocked by CCR-014 and CCR-015 |
-| 33 | CCR-033 | Add remaining checks in measured slices: variables, modules, JSDoc, strict mode, control flow, access controls, suspicious code, and side effects. | Each check has a diagnostic group and current upstream test slice. | Survey |
-| 34 | CCR-034 | Implement specialized passes only after core workflows: Angular/Polymer/J2CL, Closure primitives, CSS/ID replacement, define/tweak processing, message replacement, and translation bundles. | Each accepted flag gains end-to-end semantics or an explicit unsupported error. | Blocked by CCR-024 |
-| 35 | CCR-035 | Implement instrumentation and coverage-array modes with source-map and optimization interaction tests. | Instrumented output executes and reports the same covered regions as upstream fixtures. | Blocked by CCR-007 and CCR-024 |
-| 36 | CCR-036 | Add typed-AST serialization/deserialization using the canonical flag and versioned format; decide compatibility boundary with upstream protobuf. | Round trip preserves the supported AST and rejects incompatible versions safely. | Blocked by CCR-013 and CCR-014 |
-| 37 | CCR-037 | Build a continuously generated upstream test-coverage ledger for all 395 audited test files. | Every file is ported, partially ported, blocked by a gap, or skipped with a reviewed reason and upstream hash. | Ready |
-| 38 | CCR-038 | Add deterministic fuzz/property testing for lexer/parser/emitter round trips, pass idempotence, glob/resource bounds, and source maps. | Fixed seeds reproduce failures; corpora run on all supported hosts under explicit budgets. | Blocked by CCR-007 and CCR-013 |
-| 39 | CCR-039 | Measure performance and memory against upstream on small, medium, and large real projects; optimize only profiled bottlenecks. | Published reproducible benchmark, peak-memory, and output-size report with regression budgets. | Blocked by CCR-024 and CCR-027 |
-| 40 | CCR-040 | Run a real-world migration trial and publish the remaining incompatibility ledger. | Build, runtime, diagnostics, artifacts, maps, and performance are compared against the same upstream pin on all three hosts. | Blocked by core P0-P3 work |
+| 33 | CCR-032 | Implement the JS conformance framework: config parsing, allow/deny lists, requirement matching, diagnostics, and reporting. | Selected upstream `Conformance*Test` cases pass and local five declines are reviewed. | Blocked by CCR-014 and CCR-015 |
+| 34 | CCR-033 | Add remaining checks in measured slices: variables, modules, JSDoc, strict mode, control flow, access controls, suspicious code, and side effects. | Each check has a diagnostic group and current upstream test slice. | Survey |
+| 35 | CCR-034 | Implement specialized passes only after core workflows: Angular/Polymer/J2CL, Closure primitives, CSS/ID replacement, define/tweak processing, message replacement, and translation bundles. | Each accepted flag gains end-to-end semantics or an explicit unsupported error. | Blocked by CCR-024 |
+| 36 | CCR-035 | Implement instrumentation and coverage-array modes with source-map and optimization interaction tests. | Instrumented output executes and reports the same covered regions as upstream fixtures. | Blocked by CCR-007 and CCR-024 |
+| 37 | CCR-036 | Add typed-AST serialization/deserialization using the canonical flag and versioned format; decide compatibility boundary with upstream protobuf. | Round trip preserves the supported AST and rejects incompatible versions safely. | Blocked by CCR-013 and CCR-014 |
+| 38 | CCR-037 | Build a continuously generated upstream test-coverage ledger for all 395 audited test files. | Every file is ported, partially ported, blocked by a gap, or skipped with a reviewed reason and upstream hash. | Ready |
+| 39 | CCR-038 | Add deterministic fuzz/property testing for lexer/parser/emitter round trips, pass idempotence, glob/resource bounds, and source maps. | Fixed seeds reproduce failures; corpora run on all supported hosts under explicit budgets. | Blocked by CCR-007 and CCR-013 |
+| 40 | CCR-039 | Measure performance and memory against upstream on small, medium, and large real projects; optimize only profiled bottlenecks. | Published reproducible benchmark, peak-memory, and output-size report with regression budgets. | Blocked by CCR-024 and CCR-027 |
+| 41 | CCR-040 | Run a real-world migration trial and publish the remaining incompatibility ledger. | Build, runtime, diagnostics, artifacts, maps, and performance are compared against the same upstream pin on all three hosts. | Blocked by core P0-P3 work |
 
 ## Loop record
 
@@ -208,3 +220,5 @@ the loop moved.
 |---|---|---|
 | 2026-09-19 | Initial code/upstream audit. Full Windows test run found six failures sharing one root cause; no open Closure/CLOC PRs were found. | Selected CCR-001 because broken cross-platform tests and unusable native absolute globs outrank semantic expansion. |
 | 2026-09-19 | CCR-001 implementation verified locally: all 688 unit tests and every integration target pass under `--no-fail-fast` on Windows. | Keep CCR-001 selected until its PR is green and merged; then re-fetch, record completion, and reprioritize the full queue. |
+| 2026-09-19 | CCR-001 merged as [#15529](https://github.com/adhithyan15/coding-adventures/pull/15529) at `a31b2ccc`; upstream remained at commit `10ca677a` and release `v20260915`. Direct oracle probing then proved malformed input exits 1 upstream but exits 0 with emitted JS locally, and proved typed-bridge declines silently weaken SIMPLE output. | Selected CCR-002 ([#15534](https://github.com/adhithyan15/coding-adventures/issues/15534)). A false-success compiler result outranks oracle infrastructure and all semantic expansion work under priority rule 2. |
+| 2026-09-19 | While implementing CCR-002, inspection found that SIMPLE correlation-vector provenance reports `inline` although the scheduler registers that pass only for ADVANCED; logged as CCR-041 ([#15542](https://github.com/adhithyan15/coding-adventures/issues/15542)). CCR-002's complete package suite passed after implementing explicit typed-pipeline errors. | Kept CCR-002 selected because false-success output remains the highest-priority open defect until merged. Ranked CCR-041 after front-end/output correctness work and before broader optimization expansion because inaccurate provenance impairs later parity measurement but does not change emitted JavaScript. |
