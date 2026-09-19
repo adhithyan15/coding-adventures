@@ -150,7 +150,7 @@ class CorpusTests(unittest.TestCase):
 
         self.assertEqual(summary["schema_version"], 1)
         # Keep this pin in sync with every reviewed shared-corpus addition.
-        self.assertEqual(summary["case_count"], 149)
+        self.assertEqual(summary["case_count"], 151)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -2363,6 +2363,11 @@ class PureDomainValidationTests(unittest.TestCase):
             ),
         }
 
+    def _result_schema_args(self) -> dict[str, object]:
+        arguments = self._schema_args()
+        arguments.pop("case_schema")
+        return arguments
+
     def test_cli_parser_normalizes_defaults_and_typed_values(self) -> None:
         parsed, diagnostic = runner._parse_cli_argv(
             [
@@ -3343,12 +3348,13 @@ class PureDomainValidationTests(unittest.TestCase):
         near_path["input"]["changed_paths"] = [
             "code/packages/rust/Cargo.toml.backup"
         ]
-        self.assertIsNone(
+        self.assertEqual(
             runner._expected_diff_selection(
                 near_path["input"]["options"],
                 near_path["input"]["changed_paths"],
                 boundary,
-            )
+            ),
+            "DIFF_UNKNOWN_PATH",
         )
 
     def test_hashing_cache_sorts_local_and_boundary_union_by_raw_utf8(self) -> None:
@@ -3435,6 +3441,141 @@ class PureDomainValidationTests(unittest.TestCase):
         with self.assertRaises(runner.ConformanceError) as raised:
             runner.validate_case_document(dishonest, **self._schema_args())
         self.assertEqual(raised.exception.code, "EXPECTED_DIFF_UNKNOWN_PATH_INVALID")
+
+    def test_diff_selection_match_work_ceiling(self) -> None:
+        at_limit = load_case("diff-selection-match-work-at-limit.json")
+        over_limit = load_case("diff-selection-match-work-over-limit.json")
+        package = at_limit["input"]["options"]["packages"][0]
+        relative_paths = [
+            path.removeprefix("p/")
+            for path in at_limit["input"]["changed_paths"]
+            if path.startswith("p/")
+            and path.rsplit("/", 1)[-1] not in runner.ORPHAN_BUILD_NAMES
+        ]
+
+        self.assertEqual(
+            sum(len(pattern) + 1 for pattern in package["source_globs"]),
+            10_000,
+        )
+        self.assertEqual(len(package["source_globs"]), 21)
+        self.assertEqual(len(relative_paths), 10)
+        self.assertTrue(any("😀" in value for value in package["source_globs"]))
+        self.assertTrue(any("😀" in value for value in relative_paths))
+        self.assertEqual(
+            sum(len(path) + 1 for path in relative_paths) * 10_000,
+            runner.MAX_DIFF_SELECTION_MATCH_WORK,
+        )
+
+        with mock.patch(
+            "build_tool_conformance._portable_glob_matches",
+            wraps=runner._portable_glob_matches,
+        ) as matcher:
+            runner.validate_case_document(at_limit, **self._schema_args())
+        self.assertGreater(matcher.call_count, 0)
+
+        for case in (over_limit, copy.deepcopy(over_limit)):
+            if case is not over_limit:
+                case["input"]["options"]["packages"][0]["source_globs"][0] = "*"
+            with mock.patch(
+                "build_tool_conformance._portable_glob_matches",
+                side_effect=AssertionError("matcher must not run over the ceiling"),
+            ) as matcher:
+                runner.validate_case_document(case, **self._schema_args())
+            matcher.assert_not_called()
+
+        for charged_path in ("p", "p/nested/BUILD.bak"):
+            charged = copy.deepcopy(at_limit)
+            charged["input"]["changed_paths"].append(charged_path)
+            charged["expected"] = copy.deepcopy(over_limit["expected"])
+            charged["expected"]["case_id"] = charged["id"]
+            with mock.patch(
+                "build_tool_conformance._portable_glob_matches",
+                side_effect=AssertionError(
+                    "root and near-BUILD paths must be charged before matching"
+                ),
+            ) as matcher:
+                runner.validate_case_document(charged, **self._schema_args())
+            matcher.assert_not_called()
+
+        unknown_too = copy.deepcopy(over_limit)
+        unknown_too["input"]["changed_paths"].append("outside/unknown.txt")
+        with mock.patch(
+            "build_tool_conformance._portable_glob_matches",
+            side_effect=AssertionError("match limit must precede unknown policy"),
+        ) as matcher:
+            runner.validate_case_document(unknown_too, **self._schema_args())
+        matcher.assert_not_called()
+
+        invalid_glob = copy.deepcopy(over_limit)
+        invalid_glob["input"]["options"]["packages"][0]["source_globs"][0] = "a."
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(invalid_glob, **self._schema_args())
+        self.assertEqual(raised.exception.code, "CASE_NESTED_GLOB_UNSAFE")
+
+        invalid_boundary = copy.deepcopy(over_limit)
+        invalid_boundary["input"]["options"]["boundary_sha256"] = "0" * 64
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(invalid_boundary, **self._schema_args())
+        self.assertEqual(
+            raised.exception.code,
+            "CASE_REPOSITORY_SOURCE_BOUNDARY_DIGEST_MISMATCH",
+        )
+
+    def test_diff_selection_oracle_rejects_wrong_outcomes(self) -> None:
+        success = load_case("diff-selection-transitive.json")
+        dishonest_expected = copy.deepcopy(success)
+        dishonest_expected["expected"] = {
+            "schema_version": 1,
+            "case_id": success["id"],
+            "domain": "diff_selection",
+            "outcome": "error",
+            "result": {},
+            "diagnostics": [{"code": "DIFF_OTHER_ERROR", "severity": "error"}],
+        }
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(
+                dishonest_expected,
+                **self._schema_args(),
+            )
+        self.assertEqual(raised.exception.code, "EXPECTED_DIFF_OUTCOME_INVALID")
+
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.assert_result_matches(
+                success,
+                dishonest_expected["expected"],
+                **self._result_schema_args(),
+            )
+        self.assertEqual(raised.exception.code, "RESULT_DIFF_OUTCOME_INVALID")
+
+        over_limit = load_case("diff-selection-match-work-over-limit.json")
+        wrong_limit_error = copy.deepcopy(over_limit["expected"])
+        wrong_limit_error["diagnostics"] = [
+            {"code": "DIFF_UNKNOWN_PATH", "severity": "error"}
+        ]
+        dishonest_limit = copy.deepcopy(over_limit)
+        dishonest_limit["expected"] = wrong_limit_error
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(dishonest_limit, **self._schema_args())
+        self.assertEqual(
+            raised.exception.code,
+            "EXPECTED_DIFF_MATCH_LIMIT_INVALID",
+        )
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.assert_result_matches(
+                over_limit,
+                wrong_limit_error,
+                **self._result_schema_args(),
+            )
+        self.assertEqual(raised.exception.code, "RESULT_DIFF_MATCH_LIMIT_INVALID")
+
+        warning_limit = copy.deepcopy(over_limit)
+        warning_limit["expected"]["diagnostics"][0]["severity"] = "warning"
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(warning_limit, **self._schema_args())
+        self.assertEqual(
+            raised.exception.code,
+            "EXPECTED_DIFF_MATCH_LIMIT_INVALID",
+        )
 
     def test_semantics_reject_unknown_references_and_bad_oracles(self) -> None:
         pure_schema = runner.load_document(FIXTURE_ROOT / "pure-domains.schema.json")
@@ -3704,7 +3845,7 @@ class CommandLineTests(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
         # This second pin covers the CLI machine-readable summary path.
-        self.assertEqual(summary["case_count"], 149)
+        self.assertEqual(summary["case_count"], 151)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"
