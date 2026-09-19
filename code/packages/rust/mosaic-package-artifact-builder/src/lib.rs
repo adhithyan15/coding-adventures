@@ -8858,10 +8858,9 @@ layout AccessibleText {
                         | Backend::Compose
                         | Backend::Qt
                         | Backend::SwiftUI
+                        | Backend::Xaml
                 ) {
                     0
-                } else if backend == Backend::Xaml {
-                    1 // HostTable still requires native font propagation.
                 } else {
                     4
                 },
