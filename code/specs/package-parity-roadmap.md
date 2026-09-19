@@ -13984,6 +13984,35 @@ retained evidence, analyzer enforcement, and no skip-success path on all three
 targets without promoting OCaml. The reconciled graph has 847 owners and 1,571
 edges: 220 merged, 626 pending, and exactly this owner in progress.
 
+### PR #15668 OCaml representative-chain CI publication
+
+The selected owner is implemented and published as ready-for-review PR #15668
+from exact head `279eeabc97a6b9417b6e93bfa98280a8c8a0618f`. The standalone
+workflow leaves OCAML03 and `ci.yml` unchanged while binding its own exact
+commit-pinned actions, OCaml 5.2.1/opam 2.5.2/Dune 3.17.2 toolchain, odoc 3.0.0,
+three reviewed targets, four-package dependency order, independent analyzer,
+source archives, installed consumers, and retained evidence to a closed
+OCAML07 manifest and validator.
+
+Tests-first local execution ran every real Windows BUILD front for logic-gates,
+graph, directed-graph, and state-machine. Their production coverage is 97.35%,
+97.07%, 98.72%, and 96.64%; release install and warning-clean documentation
+builds pass. The analyzer passes its 29 native test surfaces with 95.19% library
+and 100% CLI coverage and accepts each representative package independently.
+Both consumers pass from a clean copied downstream fixture against installed
+packages, including the leaf-only state-machine link, and exact Windows output
+ends in LF rather than CRLF. Offline contract suites, archive validation,
+neutral build-tool corpus, package-parity collision checks, the 847-owner and
+1,571-edge state graph, Ruff, Bandit, YAML, lessons, and diff hygiene pass.
+
+Parallel reviews and the real local Windows run caught and closed incorrect
+opam 2.5.2 flags, incomplete evidence assertions, warning-scan error masking,
+stale coverage assertions, Windows path conversion for coverage, analyzer, and
+pins, missing native analyzer construction, unformatted downstream sources,
+and CRLF receipt rewriting. No P0/P1 review finding remains. GitHub reports the
+opened head mergeable; checks are pending, so guarded auto-merge is not yet
+enabled and no second parity implementation may begin.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
