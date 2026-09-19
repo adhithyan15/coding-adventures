@@ -8,6 +8,14 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — native `HostNavigationSplit` lowering (UI29-6, #15481)
+
+`HostNavigationSplit` now emits SwiftUI's `NavigationSplitView`, preserving
+the required pane/detail order, pane title, preferred pane width, and native
+compact-width adaptation. `collapse: never` supplies a constant `.all` column
+visibility binding. A native-complete fixture is compiled by both SwiftPM and
+the iOS Xcode toolchain in CI.
+
 ### Added — `HostButton` `selected` lowers to the `.isSelected` trait (UI86, #15420)
 
 `selected : …` adds `.accessibilityAddTraits(_mosaicSelectedTraits(…))`,
