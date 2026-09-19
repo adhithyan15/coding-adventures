@@ -1,7 +1,10 @@
-## HL-C410 — two backlog entries share the id HL-C409, and the append-only rule means neither can be renamed
+## HL-C411 — two backlog entries share the id HL-C409, and the append-only rule means neither can be renamed
 
 **Status: OPEN.** Two entries in this directory carry the ordinal `04980` and
 the id `HL-C409`:
+
+**Numbering note:** active PR #15593 already reserves `HL-C410`, so this entry
+takes the next free id, `HL-C411`, instead of recreating the same race.
 
 | file | subject | merged by |
 |---|---|---|
