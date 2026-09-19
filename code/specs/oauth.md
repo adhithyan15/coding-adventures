@@ -281,7 +281,19 @@ The delivery order is:
    revision-bound atomic rotation. Profile mismatch fails before credential
    access, while signing, transport, clock, release, and compare-and-swap
    failures preserve the prior record. This enables neither a concrete signing
-   algorithm nor network authority. A client-secret usable-access composition
+   algorithm nor network authority. Public-client refresh-token detach is now
+   shipped for the retained `none` profile: the exact opaque account key binds
+   the registered provider and credential record, and the retained public
+   authentication profile plus explicit revocation endpoint are validated
+   before credential access. Custody releases that record's refresh token and
+   revision into a zeroizing RFC 7009 request containing the registered client
+   ID; injected transport and bounded response classification remain separately
+   audited with the same provider and trace. Local deletion is conditional on
+   exact HTTP 200 and the original revision, so confidential-profile mismatch,
+   missing data, transport or provider failure, and stale revision all retain
+   the credential. This boundary adds no access-token fallback, concrete
+   transport, provider-specific data, or external dependency. A client-secret
+   usable-access composition
    now validates the exact retained Basic/Post method and provider-bound secret
    key before credential or clock access. Still-fresh credentials invoke no
    secret or transport authority; due credentials cross the existing audited

@@ -476,6 +476,15 @@ pub trait OAuthTokenTransport {
     ) -> Result<TokenEndpointResponse, TokenTransportError>;
 }
 
+/// Authorized provider-neutral transport for one public-client RFC 7009 request.
+pub trait OAuthTokenRevocationTransport {
+    /// Send one already validated zeroizing public-client revocation request.
+    fn send_revocation(
+        &mut self,
+        request: &TokenRevocationRequest,
+    ) -> Result<TokenRevocationEndpointResponse, TokenTransportError>;
+}
+
 /// Authorized provider-neutral transport for one client-secret-authenticated refresh.
 pub trait OAuthClientSecretTokenTransport {
     /// Send one custody-built, zeroizing authenticated refresh request.
@@ -968,8 +977,12 @@ pub enum BrokerAuditAction {
     ClientSecretExchange,
     /// Authenticate, send, and classify one client-secret RFC 7009 revocation.
     ClientSecretRevocation,
+    /// Send and classify one public-client RFC 7009 revocation.
+    PublicRevocation,
     /// Revoke one stored token, then delete its exact credential revision.
     ClientSecretRevocationCredentialDelete,
+    /// Revoke one public-client refresh token, then delete its exact revision.
+    PublicRevocationCredentialDelete,
     /// Revoke through private-key JWT, then delete the exact credential revision.
     PrivateKeyJwtRevocationCredentialDelete,
     /// Exchange and persist one client-secret-authenticated credential response.
@@ -2599,6 +2612,42 @@ impl<S: CredentialStore> OAuthBroker<S> {
         )
     }
 
+    /// Send and classify one public-client RFC 7009 revocation.
+    ///
+    /// The registered provider's exact client ID, revocation endpoint, and
+    /// retained public `none` profile are checked before the injected
+    /// transport is invoked. The broker audit-brackets that effect, and the
+    /// OAuth core audit-gates response classification. This operation does not
+    /// delete any local credential.
+    pub fn send_public_revocation<T, A>(
+        &self,
+        request: TokenRevocationRequest,
+        transport: &mut T,
+        audit: &mut A,
+    ) -> Result<TokenRevocationResponse, BrokerError>
+    where
+        T: OAuthTokenRevocationTransport,
+        A: BrokerAuditSink + OAuthAuditSink,
+    {
+        let provider = request.provider().clone();
+        let trace = request.trace();
+        publish_broker(
+            audit,
+            &provider,
+            trace,
+            BrokerAuditAction::PublicRevocation,
+            BrokerAuditOutcome::Attempted,
+        )?;
+        let result = self.send_public_revocation_inner(request, transport, audit);
+        finish_broker(
+            audit,
+            &provider,
+            trace,
+            BrokerAuditAction::PublicRevocation,
+            result,
+        )
+    }
+
     /// Authenticate, send, and classify one client-secret RFC 7009 revocation.
     ///
     /// The registered provider's exact client ID, revocation endpoint, and
@@ -2641,6 +2690,72 @@ impl<S: CredentialStore> OAuthBroker<S> {
             &provider,
             trace,
             BrokerAuditAction::ClientSecretRevocation,
+            result,
+        )
+    }
+
+    /// Revoke one public credential's exact stored refresh token, then delete it.
+    ///
+    /// The opaque account key selects both the registered provider and the
+    /// credential record. Retained public-client policy and the explicit
+    /// revocation endpoint are checked before credential access. Custody then
+    /// releases that record's refresh token and exact revision into a
+    /// zeroizing RFC 7009 request. Local deletion is reachable only after
+    /// exact HTTP 200 has passed the transport, OAuth response, and broker
+    /// audit gates; every other outcome leaves the credential record intact.
+    pub fn revoke_public_refresh_token_and_delete_credentials<T, A>(
+        &self,
+        key: &CredentialKey,
+        trace: OAuthTraceId,
+        transport: &mut T,
+        audit: &mut A,
+    ) -> Result<(), BrokerError>
+    where
+        T: OAuthTokenRevocationTransport,
+        A: OAuthBrokerAuditSink,
+    {
+        let provider_id = key.provider().clone();
+        publish_broker(
+            audit,
+            &provider_id,
+            trace,
+            BrokerAuditAction::PublicRevocationCredentialDelete,
+            BrokerAuditOutcome::Attempted,
+        )?;
+        let result = (|| {
+            let provider = self.registered_provider(&provider_id)?.clone();
+            if provider.confidential_authentication_method().is_some()
+                || provider.config().revocation_endpoint().is_none()
+            {
+                return Err(BrokerError::BindingMismatch);
+            }
+            let (token, revision) = self
+                .custody
+                .with_refresh_token(key, trace, audit, |token, revision| {
+                    (Zeroizing::new(token.to_owned()), revision)
+                })
+                .map_err(map_custody_error)?;
+            let request = prepare_token_revocation(
+                provider.config(),
+                token,
+                RevocationTokenHint::RefreshToken,
+                trace,
+            )
+            .publish_then_release(audit)
+            .map_err(map_oauth_error)?;
+            let response = self.send_public_revocation(request, transport, audit)?;
+            if response.provider() != &provider_id || response.trace() != trace {
+                return Err(BrokerError::BindingMismatch);
+            }
+            self.custody
+                .delete(key, revision, trace, audit)
+                .map_err(map_custody_error)
+        })();
+        finish_broker(
+            audit,
+            &provider_id,
+            trace,
+            BrokerAuditAction::PublicRevocationCredentialDelete,
             result,
         )
     }
@@ -4335,6 +4450,31 @@ impl<S: CredentialStore> OAuthBroker<S> {
         Ok(provider)
     }
 
+    fn send_public_revocation_inner<T, A>(
+        &self,
+        request: TokenRevocationRequest,
+        transport: &mut T,
+        audit: &mut A,
+    ) -> Result<TokenRevocationResponse, BrokerError>
+    where
+        T: OAuthTokenRevocationTransport,
+        A: BrokerAuditSink + OAuthAuditSink,
+    {
+        let provider = self.registered_provider(request.provider())?;
+        if provider.confidential_authentication_method().is_some()
+            || request.client_id() != provider.config().client_id()
+            || Some(request.endpoint()) != provider.config().revocation_endpoint()
+        {
+            return Err(BrokerError::BindingMismatch);
+        }
+        let context = request.response_context();
+        let wire_response = send_public_revocation_audited(transport, &request, audit)?;
+        let (status, body) = wire_response.into_parts();
+        decode_token_revocation_response(context, status, body)
+            .publish_then_release(audit)
+            .map_err(map_oauth_error)
+    }
+
     fn send_client_secret_revocation_inner<SS, T, A>(
         &self,
         authentication: &ClientSecretAuthentication,
@@ -4640,6 +4780,30 @@ fn send_client_secret_revocation_audited<
     )
 }
 
+fn send_public_revocation_audited<T: OAuthTokenRevocationTransport, A: BrokerAuditSink>(
+    transport: &mut T,
+    request: &TokenRevocationRequest,
+    audit: &mut A,
+) -> Result<TokenRevocationEndpointResponse, BrokerError> {
+    publish_broker(
+        audit,
+        request.provider(),
+        request.trace(),
+        BrokerAuditAction::TokenRevocationTransport,
+        BrokerAuditOutcome::Attempted,
+    )?;
+    let result = transport
+        .send_revocation(request)
+        .map_err(|_| BrokerError::Transport);
+    finish_broker(
+        audit,
+        request.provider(),
+        request.trace(),
+        BrokerAuditAction::TokenRevocationTransport,
+        result,
+    )
+}
+
 fn send_device_authorization_audited<T: OAuthDeviceAuthorizationTransport, A: BrokerAuditSink>(
     transport: &mut T,
     request: &DeviceAuthorizationRequest,
@@ -4777,7 +4941,8 @@ mod tests {
     };
     use coding_adventures_oauth_credential_custody::{
         AccountId, CredentialAuditAction, CredentialAuditError, CredentialAuditEvent,
-        CredentialAuditOutcome, InMemoryCredentialStore,
+        CredentialAuditOutcome, CredentialRecord, CredentialStoreError, InMemoryCredentialStore,
+        StoredCredential,
     };
     use coding_adventures_oauth_private_key_signer::{
         PrivateKeyAuditAction, PrivateKeyAuditError, PrivateKeyAuditEvent, PrivateKeyAuditOutcome,
@@ -4927,6 +5092,15 @@ mod tests {
                     (BrokerAuditAction::ClientSecretRevocation, BrokerAuditOutcome::Failed(_)) => {
                         "revocation-failed"
                     }
+                    (BrokerAuditAction::PublicRevocation, BrokerAuditOutcome::Attempted) => {
+                        "public-revocation-attempted"
+                    }
+                    (BrokerAuditAction::PublicRevocation, BrokerAuditOutcome::Succeeded) => {
+                        "public-revocation-succeeded"
+                    }
+                    (BrokerAuditAction::PublicRevocation, BrokerAuditOutcome::Failed(_)) => {
+                        "public-revocation-failed"
+                    }
                     (
                         BrokerAuditAction::ClientSecretRevocationCredentialDelete,
                         BrokerAuditOutcome::Attempted,
@@ -4951,6 +5125,18 @@ mod tests {
                         BrokerAuditAction::PrivateKeyJwtRevocationCredentialDelete,
                         BrokerAuditOutcome::Failed(_),
                     ) => "private-key-revoke-delete-failed",
+                    (
+                        BrokerAuditAction::PublicRevocationCredentialDelete,
+                        BrokerAuditOutcome::Attempted,
+                    ) => "public-revoke-delete-attempted",
+                    (
+                        BrokerAuditAction::PublicRevocationCredentialDelete,
+                        BrokerAuditOutcome::Succeeded,
+                    ) => "public-revoke-delete-succeeded",
+                    (
+                        BrokerAuditAction::PublicRevocationCredentialDelete,
+                        BrokerAuditOutcome::Failed(_),
+                    ) => "public-revoke-delete-failed",
                     (
                         BrokerAuditAction::ClientSecretExchangeCredentialCreate,
                         BrokerAuditOutcome::Attempted,
@@ -5342,6 +5528,121 @@ mod tests {
                 .form_body()
                 .contains(&format!("refresh_token={}", self.expected_refresh)));
             self.responses.pop_front().ok_or(TokenTransportError)
+        }
+    }
+
+    struct StaleDeleteStore {
+        key: CredentialKey,
+        loads: AtomicUsize,
+    }
+
+    impl StaleDeleteStore {
+        fn new(key: CredentialKey) -> Self {
+            Self {
+                key,
+                loads: AtomicUsize::new(0),
+            }
+        }
+
+        fn record(access_token: &str, refresh_token: &str) -> CredentialRecord {
+            CredentialRecord::restore(
+                Zeroizing::new(access_token.to_owned()),
+                Some(Zeroizing::new(refresh_token.to_owned())),
+                None,
+                CredentialMetadata::new("Bearer", None, Vec::new()).unwrap(),
+            )
+            .unwrap()
+        }
+    }
+
+    impl CredentialStore for StaleDeleteStore {
+        fn create(
+            &self,
+            _key: &CredentialKey,
+            _record: CredentialRecord,
+        ) -> Result<CredentialRevision, CredentialStoreError> {
+            Err(CredentialStoreError::Backend)
+        }
+
+        fn load(
+            &self,
+            key: &CredentialKey,
+        ) -> Result<Option<StoredCredential>, CredentialStoreError> {
+            if key != &self.key {
+                return Ok(None);
+            }
+            let load = self.loads.fetch_add(1, Ordering::SeqCst);
+            let (revision, record) = if load == 0 {
+                (
+                    CredentialRevision::new([0x01; 32]),
+                    Self::record("access-original", "refresh-original"),
+                )
+            } else {
+                (
+                    CredentialRevision::new([0x02; 32]),
+                    Self::record("access-newer", "refresh-newer"),
+                )
+            };
+            Ok(Some(StoredCredential::new(revision, record)))
+        }
+
+        fn compare_and_swap(
+            &self,
+            _key: &CredentialKey,
+            _expected: CredentialRevision,
+            _replacement: CredentialRecord,
+        ) -> Result<CredentialRevision, CredentialStoreError> {
+            Err(CredentialStoreError::Backend)
+        }
+
+        fn delete(
+            &self,
+            key: &CredentialKey,
+            expected: CredentialRevision,
+        ) -> Result<(), CredentialStoreError> {
+            assert_eq!(key, &self.key);
+            assert_eq!(expected, CredentialRevision::new([0x01; 32]));
+            Err(CredentialStoreError::Conflict)
+        }
+    }
+
+    struct MockPublicRevocationTransport {
+        response: Option<Result<TokenRevocationEndpointResponse, TokenTransportError>>,
+        expected_provider: &'static str,
+        expected_token: &'static str,
+        calls: usize,
+        order: Rc<RefCell<Vec<&'static str>>>,
+    }
+
+    impl OAuthTokenRevocationTransport for MockPublicRevocationTransport {
+        fn send_revocation(
+            &mut self,
+            request: &TokenRevocationRequest,
+        ) -> Result<TokenRevocationEndpointResponse, TokenTransportError> {
+            self.calls += 1;
+            self.order.borrow_mut().push("revocation-transport-effect");
+            assert_eq!(request.provider().as_str(), self.expected_provider);
+            assert_eq!(
+                request.endpoint(),
+                format!("https://token.{}.example/revoke", self.expected_provider)
+            );
+            assert_eq!(
+                request.client_id(),
+                format!("{}-public-client", self.expected_provider)
+            );
+            assert!(request
+                .form_body()
+                .contains(&format!("token={}", self.expected_token)));
+            assert!(request
+                .form_body()
+                .contains("token_type_hint=refresh_token"));
+            assert!(request.form_body().contains(&format!(
+                "client_id={}-public-client",
+                self.expected_provider
+            )));
+            assert!(!request.form_body().contains("client_secret="));
+            assert!(!request.form_body().contains("client_assertion="));
+            self.response.take().unwrap_or(Err(TokenTransportError))
         }
     }
 
@@ -8034,6 +8335,418 @@ mod tests {
                 .custody
                 .with_access_token(&credential_key, trace(75), &mut audit, |_| ()),
             Err(CustodyError::NotFound)
+        );
+    }
+
+    #[test]
+    fn public_revocation_uses_exact_registered_profile_and_audit_order() {
+        let provider_config = config("fixture")
+            .with_revocation_endpoint("https://token.fixture.example/revoke")
+            .unwrap();
+        let provider =
+            BrokerProvider::new(provider_config.clone(), TokenResponseFormat::Json, 300).unwrap();
+        let mut broker = OAuthBroker::new(CredentialCustody::new(InMemoryCredentialStore::new()));
+        let order = Rc::new(RefCell::new(Vec::new()));
+        let mut audit = RecordingAudit {
+            order: Some(order.clone()),
+            ..RecordingAudit::default()
+        };
+        broker
+            .register_provider(provider, trace(74), &mut audit)
+            .unwrap();
+        let request = prepare_token_revocation(
+            &provider_config,
+            Zeroizing::new("refresh-public".to_owned()),
+            RevocationTokenHint::RefreshToken,
+            trace(75),
+        )
+        .publish_then_release(&mut audit)
+        .unwrap();
+        order.borrow_mut().clear();
+        let mut transport = MockPublicRevocationTransport {
+            response: Some(Ok(TokenRevocationEndpointResponse::new(
+                200,
+                Zeroizing::new(Vec::new()),
+            )
+            .unwrap())),
+            expected_provider: "fixture",
+            expected_token: "refresh-public",
+            calls: 0,
+            order: order.clone(),
+        };
+
+        let response = broker
+            .send_public_revocation(request, &mut transport, &mut audit)
+            .unwrap();
+
+        assert_eq!(response.provider(), provider_config.provider());
+        assert_eq!(response.trace(), trace(75));
+        assert_eq!(transport.calls, 1);
+        assert_eq!(
+            order.borrow().as_slice(),
+            [
+                "public-revocation-attempted",
+                "revocation-transport-attempted",
+                "revocation-transport-effect",
+                "revocation-transport-succeeded",
+                "public-revocation-succeeded",
+            ]
+        );
+
+        let request = prepare_token_revocation(
+            &provider_config,
+            Zeroizing::new("refresh-public".to_owned()),
+            RevocationTokenHint::RefreshToken,
+            trace(75),
+        )
+        .publish_then_release(&mut audit)
+        .unwrap();
+        order.borrow_mut().clear();
+        audit.fail_broker_on = Some(audit.broker_calls + 2);
+        let mut blocked_transport = MockPublicRevocationTransport {
+            response: None,
+            expected_provider: "fixture",
+            expected_token: "refresh-public",
+            calls: 0,
+            order: order.clone(),
+        };
+        assert_eq!(
+            broker.send_public_revocation(request, &mut blocked_transport, &mut audit),
+            Err(BrokerError::Audit)
+        );
+        assert_eq!(blocked_transport.calls, 0);
+        assert_eq!(order.borrow().as_slice(), ["public-revocation-attempted"]);
+    }
+
+    #[test]
+    fn public_refresh_token_detach_requires_exact_remote_success() {
+        let provider_config = config("fixture")
+            .with_revocation_endpoint("https://token.fixture.example/revoke")
+            .unwrap();
+        let provider =
+            BrokerProvider::new(provider_config.clone(), TokenResponseFormat::Json, 300).unwrap();
+        let credential_key = key("fixture");
+        let order = Rc::new(RefCell::new(Vec::new()));
+        let mut audit = RecordingAudit {
+            order: Some(order.clone()),
+            ..RecordingAudit::default()
+        };
+        let response = decoded_refresh_response(
+            &provider_config,
+            trace(76),
+            r#"{"access_token":"access-public","refresh_token":"refresh-public","token_type":"Bearer"}"#,
+            &mut audit,
+        );
+        let credentials = response
+            .release_credentials()
+            .publish_then_release(&mut audit)
+            .unwrap();
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        custody
+            .create(
+                &credential_key,
+                credentials,
+                CredentialMetadata::new("Bearer", None, Vec::new()).unwrap(),
+                trace(76),
+                &mut audit,
+            )
+            .unwrap();
+        let mut broker = OAuthBroker::new(custody);
+        broker
+            .register_provider(provider, trace(76), &mut audit)
+            .unwrap();
+
+        order.borrow_mut().clear();
+        let custody_events_before = audit.custody.len();
+        let mut retryable_transport = MockPublicRevocationTransport {
+            response: Some(Ok(TokenRevocationEndpointResponse::new(
+                503,
+                Zeroizing::new(Vec::new()),
+            )
+            .unwrap())),
+            expected_provider: "fixture",
+            expected_token: "refresh-public",
+            calls: 0,
+            order: order.clone(),
+        };
+        assert!(matches!(
+            broker.revoke_public_refresh_token_and_delete_credentials(
+                &credential_key,
+                trace(77),
+                &mut retryable_transport,
+                &mut audit,
+            ),
+            Err(BrokerError::Protocol(OAuthError::TokenRevocationEndpoint(
+                ProviderTokenRevocationError::TemporarilyUnavailable
+            )))
+        ));
+        assert!(audit.custody[custody_events_before..]
+            .iter()
+            .all(|event| event.action() != CredentialAuditAction::Delete));
+        assert_eq!(retryable_transport.calls, 1);
+        assert_eq!(
+            broker
+                .custody
+                .with_access_token(&credential_key, trace(77), &mut audit, str::to_owned)
+                .unwrap(),
+            "access-public"
+        );
+
+        order.borrow_mut().clear();
+        let custody_events_before = audit.custody.len();
+        let mut successful_transport = MockPublicRevocationTransport {
+            response: Some(Ok(TokenRevocationEndpointResponse::new(
+                200,
+                Zeroizing::new(Vec::new()),
+            )
+            .unwrap())),
+            expected_provider: "fixture",
+            expected_token: "refresh-public",
+            calls: 0,
+            order: order.clone(),
+        };
+        broker
+            .revoke_public_refresh_token_and_delete_credentials(
+                &credential_key,
+                trace(78),
+                &mut successful_transport,
+                &mut audit,
+            )
+            .unwrap();
+        assert_eq!(successful_transport.calls, 1);
+        assert_eq!(
+            audit.custody[custody_events_before..]
+                .iter()
+                .map(|event| (event.action(), event.outcome()))
+                .collect::<Vec<_>>(),
+            vec![
+                (
+                    CredentialAuditAction::RefreshToken,
+                    CredentialAuditOutcome::Attempted,
+                ),
+                (
+                    CredentialAuditAction::RefreshToken,
+                    CredentialAuditOutcome::Succeeded,
+                ),
+                (
+                    CredentialAuditAction::Delete,
+                    CredentialAuditOutcome::Attempted,
+                ),
+                (
+                    CredentialAuditAction::Delete,
+                    CredentialAuditOutcome::Succeeded,
+                ),
+            ]
+        );
+        assert_eq!(
+            order.borrow().as_slice(),
+            [
+                "public-revoke-delete-attempted",
+                "refresh-token-access-attempted",
+                "refresh-token-access-succeeded",
+                "public-revocation-attempted",
+                "revocation-transport-attempted",
+                "revocation-transport-effect",
+                "revocation-transport-succeeded",
+                "public-revocation-succeeded",
+                "credential-delete-attempted",
+                "credential-delete-succeeded",
+                "public-revoke-delete-succeeded",
+            ]
+        );
+        assert_eq!(
+            broker
+                .custody
+                .with_access_token(&credential_key, trace(78), &mut audit, |_| ()),
+            Err(CustodyError::NotFound)
+        );
+    }
+
+    #[test]
+    fn public_refresh_token_detach_retains_newer_revision_after_stale_delete() {
+        let provider_config = config("fixture-stale")
+            .with_revocation_endpoint("https://token.fixture-stale.example/revoke")
+            .unwrap();
+        let provider =
+            BrokerProvider::new(provider_config, TokenResponseFormat::Json, 300).unwrap();
+        let credential_key = key("fixture-stale");
+        let custody = CredentialCustody::new(StaleDeleteStore::new(credential_key.clone()));
+        let mut broker = OAuthBroker::new(custody);
+        let order = Rc::new(RefCell::new(Vec::new()));
+        let mut audit = RecordingAudit {
+            order: Some(order.clone()),
+            ..RecordingAudit::default()
+        };
+        broker
+            .register_provider(provider, trace(83), &mut audit)
+            .unwrap();
+        order.borrow_mut().clear();
+        let mut transport = MockPublicRevocationTransport {
+            response: Some(Ok(TokenRevocationEndpointResponse::new(
+                200,
+                Zeroizing::new(Vec::new()),
+            )
+            .unwrap())),
+            expected_provider: "fixture-stale",
+            expected_token: "refresh-original",
+            calls: 0,
+            order: order.clone(),
+        };
+
+        assert_eq!(
+            broker.revoke_public_refresh_token_and_delete_credentials(
+                &credential_key,
+                trace(84),
+                &mut transport,
+                &mut audit,
+            ),
+            Err(BrokerError::Custody(CustodyError::Conflict))
+        );
+        assert_eq!(transport.calls, 1);
+        assert_eq!(
+            broker
+                .custody
+                .with_access_token(&credential_key, trace(84), &mut audit, str::to_owned)
+                .unwrap(),
+            "access-newer"
+        );
+        assert_eq!(
+            order.borrow().as_slice(),
+            [
+                "public-revoke-delete-attempted",
+                "refresh-token-access-attempted",
+                "refresh-token-access-succeeded",
+                "public-revocation-attempted",
+                "revocation-transport-attempted",
+                "revocation-transport-effect",
+                "revocation-transport-succeeded",
+                "public-revocation-succeeded",
+                "credential-delete-attempted",
+                "credential-delete-failed",
+                "public-revoke-delete-failed",
+                "access-token-access-attempted",
+                "access-token-access-succeeded",
+            ]
+        );
+    }
+
+    #[test]
+    fn public_refresh_token_detach_rejects_nonpublic_and_missing_refresh_before_transport() {
+        let confidential_config = config("fixture-confidential")
+            .with_revocation_endpoint("https://token.fixture-confidential.example/revoke")
+            .unwrap();
+        let confidential_provider = BrokerProvider::new_confidential(
+            confidential_config.clone(),
+            TokenResponseFormat::Json,
+            300,
+            ConfidentialClientAuthenticationMethod::ClientSecretBasic,
+            Vec::new(),
+        )
+        .unwrap();
+        let confidential_key = key("fixture-confidential");
+        let order = Rc::new(RefCell::new(Vec::new()));
+        let mut audit = RecordingAudit {
+            order: Some(order.clone()),
+            ..RecordingAudit::default()
+        };
+        let response = decoded_refresh_response(
+            &confidential_config,
+            trace(79),
+            r#"{"access_token":"access-secret","refresh_token":"refresh-secret","token_type":"Bearer"}"#,
+            &mut audit,
+        );
+        let credentials = response
+            .release_credentials()
+            .publish_then_release(&mut audit)
+            .unwrap();
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        custody
+            .create(
+                &confidential_key,
+                credentials,
+                CredentialMetadata::new("Bearer", None, Vec::new()).unwrap(),
+                trace(79),
+                &mut audit,
+            )
+            .unwrap();
+        let mut broker = OAuthBroker::new(custody);
+        broker
+            .register_provider(confidential_provider, trace(79), &mut audit)
+            .unwrap();
+        order.borrow_mut().clear();
+        let custody_events_before = audit.custody.len();
+        let mut rejected_transport = MockPublicRevocationTransport {
+            response: None,
+            expected_provider: "fixture-confidential",
+            expected_token: "refresh-secret",
+            calls: 0,
+            order: order.clone(),
+        };
+        assert_eq!(
+            broker.revoke_public_refresh_token_and_delete_credentials(
+                &confidential_key,
+                trace(80),
+                &mut rejected_transport,
+                &mut audit,
+            ),
+            Err(BrokerError::BindingMismatch)
+        );
+        assert_eq!(audit.custody.len(), custody_events_before);
+        assert_eq!(rejected_transport.calls, 0);
+
+        let public_config = config("fixture-access-only")
+            .with_revocation_endpoint("https://token.fixture-access-only.example/revoke")
+            .unwrap();
+        let public_provider =
+            BrokerProvider::new(public_config.clone(), TokenResponseFormat::Json, 300).unwrap();
+        let public_key = key("fixture-access-only");
+        let response = decoded_exchange_response(
+            &public_config,
+            trace(81),
+            r#"{"access_token":"access-only","token_type":"Bearer"}"#,
+            &mut audit,
+        );
+        let credentials = response
+            .release_credentials()
+            .publish_then_release(&mut audit)
+            .unwrap();
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        custody
+            .create(
+                &public_key,
+                credentials,
+                CredentialMetadata::new("Bearer", None, Vec::new()).unwrap(),
+                trace(81),
+                &mut audit,
+            )
+            .unwrap();
+        let mut broker = OAuthBroker::new(custody);
+        broker
+            .register_provider(public_provider, trace(81), &mut audit)
+            .unwrap();
+        let mut missing_transport = MockPublicRevocationTransport {
+            response: None,
+            expected_provider: "fixture-access-only",
+            expected_token: "access-only",
+            calls: 0,
+            order,
+        };
+        assert_eq!(
+            broker.revoke_public_refresh_token_and_delete_credentials(
+                &public_key,
+                trace(82),
+                &mut missing_transport,
+                &mut audit,
+            ),
+            Err(BrokerError::Custody(CustodyError::RefreshUnavailable))
+        );
+        assert_eq!(missing_transport.calls, 0);
+        assert_eq!(
+            broker
+                .custody
+                .with_access_token(&public_key, trace(82), &mut audit, str::to_owned)
+                .unwrap(),
+            "access-only"
         );
     }
 
