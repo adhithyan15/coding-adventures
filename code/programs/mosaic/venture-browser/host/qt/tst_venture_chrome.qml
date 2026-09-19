@@ -61,6 +61,8 @@ TestCase {
                 "copyAddressDisabled": disabled,
                 "openPageDisabled": disabled,
                 "savePageDisabled": disabled,
+                "printPageDisabled": disabled,
+                "sharePageDisabled": disabled,
                 "viewSourceDisabled": disabled,
                 "findOpen": false,
                 "findQuery": "",
