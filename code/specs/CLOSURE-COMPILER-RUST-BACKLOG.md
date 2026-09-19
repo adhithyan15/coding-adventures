@@ -1,0 +1,210 @@
+# Closure Compiler on Rust — parity backlog
+
+**Status:** active  
+**Last reprioritized:** 2026-09-19  
+**Current selection:** CCR-001, Windows-native absolute glob expansion  
+**Local audit base:** `coding-adventures` at `06fc0524051a397ccc53c628b08c019b2bbf75ba`  
+**Upstream audit base:** `google/closure-compiler` at
+`10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
+`v20260915`
+
+## Purpose and truthfulness boundary
+
+This is the live, evidence-backed queue for turning `closurec` and its Rust
+libraries into a practical replacement for the Google Closure Compiler. It
+supersedes status prose in older CLOC specs when the two disagree; those specs
+remain the design and historical slicing record.
+
+"Parity" is not one boolean. We track five independently verifiable levels:
+
+1. **Surface parity:** a Closure command line parses with compatible defaults,
+   validation, diagnostics, and exit status.
+2. **Language parity:** supported JavaScript parses, lowers, prints, and maps
+   back to sources without silently changing compilation mode.
+3. **Pass parity:** checks and optimizations have the same observable behavior
+   as the pinned upstream compiler for the covered corpus.
+4. **Build parity:** dependency management, modules, chunks, externs, source
+   maps, manifests, JSON streams, and reports compose as they do upstream.
+5. **Operational parity:** the same invocation is deterministic and supported
+   on Linux, macOS, and Windows, with useful failures and bounded resource use.
+
+The present implementation has a strong WHITESPACE_ONLY formatter, a real but
+partial SIMPLE/ADVANCED typed pipeline, and a large curated golden corpus. It
+is **not yet a drop-in Closure replacement**: successful flag parsing often
+does not imply semantics, unsupported typed syntax can fall back to whitespace
+minification, BUNDLE and TRANSPILE_ONLY are identity operations, emitted source
+maps are placeholders, the type checker is a passthrough scaffold, and
+collapse-properties does not mutate the program.
+
+## Evidence captured by the 2026-09-19 audit
+
+### Local implementation
+
+- `closurec` is version `0.240.0` and declares 111 flags in `cli.spec.json`.
+- All 462 curated differential fixtures match their checked-in expected bytes.
+  Most WHITESPACE_ONLY fixtures cite Closure `v20240317`; newer SIMPLE fixtures
+  cite `v20260712`, so the corpus does not yet share one current oracle pin.
+- The conformance suite has 24 declared cases: 19 compare values and five are
+  explicit unsupported-syntax declines. All three harness tests pass.
+- Both correlation-vector provenance tests pass.
+- On Windows, `cargo test --no-fail-fast` runs every later integration target
+  successfully but reports six unit failures. Every failure is an absolute
+  glob expansion returning `GlobError::NoMatches`; CCR-001 owns this defect.
+- The AST covers the main statement and expression families, including
+  classes, modules, optional chains, generators, templates, and async nodes.
+  Binding targets remain identifier-only, so destructuring and several
+  parameter forms cannot cross the typed bridge.
+- `closure-typechecker` documents and implements a passthrough v1 with no
+  inference diagnostics. `closure-pass-collapse-properties` discovers
+  candidates but intentionally reports `changed = false` and applies none.
+- The command runner consumes only a subset of the parsed configuration. Major
+  families still lacking end-to-end semantics include diagnostics, dependency
+  and chunk management, polyfills, conformance, instrumentation, translations,
+  JSON streams, renaming map inputs/reports, and several special passes.
+- `--create_source_map` currently calls a minimal v3 serializer with empty
+  sources and mappings. The repository already has a real VLQ source-map crate,
+  but the typed emitter path does not feed it spans.
+
+### Current upstream surface
+
+- The current Maven release is `v20260915`; the audited upstream checkout is
+  two days newer at commit `10ca677a`.
+- Current `CommandLineRunner.java` exposes 102 explicit option declarations.
+  After accounting for cli-builder-provided help/version and the eleven local
+  correlation-vector extensions, the actionable naming drift is the upstream
+  canonical `--typed_ast_output_file` versus the local legacy misspelling
+  `--typed_ast_output_file__INTENRNAL_USE_ONLY`.
+- The audited upstream test directory contains 395 `*Test.java` files. Signal
+  clusters include 70 `Check*`, 28 `Es6*`, 19 `*Module*`, 13 `TypeCheck*`,
+  12 `Inline*`, ten transpilation, eight peephole, six chunk, five collapse,
+  five rename, four remove-unused, three source-map, three conformance, two
+  code-printer, and one command-line test file.
+- Upstream's `DefaultPassConfig` composes many checks and optimizations beyond
+  the local scheduler: module/JSDoc/variable/strict/type/control-flow/access/
+  conformance checks; normalization; property disambiguation and collapse;
+  function, call, constructor, and variable inlining; cross-chunk movement;
+  dead-assignment and unused-code removal; polyfill/transpilation passes; and
+  final property, variable, and label renaming.
+
+Primary upstream references:
+
+- <https://github.com/google/closure-compiler>
+- <https://github.com/google/closure-compiler/blob/master/src/com/google/javascript/jscomp/CommandLineRunner.java>
+- <https://github.com/google/closure-compiler/blob/master/src/com/google/javascript/jscomp/DefaultPassConfig.java>
+- <https://github.com/google/closure-compiler/wiki/Design-Documents>
+- <https://github.com/google/closure-compiler/wiki/JS-Conformance-Framework>
+
+## Completion contract
+
+An item is complete only when its behavior is specified, covered by focused
+tests and at least one end-to-end test where applicable, documented in package
+README/changelog files, formatted and lint-clean with warnings denied, and
+verified through every affected Cargo workspace with `--no-fail-fast`. Parity
+items additionally require a reproducible upstream oracle command or a ported
+upstream test with an exact source tag/commit.
+
+The overall project is complete only when:
+
+- supported and intentionally unsupported upstream flags are machine-audited;
+- no successful compilation silently substitutes a weaker compilation level;
+- the supported JavaScript/language-mode matrix is explicit and tested;
+- all selected upstream test families are ported or listed with a reason;
+- source maps, diagnostics, modules/chunks, externs, and reports work together;
+- Linux, macOS, and Windows run the same conformance gate; and
+- a representative real-world Closure build passes a differential migration
+  trial with documented output, diagnostics, source-map, and runtime results.
+
+## Prioritization policy
+
+Re-run priority after every merged PR and immediately after discovering work.
+Order by:
+
+1. security, data loss, broken main, nondeterminism, and cross-platform test
+   failures;
+2. silent semantic corruption or successful-but-weaker fallback;
+3. oracle quality and measurements needed to evaluate later work;
+4. end-to-end correctness before adding isolated pass breadth;
+5. broadly used Closure workflows before niche flags;
+6. smallest dependency-unblocking slice, with only one active shared-crate PR.
+
+New findings are added before selecting the next item. IDs are stable; priority
+order may change. A row marked `Blocked` names its prerequisite. `Survey` means
+the implementation must begin with a measured inventory rather than assumed
+scope.
+
+## Ordered queue
+
+### P0 — restore a trustworthy baseline
+
+| Rank | ID | Work item | Acceptance evidence | Status |
+|---:|---|---|---|---|
+| 1 | CCR-001 | Make absolute and relative `--js` globs use native Windows separators and roots without regressing POSIX behavior. | The six Windows failures pass; focused mixed-separator, exclusion, `*`, and `**` tests pass; full `closurec` suite is green on Windows. | In progress |
+| 2 | CCR-002 | Replace silent SIMPLE/ADVANCED typed-pipeline fallback with an explicit compatibility policy. Unsupported syntax must either be a hard error or an opt-in, diagnostic-bearing fallback. | Differential tests prove exit code, stderr, and output for parse, bridge, pass, and emit failures. | Ready |
+| 3 | CCR-003 | Establish one reproducible oracle manifest pinned to upstream `v20260915` and commit `10ca677a`. Record Java version, commands, flags, hashes, licensing, and fixture provenance. | Offline manifest verifier passes and every checked-in fixture resolves to one pin and command. | Ready |
+| 4 | CCR-004 | Re-run all 462 golden fixtures against the new oracle, classify drift, and update only reviewed deltas. | Machine-readable report records equal/changed/declined counts and every changed byte has a linked reason. | Blocked by CCR-003 |
+| 5 | CCR-005 | Generate a CLI surface audit from current `CommandLineRunner.java` and `cli.spec.json`, separating upstream, generated, extension, deprecated-alias, and unsupported flags. | CI fails on unclassified flag drift; canonical `--typed_ast_output_file` is accepted with tested compatibility for the legacy typo. | Ready |
+| 6 | CCR-006 | Add an explicit capability/status command or document generated matrix so users can tell parse-only flags from implemented semantics. | Matrix is generated from the same registry used by dispatch and cannot drift manually. | Blocked by CCR-005 |
+
+### P1 — make the front end and output contract honest
+
+| Rank | ID | Work item | Acceptance evidence | Status |
+|---:|---|---|---|---|
+| 7 | CCR-007 | Wire real VLQ source maps through parser spans, transforms, emitter, wrappers, and output paths. | Upstream source-map vectors plus multi-file, Unicode, wrapper, stdin, and transformed-token end-to-end tests match decoded mappings. | Ready |
+| 8 | CCR-008 | Define and enforce `language_in`; stop treating accepted syntax as independent of the selected input mode. | Current upstream accept/reject corpus matches diagnostics and exit status for representative ECMAScript modes. | Ready |
+| 9 | CCR-009 | Implement `language_out` and TRANSPILE_ONLY as real lowering stages rather than identity. Start with optional chaining/nullish coalescing and class features. | Runtime-equivalent output and upstream differential tests across at least two output modes. | Ready |
+| 10 | CCR-010 | Extend binding targets across AST, parser, typed bridge, scope analysis, passes, and emitter for array/object destructuring. | Existing declined conformance cases become value-checked; declaration, assignment, parameter, rest, default, and loop targets pass. | Ready |
+| 11 | CCR-011 | Complete async/await typed bridging, including `for await` and async generators. | CLOC12 gap-165 closes and async fixtures stay on the typed pipeline. | Ready |
+| 12 | CCR-012 | Replace template-literal mode heuristics with an explicit substitution stack supporting nested templates and complex expressions. | CLOC12 gap-044b closes with nested, tagged, escaped, and multiline tests. | Ready |
+| 13 | CCR-013 | Survey current parser/bridge/emitter syntax against upstream language-feature enums and turn every decline into a stable capability row. | Generated syntax matrix names pass/fail stage and test for every feature. | Survey |
+| 14 | CCR-014 | Integrate the type checker's first real vertical slice: primitive literals, variables, assignments, calls, returns, and JSDoc annotations. | Diagnostics have stable groups/locations; upstream TypeCheck tests for the slice pass; `checks_only` emits no JS. | Ready |
+| 15 | CCR-015 | Implement diagnostics plumbing: levels, groups, warnings guards, error formatting, counts, JSON/error streams, and exit codes. | `--jscomp_*`, formatting, hide-warnings, summary detail, and output streams match selected CommandLineRunner tests. | Ready |
+| 16 | CCR-016 | Replace minimal numeric printing with a shortest-round-trip algorithm and audit special numeric property keys. | Exhaustive boundary/property tests plus upstream CodePrinter numeric vectors close residual CLOC12 numeric gaps. | Ready |
+
+### P2 — strengthen SIMPLE and ADVANCED optimization semantics
+
+| Rank | ID | Work item | Acceptance evidence | Status |
+|---:|---|---|---|---|
+| 17 | CCR-017 | Implement collapse-properties mutation with namespace safety, alias, extern, getter/setter, and dynamic-access guards. | Ported `CollapsePropertiesTest` slices pass and fixed-point termination is proven. | Ready |
+| 18 | CCR-018 | Audit remove-unused-vars for nested scopes, exports, destructuring, side effects, classes, and module bindings; implement missing cases. | Ported `RemoveUnusedVarsTest` slices and runtime-effect tests pass. | Ready |
+| 19 | CCR-019 | Expand constant folding/peephole coverage and refresh its upstream pin. | All selected current `Peephole*` vectors are ported, passing, ignored with gap IDs, or skipped with reasons. | Survey |
+| 20 | CCR-020 | Expand control-flow folding and DCE for switch/try/finally/labels/loops/throw and unreachable lexical declarations. | Ported peephole/remove-dead tests plus runtime-equivalence tests pass. | Ready |
+| 21 | CCR-021 | Expand function/variable inlining with escape, recursion, evaluation-order, `this`, `arguments`, async/generator, and multi-statement safety. | Current upstream Inline test inventory is classified and selected cases pass. | Survey |
+| 22 | CCR-022 | Complete variable/global/property/label renaming semantics, maps, stable names, extern protection, reserved names, and shadowing. | Rename test families pass; input/output map round trips are deterministic. | Ready |
+| 23 | CCR-023 | Add missing ADVANCED passes in dependency order: normalization, call optimization, constructor optimization, dead assignments, devirtualization, property disambiguation/ambiguation, and final denormalization. | Each pass lands with a ported upstream slice and pipeline-order invariant. | Survey |
+| 24 | CCR-024 | Make pass configuration reflect upstream compilation levels and relevant option interactions instead of a fixed local list. | Generated schedule snapshots and end-to-end flag interaction tests match the pinned upstream configuration. | Blocked by CCR-015 and CCR-023 |
+
+### P3 — real build-graph and Closure workflows
+
+| Rank | ID | Work item | Acceptance evidence | Status |
+|---:|---|---|---|---|
+| 25 | CCR-025 | Implement dependency modes, entry points, `goog.provide`/`goog.require`, CommonJS processing, and ES module resolution/rewriting. | Multi-file graph fixtures match order, pruning, diagnostics, and output. | Ready |
+| 26 | CCR-026 | Implement chunks/modules, chunk wrappers, chunk maps, output prefixes, weak chunks, and cross-chunk motion. | DAG validation and selected upstream Chunk/Module tests pass on all hosts. | Blocked by CCR-025 |
+| 27 | CCR-027 | Make BUNDLE a real bundling mode with module resolution, ordering, wrappers, source maps, and diagnostics. | A representative multi-module application bundles and runs equivalently to upstream. | Blocked by CCR-025 and CCR-007 |
+| 28 | CCR-028 | Complete extern ingestion and built-in environment selection, including browser/custom extern interactions. | Extern diagnostics and property/variable protection match upstream cases. | Ready |
+| 29 | CCR-029 | Implement polyfill isolation/injection/rewrite and runtime-library selection. | Output and runtime behavior match upstream across language-out modes. | Blocked by CCR-009 |
+| 30 | CCR-030 | Implement manifests, dependency graphs, variable/property maps, renaming reports, exports, and name-reference reports. | Every report has deterministic golden and round-trip tests. | Blocked by CCR-022 and CCR-025 |
+| 31 | CCR-031 | Implement JSON input/output streams and stdin/stdout composition without mixing diagnostics into data streams. | Pipeline and malformed-stream tests match upstream exit/status behavior. | Blocked by CCR-015 |
+
+### P4 — checks, policy, specialized passes, and operational proof
+
+| Rank | ID | Work item | Acceptance evidence | Status |
+|---:|---|---|---|---|
+| 32 | CCR-032 | Implement the JS conformance framework: config parsing, allow/deny lists, requirement matching, diagnostics, and reporting. | Selected upstream `Conformance*Test` cases pass and local five declines are reviewed. | Blocked by CCR-014 and CCR-015 |
+| 33 | CCR-033 | Add remaining checks in measured slices: variables, modules, JSDoc, strict mode, control flow, access controls, suspicious code, and side effects. | Each check has a diagnostic group and current upstream test slice. | Survey |
+| 34 | CCR-034 | Implement specialized passes only after core workflows: Angular/Polymer/J2CL, Closure primitives, CSS/ID replacement, define/tweak processing, message replacement, and translation bundles. | Each accepted flag gains end-to-end semantics or an explicit unsupported error. | Blocked by CCR-024 |
+| 35 | CCR-035 | Implement instrumentation and coverage-array modes with source-map and optimization interaction tests. | Instrumented output executes and reports the same covered regions as upstream fixtures. | Blocked by CCR-007 and CCR-024 |
+| 36 | CCR-036 | Add typed-AST serialization/deserialization using the canonical flag and versioned format; decide compatibility boundary with upstream protobuf. | Round trip preserves the supported AST and rejects incompatible versions safely. | Blocked by CCR-013 and CCR-014 |
+| 37 | CCR-037 | Build a continuously generated upstream test-coverage ledger for all 395 audited test files. | Every file is ported, partially ported, blocked by a gap, or skipped with a reviewed reason and upstream hash. | Ready |
+| 38 | CCR-038 | Add deterministic fuzz/property testing for lexer/parser/emitter round trips, pass idempotence, glob/resource bounds, and source maps. | Fixed seeds reproduce failures; corpora run on all supported hosts under explicit budgets. | Blocked by CCR-007 and CCR-013 |
+| 39 | CCR-039 | Measure performance and memory against upstream on small, medium, and large real projects; optimize only profiled bottlenecks. | Published reproducible benchmark, peak-memory, and output-size report with regression budgets. | Blocked by CCR-024 and CCR-027 |
+| 40 | CCR-040 | Run a real-world migration trial and publish the remaining incompatibility ledger. | Build, runtime, diagnostics, artifacts, maps, and performance are compared against the same upstream pin on all three hosts. | Blocked by core P0-P3 work |
+
+## Loop record
+
+Update this section at every selection and merge so the backlog explains why
+the loop moved.
+
+| Date | Event | Prioritization result |
+|---|---|---|
+| 2026-09-19 | Initial code/upstream audit. Full Windows test run found six failures sharing one root cause; no open Closure/CLOC PRs were found. | Selected CCR-001 because broken cross-platform tests and unusable native absolute globs outrank semantic expansion. |
+
