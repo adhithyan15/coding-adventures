@@ -423,6 +423,19 @@ function render() {
   root.innerHTML = renderTemplate(template, props);
   applyHostNodes(root, props);
   normalizeHostAttributes(root);
+  applyFontSizes(root, props);
+}
+
+function applyFontSizes(scope, context) {
+  for (const element of scope.querySelectorAll("[data-mosaic-font-size-slot]")) {
+    // Read typed component data, not interpolated CSS or a loop's local binding.
+    const value = context[element.getAttribute("data-mosaic-font-size-slot")];
+    if (typeof value === "number" && Number.isFinite(value) && value > 0) {
+      element.style.fontSize = `${value}px`;
+    }
+    // render() reconstructs the authored template first. Skipping an invalid
+    // value therefore restores its original style instead of retaining old data.
+  }
 }
 
 function applyHostNodes(scope, context) {
