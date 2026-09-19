@@ -16069,7 +16069,11 @@ fn portable_text_stdout_brainfuck_beam_raw_bytes() {
         let dir = tempfile::tempdir().unwrap();
         std::fs::write(dir.path().join("bfbytes.beam"), bytes).unwrap();
         let mut cmd = Command::new("erl");
-        cmd.current_dir(dir.path()).args(["-noshell", "-kernel", "standard_io_encoding", "latin1"])
+        // This byte sweep runs beside many other real-BEAM probes in the test
+        // binary. Keep this VM to one scheduler and one async thread so macOS CI
+        // does not intermittently terminate it while all 256 bytes are emitted.
+        cmd.current_dir(dir.path()).args(["+S", "1:1", "+A", "1"])
+            .args(["-noshell", "-kernel", "standard_io_encoding", "latin1"])
             .arg("-pa").arg(dir.path())
             .args(["-eval", "bfbytes:main(),halt(0)."]);
         let out = output_with_stdin(cmd, &input).expect("detected erl must spawn");
