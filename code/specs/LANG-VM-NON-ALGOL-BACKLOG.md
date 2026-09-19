@@ -10,6 +10,19 @@ roadmap is reconciled.
 
 ## Encoded CLR input prerequisites (selected 2026-09-19 after VM-058)
 
+### CLR04 landed; bitwise execution audit selected (2026-09-19)
+
+CLR04 merged in #15642 as `ee2c260fddc0141e5039f5a5fbbd8b06af81bce0`
+after all 46 checks completed (15 success, 31 skipped), without retries.
+Main is refreshed and open PR ownership shows no encoded CLR overlap.
+
+Next audit encoded and/or: builder exposes 0x5f/0x60 and emit APIs, while
+simulator has no corresponding named handlers. Establish hand-encoded baseline
+and authoritative matched-width semantics before committing a bounded CLR05
+specification. Preserve Int32/Int64, explicit mixed-width refusal and structural
+i32 indices. Keep wide-IIR/input gates; addition overflow in typed IIR lowering
+remains unresolved. Follow arithmetic prerequisites with the lowering ABI audit.
+
 ### CLR03 landed; arithmetic execution audit selected (2026-09-19)
 
 CLR03 merged in #15623 as `c52ecbc841052bdb1dc0f824703d1397adfe87a1`

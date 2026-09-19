@@ -54,6 +54,13 @@ Named inputs are required and explicitly wired. The scheduler invokes a
 multi-input stage once after materializing every producer; it never uses the
 event bus or ambient filesystem state as a data channel.
 
+An effectful collector can opt into safe whole-instance checkpoint reuse with
+`replay(output, config, ctx)`. The hook receives the validated materialized
+output from a prior successful `run` and reapplies only the effects represented
+by that value. Replay must be idempotent, enforce the same containment and
+validation rules as `run`, and use only declared capabilities. Stages without
+the hook continue to execute at capability boundaries.
+
 ### Orchestrator authors
 
 The orchestrator builds a `StageContext` per invocation by composing the in-memory facilities (logger, cancellation, clock, cache, telemetry, event bus) with capability-gated APIs (`StorageApi`, `NetworkApi`, `EnvApi`, `FilesystemApi`, `ShellApi`). For each capability the stage **didn't** declare, the orchestrator plugs in the matching `denied*Api()` so a method call throws `CapabilityError` with the missing capability embedded.

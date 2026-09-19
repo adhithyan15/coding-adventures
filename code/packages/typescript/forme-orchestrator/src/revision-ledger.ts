@@ -35,6 +35,7 @@ export function revisionLedgerKey(pipeline: Pipeline): string {
       id,
       stageName: instance.stage.name,
       stageVersion: instance.stage.version,
+      capabilities: instance.capabilities.map(String).sort(),
       config: (instance.config ?? null) as JsonValue,
       producer: instance.producer,
       inputProducers: [...instance.inputProducers.entries()]

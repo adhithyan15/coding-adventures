@@ -12,8 +12,8 @@ mod apple {
     use std::collections::{BTreeMap, BTreeSet};
 
     use diagram_ir::{
-        DiagramStyle, EdgeKind, SequenceBlockKind, SequenceEvent, TemporalBody, TemporalDiagram,
-        TemporalKind,
+        DiagramIconGlyph, DiagramStyle, EdgeKind, SequenceBlockKind, SequenceEvent, TemporalBody,
+        TemporalDiagram, TemporalKind,
     };
     use diagram_layout_board::layout_board_diagram;
     use diagram_layout_chart::layout_chart_diagram;
@@ -234,6 +234,13 @@ mod apple {
                     },
                 ),
             ]),
+            icon_glyphs: BTreeMap::from([(
+                "fa fa-code".into(),
+                DiagramIconGlyph {
+                    text: "⌘".into(),
+                    font_family: "Helvetica".into(),
+                },
+            )]),
             ..GraphLayoutOptions::default()
         };
         let layout = layout_graph_diagram(&graph, Some(&layout_options), None);
@@ -241,6 +248,7 @@ mod apple {
         assert_eq!(parser_layout.style.fill, "#fee2e2");
         assert_eq!(parser_layout.style.stroke_width, 4.0);
         assert_eq!(parser_layout.style.font_weight, 700);
+        assert_eq!(parser_layout.icon_glyph.as_ref().map(|icon| icon.text.as_str()), Some("⌘"));
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;
         let resolver = CoreTextResolver::new();

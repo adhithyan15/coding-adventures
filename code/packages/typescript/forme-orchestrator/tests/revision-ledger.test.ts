@@ -90,6 +90,37 @@ function transform(runCalls = vi.fn()) {
   });
 }
 
+function replayableSink(
+  runCalls = vi.fn(),
+  replayCalls = vi.fn(),
+  replayFailure: (() => boolean) = () => false,
+) {
+  return defineStage({
+    name: "@test/replayable-sink",
+    version: "1.0.0",
+    apiVersion: KERNEL_API_VERSION,
+    description: "effectful collector with explicit checkpoint replay",
+    consumes: streamOf(Kinds.ContentSource),
+    produces: Kinds.DeployArtifact,
+    capabilities: ["filesystem:write"],
+    configSchema: null,
+    async run(input) {
+      runCalls();
+      const files: Record<string, Uint8Array> = {};
+      for await (const source of input) files[source.path] = source.bytes;
+      return {
+        variant: { kind: "dist-tree" },
+        files,
+        manifest: { routes: [], assets: [], buildTime: "fixed", buildId: "blake2b:00" },
+      } as never;
+    },
+    async replay(output) {
+      replayCalls(output);
+      if (replayFailure()) throw new Error("replay unavailable");
+    },
+  });
+}
+
 function pipelineConfig(source: ReturnType<typeof observedSource>): PipelineConfig {
   return {
     name: "revision-ledger-test",
@@ -274,6 +305,69 @@ describe("external source state and persistent revision ledger", () => {
     expect(sourceCalls).toHaveBeenCalledTimes(1);
     expect(capabilityCalls).toHaveBeenCalledTimes(2);
     expect(downstreamCalls).toHaveBeenCalledTimes(1);
+    await orchestrator.dispose();
+  });
+
+  it("restores an unchanged capability-bearing collector after replay succeeds", async () => {
+    const runCalls = vi.fn();
+    const replayCalls = vi.fn();
+    const orchestrator = createOrchestrator({ logger: silentLogger() });
+    const pipeline = await orchestrator.buildPipeline({
+      ...pipelineConfig(observedSource(() => ({ path: "post.md", text: "stable" }))),
+      stages: [
+        { id: "source", stage: observedSource(() => ({ path: "post.md", text: "stable" })) },
+        { id: "sink", stage: replayableSink(runCalls, replayCalls) },
+      ],
+    });
+
+    expect((await orchestrator.runOnce(pipeline)).stages.map(stage => stage.outcome))
+      .toEqual(["success", "success"]);
+    expect((await orchestrator.runOnce(pipeline)).stages.map(stage => stage.outcome))
+      .toEqual(["skipped", "skipped"]);
+    expect(runCalls).toHaveBeenCalledTimes(1);
+    expect(replayCalls).toHaveBeenCalledTimes(1);
+    await orchestrator.dispose();
+  });
+
+  it("changes the ledger and checkpoint namespace when capability grants change", async () => {
+    const orchestrator = createOrchestrator({ logger: silentLogger() });
+    const sourceStage = observedSource(() => ({ path: "post.md", text: "stable" }));
+    const sinkStage = replayableSink();
+    const build = (capabilities: readonly (typeof sinkStage.capabilities)[number][]) =>
+      orchestrator.buildPipeline({
+        ...pipelineConfig(sourceStage),
+        stages: [
+          { id: "source", stage: sourceStage },
+          { id: "sink", stage: sinkStage, capabilities },
+        ],
+      });
+
+    const denied = await build([]);
+    const granted = await build(["filesystem:write"]);
+    expect(revisionLedgerKey(denied)).not.toBe(revisionLedgerKey(granted));
+    await orchestrator.dispose();
+  });
+
+  it("fails open to normal execution when side-effect replay rejects", async () => {
+    const runCalls = vi.fn();
+    const replayCalls = vi.fn();
+    let failReplay = false;
+    const orchestrator = createOrchestrator({ logger: silentLogger() });
+    const pipeline = await orchestrator.buildPipeline({
+      ...pipelineConfig(observedSource(() => ({ path: "post.md", text: "stable" }))),
+      stages: [
+        { id: "source", stage: observedSource(() => ({ path: "post.md", text: "stable" })) },
+        { id: "sink", stage: replayableSink(runCalls, replayCalls, () => failReplay) },
+      ],
+    });
+
+    await orchestrator.runOnce(pipeline);
+    failReplay = true;
+    const second = await orchestrator.runOnce(pipeline);
+    expect(second.outcome).toBe("success");
+    expect(second.stages.map(stage => stage.outcome)).toEqual(["skipped", "success"]);
+    expect(runCalls).toHaveBeenCalledTimes(2);
+    expect(replayCalls).toHaveBeenCalledTimes(1);
     await orchestrator.dispose();
   });
 

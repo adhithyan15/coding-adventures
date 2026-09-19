@@ -225,6 +225,16 @@ flattering the book, which is the whole point of measuring against an external
 list. Spanish A1 is still a partial inventory: its pronunciation dimension has no
 A1-only boundary in the source (see HL20 §6a).
 
+Committed inventory assertions follow the same ownership boundary as their
+curriculum. Generic probe semantics and hostile-file guards stay in
+`tests/exam-inventory.test.ts`; language-specific coverage pins, unmapped-point
+audits, and source notes live in `tests/exam-inventories/<language>.test.ts`
+(with older already-independent tracks retaining their
+`tests/exam-inventory-<language>.test.ts` owners). A content tranche edits only
+its language-owned test. The owned suites use `loadTrackLessons` rather than
+loading all 23 tracks, so parallel ownership does not multiply the full-corpus
+cost tracked by #12732.
+
 ### Chapter capabilities (HL05)
 
 A chapter used to be nothing but an integer on each lesson, so nothing could check

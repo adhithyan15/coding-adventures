@@ -14,12 +14,12 @@
  *     one fan-in invocation. This is correct but not lazy — large streams
  *     allocate fully. Lazy streaming lands in v1 alongside parallelism.
  *
- *   - **Exact affected scheduling with conservative side effects.** Observed
+ *   - **Exact affected scheduling with explicit side effects.** Observed
  *     sources and untouched capability-free instances restore validated
  *     topology-scoped materialized checkpoints. Changed instances and their
- *     downstream closure execute, retaining per-item cache reuse. Legacy
- *     sources and capability-bearing stages remain conservative until
- *     side-effect replay lands in FM-B037.
+ *     downstream closure execute, retaining per-item cache reuse. A
+ *     capability-bearing stage is restorable only when its explicit replay
+ *     hook successfully reapplies the effects represented by its checkpoint.
  *
  *   - **Reproducible-build mode is wired through.**  When
  *     `settings.reproducibleBuild = true`, every StageContext receives
@@ -285,17 +285,33 @@ export async function executeDag(
           options.logger,
         );
         if (restored !== null) {
-          state.output = restored.value;
-          state.isStreamOutput = restored.isStream;
-          state.restored = true;
-          state.summary.itemsConsumed = inputs.itemCount;
-          state.summary.itemsProduced = restored.isStream
-            ? (restored.value as unknown[]).length
-            : 1;
-          state.summary.cacheHits = 1;
-          state.summary.outputRevision = prior.outputRevision;
-          state.summary.outcome = "skipped";
-          continue;
+          let replaySucceeded = true;
+          if (typeof inst.stage.replay === "function") {
+            try {
+              options.cancellation.throwIfCancelled();
+              await inst.stage.replay(restored.value as never, inst.config, ctx);
+            } catch (error) {
+              if (error instanceof CancellationError) throw error;
+              replaySucceeded = false;
+              options.logger.warn(
+                `instance checkpoint replay failed open for ${inst.stage.name} (${inst.id})`,
+                { error: String(error) },
+              );
+            }
+          }
+          if (replaySucceeded) {
+            state.output = restored.value;
+            state.isStreamOutput = restored.isStream;
+            state.restored = true;
+            state.summary.itemsConsumed = inputs.itemCount;
+            state.summary.itemsProduced = restored.isStream
+              ? (restored.value as unknown[]).length
+              : 1;
+            state.summary.cacheHits = 1;
+            state.summary.outputRevision = prior.outputRevision;
+            state.summary.outcome = "skipped";
+            continue;
+          }
         }
       }
 
@@ -642,9 +658,10 @@ async function runCached(
   options: SchedulerOptions,
   execute: () => Promise<CachedStageOutput>,
 ): Promise<CacheRunResult> {
-  // Whole-instance checkpoints handle observed sources and exact unaffected
-  // branches. This per-invocation cache remains limited to pure non-sources;
-  // capability-bearing work waits for FM-B037 side-effect replay.
+  // Whole-instance checkpoints handle observed sources, exact unaffected
+  // branches, and effectful stages with explicit replay. This per-invocation
+  // cache remains limited to pure non-sources so effects are never replayed
+  // once per stream item.
   const hasInput = inst.producer !== null || inst.inputProducers.size !== 0;
   if (!options.useCache || !hasInput || inst.capabilities.length !== 0) {
     return { ...(await execute()), cacheHit: false, cacheMiss: false };

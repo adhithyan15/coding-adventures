@@ -23,6 +23,7 @@
 //! | `HostInput`          | `TextField(...)` with a backing `TextEditingController` |
 //! | `HostButton`         | `ElevatedButton(onPressed: ..., child: Text(...))`  |
 //! | `HostScroll`         | `SingleChildScrollView(child: ...)`                 |
+//! | `HostNavigationSplit` | `LayoutBuilder` + regular `Row` / compact `Drawer` |
 //! | `HostDialog`         | `Builder(builder: (context) { ... showDialog ... })` — see below |
 //! | `HostCheckbox`       | `Checkbox(value: ..., onChanged: ...)`              |
 //! | `HostRadio`          | `Radio<String>(value: ..., groupValue: ..., onChanged: ...)` |
@@ -2757,6 +2758,9 @@ fn emit_widget_tree_inner(
     }
     if node.tag == "HostScroll" {
         return emit_host_scroll(node, indent, part_styles, component, emits, ctx);
+    }
+    if node.tag == "HostNavigationSplit" {
+        return emit_host_navigation_split(node, indent, part_styles, component, emits, ctx);
     }
     if node.tag == "HostDialog" {
         return emit_host_dialog(node, indent, part_styles, component, emits, ctx);
@@ -6278,6 +6282,171 @@ fn required_progress_ring_value(node: &LayoutNode) -> Result<String, PipelineEmi
             "HostProgressRing missing required prop 'value:'".to_string(),
         )),
     }
+}
+
+/// Lower UI29-6's pane/detail primitive to Flutter's platform composition.
+/// At regular widths the pane and detail are side-by-side. At compact widths
+/// the pane becomes a Material `Drawer` owned by a `Scaffold`, so Flutter
+/// provides the edge gesture, route semantics, and drawer lifecycle. Flutter
+/// has no first-party adaptive split widget, so `collapse: auto` remains
+/// recorded separately as the non-gating
+/// `interaction.navigation-split-collapse-static` behaviour degradation.
+fn emit_host_navigation_split(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+    component: &str,
+    emits: &[EmitDecl],
+    ctx: TableCtx,
+) -> Result<String, PipelineEmitError> {
+    let (pane, detail) = match node.children.as_slice() {
+        [pane, detail] => (pane, detail),
+        children => {
+            return Err(PipelineEmitError::UnknownPrimitive(format!(
+                "HostNavigationSplit takes exactly two children -- the pane, then the detail -- got {}",
+                children.len()
+            )));
+        }
+    };
+
+    let title = match find_prop_value(node, "pane-title") {
+        Some(LayoutPropValue::String(value)) => {
+            format!("\"{}\"", escape_dart_string(value))
+        }
+        Some(LayoutPropValue::SlotRef(name)) | Some(LayoutPropValue::Keyword(name)) => {
+            let field = to_camel_case_first_lower(name);
+            validate_slot_or_field_name(&field)?;
+            field
+        }
+        Some(LayoutPropValue::Expr(expression)) => expression.trim().to_string(),
+        Some(LayoutPropValue::Number(number)) => {
+            format!("\"{number}\"")
+        }
+        Some(LayoutPropValue::EmitRef(_)) => {
+            return Err(PipelineEmitError::UnknownPrimitive(
+                "HostNavigationSplit `pane-title` takes text, not an emit reference".to_string(),
+            ));
+        }
+        None => "\"\"".to_string(),
+    };
+
+    let pinned = match find_prop_value(node, "collapse") {
+        None => false,
+        Some(LayoutPropValue::Keyword(value)) if value == "auto" => false,
+        Some(LayoutPropValue::Keyword(value)) if value == "never" => true,
+        Some(_) => {
+            return Err(PipelineEmitError::UnknownPrimitive(
+                "HostNavigationSplit `collapse` takes the keyword `auto` or `never`".to_string(),
+            ));
+        }
+    };
+
+    let pane_width = match find_prop_value(node, "pane-width") {
+        None => None,
+        Some(LayoutPropValue::Number(width)) => Some(width.to_string()),
+        Some(_) => {
+            return Err(PipelineEmitError::UnknownPrimitive(
+                "HostNavigationSplit `pane-width` takes a number".to_string(),
+            ));
+        }
+    };
+
+    let pad = " ".repeat(indent);
+    let inner = " ".repeat(indent + 2);
+    let body = " ".repeat(indent + 4);
+    let child = " ".repeat(indent + 6);
+
+    let pane_regular = emit_widget_tree(
+        pane,
+        indent + 6,
+        part_styles,
+        component,
+        emits,
+        TableCtx {
+            width_bounded: pane_width.is_some() || ctx.width_bounded,
+            ..ctx
+        },
+    )?;
+    let pane_regular = pane_regular.trim_start().trim_end_matches('\n');
+    let detail_regular = emit_widget_tree(
+        detail,
+        indent + 6,
+        part_styles,
+        component,
+        emits,
+        TableCtx {
+            width_bounded: true,
+            ..ctx
+        },
+    )?;
+    let detail_regular = detail_regular.trim_start().trim_end_matches('\n');
+
+    let pane_semantics = format!(
+        "Semantics(\n{child}  container: true,\n{child}  label: {title},\n{child}  child: {pane_regular},\n{child})"
+    );
+    let regular_pane = match &pane_width {
+        Some(width) => format!(
+            "SizedBox(\n{child}  width: {width},\n{child}  child: {pane_semantics},\n{child})"
+        ),
+        None => pane_semantics,
+    };
+    let regular = format!(
+        "Row(\n{body}children: [\n{child}{regular_pane},\n{child}Expanded(\n{child}  child: {detail_regular},\n{child}),\n{body}],\n{inner})"
+    );
+
+    if pinned {
+        return Ok(format!("{pad}{regular}\n"));
+    }
+
+    let pane_compact = emit_widget_tree(
+        pane,
+        indent + 8,
+        part_styles,
+        component,
+        emits,
+        TableCtx {
+            width_bounded: true,
+            ..ctx
+        },
+    )?;
+    let pane_compact = pane_compact.trim_start().trim_end_matches('\n');
+    let detail_compact = emit_widget_tree(
+        detail,
+        indent + 6,
+        part_styles,
+        component,
+        emits,
+        TableCtx {
+            width_bounded: true,
+            ..ctx
+        },
+    )?;
+    let detail_compact = detail_compact.trim_start().trim_end_matches('\n');
+    let drawer_width = pane_width
+        .as_ref()
+        .map(|width| format!("{child}    width: {width},\n"))
+        .unwrap_or_default();
+
+    Ok(format!(
+        "{pad}LayoutBuilder(\n\
+         {inner}builder: (_, constraints) {{\n\
+         {body}if (constraints.maxWidth < 600) {{\n\
+         {child}return Scaffold(\n\
+         {child}  drawer: Drawer(\n\
+         {drawer_width}\
+         {child}    child: Semantics(\n\
+         {child}      container: true,\n\
+         {child}      label: {title},\n\
+         {child}      child: {pane_compact},\n\
+         {child}    ),\n\
+         {child}  ),\n\
+         {child}  body: {detail_compact},\n\
+         {child});\n\
+         {body}}}\n\
+         {body}return {regular};\n\
+         {inner}}},\n\
+         {pad})\n"
+    ))
 }
 
 /// `HostScroll` → `SingleChildScrollView`. Multi-child case wraps
@@ -10903,6 +11072,133 @@ mod tests {
             None,
             "a negative width must not reach BorderSide"
         );
+    }
+
+    // ----- HostNavigationSplit ------------------------------------------
+
+    #[test]
+    fn host_navigation_split_auto_uses_regular_row_and_compact_drawer() {
+        let m = component("Shell", vec![], vec![]);
+        let l = layout(
+            "Shell",
+            node_with(
+                "HostNavigationSplit",
+                vec![
+                    LayoutProp {
+                        name: "pane-title".into(),
+                        value: LayoutPropValue::String("Projects".into()),
+                    },
+                    LayoutProp {
+                        name: "pane-width".into(),
+                        value: LayoutPropValue::Number(236.0),
+                    },
+                ],
+                vec![
+                    node_with(
+                        "Text",
+                        vec![LayoutProp {
+                            name: "content".into(),
+                            value: LayoutPropValue::String("Pane".into()),
+                        }],
+                        vec![],
+                    ),
+                    node_with(
+                        "Text",
+                        vec![LayoutProp {
+                            name: "content".into(),
+                            value: LayoutPropValue::String("Detail".into()),
+                        }],
+                        vec![],
+                    ),
+                ],
+            ),
+        );
+
+        let out = from_pipeline(&m, &l, &empty_style("Shell"))
+            .expect("navigation split")
+            .output;
+        assert!(out.contains("LayoutBuilder("), "{out}");
+        assert!(out.contains("constraints.maxWidth < 600"), "{out}");
+        assert!(out.contains("drawer: Drawer("), "{out}");
+        assert!(out.contains("label: \"Projects\""), "{out}");
+        assert!(out.contains("width: 236"), "{out}");
+        assert!(out.contains("return Row("), "{out}");
+        assert!(out.contains("Expanded("), "{out}");
+    }
+
+    #[test]
+    fn host_navigation_split_never_is_a_static_row() {
+        let m = component("Shell", vec![], vec![]);
+        let l = layout(
+            "Shell",
+            node_with(
+                "HostNavigationSplit",
+                vec![
+                    LayoutProp {
+                        name: "pane-title".into(),
+                        value: LayoutPropValue::String("Workbench".into()),
+                    },
+                    LayoutProp {
+                        name: "collapse".into(),
+                        value: LayoutPropValue::Keyword("never".into()),
+                    },
+                ],
+                vec![node("Column"), node("Column")],
+            ),
+        );
+
+        let out = from_pipeline(&m, &l, &empty_style("Shell"))
+            .expect("pinned navigation split")
+            .output;
+        assert!(out.contains("Row("), "{out}");
+        assert!(!out.contains("LayoutBuilder("), "{out}");
+        assert!(!out.contains("Drawer("), "{out}");
+    }
+
+    #[test]
+    fn host_navigation_split_accepts_a_bound_pane_title() {
+        let m = component(
+            "Shell",
+            vec![slot("nav-title", SlotType::Text, true)],
+            vec![],
+        );
+        let l = layout(
+            "Shell",
+            node_with(
+                "HostNavigationSplit",
+                vec![LayoutProp {
+                    name: "pane-title".into(),
+                    value: LayoutPropValue::SlotRef("nav-title".into()),
+                }],
+                vec![node("Column"), node("Column")],
+            ),
+        );
+
+        let out = from_pipeline(&m, &l, &empty_style("Shell"))
+            .expect("bound navigation split title")
+            .output;
+        assert!(out.contains("label: navTitle"), "{out}");
+    }
+
+    #[test]
+    fn host_navigation_split_rejects_a_non_pair_defensively() {
+        let m = component("Shell", vec![], vec![]);
+        let l = layout(
+            "Shell",
+            node_with(
+                "HostNavigationSplit",
+                vec![LayoutProp {
+                    name: "pane-title".into(),
+                    value: LayoutPropValue::String("Projects".into()),
+                }],
+                vec![node("Column")],
+            ),
+        );
+
+        let error = from_pipeline(&m, &l, &empty_style("Shell"))
+            .expect_err("one child must not lower")
+            .to_string();
+        assert!(error.contains("takes exactly two children"), "{error}");
     }
 
     // ----- HostScroll ---------------------------------------------------

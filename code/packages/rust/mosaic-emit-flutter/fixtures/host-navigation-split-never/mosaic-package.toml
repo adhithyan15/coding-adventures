@@ -1,0 +1,13 @@
+[package]
+name = "mosaic-pkg-flutter-host-navigation-split-never-fixture"
+version = "0.1.0"
+description = "Native-complete Flutter static HostNavigationSplit fixture"
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = ["PinnedNavigationShell"]
+
+[dependencies]
+
+[kernel]
+version = "1"

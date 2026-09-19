@@ -38,12 +38,12 @@
 //! | `h_padding`     | 24      | Horizontal text padding inside a node    |
 //! | `char_width`    | 8       | Approximate width per character (px)     |
 
-pub const VERSION: &str = "0.21.0";
+pub const VERSION: &str = "0.22.0";
 
 use std::collections::BTreeMap;
 
 use diagram_ir::{
-    DiagramDirection, DiagramShape, DiagramStyle, GraphDiagram, LayoutedGraphDiagram,
+    DiagramDirection, DiagramIconGlyph, DiagramShape, DiagramStyle, GraphDiagram, LayoutedGraphDiagram,
     LayoutedGraphEdge, LayoutedGraphGroup, LayoutedGraphNode, Point, ResolvedDiagramStyle,
     resolve_style, resolve_style_with_base,
 };
@@ -70,6 +70,8 @@ pub struct GraphLayoutOptions {
     pub char_width:      Option<f64>,
     /// Integrator-supplied visual styles keyed by semantic class name.
     pub class_styles:    BTreeMap<String, DiagramStyle>,
+    /// Integrator-supplied glyphs keyed by semantic icon identifier.
+    pub icon_glyphs:     BTreeMap<String, DiagramIconGlyph>,
 }
 
 struct Opts {
@@ -82,6 +84,7 @@ struct Opts {
     h_padding:      f64,
     char_width:     f64,
     class_styles:   BTreeMap<String, DiagramStyle>,
+    icon_glyphs:    BTreeMap<String, DiagramIconGlyph>,
 }
 
 impl Opts {
@@ -97,6 +100,7 @@ impl Opts {
             h_padding:      o.h_padding.unwrap_or(24.0),
             char_width:     o.char_width.unwrap_or(8.0),
             class_styles:   o.class_styles,
+            icon_glyphs:    o.icon_glyphs,
         }
     }
 }
@@ -167,7 +171,13 @@ fn node_dimensions(
     let font_italic = resolved_style.font_italic;
     let font_family = &resolved_style.font_family;
     let line_height = (font_size * 1.2).max(18.0);
-    match node.shape {
+    let icon_width = node
+        .icon
+        .as_ref()
+        .filter(|icon| opts.icon_glyphs.contains_key(*icon))
+        .map(|_| font_size * 1.5)
+        .unwrap_or(0.0);
+    let (width, height) = match node.shape {
         Some(DiagramShape::Bar) => (64.0, 8.0),
         Some(DiagramShape::Note) => {
             let line_count = node.label.text.lines().count().max(1) as f64;
@@ -209,7 +219,8 @@ fn node_dimensions(
             let line_count = node.label.text.lines().count().max(1) as f64;
             (width, opts.node_height.max(24.0 + line_count * line_height))
         }
-    }
+    };
+    (width + icon_width, height)
 }
 
 // ============================================================================
@@ -372,6 +383,11 @@ fn place_nodes(
                 style,
                 classes: node.classes.clone(),
                 icon: node.icon.clone(),
+                icon_glyph: node
+                    .icon
+                    .as_ref()
+                    .and_then(|icon| opts.icon_glyphs.get(icon))
+                    .cloned(),
             });
         }
     }
@@ -829,6 +845,7 @@ pub fn layout_graph_diagram(
             style: group.style.clone(),
             classes: Vec::new(),
             icon: None,
+            icon_glyph: None,
         })
         .collect();
     let nodes_by_id: std::collections::HashMap<String, &LayoutedGraphNode> = nodes
@@ -952,13 +969,14 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.21.0");
+        assert_eq!(VERSION, "0.22.0");
     }
 
     #[test]
     fn semantic_classes_resolve_in_source_order() {
         let mut diagram = two_node_diagram(DiagramDirection::Tb);
         diagram.nodes[0].classes = vec!["pipeline".into(), "emphasis".into()];
+        diagram.nodes[0].icon = Some("fa fa-code".into());
         let options = GraphLayoutOptions {
             class_styles: BTreeMap::from([
                 (
@@ -979,6 +997,13 @@ mod tests {
                     },
                 ),
             ]),
+            icon_glyphs: BTreeMap::from([(
+                "fa fa-code".into(),
+                DiagramIconGlyph {
+                    text: "⌘".into(),
+                    font_family: "Helvetica".into(),
+                },
+            )]),
             ..GraphLayoutOptions::default()
         };
 
@@ -989,6 +1014,8 @@ mod tests {
         assert_eq!(node.style.font_size, 28.0);
         assert_eq!(node.style.font_weight, 700);
         assert!(node.height > layout.nodes[1].height);
+        assert!(node.width > layout.nodes[1].width);
+        assert_eq!(node.icon_glyph.as_ref().map(|icon| icon.text.as_str()), Some("⌘"));
     }
 
     #[test]
