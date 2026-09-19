@@ -145,6 +145,14 @@ The same verified-identity custody path is available for retained
 provider/client/nonce bindings fail before signing, and the composition adds no
 concrete signing or ID-token verification algorithm.
 
+That `private_key_jwt` path can also load the exact static ID-token policy
+inside the composition. The retained provider/client/endpoint/algorithm/key
+profile, opaque verification context, and nonce are validated before the
+policy source, signer, transport, clock, verifier, or credential store is used.
+Policy loading, signing, transport, response release, identity verification,
+and storage keep their separate provider/trace audit gates; only the opaque
+credential revision is released.
+
 Registration enforces exclusive
 redirect ownership whenever either provider relies on distinct-redirect mix-up
 defense; providers that both validate RFC 9207 issuers may share a redirect.
