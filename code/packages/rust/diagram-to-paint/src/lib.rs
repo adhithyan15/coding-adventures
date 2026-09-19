@@ -1464,6 +1464,9 @@ where
         }
     }
 
+    let icon_width = node.icon_glyph.as_ref().map(|_| node.style.font_size * 1.5).unwrap_or(0.0);
+    let content_x = node.x + icon_width;
+    let content_width = node.width - icon_width;
     let size = node.style.font_size as f32;
     let line_height = node.style.font_size * 1.2;
     let text_height = lines.len().max(1) as f64 * line_height;
@@ -1504,7 +1507,7 @@ where
         }
 
         let baseline_y = top + line_index as f64 * line_height + ascent;
-        let mut pen_x = node.x + (node.width - line_advance) / 2.0;
+        let mut pen_x = content_x + (content_width - line_advance) / 2.0;
         for shaped in shaped_chunks {
             for run in shaped.runs {
                 let mut segment_pen = 0.0;
@@ -1685,6 +1688,24 @@ where
         if diagram.hide_empty_descriptions && node.label.text.is_empty() {
             continue;
         }
+        let icon_width = node.icon_glyph.as_ref().map(|_| node.style.font_size * 1.5).unwrap_or(0.0);
+        if let Some(icon) = &node.icon_glyph {
+            let icon_height = node.style.font_size * 1.2;
+            text_children.push(text_node_no_wrap(
+                &icon.text,
+                node.x + node.style.font_size * 0.25,
+                node.y + (node.height - icon_height) / 2.0,
+                icon_width,
+                icon_height,
+                {
+                    let mut font = label_font.clone();
+                    font.size = node.style.font_size * 1.1;
+                    font.family.clone_from(&icon.font_family);
+                    font
+                },
+                css_to_color(&node.style.text_color),
+            ));
+        }
         if !node.label.spans.is_empty() {
             instructions.extend(markdown_label_instructions(node, options));
             continue;
@@ -1693,9 +1714,9 @@ where
         let text_height = line_count * node.style.font_size * 1.2;
         text_children.push(text_node_no_wrap(
             &node.label.text,
-            node.x,
+            node.x + icon_width,
             node.y + (node.height - text_height) / 2.0,
-            node.width,
+            node.width - icon_width,
             text_height,
             {
                 let mut f = label_font.clone();
@@ -5130,6 +5151,7 @@ mod tests {
                     style: default_style(),
                     classes: Vec::new(),
                     icon: None,
+                    icon_glyph: None,
                 },
                 LayoutedGraphNode {
                     id: "B".to_string(),
@@ -5142,6 +5164,7 @@ mod tests {
                     style: default_style(),
                     classes: Vec::new(),
                     icon: None,
+                    icon_glyph: None,
                 },
             ],
             edges: vec![LayoutedGraphEdge {

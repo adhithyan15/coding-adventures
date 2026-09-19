@@ -173,6 +173,12 @@ pub struct GraphNode {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+pub struct DiagramIconGlyph {
+    pub text: String,
+    pub font_family: String,
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub struct GraphEdge {
     pub id: Option<String>,
     pub from: String,
@@ -455,6 +461,7 @@ pub struct LayoutedGraphNode {
     pub style: ResolvedDiagramStyle,
     pub classes: Vec<String>,
     pub icon: Option<String>,
+    pub icon_glyph: Option<DiagramIconGlyph>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
