@@ -244,6 +244,15 @@ mod apple {
         )));
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,
+            PaintInstruction::GlyphRun(run) if run.font_ref.contains("Bold")
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::GlyphRun(run)
+                if run.font_ref.contains("Oblique") || run.font_ref.contains("Italic")
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
             PaintInstruction::Path(path) if path.commands.len() == 7
         )));
         assert!(scene.instructions.iter().any(|instruction| matches!(

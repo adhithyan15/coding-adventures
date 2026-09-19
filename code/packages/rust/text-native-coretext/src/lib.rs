@@ -42,8 +42,8 @@
 #![cfg_attr(not(target_vendor = "apple"), allow(dead_code, unused_imports))]
 
 use text_interfaces::{
-    Direction, FontMetrics, FontQuery, FontResolutionError, FontResolver, Glyph, ShapeOptions,
-    ShapedRun, ShapedText, ShapingError, TextShaper,
+    Direction, FontMetrics, FontQuery, FontResolutionError, FontResolver, FontStyle, FontWeight,
+    Glyph, ShapeOptions, ShapedRun, ShapedText, ShapingError, TextShaper,
 };
 
 #[cfg(target_vendor = "apple")]
@@ -58,7 +58,7 @@ use objc_bridge::{
     CTRunGetStringIndices, Id, K_CF_STRING_ENCODING_UTF8, NIL,
 };
 
-pub const VERSION: &str = "0.2.0";
+pub const VERSION: &str = "0.3.0";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // CoreTextHandle — retained CTFontRef with automatic Drop-based release
@@ -135,10 +135,9 @@ impl std::fmt::Debug for CoreTextHandle {
 /// query's family-name list and calling `CTFontCreateWithName` for the
 /// first that succeeds.
 ///
-/// v1 supports query of family names. Weight, style, and stretch are
-/// silently ignored until we add `CTFontDescriptor`-based lookup — v1
-/// relies on callers encoding style into the family name (e.g. asking
-/// for `"Helvetica-Bold"` directly) or accepting the regular face.
+/// Weight and style requests are resolved through conventional PostScript
+/// face names before falling back to the regular family. Stretch remains a
+/// future `CTFontDescriptor`-based extension.
 ///
 /// The resolver has a configurable default size used when creating
 /// CTFontRef instances. Callers who need multiple sizes can either
@@ -181,12 +180,31 @@ impl FontResolver for CoreTextResolver {
             return Err(FontResolutionError::InvalidWeight(query.weight.0));
         }
 
-        // For v1: try each family name in order. CoreText falls back to
-        // Helvetica for unknown names, so we treat a nil return as failure.
+        // Prefer conventional PostScript style faces. This keeps the public
+        // query backend-neutral while covering CoreText's standard families.
         for family in &query.family_names {
-            let font_opt = unsafe { create_font(family, self.default_size as f64) };
-            if let Some(h) = font_opt {
-                return Ok(h);
+            let bold = query.weight.0 >= FontWeight::SEMI_BOLD.0;
+            let italic = matches!(query.style, FontStyle::Italic | FontStyle::Oblique);
+            let suffixes: &[&str] = match (bold, italic) {
+                (true, true) => &["BoldOblique", "BoldItalic"],
+                (true, false) => &["Bold"],
+                (false, true) => &["Oblique", "Italic"],
+                (false, false) => &[],
+            };
+            for suffix in suffixes {
+                let face = format!("{family}-{suffix}");
+                if let Some(handle) = unsafe { create_font(&face, self.default_size as f64) } {
+                    if handle
+                        .ps_name
+                        .to_ascii_lowercase()
+                        .contains(&suffix.to_ascii_lowercase())
+                    {
+                        return Ok(handle);
+                    }
+                }
+            }
+            if let Some(handle) = unsafe { create_font(family, self.default_size as f64) } {
+                return Ok(handle);
             }
         }
         Err(FontResolutionError::NoFamilyFound)
@@ -682,6 +700,18 @@ mod tests {
         let h = resolver().resolve(&FontQuery::named("Helvetica")).unwrap();
         assert!(!h.ps_name.is_empty());
         assert!(h.size > 0.0);
+    }
+
+    #[test]
+    fn resolves_helvetica_weight_and_style_faces() {
+        let bold = resolver()
+            .resolve(&FontQuery::named("Helvetica").with_weight(FontWeight::BOLD))
+            .unwrap();
+        let italic = resolver()
+            .resolve(&FontQuery::named("Helvetica").with_style(FontStyle::Italic))
+            .unwrap();
+        assert!(bold.ps_name.contains("Bold"));
+        assert!(italic.ps_name.contains("Oblique") || italic.ps_name.contains("Italic"));
     }
 
     #[test]
