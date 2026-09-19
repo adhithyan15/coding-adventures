@@ -9448,13 +9448,54 @@ fn compound_body_statements(node: &GrammarASTNode) -> Option<Vec<&GrammarASTNode
             compound_body_statements(child)
         }
         "compound_stmt" => {
-            let statements: Vec<&GrammarASTNode> = direct_nodes(node)
+            let mut statements = Vec::new();
+            for statement in direct_nodes(node)
                 .into_iter()
                 .filter(|child| child.rule_name == "statement")
-                .collect();
+            {
+                collect_unlabeled_compound_statements(statement, &mut statements)?;
+            }
             (statements.len() > 1).then_some(statements)
         }
         _ => None,
+    }
+}
+
+fn collect_unlabeled_compound_statements<'a>(
+    node: &'a GrammarASTNode,
+    statements: &mut Vec<&'a GrammarASTNode>,
+) -> Option<()> {
+    match node.rule_name.as_str() {
+        "statement" => {
+            let children = direct_nodes(node);
+            if children.iter().any(|child| child.rule_name == "label") {
+                return None;
+            }
+            let [child] = children.as_slice() else {
+                return None;
+            };
+            collect_unlabeled_compound_statements(child, statements)
+        }
+        "unlabeled_stmt" => {
+            let children = direct_nodes(node);
+            let [child] = children.as_slice() else {
+                return None;
+            };
+            collect_unlabeled_compound_statements(child, statements)
+        }
+        "compound_stmt" => {
+            for statement in direct_nodes(node)
+                .into_iter()
+                .filter(|child| child.rule_name == "statement")
+            {
+                collect_unlabeled_compound_statements(statement, statements)?;
+            }
+            Some(())
+        }
+        _ => {
+            statements.push(node);
+            Some(())
+        }
     }
 }
 
@@ -14691,6 +14732,34 @@ mod tests {
             "test",
         )
         .expect_err("a labeled dummy remains a control-flow target, not an inert sibling");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_recurrences_allow_nested_unlabeled_compound_siblings() {
+        let module = compile_source(
+            "begin integer i, pad; real x, hold, r; boolean stepflag, whileflag, ready; pad := 7; hold := 9.0; ready := true; stepflag := false; for i := 1 step 1 until 3 do begin begin pad := pad; ; stepflag := not stepflag end; begin hold := hold; ready := ready end end; if stepflag then r := 42.0 else r := 0.5; print(r); i := 0; whileflag := false; for i := i + 1 while i <= 3 do begin begin pad := pad; ; whileflag := not whileflag end; begin hold := hold; ready := ready end end; if whileflag then r := 42.0 else r := 0.5; print(r); for x := 1.0 step 0.5 until 10.0 do begin begin ; pad := pad; x := x * 2.0 end; begin hold := hold; ready := ready end end; print(x) end",
+            "test",
+        )
+        .expect("nested unlabeled compounds may group inert recurrence siblings");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42")
+        }));
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "11.5")
+        }));
+    }
+
+    #[test]
+    fn al4_recurrence_rejects_nested_labeled_dummy_sibling() {
+        let err = compile_source(
+            "begin real x; for x := 1.0 step 0.5 until 10.0 do begin x := x * 2.0; begin marker: ; end end; print(x) end",
+            "test",
+        )
+        .expect_err("a nested label remains a control-flow target, not inert grouping");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 

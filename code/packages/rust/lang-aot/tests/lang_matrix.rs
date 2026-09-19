@@ -3489,6 +3489,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("424211.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — unlabeled nested compounds may group the same recurrence,
+    // scalar-identity, and dummy statements without changing their effects.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, pad; real x, hold, r; boolean stepflag, whileflag, ready; pad := 7; hold := 9.0; ready := true; stepflag := false; for i := 1 step 1 until 3 do begin begin pad := pad; ; stepflag := not stepflag end; begin hold := hold; ready := ready end end; if stepflag then r := 42.0 else r := 0.5; print(r); i := 0; whileflag := false; for i := i + 1 while i <= 3 do begin begin pad := pad; ; whileflag := not whileflag end; begin hold := hold; ready := ready end end; if whileflag then r := 42.0 else r := 0.5; print(r); for x := 1.0 step 0.5 until 10.0 do begin begin ; pad := pad; x := x * 2.0 end; begin hold := hold; ready := ready end end; print(x) end",
+        expect: Expect::Stdout("424211.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a list containing only single-value elements is straight-line
     // repetition with no zero-trip path or backedge. Its final static real
     // assignment therefore remains available to the portable output path.
@@ -13244,6 +13253,31 @@ fn algol_dummy_sibling_recurrences_run_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the dummy-sibling recurrences did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_nested_compound_recurrences_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("begin begin pad := pad; ; stepflag := not stepflag end")
+        })
+        .expect("the nested-compound recurrences must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the nested-compound recurrences did not run"
             );
             continue;
         };

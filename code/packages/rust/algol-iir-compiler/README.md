@@ -256,8 +256,9 @@ being treated as identity assignments.
 The recurrence assignment in either loop form may be wrapped in a compound
 body and may additionally have proven integer, real, or boolean identity
 assignments of ordinary local scalars or unlabeled dummy statements as inert
-siblings; labels, conditionals, declarations, changing siblings, and other
-statements remain outside this bounded analysis.
+siblings. Unlabeled nested compound statements may group those same recurrence,
+identity, and dummy statements; labels, conditionals, declarations, changing
+siblings, and other statements remain outside this bounded analysis.
 An exact controlled-scalar assignment in a single-iteration `step`/`until`
 loop may use the same wrapper while retaining its checked post-body exit value.
 The assignment may also derive that value from the known entry control; unknown
@@ -267,8 +268,9 @@ passes until their checked or finite binary64 increment exits, subject to the
 same 4,096-pass analysis cap. Real simulation also rejects rounded-away
 progress. A controlled-scalar assignment may share its compound body with
 proven integer, real, or boolean identity assignments of ordinary local
-scalars or unlabeled dummy statements; changing siblings and all effectful or
-dynamic shapes remain conservative.
+scalars or unlabeled dummy statements, including through unlabeled nested
+compound grouping; changing siblings and all effectful or dynamic shapes remain
+conservative.
 
 Switch-list elements may use every supported designational expression: a
 conditional element selects its branch when `goto s[i]` runs, and a nested
