@@ -451,10 +451,11 @@ fn exponentiation_program_accepted_by_print_backends() {
 }
 
 #[test]
-fn nested_division_program_accepted_by_print_backends() {
+fn nested_division_preserves_textual_clr_and_refuses_lossy_encoding() {
     // A division nested inside a larger COMPUTE expression lowers to a scale-12
     // quotient built from plain `const`/`mul`/`div` ops (no new opcode, no
-    // strings). Every print backend must accept the emitted IIR.
+    // strings). These full-width constants require textual CoreCLR int64;
+    // encoded CLR must refuse them until its scalar representation is widened.
     let src = program(&[
         "IDENTIFICATION DIVISION.",
         "PROGRAM-ID. P.",
@@ -471,7 +472,22 @@ fn nested_division_program_accepted_by_print_backends() {
         "    STOP RUN.",
     ]);
     let m = compile_source(&src, "ndiv").unwrap();
-    assert_accepted_by_print_backends(&m, "ndiv");
+    assert!(iir_to_wasm::validate::validate_for_wasm(&m).is_empty());
+    assert!(iir_to_jvm_class_file::validate::validate_for_jvm(&m).is_empty());
+    let errors = iir_to_cil_bytecode::validate::validate_iir_for_clr(&m);
+    assert_eq!(errors.len(), 3, "{errors:?}");
+    assert!(errors.iter().all(|error| error.contains("encoded CIL range")), "{errors:?}");
+    for value in ["1000000000000", "10000000000"] {
+        assert!(errors.iter().any(|error| error.contains(value)), "{errors:?}");
+    }
+    let config = iir_to_cil_bytecode::IIRClrConfig::default();
+    match iir_to_cil_bytecode::lower_iir_to_cil(&m, &config) {
+        Err(iir_to_cil_bytecode::IIRClrError::ValidationFailed(actual)) => assert_eq!(actual, errors),
+        _ => panic!("nested division must refuse lossy encoded CLR artifacts"),
+    }
+    let il = iir_to_cil_bytecode::emit_il(&m, &config).expect("textual CoreCLR supports int64 scaling");
+    assert!(il.contains("ldc.i8 1000000000000"));
+    assert!(il.contains("ldc.i8 10000000000"));
 }
 
 #[test]
