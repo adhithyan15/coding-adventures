@@ -2800,6 +2800,11 @@ jobs:
           jq -e '.nativeComplete == true and (.degradations | length == 0)' "$slider_output/compose/mosaic-degradations.json"
           gradle --no-daemon --stacktrace -p "$slider_output/compose" compileKotlin
 
+          navigation_split_output="$RUNNER_TEMP/mosaic-compose-host-navigation-split"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-compose/tests/fixtures/host-navigation-split-package --backend compose --output "$navigation_split_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0) and (.behaviorDegradations | length == 0)' "$navigation_split_output/compose/mosaic-degradations.json"
+          gradle --no-daemon --stacktrace -p "$navigation_split_output/compose" compileKotlin
+
           strict_output="$RUNNER_TEMP/mosaic-compose-native-complete-rating-controls"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend compose --output "$strict_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
           jq -e '.nativeComplete == true and (.degradations | length == 0)' "$strict_output/compose/mosaic-degradations.json"

@@ -120,6 +120,12 @@ pub fn from_pipeline(
     if uses_flow {
         opt_ins.push("androidx.compose.foundation.layout.ExperimentalLayoutApi::class");
     }
+    let uses_navigation_split = layout_contains_tag(&layout.root, "HostNavigationSplit");
+    if uses_navigation_split {
+        opt_ins.push(
+            "androidx.compose.material3.adaptive.navigationsuite.ExperimentalMaterial3AdaptiveNavigationSuiteApi::class",
+        );
+    }
     if !opt_ins.is_empty() {
         writeln!(out, "@file:OptIn({})", opt_ins.join(", ")).unwrap();
     }
@@ -343,6 +349,18 @@ pub fn from_pipeline(
     writeln!(out, "import androidx.compose.material.Surface").unwrap();
     writeln!(out, "import androidx.compose.material.Text").unwrap();
     writeln!(out, "import androidx.compose.material.TextField").unwrap();
+    if uses_navigation_split {
+        writeln!(
+            out,
+            "import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldLayout"
+        )
+        .unwrap();
+        writeln!(
+            out,
+            "import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType"
+        )
+        .unwrap();
+    }
     if uses_checkbox_indeterminate {
         writeln!(out, "import androidx.compose.material.TriStateCheckbox").unwrap();
     }
@@ -4700,6 +4718,137 @@ fn cell_text_style(inherited: &TextStyleCtx, style: &ComposeStyle) -> TextStyleC
     ctx
 }
 
+/// Lower UI29-6's adaptive pane/detail primitive to Material 3's native
+/// navigation-suite layout. The kernel fixes child order as pane then detail;
+/// the custom `navigationSuite` slot is intentional because Mosaic's pane is
+/// an arbitrary subtree rather than a list of `NavigationSuiteItem`s.
+///
+/// With the default `collapse: auto`, Material owns the size-class decision
+/// and places the suite as a drawer, rail, or compact navigation surface.
+/// `collapse: never` pins `NavigationDrawer`, the always-leading-pane shape.
+#[allow(clippy::too_many_arguments)]
+fn emit_host_navigation_split(
+    node: &LayoutNode,
+    depth: usize,
+    component_name: &str,
+    emits: &[EmitDecl],
+    part_styles: &PartStyleMap,
+    table_ctx: Option<&TableContext>,
+    text_ctx: Option<&TextStyleCtx>,
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Result<String, PipelineEmitError> {
+    let (pane, detail) = match node.children.as_slice() {
+        [pane, detail] => (pane, detail),
+        children => {
+            return Err(PipelineEmitError::UnknownPrimitive(format!(
+                "HostNavigationSplit takes exactly two children -- the pane, then the detail -- got {}",
+                children.len()
+            )));
+        }
+    };
+
+    let title = match find_prop_value(node, "pane-title") {
+        Some(LayoutPropValue::String(value)) => {
+            format!("\"{}\"", escape_kotlin_string(value))
+        }
+        Some(LayoutPropValue::SlotRef(name)) | Some(LayoutPropValue::Keyword(name)) => {
+            let field = to_camel_case_first_lower(name);
+            validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            field
+        }
+        Some(LayoutPropValue::Expr(expression)) => {
+            compose_collection_index_expr(expression.trim(), for_payload)
+        }
+        Some(LayoutPropValue::Number(number)) => format!("\"{number}\""),
+        Some(LayoutPropValue::EmitRef(_)) => {
+            return Err(PipelineEmitError::UnknownPrimitive(
+                "HostNavigationSplit `pane-title` takes text, not an emit reference".to_string(),
+            ));
+        }
+        None => "\"\"".to_string(),
+    };
+
+    let pinned = match find_prop_value(node, "collapse") {
+        None => false,
+        Some(LayoutPropValue::Keyword(value)) if value == "auto" => false,
+        Some(LayoutPropValue::Keyword(value)) if value == "never" => true,
+        Some(_) => {
+            return Err(PipelineEmitError::UnknownPrimitive(
+                "HostNavigationSplit `collapse` takes the keyword `auto` or `never`".to_string(),
+            ));
+        }
+    };
+
+    let pad = "    ".repeat(depth);
+    let arg_pad = "    ".repeat(depth + 1);
+    let suite_pad = "    ".repeat(depth + 2);
+    let modifier_pad = "    ".repeat(depth + 4);
+    let pane_depth = depth + 4;
+    let detail_depth = depth + 2;
+    let tag = node
+        .part_name
+        .as_ref()
+        .map(|part| format!(".testTag(\"{}\")", escape_kotlin_string(part)))
+        .unwrap_or_default();
+
+    let mut out = String::new();
+    writeln!(
+        out,
+        "{pad}Box(modifier = Modifier.fillMaxSize(){tag}) {{"
+    )
+    .unwrap();
+    writeln!(out, "{arg_pad}NavigationSuiteScaffoldLayout(").unwrap();
+    writeln!(out, "{suite_pad}navigationSuite = {{").unwrap();
+    writeln!(out, "{suite_pad}    Column(").unwrap();
+    writeln!(out, "{suite_pad}        modifier = Modifier").unwrap();
+    if let Some(LayoutPropValue::Number(width)) = find_prop_value(node, "pane-width") {
+        writeln!(out, "{modifier_pad}.width({width}.dp)").unwrap();
+    }
+    writeln!(
+        out,
+        "{modifier_pad}.semantics {{ contentDescription = {title} }},"
+    )
+    .unwrap();
+    writeln!(out, "{suite_pad}    ) {{").unwrap();
+    out.push_str(&emit_compose_tree(
+        pane,
+        pane_depth,
+        component_name,
+        emits,
+        part_styles,
+        table_ctx,
+        text_ctx,
+        for_payload,
+        None,
+        false,
+    )?);
+    writeln!(out, "{suite_pad}    }}").unwrap();
+    writeln!(out, "{suite_pad}}},").unwrap();
+    if pinned {
+        writeln!(
+            out,
+            "{suite_pad}layoutType = NavigationSuiteType.NavigationDrawer,"
+        )
+        .unwrap();
+    }
+    writeln!(out, "{arg_pad}) {{").unwrap();
+    out.push_str(&emit_compose_tree(
+        detail,
+        detail_depth,
+        component_name,
+        emits,
+        part_styles,
+        table_ctx,
+        text_ctx,
+        for_payload,
+        None,
+        false,
+    )?);
+    writeln!(out, "{arg_pad}}}").unwrap();
+    writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
+}
+
 fn text_call(value_expr: &str, text_ctx: Option<&TextStyleCtx>, modifier: Option<&str>) -> String {
     let args = text_ctx.map(TextStyleCtx::text_args).unwrap_or_default();
     let modifier_arg = modifier
@@ -4740,6 +4889,16 @@ fn emit_compose_tree(
     let pad = "    ".repeat(depth);
     match node.tag.as_str() {
         "HostSurface" => emit_host_surface_compose(node, depth),
+        "HostNavigationSplit" => emit_host_navigation_split(
+            node,
+            depth,
+            component_name,
+            emits,
+            part_styles,
+            table_ctx,
+            text_ctx,
+            for_payload,
+        ),
         // UI60 (#14828): `Box` is UI29's GENERIC OPAQUE CONTAINER -- `<div>`
         // on html, `Group { }` on SwiftUI, `Item { }` on Qt -- so its children
         // lay out in flow. It lowers to Compose's `Column`.
@@ -10589,6 +10748,92 @@ mod tests {
             !out.contains("selectableGroup"),
             "expected no selectableGroup across two distinct groups, got:\n{out}"
         );
+    }
+
+    #[test]
+    fn navigation_split_lowers_to_native_adaptive_compose_container() {
+        let m = component("Shell", vec![], vec![]);
+        let pane = node(
+            "Text",
+            vec![LayoutProp {
+                name: "content".into(),
+                value: LayoutPropValue::String("Pane".into()),
+            }],
+            vec![],
+        );
+        let detail = node(
+            "Text",
+            vec![LayoutProp {
+                name: "content".into(),
+                value: LayoutPropValue::String("Detail".into()),
+            }],
+            vec![],
+        );
+        let l = layout(
+            "Shell",
+            styled_node(
+                "HostNavigationSplit",
+                "app-shell",
+                vec![
+                    LayoutProp {
+                        name: "pane-title".into(),
+                        value: LayoutPropValue::String("Projects".into()),
+                    },
+                    LayoutProp {
+                        name: "pane-width".into(),
+                        value: LayoutPropValue::Number(236.0),
+                    },
+                ],
+                vec![pane, detail],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Shell"))
+            .unwrap()
+            .output;
+
+        assert!(out.contains("NavigationSuiteScaffoldLayout("), "{out}");
+        assert!(out.contains("navigationSuite = {"), "{out}");
+        assert!(out.contains(".width(236.dp)"), "{out}");
+        assert!(
+            out.contains(".semantics { contentDescription = \"Projects\" }"),
+            "{out}"
+        );
+        assert!(out.contains("Modifier.fillMaxSize().testTag(\"app-shell\")"));
+        assert!(!out.contains("layoutType = NavigationSuiteType.NavigationDrawer"));
+        assert!(
+            out.find("Text(text = \"Pane\")").unwrap()
+                < out.find("Text(text = \"Detail\")").unwrap()
+        );
+        assert!(out.contains("ExperimentalMaterial3AdaptiveNavigationSuiteApi::class"));
+        assert!(out.contains("import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldLayout"));
+    }
+
+    #[test]
+    fn navigation_split_never_pins_a_leading_navigation_drawer() {
+        let m = component("Shell", vec![slot("title", SlotType::Text, true)], vec![]);
+        let l = layout(
+            "Shell",
+            node(
+                "HostNavigationSplit",
+                vec![
+                    slot_prop("pane-title", "title"),
+                    LayoutProp {
+                        name: "collapse".into(),
+                        value: LayoutPropValue::Keyword("never".into()),
+                    },
+                ],
+                vec![
+                    node("Column", vec![], vec![]),
+                    node("Column", vec![], vec![]),
+                ],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Shell"))
+            .unwrap()
+            .output;
+
+        assert!(out.contains("layoutType = NavigationSuiteType.NavigationDrawer,"));
+        assert!(out.contains(".semantics { contentDescription = title }"));
     }
 
     #[test]
