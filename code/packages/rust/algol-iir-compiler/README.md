@@ -265,9 +265,10 @@ dependencies and assignments whose increment remains in range fail closed.
 Exact integer or real control assignments may be followed across multiple
 passes until their checked or finite binary64 increment exits, subject to the
 same 4,096-pass analysis cap. Real simulation also rejects rounded-away
-progress. A controlled-scalar assignment may share its compound body with exact
-bare self-assignments of ordinary local scalars; changing siblings and all
-effectful or dynamic shapes remain conservative.
+progress. A controlled-scalar assignment may share its compound body with
+proven integer, real, or boolean identity assignments of ordinary local
+scalars; changing siblings and all effectful or dynamic shapes remain
+conservative.
 
 Switch-list elements may use every supported designational expression: a
 conditional element selects its branch when `goto s[i]` runs, and a nested

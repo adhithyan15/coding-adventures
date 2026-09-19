@@ -6248,8 +6248,7 @@ impl Compiler {
             if binding.is_global
                 || binding.array.is_some()
                 || self.active_by_name_binding(&name).is_some()
-                || exact_bare_variable_expression_name(expression).as_deref()
-                    != Some(name.as_str())
+                || !self.selector_expression_unconditionally_preserves_name(expression, &name)
             {
                 return None;
             }
@@ -14606,6 +14605,20 @@ mod tests {
             "test",
         )
         .expect("an exact control recurrence may ignore an inert local scalar sibling");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "11.5")
+        }));
+    }
+
+    #[test]
+    fn al4_step_loop_control_recurrence_allows_computed_inert_scalar_siblings() {
+        let module = compile_source(
+            "begin integer pad; real x, hold; boolean ready; pad := 7; hold := 9.0; ready := true; for x := 1.0 step 0.5 until 10.0 do begin x := x * 2.0; pad := 0 + pad; hold := hold * 1.0; ready := ready and true end; print(x) end",
+            "test",
+        )
+        .expect("an exact control recurrence may ignore proven scalar identity siblings");
         let main = module.get_function("main").expect("has main");
         assert!(main.instructions.iter().any(|instr| {
             instr.op == "str_const"
