@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+### Added -- versioned web preview artifacts (#15515)
+
+Package the production web app and compiled Rust runtime into a versioned ZIP
+with source identity, per-file hashes, archive checksum and standalone launch
+instructions. CI verifies the downloaded archive in a job without a checkout;
+`visicalc-v*` tags create draft prereleases after those checks pass. This is the
+first release slice under #14282, not native or full interaction acceptance.
+Packaged-app testing discovered formula-range bug #15519, which blocks promotion.
+
 ### Changed -- the inline cell editor is styled by the grid package (#15048)
 
 `mosaic-pkg-grid` now exposes a `cell-editor` part on `Cell` so the inline
