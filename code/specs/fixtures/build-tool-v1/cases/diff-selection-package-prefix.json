@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "id": "diff-selection/package-prefix",
+  "domain": "diff_selection",
+  "summary": "Exact-root and descendant changes select their packages in package-prefix mode.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "diff_selection"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "diff_selection",
+    "options": {
+      "packages": [
+        {
+          "name": "java/exact",
+          "rel_path": "code/packages/java/exact",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "java/nested",
+          "rel_path": "code/packages/java/nested",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "java/other",
+          "rel_path": "code/packages/java/other",
+          "source_mode": "package_prefix"
+        }
+      ],
+      "edges": [],
+      "forced_packages": [],
+      "unknown_path_policy": "error"
+    },
+    "changed_paths": [
+      "code/packages/java/exact",
+      "code/packages/java/nested/docs/notes.txt"
+    ]
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "diff-selection/package-prefix",
+    "domain": "diff_selection",
+    "outcome": "ok",
+    "result": {
+      "changed_packages": [
+        "java/exact",
+        "java/nested"
+      ],
+      "affected_packages": [
+        "java/exact",
+        "java/nested"
+      ],
+      "prerequisite_packages": []
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

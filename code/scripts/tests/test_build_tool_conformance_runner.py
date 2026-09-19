@@ -150,7 +150,7 @@ class CorpusTests(unittest.TestCase):
 
         self.assertEqual(summary["schema_version"], 1)
         # Keep this pin in sync with every reviewed shared-corpus addition.
-        self.assertEqual(summary["case_count"], 154)
+        self.assertEqual(summary["case_count"], 157)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -2266,13 +2266,17 @@ class ResultValidationTests(unittest.TestCase):
             runner.assert_result_matches(graph, extra)
         self.assertEqual(raised.exception.code, "RESULT_SCHEMA_INVALID")
 
-    def test_domain_aware_canonicalization_accepts_set_order_variation(self) -> None:
+    def test_graph_result_requires_canonical_edge_order(self) -> None:
         case = load_case("graph-diamond.json")
-        actual = copy.deepcopy(case["expected"])
-        actual["result"]["edges"].reverse()
-        actual["result"]["levels"][1].reverse()
+        noncanonical_edges = copy.deepcopy(case["expected"])
+        noncanonical_edges["result"]["edges"].reverse()
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.assert_result_matches(case, noncanonical_edges)
+        self.assertEqual(raised.exception.code, "RESULT_GRAPH_RESULT_INVALID")
 
-        canonical = runner.assert_result_matches(case, actual)
+        unordered_level = copy.deepcopy(case["expected"])
+        unordered_level["result"]["levels"][1].reverse()
+        canonical = runner.assert_result_matches(case, unordered_level)
 
         self.assertEqual(canonical, case["expected"])
 
@@ -3397,6 +3401,11 @@ class PureDomainValidationTests(unittest.TestCase):
                 ["python/middle"],
                 ["python/app"],
             ],
+            "graph-canonical-edge-order.json": [
+                ["python/base"],
+                ["python/lib-a", "python/lib-b"],
+                ["python/app"],
+            ],
             "graph-multiple-components.json": [
                 ["python/alpha", "python/gamma", "python/isolated"],
                 ["python/beta", "python/delta"],
@@ -3441,6 +3450,41 @@ class PureDomainValidationTests(unittest.TestCase):
         with self.assertRaises(runner.ConformanceError) as raised:
             runner.validate_case_document(dishonest, **self._schema_args())
         self.assertEqual(raised.exception.code, "EXPECTED_DIFF_UNKNOWN_PATH_INVALID")
+
+    def test_diff_package_prefix_and_forced_package_closure(self) -> None:
+        expectations = {
+            "diff-selection-package-prefix.json": (
+                {"java/exact", "java/nested"},
+                {"java/exact", "java/nested"},
+                set(),
+            ),
+            "diff-selection-forced-package.json": (
+                {"python/lib"},
+                {"python/app", "python/lib"},
+                {"python/base"},
+            ),
+        }
+        for filename, expected in expectations.items():
+            with self.subTest(filename=filename):
+                case = load_case(filename)
+                self.assertEqual(
+                    runner._expected_diff_selection(
+                        case["input"]["options"],
+                        case["input"]["changed_paths"],
+                    ),
+                    expected,
+                )
+                runner.validate_case_document(case, **self._schema_args())
+
+        forced = load_case("diff-selection-forced-package.json")
+        forced["input"]["changed_paths"] = ["outside/repository.txt"]
+        self.assertEqual(
+            runner._expected_diff_selection(
+                forced["input"]["options"],
+                forced["input"]["changed_paths"],
+            ),
+            "DIFF_UNKNOWN_PATH",
+        )
 
     def test_ci_gate_selection_match_work_ceiling(self) -> None:
         at_limit = load_case("ci-gate-selection-match-work-at-limit.json")
@@ -4006,7 +4050,7 @@ class CommandLineTests(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
         # This second pin covers the CLI machine-readable summary path.
-        self.assertEqual(summary["case_count"], 154)
+        self.assertEqual(summary["case_count"], 157)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"
