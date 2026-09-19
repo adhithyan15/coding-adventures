@@ -102,6 +102,15 @@ credential release, and revision-bound custody rotation without leaving the
 broker. Authentication mismatch is rejected before credential access, and
 transport, provider, clock, release, or compare-and-swap failures retain the
 prior record.
+Public-client Authorization Code exchange can now cross an injected transport
+and persist directly under one caller-selected opaque account key. The key's
+provider and the request's provider, client ID, token endpoint, and retained
+public `none` profile must all match before transport, clock, credential
+release, or storage access. The zeroizing PKCE request never leaves the
+transport closure; bounded response decoding, credential release, and custody
+creation remain separately audited with one provider and trace, and only the
+opaque revision returns. Account identity proof and key selection remain
+caller-owned, and no concrete network authority is added.
 Public-client profiles now have corresponding refresh-token and
 access-token-only detach boundaries without acquiring an authentication secret
 or signer. The exact opaque account key selects the registered public `none`
