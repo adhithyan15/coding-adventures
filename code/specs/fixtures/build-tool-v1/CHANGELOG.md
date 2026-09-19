@@ -2,6 +2,12 @@
 
 ## 2026-09-19
 
+- Added exact-at-limit and over-limit process-free CI-gate selection cases for
+  the fixed 50,000,000-unit operation-wide path-match ceiling. The cases pin
+  Unicode-scalar accounting, full pattern/file preflight, zero matcher calls on
+  rejection, and stable empty-result `CI_GATE_MATCH_LIMIT_EXCEEDED` failure.
+  The corpus now has 153 cases while the empty fixture workspaces leave the
+  validated staged-file count at 285.
 - Added exact-at-limit and over-limit process-free diff-selection cases for the
   fixed 50,000,000-unit operation-wide declared match-work ceiling. The cases
   pin Unicode-scalar accounting, full conservative preflight before the first

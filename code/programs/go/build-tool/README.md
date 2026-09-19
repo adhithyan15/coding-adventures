@@ -57,6 +57,23 @@ emits the root-redacted `Error: HASH_PACKAGE_FAILED "<package-identity>"`
 record with Go-escaped control characters and exits `2` instead of caching a
 sentinel digest or printing an uncontrolled stack trace.
 
+## Bounded CI gate selection
+
+CI-gate evaluation remains process-free after the registry and change
+snapshots are loaded. For ordinary pull-request snapshots, the evaluator
+preflights the complete declared gate-pattern/file Cartesian product with a
+fixed 50,000,000 Unicode-scalar work-unit ceiling before package intersection
+or the first glob call. Exactly the ceiling is accepted. A larger or
+overflowing operation returns `CI_GATE_MATCH_LIMIT_EXCEEDED`; the front door
+exits before writing a build plan or any partial gate outputs. Force, missing
+snapshots, and recognized gating-machinery changes retain their all-gates-true
+bypass.
+
+The shared globstar matcher memoizes each `(pattern index, path index)` state
+for one call, including failed states. Its `**` recurrence consumes either zero
+segments or one segment, which bounds recursive near misses by the dynamic-
+programming state grid without retaining attacker-shaped data across calls.
+
 ## Building
 
 ```bash
