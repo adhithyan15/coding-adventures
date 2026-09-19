@@ -189,9 +189,10 @@ mod apple {
     #[test]
     fn render_mermaid_mindmap_to_png() {
         let graph = parse_mindmap(
-            "mindmap\n  root((Native Mermaid))\n    Parser[Grammar first]\n      IR(Semantic tree)\n    Paint((Backend neutral))\n      Metal\n      PNG",
+            "mindmap\n  root((Native Mermaid))\n    Parser[Grammar first]\n      IR(Semantic tree)\n    Paint((Backend neutral))\n      Metal\n      PNG\n    output{{Hexagon path}}",
         )
         .expect("mindmap parse failed");
+        assert_eq!(graph.nodes.last().unwrap().shape, Some(diagram_ir::DiagramShape::Hexagon));
         let layout = layout_graph_diagram(&graph, None, None);
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;
@@ -212,6 +213,10 @@ mod apple {
         };
 
         let scene = diagram_to_paint(&layout, &opts);
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Path(path) if path.commands.len() == 7
+        )));
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,
             PaintInstruction::Path(_)
