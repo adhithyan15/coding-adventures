@@ -487,6 +487,14 @@ validation, exact typed IP comparison, case-insensitive label matching, strict
 one-label wildcards, and no Common Name input. It does not parse certificates,
 validate paths, load roots, open sockets, or integrate with `tls-platform`, so
 the concrete OAuth HTTPS boundary remains blocked on all remaining TLS work.
+The next prerequisite is also shipped as `der-tlv`: a zero-external-dependency,
+allocation-free decoder for canonical DER identifier and definite-length
+framing with explicit input, value, tag, and sibling limits. It rejects BER
+indefinite lengths, non-minimal encodings, overflow, truncation, universal EOC,
+and trailing data in exact mode. It does not interpret ASN.1 types, recurse
+through constructed values, parse X.509, validate certificate paths, verify
+signatures, or select trust roots, so it does not unblock concrete HTTPS by
+itself.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
