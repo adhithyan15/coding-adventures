@@ -148,6 +148,92 @@ describe("bounded stream fan-out", () => {
     expect(fanOut.stats().retainedValues).toBe(0);
   });
 
+  it("reports cancellation once when cancelled before the first read", async () => {
+    const cancellation = createCancellationTokenSource();
+    cancellation.cancel("already stopped");
+    const open = vi.fn(() => iterator(range(1)));
+    const fanOut = createBoundedFanOut(
+      { [Symbol.asyncIterator]: open },
+      1,
+      cancellation.token,
+    );
+    const branch = iterator(fanOut.branches[0]!);
+
+    await expect(branch.next()).rejects.toBeInstanceOf(CancellationError);
+    await expect(branch.next()).resolves.toEqual({ done: true, value: undefined });
+    expect(open).not.toHaveBeenCalled();
+  });
+
+  it("reports cancellation between pulls instead of clean completion", async () => {
+    const cancellation = createCancellationTokenSource();
+    const fanOut = createBoundedFanOut(range(3), 1, cancellation.token);
+    const branch = iterator(fanOut.branches[0]!);
+    await expect(branch.next()).resolves.toEqual({ done: false, value: 0 });
+
+    cancellation.cancel("between values");
+    await expect(branch.next()).rejects.toBeInstanceOf(CancellationError);
+    await expect(branch.next()).resolves.toEqual({ done: true, value: undefined });
+  });
+
+  it("cancellation clears queued values even after upstream completion", async () => {
+    const cancellation = createCancellationTokenSource();
+    const fanOut = createBoundedFanOut(range(1), 2, cancellation.token, 2);
+    const fast = iterator(fanOut.branches[0]!);
+    const slow = iterator(fanOut.branches[1]!);
+    await expect(fast.next()).resolves.toEqual({ done: false, value: 0 });
+    await expect(fast.next()).resolves.toEqual({ done: true, value: undefined });
+    expect(fanOut.stats().retainedValues).toBe(1);
+
+    cancellation.cancel("after completion");
+    expect(fanOut.stats()).toMatchObject({ activeBranches: 0, retainedValues: 0 });
+    await expect(slow.next()).rejects.toBeInstanceOf(CancellationError);
+    await expect(slow.next()).resolves.toEqual({ done: true, value: undefined });
+  });
+
+  it.each([
+    ["null result", () => null],
+    ["throwing done getter", () => Object.defineProperty({}, "done", {
+      get() { throw new Error("hostile done"); },
+    })],
+    ["throwing value getter", () => Object.defineProperties({}, {
+      done: { value: false },
+      value: { get() { throw new Error("hostile value"); } },
+    })],
+  ])("turns a %s into a shared terminal error and closes upstream", async (_name, result) => {
+    const upstreamReturn = vi.fn(async () => ({ done: true, value: undefined }));
+    const source = {
+      [Symbol.asyncIterator]() {
+        return {
+          next: async () => result(),
+          return: upstreamReturn,
+        };
+      },
+    } as unknown as AsyncIterable<number>;
+    const fanOut = createBoundedFanOut(source, 2, neverCancelledToken());
+    const [left, right] = fanOut.branches.map(iterator);
+
+    await expect(left!.next()).rejects.toThrow();
+    await expect(right!.next()).rejects.toThrow();
+    expect(upstreamReturn).toHaveBeenCalledTimes(1);
+  });
+
+  it("closes a rejecting upstream without replacing its error", async () => {
+    const failure = new Error("next rejected");
+    const upstreamReturn = vi.fn(async () => { throw new Error("cleanup rejected"); });
+    const source: AsyncIterable<number> = {
+      [Symbol.asyncIterator]() {
+        return {
+          next: async () => { throw failure; },
+          return: upstreamReturn,
+        };
+      },
+    };
+    const branch = iterator(createBoundedFanOut(source, 1, neverCancelledToken()).branches[0]!);
+
+    await expect(branch.next()).rejects.toBe(failure);
+    expect(upstreamReturn).toHaveBeenCalledTimes(1);
+  });
+
   it("rejects concurrent reads and a second iterator for one branch", async () => {
     let releasePull: ((result: IteratorResult<number>) => void) | undefined;
     const source: AsyncIterable<number> = {

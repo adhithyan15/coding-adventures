@@ -18,10 +18,11 @@
 
 ### Tests
 
-- Twelve focused cases cover lazy source opening, order, one-pull multicast,
-  slow-branch backpressure, detachment, source failure, cancellation, invalid
-  bounds, single-use branches, concurrent-read rejection, zero consumers, and
-  streams larger than the default 64-value window.
+- Nineteen focused cases cover lazy source opening, order, one-pull multicast,
+  slow-branch backpressure, detachment, source failure and hostile iterator
+  results, cancellation before/during/after delivery, invalid bounds,
+  single-use branches, concurrent-read rejection, zero consumers, and streams
+  larger than the default 64-value window.
 
 ## 0.8.0 — 2026-09-19
 

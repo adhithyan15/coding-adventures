@@ -34,6 +34,7 @@ interface BranchState<T> {
   active: boolean;
   iteratorTaken: boolean;
   terminalDelivered: boolean;
+  cancellationPending: CancellationError | null;
   pending: PendingRead<T> | null;
 }
 
@@ -62,11 +63,13 @@ export function createBoundedFanOut<T>(
     active: true,
     iteratorTaken: false,
     terminalDelivered: false,
+    cancellationPending: null,
     pending: null,
   }));
   let upstream: AsyncIterator<T> | null = null;
   let upstreamClosed = false;
   let terminal: Terminal | null = null;
+  let cancelled = false;
   let pumpRunning = false;
   let upstreamPulls = 0;
   let peakRetainedValues = 0;
@@ -85,9 +88,10 @@ export function createBoundedFanOut<T>(
   const closeUpstream = async (): Promise<void> => {
     if (upstreamClosed) return;
     upstreamClosed = true;
-    if (upstream === null || typeof upstream.return !== "function") return;
     try {
-      await upstream.return();
+      if (upstream === null) return;
+      const close = upstream.return;
+      if (typeof close === "function") await close.call(upstream);
     } catch {
       // Cleanup cannot replace the source failure or cancellation that caused
       // the close. Normal iterator completion does not call this path.
@@ -116,15 +120,17 @@ export function createBoundedFanOut<T>(
   };
 
   const cancel = (): void => {
-    if (terminal !== null) return;
-    let error: unknown = new CancellationError(cancellation.reason ?? undefined);
+    if (cancelled) return;
+    cancelled = true;
+    let error = new CancellationError(cancellation.reason ?? undefined);
     try {
       cancellation.throwIfCancelled();
     } catch (caught) {
-      error = caught;
+      if (caught instanceof CancellationError) error = caught;
     }
     terminal = { kind: "error", error };
     for (const state of states) {
+      if (!state.active) continue;
       state.queue.length = 0;
       state.active = false;
       if (state.pending !== null) {
@@ -132,6 +138,10 @@ export function createBoundedFanOut<T>(
         state.pending = null;
         state.terminalDelivered = true;
         pending.reject(error);
+      } else {
+        // The next read observes cancellation once even though the branch is
+        // already detached from pressure and resource accounting.
+        state.cancellationPending = error;
       }
     }
     void closeUpstream();
@@ -164,25 +174,37 @@ export function createBoundedFanOut<T>(
     pumpRunning = true;
     try {
       while (terminal === null && activeBranches() > 0 && hasDemand() && hasCapacity()) {
-        let result: IteratorResult<T>;
+        let done: boolean;
+        let value: T | undefined;
         try {
           cancellation.throwIfCancelled();
           upstreamPulls += 1;
-          result = await getUpstream().next();
+          const result: unknown = await getUpstream().next();
+          if (cancelled || terminal !== null || activeBranches() === 0) break;
+          if (typeof result !== "object" || result === null) {
+            throw new TypeError("upstream iterator next() must return an object");
+          }
+          const candidate = result as IteratorResult<T>;
+          done = Boolean(candidate.done);
+          value = done ? undefined : candidate.value;
         } catch (error) {
           if (terminal === null) finish({ kind: "error", error });
+          await closeUpstream();
           break;
         }
 
         // Cancellation or last-branch detachment may happen while next() is
         // in flight. Such a late value must never repopulate cleared queues.
         if (terminal !== null || activeBranches() === 0) break;
-        if (result.done) {
+        if (done) {
           finish({ kind: "done" });
           break;
         }
-        broadcast(result.value);
+        broadcast(value as T);
       }
+    } catch (error) {
+      if (terminal === null) finish({ kind: "error", error });
+      await closeUpstream();
     } finally {
       pumpRunning = false;
     }
@@ -191,6 +213,11 @@ export function createBoundedFanOut<T>(
   const schedulePump = (): void => { void pump(); };
 
   const next = async (state: BranchState<T>): Promise<IteratorResult<T>> => {
+    if (state.cancellationPending !== null) {
+      const error = state.cancellationPending;
+      state.cancellationPending = null;
+      throw error;
+    }
     if (!state.active) return { done: true, value: undefined };
     cancellation.throwIfCancelled();
     if (state.queue.length > 0) {
