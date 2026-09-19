@@ -15,7 +15,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 SCRIPT_ROOT = REPO_ROOT / "code/scripts"
 sys.path.insert(0, str(SCRIPT_ROOT))
 
-import ocaml_representative_ci as representative  # noqa: E402
+import ocaml_representative_ci as representative
 
 
 class ManifestAndRepositoryTests(unittest.TestCase):
@@ -39,7 +39,9 @@ class ManifestAndRepositoryTests(unittest.TestCase):
     def test_package_order_and_dependencies_are_exact(self) -> None:
         document = copy.deepcopy(self.manifest)
         document["packages"] = list(reversed(document["packages"]))
-        with self.assertRaisesRegex(representative.ContractError, "package order"):
+        with self.assertRaisesRegex(
+            representative.ContractError, "package (order|logic-gates)"
+        ):
             representative.validate_manifest_shape(document)
 
         document = copy.deepcopy(self.manifest)
@@ -75,7 +77,7 @@ class ManifestAndRepositoryTests(unittest.TestCase):
             with self.subTest(case=index), self.assertRaises(
                 representative.ContractError
             ):
-                representative.validate_workflow_text(self.manifest, workflow)
+                    representative.validate_workflow_policy_text(workflow)
 
 
 class CoverageTests(unittest.TestCase):
@@ -110,6 +112,14 @@ class CoverageTests(unittest.TestCase):
             representative.validate_coverage_summary(
                 "100.00 % 0/0 src/a.ml\n", ["src/a.ml"], 9500
             )
+
+    def test_coverage_normalizes_windows_source_paths(self) -> None:
+        result = representative.validate_coverage_summary(
+            " 96.64 % 290/300 src\\coding_adventures_state_machine.ml\n",
+            ["src/coding_adventures_state_machine.ml"],
+            9500,
+        )
+        self.assertEqual(9664, result["src/coding_adventures_state_machine.ml"])
 
 
 class ArchiveTests(unittest.TestCase):
@@ -157,6 +167,45 @@ class ArchiveTests(unittest.TestCase):
                 representative.validate_archive_members(
                     self._archive(members), "root", {"README"}
                 )
+
+
+class EvidenceTests(unittest.TestCase):
+    def test_evidence_requires_every_package_and_both_downstream_receipts(self) -> None:
+        manifest = representative.load_manifest(REPO_ROOT)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            files = [
+                "installed-packages.txt",
+                "toolchain.txt",
+                "source-archives/SHA256SUMS",
+                "downstream/representative.json",
+                "downstream/transitive-leaf.json",
+            ]
+            for package in manifest["packages"]:
+                package_id = package["id"]
+                files.extend(
+                    [
+                        f"coverage/{package_id}/coverage-summary.txt",
+                        f"coverage/{package_id}/bisect0001.coverage",
+                        f"documentation/{package_id}.log",
+                        f"documentation/{package_id}/index.html",
+                        f"analyzer/{package_id}.txt",
+                        (
+                            "source-archives/"
+                            f"coding-adventures-{package_id}-{package['version']}.tar.gz"
+                        ),
+                    ]
+                )
+            for relative in files:
+                path = root / relative
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text("evidence\n", encoding="utf-8")
+            representative.validate_evidence(manifest, root)
+            (root / "analyzer/state-machine.txt").unlink()
+            with self.assertRaisesRegex(
+                representative.ContractError, "analyzer/state-machine"
+            ):
+                representative.validate_evidence(manifest, root)
 
 
 class CliTests(unittest.TestCase):

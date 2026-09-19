@@ -45,5 +45,6 @@ let () =
       (Coding_adventures_state_machine.Dfa.process machine "coin")
   in
   require (current = "open") "unexpected DFA state";
+  set_binary_mode_out stdout true;
   print_endline
     {|{"schema_version":1,"fixture":"ocaml-representative-downstream-v1","logic_gate":1,"graph_bfs":["a","b"],"directed_order":["parse","emit"],"dfa_state":"open","passes":true}|}

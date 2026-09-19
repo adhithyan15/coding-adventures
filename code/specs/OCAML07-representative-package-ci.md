@@ -115,10 +115,12 @@ Each target uploads one artifact, retained for seven days, containing:
 - both downstream execution receipts.
 
 The workflow has only `contents: read`, disables checkout credential
-persistence, uses no repository or environment secrets, has no write token,
-and does not execute untrusted package-provided network or process operations.
-All automatic-token use is limited to the reviewed setup action input needed to
-pin the opam repository commit.
+persistence, uses no repository or environment secrets, and has no write token.
+It deliberately executes the checked-in package BUILD fronts and tests, including
+pull-request code, only on secretless ephemeral hosted runners.  The governed
+representative packages declare no network or process capability.  All
+automatic-token use is limited to the reviewed setup action input needed to pin
+the opam repository commit.
 
 ## 6. Validation boundary
 
