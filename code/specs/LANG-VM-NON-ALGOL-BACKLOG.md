@@ -20,6 +20,11 @@ textual CoreCLR emission already implements them. The simulator currently
 accepts only MethodDef calls and its Value is Int(i32) or Ref: adding a host
 input token alone would not implement the full input_i64 contract.
 
+Discovery CLR-D001: encoded const and direct call immediates use unchecked
+`as i32`; an out-of-range i64 can silently become a different integer. Select
+CLR01 (`CLR01-encoded-wide-immediate-refusal.md`) to reject lossy immediates
+before expanding the full-width ABI. Runtime arithmetic width remains separate.
+
 Prioritize a bounded full-width scalar audit/prerequisite before enabling input:
 1. Inspect existing int64 lowering and simulator opcode support; establish a
    real encoded-artifact probe with values outside i32 range. Specify and repair
