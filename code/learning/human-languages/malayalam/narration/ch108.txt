@@ -1,0 +1,248 @@
+Malayalam, chapter 108: The Marks on the Page.
+6 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+
+
+Lesson 1 of 6.
+. (full stop) — how a Malayalam sentence ends.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice:. and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+You have read Malayalam sentences since your first greeting. Nobody has told you how one ends.
+[pause 2 seconds]
+Look back at any page of this book. The mark is already there.
+
+Script you'll notice:.
+. — the full stop, at the end of a sentence, exactly where English puts it.
+That is the whole of it, and the reason it is so small is worth a page.
+The Malayalam letters brought no punctuation with them. Count the characters Unicode gives the Malayalam script — every vowel, every consonant, every sign that hangs off one — and not a single mark among them is punctuation. The alphabet you have been learning since your first letter has no full stop in it, no comma, no question mark. Those came from somewhere else.
+
+Why it's said this way.
+There was an older answer, and you have a cousin who still uses it.
+The classical tradition closed a sentence with a single upright stroke, the daṇḍa:
+।.
+Sanskrit works that way still, and a Malayalam manuscript of the old kind does too. Doubled — ॥ — it closes a verse.
+Modern printed Malayalam does not. Newspapers, signboards, schoolbooks and telephones all use the European marks, the same set English uses, and the stroke stayed behind with the palm-leaf manuscripts. You are reading the newer answer because it is the one in front of you everywhere.
+This book gives you the marks by their English names. Malayalam has its own names for them, and they are not written down here, for the same reason the stroke order of a letter is not: they belong in the book when they can be given with a source.
+
+Writing:. — where it goes.
+Tight against the last letter, no space before it, one space after.
+ഞാൻ വരും.
+The dot sits on the writing line. Nothing about the Malayalam letter before it changes to accommodate it.
+
+Guided Practice.
+[pause 1 second]
+[once you have stopped driving — write: ഞാൻ വരും and close it with a full stop]
+[your turn — look: at these two closings, and say which one a Malayalam newspaper prints]
+[pause 8 seconds for the answer]
+. (full stop), (comma) ।.
+[your turn — say: how many punctuation marks the Malayalam alphabet contains]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What closes a Malayalam sentence in print today? (A full stop — the same dot English uses.) What closed one in the classical tradition? (The daṇḍa, a single upright stroke.) How many punctuation marks does the Malayalam alphabet itself carry? (None.)
+
+
+Lesson 2 of 6.
+, — the comma, and the list that does not need one.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice:, and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Say the full stop's job in one line.
+[pause 2 seconds]
+Then say your longest list out loud: water and rice and milk.
+
+Script you'll notice:,
+, — the comma. A dot with a tail, sitting on the writing line and hanging below it, tight against the word before.
+It borrowed into Malayalam with the full stop, out of the same European set, and it does the ordinary things you would expect — separating parts of a long sentence, setting off a name you are calling to.
+
+Grammar Lens: what your own list does instead.
+The place an English writer reaches for a comma most often is the place Malayalam has already filled.
+You built this list when you learned to join things:
+വെള്ളവും അരിയും പാലും.
+English puts commas in and saves one and for the last pair: water, rice and milk. Malayalam hangs -ഉം on every item instead, and the ending does the separating that the commas were doing.
+[a table of 2 rows, read aloud]
+English, water, rice and milk.
+Malayalam, വെള്ളവും അരിയും പാലും.
+Read the Malayalam row again and find the ending three times — once at the close of each word.
+So a written Malayalam list of this kind carries no commas at all — not because a writer is avoiding them, but because there is nothing left for them to do.
+Where the comma earns its keep is the longer sentence: two clauses, or a piece set aside in the middle. There it behaves as you would expect from English.
+
+Writing:, — where it goes.
+No space before, one space after — the same habit as the full stop.
+Draw ten commas in a row and watch that every tail goes the same way.
+
+Guided Practice.
+[pause 1 second]
+[once you have stopped driving — write: വെള്ളവും അരിയും പാലും — and put no comma in it]
+[your turn — say: which piece of the Malayalam list does the job English gives the comma]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: ten commas in a row]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How many commas are in വെള്ളവും അരിയും പാലും? (None.) What is doing their work? (-ഉം, on every item.) Which side of the comma takes the space? (After it.)
+
+
+Lesson 3 of 6.
+? (question mark, exclamation mark) — the mark you have been reading all along.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice:? and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Ask somebody their name, out loud. Then picture how that sentence was printed on the page you learned it from.
+
+Script you'll notice:?
+? (question mark, exclamation mark) — the question mark, at the end, one space clear of the next sentence.
+You have been reading it since you first asked anybody their name. That was the headword ML-C02-ninre-peru-entaanu:
+നിന്റെ പേര് എന്താണ്?
+It has been on the page ever since, never once named. Here it is.
+! — the exclamation mark, in the same position, doing what it does in English.
+
+Grammar Lens: one mark, at the end, and nothing at the front.
+Spanish opens a question as well as closing it — ¿cómo estás? — with an upside-down mark at the front. Malayalam has only the closing one:
+[a table of 2 rows, read aloud]
+Spanish, ¿ …? (question mark, exclamation mark)
+Malayalam, …? (question mark, exclamation mark)
+The mark is not what makes it a question. എന്ത്, ആര് and എപ്പോൾ were doing that from your first questions onward, and ML-C03-sukhamaano showed the other way: add -ō to the end and a statement becomes a yes/no question.
+
+Writing:? — where it goes.
+Tight against the last letter, one space after. It closes the sentence by itself; no full stop follows it.
+
+Guided Practice.
+[pause 1 second]
+[once you have stopped driving — write: നിന്റെ പേര് എന്താണ് and close it the way you first saw it closed]
+[your turn — say: what a Spanish sentence puts at the front that a Malayalam one does not]
+[pause 8 seconds for the answer]
+[your turn — say: which piece of സുഖമാണോ makes it a question, mark or no mark]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Where does a Malayalam question mark stand? (At the end, and nowhere else.) Does a full stop follow it? (No — it closes the sentence on its own.) What was making your questions questions before this lesson? (The question words, and the ending -ō.)
+
+
+Lesson 4 of 6.
+" " — quoting, when a word is already doing it.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: " " and — and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Say the marker that turns a sentence into the thing somebody said.
+[pause 2 seconds]
+Then say the whole line: "I know Malayalam," I say.
+
+Script you'll notice: " " and —.
+" " — quotation marks, one pair around the words somebody said.
+You have been reading them all along, and nothing stopped to say so. ML-C72-ennu, the lesson that taught you എന്ന്, printed the quoted sentence inside a pair of them:
+"എനിക്ക് മലയാളം അറിയാം" എന്ന് ഞാൻ പറയുന്നു.
+The marks were around the quoted sentence and the lesson went straight past them, because എന്ന് was the thing it had come to teach.
+— — the long dash, which opens a line of dialogue in printed fiction instead of the marks: a dash, a space, then the speech.
+
+Grammar Lens: the marker and the marks do the same job twice.
+[a table of 2 rows, read aloud]
+what എന്ന് does, marks the sentence before it as the thing said.
+what " " does, marks the words inside them as the thing said.
+A Malayalam sentence can carry both, and often does — the marks for the eye, the word for the grammar. Neither one makes the other wrong.
+Your Sanskrit cousin shows the other end of this. Classical Sanskrit has no quotation mark at all, and closes a quotation with इति iti — the same job എന്ന് does, on a page with no marks to help it. Malayalam kept the word and took the marks as well.
+
+Writing: " " — where they go.
+Tight against the first and last letter of the quoted words, nothing between the mark and the letter.
+The dialogue dash takes a space after it, and opens the line rather than enclosing it — there is no second dash at the end.
+
+Guided Practice.
+[pause 1 second]
+[once you have stopped driving — write: എനിക്ക് മലയാളം അറിയാം inside a pair of quotation marks]
+[your turn — say: the Malayalam word that marks reported speech without any punctuation]
+[pause 8 seconds for the answer]
+[your turn — say: what a printed Malayalam story puts at the start of a spoken line]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Where did you first read quotation marks? (Around the quoted sentence in front of എന്ന്.) Does the marker stop you using the marks? (No — a sentence can carry both.) What opens a line of dialogue instead of the marks? (A long dash.)
+
+
+Lesson 5 of 6.
+: ( ) - / (colon, parentheses, hyphen, slash) — the four that are left.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice:: ( ) - / and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Name the three marks you already own, and say where each one stands.
+
+Script you'll notice:: ( ) - /.
+Four marks, and all four behave the way their English counterparts do.
+[a table of 4 rows, read aloud]
+:, (comma) the colon — before a list, or before the thing you are about to spell out.
+( ), (comma) parentheses — a pair, around an aside.
+-, (comma) the hyphen — a short stroke joining two pieces.
+/, (comma) the slash — between two alternatives.
+The colon and the parentheses take no space on the inside and one on the outside. The hyphen and the slash take none on either side.
+
+Grammar Lens: two of these you have hardly seen.
+Go back through every Malayalam word this book has taught you and count the hyphens in them. There are none.
+The compounds you have been taught run their pieces together — പള്ളിക്കൂടം, തലസ്ഥാനം — with no stroke marking the seam. Where the two pieces do stay apart, as in ശുഭ രാത്രി, what stands between them is a plain space. Neither way uses a hyphen. Where English writes twenty-one or mother-in-law, Malayalam writes one word or two, and never a stroke.
+So the hyphens you have seen on these pages are this book's notation, not Malayalam spelling:
+[a table of 3 rows, read aloud]
+-ിക്ക്, an ending, shown detached from the word it attaches to.
+-ആൻ, the same.
+i- / a- / e-, (comma) three stems, shown as beginnings, with a slash between them.
+That third row is the slash doing its ordinary job — this or this or this — and it is about as often as the slash turns up in ordinary Malayalam prose too.
+
+Writing: the four.
+Two dots, one above the other, on the line. A pair of curves facing each other. A short stroke at mid-height. A leaning stroke.
+None of them changes the Malayalam letter beside it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: how many hyphens are inside പള്ളിക്കൂടം]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: a colon, a pair of parentheses, a hyphen and a slash, in that order]
+[your turn — say: what the hyphen in -ആൻ is telling you]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How is a Malayalam compound written — joined by a hyphen, or solid? (Solid.) What are the hyphens in this book marking, then? (An ending or a stem shown on its own.) Which mark goes between two alternatives? (The slash.)
+
+
+Lesson 6 of 6.
+(. (full stop), (comma)? (question mark, exclamation mark)! " " —: ( ) - / (colon, parentheses, hyphen, slash)) — from cold.
+
+Warm-up.
+[pause 3 seconds]
+Close the lessons before this one. Name the mark that ends a sentence, the one that ends a question, and the one that separates.
+
+Grammar Lens: what was already doing the job.
+Three of these marks arrived at a job Malayalam had already filled, and that is the shape of the whole chapter:
+[a table of 3 rows, read aloud]
+the comma in a list, -ഉം, on every item.
+the question mark, the question words, and the ending -ō.
+the quotation marks, എന്ന്, after the thing said.
+The marks came in from Europe and sat down beside machinery that was already working. They are for a reader's eye. The Malayalam pieces are the grammar, and they were there first.
+
+What you've built.
+You could read this whole book and never be told what the dot at the end was. It was on the page from your first sentence. So was the question mark, the first time you asked a name, and so were the quotation marks around the words in front of എന്ന്.
+Now the page has no unexplained furniture on it: ten marks, each named, and the one thing the Malayalam alphabet never supplied — a mark of its own.
+
+Guided Practice.
+[pause 1 second]
+[once you have stopped driving — write: ഞാൻ വരും closed with a full stop, then നിന്റെ പേര് എന്താണ് closed with a question mark]
+[your turn — say: how many commas belong in വെള്ളവും അരിയും പാലും]
+[pause 8 seconds for the answer]
+[your turn — say: how many punctuation marks the Malayalam alphabet carries]
+[pause 8 seconds for the answer]
+[your turn — say: what closed a sentence before the European marks came]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Where did you first read a question mark? (Asking somebody their name.) What does a Malayalam question put at the front, the way Spanish does? (Nothing.) Which Malayalam word does the work of quotation marks? (എന്ന്.) And where did the marks themselves come from? (Europe — the Malayalam script supplied none.)

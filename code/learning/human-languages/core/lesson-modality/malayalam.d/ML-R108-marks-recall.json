@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R108-marks-recall",
+    "language": "malayalam",
+    "chapter": 108,
+    "sequence": 4000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa8b37eeeb01abe2"
+  },
+  "findings": []
+}

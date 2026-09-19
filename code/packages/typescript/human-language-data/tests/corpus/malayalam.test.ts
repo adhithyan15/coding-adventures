@@ -852,8 +852,32 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // label's word stand unexamined. Its Sanskrit sense is CONDUCT, and the road
   // from conduct to cleanliness is offered as the traditional account rather
   // than asserted -- the ch103 treatment of paLLikkooTaM.
-  expect(coverage.covered).toBe(214);
-  expect(coverage.unmapped).toBe(29);
+  // 214 -> 215: ML-A1-SCR-15, punctuation. THE PERCENTAGE HOLDS at 88
+  // (215/243 is 88.5); recomputed, not carried.
+  // NINE SPANISH POINTS BEHIND ONE MALAYALAM POINT, AND ZERO NEW HEADWORDS.
+  // A1-O3-01..09 are the full stop, comma, colon, question and exclamation
+  // marks, parentheses, quotation marks, hyphen, dialogue dash and slash. The
+  // Spanish track closed its own Puntuacion category the same way in ch424 --
+  // "eight marks the corpus printed constantly and never named."
+  // THE NOTE'S CLAIM WAS OPENED, NOT TRUSTED. "Not one lesson teaches any of
+  // them" is a claim about existing material. Six Malayalam lessons matched a
+  // punctuation grep and FIVE were the word "command" matching "comma"; the
+  // sixth, ML-C70-um-more:46, mentions ENGLISH's commas contrastively and
+  // teaches no Malayalam mark. The claim is true.
+  // THE MARKS WERE ALREADY ON THE PAGE, WHICH IS THE CHAPTER. ML-C02-ninre-
+  // peru-entaanu (sequence 130) prints a question mark in its HEADWORD, and
+  // ML-C72-ennu prints quotation marks around its quoted sentence. The book
+  // has shown these marks since chapter 2 and never named one.
+  // THE LOAD-BEARING FACT IS CHECKABLE IN UNICODE: the Malayalam block
+  // U+0D00-U+0D7F contains ZERO characters of category P. The script supplied
+  // no punctuation of its own, so every mark here is borrowed -- and the older
+  // answer, the danda, is the one SA-C60-danda teaches in the Sanskrit track.
+  // THREE MARKS LAND ON JOBS MALAYALAM HAD ALREADY FILLED, and that is what
+  // the recall lesson drills: -um on every list item does the comma's work,
+  // the question words and the -oo ending of ML-C03-sukhamaano do the question
+  // mark's, and ennu does the quotation marks'.
+  expect(coverage.covered).toBe(215);
+  expect(coverage.unmapped).toBe(28);
   expect(coverage.partial).toBe(0);
   // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
   // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
@@ -865,6 +889,6 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
     covered: 8,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 214/243 points covered (88%)",
+    "malayalam A1 (partial inventory): 215/243 points covered (88%)",
   );
 }, 60_000);

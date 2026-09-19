@@ -2647,8 +2647,32 @@ describe("the committed Malayalam A1 inventory", () => {
     // label's word stand unexamined. Its Sanskrit sense is CONDUCT, and the road
     // from conduct to cleanliness is offered as the traditional account rather
     // than asserted -- the ch103 treatment of paLLikkooTaM.
-    expect(coverage.covered).toBe(214);
-    expect(coverage.unmapped).toBe(29);
+    // 214 -> 215: ML-A1-SCR-15, punctuation. THE PERCENTAGE HOLDS at 88
+    // (215/243 is 88.5); recomputed, not carried.
+    // NINE SPANISH POINTS BEHIND ONE MALAYALAM POINT, AND ZERO NEW HEADWORDS.
+    // A1-O3-01..09 are the full stop, comma, colon, question and exclamation
+    // marks, parentheses, quotation marks, hyphen, dialogue dash and slash. The
+    // Spanish track closed its own Puntuacion category the same way in ch424 --
+    // "eight marks the corpus printed constantly and never named."
+    // THE NOTE'S CLAIM WAS OPENED, NOT TRUSTED. "Not one lesson teaches any of
+    // them" is a claim about existing material. Six Malayalam lessons matched a
+    // punctuation grep and FIVE were the word "command" matching "comma"; the
+    // sixth, ML-C70-um-more:46, mentions ENGLISH's commas contrastively and
+    // teaches no Malayalam mark. The claim is true.
+    // THE MARKS WERE ALREADY ON THE PAGE, WHICH IS THE CHAPTER. ML-C02-ninre-
+    // peru-entaanu (sequence 130) prints a question mark in its HEADWORD, and
+    // ML-C72-ennu prints quotation marks around its quoted sentence. The book
+    // has shown these marks since chapter 2 and never named one.
+    // THE LOAD-BEARING FACT IS CHECKABLE IN UNICODE: the Malayalam block
+    // U+0D00-U+0D7F contains ZERO characters of category P. The script supplied
+    // no punctuation of its own, so every mark here is borrowed -- and the older
+    // answer, the danda, is the one SA-C60-danda teaches in the Sanskrit track.
+    // THREE MARKS LAND ON JOBS MALAYALAM HAD ALREADY FILLED, and that is what
+    // the recall lesson drills: -um on every list item does the comma's work,
+    // the question words and the -oo ending of ML-C03-sukhamaano do the question
+    // mark's, and ennu does the quotation marks'.
+    expect(coverage.covered).toBe(215);
+    expect(coverage.unmapped).toBe(28);
     expect(coverage.partial).toBe(0);
     // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
     // 67-68). It is the ONLY point that moved, and the numeral column below
@@ -2687,15 +2711,21 @@ describe("the committed Malayalam A1 inventory", () => {
     // distinct characters its headwords use -- 87 per cent. The nine open ones,
     // by the number of headwords needing them: sha (14), lla (10), chillu-rr
     // (8), nga (8), the ai sign (5), dha (5), ba (3), kha (3), cha (2).
+    // 11 -> 12: ML-A1-SCR-15, punctuation, closed by chapter 108. The four
+    // still open in this column are SCR-12 (the nine never-taught characters,
+    // and its own count is under review at HL-C407), SCR-13 (capital letters),
+    // SCR-14 (written accentuation) and SCR-16 (abbreviations). SCR-13 and
+    // SCR-14 are enumerated-not-applicable: Malayalam has neither case nor
+    // accent marks, so nothing can close them.
     expect(coverage.byCategory["Lipi (script and orthography)"]!).toEqual({
       enumerated: 16,
-      covered: 11,
+      covered: 12,
     });
     // The two columns that carry this track.
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 214/243 points covered (88%)",
+      "malayalam A1 (partial inventory): 215/243 points covered (88%)",
     );
   }, 60_000);
 });

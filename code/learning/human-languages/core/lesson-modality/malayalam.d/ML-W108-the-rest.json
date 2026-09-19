@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-W108-the-rest",
+    "language": "malayalam",
+    "chapter": 108,
+    "sequence": 3990,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f5f107dfbc17a69f",
+    "detachableSegments": [
+      "Script you'll notice: : ( ) - /",
+      "Writing: the four"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
