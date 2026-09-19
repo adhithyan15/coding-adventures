@@ -6,6 +6,7 @@ style VentureChrome {
   part brand { color : "#e1a45d" ; font-size : 15 ; font-weight : bold ; }
   part page-title { color : "#d8d0c4" ; font-size : 13 ; }
   part toolbar { background : "#2b2823" ; padding : 8 ; gap : 6 ; align : center-vertical ; border-bottom-width : 1 ; border-bottom-color : "#50483d" ; }
+  part page-actions { background : "#312d27" ; padding : 8 ; gap : 6 ; align : center-vertical ; border-bottom-width : 1 ; border-bottom-color : "#50483d" ; }
   part back-button {
     background : "#3b3630" ; color : "#f1eadf" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ;
     state hover { background : "#51483c" ; } state pressed { background : "#6a4a27" ; } state focused { outline-color : "#e1a45d" ; outline-width : 2 ; } state disabled { opacity : 0.45 ; }
@@ -35,6 +36,10 @@ style VentureChrome {
     state hover { background : "#51483c" ; } state pressed { background : "#6a4a27" ; } state focused { outline-color : "#e1a45d" ; outline-width : 2 ; } state disabled { opacity : 0.45 ; }
   }
   part save-page-button {
+    background : "#3b3630" ; color : "#f1eadf" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ;
+    state hover { background : "#51483c" ; } state pressed { background : "#6a4a27" ; } state focused { outline-color : "#e1a45d" ; outline-width : 2 ; } state disabled { opacity : 0.45 ; }
+  }
+  part print-page-button {
     background : "#3b3630" ; color : "#f1eadf" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ;
     state hover { background : "#51483c" ; } state pressed { background : "#6a4a27" ; } state focused { outline-color : "#e1a45d" ; outline-width : 2 ; } state disabled { opacity : 0.45 ; }
   }

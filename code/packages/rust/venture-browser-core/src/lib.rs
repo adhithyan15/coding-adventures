@@ -548,7 +548,7 @@ fn positioned_node_breaks_find_text(node: &PositionedNode) -> bool {
 }
 
 /// Mosaic `VentureChrome` slot names, in interface declaration order.
-pub const VENTURE_CHROME_SLOT_NAMES: [&str; 16] = [
+pub const VENTURE_CHROME_SLOT_NAMES: [&str; 17] = [
     "address",
     "page-title",
     "status-text",
@@ -559,6 +559,7 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 16] = [
     "copy-address-disabled",
     "open-page-disabled",
     "save-page-disabled",
+    "print-page-disabled",
     "view-source-disabled",
     "find-open",
     "find-query",
@@ -571,7 +572,7 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 16] = [
 pub const VENTURE_CHROME_HOST_SURFACE_SLOT_NAME: &str = "content-surface";
 
 /// Mosaic `VentureChrome` event names, in interface declaration order.
-pub const VENTURE_CHROME_EVENT_NAMES: [&str; 16] = [
+pub const VENTURE_CHROME_EVENT_NAMES: [&str; 17] = [
     "onBack",
     "onForward",
     "onHome",
@@ -580,6 +581,7 @@ pub const VENTURE_CHROME_EVENT_NAMES: [&str; 16] = [
     "onCopyAddress",
     "onOpenPageInNewWindow",
     "onSavePage",
+    "onPrintPage",
     "onViewSource",
     "onFindOpen",
     "onFindChange",
@@ -1383,6 +1385,7 @@ pub enum BrowserHostEffect {
     OpenAuxiliaryDocument(BrowserAuxiliaryDocument),
     OpenBrowsingContext(BrowserBrowsingContextRequest),
     Download(BrowserDownloadRequest),
+    Print(BrowserPrintRequest),
     WriteClipboard(String),
 }
 
@@ -1434,6 +1437,13 @@ pub struct BrowserBrowsingContextRequest {
 pub struct BrowserDownloadRequest {
     pub request: BrowserFetchRequest,
     pub suggested_filename: Option<String>,
+}
+
+/// Stable page identity handed to the platform's print presenter.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct BrowserPrintRequest {
+    pub address: String,
+    pub title: String,
 }
 
 enum BrowserLinkActivation {
@@ -1674,6 +1684,7 @@ pub enum BrowserChromeAction {
     CopyPageAddress,
     OpenPageInNewWindow,
     SavePage,
+    PrintPage,
     ViewSource,
     OpenFind,
     FindQuery(String),
@@ -1693,6 +1704,7 @@ pub enum BrowserChromeEvent {
     CopyAddress,
     OpenPageInNewWindow,
     SavePage,
+    PrintPage,
     ViewSource,
     FindOpen,
     FindChange(String),
@@ -1714,6 +1726,7 @@ impl BrowserChromeEvent {
             Self::CopyAddress => "onCopyAddress",
             Self::OpenPageInNewWindow => "onOpenPageInNewWindow",
             Self::SavePage => "onSavePage",
+            Self::PrintPage => "onPrintPage",
             Self::ViewSource => "onViewSource",
             Self::FindOpen => "onFindOpen",
             Self::FindChange(_) => "onFindChange",
@@ -1739,6 +1752,7 @@ pub struct BrowserChromeProps {
     pub copy_address_disabled: bool,
     pub open_page_disabled: bool,
     pub save_page_disabled: bool,
+    pub print_page_disabled: bool,
     pub view_source_disabled: bool,
     pub find_open: bool,
     pub find_query: String,
@@ -1827,6 +1841,9 @@ impl BrowserChromeController {
             BrowserChromeEvent::SavePage if session.viewport().is_some() => {
                 Some(BrowserChromeAction::SavePage)
             }
+            BrowserChromeEvent::PrintPage if session.viewport().is_some() => {
+                Some(BrowserChromeAction::PrintPage)
+            }
             BrowserChromeEvent::ViewSource if session.viewport().is_some() => {
                 Some(BrowserChromeAction::ViewSource)
             }
@@ -1850,6 +1867,7 @@ impl BrowserChromeController {
             | BrowserChromeEvent::CopyAddress
             | BrowserChromeEvent::OpenPageInNewWindow
             | BrowserChromeEvent::SavePage
+            | BrowserChromeEvent::PrintPage
             | BrowserChromeEvent::ViewSource
             | BrowserChromeEvent::FindOpen
             | BrowserChromeEvent::FindChange(_)
@@ -1889,6 +1907,7 @@ impl BrowserChromeController {
             copy_address_disabled: navigation_disabled || session.history().current_url().is_none(),
             open_page_disabled: navigation_disabled || session.history().current_url().is_none(),
             save_page_disabled: navigation_disabled || session.viewport().is_none(),
+            print_page_disabled: navigation_disabled || session.viewport().is_none(),
             view_source_disabled: navigation_disabled || session.viewport().is_none(),
             find_open: session.find_state().open,
             find_query: session.find_state().query.clone(),
@@ -2049,6 +2068,28 @@ impl BrowserHostController {
                         suggested_filename: None,
                     }),
                 ))
+            }
+            BrowserChromeAction::PrintPage => {
+                let page = self
+                    .session
+                    .viewport()
+                    .expect("print-page action requires a retained viewport")
+                    .page();
+                let title = page
+                    .document
+                    .title
+                    .as_deref()
+                    .map(str::trim)
+                    .filter(|title| !title.is_empty())
+                    .unwrap_or(&page.final_url)
+                    .to_string();
+                self.status_text = "Print dialog requested".to_string();
+                Ok(BrowserHostEventOutcome::effect(BrowserHostEffect::Print(
+                    BrowserPrintRequest {
+                        address: page.final_url.clone(),
+                        title,
+                    },
+                )))
             }
             BrowserChromeAction::ViewSource => {
                 let page = self
@@ -7042,6 +7083,7 @@ mod tests {
                 copy_address_disabled: true,
                 open_page_disabled: true,
                 save_page_disabled: true,
+                print_page_disabled: true,
                 view_source_disabled: true,
                 find_open: false,
                 find_query: String::new(),
@@ -7102,6 +7144,7 @@ mod tests {
                 copy_address_disabled: false,
                 open_page_disabled: false,
                 save_page_disabled: false,
+                print_page_disabled: false,
                 view_source_disabled: false,
                 find_open: false,
                 find_query: String::new(),
@@ -7133,6 +7176,7 @@ mod tests {
         assert!(disabled.copy_address_disabled);
         assert!(disabled.open_page_disabled);
         assert!(disabled.save_page_disabled);
+        assert!(disabled.print_page_disabled);
         assert!(disabled.view_source_disabled);
         assert!(disabled.find_disabled);
         assert!(disabled.navigation_disabled);
@@ -7266,6 +7310,7 @@ mod tests {
             BrowserChromeEvent::CopyAddress,
             BrowserChromeEvent::OpenPageInNewWindow,
             BrowserChromeEvent::SavePage,
+            BrowserChromeEvent::PrintPage,
             BrowserChromeEvent::ViewSource,
             BrowserChromeEvent::FindOpen,
             BrowserChromeEvent::FindChange(String::new()),
@@ -7443,6 +7488,21 @@ mod tests {
             }))
         );
         assert_eq!(host.props().status_text, "Page download requested");
+
+        let printed = host
+            .handle_event_with_effect(BrowserChromeEvent::PrintPage, &mut bookmarks, |_, _| {
+                unreachable!("print page must not navigate or refetch the current context")
+            })
+            .unwrap();
+        assert!(!printed.changed);
+        assert_eq!(
+            printed.effect,
+            Some(BrowserHostEffect::Print(BrowserPrintRequest {
+                address: url.to_string(),
+                title: "Source test".to_string(),
+            }))
+        );
+        assert_eq!(host.props().status_text, "Print dialog requested");
 
         let outcome = host
             .handle_event_with_effect(BrowserChromeEvent::ViewSource, &mut bookmarks, |_, _| {

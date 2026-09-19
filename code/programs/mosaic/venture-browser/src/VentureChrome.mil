@@ -15,6 +15,7 @@ component VentureChrome {
   slot copy-address-disabled : bool ;
   slot open-page-disabled   : bool ;
   slot save-page-disabled   : bool ;
+  slot print-page-disabled  : bool ;
   slot view-source-disabled : bool ;
   slot find-open           : bool ;
   slot find-query          : text ;
@@ -31,6 +32,7 @@ component VentureChrome {
   emit onCopyAddress ;
   emit onOpenPageInNewWindow ;
   emit onSavePage ;
+  emit onPrintPage ;
   emit onViewSource ;
   emit onFindOpen ;
   emit onFindChange ( value : text ) ;

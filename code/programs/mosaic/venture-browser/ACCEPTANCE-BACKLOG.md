@@ -5,6 +5,13 @@ cross-platform proving application. Items are ordered by risk and dependency.
 
 ## Prioritized discoveries
 
+- [x] **P1 browser convergence - shared current-page print transaction.** Add
+  one Mosaic-authored Print Page control that snapshots the retained page's
+  final address and normalized title in core, then emits one typed host print
+  request without navigation or refetch. Keep disabled state, status, bridge
+  serialization, presenter seams, and deterministic acceptance aligned across
+  every generated host.
+
 - [x] **P1 browser convergence - shared current-page download transaction.**
   Add one Mosaic-authored Save Page control that resolves the committed page
   URL in core and reuses the typed download effect. Preserve the editable

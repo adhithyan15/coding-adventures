@@ -125,6 +125,8 @@ class MosaicHost private constructor(
         private set
     var lastDownloadRequest: Map<String, Any?>? = null
         private set
+    var lastPrintRequest: Map<String, Any?>? = null
+        private set
     var lastClipboardText: String? = null
         private set
     val renderedFrameCount = AtomicInteger(0)
@@ -310,6 +312,8 @@ class MosaicHost private constructor(
             lastBrowsingContextRequest = effect
         } else if (effect["type"] == "download") {
             lastDownloadRequest = effect
+        } else if (effect["type"] == "print") {
+            lastPrintRequest = effect
         } else if (effect["type"] == "write-clipboard") {
             lastClipboardText = effect["text"] as? String
             lastClipboardText?.let { text ->

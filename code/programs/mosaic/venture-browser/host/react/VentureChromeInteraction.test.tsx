@@ -26,6 +26,7 @@ const props = (statusText: string) => ({
     copyAddressDisabled: navigationDisabled,
     openPageDisabled: navigationDisabled,
     savePageDisabled: navigationDisabled,
+    printPageDisabled: navigationDisabled,
     viewSourceDisabled: navigationDisabled,
     findOpen,
     findQuery,
@@ -95,7 +96,7 @@ test("React and Electron renderer controls cross the Mosaic host seam", async ()
 
   expect(document.body.textContent).toContain("Venture React acceptance");
   expect(document.body.textContent).toContain("React host surface");
-  for (const label of ["Back", "Forward", "Reload", "Bookmark", "Copy", "New Window", "Save", "Source", "Find", "Go"]) {
+  for (const label of ["Back", "Forward", "Reload", "Bookmark", "Copy", "New Window", "Save", "Print", "Source", "Find", "Go"]) {
     const button = textButton(label);
     expect(button.disabled).toBe(true);
     button.click();
@@ -161,6 +162,12 @@ test("React and Electron renderer controls cross the Mosaic host seam", async ()
   });
   await flush();
   expect(events[events.length - 1]?.event.type).toBe("savePage");
+
+  await act(async () => {
+    textButton("Print").click();
+  });
+  await flush();
+  expect(events[events.length - 1]?.event.type).toBe("printPage");
 
   await act(async () => {
     textButton("Source").click();

@@ -36,30 +36,6 @@ layout VentureChrome {
         state-when-disabled : slot: bookmark-disabled ,
         onClick : emit: onToggleBookmark
       )
-      HostButton [ copy-address-button ] (
-        label : "Copy" ,
-        disabled : slot: copy-address-disabled ,
-        state-when-disabled : slot: copy-address-disabled ,
-        onClick : emit: onCopyAddress
-      )
-      HostButton [ open-page-button ] (
-        label : "New Window" ,
-        disabled : slot: open-page-disabled ,
-        state-when-disabled : slot: open-page-disabled ,
-        onClick : emit: onOpenPageInNewWindow
-      )
-      HostButton [ save-page-button ] (
-        label : "Save" ,
-        disabled : slot: save-page-disabled ,
-        state-when-disabled : slot: save-page-disabled ,
-        onClick : emit: onSavePage
-      )
-      HostButton [ view-source-button ] (
-        label : "Source" ,
-        disabled : slot: view-source-disabled ,
-        state-when-disabled : slot: view-source-disabled ,
-        onClick : emit: onViewSource
-      )
       HostInput [ address-input ] (
         value : slot: address ,
         placeholder : "Enter a URL" ,
@@ -78,6 +54,39 @@ layout VentureChrome {
         disabled : slot: find-disabled ,
         state-when-disabled : slot: find-disabled ,
         onClick : emit: onFindOpen
+      )
+    }
+
+    Row [ page-actions ] {
+      HostButton [ copy-address-button ] (
+        label : "Copy" ,
+        disabled : slot: copy-address-disabled ,
+        state-when-disabled : slot: copy-address-disabled ,
+        onClick : emit: onCopyAddress
+      )
+      HostButton [ open-page-button ] (
+        label : "New Window" ,
+        disabled : slot: open-page-disabled ,
+        state-when-disabled : slot: open-page-disabled ,
+        onClick : emit: onOpenPageInNewWindow
+      )
+      HostButton [ save-page-button ] (
+        label : "Save" ,
+        disabled : slot: save-page-disabled ,
+        state-when-disabled : slot: save-page-disabled ,
+        onClick : emit: onSavePage
+      )
+      HostButton [ print-page-button ] (
+        label : "Print" ,
+        disabled : slot: print-page-disabled ,
+        state-when-disabled : slot: print-page-disabled ,
+        onClick : emit: onPrintPage
+      )
+      HostButton [ view-source-button ] (
+        label : "Source" ,
+        disabled : slot: view-source-disabled ,
+        state-when-disabled : slot: view-source-disabled ,
+        onClick : emit: onViewSource
       )
     }
 

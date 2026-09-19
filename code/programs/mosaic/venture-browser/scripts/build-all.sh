@@ -131,8 +131,22 @@ test_web_project() {
     cd "$output_root/$backend"
     npm install --ignore-scripts
     npm test
-    npm audit --audit-level=high
+    audit_web_project
   )
+}
+
+audit_web_project() {
+  local attempt
+  for attempt in 1 2 3 4; do
+    if npx --yes npm@11.19.1 audit --audit-level=high; then
+      return 0
+    fi
+    if ((attempt == 4)); then
+      return 1
+    fi
+    echo "npm advisory service unavailable or audit failed; retrying ($attempt/4)" >&2
+    sleep 15
+  done
 }
 
 if has_command node; then
