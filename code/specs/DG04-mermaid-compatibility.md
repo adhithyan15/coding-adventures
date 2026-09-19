@@ -367,8 +367,10 @@ labels, and circle or cross markers at either endpoint. Quoted labels are
 preserved on solid, dotted, and thick directed links. Link endpoints may
 declare square or rounded nodes inline, including their authored labels and
 quoted edge labels, rather than requiring a separate cell declaration. Block
-node, composite, edge, title, and accessibility text decode HTML entities into
-semantic Unicode before layout. Terminal circle and
+node, composite, edge, title, and accessibility text sanitize raw HTML markup,
+preserve its visible text, and then decode HTML entities into semantic Unicode
+before layout. Escaped tag text remains visible rather than being reinterpreted
+as markup. Terminal circle and
 cross markers accept Mermaid's compact `A--oB` and `A--xB` forms without
 collapsing hyphenated node IDs. Three-or-more-tilde links create their endpoint
 nodes and lower to open, normal-width solid edges, matching the pinned Block

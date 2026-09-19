@@ -2072,7 +2072,73 @@ fn unquote_block_label(source: &str) -> String {
 }
 
 fn normalize_block_text(source: &str) -> String {
-    commonmark_parser::entities::decode_entities(&normalize_mermaid_line_breaks(source))
+    let text = normalize_mermaid_line_breaks(source);
+    commonmark_parser::entities::decode_entities(&strip_block_html_markup(&text))
+}
+
+fn strip_block_html_markup(source: &str) -> String {
+    let mut output = String::new();
+    let mut rest = source;
+    let mut suppressed_tag: Option<String> = None;
+    let mut suppressed_depth = 0usize;
+
+    while let Some(open) = rest.find('<') {
+        if suppressed_tag.is_none() {
+            output.push_str(&rest[..open]);
+        }
+        rest = &rest[open..];
+
+        if rest.starts_with("<!--") {
+            let Some(close) = rest.find("-->") else { break };
+            rest = &rest[close + 3..];
+            continue;
+        }
+
+        let Some(close) = rest.find('>') else {
+            if suppressed_tag.is_none() {
+                output.push_str(rest);
+            }
+            return output;
+        };
+        let body = rest[1..close].trim();
+        let closing = body.starts_with('/');
+        let body = body.trim_start_matches('/').trim_start();
+        let name = body
+            .chars()
+            .take_while(|character| character.is_ascii_alphanumeric())
+            .collect::<String>()
+            .to_ascii_lowercase();
+
+        if name.is_empty() || !name.starts_with(|character: char| character.is_ascii_alphabetic()) {
+            if suppressed_tag.is_none() {
+                output.push('<');
+            }
+            rest = &rest[1..];
+            continue;
+        }
+
+        if let Some(suppressed) = &suppressed_tag {
+            if name == *suppressed {
+                if closing {
+                    suppressed_depth -= 1;
+                    if suppressed_depth == 0 {
+                        suppressed_tag = None;
+                    }
+                } else if !body.ends_with('/') {
+                    suppressed_depth += 1;
+                }
+            }
+        } else if !closing && matches!(name.as_str(), "script" | "style") && !body.ends_with('/') {
+            suppressed_depth = 1;
+            suppressed_tag = Some(name);
+        }
+        rest = &rest[close + 1..];
+    }
+
+    if suppressed_tag.is_none() {
+        output.push_str(rest);
+    }
+    output
 }
 
 fn prepare_line_grammar_source(source: &str) -> Result<String, ParseError> {
@@ -2092,7 +2158,22 @@ fn split_block_items(line: &str) -> Vec<&str> {
     let mut items = Vec::new();
     let mut start = 0;
     let mut depth = 0usize;
+    let mut in_html_tag = false;
     for (index, character) in line.char_indices() {
+        if in_html_tag {
+            if character == '>' { in_html_tag = false; }
+            continue;
+        }
+        if character == '<' {
+            let tag = line[index + 1..].trim_start_matches('/');
+            if tag.contains('>')
+                && (tag.starts_with('!')
+                    || tag.starts_with(|next: char| next.is_ascii_alphabetic()))
+            {
+                in_html_tag = true;
+                continue;
+            }
+        }
         match character {
             '[' | '(' | '{' | '>' => depth += 1,
             ']' | ')' | '}' => depth = depth.saturating_sub(1),
@@ -9679,6 +9760,20 @@ mod tests_dg04 {
         assert_eq!(diagram.cells[0].label.text, "Grammar\u{a0}Parser");
         assert_eq!(diagram.connections[0].label.as_ref().unwrap().text, "lower&shape");
         assert_eq!(diagram.connections[1].label.as_ref().unwrap().text, "return path");
+    }
+
+    #[test]
+    fn block_sanitizes_html_markup_before_lowering_visible_text() {
+        let diagram = parse_block(
+            "block\ntitle <b>Grammar</b> &amp; Paint\naccTitle: <i>Parser</i> &lt;Pipeline&gt;\naccDescr: <script>alert(1)</script>Semantic IR\nblock:group[\"<strong>Decode</strong> labels\"]\nA[<em>Grammar</em><br/>Parser] B[Paint]\nA -- \"<b>lower</b>&amp;shape\" --> B\nend",
+        )
+        .unwrap();
+        assert_eq!(diagram.title.as_deref(), Some("Grammar & Paint"));
+        assert_eq!(diagram.accessibility_title.as_deref(), Some("Parser <Pipeline>"));
+        assert_eq!(diagram.accessibility_description.as_deref(), Some("Semantic IR"));
+        assert_eq!(diagram.groups[0].label.text, "Decode labels");
+        assert_eq!(diagram.cells[0].label.text, "Grammar\nParser");
+        assert_eq!(diagram.connections[0].label.as_ref().unwrap().text, "lower&shape");
     }
 
     #[test]
