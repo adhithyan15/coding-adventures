@@ -88,6 +88,9 @@ pub const OP_XOR: u8 = 0x61;
 /// dispatch never implemented it, so it fell through to the "unknown opcode"
 /// panic. Real CoreCLR (via `ilasm`/`dotnet`) already supports `neg` natively.
 pub const OP_NEG: u8 = 0x65;
+/// Explicit signed integer width conversions; narrowing discards high bits.
+pub const OP_CONV_I4: u8 = 0x69;
+pub const OP_CONV_I8: u8 = 0x6A;
 /// `box <typeTok>` — McCarthy W6b. Boxes a value type into an object reference.
 /// In this loose model the `Int` already roundtrips through `object[]`, so `box`
 /// is identity (skips the 4-byte type token). Mirrors the wasm `i31` box no-op.
@@ -486,6 +489,24 @@ impl CLRSimulator {
         }
         if opcode_byte == OP_XOR {
             return self.execute_arithmetic(stack_before, "xor", |a, b| a ^ b, |a, b| a ^ b);
+        }
+        if opcode_byte == OP_CONV_I4 || opcode_byte == OP_CONV_I8 {
+            let mnemonic = if opcode_byte == OP_CONV_I4 { "conv.i4" } else { "conv.i8" };
+            // Validate before mutation: references are not numeric addresses in
+            // this managed value model, and an absent operand is not zero.
+            let value = self.stack.last().copied().flatten()
+                .unwrap_or_else(|| panic!("{mnemonic} requires an initialized integer operand"));
+            let converted = match (opcode_byte, value) {
+                (OP_CONV_I4, Value::Int(n)) => Value::Int(n),
+                // This cast is intentional CIL truncation, not implicit lowering.
+                (OP_CONV_I4, Value::Int64(n)) => Value::Int(n as i32),
+                (OP_CONV_I8, Value::Int(n)) => Value::Int64(i64::from(n)),
+                (OP_CONV_I8, Value::Int64(n)) => Value::Int64(n),
+                _ => panic!("{mnemonic} requires an integer operand; references are unsupported"),
+            };
+            *self.stack.last_mut().expect("validated operand") = Some(converted);
+            self.pc += 1;
+            return self.trace(pc, mnemonic, stack_before, format!("convert {value} to {converted}"));
         }
         if opcode_byte == OP_NEG {
             let a = self.pop().expect("neg operand");

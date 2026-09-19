@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — explicit integer conversions (CLR03)
+
+Explicit conv.i4 truncates Int64 to its signed low 32 bits; conv.i8 sign-extends
+Int to Int64. Same-width conversions preserve values. Missing/uninitialized
+operands and references refuse before stack or pc mutation. Mixed-width
+arithmetic still requires explicit conversion. IIR lowering remains unchanged.
+
 ## Unreleased — explicit int64 values (CLR02)
 
 Add distinct Int64 values and checked ldc.i8 decoding. Locals, arguments,
