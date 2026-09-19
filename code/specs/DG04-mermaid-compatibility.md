@@ -370,7 +370,9 @@ quoted edge labels, rather than requiring a separate cell declaration. Block
 node, composite, edge, title, and accessibility text sanitize raw HTML markup,
 preserve its visible text, and then decode HTML entities into semantic Unicode
 before layout. Escaped tag text remains visible rather than being reinterpreted
-as markup. Terminal circle and
+as markup. Top-level semicolons delimit statements without splitting quoted
+label text or decoded entities, including class names that match JavaScript
+prototype properties. Terminal circle and
 cross markers accept Mermaid's compact `A--oB` and `A--xB` forms without
 collapsing hyphenated node IDs. Three-or-more-tilde links create their endpoint
 nodes and lower to open, normal-width solid edges, matching the pinned Block

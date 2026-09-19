@@ -1951,7 +1951,43 @@ fn prepare_block_source(source: &str) -> Result<String, ParseError> {
         index += 1;
     }
 
-    Ok(output.join("\n"))
+    Ok(output
+        .iter()
+        .flat_map(|line| split_block_statements(line))
+        .map(str::trim)
+        .filter(|line| !line.is_empty())
+        .collect::<Vec<_>>()
+        .join("\n"))
+}
+
+fn split_block_statements(line: &str) -> Vec<&str> {
+    let mut statements = Vec::new();
+    let mut start = 0usize;
+    let mut depth = 0usize;
+    let mut quoted = false;
+
+    for (index, character) in line.char_indices() {
+        match character {
+            '"' => quoted = !quoted,
+            '[' | '(' | '{' if !quoted => depth += 1,
+            ']' | ')' | '}' if !quoted => depth = depth.saturating_sub(1),
+            ';' if !quoted && depth == 0 && !is_block_entity_terminator(line, index) => {
+                statements.push(&line[start..index]);
+                start = index + 1;
+            }
+            _ => {}
+        }
+    }
+    statements.push(&line[start..]);
+    statements
+}
+
+fn is_block_entity_terminator(line: &str, semicolon: usize) -> bool {
+    let Some(ampersand) = line[..semicolon].rfind('&') else { return false };
+    let entity = &line[ampersand..=semicolon];
+    !line[ampersand..semicolon].contains(';')
+        && !entity.chars().any(char::is_whitespace)
+        && commonmark_parser::entities::decode_entities(entity) != entity
 }
 
 fn parse_block_quoted_connection_label(token: &Token, source: &str) -> Result<(String, Option<String>), ParseError> {
@@ -9774,6 +9810,21 @@ mod tests_dg04 {
         assert_eq!(diagram.groups[0].label.text, "Decode labels");
         assert_eq!(diagram.cells[0].label.text, "Grammar\nParser");
         assert_eq!(diagram.connections[0].label.as_ref().unwrap().text, "lower&shape");
+    }
+
+    #[test]
+    fn block_parses_semicolon_statements_without_splitting_labels_or_entities() {
+        let diagram = parse_block(
+            "block; title Grammar &amp; Paint; A[\"Parse; lower\"]; B[Paint]; classDef __proto__ fill:#dbeafe,stroke:#1d4ed8; classDef constructor fill:#dcfce7,stroke:#166534; class A __proto__; class B constructor",
+        )
+        .unwrap();
+        assert_eq!(diagram.title.as_deref(), Some("Grammar & Paint"));
+        assert_eq!(diagram.cells.len(), 2);
+        assert_eq!(diagram.cells[0].id, "A");
+        assert_eq!(diagram.cells[0].label.text, "Parse; lower");
+        assert_eq!(diagram.cells[0].style.as_ref().unwrap().fill.as_deref(), Some("#dbeafe"));
+        assert_eq!(diagram.cells[1].id, "B");
+        assert_eq!(diagram.cells[1].style.as_ref().unwrap().fill.as_deref(), Some("#dcfce7"));
     }
 
     #[test]
