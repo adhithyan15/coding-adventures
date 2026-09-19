@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C104-one-present",
+    "language": "malayalam",
+    "chapter": 104,
+    "sequence": 3770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:06a8bb6e7023ad77"
+  },
+  "findings": []
+}
