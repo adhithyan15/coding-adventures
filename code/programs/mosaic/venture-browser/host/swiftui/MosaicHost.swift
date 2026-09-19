@@ -1295,61 +1295,100 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   }
 
   private func findAccessibleControl(
-    identifier: String, in element: NSAccessibilityProtocol,
+    identifier: String, labels: Set<String>, in element: NSAccessibilityProtocol,
     visited: inout Set<ObjectIdentifier>
   ) -> NSAccessibilityProtocol? {
     let objectIdentifier = ObjectIdentifier(element as AnyObject)
     guard visited.insert(objectIdentifier).inserted else { return nil }
-    if element.accessibilityIdentifier() == identifier { return element }
+    if element.accessibilityIdentifier() == identifier
+      || element.accessibilityLabel().map(labels.contains) == true
+    {
+      return element
+    }
     for child in element.accessibilityChildren() ?? [] {
       guard let child = child as? NSAccessibilityProtocol else { continue }
       if let found = findAccessibleControl(
-        identifier: identifier, in: child, visited: &visited)
+        identifier: identifier, labels: labels, in: child, visited: &visited)
       {
         return found
+      }
+    }
+    if let view = element as? NSView {
+      for subview in view.subviews {
+        if let found = findAccessibleControl(
+          identifier: identifier, labels: labels, in: subview, visited: &visited)
+        {
+          return found
+        }
       }
     }
     return nil
   }
 
-  private func nativeToolbarPoint(identifier: String) -> (NSPoint, NSWindow)? {
-    let position: CGFloat
-    switch identifier {
-    case "back-button": position = 0.04
-    case "forward-button": position = 0.13
-    case "home-button": position = 0.22
-    case "reload-button": position = 0.31
-    case "bookmark-button": position = 0.42
-    case "copy-address-button": position = 0.54
-    case "open-page-button": position = 0.72
-    case "view-source-button": position = 0.91
-    default: return nil
-    }
+  private func nativeToolbarControlPoint(identifier: String) -> (NSPoint, NSWindow)? {
+    let identifiers = [
+      "back-button", "forward-button", "home-button", "reload-button",
+      "bookmark-button", "copy-address-button", "open-page-button", "view-source-button",
+    ]
+    guard let controlIndex = identifiers.firstIndex(of: identifier) else { return nil }
     var visited = Set<ObjectIdentifier>()
     guard let address = findEditableTextField(in: NSApp, visited: &visited),
-      let window = address.window, let contentView = window.contentView
+      let window = address.window
     else { return nil }
-    let addressFrame = address.convert(address.bounds, to: contentView)
-    let leadingChromeWidth = addressFrame.minX - contentView.bounds.minX
-    let point = contentView.convert(
-      NSPoint(
-        x: contentView.bounds.minX + leadingChromeWidth * position,
-        y: addressFrame.midY),
-      to: nil)
-    return (point, window)
+
+    var addressBranch: NSView = address
+    while let ancestor = addressBranch.superview {
+      let siblings = ancestor.subviews
+      if let addressIndex = siblings.firstIndex(where: { $0 === addressBranch }),
+        addressIndex >= identifiers.count
+      {
+        let toolbarStart = addressIndex - identifiers.count
+        let control = siblings[toolbarStart + controlIndex]
+        guard !control.frame.isEmpty else { return nil }
+        return (
+          control.convert(NSPoint(x: control.bounds.midX, y: control.bounds.midY), to: nil), window
+        )
+      }
+      addressBranch = ancestor
+    }
+    return nil
+  }
+
+  private func accessibleControlPoint(identifier: String) -> (NSPoint, NSWindow)? {
+    let labels: Set<String>
+    switch identifier {
+    case "back-button": labels = ["Back"]
+    case "forward-button": labels = ["Forward"]
+    case "home-button": labels = ["Home"]
+    case "reload-button": labels = ["Reload"]
+    case "bookmark-button": labels = ["Bookmark", "Remove Bookmark"]
+    case "copy-address-button": labels = ["Copy Address"]
+    case "open-page-button": labels = ["Open in New Window"]
+    case "view-source-button": labels = ["View Source"]
+    default: return nil
+    }
+    for window in NSApp.windows {
+      var visited = Set<ObjectIdentifier>()
+      let roots = [window as NSAccessibilityProtocol]
+        + (window.contentView.map { [$0 as NSAccessibilityProtocol] } ?? [])
+      for root in roots {
+        guard let control = findAccessibleControl(
+          identifier: identifier, labels: labels, in: root, visited: &visited)
+        else { continue }
+        let frame = control.accessibilityFrame()
+        guard !frame.isEmpty else { continue }
+        return (window.convertPoint(fromScreen: NSPoint(x: frame.midX, y: frame.midY)), window)
+      }
+    }
+    return nil
   }
 
   private func performNativeButtonClick(identifier: String) -> Bool {
     NSApp.activate(ignoringOtherApps: true)
-    var visited = Set<ObjectIdentifier>()
-    if let control = findAccessibleControl(
-      identifier: identifier, in: NSApp, visited: &visited),
-      control.accessibilityPerformPress()
-    {
-      return true
-    }
-    guard let (point, window) = nativeToolbarPoint(identifier: identifier) else { return false }
-    // Retain an event-based fallback for hosts that do not vend SwiftUI accessibility children.
+    guard
+      let (point, window) = accessibleControlPoint(identifier: identifier)
+        ?? nativeToolbarControlPoint(identifier: identifier)
+    else { return false }
     sendPrimaryClick(at: point, to: window)
     return true
   }
