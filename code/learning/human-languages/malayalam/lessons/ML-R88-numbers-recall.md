@@ -79,7 +79,7 @@ here on rather than learning case by case.
 - [YOU SAY: the tens from thirty to eighty]
 - [YOU SAY: *toṇṇūṟŭ*, and say which word is inside it]
 - [YOU SAY: *nūṟŭ*]
-- [YOU SAY: *irupatthiyonnŭ*, and say what the ten did]
+- [YOU SAY: *irupattiyonnŭ*, and say what the ten did]
 - [YOU SAY: which of the eight is not built on *ten*]
 
 ## Wrap-up Recall

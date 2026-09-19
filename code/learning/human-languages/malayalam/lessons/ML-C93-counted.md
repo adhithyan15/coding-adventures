@@ -76,7 +76,7 @@ down.** Say the number, then say the noun as you learned it.
 
 [PAUSE 1s]
 - [YOU SAY: *pustakaṅṅaḷ*, then *raṇṭŭ pustakaṁ*]
-- [YOU SAY: *ampathŭ rūpa*]
+- [YOU SAY: *ampatŭ rūpa*]
 - [YOU SAY: which of the two ways says how many]
 - [YOU SAY: what you would put after *mūnnŭ* to mean three books]
 

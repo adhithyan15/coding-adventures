@@ -47,10 +47,10 @@ It is a **consonant**, and in this script a consonant is never bare: it comes wi
 
 You already say these, and every one of them has മ somewhere inside it:
 
-- **നമസ്കാരം** *namaskāram* — hello / greetings (namaskāram — "a making of a bow")
+- **നമസ്കാരം** *namaskāraṁ* — hello / greetings (namaskāraṁ — "a making of a bow")
 - **സാരമില്ല** *sāramilla* — it doesn't matter / no problem / you're welcome
 - **താമസിക്കുക** *tāmasikkuka* — to live, to stay
-- **എനിക്ക് മലയാളം അറിയാം** *enikku malayāḷam aṟiyām* — 'I know Malayalam'
+- **എനിക്ക് മലയാളം അറിയാം** *enikkŭ malayāḷaṁ aṟiyāṁ* — 'I know Malayalam'
 
 ## Writing: മ — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-114] -->

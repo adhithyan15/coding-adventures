@@ -45,7 +45,7 @@ reviews_of: [ML-C68-ninth, ML-C67-fifth, ML-C64-but, ML-C52-garland]
 **പത്താം** (*pathāṁ*) — "**tenth**". **പത്ത്** loses its **ŭ** and takes
 **ആം**, and the ten are done.
 
-**പത്താം ദിവസം** (*pathāṁ divasam*), the tenth day.
+**പത്താം ദിവസം** (*pathāṁ divasaṁ*), the tenth day.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C68-ORDINAL-05, ML-LEX-C68-ORDINAL-04] -->

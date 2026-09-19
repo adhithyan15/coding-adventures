@@ -7,7 +7,7 @@ chapter: 89
 type: grammar
 headword: "നല്ലതാണ് എന്ന് ഞാൻ ചിന്തിക്കുന്നു"
 gloss: I think it is good — an opinion assembled entirely out of machinery you already own
-romanization: "nallathāṇŭ ennŭ ñān cintikkunnu"
+romanization: "nallatāṇŭ ennŭ ñān cintikkunnu"
 concept_tag: ML-OPINION
 prerequisites: [ML-C89-mosham, ML-C72-ennu-more, ML-C41-that]
 sounds: []
@@ -44,7 +44,7 @@ now have both halves.
 
 > **അത് നല്ലതാണ് എന്ന് ഞാൻ ചിന്തിക്കുന്നു.**
 >
-> *atŭ nallathāṇŭ ennŭ ñān cintikkunnu* — **I think it is good.**
+> *atŭ nallatāṇŭ ennŭ ñān cintikkunnu* — **I think it is good.**
 
 Take it apart and **every piece is already yours**:
 
@@ -71,8 +71,8 @@ because the machinery was already in place and waiting for something to carry.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C89-OPINION-01, ML-LEX-C89-EVAL-01, ML-GRAMMAR-C72-ENNU-VERBS-01, ML-LEX-C41-DEIXIS-02, ML-GRAMMAR-C89-NOMINAL-01, ML-LEX-AANU-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: *atŭ nallathāṇŭ*]
-- [YOU SAY: the whole opinion — *atŭ nallathāṇŭ ennŭ ñān cintikkunnu*]
+- [YOU SAY: *atŭ nallatāṇŭ*]
+- [YOU SAY: the whole opinion — *atŭ nallatāṇŭ ennŭ ñān cintikkunnu*]
 - [YOU SAY: the same sentence with *bad* instead]
 - [YOU SAY: which part of the opinion is new to this chapter]
 

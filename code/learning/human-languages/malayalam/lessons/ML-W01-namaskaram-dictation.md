@@ -7,7 +7,7 @@ delivery: script
 chapter: 1
 type: writing
 headword: നമസ്കാരം
-romanization: "namaskāram"
+romanization: "namaskāraṁ"
 gloss: write the complete known greeting from sound alone
 prerequisites: [ML-W01-namaskaram-read]
 sounds: [malayalam-inherent-a, chandrakkala, conjunct, anusvara]
@@ -40,7 +40,7 @@ Cover the written answer below. You have already traced every shape, carried
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-NAMASKARAM-01, ML-SCRIPT-NA-01, ML-SCRIPT-MA-01, ML-SCRIPT-SA-01, ML-SCRIPT-CHANDRAKKALA-01, ML-SCRIPT-KA-01, ML-SCRIPT-AA-MATRA-01, ML-SCRIPT-RA-01, ML-SCRIPT-ANUSVARAM-01, ML-SCRIPT-NAMASKARAM-READ-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-[YOU HEAR: *namaskāram* — “greetings”]
+[YOU HEAR: *namaskāraṁ* — “greetings”]
 
 Write the greeting from sound alone. Use the three remembered groups: *na-ma*,
 *ska*, *ā-ram*. Then uncover and compare: **നമസ്കാരം**. Repair one group if

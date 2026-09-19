@@ -44,7 +44,7 @@ Native Dravidian, matching Tamil *nūl*, and it stands behind *tuṇi*, the clot
 
 The older language put the same word to a second job. A treatise, a work of scholarship, was also a *nūl* — a thread of argument running from one end of a subject to the other, which is close to what English does with a train of thought.
 
-It closes on the bare *l* of *cōṟu* and *vērŭ*: the consonant with its vowel shaved off.
+It closes on the bare *l* of *cōṟŭ* and *vērŭ*: the consonant with its vowel shaved off.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 74,
   "title": "One Ending, Two Sentences",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:813d4b68d7571256",
+  "sourceHash": "fnv1a64:662cccb70c492569",
   "lessons": [
     {
       "id": "ML-C74-aan",
@@ -334,7 +334,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:367fc2b045bbdbe8",
+      "sourceHash": "fnv1a64:aa72c20d45938262",
       "notice": null,
       "blocks": [
         {
@@ -350,7 +350,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say enikku malayāḷaṁ aṟiyāṁ. Say which word in it means I, and what shape that word is in."
+              "text": "Say enikkŭ malayāḷaṁ aṟiyāṁ. Say which word in it means I, and what shape that word is in."
             },
             {
               "kind": "pause",
@@ -371,11 +371,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "എനിക്ക് വായിക്കാൻ കഴിയും. enikku vāyikkāṉ kaḻiyuṁ — \"I can read.\""
+              "text": "എനിക്ക് വായിക്കാൻ കഴിയും. enikkŭ vāyikkāṉ kaḻiyuṁ — \"I can read.\""
             },
             {
               "kind": "speech",
-              "text": "Three pieces, and two of them you already had: enikku, the dative to me that the knowing sentence uses, and vāyikkāṉ, the -ആൻ (-āṉ) form from two pages ago. The new word is കഴിയും (kaḻiyuṁ), and what it says is that the thing is possible."
+              "text": "Three pieces, and two of them you already had: enikkŭ, the dative to me that the knowing sentence uses, and vāyikkāṉ, the -ആൻ (-āṉ) form from two pages ago. The new word is കഴിയും (kaḻiyuṁ), and what it says is that the thing is possible."
             },
             {
               "kind": "speech",
@@ -442,11 +442,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "enikku vāyikkāṉ kaḻiyuṁ",
+              "instruction": "enikkŭ vāyikkāṉ kaḻiyuṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *enikku vāyikkāṉ kaḻiyuṁ*]"
+              "source": "[YOU SAY: *enikkŭ vāyikkāṉ kaḻiyuṁ*]"
             },
             {
               "kind": "prompt",
@@ -509,7 +509,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f0e8a9b365adbd0",
+      "sourceHash": "fnv1a64:97a697730d9e09f8",
       "notice": null,
       "blocks": [
         {
@@ -548,7 +548,7 @@
               "rowCount": 2,
               "utterances": [
                 "what follows the -ആൻ (-āṉ) form: a verb that happened. what the sentence says: in order to — vāyikkāṉ pōkunnu.",
-                "what follows the -ആൻ (-āṉ) form: കഴിയും. what the sentence says: can — enikku vāyikkāṉ kaḻiyuṁ."
+                "what follows the -ആൻ (-āṉ) form: കഴിയും. what the sentence says: can — enikkŭ vāyikkāṉ kaḻiyuṁ."
               ]
             },
             {
@@ -593,11 +593,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "enikku vāyikkāṉ kaḻiyuṁ",
+              "instruction": "enikkŭ vāyikkāṉ kaḻiyuṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *enikku vāyikkāṉ kaḻiyuṁ*]"
+              "source": "[YOU SAY: *enikkŭ vāyikkāṉ kaḻiyuṁ*]"
             },
             {
               "kind": "prompt",

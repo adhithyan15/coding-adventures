@@ -77,12 +77,12 @@ and this chapter went back for the other half rather than adding more words.
 - [YOU SAY: *cēṭṭā*, then *cēcci*]
 - [YOU SAY: which of the two changed its ending, and what it changed from]
 - [YOU SAY: the greeting that is never wrong]
-- [YOU SAY: *namaskāram, cēṭṭā*]
-- [YOU SAY: *namaskāram, cēcci*]
+- [YOU SAY: *namaskāraṁ, cēṭṭā*]
+- [YOU SAY: *namaskāraṁ, cēcci*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C82-ADDRESS-01, ML-CONCEPT-C82-VOCATIVE-01, ML-CONCEPT-C82-GREETING-REGISTER-01] -->
 
 [PAUSE 3s] Which ending does the calling form replace? (**-ൻ, with -ാ**.) Whose
 words are you using when you address a stranger? (**The family's**.) And which
-greeting can you always fall back on? (***namaskāram***.)
+greeting can you always fall back on? (***namaskāraṁ***.)

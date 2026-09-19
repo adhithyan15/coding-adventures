@@ -4,14 +4,14 @@
   "chapter": 15,
   "title": "Water and Rice",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:58ad0b5fd55ddcf6",
+  "sourceHash": "fnv1a64:c800eb24dbef18f1",
   "lessons": [
     {
       "id": "ML-C15-vellam-ari",
       "sequence": 430,
       "title": "വെള്ളം, അരി, ചോറ് — a different water-word, the same rice-words",
       "headword": "വെള്ളം അരി ചോറ്",
-      "romanization": "veḷḷaṁ ari cōṟu",
+      "romanization": "veḷḷaṁ ari cōṟŭ",
       "gloss": "water (a genuinely DIFFERENT word than Tamil's), and rice raw/cooked, closely matching Tamil",
       "script": "malayalam",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d58853a1673ebfb2",
+      "sourceHash": "fnv1a64:828b4bc963dd1f43",
       "notice": null,
       "blocks": [
         {
@@ -65,7 +65,7 @@
             },
             {
               "kind": "speech",
-              "text": "ചോറ് (cōṟu) = \"cooked rice\" (the meal) — and here Malayalam actually does have a Tamil cognate: Tamil keeps its own native சோறு (also cōṟu), used alongside the Sanskrit-influenced sātam as an everyday near-synonym. Malayalam simply made cōṟu its main word, where Tamil more often reaches for sātam."
+              "text": "ചോറ് (cōṟŭ) = \"cooked rice\" (the meal) — and here Malayalam actually does have a Tamil cognate: Tamil keeps its own native சோறு (also cōṟŭ), used alongside the Sanskrit-influenced sātam as an everyday near-synonym. Malayalam simply made cōṟŭ its main word, where Tamil more often reaches for sātam."
             }
           ]
         },
@@ -101,20 +101,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"cōṟu\" — cooked rice, Malayalam's own word",
+              "instruction": "\"cōṟŭ\" — cooked rice, Malayalam's own word",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"cōṟu\" — cooked rice, Malayalam's own word]"
+              "source": "[YOU SAY: \"cōṟŭ\" — cooked rice, Malayalam's own word]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say thiṅkaḷ covva budhan vyāzham veḷḷi śani ñāyar",
+              "instruction": "say tiṅkaḷ covva budhan vyāzham veḷḷi śani ñāyar",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *thiṅkaḷ covva budhan vyāzham veḷḷi śani ñāyar*]"
+              "source": "[YOU RECALL: say *tiṅkaḷ covva budhan vyāzham veḷḷi śani ñāyar*]"
             }
           ]
         },
@@ -152,7 +152,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:90a65e8207126e2d",
+      "sourceHash": "fnv1a64:06f99d57c73bf039",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -212,7 +212,7 @@
             },
             {
               "kind": "speech",
-              "text": "സന്തോഷം santōṣam — joy / pleased to meet you."
+              "text": "സന്തോഷം santōṣaṁ — joy / pleased to meet you."
             },
             {
               "kind": "speech",

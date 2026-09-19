@@ -7,7 +7,7 @@ chapter: 88
 type: word
 headword: "മുപ്പത് — എഴുപത്"
 gloss: thirty to eighty — six words that are all the same word, and the one that has worn down
-romanization: "muppathŭ — eḻupathŭ"
+romanization: "muppatŭ — eḻupatŭ"
 concept_tag: ML-TENS
 prerequisites: [ML-R87-object-recall, ML-C20-pathinonnu-irupathu, ML-C07-numbers-6-10]
 sounds: []
@@ -28,7 +28,7 @@ variety: standard-colloquial
 reviews_of: [ML-C20-pathinonnu-irupathu, ML-C07-numbers-6-10]
 ---
 
-# മുപ്പത് — എഴുപത് (muppathŭ — eḻupathŭ) — the tens
+# മുപ്പത് — എഴുപത് (muppatŭ — eḻupatŭ) — the tens
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C20-PATHINONNU-IRUPATHU-02, ML-CONCEPT-C07-NUMBERS-6-10-01] -->
@@ -47,11 +47,11 @@ in front, **പത്ത്** behind.
 
 | | | built on |
 |---|---|---|
-| **മുപ്പത്** *muppathŭ* | 30 | three |
-| **നാൽപത്** *nālpathŭ* | 40 | four |
-| **അമ്പത്** *ampathŭ* | 50 | five |
-| **അറുപത്** *aṟupathŭ* | 60 | six |
-| **എഴുപത്** *eḻupathŭ* | 70 | seven |
+| **മുപ്പത്** *muppatŭ* | 30 | three |
+| **നാൽപത്** *nālpatŭ* | 40 | four |
+| **അമ്പത്** *ampatŭ* | 50 | five |
+| **അറുപത്** *aṟupatŭ* | 60 | six |
+| **എഴുപത്** *eḻupatŭ* | 70 | seven |
 | *eṇpathŭ* | 80 | eight |
 
 Read the middle of each word. **-പത്-** is in all of them, and it is the word
@@ -69,8 +69,8 @@ in.** These are older, shorter forms that survive only in compounds:
 
 | the digit alone | inside the ten |
 |---|---|
-| **ആറ്** *āṟŭ* six | **അറു-** in *aṟupathŭ* |
-| **ഏഴ്** *ēḻŭ* seven | **എഴു-** in *eḻupathŭ* |
+| **ആറ്** *āṟŭ* six | **അറു-** in *aṟupatŭ* |
+| **ഏഴ്** *ēḻŭ* seven | **എഴു-** in *eḻupatŭ* |
 
 Close enough to recognise, not close enough to predict. **അമ്പത് has worn
 furthest** — its connection to *five* is real and no longer visible on the page.
@@ -85,7 +85,7 @@ ones — which is most of the work done.
 [PAUSE 1s]
 - [YOU SAY: the tens in order, thirty to eighty]
 - [YOU SAY: the piece all six share]
-- [YOU SAY: *aṟupathŭ*, then the digit it is built on]
+- [YOU SAY: *aṟupatŭ*, then the digit it is built on]
 - [YOU SAY: which of the six no longer shows its digit]
 
 ## Wrap-up Recall

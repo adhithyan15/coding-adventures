@@ -4,7 +4,7 @@
   "chapter": 91,
   "title": "What It Costs",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:0ea918b61a0cfbee",
+  "sourceHash": "fnv1a64:4d9b7c580b99eb50",
   "lessons": [
     {
       "id": "ML-C91-kada",
@@ -277,9 +277,9 @@
     {
       "id": "ML-C91-ethra-rupa",
       "sequence": 3220,
-      "title": "എത്ര രൂപ (ethra rūpa) — how many rupees?",
+      "title": "എത്ര രൂപ (etra rūpa) — how many rupees?",
       "headword": "എത്ര രൂപ",
-      "romanization": "ethra rūpa",
+      "romanization": "etra rūpa",
       "gloss": "how many rupees — the price question, built from a word freed two chapters back and numbers taught one chapter back",
       "script": "malayalam",
       "modality": "voice",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b54e629dd13a2937",
+      "sourceHash": "fnv1a64:ea09350ce5334a23",
       "notice": null,
       "blocks": [
         {
@@ -322,7 +322,7 @@
             },
             {
               "kind": "speech",
-              "text": "എത്ര രൂപ? — ethra rūpa? — how many rupees? What does it cost?"
+              "text": "എത്ര രൂപ? — etra rūpa? — how many rupees? What does it cost?"
             },
             {
               "kind": "speech",
@@ -378,20 +378,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ethra rūpa?",
+              "instruction": "etra rūpa?",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *ethra rūpa?*]"
+              "source": "[YOU SAY: *etra rūpa?*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ampathŭ rūpa",
+              "instruction": "ampatŭ rūpa",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *ampathŭ rūpa*]"
+              "source": "[YOU SAY: *ampatŭ rūpa*]"
             },
             {
               "kind": "prompt",
@@ -426,7 +426,7 @@
             },
             {
               "kind": "speech",
-              "text": "How do you ask a price? (ethra rūpa?) How many words is that? (Two.) And how many of them were new today? (One.)"
+              "text": "How do you ask a price? (etra rūpa?) How many words is that? (Two.) And how many of them were new today? (One.)"
             }
           ]
         }
@@ -580,7 +580,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5aead6261bf37bac",
+      "sourceHash": "fnv1a64:b46655aad32464de",
       "notice": null,
       "blocks": [
         {
@@ -627,7 +627,7 @@
             },
             {
               "kind": "speech",
-              "text": "കടയിൽ — at the shop. എത്ര രൂപ (ethra rūpa)? — how many rupees? അമ്പത് രൂപ. — fifty rupees. ഞാൻ പുസ്തകം വാങ്ങുന്നു. — I buy the book."
+              "text": "കടയിൽ — at the shop. എത്ര രൂപ (etra rūpa)? — how many rupees? അമ്പത് രൂപ. — fifty rupees. ഞാൻ പുസ്തകം വാങ്ങുന്നു. — I buy the book."
             }
           ]
         },
@@ -692,11 +692,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ethra rūpa?",
+              "instruction": "etra rūpa?",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *ethra rūpa?*]"
+              "source": "[YOU SAY: *etra rūpa?*]"
             },
             {
               "kind": "prompt",
@@ -740,7 +740,7 @@
             },
             {
               "kind": "speech",
-              "text": "How do you ask what something costs? (ethra rūpa?) What is vila? (Price.) And what had to be taught before a price could be answered at all? (The numbers past twenty.)"
+              "text": "How do you ask what something costs? (etra rūpa?) What is vila? (Price.) And what had to be taught before a price could be answered at all? (The numbers past twenty.)"
             }
           ]
         }

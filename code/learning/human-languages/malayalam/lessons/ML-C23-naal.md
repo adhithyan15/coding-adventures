@@ -12,7 +12,7 @@ concept_tag: ML-TIME-DAY-NATIVE
 prerequisites: [ML-C23-divasam]
 sounds: [malayalam-vowel-sign-aa]
 roots: [proto-dravidian-naal-day]
-etymology_hook: "native നാൾ survives inside നാളെ, narrative ഒരു നാൾ, and പിറന്നാൾ even though Sanskrit divasam counts ordinary days"
+etymology_hook: "native നാൾ survives inside നാളെ, narrative ഒരു നാൾ, and പിറന്നാൾ even though Sanskrit divasaṁ counts ordinary days"
 duration:
   max_seconds: 240
 requires:
@@ -51,7 +51,7 @@ storytelling, and the word stays productive in **പിറന്നാൾ** (*pi
 “birthday,” literally “day of birth.” That traditional compound stands beside
 the newer Sanskrit-style **ജന്മദിനം** (*janmadinam*).
 
-Three words therefore carry three honest jobs: *divasam* counts, *dinam* is
+Three words therefore carry three honest jobs: *divasaṁ* counts, *dinam* is
 formal, and native *nāḷ* tells stories and marks birthdays. This echoes
 Kannada’s native *hagalu*: borrowing narrowed a native word’s domain without
 erasing it.
@@ -66,8 +66,8 @@ erasing it.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C23-NAAL-01] -->
-<!-- hl-activity: {"id":"ML-C23-naal-survival","kind":"text","assesses":["ML-CONCEPT-C23-NAAL-01"],"prompt":"Has Sanskrit divasam erased native naal?","answer":"no","accepted":["no it has not","nāḷ still survives","naal still survives"],"feedback":{"correct":"Right: nāḷ still lives in tomorrow, narrative one day, and birthday.","incorrect":"No. Native nāḷ survives in several everyday and narrative compounds."},"response_seconds":8} -->
+<!-- hl-activity: {"id":"ML-C23-naal-survival","kind":"text","assesses":["ML-CONCEPT-C23-NAAL-01"],"prompt":"Has Sanskrit divasaṁ erased native naal?","answer":"no","accepted":["no it has not","nāḷ still survives","naal still survives"],"feedback":{"correct":"Right: nāḷ still lives in tomorrow, narrative one day, and birthday.","incorrect":"No. Native nāḷ survives in several everyday and narrative compounds."},"response_seconds":8} -->
 
-[PAUSE 3s] Has Sanskrit **divasam** erased native **നാൾ**? (**No.**) Where does
+[PAUSE 3s] Has Sanskrit **divasaṁ** erased native **നാൾ**? (**No.**) Where does
 *nāḷ* live now? (**Inside tomorrow, in narrative “one day,” and in the living
 compound for birthday.**)

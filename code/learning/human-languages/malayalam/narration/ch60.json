@@ -4,7 +4,7 @@
   "chapter": 60,
   "title": "Animals Around a House",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:167dd526895b21dc",
+  "sourceHash": "fnv1a64:02bd4c79cc83336e",
   "lessons": [
     {
       "id": "ML-C60-cow",
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ef3f3ddf4144e4a0",
+      "sourceHash": "fnv1a64:e56b780ffeaed3a2",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
             },
             {
               "kind": "speech",
-              "text": "Of all the birds around a house this is the one a household deals with daily. Cooked rice — cōṟu — set out on a step at the back is put there for the കാക്ക (kākka), and it arrives within the minute."
+              "text": "Of all the birds around a house this is the one a household deals with daily. Cooked rice — cōṟŭ — set out on a step at the back is put there for the കാക്ക (kākka), and it arrives within the minute."
             },
             {
               "kind": "speech",

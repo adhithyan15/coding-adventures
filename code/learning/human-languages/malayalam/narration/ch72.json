@@ -4,7 +4,7 @@
   "chapter": 72,
   "title": "The Thing Said",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:82446fd73d585209",
+  "sourceHash": "fnv1a64:afbd4ea6e1e7e2b9",
   "lessons": [
     {
       "id": "ML-C72-ennu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:859a3f24922941da",
+      "sourceHash": "fnv1a64:e546fe4ef92ccd98",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say enikku malayāḷaṁ aṟiyāṁ — \"I know Malayalam.\" A whole sentence, and yours since the knowing chapter."
+              "text": "Say enikkŭ malayāḷaṁ aṟiyāṁ — \"I know Malayalam.\" A whole sentence, and yours since the knowing chapter."
             },
             {
               "kind": "pause",
@@ -60,7 +60,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"എനിക്ക് മലയാളം അറിയാം\" എന്ന് ഞാൻ പറയുന്നു. \"enikku malayāḷaṁ aṟiyāṁ\" ennŭ ñān paṟayunnu — 'I say, \"I know Malayalam.\"'"
+              "text": "\"എനിക്ക് മലയാളം അറിയാം\" എന്ന് ഞാൻ പറയുന്നു. \"enikkŭ malayāḷaṁ aṟiyāṁ\" ennŭ ñān paṟayunnu — 'I say, \"I know Malayalam.\"'"
             },
             {
               "kind": "speech",
@@ -115,11 +115,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "enikku malayāḷaṁ aṟiyāṁ",
+              "instruction": "enikkŭ malayāḷaṁ aṟiyāṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *enikku malayāḷaṁ aṟiyāṁ*]"
+              "source": "[YOU SAY: *enikkŭ malayāḷaṁ aṟiyāṁ*]"
             },
             {
               "kind": "prompt",
@@ -182,7 +182,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f36f7659e0273517",
+      "sourceHash": "fnv1a64:13bdde45bcdd5f8f",
       "notice": null,
       "blocks": [
         {
@@ -238,7 +238,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"എനിക്ക് മലയാളം അറിയാം\" എന്ന് ഞാൻ ചിന്തിക്കുന്നു. \"enikku malayāḷaṁ aṟiyāṁ\" ennŭ ñān cintikkunnu — 'I think I know Malayalam.'"
+              "text": "\"എനിക്ക് മലയാളം അറിയാം\" എന്ന് ഞാൻ ചിന്തിക്കുന്നു. \"enikkŭ malayāḷaṁ aṟiyāṁ\" ennŭ ñān cintikkunnu — 'I think I know Malayalam.'"
             },
             {
               "kind": "speech",

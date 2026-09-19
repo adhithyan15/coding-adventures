@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "The Core Verbs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:911500c16c1d5dad",
+  "sourceHash": "fnv1a64:5dcb59094ed139c0",
   "lessons": [
     {
       "id": "ML-C32-undu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:062041c5546f2372",
+      "sourceHash": "fnv1a64:b3e01bd25cf06288",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 2 gave you ആണ് (āṇŭ), the \"is\" that links two nouns: enṟe pēru Arun āṇŭ, \"my name is Arun.\" ഉണ്ട് does a different job — existing and having: enikku oru sahōdaran uṇṭŭ, \"to-me one brother there-is,\" which is how Malayalam says \"I have a brother.\" ഇരിക്കുക is being in a place: ñān vīṭṭil irikkunnu, \"I am at home.\""
+              "text": "Chapter 2 gave you ആണ് (āṇŭ), the \"is\" that links two nouns: enṟe pēr Arun āṇŭ, \"my name is Arun.\" ഉണ്ട് does a different job — existing and having: enikkŭ oru sahōdaran uṇṭŭ, \"to-me one brother there-is,\" which is how Malayalam says \"I have a brother.\" ഇരിക്കുക is being in a place: ñān vīṭṭil irikkunnu, \"I am at home.\""
             },
             {
               "kind": "speech",
@@ -138,11 +138,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"enikku oru sahōdaran uṇṭŭ\" — I have a brother",
+              "instruction": "\"enikkŭ oru sahōdaran uṇṭŭ\" — I have a brother",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"enikku oru sahōdaran uṇṭŭ\" — I have a brother]"
+              "source": "[YOU SAY: \"enikkŭ oru sahōdaran uṇṭŭ\" — I have a brother]"
             },
             {
               "kind": "prompt",
@@ -394,7 +394,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9607b397aa6a44c6",
+      "sourceHash": "fnv1a64:d614d26514999c52",
       "notice": null,
       "blocks": [
         {
@@ -543,11 +543,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say rāthri",
+              "instruction": "say rātri",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *rāthri*]"
+              "source": "[YOU RECALL: say *rātri*]"
             }
           ]
         },
@@ -938,7 +938,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6808949bcdfecb1d",
+      "sourceHash": "fnv1a64:7ebd613051edd57d",
       "notice": null,
       "blocks": [
         {
@@ -995,7 +995,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "എനിക്ക് മലയാളം അറിയാം. — enikku malayāḷaṁ aṟiyāṁ — \"I know Malayalam.\""
+              "text": "എനിക്ക് മലയാളം അറിയാം. — enikkŭ malayāḷaṁ aṟiyāṁ — \"I know Malayalam.\""
             },
             {
               "kind": "speech",
@@ -1003,7 +1003,7 @@
             },
             {
               "kind": "speech",
-              "text": "enikku aṟiyāṁ — it is known to me."
+              "text": "enikkŭ aṟiyāṁ — it is known to me."
             },
             {
               "kind": "speech",
@@ -1046,20 +1046,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"enikku malayāḷaṁ aṟiyāṁ\" — I know Malayalam",
+              "instruction": "\"enikkŭ malayāḷaṁ aṟiyāṁ\" — I know Malayalam",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"enikku malayāḷaṁ aṟiyāṁ\" — I know Malayalam]"
+              "source": "[YOU SAY: \"enikkŭ malayāḷaṁ aṟiyāṁ\" — I know Malayalam]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "three knowers, one verb — \"enikku … ninakku … avanŭ aṟiyāṁ\"",
+              "instruction": "three knowers, one verb — \"enikkŭ … ninakku … avanŭ aṟiyāṁ\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: three knowers, one verb — \"enikku … ninakku … avanŭ aṟiyāṁ\"]"
+              "source": "[YOU SAY: three knowers, one verb — \"enikkŭ … ninakku … avanŭ aṟiyāṁ\"]"
             },
             {
               "kind": "prompt",

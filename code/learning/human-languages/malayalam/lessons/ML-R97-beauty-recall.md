@@ -7,7 +7,7 @@ chapter: 97
 type: review
 headword: (beautiful, and not)
 gloss: cold retrieval of both ends of the line, and of the difference between a letter re-spelled and a sound added
-romanization: sundaravuṁ allāthatuṁ enna ōrmma
+romanization: sundaravuṁ allāttatuṁ enna ōrmma
 concept_tag: ML-BEAUTY-RECALL
 prerequisites: [ML-C97-alla-sundaram, ML-C70-um]
 sounds: []

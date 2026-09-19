@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 47,
-  "sourceHash": "fnv1a64:a13f2ff247352380",
+  "sourceHash": "fnv1a64:bcfff71578ee150b",
   "lessonIds": [
     "ML-C47-leg",
     "ML-C47-tooth",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch47.txt",
   "json": "malayalam/narration/ch47.json",
-  "textHash": "fnv1a64:002e9ae435855ecd",
-  "jsonHash": "fnv1a64:cc31be56c99bb6ed",
+  "textHash": "fnv1a64:955b08b29eebb485",
+  "jsonHash": "fnv1a64:79f258c76f36ef50",
   "findings": []
 }

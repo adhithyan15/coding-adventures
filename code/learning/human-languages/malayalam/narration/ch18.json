@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0100386d17f740ed",
+  "sourceHash": "fnv1a64:19344519b2221f0a",
   "lessons": [
     {
       "id": "ML-C18-mani",
@@ -12,14 +12,14 @@
       "title": "മണി (maṇi) — one word in Malayalam's dictionaries, two in Tamil's",
       "headword": "മണി",
       "romanization": "maṇi",
-      "gloss": "hour — Malayalam's OWN dictionary tradition treats bell/hour/gem as ONE Sanskrit word, unlike Tamil's closely related mani, which its own dictionaries split into two unrelated homophones",
+      "gloss": "hour — Malayalam's OWN dictionary tradition treats bell/hour/gem as ONE Sanskrit word, unlike Tamil's closely related maṇi, which its own dictionaries split into two unrelated homophones",
       "script": "malayalam",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dcc5f068136ba4be",
+      "sourceHash": "fnv1a64:19e9c1009d5b4f00",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "മണി (mani) = \"hour, o'clock\" — and it also means \"bell, gong\" and \"gem, jewel, pearl.\" Here's the honest, slightly untidy part: Malayalam's own dictionary tradition treats all three of these senses as ONE word, borrowed from Sanskrit मणि (maṇi, \"gem, jewel, pearl\") — the same Sanskrit word behind names like Manipravalam and the mantra syllable in \"om mani padme hum.\" Under this account, \"bell/hour\" isn't a separate native word at all — it's just another meaning that grew out of the same borrowed \"gem\" word (a bell-shaped gem or ornament, perhaps, extending to the bell itself, and then to the hour it announces)."
+              "text": "മണി (maṇi) = \"hour, o'clock\" — and it also means \"bell, gong\" and \"gem, jewel, pearl.\" Here's the honest, slightly untidy part: Malayalam's own dictionary tradition treats all three of these senses as ONE word, borrowed from Sanskrit मणि (maṇi, \"gem, jewel, pearl\") — the same Sanskrit word behind names like Manipravalam and the mantra syllable in \"om maṇi padme hum.\" Under this account, \"bell/hour\" isn't a separate native word at all — it's just another meaning that grew out of the same borrowed \"gem\" word (a bell-shaped gem or ornament, perhaps, extending to the bell itself, and then to the hour it announces)."
             }
           ]
         },
@@ -68,7 +68,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ഒരു മണി (maṇi). — \"One o'clock.\" (oru mani, \"one hour/bell\") രണ്ട് മണി (maṇi). — \"Two o'clock.\" (raṇṭŭ mani, \"two hour/bell\")."
+              "text": "ഒരു മണി. — \"One o'clock.\" (oru maṇi, \"one hour/bell\") രണ്ട് മണി. — \"Two o'clock.\" (raṇṭŭ maṇi, \"two hour/bell\")."
             }
           ]
         },
@@ -86,20 +86,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"mani\" — hour, also \"bell,\" also \"gem\" — genuinely debated whether that's one word or two",
+              "instruction": "\"maṇi\" — hour, also \"bell,\" also \"gem\" — genuinely debated whether that's one word or two",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"mani\" — hour, also \"bell,\" also \"gem\" — genuinely debated whether that's one word or two]"
+              "source": "[YOU SAY: \"maṇi\" — hour, also \"bell,\" also \"gem\" — genuinely debated whether that's one word or two]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"oru mani\" — one o'clock",
+              "instruction": "\"oru maṇi\" — one o'clock",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"oru mani\" — one o'clock]"
+              "source": "[YOU SAY: \"oru maṇi\" — one o'clock]"
             },
             {
               "kind": "prompt",
@@ -146,7 +146,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7556862abdb69a73",
+      "sourceHash": "fnv1a64:7206e1483d6bb277",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -206,7 +206,7 @@
             },
             {
               "kind": "speech",
-              "text": "സന്തോഷം santōṣam — joy / pleased to meet you."
+              "text": "സന്തോഷം santōṣaṁ — joy / pleased to meet you."
             },
             {
               "kind": "speech",

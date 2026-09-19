@@ -44,7 +44,7 @@ see* out of the dictionary and swap their endings.
 | what follows the -ആൻ form | what the sentence says |
 |---|---|
 | a verb that happened | **in order to** — *vāyikkāṉ pōkunnu* |
-| **കഴിയും** | **can** — *enikku vāyikkāṉ kaḻiyuṁ* |
+| **കഴിയും** | **can** — *enikkŭ vāyikkāṉ kaḻiyuṁ* |
 
 Two sentences from one ending, and the word after it decides which. **Neither
 needed a new verb**: every verb in this chapter came out of the reading and
@@ -61,7 +61,7 @@ which rather than leaving you to guess.
 [PAUSE 1s]
 - [YOU SAY: the swap on three verbs]
 - [YOU SAY: *ñān vāyikkāṉ pōkunnu*]
-- [YOU SAY: *enikku vāyikkāṉ kaḻiyuṁ*]
+- [YOU SAY: *enikkŭ vāyikkāṉ kaḻiyuṁ*]
 - [YOU SAY: which of those two has the person in the dative, and why]
 
 ## Wrap-up Recall

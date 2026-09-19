@@ -60,13 +60,13 @@ different sound from the soft **ര** (*r*) of *varuka*.
 ## Grammar Lens: the knower leaves the subject slot
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C32-ARIYUKA-02]; assesses=[] -->
 
-> **എനിക്ക് മലയാളം അറിയാം.** — *enikku malayāḷaṁ aṟiyāṁ* — "I know Malayalam."
+> **എനിക്ക് മലയാളം അറിയാം.** — *enikkŭ malayāḷaṁ aṟiyāṁ* — "I know Malayalam."
 
 Chapter 6 gave you that sentence whole. Here is the verb inside it. You cannot
 say *ñān malayāḷaṁ aṟiyāṁ*: the one who knows is not the subject. That person
 moves into the **dative**, the "to me" case.
 
-- *enikku aṟiyāṁ* — it is known **to me**
+- *enikkŭ aṟiyāṁ* — it is known **to me**
 - *ninakku aṟiyāṁ* — it is known **to you**
 - *avanŭ aṟiyāṁ* — it is known **to him**
 
@@ -84,8 +84,8 @@ subject slot too.
 
 [PAUSE 1s]
 - [YOU SAY: "aṟiyuka" — to know — and the past, "aṟiññu"]
-- [YOU SAY: "enikku malayāḷaṁ aṟiyāṁ" — I know Malayalam]
-- [YOU SAY: three knowers, one verb — "enikku … ninakku … avanŭ aṟiyāṁ"]
+- [YOU SAY: "enikkŭ malayāḷaṁ aṟiyāṁ" — I know Malayalam]
+- [YOU SAY: three knowers, one verb — "enikkŭ … ninakku … avanŭ aṟiyāṁ"]
 - [YOU SAY: the chapter's six — "uṇṭŭ, pōkunnu, varunnu, tinnunnu, kāṇunnu, aṟiyunnu"]
 
 ## Wrap-up Recall

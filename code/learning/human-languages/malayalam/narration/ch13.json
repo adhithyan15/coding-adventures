@@ -4,14 +4,14 @@
   "chapter": 13,
   "title": "Head and Hand",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4ea7b102499b66cd",
+  "sourceHash": "fnv1a64:e6cdbf4b21a11350",
   "lessons": [
     {
       "id": "ML-C13-shareera-bhaagangal",
       "sequence": 410,
       "title": "തല, കൈ — head and hand, matching Tamil closely",
       "headword": "തല കൈ",
-      "romanization": "thala kai",
+      "romanization": "tala kai",
       "gloss": "head and hand — matching Tamil's native pair almost exactly",
       "script": "malayalam",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:103e06e6621b1843",
+      "sourceHash": "fnv1a64:2c62206c7dab31ab",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "തല (thala) = \"head\" — matches Tamil talai closely."
+              "text": "തല (tala) = \"head\" — matches Tamil talai closely."
             },
             {
               "kind": "speech",
@@ -72,11 +72,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"thala\" — head",
+              "instruction": "\"tala\" — head",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"thala\" — head]"
+              "source": "[YOU SAY: \"tala\" — head]"
             },
             {
               "kind": "prompt",
@@ -120,7 +120,7 @@
             },
             {
               "kind": "speech",
-              "text": "What are Malayalam's words for head and hand, and how closely do they match Tamil? (തല thala, കൈ kai — very closely, both native Dravidian.)"
+              "text": "What are Malayalam's words for head and hand, and how closely do they match Tamil? (തല tala, കൈ kai — very closely, both native Dravidian.)"
             }
           ]
         }
@@ -141,7 +141,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:50c768214c73e84d",
+      "sourceHash": "fnv1a64:6a75ad79de105ab5",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -209,7 +209,7 @@
             },
             {
               "kind": "speech",
-              "text": "സന്തോഷം santōṣam — joy / pleased to meet you."
+              "text": "സന്തോഷം santōṣaṁ — joy / pleased to meet you."
             },
             {
               "kind": "speech",

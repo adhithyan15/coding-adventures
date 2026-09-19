@@ -33,7 +33,7 @@ reviews_of: [ML-C01-namaskaram]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-NAMASKARAM-01] -->
 
-[PAUSE 2s] Say *na-ma* — the first two beats of *namaskāram*. Your hand meets
+[PAUSE 2s] Say *na-ma* — the first two beats of *namaskāraṁ*. Your hand meets
 only those two familiar sounds today.
 
 ## Script

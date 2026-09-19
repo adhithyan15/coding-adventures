@@ -12,7 +12,7 @@ concept_tag: ML-TIME-AT-HOUR
 prerequisites: [ML-C18-mani, ML-C06-dative-ikku, ML-C93-counted, ML-C94-three-days]
 sounds: [gemination-kk]
 roots: [dravidian-dative-ku]
-etymology_hook: "The same -kku that gave you enikku for 'to me' is what Malayalam uses to fix a clock time — one ending, three English prepositions"
+etymology_hook: "The same -kku that gave you enikkŭ for 'to me' is what Malayalam uses to fix a clock time — one ending, three English prepositions"
 duration:
   max_seconds: 275
 requires:

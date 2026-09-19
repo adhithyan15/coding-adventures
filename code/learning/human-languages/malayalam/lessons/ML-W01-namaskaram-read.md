@@ -7,7 +7,7 @@ delivery: script
 chapter: 1
 type: writing
 headword: നമസ്കാരം
-romanization: "namaskāram"
+romanization: "namaskāraṁ"
 gloss: assemble and read the known greeting with no new shape
 prerequisites: [ML-W01-aa-ra-anusvaram]
 sounds: [malayalam-inherent-a, chandrakkala, conjunct, anusvara]
@@ -33,7 +33,7 @@ reviews_of: [ML-C01-namaskaram, ML-W01-aa-ra-anusvaram]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-NA-01, ML-SCRIPT-MA-01, ML-SCRIPT-SA-01, ML-SCRIPT-CHANDRAKKALA-01, ML-SCRIPT-KA-01, ML-SCRIPT-AA-MATRA-01, ML-SCRIPT-RA-01, ML-SCRIPT-ANUSVARAM-01] -->
 
-[PAUSE 2s] Say *namaskāram*. Now the written greeting may appear: it contains
+[PAUSE 2s] Say *namaskāraṁ*. Now the written greeting may appear: it contains
 no unfamiliar shape.
 
 ## Script — assemble and read
@@ -47,7 +47,7 @@ Read the pieces in the groups you practised:
 - **സ്ക** — *ska*
 - **ാരം** — *ā-ram*
 
-Together: **നമസ്കാരം**, *namaskāram*. The conjunct **സ്ക** is still just
+Together: **നമസ്കാരം**, *namaskāraṁ*. The conjunct **സ്ക** is still just
 **സ** with its vowel removed by **്**, joined to **ക**.
 
 ## Writing — one visible whole-word copy

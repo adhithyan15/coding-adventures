@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "The Mind and the Page",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a7099dc872c38073",
+  "sourceHash": "fnv1a64:f7d4eae0e1c0f651",
   "lessons": [
     {
       "id": "ML-C33-cintikkuka",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:080402d8451fbb93",
+      "sourceHash": "fnv1a64:f8ceb7431ab3f7ff",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -44,7 +44,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say enikku malayāḷaṁ aṟiyāṁ. Knowing arrived at you, so the \"I\" left the subject slot. Thinking you do — and you keep it."
+              "text": "Say enikkŭ malayāḷaṁ aṟiyāṁ. Knowing arrived at you, so the \"I\" left the subject slot. Thinking you do — and you keep it."
             }
           ]
         },
@@ -162,11 +162,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "knowing, then thinking — \"enikku malayāḷaṁ aṟiyāṁ,\" \"ñān cintikkunnu\"",
+              "instruction": "knowing, then thinking — \"enikkŭ malayāḷaṁ aṟiyāṁ,\" \"ñān cintikkunnu\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: knowing, then thinking — \"enikku malayāḷaṁ aṟiyāṁ,\" \"ñān cintikkunnu\"]"
+              "source": "[YOU SAY: knowing, then thinking — \"enikkŭ malayāḷaṁ aṟiyāṁ,\" \"ñān cintikkunnu\"]"
             }
           ]
         },
@@ -202,7 +202,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cb6bc49224559927",
+      "sourceHash": "fnv1a64:99a8802400d26ad1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -227,7 +227,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say ñān cintikkunnu, then enikku. One is what you do; the other is the \"to me\" of Chapter 6. This word needs both."
+              "text": "Say ñān cintikkunnu, then enikkŭ. One is what you do; the other is the \"to me\" of Chapter 6. This word needs both."
             }
           ]
         },
@@ -303,11 +303,11 @@
             },
             {
               "kind": "speech",
-              "text": "എനിക്ക് മനസ്സിലായി. — enikku manassilāyi — \"I understood.\""
+              "text": "എനിക്ക് മനസ്സിലായി. — enikkŭ manassilāyi — \"I understood.\""
             },
             {
               "kind": "speech",
-              "text": "Literally: \"to me — it became in the mind.\" No ñān. The understander wears the dative ‑ഇക്ക്, as the knower does in enikku malayāḷaṁ aṟiyāṁ. Chapter 6 separated what you do from what happens to you; here one root does both, and the ending decides which. Manassilāyi is much the commoner in speech."
+              "text": "Literally: \"to me — it became in the mind.\" No ñān. The understander wears the dative ‑ഇക്ക്, as the knower does in enikkŭ malayāḷaṁ aṟiyāṁ. Chapter 6 separated what you do from what happens to you; here one root does both, and the ending decides which. Manassilāyi is much the commoner in speech."
             },
             {
               "kind": "speech",
@@ -347,29 +347,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the everyday one — \"enikku manassilāyi\"",
+              "instruction": "the everyday one — \"enikkŭ manassilāyi\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the everyday one — \"enikku manassilāyi\"]"
+              "source": "[YOU SAY: the everyday one — \"enikkŭ manassilāyi\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "three understanders — \"enikku … ninakku … avanŭ manassilāyi\"",
+              "instruction": "three understanders — \"enikkŭ … ninakku … avanŭ manassilāyi\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: three understanders — \"enikku … ninakku … avanŭ manassilāyi\"]"
+              "source": "[YOU SAY: three understanders — \"enikkŭ … ninakku … avanŭ manassilāyi\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the two datives together — \"enikku malayāḷaṁ aṟiyāṁ,\" \"enikku manassilāyi\"",
+              "instruction": "the two datives together — \"enikkŭ malayāḷaṁ aṟiyāṁ,\" \"enikkŭ manassilāyi\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two datives together — \"enikku malayāḷaṁ aṟiyāṁ,\" \"enikku manassilāyi\"]"
+              "source": "[YOU SAY: the two datives together — \"enikkŭ malayāḷaṁ aṟiyāṁ,\" \"enikkŭ manassilāyi\"]"
             },
             {
               "kind": "prompt",
@@ -395,7 +395,7 @@
             },
             {
               "kind": "speech",
-              "text": "Name the three pieces of manassilākkuka. (Mind, in, put.) Which English words share its root? (Mind, mental.) Say \"I understood\" the way it is usually said, and name the case you wear. (Enikku manassilāyi; the dative, as in enikku malayāḷaṁ aṟiyāṁ.) Which of today's two verbs carries ‑ഇക്കുക, and why? (Cintikkuka — its noun was borrowed.)"
+              "text": "Name the three pieces of manassilākkuka. (Mind, in, put.) Which English words share its root? (Mind, mental.) Say \"I understood\" the way it is usually said, and name the case you wear. (Enikku manassilāyi; the dative, as in enikkŭ malayāḷaṁ aṟiyāṁ.) Which of today's two verbs carries ‑ഇക്കുക, and why? (Cintikkuka — its noun was borrowed.)"
             }
           ]
         }
@@ -414,7 +414,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:08577a1a89d529ef",
+      "sourceHash": "fnv1a64:e79c895f10913ad5",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -564,11 +564,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "what you do, what arrives — \"ñān vāyikkunnu,\" \"enikku manassilāyi\"",
+              "instruction": "what you do, what arrives — \"ñān vāyikkunnu,\" \"enikkŭ manassilāyi\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: what you do, what arrives — \"ñān vāyikkunnu,\" \"enikku manassilāyi\"]"
+              "source": "[YOU SAY: what you do, what arrives — \"ñān vāyikkunnu,\" \"enikkŭ manassilāyi\"]"
             },
             {
               "kind": "prompt",
@@ -613,7 +613,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a56549e165423daf",
+      "sourceHash": "fnv1a64:4af5ac5b527b6377",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -714,11 +714,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "when — \"ñān rāthri eḻutunnu,\" I write at night",
+              "instruction": "when — \"ñān rātri eḻutunnu,\" I write at night",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: when — \"ñān rāthri eḻutunnu,\" I write at night]"
+              "source": "[YOU SAY: when — \"ñān rātri eḻutunnu,\" I write at night]"
             },
             {
               "kind": "prompt",
@@ -777,11 +777,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "and the sentence with no subject — \"enikku manassilāyi\"",
+              "instruction": "and the sentence with no subject — \"enikkŭ manassilāyi\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: and the sentence with no subject — \"enikku manassilāyi\"]"
+              "source": "[YOU SAY: and the sentence with no subject — \"enikkŭ manassilāyi\"]"
             }
           ]
         },

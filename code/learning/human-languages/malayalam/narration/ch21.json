@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Dog and Cat",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:bda94a980a50ecf7",
+  "sourceHash": "fnv1a64:f62d5b409571825b",
   "lessons": [
     {
       "id": "ML-C21-naaya-poocha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:09ebab61149293af",
+      "sourceHash": "fnv1a64:8caac79d0de4c71c",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "പൂച്ച (pūcha, \"cat\") closely matches Tamil's everyday word for cat — a different root from Kannada's ಬೆಕ್ಕು (bekku, related instead to the word for \"wildcat\") and Telugu's పిల్లి (pilli, a separate Proto-Dravidian root of its own, most likely the source behind Sanskrit's biḍāla and Hindi's billī). So \"cat\" genuinely splits three ways across just these four Dravidian languages, even though \"dog\" mostly agrees."
+              "text": "പൂച്ച (pūcca, \"cat\") closely matches Tamil's everyday word for cat — a different root from Kannada's ಬೆಕ್ಕು (bekku, related instead to the word for \"wildcat\") and Telugu's పిల్లి (pilli, a separate Proto-Dravidian root of its own, most likely the source behind Sanskrit's biḍāla and Hindi's billī). So \"cat\" genuinely splits three ways across just these four Dravidian languages, even though \"dog\" mostly agrees."
             }
           ]
         },
@@ -84,11 +84,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"pūcha\" — cat, matching Tamil's everyday word closely",
+              "instruction": "\"pūcca\" — cat, matching Tamil's everyday word closely",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"pūcha\" — cat, matching Tamil's everyday word closely]"
+              "source": "[YOU SAY: \"pūcca\" — cat, matching Tamil's everyday word closely]"
             },
             {
               "kind": "prompt",
@@ -135,7 +135,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:addd263d3ab7eb7a",
+      "sourceHash": "fnv1a64:6a3ae9353ea07cae",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -195,11 +195,11 @@
             },
             {
               "kind": "speech",
-              "text": "നമസ്കാരം namaskāram — hello / greetings (namaskāram — \"a making of a bow\")."
+              "text": "നമസ്കാരം namaskāraṁ — hello / greetings (namaskāraṁ — \"a making of a bow\")."
             },
             {
               "kind": "speech",
-              "text": "സന്തോഷം santōṣam — joy / pleased to meet you."
+              "text": "സന്തോഷം santōṣaṁ — joy / pleased to meet you."
             },
             {
               "kind": "speech",

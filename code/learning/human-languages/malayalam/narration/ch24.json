@@ -4,22 +4,22 @@
   "chapter": 24,
   "title": "Night",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:668a4e76037da3a1",
+  "sourceHash": "fnv1a64:d0f6475183d1af6a",
   "lessons": [
     {
       "id": "ML-C24-rathri",
       "sequence": 550,
-      "title": "രാത്രി (rāthri) — night, already hiding inside midnight",
+      "title": "രാത്രി (rātri) — night, already hiding inside midnight",
       "headword": "രാത്രി",
-      "romanization": "rāthri",
-      "gloss": "\"night\" — the Sanskrit tatsama already shortened inside paathira, with a different PIE root from Latin nox",
+      "romanization": "rātri",
+      "gloss": "\"night\" — the Sanskrit tatsama already shortened inside pātirā, with a different PIE root from Latin nox",
       "script": "malayalam",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:97cfd51d87eea3cd",
+      "sourceHash": "fnv1a64:33ee6222e1c8f90b",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Last lesson's divasam had three words doing three honest jobs. This word's family is smaller, but the split is just as real — and one piece of it, you've technically already heard."
+              "text": "Last lesson's divasaṁ had three words doing three honest jobs. This word's family is smaller, but the split is just as real — and one piece of it, you've technically already heard."
             }
           ]
         },
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "രാത്രി (rāthri) — \"night\" — is a Sanskrit tatsama. You've likely already met a piece of it: പാതിരാ (pāthirā, \"midnight,\" Chapter 17) is built from പാതി (pāthi, \"half\") fused with what's most plausibly a shortened form of this very word — \"rā\" standing in for the whole of rāthri (Chapter 17 itself didn't spell out which word was being shortened, but the parallel Tamil compound, pāti-y-irāttiri, points the same way). This lesson gives it its own, full standing."
+              "text": "രാത്രി (rātri) — \"night\" — is a Sanskrit tatsama. You've likely already met a piece of it: പാതിരാ (pātirā, \"midnight,\" Chapter 17) is built from പാതി (pāthi, \"half\") fused with what's most plausibly a shortened form of this very word — \"rā\" standing in for the whole of rātri (Chapter 17 itself didn't spell out which word was being shortened, but the parallel Tamil compound, pāti-y-irāttiri, points the same way). This lesson gives it its own, full standing."
             }
           ]
         },
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here's the honest echo across the family: just like Hindi's own रात (raat, ultimately from the same Sanskrit रात्रि), Malayalam's rāthri traces to Proto-Indo-European h₁reh₁- (\"to rest\") — a completely different PIE root from Latin's nox (nókʷts). Two Indo-European languages, two words for \"night,\" that look like they might be old cousins — but genuinely aren't. Same false-cognate story, now confirmed across a second Indo-Aryan-rooted borrowing."
+              "text": "Here's the honest echo across the family: just like Hindi's own रात (raat, ultimately from the same Sanskrit रात्रि), Malayalam's rātri traces to Proto-Indo-European h₁reh₁- (\"to rest\") — a completely different PIE root from Latin's nox (nókʷts). Two Indo-European languages, two words for \"night,\" that look like they might be old cousins — but genuinely aren't. Same false-cognate story, now confirmed across a second Indo-Aryan-rooted borrowing."
             }
           ]
         },
@@ -75,11 +75,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"rāthri\" — \"night,\" already hiding, shortened, inside pāthirā",
+              "instruction": "\"rātri\" — \"night,\" already hiding, shortened, inside pātirā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"rāthri\" — \"night,\" already hiding, shortened, inside pāthirā]"
+              "source": "[YOU SAY: \"rātri\" — \"night,\" already hiding, shortened, inside pātirā]"
             },
             {
               "kind": "prompt",
@@ -93,11 +93,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say pathinonnŭ — irupathŭ",
+              "instruction": "say patinonnŭ — irupatŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *pathinonnŭ — irupathŭ*]"
+              "source": "[YOU RECALL: say *patinonnŭ — irupatŭ*]"
             }
           ]
         },
@@ -114,7 +114,7 @@
             },
             {
               "kind": "speech",
-              "text": "Where did you already, technically, meet a piece of രാത്രി before this lesson? (Shortened to \"rā\" inside പാതിരാ, pāthirā, \"midnight,\" Chapter 17.) Does rāthri's PIE root match Latin nox's? (No — h₁reh₁- \"to rest,\" a completely different root, the same false-cognate pattern already seen with Hindi's raat.)"
+              "text": "Where did you already, technically, meet a piece of രാത്രി before this lesson? (Shortened to \"rā\" inside പാതിരാ, pātirā, \"midnight,\" Chapter 17.) Does rātri's PIE root match Latin nox's? (No — h₁reh₁- \"to rest,\" a completely different root, the same false-cognate pattern already seen with Hindi's raat.)"
             }
           ]
         }
@@ -149,7 +149,7 @@
             },
             {
               "kind": "speech",
-              "text": "രാത്രി (rāthri) is the ordinary Sanskrit night-word. Malayalam also kept two native Dravidian words, but they do not compete with it in the same way."
+              "text": "രാത്രി (rātri) is the ordinary Sanskrit night-word. Malayalam also kept two native Dravidian words, but they do not compete with it in the same way."
             }
           ]
         },
@@ -168,7 +168,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is not one native night-word simply pushed into archaism. It is two native words carrying different pieces of രാത്രി (rāthri)’s semantic space: one formal and poetic, the other common but narrower."
+              "text": "This is not one native night-word simply pushed into archaism. It is two native words carrying different pieces of രാത്രി (rātri)’s semantic space: one formal and poetic, the other common but narrower."
             }
           ]
         },

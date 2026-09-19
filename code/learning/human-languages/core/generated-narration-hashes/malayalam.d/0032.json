@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 32,
-  "sourceHash": "fnv1a64:911500c16c1d5dad",
+  "sourceHash": "fnv1a64:5dcb59094ed139c0",
   "lessonIds": [
     "ML-C32-undu",
     "ML-C32-pokuka",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "malayalam/narration/ch32.txt",
   "json": "malayalam/narration/ch32.json",
-  "textHash": "fnv1a64:b582ce3e43760dfc",
-  "jsonHash": "fnv1a64:38e33d83e6bcec16",
+  "textHash": "fnv1a64:22a60d5bd124da2f",
+  "jsonHash": "fnv1a64:babef7993c20af79",
   "findings": []
 }

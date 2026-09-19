@@ -4,14 +4,14 @@
   "chapter": 88,
   "title": "Counting Past Twenty",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2d6d9c27f466562b",
+  "sourceHash": "fnv1a64:44b2f6347e51d9df",
   "lessons": [
     {
       "id": "ML-C88-tens",
       "sequence": 3080,
-      "title": "മുപ്പത് — എഴുപത് (muppathŭ — eḻupathŭ) — the tens",
+      "title": "മുപ്പത് — എഴുപത് (muppatŭ — eḻupatŭ) — the tens",
       "headword": "മുപ്പത് — എഴുപത്",
-      "romanization": "muppathŭ — eḻupathŭ",
+      "romanization": "muppatŭ — eḻupatŭ",
       "gloss": "thirty to eighty — six words that are all the same word, and the one that has worn down",
       "script": "malayalam",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c78d5660ef2d8c4d",
+      "sourceHash": "fnv1a64:e6ee356d3a4f401d",
       "notice": null,
       "blocks": [
         {
@@ -62,11 +62,11 @@
               "columns": 3,
               "rowCount": 6,
               "utterances": [
-                "മുപ്പത് muppathŭ, 30. built on: three.",
-                "നാൽപത് nālpathŭ, 40. built on: four.",
-                "അമ്പത് ampathŭ, 50. built on: five.",
-                "അറുപത് aṟupathŭ, 60. built on: six.",
-                "എഴുപത് eḻupathŭ, 70. built on: seven.",
+                "മുപ്പത് muppatŭ, 30. built on: three.",
+                "നാൽപത് nālpatŭ, 40. built on: four.",
+                "അമ്പത് ampatŭ, 50. built on: five.",
+                "അറുപത് aṟupatŭ, 60. built on: six.",
+                "എഴുപത് eḻupatŭ, 70. built on: seven.",
                 "eṇpathŭ, 80. built on: eight."
               ]
             },
@@ -98,8 +98,8 @@
               "columns": 2,
               "rowCount": 2,
               "utterances": [
-                "the digit alone: ആറ് āṟŭ six. inside the ten: അറു- in aṟupathŭ.",
-                "the digit alone: ഏഴ് ēḻŭ seven. inside the ten: എഴു- in eḻupathŭ."
+                "the digit alone: ആറ് āṟŭ six. inside the ten: അറു- in aṟupatŭ.",
+                "the digit alone: ഏഴ് ēḻŭ seven. inside the ten: എഴു- in eḻupatŭ."
               ]
             },
             {
@@ -144,11 +144,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "aṟupathŭ, then the digit it is built on",
+              "instruction": "aṟupatŭ, then the digit it is built on",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *aṟupathŭ*, then the digit it is built on]"
+              "source": "[YOU SAY: *aṟupatŭ*, then the digit it is built on]"
             },
             {
               "kind": "prompt",
@@ -193,7 +193,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:5d2950ed26f5e539",
+      "sourceHash": "fnv1a64:ede798ec6a2c3529",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -310,11 +310,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "eḻupathŭ, toṇṇūṟŭ, nūṟŭ in order",
+              "instruction": "eḻupatŭ, toṇṇūṟŭ, nūṟŭ in order",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *eḻupathŭ*, *toṇṇūṟŭ*, *nūṟŭ* in order]"
+              "source": "[YOU SAY: *eḻupatŭ*, *toṇṇūṟŭ*, *nūṟŭ* in order]"
             }
           ]
         },
@@ -340,9 +340,9 @@
     {
       "id": "ML-C88-compound-numbers",
       "sequence": 3100,
-      "title": "ഇരുപത്തിയൊന്ന് (irupatthiyonnŭ) — twenty-one",
+      "title": "ഇരുപത്തിയൊന്ന് (irupattiyonnŭ) — twenty-one",
       "headword": "ഇരുപത്തിയൊന്ന്",
-      "romanization": "irupatthiyonnŭ",
+      "romanization": "irupattiyonnŭ",
       "gloss": "twenty-one — how a ten and a digit join, and the stem change you have met twice before",
       "script": "malayalam",
       "modality": "voice",
@@ -350,7 +350,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4bc424efe16ded33",
+      "sourceHash": "fnv1a64:f3ac9253c9f05539",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ഇരുപത്തിയൊന്ന് — irupatthiyonnŭ — twenty-one."
+              "text": "ഇരുപത്തിയൊന്ന് — irupattiyonnŭ — twenty-one."
             },
             {
               "kind": "speech",
@@ -424,11 +424,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "irupathŭ, then irupatthiyonnŭ",
+              "instruction": "irupatŭ, then irupattiyonnŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *irupathŭ*, then *irupatthiyonnŭ*]"
+              "source": "[YOU SAY: *irupatŭ*, then *irupattiyonnŭ*]"
             },
             {
               "kind": "prompt",
@@ -491,7 +491,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:76184617215ec4ff",
+      "sourceHash": "fnv1a64:fc070ed0f945bcdf",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -564,7 +564,7 @@
             },
             {
               "kind": "speech",
-              "text": "ഇരുപത്തിയൊന്ന് (irupatthiyonnŭ) — twenty-one. The ten changes shape before the digit, taking -ത്തി-, and the digit follows in the plain order English also uses."
+              "text": "ഇരുപത്തിയൊന്ന് (irupattiyonnŭ) — twenty-one. The ten changes shape before the digit, taking -ത്തി-, and the digit follows in the plain order English also uses."
             },
             {
               "kind": "speech",
@@ -613,11 +613,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "irupatthiyonnŭ, and say what the ten did",
+              "instruction": "irupattiyonnŭ, and say what the ten did",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *irupatthiyonnŭ*, and say what the ten did]"
+              "source": "[YOU SAY: *irupattiyonnŭ*, and say what the ten did]"
             },
             {
               "kind": "prompt",

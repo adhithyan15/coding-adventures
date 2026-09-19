@@ -7,7 +7,7 @@ chapter: 102
 type: grammar
 headword: "തിങ്കളാഴ്ച ഞാൻ പോകും"
 gloss: on Monday I will go — the day-name walks into the when-slot with nothing added to it
-romanization: "thiṅkaḷāzhcha ñān pōkuṁ"
+romanization: "tiṅkaḷāḻca ñān pōkuṁ"
 concept_tag: ML-TIME-BARE-DAY
 prerequisites: [ML-C10-azhcha, ML-C94-three-days, ML-C102-manikku]
 sounds: [malayalam-zha]
@@ -42,7 +42,7 @@ reviews_of: [ML-C10-azhcha, ML-C94-three-days]
 The day-name lesson laid all seven of them out in a table and left them there.
 You have read **തിങ്കളാഴ്ച** and never once *used* it. Use it now:
 
-> **തിങ്കളാഴ്ച ഞാൻ പോകും.** — *thiṅkaḷāzhcha ñān pōkuṁ* — "On Monday I will go."
+> **തിങ്കളാഴ്ച ഞാൻ പോകും.** — *tiṅkaḷāḻca ñān pōkuṁ* — "On Monday I will go."
 
 **Read that sentence twice and look for the ending.** There is none. The
 day-name went into the when-slot exactly as it stands in that table, with
@@ -57,7 +57,7 @@ point of the chapter:
 | | | |
 |---|---|---|
 | **രണ്ട് മണിക്ക് ഞാൻ പോകും** | *raṇṭŭ maṇikkŭ…* | the hour took **ക്ക്** |
-| **തിങ്കളാഴ്ച ഞാൻ പോകും** | *thiṅkaḷāzhcha…* | the day took **nothing** |
+| **തിങ്കളാഴ്ച ഞാൻ പോകും** | *tiṅkaḷāḻca…* | the day took **nothing** |
 
 Both sentences answer **when**. Both put their answer at the front. One of the
 two answers had to put an ending on first, and it is the hour.
@@ -80,8 +80,8 @@ something happens, it does not need one.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C102-BARE-DAY-01, ML-CONCEPT-C10-AZHCHA-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: *thiṅkaḷāzhcha*]
-- [YOU SAY: *thiṅkaḷāzhcha ñān pōkuṁ*]
+- [YOU SAY: *tiṅkaḷāḻca*]
+- [YOU SAY: *tiṅkaḷāḻca ñān pōkuṁ*]
 - [YOU SAY: *raṇṭŭ maṇikkŭ ñān pōkuṁ*, then the Monday line again]
 - [YOU SAY: which of the two answers carried an ending, and which carried none]
 

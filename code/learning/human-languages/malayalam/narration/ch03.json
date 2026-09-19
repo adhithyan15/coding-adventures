@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:eff6fa7102598a35",
+  "sourceHash": "fnv1a64:769e43efd8486c68",
   "lessons": [
     {
       "id": "ML-C03-engane",
@@ -144,7 +144,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:942e3144fe6ba8b0",
+      "sourceHash": "fnv1a64:60827ec19cc1445c",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -200,11 +200,11 @@
             },
             {
               "kind": "speech",
-              "text": "You copied its other half in the last chapter. Inside സന്തോഷം (santōṣam) the vowel ō is a sign wrapped around its consonant: ◌ോ. Where the vowel has no consonant to wrap around, it stands up as a letter of its own: ഓ."
+              "text": "You copied its other half in the last chapter. Inside സന്തോഷം (santōṣaṁ) the vowel ō is a sign wrapped around its consonant: ◌ോ. Where the vowel has no consonant to wrap around, it stands up as a letter of its own: ഓ."
             },
             {
               "kind": "speech",
-              "text": "സന്തോഷം santōṣam — the sign form, already in your hand."
+              "text": "സന്തോഷം santōṣaṁ — the sign form, already in your hand."
             },
             {
               "kind": "speech",
@@ -249,7 +249,7 @@
             },
             {
               "kind": "speech",
-              "text": "സന്തോഷം (santōṣam), ഓ, ◌ോ."
+              "text": "സന്തോഷം (santōṣaṁ), ഓ, ◌ോ."
             },
             {
               "kind": "prompt",
@@ -303,7 +303,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0e8473d26b5677a3",
+      "sourceHash": "fnv1a64:6cedb90674528dc3",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -361,7 +361,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Malayalam makes a yes/no question by adding -ō to the end: sukham āṇŭ (\"it is well\") becomes sukham āṇō? (\"is it well?\"). No change of word order, no helper — just the little -ō. You will use it to question any statement."
+              "text": "Malayalam makes a yes/no question by adding -ō to the end: sukhaṁ āṇŭ (\"it is well\") becomes sukhaṁ āṇō? (\"is it well?\"). No change of word order, no helper — just the little -ō. You will use it to question any statement."
             }
           ]
         },
@@ -745,7 +745,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:aba666fddca98c3c",
+      "sourceHash": "fnv1a64:d43da1fd988bcad4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -792,7 +792,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "സുഖം (sukhaṁ, \"well-being, comfort, ease, happiness\") is a Sanskrit loan — sukha = su- (\"good, well\") + kha (\"space, feeling\") — the same su- that is Greek eu- (as in euphoria). Malayalam, Tamil's closest sister, took far more Sanskrit into everyday speech than Tamil did — and sukham is a perfect case: for \"well,\" where Tamil answers with native nalam, Malayalam reaches for Sanskrit sukham."
+              "text": "സുഖം (sukhaṁ, \"well-being, comfort, ease, happiness\") is a Sanskrit loan — sukha = su- (\"good, well\") + kha (\"space, feeling\") — the same su- that is Greek eu- (as in euphoria). Malayalam, Tamil's closest sister, took far more Sanskrit into everyday speech than Tamil did — and sukhaṁ is a perfect case: for \"well,\" where Tamil answers with native nalam, Malayalam reaches for Sanskrit sukhaṁ."
             }
           ]
         },
@@ -811,7 +811,7 @@
             },
             {
               "kind": "speech",
-              "text": "Notice the reply reuses the greeting's own words — sukham + āṇŭ — just without the question -ō."
+              "text": "Notice the reply reuses the greeting's own words — sukhaṁ + āṇŭ — just without the question -ō."
             }
           ]
         },
@@ -868,7 +868,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the reply to sukhamāṇō?, and say where sukham comes from. (Sukhamāṇŭ; Sanskrit sukha, \"well-being\" — the su- that is Greek eu-.)"
+              "text": "Give the reply to sukhamāṇō?, and say where sukhaṁ comes from. (Sukhamāṇŭ; Sanskrit sukha, \"well-being\" — the su- that is Greek eu-.)"
             }
           ]
         }
@@ -1182,7 +1182,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6c7d774a34dc09e8",
+      "sourceHash": "fnv1a64:d179a05ececa7b2c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1312,7 +1312,7 @@
             },
             {
               "kind": "speech",
-              "text": "sukham from Sanskrit sukha \"well-being\" (the su- that is Greek eu-)."
+              "text": "sukhaṁ from Sanskrit sukha \"well-being\" (the su- that is Greek eu-)."
             },
             {
               "kind": "speech",
@@ -1384,9 +1384,9 @@
     {
       "id": "ML-W03-santosham-delayed-copy",
       "sequence": 215,
-      "title": "സന്തോഷം (santōṣam) — one delayed copy",
+      "title": "സന്തോഷം (santōṣaṁ) — one delayed copy",
       "headword": "സന്തോഷം",
-      "romanization": "santōṣam",
+      "romanization": "santōṣaṁ",
       "gloss": "write the known word for joy once after a short delay",
       "script": "malayalam",
       "modality": "pen",
@@ -1396,7 +1396,7 @@
         "writing-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:388046eca08ab1d4",
+      "sourceHash": "fnv1a64:b449a478fd79915a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1414,7 +1414,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look at സന്തോഷം for five seconds and say santōṣam. Find ഷ and the long ō sign ോ once more. Then cover the model with your hand or a small piece of paper."
+              "text": "Look at സന്തോഷം for five seconds and say santōṣaṁ. Find ഷ and the long ō sign ോ once more. Then cover the model with your hand or a small piece of paper."
             }
           ]
         },
@@ -1425,7 +1425,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Write സന്തോഷം (santōṣam) once while the model is covered. This is a gentle retrieval, not a speed test. If one shape will not come, uncover the model, look, cover it again, and finish."
+              "text": "Write സന്തോഷം (santōṣaṁ) once while the model is covered. This is a gentle retrieval, not a speed test. If one shape will not come, uncover the model, look, cover it again, and finish."
             }
           ]
         },
@@ -1436,7 +1436,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Uncover സന്തോഷം and compare it with your copy. Repair only one shape if needed. Say santōṣam once, then stop: one known word, one spaced writing revisit."
+              "text": "Uncover സന്തോഷം and compare it with your copy. Repair only one shape if needed. Say santōṣaṁ once, then stop: one known word, one spaced writing revisit."
             }
           ]
         }

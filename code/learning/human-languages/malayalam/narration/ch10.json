@@ -4,14 +4,14 @@
   "chapter": 10,
   "title": "Days of the Week",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1e9c4fc28e33a918",
+  "sourceHash": "fnv1a64:45bcc7d35c0be389",
   "lessons": [
     {
       "id": "ML-C10-azhcha",
       "sequence": 380,
       "title": "തിങ്കൾ to ഞായർ — the week Malayalam shares with Tamil",
       "headword": "തിങ്കൾ ചൊവ്വ ബുധൻ വ്യാഴം വെള്ളി ശനി ഞായർ",
-      "romanization": "thiṅkaḷ covva budhan vyāzham veḷḷi śani ñāyar",
+      "romanization": "tiṅkaḷ covva budhan vyāzham veḷḷi śani ñāyar",
       "gloss": "the seven weekdays — Malayalam shares Tamil's native planet-words, being its closest cousin",
       "script": "malayalam",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:ddea7d343b0585c7",
+      "sourceHash": "fnv1a64:ad159b265baed12b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -75,7 +75,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "This is the closest family match anywhere in Dravidian: thiṅkaḷ/thiṅgaḷ, veḷḷi/veḷḷi, and ñāyar/ñāyiṟu are essentially the same words, because Malayalam only became a distinct language from Tamil within roughly the last thousand years or so. Where Tamil says கிழமை (kizhamai) for \"day,\" Malayalam says ஆழ்ச (āzhcha) — a different word for the same idea (the two aren't confirmed cognates; treat this as two languages solving the same naming problem separately, not necessarily one shared root). Like Tamil, Malayalam mixes native planet-words (Moon, Mars, Venus, Sun) with Sanskrit ones (Mercury, Jupiter, Saturn) — the same split, inherited from the same shared ancestor language."
+              "text": "This is the closest family match anywhere in Dravidian: tiṅkaḷ/thiṅgaḷ, veḷḷi/veḷḷi, and ñāyar/ñāyiṟu are essentially the same words, because Malayalam only became a distinct language from Tamil within roughly the last thousand years or so. Where Tamil says கிழமை (kizhamai) for \"day,\" Malayalam says ஆழ்ச (āḻca) — a different word for the same idea (the two aren't confirmed cognates; treat this as two languages solving the same naming problem separately, not necessarily one shared root). Like Tamil, Malayalam mixes native planet-words (Moon, Mars, Venus, Sun) with Sanskrit ones (Mercury, Jupiter, Saturn) — the same split, inherited from the same shared ancestor language."
             }
           ]
         },
@@ -93,11 +93,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"thiṅkaḷ\" — moon — then \"āzhcha,\" day/week",
+              "instruction": "\"tiṅkaḷ\" — moon — then \"āḻca,\" day/week",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"thiṅkaḷ\" — moon — then \"āzhcha,\" day/week]"
+              "source": "[YOU SAY: \"tiṅkaḷ\" — moon — then \"āḻca,\" day/week]"
             },
             {
               "kind": "prompt",
@@ -132,7 +132,7 @@
             },
             {
               "kind": "speech",
-              "text": "Why do Malayalam and Tamil's day-names look so alike? (They were the same language until roughly a thousand years ago.) Which planet-names does Malayalam share almost word-for-word with Tamil? (thiṅkaḷ/Moon, veḷḷi/Venus, ñāyar/Sun — and covva/Mars, a worn variant of cevvāy.) Which three come from Sanskrit in both languages? (Mercury (Budha), Jupiter (vyāzham/viyāzhaṉ), Saturn (Śani).)"
+              "text": "Why do Malayalam and Tamil's day-names look so alike? (They were the same language until roughly a thousand years ago.) Which planet-names does Malayalam share almost word-for-word with Tamil? (tiṅkaḷ/Moon, veḷḷi/Venus, ñāyar/Sun — and covva/Mars, a worn variant of cevvāy.) Which three come from Sanskrit in both languages? (Mercury (Budha), Jupiter (vyāzham/viyāzhaṉ), Saturn (Śani).)"
             }
           ]
         }
@@ -153,7 +153,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:20953f8f6911f5ad",
+      "sourceHash": "fnv1a64:6055a4bfd019045d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -213,7 +213,7 @@
             },
             {
               "kind": "speech",
-              "text": "നമസ്കാരം namaskāram — hello / greetings (namaskāram — \"a making of a bow\")."
+              "text": "നമസ്കാരം namaskāraṁ — hello / greetings (namaskāraṁ — \"a making of a bow\")."
             },
             {
               "kind": "speech",
@@ -225,7 +225,7 @@
             },
             {
               "kind": "speech",
-              "text": "സന്തോഷം santōṣam — joy / pleased to meet you."
+              "text": "സന്തോഷം santōṣaṁ — joy / pleased to meet you."
             }
           ]
         },

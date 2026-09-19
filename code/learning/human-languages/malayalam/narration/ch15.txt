@@ -15,7 +15,7 @@ You'll want to know.
 The word, taken apart.
 Rice, though, tells the familiar story:
 അരി (ari) = "rice" (raw grain) — closely matching Tamil arisi.
-ചോറ് (cōṟu) = "cooked rice" (the meal) — and here Malayalam actually does have a Tamil cognate: Tamil keeps its own native சோறு (also cōṟu), used alongside the Sanskrit-influenced sātam as an everyday near-synonym. Malayalam simply made cōṟu its main word, where Tamil more often reaches for sātam.
+ചോറ് (cōṟŭ) = "cooked rice" (the meal) — and here Malayalam actually does have a Tamil cognate: Tamil keeps its own native சோறு (also cōṟŭ), used alongside the Sanskrit-influenced sātam as an everyday near-synonym. Malayalam simply made cōṟŭ its main word, where Tamil more often reaches for sātam.
 
 Guided Practice.
 [pause 1 second]
@@ -23,9 +23,9 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: "ari" — raw rice, matching Tamil closely]
 [pause 8 seconds for the answer]
-[your turn — say: "cōṟu" — cooked rice, Malayalam's own word]
+[your turn — say: "cōṟŭ" — cooked rice, Malayalam's own word]
 [pause 8 seconds for the answer]
-[your turn — recall: say thiṅkaḷ covva budhan vyāzham veḷḷi śani ñāyar]
+[your turn — recall: say tiṅkaḷ covva budhan vyāzham veḷḷi śani ñāyar]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -48,7 +48,7 @@ Script you'll notice: ◌ോ.
 ◌ോ — ō.
 It is a vowel sign. It is not a letter and never stands alone: it attaches to a consonant and replaces the a built into it with ō. Replaces, not adds — the a is gone.
 You already say these, and every one of them has ◌ോ (ō) somewhere inside it:
-സന്തോഷം santōṣam — joy / pleased to meet you.
+സന്തോഷം santōṣaṁ — joy / pleased to meet you.
 സുഖമാണോ? — how are you? (lit. "are you well?")
 പോയി വരാം pōyi varāṁ — goodbye (lit. "I'll go and come back").
 ജോലി ചെയ്യുക jōli ceyyuka — to work (lit. "work-do").

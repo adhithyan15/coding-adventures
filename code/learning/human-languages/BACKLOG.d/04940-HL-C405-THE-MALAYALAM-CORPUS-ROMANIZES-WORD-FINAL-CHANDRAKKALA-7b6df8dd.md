@@ -1,7 +1,7 @@
 ## HL-C405 — the Malayalam corpus romanizes word-final chandrakkala two ways, and both are in force
 
-**Status: OPEN.** Found while writing chapter 102, which needed to put two of
-them on the same page and chose not to.
+**Status: CLOSED (2026-09-19).** Found while writing chapter 102, which needed
+to put two of them on the same page and chose not to.
 
 **The two spellings.** A word ending in a consonant plus chandrakkala is
 romanized with a plain **u** in the early chapters and with **ŭ** in the later
@@ -59,3 +59,36 @@ where later ones use **ḻ** and **th** where later ones use **t** — chapter 1
 ground that a learner meets the word in that table first. Whether that is one
 problem with this one or three separate ones is part of what the census has to
 answer; do not assume they resolve together.
+
+### Closure
+
+They were one problem: the older lessons mixed an English-friendly spelling
+with the later book's letter-by-letter spelling. A census grouped every
+Malayalam-script headword declaration and every adjacent native/italic pair in
+the lesson bodies by the native token, without searching for any anticipated
+Latin spelling. It exposed the named collisions and their neighbours together:
+**പേര്** as *pēru/pēr*, **മണി** as *mani/maṇi*, **ചായ** as
+*chaaya/chāya/cāya*, and **തിങ്കളാഴ്ച** as
+*thiṅkaḷāzhcha/tiṅkaḷāḻca*, as well as the suffix collision that opened this
+shard.
+
+The corpus now follows the later letter-by-letter convention throughout those
+recurring families:
+
+- word-final chandrakkala carries **ŭ**: *-ikkŭ*, *enikkŭ*, *pattŭ*;
+- anusvara carries **ṁ**: *namaskāraṁ*, *santōṣaṁ*, *malayāḷaṁ*;
+- retroflex and palatal letters keep their marks: *maṇi*, *raṇṭŭ*, *neñcŭ*;
+- **ച / ഴ / ത** are **c / ḻ / t** unless the script really contains an
+  aspirated consonant: *cāya*, *āḻca*, *tala*, but *katha* remains *katha*.
+
+The dative lesson no longer teaches the exception: **-ിക്ക്** is *-ikkŭ*,
+**-ിന്** is *-inŭ*, **ജോലിക്ക്** is *jōlikkŭ*, and chapter 102's
+*maṇikkŭ* now visibly follows the same rule. Cross-language comparisons retain
+their own spelling — the Telugu cousin of **പേര്** remains *pēru*, for example — so
+normalising Malayalam did not silently rewrite its neighbours.
+
+The corpus test pins fourteen representatives across the opening, number,
+calendar, body, drink, question and nominalisation chapters, including all
+three concrete collisions that filed this shard. Regenerated book and narration
+artifacts carry the same spellings, so the reader no longer meets one form in a
+lesson and another in its audio or chapter output.

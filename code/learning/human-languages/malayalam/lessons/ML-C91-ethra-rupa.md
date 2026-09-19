@@ -7,7 +7,7 @@ chapter: 91
 type: phrase
 headword: "എത്ര രൂപ"
 gloss: how many rupees — the price question, built from a word freed two chapters back and numbers taught one chapter back
-romanization: "ethra rūpa"
+romanization: "etra rūpa"
 concept_tag: ML-PRICE-QUESTION
 prerequisites: [ML-C91-vila-panam, ML-C81-dooram, ML-C88-tens]
 sounds: []
@@ -28,7 +28,7 @@ variety: standard-colloquial
 reviews_of: [ML-C81-dooram, ML-C88-tens]
 ---
 
-# എത്ര രൂപ (ethra rūpa) — how many rupees?
+# എത്ര രൂപ (etra rūpa) — how many rupees?
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C81-HOW-MUCH-01, ML-CONCEPT-C88-TENS-01] -->
@@ -43,7 +43,7 @@ as far as you can.
 
 And now the question the whole chapter has been aiming at:
 
-**എത്ര രൂപ?** — *ethra rūpa?* — **how many rupees?** What does it cost?
+**എത്ര രൂപ?** — *etra rūpa?* — **how many rupees?** What does it cost?
 
 **Look at what that cost you.** **എത്ര** was lifted out of the age question two
 chapters after you first met it, and it has been yours since. **രൂപ** is the one
@@ -68,13 +68,13 @@ numbers that answer, and the unit they are counted in.**
 
 [PAUSE 1s]
 - [YOU SAY: *rūpa*]
-- [YOU SAY: *ethra rūpa?*]
-- [YOU SAY: *ampathŭ rūpa*]
+- [YOU SAY: *etra rūpa?*]
+- [YOU SAY: *ampatŭ rūpa*]
 - [YOU SAY: *nūṟŭ rūpa*]
 - [YOU SAY: which word in the question you already owned]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C91-PRICE-QUESTION-01, ML-LEX-C91-MONEY-03] -->
 
-[PAUSE 3s] How do you ask a price? (***ethra rūpa?***) How many words is that?
+[PAUSE 3s] How do you ask a price? (***etra rūpa?***) How many words is that?
 (**Two**.) And how many of them were new today? (**One**.)

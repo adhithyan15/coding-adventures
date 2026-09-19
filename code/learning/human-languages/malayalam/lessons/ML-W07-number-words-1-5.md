@@ -39,27 +39,27 @@ themselves need only one letter you have not met.
 ## Script
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-1-5-01] -->
 
-**ഒ** is independent short *o*. It begins **ഒന്ന്**, *onnu*, one.
+**ഒ** is independent short *o*. It begins **ഒന്ന്**, *onnŭ*, one.
 
 Every other shape in this row is already familiar:
 
 | numeral | word | said |
 |---|---|---|
-| **൧** | **ഒന്ന്** | *onnu* |
-| **൨** | **രണ്ട്** | *randu* |
-| **൩** | **മൂന്ന്** | *moonnu* |
-| **൪** | **നാല്** | *naalu* |
-| **൫** | **അഞ്ച്** | *anchu* |
+| **൧** | **ഒന്ന്** | *onnŭ* |
+| **൨** | **രണ്ട്** | *raṇṭŭ* |
+| **൩** | **മൂന്ന്** | *mūnnŭ* |
+| **൪** | **നാല്** | *nālŭ* |
+| **൫** | **അഞ്ച്** | *añcŭ* |
 
 ## Writing — observe and trace
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-1-5-01] -->
 <!-- hl-writing-stage: observe-trace -->
 
 Trace **ഒ** once with its model visible. Then point from **൧** to **ഒന്ന്** and
-say *onnu*. Read the remaining four rows; do not copy the whole row yet.
+say *onnŭ*. Read the remaining four rows; do not copy the whole row yet.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-1-5-01] -->
 
-[PAUSE 3s] Which new letter begins *onnu*? (**ഒ**.) Read **൩** and **മൂന്ന്**.
+[PAUSE 3s] Which new letter begins *onnŭ*? (**ഒ**.) Read **൩** and **മൂന്ന്**.
 (***Moonnu**, three.*) How many new letters appeared? (**One.**)

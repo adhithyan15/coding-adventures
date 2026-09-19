@@ -7,7 +7,7 @@ chapter: 81
 type: word
 headword: "എത്ര ദൂരം"
 gloss: how far — distance as a thing you can ask for a number of, and എത്ര lifted out of the age question
-romanization: "ethra dūraṁ"
+romanization: "etra dūraṁ"
 concept_tag: ML-WORD-HOW-FAR
 prerequisites: [ML-C81-akale, ML-C19-vayassu]
 sounds: []
@@ -28,7 +28,7 @@ variety: standard-colloquial
 reviews_of: [ML-C19-vayassu, ML-C81-akale]
 ---
 
-# എത്ര ദൂരം (ethra dūraṁ) — how far
+# എത്ര ദൂരം (etra dūraṁ) — how far
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C81-DISTANCE-02, ML-CONCEPT-C19-VAYASSU-01] -->
@@ -44,14 +44,14 @@ exists to you.
 *aṭuttŭ* and *akale* give you two rough settings. **ദൂരം** is the thing itself —
 the amount of space, which can be asked for and answered with a number.
 
-And you already own the word for asking. **എത്ര** *ethra* — *how much, how many*
+And you already own the word for asking. **എത്ര** *etra* — *how much, how many*
 — has been sitting inside the age question since you learned it:
 
 **നിങ്ങൾക്ക് എത്ര വയസ്സുണ്ട്?** — *to you, **how much** age exists?*
 
 It was a piece of a phrase then. **Now take it out and use it.**
 
-**എത്ര ദൂരം?** — *ethra dūraṁ?* — how much distance? How far?
+**എത്ര ദൂരം?** — *etra dūraṁ?* — how much distance? How far?
 
 That is the whole question, and it is two words you were given separately.
 **Lifting a word out of a phrase you already say is the cheapest vocabulary
@@ -73,13 +73,13 @@ all over, and having both is not a redundancy but a choice of texture.
 
 [PAUSE 1s]
 - [YOU SAY: *dūraṁ*]
-- [YOU SAY: *ethra dūraṁ?*]
-- [YOU SAY: the other question you know that starts with *ethra*]
-- [YOU SAY: *aṭuttŭ*, *akale*, *ethra dūraṁ* — two settings and the question]
+- [YOU SAY: *etra dūraṁ?*]
+- [YOU SAY: the other question you know that starts with *etra*]
+- [YOU SAY: *aṭuttŭ*, *akale*, *etra dūraṁ* — two settings and the question]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C81-DISTANCE-03, ML-LEX-C81-HOW-MUCH-01] -->
 
-[PAUSE 3s] What is *dūraṁ*? (**Distance**.) What does *ethra* mean on its own?
+[PAUSE 3s] What is *dūraṁ*? (**Distance**.) What does *etra* mean on its own?
 (**How much, how many**.) And where had you already met it? (**Inside the age
 question**.)

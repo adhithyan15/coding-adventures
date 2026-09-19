@@ -4,7 +4,7 @@
   "chapter": 92,
   "title": "Eating Out",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:d65bbe9e778ac7cf",
+  "sourceHash": "fnv1a64:a856b68f291ec379",
   "lessons": [
     {
       "id": "ML-C92-bhakshanam",
@@ -292,7 +292,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f485ac64dbf585bc",
+      "sourceHash": "fnv1a64:ca1692703838514a",
       "notice": null,
       "blocks": [
         {
@@ -378,11 +378,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ethra rūpa?",
+              "instruction": "etra rūpa?",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *ethra rūpa?*]"
+              "source": "[YOU SAY: *etra rūpa?*]"
             },
             {
               "kind": "prompt",

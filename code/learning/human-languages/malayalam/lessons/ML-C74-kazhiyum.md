@@ -33,7 +33,7 @@ reviews_of: [ML-C74-aan, ML-C32-ariyuka]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C32-ARIYUKA-01] -->
 
-[PAUSE 2s] Say *enikku malayāḷaṁ aṟiyāṁ*. Say which word in it means *I*, and
+[PAUSE 2s] Say *enikkŭ malayāḷaṁ aṟiyāṁ*. Say which word in it means *I*, and
 what shape that word is in.
 
 [PAUSE 2s] Today's sentence is built the same way.
@@ -43,9 +43,9 @@ what shape that word is in.
 
 > **എനിക്ക് വായിക്കാൻ കഴിയും.**
 >
-> *enikku vāyikkāṉ kaḻiyuṁ* — "I can read."
+> *enikkŭ vāyikkāṉ kaḻiyuṁ* — "I can read."
 
-Three pieces, and **two of them you already had**: *enikku*, the dative *to me*
+Three pieces, and **two of them you already had**: *enikkŭ*, the dative *to me*
 that the knowing sentence uses, and *vāyikkāṉ*, the **-ആൻ** form from two pages
 ago. The new word is **കഴിയും**, and what it says is that the thing is possible.
 
@@ -78,7 +78,7 @@ which one you are saying.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C74-KAZHIYUM-01, ML-GRAMMAR-C74-AAN-01, ML-CONCEPT-C32-ARIYUKA-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: *enikku vāyikkāṉ kaḻiyuṁ*]
+- [YOU SAY: *enikkŭ vāyikkāṉ kaḻiyuṁ*]
 - [YOU SAY: the knowing sentence and the can sentence one after the other]
 - [YOU SAY: what the two of them share at the front]
 - [YOU SAY: *pōkāṉ kaḻiyuṁ* — being able to go]

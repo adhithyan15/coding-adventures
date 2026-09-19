@@ -4,7 +4,7 @@
   "chapter": 101,
   "title": "Build and Height",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3b80034d82b65bc7",
+  "sourceHash": "fnv1a64:c6d1009f15e87786",
   "lessons": [
     {
       "id": "ML-C101-kuriya",
@@ -441,7 +441,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7235ac829791334f",
+      "sourceHash": "fnv1a64:52455dc627c645f1",
       "notice": null,
       "blocks": [
         {
@@ -472,7 +472,7 @@
             },
             {
               "kind": "speech",
-              "text": "എനിക്ക് ഉയരമുണ്ട്. — enikku uyaramuṇṭŭ — \"To me, height exists\" — I am tall."
+              "text": "എനിക്ക് ഉയരമുണ്ട്. — enikkŭ uyaramuṇṭŭ — \"To me, height exists\" — I am tall."
             }
           ]
         },
@@ -491,7 +491,7 @@
             },
             {
               "kind": "speech",
-              "text": "എനിക്ക് ഉയരമുണ്ട്. — enikku uyaramuṇṭŭ — to-me height there-is — I am tall."
+              "text": "എനിക്ക് ഉയരമുണ്ട്. — enikkŭ uyaramuṇṭŭ — to-me height there-is — I am tall."
             },
             {
               "kind": "speech",
@@ -530,11 +530,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "enikku uyaramuṇṭŭ",
+              "instruction": "enikkŭ uyaramuṇṭŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *enikku uyaramuṇṭŭ*]"
+              "source": "[YOU SAY: *enikkŭ uyaramuṇṭŭ*]"
             },
             {
               "kind": "prompt",
@@ -579,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:33e6a128f0e4397f",
+      "sourceHash": "fnv1a64:bd832df16a67c233",
       "notice": null,
       "blocks": [
         {
@@ -632,7 +632,7 @@
             },
             {
               "kind": "speech",
-              "text": "എനിക്ക് ഉയരമുണ്ട്. — enikku uyaramuṇṭŭ — to-me height there-is — I am tall."
+              "text": "എനിക്ക് ഉയരമുണ്ട്. — enikkŭ uyaramuṇṭŭ — to-me height there-is — I am tall."
             }
           ]
         },
@@ -683,11 +683,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "enikku uyaramuṇṭŭ",
+              "instruction": "enikkŭ uyaramuṇṭŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *enikku uyaramuṇṭŭ*]"
+              "source": "[YOU SAY: *enikkŭ uyaramuṇṭŭ*]"
             },
             {
               "kind": "prompt",

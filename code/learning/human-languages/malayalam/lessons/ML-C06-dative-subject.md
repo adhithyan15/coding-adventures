@@ -7,12 +7,12 @@ chapter: 6
 type: phrase
 headword: എനിക്ക് മലയാളം അറിയാം
 gloss: "'I know Malayalam' — built with no subject, because knowing happens TO you"
-romanization: enikku malayāḷam aṟiyām
+romanization: enikkŭ malayāḷaṁ aṟiyāṁ
 concept_tag: ML-DATIVE-SUBJECT
 prerequisites: [ML-C06-dative-ikku, ML-C05-njaan-malayalam-samsaarikkunnu]
 sounds: [gemination-kk, retroflex-l]
 roots: [dravidian-dative-ku]
-etymology_hook: "Dravidian puts the EXPERIENCER in the dative — knowing, liking and wanting happen TO you rather than being done BY you — so 'I know Malayalam' has no nominative 'I', the person sitting in the dative instead (a 'dative subject'); aṟiyām is aṟiy- 'know' + the able-to ending -ām, so it is literally 'is knowable'; the same construction runs through Tamil, Telugu and Kannada with cousin suffixes"
+etymology_hook: "Dravidian puts the EXPERIENCER in the dative — knowing, liking and wanting happen TO you rather than being done BY you — so 'I know Malayalam' has no nominative 'I', the person sitting in the dative instead (a 'dative subject'); aṟiyāṁ is aṟiy- 'know' + the able-to ending -ām, so it is literally 'is knowable'; the same construction runs through Tamil, Telugu and Kannada with cousin suffixes"
 duration:
   max_seconds: 294
 requires:
@@ -41,14 +41,14 @@ Malayalam." Now say "I **know** Malayalam." Malayalam will not let you use *ñā
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C06-DATIVE-SUBJECT-01]; assesses=[] -->
 
 > **എനിക്ക് മലയാളം അറിയാം.**
-> *enikku malayāḷam aṟiyām.*
+> *enikkŭ malayāḷaṁ aṟiyāṁ.*
 > literally: "**to-me** Malayalam is-knowable."
 
 | piece | |
 |---|---|
-| **എനിക്ക്** *enikku* | "to me" — the dative from the last lesson |
-| **മലയാളം** *malayāḷam* | Malayalam (Ch. 5) |
-| **അറിയാം** *aṟiyām* | "can be known" — *aṟiy-* "know" + **-ām**, the *able-to* ending |
+| **എനിക്ക്** *enikkŭ* | "to me" — the dative from the last lesson |
+| **മലയാളം** *malayāḷaṁ* | Malayalam (Ch. 5) |
+| **അറിയാം** *aṟiyāṁ* | "can be known" — *aṟiy-* "know" + **-ām**, the *able-to* ending |
 
 **You are not the subject.** *Ñān* is gone; the person has been moved into the
 dative, and the sentence is now about the **language**. Malayalam isn't saying you
@@ -75,12 +75,12 @@ English preserves one fossil of exactly this: "**methinks**" — *me* is a dativ
 
 | language | "I know [the language]" | the dative |
 |---|---|---|
-| Malayalam | *enikku malayāḷam aṟiyām* | **-ikku** |
+| Malayalam | *enikkŭ malayāḷaṁ aṟiyāṁ* | **-ikkŭ** |
 | Tamil | *enakku tamiḻ teriyum* | **-ukku** |
 | Telugu | *nāku telugu vaccu* | **-ku** |
 | Kannada | *nanage kannaḍa gottu* | **-ge** |
 
-Look at the first column: Malayalam's *enikku* and Tamil's *enakku* are nearly the
+Look at the first column: Malayalam's *enikkŭ* and Tamil's *enakku* are nearly the
 **same word** — the two languages separated most recently of the four, and it
 shows. One construction, four languages, four visibly related suffixes: the
 Dravidian family showing its bones, as *blanc/bianco/branco* did for Romance.
@@ -89,16 +89,16 @@ Dravidian family showing its bones, as *blanc/bianco/branco* did for Romance.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C06-DATIVE-SUBJECT-01, ML-CONCEPT-C06-DATIVE-SUBJECT-02, ML-CONCEPT-C06-DATIVE-SUBJECT-03] -->
 
 [PAUSE 1s]
-- [YOU SAY: "*enikku malayāḷam aṟiyām*"]
-- [YOU SAY: the contrast — "*ñān malayāḷam saṁsārikkunnu*" (I speak) … "*enikku malayāḷam aṟiyām*" (known to me)]
-- [YOU SAY: the near-twins — "*enikku* … *enakku*"]
-- [YOU SAY: the four cousins — "*-ikku · -ukku · -ku · -ge*"]
+- [YOU SAY: "*enikkŭ malayāḷaṁ aṟiyāṁ*"]
+- [YOU SAY: the contrast — "*ñān malayāḷaṁ saṁsārikkunnu*" (I speak) … "*enikkŭ malayāḷaṁ aṟiyāṁ*" (known to me)]
+- [YOU SAY: the near-twins — "*enikkŭ* … *enakku*"]
+- [YOU SAY: the four cousins — "*-ikkŭ · -ukku · -ku · -ge*"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C06-DATIVE-SUBJECT-01, ML-CONCEPT-C06-DATIVE-SUBJECT-02, ML-CONCEPT-C06-DATIVE-SUBJECT-03] -->
 
 [PAUSE 3s] What does **എനിക്ക് മലയാളം അറിയാം** literally say? ("**To-me** Malayalam
 **is-knowable**.") What has English got that Malayalam hasn't? (A nominative
-"**I**" — *ñān* is replaced by the dative *enikku*.) Why the dative? (Knowing **happens to** you.) Which Tamil word is
-*enikku* almost identical to, and why? (**Enakku** — Tamil and Malayalam split
+"**I**" — *ñān* is replaced by the dative *enikkŭ*.) Why the dative? (Knowing **happens to** you.) Which Tamil word is
+*enikkŭ* almost identical to, and why? (**Enakku** — Tamil and Malayalam split
 most recently of the four.) Which English word keeps the same idea? (**Methinks**.)

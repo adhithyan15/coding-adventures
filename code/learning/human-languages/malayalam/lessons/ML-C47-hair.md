@@ -57,7 +57,7 @@ Three. A leg, a tooth, hair.
 [PAUSE 1s]
 - [YOU SAY: *muṭi*]
 - [YOU SAY: it once more, slowly]
-- [YOU SAY: *muṭi*, then *thala*, so the head and what grows on it sit together]
+- [YOU SAY: *muṭi*, then *tala*, so the head and what grows on it sit together]
 - [YOU RECALL: say *muttaśśi*]
 
 ## Wrap-up Recall

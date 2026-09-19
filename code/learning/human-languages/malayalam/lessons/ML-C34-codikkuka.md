@@ -68,7 +68,7 @@ family's inherited **\*kēḷ‑** covered **hearing and asking together**, and 
 **hearing only** — and the empty half is exactly where the loan settled.
 
 Two questions from Chapter 18 and Chapter 19 you can now say you are asking:
-*ethra maṇi?*, "what hour?", and *niṅṅaḷkku ethra vayassuṇṭŭ?*, "how old are
+*etra maṇi?*, "what hour?", and *niṅṅaḷkku etra vayassuṇṭŭ?*, "how old are
 you?" Chapter 8's **ദയവായി** in front softens either.
 
 ## Guided Practice
@@ -78,8 +78,8 @@ you?" Chapter 8's **ദയവായി** in front softens either.
 - [YOU SAY: "ñān cōdikkunnu," then the past, "cōdiccu"]
 - [YOU SAY: verb, then noun — "cōdikkuka … cōdyaṁ"]
 - [YOU SAY: the three senses in order — "incite … demand … ask"]
-- [YOU SAY: ask the hour — "dayavāyi, ethra maṇi?"]
-- [YOU SAY: ask the age — "niṅṅaḷkku ethra vayassuṇṭŭ?"]
+- [YOU SAY: ask the hour — "dayavāyi, etra maṇi?"]
+- [YOU SAY: ask the age — "niṅṅaḷkku etra vayassuṇṭŭ?"]
 - [YOU SAY: hear, then ask — "kēḷkkuka … cōdikkuka"]
 - [YOU SAY: the two pasts — "cōdiccu" borrowed, "eṭuttu" and "eḻuti" not]
 
@@ -90,4 +90,4 @@ you?" Chapter 8's **ദയവായി** in front softens either.
 cōdikkunnu*; *cōdiccu*; **‑ഇച്ചു** means **borrowed**.) What did the root mean
 first, and why did Malayalam need it? (**To incite, to urge** — and its own
 *kēḷkkuka* had narrowed to hearing, where Tamil's *kēḷ* still asks.) Now ask
-someone's age, politely. (*Dayavāyi, niṅṅaḷkku ethra vayassuṇṭŭ?*)
+someone's age, politely. (*Dayavāyi, niṅṅaḷkku etra vayassuṇṭŭ?*)

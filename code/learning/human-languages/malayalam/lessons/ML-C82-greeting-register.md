@@ -43,11 +43,11 @@ not misunderstood — they sound like a radio announcer greeting a neighbour.
 
 | greeting | reach |
 |---|---|
-| **നമസ്കാരം** *namaskāram* | **anyone, any hour** |
+| **നമസ്കാരം** *namaskāraṁ* | **anyone, any hour** |
 | **സുപ്രഭാതം** *suprabhātaṁ* | the morning, **formal or not** |
 | **ശുഭ മധ്യാഹ്നം** *śubha madhyāhnaṁ* | the afternoon, **formal** |
 | **ശുഭ സായാഹ്നം** *śubha sāyāhnaṁ* | the evening, **formal** |
-| **ശുഭ രാത്രി** *śubha rāthri* | the night, **formal** |
+| **ശുഭ രാത്രി** *śubha rātri* | the night, **formal** |
 
 **നമസ്കാരം is the one to reach for.** It is tied to no hour and no occasion, it
 is respectful without being stiff, and it is never wrong. If you remember one
@@ -86,11 +86,11 @@ Put it with the calling words and you can start a conversation from nothing:
 - [YOU SAY: the greeting that works at any hour with anyone]
 - [YOU SAY: what you would greet a neighbour with at nine in the morning]
 - [YOU SAY: which of the five you are most likely to READ rather than say]
-- [YOU SAY: *namaskāram, cēṭṭā*]
+- [YOU SAY: *namaskāraṁ, cēṭṭā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C82-GREETING-REGISTER-01, ML-LEX-NAMASKARAM-01] -->
 
-[PAUSE 3s] Which greeting is never wrong? (***namaskāram***.) Which family is
+[PAUSE 3s] Which greeting is never wrong? (***namaskāraṁ***.) Which family is
 mostly written and announced? (**The ശുഭ one**.) And which member of that family
 is an everyday word anyway? (***suprabhātaṁ***.)

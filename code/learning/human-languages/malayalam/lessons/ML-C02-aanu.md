@@ -51,7 +51,7 @@ from the verb **ആക** (*āka*, "to be, to become").
 Here's the point: Tamil, Kannada, and Telugu all use the **zero copula** — *no*
 word for "is." Yet Malayalam, though it is Tamil's *closest* sister,
 grammaticalised a "to be" verb. So where Tamil says only *eṉ peyar Arun*,
-Malayalam adds *āṇŭ*: *enṟe pēru Arun āṇŭ*.
+Malayalam adds *āṇŭ*: *enṟe pēr Arun āṇŭ*.
 
 ## Grammar Lens: the verb comes last
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C02-COPULA-01]; assesses=[ML-LEX-AANU-01] -->
@@ -66,7 +66,7 @@ in fast speech, but the full form keeps it.)
 [PAUSE 1s]
 - [YOU SAY: "āṇŭ"]
 - [YOU SAY: the contrast — Tamil *eṉ peyar Arun* (no verb) vs. Malayalam *enṟe
-  pēru Arun āṇŭ*]
+  pēr Arun āṇŭ*]
 - [YOU RECALL: say *athe*, then say *illa*, then read **ശരി**]
 
 ## Wrap-up Recall

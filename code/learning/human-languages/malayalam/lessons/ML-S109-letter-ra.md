@@ -48,7 +48,7 @@ It is a **consonant**, and in this script a consonant is never bare: it comes wi
 The soft *r*, and the partner of the hard **റ** you read inside **എന്റെ**.
 You wrote this one in the first chapter too, at the end of the greeting.
 
-- **നമസ്കാരം** *namaskāram* — hello / greetings
+- **നമസ്കാരം** *namaskāraṁ* — hello / greetings
 - **ശരി** *śari* — okay / alright / correct
 - **പേര്** *pēr* — name
 - **സാരമില്ല** *sāramilla* — it doesn't matter

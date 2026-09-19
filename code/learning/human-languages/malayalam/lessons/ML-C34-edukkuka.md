@@ -59,7 +59,7 @@ Gundert glosses it "**to raise, lift, take up**," and the lifting came first.
 Tamil **எடு** (*eṭu*) is the same word again — and the etymological dictionary
 gives this root no entry of its own, filing *eṭu* inside the family of **എഴു**
 (*eḻu*), "**to rise**." Rise, then raise, then take. Kannada and Telugu say
-**ಎತ್ತು** / **ఎత్తు** (*ettu*) for lifting; whether that is the same word the
+**ಎತ್ತು** / **ఎత్తు** (*eṭṭŭ*) for lifting; whether that is the same word the
 dictionaries argue over, so take the resemblance and leave the verdict.
 
 It wants an object: *veḷḷaṁ eṭukkunnu*, water; *ari eṭukkunnu*, raw rice; *cōṟŭ

@@ -7,7 +7,7 @@ chapter: 81
 type: review
 headword: (how far away)
 gloss: cold retrieval of the two settings, the question, and the difference between pointing and measuring
-romanization: ethra dūraṁ enna ōrmma
+romanization: etra dūraṁ enna ōrmma
 concept_tag: ML-DISTANCE-RECALL
 prerequisites: [ML-C81-dooram]
 sounds: []
@@ -69,13 +69,13 @@ always whether the other members exist.
 
 [PAUSE 1s]
 - [YOU SAY: *aṭuttŭ*, then *akale*]
-- [YOU SAY: *ethra dūraṁ?*]
+- [YOU SAY: *etra dūraṁ?*]
 - [YOU SAY: which of your words point and which measure]
-- [YOU SAY: where *ethra* came from]
+- [YOU SAY: where *etra* came from]
 - [YOU SAY: why *akale* is not built on the pointing prefix]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C81-DISTANCE-01, ML-LEX-C81-DISTANCE-02, ML-LEX-C81-HOW-MUCH-01] -->
 
 [PAUSE 3s] Which word means *near*? (***aṭuttŭ***.) Which means *far*?
-(***akale***.) And how do you ask for the number? (***ethra dūraṁ?***)
+(***akale***.) And how do you ask for the number? (***etra dūraṁ?***)

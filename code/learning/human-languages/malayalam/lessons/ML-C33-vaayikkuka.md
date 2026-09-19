@@ -85,7 +85,7 @@ as **ഓതുക** (*ōtuka*), narrowed to reciting scripture.
 - [YOU SAY: the four read-verbs — "vāyikkuka … paṭi … ōdu … caduvu"]
 - [YOU SAY: read what you know — the planet-days, "tiṅkaḷ … veḷḷi … ñāyar" — and the year's first month, "Chiṅṅam"]
 - [YOU SAY: when — "ñān rāvile vāyikkunnu," I read in the morning]
-- [YOU SAY: what you do, what arrives — "ñān vāyikkunnu," "enikku manassilāyi"]
+- [YOU SAY: what you do, what arrives — "ñān vāyikkunnu," "enikkŭ manassilāyi"]
 - [YOU SAY: the three pieces of understanding — "manassŭ … ‑il … ākkuka"]
 
 ## Wrap-up Recall

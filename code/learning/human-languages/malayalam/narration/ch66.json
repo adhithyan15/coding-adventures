@@ -4,7 +4,7 @@
   "chapter": 66,
   "title": "Out in the Paddy",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:af3ed5f990144ddc",
+  "sourceHash": "fnv1a64:fec624fcf8594d6f",
   "lessons": [
     {
       "id": "ML-C66-paddy",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d1095548a263341",
+      "sourceHash": "fnv1a64:46ae9ca2622c8e1b",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "Native Dravidian, matching Tamil nel, and it completes a set you have been collecting a piece at a time. നെല്ല് (nellŭ) is the grain in the husk and in the field; ari is the same grain husked; cōṟu is it cooked."
+              "text": "Native Dravidian, matching Tamil nel, and it completes a set you have been collecting a piece at a time. നെല്ല് (nellŭ) is the grain in the husk and in the field; ari is the same grain husked; cōṟŭ is it cooked."
             },
             {
               "kind": "speech",

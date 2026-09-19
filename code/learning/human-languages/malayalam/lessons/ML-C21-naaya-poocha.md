@@ -12,7 +12,7 @@ concept_tag: ML-ANIMALS
 prerequisites: [ML-C20-pathinonnu-irupathu, ML-C16-kollavarsham-maasangal]
 sounds: [malayalam-vowel-sign-aa, malayalam-geminate-ch]
 roots: [dravidian-naay-dog, dravidian-punai-cat]
-etymology_hook: "നായ (nāya, 'dog') continues the same solid, native Proto-Dravidian root as Kannada's naayi and Tamil's naay — no mystery, unlike the tangled dog-words of Spanish, Hindi, and English; പൂച്ച (pūcha, 'cat') closely matches Tamil's everyday word pūnai, part of a family distinct from Kannada's bekku and Telugu's pilli — Dravidian genuinely splits more on 'cat' than on 'dog'"
+etymology_hook: "നായ (nāya, 'dog') continues the same solid, native Proto-Dravidian root as Kannada's naayi and Tamil's naay — no mystery, unlike the tangled dog-words of Spanish, Hindi, and English; പൂച്ച (pūcca, 'cat') closely matches Tamil's everyday word pūnai, part of a family distinct from Kannada's bekku and Telugu's pilli — Dravidian genuinely splits more on 'cat' than on 'dog'"
 duration:
   max_seconds: 240
 requires:
@@ -49,7 +49,7 @@ Hindi, and English.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C21-NAAYA-POOCHA-02]; assesses=[] -->
 
-**പൂച്ച** (*pūcha*, "**cat**") closely matches Tamil's **everyday** word for
+**പൂച്ച** (*pūcca*, "**cat**") closely matches Tamil's **everyday** word for
 cat — a different root from Kannada's **ಬೆಕ್ಕು** (*bekku*, related instead to
 the word for "wildcat") and Telugu's **పిల్లి** (*pilli*, a separate
 Proto-Dravidian root of its own, most likely the source behind Sanskrit's
@@ -61,7 +61,7 @@ just these four Dravidian languages, even though "dog" mostly agrees.
 
 [PAUSE 1s]
 - [YOU SAY: "nāya" — dog, same solid root as Kannada and Tamil]
-- [YOU SAY: "pūcha" — cat, matching Tamil's everyday word closely]
+- [YOU SAY: "pūcca" — cat, matching Tamil's everyday word closely]
 - [YOU RECALL: say *ciṅṅaṁ kanni tulāṁ vṛścikaṁ dhanu makaraṁ kuṁbhaṁ mīnaṁ mēṭaṁ iṭavaṁ mithunaṁ karkkaṭakaṁ*]
 
 ## Wrap-up Recall

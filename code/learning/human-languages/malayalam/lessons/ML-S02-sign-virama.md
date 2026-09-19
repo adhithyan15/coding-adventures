@@ -47,7 +47,7 @@ It is a **vowel-killer**. Every consonant in this script arrives with an *a* alr
 
 You already say these, and every one of them has ◌് somewhere inside it:
 
-- **നമസ്കാരം** *namaskāram* — hello / greetings (namaskāram — "a making of a bow")
+- **നമസ്കാരം** *namaskāraṁ* — hello / greetings (namaskāraṁ — "a making of a bow")
 - **നന്ദി** *nandi* — thank you
 - **ഇല്ല** *illa* — no / there isn't (illa — the negative)
 - **പേര്** *pēr* — name
