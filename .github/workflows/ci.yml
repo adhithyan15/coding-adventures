@@ -26,7 +26,9 @@
 #       every official Unicode 17 normalization/casing vector.
 #   12. unicode17-swift-conformance: runs the generated Swift tables against
 #       every official Unicode 17 normalization/casing vector.
-#   13. build: Installs only the needed toolchains, then runs the build.
+#   13. unicode17-dart-conformance: runs the generated Dart tables against
+#       every official Unicode 17 normalization/casing vector.
+#   14. build: Installs only the needed toolchains, then runs the build.
 #
 # This saves 3-5 minutes on language-specific changes by skipping
 # unneeded toolchain installations (e.g., Rust tarpaulin, Elixir/Erlang).
@@ -112,6 +114,7 @@ jobs:
       run_unicode17_perl_conformance: ${{ steps.detect.outputs.run_unicode17_perl_conformance }}
       run_unicode17_haskell_conformance: ${{ steps.detect.outputs.run_unicode17_haskell_conformance }}
       run_unicode17_swift_conformance: ${{ steps.detect.outputs.run_unicode17_swift_conformance }}
+      run_unicode17_dart_conformance: ${{ steps.detect.outputs.run_unicode17_dart_conformance }}
       run_contracts_adj_stdlib: ${{ steps.detect.outputs.run_contracts_adj_stdlib }}
       run_contracts_build_tool_conformance: ${{ steps.detect.outputs.run_contracts_build_tool_conformance }}
       run_contracts_capability_cage: ${{ steps.detect.outputs.run_contracts_capability_cage }}
@@ -521,6 +524,12 @@ jobs:
         if: needs.detect.outputs.run_contracts_build_tool_conformance == 'true'
         uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
 
+      - name: Set up Dart for native build-tool contract consumers
+        if: needs.detect.outputs.run_contracts_build_tool_conformance == 'true'
+        uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1.8.1
+        with:
+          sdk: '3.12.2'
+
       # Rust is needed only by the two gated cargo clusters below. Installing it
       # unconditionally would re-add a chunk of what this split removed.
       - name: Set up Rust for ADJ and capability-cage contracts
@@ -665,6 +674,7 @@ jobs:
           python3 code/scripts/build_tool_conformance_execution.py validate-contract
           gradle --no-daemon --no-build-cache --max-workers=1 -p code/programs/java/build-tool clean check
           gradle --no-daemon --no-build-cache --max-workers=1 -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false -p code/programs/kotlin/build-tool clean check
+          (cd code/programs/dart/build-tool && dart pub get && dart analyze --fatal-infos && dart test)
 
       - name: Verify capability cage contracts
         if: needs.detect.outputs.run_contracts_capability_cage == 'true'
@@ -1268,7 +1278,37 @@ jobs:
             --swift-executable "$swift_executable" \
             --swiftc-executable "$swiftc_executable"
 
-  # ── Job 13: Build and test ─────────────────────────────────────
+  # ── Job 13: Unicode 17 generated Dart conformance ──────────────
+  unicode17-dart-conformance:
+    name: Unicode 17 generated Dart conformance
+    needs: detect
+    if: needs.detect.outputs.run_unicode17_dart_conformance == 'true'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up pinned Dart toolchain
+        uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1.8.1
+        with:
+          sdk: '3.12.2'
+
+      - name: Verify generated Dart against every official Unicode 17 vector
+        shell: bash
+        run: |
+          dart_executable="$(command -v dart)"
+          test -x "$dart_executable"
+          test "$("$dart_executable" --version 2>&1 | sed -n '1p')" = "Dart SDK version: 3.12.2 (stable) (Tue Jun 9 01:11:39 2026 -0700) on \"linux_x64\""
+          python3 code/scripts/generate_tracked_artifact_unicode17.py \
+            --check \
+            --self-check-runtime dart \
+            --dart-executable "$dart_executable"
+
+  # ── Job 14: Build and test ─────────────────────────────────────
   #
   # Installs only the toolchains flagged by the detect job, then
   # compiles the build tool and runs the incremental build.
@@ -1661,6 +1701,8 @@ jobs:
       - name: Set up Dart
         if: needs.detect.outputs.needs_dart == 'true' || needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
         uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1.8.1
+        with:
+          sdk: '3.12.2'
 
       - name: Set up Flutter
         if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
@@ -3267,7 +3309,7 @@ jobs:
   # dependency failed, so it can report the failure rather than being skipped.
   ci-gate:
     name: ${{ github.event_name == 'pull_request' && 'CI gate' || 'CI push gate' }}
-    needs: [detect, contracts, ocaml-capability-gate, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, build]
+    needs: [detect, contracts, ocaml-capability-gate, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, unicode17-dart-conformance, build]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -3289,11 +3331,12 @@ jobs:
           UNICODE17_PERL_RESULT: ${{ needs['unicode17-perl-conformance'].result }}
           UNICODE17_HASKELL_RESULT: ${{ needs['unicode17-haskell-conformance'].result }}
           UNICODE17_SWIFT_RESULT: ${{ needs['unicode17-swift-conformance'].result }}
+          UNICODE17_DART_RESULT: ${{ needs['unicode17-dart-conformance'].result }}
           BUILD_RESULT: ${{ needs.build.result }}
         run: |
-          echo "detect=$DETECT_RESULT contracts=$CONTRACTS_RESULT ocaml_capability=$OCAML_CAPABILITY_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT mosaic_grammar_regen=$MOSAIC_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT build=$BUILD_RESULT"
+          echo "detect=$DETECT_RESULT contracts=$CONTRACTS_RESULT ocaml_capability=$OCAML_CAPABILITY_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT mosaic_grammar_regen=$MOSAIC_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT unicode17_dart=$UNICODE17_DART_RESULT build=$BUILD_RESULT"
           fail=0
-          for r in "$DETECT_RESULT" "$CONTRACTS_RESULT" "$OCAML_CAPABILITY_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$MOSAIC_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$BUILD_RESULT"; do
+          for r in "$DETECT_RESULT" "$CONTRACTS_RESULT" "$OCAML_CAPABILITY_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$MOSAIC_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$UNICODE17_DART_RESULT" "$BUILD_RESULT"; do
             case "$r" in
               success|skipped) ;;
               *) echo "::error::a required job did not pass (result: $r)"; fail=1 ;;

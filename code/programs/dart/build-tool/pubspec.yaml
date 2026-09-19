@@ -1,0 +1,16 @@
+name: coding_adventures_build_tool
+version: 0.1.0
+description: Process-free Dart build-tool graph and diff-selection core.
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_sha256:
+    path: ../../../packages/dart/sha256
+
+dev_dependencies:
+  coverage: ^1.15.0
+  test: ^1.25.0

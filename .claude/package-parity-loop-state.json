@@ -11,21 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 15615,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/15615",
-    "branch": "codex/parity-neutral-graph-diff-hardening-20260919",
-    "implementation_revision": "f4ef396e166572ad831fc273af3a861115c4c5d2",
-    "status": "checks-pending"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-09-19T17:49:39Z",
+    "observed_at": "2026-09-19T19:28:11Z",
     "pr_number": 15615,
-    "status": "checks-pending",
-    "notes": "Ready-for-review PR #15615 remains mergeable with no conflict. Actual Repo-wide metadata contracts job 105937790704 failed because the new changelog shard omitted the required lowercase eight-hex heading digest and used an invalid level-one heading. Revisions 3038fd7ae0a9af2caf501949ec937949b771164c and 686aa80ad9c7f3722b47e47922329116495a3233 apply the smallest repair: rename the shard with the SHA-256-derived 72e95595 suffix and use the required level-three heading. The exact npm build plus check:doc-shards command now passes locally. The repair is pushed to the same branch; replacement checks are pending, so auto-merge remains disabled."
+    "status": "merged",
+    "notes": "PR #15615 completed all required checks successfully, reported a clean merge state, and merged automatically at 2026-09-19T19:28:11Z as 3467742ee4e6ad3f6fe4fd55c87ca3bcb8cfcecc."
   },
   "last_inventory": {
-    "revision": "252899ba632f52a1e6a81de282fdf6bd6745b8a4",
+    "revision": "3467742ee4e6ad3f6fe4fd55c87ca3bcb8cfcecc",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1441,
@@ -1055,113 +1049,167 @@
       "notes": "The validated CI-gate schema admits 128 gates times 4,096 path globs times 8,192 changed files, while the Python oracle and Go evaluator have no operation-wide preflight ceiling and Go globstar recursion is not memoized. Define a fixed 50,000,000 Unicode-scalar work-unit budget over the full gate-path and changed-file Cartesian product, preserve validated run-all bypasses and structural precedence, fail with exact CI_GATE_MATCH_LIMIT_EXCEEDED before any matcher call, memoize Go globstar states, add exact-at-limit and over-limit neutral fixtures, and update every current and future CI-gate consumer dependency without adding host or workflow authority."
     },
     {
-      "id": "build-tool-go-diff-selection-match-work-ceiling-adoption",
-      "title": "Adopt bounded diff-selection match work in the Go build tool",
+      "id": "build-tool-elixir-glob-matcher-complexity-hardening",
+      "title": "Harden Elixir build-tool glob matcher complexity",
       "status": "pending",
       "depends_on": ["build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
       "branch": null,
       "pr_number": null,
-      "notes": "Consume the exact-at-limit and over-limit neutral diff fixtures in the canonical Go engine, count Unicode scalars with checked arithmetic, preserve validation and unknown-path precedence, and return the stable limit diagnostic before any matcher call without widening authority."
+      "notes": "Replace unbounded recursive grapheme matching with bounded memoized portable-glob behavior, strict character classes, Unicode-scalar accounting, and stable failures without adding host authority."
+    },
+    {
+      "id": "build-tool-python-glob-matcher-complexity-hardening",
+      "title": "Harden Python build-tool glob matcher complexity",
+      "status": "pending",
+      "depends_on": ["build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Eliminate recursive globstar and host-fnmatch ambiguity behind one explicit bounded portable matcher with stable Unicode-scalar semantics and no host authority."
+    },
+    {
+      "id": "build-tool-ruby-glob-matcher-complexity-hardening",
+      "title": "Harden Ruby build-tool glob matcher complexity",
+      "status": "pending",
+      "depends_on": ["build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Eliminate recursive suffix slicing and host-matcher divergence with bounded memoized portable-glob semantics, strict character classes, and stable failures."
+    },
+    {
+      "id": "build-tool-rust-glob-matcher-complexity-hardening",
+      "title": "Harden Rust build-tool glob matcher complexity",
+      "status": "pending",
+      "depends_on": ["build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Replace recursive byte-state revisitation with bounded memoized matching, Unicode-scalar accounting, strict character classes, and stable failures."
+    },
+    {
+      "id": "build-tool-typescript-glob-matcher-complexity-hardening",
+      "title": "Harden TypeScript build-tool glob matcher complexity",
+      "status": "pending",
+      "depends_on": ["build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Replace recursive UTF-16 matching with bounded memoized Unicode-scalar matching, strict portable character classes, and stable failures without Node host authority."
+    },
+    {
+      "id": "ocaml-build-tool-process-free-graph-diff-core",
+      "title": "Implement the OCaml process-free graph and diff-selection core",
+      "status": "pending",
+      "depends_on": ["ocaml-representative-core", "ocaml-capability-analyzer", "build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the exact eight graph and eleven diff-selection cases as a pure OCaml core with stable cycle, unknown-path, and limit errors; deterministic closures; strict bounded glob matching; and no filesystem, Git, process, environment, network, credential, or execution authority."
+    },
+    {
+      "id": "build-tool-go-diff-selection-match-work-ceiling-adoption",
+      "title": "Complete the 19-case process-free graph and diff-selection contract in the Go build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Dynamically consume all eight graph and eleven diff-selection cases through production graph and diff code, including canonical edges and levels, cycle no-output, closures, exact BUILD fronts, strict character classes, boundary selection, Unicode-scalar preflight, stable errors, and unchanged process-free authority."
     },
     {
       "id": "build-tool-csharp-fsharp-diff-selection-match-work-ceiling-adoption",
-      "title": "Adopt bounded diff-selection match work in the shared C# and F# build-tool engine",
+      "title": "Complete the 19-case process-free graph and diff-selection contract in the shared C# and F# build-tool engine",
       "status": "pending",
-      "depends_on": ["build-tool-diff-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
       "branch": null,
       "pr_number": null,
-      "notes": "Implement the reviewed ceiling once in the shared C# engine and prove dynamic fixture consumption through both native C# and F# test fronts without adding host authority."
+      "notes": "Implement the complete eight-graph and eleven-diff contract once in the shared engine and prove dynamic production-code consumption through both native C# and F# fronts, including stable errors, strict bounded matching, and no added host authority."
     },
     {
       "id": "build-tool-elixir-diff-selection-match-work-ceiling-adoption",
-      "title": "Adopt bounded diff-selection match work in the Elixir build tool",
+      "title": "Complete the 19-case process-free graph and diff-selection contract in the Elixir build tool",
       "status": "pending",
-      "depends_on": ["build-tool-diff-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-elixir-glob-matcher-complexity-hardening"],
       "branch": null,
       "pr_number": null,
-      "notes": "Consume the reviewed neutral ceiling fixtures in the pure Elixir diff engine with checked Unicode-scalar accounting and zero matcher calls on overflow."
+      "notes": "Dynamically consume all eight graph and eleven diff-selection cases through production code with stable no-partial errors, closures, strict memoized Unicode-scalar matching, exact BUILD fronts, and unchanged process-free authority."
     },
     {
       "id": "build-tool-haskell-diff-selection-match-work-ceiling-adoption",
-      "title": "Adopt bounded diff-selection match work in the Haskell build tool",
+      "title": "Complete the 19-case process-free graph and diff-selection contract in the Haskell build tool",
       "status": "pending",
-      "depends_on": ["build-tool-diff-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
       "branch": null,
       "pr_number": null,
-      "notes": "Consume the reviewed neutral ceiling fixtures in the Haskell diff engine and preserve exact scalar accounting, precedence, and stable diagnostics before terminal lane closure."
+      "notes": "Implement and dynamically consume the complete eight-graph and eleven-diff process-free contract, including canonical topology, no-partial cycle failures, closures, boundary selection, strict bounded matching, and stable diagnostics."
     },
     {
       "id": "build-tool-lua-diff-selection-match-work-ceiling-adoption",
-      "title": "Adopt bounded diff-selection match work in the Lua build tool",
+      "title": "Complete the 19-case process-free graph and diff-selection contract in the Lua build tool",
       "status": "pending",
-      "depends_on": ["build-tool-diff-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
       "branch": null,
       "pr_number": null,
-      "notes": "Consume the reviewed neutral ceiling fixtures in the pure Lua diff engine with checked Unicode-scalar accounting and no matcher work after overflow."
+      "notes": "Implement and dynamically consume all eight graph and eleven diff-selection cases in one process-free Lua core with stable errors, deterministic closures, and bounded memoized Unicode-scalar matching."
     },
     {
       "id": "build-tool-perl-diff-selection-match-work-ceiling-adoption",
-      "title": "Adopt bounded diff-selection match work in the Perl build tool",
+      "title": "Complete the 19-case process-free graph and diff-selection contract in the Perl build tool",
       "status": "pending",
-      "depends_on": ["build-tool-diff-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
       "branch": null,
       "pr_number": null,
-      "notes": "Consume the reviewed neutral ceiling fixtures in the pure Perl diff engine with exact stable failure behavior and no new authority."
+      "notes": "Repair the embedded production graph and diff modules and dynamically consume all eight graph and eleven diff-selection cases with canonical topology, no partial cycle output, strict bounded matching, stable failures, and no new authority."
     },
     {
       "id": "build-tool-python-diff-selection-match-work-ceiling-adoption",
-      "title": "Adopt bounded diff-selection match work in the Python build tool",
+      "title": "Complete the 19-case process-free graph and diff-selection contract in the Python build tool",
       "status": "pending",
-      "depends_on": ["build-tool-diff-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-python-glob-matcher-complexity-hardening"],
       "branch": null,
       "pr_number": null,
-      "notes": "Carry the reviewed reference-oracle ceiling into the production Python diff engine and dynamically consume both neutral boundary fixtures."
+      "notes": "Dynamically consume all eight graph and eleven diff-selection cases through production code with exact stable results, closures, boundary behavior, and the separately hardened portable matcher."
     },
     {
       "id": "build-tool-ruby-diff-selection-match-work-ceiling-adoption",
-      "title": "Adopt bounded diff-selection match work in the Ruby build tool",
+      "title": "Complete the 19-case process-free graph and diff-selection contract in the Ruby build tool",
       "status": "pending",
-      "depends_on": ["build-tool-diff-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-ruby-glob-matcher-complexity-hardening"],
       "branch": null,
       "pr_number": null,
-      "notes": "Consume the reviewed neutral ceiling fixtures in the pure Ruby diff engine with checked scalar accounting and stable overflow diagnostics."
+      "notes": "Complete and dynamically consume the eight-graph and eleven-diff process-free contract through production code, reusing the separately hardened shared Ruby matcher and preserving stable empty failures."
     },
     {
       "id": "build-tool-rust-diff-selection-match-work-ceiling-adoption",
-      "title": "Adopt bounded diff-selection match work in the Rust build tool",
+      "title": "Complete the 19-case process-free graph and diff-selection contract in the Rust build tool",
       "status": "pending",
-      "depends_on": ["build-tool-diff-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-rust-glob-matcher-complexity-hardening"],
       "branch": null,
       "pr_number": null,
-      "notes": "Consume the reviewed neutral ceiling fixtures in the dependency-minimal Rust diff engine with checked arithmetic and zero partial results."
+      "notes": "Complete canonical graph projection and the total diff result contract, consume all 19 cases through production modules, reuse the separately hardened matcher, and preserve stable empty failures without new authority."
     },
     {
       "id": "build-tool-swift-diff-selection-match-work-ceiling-adoption",
-      "title": "Adopt bounded diff-selection match work in the Swift build tool",
+      "title": "Complete the 19-case process-free graph and diff-selection contract in the Swift build tool",
       "status": "pending",
-      "depends_on": ["build-tool-diff-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
       "branch": null,
       "pr_number": null,
-      "notes": "Consume the reviewed neutral ceiling fixtures in the Foundation-free Swift diff engine before terminal lane closure."
+      "notes": "Dynamically consume all eight graph and eleven diff-selection cases through production code with canonical topology, stable errors, exact BUILD fronts, boundary behavior, and bounded Unicode-scalar matching."
     },
     {
       "id": "build-tool-typescript-diff-selection-match-work-ceiling-adoption",
-      "title": "Adopt bounded diff-selection match work in the TypeScript build tool",
+      "title": "Complete the 19-case process-free graph and diff-selection contract in the TypeScript build tool",
       "status": "pending",
-      "depends_on": ["build-tool-diff-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-typescript-glob-matcher-complexity-hardening"],
       "branch": null,
       "pr_number": null,
-      "notes": "Consume the reviewed neutral ceiling fixtures in the process-free TypeScript diff engine without Node host authority or package-metadata churn."
+      "notes": "Dynamically consume all 19 cases through authority-free graph and diff operations, reuse the separately hardened Unicode-scalar matcher, and keep Node host authority outside the pure core."
     },
     {
       "id": "build-tool-diff-selection-match-work-ceiling-remaining-engines",
-      "title": "Complete bounded diff-selection match work across every build-tool engine",
+      "title": "Complete the 19-case process-free graph and diff-selection contract across every build-tool engine",
       "status": "pending",
       "selection_blocked": true,
-      "depends_on": ["build-tool-go-diff-selection-match-work-ceiling-adoption", "build-tool-csharp-fsharp-diff-selection-match-work-ceiling-adoption", "build-tool-elixir-diff-selection-match-work-ceiling-adoption", "build-tool-haskell-diff-selection-match-work-ceiling-adoption", "build-tool-lua-diff-selection-match-work-ceiling-adoption", "build-tool-perl-diff-selection-match-work-ceiling-adoption", "build-tool-python-diff-selection-match-work-ceiling-adoption", "build-tool-ruby-diff-selection-match-work-ceiling-adoption", "build-tool-rust-diff-selection-match-work-ceiling-adoption", "build-tool-swift-diff-selection-match-work-ceiling-adoption", "build-tool-typescript-diff-selection-match-work-ceiling-adoption", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
+      "depends_on": ["build-tool-go-diff-selection-match-work-ceiling-adoption", "build-tool-csharp-fsharp-diff-selection-match-work-ceiling-adoption", "build-tool-elixir-diff-selection-match-work-ceiling-adoption", "build-tool-haskell-diff-selection-match-work-ceiling-adoption", "build-tool-lua-diff-selection-match-work-ceiling-adoption", "build-tool-perl-diff-selection-match-work-ceiling-adoption", "build-tool-python-diff-selection-match-work-ceiling-adoption", "build-tool-ruby-diff-selection-match-work-ceiling-adoption", "build-tool-rust-diff-selection-match-work-ceiling-adoption", "build-tool-swift-diff-selection-match-work-ceiling-adoption", "build-tool-typescript-diff-selection-match-work-ceiling-adoption", "build-tool-jvm-process-free-graph-diff-core", "build-tool-dart-process-free-graph-diff-core", "ocaml-build-tool-process-free-graph-diff-core"],
       "branch": null,
       "pr_number": null,
-      "notes": "Selection-blocked aggregate requiring every current engine and the future JVM, Dart, and OCaml build tools to consume the bounded diff-selection contract before all-language closure."
+      "notes": "Selection-blocked aggregate for exact pure graph and diff-selection completion: eleven established-engine leaves plus the JVM, Dart, and OCaml process-free cores. Broad front-door and current-contract promotion remain separately owned."
     },
     {
       "id": "build-tool-go-native-source-snapshot-stability-hardening",
@@ -1177,7 +1225,7 @@
       "id": "build-tool-python-language-source-input-registry-adoption",
       "title": "Adopt the exact language source-input registry in the Python build tool",
       "status": "pending",
-      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-python-portable-source-hashing-conformance", "build-tool-site-authored-resource-source-input-extension"],
+      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-python-portable-source-hashing-conformance", "build-tool-site-authored-resource-source-input-extension", "build-tool-python-glob-matcher-complexity-hardening"],
       "branch": null,
       "pr_number": null,
       "notes": "Production Python currently owns only a small global suffix and metadata allowlist plus generated-directory pruning. Adopt the checked registry including scoped Rust companions, package resources, and exact root metadata, and test production lookup equality rather than a fixture-only copy."
@@ -1186,7 +1234,7 @@
       "id": "build-tool-ruby-language-source-input-registry-adoption",
       "title": "Adopt the exact language source-input registry in the Ruby build tool",
       "status": "pending",
-      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-ruby-portable-source-hashing-conformance", "build-tool-site-authored-resource-source-input-extension"],
+      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-ruby-portable-source-hashing-conformance", "build-tool-site-authored-resource-source-input-extension", "build-tool-ruby-glob-matcher-complexity-hardening"],
       "branch": null,
       "pr_number": null,
       "notes": "Production Ruby currently owns a small global suffix and metadata allowlist plus generated-directory pruning. Adopt the checked registry including path-scoped native companions and resources, with exact production lookup equality and no selector widening."
@@ -1252,7 +1300,7 @@
       "id": "build-tool-typescript-language-source-input-registry-adoption",
       "title": "Adopt the exact language source-input registry in the TypeScript build tool",
       "status": "pending",
-      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-typescript-portable-source-hashing-conformance", "build-tool-site-authored-resource-source-input-extension"],
+      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-typescript-portable-source-hashing-conformance", "build-tool-site-authored-resource-source-input-extension", "build-tool-typescript-glob-matcher-complexity-hardening"],
       "branch": null,
       "pr_number": null,
       "notes": "Production TypeScript currently owns a small global suffix and metadata allowlist plus generated-directory pruning. Adopt the checked registry including path-scoped CSS, native Rust companions, exact metadata scope, and universal capability input without blanket JSON, YAML, or TOML inclusion."
@@ -1261,7 +1309,7 @@
       "id": "build-tool-elixir-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Elixir build tool",
       "status": "pending",
-      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-site-authored-resource-source-input-extension"],
+      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-site-authored-resource-source-input-extension", "build-tool-elixir-glob-matcher-complexity-hardening"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13544 source-hashing audit. Elixir recursively hashes without the exact generated-component registry and lacks portable path framing and OCaml source recognition. Repair those bounded collector semantics, consume the complete checked language source-input registry in production, and prove exact projection equality with no undeclared selector."
@@ -1280,16 +1328,16 @@
       "id": "build-tool-perl-blib-generated-directory-registry-repair",
       "title": "Resolve Perl blib generated-directory registry authority",
       "status": "pending",
-      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit"],
+      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered by the parallel Perl source-hashing readiness audit after PR #14339. Production Perl correctly prunes the generated blib tree, but the canonical generated-directory registry omits blib and exact projection rules prohibit an undeclared engine-only component. Removing the prune would hash generated .pm files. Resolve the shared registry, fixture, digest, and adopted projection authority or record a narrow reviewed exception before Perl source hashing claims exact registry parity."
+      "notes": "Add exact lowercase blib to the canonical generated-component registry; update generated-directory and source-collection fixtures, registry digest, repository-boundary digest/pin, every checked projection, and equality tests while preserving case and near-name behavior. Do not retain an engine-only selector or broad exception."
     },
     {
       "id": "build-tool-perl-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Perl build tool",
       "status": "pending",
-      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-perl-blib-generated-directory-registry-repair", "build-tool-site-authored-resource-source-input-extension"],
+      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-perl-blib-generated-directory-registry-repair", "build-tool-site-authored-resource-source-input-extension", "build-tool-perl-diff-selection-match-work-ceiling-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13544 source-hashing audit. Perl has only a partial artifact skip registry, uses platform-native relative paths, and lacks OCaml source recognition. Adopt the complete checked language source-input registry and normalized framing contract in one engine-scoped tranche, proving exact production lookup equality."
@@ -1489,7 +1537,7 @@
       "id": "build-tool-rust-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Rust build tool",
       "status": "pending",
-      "depends_on": ["build-tool-rust-generated-directory-hashing-exclusion", "build-tool-rust-declared-source-metadata-plumbing", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-site-authored-resource-source-input-extension"],
+      "depends_on": ["build-tool-rust-generated-directory-hashing-exclusion", "build-tool-rust-declared-source-metadata-plumbing", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-site-authored-resource-source-input-extension", "build-tool-rust-glob-matcher-complexity-hardening"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13544 source-hashing audit. After Rust adopts the neutral generated-directory registry, add normalized unambiguous path framing and consume the complete checked language source-input registry, including reviewed cross-language smoke companions, with exact production equality."
@@ -2867,10 +2915,11 @@
       "id": "build-tool-existing-remediation",
       "title": "Remediate all 12 existing build-tool front doors against shared fixtures",
       "status": "pending",
-      "depends_on": ["build-tool-go-oracle"],
+      "selection_blocked": true,
+      "depends_on": ["build-tool-go-oracle", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-elixir-glob-matcher-complexity-hardening", "build-tool-python-glob-matcher-complexity-hardening", "build-tool-ruby-glob-matcher-complexity-hardening", "build-tool-rust-glob-matcher-complexity-hardening", "build-tool-typescript-glob-matcher-complexity-hardening"],
       "branch": null,
       "pr_number": null,
-      "notes": "Deliver one independent engine per PR; explicitly review the shared C#/F# engine exception. The exact-main audit after PR #13490 discovered that PR #13366's new Dune generated-output decoy makes the unchanged Ruby identity-registry fixture emit ocaml/decoy because Ruby discovery does not yet prune the exact case-sensitive _build component. The selected Ruby declaration-engine tranche must apply the bounded discovery/test repair needed to restore its canonical package suite; keep the separately owned Ruby hashing exclusion out of scope."
+      "notes": "Selection-blocked classification umbrella. Deliver one independent engine per PR, retain the reviewed shared C#/F# exception, consume the strengthened eight-graph/eleven-diff roster, and complete the explicit matcher children before claiming all front doors remediated. JVM, Dart, and OCaml remain governed by their exact core/current-contract owners."
     },
     {
       "id": "build-tool-haskell-neutral-adapter-closure",
@@ -2950,15 +2999,27 @@
       "status": "pending",
       "depends_on": [
         "build-tool-pure-domain-corpus",
-        "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening",
-        "build-tool-tracked-artifact-trailing-empty-segment-cross-runtime-hardening",
-        "build-tool-tracked-artifact-unicode-version-contract",
         "build-tool-dart-process-free-graph-diff-core",
         "build-tool-execution-semantics-corpus"
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Must pass the same plan, resolver, execution, and platform fixtures as the reference."
+      "notes": "Own the baseline Dart plan, resolver, execution, and platform implementation after the process-free graph/diff core. Tracked-artifact validation is a separate explicit child owner."
+    },
+    {
+      "id": "build-tool-dart-tracked-artifact-validation-conformance",
+      "title": "Make the Dart build tool consume tracked-artifact validation",
+      "status": "pending",
+      "depends_on": [
+        "build-tool-dart",
+        "build-tool-tracked-artifact-validation-corpus",
+        "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening",
+        "build-tool-tracked-artifact-trailing-empty-segment-cross-runtime-hardening",
+        "build-tool-tracked-artifact-unicode-version-contract"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#15615 Dart contract-ownership audit. Consume the closed process-free tracked_artifact_snapshot and exact language-neutral diagnostics in the Dart build tool, reusing the source-embedded Unicode 17 runtime established by the Dart core. Enforce Unicode-scalar bounds and ordering, NFC/NFKC/full-fold/full-uppercase semantics, trailing empty-segment rejection, portable paths, node_modules aliases, stable redaction, and exact fixture-roster coverage without adding host authority."
     },
     {
       "id": "ocaml-lane-contract",
@@ -3109,10 +3170,10 @@
       "id": "ocaml-representative-package-ci-execution",
       "title": "Execute the real OCaml representative package chain on Ubuntu, macOS, and Windows CI",
       "status": "pending",
-      "depends_on": ["ocaml-representative-core", "ocaml-ci-toolchain"],
+      "depends_on": ["ocaml-representative-core", "ocaml-ci-toolchain", "ocaml-capability-analyzer"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered during the ocaml-representative-core parallel validation audit. The pinned three-platform OCaml workflow currently executes only scaffold fixtures; canonical generic CI now provisions the reviewed OCaml toolchain and can discover real OCaml packages, but it still does not execute the representative chain. Extend the reviewed pinned toolchain path to execute logic-gates plus the leaf-first graph, directed-graph, and state-machine chain on Ubuntu, macOS, and Windows with real format, test, numeric coverage-floor, install, source-archive, installed downstream-consumer, retained-artifact, and no-skip evidence. Include stale-coverage isolation, consistent Unix/Windows aggregation, explicit direct-BUILD fail-fast semantics, and an exact reviewed odoc pin with warning-clean documentation builds in this same workflow/toolchain owner rather than creating an overlapping release-hardening item. Correct the stale OCaml lane README and OCAML06 status documentation in this execution tranche. Keep this execution-coupled owner separate from the process-free representative-core tranche and require it before lane promotion."
+      "notes": "Discovered during the ocaml-representative-core parallel validation audit. Execute logic-gates plus the leaf-first graph, directed-graph, and state-machine chain on Ubuntu, macOS, and Windows with real format, test, numeric coverage-floor, install, source-archive, installed downstream-consumer, retained-artifact, no-skip, warning-clean odoc, and merged analyzer enforcement evidence. Keep this execution-coupled owner separate from the process-free representative-core tranche and require it before lane promotion."
     },
     {
       "id": "ocaml-build-tool-and-promotion",
@@ -3124,13 +3185,11 @@
         "ocaml-capability-analyzer",
         "build-tool-pure-domain-corpus",
         "build-tool-execution-semantics-corpus",
-        "build-tool-neutral-graph-diff-corpus-completion",
-        "build-tool-neutral-graph-diff-contract-coverage-completion",
-        "build-tool-diff-selection-match-work-ceiling"
+        "ocaml-build-tool-process-free-graph-diff-core"
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Implement on directed-graph only after the shared pure-domain, execution-semantics, and neutral graph/diff corpora are complete, and require two-way Go build-plan interchange. This item does not promote the lane."
+      "notes": "Implement the native CLI, resolver, hashing/cache, execution, and two-way Go build-plan interchange after the pure-domain, execution-semantics, representative, capability, substrate, and dedicated OCaml graph/diff cores. This item does not promote the lane."
     },
     {
       "id": "ocaml-lane-promotion",
@@ -4703,11 +4762,16 @@
       "status": "pending",
       "depends_on": [
         "build-tool-pure-domain-corpus",
-        "build-tool-execution-semantics-corpus"
+        "build-tool-execution-semantics-corpus",
+        "build-tool-neutral-graph-diff-corpus-completion",
+        "build-tool-neutral-graph-diff-contract-coverage-completion",
+        "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus",
+        "build-tool-diff-selection-match-work-ceiling",
+        "build-tool-neutral-graph-diff-adversarial-corpus-hardening"
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Keep both emerging until package/scaffold/build-tool maturity and applicability are explicit. Add C and C++ as emerging entries in the build-tool implementation manifest, decide native-build-tool applicability or record a reviewed exception for each, and provide that evidence to build-tool-all-language-adapter-ci-closure before either lane can graduate."
+      "notes": "Keep both emerging until package, scaffold, and build-tool maturity and applicability are explicit. Add C and C++ as emerging implementation-manifest entries and require exact 19-case native graph/diff evidence or an explicit reviewed not-applicable exception for each before either lane can graduate."
     },
     {
       "id": "chief-process-supervisor-native-authority-review",
@@ -7840,13 +7904,13 @@
         "build-tool-swift-tracked-artifact-validation-conformance",
         "build-tool-typescript-tracked-artifact-validation-conformance",
         "build-tool-jvm-current-contract-conformance",
-        "build-tool-dart-current-contract-conformance",
+        "build-tool-dart-tracked-artifact-validation-conformance",
         "ocaml-build-tool-current-contract-conformance"
       ],
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "Completion umbrella for the independently reviewable C#, F#, Elixir, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript children. Review the current F# facade through its own explicit owner rather than inferring coverage from C#, and route later Dart/JVM engines through the same contract. Do not infer coverage from the Go repository gate."
+      "notes": "Completion umbrella for independently reviewable lane children. Review F# through its explicit owner, route Dart through its dedicated tracked-artifact child rather than a broad promotion gate, and do not infer coverage from the Go repository gate."
     },
     {
       "id": "build-tool-csharp-tracked-artifact-validation-conformance",
@@ -8610,12 +8674,13 @@
         "build-tool-lua-tracked-artifact-validation-conformance",
         "build-tool-perl-tracked-artifact-validation-conformance",
         "build-tool-haskell-tracked-artifact-validation-conformance",
-        "build-tool-swift-tracked-artifact-validation-conformance"
+        "build-tool-swift-tracked-artifact-validation-conformance",
+        "build-tool-dart-process-free-graph-diff-core"
       ],
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "Discovered after merged PR #12773 extended the shared Unicode 17 generator to resolve `node` through PATH, write temporary TypeScript sources and runner files, and invoke `tsx` for full-vector verification. The Ruby tracked-artifact consumer extends the same native generator boundary to PATH-resolved `ruby`, temporary Ruby source and runner files, inherited `RUBYOPT`/`RUBYLIB` and other environment state, buffered child output, and child diagnostics. The merged Elixir consumer adds PATH-resolved `elixir`, temporary emitted modules and runners, inherited `ERL_AFLAGS`/`ERL_FLAGS`/`ELIXIR_ERL_OPTIONS` and related runtime state, buffered child output, and child diagnostics. The merged Lua and Perl slices close their corresponding risks with explicit pinned executable identities, runtime isolation flags, minimal environments, bounded retained output, and unconditional descendant cleanup through a Windows kill-on-close Job Object or POSIX process group, with real timeout and early-root-exit tests. The merged Haskell consumer reuses that hardened runner with explicit exact GHC/runghc identities, no user package or project environment, bounded output, and descendant cleanup. The merged Swift consumer closes that reviewed boundary with exact runner-provided Swift 6.3.3 swift/swiftc identity gates, lexical driver entrypoint preservation plus resolved-target validation, isolated temporary source and module-cache state, fixed root-owned /usr/bin:/bin linker lookup on POSIX, and on Windows pinned-toolchain runtime and SDK discovery plus registered host MSVC and Windows Kits linker libraries under bounded Job Object execution; full emitted-runtime verification owns those generator changes while the validator remains process-free. Review the still-open executable identity, environment and PATH authority, temporary-directory containment and cleanup, command construction, dependency resolution, bounded output and diagnostics, process failures and process-tree cleanup, offline determinism, credential redaction, and truthful capabilities across the remaining emitted runtimes separately from the pure runtime validators. This native generator-shell authority work is excluded from autonomous portable selection."
+      "notes": "Selection-blocked review of remaining native Unicode-generator shell authority. Cover exact executable identity, environment and PATH authority, temporary containment and cleanup, command construction, dependency resolution, bounded output and diagnostics, timeout and process-tree cleanup, offline determinism, credential redaction, and truthful capabilities. The Dart core adds an exact pinned Dart self-check with isolated cache and environment and must be reviewed here while its generated runtime remains process-free."
     },
     {
       "id": "ge225-gatelevel-singleton-classification",
@@ -8951,7 +9016,7 @@
       "id": "build-tool-elixir-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the Elixir build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-elixir-glob-matcher-complexity-hardening"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no Elixir CI gate evaluator. Add a process-free native implementation and consume every neutral ci_gate_selection case without filesystem, Git, process, environment, network, credential, or workflow authority."
@@ -8987,7 +9052,7 @@
       "id": "build-tool-python-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the Python build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-python-glob-matcher-complexity-hardening"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no Python CI gate evaluator. Add a typed process-free module and pytest consumption of every neutral case without reading the repository, invoking Git, or writing workflow outputs."
@@ -8996,7 +9061,7 @@
       "id": "build-tool-ruby-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the Ruby build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ruby-glob-matcher-complexity-hardening"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no Ruby CI gate evaluator. Add a frozen bounded pure registry projection and Minitest consumption of every neutral case without host or workflow authority."
@@ -9005,7 +9070,7 @@
       "id": "build-tool-rust-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the Rust build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-rust-glob-matcher-complexity-hardening"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no Rust CI gate evaluator. Add a bounded dependency-minimal pure implementation and native consumption of every neutral case with no filesystem, Git, process, environment, network, credential, or workflow authority."
@@ -9023,7 +9088,7 @@
       "id": "build-tool-typescript-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the TypeScript build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-typescript-glob-matcher-complexity-hardening"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no TypeScript CI gate evaluator. Add a bounded process-free module and Vitest consumption of every neutral case without Node filesystem, process, environment, network, credential, or workflow authority."
@@ -9056,7 +9121,7 @@
       "id": "build-tool-go-repository-boundary-reverse-diff-digest-adoption",
       "title": "Adopt repository-boundary reverse diff and digest behavior in Go",
       "status": "pending",
-      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-go-native-source-snapshot-stability-hardening"],
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-go-native-source-snapshot-stability-hardening", "build-tool-go-diff-selection-match-work-ceiling-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Go build tool after its exact source-input registry adoption. Keep native Git snapshot acquisition and filesystem safety in their existing owners."
@@ -9065,7 +9130,7 @@
       "id": "build-tool-elixir-repository-boundary-reverse-diff-digest-adoption",
       "title": "Adopt repository-boundary reverse diff and digest behavior in Elixir",
       "status": "pending",
-      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-elixir-native-source-snapshot-stability-hardening"],
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-elixir-native-source-snapshot-stability-hardening", "build-tool-elixir-diff-selection-match-work-ceiling-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Elixir build tool after portable source hashing lands."
@@ -9074,7 +9139,7 @@
       "id": "build-tool-haskell-repository-boundary-reverse-diff-digest-adoption",
       "title": "Adopt repository-boundary reverse diff and digest behavior in Haskell",
       "status": "pending",
-      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-haskell-native-source-snapshot-stability-hardening"],
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-haskell-native-source-snapshot-stability-hardening", "build-tool-haskell-diff-selection-match-work-ceiling-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Haskell build tool after portable source hashing lands."
@@ -9083,7 +9148,7 @@
       "id": "build-tool-lua-repository-boundary-reverse-diff-digest-adoption",
       "title": "Adopt repository-boundary reverse diff and digest behavior in Lua",
       "status": "pending",
-      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-lua-hashing-cache-conformance"],
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-lua-hashing-cache-conformance", "build-tool-lua-diff-selection-match-work-ceiling-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Lua build tool after its hashing and cache implementation lands."
@@ -9092,7 +9157,7 @@
       "id": "build-tool-perl-repository-boundary-reverse-diff-digest-adoption",
       "title": "Adopt repository-boundary reverse diff and digest behavior in Perl",
       "status": "pending",
-      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-perl-portable-source-hashing-conformance"],
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-perl-portable-source-hashing-conformance", "build-tool-perl-diff-selection-match-work-ceiling-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Perl build tool after portable source hashing lands."
@@ -9101,7 +9166,7 @@
       "id": "build-tool-python-repository-boundary-reverse-diff-digest-adoption",
       "title": "Adopt repository-boundary reverse diff and digest behavior in Python",
       "status": "pending",
-      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-python-language-source-input-registry-adoption"],
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-python-language-source-input-registry-adoption", "build-tool-python-diff-selection-match-work-ceiling-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Python build tool after its exact source-input registry adoption."
@@ -9110,7 +9175,7 @@
       "id": "build-tool-ruby-repository-boundary-reverse-diff-digest-adoption",
       "title": "Adopt repository-boundary reverse diff and digest behavior in Ruby",
       "status": "pending",
-      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-ruby-language-source-input-registry-adoption"],
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-ruby-language-source-input-registry-adoption", "build-tool-ruby-diff-selection-match-work-ceiling-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Ruby build tool after its exact source-input registry adoption."
@@ -9119,7 +9184,7 @@
       "id": "build-tool-rust-repository-boundary-reverse-diff-digest-adoption",
       "title": "Adopt repository-boundary reverse diff and digest behavior in Rust",
       "status": "pending",
-      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-rust-portable-source-hashing-conformance"],
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-rust-portable-source-hashing-conformance", "build-tool-rust-diff-selection-match-work-ceiling-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Rust build tool after portable source hashing lands."
@@ -9128,7 +9193,7 @@
       "id": "build-tool-typescript-repository-boundary-reverse-diff-digest-adoption",
       "title": "Adopt repository-boundary reverse diff and digest behavior in TypeScript",
       "status": "pending",
-      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-typescript-language-source-input-registry-adoption"],
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-typescript-language-source-input-registry-adoption", "build-tool-typescript-diff-selection-match-work-ceiling-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the TypeScript build tool after its exact source-input registry adoption."
@@ -9137,7 +9202,7 @@
       "id": "build-tool-csharp-fsharp-repository-boundary-diff-fixture-adoption",
       "title": "Consume repository-boundary reverse-diff fixtures through both .NET front doors",
       "status": "pending",
-      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-csharp-fsharp-portable-source-hashing-conformance"],
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-csharp-fsharp-portable-source-hashing-conformance", "build-tool-csharp-fsharp-diff-selection-match-work-ceiling-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "The shared C# engine and independent F# facade now execute every neutral local-plus-boundary package-digest case, but neither front door loads the new reverse-diff fixture. Add complete dynamic consumption through both native test suites without changing the already reviewed native Git or filesystem authority boundary."
@@ -9146,7 +9211,7 @@
       "id": "build-tool-swift-repository-boundary-diff-digest-fixture-adoption",
       "title": "Consume repository-boundary diff and digest fixtures in Swift",
       "status": "pending",
-      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-swift-portable-source-hashing-conformance", "build-tool-swift-repository-source-input-boundary-adoption"],
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-swift-portable-source-hashing-conformance", "build-tool-swift-repository-source-input-boundary-adoption", "build-tool-swift-diff-selection-match-work-ceiling-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Swift already implements equivalent exact boundary selection and hashing behavior but does not load either new neutral case. Add dynamic fixture consumption so behavior-equivalent bespoke tests cannot drift from the shared contract."
@@ -9164,7 +9229,7 @@
       "id": "build-tool-dart-current-contract-conformance",
       "title": "Bring the Dart build tool to the current neutral contract",
       "status": "pending",
-      "depends_on": ["build-tool-dart", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension", "build-tool-diff-selection-match-work-ceiling", "build-tool-ci-gate-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-dart-tracked-artifact-validation-conformance", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension", "build-tool-diff-selection-match-work-ceiling", "build-tool-ci-gate-selection-match-work-ceiling"],
       "branch": null,
       "pr_number": null,
       "notes": "Promotion gate for the Dart build-tool front door. Require all current process-free contracts and language-neutral fixtures before the lane is counted complete."
@@ -9312,7 +9377,7 @@
     {
       "id": "build-tool-neutral-graph-diff-adversarial-corpus-hardening",
       "title": "Harden neutral graph and diff-selection adversarial coverage",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-jvm-process-free-graph-diff-core"],
       "branch": "codex/parity-neutral-graph-diff-hardening-20260919",
       "pr_number": 15615,
@@ -9328,16 +9393,23 @@
       "validation_notes": "Specification-first hardening adds five language-neutral adversarial cases, raising the corpus from 157 to 162 cases while retaining 285 validated files, and expands the graph/diff roster from 14 to 19. Tests-first evidence reproduced Go's arbitrary BUILD_* overmatch before the production repair narrowed matching to exactly BUILD, BUILD_windows, BUILD_mac, BUILD_linux, and BUILD_mac_and_linux. The independent Python oracle now requires exactly one GRAPH_CYCLE diagnostic for every cyclic graph, including a partial cycle with no output; strict portable-glob evidence covers negation, caret literal handling, ascending ranges, leading right bracket, leading and trailing hyphen, and unmatched left bracket. Full Go test, vet, and trimpath build pass; Java and Kotlin clean checks, tests, and JaCoCo coverage gates pass; the neutral corpus validates; all 25 schema tests and all 85 semantic runner tests pass after the conflict-free rebase onto 252899ba632f52a1e6a81de282fdf6bd6745b8a4. CI-gate, capability-taxonomy, package-parity collision, Ruff, medium/high Bandit, JSON/state-DAG, and diff-hygiene checks pass. Independent correctness, state/roadmap, and security reviews report no concrete blocker. A real repository dry plan was attempted after rebase but remains blocked by unrelated existing BUILD metadata validation failures and stale absolute grammar lookup warnings outside this 24-file slice; the focused and full native validation paths for every touched implementation are green. The exact-main schema-3 inventory remains collision-clean and numerically unchanged at 15 established lanes, 1,441 implementation identities, 4,666 slots, 1,481 all-reported identities, 782 Rust singletons, five OCaml packages, and zero unknown buckets.",
       "publication_notes": "Opened ready-for-review PR #15615 after a normal first push from exact rebased origin/main 252899ba632f52a1e6a81de282fdf6bd6745b8a4. Immediately before publication, the worktree was clean, no other parity PR or prior same-branch PR existed, the 24-file slice had passed its focused and full native validation, and GitHub reported the branch mergeable with no conflict. Initial required checks are queued, so auto-merge remains disabled.",
       "ci_repair_revision": "686aa80ad9c7f3722b47e47922329116495a3233",
-      "ci_repair_notes": "Actual job 105937790704 failed only in the document-shard gate because the new changelog filename omitted its lowercase eight-hex heading digest and the shard began with a level-one heading. The shard now uses the required 01050 rank, uppercase slug, SHA-256-derived 72e95595 heading digest, and level-three heading. The exact npm ci, build, and check:doc-shards sequence passes locally; no production, fixture, dependency, authority, or conformance behavior changed."
+      "ci_repair_notes": "Actual job 105937790704 failed only in the document-shard gate because the new changelog filename omitted its lowercase eight-hex heading digest and the shard began with a level-one heading. The shard now uses the required 01050 rank, uppercase slug, SHA-256-derived 72e95595 heading digest, and level-three heading. The exact npm ci, build, and check:doc-shards sequence passes locally; no production, fixture, dependency, authority, or conformance behavior changed.",
+      "merged_head_revision": "68e64938cc6578a4ab54952d2d87006f236fe279",
+      "merged_at": "2026-09-19T19:28:11Z",
+      "merge_revision": "3467742ee4e6ad3f6fe4fd55c87ca3bcb8cfcecc",
+      "merge_notes": "All 48 reported final-head checks completed acceptably with no failure and GitHub reported a clean merge state. Guarded squash auto-merge was enabled only after the final repo-wide metadata contract completed, and GitHub merged PR #15615 without a plain manual merge command."
     },
     {
       "id": "build-tool-dart-process-free-graph-diff-core",
       "title": "Implement Dart build-tool graph and diff-selection cores",
-      "status": "pending",
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
-      "branch": null,
+      "status": "in-progress",
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-tracked-artifact-unicode-version-contract"],
+      "branch": "codex/parity-dart-core-20260919",
       "pr_number": null,
-      "notes": "Discovered by the post-#14519 all-language build-tool audit. Implement only the process-free graph and diff-selection domains against the closed neutral corpus, with deterministic topology, cycle errors, closures, unknown-path policies, bounded inputs, and no filesystem, Git, process, environment, network, or credential authority. This bounded core becomes a prerequisite of the full Dart build tool rather than claiming a complete adapter."
+      "selected_at": "2026-09-19T19:29:27Z",
+      "selection_revision": "3467742ee4e6ad3f6fe4fd55c87ca3bcb8cfcecc",
+      "selection_notes": "Selected after guarded auto-merge of PR #15615, a collision-clean exact-main inventory refresh, comprehensive all-lane ownership reconciliation, and a dependency/leverage pass. This consumer-backed core is the cleanest ready successor and unlocks 17 unfinished descendants without overlapping any live implementation PR.",
+      "notes": "Implement only the process-free Dart graph and diff-selection domains against the exact eight graph and eleven diff cases, with deterministic topology, stable empty failures, closures, unknown-path policies, exact BUILD fronts, strict memoized Unicode-scalar globs, and the fixed operation-wide work ceiling. Extend the pinned Unicode 17 generator with a reusable Dart runtime for NFC, full-fold identity, and uppercase, and compare Dart runes directly for numeric Unicode-scalar ordering; the generated runtime remains process-free while generator host authority stays in its separate review. This bounded core is not a CLI or complete adapter and adds no filesystem, Git, process, environment, network, or credential authority."
     },
     {
       "id": "alpha-axp-simulator-two-lane-classification",

@@ -106,7 +106,7 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-working inventory was regenerated from `6174c8c1ff` after PR #15596 merged and
+working inventory was regenerated from `3467742ee4e6ad3f6fe4fd55c87ca3bcb8cfcecc` after PR #15615 merged and
 the dedicated parity worktree refreshed from exact `origin/main`. The inventory
 contains 1,441 normalized implementation identities across 4,666
 established-lane package slots and found zero canonical collisions or unknown
@@ -122,14 +122,14 @@ language buckets:
 The loop must not start by attempting 13,468 singleton slots. It should finish
 the broadly established portable core, then classify the sparse majority.
 
-The post-#15596 refresh found no canonical collision or unknown bucket, but it
+The post-#15615 refresh found no canonical collision or unknown bucket, but it
 did find concrete ownership and fixture gaps that must be recorded before the
 next implementation selection:
 
-- `build-tool-neutral-graph-diff-adversarial-corpus-hardening` is the selected
-  immediate successor. It promotes five JVM-local edge cases into the neutral
-  corpus and repairs the Go build tool's overbroad `BUILD_*` recognition before
-  Dart or later adapters claim complete graph/diff consumption.
+- `build-tool-dart-process-free-graph-diff-core` is the selected immediate
+  successor. It consumes the complete language-neutral eight-case graph and
+  eleven-case diff-selection corpus and adds a pinned generated Unicode 17
+  policy runtime without claiming a Dart front door or host authority.
 - Alpha AXP and PowerPC 601 simulator and gate-level identities now have four
   exact Python/Rust classification owners, with each gate-level owner depending
   on its functional simulator owner.
@@ -139,10 +139,10 @@ next implementation selection:
   OpenID identity conformance owner; concrete credential and host authority
   remains in the existing selection-blocked review.
 
-The next dependency/leverage order is therefore neutral graph/diff adversarial
-hardening, then the Dart process-free graph/diff core. Perl `blib` registry
-repair remains the strongest small independent fallback; OCaml representative
-CI follows Dart once overlapping workflow work clears.
+The next dependency/leverage order is therefore the Dart process-free
+graph/diff core, then its remaining pure-domain and execution contracts. Perl
+`blib` registry repair remains the strongest small independent fallback; OCaml
+representative CI follows Dart once overlapping workflow work clears.
 
 Recently classified mixed Rust identities include `smart-home-camera-media`,
 `smart-home-onvif-integration`, `smart-home-shelly-integration`,
@@ -2709,7 +2709,8 @@ Executable front doors currently exist in 12 of the 15 established lanes:
 - Elixir, Go, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript
   under their respective `code/programs/<language>/build-tool` directories
 
-Dart, Java, and Kotlin have no implementation. The F# entry point is currently
+Dart has no executable implementation; Java and Kotlin now have process-free
+graph/diff cores but no executable front doors. The F# entry point is currently
 a thin facade over the C# engine rather than an independent native engine.
 C and C++ are emerging lanes without build tools; OCaml must receive one before
 it can graduate from emerging status. WASM is an execution target, Mosaic and
@@ -2740,7 +2741,7 @@ Delivery order:
    adversarial corpus from discovery, resolution, graph, and plan into the
    remaining non-execution domains: diff selection, hashing/cache, Starlark,
    sharding, validation, toolchain detection, and CLI. The current selected
-   tranche now provides a 111-case, 11-domain process-free corpus, including
+   tranche now provides a 162-case, 11-domain process-free corpus, including
    conservative unknown-path handling, typed cache states, inline-only
    Starlark loads, prerequisite-closed shard verification, the OCaml-aware
    toolchain registry, and fail-closed BUILD-file validation.
@@ -13889,6 +13890,37 @@ reconciled state contains 828 unique owners and 1,446 dependency edges: 217
 merged, 610 pending, and exactly this JVM owner in progress. The graph remains
 dependency-complete and acyclic with no merged owner depending on unfinished
 work.
+
+### Post-PR #15615 refresh and Dart graph/diff core selection
+
+PR #15615 completed all required checks acceptably, reported a clean merge
+state, and merged through guarded squash auto-merge at
+`2026-09-19T19:28:11Z` as
+`3467742ee4e6ad3f6fe4fd55c87ca3bcb8cfcecc`. The refreshed schema-3 inventory
+remains collision-free: 15 established lanes, 1,441 implementation identities,
+4,666 established-lane slots, 1,481 all-reported identities, completion bands
+175/265, 123/934, 181/2,282, and 962/13,468, with 782 Rust singletons and no
+unknown language bucket.
+
+The completed hardening establishes one exact neutral graph/diff boundary:
+eight graph cases and eleven diff-selection cases. All eleven historical
+selection/match-ceiling adoption leaves are now full 19-case core owners.
+Collision-checked audit added five missing matcher-complexity owners for
+Elixir, Python, Ruby, Rust, and TypeScript; an OCaml process-free graph/diff
+core; and an explicit Dart tracked-artifact validation owner. Dart's generated
+Unicode 17 NFC, NFKC, full fold, NFKC-fold, and full-uppercase substrate belongs
+inside the Dart graph/diff core because those tables define portable path and
+package-root policy. Generator executable identity and host-process controls
+remain in the separate selection-blocked authority review.
+
+The reconciled state contains 845 unique owners and 1,571 dependency edges:
+219 merged, 625 pending, and exactly
+`build-tool-dart-process-free-graph-diff-core` in progress. It has no missing,
+self, duplicate, cyclic, or merged-to-unfinished dependency. The selected Dart
+slice is intentionally authority-free: it adds the native library, exact
+fixture discovery, generated Unicode notice and tables, strict package-native
+validation, and CI conformance, but no CLI, adapter, resolver, executor, or
+complete build-tool claim.
 
 ## Autonomous Loop Protocol
 

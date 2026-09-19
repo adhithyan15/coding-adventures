@@ -44,6 +44,7 @@ LICENSE_TARGETS = (
     Path("code/programs/perl/build-tool/UNICODE-LICENSE.txt"),
     Path("code/programs/haskell/build-tool/UNICODE-LICENSE.txt"),
     Path("code/programs/swift/build-tool/UNICODE-LICENSE.txt"),
+    Path("code/programs/dart/build-tool/UNICODE-LICENSE.txt"),
 )
 SOURCES = {
     "UnicodeData.txt": "2e1efc1dcb59c575eedf5ccae60f95229f706ee6d031835247d843c11d96470c",
@@ -91,6 +92,9 @@ HASKELL_TARGET = Path(
 SWIFT_TARGET = Path(
     "code/programs/swift/build-tool/Sources/BuildToolCore/"
     "TrackedArtifactUnicode17.swift"
+)
+DART_TARGET = Path(
+    "code/programs/dart/build-tool/lib/src/tracked_artifact_unicode17.dart"
 )
 
 
@@ -989,6 +993,220 @@ export function fullUppercase(value: string): string {{
   return mapScalars(value, uppercase);
 }}
 '''
+
+
+_DART_UNICODE_BODY = r"""
+final class _DecompositionRow {
+  const _DecompositionRow(this.compatibility, this.mapping);
+  final bool compatibility;
+  final List<int> mapping;
+}
+
+List<String> _lines(String data) => data.isEmpty ? const [] : data.split('\n');
+int _hex(String value) => int.parse(value, radix: 16);
+List<int> _hexList(String value) =>
+    value.isEmpty ? const [] : value.split(',').map(_hex).toList();
+
+Map<int, int> _parseCombining() {
+  final result = <int, int>{};
+  for (final line in _lines(_combiningData)) {
+    final fields = line.split(';');
+    result[_hex(fields[0])] = int.parse(fields[1]);
+  }
+  return result;
+}
+
+Map<int, _DecompositionRow> _parseDecomposition() {
+  final result = <int, _DecompositionRow>{};
+  for (final line in _lines(_decompositionData)) {
+    final fields = line.split(';');
+    result[_hex(fields[0])] =
+        _DecompositionRow(fields[1] == 'K', _hexList(fields[2]));
+  }
+  return result;
+}
+
+int _pairKey(int left, int right) => left * 0x110000 + right;
+
+Map<int, int> _parseComposition() {
+  final result = <int, int>{};
+  for (final line in _lines(_compositionData)) {
+    final fields = line.split(';');
+    final pair = fields[0].split(',');
+    result[_pairKey(_hex(pair[0]), _hex(pair[1]))] = _hex(fields[1]);
+  }
+  return result;
+}
+
+Map<int, List<int>> _parseMapping(String data) {
+  final result = <int, List<int>>{};
+  for (final line in _lines(data)) {
+    final fields = line.split(';');
+    result[_hex(fields[0])] = _hexList(fields[1]);
+  }
+  return result;
+}
+
+final _combining = _parseCombining();
+final _decomposition = _parseDecomposition();
+final _composition = _parseComposition();
+final _folding = _parseMapping(_foldingData);
+final _uppercase = _parseMapping(_uppercaseData);
+
+const _sBase = 0xac00;
+const _lBase = 0x1100;
+const _vBase = 0x1161;
+const _tBase = 0x11a7;
+const _lCount = 19;
+const _vCount = 21;
+const _tCount = 28;
+const _nCount = _vCount * _tCount;
+const _sCount = _lCount * _nCount;
+
+int _combiningClass(int scalar) => _combining[scalar] ?? 0;
+
+void _decomposeScalar(int scalar, bool compatibility, List<int> output) {
+  if (scalar >= _sBase && scalar < _sBase + _sCount) {
+    final index = scalar - _sBase;
+    output.add(_lBase + index ~/ _nCount);
+    output.add(_vBase + (index % _nCount) ~/ _tCount);
+    final trailing = _tBase + index % _tCount;
+    if (trailing != _tBase) output.add(trailing);
+    return;
+  }
+  final row = _decomposition[scalar];
+  if (row == null || (row.compatibility && !compatibility)) {
+    output.add(scalar);
+    return;
+  }
+  for (final mapped in row.mapping) {
+    _decomposeScalar(mapped, compatibility, output);
+  }
+}
+
+void _canonicalOrder(List<int> scalars) {
+  var index = 0;
+  while (index < scalars.length) {
+    if (_combiningClass(scalars[index]) == 0) {
+      index++;
+      continue;
+    }
+    var end = index + 1;
+    while (end < scalars.length && _combiningClass(scalars[end]) != 0) end++;
+    for (var current = index + 1; current < end; current++) {
+      final value = scalars[current];
+      final valueClass = _combiningClass(value);
+      var insertion = current;
+      while (insertion > index &&
+          _combiningClass(scalars[insertion - 1]) > valueClass) {
+        scalars[insertion] = scalars[insertion - 1];
+        insertion--;
+      }
+      scalars[insertion] = value;
+    }
+    index = end;
+  }
+}
+
+int? _composePair(int left, int right) {
+  if (left >= _lBase &&
+      left < _lBase + _lCount &&
+      right >= _vBase &&
+      right < _vBase + _vCount) {
+    return _sBase + ((left - _lBase) * _vCount + right - _vBase) * _tCount;
+  }
+  if (left >= _sBase &&
+      left < _sBase + _sCount &&
+      (left - _sBase) % _tCount == 0 &&
+      right > _tBase &&
+      right < _tBase + _tCount) {
+    return left + right - _tBase;
+  }
+  return _composition[_pairKey(left, right)];
+}
+
+String _normalize(String value, bool compatibility) {
+  final decomposed = <int>[];
+  for (final scalar in value.runes) {
+    _decomposeScalar(scalar, compatibility, decomposed);
+  }
+  _canonicalOrder(decomposed);
+  if (decomposed.isEmpty) return '';
+  final output = <int>[decomposed.first];
+  var starterIndex = 0;
+  var starter = decomposed.first;
+  var lastClass = _combiningClass(starter) == 0 ? 0 : 255;
+  for (final scalar in decomposed.skip(1)) {
+    final scalarClass = _combiningClass(scalar);
+    final composite = lastClass == 0 || lastClass < scalarClass
+        ? _composePair(starter, scalar)
+        : null;
+    if (composite != null) {
+      output[starterIndex] = composite;
+      starter = composite;
+      continue;
+    }
+    output.add(scalar);
+    if (scalarClass == 0) {
+      starterIndex = output.length - 1;
+      starter = scalar;
+    }
+    lastClass = scalarClass;
+  }
+  return String.fromCharCodes(output);
+}
+
+String _mapScalars(String value, Map<int, List<int>> table) {
+  final output = <int>[];
+  for (final scalar in value.runes) output.addAll(table[scalar] ?? [scalar]);
+  return String.fromCharCodes(output);
+}
+
+/// Source-embedded Unicode 17 normalization and full-casing substrate.
+abstract final class TrackedArtifactUnicode17 {
+  static const unicodeVersion = '17.0.0';
+  static String nfc(String value) => _normalize(value, false);
+  static String nfkc(String value) => _normalize(value, true);
+  static String casefold(String value) => _mapScalars(value, _folding);
+  static String nfkcCasefold(String value) => casefold(nfkc(value));
+  static String fullUppercase(String value) => _mapScalars(value, _uppercase);
+}
+"""
+
+
+def _render_dart(
+    tables: tuple[
+        list[tuple[int, int]],
+        list[tuple[int, bool, tuple[int, ...]]],
+        list[tuple[int, int, int]],
+        list[tuple[int, tuple[int, ...]]],
+        list[tuple[int, tuple[int, ...]]],
+    ],
+) -> str:
+    combining, decomposition, composition, folding, uppercase = tables
+    combining_text = "\n".join(f"{cp:X};{ccc}" for cp, ccc in combining)
+    decomposition_text = "\n".join(
+        f"{cp:X};{'K' if compat else 'C'};{','.join(f'{value:X}' for value in mapping)}"
+        for cp, compat, mapping in decomposition
+    )
+    composition_text = "\n".join(
+        f"{left:X},{right:X};{result:X}" for left, right, result in composition
+    )
+    hashes = ", ".join(f"{name} sha256:{digest}" for name, digest in SOURCES.items())
+    header = f"""// Generated Unicode {UNICODE_VERSION} data and algorithms.
+// DO NOT EDIT. Run `python code/scripts/generate_tracked_artifact_unicode17.py`.
+// Sources: {UCD_BASE}
+// {hashes}
+// Unicode License v3: every source and binary distribution carries the full
+// notice as UNICODE-LICENSE.txt (sha256:{LICENSE_SHA256}).
+
+const _combiningData = r\'''{combining_text}\''';
+const _decompositionData = r\'''{decomposition_text}\''';
+const _compositionData = r\'''{composition_text}\''';
+const _foldingData = r\'''{_mapping_lines(folding)}\''';
+const _uppercaseData = r\'''{_mapping_lines(uppercase)}\''';
+"""
+    return header + _DART_UNICODE_BODY
 
 
 def _render_ruby(
@@ -3278,6 +3496,85 @@ try SelfCheck.run()
 """
 
 
+_DART_SELF_CHECK = r"""import 'dart:convert';
+import 'dart:io';
+
+import 'tracked_artifact_unicode17.dart';
+
+Never fail(String message) => throw StateError(message);
+
+String fromScalarField(String field) => field.isEmpty
+    ? ''
+    : String.fromCharCodes(field.split(',').map((value) => int.parse(value, radix: 16)));
+
+Future<void> main() async {
+  var normalizationCount = 0;
+  var foldingCount = 0;
+  var uppercaseCount = 0;
+  var sawVersion = false;
+  await for (final line in stdin.transform(utf8.decoder).transform(const LineSplitter())) {
+    final fields = line.split(';');
+    switch (fields.first) {
+      case 'V':
+        if (fields.length != 2 || fields[1] != TrackedArtifactUnicode17.unicodeVersion) {
+          fail('generated Dart Unicode version drift');
+        }
+        sawVersion = true;
+      case 'N':
+        normalizationCount++;
+        if (fields.length != 6) fail('invalid Dart normalization record');
+        final c1 = fromScalarField(fields[1]);
+        final c2 = fromScalarField(fields[2]);
+        final c3 = fromScalarField(fields[3]);
+        final c4 = fromScalarField(fields[4]);
+        final c5 = fromScalarField(fields[5]);
+        if (TrackedArtifactUnicode17.nfc(c1) != c2 ||
+            TrackedArtifactUnicode17.nfc(c2) != c2 ||
+            TrackedArtifactUnicode17.nfc(c3) != c2 ||
+            TrackedArtifactUnicode17.nfc(c4) != c4 ||
+            TrackedArtifactUnicode17.nfc(c5) != c4 ||
+            TrackedArtifactUnicode17.nfkc(c1) != c4 ||
+            TrackedArtifactUnicode17.nfkc(c2) != c4 ||
+            TrackedArtifactUnicode17.nfkc(c3) != c4 ||
+            TrackedArtifactUnicode17.nfkc(c4) != c4 ||
+            TrackedArtifactUnicode17.nfkc(c5) != c4) {
+          fail('normalization Dart self-check failed at vector $normalizationCount');
+        }
+      case 'F':
+        foldingCount++;
+        if (fields.length != 4) fail('invalid Dart folding record');
+        final source = fromScalarField(fields[1]);
+        if (TrackedArtifactUnicode17.casefold(source) != fromScalarField(fields[2])) {
+          fail('case-fold Dart self-check failed at vector $foldingCount');
+        }
+        if (TrackedArtifactUnicode17.nfkcCasefold(source) != fromScalarField(fields[3])) {
+          fail('NFKC-case-fold Dart self-check failed at vector $foldingCount');
+        }
+      case 'U':
+        uppercaseCount++;
+        if (fields.length != 3 ||
+            TrackedArtifactUnicode17.fullUppercase(fromScalarField(fields[1])) != fromScalarField(fields[2])) {
+          fail('full-uppercase Dart self-check failed at vector $uppercaseCount');
+        }
+      default:
+        fail('unknown Dart self-check record');
+    }
+  }
+  if (!sawVersion || normalizationCount == 0 || foldingCount == 0 || uppercaseCount == 0) {
+    fail('missing generated Dart Unicode vectors');
+  }
+  final outlined = fromScalarField('1CCE3,1CCE4,1CCD9,1CCDA,5F,1CCE2,1CCE4,1CCD9,1CCEA,1CCE1,1CCDA,1CCE8');
+  if (TrackedArtifactUnicode17.nfkcCasefold(outlined) != 'node_modules') {
+    fail('Unicode 17 outlined-letter Dart sentinel failed');
+  }
+  if (TrackedArtifactUnicode17.nfc(fromScalarField('105D2,307')) != fromScalarField('105C9')) {
+    fail('Unicode 17 Todhri Dart sentinel failed');
+  }
+  stdout.write('ok\n');
+}
+"""
+
+
 _LUA_OUTPUT_LIMIT = 8192
 _WINDOWS_CREATE_SUSPENDED = 0x00000004
 _WINDOWS_JOB_OBJECT_EXTENDED_LIMIT_INFORMATION = 9
@@ -3626,6 +3923,67 @@ def _haskell_self_check_environment() -> dict[str, str]:
         for name in ("SystemRoot", "WINDIR")
         if (value := os.environ.get(name)) is not None
     }
+
+
+def _dart_self_check_environment() -> dict[str, str]:
+    """Retain only loader state; Dart receives no user package or cache state."""
+    return {
+        name: value
+        for name in ("SystemRoot", "WINDIR")
+        if (value := os.environ.get(name)) is not None
+    }
+
+
+def _is_reviewed_dart_version(output: str) -> bool:
+    lines = output.strip().splitlines()
+    return (
+        len(lines) == 1
+        and lines[0].startswith(
+            'Dart SDK version: 3.12.2 (stable) (Tue Jun 9 01:11:39 2026 -0700) on "'
+        )
+        and lines[0].endswith('"')
+    )
+
+
+def _self_check_dart(
+    dart_output: str,
+    sources: dict[str, str],
+    python_module,
+    dart_executable: Path,
+) -> None:
+    executable = dart_executable.resolve(strict=True)
+    environment = _dart_self_check_environment()
+    version = _run_bounded_process(
+        [str(executable), "--version"],
+        cwd=executable.parent,
+        env=environment,
+        input_text="",
+        timeout=10,
+    )
+    version_text = (version.stdout + version.stderr).strip()
+    if version.returncode != 0 or not _is_reviewed_dart_version(version_text):
+        raise RuntimeError(
+            "Dart Unicode self-check requires the exact reviewed Dart 3.12.2 "
+            f"runtime; received {version_text or 'no diagnostic'}"
+        )
+    with tempfile.TemporaryDirectory(prefix="unicode17-dart-check-") as temporary:
+        temporary_path = Path(temporary)
+        (temporary_path / "tracked_artifact_unicode17.dart").write_text(
+            dart_output, encoding="utf-8", newline="\n"
+        )
+        runner = temporary_path / "self_check.dart"
+        runner.write_text(_DART_SELF_CHECK, encoding="utf-8", newline="\n")
+        result = _run_bounded_process(
+            [str(executable), "--disable-dart-dev", str(runner)],
+            cwd=temporary_path,
+            env=environment,
+            input_text=_lua_self_check_payload(python_module, sources),
+            timeout=180,
+        )
+    normalized_stdout = result.stdout.replace("\r\n", "\n")
+    if result.returncode != 0 or normalized_stdout != "ok\n":
+        detail = result.stderr.strip() or result.stdout.strip() or "no diagnostic"
+        raise RuntimeError(f"generated Dart Unicode self-check failed: {detail}")
 
 
 def _swift_windows_runtime_directory(swiftc: Path) -> Path:
@@ -4036,7 +4394,16 @@ def _write_bytes_or_check(
 def _selected_runtime_self_checks(requested: list[str] | None) -> tuple[str, ...]:
     """Return the emitted runtimes whose official-vector checks must run."""
     if requested is None:
-        return ("typescript", "ruby", "elixir", "lua", "perl", "haskell", "swift")
+        return (
+            "typescript",
+            "ruby",
+            "elixir",
+            "lua",
+            "perl",
+            "haskell",
+            "swift",
+            "dart",
+        )
     return tuple(dict.fromkeys(requested))
 
 
@@ -4046,7 +4413,16 @@ def main() -> int:
     parser.add_argument(
         "--self-check-runtime",
         action="append",
-        choices=("typescript", "ruby", "elixir", "lua", "perl", "haskell", "swift"),
+        choices=(
+            "typescript",
+            "ruby",
+            "elixir",
+            "lua",
+            "perl",
+            "haskell",
+            "swift",
+            "dart",
+        ),
         help=(
             "limit emitted-runtime official-vector checks; repeat to select more "
             "than one runtime (default: every emitted runtime)"
@@ -4100,6 +4476,14 @@ def main() -> int:
             "emitted-runtime check is selected"
         ),
     )
+    parser.add_argument(
+        "--dart-executable",
+        type=Path,
+        help=(
+            "exact reviewed Dart 3.12.2 executable used when the Dart "
+            "emitted-runtime check is selected"
+        ),
+    )
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[2]
     license_payload = (root / LICENSE_PATH).read_bytes()
@@ -4122,6 +4506,7 @@ def main() -> int:
     perl_output = _render_perl(tables)
     haskell_output = _render_haskell(tables)
     swift_output = _render_swift(tables)
+    dart_output = _render_dart(tables)
     for target in PYTHON_TARGETS:
         _write_or_check(root, target, python_output, args.check)
     _write_or_check(root, CSHARP_TARGET, csharp_output, args.check)
@@ -4132,6 +4517,7 @@ def main() -> int:
     _write_or_check(root, PERL_TARGET, perl_output, args.check)
     _write_or_check(root, HASKELL_TARGET, haskell_output, args.check)
     _write_or_check(root, SWIFT_TARGET, swift_output, args.check)
+    _write_or_check(root, DART_TARGET, dart_output, args.check)
     for target in LICENSE_TARGETS:
         _write_bytes_or_check(root, target, upstream_license, args.check)
     python_module = _load_generated_module(root / PYTHON_TARGETS[0])
@@ -4188,6 +4574,15 @@ def main() -> int:
             python_module,
             args.swift_executable,
             args.swiftc_executable,
+        )
+    if "dart" in selected_runtimes:
+        if args.dart_executable is None:
+            parser.error("--dart-executable is required for the Dart self-check")
+        _self_check_dart(
+            dart_output,
+            sources,
+            python_module,
+            args.dart_executable,
         )
     print(
         f"Unicode {UNICODE_VERSION} generated and verified: "
