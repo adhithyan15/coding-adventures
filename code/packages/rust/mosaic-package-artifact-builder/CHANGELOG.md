@@ -12,30 +12,37 @@
 - Recognize implemented XAML numeric typography on text/input/button primitives;
   retain the unsupported font-size diagnostic for HostTable (#15556).
 
+### Changed — Qt comes off `primitive.navigation-split-unimplemented` (UI29-6, #15481)
+
+The Qt emitter now lowers `HostNavigationSplit` to Qt Quick Controls'
+`SplitView`, so Qt native-complete reports no longer claim that the primitive
+is missing. The permanent lack of adaptive collapse remains explicit as the
+non-gating `interaction.navigation-split-collapse-static` behaviour entry.
+Flutter remains gated until its lowering slice lands.
+
 ### Changed — Compose comes off `primitive.navigation-split-unimplemented` (UI29-6, #15481)
 
 The Compose emitter now lowers `HostNavigationSplit` to Material 3's adaptive
 `NavigationSuiteScaffoldLayout`, so Compose native-complete reports no longer
-claim that the primitive is missing. Qt and Flutter remain gated until their
-own lowering slices land.
+claim that the primitive is missing. Flutter remains gated until its own
+lowering slice lands.
 
 ### Changed — SwiftUI comes off `primitive.navigation-split-unimplemented` (UI29-6, #15481)
 
 The SwiftUI emitter now lowers `HostNavigationSplit` to native
 `NavigationSplitView`, so SwiftUI native-complete reports no longer claim that
-the primitive is missing. Qt and Flutter remain gated until their own lowering
-slices land.
+the primitive is missing. Flutter remains gated until its own lowering slice
+lands.
 
 ### Added — non-gating platform behaviour degradations (UI29-6, #15491)
 
 `mosaic-degradations.json` now separates permanent platform limitations into
 `behaviorDegradations`. Qt and Flutter record
 `interaction.navigation-split-collapse-static` for
-`HostNavigationSplit(collapse: auto)` while their still-missing primitive
-lowerings continue to fail the ordinary capability gate. Once those lowerings
-land, removing `primitive.navigation-split-unimplemented` will make strict
-consumer builds possible without hiding the collapse limitation in an
-allowlist. `collapse: never` records no behaviour degradation.
+`HostNavigationSplit(collapse: auto)`. Flutter's still-missing primitive
+lowering continues to fail the ordinary capability gate; Qt's capability gap
+is now closed without hiding the collapse limitation in an allowlist.
+`collapse: never` records no behaviour degradation.
 
 
 ### Added — Flutter style-drop degradations (#12022)
@@ -51,8 +58,7 @@ The XAML emitter lowers `HostNavigationSplit` to `NavigationView` as of slice
 `K-xaml`, so XAML is no longer reported as missing it. UI84 §3: the lowering
 records the drop, so closing the gap closes the report, in the same change.
 
-Qt and Flutter still report it, and each of their slices removes its own
-backend the same way.
+Flutter still reports it, and its slice removes the backend the same way.
 
 ## 2026-09-13
 

@@ -1,0 +1,7 @@
+// UI29-6 fixture: both collapse modes and literal/slot title shapes are
+// generated native-complete and built by the real Qt toolchain in CI.
+component Shell {
+  slot workspace-name : text ;
+  slot inbox-label : text ;
+  emit onOpenInbox ;
+}

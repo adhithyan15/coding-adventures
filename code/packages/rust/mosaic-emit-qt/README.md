@@ -154,13 +154,14 @@ platform fonts and explicit host font choices remain unchanged.
 | `HostSlider`  | `Slider { value: ...; from: ...; to: ...; stepSize: ... }` with movement and release events |
 | `HostScroll`  | `ScrollView { ... children ... }` (from Controls 2.15)                      |
 | `HostDialog`  | `Popup { modal: ...; visible: ...; closePolicy: ...; contentItem: ColumnLayout { ... } }` (from Controls 2.15) |
+| `HostNavigationSplit` | `SplitView` with a preferred-width pane, accessible pane landmark, and fill-width detail |
 | `HostDraggable` | Native `DragHandler` + `Drag.Automatic`, with keyboard and screen-reader operation |
 | `HostDropTarget` | Native `DropArea`, kind filtering, lifecycle events, and before/into/after positions |
 
 The versionless `QtQuick.Controls` import is added **only when** the layout
 tree uses a Controls-backed primitive, including `Icon`, multiline `Input`,
-and placeholder-capable `Input`/`HostInput`, keeping the import set minimal
-for components that don't need it.
+placeholder-capable `Input`/`HostInput`, and `HostNavigationSplit`, keeping the
+import set minimal for components that don't need it.
 
 `HostDraggable` and `HostDropTarget` share one controller scoped to each
 mounted component instance. Mouse, touch, and pen use Qt Quick's native drag
