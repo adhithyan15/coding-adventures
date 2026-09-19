@@ -1,7 +1,18 @@
 ## HL-C408 — `practises.knowledge` accepts an atom id that does not exist
 
-**Status: OPEN.** Found after writing a non-existent atom id into a Malayalam
-lesson for the **third** time in one session.
+**Status: CLOSED (2026-09-19).** Found after writing a non-existent atom id
+into a Malayalam lesson for the **third** time in one session.
+
+`curriculum.ts` now resolves every `practises.knowledge` id against the complete
+set of atoms introduced in that language before it checks availability or body
+assessment coverage. A fabricated id reports
+`schema-v2-unknown-practised-knowledge` and does not cascade into the misleading
+"not assessed" error; an existing atom omitted from the prerequisite closure
+still reports the distinct "not yet available" error. Focused fixtures pin both
+paths. The closing sweep loaded all **7,186** lessons: **8,841** distinct ids
+appear in `practises.knowledge`, **8,842** are introduced, and the dangling set
+remains **zero**. `reviews_of` names lesson ids, not knowledge atoms, so its
+existing lesson-reference validation is the applicable check.
 
 **`curriculum.ts` checks one of the two atom lists by name and not the other.**
 
