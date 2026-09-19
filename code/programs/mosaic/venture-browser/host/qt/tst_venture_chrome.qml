@@ -63,6 +63,7 @@ TestCase {
                 "savePageDisabled": disabled,
                 "printPageDisabled": disabled,
                 "sharePageDisabled": disabled,
+                "pageInfoDisabled": disabled,
                 "viewSourceDisabled": disabled,
                 "findOpen": false,
                 "findQuery": "",
@@ -91,6 +92,7 @@ TestCase {
         verify(!nativeControl("save-page-button").enabled)
         verify(!nativeControl("print-page-button").enabled)
         verify(!nativeControl("share-page-button").enabled)
+        verify(!nativeControl("page-info-button").enabled)
         verify(!nativeControl("view-source-button").enabled)
         verify(!nativeControl("find-button").enabled)
         verify(nativeControl("address-input").readOnly)
@@ -107,6 +109,7 @@ TestCase {
         mouseClick(nativeControl("save-page-button"))
         mouseClick(nativeControl("print-page-button"))
         mouseClick(nativeControl("share-page-button"))
+        mouseClick(nativeControl("page-info-button"))
         mouseClick(nativeControl("view-source-button"))
         mouseClick(nativeControl("find-button"))
         mouseClick(nativeControl("go-button"))
@@ -216,6 +219,18 @@ TestCase {
         wait(0)
         compare(recordingHost.events.length, 1)
         compare(recordingHost.events[0].event, "onSharePage")
+    }
+
+    function test_page_info_crosses_the_mosaic_host_seam() {
+        hydrate(false)
+        recordingHost.reset()
+        const pageInfoButton = nativeControl("page-info-button")
+        verify(pageInfoButton.enabled)
+        pageInfoButton.forceActiveFocus()
+        keyClick(Qt.Key_Space)
+        wait(0)
+        compare(recordingHost.events.length, 1)
+        compare(recordingHost.events[0].event, "onPageInfo")
     }
 
     function test_find_actions_cross_the_mosaic_host_seam() {
