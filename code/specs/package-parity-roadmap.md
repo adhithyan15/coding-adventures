@@ -13816,6 +13816,13 @@ counts. Bandit reports no medium/high production-runner finding, and the
 change adds no filesystem, Git, process, environment, network, credential,
 native-link, execution, or host authority.
 
+Before publication, the seven-commit branch rebased conflict-free onto exact
+`origin/main` `f1e1ae4205a26fd171fab3b357ef820dd149b70f`. The intervening
+Mosaic navigation, verified OAuth device-step, and Malayalam census commits
+have zero exact path overlap with this tranche and add no package root,
+manifest, BUILD marker, build-tool contract, or parity owner. The refreshed
+collision-checked inventory is structurally unchanged.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
