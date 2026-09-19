@@ -33590,30 +33590,6 @@
         "revisits": 3
       },
       {
-        "atom": "ML-CONCEPT-C21-NAAYA-POOCHA-01",
-        "language": "malayalam",
-        "introducedBy": "ML-C21-naaya-poocha",
-        "introducedAt": 113,
-        "missed": [
-          "R1",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "ML-CONCEPT-C21-NAAYA-POOCHA-02",
-        "language": "malayalam",
-        "introducedBy": "ML-C21-naaya-poocha",
-        "introducedAt": 113,
-        "missed": [
-          "R1",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "ML-CONCEPT-C22-PACCHA-MANJA-01",
         "language": "malayalam",
         "introducedBy": "ML-C22-paccha-manja",
@@ -55290,6 +55266,28 @@
         "language": "malayalam",
         "introducedBy": "ML-C20-pathinonnu-irupathu",
         "introducedAt": 110,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-CONCEPT-C21-NAAYA-POOCHA-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C21-naaya-poocha",
+        "introducedAt": 113,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-CONCEPT-C21-NAAYA-POOCHA-02",
+        "language": "malayalam",
+        "introducedBy": "ML-C21-naaya-poocha",
+        "introducedAt": 113,
         "missed": [
           "R1",
           "R3"
@@ -78128,7 +78126,7 @@
         "missed": [
           "R1"
         ],
-        "revisits": 14
+        "revisits": 15
       },
       {
         "atom": "ML-CONCEPT-C15-VELLAM-ARI-02",
@@ -78248,7 +78246,7 @@
         "missed": [
           "R3"
         ],
-        "revisits": 9
+        "revisits": 10
       },
       {
         "atom": "ML-CONCEPT-C39-KAAPI-01",
@@ -78268,7 +78266,7 @@
         "missed": [
           "R3"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "ML-CONCEPT-C88-TENS-01",
@@ -78448,7 +78446,7 @@
         "missed": [
           "R3"
         ],
-        "revisits": 10
+        "revisits": 11
       },
       {
         "atom": "ML-LEX-C41-DEIXIS-03",
@@ -78528,7 +78526,7 @@
         "missed": [
           "R3"
         ],
-        "revisits": 21
+        "revisits": 22
       },
       {
         "atom": "ML-LEX-C48-ROLE-01",
@@ -93691,7 +93689,7 @@
         "R1": 1748,
         "R2": 4066,
         "R3": 5710,
-        "R4": 4263
+        "R4": 4261
       },
       "forwardReferences": 798
     }
@@ -114364,12 +114362,12 @@
         "forwardReferences": 12,
         "atomsTaught": 514,
         "atomsNeverRevisited": 19,
-        "reinforcementWindowMisses": 1104,
+        "reinforcementWindowMisses": 1102,
         "reinforcementMissesByWindow": {
           "R1": 122,
           "R2": 180,
           "R3": 445,
-          "R4": 357
+          "R4": 355
         },
         "payoffSurprises": 8,
         "writingPracticeLessons": 114,
@@ -114400,7 +114398,7 @@
           {
             "language": "malayalam",
             "kind": "reinforcement",
-            "count": 1104,
+            "count": 1102,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -115744,7 +115742,7 @@
       {
         "language": "malayalam",
         "kind": "reinforcement",
-        "count": 1104,
+        "count": 1102,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -140864,13 +140862,13 @@
     "terms": 54,
     "termsUsed": 54,
     "lessonsUsingTerms": 6736,
-    "usesBeforeIntroduction": 22440,
-    "technicalUsesBeforeIntroduction": 5567,
-    "technicalLessons": 3116,
+    "usesBeforeIntroduction": 22439,
+    "technicalUsesBeforeIntroduction": 5566,
+    "technicalLessons": 3115,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 1745
+        "lessons": 1744
       },
       {
         "term": "noun",
