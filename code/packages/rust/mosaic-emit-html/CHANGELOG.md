@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Support HTML HostTable numeric typography with scoped native-control inheritance,
+  row/container overrides and nested-table boundaries (#15677).
+
 - Retain authored Text styles and numeric font-size bindings on semantic table
   cells, including row and cell loops (#15655). Unstyled cells keep their output.
 

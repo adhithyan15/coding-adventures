@@ -8974,10 +8974,9 @@ layout AccessibleText {
                         | Backend::SwiftUI
                         | Backend::Xaml
                         | Backend::Flutter
+                        | Backend::Html
                 ) {
                     0
-                } else if backend == Backend::Html {
-                    1 // Table inheritance remains unsupported.
                 } else {
                     4
                 },
