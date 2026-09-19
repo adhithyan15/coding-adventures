@@ -316,16 +316,22 @@ model-card parameter, or a UI artifact is not a completion signal.
      positive/negative Mosaic host controls. Keep arbitrary expressions,
      passive-device currents, nested sweeps, and vendor-output controls for
      later phases.
-   - **Linear passive-current output contract** (current phase): discovery after
+   - **Linear passive-current output contract** (completed in PR #15599): discovery after
      PR #15581: the shared result maps retain voltage-source MNA branch currents,
      but output cards cannot yet evaluate a resistor, capacitor, or inductor
      current. Add canonical `I(Rname)`, `I(Cname)`, and `I(Lname)` parsing,
      stable labels and deduplication, and real/complex evaluation across the
      supported operating-point, sweep, AC, and transient result rows in Python,
-     Rust, and TypeScript. Extend the schematic document and Mosaic controls only
-     after the shared execution contract is proven; keep nonlinear-device
-     currents, arbitrary arithmetic expressions, nested sweeps, and
-     vendor-output controls for later phases.
+     Rust, and TypeScript. The follow-on schematic document and Mosaic controls
+     now select R/C/L and voltage-source branch currents through the same ordered
+     global and card-scoped output contract.
+   - **Mosaic schematic nonlinear-current selection** (current phase): discovery after
+     PR #15599: the canonical document can now author every linear passive
+     branch current, but nonlinear device currents remain outside the shared
+     result-map contract. Re-audit executable diode, BJT, JFET, and MOS branch
+     currents across the three engines before extending schematic controls; keep
+     arbitrary arithmetic expressions, nested sweeps, and vendor-output controls
+     for later phases.
 
 ### Operating rules
 

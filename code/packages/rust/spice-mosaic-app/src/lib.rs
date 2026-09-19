@@ -735,7 +735,7 @@ impl SpiceMosaicApp {
                         .map(str::to_owned)
                         .collect::<Vec<_>>(),
                     document
-                        .branch_current_source_references()
+                        .branch_current_element_references()
                         .into_iter()
                         .map(str::to_owned)
                         .collect::<Vec<_>>(),
@@ -746,7 +746,7 @@ impl SpiceMosaicApp {
                         .map(str::to_owned)
                         .collect::<Vec<_>>(),
                     document
-                        .branch_current_source_references()
+                        .branch_current_element_references()
                         .into_iter()
                         .map(str::to_owned)
                         .collect::<Vec<_>>(),
@@ -852,7 +852,7 @@ impl SpiceMosaicApp {
             "schematic-saved-output-label": "Saved outputs",
             "schematic-saved-output-voltage-label": "Save voltage",
             "schematic-saved-output-voltage-options": schematic_saved_output_voltage_options,
-            "schematic-saved-output-current-label": "Save source current",
+            "schematic-saved-output-current-label": "Save element current",
             "schematic-saved-output-current-options": schematic_saved_output_current_options,
             "schematic-saved-output-differential-label": "Save differential voltage",
             "schematic-saved-output-differential-positive-label": "Positive node",
@@ -865,7 +865,7 @@ impl SpiceMosaicApp {
             "schematic-scoped-output-label": "Selected card outputs",
             "schematic-scoped-output-voltage-label": "Probe voltage",
             "schematic-scoped-output-voltage-options": schematic_scoped_output_voltage_options,
-            "schematic-scoped-output-current-label": "Probe source current",
+            "schematic-scoped-output-current-label": "Probe element current",
             "schematic-scoped-output-current-options": schematic_scoped_output_current_options,
             "schematic-scoped-output-differential-label": "Probe differential voltage",
             "schematic-scoped-output-differential-positive-label": "Positive node",
@@ -1444,7 +1444,7 @@ impl MosaicApp for SpiceMosaicApp {
             }
             "addSchematicSavedOutputCurrent" => {
                 let source = event.payload["source"].as_str().ok_or_else(|| {
-                    invalid("addSchematicSavedOutputCurrent requires a source reference")
+                    invalid("addSchematicSavedOutputCurrent requires an element reference")
                 })?;
                 let history = self.schematic_history_entry();
                 let document = self.schematic.as_mut().ok_or_else(|| {
@@ -1538,7 +1538,7 @@ impl MosaicApp for SpiceMosaicApp {
             }
             "addSchematicScopedOutputCurrent" => {
                 let source = event.payload["source"].as_str().ok_or_else(|| {
-                    invalid("addSchematicScopedOutputCurrent requires a source reference")
+                    invalid("addSchematicScopedOutputCurrent requires an element reference")
                 })?;
                 let history = self.schematic_history_entry();
                 let document = self.schematic.as_mut().ok_or_else(|| {
@@ -2429,7 +2429,7 @@ mod tests {
         );
         assert_eq!(
             loaded.props["schematic-saved-output-current-options"],
-            json!(["V1"])
+            json!(["V1", "R1"])
         );
         dispatch(
             &mut app,
@@ -2440,6 +2440,11 @@ mod tests {
             &mut app,
             "onAddSchematicSavedOutputCurrent",
             json!({"source":"V1"}),
+        );
+        dispatch(
+            &mut app,
+            "onAddSchematicSavedOutputCurrent",
+            json!({"source":"R1"}),
         );
         dispatch(
             &mut app,
@@ -2454,7 +2459,7 @@ mod tests {
         let current = dispatch(&mut app, "onAddSchematicSavedOutputDifferential", json!({}));
         assert_eq!(
             current.props["schematic-saved-output-rows"],
-            json!(["V(OUT)", "I(V1)", "V(OUT,IN)"])
+            json!(["V(OUT)", "I(V1)", "I(R1)", "V(OUT,IN)"])
         );
         let snapshot = app.snapshot().unwrap().unwrap();
         let mut restored = SpiceMosaicApp::default();
@@ -2463,27 +2468,27 @@ mod tests {
         let restored_update = restored.start(context).unwrap();
         assert_eq!(
             restored_update.props["schematic-saved-output-rows"],
-            json!(["V(OUT)", "I(V1)", "V(OUT,IN)"])
+            json!(["V(OUT)", "I(V1)", "I(R1)", "V(OUT,IN)"])
         );
         let synchronized = dispatch(&mut app, "onSynchronizeSchematic", json!({}));
         assert!(synchronized.props["netlist-text"]
             .as_str()
             .unwrap()
-            .contains(".save V(OUT) I(V1) V(OUT,IN)"));
+            .contains(".save V(OUT) I(V1) I(R1) V(OUT,IN)"));
         let undone = dispatch(&mut app, "onUndoSchematic", json!({}));
         assert_eq!(
             undone.props["schematic-saved-output-rows"],
-            json!(["V(OUT)", "I(V1)"])
+            json!(["V(OUT)", "I(V1)", "I(R1)"])
         );
         let redone = dispatch(&mut app, "onRedoSchematic", json!({}));
         assert_eq!(
             redone.props["schematic-saved-output-rows"],
-            json!(["V(OUT)", "I(V1)", "V(OUT,IN)"])
+            json!(["V(OUT)", "I(V1)", "I(R1)", "V(OUT,IN)"])
         );
         let removed = dispatch(&mut app, "onRemoveSchematicSavedOutput", json!({"index":0}));
         assert_eq!(
             removed.props["schematic-saved-output-rows"],
-            json!(["I(V1)", "V(OUT,IN)"])
+            json!(["I(V1)", "I(R1)", "V(OUT,IN)"])
         );
     }
 
@@ -2536,14 +2541,19 @@ mod tests {
             "onAddSchematicScopedOutputDifferential",
             json!({}),
         );
-        let scoped = dispatch(
+        dispatch(
             &mut app,
             "onAddSchematicScopedOutputCurrent",
             json!({"source":"V1"}),
         );
+        let scoped = dispatch(
+            &mut app,
+            "onAddSchematicScopedOutputCurrent",
+            json!({"source":"R1"}),
+        );
         assert_eq!(
             scoped.props["schematic-scoped-output-rows"],
-            json!(["V(OUT)", "V(OUT,IN)", "I(V1)"])
+            json!(["V(OUT)", "V(OUT,IN)", "I(V1)", "I(R1)"])
         );
         let snapshot = app.snapshot().unwrap().unwrap();
         let mut restored = SpiceMosaicApp::default();
@@ -2552,7 +2562,7 @@ mod tests {
         let restored_update = restored.start(context).unwrap();
         assert_eq!(
             restored_update.props["schematic-scoped-output-rows"],
-            json!(["V(OUT)", "V(OUT,IN)", "I(V1)"])
+            json!(["V(OUT)", "V(OUT,IN)", "I(V1)", "I(R1)"])
         );
         let moved = dispatch(&mut app, "onMoveSchematicAnalysisCardEarlier", json!({}));
         assert_eq!(
@@ -2563,7 +2573,7 @@ mod tests {
         assert!(synchronized.props["netlist-text"]
             .as_str()
             .unwrap()
-            .contains(".ac dec 10 10 10k\n.probe ac V(OUT) V(OUT,IN) I(V1)\n.op"));
+            .contains(".ac dec 10 10 10k\n.probe ac V(OUT) V(OUT,IN) I(V1) I(R1)\n.op"));
         dispatch(&mut app, "onRemoveSchematicAnalysisCard", json!({}));
         let after_remove = dispatch(&mut app, "onSynchronizeSchematic", json!({}));
         assert!(!after_remove.props["netlist-text"]
