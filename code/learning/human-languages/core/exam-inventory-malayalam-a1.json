@@ -3966,7 +3966,13 @@
       "id": "ML-A1-LEX-38",
       "category": "Padakosham (lexicon by domain)",
       "label": "the telephone, the post, the internet, an e-mail address",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C110-PHONE-01",
+        "ML-LEX-C110-LETTER-01",
+        "ML-LEX-C110-POST-01",
+        "ML-LEX-C110-EMAIL-01",
+        "ML-LEX-C110-INTERNET-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -3980,7 +3986,7 @@
         "A1-NE11-01"
       ],
       "malayalamSpecific": false,
-      "note": "Nothing. The Spanish inventory expects an A1 candidate to dictate an e-mail address; this track cannot name a telephone."
+      "note": "CLOSED BY CHAPTER 110, AND IT CARRIED FIVE SPANISH POINTS -- the largest single payoff in this file. The old note's 'Nothing' held, but confirming it needed a WORD-BOUNDED census: kattu (a letter) appears taught because the string matches inside akattu ('inside', ML-C95), and bounded against the Malayalam block it returns zero. FOUR OF THE FIVE WORDS COST NO SCRIPT DEBT -- only inrarneRRu moves anything, deepening the already-open chillu-r from 11/11 to 12/12 while opening nothing new. THE TELEPHONE IS TAUGHT BY EAR: phooN needs the chillu NN, which ML-S131 teaches but data/scripts/malayalam.json omits (HL-C398), and adding that entry requires a sourced stroke-order citation on a script-owner surface a curriculum chapter must not edit. The word is given in romanization with the lesson saying its written shape comes when its letter does, which is chapter 88's precedent for eighty. The phone is the SECOND word the curriculum has wanted that contains the glyph, so HL-C398's cost is now demonstrated rather than predicted."
     },
     {
       "id": "ML-A1-LEX-39",

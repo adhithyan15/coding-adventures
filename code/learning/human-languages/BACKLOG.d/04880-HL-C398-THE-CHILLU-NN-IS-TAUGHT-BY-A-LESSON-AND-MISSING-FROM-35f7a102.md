@@ -60,3 +60,22 @@ Worth checking at the same time whether any other taught letter is missing from
 its script's inventory. The failure mode is silent until some lesson happens to
 need the glyph, which is how this one surfaced — **eighty is simply the first
 word the curriculum has wanted that contains it.**
+
+### Second occurrence: chapter 110, the telephone
+
+**ഫോൺ** hit the same wall, and the cost is no longer hypothetical. Closing
+`ML-A1-LEX-38` — five Spanish points, the largest single payoff left in that
+inventory — meant naming the telephone, and the word cannot be printed for the
+same reason eighty could not.
+
+The draft that discovered it had gone further and bought a **new letter** for the
+job: `ML-S148-letter-pha` taught **ഫ**, which appears in no headword anywhere in
+the corpus. Validate then failed on the *chillu*, not on **ഫ** — and once the
+word could not be printed, a letter bought to write it had no purpose, so that
+lesson was deleted rather than kept for appearance.
+
+So the tally for this one missing inventory entry is now: one number taught by
+ear, one everyday noun taught by ear, and one script lesson written and thrown
+away. **Two words in, the pattern is clear — this will keep costing until the
+citation is sourced**, and each occurrence costs more than the last, because the
+words that need it are getting more ordinary.

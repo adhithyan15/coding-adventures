@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C110-thapaal",
+    "language": "malayalam",
+    "chapter": 110,
+    "sequence": 4070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9828632007cac608"
+  },
+  "findings": []
+}
