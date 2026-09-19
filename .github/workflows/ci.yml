@@ -2584,6 +2584,28 @@ jobs:
             flutter test test/widget_test.dart
           )
 
+          navigation_split_output="$RUNNER_TEMP/mosaic-flutter-host-navigation-split"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-flutter/fixtures/host-navigation-split --backend flutter --output "$navigation_split_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0) and (.behaviorDegradations | length == 1) and .behaviorDegradations[0].code == "interaction.navigation-split-collapse-static"' "$navigation_split_output/flutter/mosaic-degradations.json"
+          (
+            cd "$navigation_split_output/flutter"
+            cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-emit-flutter/fixtures/host-navigation-split-test/widget_test.dart" test/widget_test.dart
+            flutter pub get
+            flutter analyze
+            flutter test test/widget_test.dart
+          )
+
+          pinned_navigation_split_output="$RUNNER_TEMP/mosaic-flutter-host-navigation-split-never"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-flutter/fixtures/host-navigation-split-never --backend flutter --output "$pinned_navigation_split_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0) and (.behaviorDegradations | length == 0)' "$pinned_navigation_split_output/flutter/mosaic-degradations.json"
+          (
+            cd "$pinned_navigation_split_output/flutter"
+            cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-emit-flutter/fixtures/host-navigation-split-never-test/widget_test.dart" test/widget_test.dart
+            flutter pub get
+            flutter analyze
+            flutter test test/widget_test.dart
+          )
+
           nested_conditional_output="$RUNNER_TEMP/mosaic-flutter-nested-row-conditional"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-flutter/fixtures/nested-row-conditional --backend flutter --output "$nested_conditional_output" --emit-project
           (

@@ -5,6 +5,11 @@ this file.
 
 ## [Unreleased]
 
+- Lower `HostNavigationSplit` to a regular-width pane/detail `Row` and a
+  compact Material `Drawer`, preserving pane width and accessible pane naming.
+  `collapse: never` emits a static row, while `collapse: auto` keeps Flutter's
+  permanent composition limitation visible in the behavior report (#15649).
+
 - Propagate numeric HostTable font sizes through native DataTable and structural
   table headers, text and editors (#15602). Preserve static child/container
   overrides, font families and authored fallback for invalid live sizes. The

@@ -196,6 +196,9 @@ See `CHANGELOG.md` for the full feature matrix. The headline:
   Spacer / Divider / Icon), and the most-used host primitives
   (HostInput / HostButton / HostCheckbox / HostRadio / HostSlider / HostScroll)
   are wired with a passing test each.
+- ✅ `HostNavigationSplit` lowers to a side-by-side pane/detail `Row` at
+  regular widths and a Material `Drawer` at compact widths, with pane naming
+  carried by `Semantics`; `collapse: never` pins the static row.
 - ✅ Canonical UI31 HostTable compositions lower dynamic `For`-driven headers,
   rows, and cells to Flutter's native `DataTable` family; unsupported table
   shapes keep an explicitly reported visual fallback. For/If/Else lower to
