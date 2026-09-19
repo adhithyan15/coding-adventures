@@ -143,7 +143,7 @@ class OutputProbe:
 
 @dataclass(frozen=True, slots=True)
 class PrintAnalysis:
-    """A `.print <analysis> <V(node)|I(source)>...` output card."""
+    """A `.print <analysis> <V(node)|I(element)>...` output card."""
 
     analysis: str
     probes: tuple[OutputProbe, ...]
@@ -151,7 +151,7 @@ class PrintAnalysis:
 
 @dataclass(frozen=True, slots=True)
 class PlotAnalysis:
-    """A `.plot <analysis> <V(node)|I(source)>...` output card."""
+    """A `.plot <analysis> <V(node)|I(element)>...` output card."""
 
     analysis: str
     probes: tuple[OutputProbe, ...]
@@ -159,14 +159,14 @@ class PlotAnalysis:
 
 @dataclass(frozen=True, slots=True)
 class SaveAnalysis:
-    """A `.save <V(node)|I(source)>...` persistent output-selection card."""
+    """A `.save <V(node)|I(element)>...` persistent output-selection card."""
 
     probes: tuple[OutputProbe, ...]
 
 
 @dataclass(frozen=True, slots=True)
 class ProbeAnalysis:
-    """A `.probe [analysis] <V(node)|I(source)>...` output-selection card."""
+    """A `.probe [analysis] <V(node)|I(element)>...` output-selection card."""
 
     analysis: str | None
     probes: tuple[OutputProbe, ...]
@@ -190,7 +190,7 @@ class MeasureAnalysis:
 
 @dataclass(frozen=True, slots=True)
 class FourAnalysis:
-    """A `.four <frequency> <V(node)|I(source)>...` Fourier-analysis card."""
+    """A `.four <frequency> <V(node)|I(element)>...` Fourier-analysis card."""
 
     frequency_hz: float
     probes: tuple[OutputProbe, ...]
@@ -198,7 +198,7 @@ class FourAnalysis:
 
 @dataclass(frozen=True, slots=True)
 class DistortionAnalysis:
-    """A `.disto mode points start stop <V(node)|I(source)>...` card."""
+    """A `.disto mode points start stop <V(node)|I(element)>...` card."""
 
     mode: str
     points: int
@@ -2044,13 +2044,13 @@ def _parse_output_probe(token: str, directive: str) -> OutputProbe:
     match = re.fullmatch(r"(?i)([vi])\(([^()\s,]+)(?:,([^()\s,]+))?\)", token)
     if match is None:
         raise NetlistParseError(
-            f"{directive} probe must be V(node[,node]) or I(source), got {token!r}"
+            f"{directive} probe must be V(node[,node]) or I(element), got {token!r}"
         )
     kind = "voltage" if match.group(1).lower() == "v" else "current"
     negative_target = match.group(3)
     if kind == "current" and negative_target is not None:
         raise NetlistParseError(
-            f"{directive} probe must be V(node[,node]) or I(source), got {token!r}"
+            f"{directive} probe must be V(node[,node]) or I(element), got {token!r}"
         )
     return OutputProbe(kind=kind, target=match.group(2), negative_target=negative_target)
 
