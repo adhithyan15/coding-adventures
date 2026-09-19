@@ -211,6 +211,23 @@ pub struct SchematicNetLabel {
     pub name: String,
 }
 
+/// One schematic-owned result signal retained by a global Berkeley `.save` card.
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub enum SchematicOutputProbe {
+    Voltage { node: String },
+    Current { source: String },
+}
+
+impl SchematicOutputProbe {
+    /// The canonical Berkeley probe token shown by host controls and deck output.
+    pub fn token(&self) -> String {
+        match self {
+            Self::Voltage { node } => format!("V({node})"),
+            Self::Current { source } => format!("I({source})"),
+        }
+    }
+}
+
 /// A compact editor document that can be lowered into a canonical Berkeley deck.
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct SchematicDocument {
@@ -219,6 +236,8 @@ pub struct SchematicDocument {
     pub wires: Vec<SchematicWire>,
     #[serde(default)]
     pub net_labels: Vec<SchematicNetLabel>,
+    #[serde(default)]
+    pub output_probes: Vec<SchematicOutputProbe>,
     #[serde(default)]
     pub analysis: SchematicAnalysis,
     #[serde(default)]
@@ -728,6 +747,13 @@ impl SchematicDocument {
                 updated_cards += usize::from(updated);
             }
         }
+        for probe in &mut self.output_probes {
+            if let SchematicOutputProbe::Current { source } = probe {
+                if *source == old_reference {
+                    *source = new_reference.to_owned();
+                }
+            }
+        }
         Ok(updated_cards)
     }
 
@@ -774,6 +800,20 @@ impl SchematicDocument {
             .collect()
     }
 
+    /// Return voltage sources with executable branch-current result columns.
+    pub fn branch_current_source_references(&self) -> Vec<&str> {
+        self.components
+            .iter()
+            .filter(|component| {
+                matches!(
+                    component.kind,
+                    SchematicComponentKind::DcVoltage | SchematicComponentKind::AcVoltage
+                )
+            })
+            .map(|component| component.reference.as_str())
+            .collect()
+    }
+
     /// Return named non-ground nets that can be probed by a transfer-function card.
     pub fn transfer_function_output_nodes(&self) -> Vec<&str> {
         let ground_points = self
@@ -789,6 +829,59 @@ impl SchematicDocument {
             .collect::<BTreeSet<_>>()
             .into_iter()
             .collect()
+    }
+
+    /// Return the saved-output probes in their persisted deck order.
+    pub fn saved_output_probe_tokens(&self) -> Vec<String> {
+        self.output_probes
+            .iter()
+            .map(SchematicOutputProbe::token)
+            .collect()
+    }
+
+    /// Append one labelled non-ground voltage probe, unless it is already saved.
+    pub fn add_saved_output_voltage_probe(&mut self, node: &str) -> Result<bool, SchematicError> {
+        if !self.transfer_function_output_nodes().contains(&node) {
+            return Err(invalid(format!(
+                "{node} is not a labelled non-ground schematic net"
+            )));
+        }
+        let probe = SchematicOutputProbe::Voltage {
+            node: node.to_owned(),
+        };
+        if self.output_probes.contains(&probe) {
+            return Ok(false);
+        }
+        self.output_probes.push(probe);
+        Ok(true)
+    }
+
+    /// Append one voltage-source branch-current probe, unless it is already saved.
+    pub fn add_saved_output_current_probe(&mut self, source: &str) -> Result<bool, SchematicError> {
+        if !self.branch_current_source_references().contains(&source) {
+            return Err(invalid(format!(
+                "{source} is not a voltage source with a branch-current result"
+            )));
+        }
+        let probe = SchematicOutputProbe::Current {
+            source: source.to_owned(),
+        };
+        if self.output_probes.contains(&probe) {
+            return Ok(false);
+        }
+        self.output_probes.push(probe);
+        Ok(true)
+    }
+
+    /// Remove one saved-output probe by its displayed source-order position.
+    pub fn remove_saved_output_probe(
+        &mut self,
+        index: usize,
+    ) -> Result<SchematicOutputProbe, SchematicError> {
+        if index >= self.output_probes.len() {
+            return Err(invalid("schematic saved output probe is unavailable"));
+        }
+        Ok(self.output_probes.remove(index))
     }
 
     /// Return selectable independent sources for a canonical DC sweep.
@@ -990,6 +1083,39 @@ impl SchematicDocument {
         }
     }
 
+    fn saved_output_directive(&self) -> Result<Option<String>, SchematicError> {
+        if self.output_probes.is_empty() {
+            return Ok(None);
+        }
+        for probe in &self.output_probes {
+            match probe {
+                SchematicOutputProbe::Voltage { node }
+                    if !self
+                        .transfer_function_output_nodes()
+                        .contains(&node.as_str()) =>
+                {
+                    return Err(invalid(format!(
+                        "{node} is not a labelled non-ground schematic net"
+                    )));
+                }
+                SchematicOutputProbe::Current { source }
+                    if !self
+                        .branch_current_source_references()
+                        .contains(&source.as_str()) =>
+                {
+                    return Err(invalid(format!(
+                        "{source} is not a voltage source with a branch-current result"
+                    )));
+                }
+                _ => {}
+            }
+        }
+        Ok(Some(format!(
+            ".save {}",
+            self.saved_output_probe_tokens().join(" ")
+        )))
+    }
+
     fn validate_wire_endpoints(&self, wire: &SchematicWire) -> Result<(), SchematicError> {
         if wire.start == wire.end {
             return Err(invalid("schematic wires must have distinct endpoints"));
@@ -1161,6 +1287,7 @@ impl SchematicDocument {
             }
             self.analysis_directive(&card)?;
         }
+        self.saved_output_directive()?;
         for (index, wire) in self.wires.iter().enumerate() {
             self.validate_wire_endpoints(wire)?;
             if self.wires[..index].iter().any(|existing| {
@@ -1251,6 +1378,9 @@ impl SchematicDocument {
         for card in self.analysis_cards() {
             lines.push(self.analysis_directive(&card)?);
         }
+        if let Some(card) = self.saved_output_directive()? {
+            lines.push(card);
+        }
         lines.push(".end".to_owned());
         Ok(lines.join("\n") + "\n")
     }
@@ -1313,6 +1443,7 @@ mod tests {
                 },
             ],
             net_labels: Vec::new(),
+            output_probes: Vec::new(),
             analysis: SchematicAnalysis::OperatingPoint,
             analysis_settings: SchematicAnalysisSettings::default(),
             analysis_cards: Vec::new(),
@@ -1464,6 +1595,7 @@ mod tests {
             components: Vec::new(),
             wires: Vec::new(),
             net_labels: Vec::new(),
+            output_probes: Vec::new(),
             analysis: SchematicAnalysis::default(),
             analysis_settings: SchematicAnalysisSettings::default(),
             analysis_cards: Vec::new(),
@@ -1551,6 +1683,7 @@ mod tests {
                 end: point(0, 0),
             }],
             net_labels: Vec::new(),
+            output_probes: Vec::new(),
             analysis: SchematicAnalysis::AcSweep,
             analysis_settings: SchematicAnalysisSettings::default(),
             analysis_cards: Vec::new(),
@@ -1858,6 +1991,47 @@ mod tests {
             .to_berkeley_netlist()
             .unwrap()
             .contains(".tf V(OUT) VBIAS"));
+    }
+
+    #[test]
+    fn saved_output_probes_lower_voltage_and_current_and_follow_source_renames() {
+        let mut document = rc_document();
+        document.set_net_label(point(40, 20), "OUT").unwrap();
+        assert!(document.add_saved_output_voltage_probe("OUT").unwrap());
+        assert!(document.add_saved_output_current_probe("V1").unwrap());
+        assert!(!document.add_saved_output_voltage_probe("OUT").unwrap());
+        assert_eq!(document.saved_output_probe_tokens(), ["V(OUT)", "I(V1)"]);
+        assert!(document
+            .to_berkeley_netlist()
+            .unwrap()
+            .contains(".save V(OUT) I(V1)"));
+        document.rename_component("V1", "VBIAS").unwrap();
+        assert_eq!(document.saved_output_probe_tokens(), ["V(OUT)", "I(VBIAS)"]);
+        let deck = document.to_berkeley_netlist().unwrap();
+        parse_netlist(&deck).unwrap();
+        assert_eq!(run_netlist(&deck).unwrap().len(), 1);
+        assert!(deck.contains(".save V(OUT) I(VBIAS)"));
+        assert_eq!(
+            document
+                .add_saved_output_voltage_probe("MISSING")
+                .unwrap_err()
+                .to_string(),
+            "MISSING is not a labelled non-ground schematic net"
+        );
+        assert_eq!(
+            document
+                .add_saved_output_current_probe("R1")
+                .unwrap_err()
+                .to_string(),
+            "R1 is not a voltage source with a branch-current result"
+        );
+        assert_eq!(
+            document
+                .remove_saved_output_probe(2)
+                .unwrap_err()
+                .to_string(),
+            "schematic saved output probe is unavailable"
+        );
     }
 
     #[test]

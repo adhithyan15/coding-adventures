@@ -709,6 +709,29 @@ impl SpiceMosaicApp {
                     [true, true, true],
                 )
             });
+        let (
+            schematic_saved_output_voltage_options,
+            schematic_saved_output_current_options,
+            schematic_saved_output_rows,
+        ) = self
+            .schematic
+            .as_ref()
+            .map(|document| {
+                (
+                    document
+                        .transfer_function_output_nodes()
+                        .into_iter()
+                        .map(str::to_owned)
+                        .collect::<Vec<_>>(),
+                    document
+                        .branch_current_source_references()
+                        .into_iter()
+                        .map(str::to_owned)
+                        .collect::<Vec<_>>(),
+                    document.saved_output_probe_tokens(),
+                )
+            })
+            .unwrap_or_default();
         let selected_label = self
             .analyses
             .get(self.selected_analysis_row)
@@ -802,6 +825,12 @@ impl SpiceMosaicApp {
             "schematic-analysis-parameter-three-label": schematic_analysis_parameter_labels[2],
             "schematic-analysis-parameter-three-value": schematic_analysis_parameter_values[2],
             "schematic-analysis-parameter-three-disabled": schematic_analysis_parameter_disabled[2],
+            "schematic-saved-output-label": "Saved outputs",
+            "schematic-saved-output-voltage-label": "Save voltage",
+            "schematic-saved-output-voltage-options": schematic_saved_output_voltage_options,
+            "schematic-saved-output-current-label": "Save source current",
+            "schematic-saved-output-current-options": schematic_saved_output_current_options,
+            "schematic-saved-output-rows": schematic_saved_output_rows,
             "schematic-grid-label": "Grid routing",
             "schematic-grid-lines": Self::schematic_grid_lines(),
             "schematic-wire-segments": schematic_wire_segments,
@@ -1164,6 +1193,7 @@ impl MosaicApp for SpiceMosaicApp {
                     components: Vec::new(),
                     wires: Vec::new(),
                     net_labels: Vec::new(),
+                    output_probes: Vec::new(),
                     analysis: SchematicAnalysis::default(),
                     analysis_settings: SchematicAnalysisSettings::default(),
                     analysis_cards: Vec::new(),
@@ -1193,6 +1223,7 @@ impl MosaicApp for SpiceMosaicApp {
                     components: Vec::new(),
                     wires: Vec::new(),
                     net_labels: Vec::new(),
+                    output_probes: Vec::new(),
                     analysis: SchematicAnalysis::default(),
                     analysis_settings: SchematicAnalysisSettings::default(),
                     analysis_cards: Vec::new(),
@@ -1344,6 +1375,59 @@ impl MosaicApp for SpiceMosaicApp {
                 self.record_schematic_edit(history);
                 self.diagnostics =
                     "Updated the canonical analysis card. Sync the netlist when ready.".to_owned();
+                Ok(self.announced(self.diagnostics.clone()))
+            }
+            "addSchematicSavedOutputVoltage" => {
+                let node = event.payload["output"].as_str().ok_or_else(|| {
+                    invalid("addSchematicSavedOutputVoltage requires a labelled node")
+                })?;
+                let history = self.schematic_history_entry();
+                let document = self.schematic.as_mut().ok_or_else(|| {
+                    invalid("addSchematicSavedOutputVoltage requires a loaded schematic")
+                })?;
+                let added = document
+                    .add_saved_output_voltage_probe(node)
+                    .map_err(|error| invalid(error.to_string()))?;
+                if added {
+                    self.record_schematic_edit(history);
+                    self.diagnostics = format!("Saved V({node}) in the canonical netlist.");
+                } else {
+                    self.diagnostics = format!("V({node}) is already a saved output.");
+                }
+                Ok(self.announced(self.diagnostics.clone()))
+            }
+            "addSchematicSavedOutputCurrent" => {
+                let source = event.payload["source"].as_str().ok_or_else(|| {
+                    invalid("addSchematicSavedOutputCurrent requires a source reference")
+                })?;
+                let history = self.schematic_history_entry();
+                let document = self.schematic.as_mut().ok_or_else(|| {
+                    invalid("addSchematicSavedOutputCurrent requires a loaded schematic")
+                })?;
+                let added = document
+                    .add_saved_output_current_probe(source)
+                    .map_err(|error| invalid(error.to_string()))?;
+                if added {
+                    self.record_schematic_edit(history);
+                    self.diagnostics = format!("Saved I({source}) in the canonical netlist.");
+                } else {
+                    self.diagnostics = format!("I({source}) is already a saved output.");
+                }
+                Ok(self.announced(self.diagnostics.clone()))
+            }
+            "removeSchematicSavedOutput" => {
+                let index = event.payload["index"].as_u64().ok_or_else(|| {
+                    invalid("removeSchematicSavedOutput requires a non-negative output index")
+                })? as usize;
+                let history = self.schematic_history_entry();
+                let document = self.schematic.as_mut().ok_or_else(|| {
+                    invalid("removeSchematicSavedOutput requires a loaded schematic")
+                })?;
+                let removed = document
+                    .remove_saved_output_probe(index)
+                    .map_err(|error| invalid(error.to_string()))?;
+                self.record_schematic_edit(history);
+                self.diagnostics = format!("Removed {} from saved outputs.", removed.token());
                 Ok(self.announced(self.diagnostics.clone()))
             }
             "schematicPlace" => {
@@ -2129,6 +2213,65 @@ mod tests {
             .as_str()
             .unwrap()
             .contains(".tf V(OUT) I1"));
+    }
+
+    #[test]
+    fn schematic_saved_outputs_persist_and_sync_voltage_and_current_probes() {
+        let mut app = SpiceMosaicApp::default();
+        app.start(StartContext::new("en-US", Platform::Web))
+            .unwrap();
+        let document = json!({
+            "title": "Saved outputs",
+            "components": [
+                {"reference":"V1","kind":"DcVoltage","value":"5","terminals":[{"x":0,"y":20},{"x":0,"y":0}]},
+                {"reference":"R1","kind":"Resistor","value":"1k","terminals":[{"x":0,"y":20},{"x":40,"y":20}]},
+                {"reference":"G1","kind":"Ground","value":"","terminals":[{"x":0,"y":0}]}
+            ],
+            "wires": [],
+            "net_labels": [{"point":{"x":40,"y":20},"name":"OUT"}]
+        });
+        let loaded = dispatch(&mut app, "schematicLoad", json!({"document": document}));
+        assert_eq!(
+            loaded.props["schematic-saved-output-voltage-options"],
+            json!(["OUT"])
+        );
+        assert_eq!(
+            loaded.props["schematic-saved-output-current-options"],
+            json!(["V1"])
+        );
+        dispatch(
+            &mut app,
+            "onAddSchematicSavedOutputVoltage",
+            json!({"output":"OUT"}),
+        );
+        let current = dispatch(
+            &mut app,
+            "onAddSchematicSavedOutputCurrent",
+            json!({"source":"V1"}),
+        );
+        assert_eq!(
+            current.props["schematic-saved-output-rows"],
+            json!(["V(OUT)", "I(V1)"])
+        );
+        let snapshot = app.snapshot().unwrap().unwrap();
+        let mut restored = SpiceMosaicApp::default();
+        let mut context = StartContext::new("en-US", Platform::Web);
+        context.restored_snapshot = Some(snapshot);
+        let restored_update = restored.start(context).unwrap();
+        assert_eq!(
+            restored_update.props["schematic-saved-output-rows"],
+            json!(["V(OUT)", "I(V1)"])
+        );
+        let synchronized = dispatch(&mut app, "onSynchronizeSchematic", json!({}));
+        assert!(synchronized.props["netlist-text"]
+            .as_str()
+            .unwrap()
+            .contains(".save V(OUT) I(V1)"));
+        let removed = dispatch(&mut app, "onRemoveSchematicSavedOutput", json!({"index":0}));
+        assert_eq!(
+            removed.props["schematic-saved-output-rows"],
+            json!(["I(V1)"])
+        );
     }
 
     #[test]

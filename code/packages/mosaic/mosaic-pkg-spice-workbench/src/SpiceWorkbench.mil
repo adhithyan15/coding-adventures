@@ -47,6 +47,12 @@ component SpiceWorkbench {
   slot schematic-analysis-parameter-three-label : text ;
   slot schematic-analysis-parameter-three-value : text ;
   slot schematic-analysis-parameter-three-disabled : bool ;
+  slot schematic-saved-output-label : text ;
+  slot schematic-saved-output-voltage-label : text ;
+  slot schematic-saved-output-voltage-options : list<text> ;
+  slot schematic-saved-output-current-label : text ;
+  slot schematic-saved-output-current-options : list<text> ;
+  slot schematic-saved-output-rows : list<text> ;
   slot schematic-grid-label : text ;
   slot schematic-grid-lines : list<list<number>> ;
   slot schematic-wire-segments : list<list<number>> ;
@@ -113,6 +119,9 @@ component SpiceWorkbench {
   emit onSchematicAnalysisParameterOneChange ( value : text ) ;
   emit onSchematicAnalysisParameterTwoChange ( value : text ) ;
   emit onSchematicAnalysisParameterThreeChange ( value : text ) ;
+  emit onAddSchematicSavedOutputVoltage ( output : text ) ;
+  emit onAddSchematicSavedOutputCurrent ( source : text ) ;
+  emit onRemoveSchematicSavedOutput ( index : number ) ;
   emit onSelectSchematicComponent ( reference : text ) ;
   emit onSelectSchematicTerminal ( index : number ) ;
   emit onSchematicNetLabelChange ( value : text ) ;

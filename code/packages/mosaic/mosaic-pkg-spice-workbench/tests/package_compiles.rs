@@ -98,6 +98,14 @@ fn manifest_and_component_contract_are_complete() {
     assert!(component
         .slots
         .iter()
+        .any(|slot| slot.name == "schematic-saved-output-voltage-options"));
+    assert!(component
+        .slots
+        .iter()
+        .any(|slot| slot.name == "schematic-saved-output-current-options"));
+    assert!(component
+        .slots
+        .iter()
         .any(|slot| slot.name == "schematic-value-disabled"));
     assert!(component
         .slots
@@ -152,6 +160,14 @@ fn manifest_and_component_contract_are_complete() {
         .emits
         .iter()
         .any(|emit| emit.name == "onPlaceSchematicComponent"));
+    assert!(component
+        .emits
+        .iter()
+        .any(|emit| emit.name == "onAddSchematicSavedOutputVoltage"));
+    assert!(component
+        .emits
+        .iter()
+        .any(|emit| emit.name == "onRemoveSchematicSavedOutput"));
     assert!(component
         .emits
         .iter()
@@ -243,6 +259,9 @@ fn multiline_workbench_compiles_in_both_themes() {
     assert!(source("SpiceWorkbench.mll")
         .contains("HostButton [ move-schematic-analysis-card-later ]"));
     assert!(source("SpiceWorkbench.mll").contains("HostButton [ remove-schematic-analysis-card ]"));
+    assert!(source("SpiceWorkbench.mll").contains("HostButton [ schematic-saved-output-voltage-option ]"));
+    assert!(source("SpiceWorkbench.mll").contains("HostButton [ schematic-saved-output-current-option ]"));
+    assert!(source("SpiceWorkbench.mll").contains("HostButton [ schematic-saved-output-remove ]"));
     assert!(
         source("SpiceWorkbench.mll").contains("HostButton [ schematic-analysis-source-option ]")
     );
