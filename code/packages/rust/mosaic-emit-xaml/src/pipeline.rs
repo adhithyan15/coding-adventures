@@ -793,6 +793,7 @@ struct EmitContext<'a> {
     /// Whether this component emitted a HostButton with `selected:` (UI86)
     /// and therefore needs the component-scoped selectable Button subclass.
     needs_selectable_button_support: bool,
+    needs_font_size_support: bool,
 }
 
 impl<'a> EmitContext<'a> {
@@ -840,6 +841,7 @@ impl<'a> EmitContext<'a> {
             needs_native_drag_support: false,
             needs_native_slider_support: false,
             needs_selectable_button_support: false,
+            needs_font_size_support: false,
         }
     }
 
@@ -3052,6 +3054,34 @@ fn indent_xaml_fragment(fragment: &str, extra_spaces: usize) -> String {
 /// [`emit_xaml_children`] which pairs an `If` with the following `Else`
 /// sibling. A bare `If` or `Else` reaching this function is an error
 /// (they should always come through `emit_xaml_children`).
+/// Layout typography supported by this projection. Table propagation is separate.
+pub fn has_native_font_size(node: &LayoutNode) -> bool {
+    if !matches!(node.tag.as_str(), "Text" | "HostInput" | "Input" | "HostButton") {
+        return false;
+    }
+    match find_prop_value(node, "font-size") {
+        Some(LayoutPropValue::Number(n)) => n.is_finite() && *n > 0.0,
+        Some(LayoutPropValue::SlotRef(slot)) => is_safe_identifier(&kebab_to_pascal_case(slot)),
+        _ => false,
+    }
+}
+
+fn font_size_attr(node: &LayoutNode, ctx: &mut EmitContext<'_>) -> Result<String, PipelineEmitError> {
+    let Some(value) = find_prop_value(node, "font-size") else { return Ok(String::new()) };
+    let value = match value {
+        LayoutPropValue::Number(n) if n.is_finite() && *n > 0.0 => n.to_string(),
+        LayoutPropValue::SlotRef(slot) if ctx.for_scope.is_empty()
+            && ctx.slot_types.get(slot).is_some_and(|t| t == "double")
+            && is_safe_identifier(&ctx.slot_property_name(slot)) => {
+                format!("{{x:Bind {}, Mode=OneWay}}", ctx.slot_xbind_path(slot))
+            }
+        _ => return Err(PipelineEmitError::UnsupportedExpression(
+            "font-size requires a positive finite number or a page-scoped numeric slot".to_string())),
+    };
+    ctx.needs_font_size_support = true;
+    Ok(format!(" local:{}MosaicFontSize.Value=\"{}\"", ctx.component_name, value))
+}
+
 fn emit_xaml_node(
     node: &LayoutNode,
     indent: usize,
@@ -3945,10 +3975,11 @@ fn emit_text(
     let inner_pad = " ".repeat(indent + 4);
     let (container_style, text_setters) =
         partition_box_style(node.part_name.as_deref(), part_styles);
-    let text_style = text_setters
+    let mut text_style = text_setters
         .into_iter()
         .map(|(setter, value)| format!(" {setter}=\"{value}\""))
         .collect::<String>();
+    text_style.push_str(&font_size_attr(node, ctx)?);
 
     let mut accessibility_attrs = String::new();
     match find_prop_value(node, "a11y-label") {
@@ -4466,6 +4497,40 @@ fn emit_path(
 /// Emit `{Component}.xaml.cs` — the partial class with DPs, the
 /// Dispatch event, constructor boilerplate, and any helper methods the
 /// expression lowerer registered during the XAML walk (PR-2).
+// Preserve the original local value (or lack of one), so invalid values restore
+// authored styles and native inheritance rather than inventing a fallback size.
+fn font_size_support(name: &str) -> String {
+    r#"
+public sealed class COMPONENTMosaicFontSize : DependencyObject
+{
+    private sealed class Original { public object Value = DependencyProperty.UnsetValue; }
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<DependencyObject, Original> Originals = new();
+    public static readonly DependencyProperty ValueProperty = DependencyProperty.RegisterAttached(
+        "Value", typeof(double), typeof(COMPONENTMosaicFontSize), new PropertyMetadata(double.NaN, Changed));
+    public static double GetValue(DependencyObject target) => (double)target.GetValue(ValueProperty);
+    public static void SetValue(DependencyObject target, double value) => target.SetValue(ValueProperty, value);
+    private static void Changed(DependencyObject target, DependencyPropertyChangedEventArgs args)
+    {
+        var property = target is TextBlock ? TextBlock.FontSizeProperty : Control.FontSizeProperty;
+        var value = (double)args.NewValue;
+        if (double.IsFinite(value) && value > 0)
+        {
+            if (!Originals.TryGetValue(target, out _))
+                Originals.Add(target, new Original { Value = target.ReadLocalValue(property) });
+            target.SetValue(property, value);
+        }
+        else if (Originals.TryGetValue(target, out var original))
+        {
+            if (ReferenceEquals(original.Value, DependencyProperty.UnsetValue)) target.ClearValue(property);
+            else target.SetValue(property, original.Value);
+            Originals.Remove(target);
+        }
+    }
+}
+
+"#.replace("COMPONENT", name)
+}
+
 fn emit_code_behind(
     name: &str,
     slots: &[SlotDecl],
@@ -4507,6 +4572,10 @@ fn emit_code_behind(
     writeln!(out).unwrap();
     writeln!(out, "namespace {ns};").unwrap();
     writeln!(out).unwrap();
+
+    if ctx.needs_font_size_support {
+        out.push_str(&font_size_support(name));
+    }
 
     let property_change_interface = if ctx.row_projections.is_empty() {
         ""
@@ -8747,7 +8816,8 @@ fn emit_host_input(
     ctx: &mut EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
-    let style = part_style_attr(node, part_styles);
+    let mut style = part_style_attr(node, part_styles);
+    style.push_str(&font_size_attr(node, ctx)?);
     let x_name = host_x_name(node, "HostInput", ctx);
     register_host_visual_states(node, "TextBox", &x_name, part_styles, ctx);
 
@@ -9159,7 +9229,8 @@ fn emit_host_button(
     ctx: &mut EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
-    let style = content_control_style_attr(node, part_styles);
+    let mut style = content_control_style_attr(node, part_styles);
+    style.push_str(&font_size_attr(node, ctx)?);
     let x_name = host_x_name(node, "HostButton", ctx);
     register_host_visual_states(node, "Button", &x_name, part_styles, ctx);
 
@@ -12232,6 +12303,32 @@ mod tests {
 
     fn compile(c: &MosmodelComponent, l: &LayoutDef, s: &StyleDef) -> XamlEmitResult {
         from_pipeline(c, l, s, None, &opts()).expect("emit ok")
+    }
+
+    #[test]
+    fn font_size_rejects_invalid_values_and_nonnumeric_slots() {
+        let slots = vec![slot("label", SlotType::Text, false)];
+        for value in [LayoutPropValue::Number(f64::NAN), LayoutPropValue::Number(f64::INFINITY),
+            LayoutPropValue::Number(-1.0), LayoutPropValue::SlotRef("label".into()),
+            LayoutPropValue::SlotRef("bad;code".into()), LayoutPropValue::Expr("size * 2".into())] {
+            let mut node = box_root();
+            node.tag = "Text".into();
+            node.props.push(LayoutProp { name: "font-size".into(), value });
+            let mut ctx = EmitContext::new("Typography", &slots, &[]);
+            assert!(font_size_attr(&node, &mut ctx).is_err());
+        }
+    }
+
+    #[test]
+    fn font_size_rejects_page_slot_in_template_scope() {
+        let slots = vec![slot("text-size", SlotType::Number, false)];
+        let mut ctx = EmitContext::new("Typography", &slots, &[]);
+        ctx.for_scope.push(ForBinding { as_name: "row".into(), index_name: None,
+            element_type: "string".into(), vm_class: "Typography_RowVm".into(), projection_property: None });
+        let mut node = box_root();
+        node.tag = "Text".into();
+        node.props.push(LayoutProp { name: "font-size".into(), value: LayoutPropValue::SlotRef("text-size".into()) });
+        assert!(font_size_attr(&node, &mut ctx).is_err());
     }
 
     // ── version ──

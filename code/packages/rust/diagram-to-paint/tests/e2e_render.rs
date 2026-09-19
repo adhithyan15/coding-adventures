@@ -40,7 +40,7 @@ mod apple {
         parse_to_diagram as parse_mermaid_to_diagram, parse_cynefin, parse_info, parse_ishikawa, parse_radar, parse_railroad, parse_swimlane, parse_treeview, parse_treemap, parse_venn, parse_wardley, parse_xychart, parse_zenuml,
     };
     use paint_codec_png::write_png;
-    use paint_instructions::PaintInstruction;
+    use paint_instructions::{PaintInstruction, PathCommand};
     use paint_metal::render;
     use serde_json::Value;
     use text_native_coretext::{CoreTextMetrics, CoreTextResolver, CoreTextShaper};
@@ -189,10 +189,17 @@ mod apple {
     #[test]
     fn render_mermaid_mindmap_to_png() {
         let graph = parse_mindmap(
-            "mindmap\n  root((Native Mermaid))\n    Parser[Grammar first]\n      IR(Semantic tree)\n    Paint((Backend neutral))\n      Metal\n      PNG\n    output{{Hexagon path}}",
+            "mindmap\n  root((Native Mermaid))\n    Parser[Grammar first]\n      IR(Semantic tree)\n    Paint((Backend neutral))\n      Metal\n      PNG\n    output{{Hexagon path}}\n    cloud)Portable cloud(\n    alert))Backend bang((",
         )
         .expect("mindmap parse failed");
-        assert_eq!(graph.nodes.last().unwrap().shape, Some(diagram_ir::DiagramShape::Hexagon));
+        assert!(graph
+            .nodes
+            .iter()
+            .any(|node| node.shape == Some(diagram_ir::DiagramShape::Cloud)));
+        assert!(graph
+            .nodes
+            .iter()
+            .any(|node| node.shape == Some(diagram_ir::DiagramShape::Bang)));
         let layout = layout_graph_diagram(&graph, None, None);
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;
@@ -216,6 +223,15 @@ mod apple {
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,
             PaintInstruction::Path(path) if path.commands.len() == 7
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Path(path)
+                if path.commands.iter().filter(|command| matches!(command, PathCommand::CubicTo { .. })).count() == 6
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Path(path) if path.commands.len() == 17
         )));
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,

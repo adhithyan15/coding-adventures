@@ -847,6 +847,99 @@ fn node_shape_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
                 (node.x, node.y + node.height / 2.0),
             ])
         }
+        DiagramShape::Cloud => {
+            let x = node.x;
+            let y = node.y;
+            let w = node.width;
+            let h = node.height;
+            PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: vec![
+                    PathCommand::MoveTo {
+                        x: x + 0.18 * w,
+                        y: y + 0.78 * h,
+                    },
+                    PathCommand::CubicTo {
+                        cx1: x + 0.02 * w,
+                        cy1: y + 0.78 * h,
+                        cx2: x - 0.02 * w,
+                        cy2: y + 0.52 * h,
+                        x: x + 0.14 * w,
+                        y: y + 0.46 * h,
+                    },
+                    PathCommand::CubicTo {
+                        cx1: x + 0.10 * w,
+                        cy1: y + 0.27 * h,
+                        cx2: x + 0.31 * w,
+                        cy2: y + 0.16 * h,
+                        x: x + 0.43 * w,
+                        y: y + 0.30 * h,
+                    },
+                    PathCommand::CubicTo {
+                        cx1: x + 0.52 * w,
+                        cy1: y + 0.06 * h,
+                        cx2: x + 0.80 * w,
+                        cy2: y + 0.10 * h,
+                        x: x + 0.81 * w,
+                        y: y + 0.35 * h,
+                    },
+                    PathCommand::CubicTo {
+                        cx1: x + 1.00 * w,
+                        cy1: y + 0.34 * h,
+                        cx2: x + 1.04 * w,
+                        cy2: y + 0.63 * h,
+                        x: x + 0.87 * w,
+                        y: y + 0.72 * h,
+                    },
+                    PathCommand::CubicTo {
+                        cx1: x + 0.78 * w,
+                        cy1: y + 0.91 * h,
+                        cx2: x + 0.54 * w,
+                        cy2: y + 0.90 * h,
+                        x: x + 0.47 * w,
+                        y: y + 0.78 * h,
+                    },
+                    PathCommand::CubicTo {
+                        cx1: x + 0.38 * w,
+                        cy1: y + 0.94 * h,
+                        cx2: x + 0.20 * w,
+                        cy2: y + 0.92 * h,
+                        x: x + 0.18 * w,
+                        y: y + 0.78 * h,
+                    },
+                    PathCommand::Close,
+                ],
+                fill: Some(node.style.fill.clone()),
+                fill_rule: None,
+                stroke: Some(node.style.stroke.clone()),
+                stroke_width: Some(node.style.stroke_width),
+                stroke_cap: None,
+                stroke_join: Some(StrokeJoin::Round),
+                stroke_dash: node.style.stroke_dash.clone(),
+                stroke_dash_offset: None,
+            })
+        }
+        DiagramShape::Bang => {
+            let cx = node.x + node.width / 2.0;
+            let cy = node.y + node.height / 2.0;
+            let outer_x = node.width / 2.0;
+            let outer_y = node.height / 2.0;
+            let inner_x = outer_x * 0.68;
+            let inner_y = outer_y * 0.68;
+            let points = (0..16)
+                .map(|index| {
+                    let angle = -std::f64::consts::FRAC_PI_2
+                        + index as f64 * std::f64::consts::PI / 8.0;
+                    let (rx, ry) = if index % 2 == 0 {
+                        (outer_x, outer_y)
+                    } else {
+                        (inner_x, inner_y)
+                    };
+                    (cx + rx * angle.cos(), cy + ry * angle.sin())
+                })
+                .collect::<Vec<_>>();
+            polygon_node_instruction(node, &points)
+        }
         DiagramShape::ParallelogramRight => {
             let inset = node.width.min(node.height * 2.0) * 0.16;
             polygon_node_instruction(node, &[
@@ -5438,7 +5531,7 @@ mod tests {
     }
 
     #[test]
-    fn block_polygonal_and_stadium_shapes_lower_to_backend_neutral_paint() {
+    fn polygonal_and_stadium_shapes_lower_to_backend_neutral_paint() {
         let shaper = FakeShaper;
         let metrics = FakeMetrics;
         let resolver = FakeResolver;
@@ -5446,6 +5539,7 @@ mod tests {
 
         for (shape, command_count) in [
             (DiagramShape::Hexagon, 7),
+            (DiagramShape::Bang, 17),
             (DiagramShape::ParallelogramRight, 5),
             (DiagramShape::ParallelogramLeft, 5),
             (DiagramShape::Trapezoid, 5),
@@ -5466,6 +5560,15 @@ mod tests {
             matches!(instruction, PaintInstruction::Path(path)
                 if path.commands.len() == 8
                     && path.commands.iter().filter(|command| matches!(command, PathCommand::ArcTo { .. })).count() == 4)
+        }));
+
+        let mut layout = simple_layout();
+        layout.nodes[0].shape = DiagramShape::Cloud;
+        let scene = diagram_to_paint(&layout, &opts);
+        assert!(scene.instructions.iter().any(|instruction| {
+            matches!(instruction, PaintInstruction::Path(path)
+                if path.commands.len() == 8
+                    && path.commands.iter().filter(|command| matches!(command, PathCommand::CubicTo { .. })).count() == 6)
         }));
     }
 

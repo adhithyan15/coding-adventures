@@ -344,10 +344,10 @@ the complete pinned syntax and tolerant visual corpus passes.
 
 The initial Mermaid 11.16.1 mindmap slice is grammar-backed and preserves
 indentation as parent-child semantic relationships. It supports plain, square,
-rounded, circular, and hexagonal nodes, deterministic generated IDs, depth styles, shared
-graph layout, and backend-neutral PaintScene lowering. A native Metal-to-PNG
-fixture validates this documented subset; icons, classes, and additional
-mindmap shapes including cloud and bang remain explicitly outside the partial
+rounded, circular, hexagonal, cloud, and bang nodes, deterministic generated
+IDs, depth styles, shared graph layout, and backend-neutral PaintScene lowering. A native Metal-to-PNG
+fixture validates this documented subset; icons, classes, and Markdown strings
+remain explicitly outside the partial
 compatibility level.
 
 ### Block Native Slice

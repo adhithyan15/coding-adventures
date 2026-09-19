@@ -42,6 +42,14 @@ authored font environment. Invalid live values retain that environment font,
 and resolved monospaced ancestors pass their design to scaled descendants.
 This avoids replacing a control with a conditional view when a value changes.
 
+XAML supports positive literals and page-scoped numeric slots on `Text`,
+`Input`/`HostInput` and `HostButton`. Live OneWay bindings use a component-scoped
+attached property; invalid values restore the original local font setting or
+clear the override to recover native styles/inheritance. Expressions and slot
+bindings inside templates are rejected. `HostTable` remains explicitly degraded
+pending template/header/editor propagation (#15564). Windows CI compiles two
+generated components together and exercises live scaling and fallback restoration.
+
 Other backends report `typography.font-size-binding-unimplemented` in package
 degradation analysis. This foundation does not claim cross-backend typography acceptance,
 startup context propagation, or application layout acceptance; those are tracked
