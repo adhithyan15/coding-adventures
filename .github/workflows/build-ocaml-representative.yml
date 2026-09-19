@@ -164,7 +164,7 @@ jobs:
             --summary _build/coverage-summary.txt \
             --source src/coding_adventures_capability_analyzer.ml \
             --source bin/main.ml --minimum 95
-          opam exec -- dune build @install --profile release
+          opam exec -- dune build bin/main.exe @install --profile release
 
       - name: Archive, build, test, document, install, and analyze the chain
         shell: bash
@@ -237,12 +237,20 @@ jobs:
             test -n "$(find _build/default/_doc/_html -name '*.html' -type f -print -quit)"
             mkdir -p "$evidence/documentation/$package"
             cp -R _build/default/_doc/_html/. "$evidence/documentation/$package/"
+            analyzer_root="$package_root"
+            if test "$RUNNER_OS" = "Windows"; then
+              analyzer_root="$(cygpath -w "$package_root")"
+            fi
             "$RUNNER_TEMP/ocaml07-analyzer/_build/default/bin/main.exe" \
-              --dir "$package_root" --verbose \
+              --dir "$analyzer_root" --verbose \
               > "$evidence/analyzer/$package.txt" 2>&1
             opam_name="coding-adventures-$package"
+            pin_root="$package_root"
+            if test "$RUNNER_OS" = "Windows"; then
+              pin_root="$(cygpath -w "$package_root")"
+            fi
             opam pin add --no-action --working-dir --no-checksums --yes \
-              "$opam_name" "$package_root"
+              "$opam_name" "$pin_root"
             opam install --yes --require-checksums "$opam_name.0.1.0"
             test "$(opam show --field=installed-version "$opam_name")" = '0.1.0'
           done

@@ -7,9 +7,9 @@ let () =
   in
   let machine =
     unwrap "leaf DFA creation failed"
-      (Coding_adventures_state_machine.Dfa.create
-         ~states:[ "cold"; "warm" ] ~alphabet:[ "boot" ]
-         ~transitions:[ transition ] ~initial:"cold" ~accepting:[ "warm" ] ())
+      (Coding_adventures_state_machine.Dfa.create ~states:[ "cold"; "warm" ]
+         ~alphabet:[ "boot" ] ~transitions:[ transition ] ~initial:"cold"
+         ~accepting:[ "warm" ] ())
   in
   let reachable =
     Coding_adventures_state_machine.Dfa.reachable_states machine

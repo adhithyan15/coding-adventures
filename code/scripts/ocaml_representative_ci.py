@@ -23,7 +23,7 @@ MANIFEST_RELATIVE_PATH = Path(
 )
 WORKFLOW_RELATIVE_PATH = Path(".github/workflows/build-ocaml-representative.yml")
 EXPECTED_WORKFLOW_SHA256 = (
-    "203be2d63b7e1b4f490f40626006ad0416d976c525db445f1f931398c27d16ef"
+    "43b295c58401d8f399508c210cd77098f9f8d430216f7e6f55e5bab717965e30"
 )
 
 VERSIONS = {
@@ -224,7 +224,9 @@ def _tree_sha256(root: Path) -> str:
         if path.is_symlink():
             raise ContractError(f"governed tree contains a linked file: {path}")
         relative = path.relative_to(root).as_posix()
-        if set(PurePosixPath(relative).parts) & BANNED_ARCHIVE_PARTS:
+        if set(PurePosixPath(relative).parts) & BANNED_ARCHIVE_PARTS or relative.endswith(
+            ".coverage"
+        ):
             continue
         content = path.read_bytes()
         digest.update(relative.encode("utf-8"))
