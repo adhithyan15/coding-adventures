@@ -254,9 +254,9 @@ Boolean snapshot evaluation distinguishes exact bare variables from unary
 wrappers, so direct `not` recurrences preserve their negated value rather than
 being treated as identity assignments.
 The recurrence assignment in either loop form may be wrapped in a compound
-body. A `while` recurrence may additionally have exact bare self-assignments of
-ordinary local scalars as inert siblings; labels, conditionals, declarations,
-changing siblings, and other statements remain outside this bounded analysis.
+body and may additionally have exact bare self-assignments of ordinary local
+scalars as inert siblings; labels, conditionals, declarations, changing
+siblings, and other statements remain outside this bounded analysis.
 An exact controlled-scalar assignment in a single-iteration `step`/`until`
 loop may use the same wrapper while retaining its checked post-body exit value.
 The assignment may also derive that value from the known entry control; unknown

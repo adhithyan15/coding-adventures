@@ -6132,7 +6132,7 @@ impl Compiler {
             ScalarType::Boolean | ScalarType::String => return None,
         };
 
-        let assignment = single_statement_assignment(body)?;
+        let assignment = self.for_body_recurrence_assignment(body)?;
         let left_parts: Vec<&GrammarASTNode> = direct_nodes(assignment)
             .into_iter()
             .filter(|node| node.rule_name == "left_part")
@@ -14559,6 +14559,30 @@ mod tests {
             instr.op == "str_const"
                 && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42")
         }));
+    }
+
+    #[test]
+    fn al4_step_body_recurrence_allows_inert_scalar_siblings() {
+        let module = compile_source(
+            "begin integer i, pad, hold; real r; boolean flag; pad := 7; hold := 9; flag := false; for i := 1 step 1 until 3 do begin pad := pad; flag := not flag; hold := hold end; if flag then r := 42.0 else r := 0.5; print(r) end",
+            "test",
+        )
+        .expect("a bounded step recurrence may ignore inert local scalar siblings");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42")
+        }));
+    }
+
+    #[test]
+    fn al4_step_body_recurrence_rejects_changing_scalar_sibling() {
+        let err = compile_source(
+            "begin integer i, pad; real r; boolean flag; pad := 7; flag := false; for i := 1 step 1 until 3 do begin flag := not flag; pad := pad + 1 end; if flag then r := 42.0 else r := 0.5; print(r) end",
+            "test",
+        )
+        .expect_err("a changing sibling keeps a compound step recurrence conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]

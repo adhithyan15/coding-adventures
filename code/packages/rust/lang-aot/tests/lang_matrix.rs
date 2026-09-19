@@ -2767,6 +2767,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — an exact step recurrence remains analyzable when every
+    // additional compound-body statement is an inert local scalar assignment.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, pad, hold; real r; boolean flag; pad := 7; hold := 9; flag := false; for i := 1 step 1 until 3 do begin pad := pad; flag := not flag; hold := hold end; if flag then r := 42.0 else r := 0.5; print(r) end",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — bounded while analysis applies one simple scalar recurrence
     // after every true predicate and retains its exact formatter-free result.
     Prog {
@@ -13293,6 +13302,31 @@ fn algol_step_loop_single_compound_recurrence_runs_on_every_available_standard_b
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the compound step-loop recurrence did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_inert_sibling_step_recurrence_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "for i := 1 step 1 until 3 do begin pad := pad; flag := not flag; hold := hold",
+                )
+        })
+        .expect("the inert-sibling step recurrence must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the inert-sibling step recurrence did not run"
             );
             continue;
         };

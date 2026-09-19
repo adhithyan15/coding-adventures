@@ -979,6 +979,9 @@ backend immediately) come before the enabler-dependent items.
   conservative. Such a controlled-scalar assignment may share its compound
   body with exact bare self-assignments of ordinary local scalars; changing
   siblings and all effectful or dynamic shapes remain conservative.
+  A finite `step`/`until` body recurrence may likewise share its compound body
+  with those inert local scalar self-assignments while retaining its exact
+  final snapshot; changing siblings remain conservative.
   Finite static real loops whose bodies avoid the control also retain their
   first post-limit value by simulating at most 4,096 emitted binary64 additions;
   non-finite and rounded-away progress fails closed. Finite static loops also
