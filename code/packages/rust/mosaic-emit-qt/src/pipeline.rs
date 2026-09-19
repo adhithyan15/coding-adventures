@@ -43,6 +43,7 @@
 //! | `HostButton`  | `Button { text: ...; enabled: ...; onClicked: ... }` (Controls 2.15)        |
 //! | `HostScroll`  | `ScrollView { ... children ... }`                                           |
 //! | `HostDialog`  | `Popup { modal: ...; visible: ...; closePolicy: ...; contentItem: ColumnLayout { ... } }` (Controls 2.15) |
+//! | `HostNavigationSplit` | `SplitView { Item { Accessible.role: Accessible.Pane; ... } Item { SplitView.fillWidth: true; ... } }` |
 //! | `HostTable`   | Canonical dynamic Grid shapes use `TableView` + `HorizontalHeaderView`; other shapes retain the structural layout fallback |
 //! | `For`         | `Repeater { model: <coll>; delegate: Item { property var <as>: modelData; <children> } }` — see `emit_for_qml` |
 //! | `If`/`Else`   | `Loader { active: <cond>; sourceComponent: Component { ... } }` pairs — see `emit_if_qml` |
@@ -3073,6 +3074,7 @@ fn emit_qml_tree(
         "HostLink" => return emit_host_link_qml(node, depth, ctx),
         "HostTooltip" => return emit_host_tooltip_qml(node, depth, ctx),
         "HostNumberInput" => return emit_host_number_input_qml(node, depth, ctx),
+        "HostNavigationSplit" => return emit_host_navigation_split_qml(node, depth, ctx),
 
         "HostTable" => return emit_host_table_qml(node, depth, ctx),
         // UI29 §3.1 — `For` meta-primitive: lower to a `Repeater` with an
@@ -6001,6 +6003,122 @@ fn emit_host_tooltip_qml(
     Ok(out)
 }
 
+/// Lower UI29-6's pane/detail primitive to Qt Quick Controls' native
+/// `SplitView`. Qt owns the splitter, preferred pane width, keyboard focus,
+/// and pane landmark semantics. It does not own adaptive collapse, so
+/// `collapse: auto` remains recorded separately as the non-gating
+/// `interaction.navigation-split-collapse-static` behaviour degradation.
+fn emit_host_navigation_split_qml(
+    node: &LayoutNode,
+    depth: usize,
+    ctx: &EmitCtx<'_>,
+) -> Result<String, PipelineEmitError> {
+    let (pane, detail) = match node.children.as_slice() {
+        [pane, detail] => (pane, detail),
+        children => {
+            return Err(PipelineEmitError::UnknownPrimitive(format!(
+                "HostNavigationSplit takes exactly two children -- the pane, then the detail -- got {}",
+                children.len()
+            )));
+        }
+    };
+
+    let title = match node
+        .props
+        .iter()
+        .find(|prop| prop.name == "pane-title")
+        .map(|prop| &prop.value)
+    {
+        Some(LayoutPropValue::String(value)) => {
+            format!("\"{}\"", escape_qml_string(value))
+        }
+        Some(LayoutPropValue::SlotRef(name)) => {
+            let field = to_camel_case_first_lower(name);
+            validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            format!("mosaicRoot.{field}")
+        }
+        Some(LayoutPropValue::Keyword(name)) => {
+            let field = to_camel_case_first_lower(name);
+            validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            field
+        }
+        Some(LayoutPropValue::Expr(expression)) => format!("({})", expression.trim()),
+        Some(LayoutPropValue::Number(number)) => format!("\"{number}\""),
+        Some(LayoutPropValue::EmitRef(_)) => {
+            return Err(PipelineEmitError::UnknownPrimitive(
+                "HostNavigationSplit `pane-title` takes text, not an emit reference".to_string(),
+            ));
+        }
+        None => "\"\"".to_string(),
+    };
+
+    match node
+        .props
+        .iter()
+        .find(|prop| prop.name == "collapse")
+        .map(|prop| &prop.value)
+    {
+        None => {}
+        Some(LayoutPropValue::Keyword(value)) if value == "auto" || value == "never" => {}
+        Some(_) => {
+            return Err(PipelineEmitError::UnknownPrimitive(
+                "HostNavigationSplit `collapse` takes the keyword `auto` or `never`".to_string(),
+            ));
+        }
+    }
+
+    let pane_qml = inject_anchors_fill_parent(&emit_qml_tree(pane, depth + 2, ctx)?, depth + 2);
+    let detail_qml = inject_anchors_fill_parent(&emit_qml_tree(detail, depth + 2, ctx)?, depth + 2);
+
+    let pad = "    ".repeat(depth);
+    let inner = "    ".repeat(depth + 1);
+    let wrapper = "    ".repeat(depth + 2);
+    let mut out = String::new();
+    writeln!(out, "{pad}SplitView {{").unwrap();
+    writeln!(out, "{inner}orientation: Qt.Horizontal").unwrap();
+    writeln!(out, "{inner}Layout.fillWidth: true").unwrap();
+    writeln!(out, "{inner}Layout.fillHeight: true").unwrap();
+    if let Some(part) = node.part_name.as_deref() {
+        writeln!(out, "{inner}objectName: \"{}\"", escape_qml_string(part)).unwrap();
+    }
+
+    writeln!(out, "{inner}Item {{").unwrap();
+    writeln!(
+        out,
+        "{wrapper}implicitWidth: children.length > 0 ? children[0].implicitWidth : 0"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{wrapper}implicitHeight: children.length > 0 ? children[0].implicitHeight : 0"
+    )
+    .unwrap();
+    if let Some(width) = find_number_prop(node, "pane-width") {
+        writeln!(out, "{wrapper}SplitView.preferredWidth: {width}").unwrap();
+    }
+    writeln!(out, "{wrapper}Accessible.role: Accessible.Pane").unwrap();
+    writeln!(out, "{wrapper}Accessible.name: {title}").unwrap();
+    out.push_str(&pane_qml);
+    writeln!(out, "{inner}}}").unwrap();
+
+    writeln!(out, "{inner}Item {{").unwrap();
+    writeln!(
+        out,
+        "{wrapper}implicitWidth: children.length > 0 ? children[0].implicitWidth : 0"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{wrapper}implicitHeight: children.length > 0 ? children[0].implicitHeight : 0"
+    )
+    .unwrap();
+    writeln!(out, "{wrapper}SplitView.fillWidth: true").unwrap();
+    out.push_str(&detail_qml);
+    writeln!(out, "{inner}}}").unwrap();
+    writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
+}
+
 /// Lower a `HostNumberInput` node (UI29-4, 21st kernel primitive)
 /// to a QtQuick.Controls `TextField` with a `DoubleValidator`.
 /// This preserves decimal `number` payloads for scheduler options such
@@ -6258,6 +6376,7 @@ fn tree_needs_controls_import(node: &LayoutNode) -> bool {
             | "HostRadio"
             | "HostTooltip"
             | "HostNumberInput"
+            | "HostNavigationSplit"
             | "Icon"
     ) || node.children.iter().any(tree_needs_controls_import)
 }
@@ -13050,6 +13169,117 @@ mod tests {
             out.contains("HoverHandler { id: hoverHandler }"),
             "expected HoverHandler, got:\n{out}"
         );
+    }
+
+    #[test]
+    fn host_navigation_split_lowers_to_native_split_view() {
+        let m = component("Shell", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "Shell".to_string(),
+            root: LayoutNode {
+                tag: "HostNavigationSplit".to_string(),
+                part_name: Some("app-shell".to_string()),
+                props: vec![
+                    LayoutProp {
+                        name: "pane-title".to_string(),
+                        value: LayoutPropValue::String("Projects".to_string()),
+                    },
+                    LayoutProp {
+                        name: "pane-width".to_string(),
+                        value: LayoutPropValue::Number(236.0),
+                    },
+                    LayoutProp {
+                        name: "collapse".to_string(),
+                        value: LayoutPropValue::Keyword("auto".to_string()),
+                    },
+                ],
+                children: vec![
+                    LayoutNode {
+                        tag: "Column".to_string(),
+                        part_name: Some("pane".to_string()),
+                        props: vec![],
+                        children: vec![LayoutNode {
+                            tag: "Text".to_string(),
+                            part_name: None,
+                            props: vec![LayoutProp {
+                                name: "content".to_string(),
+                                value: LayoutPropValue::String("Pane".to_string()),
+                            }],
+                            children: vec![],
+                        }],
+                    },
+                    LayoutNode {
+                        tag: "Column".to_string(),
+                        part_name: Some("detail".to_string()),
+                        props: vec![],
+                        children: vec![LayoutNode {
+                            tag: "Text".to_string(),
+                            part_name: None,
+                            props: vec![LayoutProp {
+                                name: "content".to_string(),
+                                value: LayoutPropValue::String("Detail".to_string()),
+                            }],
+                            children: vec![],
+                        }],
+                    },
+                ],
+            },
+        };
+
+        let result = from_pipeline(&m, &l, &empty_style("Shell")).unwrap();
+        let out = result.output;
+        assert!(out.contains("import QtQuick.Controls"));
+        assert!(out.contains("SplitView {"));
+        assert!(out.contains("objectName: \"app-shell\""));
+        assert!(out.contains("SplitView.preferredWidth: 236"));
+        assert!(out.contains("Accessible.role: Accessible.Pane"));
+        assert!(out.contains("Accessible.name: \"Projects\""));
+        assert!(out.contains("SplitView.fillWidth: true"));
+        assert_eq!(out.matches("anchors.fill: parent").count(), 2);
+        assert!(out.find("text: \"Pane\"").unwrap() < out.find("text: \"Detail\"").unwrap());
+    }
+
+    #[test]
+    fn host_navigation_split_uses_dynamic_accessible_title() {
+        let m = component(
+            "Shell",
+            vec![slot("pane-title", SlotType::Text, true)],
+            vec![],
+        );
+        let l = LayoutDef {
+            component_name: "Shell".to_string(),
+            root: LayoutNode {
+                tag: "HostNavigationSplit".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "pane-title".to_string(),
+                        value: LayoutPropValue::SlotRef("pane-title".to_string()),
+                    },
+                    LayoutProp {
+                        name: "collapse".to_string(),
+                        value: LayoutPropValue::Keyword("never".to_string()),
+                    },
+                ],
+                children: vec![
+                    LayoutNode {
+                        tag: "Column".to_string(),
+                        part_name: None,
+                        props: vec![],
+                        children: vec![],
+                    },
+                    LayoutNode {
+                        tag: "Column".to_string(),
+                        part_name: None,
+                        props: vec![],
+                        children: vec![],
+                    },
+                ],
+            },
+        };
+
+        let out = from_pipeline(&m, &l, &empty_style("Shell")).unwrap().output;
+        assert!(out.contains("Accessible.name: mosaicRoot.paneTitle"));
     }
 
     #[test]
