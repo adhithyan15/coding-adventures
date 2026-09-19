@@ -978,11 +978,11 @@ backend immediately) come before the enabler-dependent items.
   progress, cycles, and loops exceeding 4,096 evaluations remaining
   conservative. Such a controlled-scalar assignment may share its compound
   body with proven integer, real, or boolean identity assignments of ordinary
-  local scalars; changing siblings and all effectful or dynamic shapes remain
-  conservative.
+  local scalars or unlabeled dummy statements; changing siblings and all
+  effectful or dynamic shapes remain conservative.
   A finite `step`/`until` body recurrence may likewise share its compound body
-  with those inert local scalar identity assignments while retaining its exact
-  final snapshot; changing siblings remain conservative.
+  with those inert siblings while retaining its exact final snapshot; changing
+  siblings remain conservative.
   Finite static real loops whose bodies avoid the control also retain their
   first post-limit value by simulating at most 4,096 emitted binary64 additions;
   non-finite and rounded-away progress fails closed. Finite static loops also
@@ -1011,8 +1011,8 @@ backend immediately) come before the enabler-dependent items.
   operator wrappers are distinguished from bare-variable reads. Exact snapshot
   updates may unwrap one changing assignment from a compound body whose other
   statements are proven integer, real, or boolean identity assignments of
-  ordinary local scalars. Labels, conditionals, declarations, changing
-  siblings, dependency writes, string targets, overflow,
+  ordinary local scalars or unlabeled dummy statements. Labels, conditionals,
+  declarations, changing siblings, dependency writes, string targets, overflow,
   non-finite values, and loops exceeding 4,096 evaluations remain
   conservative. Capped abstract execution also retains the
   first integer or finite binary64 control value whose predicate is false when
