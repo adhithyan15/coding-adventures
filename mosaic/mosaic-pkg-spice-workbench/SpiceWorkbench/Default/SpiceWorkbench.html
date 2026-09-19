@@ -115,6 +115,29 @@
           <!-- /mosaic-for -->
         </div>
       </div>
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <span style="font-size: 12px; font-weight: bold; color: #475569">{{schematicScopedOutputLabel}}</span>
+        <span style="font-size: 12px; color: #475569">{{schematicScopedOutputVoltageLabel}}</span>
+        <div style="display: flex; flex-direction: row; gap: 6px">
+          <!-- mosaic-for each="schematicScopedOutputVoltageOptions" as="output" index="output-index" -->
+            <!-- emit "onAddSchematicScopedOutputVoltage" dropped: HTML is static -->
+            <button data-on-click="onAddSchematicScopedOutputVoltage" style="background: #ecfeff; color: #155e75; border-width: 1px; border-color: #67e8f9; border-radius: 3px; padding: 6px">{{output}}</button>
+          <!-- /mosaic-for -->
+        </div>
+        <span style="font-size: 12px; color: #475569">{{schematicScopedOutputCurrentLabel}}</span>
+        <div style="display: flex; flex-direction: row; gap: 6px">
+          <!-- mosaic-for each="schematicScopedOutputCurrentOptions" as="source" index="source-index" -->
+            <!-- emit "onAddSchematicScopedOutputCurrent" dropped: HTML is static -->
+            <button data-on-click="onAddSchematicScopedOutputCurrent" style="background: #f5f3ff; color: #5b21b6; border-width: 1px; border-color: #c4b5fd; border-radius: 3px; padding: 6px">{{source}}</button>
+          <!-- /mosaic-for -->
+        </div>
+        <div style="display: flex; flex-direction: row; gap: 6px">
+          <!-- mosaic-for each="schematicScopedOutputRows" as="probe" index="probe-index" -->
+            <!-- emit "onRemoveSchematicScopedOutput" dropped: HTML is static -->
+            <button data-on-click="onRemoveSchematicScopedOutput" style="background: #fff1f2; color: #9f1239; border-width: 1px; border-color: #fda4af; border-radius: 3px; padding: 6px; font-family: monospace">{{probe}}</button>
+          <!-- /mosaic-for -->
+        </div>
+      </div>
       <span style="font-size: 12px; font-weight: bold; color: #475569">{{schematicGridLabel}}</span>
       <div style="position: relative; width: 360px; min-height: 240px; background: #ffffff; border-width: 1px; border-color: #cbd5e1">
         <!-- mosaic-for each="schematicGridLines" as="line" index="line-index" -->
