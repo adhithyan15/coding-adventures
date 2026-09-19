@@ -947,3 +947,7 @@ Park–Miller sequence every other standard backend already proves
 intentional — real stdin-as-tape host support is a separate, unscoped
 item), **this closes every non-ALGOL BEAM gap in
 `LANG-VM-NON-ALGOL-BACKLOG.md`.**
+
+## [0.348.0] - 2026-09-19 - VM-058 INSPECT region intersection
+
+Add an INSPECT two-boundary tally row after execution on all eight backends. COBOL now declares 59 rows / 472 cells; non-ALGOL declares 211 rows / 1688 cells.

@@ -1,6 +1,6 @@
 # VM-058: preserve both INSPECT region boundaries
 
-Status: semantic design and baseline verification, 2026-09-19.
+Status: implemented and locally validated, 2026-09-19; PR pending.
 
 ## Contract
 
@@ -50,3 +50,24 @@ compiler JIT/oracle tests, runtime tests and Clippy. Only after these pass, add
 a bounded matrix row and execute all declared backend cells, updating counts
 and documentation from actual results. Check downstream use of public Region
 before changing its representation. Security review precedes publication.
+
+## Results
+
+Both engines now collect every region sibling through one reader per engine.
+All seven compiler and eight runtime call sites use the new reader. Runtime
+Region holds independent before/after operands; compiler InspectRegion holds
+copyable AST borrows. The existing single-boundary emitter is reused for each
+boundary, then intersected and clamped. No remaining in-repository use of the
+old runtime RegionKind or kind/delim fields was found.
+
+Eight boundary observations, eleven reader-family observations and two duplicate
+rejections pass with expected output checked separately on oracle and compiled
+VM/JIT harness. This harness may use VM fallback; it is not proof of machine JIT.
+The complete compiler/runtime suites pass (83 compatibility, 22 compiler unit,
+640 compiled/oracle integration, 219 runtime tests and 1 runtime doc test).
+The new matrix row was then executed on NativeAOT, LLVM, WASM, JVM, real CoreCLR,
+VM, JIT harness and real Erlang before declaration. CoreCLR required adding the
+installed Framework64 ilasm directory to this process's PATH; no files installed.
+Coverage guard, Clippy and document-shard validation pass. COBOL declarations
+are now 59 rows / 472 cells; non-ALGOL 211 rows / 1688 cells. The full pre-existing
+matrix was not rerun on every backend in this slice.

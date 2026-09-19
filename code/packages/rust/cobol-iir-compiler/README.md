@@ -218,3 +218,7 @@ register is both source and destination of the reshape with no intermediate
 temporary. `S` is unchanged on the generic JIT/interpreter path; the same
 construct exposed a WASM-lowering-only aliasing defect in `str_slice`, fixed
 and regression-tested separately in `iir-to-wasm`.
+
+## [0.80.0] - 2026-09-19 - VM-058 INSPECT region intersection
+
+Preserve both BEFORE and AFTER boundaries on each INSPECT item, reject duplicate kinds, and intersect original-field windows with crossed bounds clamped empty. Tests pin oracle and compiled output independently, including multi-item and combined statements.

@@ -15,6 +15,11 @@ after all 46 exact-head checks completed (15 success, 31 skipped). All existing
 non-ALGOL matrix rows now declare all eight backends. This closes the old
 missing-cell campaign; prioritize known semantic defects next.
 
+Implementation and local validation are complete; publication/CI remains.
+See `VM058-cobol-inspect-region-intersection.md`. Both boundary orders, absent
+and crossed delimiters, single/multi-item readers and duplicate refusal pass.
+The new tally row executes on all eight runtime lanes before declaration.
+
 Priority order after reviewing current main and open PRs:
 1. VM-058: a grammar-accepted second INSPECT region is silently ignored by both
    oracle and compiler. Correct this bounded, shared semantic defect first.

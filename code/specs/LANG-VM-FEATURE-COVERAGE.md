@@ -31,11 +31,11 @@ refusal also does not imply the complete driver refuses that feature.
 | Oct | 12 | 96 | All eight columns, including real BEAM stdout and u8 wrap; frontend JIT control-flow tests |
 | ALGOL 60 | 233 | 1631 | Separate owner; full-matrix CI exclusion remains VM-025; not re-audited by VM-061 (see below) |
 | FLOW-MATIC | 8 | 64 | All eight rows now declare Beam (BEAM07 promoted the four `READ-ITEM`/EOF rows that were on seven columns) |
-| COBOL-60 | 58 | 464 | All 58 of those cells are BEAM (VM-040 COBOL BEAM slices); much larger frontend JIT/oracle suite |
+| COBOL-60 | 59 | 472 | All eight backends; VM-058 adds independently executed two-boundary INSPECT tally proof |
 | McCarthy Lisp | 0 | 0 | Dedicated 19-program capstone with nine runner lanes |
 | Macsyma | 0 | 0 | Dedicated 21-program capstone with eight runner lanes plus real CoreCLR |
 
-The normal non-ALGOL capstone declares 210 programs and 1680 cells. Every
+The normal non-ALGOL capstone declares 211 programs and 1688 cells. Every
 existing non-ALGOL corpus row now declares all eight backends. BEAM09 adds
 Brainfuck's three input cells after real Erlang execution and separately proves
 all 256 byte values, repeated EOF and tape state across input calls. This does
@@ -536,3 +536,10 @@ The regions/self-move probe executes the final six COBOL BEAM corpus rows.
 All 58 existing COBOL programs now declare eight backends (464 cells).
 This is corpus coverage, not full language support; VM-058 remains open.
 No new full-capstone or other seven-column rerun is reported here.
+
+## VM-058: same-item INSPECT boundaries
+
+The new tally row executes on all eight backends, including actual CoreCLR and
+Erlang. Compiler/oracle tests independently pin both boundaries, missing and
+crossed delimiters, duplicate rejection and reader families. Only the new row
+was rerun across all backends in this slice.

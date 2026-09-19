@@ -6816,6 +6816,25 @@ const PROGRAMS: &[Prog] = &[
     Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE Q (A) TO Q (A) ; MOVE UP (A) TO UP (A) ; WRITE-ITEM FILE-A .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("3 100\n7 0"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
     Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; MOVE N (A) TO N (A) ; WRITE-ITEM FILE-A .\n(2) READ-ITEM FILE-A ; READ-ITEM FILE-A ; WRITE-ITEM FILE-A ; STOP .", expect: Expect::Stdout("9\n9"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
 
+    Prog {
+    lang: Language::Cobol60,
+    ext: "cob",
+    src: "000000 IDENTIFICATION DIVISION.\n\
+          000000 PROGRAM-ID. REGION-INTERSECTION.\n\
+          000000 DATA DIVISION.\n\
+          000000 WORKING-STORAGE SECTION.\n\
+          000000 01 S PIC X(6) VALUE \"0A00B0\".\n\
+          000000 01 C PIC 9(3) VALUE 0.\n\
+          000000 PROCEDURE DIVISION.\n\
+          000000 MAIN.\n\
+          000000 INSPECT S TALLYING C FOR ALL \"0\"\n\
+          000000 BEFORE \"B\" AFTER \"A\".\n\
+          000000 DISPLAY C.\n\
+          000000 STOP RUN.",
+    expect: Expect::Stdout("002"),
+    backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
@@ -9568,7 +9587,7 @@ fn feature_coverage_doc_counts_match_programs_source() {
         (Language::DartmouthBasic, 51, 408),
         (Language::Oct, 12, 96),
         (Language::FlowMatic, 8, 64),
-        (Language::Cobol60, 58, 464),
+        (Language::Cobol60, 59, 472),
     ];
 
     for (lang, want_rows, want_cells) in expected {
@@ -16690,4 +16709,25 @@ fn twig_beam_match_union() {
     }
     assert_eq!(executed, 2);
     eprintln!("Twig BEAM match/union: {executed} programs executed (Twig now 49/49 on Beam)");
+}
+
+
+
+
+#[test]
+fn portable_text_stdout_cobol_region_intersection() {
+    let program = PROGRAMS.iter().find(|p| p.src.contains("PROGRAM-ID. REGION-INTERSECTION.")).unwrap();
+    for (backend, runner) in [
+        (NativeAot, run_native as fn(&Prog) -> Option<RunResult>),
+        (Llvm, run_llvm), (Wasm, run_wasm), (Jvm, run_jvm),
+        (Clr, run_clr), (Vm, run_vm), (Jit, run_jit), (Beam, run_beam),
+    ] {
+        match runner(program) {
+            Some(result) => {
+                assert_cell(backend, program, result);
+                eprintln!("VM058 region intersection executed {backend:?}");
+            }
+            None => eprintln!("SKIP VM058 region intersection: {backend:?} runtime unavailable"),
+        }
+    }
 }
