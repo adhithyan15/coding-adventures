@@ -172,12 +172,15 @@ fixture-path handling belong only to package-local tests.
 
 Both native suites MUST discover and independently evaluate the complete shared
 `graph` and `diff_selection` fixture set. They MUST assert the exact case-ID
-roster so a newly added case cannot be skipped silently. The initial required
-roster contains six graph cases and eight diff-selection cases, including
+roster so a newly added case cannot be skipped silently. The required roster
+contains eight graph cases and eleven diff-selection cases. In addition to
 canonical edge ordering, deterministic levels, cycle rejection, transitive
 affected and prerequisite closure, package-prefix and forced-package selection,
 repository-boundary reverse selection, both unknown-path policies, and the
-exact/over-limit match-work cases.
+exact/over-limit match-work cases, it includes an empty graph, a disconnected
+ready node beside a cycle with no partial output, portable strict character
+classes, a known-but-unselected near-BUILD path, and exact BUILD-front
+recognition.
 
 The graph operations MUST enforce the shared structural limits before graph
 evaluation, interpret every edge as `[prerequisite, dependent]`, emit canonical
@@ -617,9 +620,10 @@ edge.
 
 ### 3. Graph and scheduling
 
-Required cases cover isolated nodes, chains, diamonds, multiple components,
-cycles, affected dependents, prerequisite closure, independent levels, and
-failure propagation.
+Required cases cover the empty graph, isolated nodes, chains, diamonds,
+multiple components, cycles including a disconnected ready component that
+still yields no partial output, affected dependents, prerequisite closure,
+independent levels, and failure propagation.
 
 Each graph edge is the ordered pair `[prerequisite, dependent]`. Successful
 graph results reproduce the canonical edge set in ordinal qualified-name order,
@@ -631,8 +635,11 @@ every prerequisite has entered an earlier level. This deterministic Kahn
 traversal handles isolated nodes and disconnected components without inventing
 edges.
 
-A cycle is a build-plan error with empty result object and stable error
-diagnostic `GRAPH_CYCLE`; adapters must not return a partial order. Graph input
+A cycle is a build-plan error with empty result object and exactly one stable
+error diagnostic `GRAPH_CYCLE`; adapters must not return a partial order even
+when an acyclic component or initially ready package could otherwise be
+scheduled. An empty package and edge set succeeds with empty edges and levels.
+Graph input
 is process-free and bounded to 4,096 unique package names and 16,384 unique
 edges. Result edges are bounded to 16,384; levels and every level are each
 bounded to 4,096 package names. If package `A` fails during later execution,
@@ -656,6 +663,14 @@ For `source_mode: "package_prefix"`, a changed path selects the package when
 the path equals `rel_path` or is a descendant of `rel_path`; no glob match is
 required. For `source_mode: "strict_globs"`, only an exact recursive BUILD
 front or a package-relative source-glob match selects the package.
+
+A changed path equal to or below a declared strict-glob package root is known
+even when it matches neither a source glob nor an exact BUILD front. Such a
+path remains unselected and MUST NOT trigger unknown-path policy. BUILD-front
+recognition is limited to the exact basenames `BUILD`, `BUILD_windows`,
+`BUILD_mac`, `BUILD_linux`, and `BUILD_mac_and_linux`; names such as
+`BUILD_debug`, `BUILD.bak`, or `BUILD_windows.old` are ordinary known package
+paths and do not select the package unless a declared source glob matches.
 
 Every `forced_packages` entry seeds `changed_packages` before changed-path
 classification. Package-local and repository-boundary matches add to the same

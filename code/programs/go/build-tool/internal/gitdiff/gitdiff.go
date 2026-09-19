@@ -17,6 +17,15 @@ import (
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/globmatch"
 )
 
+func isBuildFront(base string) bool {
+	switch base {
+	case "BUILD", "BUILD_windows", "BUILD_mac", "BUILD_linux", "BUILD_mac_and_linux":
+		return true
+	default:
+		return false
+	}
+}
+
 // GetChangedFiles runs `git diff --name-only <base>...HEAD` and returns
 // the list of changed file paths relative to the repo root.
 //
@@ -105,7 +114,7 @@ func MapFilesToPackages(changedFiles []string, packages []discovery.Package, rep
 			// BUILD file changes always trigger a rebuild — the build
 			// definition itself changed.
 			base := filepath.Base(relToPackage)
-			if base == "BUILD" || strings.HasPrefix(base, "BUILD_") {
+			if isBuildFront(base) {
 				changed[pkg.name] = true
 				break
 			}

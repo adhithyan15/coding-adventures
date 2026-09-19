@@ -148,6 +148,12 @@ On Windows, use the compiled `.exe`:
 | `-validate-build-files` | true | Validate BUILD dependency metadata, crate coverage, and tracked artifacts |
 | `-ci-gates` | code/specs/data/ci-gates.json | CI gate registry used to decide which Actions jobs this change needs; empty disables gating |
 
+For strict Starlark packages with declared sources, diff selection recognizes
+only the exact recursive build fronts `BUILD`, `BUILD_windows`, `BUILD_mac`,
+`BUILD_linux`, and `BUILD_mac_and_linux`. Near names such as `BUILD_debug` and
+`BUILD.bak` are known in-package paths but do not select the package unless a
+declared source glob matches.
+
 `-validate-build-files` also fails closed when Git tracks any `node_modules`
 path. Dependency directories are machine-local build products; committing one
 can hide an absolute symlink that works only in its author's checkout.

@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Consume all 19 shared graph/diff fixtures, including empty and partial-cycle
+  graphs, portable character-class globs, known near-BUILD paths, and exact
+  recursive BUILD-front recognition.
+
 ## 0.1.0 - 2026-09-19
 
 - Add an independent process-free native graph and diff-selection core.

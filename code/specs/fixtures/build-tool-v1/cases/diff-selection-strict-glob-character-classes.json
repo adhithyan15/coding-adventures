@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "id": "diff-selection/strict-glob-character-classes",
+  "domain": "diff_selection",
+  "summary": "Portable character-class literals select independently declared strict-glob packages.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["diff_selection"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "diff_selection",
+    "options": {
+      "packages": [
+        {"name": "fixture/class-negated", "rel_path": "p-class-negated", "source_mode": "strict_globs", "source_globs": ["src/[!a].txt"]},
+        {"name": "fixture/class-range", "rel_path": "p-class-range", "source_mode": "strict_globs", "source_globs": ["src/[a-c].txt"]},
+        {"name": "fixture/leading-close", "rel_path": "p-leading-close", "source_mode": "strict_globs", "source_globs": ["src/[]a].txt"]},
+        {"name": "fixture/literal-hyphen-leading", "rel_path": "p-hyphen-leading", "source_mode": "strict_globs", "source_globs": ["src/[-a].txt"]},
+        {"name": "fixture/literal-hyphen-trailing", "rel_path": "p-hyphen-trailing", "source_mode": "strict_globs", "source_globs": ["src/[a-].txt"]},
+        {"name": "fixture/literal-open", "rel_path": "p-literal-open", "source_mode": "strict_globs", "source_globs": ["src/[.txt"]},
+        {"name": "fixture/literal-positive-caret", "rel_path": "p-literal-caret", "source_mode": "strict_globs", "source_globs": ["src/[^a].txt"]}
+      ],
+      "edges": [],
+      "forced_packages": [],
+      "unknown_path_policy": "error"
+    },
+    "changed_paths": [
+      "p-class-negated/src/b.txt",
+      "p-class-range/src/b.txt",
+      "p-hyphen-leading/src/-.txt",
+      "p-hyphen-trailing/src/-.txt",
+      "p-leading-close/src/].txt",
+      "p-literal-caret/src/a.txt",
+      "p-literal-open/src/[.txt"
+    ]
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "diff-selection/strict-glob-character-classes",
+    "domain": "diff_selection",
+    "outcome": "ok",
+    "result": {
+      "changed_packages": [
+        "fixture/class-negated",
+        "fixture/class-range",
+        "fixture/leading-close",
+        "fixture/literal-hyphen-leading",
+        "fixture/literal-hyphen-trailing",
+        "fixture/literal-open",
+        "fixture/literal-positive-caret"
+      ],
+      "affected_packages": [
+        "fixture/class-negated",
+        "fixture/class-range",
+        "fixture/leading-close",
+        "fixture/literal-hyphen-leading",
+        "fixture/literal-hyphen-trailing",
+        "fixture/literal-open",
+        "fixture/literal-positive-caret"
+      ],
+      "prerequisite_packages": []
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}
