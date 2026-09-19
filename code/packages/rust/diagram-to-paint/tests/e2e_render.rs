@@ -189,7 +189,7 @@ mod apple {
     #[test]
     fn render_mermaid_mindmap_to_png() {
         let graph = parse_mindmap(
-            "mindmap\n  root((Native Mermaid))\n    Parser[\"Grammar [] first\"] %% hidden parser comment\n      IR(\"Semantic<br/>tree\")\n    Paint((Backend neutral))\n      Metal\n      PNG\n    output{{Hexagon path}}\n    cloud)Portable cloud(\n    alert))Backend bang((",
+            "mindmap\n  root((Native Mermaid))\n    Parser[\"Grammar [] first\"] %% hidden parser comment\n    :::pipeline primary\n    ::icon(fa fa-code)\n      IR(\"Semantic<br/>tree\")\n    Paint((Backend neutral))\n      Metal\n      PNG\n    output{{Hexagon path}}\n    cloud)Portable cloud(\n    alert))Backend bang((",
         )
         .expect("mindmap parse failed");
         assert!(graph
@@ -206,6 +206,9 @@ mod apple {
             .nodes
             .iter()
             .all(|node| !node.label.text.contains("hidden parser comment")));
+        let parser_node = graph.nodes.iter().find(|node| node.id == "Parser").unwrap();
+        assert_eq!(parser_node.classes, ["pipeline", "primary"]);
+        assert_eq!(parser_node.icon.as_deref(), Some("fa fa-code"));
         let layout = layout_graph_diagram(&graph, None, None);
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;
@@ -226,6 +229,13 @@ mod apple {
         };
 
         let scene = diagram_to_paint(&layout, &opts);
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Group(group)
+                if group.base.metadata.as_ref().is_some_and(|metadata|
+                    metadata.get("diagram.classes").is_some_and(|value| value == "pipeline primary")
+                    && metadata.get("diagram.icon").is_some_and(|value| value == "fa fa-code"))
+        )));
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,
             PaintInstruction::Path(path) if path.commands.len() == 7

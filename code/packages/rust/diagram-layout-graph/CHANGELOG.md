@@ -1,5 +1,9 @@
 # Changelog — diagram-layout-graph
 
+## 0.20.0
+
+- Carry graph-node class names and icon identifiers through deterministic layout.
+
 ## 0.19.0
 
 - Populate explicit point endpoint markers for existing directed graph edges.

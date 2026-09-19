@@ -354,6 +354,8 @@ fn place_nodes(
                 shape:  node.shape.clone().unwrap_or_default(),
                 x, y, width, height,
                 style,
+                classes: node.classes.clone(),
+                icon: node.icon.clone(),
             });
         }
     }
@@ -674,9 +676,9 @@ fn layout_groups(diagram: &GraphDiagram, nodes: &[LayoutedGraphNode]) -> Vec<Lay
 ///     groups: Vec::new(),
 ///     nodes: vec![
 ///         GraphNode { id: "A".into(), label: DiagramLabel::new("A"),
-///                     shape: None, style: None },
+///                     shape: None, style: None, classes: Vec::new(), icon: None },
 ///         GraphNode { id: "B".into(), label: DiagramLabel::new("B"),
-///                     shape: None, style: None },
+///                     shape: None, style: None, classes: Vec::new(), icon: None },
 ///     ],
 ///     edges: vec![
 ///         GraphEdge { id: None, from: "A".into(), to: "B".into(),
@@ -809,6 +811,8 @@ pub fn layout_graph_diagram(
             width: group.width,
             height: group.height,
             style: group.style.clone(),
+            classes: Vec::new(),
+            icon: None,
         })
         .collect();
     let nodes_by_id: std::collections::HashMap<String, &LayoutedGraphNode> = nodes
@@ -899,6 +903,8 @@ mod tests {
             label: DiagramLabel::new(id),
             shape: None,
             style: None,
+            classes: Vec::new(),
+            icon: None,
         }
     }
 
@@ -1054,6 +1060,8 @@ mod tests {
                     label: DiagramLabel::new("A very long label"),
                     shape: None,
                     style: None,
+                    classes: Vec::new(),
+                    icon: None,
                 },
             ],
             edges: vec![],
@@ -1081,6 +1089,8 @@ mod tests {
                     label: DiagramLabel::new("A very wide disconnected state"),
                     shape: None,
                     style: None,
+                    classes: Vec::new(),
+                    icon: None,
                 },
                 simple_node("Narrow"),
             ],

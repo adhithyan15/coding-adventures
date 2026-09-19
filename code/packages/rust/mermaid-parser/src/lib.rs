@@ -159,6 +159,8 @@ impl DiagramBuilder {
             label: DiagramLabel::new(label),
             shape: node_ref.shape,
             style: None,
+            classes: Vec::new(),
+            icon: None,
         });
     }
 }
@@ -2296,7 +2298,7 @@ pub fn parse_mindmap(source: &str) -> Result<GraphDiagram, ParseError> {
         col: error.token.column,
     })?;
 
-    let mut nodes = Vec::new();
+    let mut nodes: Vec<GraphNode> = Vec::new();
     let mut edges = Vec::new();
     let mut ancestors = Vec::<(usize, String)>::new();
     let mut ids = HashSet::new();
@@ -2312,6 +2314,30 @@ pub fn parse_mindmap(source: &str) -> Result<GraphDiagram, ParseError> {
             .map(|character| if character == '\t' { 4 } else { 1 })
             .sum::<usize>();
         let source = token.value.trim();
+        if let Some(icon) = source
+            .strip_prefix("::icon(")
+            .and_then(|value| value.strip_suffix(')'))
+        {
+            let node = nodes
+                .last_mut()
+                .ok_or_else(|| token_error(token, "mindmap icon must follow a node"))?;
+            node.icon = Some(icon.trim().to_string());
+            continue;
+        }
+        if let Some(classes) = source.strip_prefix(":::") {
+            let classes = classes
+                .split_whitespace()
+                .map(str::to_string)
+                .collect::<Vec<_>>();
+            if classes.is_empty() {
+                return Err(token_error(token, "mindmap class decoration requires a class"));
+            }
+            let node = nodes
+                .last_mut()
+                .ok_or_else(|| token_error(token, "mindmap class must follow a node"))?;
+            node.classes.extend(classes);
+            continue;
+        }
         let (explicit_id, label, shape) = parse_mindmap_node(source);
         let base_id = explicit_id.unwrap_or_else(|| mindmap_slug(&label));
         let id = unique_mindmap_id(base_id, &mut ids);
@@ -2341,6 +2367,8 @@ pub fn parse_mindmap(source: &str) -> Result<GraphDiagram, ParseError> {
             label: DiagramLabel::new(label),
             shape: Some(shape),
             style: Some(mindmap_depth_style(depth)),
+            classes: Vec::new(),
+            icon: None,
         });
         ancestors.push((indent, id));
     }
@@ -6177,6 +6205,8 @@ fn upsert_state_node(
         label: DiagramLabel::new(label),
         shape: Some(DiagramShape::RoundedRect),
         style: None,
+        classes: Vec::new(),
+        icon: None,
     });
 }
 
@@ -10208,6 +10238,21 @@ mod tests_dg04 {
         assert_eq!(diagram.nodes[0].label.text, "Root");
         assert_eq!(diagram.nodes[1].label.text, "100%% complete");
         assert_eq!(diagram.nodes[2].label.text, "Leaf");
+    }
+
+    #[test]
+    fn mindmap_preserves_icon_and_class_decorations_on_the_previous_node() {
+        let diagram = parse_mindmap(
+            "mindmap\n  root[Root]\n    child[Child]\n    :::urgent large\n    ::icon(fa fa-book)\n      leaf[Leaf]",
+        )
+        .unwrap();
+
+        assert_eq!(diagram.nodes.len(), 3);
+        assert_eq!(diagram.nodes[1].classes, ["urgent", "large"]);
+        assert_eq!(diagram.nodes[1].icon.as_deref(), Some("fa fa-book"));
+        assert_eq!(diagram.edges.len(), 2);
+        assert_eq!(diagram.edges[1].from, "child");
+        assert_eq!(diagram.edges[1].to, "leaf");
     }
 
     #[test]

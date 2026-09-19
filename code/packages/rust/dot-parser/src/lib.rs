@@ -541,6 +541,8 @@ fn lower(doc: &DotDocument) -> GraphDiagram {
                 label: DiagramLabel::new(label_text),
                 shape,
                 style: None, // v1: style attributes are not yet mapped to DiagramStyle
+                classes: Vec::new(),
+                icon: None,
             }
         })
         .collect();
