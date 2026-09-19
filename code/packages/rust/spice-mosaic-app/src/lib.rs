@@ -140,6 +140,10 @@ pub struct SpiceMosaicApp {
     selected_schematic_terminal: usize,
     selected_schematic_route_target: Option<String>,
     selected_schematic_analysis_card: usize,
+    saved_output_differential_positive: String,
+    saved_output_differential_negative: String,
+    scoped_output_differential_positive: String,
+    scoped_output_differential_negative: String,
     protocol_version: u32,
     next_schematic_file_effect_id: EffectId,
     pending_schematic_file_effect: Option<PendingSchematicFileEffect>,
@@ -165,6 +169,10 @@ impl Default for SpiceMosaicApp {
             selected_schematic_terminal: 0,
             selected_schematic_route_target: None,
             selected_schematic_analysis_card: 0,
+            saved_output_differential_positive: String::new(),
+            saved_output_differential_negative: String::new(),
+            scoped_output_differential_positive: String::new(),
+            scoped_output_differential_negative: String::new(),
             protocol_version: PROTOCOL_VERSION,
             next_schematic_file_effect_id: default_next_effect_id(),
             pending_schematic_file_effect: None,
@@ -846,12 +854,26 @@ impl SpiceMosaicApp {
             "schematic-saved-output-voltage-options": schematic_saved_output_voltage_options,
             "schematic-saved-output-current-label": "Save source current",
             "schematic-saved-output-current-options": schematic_saved_output_current_options,
+            "schematic-saved-output-differential-label": "Save differential voltage",
+            "schematic-saved-output-differential-positive-label": "Positive node",
+            "schematic-saved-output-differential-positive": self.saved_output_differential_positive,
+            "schematic-saved-output-differential-negative-label": "Negative node",
+            "schematic-saved-output-differential-negative": self.saved_output_differential_negative,
+            "schematic-saved-output-differential-disabled": self.schematic.is_none(),
+            "schematic-saved-output-differential-add-label": "Save differential",
             "schematic-saved-output-rows": schematic_saved_output_rows,
             "schematic-scoped-output-label": "Selected card outputs",
             "schematic-scoped-output-voltage-label": "Probe voltage",
             "schematic-scoped-output-voltage-options": schematic_scoped_output_voltage_options,
             "schematic-scoped-output-current-label": "Probe source current",
             "schematic-scoped-output-current-options": schematic_scoped_output_current_options,
+            "schematic-scoped-output-differential-label": "Probe differential voltage",
+            "schematic-scoped-output-differential-positive-label": "Positive node",
+            "schematic-scoped-output-differential-positive": self.scoped_output_differential_positive,
+            "schematic-scoped-output-differential-negative-label": "Negative node",
+            "schematic-scoped-output-differential-negative": self.scoped_output_differential_negative,
+            "schematic-scoped-output-differential-disabled": self.schematic.is_none(),
+            "schematic-scoped-output-differential-add-label": "Probe differential",
             "schematic-scoped-output-rows": schematic_scoped_output_rows,
             "schematic-grid-label": "Grid routing",
             "schematic-grid-lines": Self::schematic_grid_lines(),
@@ -1439,6 +1461,45 @@ impl MosaicApp for SpiceMosaicApp {
                 }
                 Ok(self.announced(self.diagnostics.clone()))
             }
+            "schematicSavedOutputDifferentialPositiveChange" => {
+                self.saved_output_differential_positive = event.payload["value"]
+                    .as_str()
+                    .ok_or_else(|| {
+                        invalid("schematic saved differential positive node requires text value")
+                    })?
+                    .to_owned();
+                Ok(self.update())
+            }
+            "schematicSavedOutputDifferentialNegativeChange" => {
+                self.saved_output_differential_negative = event.payload["value"]
+                    .as_str()
+                    .ok_or_else(|| {
+                        invalid("schematic saved differential negative node requires text value")
+                    })?
+                    .to_owned();
+                Ok(self.update())
+            }
+            "addSchematicSavedOutputDifferential" => {
+                let history = self.schematic_history_entry();
+                let positive_node = self.saved_output_differential_positive.clone();
+                let negative_node = self.saved_output_differential_negative.clone();
+                let document = self.schematic.as_mut().ok_or_else(|| {
+                    invalid("addSchematicSavedOutputDifferential requires a loaded schematic")
+                })?;
+                let added = document
+                    .add_saved_output_differential_voltage_probe(&positive_node, &negative_node)
+                    .map_err(|error| invalid(error.to_string()))?;
+                if added {
+                    self.record_schematic_edit(history);
+                    self.diagnostics = format!(
+                        "Saved V({positive_node},{negative_node}) in the canonical netlist."
+                    );
+                } else {
+                    self.diagnostics =
+                        format!("V({positive_node},{negative_node}) is already a saved output.");
+                }
+                Ok(self.announced(self.diagnostics.clone()))
+            }
             "removeSchematicSavedOutput" => {
                 let index = event.payload["index"].as_u64().ok_or_else(|| {
                     invalid("removeSchematicSavedOutput requires a non-negative output index")
@@ -1493,6 +1554,50 @@ impl MosaicApp for SpiceMosaicApp {
                 } else {
                     self.diagnostics =
                         format!("I({source}) is already scoped to this analysis card.");
+                }
+                Ok(self.announced(self.diagnostics.clone()))
+            }
+            "schematicScopedOutputDifferentialPositiveChange" => {
+                self.scoped_output_differential_positive = event.payload["value"]
+                    .as_str()
+                    .ok_or_else(|| {
+                        invalid("schematic scoped differential positive node requires text value")
+                    })?
+                    .to_owned();
+                Ok(self.update())
+            }
+            "schematicScopedOutputDifferentialNegativeChange" => {
+                self.scoped_output_differential_negative = event.payload["value"]
+                    .as_str()
+                    .ok_or_else(|| {
+                        invalid("schematic scoped differential negative node requires text value")
+                    })?
+                    .to_owned();
+                Ok(self.update())
+            }
+            "addSchematicScopedOutputDifferential" => {
+                let history = self.schematic_history_entry();
+                let positive_node = self.scoped_output_differential_positive.clone();
+                let negative_node = self.scoped_output_differential_negative.clone();
+                let document = self.schematic.as_mut().ok_or_else(|| {
+                    invalid("addSchematicScopedOutputDifferential requires a loaded schematic")
+                })?;
+                let added = document
+                    .add_scoped_output_differential_voltage_probe(
+                        self.selected_schematic_analysis_card,
+                        &positive_node,
+                        &negative_node,
+                    )
+                    .map_err(|error| invalid(error.to_string()))?;
+                if added {
+                    self.record_schematic_edit(history);
+                    self.diagnostics = format!(
+                        "Probed V({positive_node},{negative_node}) for the selected schematic analysis card."
+                    );
+                } else {
+                    self.diagnostics = format!(
+                        "V({positive_node},{negative_node}) is already scoped to this analysis card."
+                    );
                 }
                 Ok(self.announced(self.diagnostics.clone()))
             }
@@ -2300,7 +2405,7 @@ mod tests {
     }
 
     #[test]
-    fn schematic_saved_outputs_persist_and_sync_voltage_and_current_probes() {
+    fn schematic_saved_outputs_persist_sync_and_undo_differential_probes() {
         let mut app = SpiceMosaicApp::default();
         app.start(StartContext::new("en-US", Platform::Web))
             .unwrap();
@@ -2312,12 +2417,15 @@ mod tests {
                 {"reference":"G1","kind":"Ground","value":"","terminals":[{"x":0,"y":0}]}
             ],
             "wires": [],
-            "net_labels": [{"point":{"x":40,"y":20},"name":"OUT"}]
+            "net_labels": [
+                {"point":{"x":0,"y":20},"name":"IN"},
+                {"point":{"x":40,"y":20},"name":"OUT"}
+            ]
         });
         let loaded = dispatch(&mut app, "schematicLoad", json!({"document": document}));
         assert_eq!(
             loaded.props["schematic-saved-output-voltage-options"],
-            json!(["OUT"])
+            json!(["IN", "OUT"])
         );
         assert_eq!(
             loaded.props["schematic-saved-output-current-options"],
@@ -2328,14 +2436,25 @@ mod tests {
             "onAddSchematicSavedOutputVoltage",
             json!({"output":"OUT"}),
         );
-        let current = dispatch(
+        dispatch(
             &mut app,
             "onAddSchematicSavedOutputCurrent",
             json!({"source":"V1"}),
         );
+        dispatch(
+            &mut app,
+            "onSchematicSavedOutputDifferentialPositiveChange",
+            json!({"value":"OUT"}),
+        );
+        dispatch(
+            &mut app,
+            "onSchematicSavedOutputDifferentialNegativeChange",
+            json!({"value":"IN"}),
+        );
+        let current = dispatch(&mut app, "onAddSchematicSavedOutputDifferential", json!({}));
         assert_eq!(
             current.props["schematic-saved-output-rows"],
-            json!(["V(OUT)", "I(V1)"])
+            json!(["V(OUT)", "I(V1)", "V(OUT,IN)"])
         );
         let snapshot = app.snapshot().unwrap().unwrap();
         let mut restored = SpiceMosaicApp::default();
@@ -2344,17 +2463,27 @@ mod tests {
         let restored_update = restored.start(context).unwrap();
         assert_eq!(
             restored_update.props["schematic-saved-output-rows"],
-            json!(["V(OUT)", "I(V1)"])
+            json!(["V(OUT)", "I(V1)", "V(OUT,IN)"])
         );
         let synchronized = dispatch(&mut app, "onSynchronizeSchematic", json!({}));
         assert!(synchronized.props["netlist-text"]
             .as_str()
             .unwrap()
-            .contains(".save V(OUT) I(V1)"));
+            .contains(".save V(OUT) I(V1) V(OUT,IN)"));
+        let undone = dispatch(&mut app, "onUndoSchematic", json!({}));
+        assert_eq!(
+            undone.props["schematic-saved-output-rows"],
+            json!(["V(OUT)", "I(V1)"])
+        );
+        let redone = dispatch(&mut app, "onRedoSchematic", json!({}));
+        assert_eq!(
+            redone.props["schematic-saved-output-rows"],
+            json!(["V(OUT)", "I(V1)", "V(OUT,IN)"])
+        );
         let removed = dispatch(&mut app, "onRemoveSchematicSavedOutput", json!({"index":0}));
         assert_eq!(
             removed.props["schematic-saved-output-rows"],
-            json!(["I(V1)"])
+            json!(["I(V1)", "V(OUT,IN)"])
         );
     }
 
@@ -2371,7 +2500,10 @@ mod tests {
                 {"reference":"G1","kind":"Ground","value":"","terminals":[{"x":0,"y":0}]}
             ],
             "wires": [],
-            "net_labels": [{"point":{"x":40,"y":20},"name":"OUT"}]
+            "net_labels": [
+                {"point":{"x":0,"y":20},"name":"IN"},
+                {"point":{"x":40,"y":20},"name":"OUT"}
+            ]
         });
         dispatch(&mut app, "schematicLoad", json!({"document": document}));
         dispatch(
@@ -2389,6 +2521,21 @@ mod tests {
             "onAddSchematicScopedOutputVoltage",
             json!({"output":"OUT"}),
         );
+        dispatch(
+            &mut app,
+            "onSchematicScopedOutputDifferentialPositiveChange",
+            json!({"value":"OUT"}),
+        );
+        dispatch(
+            &mut app,
+            "onSchematicScopedOutputDifferentialNegativeChange",
+            json!({"value":"IN"}),
+        );
+        dispatch(
+            &mut app,
+            "onAddSchematicScopedOutputDifferential",
+            json!({}),
+        );
         let scoped = dispatch(
             &mut app,
             "onAddSchematicScopedOutputCurrent",
@@ -2396,7 +2543,7 @@ mod tests {
         );
         assert_eq!(
             scoped.props["schematic-scoped-output-rows"],
-            json!(["V(OUT)", "I(V1)"])
+            json!(["V(OUT)", "V(OUT,IN)", "I(V1)"])
         );
         let snapshot = app.snapshot().unwrap().unwrap();
         let mut restored = SpiceMosaicApp::default();
@@ -2405,7 +2552,7 @@ mod tests {
         let restored_update = restored.start(context).unwrap();
         assert_eq!(
             restored_update.props["schematic-scoped-output-rows"],
-            json!(["V(OUT)", "I(V1)"])
+            json!(["V(OUT)", "V(OUT,IN)", "I(V1)"])
         );
         let moved = dispatch(&mut app, "onMoveSchematicAnalysisCardEarlier", json!({}));
         assert_eq!(
@@ -2416,7 +2563,7 @@ mod tests {
         assert!(synchronized.props["netlist-text"]
             .as_str()
             .unwrap()
-            .contains(".ac dec 10 10 10k\n.probe ac V(OUT) I(V1)\n.op"));
+            .contains(".ac dec 10 10 10k\n.probe ac V(OUT) V(OUT,IN) I(V1)\n.op"));
         dispatch(&mut app, "onRemoveSchematicAnalysisCard", json!({}));
         let after_remove = dispatch(&mut app, "onSynchronizeSchematic", json!({}));
         assert!(!after_remove.props["netlist-text"]

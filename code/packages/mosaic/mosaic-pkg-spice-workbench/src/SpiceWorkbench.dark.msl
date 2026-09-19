@@ -44,21 +44,33 @@ style SpiceWorkbench {
   part schematic-saved-output-label { font-size : 12 ; font-weight : bold ; color : "#9fb3c8" ; }
   part schematic-saved-output-voltage-label { font-size : 12 ; color : "#9fb3c8" ; }
   part schematic-saved-output-current-label { font-size : 12 ; color : "#9fb3c8" ; }
+  part schematic-saved-output-differential-label { font-size : 12 ; color : "#9fb3c8" ; }
+  part schematic-saved-output-differential-positive-label { font-size : 12 ; color : "#9fb3c8" ; }
+  part schematic-saved-output-differential-negative-label { font-size : 12 ; color : "#9fb3c8" ; }
   part schematic-saved-output-voltage-options { gap : 6 ; }
   part schematic-saved-output-current-options { gap : 6 ; }
   part schematic-saved-output-actions { gap : 6 ; }
   part schematic-saved-output-voltage-option { background : "#164e63" ; color : "#cffafe" ; border-width : 1 ; border-color : "#0891b2" ; border-radius : 3 ; padding : 6 ; }
   part schematic-saved-output-current-option { background : "#312e81" ; color : "#ddd6fe" ; border-width : 1 ; border-color : "#818cf8" ; border-radius : 3 ; padding : 6 ; }
+  part schematic-saved-output-differential-positive-input { background : "#0d1117" ; color : "#d2e7ff" ; border-width : 1 ; border-color : "#33465c" ; border-radius : 3 ; padding : 6 ; font-family : "monospace" ; }
+  part schematic-saved-output-differential-negative-input { background : "#0d1117" ; color : "#d2e7ff" ; border-width : 1 ; border-color : "#33465c" ; border-radius : 3 ; padding : 6 ; font-family : "monospace" ; }
+  part schematic-saved-output-differential-add { background : "#164e63" ; color : "#cffafe" ; border-width : 1 ; border-color : "#0891b2" ; border-radius : 3 ; padding : 6 ; }
   part schematic-saved-output-remove { background : "#4c1d2d" ; color : "#fecdd3" ; border-width : 1 ; border-color : "#be123c" ; border-radius : 3 ; padding : 6 ; font-family : "monospace" ; }
   part schematic-scoped-outputs { gap : 4 ; }
   part schematic-scoped-output-label { font-size : 12 ; font-weight : bold ; color : "#9fb3c8" ; }
   part schematic-scoped-output-voltage-label { font-size : 12 ; color : "#9fb3c8" ; }
   part schematic-scoped-output-current-label { font-size : 12 ; color : "#9fb3c8" ; }
+  part schematic-scoped-output-differential-label { font-size : 12 ; color : "#9fb3c8" ; }
+  part schematic-scoped-output-differential-positive-label { font-size : 12 ; color : "#9fb3c8" ; }
+  part schematic-scoped-output-differential-negative-label { font-size : 12 ; color : "#9fb3c8" ; }
   part schematic-scoped-output-voltage-options { gap : 6 ; }
   part schematic-scoped-output-current-options { gap : 6 ; }
   part schematic-scoped-output-actions { gap : 6 ; }
   part schematic-scoped-output-voltage-option { background : "#164e63" ; color : "#cffafe" ; border-width : 1 ; border-color : "#0891b2" ; border-radius : 3 ; padding : 6 ; }
   part schematic-scoped-output-current-option { background : "#312e81" ; color : "#ddd6fe" ; border-width : 1 ; border-color : "#818cf8" ; border-radius : 3 ; padding : 6 ; }
+  part schematic-scoped-output-differential-positive-input { background : "#0d1117" ; color : "#d2e7ff" ; border-width : 1 ; border-color : "#33465c" ; border-radius : 3 ; padding : 6 ; font-family : "monospace" ; }
+  part schematic-scoped-output-differential-negative-input { background : "#0d1117" ; color : "#d2e7ff" ; border-width : 1 ; border-color : "#33465c" ; border-radius : 3 ; padding : 6 ; font-family : "monospace" ; }
+  part schematic-scoped-output-differential-add { background : "#164e63" ; color : "#cffafe" ; border-width : 1 ; border-color : "#0891b2" ; border-radius : 3 ; padding : 6 ; }
   part schematic-scoped-output-remove { background : "#4c1d2d" ; color : "#fecdd3" ; border-width : 1 ; border-color : "#be123c" ; border-radius : 3 ; padding : 6 ; font-family : "monospace" ; }
   part schematic-grid-label { font-size : 12 ; font-weight : bold ; color : "#9fb3c8" ; }
   part schematic-grid { width : 360 ; min-height : 240 ; background : "#0d1117" ; border-width : 1 ; border-color : "#33465c" ; }
