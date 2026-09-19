@@ -548,7 +548,7 @@ fn positioned_node_breaks_find_text(node: &PositionedNode) -> bool {
 }
 
 /// Mosaic `VentureChrome` slot names, in interface declaration order.
-pub const VENTURE_CHROME_SLOT_NAMES: [&str; 15] = [
+pub const VENTURE_CHROME_SLOT_NAMES: [&str; 16] = [
     "address",
     "page-title",
     "status-text",
@@ -558,6 +558,7 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 15] = [
     "bookmark-disabled",
     "copy-address-disabled",
     "open-page-disabled",
+    "save-page-disabled",
     "view-source-disabled",
     "find-open",
     "find-query",
@@ -570,7 +571,7 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 15] = [
 pub const VENTURE_CHROME_HOST_SURFACE_SLOT_NAME: &str = "content-surface";
 
 /// Mosaic `VentureChrome` event names, in interface declaration order.
-pub const VENTURE_CHROME_EVENT_NAMES: [&str; 15] = [
+pub const VENTURE_CHROME_EVENT_NAMES: [&str; 16] = [
     "onBack",
     "onForward",
     "onHome",
@@ -578,6 +579,7 @@ pub const VENTURE_CHROME_EVENT_NAMES: [&str; 15] = [
     "onToggleBookmark",
     "onCopyAddress",
     "onOpenPageInNewWindow",
+    "onSavePage",
     "onViewSource",
     "onFindOpen",
     "onFindChange",
@@ -1671,6 +1673,7 @@ pub enum BrowserChromeAction {
     ToggleCurrentBookmark,
     CopyPageAddress,
     OpenPageInNewWindow,
+    SavePage,
     ViewSource,
     OpenFind,
     FindQuery(String),
@@ -1689,6 +1692,7 @@ pub enum BrowserChromeEvent {
     ToggleBookmark,
     CopyAddress,
     OpenPageInNewWindow,
+    SavePage,
     ViewSource,
     FindOpen,
     FindChange(String),
@@ -1709,6 +1713,7 @@ impl BrowserChromeEvent {
             Self::ToggleBookmark => "onToggleBookmark",
             Self::CopyAddress => "onCopyAddress",
             Self::OpenPageInNewWindow => "onOpenPageInNewWindow",
+            Self::SavePage => "onSavePage",
             Self::ViewSource => "onViewSource",
             Self::FindOpen => "onFindOpen",
             Self::FindChange(_) => "onFindChange",
@@ -1733,6 +1738,7 @@ pub struct BrowserChromeProps {
     pub bookmark_disabled: bool,
     pub copy_address_disabled: bool,
     pub open_page_disabled: bool,
+    pub save_page_disabled: bool,
     pub view_source_disabled: bool,
     pub find_open: bool,
     pub find_query: String,
@@ -1818,6 +1824,9 @@ impl BrowserChromeController {
             {
                 Some(BrowserChromeAction::OpenPageInNewWindow)
             }
+            BrowserChromeEvent::SavePage if session.viewport().is_some() => {
+                Some(BrowserChromeAction::SavePage)
+            }
             BrowserChromeEvent::ViewSource if session.viewport().is_some() => {
                 Some(BrowserChromeAction::ViewSource)
             }
@@ -1840,6 +1849,7 @@ impl BrowserChromeController {
             BrowserChromeEvent::ToggleBookmark
             | BrowserChromeEvent::CopyAddress
             | BrowserChromeEvent::OpenPageInNewWindow
+            | BrowserChromeEvent::SavePage
             | BrowserChromeEvent::ViewSource
             | BrowserChromeEvent::FindOpen
             | BrowserChromeEvent::FindChange(_)
@@ -1878,6 +1888,7 @@ impl BrowserChromeController {
             bookmark_disabled: navigation_disabled || session.history().current_url().is_none(),
             copy_address_disabled: navigation_disabled || session.history().current_url().is_none(),
             open_page_disabled: navigation_disabled || session.history().current_url().is_none(),
+            save_page_disabled: navigation_disabled || session.viewport().is_none(),
             view_source_disabled: navigation_disabled || session.viewport().is_none(),
             find_open: session.find_state().open,
             find_query: session.find_state().query.clone(),
@@ -2021,6 +2032,21 @@ impl BrowserHostController {
                         request: BrowserFetchRequest::get(address),
                         noopener: true,
                         noreferrer: false,
+                    }),
+                ))
+            }
+            BrowserChromeAction::SavePage => {
+                let address = self
+                    .session
+                    .history()
+                    .current_url()
+                    .expect("save-page action requires a committed page")
+                    .to_string();
+                self.status_text = "Page download requested".to_string();
+                Ok(BrowserHostEventOutcome::effect(
+                    BrowserHostEffect::Download(BrowserDownloadRequest {
+                        request: BrowserFetchRequest::get(address),
+                        suggested_filename: None,
                     }),
                 ))
             }
@@ -7015,6 +7041,7 @@ mod tests {
                 bookmark_disabled: true,
                 copy_address_disabled: true,
                 open_page_disabled: true,
+                save_page_disabled: true,
                 view_source_disabled: true,
                 find_open: false,
                 find_query: String::new(),
@@ -7074,6 +7101,7 @@ mod tests {
                 bookmark_disabled: false,
                 copy_address_disabled: false,
                 open_page_disabled: false,
+                save_page_disabled: false,
                 view_source_disabled: false,
                 find_open: false,
                 find_query: String::new(),
@@ -7104,6 +7132,7 @@ mod tests {
         assert!(disabled.bookmark_disabled);
         assert!(disabled.copy_address_disabled);
         assert!(disabled.open_page_disabled);
+        assert!(disabled.save_page_disabled);
         assert!(disabled.view_source_disabled);
         assert!(disabled.find_disabled);
         assert!(disabled.navigation_disabled);
@@ -7236,6 +7265,7 @@ mod tests {
             BrowserChromeEvent::ToggleBookmark,
             BrowserChromeEvent::CopyAddress,
             BrowserChromeEvent::OpenPageInNewWindow,
+            BrowserChromeEvent::SavePage,
             BrowserChromeEvent::ViewSource,
             BrowserChromeEvent::FindOpen,
             BrowserChromeEvent::FindChange(String::new()),
@@ -7398,6 +7428,21 @@ mod tests {
             ))
         );
         assert_eq!(host.props().status_text, "New window requested");
+
+        let saved = host
+            .handle_event_with_effect(BrowserChromeEvent::SavePage, &mut bookmarks, |_, _| {
+                unreachable!("save page must not navigate or refetch the current context")
+            })
+            .unwrap();
+        assert!(!saved.changed);
+        assert_eq!(
+            saved.effect,
+            Some(BrowserHostEffect::Download(BrowserDownloadRequest {
+                request: BrowserFetchRequest::get(url),
+                suggested_filename: None,
+            }))
+        );
+        assert_eq!(host.props().status_text, "Page download requested");
 
         let outcome = host
             .handle_event_with_effect(BrowserChromeEvent::ViewSource, &mut bookmarks, |_, _| {

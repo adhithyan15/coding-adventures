@@ -186,6 +186,8 @@ public static class MosaicHost
                     component, "copy-address-button");
                 var openPageButton = await FindAutomationElementAsync<Button>(
                     component, "open-page-button");
+                var savePageButton = await FindAutomationElementAsync<Button>(
+                    component, "save-page-button");
                 var viewSourceButton = await FindAutomationElementAsync<Button>(
                     component, "view-source-button");
                 var goButton = await FindAutomationElementAsync<Button>(component, "go-button");
@@ -196,6 +198,7 @@ public static class MosaicHost
                     || reloadButton is null
                     || copyAddressButton is null
                     || openPageButton is null
+                    || savePageButton is null
                     || viewSourceButton is null
                     || goButton is null)
                 {
@@ -328,6 +331,23 @@ public static class MosaicHost
                         backend = "xaml",
                         status = "error",
                         error = "native Open in New Window effect did not preserve the committed URL",
+                    });
+                    return;
+                }
+                var savePageProvider = new ButtonAutomationPeer(savePageButton)
+                    as IInvokeProvider;
+                savePageProvider?.Invoke();
+                if (savePageProvider is null
+                    || !await WaitForControlStateAsync(
+                        () => LastDownloadRequest is { } download
+                            && download.GetProperty("request").GetProperty("url").GetString()
+                                == targetUrl))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native Save Page effect did not preserve the committed URL",
                     });
                     return;
                 }
@@ -913,6 +933,7 @@ public static class MosaicHost
             component.BookmarkDisabled = props.GetProperty("bookmark-disabled").GetBoolean();
             component.CopyAddressDisabled = props.GetProperty("copy-address-disabled").GetBoolean();
             component.OpenPageDisabled = props.GetProperty("open-page-disabled").GetBoolean();
+            component.SavePageDisabled = props.GetProperty("save-page-disabled").GetBoolean();
             component.ViewSourceDisabled = props.GetProperty("view-source-disabled").GetBoolean();
             component.FindOpen = props.GetProperty("find-open").GetBoolean();
             SetIfChanged(component.FindQuery, props.GetProperty("find-query").GetString(),

@@ -822,6 +822,94 @@ fn open_page_reuses_one_typed_browsing_context_effect_across_generated_hosts() {
 }
 
 #[test]
+fn save_page_reuses_one_typed_download_effect_across_generated_hosts() {
+    let interface = read_package_file("src/VentureChrome.mil");
+    let layout = read_package_file("src/VentureChrome.mll");
+    assert!(interface.contains("slot save-page-disabled"));
+    assert!(interface.contains("emit onSavePage"));
+    assert!(layout.contains("HostButton [ save-page-button ]"));
+
+    let core = read_package_file("../../../packages/rust/venture-browser-core/src/lib.rs");
+    for symbol in [
+        "BrowserChromeAction::SavePage",
+        "BrowserHostEffect::Download",
+        "Page download requested",
+    ] {
+        assert!(
+            core.contains(symbol),
+            "shared save-page core omits {symbol}"
+        );
+    }
+
+    for (name, path, presenter) in [
+        (
+            "SwiftUI",
+            "host/swiftui/MosaicHost.swift",
+            "VentureDownloadRequested",
+        ),
+        ("XAML", "host/xaml/MosaicHost.cs", "DownloadRequested"),
+        ("Qt", "host/qt/MosaicHost.cpp", "downloadRequested"),
+        (
+            "Flutter",
+            "host/flutter/mosaic_host.dart",
+            "lastDownloadRequest",
+        ),
+        (
+            "Compose",
+            "host/compose/MosaicHost.kt",
+            "lastDownloadRequest",
+        ),
+    ] {
+        let host = read_package_file(path);
+        assert!(host.contains("download"), "{name} omits the shared effect");
+        assert!(host.contains(presenter), "{name} omits its presenter seam");
+    }
+
+    for (name, path) in [
+        (
+            "Cairo",
+            "../../../packages/rust/venture-browser-cairo/src/lib.rs",
+        ),
+        (
+            "macOS",
+            "../../../packages/rust/venture-browser-macos/src/lib.rs",
+        ),
+        (
+            "Windows",
+            "../../../packages/rust/venture-browser-windows/src/lib.rs",
+        ),
+    ] {
+        let bridge = read_package_file(path);
+        assert!(bridge.contains("onSavePage"), "{name} omits the event");
+        assert!(
+            bridge.contains("\\\"type\\\":\\\"download\\\""),
+            "{name} omits effect serialization"
+        );
+    }
+
+    for path in [
+        "host/compose/VentureChromeInteractionTest.kt",
+        "host/flutter/venture_chrome_interaction_test.dart",
+        "host/qt/tst_venture_chrome.qml",
+        "host/react/VentureChromeInteraction.test.tsx",
+        "host/swiftui/MosaicHost.swift",
+        "host/web/VentureChromeInteraction.test.js",
+        "host/xaml/MosaicHost.cs",
+    ] {
+        let acceptance = read_package_file(path);
+        assert!(
+            acceptance.contains("save-page-button")
+                || acceptance.contains("Save Page")
+                || acceptance.contains("onSavePage")
+                || acceptance.contains("savePage")
+                || acceptance.contains("save-page")
+                || acceptance.contains("lastDownloadRequest"),
+            "{path} omits Save Page acceptance"
+        );
+    }
+}
+
+#[test]
 fn real_page_visual_fixture_remains_a_package_acceptance_dependency() {
     let capture = venture_browser_visual_fixtures::capture("http://venture.test")
         .expect("capture Venture's deterministic real-page fixture");

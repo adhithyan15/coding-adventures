@@ -25,6 +25,7 @@ const props = (statusText: string) => ({
     bookmarkDisabled: navigationDisabled,
     copyAddressDisabled: navigationDisabled,
     openPageDisabled: navigationDisabled,
+    savePageDisabled: navigationDisabled,
     viewSourceDisabled: navigationDisabled,
     findOpen,
     findQuery,
@@ -94,7 +95,7 @@ test("React and Electron renderer controls cross the Mosaic host seam", async ()
 
   expect(document.body.textContent).toContain("Venture React acceptance");
   expect(document.body.textContent).toContain("React host surface");
-  for (const label of ["Back", "Forward", "Reload", "Bookmark", "Copy Address", "Open in New Window", "View Source", "Find", "Go"]) {
+  for (const label of ["Back", "Forward", "Reload", "Bookmark", "Copy", "New Window", "Save", "Source", "Find", "Go"]) {
     const button = textButton(label);
     expect(button.disabled).toBe(true);
     button.click();
@@ -144,19 +145,25 @@ test("React and Electron renderer controls cross the Mosaic host seam", async ()
   expect(document.body.textContent).toContain("Bookmark persisted through MosaicHost");
 
   await act(async () => {
-    textButton("Copy Address").click();
+    textButton("Copy").click();
   });
   await flush();
   expect(events[events.length - 1]?.event.type).toBe("copyAddress");
 
   await act(async () => {
-    textButton("Open in New Window").click();
+    textButton("New Window").click();
   });
   await flush();
   expect(events[events.length - 1]?.event.type).toBe("openPageInNewWindow");
 
   await act(async () => {
-    textButton("View Source").click();
+    textButton("Save").click();
+  });
+  await flush();
+  expect(events[events.length - 1]?.event.type).toBe("savePage");
+
+  await act(async () => {
+    textButton("Source").click();
   });
   await flush();
   expect(events[events.length - 1]?.event.type).toBe("viewSource");

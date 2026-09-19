@@ -78,8 +78,10 @@ previous, and close events.
 Chrome-owned utility transactions also stay in this boundary. Copy Address
 selects the committed history URL and emits a typed clipboard write, while
 Open in New Window selects the same URL and emits a `_blank` GET browsing
-context request with `noopener`. Neither command reads the editable address
-draft or mutates the current session; native hosts only present the effect.
+context request with `noopener`. Save Page reuses that committed page URL to
+emit the existing typed download effect. None of these commands reads the
+editable address draft or mutates the current session; native hosts only
+present the effect.
 
 Typed inputs retain that single-owner design. The session exposes
 `ControlValueState` for live validity and accessibility projection, routes
@@ -190,7 +192,7 @@ surfaces never instantiate toolkit-specific controls or own editing policy.
 
 `BrowserChromeController` is the matching host-neutral reducer for the shared
 Mosaic `VentureChrome` package. It preserves address edits as a draft, maps
-navigation, bookmark, Copy Address, and View Source events to host-neutral commands, synchronizes redirects
+navigation, bookmark, Copy Address, Save Page, and View Source events to host-neutral commands, synchronizes redirects
 only after a successful load, and projects one coherent `BrowserChromeProps`
 snapshot for the declared MIL slots. `BrowserAuxiliaryDocument::view_source`
 escapes the already-retained response text into synthetic preformatted HTML,
