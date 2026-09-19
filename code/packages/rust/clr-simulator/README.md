@@ -66,3 +66,7 @@ Explicit conv.i4 truncates Int64 to its signed low 32 bits; conv.i8 sign-extends
 Int to Int64. Same-width conversions preserve values. Missing/uninitialized
 operands and references refuse before stack or pc mutation. Mixed-width
 arithmetic still requires explicit conversion. IIR lowering remains unchanged.
+
+Signed shifts (shl/shr) preserve Int or Int64 width and require an Int count.
+Only counts from zero through width minus one are supported; invalid operands
+and counts refuse before changing stack or pc. This does not widen IIR lowering.

@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — signed shifts (CLR04)
+
+Execute shl/shr for Int and Int64 with i32 counts. Preserve signed right-shift
+semantics and reject invalid counts/operands before stack or pc mutation.
+Counts outside 0..width are explicitly refused; IIR lowering is unchanged.
+
 ## Unreleased — explicit integer conversions (CLR03)
 
 Explicit conv.i4 truncates Int64 to its signed low 32 bits; conv.i8 sign-extends

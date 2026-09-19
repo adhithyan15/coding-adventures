@@ -80,6 +80,10 @@ pub const OP_MUL: u8 = 0x5A;
 pub const OP_DIV: u8 = 0x5B;
 /// `xor` (0x61) — McCarthy W7 logical `not` lowers to `x ^ 1`.
 pub const OP_XOR: u8 = 0x61;
+/// Shift left, filling with zero bits.
+pub const OP_SHL: u8 = 0x62;
+/// Shift right, replicating the sign bit.
+pub const OP_SHR: u8 = 0x63;
 /// `neg` (0x65) — unary two's-complement negation: pop one int, push `-x`.
 /// Macsyma Wave 4's unary `-x` (`iir-builtin-lowering::dynamic_arith`'s new
 /// unary-negate case) is the first IIR pipeline to reach the CLR column with
@@ -489,6 +493,34 @@ impl CLRSimulator {
         }
         if opcode_byte == OP_XOR {
             return self.execute_arithmetic(stack_before, "xor", |a, b| a ^ b, |a, b| a ^ b);
+        }
+        if opcode_byte == OP_SHL || opcode_byte == OP_SHR {
+            let mnemonic = if opcode_byte == OP_SHL { "shl" } else { "shr" };
+            // CIL counts are i32 even when the shifted value is i64. Check
+            // everything before consuming operands, including the range whose
+            // result CIL leaves unspecified; this simulator refuses that range.
+            let len = self.stack.len();
+            assert!(len >= 2, "{mnemonic} requires two initialized operands");
+            let value = self.stack[len - 2].unwrap_or_else(|| panic!("{mnemonic} requires initialized value"));
+            let count = match self.stack[len - 1] {
+                Some(Value::Int(n)) => n,
+                _ => panic!("{mnemonic} requires an initialized i32 count"),
+            };
+            let width = match value {
+                Value::Int(_) => 32,
+                Value::Int64(_) => 64,
+                _ => panic!("{mnemonic} requires an integer value"),
+            };
+            assert!((0..width).contains(&count), "{mnemonic} count must be in 0..{width}");
+            let result = match value {
+                Value::Int(n) => Value::Int(if opcode_byte == OP_SHL { n << count } else { n >> count }),
+                Value::Int64(n) => Value::Int64(if opcode_byte == OP_SHL { n << count } else { n >> count }),
+                _ => unreachable!("validated integer value"),
+            };
+            self.stack.truncate(len - 2);
+            self.stack.push(Some(result));
+            self.pc += 1;
+            return self.trace(pc, mnemonic, stack_before, format!("shift {value} by {count}: {result}"));
         }
         if opcode_byte == OP_CONV_I4 || opcode_byte == OP_CONV_I8 {
             let mnemonic = if opcode_byte == OP_CONV_I4 { "conv.i4" } else { "conv.i8" };
