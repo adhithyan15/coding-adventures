@@ -976,7 +976,10 @@ backend immediately) come before the enabler-dependent items.
   may be followed across multiple passes until their checked or finite
   binary64 increment exits, with overflow, non-finite values, rounded-away
   progress, cycles, and loops exceeding 4,096 evaluations remaining
-  conservative. Such a controlled-scalar assignment may share its compound
+  conservative. A statically decidable statement conditional may select a
+  different pure controlled-scalar assignment on each pass as the exact
+  control snapshot evolves; dynamic selectors and branches that write another
+  changing scalar remain conservative. Such a controlled-scalar assignment may share its compound
   body with proven integer, real, or boolean identity assignments of ordinary
   local scalars or unlabeled dummy statements. Unlabeled nested compound
   statements may group those same statements; changing siblings and all
