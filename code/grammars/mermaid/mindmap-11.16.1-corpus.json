@@ -2,10 +2,11 @@
   "schema_version": 1,
   "upstream": "mermaid@11.16.1",
   "family": "mindmap",
-  "supported_subset": "Indented trees with comments plus plain, quoted delimiter-rich, and line-break labels across square, rounded, circular, hexagonal, cloud, and bang nodes",
+  "supported_subset": "Indented trees with comments, icon and class metadata, plus plain, quoted delimiter-rich, and line-break labels across square, rounded, circular, hexagonal, cloud, and bang nodes",
   "fixtures": [
     { "id": "basic", "source": "mindmap\n  root((mindmap))\n    Origins\n      Long history\n    Research" },
     { "id": "shapes", "source": "mindmap\n  root[Native renderer]\n    parser(Grammar first)\n    paint((Backend neutral))\n    output{{Paint polygon}}\n    cloud)Portable cloud(\n    alert))Backend bang((" },
-    { "id": "quoted-labels", "source": "mindmap\n  root[\"String containing [] and ()\"] %% root comment\n    child[\"100%% complete\"] %% child comment\n    escaped[\"First\\nSecond\"]" }
+    { "id": "quoted-labels", "source": "mindmap\n  root[\"String containing [] and ()\"] %% root comment\n    child[\"100%% complete\"] %% child comment\n    escaped[\"First\\nSecond\"]" },
+    { "id": "decorations", "source": "mindmap\n  root[Root]\n    child[Child]\n    :::urgent large\n    ::icon(fa fa-book)\n      leaf[Leaf]" }
   ]
 }

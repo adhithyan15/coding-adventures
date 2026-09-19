@@ -181,7 +181,8 @@ fn layout_grid_entries(
                     if cell.visible {
                         nodes.push(LayoutedGraphNode { id: cell.id.clone(), label: cell.label.clone(), shape: cell.shape.clone(),
                             x: entry_x, y: row_y, width: entry_width, height: CELL_HEIGHT,
-                            style: resolve_style_with_base(cell.style.as_ref(), resolve_style(Some(&grid_style(nodes.len())))) });
+                            style: resolve_style_with_base(cell.style.as_ref(), resolve_style(Some(&grid_style(nodes.len())))),
+                            classes: Vec::new(), icon: None });
                     }
                 }
                 GridEntry::Group(group) => {
