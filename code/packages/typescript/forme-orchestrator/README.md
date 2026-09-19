@@ -41,9 +41,9 @@ These are deferred to follow-up packages:
 
 - **No parallelism.** Stages execute sequentially in topological order. `settings.maxConcurrency` is honoured at `1`.
 - **No streaming pipelining yet.** A `Stream<X>` producer is still fully drained
-  before downstream consumers see values. The bounded, content-addressed
-  checkpoint tree is implemented, while FM-B039/FM-B040 own live multicast
-  transport and scheduler integration.
+  before downstream consumers see values. The bounded multicast transport and
+  content-addressed checkpoint tree are implemented; FM-B040 owns their
+  integration with pipeline-wide concurrent scheduling.
 - **Replay is explicit.** Exact affected scheduling restores untouched pure
   stages directly and invokes `Stage.replay` before skipping an effectful
   collector. Capability-bearing stages without that hook still execute
@@ -72,6 +72,10 @@ These are deferred to follow-up packages:
 - Bounded stream-checkpoint storage with an `O(log n)` writer frontier,
   manifest-last publication, full pre-replay validation, lazy ordered reads,
   content deduplication, and cancellation-safe fail-open behavior
+- Bounded lazy stream multicast with one upstream pull per value, independent
+  ordered 64-value consumer windows, slow-branch backpressure, safe consumer
+  detachment, shared terminal errors, cancellation cleanup, and retained-value
+  instrumentation
 - Deterministic tagged cache encoding for plain Forme values and bytes;
   per-invocation cache hits/misses for safe pure stages, with `useCache: false`
   bypass and fail-open behavior for unsupported/corrupt entries
