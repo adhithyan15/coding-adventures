@@ -25,60 +25,61 @@
             "scope": "job",
             "description": "Leading bang negates a character class.",
             "packages": [],
-            "paths": ["code/[!a]eta.txt"]
+            "paths": ["code/[!a]eta.bang"]
           },
           {
             "id": "caret-literal",
             "scope": "job",
             "description": "Caret is a literal class member, not a negation marker.",
             "packages": [],
-            "paths": ["code/[^a].txt"]
+            "paths": ["code/[^a].caret"]
           },
           {
             "id": "leading-bracket-literal",
             "scope": "job",
             "description": "An unmatched opening bracket is literal.",
             "packages": [],
-            "paths": ["code/[.txt"]
+            "paths": ["code/[.unmatched"]
           },
           {
             "id": "leading-closing-bracket",
             "scope": "job",
             "description": "A leading closing bracket is a literal class member.",
             "packages": [],
-            "paths": ["code/[]a].txt"]
+            "paths": ["code/[]a].closing"]
           },
           {
             "id": "literal-leading-hyphen",
             "scope": "job",
             "description": "A leading hyphen remains a literal class member.",
             "packages": [],
-            "paths": ["code/[-a].txt"]
+            "paths": ["code/[-a].leading-hyphen"]
           },
           {
             "id": "literal-trailing-hyphen",
             "scope": "job",
             "description": "A trailing hyphen remains a literal class member.",
             "packages": [],
-            "paths": ["code/[a-].txt"]
+            "paths": ["code/[a-].trailing-hyphen"]
           },
           {
             "id": "ascending-range",
             "scope": "job",
             "description": "Ascending ranges include their interior characters.",
             "packages": [],
-            "paths": ["code/[a-c].txt"]
+            "paths": ["code/[a-c].range"]
           }
         ]
       },
       "affected_packages": [],
       "changed_files": [
-        "code/beta.txt",
-        "code/^.txt",
-        "code/[.txt",
-        "code/].txt",
-        "code/-.txt",
-        "code/b.txt"
+        "code/beta.bang",
+        "code/^.caret",
+        "code/[.unmatched",
+        "code/].closing",
+        "code/-.leading-hyphen",
+        "code/-.trailing-hyphen",
+        "code/b.range"
       ],
       "force": false
     }
