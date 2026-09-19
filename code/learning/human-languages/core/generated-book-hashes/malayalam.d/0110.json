@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:5e51a8177d75af63",
+  "lessonIds": [
+    "ML-C110-phon",
+    "ML-C110-kattu",
+    "ML-C110-thapaal",
+    "ML-C110-imeyil",
+    "ML-R110-message-recall"
+  ],
+  "tex": "malayalam/book/chapters/ch110-message.tex"
+}

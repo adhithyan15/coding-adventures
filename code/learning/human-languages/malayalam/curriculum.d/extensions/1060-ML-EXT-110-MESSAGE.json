@@ -1,0 +1,17 @@
+{
+  "id": "ML-EXT-110-MESSAGE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the telephone, a letter, the post, e-mail and the internet, and say an address aloud as far as the stop.",
+  "prerequisites": [
+    "ML-EXT-109-NEITHER"
+  ],
+  "lessons": [
+    "ML-C110-phon",
+    "ML-C110-kattu",
+    "ML-C110-thapaal",
+    "ML-C110-imeyil",
+    "ML-R110-message-recall"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C110-phon",
+    "language": "malayalam",
+    "chapter": 110,
+    "sequence": 4050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:329381f82ae1a588"
+  },
+  "findings": []
+}
