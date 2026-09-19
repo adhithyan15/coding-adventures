@@ -61,6 +61,13 @@ closurec --js src/foo.js --js src/bar.js \
          --formatting SINGLE_QUOTES
 ```
 
+`--js` and `--externs` accept literal files, `*`, `**`, `?`, character
+classes, and leading-`!` exclusions. Paths use the host filesystem's native
+component rules: Windows callers may use backslashes, forward slashes, or a
+mixture after a drive or UNC root, while Unix keeps backslash as an ordinary
+filename character. Matches are sorted deterministically within each inclusion
+and duplicate files retain their first command-line position.
+
 Short aliases the Java tool ships:
 
 | Short | Long |

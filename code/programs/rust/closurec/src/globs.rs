@@ -13,7 +13,7 @@
 //! Exactly the glob features the Closure CLI honors:
 //!
 //! - `*` — matches any sequence of characters within a *single*
-//!   path segment (does NOT cross `/`).
+//!   path segment (does NOT cross the host path separator).
 //! - `**` — matches across any number of path segments (zero or
 //!   more directories), but ONLY as a complete segment.
 //!   `src/**/*.js` works; `src/**.js` is treated literally per
@@ -214,12 +214,26 @@ fn has_glob_chars(s: &str) -> bool {
 /// path segment that contains a glob character.
 ///
 /// Absolute paths are preserved as-is: `/var/x/*.js` splits to
-/// `("/var/x", "*.js")`, not `("var/x", "*.js")`. Without this,
-/// the walker would start at the wrong directory.
+/// `("/var/x", "*.js")`, not `("var/x", "*.js")`. On Windows,
+/// both `C:\work\*.js` and mixed `C:\work/*.js` spell the same native
+/// walk root. Without this, the walker would start at the wrong directory.
 fn split_fixed_prefix(pattern: &str) -> (String, String) {
+    // Closure's CLI accepts the spelling produced by the host's own path
+    // formatter. On Windows that means a user routinely supplies backslashes,
+    // while programmatic callers often append a forward-slash glob suffix.
+    // Convert only on Windows: a backslash remains a legitimate filename byte
+    // on Unix and must not gain separator semantics there.
+    #[cfg(windows)]
+    let normalized = pattern.replace('\\', "/");
+    #[cfg(windows)]
+    let pattern = normalized.as_str();
+
     // Track absolute vs relative explicitly so we don't lose the
-    // leading `/` when stripping segments off for the recurse.
-    let (mut prefix, rest) = if let Some(stripped) = pattern.strip_prefix('/') {
+    // leading slash when stripping segments off for the recurse. UNC paths
+    // need both leading slashes: `//server/share` is not `/server/share`.
+    let (mut prefix, rest) = if let Some(stripped) = pattern.strip_prefix("//") {
+        ("//".to_string(), stripped)
+    } else if let Some(stripped) = pattern.strip_prefix('/') {
         ("/".to_string(), stripped)
     } else {
         (String::new(), pattern)
@@ -364,29 +378,56 @@ enum SegmentMatcher {
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct CompiledPattern {
+    root: PatternRoot,
     segments: Vec<SegmentMatcher>,
 }
 
+/// The filesystem namespace a pattern belongs to.
+///
+/// The old matcher discarded every non-`Normal` component. That happened to
+/// align Unix absolute paths, but on Windows it also discarded the drive or
+/// UNC prefix without first teaching the pattern that `\` is a separator.
+/// Keeping the root separately both aligns the segments and prevents an
+/// exclusion rooted on one drive/share from removing a same-shaped path on
+/// another.
+#[derive(Debug, Clone, PartialEq)]
+enum PatternRoot {
+    Relative,
+    Rooted,
+    Prefix(String),
+}
+
 fn compile_pattern(pattern: &str) -> Result<CompiledPattern, String> {
+    let mut root = PatternRoot::Relative;
     let mut segments = Vec::new();
-    // Skip a single leading empty segment that appears when the
-    // pattern is absolute (e.g. `/foo/*.js` → ["", "foo", "*.js"]).
-    // `matches_path` only emits `Component::Normal` segments, so
-    // an absolute path's components are `["foo", "*.js"]` — we
-    // must align with that.
-    let parts: Vec<&str> = if let Some(rest) = pattern.strip_prefix('/') {
-        rest.split('/').collect()
-    } else {
-        pattern.split('/').collect()
-    };
-    for seg in parts {
-        if seg == "**" {
-            segments.push(SegmentMatcher::DoubleStar);
-        } else {
-            segments.push(SegmentMatcher::Tokens(compile_segment(seg)?));
+    // `Path::components` is the important portability boundary. It treats
+    // both slash spellings as separators on Windows, recognizes drive and UNC
+    // prefixes, and leaves backslashes literal on Unix. Candidate paths go
+    // through the same decomposition in `matches_path` below.
+    for component in Path::new(pattern).components() {
+        match component {
+            Component::Prefix(prefix) => {
+                root = PatternRoot::Prefix(prefix.as_os_str().to_string_lossy().into_owned());
+            }
+            Component::RootDir => {
+                if root == PatternRoot::Relative {
+                    root = PatternRoot::Rooted;
+                }
+            }
+            Component::Normal(segment) => {
+                let segment = segment.to_string_lossy();
+                if segment == "**" {
+                    segments.push(SegmentMatcher::DoubleStar);
+                } else {
+                    segments.push(SegmentMatcher::Tokens(compile_segment(&segment)?));
+                }
+            }
+            // Match the existing contract: filesystem navigation components
+            // select the walk root but are not content segments.
+            Component::CurDir | Component::ParentDir => {}
         }
     }
-    Ok(CompiledPattern { segments })
+    Ok(CompiledPattern { root, segments })
 }
 
 fn compile_segment(seg: &str) -> Result<Vec<Token>, String> {
@@ -471,19 +512,48 @@ fn compile_char_class(rest: &str) -> Result<(Token, usize), String> {
 }
 
 fn matches_path(pattern: &CompiledPattern, path: &Path) -> bool {
-    // Only walk the `Normal` segments of the path. RootDir, CurDir,
-    // and ParentDir are filesystem decorations — the *content*
-    // segments are what we glob against, mirroring how
-    // `compile_pattern` strips a leading `/` from absolute
-    // patterns to align with this same Normal-only segment list.
-    let segments: Vec<String> = path
-        .components()
-        .filter_map(|c| match c {
-            Component::Normal(s) => Some(s.to_string_lossy().into_owned()),
-            _ => None,
-        })
-        .collect();
+    let mut root = PatternRoot::Relative;
+    let mut segments = Vec::new();
+    for component in path.components() {
+        match component {
+            Component::Prefix(prefix) => {
+                root = PatternRoot::Prefix(prefix.as_os_str().to_string_lossy().into_owned());
+            }
+            Component::RootDir => {
+                if root == PatternRoot::Relative {
+                    root = PatternRoot::Rooted;
+                }
+            }
+            Component::Normal(segment) => {
+                segments.push(segment.to_string_lossy().into_owned());
+            }
+            Component::CurDir | Component::ParentDir => {}
+        }
+    }
+    if !roots_match(&pattern.root, &root) {
+        return false;
+    }
     match_segments(&pattern.segments, &segments)
+}
+
+fn roots_match(pattern: &PatternRoot, candidate: &PatternRoot) -> bool {
+    match (pattern, candidate) {
+        (PatternRoot::Relative, PatternRoot::Relative)
+        | (PatternRoot::Rooted, PatternRoot::Rooted) => true,
+        (PatternRoot::Prefix(left), PatternRoot::Prefix(right)) => {
+            // Windows drive letters, device names, and UNC server/share names
+            // are case-insensitive for the host paths this matcher walks.
+            #[cfg(windows)]
+            {
+                left.eq_ignore_ascii_case(right)
+            }
+            #[cfg(not(windows))]
+            {
+                left == right
+            }
+        }
+        _ => false,
+    }
 }
 
 fn match_segments(matchers: &[SegmentMatcher], path: &[String]) -> bool {
@@ -632,6 +702,23 @@ mod tests {
         );
     }
 
+    #[cfg(windows)]
+    #[test]
+    fn split_fixed_prefix_accepts_native_and_mixed_windows_separators() {
+        assert_eq!(
+            split_fixed_prefix(r"C:\work\src\*.js"),
+            ("C:/work/src".to_string(), "*.js".to_string()),
+        );
+        assert_eq!(
+            split_fixed_prefix(r"C:\work\src/*.js"),
+            ("C:/work/src".to_string(), "*.js".to_string()),
+        );
+        assert_eq!(
+            split_fixed_prefix(r"\\server\share\src\**\*.js"),
+            ("//server/share/src".to_string(), "**/*.js".to_string()),
+        );
+    }
+
     #[test]
     fn segment_matcher_literal() {
         let m = compile_pattern("foo.js").unwrap();
@@ -657,6 +744,24 @@ mod tests {
         assert!(matches_path(&m, Path::new("src/a/b/c/d.js")));
         assert!(!matches_path(&m, Path::new("a.js")));
         assert!(!matches_path(&m, Path::new("src/a.css")));
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn segment_matcher_understands_windows_roots_and_separators() {
+        let drive = compile_pattern(r"C:\work\src\**\*.js").unwrap();
+        assert!(matches_path(
+            &drive,
+            Path::new(r"C:\work\src\nested\a.js")
+        ));
+        assert!(!matches_path(
+            &drive,
+            Path::new(r"D:\work\src\nested\a.js")
+        ));
+
+        let unc = compile_pattern(r"\\server\share\src\*.js").unwrap();
+        assert!(matches_path(&unc, Path::new(r"\\server\share\src\a.js")));
+        assert!(!matches_path(&unc, Path::new(r"\\other\share\src\a.js")));
     }
 
     #[test]

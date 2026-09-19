@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.241.0] - 2026-09-19
+
+### Fixed - Windows-native absolute `--js` and `--externs` globs
+
+Glob patterns now use the host filesystem's component semantics. On Windows,
+native backslashes, forward slashes, and mixed patterns such as
+`C:\work\src/*.js` resolve to the same walk root and match the same files.
+Drive and UNC roots are retained separately from content segments so an
+exclusion on one drive or share cannot remove a same-shaped path on another.
+Unix retains its prior behavior, including treating backslash as a valid
+filename character rather than a separator.
+
+The previous matcher split only on `/`, while Windows temporary directories
+from `Path::display()` contain `\`. As a result, every filesystem-backed glob
+test returned `NoMatches` on Windows even though literal inputs worked. New
+pure tests cover native, mixed, drive, and UNC spellings, while the existing
+filesystem-backed `*`, `**`, exclusion, ordering, and deduplication tests now
+exercise the repaired native path end to end.
+
 ## [0.240.0] - 2026-07-21
 
 ### Fixed - SIMPLE/ADVANCED no longer split a function-local `var x = init`
