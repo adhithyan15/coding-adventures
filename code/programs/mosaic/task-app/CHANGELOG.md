@@ -4,6 +4,14 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+### Fixed — WinUI Board view startup (#15473)
+
+The native app adapter now emits all four cells required by each Board column:
+title, status key, count, and theme-aware accent. Switching the generated WinUI
+app from List to Board no longer raises an out-of-range binding exception. The
+WinUI runtime smoke now enters Board and returns to List through UI Automation,
+so the view-specific construction path is CI-gated.
+
 ### Changed — `nav-options` is a list of labels (UI86, #15420)
 
 The view switcher's slot type follows toolkit 0.15: `list<text>` instead of
