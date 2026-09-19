@@ -49,8 +49,8 @@ from Sanskrit.
 loan — *sukha* = *su-* ("good, well") + *kha* ("space, feeling") — the same *su-*
 that is Greek *eu-* (as in *euphoria*). Malayalam,
 Tamil's closest sister, took far more Sanskrit into everyday speech than Tamil
-did — and *sukham* is a perfect case: for "well," where Tamil answers with native
-*nalam*, Malayalam reaches for Sanskrit *sukham*.
+did — and *sukhaṁ* is a perfect case: for "well," where Tamil answers with native
+*nalam*, Malayalam reaches for Sanskrit *sukhaṁ*.
 
 ## The exchange — the reply
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-SUKHAM-01] -->
@@ -61,7 +61,7 @@ With the copula from Chapter 2: **സുഖമാണ്** (*sukhamāṇŭ*) — 
 > — *sukhamāṇō?* ("Are you well? / How are you?")
 > — *sukhamāṇŭ, nandi.* ("I'm well, thank you.")
 
-Notice the reply reuses the greeting's own words — *sukham* + *āṇŭ* — just
+Notice the reply reuses the greeting's own words — *sukhaṁ* + *āṇŭ* — just
 without the question *-ō*.
 
 ## Guided Practice
@@ -75,5 +75,5 @@ without the question *-ō*.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-SUKHAM-01] -->
 
-[PAUSE 3s] Give the reply to *sukhamāṇō?*, and say where *sukham* comes from.
+[PAUSE 3s] Give the reply to *sukhamāṇō?*, and say where *sukhaṁ* comes from.
 (*Sukhamāṇŭ*; Sanskrit *sukha*, "well-being" — the *su-* that is Greek *eu-*.)

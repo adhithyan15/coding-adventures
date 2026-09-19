@@ -7,12 +7,12 @@ chapter: 39
 type: word
 headword: കാപ്പി
 gloss: coffee — an English colonial-era loan, itself from Arabic by way of Turkish and Italian; tea and coffee arrived by opposite roads
-romanization: kaapi
+romanization: kāppi
 concept_tag: ML-COFFEE
 prerequisites: [ML-C39-chaaya, ML-C36-makan]
 sounds: [malayalam-vowel-sign-aa, malayalam-geminate-ppa]
 roots: [arabic-qahwa-coffee]
-etymology_hook: "കാപ്പി comes from English coffee, borrowed during the colonial period and reshaped to Malayalam's own sound pattern; coffee itself is Arabic qahwah, which became Turkish kahve, then Italian caffe, then English coffee, before finally landing in Kerala as kaappi. chaaya walked overland from China through Persia; kaappi sailed from Arabia through Europe -- two drinks, two opposite roads, meeting on the same tea-shop counter"
+etymology_hook: "കാപ്പി comes from English coffee, borrowed during the colonial period and reshaped to Malayalam's own sound pattern; coffee itself is Arabic qahwah, which became Turkish kahve, then Italian caffe, then English coffee, before finally landing in Kerala as kaappi. cāya walked overland from China through Persia; kaappi sailed from Arabia through Europe -- two drinks, two opposite roads, meeting on the same tea-shop counter"
 duration:
   max_seconds: 240
 requires:
@@ -65,8 +65,8 @@ land, one over sea — meeting on the very same tea-shop counter.
 [PAUSE 1s]
 - [YOU SAY: "dayavāyi oru kāppi" — a coffee, please]
 - [YOU SAY: the long road — "qahwah … kahve … caffè … coffee … kāppi"]
-- [YOU SAY: two drinks, two roads — "chāya," overland; "kāppi," by sea]
-- [YOU SAY: two hearts, still — "hṛdayaṁ … nenchŭ"]
+- [YOU SAY: two drinks, two roads — "cāya," overland; "kāppi," by sea]
+- [YOU SAY: two hearts, still — "hṛdayaṁ … neñcŭ"]
 - [YOU RECALL: read **മകൻ**]
 
 ## Wrap-up Recall

@@ -47,7 +47,7 @@ It is a **vowel sign**. It is not a letter and never stands alone: it attaches t
 
 You already say these, and every one of them has ◌ോ somewhere inside it:
 
-- **സന്തോഷം** *santōṣam* — joy / pleased to meet you
+- **സന്തോഷം** *santōṣaṁ* — joy / pleased to meet you
 - **സുഖമാണോ?** — how are you? (lit. "are you well?")
 - **പോയി വരാം** *pōyi varāṁ* — goodbye (lit. "I'll go and come back")
 - **ജോലി ചെയ്യുക** *jōli ceyyuka* — to work (lit. "work-do")

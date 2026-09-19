@@ -47,7 +47,7 @@ It is a **consonant**, and in this script a consonant is never bare: it comes wi
 
 You already say these, and every one of them has ഷ somewhere inside it:
 
-- **സന്തോഷം** *santōṣam* — joy / pleased to meet you
+- **സന്തോഷം** *santōṣaṁ* — joy / pleased to meet you
 - **ക്ഷമിക്കണം** *kṣamikkaṇaṁ* — (you) should forgive / sorry
 
 ## Writing: ഷ — copy what you see

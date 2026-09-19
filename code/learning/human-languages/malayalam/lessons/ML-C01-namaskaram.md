@@ -6,8 +6,8 @@ sequence: 10
 chapter: 1
 type: word
 headword: നമസ്കാരം
-gloss: hello / greetings (namaskāram — a making of a bow)
-romanization: "namaskāram"
+gloss: hello / greetings (namaskāraṁ — a making of a bow)
+romanization: "namaskāraṁ"
 concept_tag: GREETING-HELLO
 prerequisites: []
 sounds: [malayalam-inherent-a, chandrakkala, conjunct, anusvara]
@@ -34,7 +34,7 @@ reviews_of: []
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Imagine meeting someone with your palms together and a small bow.
-First, only listen: *namaskāram*.
+First, only listen: *namaskāraṁ*.
 
 ## The exchange
 <!-- hl-knowledge: introduces=[ML-LEX-NAMASKARAM-01]; assesses=[] -->
@@ -60,8 +60,8 @@ The same idea, five ways:
 
 | Language | "Hello" | Source |
 |---|---|---|
-| **Malayalam** | *namaskāram* | Sanskrit |
-| Telugu | *namaskāram* | Sanskrit |
+| **Malayalam** | *namaskāraṁ* | Sanskrit |
+| Telugu | *namaskāraṁ* | Sanskrit |
 | Kannada | *namaskāra* | Sanskrit |
 | Hindi | *namaste* | Sanskrit |
 | Tamil | *vaṇakkam* | **native Dravidian** |
@@ -73,7 +73,7 @@ family the other way round.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-NAMASKARAM-01, ML-ETYMON-NAMASKARAM-BOW-01] -->
 
-- [YOU SAY: *namaskāram* once as a greeting]
+- [YOU SAY: *namaskāraṁ* once as a greeting]
 - [YOU SAY: its five beats — *na-ma-s-kā-ram*]
 - [YOU SAY: its literal memory hook — “the making of a bow”]
 

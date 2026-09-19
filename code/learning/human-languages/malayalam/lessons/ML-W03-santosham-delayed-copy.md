@@ -8,7 +8,7 @@ chapter: 3
 type: writing
 headword: "സന്തോഷം"
 gloss: write the known word for joy once after a short delay
-romanization: "santōṣam"
+romanization: "santōṣaṁ"
 prerequisites: [ML-W02-santosham-guided-copy]
 sounds: [anusvara]
 roots: [santosha-sanskrit]
@@ -33,7 +33,7 @@ reviews_of: [ML-C02-santosham, ML-W02-santosham-guided-copy]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-OBSERVE-TRACE-SANTOSHAM-02, ML-SCRIPT-GUIDED-COPY-SANTOSHAM-02] -->
 
-Look at **സന്തോഷം** for five seconds and say *santōṣam*. Find **ഷ** and the
+Look at **സന്തോഷം** for five seconds and say *santōṣaṁ*. Find **ഷ** and the
 long *ō* sign **ോ** once more. Then cover the model with your hand or a small
 piece of paper.
 
@@ -49,5 +49,5 @@ again, and finish.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-OBSERVE-TRACE-SANTOSHAM-02, ML-SCRIPT-GUIDED-COPY-SANTOSHAM-02] -->
 
 Uncover **സന്തോഷം** and compare it with your copy. Repair only one shape if
-needed. Say *santōṣam* once, then stop: one known word, one spaced writing
+needed. Say *santōṣaṁ* once, then stop: one known word, one spaced writing
 revisit.

@@ -47,8 +47,8 @@ It is a **consonant**, and in this script a consonant is never bare: it comes wi
 
 You already say these, and every one of them has സ somewhere inside it:
 
-- **നമസ്കാരം** *namaskāram* — hello / greetings (namaskāram — "a making of a bow")
-- **സന്തോഷം** *santōṣam* — joy / pleased to meet you
+- **നമസ്കാരം** *namaskāraṁ* — hello / greetings (namaskāraṁ — "a making of a bow")
+- **സന്തോഷം** *santōṣaṁ* — joy / pleased to meet you
 - **സുഖം** *sukhaṁ* — well-being — and the reply "സുഖമാണ്
 - **സാരമില്ല** *sāramilla* — it doesn't matter / no problem / you're welcome
 

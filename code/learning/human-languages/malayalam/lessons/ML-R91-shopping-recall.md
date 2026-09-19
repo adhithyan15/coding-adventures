@@ -85,7 +85,7 @@ has not.
 
 [PAUSE 1s]
 - [YOU SAY: *kaṭayil*]
-- [YOU SAY: *ethra rūpa?*]
+- [YOU SAY: *etra rūpa?*]
 - [YOU SAY: a price of your own, using any ten you know]
 - [YOU SAY: *ñān pustakaṁ vāṅṅunnu*]
 - [YOU SAY: which three words on this page were new]
@@ -93,6 +93,6 @@ has not.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C91-PRICE-QUESTION-01, ML-LEX-C91-BUY-01, ML-LEX-C91-MONEY-01] -->
 
-[PAUSE 3s] How do you ask what something costs? (***ethra rūpa?***) What is
+[PAUSE 3s] How do you ask what something costs? (***etra rūpa?***) What is
 *vila*? (**Price**.) And what had to be taught before a price could be answered
 at all? (**The numbers past twenty**.)

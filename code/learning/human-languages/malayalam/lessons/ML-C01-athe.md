@@ -53,7 +53,7 @@ Left to right: **അ · തെ** = *a-the* →
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ML-LEX-ATHE-01]; assesses=[] -->
 
-**അതെ** (*athe*) is native Malayalam, and it grows from **അത്** (*athu*),
+**അതെ** (*athe*) is native Malayalam, and it grows from **അത്** (*atŭ*),
 "that." To say "yes," Malayalam essentially says **"that [is so]"** — you
 affirm by pointing at the truth of what was said. Its natural partner is the
 negative *alla*, "[it is] not that" — the next lesson.
@@ -74,12 +74,12 @@ agree by confirming *that* is how things are.
 - [YOU SAY: a · the → "athe"]
 - [YOU SAY: note the "e" sign sits *before* ത but is read *after* it]
 - [YOU SAY: "athe" — "yes, that's so"]
-- [YOU RECALL: say *namaskāram*]
+- [YOU RECALL: say *namaskāraṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ATHE-01, ML-CONCEPT-C01-ANSWER-BY-POINTING-01] -->
 
 [PAUSE 3s] Read **അതെ**. What everyday word is it built from, and so what does
-"yes" literally assert? (*athu*, "that" — so "yes" = "that [is so]".) Where does
+"yes" literally assert? (*atŭ*, "that" — so "yes" = "that [is so]".) Where does
 the "e" vowel sign sit, and where is it read? (Written before the consonant,
 read after.)

@@ -7,7 +7,7 @@ chapter: 102
 type: review
 headword: (on Monday, at two o'clock, at what time?)
 gloss: cold retrieval of the two ways of answering "when", and of which one takes an ending
-romanization: "ethra maṇikkŭ enna ōrmma"
+romanization: "etra maṇikkŭ enna ōrmma"
 concept_tag: ML-WHEN-RECALL
 prerequisites: [ML-C102-day-and-hour, ML-C102-ethra-manikku, ML-C102-azhcha, ML-C102-manikku]
 sounds: []
@@ -43,7 +43,7 @@ Two answers to the same question, and only one of them is dressed:
 
 | | | |
 |---|---|---|
-| **തിങ്കളാഴ്ച** | *thiṅkaḷāzhcha* | on Monday — **bare** |
+| **തിങ്കളാഴ്ച** | *tiṅkaḷāḻca* | on Monday — **bare** |
 | **രണ്ട് മണിക്ക്** | *raṇṭŭ maṇikkŭ* | at two o'clock — **ക്ക്** |
 
 If you can remember which one is which, you have the chapter. The day-name
@@ -67,9 +67,9 @@ missing was one joint, not a vocabulary list.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C102-BARE-DAY-01, ML-GRAMMAR-C102-HOUR-DATIVE-01, ML-PHRASE-C102-WHAT-TIME-01, ML-CONCEPT-C94-THREE-DAYS-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: *thiṅkaḷāzhcha*, then *raṇṭŭ maṇikkŭ*]
-- [YOU SAY: *ethra maṇikkŭ?* and answer it]
-- [YOU SAY: *thiṅkaḷāzhcha raṇṭŭ maṇikkŭ ñān pōkuṁ*]
+- [YOU SAY: *tiṅkaḷāḻca*, then *raṇṭŭ maṇikkŭ*]
+- [YOU SAY: *etra maṇikkŭ?* and answer it]
+- [YOU SAY: *tiṅkaḷāḻca raṇṭŭ maṇikkŭ ñān pōkuṁ*]
 - [YOU SAY: the two day words that behave like the day-name]
 
 ## Wrap-up Recall

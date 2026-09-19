@@ -7,7 +7,7 @@ chapter: 68
 type: word
 headword: "പതിനൊന്നാം"
 gloss: "eleventh — proof the ending was never a fact about one to ten"
-romanization: "pathinonnāṁ"
+romanization: "patinonnāṁ"
 concept_tag: ML-ORDINAL-ELEVENTH
 prerequisites: [ML-C68-tenth, ML-C68-sixth, ML-C65-request, ML-C53-sky, ML-C20-pathinonnu-irupathu]
 sounds: []
@@ -28,7 +28,7 @@ variety: standard-colloquial
 reviews_of: [ML-C68-tenth, ML-C68-sixth, ML-C65-request, ML-C53-sky]
 ---
 
-# പതിനൊന്നാം (pathinonnāṁ) — eleventh, and the edge that is not there
+# പതിനൊന്നാം (patinonnāṁ) — eleventh, and the edge that is not there
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C68-ORDINAL-05, ML-LEX-C68-ORDINAL-01, ML-LEX-C65-ASK-01, ML-LEX-C53-SKY-01] -->
@@ -42,13 +42,13 @@ reviews_of: [ML-C68-tenth, ML-C68-sixth, ML-C65-request, ML-C53-sky]
 ## You'll want to know: പതിനൊന്നാം
 <!-- hl-knowledge: introduces=[ML-LEX-C68-ORDINAL-06]; assesses=[ML-GRAMMAR-C67-ORDINAL-02, ML-CONCEPT-C20-PATHINONNU-IRUPATHU-01] -->
 
-**പതിനൊന്നാം** (*pathinonnāṁ*) — "**eleventh**".
+**പതിനൊന്നാം** (*patinonnāṁ*) — "**eleventh**".
 
 **പതിനൊന്ന്** was itself a built word: *pathin-*, the joining shape of ten, with
 *onnŭ* welded on. Now the ordinal ending goes on top of *that*, and the result is
 a word of three parts, not one of which had to be learned as a whole.
 
-**പതിനൊന്നാം ദിവസം** (*pathinonnāṁ divasam*), the eleventh day.
+**പതിനൊന്നാം ദിവസം** (*patinonnāṁ divasaṁ*), the eleventh day.
 
 ## Grammar Lens: the ending is a fact about numbers, not about ten
 <!-- hl-knowledge: introduces=[ML-GRAMMAR-C68-ORDINAL-07]; assesses=[ML-LEX-C68-ORDINAL-06] -->
@@ -66,9 +66,9 @@ chapter rather than after ten examples. The examples were never the content.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C68-ORDINAL-06, ML-GRAMMAR-C68-ORDINAL-07, ML-LEX-C68-ORDINAL-05] -->
 
 [PAUSE 1s]
-- [YOU SAY: *pathinonnŭ*, then *pathinonnāṁ*]
-- [YOU SAY: *pathāṁ, pathinonnāṁ*]
-- [YOU SAY: take *irupathŭ* and make its ordinal yourself]
+- [YOU SAY: *patinonnŭ*, then *patinonnāṁ*]
+- [YOU SAY: *pathāṁ, patinonnāṁ*]
+- [YOU SAY: take *irupatŭ* and make its ordinal yourself]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C68-ORDINAL-06, ML-GRAMMAR-C68-ORDINAL-07] -->

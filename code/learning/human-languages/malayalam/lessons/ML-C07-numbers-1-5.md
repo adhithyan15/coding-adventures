@@ -5,7 +5,7 @@ spine_node: SPINE-COUNT-ONE-TO-FIVE
 sequence: 340
 chapter: 7
 type: word
-headword: "onnu randu moonnu naalu anchu"
+headword: "onnŭ raṇṭŭ mūnnŭ nālŭ añcŭ"
 gloss: hear and say one to five before meeting their written forms
 concept_tag: ML-NUMBERS-1-5
 prerequisites: [ML-C01-namaskaram, ML-C05-taamasikkuka, ML-C05-joli-ceyyuka]
@@ -41,35 +41,35 @@ attach each one to a quantity, and say them before your eyes meet the script.
 
 | quantity | said |
 |---|---|
-| 1 | ***onnu*** |
-| 2 | ***randu*** |
-| 3 | ***moonnu*** |
-| 4 | ***naalu*** |
-| 5 | ***anchu*** |
+| 1 | ***onnŭ*** |
+| 2 | ***raṇṭŭ*** |
+| 3 | ***mūnnŭ*** |
+| 4 | ***nālŭ*** |
+| 5 | ***añcŭ*** |
 
-Point to one finger and say *onnu*. Add one finger at a time: *randu, moonnu,
-naalu, anchu*. [REPEAT x2]
+Point to one finger and say *onnŭ*. Add one finger at a time: *raṇṭŭ, mūnnŭ,
+nālŭ, añcŭ*. [REPEAT x2]
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C07-NUMBERS-1-5-02]; assesses=[] -->
 
 Malayalam and Tamil were once one language, and the family resemblance is still
-audible. Malayalam *onnu* sits beside Tamil *onru*; *randu* beside *irandu*;
-*moonnu* beside *moonru*; and *naalu* beside *naanku*. You do not need to learn
+audible. Malayalam *onnŭ* sits beside Tamil *onru*; *raṇṭŭ* beside *irandu*;
+*mūnnŭ* beside *moonru*; and *nālŭ* beside *naanku*. You do not need to learn
 the Tamil forms. Listen only for the shared bones.
 
 ## Why it's said this way — one sound change
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C07-NUMBERS-1-5-03]; assesses=[] -->
 
-Five moved furthest: an older *aintu* softened toward Malayalam *anchu*. Say
+Five moved furthest: an older *aintu* softened toward Malayalam *añcŭ*. Say
 *an-chu* slowly, then normally. The sound comes before its spelling.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-1-5-01, ML-CONCEPT-C07-NUMBERS-1-5-02, ML-CONCEPT-C07-NUMBERS-1-5-03, ML-LEX-TAAMASIKKUKA-01, ML-CONCEPT-C05-POSTPOSITION-IL-01, ML-LEX-JOLI-CEYYUKA-01, ML-CONCEPT-C05-NOUN-PLUS-CEYYUKA-01] -->
 
-- [YOU SAY: *onnu, randu, moonnu, naalu, anchu* while raising one more finger]
-- [YOU HEAR: *moonnu*; YOU SHOW: 3]
-- [YOU HEAR: *anchu*; YOU SHOW: 5]
+- [YOU SAY: *onnŭ, raṇṭŭ, mūnnŭ, nālŭ, añcŭ* while raising one more finger]
+- [YOU HEAR: *mūnnŭ*; YOU SHOW: 3]
+- [YOU HEAR: *añcŭ*; YOU SHOW: 5]
 - [YOU RECALL: say *tāmasikkuka*, then say *jōli ceyyuka*]
 
 ## Wrap-up Recall

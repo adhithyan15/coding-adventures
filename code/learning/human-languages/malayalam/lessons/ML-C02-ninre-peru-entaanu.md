@@ -7,7 +7,7 @@ chapter: 2
 type: phrase
 headword: നിന്റെ പേര് എന്താണ്?
 gloss: what's your name?
-romanization: "ninṟe pēru entāṇŭ?"
+romanization: "ninṟe pēr entāṇŭ?"
 concept_tag: INTRO-WHATS-YOUR-NAME
 prerequisites: [ML-C02-entu, ML-C02-nii-ningal, ML-C02-peru, ML-C02-aanu]
 sounds: []
@@ -28,7 +28,7 @@ variety: standard-colloquial
 reviews_of: [ML-C02-entu, ML-C02-nii-ningal, ML-C02-enre-peru-aanu]
 ---
 
-# നിന്റെ പേര് എന്താണ്? (ninṟe pēru entāṇŭ?) — "what's your name?"
+# നിന്റെ പേര് എന്താണ്? (ninṟe pēr entāṇŭ?) — "what's your name?"
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -50,14 +50,14 @@ Unlike the Tamil question (which had **no** verb), Malayalam carries its copula
 ## Grammar Lens: answer, and the respectful version
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C02-RESPECT-BY-PLURAL-01] -->
 
-Answer with the sentence you built: **Enṟe pēru Arun āṇŭ.** The respectful
-"your" is *niṅṅaḷuṭe*: *niṅṅaḷuṭe pēru entāṇŭ?*
+Answer with the sentence you built: **Enṟe pēr Arun āṇŭ.** The respectful
+"your" is *niṅṅaḷuṭe*: *niṅṅaḷuṭe pēr entāṇŭ?*
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-PHRASE-C02-WHATS-YOUR-NAME-01, ML-CONCEPT-C02-RESPECT-BY-PLURAL-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: "ninṟe pēru entāṇŭ?"]
+- [YOU SAY: "ninṟe pēr entāṇŭ?"]
 - [YOU SAY: hear the copula inside — *entŭ* + *āṇŭ* → *entāṇŭ*]
 
 ## Wrap-up Recall

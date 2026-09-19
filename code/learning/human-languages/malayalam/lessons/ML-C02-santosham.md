@@ -7,7 +7,7 @@ chapter: 2
 type: phrase
 headword: സന്തോഷം
 gloss: joy / pleased to meet you
-romanization: "santōṣam"
+romanization: "santōṣaṁ"
 concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [ML-C02-enre-peru-aanu]
 sounds: [anusvara]
@@ -28,7 +28,7 @@ variety: standard-colloquial
 reviews_of: [ML-C02-enre-peru-aanu, ML-C02-ninre-peru-entaanu]
 ---
 
-# സന്തോഷം (santōṣam) — "joy," and "pleased to meet you"
+# സന്തോഷം (santōṣaṁ) — "joy," and "pleased to meet you"
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -38,7 +38,7 @@ reviews_of: [ML-C02-enre-peru-aanu, ML-C02-ninre-peru-entaanu]
 ## The exchange — the words you can use
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**സന്തോഷം** (*santōṣam*) literally means "joy." At the end of a short
+**സന്തോഷം** (*santōṣaṁ*) literally means "joy." At the end of a short
 introduction, it can stand by itself for "pleased to meet you." A fuller phrase
 exists, but it needs words and grammar you have not learned yet; the one-word
 version is complete and useful now.
@@ -58,7 +58,7 @@ your hand copy it with the model still present.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ML-LEX-SANTOSHAM-01]; assesses=[] -->
 
-**സന്തോഷം** (*santōṣam*, "joy") is **Sanskrit** — the same loan Kannada and
+**സന്തോഷം** (*santōṣaṁ*, "joy") is **Sanskrit** — the same loan Kannada and
 Telugu use. So even Malayalam, the great keeper of native words (recall *nandi*
 for "thanks" in Chapter 1), reaches for Sanskrit here. The loanwords spread
 **selectively**, word by word — which is exactly what these cognate notes
@@ -68,9 +68,9 @@ trace: native for "name" and "thanks," Sanskrit for "pleased."
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-SANTOSHAM-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: "santōṣam"]
+- [YOU SAY: "santōṣaṁ"]
 - [YOU SAY: the pattern — Malayalam keeps native *nandi* (thanks) but borrows
-  Sanskrit *santōṣam* (pleased)]
+  Sanskrit *santōṣaṁ* (pleased)]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-SANTOSHAM-01] -->

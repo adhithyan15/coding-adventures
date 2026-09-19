@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 28,
-  "sourceHash": "fnv1a64:d80e4e516ce86f51",
+  "sourceHash": "fnv1a64:6b5b40f7f6ace820",
   "lessonIds": [
     "ML-C28-uchakazhinju"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "malayalam/narration/ch28.txt",
   "json": "malayalam/narration/ch28.json",
-  "textHash": "fnv1a64:9bbafb4063e188cc",
-  "jsonHash": "fnv1a64:dfdfe2e8284927d7",
+  "textHash": "fnv1a64:cdb2beee874c6ead",
+  "jsonHash": "fnv1a64:69a63b00d45abfc1",
   "findings": []
 }

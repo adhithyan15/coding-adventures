@@ -52,7 +52,7 @@ one word offers, one accepts, one declines.
 
 > **എനിക്ക് വെള്ളം വേണം.**
 >
-> *enikku veḷḷaṁ vēṇaṁ* — "**I want water.**"
+> *enikkŭ veḷḷaṁ vēṇaṁ* — "**I want water.**"
 
 Read it in Malayalam order and it does not say that. It says **to me — water —
 is wanted.** The water is what the sentence is about; **you are not the
@@ -68,7 +68,7 @@ rather than relearning: when a Malayalam sentence is about something happening
 
 [PAUSE 1s]
 - [YOU SAY: *vēṇaṁ* — wanted]
-- [YOU SAY: *enikku veḷḷaṁ vēṇaṁ*]
+- [YOU SAY: *enikkŭ veḷḷaṁ vēṇaṁ*]
 - [YOU SAY: which word in the sentence is the subject, and which one is you]
 
 ## Wrap-up Recall
@@ -76,4 +76,4 @@ rather than relearning: when a Malayalam sentence is about something happening
 
 [PAUSE 3s] How do you say *I want water*? (***എനിക്ക് വെള്ളം വേണം***.) Who is
 the subject of that sentence? (**The water** — not you.) And which case is the
-person in? (**The dative** — *enikku*.)
+person in? (**The dative** — *enikkŭ*.)

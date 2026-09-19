@@ -72,7 +72,7 @@ and finding out which idea usually costs less than memorising the exception.
 - [YOU SAY: *nūṟŭ*]
 - [YOU SAY: *toṇṇūṟŭ*]
 - [YOU SAY: which of the two you can hear inside the other]
-- [YOU SAY: *eḻupathŭ*, *toṇṇūṟŭ*, *nūṟŭ* in order]
+- [YOU SAY: *eḻupatŭ*, *toṇṇūṟŭ*, *nūṟŭ* in order]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C88-NINETY-01, ML-CONCEPT-C88-HUNDRED-01] -->

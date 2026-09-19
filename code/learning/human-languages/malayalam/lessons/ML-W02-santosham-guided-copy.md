@@ -8,7 +8,7 @@ chapter: 2
 type: writing
 headword: "സന്തോഷം"
 gloss: copy the known word for joy once with the model visible
-romanization: "santōṣam"
+romanization: "santōṣaṁ"
 prerequisites: [ML-C02-santosham]
 sounds: [anusvara]
 roots: [santosha-sanskrit]
@@ -33,7 +33,7 @@ reviews_of: [ML-C02-santosham]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-Point to **സന്തോഷം** and say *santōṣam* once. Keep the model on the page.
+Point to **സന്തോഷം** and say *santōṣaṁ* once. Keep the model on the page.
 Find **ഷ** near the end, then find the long *ō* sign **ോ** on the consonant
 before it. Those are the two shapes you will work with.
 
@@ -67,4 +67,4 @@ not hide the model, do not spell from memory, and do not add a second word.
 
 Compare your copy with **സന്തോഷം** while both remain visible. Check only the
 two shapes you noticed: **ഷ** and **ോ**. Repair one shape if you want, then
-stop and say *santōṣam* once more.
+stop and say *santōṣaṁ* once more.

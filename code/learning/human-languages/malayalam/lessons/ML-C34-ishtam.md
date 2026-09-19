@@ -7,7 +7,7 @@ chapter: 34
 type: phrase
 headword: എനിക്ക് മലയാളം ഇഷ്ടമാണ്
 gloss: "'I like Malayalam' — a noun, a copula, and a dative; the one sentence in this book where putting yourself in the subject slot is not merely odd but impossible"
-romanization: enikku malayāḷaṁ iṣṭamāṇŭ
+romanization: enikkŭ malayāḷaṁ iṣṭamāṇŭ
 concept_tag: VERB-LIKE-LOVE
 prerequisites: [ML-C34-sahaayikkuka, ML-C06-dative-subject, ML-C07-numbers-1-5, ML-C20-kalavastha]
 sounds: [malayalam-conjunct-shta, malayalam-anusvara]
@@ -41,10 +41,10 @@ every verb so far. Not this one.
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C34-ISHTAM-01]; assesses=[ML-CONCEPT-C06-DATIVE-SUBJECT-01] -->
 
 > **എനിക്ക് മലയാളം ഇഷ്ടമാണ്.**
-> *enikku malayāḷaṁ iṣṭamāṇŭ* — "**to me** — Malayalam — **is a liking**."
+> *enikkŭ malayāḷaṁ iṣṭamāṇŭ* — "**to me** — Malayalam — **is a liking**."
 
 **ഇഷ്ടം** is a **noun**; **‑ആണ്** is Chapter 2's copula. Only the front moves:
-*enikku*, *ninakku*, *avanŭ*.
+*enikkŭ*, *ninakku*, *avanŭ*.
 
 ## The letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -58,7 +58,7 @@ retroflex) + **ം**, the anusvāram of *malayāḷaṁ*.
 *Enikku malayāḷaṁ aṟiyāṁ* — I **know** it. *Enikku manassilāyi* — I
 **understood**. *Enikku malayāḷaṁ iṣṭamāṇŭ* — I **like** it. One frame, three
 meanings; Chapter 6 promised the third before you had words for it. Swap the
-thing and it holds: *enikku maḻa iṣṭamāṇŭ*, "I like rain."
+thing and it holds: *enikkŭ maḻa iṣṭamāṇŭ*, "I like rain."
 
 Here the dative is not a preference. ***Ñān malayāḷaṁ iṣṭamāṇŭ* is
 ungrammatical**.
@@ -87,10 +87,10 @@ where Malayalam does. Chapter 6's row is the near end: **‑ikku, ‑ukku, ‑ku
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C34-ISHTAM-01, ML-CONCEPT-C34-ISHTAM-02, ML-CONCEPT-C34-ISHTAM-03, ML-CONCEPT-C34-SAHAAYIKKUKA-01, ML-CONCEPT-C34-SAHAAYIKKUKA-02, ML-CONCEPT-C34-CODIKKUKA-01, ML-CONCEPT-C34-CODIKKUKA-02, ML-CONCEPT-C34-EDUKKUKA-01, ML-CONCEPT-C34-EDUKKUKA-02, ML-CONCEPT-C06-DATIVE-SUBJECT-01, ML-CONCEPT-C06-DATIVE-SUBJECT-02, ML-CONCEPT-C06-DATIVE-SUBJECT-03, ML-CONCEPT-C33-MANASSILAAKKUKA-03, ML-CONCEPT-C32-ARIYUKA-02, ML-CONCEPT-C20-KALAVASTHA-02, ML-CONCEPT-C07-NUMBERS-1-5-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: "enikku malayāḷaṁ iṣṭamāṇŭ" — to me, Malayalam, is a liking]
-- [YOU SAY: three likers, then a new thing — "enikku … ninakku … avanŭ," then "enikku maḻa iṣṭamāṇŭ"]
+- [YOU SAY: "enikkŭ malayāḷaṁ iṣṭamāṇŭ" — to me, Malayalam, is a liking]
+- [YOU SAY: three likers, then a new thing — "enikkŭ … ninakku … avanŭ," then "enikkŭ maḻa iṣṭamāṇŭ"]
 - [YOU SAY: the three datives — "aṟiyāṁ, manassilāyi, iṣṭamāṇŭ"]
-- [YOU SAY: the two ways round — "ñān iṣṭappeṭunnu," "enikku piṭiccu"]
+- [YOU SAY: the two ways round — "ñān iṣṭappeṭunnu," "enikkŭ piṭiccu"]
 - [YOU SAY: the chapter's **നാല്** — "eṭukkunnu, cōdikkunnu, sahāyikkunnu, iṣṭamāṇŭ"]
 - [YOU SAY: the borrowings, by their pasts — "cōdiccu, sahāyiccu," not "eṭuttu"]
 - [YOU SAY: the same shape far away — "me gusta … mi piace … piḍikkum" — on "‑ikku · ‑ukku · ‑ku · ‑ge"]

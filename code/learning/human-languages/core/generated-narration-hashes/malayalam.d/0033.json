@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 33,
-  "sourceHash": "fnv1a64:a7099dc872c38073",
+  "sourceHash": "fnv1a64:f7d4eae0e1c0f651",
   "lessonIds": [
     "ML-C33-cintikkuka",
     "ML-C33-manassilaakkuka",
@@ -12,7 +12,7 @@
   "drivablePrefix": 0,
   "text": "malayalam/narration/ch33.txt",
   "json": "malayalam/narration/ch33.json",
-  "textHash": "fnv1a64:b4eb67ad0083f697",
-  "jsonHash": "fnv1a64:92edd621eb00722f",
+  "textHash": "fnv1a64:82f7af5a81dd5a33",
+  "jsonHash": "fnv1a64:cdf503b52b820e3d",
   "findings": []
 }

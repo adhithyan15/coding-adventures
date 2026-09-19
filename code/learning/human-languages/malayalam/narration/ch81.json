@@ -4,7 +4,7 @@
   "chapter": 81,
   "title": "How Far Away",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6536495093981c3d",
+  "sourceHash": "fnv1a64:92d97fd3716fc015",
   "lessons": [
     {
       "id": "ML-C81-aduthu",
@@ -307,9 +307,9 @@
     {
       "id": "ML-C81-dooram",
       "sequence": 2820,
-      "title": "എത്ര ദൂരം (ethra dūraṁ) — how far",
+      "title": "എത്ര ദൂരം (etra dūraṁ) — how far",
       "headword": "എത്ര ദൂരം",
-      "romanization": "ethra dūraṁ",
+      "romanization": "etra dūraṁ",
       "gloss": "how far — distance as a thing you can ask for a number of, and എത്ര lifted out of the age question",
       "script": "malayalam",
       "modality": "voice",
@@ -317,7 +317,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e846f145d2ef33c2",
+      "sourceHash": "fnv1a64:5d4bcaabd2aa1348",
       "notice": null,
       "blocks": [
         {
@@ -352,7 +352,7 @@
             },
             {
               "kind": "speech",
-              "text": "And you already own the word for asking. എത്ര ethra — how much, how many — has been sitting inside the age question since you learned it:"
+              "text": "And you already own the word for asking. എത്ര etra — how much, how many — has been sitting inside the age question since you learned it:"
             },
             {
               "kind": "speech",
@@ -364,7 +364,7 @@
             },
             {
               "kind": "speech",
-              "text": "എത്ര ദൂരം? — ethra dūraṁ? — how much distance? How far?"
+              "text": "എത്ര ദൂരം? — etra dūraṁ? — how much distance? How far?"
             },
             {
               "kind": "speech",
@@ -381,7 +381,7 @@
               "utterances": [
                 "അടുത്ത് (aṭuttŭ), near — a setting.",
                 "അകലെ (akale), far — a setting.",
-                "എത്ര ദൂരം (ethra dūraṁ)?, how far — a question with a number for an answer."
+                "എത്ര ദൂരം (etra dūraṁ)?, how far — a question with a number for an answer."
               ]
             },
             {
@@ -413,29 +413,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ethra dūraṁ?",
+              "instruction": "etra dūraṁ?",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *ethra dūraṁ?*]"
+              "source": "[YOU SAY: *etra dūraṁ?*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the other question you know that starts with ethra",
+              "instruction": "the other question you know that starts with etra",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the other question you know that starts with *ethra*]"
+              "source": "[YOU SAY: the other question you know that starts with *etra*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "aṭuttŭ, akale, ethra dūraṁ — two settings and the question",
+              "instruction": "aṭuttŭ, akale, etra dūraṁ — two settings and the question",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *aṭuttŭ*, *akale*, *ethra dūraṁ* — two settings and the question]"
+              "source": "[YOU SAY: *aṭuttŭ*, *akale*, *etra dūraṁ* — two settings and the question]"
             }
           ]
         },
@@ -452,7 +452,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is dūraṁ? (Distance.) What does ethra mean on its own? (How much, how many.) And where had you already met it? (Inside the age question.)"
+              "text": "What is dūraṁ? (Distance.) What does etra mean on its own? (How much, how many.) And where had you already met it? (Inside the age question.)"
             }
           ]
         }
@@ -461,9 +461,9 @@
     {
       "id": "ML-R81-distance-recall",
       "sequence": 2830,
-      "title": "(how far away) (ethra dūraṁ enna ōrmma) — from cold",
+      "title": "(how far away) (etra dūraṁ enna ōrmma) — from cold",
       "headword": "(how far away)",
-      "romanization": "ethra dūraṁ enna ōrmma",
+      "romanization": "etra dūraṁ enna ōrmma",
       "gloss": "cold retrieval of the two settings, the question, and the difference between pointing and measuring",
       "script": "malayalam",
       "modality": "voice",
@@ -471,7 +471,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:002287b6c2c91c51",
+      "sourceHash": "fnv1a64:cef9818965fd377b",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
               "utterances": [
                 "word: ഇവിടെ / അവിടെ. job: point — my side or not my side.",
                 "word: അടുത്ത് (aṭuttŭ) / അകലെ (akale). job: measure — a little space or a lot.",
-                "word: എത്ര ദൂരം (ethra dūraṁ)? job: ask — and expect a number back."
+                "word: എത്ര ദൂരം (etra dūraṁ)? job: ask — and expect a number back."
               ]
             },
             {
@@ -558,11 +558,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ethra dūraṁ?",
+              "instruction": "etra dūraṁ?",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *ethra dūraṁ?*]"
+              "source": "[YOU SAY: *etra dūraṁ?*]"
             },
             {
               "kind": "prompt",
@@ -576,11 +576,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "where ethra came from",
+              "instruction": "where etra came from",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: where *ethra* came from]"
+              "source": "[YOU SAY: where *etra* came from]"
             },
             {
               "kind": "prompt",
@@ -606,7 +606,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which word means near? (aṭuttŭ.) Which means far? (akale.) And how do you ask for the number? (ethra dūraṁ?)"
+              "text": "Which word means near? (aṭuttŭ.) Which means far? (akale.) And how do you ask for the number? (etra dūraṁ?)"
             }
           ]
         }

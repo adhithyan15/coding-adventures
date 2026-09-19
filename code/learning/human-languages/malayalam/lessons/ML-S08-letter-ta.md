@@ -49,7 +49,7 @@ You already say these, and every one of them has ത somewhere inside it:
 
 - **അതെ** — yes (athe — "that [is so]")
 - **എന്ത്** — what
-- **സന്തോഷം** *santōṣam* — joy / pleased to meet you
+- **സന്തോഷം** *santōṣaṁ* — joy / pleased to meet you
 - **താമസിക്കുക** *tāmasikkuka* — to live, to stay
 
 ## Writing: ത — copy what you see

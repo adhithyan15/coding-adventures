@@ -28,7 +28,7 @@ variety: standard-colloquial
 reviews_of: [ML-C01-namaskaram]
 ---
 
-# പേര് (pēru) — "name," the native Dravidian word
+# പേര് (pēr) — "name," the native Dravidian word
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -39,12 +39,12 @@ reviews_of: [ML-C01-namaskaram]
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 *(Skim if you read Malayalam.)* **പ** (pa) + **േ** (the *ē*-sign) → **പേ** (pē);
-**ര്** (bare *r*, chandrakkala). Read **പേ·ര്** → **pēru**.
+**ര്** (bare *r*, chillu). Read **പേ·ര്** → **pēr**.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ML-LEX-PERU-01]; assesses=[] -->
 
-**പേര്** (*pēru*, "name") is **native Dravidian**, from Proto-Dravidian **\*pēr**
+**പേര്** (*pēr*, "name") is **native Dravidian**, from Proto-Dravidian **\*pēr**
 — the same word as Tamil *peyar* and Telugu *pēru*, a cousin of Kannada *hesaru*
 (*p*→*h*). Being Tamil's closest sister, Malayalam keeps the native word, *not*
 Sanskrit *nāma* (Hindi *nām*, English *name*).
@@ -53,8 +53,8 @@ Sanskrit *nāma* (Hindi *nām*, English *name*).
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-PERU-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: "pēru"]
-- [YOU SAY: its cousins — *pēru* / *peyar* / *pēr* / *hesaru*]
+- [YOU SAY: "pēr"]
+- [YOU SAY: its cousins — *pēr* / *peyar* / *pēru* / *hesaru*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-PERU-01] -->

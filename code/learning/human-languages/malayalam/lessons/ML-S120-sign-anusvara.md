@@ -47,8 +47,8 @@ It is a **nasal**, written as a mark rather than as a letter. It rides on the sy
 
 You already say these, and every one of them has ◌ം somewhere inside it:
 
-- **നമസ്കാരം** *namaskāram* — hello / greetings (namaskāram — "a making of a bow")
-- **സന്തോഷം** *santōṣam* — joy / pleased to meet you
+- **നമസ്കാരം** *namaskāraṁ* — hello / greetings (namaskāraṁ — "a making of a bow")
+- **സന്തോഷം** *santōṣaṁ* — joy / pleased to meet you
 - **സുഖം** *sukhaṁ* — well-being — and the reply "സുഖമാണ്
 - **പോയി വരാം** *pōyi varāṁ* — goodbye (lit. "I'll go and come back")
 

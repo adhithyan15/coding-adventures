@@ -35,7 +35,7 @@ reviews_of: [ML-C68-eleventh, ML-C68-seventh, ML-C67-first, ML-C65-permission, M
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C68-ORDINAL-06, ML-GRAMMAR-C68-ORDINAL-07, ML-LEX-C68-ORDINAL-02, ML-LEX-C65-ASK-02, ML-LEX-C53-SKY-02] -->
 
 [PAUSE 2s]
-- [YOU RECALL: say *pathinonnāṁ*, and say why *irupathāṁ* needs no lesson — **R1**]
+- [YOU RECALL: say *patinonnāṁ*, and say why *irupathāṁ* needs no lesson — **R1**]
 - [YOU RECALL: say *ēḻāṁ* — **R2**]
 - [YOU RECALL: say *anuvādaṁ* — **R3**]
 - [YOU RECALL: say *sūryan* — **R4**]
@@ -49,7 +49,7 @@ This is not another ordinal. **ഒന്നാം** picks an item out of a line:
 door, the first way. **ആദ്യം** puts an *action* first in time, and it pairs with
 **പിന്നെ**, which you already have:
 
-> **ആദ്യം ഊണ്, പിന്നെ ചായ.** — *Ādyaṁ ūṇŭ, pinne chāya.* "Lunch first, then tea."
+> **ആദ്യം ഊണ്, പിന്നെ ചായ.** — *Ādyaṁ ūṇŭ, pinne cāya.* "Lunch first, then tea."
 
 ## Why it's said this way — the one word Malayalam borrowed here
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C68-ORDINAL-08, ML-LEX-C67-ORDINAL-01, ML-GRAMMAR-C67-ORDINAL-02] -->
@@ -77,7 +77,7 @@ Two kinds of order, and the words for both:
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C68-ORDINAL-08, ML-LEX-C64-SMALL-01, ML-LEX-C67-ORDINAL-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: *ādyaṁ*, then *ādyaṁ ūṇŭ, pinne chāya*]
+- [YOU SAY: *ādyaṁ*, then *ādyaṁ ūṇŭ, pinne cāya*]
 - [YOU SAY: *onnāṁ vaḻi* — the first way]
 - [YOU SAY: both in one breath, and hear that they are answering different questions]
 

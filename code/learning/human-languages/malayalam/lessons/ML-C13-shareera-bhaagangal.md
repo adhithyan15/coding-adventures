@@ -7,12 +7,12 @@ chapter: 13
 type: word
 headword: തല കൈ
 gloss: head and hand — matching Tamil's native pair almost exactly
-romanization: "thala kai"
+romanization: "tala kai"
 concept_tag: ML-BODY-BASIC
 prerequisites: [ML-C12-kudumbam, ML-C08-dayavayi]
 sounds: [malayalam-vowel-sign-ai]
 roots: [dravidian-tala-kai]
-etymology_hook: "തല thala (head) and കൈ kai (hand) are native Dravidian, matching Tamil's talai/kai closely — unlike the family words, Malayalam stays close to Tamil here"
+etymology_hook: "തല tala (head) and കൈ kai (hand) are native Dravidian, matching Tamil's talai/kai closely — unlike the family words, Malayalam stays close to Tamil here"
 duration:
   max_seconds: 240
 requires:
@@ -41,7 +41,7 @@ colors and days.
 ## You'll want to know
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01]; assesses=[] -->
 
-- **തല** (*thala*) = "**head**" — matches Tamil *talai* closely.
+- **തല** (*tala*) = "**head**" — matches Tamil *talai* closely.
 - **കൈ** (*kai*) = "**hand**" — matches Tamil *kai* almost exactly.
 
 Both native Dravidian, both close cousins of Tamil's own words — a reminder
@@ -52,7 +52,7 @@ not uniformly.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01, ML-CONCEPT-C08-DAYAVAYI-01, ML-CONCEPT-C08-DAYAVAYI-02, ML-CONCEPT-C08-DAYAVAYI-03, ML-CONCEPT-C08-DAYAVAYI-04] -->
 
 [PAUSE 1s]
-- [YOU SAY: "thala" — head]
+- [YOU SAY: "tala" — head]
 - [YOU SAY: "kai" — hand]
 - [YOU SAY: the match — nearly identical to Tamil's talai/kai]
 - [YOU RECALL: say *dayavāyi*]
@@ -61,5 +61,5 @@ not uniformly.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01] -->
 
 [PAUSE 3s] What are Malayalam's words for head and hand, and how closely do
-they match Tamil? (**തല thala, കൈ kai** — very closely, both native
+they match Tamil? (**തല tala, കൈ kai** — very closely, both native
 Dravidian.)

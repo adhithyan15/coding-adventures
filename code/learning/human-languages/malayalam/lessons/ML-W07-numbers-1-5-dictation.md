@@ -39,7 +39,7 @@ Cover the answer line. You will hear familiar words, never an untaught form.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-1-5-01, ML-SCRIPT-DIGITS-1-3-07, ML-SCRIPT-DIGITS-4-5-07] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-[YOU HEAR: *randu — anchu — moonnu*]
+[YOU HEAR: *raṇṭŭ — añcŭ — mūnnŭ*]
 
 Write the three numeral shapes from sound alone. Then uncover and compare:
 **൨ ൫ ൩**. Repair one shape if needed; do not rewrite the whole line.
@@ -47,5 +47,5 @@ Write the three numeral shapes from sound alone. Then uncover and compare:
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-1-5-01, ML-SCRIPT-DIGITS-1-3-07, ML-SCRIPT-DIGITS-4-5-07] -->
 
-[PAUSE 3s] Write the numeral for *naalu* from sound alone. (**൪**.) You are now
+[PAUSE 3s] Write the numeral for *nālŭ* from sound alone. (**൪**.) You are now
 ready to hear six through ten before meeting any of their shapes.

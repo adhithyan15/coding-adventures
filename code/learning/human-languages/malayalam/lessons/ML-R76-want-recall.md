@@ -67,7 +67,7 @@ person goes in the dative and the thing goes to the front.
 
 [PAUSE 1s]
 - [YOU SAY: offer tea, accept, then decline]
-- [YOU SAY: *enikku veḷḷaṁ vēṇaṁ*]
+- [YOU SAY: *enikkŭ veḷḷaṁ vēṇaṁ*]
 - [YOU SAY: who the subject of that sentence is]
 - [YOU SAY: the three forms in the order an exchange uses them]
 
@@ -75,5 +75,5 @@ person goes in the dative and the thing goes to the front.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C58-WANT-01, ML-LEX-C76-VENO-01, ML-CONCEPT-C06-DATIVE-SUBJECT-01] -->
 
 [PAUSE 3s] Offer somebody water. (***വെള്ളം വേണോ?***) Accept it.
-(***വേണം***.) And in *enikku veḷḷaṁ vēṇaṁ*, who is the subject? (**The
+(***വേണം***.) And in *enikkŭ veḷḷaṁ vēṇaṁ*, who is the subject? (**The
 water**.)

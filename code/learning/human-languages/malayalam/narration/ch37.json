@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Face Words",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:7bdbf57b107686af",
+  "sourceHash": "fnv1a64:dbb6104990c8f3de",
   "lessons": [
     {
       "id": "ML-C37-kannu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:52b6e94cc428a748",
+      "sourceHash": "fnv1a64:da21b65ae320bdf0",
       "notice": null,
       "blocks": [
         {
@@ -97,11 +97,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "three body words now — \"thala, kai, kaṇṇŭ\"",
+              "instruction": "three body words now — \"tala, kai, kaṇṇŭ\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: three body words now — \"thala, kai, kaṇṇŭ\"]"
+              "source": "[YOU SAY: three body words now — \"tala, kai, kaṇṇŭ\"]"
             },
             {
               "kind": "prompt",

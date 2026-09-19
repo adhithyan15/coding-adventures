@@ -4,7 +4,7 @@
   "chapter": 97,
   "title": "Beautiful, and Not",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:588e35b8ff54a451",
+  "sourceHash": "fnv1a64:d6723f4c1af5505a",
   "lessons": [
     {
       "id": "ML-C97-sundaram",
@@ -465,9 +465,9 @@
     {
       "id": "ML-R97-beauty-recall",
       "sequence": 3470,
-      "title": "(beautiful, and not) (sundaravuṁ allāthatuṁ enna ōrmma) — from cold",
+      "title": "(beautiful, and not) (sundaravuṁ allāttatuṁ enna ōrmma) — from cold",
       "headword": "(beautiful, and not)",
-      "romanization": "sundaravuṁ allāthatuṁ enna ōrmma",
+      "romanization": "sundaravuṁ allāttatuṁ enna ōrmma",
       "gloss": "cold retrieval of both ends of the line, and of the difference between a letter re-spelled and a sound added",
       "script": "malayalam",
       "modality": "voice",
@@ -475,7 +475,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:71125b3d66a796b2",
+      "sourceHash": "fnv1a64:fb980d6c29b52f56",
       "notice": null,
       "blocks": [
         {

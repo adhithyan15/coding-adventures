@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "The Meal",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e7d8b32e1ad3e0ea",
+  "sourceHash": "fnv1a64:b863493db88d2938",
   "lessons": [
     {
       "id": "ML-C40-oon",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cd789335ab45db73",
+      "sourceHash": "fnv1a64:61b25fe2b651e9ab",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -96,7 +96,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "എനിക്ക് ഊണ് ഇഷ്ടമാണ്. — enikku ūṇ iṣṭamāṇŭ. — \"I like having a meal\" — the familiar dative ‑ikku, the iṣṭaṁ liking-frame, one more turn of the same machine."
+              "text": "എനിക്ക് ഊണ് ഇഷ്ടമാണ്. — enikkŭ ūṇ iṣṭamāṇŭ. — \"I like having a meal\" — the familiar dative ‑ikku, the iṣṭaṁ liking-frame, one more turn of the same machine."
             },
             {
               "kind": "speech",
@@ -136,11 +136,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"enikku ūṇ iṣṭamāṇŭ\" — I like having a meal",
+              "instruction": "\"enikkŭ ūṇ iṣṭamāṇŭ\" — I like having a meal",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"enikku ūṇ iṣṭamāṇŭ\" — I like having a meal]"
+              "source": "[YOU SAY: \"enikkŭ ūṇ iṣṭamāṇŭ\" — I like having a meal]"
             },
             {
               "kind": "prompt",
@@ -154,11 +154,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "this chapter's three drinks and its meal — \"chāya, kāppi, pāl … ūṇ\"",
+              "instruction": "this chapter's three drinks and its meal — \"cāya, kāppi, pāl … ūṇ\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: this chapter's three drinks and its meal — \"chāya, kāppi, pāl … ūṇ\"]"
+              "source": "[YOU SAY: this chapter's three drinks and its meal — \"cāya, kāppi, pāl … ūṇ\"]"
             }
           ]
         },

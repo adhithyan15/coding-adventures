@@ -4,22 +4,22 @@
   "chapter": 25,
   "title": "Good Night",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a4a02667106cd4cf",
+  "sourceHash": "fnv1a64:f359aaa1f51e9959",
   "lessons": [
     {
       "id": "ML-C25-shubha-rathri",
       "sequence": 570,
-      "title": "ശുഭ രാത്രി (śubha rāthri) — \"good night,\" and a pattern seen before",
+      "title": "ശുഭ രാത്രി (śubha rātri) — \"good night,\" and a pattern seen before",
       "headword": "ശുഭ രാത്രി",
-      "romanization": "śubha rāthri",
-      "gloss": "\"good night\" — the standard Sanskrit-tatsama phrase (rāthri already met, śubha new); some sources describe modern Malayalam speakers often code-switching to English \"good night\" instead — the same claim, similarly thinly sourced, is also made about Telugu",
+      "romanization": "śubha rātri",
+      "gloss": "\"good night\" — the standard Sanskrit-tatsama phrase (rātri already met, śubha new); some sources describe modern Malayalam speakers often code-switching to English \"good night\" instead — the same claim, similarly thinly sourced, is also made about Telugu",
       "script": "malayalam",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8b6ab38c5bbc21eb",
+      "sourceHash": "fnv1a64:9333b5cd13f1d4e3",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already have rāthri. One more Sanskrit word, shared with Hindi, Kannada, and Telugu, completes Malayalam's \"good night\" — and this lesson's honest twist is one you've technically seen before, just in a different language."
+              "text": "You already have rātri. One more Sanskrit word, shared with Hindi, Kannada, and Telugu, completes Malayalam's \"good night\" — and this lesson's honest twist is one you've technically seen before, just in a different language."
             }
           ]
         },
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ശുഭ രാത്രി (śubha rāthri) — \"good night\" — literally \"auspicious night.\" Both pieces are Sanskrit tatsama: രാത്രി (rāthri, \"night,\" already met last lesson) plus ശുഭ (śubha, \"auspicious,\" from root śubh, \"to be beautiful,\" ultimately PIE ḱewbʰ- — the same word, the same root, already verified for the Hindi, Kannada, and Telugu siblings of this exact arc)."
+              "text": "ശുഭ രാത്രി (śubha rātri) — \"good night\" — literally \"auspicious night.\" Both pieces are Sanskrit tatsama: രാത്രി (rātri, \"night,\" already met last lesson) plus ശുഭ (śubha, \"auspicious,\" from root śubh, \"to be beautiful,\" ultimately PIE ḱewbʰ- — the same word, the same root, already verified for the Hindi, Kannada, and Telugu siblings of this exact arc)."
             }
           ]
         },
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here's the honest twist, hedged deliberately: some sources describe modern Malayalam speakers, especially in casual settings, code-switching to English \"good night\" rather than saying ശുഭ രാത്രി aloud — treating it more as the standard, correct-but-formal translation than an everyday spoken phrase. But this lesson isn't presenting that as a fresh Malayalam discovery. The exact same claim, sourced from similarly thin blogs and forum posts, is also made for Telugu, and there too it is genuinely unclear whether the pattern is Telugu-specific or something broader. Seeing the same claim turn up again for Malayalam strengthens the suspicion that this is a broader South Asian pattern (or simply a sourcing artifact — the languages that happen to get commented on in casual sources), not a language-specific trait worth treating as a genuine discovery each time. Either way, śubha rāthri itself remains perfectly correct, understood Malayalam."
+              "text": "Here's the honest twist, hedged deliberately: some sources describe modern Malayalam speakers, especially in casual settings, code-switching to English \"good night\" rather than saying ശുഭ രാത്രി aloud — treating it more as the standard, correct-but-formal translation than an everyday spoken phrase. But this lesson isn't presenting that as a fresh Malayalam discovery. The exact same claim, sourced from similarly thin blogs and forum posts, is also made for Telugu, and there too it is genuinely unclear whether the pattern is Telugu-specific or something broader. Seeing the same claim turn up again for Malayalam strengthens the suspicion that this is a broader South Asian pattern (or simply a sourcing artifact — the languages that happen to get commented on in casual sources), not a language-specific trait worth treating as a genuine discovery each time. Either way, śubha rātri itself remains perfectly correct, understood Malayalam."
             }
           ]
         },
@@ -75,11 +75,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"śubha rāthri\" — \"good night,\" literally \"auspicious night\"",
+              "instruction": "\"śubha rātri\" — \"good night,\" literally \"auspicious night\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"śubha rāthri\" — \"good night,\" literally \"auspicious night\"]"
+              "source": "[YOU SAY: \"śubha rātri\" — \"good night,\" literally \"auspicious night\"]"
             },
             {
               "kind": "prompt",
@@ -114,7 +114,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does ശുഭ രാത്രി literally mean? (\"Auspicious night.\") Is the \"Malayalam speakers code-switch to English instead\" claim a fresh discovery in this lesson? (No — the identical claim, similarly thinly sourced, is also made about Telugu, suggesting a broader pattern or a sourcing artifact, not a Malayalam-specific fact.) Does this affect whether śubha rāthri itself is correct? (No — it's perfectly correct and understood Malayalam, whatever its actual spoken frequency.)"
+              "text": "What does ശുഭ രാത്രി literally mean? (\"Auspicious night.\") Is the \"Malayalam speakers code-switch to English instead\" claim a fresh discovery in this lesson? (No — the identical claim, similarly thinly sourced, is also made about Telugu, suggesting a broader pattern or a sourcing artifact, not a Malayalam-specific fact.) Does this affect whether śubha rātri itself is correct? (No — it's perfectly correct and understood Malayalam, whatever its actual spoken frequency.)"
             }
           ]
         }

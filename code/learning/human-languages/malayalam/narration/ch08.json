@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Please",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:bb447960d213ee52",
+  "sourceHash": "fnv1a64:b0430dfa6506936c",
   "lessons": [
     {
       "id": "ML-C08-dayavayi",
@@ -189,7 +189,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fe8de4647a60eff9",
+      "sourceHash": "fnv1a64:ac9d3841963ae0cd",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -253,7 +253,7 @@
             },
             {
               "kind": "speech",
-              "text": "ശരി sari — okay / alright / correct (śari)."
+              "text": "ശരി śari — okay / alright / correct."
             },
             {
               "kind": "speech",

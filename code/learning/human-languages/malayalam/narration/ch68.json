@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "All the Way Up, and First in Time",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:8d9b06a0920608df",
+  "sourceHash": "fnv1a64:9e87d91161ca4f14",
   "lessons": [
     {
       "id": "ML-C68-sixth",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b93f3fb46be58b1",
+      "sourceHash": "fnv1a64:abd2e74df2f47031",
       "notice": null,
       "blocks": [
         {
@@ -86,7 +86,7 @@
             },
             {
               "kind": "speech",
-              "text": "ആറാം ദിവസം (āṟāṁ divasam), the sixth day."
+              "text": "ആറാം ദിവസം (āṟāṁ divasaṁ), the sixth day."
             },
             {
               "kind": "speech",
@@ -126,11 +126,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "āṟāṁ divasam — the sixth day",
+              "instruction": "āṟāṁ divasaṁ — the sixth day",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *āṟāṁ divasam* — the sixth day]"
+              "source": "[YOU SAY: *āṟāṁ divasaṁ* — the sixth day]"
             }
           ]
         },
@@ -166,7 +166,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:60816e9f25ccf245",
+      "sourceHash": "fnv1a64:bc1f426dd2f5068d",
       "notice": null,
       "blocks": [
         {
@@ -233,7 +233,7 @@
             },
             {
               "kind": "speech",
-              "text": "ഏഴാം ദിവസം (ēḻāṁ divasam), the seventh day."
+              "text": "ഏഴാം ദിവസം (ēḻāṁ divasaṁ), the seventh day."
             },
             {
               "kind": "speech",
@@ -313,7 +313,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:80c29fa3a1e94183",
+      "sourceHash": "fnv1a64:bf682e4a2a2f082f",
       "notice": null,
       "blocks": [
         {
@@ -380,7 +380,7 @@
             },
             {
               "kind": "speech",
-              "text": "എട്ടാം ദിവസം (eṭṭāṁ divasam), the eighth day."
+              "text": "എട്ടാം ദിവസം (eṭṭāṁ divasaṁ), the eighth day."
             }
           ]
         },
@@ -456,7 +456,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0bac52f1fb7e2c2d",
+      "sourceHash": "fnv1a64:ccb2e182b2b51001",
       "notice": null,
       "blocks": [
         {
@@ -523,7 +523,7 @@
             },
             {
               "kind": "speech",
-              "text": "ഒമ്പതാം ദിവസം (ompathāṁ divasam), the ninth day."
+              "text": "ഒമ്പതാം ദിവസം (ompathāṁ divasaṁ), the ninth day."
             }
           ]
         },
@@ -599,7 +599,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c544d7081616405",
+      "sourceHash": "fnv1a64:c26bed9a89c28b41",
       "notice": null,
       "blocks": [
         {
@@ -662,7 +662,7 @@
             },
             {
               "kind": "speech",
-              "text": "പത്താം ദിവസം (pathāṁ divasam), the tenth day."
+              "text": "പത്താം ദിവസം (pathāṁ divasaṁ), the tenth day."
             }
           ]
         },
@@ -728,9 +728,9 @@
     {
       "id": "ML-C68-eleventh",
       "sequence": 2340,
-      "title": "പതിനൊന്നാം (pathinonnāṁ) — eleventh, and the edge that is not there",
+      "title": "പതിനൊന്നാം (patinonnāṁ) — eleventh, and the edge that is not there",
       "headword": "പതിനൊന്നാം",
-      "romanization": "pathinonnāṁ",
+      "romanization": "patinonnāṁ",
       "gloss": "eleventh — proof the ending was never a fact about one to ten",
       "script": "malayalam",
       "modality": "voice",
@@ -738,7 +738,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:17e3fffc42d42991",
+      "sourceHash": "fnv1a64:96c06f186f97109b",
       "notice": null,
       "blocks": [
         {
@@ -797,7 +797,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "പതിനൊന്നാം (pathinonnāṁ) — \"eleventh\"."
+              "text": "പതിനൊന്നാം (patinonnāṁ) — \"eleventh\"."
             },
             {
               "kind": "speech",
@@ -805,7 +805,7 @@
             },
             {
               "kind": "speech",
-              "text": "പതിനൊന്നാം ദിവസം (pathinonnāṁ divasam), the eleventh day."
+              "text": "പതിനൊന്നാം ദിവസം (patinonnāṁ divasaṁ), the eleventh day."
             }
           ]
         },
@@ -838,29 +838,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "pathinonnŭ, then pathinonnāṁ",
+              "instruction": "patinonnŭ, then patinonnāṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *pathinonnŭ*, then *pathinonnāṁ*]"
+              "source": "[YOU SAY: *patinonnŭ*, then *patinonnāṁ*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "pathāṁ, pathinonnāṁ",
+              "instruction": "pathāṁ, patinonnāṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *pathāṁ, pathinonnāṁ*]"
+              "source": "[YOU SAY: *pathāṁ, patinonnāṁ*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "take irupathŭ and make its ordinal yourself",
+              "instruction": "take irupatŭ and make its ordinal yourself",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: take *irupathŭ* and make its ordinal yourself]"
+              "source": "[YOU SAY: take *irupatŭ* and make its ordinal yourself]"
             }
           ]
         },
@@ -877,7 +877,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"the eleventh day\". (പതിനൊന്നാം (pathinonnāṁ) ദിവസം.) Do you need a lesson for twentieth? (No — the ending goes on any number.)"
+              "text": "Say \"the eleventh day\". (പതിനൊന്നാം (patinonnāṁ) ദിവസം.) Do you need a lesson for twentieth? (No — the ending goes on any number.)"
             }
           ]
         }
@@ -896,7 +896,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:908acb7362d19a40",
+      "sourceHash": "fnv1a64:59acc194d2c5509c",
       "notice": null,
       "blocks": [
         {
@@ -913,11 +913,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say pathinonnāṁ, and say why irupathāṁ needs no lesson — R1",
+              "instruction": "say patinonnāṁ, and say why irupathāṁ needs no lesson — R1",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *pathinonnāṁ*, and say why *irupathāṁ* needs no lesson — **R1**]"
+              "source": "[YOU RECALL: say *patinonnāṁ*, and say why *irupathāṁ* needs no lesson — **R1**]"
             },
             {
               "kind": "prompt",
@@ -963,7 +963,7 @@
             },
             {
               "kind": "speech",
-              "text": "ആദ്യം (ādyaṁ) ഊണ്, പിന്നെ ചായ. — Ādyaṁ ūṇŭ, pinne chāya. \"Lunch first, then tea.\""
+              "text": "ആദ്യം (ādyaṁ) ഊണ്, പിന്നെ ചായ. — Ādyaṁ ūṇŭ, pinne cāya. \"Lunch first, then tea.\""
             }
           ]
         },
@@ -1020,11 +1020,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ādyaṁ, then ādyaṁ ūṇŭ, pinne chāya",
+              "instruction": "ādyaṁ, then ādyaṁ ūṇŭ, pinne cāya",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *ādyaṁ*, then *ādyaṁ ūṇŭ, pinne chāya*]"
+              "source": "[YOU SAY: *ādyaṁ*, then *ādyaṁ ūṇŭ, pinne cāya*]"
             },
             {
               "kind": "prompt",

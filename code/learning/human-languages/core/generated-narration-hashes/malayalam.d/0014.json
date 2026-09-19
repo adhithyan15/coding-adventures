@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 14,
-  "sourceHash": "fnv1a64:593b973548ad02c8",
+  "sourceHash": "fnv1a64:52aa23bb1c67e7c5",
   "lessonIds": [
     "ML-C14-kaalangal",
     "ML-S118-letter-llla"
@@ -10,7 +10,7 @@
   "drivablePrefix": 1,
   "text": "malayalam/narration/ch14.txt",
   "json": "malayalam/narration/ch14.json",
-  "textHash": "fnv1a64:038c959297a06953",
-  "jsonHash": "fnv1a64:4975afc2ff069fae",
+  "textHash": "fnv1a64:c984c3ef3b9bebe3",
+  "jsonHash": "fnv1a64:6d49de7e1d76475b",
   "findings": []
 }

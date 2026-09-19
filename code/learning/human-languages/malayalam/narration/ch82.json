@@ -4,7 +4,7 @@
   "chapter": 82,
   "title": "Opening A Conversation",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:ec1276946286414f",
+  "sourceHash": "fnv1a64:d9fb4597b7142649",
   "lessons": [
     {
       "id": "ML-C82-chettaa",
@@ -304,7 +304,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:258e3396756e3780",
+      "sourceHash": "fnv1a64:5799ca648d7c73a6",
       "notice": null,
       "blocks": [
         {
@@ -342,11 +342,11 @@
               "columns": 2,
               "rowCount": 5,
               "utterances": [
-                "greeting: നമസ്കാരം namaskāram. reach: anyone, any hour.",
+                "greeting: നമസ്കാരം namaskāraṁ. reach: anyone, any hour.",
                 "greeting: സുപ്രഭാതം suprabhātaṁ. reach: the morning, formal or not.",
                 "greeting: ശുഭ മധ്യാഹ്നം śubha madhyāhnaṁ. reach: the afternoon, formal.",
                 "greeting: ശുഭ സായാഹ്നം śubha sāyāhnaṁ. reach: the evening, formal.",
-                "greeting: ശുഭ രാത്രി śubha rāthri. reach: the night, formal."
+                "greeting: ശുഭ രാത്രി śubha rātri. reach: the night, formal."
               ]
             },
             {
@@ -439,11 +439,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "namaskāram, cēṭṭā",
+              "instruction": "namaskāraṁ, cēṭṭā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *namaskāram, cēṭṭā*]"
+              "source": "[YOU SAY: *namaskāraṁ, cēṭṭā*]"
             }
           ]
         },
@@ -460,7 +460,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which greeting is never wrong? (namaskāram.) Which family is mostly written and announced? (The ശുഭ one.) And which member of that family is an everyday word anyway? (suprabhātaṁ.)"
+              "text": "Which greeting is never wrong? (namaskāraṁ.) Which family is mostly written and announced? (The ശുഭ one.) And which member of that family is an everyday word anyway? (suprabhātaṁ.)"
             }
           ]
         }
@@ -479,7 +479,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41ce3a17addf887d",
+      "sourceHash": "fnv1a64:aa442b8c80731185",
       "notice": null,
       "blocks": [
         {
@@ -592,20 +592,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "namaskāram, cēṭṭā",
+              "instruction": "namaskāraṁ, cēṭṭā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *namaskāram, cēṭṭā*]"
+              "source": "[YOU SAY: *namaskāraṁ, cēṭṭā*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "namaskāram, cēcci",
+              "instruction": "namaskāraṁ, cēcci",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *namaskāram, cēcci*]"
+              "source": "[YOU SAY: *namaskāraṁ, cēcci*]"
             }
           ]
         },
@@ -622,7 +622,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which ending does the calling form replace? (-ൻ, with -ാ.) Whose words are you using when you address a stranger? (The family's.) And which greeting can you always fall back on? (namaskāram.)"
+              "text": "Which ending does the calling form replace? (-ൻ, with -ാ.) Whose words are you using when you address a stranger? (The family's.) And which greeting can you always fall back on? (namaskāraṁ.)"
             }
           ]
         }

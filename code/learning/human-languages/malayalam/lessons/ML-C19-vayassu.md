@@ -7,12 +7,12 @@ chapter: 19
 type: phrase
 headword: നിങ്ങൾക്ക് എത്ര വയസ്സുണ്ട്?
 gloss: how old are you? — literally "to you how much age exists?"; the SAME Sanskrit vayas word, but Malayalam adds a dative-subject + existential verb, a genuinely different shape than Kannada/Telugu's plain possessive
-romanization: "niṅṅaḷkkŭ ethra vayassuṇṭŭ?"
+romanization: "niṅṅaḷkkŭ etra vayassuṇṭŭ?"
 concept_tag: ML-AGE
 prerequisites: [ML-C18-mani]
 sounds: [malayalam-chillu-l, malayalam-existential-undu]
 roots: [sanskrit-vayas-vigor-age]
-etymology_hook: "വയസ്സ് (vayass, 'age') is the same Sanskrit वयस् as Kannada/Telugu's word — but Malayalam asks it differently: 'നിങ്ങൾക്ക് എത്ര വയസ്സുണ്ട്?' (ningalkku ethra vayassundu?, 'to you how much age exists?'), a DATIVE-SUBJECT + existential-verb (undu, 'exists') construction, a genuinely different grammatical shape than Kannada/Telugu's plain verbless possessive"
+etymology_hook: "വയസ്സ് (vayass, 'age') is the same Sanskrit वयस् as Kannada/Telugu's word — but Malayalam asks it differently: 'നിങ്ങൾക്ക് എത്ര വയസ്സുണ്ട്?' (ningalkku etra vayassundu?, 'to you how much age exists?'), a DATIVE-SUBJECT + existential-verb (undu, 'exists') construction, a genuinely different grammatical shape than Kannada/Telugu's plain verbless possessive"
 duration:
   max_seconds: 256
 requires:
@@ -48,11 +48,11 @@ vigor," PIE cousin of Latin **vīs**) behind Kannada's *vayassu* and Telugu's
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 > **നിങ്ങൾക്ക് എത്ര വയസ്സുണ്ട്?** — "How old are you?" (formal/plural) —
-  literally "**to you, how much age exists**?" (*ningaḷkku ethra vayassuṇṭŭ?*
-  — from *ningaḷkku*, "to you" [dative] + *ethra vayassu*, "how much age" +
+  literally "**to you, how much age exists**?" (*ningaḷkku etra vayassuṇṭŭ?*
+  — from *ningaḷkku*, "to you" [dative] + *etra vayassu*, "how much age" +
   *uṇṭŭ*, "exists.")
 > **എനിക്ക് ഇരുപത് വയസ്സുണ്ട്.** — "I am twenty years old." — literally "**to
-  me twenty age exists**." (*enikku irupatu vayassuṇṭŭ.*)
+  me twenty age exists**." (*enikkŭ irupatu vayassuṇṭŭ.*)
 
 This is a real grammatical departure from Kannada and Telugu's plain "your age
 how-much?" Malayalam puts the **person in the dative case** ("to you," not
@@ -67,8 +67,8 @@ its two Dravidian cousins even though the age-word itself is identical.
 
 [PAUSE 1s]
 - [YOU SAY: "vayassu" — age]
-- [YOU SAY: "ningaḷkku ethra vayassuṇṭŭ?" — how old are you?]
-- [YOU SAY: "enikku irupatu vayassuṇṭŭ" — I am twenty, "to me twenty age
+- [YOU SAY: "ningaḷkku etra vayassuṇṭŭ?" — how old are you?]
+- [YOU SAY: "enikkŭ irupatu vayassuṇṭŭ" — I am twenty, "to me twenty age
   exists"]
 
 ## Wrap-up Recall
@@ -77,5 +77,5 @@ its two Dravidian cousins even though the age-word itself is identical.
 [PAUSE 3s] Is Malayalam's **വയസ്സ്** the same Sanskrit word as Kannada's and
 Telugu's? (**Yes**.) Does Malayalam ask age the same simple way Kannada and
 Telugu do? (**No** — it uses a **dative** subject, "to you," plus the
-existential verb **ഉണ്ട്**, "exists.") What does *enikku irupatu vayassuṇṭŭ*
+existential verb **ഉണ്ട്**, "exists.") What does *enikkŭ irupatu vayassuṇṭŭ*
 literally mean? ("**To me twenty age exists**.")

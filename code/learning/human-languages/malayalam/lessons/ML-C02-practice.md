@@ -40,18 +40,18 @@ people actually say it.
 
 | Malayalam | English |
 |---|---|
-| എന്റെ പേര് മീരാ ആണ്. (*enṟe pēru Mira āṇŭ*) | My name is Mira. |
-| നിന്റെ പേര് എന്താണ്? (*ninṟe pēru entāṇŭ*) | What's your name? |
-| എന്റെ പേര് അരുൺ ആണ്. (*enṟe pēru Arun āṇŭ*) | My name is Arun. |
-| സന്തോഷം. (*santōṣam*) | Pleased to meet you. |
+| എന്റെ പേര് മീരാ ആണ്. (*enṟe pēr Mira āṇŭ*) | My name is Mira. |
+| നിന്റെ പേര് എന്താണ്? (*ninṟe pēr entāṇŭ*) | What's your name? |
+| എന്റെ പേര് അരുൺ ആണ്. (*enṟe pēr Arun āṇŭ*) | My name is Arun. |
+| സന്തോഷം. (*santōṣaṁ*) | Pleased to meet you. |
 
 Every atom traced:
 
-- **pēru** ← Dravidian *\*pēr* (*not* *name*; twin of Tamil *peyar*)
+- **pēr** ← Dravidian *\*pēr* (*not* *name*; twin of Tamil *peyar*)
 - **enṟe** — the native Dravidian possessive "my"
 - **āṇŭ** ← the verb *āka* ("to be") — Malayalam's **copula**
 - **entŭ** ← Dravidian question-stem *\*yā-/\*e-*
-- **santōṣam** ← **Sanskrit** (borrowed even in native-loving Malayalam)
+- **santōṣaṁ** ← **Sanskrit** (borrowed even in native-loving Malayalam)
 
 The Malayalam standout: unlike its Dravidian sisters' **zero copula**, Malayalam
 **has a word for "is"** (*āṇŭ*) — a real grammatical difference between the
@@ -62,8 +62,8 @@ closest of sisters.
 
 [PAUSE 1s]
 - [YOU SAY: the whole exchange, both voices]
-- [YOU SAY: your own introduction — "enṟe pēru … āṇŭ"]
-- [YOU SAY: ask it back — "ninṟe pēru entāṇŭ?"]
+- [YOU SAY: your own introduction — "enṟe pēr … āṇŭ"]
+- [YOU SAY: ask it back — "ninṟe pēr entāṇŭ?"]
 
 ## Writing check — keep the model visible
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-GUIDED-COPY-SANTOSHAM-02] -->
@@ -89,8 +89,8 @@ above, then say the word it sits in.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-PERU-01, ML-LEX-ENRE-01, ML-LEX-AANU-01, ML-LEX-NII-NINGAL-01, ML-LEX-ENTU-01, ML-LEX-SANTOSHAM-01, ML-PHRASE-C02-MY-NAME-IS-01, ML-PHRASE-C02-WHATS-YOUR-NAME-01, ML-CONCEPT-C02-COPULA-01] -->
 
-[PAUSE 3s] Give your name, ask someone else's, say you're pleased. (*Enṟe pēru
-… āṇŭ. / Ninṟe pēru entāṇŭ? / Santōṣam.*) What grammatical word does Malayalam
+[PAUSE 3s] Give your name, ask someone else's, say you're pleased. (*Enṟe pēr
+… āṇŭ. / Ninṟe pēr entāṇŭ? / Santōṣam.*) What grammatical word does Malayalam
 have that Tamil, Kannada, and Telugu lack? (A copula — *āṇŭ*, "is.")
 
 Next chapter begins the responding cycle, one short question and answer at a

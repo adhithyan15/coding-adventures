@@ -4,14 +4,14 @@
   "chapter": 19,
   "title": "Asking Someone's Age",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ef50921f30387028",
+  "sourceHash": "fnv1a64:1f4b1b2ba9e643c8",
   "lessons": [
     {
       "id": "ML-C19-vayassu",
       "sequence": 480,
-      "title": "നിങ്ങൾക്ക് എത്ര വയസ്സുണ്ട്? (niṅṅaḷkkŭ ethra vayassuṇṭŭ?) — \"to you, how much age exists?\"",
+      "title": "നിങ്ങൾക്ക് എത്ര വയസ്സുണ്ട്? (niṅṅaḷkkŭ etra vayassuṇṭŭ?) — \"to you, how much age exists?\"",
       "headword": "നിങ്ങൾക്ക് എത്ര വയസ്സുണ്ട്?",
-      "romanization": "niṅṅaḷkkŭ ethra vayassuṇṭŭ?",
+      "romanization": "niṅṅaḷkkŭ etra vayassuṇṭŭ?",
       "gloss": "how old are you? — literally \"to you how much age exists?\"; the SAME Sanskrit vayas word, but Malayalam adds a dative-subject + existential verb, a genuinely different shape than Kannada/Telugu's plain possessive",
       "script": "malayalam",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b119ea083e23f0ca",
+      "sourceHash": "fnv1a64:30dce977f0ddff22",
       "notice": null,
       "blocks": [
         {
@@ -57,11 +57,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "നിങ്ങൾക്ക് എത്ര വയസ്സുണ്ട്? (niṅṅaḷkkŭ ethra vayassuṇṭŭ?) — \"How old are you?\" (formal/plural) — literally \"to you, how much age exists?\" (ningaḷkku ethra vayassuṇṭŭ? — from ningaḷkku, \"to you\" [dative] + ethra vayassu, \"how much age\" + uṇṭŭ, \"exists.\")"
+              "text": "നിങ്ങൾക്ക് എത്ര വയസ്സുണ്ട്? (niṅṅaḷkkŭ etra vayassuṇṭŭ?) — \"How old are you?\" (formal/plural) — literally \"to you, how much age exists?\" (ningaḷkku etra vayassuṇṭŭ? — from ningaḷkku, \"to you\" [dative] + etra vayassu, \"how much age\" + uṇṭŭ, \"exists.\")"
             },
             {
               "kind": "speech",
-              "text": "എനിക്ക് ഇരുപത് വയസ്സുണ്ട്. — \"I am twenty years old.\" — literally \"to me twenty age exists.\" (enikku irupatu vayassuṇṭŭ.)"
+              "text": "എനിക്ക് ഇരുപത് വയസ്സുണ്ട്. — \"I am twenty years old.\" — literally \"to me twenty age exists.\" (enikkŭ irupatu vayassuṇṭŭ.)"
             },
             {
               "kind": "speech",
@@ -92,20 +92,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ningaḷkku ethra vayassuṇṭŭ?\" — how old are you?",
+              "instruction": "\"ningaḷkku etra vayassuṇṭŭ?\" — how old are you?",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ningaḷkku ethra vayassuṇṭŭ?\" — how old are you?]"
+              "source": "[YOU SAY: \"ningaḷkku etra vayassuṇṭŭ?\" — how old are you?]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"enikku irupatu vayassuṇṭŭ\" — I am twenty, \"to me twenty age exists\"",
+              "instruction": "\"enikkŭ irupatu vayassuṇṭŭ\" — I am twenty, \"to me twenty age exists\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"enikku irupatu vayassuṇṭŭ\" — I am twenty, \"to me twenty age exists\"]"
+              "source": "[YOU SAY: \"enikkŭ irupatu vayassuṇṭŭ\" — I am twenty, \"to me twenty age exists\"]"
             }
           ]
         },
@@ -122,7 +122,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is Malayalam's വയസ്സ് the same Sanskrit word as Kannada's and Telugu's? (Yes.) Does Malayalam ask age the same simple way Kannada and Telugu do? (No — it uses a dative subject, \"to you,\" plus the existential verb ഉണ്ട്, \"exists.\") What does enikku irupatu vayassuṇṭŭ literally mean? (\"To me twenty age exists.\")"
+              "text": "Is Malayalam's വയസ്സ് the same Sanskrit word as Kannada's and Telugu's? (Yes.) Does Malayalam ask age the same simple way Kannada and Telugu do? (No — it uses a dative subject, \"to you,\" plus the existential verb ഉണ്ട്, \"exists.\") What does enikkŭ irupatu vayassuṇṭŭ literally mean? (\"To me twenty age exists.\")"
             }
           ]
         }

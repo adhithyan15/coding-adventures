@@ -59,7 +59,7 @@ same underlying idea: weather as bound up with time. Where Spanish just
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C20-KALAVASTHA-02]; assesses=[] -->
 
 > **മഴ പെയ്യുന്നു.** — "It's raining." — literally "**rain is falling**."
-  (*mazha peyyunnu.*)
+  (*maḻa peyyunnu.*)
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C20-KALAVASTHA-01, ML-CONCEPT-C20-KALAVASTHA-02] -->
@@ -67,7 +67,7 @@ same underlying idea: weather as bound up with time. Where Spanish just
 [PAUSE 1s]
 - [YOU SAY: "kālāvastha" — weather, "the state of time"]
 - [YOU SAY: "kālam" — time, "avastha" — state]
-- [YOU SAY: "mazha peyyunnu" — it's raining, "rain is falling"]
+- [YOU SAY: "maḻa peyyunnu" — it's raining, "rain is falling"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C20-KALAVASTHA-01, ML-CONCEPT-C20-KALAVASTHA-02] -->
@@ -77,4 +77,4 @@ whole word literally mean? (**കാലം**, "time," + **അവസ്ഥ**, "st
 state of time**.") What earlier lesson does this echo, and how is the
 construction different? (**Spanish's *tiempo*** — Spanish reuses ONE word for
 both senses; Malayalam **compounds** two separate words instead.) What word
-does Malayalam use for "rain"? (**മഴ**, *mazha*.)
+does Malayalam use for "rain"? (**മഴ**, *maḻa*.)
