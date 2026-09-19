@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-closurec"
-version = "0.243.0"
+version = "0.244.0"
 edition = "2021"
 description = "closurec — CLI driver for the Closure Compiler clone. Mirrors the upstream Java Closure Compiler's command-line flag surface (google/closure-compiler @ CommandLineRunner.java) for drop-in compatibility. Per CLOC08."
 
@@ -45,6 +45,9 @@ coding_adventures_correlation_vector = { path = "../../../packages/rust/correlat
 coding-adventures-type-sidecar = { path = "../../../packages/rust/type-sidecar" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+
+[dev-dependencies]
+coding_adventures_sha256 = { path = "../../../packages/rust/sha256" }
 
 # closurec's diff-test modules are literate: their `//!` docs interleave prose
 # with lines that clippy's doc parser reads as unindented list items. These are
