@@ -548,7 +548,7 @@ fn positioned_node_breaks_find_text(node: &PositionedNode) -> bool {
 }
 
 /// Mosaic `VentureChrome` slot names, in interface declaration order.
-pub const VENTURE_CHROME_SLOT_NAMES: [&str; 17] = [
+pub const VENTURE_CHROME_SLOT_NAMES: [&str; 18] = [
     "address",
     "page-title",
     "status-text",
@@ -560,6 +560,7 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 17] = [
     "open-page-disabled",
     "save-page-disabled",
     "print-page-disabled",
+    "share-page-disabled",
     "view-source-disabled",
     "find-open",
     "find-query",
@@ -572,7 +573,7 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 17] = [
 pub const VENTURE_CHROME_HOST_SURFACE_SLOT_NAME: &str = "content-surface";
 
 /// Mosaic `VentureChrome` event names, in interface declaration order.
-pub const VENTURE_CHROME_EVENT_NAMES: [&str; 17] = [
+pub const VENTURE_CHROME_EVENT_NAMES: [&str; 18] = [
     "onBack",
     "onForward",
     "onHome",
@@ -582,6 +583,7 @@ pub const VENTURE_CHROME_EVENT_NAMES: [&str; 17] = [
     "onOpenPageInNewWindow",
     "onSavePage",
     "onPrintPage",
+    "onSharePage",
     "onViewSource",
     "onFindOpen",
     "onFindChange",
@@ -1386,6 +1388,7 @@ pub enum BrowserHostEffect {
     OpenBrowsingContext(BrowserBrowsingContextRequest),
     Download(BrowserDownloadRequest),
     Print(BrowserPrintRequest),
+    Share(BrowserShareRequest),
     WriteClipboard(String),
 }
 
@@ -1442,6 +1445,13 @@ pub struct BrowserDownloadRequest {
 /// Stable page identity handed to the platform's print presenter.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct BrowserPrintRequest {
+    pub address: String,
+    pub title: String,
+}
+
+/// Stable page identity handed to the platform's share presenter.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct BrowserShareRequest {
     pub address: String,
     pub title: String,
 }
@@ -1685,6 +1695,7 @@ pub enum BrowserChromeAction {
     OpenPageInNewWindow,
     SavePage,
     PrintPage,
+    SharePage,
     ViewSource,
     OpenFind,
     FindQuery(String),
@@ -1705,6 +1716,7 @@ pub enum BrowserChromeEvent {
     OpenPageInNewWindow,
     SavePage,
     PrintPage,
+    SharePage,
     ViewSource,
     FindOpen,
     FindChange(String),
@@ -1727,6 +1739,7 @@ impl BrowserChromeEvent {
             Self::OpenPageInNewWindow => "onOpenPageInNewWindow",
             Self::SavePage => "onSavePage",
             Self::PrintPage => "onPrintPage",
+            Self::SharePage => "onSharePage",
             Self::ViewSource => "onViewSource",
             Self::FindOpen => "onFindOpen",
             Self::FindChange(_) => "onFindChange",
@@ -1753,6 +1766,7 @@ pub struct BrowserChromeProps {
     pub open_page_disabled: bool,
     pub save_page_disabled: bool,
     pub print_page_disabled: bool,
+    pub share_page_disabled: bool,
     pub view_source_disabled: bool,
     pub find_open: bool,
     pub find_query: String,
@@ -1844,6 +1858,9 @@ impl BrowserChromeController {
             BrowserChromeEvent::PrintPage if session.viewport().is_some() => {
                 Some(BrowserChromeAction::PrintPage)
             }
+            BrowserChromeEvent::SharePage if session.viewport().is_some() => {
+                Some(BrowserChromeAction::SharePage)
+            }
             BrowserChromeEvent::ViewSource if session.viewport().is_some() => {
                 Some(BrowserChromeAction::ViewSource)
             }
@@ -1868,6 +1885,7 @@ impl BrowserChromeController {
             | BrowserChromeEvent::OpenPageInNewWindow
             | BrowserChromeEvent::SavePage
             | BrowserChromeEvent::PrintPage
+            | BrowserChromeEvent::SharePage
             | BrowserChromeEvent::ViewSource
             | BrowserChromeEvent::FindOpen
             | BrowserChromeEvent::FindChange(_)
@@ -1908,6 +1926,7 @@ impl BrowserChromeController {
             open_page_disabled: navigation_disabled || session.history().current_url().is_none(),
             save_page_disabled: navigation_disabled || session.viewport().is_none(),
             print_page_disabled: navigation_disabled || session.viewport().is_none(),
+            share_page_disabled: navigation_disabled || session.viewport().is_none(),
             view_source_disabled: navigation_disabled || session.viewport().is_none(),
             find_open: session.find_state().open,
             find_query: session.find_state().query.clone(),
@@ -2086,6 +2105,28 @@ impl BrowserHostController {
                 self.status_text = "Print dialog requested".to_string();
                 Ok(BrowserHostEventOutcome::effect(BrowserHostEffect::Print(
                     BrowserPrintRequest {
+                        address: page.final_url.clone(),
+                        title,
+                    },
+                )))
+            }
+            BrowserChromeAction::SharePage => {
+                let page = self
+                    .session
+                    .viewport()
+                    .expect("share-page action requires a retained viewport")
+                    .page();
+                let title = page
+                    .document
+                    .title
+                    .as_deref()
+                    .map(str::trim)
+                    .filter(|title| !title.is_empty())
+                    .unwrap_or(&page.final_url)
+                    .to_string();
+                self.status_text = "Share sheet requested".to_string();
+                Ok(BrowserHostEventOutcome::effect(BrowserHostEffect::Share(
+                    BrowserShareRequest {
                         address: page.final_url.clone(),
                         title,
                     },
@@ -7084,6 +7125,7 @@ mod tests {
                 open_page_disabled: true,
                 save_page_disabled: true,
                 print_page_disabled: true,
+                share_page_disabled: true,
                 view_source_disabled: true,
                 find_open: false,
                 find_query: String::new(),
@@ -7145,6 +7187,7 @@ mod tests {
                 open_page_disabled: false,
                 save_page_disabled: false,
                 print_page_disabled: false,
+                share_page_disabled: false,
                 view_source_disabled: false,
                 find_open: false,
                 find_query: String::new(),
@@ -7177,6 +7220,7 @@ mod tests {
         assert!(disabled.open_page_disabled);
         assert!(disabled.save_page_disabled);
         assert!(disabled.print_page_disabled);
+        assert!(disabled.share_page_disabled);
         assert!(disabled.view_source_disabled);
         assert!(disabled.find_disabled);
         assert!(disabled.navigation_disabled);
@@ -7311,6 +7355,7 @@ mod tests {
             BrowserChromeEvent::OpenPageInNewWindow,
             BrowserChromeEvent::SavePage,
             BrowserChromeEvent::PrintPage,
+            BrowserChromeEvent::SharePage,
             BrowserChromeEvent::ViewSource,
             BrowserChromeEvent::FindOpen,
             BrowserChromeEvent::FindChange(String::new()),
@@ -7503,6 +7548,21 @@ mod tests {
             }))
         );
         assert_eq!(host.props().status_text, "Print dialog requested");
+
+        let shared = host
+            .handle_event_with_effect(BrowserChromeEvent::SharePage, &mut bookmarks, |_, _| {
+                unreachable!("share page must not navigate or refetch the current context")
+            })
+            .unwrap();
+        assert!(!shared.changed);
+        assert_eq!(
+            shared.effect,
+            Some(BrowserHostEffect::Share(BrowserShareRequest {
+                address: url.to_string(),
+                title: "Source test".to_string(),
+            }))
+        );
+        assert_eq!(host.props().status_text, "Share sheet requested");
 
         let outcome = host
             .handle_event_with_effect(BrowserChromeEvent::ViewSource, &mut bookmarks, |_, _| {

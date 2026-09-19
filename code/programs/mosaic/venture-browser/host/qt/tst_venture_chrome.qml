@@ -87,6 +87,8 @@ TestCase {
         verify(!nativeControl("copy-address-button").enabled)
         verify(!nativeControl("open-page-button").enabled)
         verify(!nativeControl("save-page-button").enabled)
+        verify(!nativeControl("print-page-button").enabled)
+        verify(!nativeControl("share-page-button").enabled)
         verify(!nativeControl("view-source-button").enabled)
         verify(!nativeControl("find-button").enabled)
         verify(nativeControl("address-input").readOnly)
@@ -101,6 +103,8 @@ TestCase {
         mouseClick(nativeControl("copy-address-button"))
         mouseClick(nativeControl("open-page-button"))
         mouseClick(nativeControl("save-page-button"))
+        mouseClick(nativeControl("print-page-button"))
+        mouseClick(nativeControl("share-page-button"))
         mouseClick(nativeControl("view-source-button"))
         mouseClick(nativeControl("find-button"))
         mouseClick(nativeControl("go-button"))
@@ -198,6 +202,18 @@ TestCase {
         wait(0)
         compare(recordingHost.events.length, 1)
         compare(recordingHost.events[0].event, "onPrintPage")
+    }
+
+    function test_share_page_crosses_the_mosaic_host_seam() {
+        hydrate(false)
+        recordingHost.reset()
+        const sharePageButton = nativeControl("share-page-button")
+        verify(sharePageButton.enabled)
+        sharePageButton.forceActiveFocus()
+        keyClick(Qt.Key_Space)
+        wait(0)
+        compare(recordingHost.events.length, 1)
+        compare(recordingHost.events[0].event, "onSharePage")
     }
 
     function test_find_actions_cross_the_mosaic_host_seam() {
