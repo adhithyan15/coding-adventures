@@ -6456,7 +6456,7 @@ impl Compiler {
             }
         }
 
-        let assignment = single_statement_assignment(body)?;
+        let assignment = self.for_body_recurrence_assignment(body)?;
         let left_parts: Vec<&GrammarASTNode> = direct_nodes(assignment)
             .into_iter()
             .filter(|node| node.rule_name == "left_part")
@@ -6543,6 +6543,48 @@ impl Compiler {
         self.static_integer_slots = saved_integers;
         self.static_boolean_slots = saved_booleans;
         exited.then_some((binding.slot, snapshot?))
+    }
+
+    fn for_body_recurrence_assignment<'a>(
+        &self,
+        body: &'a GrammarASTNode,
+    ) -> Option<&'a GrammarASTNode> {
+        if let Some(assignment) = single_statement_assignment(body) {
+            return Some(assignment);
+        }
+
+        let statements = compound_body_statements(body)?;
+        let mut recurrence = None;
+        for statement in statements {
+            let assignment = single_statement_assignment(statement)?;
+            let left_parts: Vec<&GrammarASTNode> = direct_nodes(assignment)
+                .into_iter()
+                .filter(|node| node.rule_name == "left_part")
+                .collect();
+            if left_parts.len() != 1 {
+                return None;
+            }
+            let variable = first_direct_node(left_parts[0], "variable")?;
+            if array_subscripts(variable).is_some() {
+                return None;
+            }
+            let name = self.simple_variable_name(variable).ok()?;
+            let expression = first_direct_node(assignment, "expression")?;
+            if exact_bare_variable_expression_name(expression).as_deref() == Some(name.as_str()) {
+                let binding = self.require_var(&name).ok()?;
+                if binding.is_global
+                    || binding.array.is_some()
+                    || self.active_by_name_binding(&name).is_some()
+                {
+                    return None;
+                }
+                continue;
+            }
+            if recurrence.replace(assignment).is_some() {
+                return None;
+            }
+        }
+        recurrence
     }
 
     fn for_body_writes_name(
@@ -14622,12 +14664,26 @@ mod tests {
     }
 
     #[test]
-    fn al4_compound_while_boolean_recurrence_remains_conservative() {
-        let err = compile_source(
-            "begin integer i; real r; boolean flag; i := 0; flag := false; for i := i + 1 while i <= 3 do begin flag := flag eqv false; r := r end; if flag then r := 42.0 else r := 0.5; print(r) end",
+    fn al4_while_recurrence_allows_inert_scalar_siblings() {
+        let module = compile_source(
+            "begin integer i, pad, hold; real r; boolean flag; i := 0; pad := 7; hold := 9; flag := false; for i := i + 1 while i <= 3 do begin pad := pad; flag := not flag; hold := hold end; if flag then r := 42.0 else r := 0.5; print(r) end",
             "test",
         )
-        .expect_err("compound bodies remain outside boolean recurrence analysis");
+        .expect("a bounded while recurrence may ignore inert local scalar siblings");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42")
+        }));
+    }
+
+    #[test]
+    fn al4_while_recurrence_rejects_changing_scalar_sibling() {
+        let err = compile_source(
+            "begin integer i, pad; real r; boolean flag; i := 0; pad := 7; flag := false; for i := i + 1 while i <= 3 do begin flag := not flag; pad := pad + 1 end; if flag then r := 42.0 else r := 0.5; print(r) end",
+            "test",
+        )
+        .expect_err("a changing sibling keeps a compound while recurrence conservative");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
