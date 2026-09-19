@@ -189,7 +189,7 @@ mod apple {
     #[test]
     fn render_mermaid_mindmap_to_png() {
         let graph = parse_mindmap(
-            "mindmap\n  root((Native Mermaid))\n    Parser[\"Grammar [] first\"] %% hidden parser comment\n    :::pipeline primary\n    ::icon(fa fa-code)\n      IR(\"Semantic<br/>tree\")\n    Paint((Backend neutral))\n      Metal\n      PNG\n    output{{Hexagon path}}\n    cloud)Portable cloud(\n    alert))Backend bang((",
+            "mindmap\n  root((Native Mermaid))\n    Parser[\"`**Grammar** first\n      *semantic spans*`\"] %% hidden parser comment\n    :::pipeline primary\n    ::icon(fa fa-code)\n      IR(\"Semantic<br/>tree\")\n    Paint((Backend neutral))\n      Metal\n      PNG\n    output{{Hexagon path}}\n    cloud)Portable cloud(\n    alert))Backend bang((",
         )
         .expect("mindmap parse failed");
         assert!(graph
@@ -200,7 +200,7 @@ mod apple {
             .nodes
             .iter()
             .any(|node| node.shape == Some(diagram_ir::DiagramShape::Bang)));
-        assert!(graph.nodes.iter().any(|node| node.label.text == "Grammar [] first"));
+        assert!(graph.nodes.iter().any(|node| node.label.text == "Grammar first\nsemantic spans"));
         assert!(graph.nodes.iter().any(|node| node.label.text == "Semantic\ntree"));
         assert!(graph
             .nodes
@@ -209,6 +209,10 @@ mod apple {
         let parser_node = graph.nodes.iter().find(|node| node.id == "Parser").unwrap();
         assert_eq!(parser_node.classes, ["pipeline", "primary"]);
         assert_eq!(parser_node.icon.as_deref(), Some("fa fa-code"));
+        assert_eq!(
+            parser_node.label.markdown.as_deref(),
+            Some("**Grammar** first\n*semantic spans*")
+        );
         let layout = layout_graph_diagram(&graph, None, None);
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;
@@ -234,7 +238,9 @@ mod apple {
             PaintInstruction::Group(group)
                 if group.base.metadata.as_ref().is_some_and(|metadata|
                     metadata.get("diagram.classes").is_some_and(|value| value == "pipeline primary")
-                    && metadata.get("diagram.icon").is_some_and(|value| value == "fa fa-code"))
+                    && metadata.get("diagram.icon").is_some_and(|value| value == "fa fa-code")
+                    && metadata.get("diagram.label.markdown").is_some_and(|value|
+                        value == "**Grammar** first\n*semantic spans*"))
         )));
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,

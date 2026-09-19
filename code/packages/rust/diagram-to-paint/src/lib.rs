@@ -796,7 +796,7 @@ where
 
 fn node_shape_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
     let instruction = node_shape_geometry_instruction(node);
-    if node.classes.is_empty() && node.icon.is_none() {
+    if node.classes.is_empty() && node.icon.is_none() && node.label.markdown.is_none() {
         return instruction;
     }
 
@@ -806,6 +806,9 @@ fn node_shape_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
     }
     if let Some(icon) = &node.icon {
         metadata.insert("diagram.icon".into(), icon.clone());
+    }
+    if let Some(markdown) = &node.label.markdown {
+        metadata.insert("diagram.label.markdown".into(), markdown.clone());
     }
     PaintInstruction::Group(PaintGroup {
         base: PaintBase {
