@@ -347,9 +347,14 @@ The delivery order is:
    detached and consumed by identity proof rather than stored; only the
    remaining credentials are created under the proof-derived opaque account
    key, and only the storage revision is released. Missing or rejected identity
-   evidence reaches no credential store. Identity-policy loading, concrete
-   verification algorithms, clock/storage implementations, transport, waiting,
-   and UI remain separate injected or caller-owned authorities.
+   evidence reaches no credential store. The same composition can load the
+   exact static identity policy internally after binding the opaque verification
+   context, response, nonce, registered deployment client, provider, and trace,
+   so the caller supplies no decoded identity policy. Policy-source,
+   verification, clock, credential-release, custody, and broker audits remain
+   separate. Concrete sources, verification algorithms, clock/storage
+   implementations, transport, waiting, and UI remain separate injected or
+   caller-owned authorities.
 8. **HTTPS transport:** provider-neutral request/response types over the
    repository's TLS and HTTP primitives, with endpoint/capability authorization
    before any socket is opened.
