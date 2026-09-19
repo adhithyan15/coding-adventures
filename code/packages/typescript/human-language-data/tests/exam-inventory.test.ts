@@ -2625,8 +2625,30 @@ describe("the committed Malayalam A1 inventory", () => {
     // does not trip neverTaughtGlyphs because it sits inside other lessons'
     // examples, and closure is read in ORDER -- shari needs it in CHAPTER 1, so a
     // lesson at 3870 retires nothing. Filed against HL-C407.
-    expect(coverage.covered).toBe(213);
-    expect(coverage.unmapped).toBe(30);
+    // 213 -> 214: ML-A1-LEX-42, medicine and treatment. THE PERCENTAGE HOLDS at 88
+    // (214/243 is 88.1); recomputed, not carried.
+    // THE NOTE HELD ON ALL FIVE CHECKS, AND THIS TIME I RAN THE FIFTH ONE. "The
+    // symptoms are taught (ML-A1-LEX-27) and nothing that treats them is" is a
+    // claim about existing material, which is the shape that caught me on
+    // ML-A1-TIME-09. So LEX-27's five probe atoms were opened: cuma, pani, vEdana
+    // and kshiiNaM are all taught headwords in chapter 63. True.
+    // THE DOMAIN CHECK PAID OFF AGAIN, AND IT SHAPES THE CHAPTER: vaidyan, the
+    // doctor, is taught at ML-C48-doctor (1310). So the learner has had the
+    // SYMPTOMS and the PERSON and nothing in between -- no substance, no practice.
+    // That gap IS the chapter, the same way teacher-and-student-without-a-school
+    // was chapter 103's.
+    // THREE WORDS, CHOSEN FOR ZERO SCRIPT DEBT. marunnu, cikitsa and vRtti cover
+    // the label's three halves and every glyph in them is already script-taught.
+    // aashupatri (hospital) and guLika (tablet) were DROPPED, not because they are
+    // wrong but because each adds a headword to an already-open never-taught
+    // character -- U+0D36 and U+0D33 -- and neither is in the label.
+    // vRtti IS GLOSSED HONESTLY AS THE EVERYDAY WORD. It is cleanliness, not
+    // hygiene-as-a-subject; the lesson says so rather than letting the exam
+    // label's word stand unexamined. Its Sanskrit sense is CONDUCT, and the road
+    // from conduct to cleanliness is offered as the traditional account rather
+    // than asserted -- the ch103 treatment of paLLikkooTaM.
+    expect(coverage.covered).toBe(214);
+    expect(coverage.unmapped).toBe(29);
     expect(coverage.partial).toBe(0);
     // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
     // 67-68). It is the ONLY point that moved, and the numeral column below
@@ -2673,7 +2695,7 @@ describe("the committed Malayalam A1 inventory", () => {
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 213/243 points covered (88%)",
+      "malayalam A1 (partial inventory): 214/243 points covered (88%)",
     );
   }, 60_000);
 });

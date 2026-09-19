@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:5dcd07ddf5a47027",
+  "lessonIds": [
+    "ML-C107-marunnu",
+    "ML-C107-chikitsa",
+    "ML-C107-vrtthi",
+    "ML-C107-before-and-after",
+    "ML-R107-medicine-recall"
+  ],
+  "tex": "malayalam/book/chapters/ch107-medicine.tex"
+}
