@@ -94,6 +94,15 @@ class VentureChromeInteractionTest {
             assertEquals(true, browsingContext["noopener"])
             println("compose-live-stage=open-page")
 
+            rule.onNodeWithTag("save-page-button").assertIsEnabled().performClick()
+            rule.waitUntil(10_000) { host.lastDownloadRequest != null }
+            val download = assertNotNull(host.lastDownloadRequest)
+            @Suppress("UNCHECKED_CAST")
+            val downloadRequest = download["request"] as Map<String, Any?>
+            assertEquals("${server.origin}/start", downloadRequest["url"])
+            rule.waitForIdle()
+            println("compose-live-stage=save-page")
+
             rule.onNodeWithTag("view-source-button").assertIsEnabled().performClick()
             rule.waitUntil(10_000) { host.lastAuxiliaryDocument != null }
             val sourceDocument = assertNotNull(host.lastAuxiliaryDocument)

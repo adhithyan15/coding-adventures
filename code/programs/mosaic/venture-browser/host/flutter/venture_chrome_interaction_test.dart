@@ -103,12 +103,12 @@ void main() {
       await _pumpLiveVentureShell(tester, host);
       debugPrint('flutter-live-stage=shell-pumped');
 
-      await tester.tap(find.text('Copy Address'));
+      await tester.tap(find.text('Copy'));
       await tester.pumpAndSettle();
       expect(host.lastClipboardText, 'http://127.0.0.1:$port/start');
       debugPrint('flutter-live-stage=copy-address');
 
-      await tester.tap(find.text('Open in New Window'));
+      await tester.tap(find.text('New Window'));
       await tester.pumpAndSettle();
       expect(host.lastBrowsingContextRequest?['target'], '_blank');
       expect(
@@ -118,7 +118,15 @@ void main() {
       expect(host.lastBrowsingContextRequest?['noopener'], isTrue);
       debugPrint('flutter-live-stage=open-page');
 
-      await tester.tap(find.text('View Source'));
+      await tester.tap(find.text('Save'));
+      await tester.pumpAndSettle();
+      expect(
+        (host.lastDownloadRequest?['request'] as Map?)?['url'],
+        'http://127.0.0.1:$port/start',
+      );
+      debugPrint('flutter-live-stage=save-page');
+
+      await tester.tap(find.text('Source'));
       await tester.pumpAndSettle();
       expect(host.lastAuxiliaryDocument?['kind'], 'view-source');
       expect(

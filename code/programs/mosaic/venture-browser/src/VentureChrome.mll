@@ -37,19 +37,25 @@ layout VentureChrome {
         onClick : emit: onToggleBookmark
       )
       HostButton [ copy-address-button ] (
-        label : "Copy Address" ,
+        label : "Copy" ,
         disabled : slot: copy-address-disabled ,
         state-when-disabled : slot: copy-address-disabled ,
         onClick : emit: onCopyAddress
       )
       HostButton [ open-page-button ] (
-        label : "Open in New Window" ,
+        label : "New Window" ,
         disabled : slot: open-page-disabled ,
         state-when-disabled : slot: open-page-disabled ,
         onClick : emit: onOpenPageInNewWindow
       )
+      HostButton [ save-page-button ] (
+        label : "Save" ,
+        disabled : slot: save-page-disabled ,
+        state-when-disabled : slot: save-page-disabled ,
+        onClick : emit: onSavePage
+      )
       HostButton [ view-source-button ] (
-        label : "View Source" ,
+        label : "Source" ,
         disabled : slot: view-source-disabled ,
         state-when-disabled : slot: view-source-disabled ,
         onClick : emit: onViewSource

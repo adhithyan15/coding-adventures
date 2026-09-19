@@ -2,7 +2,7 @@
 
 This package is the shared Mosaic source of truth for Venture's native browser
 chrome. It authors the title, Back, Forward, Home, Reload, address input, Go
-action, bookmark, Copy Address, Open in New Window, View Source, and
+action, bookmark, Copy Address, Open in New Window, Save Page, View Source, and
 find-in-page controls, status line, disabled states, and dispatch contract once
 in MIL, MLL, and MSL.
 
@@ -21,7 +21,8 @@ recreating the surrounding chrome in backend-specific UI code.
   node slot.
 - Emits carry Back, Forward, Home, Reload, address edits, Navigate, the
   storage-neutral bookmark toggle command, host-neutral Copy Address and Open
-  in New Window transactions, and a host-neutral View Source request.
+  in New Window transactions, a host-neutral Save Page download, and a
+  host-neutral View Source request.
 - `venture-browser-core::BrowserChromeController` is the shared reducer and
   slot projection for that exact contract.
 - `venture-browser-core::BrowserHostController` owns the native-host state
@@ -54,6 +55,10 @@ recreating the surrounding chrome in backend-specific UI code.
   typed browsing-context effect as a `_blank` GET request with `noopener`.
   Generated hosts only invoke their presenter seam; target, request, security,
   disabledness, and status policy remain shared.
+- Save Page resolves the committed loaded page rather than the editable address
+  draft and emits the existing typed download effect as a GET request. Generated
+  hosts only invoke their download presenter seam; request selection,
+  disabledness, status projection, and effect encoding stay shared.
 - Both themes expose the same parts and interaction states.
 - `tests/package_compiles.rs` guards the package contract; the package artifact
   builder compiles these exact sources, emits project shells, and verifies a

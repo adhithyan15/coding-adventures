@@ -60,6 +60,7 @@ TestCase {
                 "bookmarkDisabled": disabled,
                 "copyAddressDisabled": disabled,
                 "openPageDisabled": disabled,
+                "savePageDisabled": disabled,
                 "viewSourceDisabled": disabled,
                 "findOpen": false,
                 "findQuery": "",
@@ -85,6 +86,7 @@ TestCase {
         verify(!nativeControl("reload-button").enabled)
         verify(!nativeControl("copy-address-button").enabled)
         verify(!nativeControl("open-page-button").enabled)
+        verify(!nativeControl("save-page-button").enabled)
         verify(!nativeControl("view-source-button").enabled)
         verify(!nativeControl("find-button").enabled)
         verify(nativeControl("address-input").readOnly)
@@ -98,6 +100,7 @@ TestCase {
         mouseClick(nativeControl("reload-button"))
         mouseClick(nativeControl("copy-address-button"))
         mouseClick(nativeControl("open-page-button"))
+        mouseClick(nativeControl("save-page-button"))
         mouseClick(nativeControl("view-source-button"))
         mouseClick(nativeControl("find-button"))
         mouseClick(nativeControl("go-button"))
@@ -171,6 +174,18 @@ TestCase {
         wait(0)
         compare(recordingHost.events.length, 1)
         compare(recordingHost.events[0].event, "onOpenPageInNewWindow")
+    }
+
+    function test_save_page_crosses_the_mosaic_host_seam() {
+        hydrate(false)
+        recordingHost.reset()
+        const savePageButton = nativeControl("save-page-button")
+        verify(savePageButton.enabled)
+        savePageButton.forceActiveFocus()
+        keyClick(Qt.Key_Space)
+        wait(0)
+        compare(recordingHost.events.length, 1)
+        compare(recordingHost.events[0].event, "onSavePage")
     }
 
     function test_find_actions_cross_the_mosaic_host_seam() {

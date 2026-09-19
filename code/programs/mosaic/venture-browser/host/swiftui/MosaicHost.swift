@@ -725,6 +725,44 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     let request = lastBrowsingContextRequest?["request"] as? NSDictionary
     let address = request?["url"] as? String ?? ""
     if openPageEvents == eventCount + 1, target == "_blank", noopener, address == targetURL {
+      let savePageEvents = chromeEventCounts["onSavePage", default: 0]
+      guard performNativeButtonClick(identifier: "save-page-button") else {
+        writeInteractionResult(
+          ["backend": "swiftui", "status": "error", "error": "save-page-button not found"],
+          to: markerPath)
+        return
+      }
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
+        self?.verifySavePage(
+          startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+          eventCount: savePageEvents, remaining: 50)
+      }
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error", "openPageTarget": target,
+          "openPageAddress": address, "openPageEvents": String(openPageEvents),
+          "error": "native Open in New Window effect did not preserve the committed URL",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifyOpenPage(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        eventCount: eventCount, remaining: remaining - 1)
+    }
+  }
+
+  private func verifySavePage(
+    startURL: String, targetURL: String, markerPath: String, eventCount: Int, remaining: Int
+  ) {
+    let savePageEvents = chromeEventCounts["onSavePage", default: 0]
+    let request = lastDownloadRequest?["request"] as? NSDictionary
+    let address = request?["url"] as? String ?? ""
+    if savePageEvents == eventCount + 1, address == targetURL {
       let viewSourceEvents = chromeEventCounts["onViewSource", default: 0]
       guard performNativeButtonClick(identifier: "view-source-button") else {
         writeInteractionResult(
@@ -742,15 +780,15 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     guard remaining > 0 else {
       writeInteractionResult(
         [
-          "backend": "swiftui", "status": "error", "openPageTarget": target,
-          "openPageAddress": address, "openPageEvents": String(openPageEvents),
-          "error": "native Open in New Window effect did not preserve the committed URL",
+          "backend": "swiftui", "status": "error", "savePageAddress": address,
+          "savePageEvents": String(savePageEvents),
+          "error": "native Save Page effect did not preserve the committed URL",
         ],
         to: markerPath)
       return
     }
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-      self?.verifyOpenPage(
+      self?.verifySavePage(
         startURL: startURL, targetURL: targetURL, markerPath: markerPath,
         eventCount: eventCount, remaining: remaining - 1)
     }
@@ -1328,7 +1366,8 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private func nativeToolbarControlPoint(identifier: String) -> (NSPoint, NSWindow)? {
     let identifiers = [
       "back-button", "forward-button", "home-button", "reload-button",
-      "bookmark-button", "copy-address-button", "open-page-button", "view-source-button",
+      "bookmark-button", "copy-address-button", "open-page-button", "save-page-button",
+      "view-source-button",
     ]
     guard let controlIndex = identifiers.firstIndex(of: identifier) else { return nil }
     var visited = Set<ObjectIdentifier>()
@@ -1362,9 +1401,10 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     case "home-button": labels = ["Home"]
     case "reload-button": labels = ["Reload"]
     case "bookmark-button": labels = ["Bookmark", "Remove Bookmark"]
-    case "copy-address-button": labels = ["Copy Address"]
-    case "open-page-button": labels = ["Open in New Window"]
-    case "view-source-button": labels = ["View Source"]
+    case "copy-address-button": labels = ["Copy", "Copy Address"]
+    case "open-page-button": labels = ["New Window", "Open in New Window"]
+    case "save-page-button": labels = ["Save", "Save Page"]
+    case "view-source-button": labels = ["Source", "View Source"]
     default: return nil
     }
     for window in NSApp.windows {
