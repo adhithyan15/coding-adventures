@@ -9,14 +9,15 @@
 
 #[cfg(target_vendor = "apple")]
 mod apple {
-    use std::collections::BTreeSet;
+    use std::collections::{BTreeMap, BTreeSet};
 
     use diagram_ir::{
-        EdgeKind, SequenceBlockKind, SequenceEvent, TemporalBody, TemporalDiagram, TemporalKind,
+        DiagramStyle, EdgeKind, SequenceBlockKind, SequenceEvent, TemporalBody, TemporalDiagram,
+        TemporalKind,
     };
     use diagram_layout_board::layout_board_diagram;
     use diagram_layout_chart::layout_chart_diagram;
-    use diagram_layout_graph::layout_graph_diagram;
+    use diagram_layout_graph::{GraphLayoutOptions, layout_graph_diagram};
     use diagram_layout_grid::layout_grid_diagram;
     use diagram_layout_hierarchy::{layout_railroad, layout_swimlane, layout_treeview, layout_treemap};
     use diagram_layout_geometric::{layout_cynefin, layout_info, layout_ishikawa, layout_venn, layout_wardley};
@@ -213,7 +214,33 @@ mod apple {
             parser_node.label.markdown.as_deref(),
             Some("**Grammar** first\n*semantic spans*")
         );
-        let layout = layout_graph_diagram(&graph, None, None);
+        let layout_options = GraphLayoutOptions {
+            class_styles: BTreeMap::from([
+                (
+                    "pipeline".into(),
+                    DiagramStyle {
+                        fill: Some("#fee2e2".into()),
+                        stroke: Some("#b91c1c".into()),
+                        text_color: Some("#7f1d1d".into()),
+                        stroke_width: Some(4.0),
+                        ..DiagramStyle::default()
+                    },
+                ),
+                (
+                    "primary".into(),
+                    DiagramStyle {
+                        font_weight: Some(700),
+                        ..DiagramStyle::default()
+                    },
+                ),
+            ]),
+            ..GraphLayoutOptions::default()
+        };
+        let layout = layout_graph_diagram(&graph, Some(&layout_options), None);
+        let parser_layout = layout.nodes.iter().find(|node| node.id == "Parser").unwrap();
+        assert_eq!(parser_layout.style.fill, "#fee2e2");
+        assert_eq!(parser_layout.style.stroke_width, 4.0);
+        assert_eq!(parser_layout.style.font_weight, 700);
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;
         let resolver = CoreTextResolver::new();
@@ -241,6 +268,13 @@ mod apple {
                     && metadata.get("diagram.icon").is_some_and(|value| value == "fa fa-code")
                     && metadata.get("diagram.label.markdown").is_some_and(|value|
                         value == "**Grammar** first\n*semantic spans*"))
+                    && group.children.iter().any(|child| matches!(
+                        child,
+                        PaintInstruction::Rect(rect)
+                            if rect.fill.as_deref() == Some("#fee2e2")
+                                && rect.stroke.as_deref() == Some("#b91c1c")
+                                && rect.stroke_width == Some(4.0)
+                    ))
         )));
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,

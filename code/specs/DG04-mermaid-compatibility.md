@@ -351,10 +351,12 @@ backend-neutral PaintScene lowering. Multiline Markdown strings preserve their
 authored source and typed bold/italic spans in semantic IR, participate in
 layout, and lower to independently shaped backend-neutral glyph runs. Icon
 identifiers and authored class names remain available as Paint instruction
-metadata so integrators can resolve external icon fonts and styles without
-coupling the parser to a backend. A native Metal-to-PNG fixture validates this
-documented subset; visual resolution of integrator-supplied icons and classes
-remains explicitly outside the partial compatibility level.
+metadata. Integrator-supplied class styles resolve in authored class order
+before layout, so typography participates in node measurement and the resolved
+fill, stroke, and text styling lower through backend-neutral PaintInstructions.
+A native Metal-to-PNG fixture validates this documented subset; visual
+resolution of external icon-pack artwork remains explicitly outside the partial
+compatibility level.
 
 ### Block Native Slice
 
