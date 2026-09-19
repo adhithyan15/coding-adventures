@@ -991,11 +991,12 @@ backend immediately) come before the enabler-dependent items.
   bounded analysis evaluates it once per iteration and retains its exact
   integer, finite real, or boolean result. Integer and real recurrence
   simulation is capped at 4,096 passes. That recurrence assignment may unwrap
-  one unlabeled assignment from a single-statement compound body. Larger loops,
-  labels, conditionals, declarations, additional statements, integer
-  overflow, non-finite results, zero steps, arrays, globals, by-name targets,
-  tracking barriers, dynamic writes, and other control-dependent
-  multi-iteration bodies remain conservative.
+  one changing assignment from a compound body whose other assignments are
+  proven integer, real, or boolean scalar identities. Larger loops, labels,
+  conditionals, declarations, changing siblings, integer overflow, non-finite
+  results, zero steps, arrays, globals, by-name targets, tracking barriers,
+  dynamic writes, and other control-dependent multi-iteration bodies remain
+  conservative.
   A `while` element also retains body initialization when a bounded static
   numeric comparison, evaluated after abstractly assigning its initial
   controlled value, proves the first condition true. Such an element also
@@ -1008,9 +1009,9 @@ backend immediately) come before the enabler-dependent items.
   direct unary `not` updates retain their exact negated snapshots because
   operator wrappers are distinguished from bare-variable reads. Exact snapshot
   updates may unwrap one changing assignment from a compound body whose other
-  statements are exact bare self-assignments of ordinary local scalars. Labels,
-  conditionals, declarations, changing siblings, dependency writes, string
-  targets, overflow,
+  statements are proven integer, real, or boolean identity assignments of
+  ordinary local scalars. Labels, conditionals, declarations, changing
+  siblings, dependency writes, string targets, overflow,
   non-finite values, and loops exceeding 4,096 evaluations remain
   conservative. Capped abstract execution also retains the
   first integer or finite binary64 control value whose predicate is false when

@@ -2821,6 +2821,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — existing exact scalar identity proofs may establish inert
+    // siblings around one changing recurrence in both bounded loop forms.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, pad; real hold, r; boolean stepflag, whileflag, ready; pad := 7; hold := 9.0; ready := true; stepflag := false; for i := 1 step 1 until 3 do begin pad := 0 + pad; stepflag := not stepflag; hold := hold * 1.0; ready := ready and true end; if stepflag then r := 42.0 else r := 0.5; print(r); i := 0; whileflag := false; for i := i + 1 while i <= 3 do begin ready := true and ready; whileflag := not whileflag; pad := pad * 1; hold := 1.0 * hold end; if whileflag then r := 42.0 else r := 0.5; print(r) end",
+        expect: Expect::Stdout("4242"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a statically nonempty while element may have a dynamic trip
     // count while still establishing the same control-independent body value.
     Prog {
@@ -13465,6 +13474,31 @@ fn algol_inert_sibling_while_recurrence_runs_on_every_available_standard_backend
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the inert-sibling while recurrence did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_computed_inert_sibling_recurrences_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("pad := 0 + pad; stepflag := not stepflag")
+        })
+        .expect("the computed inert-sibling recurrences must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the computed inert-sibling recurrences did not run"
             );
             continue;
         };
