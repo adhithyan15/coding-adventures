@@ -760,8 +760,37 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // ONE INVENTED EXAMPLE WAS CAUGHT BEFORE THE FIRST VALIDATE: the draft wrote
   // "indya oru raajyaM", and oru is taught NOWHERE -- it is the open point
   // ML-A1-ART-02, which this corpus has been using untaught in six lessons.
-  expect(coverage.covered).toBe(212);
-  expect(coverage.unmapped).toBe(31);
+  // 212 -> 213: ML-A1-TIME-09, before and after. THE PERCENTAGE MOVES, 87 -> 88
+  // (213/243 is 87.7); recomputed, not carried.
+  // THE NOTE'S FIRST HALF IS TRUE AND ITS SECOND HALF IS NOT, AND THE DRAFT OF
+  // THIS COMMENT CELEBRATED IT AS THE FIRST TRUSTWORTHY NOTE OF THE RUN. It read
+  // "munpu and shesham are not taught" -- verifiably true, neither appears
+  // anywhere -- and then "pinne (then) is the nearest and it SEQUENCES TURNS
+  // RATHER THAN EVENTS". ML-C68-at-first (2350) teaches the opposite in as many
+  // words: "aadyaM puts an ACTION first in TIME, and it pairs with pinne", its
+  // summary table is headed "an action in time", and its example is aadyaM uuNu,
+  // pinne chaaya -- lunch first, then tea, which orders the world.
+  // I TOOK THE NOTE'S OWN ANTICIPATION OF THE DOMAIN CHECK AS EVIDENCE THAT THE
+  // CHECK HAD BEEN DONE. That is the domain mode again, one level up: not
+  // trusting a note's list of words, but trusting a note's self-assessment. So
+  // this is the FIFTH stale note in five tranches, not the first sound one.
+  // THE CHAPTER'S ORGANISING CONTRAST WAS REBUILT ON WHAT THE CORPUS ACTUALLY
+  // TEACHES. Both pairs order real events. What aadyaM and pinne cannot do is
+  // NAME what they measure against: they lay a run out, this then that. munpu
+  // and shEshaM fix an event against a NAMED point. That is what "anteriority
+  // and posteriority" asks for, so the point still closes -- on a true framing.
+  // NO NEW GRAMMAR: both are postpositions on the dative, so raNTu maNikku munpu
+  // reuses ML-C102-manikku's form and uuNinu shEshaM shows the dative's other
+  // shape on uuNu, owned since 930. The draft called that ending derivable and
+  // it was not -- ML-C06 says the choice is "by the sound the noun ends in" and
+  // never says WHICH sounds, so the lesson now supplies the one rule it needs.
+  // shEshaM LANDS ON KNOWN SCRIPT DEBT AND NOTHING CAN BE DONE HERE: U+0D36 has
+  // no script lesson (SCR-12's "sha", 12 tokens across 15 headword fields), it
+  // does not trip neverTaughtGlyphs because it sits inside other lessons'
+  // examples, and closure is read in ORDER -- shari needs it in CHAPTER 1, so a
+  // lesson at 3870 retires nothing. Filed against HL-C407.
+  expect(coverage.covered).toBe(213);
+  expect(coverage.unmapped).toBe(30);
   expect(coverage.partial).toBe(0);
   // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
   // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
@@ -773,6 +802,6 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
     covered: 8,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 212/243 points covered (87%)",
+    "malayalam A1 (partial inventory): 213/243 points covered (88%)",
   );
 }, 60_000);

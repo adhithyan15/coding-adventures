@@ -1,0 +1,12 @@
+{
+  "language": "malayalam",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:79d680f1cb09cc91",
+  "lessonIds": [
+    "ML-C106-munpu",
+    "ML-C106-shesham",
+    "ML-C106-ordering",
+    "ML-R106-before-after-recall"
+  ],
+  "tex": "malayalam/book/chapters/ch106-before-after.tex"
+}
