@@ -19,8 +19,8 @@
 //!
 //! ## The stack value model ([`Value`])
 //!
-//! A CLR evaluation-stack slot holds either a 32-bit integer or an **object
-//! reference**. We model that with [`Value`]: `Int(i32)` for a number, and
+//! A CLR evaluation-stack slot holds a 32-bit or 64-bit integer or an **object
+//! reference**. We model that with [`Value`]: `Int(i32)`, `Int64(i64)`, and
 //! `Ref(Option<usize>)` for a reference — `Ref(None)` is the CLR `null`, and
 //! `Ref(Some(i))` indexes the simulator's object [`heap`](CLRSimulator::heap).
 //! A stack/local slot is `Option<Value>`, where the outer `None` means an
@@ -39,6 +39,9 @@
 //! all opcodes are single bytes.
 
 use std::fmt;
+
+/// Load a signed 64-bit immediate with an eight-byte little-endian payload.
+pub const OP_LDC_I8: u8 = 0x21;
 
 // ===========================================================================
 // Opcode constants
@@ -128,11 +131,13 @@ pub const CLT_BYTE: u8 = 0x04;
 // Stack value model
 // ===========================================================================
 
-/// A CLR evaluation-stack value: a 32-bit integer, or an object reference
+/// A CLR evaluation-stack value: a 32-bit or 64-bit integer, or an object reference
 /// (`None` = `null`, `Some(i)` = index into [`CLRSimulator::heap`]).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Value {
     Int(i32),
+    /// A distinct stack type: small int64 values must not become int32.
+    Int64(i64),
     Ref(Option<usize>),
 }
 
@@ -142,6 +147,7 @@ impl Value {
     fn as_int(self) -> i32 {
         match self {
             Value::Int(n) => n,
+            Value::Int64(_) => panic!("expected int32, found int64"),
             Value::Ref(_) => panic!("expected an int on the CLR stack, found a reference"),
         }
     }
@@ -154,6 +160,7 @@ impl Value {
     fn as_cmp_int(self) -> i32 {
         match self {
             Value::Int(n) => n,
+            Value::Int64(_) => panic!("int64 requires matched-width comparison"),
             Value::Ref(None) => 0,
             Value::Ref(Some(_)) => 1,
         }
@@ -164,6 +171,7 @@ impl Value {
     fn is_truthy(self) -> bool {
         match self {
             Value::Int(n) => n != 0,
+            Value::Int64(n) => n != 0,
             Value::Ref(r) => r.is_some(),
         }
     }
@@ -173,6 +181,7 @@ impl fmt::Display for Value {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Value::Int(n) => write!(f, "{n}"),
+            Value::Int64(n) => write!(f, "{n}"),
             Value::Ref(None) => write!(f, "null"),
             Value::Ref(Some(i)) => write!(f, "obj#{i}"),
         }
@@ -363,6 +372,15 @@ impl CLRSimulator {
             return self.trace(pc, "ldc.i4.s", stack_before, format!("push {val}"));
         }
 
+        if opcode_byte == OP_LDC_I8 {
+            // Validate the complete payload before mutating execution state.
+            let bytes = self.bytecode.get(pc + 1..pc + 9)
+                .expect("truncated ldc.i8 operand");
+            let val = i64::from_le_bytes(bytes.try_into().expect("eight-byte operand"));
+            self.stack.push(Some(Value::Int64(val)));
+            self.pc += 9;
+            return self.trace(pc, "ldc.i8", stack_before, format!("push {val}"));
+        }
         if opcode_byte == OP_LDC_I4 {
             let val = i32::from_le_bytes([
                 self.bytecode[pc + 1],
@@ -458,32 +476,36 @@ impl CLRSimulator {
 
         // Arithmetic operations.
         if opcode_byte == OP_ADD {
-            return self.execute_arithmetic(stack_before, "add", |a, b| a.wrapping_add(b));
+            return self.execute_arithmetic(stack_before, "add", |a, b| a.wrapping_add(b), |a, b| a.wrapping_add(b));
         }
         if opcode_byte == OP_SUB {
-            return self.execute_arithmetic(stack_before, "sub", |a, b| a.wrapping_sub(b));
+            return self.execute_arithmetic(stack_before, "sub", |a, b| a.wrapping_sub(b), |a, b| a.wrapping_sub(b));
         }
         if opcode_byte == OP_MUL {
-            return self.execute_arithmetic(stack_before, "mul", |a, b| a.wrapping_mul(b));
+            return self.execute_arithmetic(stack_before, "mul", |a, b| a.wrapping_mul(b), |a, b| a.wrapping_mul(b));
         }
         if opcode_byte == OP_XOR {
-            return self.execute_arithmetic(stack_before, "xor", |a, b| a ^ b);
+            return self.execute_arithmetic(stack_before, "xor", |a, b| a ^ b, |a, b| a ^ b);
         }
         if opcode_byte == OP_NEG {
-            let a = self.pop_int();
-            let result = a.wrapping_neg();
-            self.stack.push(Some(Value::Int(result)));
+            let a = self.pop().expect("neg operand");
+            let result = match a {
+                Value::Int(n) => Value::Int(n.wrapping_neg()),
+                Value::Int64(n) => Value::Int64(n.wrapping_neg()),
+                Value::Ref(_) => panic!("neg requires an integer"),
+            };
+            self.stack.push(Some(result));
             self.pc += 1;
             return self.trace(pc, "neg", stack_before, format!("pop {a}, push {result}"));
         }
         if opcode_byte == OP_DIV {
-            let b_val = self.pop_int();
-            assert!(b_val != 0, "System.DivideByZeroException: division by zero");
-            let a_val = self.pop_int();
-            let result = a_val.wrapping_div(b_val);
-            self.stack.push(Some(Value::Int(result)));
-            self.pc += 1;
-            return self.trace(pc, "div", stack_before, format!("pop {b_val} and {a_val}, push {result}"));
+            return self.execute_arithmetic(stack_before, "div", |a, b| {
+                assert!(b != 0, "System.DivideByZeroException: division by zero");
+                a.checked_div(b).expect("System.ArithmeticException: division overflow")
+            }, |a, b| {
+                assert!(b != 0, "System.DivideByZeroException: division by zero");
+                a.checked_div(b).expect("System.ArithmeticException: division overflow")
+            });
         }
 
         // ── call <methodTok> (0x28) — McCarthy W8b (lambda) ──
@@ -587,7 +609,7 @@ impl CLRSimulator {
         match r {
             Value::Ref(Some(i)) => &self.heap[i],
             Value::Ref(None) => panic!("System.NullReferenceException"),
-            Value::Int(_) => panic!("expected an array reference, found an int"),
+            Value::Int(_) | Value::Int64(_) => panic!("expected an array reference, found an int"),
         }
     }
 
@@ -596,7 +618,7 @@ impl CLRSimulator {
         match r {
             Value::Ref(Some(i)) => &mut self.heap[i],
             Value::Ref(None) => panic!("System.NullReferenceException"),
-            Value::Int(_) => panic!("expected an array reference, found an int"),
+            Value::Int(_) | Value::Int64(_) => panic!("expected an array reference, found an int"),
         }
     }
 
@@ -628,8 +650,13 @@ impl CLRSimulator {
         // Atoms remain their integer value (this never collides: an atom that
         // happens to be 0/1 is only ever compared with `equal?`, which unboxes
         // both sides to genuine ints first).
-        let b = self.pop().expect("Cannot compare null").as_cmp_int();
-        let a = self.pop().expect("Cannot compare null").as_cmp_int();
+        let b = self.pop().expect("Cannot compare null");
+        let a = self.pop().expect("Cannot compare null");
+        let (a, b) = match (a, b) {
+            (Value::Int64(a), Value::Int64(b)) => (a, b),
+            (Value::Int64(_), _) | (_, Value::Int64(_)) => panic!("comparison requires matched integer widths"),
+            (a, b) => (i64::from(a.as_cmp_int()), i64::from(b.as_cmp_int())),
+        };
         let (mnemonic, op_str, result) = match second_byte {
             CEQ_BYTE => ("ceq", "==", if a == b { 1 } else { 0 }),
             CGT_BYTE => ("cgt", ">", if a > b { 1 } else { 0 }),
@@ -641,14 +668,19 @@ impl CLRSimulator {
         self.trace(pc, mnemonic, stack_before, format!("pop {b} and {a}, push {result} ({a} {op_str} {b})"))
     }
 
-    fn execute_arithmetic<F>(&mut self, stack_before: Vec<Option<Value>>, mnemonic: &str, op: F) -> CLRTrace
+    fn execute_arithmetic<F, G>(&mut self, stack_before: Vec<Option<Value>>, mnemonic: &str, op: F, wide_op: G) -> CLRTrace
     where
         F: Fn(i32, i32) -> i32,
+        G: Fn(i64, i64) -> i64,
     {
-        let b = self.pop_int();
-        let a = self.pop_int();
-        let result = op(a, b);
-        self.stack.push(Some(Value::Int(result)));
+        let b = self.pop().expect("arithmetic operand");
+        let a = self.pop().expect("arithmetic operand");
+        let result = match (a, b) {
+            (Value::Int(a), Value::Int(b)) => Value::Int(op(a, b)),
+            (Value::Int64(a), Value::Int64(b)) => Value::Int64(wide_op(a, b)),
+            _ => panic!("arithmetic requires matched integer widths"),
+        };
+        self.stack.push(Some(result));
         let pc = self.pc;
         self.pc += 1;
         self.trace(pc, mnemonic, stack_before, format!("pop {b} and {a}, push {result}"))

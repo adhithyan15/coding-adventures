@@ -10,6 +10,27 @@ roadmap is reconciled.
 
 ## Encoded CLR input prerequisites (selected 2026-09-19 after VM-058)
 
+### CLR01 landed; CLR02 scalar representation audit selected (2026-09-19)
+
+CLR01 merged in #15568 as `07e216fbd79e1164dfbab5a5317c7076da2ca560`
+after all 46 checks completed (15 success, 31 skipped). The macOS timeout
+passed on one retry. Refreshed main and checked open PR ownership: no encoded
+CLR overlap. The original dirty checkout and separately owned ALGOL are preserved.
+
+Next bounded prerequisite is explicit int64 values in the encoded simulator and
+literal builder, before widening IIR lowering or enabling input. Audit all public
+Value consumers first: preserve Int(i32), add a distinct full-width representation,
+and define mixed-width refusal/conversion instead of silently promoting existing
+i32 arithmetic. Verify ldc.i8 decoding, locals, arguments, method returns, truth,
+comparison and arithmetic widths using independently expected bytecode executions.
+Pin division overflow and malformed operand behavior from authoritative CIL rules
+before committing the detailed CLR02 spec and implementation. Boxing remains a
+loose simulator model; identify boundaries that require a later ABI slice.
+
+Keep CLR01's encoded IIR refusal until the complete lowering contract is supported.
+Host input and strings follow that contract; full Oct/Nib fidelity and BEAM's
+255-variable limit remain ranked after these correctness prerequisites.
+
 VM-058 merged as #15550 (`0704444b28f6704cc175c4e57cd95853fbf28647`)
 after 46 checks completed (15 success, 31 skipped). Main is refreshed and no
 open PR overlaps the encoded CLR runtime/backend path; ALGOL remains separate.

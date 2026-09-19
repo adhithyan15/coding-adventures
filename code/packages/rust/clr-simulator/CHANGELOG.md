@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased — explicit int64 values (CLR02)
+
+Add distinct Int64 values and checked ldc.i8 decoding. Locals, arguments,
+returns and the existing loose object-array model preserve all bits. Current
+arithmetic and signed comparisons accept matched widths; mixed widths refuse.
+Signed division now rejects MIN/-1 overflow for both widths. Array indices
+remain int32. This adds no host input or full CLR boxing/type verification.
+
 ## Unreleased — validate call token tables (VM-060a)
 
 Reject non-MethodDef call tokens before consuming arguments or changing frames.

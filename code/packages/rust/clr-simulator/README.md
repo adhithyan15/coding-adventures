@@ -8,10 +8,15 @@ This crate simulates a subset of .NET CLR bytecode. Unlike the JVM (which encode
 
 ## Supported Instructions
 
-Includes ldc.i4 (compact and extended forms), ldloc/stloc, add, sub, mul, div, nop, ldnull, br.s, brfalse.s, brtrue.s, ret, and two-byte comparison opcodes (ceq, cgt, clt).
+Includes ldc.i4 (compact and extended forms), ldc.i8, ldloc/stloc, add, sub, mul, div, xor, neg, nop, ldnull, br.s, brfalse.s, brtrue.s, ret, and two-byte comparison opcodes (ceq, cgt, clt).
+
+`Int64(i64)` preserves a separate 64-bit stack type. Integer arithmetic and
+comparisons require matching widths; array sizes and indices remain int32.
+Division rejects zero and signed overflow. This subset does not implement
+floating-point arithmetic, host input, or full CLR boxing/type verification.
 
 Since 0.2.0 it also executes **reference types**: a stack/local slot is a
-`Value` (`Int(i32)` or `Ref(Option<usize>)` into an object heap), and the
+`Value` (`Int(i32)`, `Int64(i64)` or `Ref(Option<usize>)` into an object heap), and the
 reference opcodes `newarr`, `stelem.ref`, `ldelem.ref`, `dup`, and identity
 `box`/`unbox.any` run — enough to execute the `System.Object[]` cons cells the
 IIR→CIL backend emits for McCarthy Lisp (LANG77 / W6b).

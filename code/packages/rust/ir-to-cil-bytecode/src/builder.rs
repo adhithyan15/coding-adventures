@@ -160,6 +160,7 @@ pub enum CILOpcode {
     LdcI48    = 0x1E,
     LdcI4S    = 0x1F,
     LdcI4     = 0x20,
+    LdcI8     = 0x21,
     Dup       = 0x25,
     Pop       = 0x26,
     Call      = 0x28,
@@ -494,6 +495,11 @@ impl CILBytecodeBuilder {
     /// Emit the shortest `ldc.i4` sequence for an `i32` immediate.
     pub fn emit_ldc_i4(&mut self, value: i32) {
         self.emit_raw(encode_ldc_i4(value));
+    }
+
+    /// Emit int64 even when the value fits i32; opcode determines stack type.
+    pub fn emit_ldc_i8(&mut self, value: i64) {
+        self.emit_raw(encode_ldc_i8(value));
     }
 
     // ── Local variable access ─────────────────────────────────────────────
@@ -866,6 +872,13 @@ impl CILBytecodeBuilder {
 // ===========================================================================
 // Unit tests
 // ===========================================================================
+
+/// Encode a typed int64 constant, preserving all eight payload bytes.
+pub fn encode_ldc_i8(value: i64) -> Vec<u8> {
+    let mut bytes = vec![CILOpcode::LdcI8 as u8];
+    bytes.extend_from_slice(&value.to_le_bytes());
+    bytes
+}
 
 #[cfg(test)]
 mod tests {

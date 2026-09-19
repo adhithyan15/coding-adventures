@@ -2,6 +2,11 @@
 
 Translates a target-independent `IrProgram` into CLR CIL method bytecode.
 
+The direct builder also provides `encode_ldc_i8` and `emit_ldc_i8` for typed
+64-bit literals. They always emit opcode 0x21 and eight little-endian bytes,
+even for small values. This builder capability does not widen legacy IR or
+IIR lowering; their existing validation limits remain in effect.
+
 ## What is CIL?
 
 Common Intermediate Language (CIL) is the stack-based bytecode format used
