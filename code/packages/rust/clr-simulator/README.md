@@ -70,3 +70,7 @@ arithmetic still requires explicit conversion. IIR lowering remains unchanged.
 Signed shifts (shl/shr) preserve Int or Int64 width and require an Int count.
 Only counts from zero through width minus one are supported; invalid operands
 and counts refuse before changing stack or pc. This does not widen IIR lowering.
+
+Bitwise and/or execute on matching Int or Int64 operands and preserve all bits.
+They do not coerce values to booleans. Mixed widths, references and missing
+operands refuse before changing stack or pc.

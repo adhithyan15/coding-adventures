@@ -80,6 +80,10 @@ pub const OP_MUL: u8 = 0x5A;
 pub const OP_DIV: u8 = 0x5B;
 /// `xor` (0x61) — McCarthy W7 logical `not` lowers to `x ^ 1`.
 pub const OP_XOR: u8 = 0x61;
+/// Per-bit conjunction, preserving the integer width.
+pub const OP_AND: u8 = 0x5F;
+/// Per-bit disjunction, preserving the integer width.
+pub const OP_OR: u8 = 0x60;
 /// Shift left, filling with zero bits.
 pub const OP_SHL: u8 = 0x62;
 /// Shift right, replicating the sign bit.
@@ -490,6 +494,25 @@ impl CLRSimulator {
         }
         if opcode_byte == OP_MUL {
             return self.execute_arithmetic(stack_before, "mul", |a, b| a.wrapping_mul(b), |a, b| a.wrapping_mul(b));
+        }
+        if opcode_byte == OP_AND || opcode_byte == OP_OR {
+            let mnemonic = if opcode_byte == OP_AND { "and" } else { "or" };
+            // Bitwise operations retain every bit, rather than projecting the
+            // operands to truth values. Inspect both slots before mutation so
+            // an invalid width or reference cannot consume a valid operand.
+            let len = self.stack.len();
+            assert!(len >= 2, "{mnemonic} requires two initialized integer operands");
+            let result = match (self.stack[len - 2], self.stack[len - 1]) {
+                (Some(Value::Int(a)), Some(Value::Int(b))) =>
+                    Value::Int(if opcode_byte == OP_AND { a & b } else { a | b }),
+                (Some(Value::Int64(a)), Some(Value::Int64(b))) =>
+                    Value::Int64(if opcode_byte == OP_AND { a & b } else { a | b }),
+                _ => panic!("{mnemonic} requires initialized integers of matching widths"),
+            };
+            self.stack.truncate(len - 2);
+            self.stack.push(Some(result));
+            self.pc += 1;
+            return self.trace(pc, mnemonic, stack_before, format!("bitwise {mnemonic}: {result}"));
         }
         if opcode_byte == OP_XOR {
             return self.execute_arithmetic(stack_before, "xor", |a, b| a ^ b, |a, b| a ^ b);

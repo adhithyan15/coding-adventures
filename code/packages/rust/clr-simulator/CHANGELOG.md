@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — bitwise AND and OR (CLR05)
+
+Execute and/or on matched Int or Int64 operands, preserving every bit and width.
+Malformed operands and mixed widths refuse before stack/pc mutation. Independent
+literal bytecode and builder branch-offset tests cover the new execution path.
+IIR lowering and input gates remain unchanged.
+
 ## Unreleased — signed shifts (CLR04)
 
 Execute shl/shr for Int and Int64 with i32 counts. Preserve signed right-shift
