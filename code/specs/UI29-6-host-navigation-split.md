@@ -129,7 +129,8 @@ the collapsed state, it arrives through UI48's environment, not through here.
 - **Every backend, before its lowering lands**, reports
   `primitive.navigation-split-unimplemented` — the `HostSwitch` pattern,
   narrowed one backend at a time as `HostProgressRing` was. **XAML** came off
-  that list in slice `K-xaml`; SwiftUI, Compose, Qt and Flutter remain.
+  that list in slice `K-xaml`, and **SwiftUI** in `K-swiftui`; Compose, Qt and
+  Flutter remain.
 - **XAML** carries no gap of its own. `NavigationView`'s `Auto` mode is the
   adaptive ladder this primitive exists to reach, `PaneTitle` is both the
   drawn header and the UIA name, and `OpenPaneLength` is a preferred width in
@@ -201,7 +202,8 @@ make the consumers permanently impossible to build. The order is forced:
 | `U29-6-0` | this spec |
 | `U29-6-G` | registration + child-count validation + the unconditional degradation |
 | `U29-6-K-xaml` | **done** — `NavigationView`, `PaneDisplayMode="Auto"` |
-| `U29-6-K-swiftui` … `-compose` … `-qt` … `-flutter` | one lowering each, in parallel |
+| `U29-6-K-swiftui` | **done** — `NavigationSplitView`, native collapse and pane title |
+| `U29-6-K-compose` … `-qt` … `-flutter` | one lowering each, in parallel |
 | `U29-6-K-web` | React, HTML, WebComponent landmarks |
 | `U29-6-P` | the four consumers, after every `K` has landed |
 

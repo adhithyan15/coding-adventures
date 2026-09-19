@@ -256,6 +256,20 @@ pub fn validate_iir_for_clr(module: &IIRModule) -> Vec<String> {
         }
 
         for instr in &func.instructions {
+            // Encoded literals currently use ldc.i4 and the simulator's i32
+            // values. Check every position before any opcode early acceptance.
+            for src in &instr.srcs {
+                if let Operand::Int(value) = src {
+                    if i32::try_from(*value).is_err() {
+                        errors.push(format!(
+                            "function {:?}, operation {:?}: integer immediate {} is outside \
+                             encoded CIL range {}..={}; full-width encoded scalars are not \
+                             implemented; use emit_il for textual CoreCLR int64 support",
+                            func.name, instr.op, value, i32::MIN, i32::MAX
+                        ));
+                    }
+                }
+            }
             // ── Check 2.5: Closure early-accept (LANG37) ─────────────────────
             //
             // `alloc_closure` and `call_closure` (LANG34 opcodes) are fully

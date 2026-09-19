@@ -1,5 +1,14 @@
 # Changelog — iir-to-cil-bytecode
 
+## Unreleased — refuse lossy encoded integer immediates (CLR01)
+
+Reject every out-of-i32 integer operand before encoded artifact creation,
+including closure early-accept paths and direct-call arguments. Literal emission
+also uses checked conversions. Diagnostics identify the function, operation,
+value and supported range. Textual CoreCLR int64 emission is unchanged.
+Regression tests cover extrema, boundaries, direct calls and actual simulator
+execution; full-width encoded arithmetic and input are still unimplemented.
+
 ## Unreleased — explicit encoded input refusal (VM-059)
 
 Encoded validation now explains that input_i64/input_str/input_more require

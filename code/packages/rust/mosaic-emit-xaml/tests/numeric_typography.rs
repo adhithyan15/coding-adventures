@@ -2,11 +2,34 @@ use mosaic_emit_xaml::{from_pipeline, EmitOptions, XamlEmitResult};
 
 fn fixture(name: &str, value: &str) -> Result<XamlEmitResult, mosaic_emit_xaml::PipelineEmitError> {
     let model = mosmodel_compiler::compile(&format!(
-        "component {name} {{ slot text-size : number ; emit onAction ; }}"
+        "component {name} {{ slot text-size : number ; slot headers : list<text> ; slot rows : list<list<text>> ; emit onAction ; }}"
     ))
     .unwrap();
-    let layout = moslayout_compiler::compile(&format!("layout {name} {{ Column {{ Text [ title ] (content: \"Title\", font-size: {value}) HostInput [ input ] (font-size: {value}) HostButton [ button ] (label: \"Action\", font-size: {value}) }} }}"), Some(&model.descriptor_json)).unwrap();
-    let style = mosstyle_compiler::compile(&format!("style {name} {{ part title {{ font-size: 18; }} part input {{ font-size: 16; }} part button {{ font-size: 14; }} }}"), Some(&layout.part_map_json)).unwrap();
+    let layout = moslayout_compiler::compile(
+        &format!(
+            r#"layout {name} {{ Column {{
+        Text [ title ] (content: "Title", font-size: {value})
+        HostInput [ input ] (font-size: {value})
+        HostButton [ button ] (label: "Action", font-size: {value})
+        HostTable [ sheet ] (font-size: {value}) {{
+            HostTableHead {{ Row {{ For (each: slot: headers, as: h, index: hi) {{
+                Box {{ Text [ header-title ] (content: (h)) }}
+            }} }} }}
+            HostTableBody {{ For (each: slot: rows, as: row, index: ri) {{ Row {{
+                For (each: row, as: cell, index: ci) {{ Box {{
+                    Text [ cell-label ] (content: (cell))
+                    HostInput [ cell-editor ] (value: (cell))
+                    Box [ fixed-label ] {{ Text (content: "Fixed") }}
+                }} }}
+            }} }} }}
+        }}
+        Text [ outside ] (content: "Outside")
+    }} }}"#
+        ),
+        Some(&model.descriptor_json),
+    )
+    .unwrap();
+    let style = mosstyle_compiler::compile(&format!("style {name} {{ part title {{ font-size: 18; }} part input {{ font-size: 16; }} part button {{ font-size: 14; }} part cell-label {{ font-family: \"Consolas\"; }} part fixed-label {{ font-size: 22; }} }}"), Some(&layout.part_map_json)).unwrap();
     from_pipeline(
         &model.component,
         &layout.def,
@@ -32,6 +55,22 @@ fn numeric_font_binding_preserves_static_fallback_and_namespaces_helpers() {
                 .count(),
             3
         );
+        assert_eq!(
+            result
+                .xaml
+                .matches("MosaicFontSize.Value=\"{x:Bind Owner.TextSize, Mode=OneWay}\"")
+                .count(),
+            3
+        );
+        assert!(result.xaml.contains("FontFamily=\"Consolas\""));
+        assert!(result.xaml.contains("Property=\"FontSize\" Value=\"22\""));
+        for file in &result.for_view_models {
+            if let Some(dir) = std::env::var_os("MOSAIC_TYPOGRAPHY_OUTPUT") {
+                let dir = std::path::PathBuf::from(dir);
+                std::fs::create_dir_all(&dir).unwrap();
+                std::fs::write(dir.join(&file.filename), &file.source).unwrap();
+            }
+        }
         for size in [18, 16, 14] {
             assert!(result.xaml.contains(&format!("FontSize=\"{size}\"")));
         }

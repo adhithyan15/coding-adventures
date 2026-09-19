@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — encoded CLR wide-scaling refusal (CLR01)
+
+Nested-division compatibility now verifies explicit encoded CLR refusal of
+scale-12/scale-10 constants and preserved textual CoreCLR int64 emission.
+Previously validator acceptance concealed unsupported encoded integer widths.
+WASM/JVM acceptance remains covered; no COBOL lowering behavior changes.
+
 ## Unreleased — COBOL INSPECT BEFORE/AFTER region proofs (VM-047c)
 
 Add five matching oracle and seven-backend observations for `INSPECT ...

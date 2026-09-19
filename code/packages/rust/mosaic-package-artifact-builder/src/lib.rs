@@ -2120,9 +2120,12 @@ fn collect_native_degradations(
         // its own backend from this arm in the same change that adds the
         // lowering, so the report cannot outlive the gap or precede the fix.
         // Narrowed one backend at a time, exactly as HostProgressRing was:
-        // XAML lowers it to `NavigationView` (UI29-6 slice K-xaml), so XAML
-        // comes off this list in the same change that added the lowering.
-        "HostNavigationSplit" if backend.is_native() && !matches!(backend, Backend::Xaml) => {
+        // XAML lowers it to `NavigationView` and SwiftUI lowers it to
+        // `NavigationSplitView`, so each came off this list with its lowering.
+        "HostNavigationSplit"
+            if backend.is_native()
+                && !matches!(backend, Backend::Xaml | Backend::SwiftUI) =>
+        {
             Some((
                 "primitive.navigation-split-unimplemented",
                 "the backend does not yet lower HostNavigationSplit to its native adaptive split container",
@@ -7693,6 +7696,47 @@ layout Shell {
         );
     }
 
+    /// UI29-6 slice K-swiftui: `NavigationSplitView` landed, so SwiftUI's
+    /// capability report must clear in the same change as the lowering.
+    #[test]
+    fn host_navigation_split_swiftui_now_has_a_native_lowering() {
+        let pkg = make_package("mosaic-pkg-shell-swiftui", &["Shell"]);
+        fs::write(
+            pkg.path().join("src/Shell.mll"),
+            r#"
+layout Shell {
+  HostNavigationSplit [ root ] (
+    pane-title: "Projects",
+    pane-width: 236
+  ) {
+    Column [ pane ] { }
+    Column [ detail ] { }
+  }
+}
+"#,
+        )
+        .unwrap();
+
+        let out = TempDir::new().unwrap();
+        let report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::SwiftUI,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("SwiftUI navigation-split capability analysis");
+        assert!(
+            report.native_complete,
+            "SwiftUI now has a native HostNavigationSplit lowering: {:?}",
+            report.degradations
+        );
+        assert!(report.behavior_degradations.is_empty());
+    }
+
     /// UI29-6 (#15481): registered before any backend lowers it, so every
     /// native backend must say so rather than emit two silent containers.
     #[test]
@@ -7714,15 +7758,9 @@ layout Shell {
         )
         .unwrap();
 
-        // XAML is absent on purpose: it lowers this now, and
-        // `host_navigation_split_xaml_now_has_a_native_lowering` below is
-        // the other half of the same statement.
-        for backend in [
-            Backend::Compose,
-            Backend::Flutter,
-            Backend::Qt,
-            Backend::SwiftUI,
-        ] {
+        // XAML and SwiftUI are absent on purpose: each lowers this now, and
+        // the dedicated native-lowering tests above pin that other half.
+        for backend in [Backend::Compose, Backend::Flutter, Backend::Qt] {
             let out = TempDir::new().unwrap();
             let report = analyze_package_degradations(
                 &BuildOptions {
@@ -8858,10 +8896,9 @@ layout AccessibleText {
                         | Backend::Compose
                         | Backend::Qt
                         | Backend::SwiftUI
+                        | Backend::Xaml
                 ) {
                     0
-                } else if backend == Backend::Xaml {
-                    1 // HostTable still requires native font propagation.
                 } else {
                     4
                 },

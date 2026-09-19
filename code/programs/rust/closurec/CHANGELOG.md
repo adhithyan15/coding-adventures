@@ -2,6 +2,30 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.245.0] - 2026-09-19
+
+### Added - pinned, generated Closure CLI surface audit
+
+The new deterministic `cli_surface_audit` maintainer tool reads an explicitly
+supplied `CommandLineRunner.java`, requires the exact reviewed byte length and
+SHA-256 from Closure Compiler commit `10ca677a`, extracts all `@Option`
+declarations and aliases, and combines them with `cli.spec.json`. It never
+downloads upstream source itself.
+
+`tests/cli-surface/v20260915-audit.json` records 102 upstream options, seven
+exact upstream aliases, 112 local spec flags, 100 directly declared upstream
+flags, two cli-builder-generated built-ins, eleven correlation-vector
+extensions, one deprecated local alias, and four explicitly unsupported
+upstream long aliases. The strict offline verifier rejects changed pins,
+unclassified upstream or local names, duplicate ownership, stale aliases,
+incorrect counts, and any unreviewed `cli.spec.json` byte drift.
+
+The canonical upstream `--typed_ast_output_file` spelling is now accepted.
+The historical closurec spelling
+`--typed_ast_output_file__INTENRNAL_USE_ONLY` remains as a deprecated
+compatibility alias; both map to one runtime path, while conflicting values
+fail closed. Focused unit and binary-level tests cover both spellings.
+
 ## [0.244.0] - 2026-09-19
 
 ### Added - pinned `v20260915` refresh evidence for all 462 minify goldens

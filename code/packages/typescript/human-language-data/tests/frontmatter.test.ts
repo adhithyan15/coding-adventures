@@ -35,6 +35,32 @@ describe("splitFrontmatter", () => {
     expect(frontmatter?.gloss).toBe("day");
   });
 
+  it.each(["headword", "romanization", "gloss", "concept_tag"])(
+    "rejects escapes in a double-quoted %s instead of silently preserving them",
+    (field) => {
+      const escaped = ["---", `${field}: "\\\" \\\""`, "---", ""].join("\n");
+      expect(() => splitFrontmatter(escaped)).toThrow(
+        new RegExp(
+          `${field} cannot use a double-quoted frontmatter scalar containing backslashes; use single quotes`,
+        ),
+      );
+    },
+  );
+
+  it("allows literal backslashes in single-quoted scalars", () => {
+    const { frontmatter } = splitFrontmatter(
+      ["---", "headword: '\\\" \\\"'", "---", ""].join("\n"),
+    );
+    expect(frontmatter?.headword).toBe('\\\" \\\"');
+  });
+
+  it("preserves backslashes in prose-only fields in the repository's tiny YAML dialect", () => {
+    const { frontmatter } = splitFrontmatter(
+      ['---', 'etymology_hook: "Proto-Indo-European \\*dwo-"', "---", ""].join("\n"),
+    );
+    expect(frontmatter?.etymology_hook).toBe("Proto-Indo-European \\*dwo-");
+  });
+
   it("ignores blank lines and comment lines inside the block", () => {
     const { frontmatter } = splitFrontmatter(
       ["---", "# a comment", "", "id: X", "---", ""].join("\n"),

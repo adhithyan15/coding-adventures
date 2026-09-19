@@ -3480,6 +3480,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("11.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — unlabeled dummy statements are inert siblings around finite
+    // step, bounded while, and controlled-scalar recurrence assignments.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; real x, r; boolean stepflag, whileflag; stepflag := false; for i := 1 step 1 until 3 do begin ; stepflag := not stepflag; ; end; if stepflag then r := 42.0 else r := 0.5; print(r); i := 0; whileflag := false; for i := i + 1 while i <= 3 do begin ; whileflag := not whileflag; ; end; if whileflag then r := 42.0 else r := 0.5; print(r); for x := 1.0 step 0.5 until 10.0 do begin ; x := x * 2.0; ; end; print(x) end",
+        expect: Expect::Stdout("424211.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a list containing only single-value elements is straight-line
     // repetition with no zero-trip path or backedge. Its final static real
     // assignment therefore remains available to the portable output path.
@@ -13212,6 +13221,29 @@ fn algol_computed_inert_sibling_control_recurrence_runs_on_every_available_stand
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the computed inert-sibling control recurrence did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_dummy_sibling_recurrences_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("begin ; stepflag := not stepflag; ; end")
+        })
+        .expect("the dummy-sibling recurrences must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the dummy-sibling recurrences did not run"
             );
             continue;
         };

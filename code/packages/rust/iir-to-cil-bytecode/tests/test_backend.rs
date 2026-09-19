@@ -54,6 +54,52 @@ fn default_cfg() -> IIRClrConfig {
     IIRClrConfig::default()
 }
 
+#[test]
+fn clr01_wide_immediates_refuse_every_operand_position() {
+    for value in [i64::MIN, i64::from(i32::MIN) - 1, i64::from(i32::MAX) + 1, i64::MAX] {
+        for op in ["const", "call", "alloc_closure", "call_closure", "field_load", "field_store"] {
+            let module = single_fn(vec![IIRInstr::new(op, Some("value".into()),
+                vec![Operand::Var("callee".into()), Operand::Int(value)], "i64")]);
+            let errors = validate_iir_for_clr(&module);
+            assert!(errors.iter().any(|e| e.contains("encoded CIL range")
+                && e.contains("main") && e.contains(op) && e.contains(&value.to_string())),
+                "{op} {value}: {errors:?}");
+            assert!(matches!(lower_iir_to_cil(&module, &default_cfg()),
+                Err(IIRClrError::ValidationFailed(_))));
+        }
+    }
+}
+
+#[test]
+fn clr01_textual_i64_literals_remain_full_width() {
+    for value in [i64::MIN, i64::from(i32::MIN) - 1, i64::from(i32::MAX) + 1, i64::MAX] {
+        let module = single_fn(vec![
+            IIRInstr::new("const", Some("value".into()), vec![Operand::Int(value)], "i64"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]);
+        assert!(matches!(lower_iir_to_cil(&module, &default_cfg()),
+            Err(IIRClrError::ValidationFailed(_))));
+        let il = emit_il(&module, &default_cfg()).expect("textual i64 emission");
+        assert!(il.contains(&format!("ldc.i8 {value}")), "{il}");
+    }
+}
+
+#[test]
+fn clr01_direct_call_immediates_are_checked_before_encoding() {
+    for value in [i64::from(i32::MIN), i64::from(i32::MAX), i64::MIN, i64::MAX] {
+        let mut module = single_fn(vec![
+            IIRInstr::new("call", Some("result".into()),
+                vec![Operand::Var("identity".into()), Operand::Int(value)], "i32"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]);
+        module.add_or_replace(IIRFunction::new("identity", vec![("arg".into(), "i32".into())], "i32", vec![
+            IIRInstr::new("ret", None, vec![Operand::Var("arg".into())], "i32"),
+        ]));
+        let result = lower_iir_to_cil(&module, &default_cfg());
+        assert_eq!(result.is_ok(), i32::try_from(value).is_ok(), "value {value}");
+    }
+}
+
 /// CIL opcode constants used in assertions.
 const RET: u8 = 0x2A;
 const NOP: u8 = 0x00;
