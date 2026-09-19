@@ -61,8 +61,8 @@ words are not connected at all.
 | **കസേരയുടെ മുകളിൽ** | on top of the chair |
 
 So this costs you no new grammar either. **The owner-ending is the one from the
-genitive chapter, unchanged**: **കസേര** takes **-യുടെ**, just as **അമ്മ** did
-there.
+genitive chapter, unchanged**: **കസേര** takes **-യുടെ**, the same way **അമ്മ**
+did there.
 
 Put a thing in front and you have a sentence's worth:
 
