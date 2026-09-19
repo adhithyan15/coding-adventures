@@ -15,7 +15,7 @@ roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [ML-LEX-C107-CLEAN-01, ML-LEX-C107-TREATMENT-01, ML-LEX-C107-MEDICINE-01]
+  knowledge: [ML-LEX-C107-CLEAN-01, ML-LEX-C107-TREATMENT-01, ML-LEX-C107-MEDICINE-01, ML-LEX-C63-FEEL-05, ML-LEX-C63-FEEL-04, ML-LEX-C48-ROLE-03]
 introduces:
   knowledge: []
 practises:
@@ -46,17 +46,24 @@ Lay this chapter out against what you already had and it makes a line:
 | **പനി**, **ചുമ** | *pani*, *cuma* | the thing going wrong |
 | **ചികിത്സ**, **മരുന്ന്** | *cikitsa*, *marunnŭ* | **after** — getting well |
 
-**You have had the middle of that line for a long while and neither end.** You
-could say what was wrong and name nobody who would help and nothing that would.
+**Two of those five are native and three are borrowed**, and it is not the split
+you would guess: **പനി** and **ചുമ**, the two you have had longest, are the
+Dravidian ones — their own lessons say so — and **മരുന്ന്** joins them from this
+chapter.
+
+**You have had the middle of that line for a long while, and the far end only as
+a person.** You could say what was wrong, and name **വൈദ്യൻ** — but not one word
+for what they would actually do, or give, or for the keeping-well that comes
+before any of it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C107-CLEAN-01, ML-LEX-C107-TREATMENT-01, ML-LEX-C107-MEDICINE-01, ML-LEX-C48-ROLE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: the line in order — *vṛtti*, *pani*, *cikitsa*, *marunnŭ*]
-- [YOU SAY: which end of it you had first]
+- [YOU SAY: which of the four words in that line you have had the longest]
 - [YOU SAY: the person who stands at the far end — *vaidyan*]
-- [YOU SAY: which one of the four words is not borrowed]
+- [YOU SAY: which of *vṛtti*, *cikitsa* and *marunnŭ* is not borrowed]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C107-CLEAN-01, ML-LEX-C107-TREATMENT-01, ML-LEX-C107-MEDICINE-01] -->

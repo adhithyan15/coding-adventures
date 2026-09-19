@@ -12,7 +12,7 @@ concept_tag: ML-NOUN-CLEANLINESS
 prerequisites: [ML-C107-chikitsa]
 sounds: []
 roots: [sanskrit-vrtti-conduct]
-etymology_hook: "vRtti is Sanskrit for conduct or a way of living; Malayalam narrowed it to cleanliness, so the word for keeping clean began as the word for how you carry yourself"
+etymology_hook: "vRtti is Sanskrit from the root vRt, to turn or proceed — a way of going on, so conduct and also livelihood; Malayalam ADDED cleanliness to that range rather than replacing it"
 duration:
   max_seconds: 235
 requires:
@@ -43,35 +43,39 @@ has gone wrong.
 **വൃത്തി** (*vṛtti*) — **cleanliness**.
 
 **This is the everyday word, and it is worth being plain about its range.** It
-is what you use about a room, a kitchen, a person's hands. Malayalam has a more
-formal word for hygiene as a subject — the kind printed on a public notice — and
-this is not it. This is the one people say.
+is what you use about a room, a kitchen, a person's hands. Malayalam's formal
+word for hygiene as a subject — the kind printed on a public notice — is
+*śucitvaṁ*, given here in sound only, because this book has not taught it. **വൃത്തി**
+is the one people say.
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C107-CLEAN-01] -->
 
-**The Sanskrit it comes from does not mean clean at all.** *vṛtti* is **conduct**
-— a way of living, how a person carries themselves.
+**The Sanskrit it comes from does not mean clean at all.** *vṛtti* is built on
+the root **√vṛt**, *to turn, to proceed* — so *a way of going on*: conduct, and
+also **livelihood**.
 
-Malayalam narrowed it. The word for **how you conduct yourself** became the word
-for **how clean you keep things**, which is a short step if you have ever been
-told that keeping a clean house is a matter of character. Take that as the
-traditional account of the shift rather than a settled fact; the Sanskrit sense
-and the Malayalam sense are both well attested, and the road between them is the
-part that is told rather than proved.
+**Malayalam did not narrow it; it added a sense and kept the rest.** The word is
+still current for an occupation, and the older sense shows through in the
+everyday **വൃത്തികെട്ട** — *filthy* — which is literally *of spoiled conduct*.
+
+How *a way of going on* came to mean *how clean you keep things* is a short step
+if you have ever been told that a clean house is a matter of character. Take that
+road as the traditional account rather than a settled fact; both senses are well
+attested, and it is the path between them that is told rather than proved.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C107-CLEAN-01, ML-LEX-C107-MEDICINE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vṛtti*]
-- [YOU SAY: *marunnŭ*, then *vṛtti* — the cure, and the thing that comes before
-  needing one]
+- [YOU SAY: *marunnŭ*, then *vṛtti* — the medicine, and the thing that comes
+  before needing one]
 - [YOU SAY: what the Sanskrit word behind it meant]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C107-CLEAN-01, ML-LEX-C107-TREATMENT-01] -->
 
-[PAUSE 3s] Cleanliness? (**വൃത്തി**.) What did the Sanskrit word behind it mean?
-(**Conduct** — a way of living.) Which of this chapter's words is the native one?
-(**മരുന്ന്**.)
+[PAUSE 3s] Cleanliness? (**വൃത്തി**.) What does the Sanskrit root behind it mean?
+(**To turn, to proceed** — so *a way of going on*.) Of this chapter's three
+words, which is the native one? (**മരുന്ന്**.)
