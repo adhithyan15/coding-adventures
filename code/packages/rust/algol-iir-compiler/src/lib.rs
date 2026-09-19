@@ -6220,21 +6220,41 @@ impl Compiler {
         body: &'a GrammarASTNode,
     ) -> Option<&'a GrammarASTNode> {
         let target_name = self.simple_variable_name(target).ok()?;
-        let assign = single_statement_assignment(body)?;
-        let left_parts: Vec<&GrammarASTNode> = direct_nodes(assign)
-            .into_iter()
-            .filter(|node| node.rule_name == "left_part")
-            .collect();
-        if left_parts.len() != 1 {
-            return None;
+        let statements = compound_body_statements(body).unwrap_or_else(|| vec![body]);
+        let mut target_expression = None;
+        for statement in statements {
+            let assign = single_statement_assignment(statement)?;
+            let left_parts: Vec<&GrammarASTNode> = direct_nodes(assign)
+                .into_iter()
+                .filter(|node| node.rule_name == "left_part")
+                .collect();
+            if left_parts.len() != 1 {
+                return None;
+            }
+            let variable = first_direct_node(left_parts[0], "variable")?;
+            if array_subscripts(variable).is_some() {
+                return None;
+            }
+            let name = self.simple_variable_name(variable).ok()?;
+            let expression = first_direct_node(assign, "expression")?;
+            if name == target_name {
+                if target_expression.is_some() {
+                    return None;
+                }
+                target_expression = Some(expression);
+                continue;
+            }
+            let binding = self.require_var(&name).ok()?;
+            if binding.is_global
+                || binding.array.is_some()
+                || self.active_by_name_binding(&name).is_some()
+                || exact_bare_variable_expression_name(expression).as_deref()
+                    != Some(name.as_str())
+            {
+                return None;
+            }
         }
-        let variable = first_direct_node(left_parts[0], "variable")?;
-        if array_subscripts(variable).is_some()
-            || self.simple_variable_name(variable).ok().as_deref() != Some(target_name.as_str())
-        {
-            return None;
-        }
-        first_direct_node(assign, "expression")
+        target_expression
     }
 
     fn for_element_execution(
@@ -9322,6 +9342,36 @@ fn single_statement_assignment(node: &GrammarASTNode) -> Option<&GrammarASTNode>
                 return None;
             };
             single_statement_assignment(statement)
+        }
+        _ => None,
+    }
+}
+
+fn compound_body_statements(node: &GrammarASTNode) -> Option<Vec<&GrammarASTNode>> {
+    match node.rule_name.as_str() {
+        "statement" => {
+            let children = direct_nodes(node);
+            if children.iter().any(|child| child.rule_name == "label") {
+                return None;
+            }
+            let [child] = children.as_slice() else {
+                return None;
+            };
+            compound_body_statements(child)
+        }
+        "unlabeled_stmt" => {
+            let children = direct_nodes(node);
+            let [child] = children.as_slice() else {
+                return None;
+            };
+            compound_body_statements(child)
+        }
+        "compound_stmt" => {
+            let statements: Vec<&GrammarASTNode> = direct_nodes(node)
+                .into_iter()
+                .filter(|child| child.rule_name == "statement")
+                .collect();
+            (statements.len() > 1).then_some(statements)
         }
         _ => None,
     }
@@ -14470,12 +14520,26 @@ mod tests {
     }
 
     #[test]
-    fn al4_multi_statement_step_loop_recurrence_remains_conservative() {
-        let err = compile_source(
-            "begin integer i; real r; boolean flag; flag := false; for i := 1 step 1 until 3 do begin flag := not flag; r := r end; if flag then r := 42.0 else r := 0.5; print(r) end",
+    fn al4_step_loop_control_recurrence_allows_inert_scalar_sibling() {
+        let module = compile_source(
+            "begin integer pad; real x; pad := 7; for x := 1.0 step 0.5 until 10.0 do begin x := x * 2.0; pad := pad end; print(x) end",
             "test",
         )
-        .expect_err("multiple compound statements remain outside recurrence analysis");
+        .expect("an exact control recurrence may ignore an inert local scalar sibling");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "11.5")
+        }));
+    }
+
+    #[test]
+    fn al4_step_loop_control_recurrence_rejects_changing_scalar_sibling() {
+        let err = compile_source(
+            "begin integer pad; real x; pad := 7; for x := 1.0 step 0.5 until 10.0 do begin x := x * 2.0; pad := pad + 1 end; print(x) end",
+            "test",
+        )
+        .expect_err("a changing sibling keeps a compound control recurrence conservative");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
