@@ -704,14 +704,11 @@ had gone back to actually try it. A real `erl` probe found the three non-input
 rows execute correctly with **no backend code change**, through the exact
 same lowering every other byte-tape/array BEAM program already used.
 
-The three STDIN rows (`,+.`, `,.,.`, `,[.,]`) remain undeclared: `iir-to-beam`
-has no `getchar` builtin, so they refuse explicitly at BEAM validation, naming
-`getchar` — proven to be a BACKEND refusal, not a frontend one
-(`brainfuck-iir-compiler` compiles all three to IIR without complaint). That
-is host input (VM-060b), the same gap every other frontend's BEAM input rows
-are deferred behind, not a Brainfuck- or tape-specific limitation. Brainfuck
-now declares 45 cells (was 42); `feature_coverage_doc_counts_match_programs_source`
-pins both the new row count and the frontend/backend refusal split.
+BEAM09 also proves the three STDIN rows (`,+.`, `,.,.`, `,[.,]`) on real
+Erlang. All six Brainfuck rows now declare eight columns (48 cells). The
+harness starts Brainfuck with `-kernel standard_io_encoding latin1` to preserve
+raw bytes on modern OTP. Separate raw-output tests cover every byte 0..255,
+repeated EOF returning zero, and live tape state across input calls.
 
 ### COBOL boolean/EVALUATE on BEAM (VM-040)
 

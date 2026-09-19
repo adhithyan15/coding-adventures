@@ -628,6 +628,10 @@ pub fn lower_iir_to_beam(
     // multi-variable BASIC program already on `Beam`) — only the three
     // `call_ext`s above need the `save_live_across_imported_call!` dance.
     let atom_get_line  = atoms.intern("get_line");
+    let atom_hd = atoms.intern("hd");
+    let import_hd = imports.intern(erlang_atom, atom_hd, 1);
+    let atom_get_chars = atoms.intern("get_chars");
+    let import_get_chars = imports.intern(io_atom, atom_get_chars, 2);
     let atom_eof       = atoms.intern("eof");
     let atom_undefined = atoms.intern("undefined");
     let atom_empty     = atoms.intern(""); // io:get_line('') — no prompt text
@@ -1197,7 +1201,7 @@ pub fn lower_iir_to_beam(
                 // "every call_ext-emitting op must be listed" rule `putchar`
                 // already follows just above.
                 Some(Operand::Var(name)) if matches!(
-                    name.as_str(), "putchar" | "input_more" | "input_i64" | "input_str"
+                    name.as_str(), "putchar" | "getchar" | "input_more" | "input_i64" | "input_str"
                 ))) {
                 continue;
             }
@@ -2667,6 +2671,47 @@ pub fn lower_iir_to_beam(
                         BEAMOperand::x(rx),
                         BEAMOperand::x(meta.next_reg),
                     ]));
+                }
+                // A byte-oriented host configures standard_io as latin1.
+                // get_chars reads exactly one element, including NUL/newline;
+                // only eof maps to zero. An I/O error is not an empty stream:
+                // hd/1 traps on that non-list result rather than hiding it.
+                "call_builtin" if matches!(instr.srcs.first(),
+                    Some(Operand::Var(name)) if name == "getchar") => {
+                    let rd = match &instr.dest {
+                        Some(d) => var_reg!(d),
+                        None => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "call_builtin getchar must have a dest".into(),
+                        }),
+                    };
+                    let cur_idx = instr_idx - 1;
+                    let have_byte = alloc_synth_label!("byte input");
+                    let done = alloc_synth_label!("byte input");
+                    save_live_across_imported_call!(cur_idx);
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::a(atom_empty), BEAMOperand::x(0),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::i(1), BEAMOperand::x(1),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                        BEAMOperand::u(2), BEAMOperand::u(import_get_chars as u64),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_IS_EQ_EXACT, vec![
+                        BEAMOperand::f(have_byte), BEAMOperand::x(0), BEAMOperand::a(atom_eof),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::i(0), BEAMOperand::x(rd),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_JUMP, vec![BEAMOperand::f(done)]));
+                    instrs.push(BEAMInstruction::new(OP_LABEL, vec![BEAMOperand::u(have_byte as u64)]));
+                    instrs.push(BEAMInstruction::new(OP_GC_BIF1, vec![
+                        BEAMOperand::f(0), BEAMOperand::u(1),
+                        BEAMOperand::u(import_hd as u64), BEAMOperand::x(0), BEAMOperand::x(rd),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_LABEL, vec![BEAMOperand::u(done as u64)]));
+                    restore_live_across_imported_call!(cur_idx);
                 }
                 // ── call_builtin "input_more" → FlowMatic READ-ITEM EOF peek ──
                 //

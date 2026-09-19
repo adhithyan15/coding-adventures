@@ -551,13 +551,13 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
                 let supported = matches!(
                     instr.srcs.first(),
                     Some(Operand::Var(n)) if BEAM_PREDICATE_BUILTINS.contains(&n.as_str())
-                        || matches!(n.as_str(), "print_i64" | "putchar"
+                        || matches!(n.as_str(), "print_i64" | "putchar" | "getchar"
                             | "input_more" | "input_i64" | "input_str")
                 );
                 if !supported {
                     errors.push(format!(
                         "UnsupportedOp: function {:?}, call_builtin {:?} is not in the \
-                         BEAM builtin set (pair?/equal?/not/print_i64/putchar/\
+                         BEAM builtin set (pair?/equal?/not/print_i64/putchar/getchar/\
                          input_more/input_i64/input_str)",
                         func.name, instr.srcs.first()
                     ));

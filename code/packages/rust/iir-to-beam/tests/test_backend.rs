@@ -2947,36 +2947,18 @@ fn integer_output_builtin_accepts_no_destination() {
     assert!(lower_iir_to_beam(&missing, &cfg()).is_err());
 }
 
-/// VM-042/VM-D031: `iir-to-beam` has no `getchar` builtin, so a Brainfuck `,`
-/// (or any other frontend's input read) is refused explicitly at validation —
-/// distinct from `putchar`, which the SAME `call_builtin` allowlist already
-/// accepts and which every non-input Brainfuck matrix row already uses on real
-/// `erl` (see `lang-aot`'s `portable_text_stdout_brainfuck_beam_corpus`). This
-/// pins that the refusal is targeted at the missing host-input builtin
-/// specifically (VM-060b), not a broader "Brainfuck can't use call_builtin on
-/// BEAM" limitation — the stale premise `brainfuck-iir-compiler`'s README
-/// carried before PR #11343 added `:atomics`-backed tape mutation.
+/// BEAM09 extends byte output with byte input. Runtime tests in lang-aot
+/// exercise all byte values, repeated EOF and tape liveness across these calls.
 #[test]
-fn call_builtin_getchar_rejected_but_putchar_accepted() {
-    let getchar = make_module_single(vec![IIRInstr::new(
-        "call_builtin",
-        Some("v".into()),
-        vec![Operand::Var("getchar".into())],
-        "i64",
-    )]);
-    let errs = validate_for_beam(&getchar);
-    assert!(
-        errs.iter().any(|e| e.contains("UnsupportedOp") && e.contains("getchar")),
-        "validator must name `getchar` in its rejection, not just fail generically: {errs:?}"
-    );
-    assert!(
-        lower_iir_to_beam(&getchar, &cfg()).is_err(),
-        "a validated-rejected module must also fail lowering, not silently succeed"
-    );
+fn call_builtin_getchar_and_putchar_accepted() {
+    let getchar = make_module_single(vec![
+        IIRInstr::new("call_builtin", Some("v".into()),
+            vec![Operand::Var("getchar".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i64"),
+    ]);
+    assert!(validate_for_beam(&getchar).is_empty());
+    assert!(lower_iir_to_beam(&getchar, &cfg()).is_ok());
 
-    // The control: `putchar` (the SAME call_builtin allowlist check) is accepted —
-    // proving the refusal above is targeted at the missing input builtin, not a
-    // side effect of some other broken validation path.
     let putchar = make_module_single(vec![
         IIRInstr::new("const", Some("ch".into()), vec![Operand::Int(65)], "i64"),
         IIRInstr::new(
