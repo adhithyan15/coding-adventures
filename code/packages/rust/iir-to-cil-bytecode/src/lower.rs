@@ -690,7 +690,10 @@ pub fn lower_iir_to_cil(
                     match instr.srcs.first() {
                         Some(Operand::Int(n)) => {
                             // Push the integer immediate in the most compact form.
-                            builder.emit_ldc_i4(*n as i32);
+                            builder.emit_ldc_i4(i32::try_from(*n).map_err(|_| IIRClrError::InvalidOperand {
+                                function: fn_name.clone(),
+                                detail: format!("const integer {n} exceeds encoded CIL i32 range"),
+                            })?);
                         }
                         Some(Operand::Bool(b)) => {
                             // Booleans map to 1 (true) and 0 (false) on the stack.
@@ -1207,7 +1210,10 @@ pub fn lower_iir_to_cil(
                                 emit_load(&mut builder, &info, fn_name)?;
                             }
                             Operand::Int(n) => {
-                                builder.emit_ldc_i4(*n as i32);
+                                builder.emit_ldc_i4(i32::try_from(*n).map_err(|_| IIRClrError::InvalidOperand {
+                                    function: fn_name.clone(),
+                                    detail: format!("call integer {n} exceeds encoded CIL i32 range"),
+                                })?);
                             }
                             Operand::Bool(b) => {
                                 builder.emit_ldc_i4(if *b { 1 } else { 0 });
