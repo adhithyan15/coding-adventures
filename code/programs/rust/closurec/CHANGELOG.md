@@ -2,6 +2,32 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.243.0] - 2026-09-19
+
+### Added - one strict offline oracle manifest for every differential fixture
+
+`tests/oracle/manifest.json` now classifies all 626 immediate fixture
+directories under `tests/diff/` exactly once. It distinguishes the 462
+`minify_*` upstream-golden cohort from mixed fail-closed behavior,
+closurec-only correlation-vector extensions, and local help, version, and
+transitional print-tree contracts. Current expected-output provenance remains
+explicitly `v20240317`, `v20260712`, `v20260915`, unverified, or local rather
+than being silently relabeled as current.
+
+The manifest pins the `v20260915` annotated tag and release commit, the later
+audited `master` commit, Maven coordinates and URLs, 14,976,538-byte artifact,
+SHA-256, Java runtime, embedded JDK marker, licensing, deterministic capture
+environment, and two normalized command templates. The upstream JAR is never
+committed, downloaded, or executed by CI.
+
+`tests/oracle_manifest.rs` is a strict Serde-based offline verifier. It rejects
+unknown fields, unsupported schema versions, malformed or changed pins,
+duplicate/missing/stale fixtures, unsafe paths and symlink escapes, incomplete
+harness mappings, unresolved evidence, false upstream claims, and command
+matrices that fail to bind their placeholders. Six integration tests cover the
+canonical 626/462 inventory and hostile schema/mapping mutations while
+collecting independent semantic violations into one report.
+
 ## [0.242.0] - 2026-09-19
 
 ### Fixed - SIMPLE and ADVANCED fail closed instead of silently weakening output

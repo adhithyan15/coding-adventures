@@ -1,10 +1,10 @@
 # CLOC14 — End-to-end byte-identity test harness
 
-**Status:** v0.3 manifest design selected (CCR-003). The harness now discovers
-**462 `minify_*` fixtures**, while `tests/diff/` contains 626 differential
-fixture directories in total. The checked-in bytes pass, but their provenance
-is fragmented across README prose and multiple Closure releases. v0.3 makes
-that provenance machine-verifiable before CCR-004 refreshes the 462 goldens.
+**Status:** v0.3 oracle manifest implemented and locally validated (CCR-003).
+The strict offline verifier classifies all **626 differential fixture
+directories** exactly once, including **462 `minify_*` fixtures**, and preserves
+their current provenance across multiple Closure releases. CCR-004 will use the
+pinned oracle to refresh those 462 goldens and review every changed byte.
 **Layer:** Above CLOC11 (CLI compat) and CLOC12 (upstream test ports), below CLOC15+ (whatever comes next).
 **Depends on:** closurec CLI being runnable end-to-end.
 **Unblocks:** Every future gap-fix can be *measured* against upstream Closure's output instead of unit-tested in isolation.

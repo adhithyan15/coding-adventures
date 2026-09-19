@@ -1,0 +1,900 @@
+//! Offline verifier for the Closure Compiler oracle manifest.
+//!
+//! The manifest is a trust ledger, not a downloader. CI proves that every
+//! differential fixture has exactly one reviewed disposition and that every
+//! claimed upstream command resolves inside this package. It deliberately
+//! never opens the network or executes Java: artifact acquisition is a
+//! maintainer action whose byte length and SHA-256 are pinned in the ledger.
+
+use serde::Deserialize;
+use std::collections::{BTreeMap, BTreeSet};
+use std::path::{Component, Path, PathBuf};
+
+const MANIFEST_PATH: &str = "tests/oracle/manifest.json";
+const SCHEMA_VERSION: u32 = 1;
+const RELEASE: &str = "v20260915";
+const RELEASE_TAG_OBJECT: &str = "72421c28d352e5dda9a111bec39c3d41af46f3a3";
+const RELEASE_COMMIT: &str = "56007b2869ef6ce70b659b033459b8d8113101de";
+const AUDIT_COMMIT: &str = "10ca677aff381d2c2e6e1b254ba32861e503173d";
+const ARTIFACT_SHA256: &str = "9c8af06056aa06f968b5a457540a85869c7ba2861c211c56d8d4ef6c35ddf36d";
+const ARTIFACT_SIZE: u64 = 14_976_538;
+
+#[derive(Clone, Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct OracleManifest {
+    schema_version: u32,
+    upstream: Upstream,
+    capture_environment: CaptureEnvironment,
+    commands: Vec<CommandTemplate>,
+    fixture_sets: Vec<FixtureSet>,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct Upstream {
+    project: String,
+    repository_url: String,
+    license_spdx: String,
+    license_url: String,
+    release: Release,
+    audited_source: AuditedSource,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct Release {
+    tag: String,
+    annotated_tag_object_sha: String,
+    commit_sha: String,
+    artifact: Artifact,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct Artifact {
+    repository: String,
+    group_id: String,
+    artifact_id: String,
+    version: String,
+    url: String,
+    pom_url: String,
+    size_bytes: u64,
+    sha256: String,
+    embedded_build_jdk_spec: String,
+    embedded_license_paths: Vec<String>,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct AuditedSource {
+    branch: String,
+    commit_sha: String,
+    observed_on: String,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct CaptureEnvironment {
+    java_version: String,
+    locale: String,
+    timezone: String,
+    encoding: String,
+    working_directory: String,
+    oracle_jar_placeholder: String,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct CommandTemplate {
+    id: String,
+    kind: CommandKind,
+    description: String,
+    executable: String,
+    working_directory: String,
+    argv: Vec<String>,
+    flags_path: Option<String>,
+    input_root: Option<String>,
+    matrix: Vec<CommandCase>,
+}
+
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq)]
+#[serde(rename_all = "snake_case")]
+enum CommandKind {
+    FlagsFile,
+    Matrix,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct CommandCase {
+    id: String,
+    variables: BTreeMap<String, String>,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct FixtureSet {
+    id: String,
+    disposition: Disposition,
+    command: Option<String>,
+    current_provenance: CurrentProvenance,
+    expectation: Expectation,
+    local_boundary: Option<String>,
+    default_harness: Option<String>,
+    harnesses: BTreeMap<String, String>,
+    fixtures: Vec<String>,
+}
+
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq)]
+#[serde(rename_all = "snake_case")]
+enum Disposition {
+    UpstreamGolden,
+    MixedContract,
+    LocalExtension,
+    LocalContract,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct CurrentProvenance {
+    status: ProvenanceStatus,
+    release: Option<String>,
+    evidence: Option<String>,
+}
+
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq)]
+#[serde(rename_all = "snake_case")]
+enum ProvenanceStatus {
+    DocumentedRelease,
+    Unverified,
+    Local,
+}
+
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq)]
+#[serde(rename_all = "snake_case")]
+enum Expectation {
+    ExpectedStdout,
+    InlineHarness,
+}
+
+fn package_root() -> PathBuf {
+    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+}
+
+fn read_manifest() -> OracleManifest {
+    let text =
+        std::fs::read_to_string(package_root().join(MANIFEST_PATH)).expect("read oracle manifest");
+    serde_json::from_str(&text).expect("parse strict oracle manifest")
+}
+
+fn is_slug(value: &str) -> bool {
+    !value.is_empty()
+        && value.bytes().all(|byte| {
+            byte.is_ascii_lowercase() || byte.is_ascii_digit() || matches!(byte, b'-' | b'_')
+        })
+}
+
+fn is_lower_hex(value: &str, length: usize) -> bool {
+    value.len() == length
+        && value
+            .bytes()
+            .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
+}
+
+fn is_release(value: &str) -> bool {
+    value.len() == 9
+        && value.starts_with('v')
+        && value[1..].bytes().all(|byte| byte.is_ascii_digit())
+}
+
+fn is_iso_date(value: &str) -> bool {
+    value.len() == 10
+        && value.as_bytes()[4] == b'-'
+        && value.as_bytes()[7] == b'-'
+        && value
+            .bytes()
+            .enumerate()
+            .all(|(index, byte)| matches!(index, 4 | 7) || byte.is_ascii_digit())
+}
+
+fn is_safe_relative(path: &str) -> bool {
+    let path = Path::new(path);
+    !path.as_os_str().is_empty()
+        && !path.is_absolute()
+        && path.components().all(|component| {
+            !matches!(
+                component,
+                Component::ParentDir | Component::RootDir | Component::Prefix(_)
+            )
+        })
+}
+
+fn validate_existing_path(
+    root: &Path,
+    relative: &str,
+    expected_directory: bool,
+    label: &str,
+    errors: &mut Vec<String>,
+) {
+    if !is_safe_relative(relative) {
+        errors.push(format!("{label} is not a safe relative path: {relative}"));
+        return;
+    }
+
+    let joined = root.join(relative);
+    let expected_kind = if expected_directory {
+        "directory"
+    } else {
+        "file"
+    };
+    if (expected_directory && !joined.is_dir()) || (!expected_directory && !joined.is_file()) {
+        errors.push(format!(
+            "{label} does not resolve to a {expected_kind}: {relative}"
+        ));
+        return;
+    }
+
+    let Ok(canonical_root) = root.canonicalize() else {
+        errors.push(format!(
+            "cannot canonicalize package root: {}",
+            root.display()
+        ));
+        return;
+    };
+    let Ok(canonical_path) = joined.canonicalize() else {
+        errors.push(format!("cannot canonicalize {label}: {relative}"));
+        return;
+    };
+    if !canonical_path.starts_with(&canonical_root) {
+        errors.push(format!("{label} escapes the package root: {relative}"));
+    }
+}
+
+fn placeholders(parts: &[String]) -> BTreeSet<String> {
+    let mut found = BTreeSet::new();
+    for part in parts {
+        let mut rest = part.as_str();
+        while let Some(start) = rest.find('{') {
+            let after_start = &rest[start..];
+            let Some(end) = after_start.find('}') else {
+                found.insert(after_start.to_string());
+                break;
+            };
+            found.insert(after_start[..=end].to_string());
+            rest = &after_start[end + 1..];
+        }
+    }
+    found
+}
+
+fn render_fixture_template(template: &str, fixture: &str, harness: &str) -> String {
+    template
+        .replace("{fixture}", fixture)
+        .replace("{harness}", harness)
+}
+
+fn discover_fixture_directories(root: &Path, errors: &mut Vec<String>) -> BTreeSet<String> {
+    let diff_root = root.join("tests/diff");
+    let Ok(entries) = std::fs::read_dir(&diff_root) else {
+        errors.push(format!("cannot read fixture root: {}", diff_root.display()));
+        return BTreeSet::new();
+    };
+
+    let mut names = BTreeSet::new();
+    for entry in entries {
+        match entry {
+            Ok(entry) => match entry.file_type() {
+                Ok(kind) if kind.is_dir() => {
+                    names.insert(entry.file_name().to_string_lossy().into_owned());
+                }
+                Ok(_) => {}
+                Err(error) => errors.push(format!(
+                    "cannot inspect fixture entry {}: {error}",
+                    entry.path().display()
+                )),
+            },
+            Err(error) => errors.push(format!("cannot read fixture entry: {error}")),
+        }
+    }
+    names
+}
+
+fn validate_pins(manifest: &OracleManifest, errors: &mut Vec<String>) {
+    if manifest.schema_version != SCHEMA_VERSION {
+        errors.push(format!(
+            "unsupported schema version: got {}, expected {SCHEMA_VERSION}",
+            manifest.schema_version
+        ));
+    }
+
+    let upstream = &manifest.upstream;
+    if upstream.project != "google/closure-compiler" {
+        errors.push(format!("unexpected upstream project: {}", upstream.project));
+    }
+    if upstream.repository_url != "https://github.com/google/closure-compiler" {
+        errors.push(format!(
+            "unexpected upstream repository URL: {}",
+            upstream.repository_url
+        ));
+    }
+    if upstream.license_spdx != "Apache-2.0" {
+        errors.push(format!(
+            "unexpected SPDX license: {}",
+            upstream.license_spdx
+        ));
+    }
+    if upstream.license_url != "https://github.com/google/closure-compiler/blob/master/COPYING" {
+        errors.push(format!("unexpected license URL: {}", upstream.license_url));
+    }
+
+    let release = &upstream.release;
+    if release.tag != RELEASE {
+        errors.push(format!("unexpected release: {}", release.tag));
+    }
+    if release.annotated_tag_object_sha != RELEASE_TAG_OBJECT
+        || !is_lower_hex(&release.annotated_tag_object_sha, 40)
+    {
+        errors.push(format!(
+            "invalid release tag object SHA: {}",
+            release.annotated_tag_object_sha
+        ));
+    }
+    if release.commit_sha != RELEASE_COMMIT || !is_lower_hex(&release.commit_sha, 40) {
+        errors.push(format!(
+            "invalid release commit SHA: {}",
+            release.commit_sha
+        ));
+    }
+
+    let artifact = &release.artifact;
+    if artifact.repository != "Maven Central"
+        || artifact.group_id != "com.google.javascript"
+        || artifact.artifact_id != "closure-compiler"
+        || artifact.version != RELEASE
+    {
+        errors.push("unexpected Maven artifact coordinates".to_string());
+    }
+    if artifact.url
+        != "https://repo1.maven.org/maven2/com/google/javascript/closure-compiler/v20260915/closure-compiler-v20260915.jar"
+        || artifact.pom_url
+            != "https://repo1.maven.org/maven2/com/google/javascript/closure-compiler/v20260915/closure-compiler-v20260915.pom"
+    {
+        errors.push("unexpected Maven artifact URL".to_string());
+    }
+    if artifact.size_bytes != ARTIFACT_SIZE {
+        errors.push(format!("unexpected artifact size: {}", artifact.size_bytes));
+    }
+    if artifact.sha256 != ARTIFACT_SHA256 || !is_lower_hex(&artifact.sha256, 64) {
+        errors.push(format!("invalid artifact SHA-256: {}", artifact.sha256));
+    }
+    if artifact.embedded_build_jdk_spec != "21" {
+        errors.push(format!(
+            "unexpected embedded JDK spec: {}",
+            artifact.embedded_build_jdk_spec
+        ));
+    }
+    let license_paths: BTreeSet<_> = artifact
+        .embedded_license_paths
+        .iter()
+        .map(String::as_str)
+        .collect();
+    let expected_license_paths = BTreeSet::from([
+        "META-INF/LICENSE",
+        "META-INF/LICENSE.txt",
+        "META-INF/NOTICE.txt",
+    ]);
+    if license_paths != expected_license_paths
+        || artifact.embedded_license_paths.len() != expected_license_paths.len()
+    {
+        errors.push("embedded license path inventory is incomplete or duplicated".to_string());
+    }
+
+    let audit = &upstream.audited_source;
+    if audit.branch != "master"
+        || audit.commit_sha != AUDIT_COMMIT
+        || !is_lower_hex(&audit.commit_sha, 40)
+        || !is_iso_date(&audit.observed_on)
+    {
+        errors.push("invalid audited-source pin".to_string());
+    }
+
+    let environment = &manifest.capture_environment;
+    if environment.java_version != "21.0.12"
+        || environment.locale != "C.UTF-8"
+        || environment.timezone != "UTC"
+        || environment.encoding != "UTF-8"
+        || environment.working_directory != "code/programs/rust/closurec"
+        || environment.oracle_jar_placeholder != "{oracle_jar}"
+    {
+        errors.push("capture environment is not the reviewed deterministic profile".to_string());
+    }
+}
+
+fn validate_commands(
+    root: &Path,
+    commands: &[CommandTemplate],
+    errors: &mut Vec<String>,
+) -> BTreeMap<String, CommandKind> {
+    let mut kinds = BTreeMap::new();
+    for command in commands {
+        if !is_slug(&command.id) {
+            errors.push(format!("command id is not a slug: {}", command.id));
+        }
+        if kinds.insert(command.id.clone(), command.kind).is_some() {
+            errors.push(format!("duplicate command id: {}", command.id));
+        }
+        if command.description.trim().is_empty() {
+            errors.push(format!("command {} has an empty description", command.id));
+        }
+        if command.executable != "java" || command.working_directory != "{package_root}" {
+            errors.push(format!(
+                "command {} has an unexpected execution boundary",
+                command.id
+            ));
+        }
+
+        let actual_placeholders = placeholders(&command.argv);
+        match command.kind {
+            CommandKind::FlagsFile => {
+                let expected =
+                    BTreeSet::from(["{fixture_flags}".to_string(), "{oracle_jar}".to_string()]);
+                if actual_placeholders != expected {
+                    errors.push(format!("command {} has invalid placeholders", command.id));
+                }
+                if command.flags_path.as_deref() != Some("tests/diff/{fixture}/flags.txt")
+                    || command.input_root.as_deref() != Some("tests/diff/{fixture}/input")
+                    || !command.matrix.is_empty()
+                {
+                    errors.push(format!(
+                        "flags-file command {} has invalid fields",
+                        command.id
+                    ));
+                }
+            }
+            CommandKind::Matrix => {
+                let expected = BTreeSet::from([
+                    "{compilation_level}".to_string(),
+                    "{fixture_input}".to_string(),
+                    "{oracle_jar}".to_string(),
+                ]);
+                if actual_placeholders != expected {
+                    errors.push(format!("command {} has invalid placeholders", command.id));
+                }
+                if command.flags_path.is_some()
+                    || command.input_root.is_some()
+                    || command.matrix.is_empty()
+                {
+                    errors.push(format!("matrix command {} has invalid fields", command.id));
+                }
+            }
+        }
+
+        let mut case_ids = BTreeSet::new();
+        for case in &command.matrix {
+            if !is_slug(&case.id) || !case_ids.insert(case.id.clone()) {
+                errors.push(format!(
+                    "command {} has an invalid or duplicate matrix id",
+                    command.id
+                ));
+            }
+            for (key, value) in &case.variables {
+                if !is_slug(key) || value.trim().is_empty() {
+                    errors.push(format!(
+                        "command {} has an invalid matrix variable",
+                        command.id
+                    ));
+                }
+                if key == "fixture_input" {
+                    validate_existing_path(
+                        root,
+                        value,
+                        false,
+                        &format!("command {} matrix input", command.id),
+                        errors,
+                    );
+                }
+            }
+            let variable_placeholders: BTreeSet<_> = case
+                .variables
+                .keys()
+                .map(|key| format!("{{{key}}}"))
+                .collect();
+            let required: BTreeSet<_> = actual_placeholders
+                .iter()
+                .filter(|placeholder| placeholder.as_str() != "{oracle_jar}")
+                .cloned()
+                .collect();
+            if command.kind == CommandKind::Matrix && variable_placeholders != required {
+                errors.push(format!(
+                    "command {} matrix case {} does not bind every placeholder",
+                    command.id, case.id
+                ));
+            }
+        }
+    }
+    kinds
+}
+
+fn validate_provenance(set: &FixtureSet, errors: &mut Vec<String>) {
+    let provenance = &set.current_provenance;
+    match provenance.status {
+        ProvenanceStatus::DocumentedRelease => {
+            if !provenance.release.as_deref().is_some_and(is_release) {
+                errors.push(format!(
+                    "fixture set {} has an invalid documented release",
+                    set.id
+                ));
+            }
+            if provenance.evidence.as_deref().is_none_or(str::is_empty) {
+                errors.push(format!("fixture set {} lacks provenance evidence", set.id));
+            }
+        }
+        ProvenanceStatus::Unverified | ProvenanceStatus::Local => {
+            if provenance.release.is_some() || provenance.evidence.is_some() {
+                errors.push(format!(
+                    "fixture set {} attaches release evidence to non-documented provenance",
+                    set.id
+                ));
+            }
+        }
+    }
+}
+
+fn validate_manifest(root: &Path, manifest: &OracleManifest) -> Vec<String> {
+    let mut errors = Vec::new();
+    validate_pins(manifest, &mut errors);
+    let commands = validate_commands(root, &manifest.commands, &mut errors);
+    let discovered = discover_fixture_directories(root, &mut errors);
+
+    let mut set_ids = BTreeSet::new();
+    let mut classified: BTreeMap<String, Vec<String>> = BTreeMap::new();
+    let mut minify = BTreeSet::new();
+    let mut used_commands = BTreeSet::new();
+
+    for set in &manifest.fixture_sets {
+        if !is_slug(&set.id) || !set_ids.insert(set.id.clone()) {
+            errors.push(format!("invalid or duplicate fixture-set id: {}", set.id));
+        }
+        if set.fixtures.is_empty() {
+            errors.push(format!("fixture set {} is empty", set.id));
+        }
+        if !set.fixtures.windows(2).all(|pair| pair[0] < pair[1]) {
+            errors.push(format!("fixture set {} is not strictly sorted", set.id));
+        }
+
+        validate_provenance(set, &mut errors);
+        match set.disposition {
+            Disposition::UpstreamGolden => {
+                if set.command.is_none()
+                    || set.local_boundary.is_some()
+                    || set.current_provenance.status == ProvenanceStatus::Local
+                {
+                    errors.push(format!(
+                        "upstream fixture set {} has invalid boundaries",
+                        set.id
+                    ));
+                }
+            }
+            Disposition::MixedContract => {
+                if set.command.is_none()
+                    || set.local_boundary.as_deref().is_none_or(str::is_empty)
+                    || set.current_provenance.status != ProvenanceStatus::DocumentedRelease
+                {
+                    errors.push(format!(
+                        "mixed fixture set {} has invalid boundaries",
+                        set.id
+                    ));
+                }
+            }
+            Disposition::LocalExtension | Disposition::LocalContract => {
+                if set.command.is_some()
+                    || set.local_boundary.as_deref().is_none_or(str::is_empty)
+                    || set.current_provenance.status != ProvenanceStatus::Local
+                {
+                    errors.push(format!(
+                        "local fixture set {} has invalid boundaries",
+                        set.id
+                    ));
+                }
+            }
+        }
+
+        let command_kind = set
+            .command
+            .as_ref()
+            .and_then(|id| commands.get(id))
+            .copied();
+        if let Some(command) = &set.command {
+            used_commands.insert(command.clone());
+            if command_kind.is_none() {
+                errors.push(format!(
+                    "fixture set {} references unknown command {command}",
+                    set.id
+                ));
+            }
+        }
+
+        if set.default_harness.is_some() == !set.harnesses.is_empty() {
+            errors.push(format!(
+                "fixture set {} must use exactly one harness mapping mode",
+                set.id
+            ));
+        }
+        let fixture_names: BTreeSet<_> = set.fixtures.iter().cloned().collect();
+        let harness_names: BTreeSet<_> = set.harnesses.keys().cloned().collect();
+        if set.default_harness.is_none() && fixture_names != harness_names {
+            errors.push(format!(
+                "fixture set {} has incomplete harness mappings",
+                set.id
+            ));
+        }
+
+        for fixture in &set.fixtures {
+            if !is_slug(fixture) {
+                errors.push(format!("fixture name is not a slug: {fixture}"));
+            }
+            classified
+                .entry(fixture.clone())
+                .or_default()
+                .push(set.id.clone());
+            if fixture.starts_with("minify_") {
+                minify.insert(fixture.clone());
+                if set.disposition != Disposition::UpstreamGolden
+                    || set.default_harness.as_deref() != Some("tests/diff_minify.rs")
+                {
+                    errors.push(format!("minify fixture {fixture} has the wrong contract"));
+                }
+            }
+
+            let fixture_dir = format!("tests/diff/{fixture}");
+            validate_existing_path(root, &fixture_dir, true, "fixture directory", &mut errors);
+
+            let harness = set
+                .default_harness
+                .as_deref()
+                .or_else(|| set.harnesses.get(fixture).map(String::as_str))
+                .unwrap_or("");
+            validate_existing_path(root, harness, false, "fixture harness", &mut errors);
+
+            if set.expectation == Expectation::ExpectedStdout {
+                validate_existing_path(
+                    root,
+                    &format!("tests/diff/{fixture}/expected.stdout"),
+                    false,
+                    "expected stdout",
+                    &mut errors,
+                );
+            }
+
+            if let Some(evidence) = &set.current_provenance.evidence {
+                let rendered = render_fixture_template(evidence, fixture, harness);
+                if rendered.contains('{') || rendered.contains('}') {
+                    errors.push(format!(
+                        "fixture {fixture} has unresolved evidence placeholders"
+                    ));
+                } else {
+                    validate_existing_path(
+                        root,
+                        &rendered,
+                        false,
+                        "provenance evidence",
+                        &mut errors,
+                    );
+                    if let Some(release) = &set.current_provenance.release {
+                        match std::fs::read_to_string(root.join(&rendered)) {
+                            Ok(contents) if !contents.contains(release) => errors.push(format!(
+                                "provenance evidence for {fixture} does not contain {release}"
+                            )),
+                            Err(error) => errors.push(format!(
+                                "cannot read provenance evidence for {fixture}: {error}"
+                            )),
+                            Ok(_) => {}
+                        }
+                    }
+                }
+            }
+
+            if command_kind == Some(CommandKind::FlagsFile) {
+                validate_existing_path(
+                    root,
+                    &format!("tests/diff/{fixture}/flags.txt"),
+                    false,
+                    "fixture flags",
+                    &mut errors,
+                );
+                validate_existing_path(
+                    root,
+                    &format!("tests/diff/{fixture}/input"),
+                    true,
+                    "fixture input root",
+                    &mut errors,
+                );
+            }
+        }
+    }
+
+    for (fixture, memberships) in &classified {
+        if memberships.len() != 1 {
+            errors.push(format!(
+                "fixture {fixture} is classified {} times: {}",
+                memberships.len(),
+                memberships.join(", ")
+            ));
+        }
+        if !discovered.contains(fixture) {
+            errors.push(format!("manifest references missing fixture: {fixture}"));
+        }
+    }
+    for fixture in discovered.difference(&classified.keys().cloned().collect()) {
+        errors.push(format!("fixture is missing from the manifest: {fixture}"));
+    }
+
+    let discovered_minify: BTreeSet<_> = discovered
+        .iter()
+        .filter(|name| name.starts_with("minify_"))
+        .cloned()
+        .collect();
+    if minify != discovered_minify {
+        errors.push("manifest minify cohort differs from runtime discovery".to_string());
+    }
+
+    for command in commands.keys() {
+        if !used_commands.contains(command) {
+            errors.push(format!("command is not used by any fixture set: {command}"));
+        }
+    }
+
+    errors
+}
+
+fn assert_error(errors: &[String], needle: &str) {
+    assert!(
+        errors.iter().any(|error| error.contains(needle)),
+        "expected an error containing {needle:?}, got:\n{}",
+        errors.join("\n")
+    );
+}
+
+#[test]
+fn canonical_manifest_classifies_every_fixture_offline() {
+    let manifest = read_manifest();
+    let errors = validate_manifest(&package_root(), &manifest);
+    assert!(
+        errors.is_empty(),
+        "oracle manifest errors:\n{}",
+        errors.join("\n")
+    );
+
+    let fixture_count: usize = manifest
+        .fixture_sets
+        .iter()
+        .map(|set| set.fixtures.len())
+        .sum();
+    let minify_count: usize = manifest
+        .fixture_sets
+        .iter()
+        .flat_map(|set| &set.fixtures)
+        .filter(|fixture| fixture.starts_with("minify_"))
+        .count();
+    assert_eq!(fixture_count, 626, "reviewed fixture inventory changed");
+    assert_eq!(minify_count, 462, "reviewed minify cohort changed");
+}
+
+#[test]
+fn strict_schema_rejects_unknown_top_level_and_nested_fields() {
+    let text = std::fs::read_to_string(package_root().join(MANIFEST_PATH)).unwrap();
+    let canonical: serde_json::Value = serde_json::from_str(&text).unwrap();
+
+    let mut top_level = canonical.clone();
+    top_level
+        .as_object_mut()
+        .unwrap()
+        .insert("unexpected".to_string(), serde_json::Value::Bool(true));
+    assert!(serde_json::from_value::<OracleManifest>(top_level).is_err());
+
+    let mut nested = canonical;
+    nested["upstream"]["release"]["artifact"]
+        .as_object_mut()
+        .unwrap()
+        .insert("unexpected".to_string(), serde_json::Value::Bool(true));
+    assert!(serde_json::from_value::<OracleManifest>(nested).is_err());
+}
+
+#[test]
+fn validator_collects_independent_pin_and_mapping_errors() {
+    let mut manifest = read_manifest();
+    manifest.schema_version = 99;
+    manifest.upstream.release.artifact.sha256 = "not-a-hash".to_string();
+    manifest
+        .upstream
+        .release
+        .artifact
+        .embedded_license_paths
+        .push("META-INF/LICENSE".to_string());
+    let duplicate = manifest.fixture_sets[0].fixtures[0].clone();
+    manifest.fixture_sets[1].fixtures.push(duplicate);
+
+    let errors = validate_manifest(&package_root(), &manifest);
+    assert!(
+        errors.len() >= 3,
+        "expected collected errors, got {errors:?}"
+    );
+    assert_error(&errors, "unsupported schema version");
+    assert_error(&errors, "invalid artifact SHA-256");
+    assert_error(
+        &errors,
+        "embedded license path inventory is incomplete or duplicated",
+    );
+    assert_error(&errors, "classified 2 times");
+}
+
+#[test]
+fn validator_rejects_missing_and_stale_fixture_entries() {
+    let mut manifest = read_manifest();
+    let removed = manifest.fixture_sets[0].fixtures.remove(0);
+    manifest.fixture_sets[1]
+        .fixtures
+        .push("fixture-that-does-not-exist".to_string());
+    manifest.fixture_sets[1].fixtures.sort();
+
+    let errors = validate_manifest(&package_root(), &manifest);
+    assert_error(
+        &errors,
+        &format!("fixture is missing from the manifest: {removed}"),
+    );
+    assert_error(
+        &errors,
+        "manifest references missing fixture: fixture-that-does-not-exist",
+    );
+}
+
+#[test]
+fn validator_rejects_unknown_commands_and_false_upstream_claims() {
+    let mut manifest = read_manifest();
+    manifest
+        .fixture_sets
+        .iter_mut()
+        .find(|set| set.id == "typed-pipeline-current-v20260915")
+        .unwrap()
+        .command = Some("unknown-command".to_string());
+    let local = manifest
+        .fixture_sets
+        .iter_mut()
+        .find(|set| set.disposition == Disposition::LocalExtension)
+        .unwrap();
+    local.command = Some("closure-flags-file-v1".to_string());
+
+    let errors = validate_manifest(&package_root(), &manifest);
+    assert_error(&errors, "references unknown command unknown-command");
+    assert_error(
+        &errors,
+        "local fixture set correlation-vector-local-extensions",
+    );
+    assert_error(
+        &errors,
+        "command is not used by any fixture set: typed-pipeline-failure-matrix-v1",
+    );
+}
+
+#[test]
+fn validator_rejects_escaping_paths_and_incomplete_matrix_bindings() {
+    let mut manifest = read_manifest();
+    let set = manifest
+        .fixture_sets
+        .iter_mut()
+        .find(|set| set.id == "non-minify-unverified-stdout")
+        .unwrap();
+    let fixture = set.fixtures[0].clone();
+    set.harnesses.insert(fixture, "../outside.rs".to_string());
+
+    let matrix = manifest
+        .commands
+        .iter_mut()
+        .find(|command| command.kind == CommandKind::Matrix)
+        .unwrap();
+    matrix.matrix[0].variables.remove("fixture_input");
+
+    let errors = validate_manifest(&package_root(), &manifest);
+    assert_error(&errors, "fixture harness is not a safe relative path");
+    assert_error(&errors, "does not bind every placeholder");
+}
