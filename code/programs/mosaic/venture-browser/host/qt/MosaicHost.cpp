@@ -701,6 +701,9 @@ void MosaicHost::consumeEffect(const QVariantMap &response)
              == QStringLiteral("download")) {
     emit downloadRequested(effect);
   } else if (effect.value(QStringLiteral("type")).toString()
+             == QStringLiteral("print")) {
+    emit printRequested(effect);
+  } else if (effect.value(QStringLiteral("type")).toString()
              == QStringLiteral("write-clipboard")) {
     QGuiApplication::clipboard()->setText(effect.value(QStringLiteral("text")).toString());
   }

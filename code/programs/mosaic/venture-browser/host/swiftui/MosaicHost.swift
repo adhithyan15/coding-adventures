@@ -187,6 +187,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private(set) var lastAuxiliaryDocument: NSDictionary?
   private(set) var lastBrowsingContextRequest: NSDictionary?
   private(set) var lastDownloadRequest: NSDictionary?
+  private(set) var lastPrintRequest: NSDictionary?
 
   required override init() {
     let native = VentureNativeLibrary()
@@ -240,6 +241,11 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
       lastDownloadRequest = effect
       NotificationCenter.default.post(
         name: Notification.Name("VentureDownloadRequested"), object: self,
+        userInfo: ["request": effect])
+    } else if type == "print" {
+      lastPrintRequest = effect
+      NotificationCenter.default.post(
+        name: Notification.Name("VenturePrintRequested"), object: self,
         userInfo: ["request": effect])
     } else if type == "write-clipboard", let text = effect["text"] as? String {
       NSPasteboard.general.clearContents()
@@ -763,6 +769,46 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     let request = lastDownloadRequest?["request"] as? NSDictionary
     let address = request?["url"] as? String ?? ""
     if savePageEvents == eventCount + 1, address == targetURL {
+      let printPageEvents = chromeEventCounts["onPrintPage", default: 0]
+      guard performNativeButtonClick(identifier: "print-page-button") else {
+        writeInteractionResult(
+          ["backend": "swiftui", "status": "error", "error": "print-page-button not found"],
+          to: markerPath)
+        return
+      }
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
+        self?.verifyPrintPage(
+          startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+          eventCount: printPageEvents, remaining: 50)
+      }
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error", "savePageAddress": address,
+          "savePageEvents": String(savePageEvents),
+          "error": "native Save Page effect did not preserve the committed URL",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifySavePage(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        eventCount: eventCount, remaining: remaining - 1)
+    }
+  }
+
+  private func verifyPrintPage(
+    startURL: String, targetURL: String, markerPath: String, eventCount: Int, remaining: Int
+  ) {
+    let printPageEvents = chromeEventCounts["onPrintPage", default: 0]
+    let address = lastPrintRequest?["address"] as? String ?? ""
+    let title = lastPrintRequest?["title"] as? String ?? ""
+    if printPageEvents == eventCount + 1, address == targetURL,
+      title == "Venture interaction acceptance"
+    {
       let viewSourceEvents = chromeEventCounts["onViewSource", default: 0]
       guard performNativeButtonClick(identifier: "view-source-button") else {
         writeInteractionResult(
@@ -780,15 +826,15 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     guard remaining > 0 else {
       writeInteractionResult(
         [
-          "backend": "swiftui", "status": "error", "savePageAddress": address,
-          "savePageEvents": String(savePageEvents),
-          "error": "native Save Page effect did not preserve the committed URL",
+          "backend": "swiftui", "status": "error", "printPageAddress": address,
+          "printPageTitle": title, "printPageEvents": String(printPageEvents),
+          "error": "native Print Page effect did not preserve page identity",
         ],
         to: markerPath)
       return
     }
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-      self?.verifySavePage(
+      self?.verifyPrintPage(
         startURL: startURL, targetURL: targetURL, markerPath: markerPath,
         eventCount: eventCount, remaining: remaining - 1)
     }
@@ -1366,8 +1412,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private func nativeToolbarControlPoint(identifier: String) -> (NSPoint, NSWindow)? {
     let identifiers = [
       "back-button", "forward-button", "home-button", "reload-button",
-      "bookmark-button", "copy-address-button", "open-page-button", "save-page-button",
-      "view-source-button",
+      "bookmark-button",
     ]
     guard let controlIndex = identifiers.firstIndex(of: identifier) else { return nil }
     var visited = Set<ObjectIdentifier>()
@@ -1393,20 +1438,66 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     return nil
   }
 
-  private func accessibleControlPoint(identifier: String) -> (NSPoint, NSWindow)? {
-    let labels: Set<String>
-    switch identifier {
-    case "back-button": labels = ["Back"]
-    case "forward-button": labels = ["Forward"]
-    case "home-button": labels = ["Home"]
-    case "reload-button": labels = ["Reload"]
-    case "bookmark-button": labels = ["Bookmark", "Remove Bookmark"]
-    case "copy-address-button": labels = ["Copy", "Copy Address"]
-    case "open-page-button": labels = ["New Window", "Open in New Window"]
-    case "save-page-button": labels = ["Save", "Save Page"]
-    case "view-source-button": labels = ["Source", "View Source"]
-    default: return nil
+  private func nativePageActionControlPoint(identifier: String) -> (NSPoint, NSWindow)? {
+    let identifiers = [
+      "copy-address-button", "open-page-button", "save-page-button",
+      "print-page-button", "view-source-button",
+    ]
+    guard let controlIndex = identifiers.firstIndex(of: identifier) else { return nil }
+    var visited = Set<ObjectIdentifier>()
+    guard let address = findEditableTextField(in: NSApp, visited: &visited),
+      let window = address.window,
+      let contentView = window.contentView
+    else { return nil }
+
+    var addressBranch: NSView = address
+    while addressBranch.superview !== contentView {
+      guard let ancestor = addressBranch.superview else { return nil }
+      addressBranch = ancestor
     }
+    let rowY = contentView.subviews
+      .filter {
+        abs($0.frame.height - addressBranch.frame.height) < 1
+          && abs($0.frame.minY - addressBranch.frame.minY) > 1
+          && $0.frame.width < 200
+      }
+      .map { $0.frame.minY }
+      .min(by: {
+        abs($0 - addressBranch.frame.minY) < abs($1 - addressBranch.frame.minY)
+      })
+    guard let rowY else { return nil }
+    let controls = contentView.subviews
+      .filter {
+        abs($0.frame.minY - rowY) < 1
+          && abs($0.frame.height - addressBranch.frame.height) < 1
+          && $0.frame.width < 200
+      }
+      .sorted { $0.frame.minX < $1.frame.minX }
+    guard controls.count == identifiers.count else { return nil }
+    let control = controls[controlIndex]
+    return (
+      control.convert(NSPoint(x: control.bounds.midX, y: control.bounds.midY), to: nil), window
+    )
+  }
+
+  private func accessibleControlLabels(identifier: String) -> Set<String> {
+    switch identifier {
+    case "back-button": return ["Back"]
+    case "forward-button": return ["Forward"]
+    case "home-button": return ["Home"]
+    case "reload-button": return ["Reload"]
+    case "bookmark-button": return ["Bookmark", "Remove Bookmark"]
+    case "copy-address-button": return ["Copy", "Copy Address"]
+    case "open-page-button": return ["New Window", "Open in New Window"]
+    case "save-page-button": return ["Save", "Save Page"]
+    case "print-page-button": return ["Print", "Print Page"]
+    case "view-source-button": return ["Source", "View Source"]
+    default: return []
+    }
+  }
+
+  private func accessibleControlPoint(identifier: String) -> (NSPoint, NSWindow)? {
+    let labels = accessibleControlLabels(identifier: identifier)
     for window in NSApp.windows {
       var visited = Set<ObjectIdentifier>()
       let roots = [window as NSAccessibilityProtocol]
@@ -1425,12 +1516,26 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
 
   private func performNativeButtonClick(identifier: String) -> Bool {
     NSApp.activate(ignoringOtherApps: true)
-    guard
-      let (point, window) = accessibleControlPoint(identifier: identifier)
-        ?? nativeToolbarControlPoint(identifier: identifier)
-    else { return false }
-    sendPrimaryClick(at: point, to: window)
-    return true
+    if let (point, window) = accessibleControlPoint(identifier: identifier)
+      ?? nativeToolbarControlPoint(identifier: identifier)
+      ?? nativePageActionControlPoint(identifier: identifier)
+    {
+      sendPrimaryClick(at: point, to: window)
+      return true
+    }
+    for window in NSApp.windows {
+      var visited = Set<ObjectIdentifier>()
+      let roots = [window as NSAccessibilityProtocol]
+        + (window.contentView.map { [$0 as NSAccessibilityProtocol] } ?? [])
+      for root in roots {
+        guard let control = findAccessibleControl(
+          identifier: identifier, labels: accessibleControlLabels(identifier: identifier),
+          in: root, visited: &visited)
+        else { continue }
+        return control.accessibilityPerformPress()
+      }
+    }
+    return false
   }
 
   private func performNativeAddressCommit(value: String) -> Bool {

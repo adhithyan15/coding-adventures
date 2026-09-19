@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Map the shared Print Page event and disabled state through one typed print
+  effect for generated SwiftUI.
+
 - Map the shared Save Page event and disabled state through the existing typed
   download effect for generated SwiftUI.
 

@@ -62,6 +62,7 @@ signals:
   void auxiliaryDocumentRequested(const QVariantMap &document);
   void browsingContextRequested(const QVariantMap &request);
   void downloadRequested(const QVariantMap &request);
+  void printRequested(const QVariantMap &request);
 
 private:
   using NewFn = void *(*)(const char *, double, double);

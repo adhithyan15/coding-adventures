@@ -79,9 +79,10 @@ Chrome-owned utility transactions also stay in this boundary. Copy Address
 selects the committed history URL and emits a typed clipboard write, while
 Open in New Window selects the same URL and emits a `_blank` GET browsing
 context request with `noopener`. Save Page reuses that committed page URL to
-emit the existing typed download effect. None of these commands reads the
-editable address draft or mutates the current session; native hosts only
-present the effect.
+emit the existing typed download effect. Print Page snapshots the retained
+page's final address and normalized title into one typed print request. None of
+these commands reads the editable address draft or mutates the current session;
+native hosts only present the effect.
 
 Typed inputs retain that single-owner design. The session exposes
 `ControlValueState` for live validity and accessibility projection, routes

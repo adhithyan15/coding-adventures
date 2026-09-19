@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+- Add a shared Print Page transaction using the retained page identity and one
+  typed print presenter seam across every generated host.
+
+- Audit generated web acceptance dependencies through pinned npm 11 so every
+  host uses the supported bulk advisory endpoint with the same severity gate,
+  including bounded retries for transient registry maintenance.
+
 - Add a shared Save Page transaction using the committed page URL and the
   existing typed download presenter seam across every generated host.
 

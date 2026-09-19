@@ -188,6 +188,18 @@ TestCase {
         compare(recordingHost.events[0].event, "onSavePage")
     }
 
+    function test_print_page_crosses_the_mosaic_host_seam() {
+        hydrate(false)
+        recordingHost.reset()
+        const printPageButton = nativeControl("print-page-button")
+        verify(printPageButton.enabled)
+        printPageButton.forceActiveFocus()
+        keyClick(Qt.Key_Space)
+        wait(0)
+        compare(recordingHost.events.length, 1)
+        compare(recordingHost.events[0].event, "onPrintPage")
+    }
+
     function test_find_actions_cross_the_mosaic_host_seam() {
         hydrate(false)
         recordingHost.reset()
