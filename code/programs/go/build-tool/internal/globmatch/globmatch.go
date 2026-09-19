@@ -22,10 +22,10 @@
 // This package supports the same glob syntax as most build systems:
 //
 //   - *    matches any sequence of non-separator characters within
-//          a single path segment. "*.py" matches "foo.py" but not
-//          "dir/foo.py".
+//     a single path segment. "*.py" matches "foo.py" but not
+//     "dir/foo.py".
 //   - **   matches zero or more complete path segments. "src/**/*.py"
-//          matches "src/foo.py", "src/a/b/c.py", etc.
+//     matches "src/foo.py", "src/a/b/c.py", etc.
 //   - ?    matches exactly one non-separator character.
 //   - [ab] character classes, as supported by filepath.Match.
 //
@@ -94,50 +94,43 @@ func splitPath(p string) []string {
 //   - Path empty, pattern non-empty → match only if all remaining
 //     pattern segments are "**" (which can match zero segments).
 func matchSegments(pattern, path []string) bool {
-	// Base case: both exhausted — success.
-	if len(pattern) == 0 {
-		return len(path) == 0
-	}
+	matched, _ := matchSegmentsWithVisitCount(pattern, path)
+	return matched
+}
 
-	// If path is empty, the remaining pattern must be all "**".
-	if len(path) == 0 {
-		for _, p := range pattern {
-			if p != "**" {
-				return false
-			}
+func matchSegmentsWithVisitCount(pattern, path []string) (bool, int) {
+	type state struct {
+		patternIndex int
+		pathIndex    int
+	}
+	memo := make(map[state]bool)
+	seen := make(map[state]bool)
+	visited := 0
+
+	var match func(int, int) bool
+	match = func(patternIndex, pathIndex int) bool {
+		key := state{patternIndex: patternIndex, pathIndex: pathIndex}
+		if seen[key] {
+			return memo[key]
 		}
-		return true
-	}
+		seen[key] = true
+		visited++
 
-	// Current pattern segment.
-	seg := pattern[0]
-
-	if seg == "**" {
-		// ** matches zero or more path segments.
-		// Try consuming 0, 1, 2, … segments from the path.
-		//
-		// Optimization: consecutive ** segments are equivalent to a single
-		// one, so skip them.
-		restPattern := pattern[1:]
-		for len(restPattern) > 0 && restPattern[0] == "**" {
-			restPattern = restPattern[1:]
+		var result bool
+		switch {
+		case patternIndex == len(pattern):
+			result = pathIndex == len(path)
+		case pattern[patternIndex] == "**":
+			result = match(patternIndex+1, pathIndex) ||
+				(pathIndex < len(path) && match(patternIndex, pathIndex+1))
+		case pathIndex < len(path):
+			segmentMatches, err := filepath.Match(pattern[patternIndex], path[pathIndex])
+			result = err == nil && segmentMatches && match(patternIndex+1, pathIndex+1)
 		}
 
-		// Try matching the rest of the pattern against path[i:] for
-		// every possible i from 0 to len(path).
-		for i := 0; i <= len(path); i++ {
-			if matchSegments(restPattern, path[i:]) {
-				return true
-			}
-		}
-		return false
+		memo[key] = result
+		return result
 	}
 
-	// Normal segment: must match exactly one path segment.
-	matched, err := filepath.Match(seg, path[0])
-	if err != nil || !matched {
-		return false
-	}
-
-	return matchSegments(pattern[1:], path[1:])
+	return match(0, 0), visited
 }

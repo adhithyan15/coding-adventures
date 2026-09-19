@@ -3522,6 +3522,26 @@ class PureDomainValidationTests(unittest.TestCase):
             runner.validate_case_document(invalid_glob, **self._schema_args())
         self.assertEqual(raised.exception.code, "CASE_CI_GATE_GLOB_UNSAFE")
 
+        duplicate = copy.deepcopy(over_limit)
+        duplicate["input"]["options"]["registry"]["gates"].append(
+            copy.deepcopy(duplicate["input"]["options"]["registry"]["gates"][0])
+        )
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(duplicate, **self._schema_args())
+        self.assertEqual(raised.exception.code, "CASE_CI_GATE_DUPLICATE")
+
+        output_collision = copy.deepcopy(over_limit)
+        colliding_gate = copy.deepcopy(
+            output_collision["input"]["options"]["registry"]["gates"][0]
+        )
+        colliding_gate["id"] = "bounded_job"
+        output_collision["input"]["options"]["registry"]["gates"].append(
+            colliding_gate
+        )
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(output_collision, **self._schema_args())
+        self.assertEqual(raised.exception.code, "CASE_CI_GATE_OUTPUT_COLLISION")
+
     def test_ci_gate_selection_oracle_rejects_wrong_limit_outcomes(self) -> None:
         success = load_case("ci-gate-selection-unrelated.json")
         dishonest_success = copy.deepcopy(success)

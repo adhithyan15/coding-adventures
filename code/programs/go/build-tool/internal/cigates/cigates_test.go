@@ -197,7 +197,11 @@ func TestMatchWorkPreflightUsesUnicodeScalarsAndRunsBeforeMatching(t *testing.T)
 	}
 	files[0] = "🚀" + strings.Repeat("0", 498)
 	reg := &Registry{SchemaVersion: 1, Gates: map[string]Gate{
-		"bounded-job": {Description: "Boundary.", Paths: patterns},
+		"bounded-job": {
+			Description: "Boundary.",
+			Packages:    []string{"rust/affected"},
+			Paths:       patterns,
+		},
 	}}
 
 	calls := 0
@@ -227,6 +231,33 @@ func TestMatchWorkPreflightUsesUnicodeScalarsAndRunsBeforeMatching(t *testing.T)
 	}
 	if len(got) != 0 || calls != 0 {
 		t.Fatalf("over-limit returned %v after %d matcher calls", got, calls)
+	}
+
+	bypasses := []struct {
+		name     string
+		affected map[string]bool
+		changed  []string
+		force    bool
+	}{
+		{name: "force", affected: map[string]bool{}, changed: over, force: true},
+		{name: "nil affected", affected: nil, changed: over},
+		{name: "nil changed", affected: map[string]bool{}, changed: nil},
+		{name: "machinery", affected: map[string]bool{}, changed: []string{CIWorkflowPath}},
+	}
+	for _, test := range bypasses {
+		t.Run(test.name, func(t *testing.T) {
+			calls := 0
+			got, err := evaluateWithMatcher(reg, test.affected, test.changed, test.force, func(_, _ string) bool {
+				calls++
+				return false
+			})
+			if err != nil {
+				t.Fatalf("Evaluate bypass: %v", err)
+			}
+			if !got["bounded-job"] || calls != 0 {
+				t.Fatalf("bypass returned %v after %d matcher calls", got, calls)
+			}
+		})
 	}
 }
 

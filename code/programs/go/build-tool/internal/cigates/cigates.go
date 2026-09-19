@@ -53,10 +53,12 @@ package cigates
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"sort"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/globmatch"
 )
@@ -64,6 +66,13 @@ import (
 // CurrentSchemaVersion is the registry format this implementation understands.
 // A registry stamped higher is rejected rather than half-read.
 const CurrentSchemaVersion = 1
+
+// MaxMatchWork is the operation-wide Unicode-scalar path-match budget.
+const MaxMatchWork uint64 = 50_000_000
+
+// ErrMatchWorkLimitExceeded is returned before any matcher call when the full
+// declared gate-pattern/file Cartesian product exceeds MaxMatchWork.
+var ErrMatchWorkLimitExceeded = errors.New("CI_GATE_MATCH_LIMIT_EXCEEDED")
 
 // DefaultRegistryPath is the registry's home, relative to the repo root.
 const DefaultRegistryPath = "code/specs/data/ci-gates.json"
@@ -281,7 +290,17 @@ func Evaluate(
 	affected map[string]bool,
 	changedFiles []string,
 	force bool,
-) map[string]bool {
+) (map[string]bool, error) {
+	return evaluateWithMatcher(reg, affected, changedFiles, force, globmatch.MatchPath)
+}
+
+func evaluateWithMatcher(
+	reg *Registry,
+	affected map[string]bool,
+	changedFiles []string,
+	force bool,
+	matcher func(string, string) bool,
+) (map[string]bool, error) {
 	result := make(map[string]bool, len(reg.Gates))
 
 	// Four reasons to run absolutely everything, checked before any per-gate
@@ -301,13 +320,33 @@ func Evaluate(
 		for id := range reg.Gates {
 			result[id] = true
 		}
-		return result
+		return result, nil
 	}
 
-	for id, gate := range reg.Gates {
-		result[id] = gateFires(gate, affected, changedFiles)
+	remaining := MaxMatchWork
+	for _, id := range SortedGateIDs(reg) {
+		gate := reg.Gates[id]
+		var patternFactor uint64
+		for _, pattern := range gate.Paths {
+			units := uint64(utf8.RuneCountInString(pattern)) + 1
+			if units > MaxMatchWork-patternFactor {
+				return nil, ErrMatchWorkLimitExceeded
+			}
+			patternFactor += units
+		}
+		for _, file := range changedFiles {
+			pathFactor := uint64(utf8.RuneCountInString(file)) + 1
+			if patternFactor != 0 && pathFactor > remaining/patternFactor {
+				return nil, ErrMatchWorkLimitExceeded
+			}
+			remaining -= patternFactor * pathFactor
+		}
 	}
-	return result
+
+	for _, id := range SortedGateIDs(reg) {
+		result[id] = gateFires(reg.Gates[id], affected, changedFiles, matcher)
+	}
+	return result, nil
 }
 
 // touchesGatingMachinery reports whether the change edits ci.yml, the registry,
@@ -329,7 +368,12 @@ func touchesGatingMachinery(changedFiles []string) bool {
 
 // gateFires is the per-gate decision: does this change touch anything this job
 // depends on?
-func gateFires(gate Gate, affected map[string]bool, changedFiles []string) bool {
+func gateFires(
+	gate Gate,
+	affected map[string]bool,
+	changedFiles []string,
+	matcher func(string, string) bool,
+) bool {
 	// Package clause: any declared package inside the affected closure.
 	for _, pkg := range gate.Packages {
 		if affected[pkg] {
@@ -342,7 +386,7 @@ func gateFires(gate Gate, affected map[string]bool, changedFiles []string) bool 
 	// in the affected closure at all (see the package doc comment).
 	for _, pattern := range gate.Paths {
 		for _, file := range changedFiles {
-			if globmatch.MatchPath(pattern, file) {
+			if matcher(pattern, file) {
 				return true
 			}
 		}
