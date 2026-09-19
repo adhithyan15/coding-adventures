@@ -5,6 +5,13 @@
 - Recognize implemented XAML numeric typography on text/input/button primitives;
   retain the unsupported font-size diagnostic for HostTable (#15556).
 
+### Changed — SwiftUI comes off `primitive.navigation-split-unimplemented` (UI29-6, #15481)
+
+The SwiftUI emitter now lowers `HostNavigationSplit` to native
+`NavigationSplitView`, so SwiftUI native-complete reports no longer claim that
+the primitive is missing. Compose, Qt, and Flutter remain gated until their
+own lowering slices land.
+
 ### Added — non-gating platform behaviour degradations (UI29-6, #15491)
 
 `mosaic-degradations.json` now separates permanent platform limitations into
@@ -30,7 +37,7 @@ The XAML emitter lowers `HostNavigationSplit` to `NavigationView` as of slice
 `K-xaml`, so XAML is no longer reported as missing it. UI84 §3: the lowering
 records the drop, so closing the gap closes the report, in the same change.
 
-SwiftUI, Compose, Qt and Flutter still report it, and each of their slices
+Compose, Qt and Flutter still report it, and each of their slices
 removes its own backend the same way.
 
 ## 2026-09-13

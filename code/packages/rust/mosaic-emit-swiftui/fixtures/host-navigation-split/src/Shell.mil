@@ -1,0 +1,3 @@
+component Shell {
+  slot pane-title : text ;
+}

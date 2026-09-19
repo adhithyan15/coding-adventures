@@ -122,6 +122,7 @@ pressed or selected variant still exposes that more-specific state.
 | `Divider`        | `Divider()`                                   |
 | `Stack`          | `ZStack { ... }` *(v0.2.0; UI29 kernel)*      |
 | `HostScroll`     | `ScrollView { ... }`; `axis` selects `ScrollView(.horizontal)` / `ScrollView([.horizontal, .vertical])` (UI61) *(v0.2.0; UI29 kernel)*  |
+| `HostNavigationSplit` | `NavigationSplitView { pane } detail: { detail }`; the pane receives its title and ideal width *(UI29-6)* |
 | `Input`          | `TextEditor` when `multiline: true`; otherwise the native `TextField` path *(UI25 compatibility)* |
 | `HostInput`      | `TextField` with a dispatching `Binding` when `onChange` is wired *(UI29 kernel)* |
 | `HostButton`     | `Button(action: { dispatch(.tap) }) { Text(label) }` *(v0.2.0; UI29 kernel)* |

@@ -3955,6 +3955,17 @@ fn emit_view_tree(
             for_payload,
         )?,
 
+        // UI29-6 — the adaptive pane/detail container. SwiftUI owns the
+        // compact-width transition and back-navigation semantics through
+        // NavigationSplitView; two ordinary stacks cannot reproduce them.
+        "HostNavigationSplit" => emit_host_navigation_split(
+            node,
+            indent,
+            part_styles,
+            emits,
+            for_payload,
+        )?,
+
         // -----------------------------------------------------------------
         // Leaf primitives — emit a single line, no children.
         // -----------------------------------------------------------------
@@ -4502,6 +4513,115 @@ fn container(
         None,
     )?);
     out.push_str(&format!("{pad}}}\n"));
+    Ok(out)
+}
+
+/// Lower `HostNavigationSplit` to SwiftUI's native `NavigationSplitView`.
+///
+/// The kernel fixes child order as pane, then detail. `pane-title` is applied
+/// to the pane so VoiceOver and the platform navigation chrome receive the
+/// authored name. `pane-width` remains an ideal width hint, leaving SwiftUI
+/// free to adapt it. The default `collapse: auto` uses the platform-owned
+/// visibility binding; `collapse: never` supplies a constant `.all` binding
+/// so application state cannot collapse the pane.
+fn emit_host_navigation_split(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Result<String, PipelineEmitError> {
+    let (pane, detail) = match node.children.as_slice() {
+        [pane, detail] => (pane, detail),
+        children => {
+            return Err(PipelineEmitError::UnknownPrimitive(format!(
+                "HostNavigationSplit takes exactly two children -- the pane, then the detail -- got {}",
+                children.len()
+            )));
+        }
+    };
+
+    let title = match find_prop_value(node, "pane-title") {
+        Some(LayoutPropValue::String(value)) => {
+            format!("\"{}\"", escape_swift_string(value))
+        }
+        Some(LayoutPropValue::SlotRef(name)) | Some(LayoutPropValue::Keyword(name)) => {
+            let field = to_camel_case_first_lower(name);
+            validate_slot_or_field_name(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            field
+        }
+        Some(LayoutPropValue::Expr(expression)) => {
+            swift_collection_index_expr(expression.trim(), for_payload)
+        }
+        Some(LayoutPropValue::Number(number)) => format!("Text(verbatim: \"{number}\")"),
+        Some(LayoutPropValue::EmitRef(_)) => {
+            return Err(PipelineEmitError::UnknownPrimitive(
+                "HostNavigationSplit `pane-title` takes text, not an emit reference".to_string(),
+            ));
+        }
+        None => "\"\"".to_string(),
+    };
+
+    let pinned = match find_prop_value(node, "collapse") {
+        None => false,
+        Some(LayoutPropValue::Keyword(value)) if value == "auto" => false,
+        Some(LayoutPropValue::Keyword(value)) if value == "never" => true,
+        Some(_) => {
+            return Err(PipelineEmitError::UnknownPrimitive(
+                "HostNavigationSplit `collapse` takes the keyword `auto` or `never`".to_string(),
+            ));
+        }
+    };
+
+    let pad = " ".repeat(indent);
+    let child_pad = " ".repeat(indent + 4);
+    let modifier_pad = " ".repeat(indent + 8);
+    let opener = if pinned {
+        "NavigationSplitView(columnVisibility: .constant(.all))"
+    } else {
+        "NavigationSplitView"
+    };
+    let mut out = format!("{pad}{opener} {{\n");
+    out.push_str(&emit_view_tree(
+        pane,
+        indent + 4,
+        part_styles,
+        emits,
+        None,
+        for_payload,
+        None,
+    )?);
+    writeln!(out, "{modifier_pad}.navigationTitle({title})").unwrap();
+    if let Some(LayoutPropValue::Number(width)) = find_prop_value(node, "pane-width") {
+        writeln!(
+            out,
+            "{modifier_pad}.navigationSplitViewColumnWidth(ideal: {width})"
+        )
+        .unwrap();
+    }
+    writeln!(out, "{pad}}} detail: {{").unwrap();
+    out.push_str(&emit_view_tree(
+        detail,
+        indent + 4,
+        part_styles,
+        emits,
+        None,
+        for_payload,
+        None,
+    )?);
+    writeln!(out, "{pad}}}").unwrap();
+
+    // The identifier names the native split itself for UI tests without
+    // replacing the pane's authored accessibility label.
+    if let Some(part) = &node.part_name {
+        writeln!(
+            out,
+            "{child_pad}.accessibilityIdentifier(\"{}\")",
+            escape_swift_string(part)
+        )
+        .unwrap();
+    }
+
     Ok(out)
 }
 
@@ -8322,6 +8442,83 @@ mod tests {
             name: name.to_string(),
             value: LayoutPropValue::Expr(text.to_string()),
         }
+    }
+
+    fn navigation_split(props: Vec<LayoutProp>) -> LayoutNode {
+        LayoutNode {
+            tag: "HostNavigationSplit".to_string(),
+            part_name: Some("app-shell".to_string()),
+            props,
+            children: vec![
+                leaf("Text", vec![prop_string("content", "PANE-SIDE")]),
+                leaf("Text", vec![prop_string("content", "DETAIL-SIDE")]),
+            ],
+        }
+    }
+
+    #[test]
+    fn navigation_split_lowers_to_native_adaptive_swiftui_container() {
+        let layout = layout_with(
+            "Shell",
+            navigation_split(vec![
+                prop_string("pane-title", "Projects"),
+                LayoutProp {
+                    name: "pane-width".to_string(),
+                    value: LayoutPropValue::Number(236.0),
+                },
+            ]),
+        );
+        let output = from_pipeline(
+            &component("Shell", vec![], vec![]),
+            &layout,
+            &empty_style("Shell"),
+        )
+        .unwrap()
+        .output;
+
+        assert!(output.contains("NavigationSplitView {"), "{output}");
+        assert!(output.contains(".navigationTitle(\"Projects\")"), "{output}");
+        assert!(
+            output.contains(".navigationSplitViewColumnWidth(ideal: 236)"),
+            "{output}"
+        );
+        assert!(
+            output.contains(".accessibilityIdentifier(\"app-shell\")"),
+            "{output}"
+        );
+
+        let pane = output.find("PANE-SIDE").unwrap();
+        let detail_boundary = output.find("} detail: {").unwrap();
+        let detail = output.find("DETAIL-SIDE").unwrap();
+        assert!(pane < detail_boundary && detail_boundary < detail, "{output}");
+    }
+
+    #[test]
+    fn navigation_split_never_pins_all_columns_and_slot_title_stays_live() {
+        let layout = layout_with(
+            "Shell",
+            navigation_split(vec![
+                prop_slot_ref("pane-title", "pane-title"),
+                prop_keyword("collapse", "never"),
+            ]),
+        );
+        let output = from_pipeline(
+            &component(
+                "Shell",
+                vec![slot("pane-title", SlotType::Text, true)],
+                vec![],
+            ),
+            &layout,
+            &empty_style("Shell"),
+        )
+        .unwrap()
+        .output;
+
+        assert!(
+            output.contains("NavigationSplitView(columnVisibility: .constant(.all))"),
+            "{output}"
+        );
+        assert!(output.contains(".navigationTitle(paneTitle)"), "{output}");
     }
 
     fn node_with_props(tag: &str, props: Vec<LayoutProp>, children: Vec<LayoutNode>) -> LayoutNode {
