@@ -46,10 +46,21 @@ pub enum DiagramShape {
 #[derive(Clone, Debug, PartialEq)]
 pub struct DiagramLabel {
     pub text: String,
+    pub markdown: Option<String>,
 }
 impl DiagramLabel {
     pub fn new(text: impl Into<String>) -> Self {
-        DiagramLabel { text: text.into() }
+        DiagramLabel {
+            text: text.into(),
+            markdown: None,
+        }
+    }
+
+    pub fn markdown(text: impl Into<String>, source: impl Into<String>) -> Self {
+        DiagramLabel {
+            text: text.into(),
+            markdown: Some(source.into()),
+        }
     }
 }
 

@@ -2339,7 +2339,7 @@ pub fn parse_mindmap(source: &str) -> Result<GraphDiagram, ParseError> {
             continue;
         }
         let (explicit_id, label, shape) = parse_mindmap_node(source);
-        let base_id = explicit_id.unwrap_or_else(|| mindmap_slug(&label));
+        let base_id = explicit_id.unwrap_or_else(|| mindmap_slug(&label.text));
         let id = unique_mindmap_id(base_id, &mut ids);
 
         while ancestors.last().is_some_and(|(level, _)| *level >= indent) {
@@ -2364,7 +2364,7 @@ pub fn parse_mindmap(source: &str) -> Result<GraphDiagram, ParseError> {
         let depth = ancestors.len();
         nodes.push(GraphNode {
             id: id.clone(),
-            label: DiagramLabel::new(label),
+            label,
             shape: Some(shape),
             style: Some(mindmap_depth_style(depth)),
             classes: Vec::new(),
@@ -2398,6 +2398,7 @@ pub fn parse_mindmap(source: &str) -> Result<GraphDiagram, ParseError> {
 fn prepare_mindmap_source(source: &str) -> Result<String, ParseError> {
     let source = blank_mermaid_front_matter(source)?;
     let source = String::from_utf8(source).expect("front matter blanking preserves UTF-8");
+    let source = collapse_mindmap_markdown_lines(&source)?;
     Ok(source
         .lines()
         .map(|line| {
@@ -2415,6 +2416,36 @@ fn prepare_mindmap_source(source: &str) -> Result<String, ParseError> {
         .join("\n"))
 }
 
+fn collapse_mindmap_markdown_lines(source: &str) -> Result<String, ParseError> {
+    let mut output = Vec::new();
+    let mut pending: Option<String> = None;
+    let mut start_line = 0;
+
+    for (index, line) in source.lines().enumerate() {
+        if let Some(current) = &mut pending {
+            current.push_str("\\n");
+            current.push_str(line.trim());
+            if line.contains("`\"") {
+                output.push(pending.take().expect("pending markdown line exists"));
+            }
+        } else if line.contains("\"`") && !line.contains("`\"") {
+            pending = Some(line.to_string());
+            start_line = index + 1;
+        } else {
+            output.push(line.to_string());
+        }
+    }
+
+    if pending.is_some() {
+        return Err(ParseError {
+            message: "unterminated mindmap Markdown string".into(),
+            line: start_line,
+            col: 1,
+        });
+    }
+    Ok(output.join("\n"))
+}
+
 fn strip_mindmap_trailing_comment(line: &str) -> &str {
     for (index, _) in line.match_indices("%%") {
         let node = line[..index].trim_end();
@@ -2428,7 +2459,7 @@ fn strip_mindmap_trailing_comment(line: &str) -> &str {
     line
 }
 
-fn parse_mindmap_node(source: &str) -> (Option<String>, String, DiagramShape) {
+fn parse_mindmap_node(source: &str) -> (Option<String>, DiagramLabel, DiagramShape) {
     for (open, close, shape) in [
         ("{{", "}}", DiagramShape::Hexagon),
         ("))", "((", DiagramShape::Bang),
@@ -2440,12 +2471,12 @@ fn parse_mindmap_node(source: &str) -> (Option<String>, String, DiagramShape) {
         if let Some(open_index) = source.find(open) {
             if source.ends_with(close) && open_index + open.len() <= source.len() - close.len() {
                 let id = source[..open_index].trim();
-                let label = unquote_mermaid_string(
+                let label = parse_mindmap_label(
                     source[open_index + open.len()..source.len() - close.len()].trim(),
                 );
                 return (
                     (!id.is_empty()).then(|| id.to_string()),
-                    normalize_mermaid_line_breaks(&label),
+                    label,
                     shape,
                 );
             }
@@ -2453,9 +2484,23 @@ fn parse_mindmap_node(source: &str) -> (Option<String>, String, DiagramShape) {
     }
     (
         None,
-        normalize_mermaid_line_breaks(source),
+        DiagramLabel::new(normalize_mermaid_line_breaks(source)),
         DiagramShape::RoundedRect,
     )
+}
+
+fn parse_mindmap_label(source: &str) -> DiagramLabel {
+    let trimmed = source.trim();
+    if let Some(markdown) = trimmed
+        .strip_prefix("\"`")
+        .and_then(|value| value.strip_suffix("`\""))
+    {
+        let markdown = normalize_mermaid_line_breaks(markdown).replace("\\n", "\n");
+        let text = markdown.replace("**", "").replace('*', "");
+        return DiagramLabel::markdown(text, markdown);
+    }
+
+    DiagramLabel::new(normalize_mermaid_line_breaks(&unquote_mermaid_string(trimmed)))
 }
 
 fn mindmap_slug(label: &str) -> String {
@@ -10225,6 +10270,25 @@ mod tests_dg04 {
         assert_eq!(diagram.nodes[0].label.text, "String containing [] and ()");
         assert_eq!(diagram.nodes[1].label.text, "Line one\nLine two");
         assert_eq!(diagram.nodes[2].label.text, "First\nSecond");
+    }
+
+    #[test]
+    fn mindmap_preserves_multiline_markdown_labels_as_semantic_source() {
+        let diagram = parse_mindmap(
+            "mindmap\n  root[\"`**Root** with\n    a *second line*\n    Unicode works too: 🤓`\"]\n    child[Plain]",
+        )
+        .unwrap();
+
+        assert_eq!(
+            diagram.nodes[0].label.text,
+            "Root with\na second line\nUnicode works too: 🤓"
+        );
+        assert_eq!(
+            diagram.nodes[0].label.markdown.as_deref(),
+            Some("**Root** with\na *second line*\nUnicode works too: 🤓")
+        );
+        assert_eq!(diagram.nodes[1].label.markdown, None);
+        assert!(parse_mindmap("mindmap\n  root[\"`unterminated").is_err());
     }
 
     #[test]
