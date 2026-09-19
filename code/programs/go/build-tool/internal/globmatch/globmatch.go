@@ -22,21 +22,20 @@
 // This package supports the same glob syntax as most build systems:
 //
 //   - *    matches any sequence of non-separator characters within
-//          a single path segment. "*.py" matches "foo.py" but not
-//          "dir/foo.py".
+//     a single path segment. "*.py" matches "foo.py" but not
+//     "dir/foo.py".
 //   - **   matches zero or more complete path segments. "src/**/*.py"
-//          matches "src/foo.py", "src/a/b/c.py", etc.
+//     matches "src/foo.py", "src/a/b/c.py", etc.
 //   - ?    matches exactly one non-separator character.
-//   - [ab] character classes, as supported by filepath.Match.
+//   - [ab] character classes and [!ab] negation, matching the neutral Python
+//     fnmatchcase grammar. A bare unmatched [ is literal, and ^ is not a
+//     negation marker.
 //
 // All matching uses forward slashes as the path separator. Callers
 // should normalize paths with filepath.ToSlash before calling.
 package globmatch
 
-import (
-	"path/filepath"
-	"strings"
-)
+import "strings"
 
 // MatchPath reports whether a relative file path matches the given glob
 // pattern. Both pattern and path should use forward slashes as separators.
@@ -84,8 +83,8 @@ func splitPath(p string) []string {
 //
 //   - A "**" pattern segment can match zero or more path segments.
 //     We try consuming 0, 1, 2, … path segments until we find a match.
-//   - Any other pattern segment must match exactly one path segment
-//     using filepath.Match (which handles *, ?, and character classes).
+//   - Any other pattern segment must match exactly one path segment using the
+//     language-neutral fnmatchcase grammar.
 //
 // The recursion terminates when one or both slices are exhausted:
 //
@@ -94,50 +93,132 @@ func splitPath(p string) []string {
 //   - Path empty, pattern non-empty → match only if all remaining
 //     pattern segments are "**" (which can match zero segments).
 func matchSegments(pattern, path []string) bool {
-	// Base case: both exhausted — success.
-	if len(pattern) == 0 {
-		return len(path) == 0
+	matched, _ := matchSegmentsWithVisitCount(pattern, path)
+	return matched
+}
+
+func matchSegmentsWithVisitCount(pattern, path []string) (bool, int) {
+	type state struct {
+		patternIndex int
+		pathIndex    int
+	}
+	memo := make(map[state]bool)
+	seen := make(map[state]bool)
+	visited := 0
+
+	var match func(int, int) bool
+	match = func(patternIndex, pathIndex int) bool {
+		key := state{patternIndex: patternIndex, pathIndex: pathIndex}
+		if seen[key] {
+			return memo[key]
+		}
+		seen[key] = true
+		visited++
+
+		var result bool
+		switch {
+		case patternIndex == len(pattern):
+			result = pathIndex == len(path)
+		case pattern[patternIndex] == "**":
+			result = match(patternIndex+1, pathIndex) ||
+				(pathIndex < len(path) && match(patternIndex, pathIndex+1))
+		case pathIndex < len(path):
+			result = matchSegment(pattern[patternIndex], path[pathIndex]) &&
+				match(patternIndex+1, pathIndex+1)
+		}
+
+		memo[key] = result
+		return result
 	}
 
-	// If path is empty, the remaining pattern must be all "**".
-	if len(path) == 0 {
-		for _, p := range pattern {
-			if p != "**" {
-				return false
+	return match(0, 0), visited
+}
+
+// matchSegment implements the slash-free Python fnmatchcase grammar used by
+// the language-neutral build-tool oracle. It is deliberately independent of
+// filepath.Match, whose character-class syntax differs across the exact cases
+// that can otherwise cause a CI gate false negative.
+func matchSegment(pattern, value string) bool {
+	patternRunes := []rune(pattern)
+	valueRunes := []rune(value)
+	type state struct{ patternIndex, valueIndex int }
+	memo := make(map[state]bool)
+	seen := make(map[state]bool)
+
+	var match func(int, int) bool
+	match = func(patternIndex, valueIndex int) bool {
+		key := state{patternIndex, valueIndex}
+		if seen[key] {
+			return memo[key]
+		}
+		seen[key] = true
+
+		var result bool
+		switch {
+		case patternIndex == len(patternRunes):
+			result = valueIndex == len(valueRunes)
+		case patternRunes[patternIndex] == '*':
+			result = match(patternIndex+1, valueIndex) ||
+				(valueIndex < len(valueRunes) && match(patternIndex, valueIndex+1))
+		case patternRunes[patternIndex] == '?':
+			result = valueIndex < len(valueRunes) && match(patternIndex+1, valueIndex+1)
+		case patternRunes[patternIndex] == '[':
+			classMatches, next, closed := matchCharacterClass(patternRunes, patternIndex, valueRunes, valueIndex)
+			if closed {
+				result = classMatches && match(next, valueIndex+1)
+			} else {
+				result = valueIndex < len(valueRunes) && valueRunes[valueIndex] == '[' &&
+					match(patternIndex+1, valueIndex+1)
 			}
+		default:
+			result = valueIndex < len(valueRunes) && patternRunes[patternIndex] == valueRunes[valueIndex] &&
+				match(patternIndex+1, valueIndex+1)
 		}
-		return true
+		memo[key] = result
+		return result
+	}
+	return match(0, 0)
+}
+
+func matchCharacterClass(pattern []rune, opening int, value []rune, valueIndex int) (bool, int, bool) {
+	cursor := opening + 1
+	negated := cursor < len(pattern) && pattern[cursor] == '!'
+	if negated {
+		cursor++
+	}
+	closingSearch := cursor
+	if closingSearch < len(pattern) && pattern[closingSearch] == ']' {
+		closingSearch++
+	}
+	closing := closingSearch
+	for closing < len(pattern) && pattern[closing] != ']' {
+		closing++
+	}
+	if closing == len(pattern) {
+		return false, opening + 1, false
+	}
+	if valueIndex >= len(value) {
+		return false, closing + 1, true
 	}
 
-	// Current pattern segment.
-	seg := pattern[0]
-
-	if seg == "**" {
-		// ** matches zero or more path segments.
-		// Try consuming 0, 1, 2, … segments from the path.
-		//
-		// Optimization: consecutive ** segments are equivalent to a single
-		// one, so skip them.
-		restPattern := pattern[1:]
-		for len(restPattern) > 0 && restPattern[0] == "**" {
-			restPattern = restPattern[1:]
-		}
-
-		// Try matching the rest of the pattern against path[i:] for
-		// every possible i from 0 to len(path).
-		for i := 0; i <= len(path); i++ {
-			if matchSegments(restPattern, path[i:]) {
-				return true
+	want := value[valueIndex]
+	member := cursor
+	matched := false
+	for member < closing {
+		if member+2 < closing && pattern[member+1] == '-' {
+			if pattern[member] <= want && want <= pattern[member+2] {
+				matched = true
 			}
+			member += 3
+		} else {
+			if pattern[member] == want {
+				matched = true
+			}
+			member++
 		}
-		return false
 	}
-
-	// Normal segment: must match exactly one path segment.
-	matched, err := filepath.Match(seg, path[0])
-	if err != nil || !matched {
-		return false
+	if negated {
+		matched = !matched
 	}
-
-	return matchSegments(pattern[1:], path[1:])
+	return matched, closing + 1, true
 }

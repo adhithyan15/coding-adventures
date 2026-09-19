@@ -316,15 +316,45 @@
           "const": "ci_gate_selection"
         },
         "outcome": {
-          "const": "ok"
+          "enum": [
+            "ok",
+            "error",
+            "unsupported",
+            "skipped"
+          ]
         },
         "input": {
           "$ref": "#/$defs/ci_gate_selection_input"
         },
         "result": {
-          "$ref": "#/$defs/ci_gate_selection_result"
+          "type": "object"
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "const": "ok"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "result": {
+                "$ref": "#/$defs/ci_gate_selection_result"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "result": {
+                "$ref": "#/$defs/empty_result"
+              }
+            }
+          }
+        }
+      ]
     },
     "empty_result": {
       "type": "object",
