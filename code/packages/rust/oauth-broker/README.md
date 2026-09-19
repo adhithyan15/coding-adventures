@@ -145,6 +145,15 @@ The same verified-identity custody path is available for retained
 provider/client/nonce bindings fail before signing, and the composition adds no
 concrete signing or ID-token verification algorithm.
 
+The RFC 8628 initiation path now has an explicit OpenID Connect composition.
+It requires the exact case-sensitive `openid` scope, obtains an independent
+256-bit nonce from injected entropy, includes it in the audited device request,
+and retains it as non-cloneable zeroizing provider/client/trace-bound state
+beside the validated display and polling state. Registered profile binding is
+checked before entropy or transport access. Identity verification, opaque
+account-key selection, polling time, storage, and concrete network authority
+remain separate.
+
 That `private_key_jwt` path can also load the exact static ID-token policy
 inside the composition. The retained provider/client/endpoint/algorithm/key
 profile, opaque verification context, and nonce are validated before the
@@ -188,8 +197,8 @@ dependency are sibling packages in this repository.
 - concrete filesystem, vault, or embedded-resource provider-data sources;
 - concrete encrypted-vault credential storage;
 - concrete account-identity verification/JWKS, identity composition for other
-  grant paths, account listing, device authorization UI,
-  timing/sleep authority, and full device-flow loops;
+  grant paths including device polling, account listing, device authorization
+  UI, timing/sleep authority, and full device-flow loops;
 - concrete private-key algorithms, OIDC validation, and DPoP.
 
 Those are independently reviewable follow-up slices in `code/specs/oauth.md`.

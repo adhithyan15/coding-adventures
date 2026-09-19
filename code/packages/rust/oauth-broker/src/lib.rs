@@ -10,10 +10,11 @@
 use coding_adventures_oauth::{
     decode_device_authorization_response, decode_device_token_poll_response, decode_token_response,
     decode_token_revocation_response, prepare_device_authorization, prepare_device_token_poll,
-    prepare_token_refresh, prepare_token_revocation, ConfidentialClientAuthenticationMethod,
-    DeviceAuthorization, DeviceAuthorizationProfile, DeviceAuthorizationRequest, DevicePollResult,
-    DevicePollingSession, DeviceTokenPollRequest, OAuthAuditSink, OAuthError, OAuthTraceId,
-    OpenIdAuthorizationNonce, ProviderConfig, ProviderId, RevocationTokenHint,
+    prepare_openid_device_authorization, prepare_token_refresh, prepare_token_revocation,
+    ConfidentialClientAuthenticationMethod, DeviceAuthorization, DeviceAuthorizationProfile,
+    DeviceAuthorizationRequest, DevicePollResult, DevicePollingSession, DeviceTokenPollRequest,
+    EntropySource, OAuthAuditSink, OAuthError, OAuthTraceId, OpenIdAuthorizationNonce,
+    OpenIdDeviceAuthorization, ProviderConfig, ProviderId, RevocationTokenHint,
     TokenExchangeRequest, TokenRefreshRequest, TokenResponse, TokenResponseFormat,
     TokenRevocationRequest, TokenRevocationResponse, MAX_TOKEN_RESPONSE_BYTES,
     MAX_TOKEN_REVOCATION_RESPONSE_BYTES,
@@ -3346,6 +3347,65 @@ impl<S: CredentialStore> OAuthBroker<S> {
         )
     }
 
+    /// Initiate one OIDC-enabled RFC 8628 device flow with a fresh nonce.
+    ///
+    /// Exact registered provider/client/endpoint binding is checked before
+    /// caller-injected entropy or transport access. The request requires the
+    /// case-sensitive `openid` scope and keeps the independent zeroizing nonce
+    /// provider/client/trace bound beside the decoded verification and polling
+    /// state for a later audited ID-token proof. This boundary performs no
+    /// identity verification or account-key selection.
+    pub fn begin_openid_device_authorization<E, T, A>(
+        &self,
+        profile: &DeviceAuthorizationProfile,
+        requested_scopes: &[&str],
+        trace: OAuthTraceId,
+        entropy: &mut E,
+        transport: &mut T,
+        audit: &mut A,
+    ) -> Result<OpenIdDeviceAuthorization, BrokerError>
+    where
+        E: EntropySource,
+        T: OAuthDeviceAuthorizationTransport,
+        A: OAuthBrokerAuditSink,
+    {
+        let provider = profile.provider().clone();
+        publish_broker(
+            audit,
+            &provider,
+            trace,
+            BrokerAuditAction::DeviceAuthorization,
+            BrokerAuditOutcome::Attempted,
+        )?;
+        let result = (|| {
+            let registered = self.registered_provider(&provider)?;
+            if !profile.is_bound_to(registered.config()) {
+                return Err(BrokerError::BindingMismatch);
+            }
+            let request =
+                prepare_openid_device_authorization(profile, requested_scopes, trace, entropy)
+                    .publish_then_release(audit)
+                    .map_err(map_oauth_error)?;
+            let context = request.response_context();
+            let response = send_device_authorization_audited(transport, request.request(), audit)?;
+            let (status, content_type, body) = response.into_parts();
+            let authorization =
+                decode_device_authorization_response(context, status, content_type.as_str(), body)
+                    .publish_then_release(audit)
+                    .map_err(map_oauth_error)?;
+            request
+                .bind_response(authorization)
+                .map_err(map_oauth_error)
+        })();
+        finish_broker(
+            audit,
+            &provider,
+            trace,
+            BrokerAuditAction::DeviceAuthorization,
+            result,
+        )
+    }
+
     fn poll_device_once_inner<T, A>(
         &self,
         session: DevicePollingSession,
@@ -4612,6 +4672,18 @@ mod tests {
         }
     }
 
+    struct CountingDeviceEntropy {
+        calls: usize,
+    }
+
+    impl EntropySource for CountingDeviceEntropy {
+        fn fill(&mut self, destination: &mut [u8]) -> Result<(), OAuthError> {
+            self.calls += 1;
+            destination.fill(0x5a);
+            Ok(())
+        }
+    }
+
     struct CountingClock {
         now: u64,
         calls: usize,
@@ -4964,6 +5036,8 @@ mod tests {
 
     struct MockDeviceAuthorizationTransport {
         response: Option<Result<DeviceAuthorizationEndpointResponse, TokenTransportError>>,
+        expected_scope: &'static str,
+        expects_nonce: bool,
         calls: usize,
     }
 
@@ -4976,6 +5050,22 @@ mod tests {
                     Zeroizing::new(body.as_bytes().to_vec()),
                 )
                 .unwrap())),
+                expected_scope: "files.read",
+                expects_nonce: false,
+                calls: 0,
+            }
+        }
+
+        fn openid_json(body: &str) -> Self {
+            Self {
+                response: Some(Ok(DeviceAuthorizationEndpointResponse::new(
+                    200,
+                    "application/json",
+                    Zeroizing::new(body.as_bytes().to_vec()),
+                )
+                .unwrap())),
+                expected_scope: "openid%20files.read",
+                expects_nonce: true,
                 calls: 0,
             }
         }
@@ -4983,6 +5073,8 @@ mod tests {
         fn failed() -> Self {
             Self {
                 response: Some(Err(TokenTransportError)),
+                expected_scope: "files.read",
+                expects_nonce: false,
                 calls: 0,
             }
         }
@@ -5001,10 +5093,20 @@ mod tests {
                 "https://device.fixture.example/authorize"
             );
             assert_eq!(request.content_type(), "application/x-www-form-urlencoded");
-            assert_eq!(
-                request.form_body(),
-                "client_id=fixture-public-client&scope=files.read"
+            let expected_prefix = format!(
+                "client_id=fixture-public-client&scope={}",
+                self.expected_scope
             );
+            if self.expects_nonce {
+                let nonce = request
+                    .form_body()
+                    .strip_prefix(&format!("{expected_prefix}&nonce="))
+                    .expect("OIDC request must carry its nonce after exact core fields");
+                assert_eq!(nonce.len(), 43);
+                assert!(!nonce.contains('&'));
+            } else {
+                assert_eq!(request.form_body(), expected_prefix);
+            }
             self.response.take().unwrap_or(Err(TokenTransportError))
         }
     }
@@ -10861,6 +10963,144 @@ mod tests {
             .oauth
             .iter()
             .all(|event| { event.provider().as_str() == "fixture" && event.trace() == trace(32) }));
+    }
+
+    #[test]
+    fn openid_device_authorization_retains_nonce_after_audited_transport() {
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        let mut broker = OAuthBroker::new(custody);
+        let mut setup_audit = RecordingAudit::default();
+        broker
+            .register_provider(policy("fixture", 300), trace(72), &mut setup_audit)
+            .unwrap();
+        let profile = device_profile("fixture", trace(72), &mut setup_audit);
+        let mut entropy = FixedOpenIdEntropy([0x4d; 96]);
+        let mut audit = RecordingAudit::default();
+        let mut transport = MockDeviceAuthorizationTransport::openid_json(
+            r#"{
+                "device_code":"device-secret",
+                "user_code":"ABCD-EFGH",
+                "verification_uri":"https://device.fixture.example/activate",
+                "expires_in":900,
+                "interval":5
+            }"#,
+        );
+
+        let authorization = broker
+            .begin_openid_device_authorization(
+                &profile,
+                &["openid", "files.read"],
+                trace(72),
+                &mut entropy,
+                &mut transport,
+                &mut audit,
+            )
+            .unwrap();
+
+        assert_eq!(transport.calls, 1);
+        assert_eq!(authorization.polling().provider().as_str(), "fixture");
+        assert_eq!(authorization.polling().trace(), trace(72));
+        assert_eq!(authorization.verification().user_code(), "ABCD-EFGH");
+        let (_, _, nonce) = authorization.into_parts();
+        assert_eq!(nonce.provider().as_str(), "fixture");
+        assert_eq!(nonce.client_id(), "fixture-public-client");
+        assert_eq!(nonce.trace(), trace(72));
+        assert_eq!(nonce.into_value().len(), 43);
+        assert_eq!(
+            audit
+                .broker
+                .iter()
+                .map(|event| (event.action(), event.outcome()))
+                .collect::<Vec<_>>(),
+            vec![
+                (
+                    BrokerAuditAction::DeviceAuthorization,
+                    BrokerAuditOutcome::Attempted,
+                ),
+                (
+                    BrokerAuditAction::DeviceAuthorizationTransport,
+                    BrokerAuditOutcome::Attempted,
+                ),
+                (
+                    BrokerAuditAction::DeviceAuthorizationTransport,
+                    BrokerAuditOutcome::Succeeded,
+                ),
+                (
+                    BrokerAuditAction::DeviceAuthorization,
+                    BrokerAuditOutcome::Succeeded,
+                ),
+            ]
+        );
+        assert_eq!(audit.oauth.len(), 2);
+        assert!(audit
+            .oauth
+            .iter()
+            .all(|event| { event.provider().as_str() == "fixture" && event.trace() == trace(72) }));
+    }
+
+    #[test]
+    fn openid_device_authorization_rejects_bindings_before_entropy_or_transport() {
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        let mut broker = OAuthBroker::new(custody);
+        let mut setup_audit = RecordingAudit::default();
+        let mismatched = ProviderConfig::new(
+            ProviderId::new("fixture").unwrap(),
+            "https://auth.fixture.example/authorize",
+            "https://token.fixture.example/token",
+            "different-public-client",
+            "http://127.0.0.1:49152/callback",
+        )
+        .unwrap()
+        .with_distinct_redirect_uri();
+        broker
+            .register_provider(
+                BrokerProvider::new(mismatched, TokenResponseFormat::Json, 300).unwrap(),
+                trace(73),
+                &mut setup_audit,
+            )
+            .unwrap();
+        let profile = device_profile("fixture", trace(73), &mut setup_audit);
+        let mut entropy = CountingDeviceEntropy { calls: 0 };
+        let mut transport = MockDeviceAuthorizationTransport::failed();
+        let mut audit = RecordingAudit::default();
+
+        assert!(matches!(
+            broker.begin_openid_device_authorization(
+                &profile,
+                &["openid", "files.read"],
+                trace(73),
+                &mut entropy,
+                &mut transport,
+                &mut audit,
+            ),
+            Err(BrokerError::BindingMismatch)
+        ));
+        assert_eq!(entropy.calls, 0);
+        assert_eq!(transport.calls, 0);
+        assert!(audit.oauth.is_empty());
+
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        let mut broker = OAuthBroker::new(custody);
+        broker
+            .register_provider(policy("fixture", 300), trace(74), &mut setup_audit)
+            .unwrap();
+        let profile = device_profile("fixture", trace(74), &mut setup_audit);
+        let mut entropy = CountingDeviceEntropy { calls: 0 };
+        let mut audit = RecordingAudit::default();
+        assert!(matches!(
+            broker.begin_openid_device_authorization(
+                &profile,
+                &["OpenID", "files.read"],
+                trace(74),
+                &mut entropy,
+                &mut transport,
+                &mut audit,
+            ),
+            Err(BrokerError::Protocol(OAuthError::InvalidConfiguration(_)))
+        ));
+        assert_eq!(entropy.calls, 0);
+        assert_eq!(transport.calls, 0);
+        assert_eq!(audit.oauth.len(), 1);
     }
 
     #[test]
