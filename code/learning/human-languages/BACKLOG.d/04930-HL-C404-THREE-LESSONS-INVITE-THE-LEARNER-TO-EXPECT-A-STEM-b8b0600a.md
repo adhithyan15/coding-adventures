@@ -1,5 +1,14 @@
 ## HL-C404 — three lessons invite the learner to expect a stem change "before something else", and two of them are probably right
 
+**Status: CLOSED (2026-09-19).** Enumeration confirms that `ML-C88` and
+`ML-R88` describe two genuine stem alternations and should remain as written:
+**കേരളം** → **കേരളത്തി-** before a case ending and **ഇരുപത്** →
+**ഇരുപത്തി-** before a digit. `ML-C89` was the outlier. Its **ം** → **മ**
+join is the orthographic carrier change explained directly in `ML-C96`, not a
+third stem alternation, so the lesson now contrasts the two events explicitly.
+`ML-C97`'s warning not to transfer the earlier rules to **ം** remains consistent
+with that distinction.
+
 Raised in review of the `HL-C400` fix. **Filed rather than patched**, and filed
 with a dissent, because on inspection the reviewer's grouping does not hold.
 
