@@ -41,6 +41,7 @@ fn compile_and_run(language: Language, source: &str) -> i32 {
     // than a bare `i32`; a scalar program leaves an `Int`, so unwrap that.
     match sim.stack.last().and_then(|v| *v) {
         Some(Value::Int(n)) => n,
+        Some(Value::Int64(_)) => panic!("expected an int32 scalar"),
         Some(Value::Ref(_)) => {
             panic!("`{source}` left an object reference, not an int, on the stack")
         }
