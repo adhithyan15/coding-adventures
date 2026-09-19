@@ -163,6 +163,17 @@ expiry discard the nonce. The composition reuses the existing registry,
 protocol, transport, and broker audit gates and adds no verifier, account-key
 selection, storage, clock, sleep, or concrete transport.
 
+An authorized nonce-paired device response can now cross the existing audited
+identity authority and credential custody in one composition. The registered
+provider, deployment client, response, nonce, identity profile, and trace must
+all match before clock access or credential release. The zeroizing ID token is
+detached and consumed by proof rather than stored; only the remaining
+credentials are created under the authority-derived opaque provider/account
+key, and only the opaque storage revision is returned. Missing or rejected
+identity evidence reaches no credential store. The identity profile must
+already be validated, and concrete policy loading, verification algorithms,
+clock, storage, transport, and waiting remain separate authorities.
+
 That `private_key_jwt` path can also load the exact static ID-token policy
 inside the composition. The retained provider/client/endpoint/algorithm/key
 profile, opaque verification context, and nonce are validated before the
@@ -206,9 +217,8 @@ dependency are sibling packages in this repository.
 - concrete filesystem, vault, or embedded-resource provider-data sources;
 - concrete encrypted-vault credential storage;
 - concrete account-identity verification/JWKS, identity composition for other
-  grant paths including device-poll result verification and custody, account
-  listing, device authorization UI, timing/sleep authority, and full
-  device-flow loops;
+  grant paths, account listing, device authorization UI, timing/sleep
+  authority, and full device-flow loops;
 - concrete private-key algorithms, OIDC validation, and DPoP.
 
 Those are independently reviewable follow-up slices in `code/specs/oauth.md`.

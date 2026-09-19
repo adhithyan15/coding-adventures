@@ -339,7 +339,17 @@ The delivery order is:
    `slow_down`, and retryable transport failure. Only an authorized token
    response is paired with that nonce for a later identity proof; denial and
    expiry discard it. This adds no verifier, account-key selection, storage,
-   clock, sleep, or concrete transport authority.
+   clock, sleep, or concrete transport authority. An authorized nonce-paired
+   response can then cross the existing audited ID-token authority and
+   credential-custody gates using one already validated, data-driven identity
+   profile. Exact provider, deployment-client, and trace binding is checked
+   before clock access or credential release. The zeroizing ID token is
+   detached and consumed by identity proof rather than stored; only the
+   remaining credentials are created under the proof-derived opaque account
+   key, and only the storage revision is released. Missing or rejected identity
+   evidence reaches no credential store. Identity-policy loading, concrete
+   verification algorithms, clock/storage implementations, transport, waiting,
+   and UI remain separate injected or caller-owned authorities.
 8. **HTTPS transport:** provider-neutral request/response types over the
    repository's TLS and HTTP primitives, with endpoint/capability authorization
    before any socket is opened.
