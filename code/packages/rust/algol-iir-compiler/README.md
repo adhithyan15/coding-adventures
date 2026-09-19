@@ -199,9 +199,9 @@ metadata is consumed before loop lowering disables snapshot propagation.
 For a statically bounded multi-iteration `step` loop, one simple local scalar
 assignment may depend on the control or its own prior snapshot: the compiler
 simulates it once per iteration and retains the exact integer, finite real, or
-boolean result. Multi-statement compound bodies, writes to the control, dynamic bounds, and
-integer or real loops beyond the 4,096-iteration analysis cap remain
-conservative.
+boolean result. Its compound body may contain proven scalar identity siblings;
+writes to the control, dynamic bounds, and integer or real loops beyond the
+4,096-iteration analysis cap remain conservative.
 For a `while` element, a bounded static numeric comparison may likewise prove
 the initial body execution after abstractly assigning the controlled value;
 such known comparisons compose through ALGOL's boolean operators, while bare
@@ -254,9 +254,10 @@ Boolean snapshot evaluation distinguishes exact bare variables from unary
 wrappers, so direct `not` recurrences preserve their negated value rather than
 being treated as identity assignments.
 The recurrence assignment in either loop form may be wrapped in a compound
-body and may additionally have exact bare self-assignments of ordinary local
-scalars as inert siblings; labels, conditionals, declarations, changing
-siblings, and other statements remain outside this bounded analysis.
+body and may additionally have proven integer, real, or boolean identity
+assignments of ordinary local scalars as inert siblings; labels, conditionals,
+declarations, changing siblings, and other statements remain outside this
+bounded analysis.
 An exact controlled-scalar assignment in a single-iteration `step`/`until`
 loop may use the same wrapper while retaining its checked post-body exit value.
 The assignment may also derive that value from the known entry control; unknown

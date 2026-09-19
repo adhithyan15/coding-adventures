@@ -6570,7 +6570,7 @@ impl Compiler {
             }
             let name = self.simple_variable_name(variable).ok()?;
             let expression = first_direct_node(assignment, "expression")?;
-            if exact_bare_variable_expression_name(expression).as_deref() == Some(name.as_str()) {
+            if self.selector_expression_unconditionally_preserves_name(expression, &name) {
                 let binding = self.require_var(&name).ok()?;
                 if binding.is_global
                     || binding.array.is_some()
@@ -14586,6 +14586,20 @@ mod tests {
     }
 
     #[test]
+    fn al4_step_body_recurrence_allows_computed_inert_scalar_siblings() {
+        let module = compile_source(
+            "begin integer i, pad; real hold, r; boolean flag, ready; pad := 7; hold := 9.0; ready := true; flag := false; for i := 1 step 1 until 3 do begin pad := 0 + pad; flag := not flag; hold := hold * 1.0; ready := ready and true end; if flag then r := 42.0 else r := 0.5; print(r) end",
+            "test",
+        )
+        .expect("a bounded step recurrence may ignore proven scalar identity siblings");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42")
+        }));
+    }
+
+    #[test]
     fn al4_step_loop_control_recurrence_allows_inert_scalar_sibling() {
         let module = compile_source(
             "begin integer pad; real x; pad := 7; for x := 1.0 step 0.5 until 10.0 do begin x := x * 2.0; pad := pad end; print(x) end",
@@ -14709,6 +14723,20 @@ mod tests {
         )
         .expect_err("a changing sibling keeps a compound while recurrence conservative");
         assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_while_recurrence_allows_computed_inert_scalar_siblings() {
+        let module = compile_source(
+            "begin integer i, pad; real hold, r; boolean flag, ready; i := 0; pad := 7; hold := 9.0; ready := true; flag := false; for i := i + 1 while i <= 3 do begin pad := 0 + pad; flag := not flag; hold := hold * 1.0; ready := ready and true end; if flag then r := 42.0 else r := 0.5; print(r) end",
+            "test",
+        )
+        .expect("a bounded while recurrence may ignore proven scalar identity siblings");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42")
+        }));
     }
 
     #[test]
