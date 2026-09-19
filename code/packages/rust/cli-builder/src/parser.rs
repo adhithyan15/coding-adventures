@@ -133,7 +133,7 @@ impl Parser {
         // Build the token classifier from the active flag set.
         let flag_infos: Vec<FlagInfo> = active_flags
             .iter()
-            .map(FlagInfo::from_flag_def)
+            .flat_map(FlagInfo::from_flag_def_and_aliases)
             .collect();
         let classifier = TokenClassifier::new(flag_infos);
 
@@ -423,7 +423,7 @@ impl Parser {
                                     version_requested = true;
                                     return Ok(ScanResult { parsed_flags, positional_tokens, errors, help_requested, version_requested, explicit_flags });
                                 }
-                                if let Some(flag) = active_flags.iter().find(|f| f.long.as_deref() == Some(&name)) {
+                                if let Some(flag) = active_flags.iter().find(|f| f.matches_long(&name)) {
                                     explicit_flags.push(flag.id.clone());
                                     if flag.flag_type == "boolean" {
                                         store_flag_value(&mut parsed_flags, flag, json!(true), &mut errors, command_path);
@@ -453,7 +453,7 @@ impl Parser {
                             }
 
                             TokenEvent::LongFlagWithValue(name, value) => {
-                                if let Some(flag) = active_flags.iter().find(|f| f.long.as_deref() == Some(&name)) {
+                                if let Some(flag) = active_flags.iter().find(|f| f.matches_long(&name)) {
                                     explicit_flags.push(flag.id.clone());
                                     let val = coerce_value(&value, &flag.flag_type, &flag.enum_values);
                                     match val {
@@ -646,6 +646,7 @@ impl Parser {
                 id: "__builtin_help".to_string(),
                 short: Some("h".to_string()),
                 long: Some("help".to_string()),
+                long_aliases: Vec::new(),
                 single_dash_long: None,
                 description: "Show this help message and exit.".to_string(),
                 flag_type: "boolean".to_string(),
@@ -665,6 +666,7 @@ impl Parser {
                 id: "__builtin_version".to_string(),
                 short: None,
                 long: Some("version".to_string()),
+                long_aliases: Vec::new(),
                 single_dash_long: None,
                 description: "Show version and exit.".to_string(),
                 flag_type: "boolean".to_string(),
@@ -854,6 +856,13 @@ fn fuzzy_suggest_flag(unknown: &str, active_flags: &[FlagDef]) -> Option<String>
             if dist < best_dist {
                 best_dist = dist;
                 best_suggestion = Some(format!("--{}", long));
+            }
+        }
+        for alias in &flag.long_aliases {
+            let dist = levenshtein(unknown, alias);
+            if dist < best_dist {
+                best_dist = dist;
+                best_suggestion = Some(format!("--{}", alias));
             }
         }
         // Check against single_dash_long
