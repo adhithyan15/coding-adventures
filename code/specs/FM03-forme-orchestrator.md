@@ -586,6 +586,36 @@ Discipline:
 - The orchestrator reads from a `Stream` lazily, never eagerly
   drains.
 
+#### 4.4.1 Bounded multicast contract
+
+The scheduler's streaming primitive receives the complete, statically known
+consumer count before it opens the upstream iterator. It returns exactly one
+single-use `AsyncIterable` branch per consumer. The primitive pulls the
+upstream at most once for each logical value and delivers that value to every
+branch that is still attached, preserving source order independently on every
+branch.
+
+Each attached branch owns an ordered window of at most 64 values. An upstream
+pull may begin only when every attached branch has room for the resulting
+value. A branch waiting in `next()` receives the value directly rather than
+placing it in its window. Therefore one slow branch backpressures the shared
+producer after at most 64 queued values, and total retained queue entries are
+bounded by `attachedBranches * 64`. The primitive does not prefetch without
+consumer demand and permits only one unresolved `next()` call per branch.
+
+Calling `return()` on a branch detaches it, discards only that branch's queued
+values, and immediately removes it from the backpressure calculation. When the
+last branch detaches, the primitive calls `return()` on the upstream iterator
+exactly once. Pipeline cancellation rejects pending reads with the normal
+`CancellationError`, detaches every branch, clears all windows, and closes the
+upstream iterator.
+
+Normal upstream completion reaches each branch after that branch drains its
+window. An upstream exception is remembered and rethrown by every attached
+branch after its already-delivered and queued prefix, so a fast branch cannot
+hide the failure from a slow one. Upstream `return()` cleanup failures never
+replace an earlier cancellation or source failure.
+
 ### 4.5 Resource limits
 
 Each run has a deadline (`settings.deadlineMs`) past which the
