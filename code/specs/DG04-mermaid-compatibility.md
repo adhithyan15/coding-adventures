@@ -354,9 +354,11 @@ identifiers and authored class names remain available as Paint instruction
 metadata. Integrator-supplied class styles resolve in authored class order
 before layout, so typography participates in node measurement and the resolved
 fill, stroke, and text styling lower through backend-neutral PaintInstructions.
-A native Metal-to-PNG fixture validates this documented subset; visual
-resolution of external icon-pack artwork remains explicitly outside the partial
-compatibility level.
+Integrator-supplied icon glyphs resolve from semantic icon identifiers, reserve
+layout space, and lower through the same backend-neutral shaped-text path. A
+native Metal-to-PNG fixture validates this documented subset; automatic loading
+of external icon packs remains explicitly outside the partial compatibility
+level.
 
 ### Block Native Slice
 
