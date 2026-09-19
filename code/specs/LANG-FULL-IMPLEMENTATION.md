@@ -976,7 +976,9 @@ backend immediately) come before the enabler-dependent items.
   may be followed across multiple passes until their checked or finite
   binary64 increment exits, with overflow, non-finite values, rounded-away
   progress, cycles, and loops exceeding 4,096 evaluations remaining
-  conservative.
+  conservative. Such a controlled-scalar assignment may share its compound
+  body with exact bare self-assignments of ordinary local scalars; changing
+  siblings and all effectful or dynamic shapes remain conservative.
   Finite static real loops whose bodies avoid the control also retain their
   first post-limit value by simulating at most 4,096 emitted binary64 additions;
   non-finite and rounded-away progress fails closed. Finite static loops also
