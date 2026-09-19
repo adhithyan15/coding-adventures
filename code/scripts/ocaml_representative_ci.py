@@ -23,7 +23,7 @@ MANIFEST_RELATIVE_PATH = Path(
 )
 WORKFLOW_RELATIVE_PATH = Path(".github/workflows/build-ocaml-representative.yml")
 EXPECTED_WORKFLOW_SHA256 = (
-    "280b6673bc4a009a3a11208c9324e54e3c188bd4057ace86040bb92f16a651f2"
+    "0aaed0978df01d80157be9ae7e52dfb63603b34d6178acd80c5e1baa1d5655f2"
 )
 
 VERSIONS = {
@@ -375,6 +375,7 @@ def validate_workflow_policy_text(workflow_text: str) -> None:
         'sh -c "$command"',
         "env -u CLICOLOR_FORCE opam exec -- odoc --version",
         "opam show --color=never --field=installed-version yojson",
+        'opam show --color=never --field=installed-version "$opam_name"',
         "opam lint --strict",
         "dune build @install @doc --profile release",
         "validate-coverage",

@@ -259,7 +259,7 @@ jobs:
             opam pin add --no-action --working-dir --no-checksums --yes \
               "$opam_name" "$pin_root"
             opam install --yes --require-checksums "$opam_name.0.1.0"
-            test "$(opam show --field=installed-version "$opam_name")" = '0.1.0'
+            test "$(opam show --color=never --field=installed-version "$opam_name")" = '0.1.0'
           done
           opam list --installed --columns=name,version --normalise --color=never \
             | sed -e '/^#/d' -e '/^[[:space:]]*$/d' \
