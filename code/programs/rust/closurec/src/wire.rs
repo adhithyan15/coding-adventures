@@ -481,12 +481,25 @@ fn read_instrumentation(p: &ParseResult) -> Result<InstrumentationConfig, Config
 }
 
 fn read_special_modes(p: &ParseResult) -> Result<SpecialModesConfig, ConfigError> {
+    let canonical_typed_ast = get_str(p, "typed_ast_output_file")?.filter(|s| !s.is_empty());
+    let legacy_typed_ast = get_str(p, "typed_ast_output_file_internal")?.filter(|s| !s.is_empty());
+    let typed_ast_output_file = match (canonical_typed_ast, legacy_typed_ast) {
+        (Some(canonical), Some(legacy)) if canonical != legacy => {
+            return Err(ConfigError::SpecMismatch(
+                "--typed_ast_output_file and deprecated --typed_ast_output_file__INTENRNAL_USE_ONLY disagree"
+                    .to_string(),
+            ));
+        }
+        (Some(value), _) | (_, Some(value)) => Some(PathBuf::from(value)),
+        (None, None) => None,
+    };
     Ok(SpecialModesConfig {
         print_tree: get_bool(p, "print_tree")?,
         print_tree_json: get_bool(p, "print_tree_json")?,
         print_ast: get_bool(p, "print_ast")?,
         print_source_after_each_pass: get_bool(p, "print_source_after_each_pass")?,
         help_markdown: get_bool(p, "help_markdown")?,
+        typed_ast_output_file,
         correlation_vector: get_bool(p, "correlation_vector")?,
         correlation_vector_output: get_str(p, "correlation_vector_output")?
             .filter(|s| !s.is_empty())
@@ -712,6 +725,37 @@ mod tests {
         assert_eq!(cfg.io.js_patterns, vec!["a.js".to_string(), "b.js".to_string()]);
         assert_eq!(cfg.io.js_output_file, Some(PathBuf::from("out.js")));
         assert_eq!(cfg.compilation.level, CompilationLevel::Advanced);
+    }
+
+    #[test]
+    fn canonical_and_legacy_typed_ast_flags_share_one_runtime_value() {
+        let canonical = config_from_parsed(&parse(&["--typed_ast_output_file", "typed.ast"]))
+            .expect("canonical config builds");
+        let legacy = config_from_parsed(&parse(&[
+            "--typed_ast_output_file__INTENRNAL_USE_ONLY",
+            "typed.ast",
+        ]))
+        .expect("legacy config builds");
+        assert_eq!(
+            canonical.special_modes.typed_ast_output_file,
+            Some(PathBuf::from("typed.ast"))
+        );
+        assert_eq!(
+            legacy.special_modes.typed_ast_output_file,
+            canonical.special_modes.typed_ast_output_file
+        );
+    }
+
+    #[test]
+    fn conflicting_typed_ast_spellings_fail_closed() {
+        let parsed = parse(&[
+            "--typed_ast_output_file",
+            "canonical.ast",
+            "--typed_ast_output_file__INTENRNAL_USE_ONLY",
+            "legacy.ast",
+        ]);
+        let error = config_from_parsed(&parsed).expect_err("conflicting aliases must fail");
+        assert!(error.to_string().contains("disagree"), "{error}");
     }
 
     #[test]

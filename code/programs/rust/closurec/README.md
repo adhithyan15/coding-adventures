@@ -1,12 +1,14 @@
 # closurec
 
 `closurec` is the CLI driver for the Closure Compiler clone.
-**Drop-in compatible with the upstream Java Closure Compiler at
-the command-line surface** — a script written against
+It tracks the upstream Java Closure Compiler's canonical command-line surface,
+so a script written against
 `java -jar closure-compiler.jar --js foo.js --js_output_file
 out.js --compilation_level ADVANCED` works unchanged when the
 `java -jar …` invocation is swapped for `closurec`. Per
 [CLOC08](../../../specs/CLOC08-closurec-cli-surface.md).
+Four deprecated upstream long aliases remain explicitly unsupported below;
+semantic support also varies by flag and is tracked in the parity backlog.
 
 The binary ties together every crate in Stages 1–4: lexer,
 parser, type sidecar, JSDoc extractor, type-checker, pass
@@ -40,8 +42,9 @@ cli-builder handles:
 - fuzzy "did you mean?" suggestions on unknown flags,
 - `--help` and `--version` auto-injection.
 
-When upstream Closure Compiler adds a flag, we update
-`cli.spec.json` and the binary picks it up — no code changes.
+When upstream Closure Compiler adds a flag, we update `cli.spec.json` and the
+binary picks it up. The pinned surface audit below makes an unclassified local
+or upstream change fail CI rather than relying on this prose.
 
 ## CLI surface
 
@@ -76,6 +79,34 @@ Short aliases the Java tool ships:
 | `-W`  | `--warning_level` |
 | `-D`  | `--define` |
 
+`--typed_ast_output_file` is the current canonical upstream spelling.
+`closurec` also accepts its historical misspelling
+`--typed_ast_output_file__INTENRNAL_USE_ONLY` as a deprecated compatibility
+alias; both spellings populate the same runtime configuration field, and
+conflicting values fail closed.
+
+### Machine-audited surface
+
+[`tests/cli-surface/v20260915-audit.json`](./tests/cli-surface/v20260915-audit.json)
+pins the 87,726-byte `CommandLineRunner.java` blob at upstream commit
+`10ca677aff381d2c2e6e1b254ba32861e503173d`, including its Git blob ID and
+SHA-256. The deterministic report classifies 102 upstream options, seven
+upstream aliases, 112 local spec flags, two cli-builder-generated flags,
+eleven local correlation-vector extensions, one deprecated compatibility
+alias, and the four unsupported long aliases listed below.
+
+The offline `cli_surface` integration test verifies that every upstream and
+local name has exactly one reviewed disposition, the report still hashes the
+current `cli.spec.json`, supported single-dash aliases are present, and no
+unsupported alias disposition has gone stale. To regenerate from an
+independently obtained pinned source file:
+
+```sh
+cargo run --example cli_surface_audit -- \
+  --upstream-source /path/to/CommandLineRunner.java \
+  --output tests/cli-surface/v20260915-audit.json
+```
+
 ## Exit codes
 
 | Code | Meaning |
@@ -90,9 +121,9 @@ writes no JavaScript output and does not create the requested output file.
 
 ## Known compatibility gaps
 
-cli-builder doesn't currently support multiple long-form aliases
-per flag. These deprecated upstream aliases are **not
-implemented** — use the canonical name instead:
+cli-builder doesn't currently support long-form aliases per flag. These exact
+upstream aliases are classified as **unsupported** by the audit — use the
+canonical name instead:
 
 | Deprecated alias    | Use instead              |
 |---------------------|--------------------------|

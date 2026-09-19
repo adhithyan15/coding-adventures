@@ -2,7 +2,7 @@
 
 closurec — Closure Compiler clone CLI driver. Mirrors the flag surface of the upstream Java Closure Compiler (google/closure-compiler @ CommandLineRunner.java) for drop-in compatibility.
 
-Version: 0.244.0
+Version: 0.245.0
 
 ## Flags
 
@@ -198,9 +198,13 @@ Warning level (QUIET | DEFAULT | VERBOSE).
 
 Enable debugging options. Renamed properties use long mangled names.
 
+### `--typed_ast_output_file` (string)
+
+Output in-progress typedAST format. DO NOT USE (hidden).
+
 ### `--typed_ast_output_file__INTENRNAL_USE_ONLY` (string)
 
-Output in-progress typedAST format. DO NOT USE (hidden, name is intentionally misspelled upstream).
+Deprecated closurec compatibility alias for --typed_ast_output_file.
 
 ### `--generate_exports` (boolean, default: true)
 

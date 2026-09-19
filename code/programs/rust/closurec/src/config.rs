@@ -504,6 +504,10 @@ pub struct SpecialModesConfig {
     pub print_ast: bool,
     pub print_source_after_each_pass: bool,
     pub help_markdown: bool,
+    /// Canonical `--typed_ast_output_file` value. The deprecated
+    /// pre-CCR-005 misspelling maps to this same field in `wire`.
+    /// Serialization remains a future compatibility decision.
+    pub typed_ast_output_file: Option<PathBuf>,
     /// CLOC11.60: when true, the pipeline threads a
     /// [`coding_adventures_correlation_vector::CVLog`] through
     /// every transform stage so the user (or audit tooling) can

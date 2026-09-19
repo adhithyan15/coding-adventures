@@ -2,7 +2,7 @@
   "cli_builder_spec_version": "1.0",
   "name": "closurec",
   "description": "closurec — Closure Compiler clone CLI driver. Mirrors the flag surface of the upstream Java Closure Compiler (google/closure-compiler @ CommandLineRunner.java) for drop-in compatibility.",
-  "version": "0.244.0",
+  "version": "0.245.0",
   "parsing_mode": "gnu",
   "flags": [
     { "id": "browser_featureset_year", "long": "browser_featureset_year", "type": "integer", "default": 0, "description": "Shortcut for defining goog.FEATURESET_YEAR=YYYY (minimum 2012)." },
@@ -53,7 +53,8 @@
     { "id": "assume_function_wrapper", "long": "assume_function_wrapper", "type": "boolean", "default": false, "description": "Enable optimizations assuming output will be wrapped with a function wrapper." },
     { "id": "warning_level", "short": "W", "long": "warning_level", "type": "enum", "enum_values": ["QUIET", "DEFAULT", "VERBOSE"], "default": "DEFAULT", "description": "Warning level (QUIET | DEFAULT | VERBOSE)." },
     { "id": "debug", "long": "debug", "type": "boolean", "default": false, "description": "Enable debugging options. Renamed properties use long mangled names." },
-    { "id": "typed_ast_output_file_internal", "long": "typed_ast_output_file__INTENRNAL_USE_ONLY", "type": "string", "description": "Output in-progress typedAST format. DO NOT USE (hidden, name is intentionally misspelled upstream)." },
+    { "id": "typed_ast_output_file", "long": "typed_ast_output_file", "type": "string", "description": "Output in-progress typedAST format. DO NOT USE (hidden)." },
+    { "id": "typed_ast_output_file_internal", "long": "typed_ast_output_file__INTENRNAL_USE_ONLY", "type": "string", "description": "Deprecated closurec compatibility alias for --typed_ast_output_file." },
     { "id": "generate_exports", "long": "generate_exports", "type": "boolean", "default": true, "description": "Generates export code for symbols marked with @export." },
     { "id": "export_local_property_definitions", "long": "export_local_property_definitions", "type": "boolean", "default": true, "description": "Generates export code for local properties marked with @export." },
     { "id": "formatting", "long": "formatting", "type": "enum", "enum_values": ["PRETTY_PRINT", "PRINT_INPUT_DELIMITER", "SINGLE_QUOTES"], "repeatable": true, "description": "Formatting options to apply to the output JS (repeatable)." },
