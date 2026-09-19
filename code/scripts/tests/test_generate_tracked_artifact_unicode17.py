@@ -101,7 +101,7 @@ class UnicodeDownloadBoundaryTests(unittest.TestCase):
     ) -> None:
         self.assertEqual(
             generator._selected_runtime_self_checks(None),
-            ("typescript", "ruby", "elixir", "lua", "perl", "haskell", "swift"),
+            ("typescript", "ruby", "elixir", "lua", "perl", "haskell", "swift", "dart"),
         )
 
     def test_runtime_self_check_selection_can_isolate_elixir_for_ci(self) -> None:
@@ -390,6 +390,37 @@ class UnicodeDownloadBoundaryTests(unittest.TestCase):
             generator.LICENSE_TARGETS,
         )
 
+    def test_dart_renderer_exports_the_pinned_process_free_api(self) -> None:
+        rendered = generator._render_dart(
+            (
+                [(0x0300, 230)],
+                [(0x00C0, False, (0x0041, 0x0300))],
+                [(0x0041, 0x0300, 0x00C0)],
+                [(0x0041, (0x0061,))],
+                [(0x0061, (0x0041,))],
+            )
+        )
+
+        self.assertIn("abstract final class TrackedArtifactUnicode17", rendered)
+        self.assertIn("static const unicodeVersion = '17.0.0'", rendered)
+        self.assertIn("static String nfc(String value)", rendered)
+        self.assertIn("static String nfkcCasefold(String value)", rendered)
+        self.assertIn("static String fullUppercase(String value)", rendered)
+        self.assertNotIn("dart:io", rendered)
+        self.assertNotIn("toUpperCase()", rendered)
+
+    def test_dart_output_and_license_are_declared_targets(self) -> None:
+        self.assertEqual(
+            generator.DART_TARGET,
+            Path(
+                "code/programs/dart/build-tool/lib/src/tracked_artifact_unicode17.dart"
+            ),
+        )
+        self.assertIn(
+            Path("code/programs/dart/build-tool/UNICODE-LICENSE.txt"),
+            generator.LICENSE_TARGETS,
+        )
+
     def test_typescript_self_check_runs_every_official_vector_family(self) -> None:
         sources = {
             "NormalizationTest.txt": "0041;0041;0041;0041;0041; # LATIN A\n",
@@ -651,6 +682,68 @@ class UnicodeDownloadBoundaryTests(unittest.TestCase):
         self.assertNotIn("PATH", invocation["env"])
         self.assertNotIn("GHC_ENVIRONMENT", invocation["env"])
         self.assertNotIn("CABAL_DIR", invocation["env"])
+
+    def test_dart_self_check_runs_every_official_vector_family(self) -> None:
+        sources = {
+            "NormalizationTest.txt": "0041;0041;0041;0041;0041; # LATIN A\n",
+            "CaseFolding.txt": "0041; C; 0061; # LATIN A\n",
+            "UnicodeData.txt": ";".join(["0061"] + [""] * 11 + ["0041"] + [""] * 2),
+            "SpecialCasing.txt": "0061; 0061; 0041; 0041; ; # LATIN A\n",
+        }
+
+        class _Module:
+            @staticmethod
+            def nfkc_casefold(value: str) -> str:
+                return value.lower()
+
+        executable = Path(sys.executable).resolve()
+        version = subprocess.CompletedProcess(
+            [],
+            0,
+            "",
+            "Dart SDK version: 3.12.2 (stable) "
+            '(Tue Jun 9 01:11:39 2026 -0700) on "windows_x64"\n',
+        )
+        completed = subprocess.CompletedProcess([], 0, "ok\r\n", "")
+        with mock.patch.object(
+            generator,
+            "_run_bounded_process",
+            side_effect=(version, completed),
+        ) as run:
+            generator._self_check_dart(
+                "abstract final class TrackedArtifactUnicode17 {}\n",
+                sources,
+                _Module(),
+                executable,
+            )
+
+        self.assertEqual(run.call_args_list[0].args[0], [str(executable), "--version"])
+        command = run.call_args_list[1].args[0]
+        self.assertEqual(command[:2], [str(executable), "--disable-dart-dev"])
+        self.assertTrue(command[2].endswith("self_check.dart"))
+        invocation = run.call_args_list[1].kwargs
+        self.assertEqual(
+            invocation["input_text"],
+            "V;17.0.0\nN;41;41;41;41;41\nF;41;61;61\nU;61;41\n",
+        )
+        self.assertEqual(invocation["timeout"], 180)
+        self.assertNotIn("PATH", invocation["env"])
+        self.assertNotIn("PUB_CACHE", invocation["env"])
+        self.assertNotIn("HOME", invocation["env"])
+
+    def test_dart_self_check_rejects_near_or_untrusted_version_text(self) -> None:
+        valid = (
+            "Dart SDK version: 3.12.2 (stable) "
+            '(Tue Jun 9 01:11:39 2026 -0700) on "linux_x64"'
+        )
+        self.assertTrue(generator._is_reviewed_dart_version(valid))
+        self.assertFalse(
+            generator._is_reviewed_dart_version(valid.replace("3.12.2", "3.12.20"))
+        )
+        self.assertFalse(
+            generator._is_reviewed_dart_version(valid.replace("3.12.2", "3.12.2-dev"))
+        )
+        self.assertFalse(generator._is_reviewed_dart_version("prefix\n" + valid))
 
     def test_swift_self_check_compiles_and_runs_every_official_vector_family(
         self,

@@ -88,6 +88,12 @@ layout VentureChrome {
         state-when-disabled : slot: share-page-disabled ,
         onClick : emit: onSharePage
       )
+      HostButton [ page-info-button ] (
+        label : "Info" ,
+        disabled : slot: page-info-disabled ,
+        state-when-disabled : slot: page-info-disabled ,
+        onClick : emit: onPageInfo
+      )
       HostButton [ view-source-button ] (
         label : "Source" ,
         disabled : slot: view-source-disabled ,

@@ -20,6 +20,16 @@ import {
 } from "./assert-language-corpus.js";
 it("pins Malayalam continuity", () => expectLanguageContinuity("malayalam"));
 it("pins Malayalam modality", () => expectLanguageModality("malayalam"));
+it("keeps the chapter 93 plural recall inside the learner's available walk", () => {
+  const lesson = loadTrackLessons("malayalam").find(
+    (candidate) => candidate.realization.lessonId === "ML-C93-angal",
+  );
+  const recall = lesson?.blocks.find((block) => block.type === "recall");
+
+  expect(recall?.markdown).toContain("respectful *you*");
+  expect(recall?.markdown).not.toMatch(/\bwe\b/i);
+  expect(recall?.knowledge?.assesses).not.toContain("ML-LEX-NJAANGAL-01");
+});
 it("keeps recurring Malayalam forms on one letter-by-letter romanization", () => {
   const lessons = loadTrackLessons("malayalam");
   const byId = new Map(lessons.map((lesson) => [lesson.realization.lessonId, lesson]));

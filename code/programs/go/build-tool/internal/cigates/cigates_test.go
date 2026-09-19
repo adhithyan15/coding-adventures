@@ -719,14 +719,14 @@ func TestCryptoPackageChangeFiresBothCryptoManifestGates(t *testing.T) {
 	}
 }
 
-func TestUnicodeGeneratorChangeFiresAllFiveUnicodeGates(t *testing.T) {
+func TestUnicodeGeneratorChangeFiresAllSixUnicodeGates(t *testing.T) {
 	reg := loadRealRegistry(t)
 	// generate_tracked_artifact_unicode17.py renders and --checks EVERY language
 	// target regardless of --self-check-runtime, so all five jobs share one
 	// condition. Gating them differently would be wrong.
 	got := mustEvaluate(t, reg, map[string]bool{}, []string{"code/scripts/generate_tracked_artifact_unicode17.py"}, false)
 
-	for _, lang := range []string{"elixir", "lua", "perl", "haskell", "swift"} {
+	for _, lang := range []string{"elixir", "lua", "perl", "haskell", "swift", "dart"} {
 		id := "unicode17-" + lang + "-conformance"
 		if !got[id] {
 			t.Errorf("gate %q must fire when the Unicode 17 generator changes", id)

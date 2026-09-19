@@ -697,6 +697,17 @@ mod ffi {
                 json_string(&request.address),
                 json_string(&request.title),
             ),
+            BrowserHostEffect::PageInfo(request) => format!(
+                "{{\"type\":\"page-info\",\"requestedAddress\":{},\"address\":{},\"title\":{},\"status\":{},\"imageResourceCount\":{},\"imageFailureCount\":{},\"stylesheetResourceCount\":{},\"stylesheetFailureCount\":{}}}",
+                json_string(&request.requested_address),
+                json_string(&request.address),
+                json_string(&request.title),
+                request.status,
+                request.image_resource_count,
+                request.image_failure_count,
+                request.stylesheet_resource_count,
+                request.stylesheet_failure_count,
+            ),
             BrowserHostEffect::WriteClipboard(text) => format!(
                 "{{\"type\":\"write-clipboard\",\"text\":{}}}",
                 json_string(text),
@@ -717,7 +728,7 @@ mod ffi {
             .map(|message| format!(",\"error\":{}", json_string(message)))
             .unwrap_or_default();
         let value = format!(
-            "{{\"props\":{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"bookmark-label\":{},\"bookmark-disabled\":{},\"copy-address-disabled\":{},\"open-page-disabled\":{},\"save-page-disabled\":{},\"print-page-disabled\":{},\"share-page-disabled\":{},\"view-source-disabled\":{},\"find-open\":{},\"find-query\":{},\"find-result-label\":{},\"find-disabled\":{},\"navigation-disabled\":false}}{effect}{error}}}",
+            "{{\"props\":{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"bookmark-label\":{},\"bookmark-disabled\":{},\"copy-address-disabled\":{},\"open-page-disabled\":{},\"save-page-disabled\":{},\"print-page-disabled\":{},\"share-page-disabled\":{},\"page-info-disabled\":{},\"view-source-disabled\":{},\"find-open\":{},\"find-query\":{},\"find-result-label\":{},\"find-disabled\":{},\"navigation-disabled\":false}}{effect}{error}}}",
             json_string(&props.address),
             json_string(&props.page_title),
             json_string(&props.status_text),
@@ -730,6 +741,7 @@ mod ffi {
             props.save_page_disabled,
             props.print_page_disabled,
             props.share_page_disabled,
+            props.page_info_disabled,
             props.view_source_disabled,
             props.find_open,
             json_string(&props.find_query),
@@ -797,6 +809,7 @@ mod ffi {
             "onSavePage" => Some(BrowserChromeEvent::SavePage),
             "onPrintPage" => Some(BrowserChromeEvent::PrintPage),
             "onSharePage" => Some(BrowserChromeEvent::SharePage),
+            "onPageInfo" => Some(BrowserChromeEvent::PageInfo),
             "onViewSource" => Some(BrowserChromeEvent::ViewSource),
             "onFindOpen" => Some(BrowserChromeEvent::FindOpen),
             "onFindChange" => string_arg(value).map(BrowserChromeEvent::FindChange),

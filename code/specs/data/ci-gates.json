@@ -189,7 +189,8 @@
         "lua/programs/build-tool",
         "perl/programs/build-tool",
         "haskell/programs/build-tool",
-        "swift/programs/build-tool"
+        "swift/programs/build-tool",
+        "dart/programs/build-tool"
       ],
       "paths": [
         "code/scripts/generate_tracked_artifact_unicode17.py",
@@ -211,7 +212,8 @@
         "lua/programs/build-tool",
         "perl/programs/build-tool",
         "haskell/programs/build-tool",
-        "swift/programs/build-tool"
+        "swift/programs/build-tool",
+        "dart/programs/build-tool"
       ],
       "paths": [
         "code/scripts/generate_tracked_artifact_unicode17.py",
@@ -235,7 +237,8 @@
         "lua/programs/build-tool",
         "perl/programs/build-tool",
         "haskell/programs/build-tool",
-        "swift/programs/build-tool"
+        "swift/programs/build-tool",
+        "dart/programs/build-tool"
       ],
       "paths": [
         "code/scripts/generate_tracked_artifact_unicode17.py",
@@ -257,7 +260,8 @@
         "lua/programs/build-tool",
         "perl/programs/build-tool",
         "haskell/programs/build-tool",
-        "swift/programs/build-tool"
+        "swift/programs/build-tool",
+        "dart/programs/build-tool"
       ],
       "paths": [
         "code/scripts/generate_tracked_artifact_unicode17.py",
@@ -279,7 +283,31 @@
         "lua/programs/build-tool",
         "perl/programs/build-tool",
         "haskell/programs/build-tool",
-        "swift/programs/build-tool"
+        "swift/programs/build-tool",
+        "dart/programs/build-tool"
+      ],
+      "paths": [
+        "code/scripts/generate_tracked_artifact_unicode17.py",
+        "code/scripts/tracked_artifact_unicode17.py",
+        "code/scripts/tests/test_generate_tracked_artifact_unicode17.py",
+        "code/specs/fixtures/build-tool-v1/UNICODE-LICENSE.txt"
+      ]
+    },
+    "unicode17-dart-conformance": {
+      "scope": "job",
+      "description": "Generated Dart Unicode 17 tables against every official normalization/casing vector.",
+      "packages": [
+        "python/programs/build-tool",
+        "dotnet/programs/build-tool-csharp",
+        "dotnet/programs/build-tool-fsharp",
+        "typescript/programs/build-tool",
+        "ruby/programs/build-tool",
+        "elixir/programs/build-tool",
+        "lua/programs/build-tool",
+        "perl/programs/build-tool",
+        "haskell/programs/build-tool",
+        "swift/programs/build-tool",
+        "dart/programs/build-tool"
       ],
       "paths": [
         "code/scripts/generate_tracked_artifact_unicode17.py",
@@ -316,7 +344,8 @@
       "packages": [
         "go/programs/build-tool",
         "java/programs/build-tool",
-        "kotlin/programs/build-tool"
+        "kotlin/programs/build-tool",
+        "dart/programs/build-tool"
       ],
       "paths": [
         "code/specs/fixtures/build-tool-v1/**",
@@ -327,7 +356,8 @@
         "code/scripts/tests/test_build_tool_conformance_*.py",
         "code/programs/go/build-tool/**",
         "code/programs/java/build-tool/**",
-        "code/programs/kotlin/build-tool/**"
+        "code/programs/kotlin/build-tool/**",
+        "code/programs/dart/build-tool/**"
       ]
     },
     "contracts-capability-cage": {

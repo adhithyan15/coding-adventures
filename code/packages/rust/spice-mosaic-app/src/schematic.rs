@@ -861,14 +861,18 @@ impl SchematicDocument {
             .collect()
     }
 
-    /// Return voltage sources with executable branch-current result columns.
-    pub fn branch_current_source_references(&self) -> Vec<&str> {
+    /// Return schematic elements with executable branch-current result columns.
+    pub fn branch_current_element_references(&self) -> Vec<&str> {
         self.components
             .iter()
             .filter(|component| {
                 matches!(
                     component.kind,
-                    SchematicComponentKind::DcVoltage | SchematicComponentKind::AcVoltage
+                    SchematicComponentKind::Resistor
+                        | SchematicComponentKind::Capacitor
+                        | SchematicComponentKind::Inductor
+                        | SchematicComponentKind::DcVoltage
+                        | SchematicComponentKind::AcVoltage
                 )
             })
             .map(|component| component.reference.as_str())
@@ -935,11 +939,11 @@ impl SchematicDocument {
         Ok(true)
     }
 
-    /// Append one voltage-source branch-current probe, unless it is already saved.
+    /// Append one element branch-current probe, unless it is already saved.
     pub fn add_saved_output_current_probe(&mut self, source: &str) -> Result<bool, SchematicError> {
-        if !self.branch_current_source_references().contains(&source) {
+        if !self.branch_current_element_references().contains(&source) {
             return Err(invalid(format!(
-                "{source} is not a voltage source with a branch-current result"
+                "{source} is not a schematic element with a branch-current result"
             )));
         }
         let probe = SchematicOutputProbe::Current {
@@ -1049,15 +1053,15 @@ impl SchematicDocument {
         Ok(true)
     }
 
-    /// Append a voltage-source branch-current probe for one analysis card.
+    /// Append an element branch-current probe for one analysis card.
     pub fn add_scoped_output_current_probe(
         &mut self,
         card_index: usize,
         source: &str,
     ) -> Result<bool, SchematicError> {
-        if !self.branch_current_source_references().contains(&source) {
+        if !self.branch_current_element_references().contains(&source) {
             return Err(invalid(format!(
-                "{source} is not a voltage source with a branch-current result"
+                "{source} is not a schematic element with a branch-current result"
             )));
         }
         let probe = SchematicOutputProbe::Current {
@@ -1315,11 +1319,11 @@ impl SchematicDocument {
                 } => self.validate_differential_output_nodes(positive_node, negative_node)?,
                 SchematicOutputProbe::Current { source }
                     if !self
-                        .branch_current_source_references()
+                        .branch_current_element_references()
                         .contains(&source.as_str()) =>
                 {
                     return Err(invalid(format!(
-                        "{source} is not a voltage source with a branch-current result"
+                        "{source} is not a schematic element with a branch-current result"
                     )));
                 }
                 _ => {}
@@ -1362,11 +1366,11 @@ impl SchematicDocument {
                 } => self.validate_differential_output_nodes(positive_node, negative_node)?,
                 SchematicOutputProbe::Current { source }
                     if !self
-                        .branch_current_source_references()
+                        .branch_current_element_references()
                         .contains(&source.as_str()) =>
                 {
                     return Err(invalid(format!(
-                        "{source} is not a voltage source with a branch-current result"
+                        "{source} is not a schematic element with a branch-current result"
                     )));
                 }
                 _ => {}
@@ -2304,7 +2308,7 @@ mod tests {
     }
 
     #[test]
-    fn saved_output_probes_lower_voltage_differential_and_current_and_follow_source_renames() {
+    fn saved_output_probes_lower_voltage_differential_and_linear_currents() {
         let mut document = rc_document();
         document.set_net_label(point(0, 20), "IN").unwrap();
         document.set_net_label(point(40, 20), "OUT").unwrap();
@@ -2313,27 +2317,29 @@ mod tests {
             .add_saved_output_differential_voltage_probe("OUT", "IN")
             .unwrap());
         assert!(document.add_saved_output_current_probe("V1").unwrap());
+        assert!(document.add_saved_output_current_probe("R1").unwrap());
+        assert!(document.add_saved_output_current_probe("C1").unwrap());
         assert!(!document.add_saved_output_voltage_probe("OUT").unwrap());
         assert!(!document
             .add_saved_output_differential_voltage_probe("OUT", "IN")
             .unwrap());
         assert_eq!(
             document.saved_output_probe_tokens(),
-            ["V(OUT)", "V(OUT,IN)", "I(V1)"]
+            ["V(OUT)", "V(OUT,IN)", "I(V1)", "I(R1)", "I(C1)"]
         );
         assert!(document
             .to_berkeley_netlist()
             .unwrap()
-            .contains(".save V(OUT) V(OUT,IN) I(V1)"));
+            .contains(".save V(OUT) V(OUT,IN) I(V1) I(R1) I(C1)"));
         document.rename_component("V1", "VBIAS").unwrap();
         assert_eq!(
             document.saved_output_probe_tokens(),
-            ["V(OUT)", "V(OUT,IN)", "I(VBIAS)"]
+            ["V(OUT)", "V(OUT,IN)", "I(VBIAS)", "I(R1)", "I(C1)"]
         );
         let deck = document.to_berkeley_netlist().unwrap();
         parse_netlist(&deck).unwrap();
         assert_eq!(run_netlist(&deck).unwrap().len(), 1);
-        assert!(deck.contains(".save V(OUT) V(OUT,IN) I(VBIAS)"));
+        assert!(deck.contains(".save V(OUT) V(OUT,IN) I(VBIAS) I(R1) I(C1)"));
         assert_eq!(
             document
                 .add_saved_output_voltage_probe("MISSING")
@@ -2357,18 +2363,36 @@ mod tests {
         );
         assert_eq!(
             document
-                .add_saved_output_current_probe("R1")
+                .add_saved_output_current_probe("I1")
                 .unwrap_err()
                 .to_string(),
-            "R1 is not a voltage source with a branch-current result"
+            "I1 is not a schematic element with a branch-current result"
         );
         assert_eq!(
             document
-                .remove_saved_output_probe(3)
+                .remove_saved_output_probe(5)
                 .unwrap_err()
                 .to_string(),
             "schematic saved output probe is unavailable"
         );
+    }
+
+    #[test]
+    fn linear_passive_branch_currents_are_selectable_from_the_document_palette() {
+        let mut document = rc_document();
+        document.components.push(SchematicComponent {
+            reference: "L1".to_owned(),
+            kind: SchematicComponentKind::Inductor,
+            value: "1m".to_owned(),
+            terminals: vec![point(60, 20), point(60, 0)],
+        });
+
+        assert_eq!(
+            document.branch_current_element_references(),
+            ["C1", "V1", "R1", "L1"]
+        );
+        assert!(document.add_saved_output_current_probe("L1").unwrap());
+        assert_eq!(document.saved_output_probe_tokens(), ["I(L1)"]);
     }
 
     #[test]
@@ -2382,28 +2406,31 @@ mod tests {
             .add_scoped_output_differential_voltage_probe(ac, "OUT", "IN")
             .unwrap());
         assert!(document.add_scoped_output_current_probe(ac, "V1").unwrap());
+        assert!(document.add_scoped_output_current_probe(ac, "R1").unwrap());
+        assert!(document.add_scoped_output_current_probe(ac, "C1").unwrap());
         assert_eq!(
             document.scoped_output_probe_tokens(ac).unwrap(),
-            ["V(OUT)", "V(OUT,IN)", "I(V1)"]
+            ["V(OUT)", "V(OUT,IN)", "I(V1)", "I(R1)", "I(C1)"]
         );
 
         let deck = document.to_berkeley_netlist().unwrap();
-        assert!(deck.contains(".op\n.ac dec 10 10 10k\n.probe ac V(OUT) V(OUT,IN) I(V1)\n.end"));
+        assert!(deck.contains(
+            ".op\n.ac dec 10 10 10k\n.probe ac V(OUT) V(OUT,IN) I(V1) I(R1) I(C1)\n.end"
+        ));
         parse_netlist(&deck).unwrap();
 
         document.move_analysis_card(ac, 0).unwrap();
         assert_eq!(
             document.scoped_output_probe_tokens(0).unwrap(),
-            ["V(OUT)", "V(OUT,IN)", "I(V1)"]
+            ["V(OUT)", "V(OUT,IN)", "I(V1)", "I(R1)", "I(C1)"]
         );
-        assert!(document
-            .to_berkeley_netlist()
-            .unwrap()
-            .contains(".ac dec 10 10 10k\n.probe ac V(OUT) V(OUT,IN) I(V1)\n.op\n.end"));
+        assert!(document.to_berkeley_netlist().unwrap().contains(
+            ".ac dec 10 10 10k\n.probe ac V(OUT) V(OUT,IN) I(V1) I(R1) I(C1)\n.op\n.end"
+        ));
         document.rename_component("V1", "VBIAS").unwrap();
         assert_eq!(
             document.scoped_output_probe_tokens(0).unwrap(),
-            ["V(OUT)", "V(OUT,IN)", "I(VBIAS)"]
+            ["V(OUT)", "V(OUT,IN)", "I(VBIAS)", "I(R1)", "I(C1)"]
         );
         document.remove_analysis_card(0).unwrap();
         assert!(document.scoped_output_probes.is_empty());

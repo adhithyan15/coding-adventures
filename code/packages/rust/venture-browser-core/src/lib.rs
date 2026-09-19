@@ -548,7 +548,7 @@ fn positioned_node_breaks_find_text(node: &PositionedNode) -> bool {
 }
 
 /// Mosaic `VentureChrome` slot names, in interface declaration order.
-pub const VENTURE_CHROME_SLOT_NAMES: [&str; 18] = [
+pub const VENTURE_CHROME_SLOT_NAMES: [&str; 19] = [
     "address",
     "page-title",
     "status-text",
@@ -561,6 +561,7 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 18] = [
     "save-page-disabled",
     "print-page-disabled",
     "share-page-disabled",
+    "page-info-disabled",
     "view-source-disabled",
     "find-open",
     "find-query",
@@ -573,7 +574,7 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 18] = [
 pub const VENTURE_CHROME_HOST_SURFACE_SLOT_NAME: &str = "content-surface";
 
 /// Mosaic `VentureChrome` event names, in interface declaration order.
-pub const VENTURE_CHROME_EVENT_NAMES: [&str; 18] = [
+pub const VENTURE_CHROME_EVENT_NAMES: [&str; 19] = [
     "onBack",
     "onForward",
     "onHome",
@@ -584,6 +585,7 @@ pub const VENTURE_CHROME_EVENT_NAMES: [&str; 18] = [
     "onSavePage",
     "onPrintPage",
     "onSharePage",
+    "onPageInfo",
     "onViewSource",
     "onFindOpen",
     "onFindChange",
@@ -1389,6 +1391,7 @@ pub enum BrowserHostEffect {
     Download(BrowserDownloadRequest),
     Print(BrowserPrintRequest),
     Share(BrowserShareRequest),
+    PageInfo(BrowserPageInfoRequest),
     WriteClipboard(String),
 }
 
@@ -1454,6 +1457,19 @@ pub struct BrowserPrintRequest {
 pub struct BrowserShareRequest {
     pub address: String,
     pub title: String,
+}
+
+/// Retained page identity and diagnostics handed to a platform presenter.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct BrowserPageInfoRequest {
+    pub requested_address: String,
+    pub address: String,
+    pub title: String,
+    pub status: u16,
+    pub image_resource_count: usize,
+    pub image_failure_count: usize,
+    pub stylesheet_resource_count: usize,
+    pub stylesheet_failure_count: usize,
 }
 
 enum BrowserLinkActivation {
@@ -1696,6 +1712,7 @@ pub enum BrowserChromeAction {
     SavePage,
     PrintPage,
     SharePage,
+    PageInfo,
     ViewSource,
     OpenFind,
     FindQuery(String),
@@ -1717,6 +1734,7 @@ pub enum BrowserChromeEvent {
     SavePage,
     PrintPage,
     SharePage,
+    PageInfo,
     ViewSource,
     FindOpen,
     FindChange(String),
@@ -1740,6 +1758,7 @@ impl BrowserChromeEvent {
             Self::SavePage => "onSavePage",
             Self::PrintPage => "onPrintPage",
             Self::SharePage => "onSharePage",
+            Self::PageInfo => "onPageInfo",
             Self::ViewSource => "onViewSource",
             Self::FindOpen => "onFindOpen",
             Self::FindChange(_) => "onFindChange",
@@ -1767,6 +1786,7 @@ pub struct BrowserChromeProps {
     pub save_page_disabled: bool,
     pub print_page_disabled: bool,
     pub share_page_disabled: bool,
+    pub page_info_disabled: bool,
     pub view_source_disabled: bool,
     pub find_open: bool,
     pub find_query: String,
@@ -1861,6 +1881,9 @@ impl BrowserChromeController {
             BrowserChromeEvent::SharePage if session.viewport().is_some() => {
                 Some(BrowserChromeAction::SharePage)
             }
+            BrowserChromeEvent::PageInfo if session.viewport().is_some() => {
+                Some(BrowserChromeAction::PageInfo)
+            }
             BrowserChromeEvent::ViewSource if session.viewport().is_some() => {
                 Some(BrowserChromeAction::ViewSource)
             }
@@ -1886,6 +1909,7 @@ impl BrowserChromeController {
             | BrowserChromeEvent::SavePage
             | BrowserChromeEvent::PrintPage
             | BrowserChromeEvent::SharePage
+            | BrowserChromeEvent::PageInfo
             | BrowserChromeEvent::ViewSource
             | BrowserChromeEvent::FindOpen
             | BrowserChromeEvent::FindChange(_)
@@ -1927,6 +1951,7 @@ impl BrowserChromeController {
             save_page_disabled: navigation_disabled || session.viewport().is_none(),
             print_page_disabled: navigation_disabled || session.viewport().is_none(),
             share_page_disabled: navigation_disabled || session.viewport().is_none(),
+            page_info_disabled: navigation_disabled || session.viewport().is_none(),
             view_source_disabled: navigation_disabled || session.viewport().is_none(),
             find_open: session.find_state().open,
             find_query: session.find_state().query.clone(),
@@ -2131,6 +2156,34 @@ impl BrowserHostController {
                         title,
                     },
                 )))
+            }
+            BrowserChromeAction::PageInfo => {
+                let page = self
+                    .session
+                    .viewport()
+                    .expect("page-info action requires a retained viewport")
+                    .page();
+                let title = page
+                    .document
+                    .title
+                    .as_deref()
+                    .map(str::trim)
+                    .filter(|title| !title.is_empty())
+                    .unwrap_or(&page.final_url)
+                    .to_string();
+                self.status_text = "Page information requested".to_string();
+                Ok(BrowserHostEventOutcome::effect(
+                    BrowserHostEffect::PageInfo(BrowserPageInfoRequest {
+                        requested_address: page.requested_url.clone(),
+                        address: page.final_url.clone(),
+                        title,
+                        status: page.status,
+                        image_resource_count: page.image_resources.len(),
+                        image_failure_count: page.image_failures.len(),
+                        stylesheet_resource_count: page.stylesheet_resources.len(),
+                        stylesheet_failure_count: page.stylesheet_failures.len(),
+                    }),
+                ))
             }
             BrowserChromeAction::ViewSource => {
                 let page = self
@@ -7126,6 +7179,7 @@ mod tests {
                 save_page_disabled: true,
                 print_page_disabled: true,
                 share_page_disabled: true,
+                page_info_disabled: true,
                 view_source_disabled: true,
                 find_open: false,
                 find_query: String::new(),
@@ -7188,6 +7242,7 @@ mod tests {
                 save_page_disabled: false,
                 print_page_disabled: false,
                 share_page_disabled: false,
+                page_info_disabled: false,
                 view_source_disabled: false,
                 find_open: false,
                 find_query: String::new(),
@@ -7221,6 +7276,7 @@ mod tests {
         assert!(disabled.save_page_disabled);
         assert!(disabled.print_page_disabled);
         assert!(disabled.share_page_disabled);
+        assert!(disabled.page_info_disabled);
         assert!(disabled.view_source_disabled);
         assert!(disabled.find_disabled);
         assert!(disabled.navigation_disabled);
@@ -7356,6 +7412,7 @@ mod tests {
             BrowserChromeEvent::SavePage,
             BrowserChromeEvent::PrintPage,
             BrowserChromeEvent::SharePage,
+            BrowserChromeEvent::PageInfo,
             BrowserChromeEvent::ViewSource,
             BrowserChromeEvent::FindOpen,
             BrowserChromeEvent::FindChange(String::new()),
@@ -7563,6 +7620,27 @@ mod tests {
             }))
         );
         assert_eq!(host.props().status_text, "Share sheet requested");
+
+        let page_info = host
+            .handle_event_with_effect(BrowserChromeEvent::PageInfo, &mut bookmarks, |_, _| {
+                unreachable!("page info must not navigate or refetch the current context")
+            })
+            .unwrap();
+        assert!(!page_info.changed);
+        assert_eq!(
+            page_info.effect,
+            Some(BrowserHostEffect::PageInfo(BrowserPageInfoRequest {
+                requested_address: url.to_string(),
+                address: url.to_string(),
+                title: "Source test".to_string(),
+                status: 200,
+                image_resource_count: 0,
+                image_failure_count: 0,
+                stylesheet_resource_count: 0,
+                stylesheet_failure_count: 0,
+            }))
+        );
+        assert_eq!(host.props().status_text, "Page information requested");
 
         let outcome = host
             .handle_event_with_effect(BrowserChromeEvent::ViewSource, &mut bookmarks, |_, _| {

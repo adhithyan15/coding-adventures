@@ -146,16 +146,16 @@ over the canonical sorted 16-key registry, and enforce the shared per-file and
 aggregate ceilings without reading host state or gaining filesystem, process,
 environment, Git, clock, randomness, credential, or network authority.
 
-### Java and Kotlin graph/diff core tranche
+### Java, Kotlin, and Dart graph/diff core tranche
 
-Java and Kotlin begin build-tool parity with independent, process-free native
+Java, Kotlin, and Dart begin build-tool parity with independent, process-free native
 cores rooted at `code/programs/java/build-tool` and
-`code/programs/kotlin/build-tool`. This tranche is deliberately narrower than
+`code/programs/kotlin/build-tool`, and `code/programs/dart/build-tool`. This tranche is deliberately narrower than
 a complete build-tool implementation: it establishes the graph and
 `diff_selection` contracts through native module surfaces, but it does not add
 a CLI, conformance adapter, package discovery, build-file evaluation, planning,
 or execution authority. Until those later tranches are complete, the
-implementation manifest MUST continue to report the Java and Kotlin front doors
+implementation manifest MUST continue to report the Java, Kotlin, and Dart front doors
 and adapters as missing.
 
 Each core MUST expose native operations equivalent to:
@@ -170,7 +170,7 @@ tranche MUST NOT read files, environment variables, system properties, Git
 state, clocks, randomness, credentials, processes, or the network. JSON and
 fixture-path handling belong only to package-local tests.
 
-Both native suites MUST discover and independently evaluate the complete shared
+All three native suites MUST discover and independently evaluate the complete shared
 `graph` and `diff_selection` fixture set. They MUST assert the exact case-ID
 roster so a newly added case cannot be skipped silently. The required roster
 contains eight graph cases and eleven diff-selection cases. In addition to
@@ -193,9 +193,19 @@ BUILD fronts at zero cost, and return empty selections with
 contract. Portable glob behavior and diagnostic precedence MUST not depend on
 host path or locale semantics.
 
+The Dart core MUST use the repository's pinned Unicode 17.0.0 snapshot for NFC,
+full default folding, and locale-independent full uppercase, while canonical
+ordering compares numeric Unicode scalar values directly through Dart runes.
+Its generated runtime is process-free and source-embedded. The generator's
+runtime self-check may invoke only the exact caller-supplied Dart executable in
+an isolated bounded environment; that host authority remains outside the core
+and inside the separately reviewed Unicode-generator boundary. Dart MUST NOT
+substitute host casing, host normalization, regex backtracking, or a filesystem
+glob implementation for the portable contract.
+
 Direct fixture consumption by these native suites is conformance evidence for
 this bounded core only. It MUST NOT be represented as a ready front door,
-adapter, or complete Java/Kotlin build-tool implementation.
+adapter, or complete Java/Kotlin/Dart build-tool implementation.
 
 C and C++ remain emerging implementation lanes. OCaml also begins as emerging
 and must implement this contract before promotion. WASM is an execution target,

@@ -5,12 +5,28 @@ cross-platform proving application. Items are ordered by risk and dependency.
 
 ## Prioritized discoveries
 
+- [x] **P1 browser convergence - shared retained-response information.** Add
+  one Mosaic-authored Page Information control that snapshots requested and
+  final response URLs, normalized title, HTTP status, and image/stylesheet
+  resource and failure counts in core. Emit one typed presenter request without
+  navigation or refetch, and align disabled state, bridge serialization, host
+  seams, and deterministic acceptance across every generated host.
+
 - [x] **P1 browser convergence - shared current-page share transaction.** Add
   one Mosaic-authored Share Page control that snapshots the retained page's
   final address and normalized title in core, then emits one typed host share
   request without navigation or refetch. Keep disabled state, status, bridge
   serialization, presenter seams, and deterministic acceptance aligned across
   every generated host.
+
+### Deferred architecture discovery
+
+Page zoom remains valuable, but it is intentionally not scheduled as a host
+feature. The current core session retains browser state while each platform
+bridge still owns final page composition and logical viewport width; adding
+zoom now would duplicate reflow policy across toolkits. A future zoom phase
+should first centralize page-composition ownership, then expose one shared scale
+transaction to every host.
 
 - [x] **P1 browser convergence - shared current-page print transaction.** Add
   one Mosaic-authored Print Page control that snapshots the retained page's

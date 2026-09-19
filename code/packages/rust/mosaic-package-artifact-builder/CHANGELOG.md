@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Recognize HTML numeric typography on text, buttons and inputs; retain
+  diagnostics for HTML tables and WebComponent bindings (#15647).
+
 - Recognize Flutter HostTable numeric typography now that header/cell/editor
   propagation is implemented and exercised in generated widgets (#15602).
 
@@ -166,6 +169,9 @@ build script and that file has a migration in flight.
 - Recognize validated Compose typography projections while continuing to report unsupported backends, primitives and binding forms explicitly.
 
 ## Unreleased
+
+- Recognize HTML numeric typography on text, buttons and inputs; retain
+  diagnostics for HTML tables and WebComponent bindings (#15647).
 
 ### Added — `primitive.navigation-split-unimplemented` (UI29-6, #15481)
 
