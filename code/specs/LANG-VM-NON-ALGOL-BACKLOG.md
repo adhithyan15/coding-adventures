@@ -8,6 +8,15 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## BEAM09 — Brainfuck byte input (selected on restart, 2026-09-19)
+
+The paused BASIC string work was superseded by #15147 and subsequent BEAM03–08.
+The existing Brainfuck input rows remain the next bounded gap: implement the
+byte/EOF host contract, prove raw-byte execution, then promote those three rows.
+See `BEAM09-brainfuck-byte-input.md` for the design, acceptance and priority order.
+The earlier BEAM08 completion claim covers its scoped track, not these input rows
+or full language/historical-machine semantics.
+
 ## BEAM08 — `RND` on BEAM: VM-018 closed, the non-ALGOL BEAM matrix is COMPLETE (selected by the user after BEAM07)
 
 `git fetch origin && git merge origin/main` fast-forwarded cleanly onto the
