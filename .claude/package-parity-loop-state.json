@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 15533,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/15533",
+    "branch": "codex/build-tool-diff-match-ceiling-20260919",
+    "implementation_revision": "84182f72b0cf319bcd85fb112cff73ca8efeda9c",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-09-13T18:45:42Z",
-    "pr_number": 15080,
-    "status": "merged",
-    "notes": "All 52 reported final-head checks completed acceptably: 31 successes, 20 expected skips, and one neutral result, with zero failures or nonterminal checks. GitHub reported no merge conflict, guarded squash auto-merge had been enabled, and GitHub merged PR #15080 as 03b643fc33459a9595ee8bfbeae7318aa6848f5a without a manual merge command."
+    "observed_at": "2026-09-19T09:23:37Z",
+    "pr_number": 15533,
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #15533 is open at exact implementation revision 84182f72b0cf319bcd85fb112cff73ca8efeda9c. GitHub reports the branch mergeable with no conflict, while the initial CI and CodeQL detection checks remain queued. Auto-merge remains disabled until every required check is terminal and acceptable."
   },
   "last_inventory": {
     "revision": "06c4814c64f5773f0a12902b5cf1dae943c53851",
@@ -1006,15 +1012,18 @@
     {
       "id": "build-tool-diff-selection-match-work-ceiling",
       "title": "Bound language-neutral diff-selection match work",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-site-authored-resource-source-input-extension"],
       "branch": "codex/build-tool-diff-match-ceiling-20260919",
-      "pr_number": null,
+      "pr_number": 15533,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/15533",
+      "opened_at": "2026-09-19T09:23:33Z",
+      "opened_revision": "84182f72b0cf319bcd85fb112cff73ca8efeda9c",
       "selected_at": "2026-09-19T08:31:53Z",
       "selection_revision": "06fc0524051a397ccc53c628b08c019b2bbf75ba",
       "selection_notes": "Selected only after PR #15080 completed all 52 reported final-head checks acceptably and merged through guarded squash auto-merge. The exact-main collision-checked schema-3 inventory reports 15 established lanes, 1,441 implementation identities, 4,666 slots, 1,481 all-reported identities, bands 175/265, 123/934, 181/2,282, and 962/13,468, 782 Rust singletons, five emerging OCaml packages, zero collisions, and zero unknown buckets. Parallel audits registered the newly discovered photo-picker Mosaic portable and native-host work before selection. This process-free ceiling is the smallest ready dependency-shaped owner that closes algorithmic denial-of-service risk in the shared diff oracle before additional JVM, Dart, OCaml, and established engines adopt the corpus.",
       "rebase_notes": "Rebased conflict-free twice before publication onto exact origin/main 06c4814c64f5773f0a12902b5cf1dae943c53851. The four intervening merged changes extend existing SPICE Mosaic, OAuth broker, Venture browser, and ALGOL IIR/lang-aot behavior without adding or removing a package identity, BUILD marker, build-tool contract, selected path, or newly unowned parity gap. The regenerated schema-3 inventory remains 15 established lanes, 1,441 implementation identities, 4,666 slots, 1,481 all-reported identities, 782 Rust singletons, five OCaml packages, zero collisions, and zero unknown buckets.",
-      "validation_notes": "Specification-first and red-test execution proved the prior oracle lacked the ceiling and accepted arbitrary errors. The final 151-case corpus validates with 285 staged files; 24 schema tests and 82 runner tests pass, including exact 50,000,000-unit admission, 50,000,004-unit failure, Unicode-scalar accounting, strict-root charging, near-BUILD charging, all five recursive exact BUILD-front exemptions, structural and boundary precedence, match-limit precedence over unknown paths, zero matcher calls on overflow, and expected/result fail-open rejection. Branch-aware coverage reports 90% for the 2,191-statement runner. Ten package-parity, seven capability-taxonomy, ten OCaml capability-gate, and 51 OCaml toolchain-lock tests pass with two expected Windows skips. The canonical Go build tool passes all packages, vet, and a trimpath build. The exact-main reporter remains collision-clean with zero unknown buckets; the 811-owner/1,386-edge state graph is strict-JSON-valid, unique, dependency-complete, acyclic, and free of merged-to-unfinished edges at 214 merged, 596 pending, and exactly this owner in progress. Ruff changed-line checks, Bandit medium/high, PyCompile, JSON, and diff-hygiene checks pass; the repository's two touched Python files retain their pre-existing whole-file Ruff-format debt rather than introducing broad unrelated reformatting.",
+      "validation_notes": "Specification-first and red-test execution proved the prior oracle lacked the ceiling and accepted arbitrary errors. The final 151-case corpus validates with 285 staged files; 24 schema tests and 82 runner tests pass, including exact 50,000,000-unit admission, 50,000,004-unit failure, Unicode-scalar accounting, strict-root charging, near-BUILD charging, all five recursive exact BUILD-front exemptions, structural and boundary precedence, match-limit precedence over unknown paths, zero matcher calls on overflow, and expected/result fail-open rejection. Branch-aware coverage reports 90% for the 2,191-statement runner. Ten package-parity, seven capability-taxonomy, ten OCaml capability-gate, and 51 OCaml toolchain-lock tests pass with two expected Windows skips. The canonical Go build tool passes all packages, vet, and a trimpath build. The exact-main reporter remains collision-clean with zero unknown buckets; the 811-owner/1,386-edge state graph is strict-JSON-valid, unique, dependency-complete, acyclic, and free of merged-to-unfinished edges at 214 merged, 596 pending, and exactly this owner at pr-open. Ruff changed-line checks, Bandit medium/high, PyCompile, JSON, and diff-hygiene checks pass; the repository's two touched Python files retain their pre-existing whole-file Ruff-format debt rather than introducing broad unrelated reformatting.",
       "security_notes": "Independent review issued SHIP with no critical, high, medium, or low finding requiring change. The ceiling uses checked remaining-budget arithmetic, rejects over-limit inputs before the matcher, treats fixture strings as inert data, preserves earlier structural and boundary failures, returns one redacted stable diagnostic, and adds no Git, filesystem, process, environment, network, credential, native-link, or execution authority.",
       "notes": "Adversarial review found that diff-selection strict-glob matching has no operation-wide work ceiling and that the independent oracle accepts arbitrary error outcomes after a successful expectation. Define a fixed 50,000,000-unit full preflight over every applicable strict-glob package, changed path, and declared pattern; exempt recursive exact BUILD fronts; count Unicode scalars; fail with one stable DIFF_MATCH_LIMIT_EXCEEDED diagnostic before any matcher call; preserve structural and repository-boundary validation precedence; and make successful expectations reject arbitrary adapter errors. Add exact-at-limit and over-limit neutral fixtures without granting Git, filesystem, process, environment, network, credential, or native-link authority."
     },
