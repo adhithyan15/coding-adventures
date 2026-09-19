@@ -12,6 +12,7 @@ let bookmarked = false;
 let findOpen = false;
 let findQuery = "";
 let findResultLabel = "";
+let zoomPercent = 100;
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 const props = (statusText: string) => ({
@@ -29,6 +30,10 @@ const props = (statusText: string) => ({
     printPageDisabled: navigationDisabled,
     sharePageDisabled: navigationDisabled,
     pageInfoDisabled: navigationDisabled,
+    zoomLabel: `${zoomPercent}%`,
+    zoomOutDisabled: navigationDisabled || zoomPercent === 50,
+    zoomResetDisabled: navigationDisabled || zoomPercent === 100,
+    zoomInDisabled: navigationDisabled || zoomPercent === 200,
     viewSourceDisabled: navigationDisabled,
     findOpen,
     findQuery,
@@ -66,6 +71,14 @@ window.mosaicHost = {
       findResultLabel = "2 of 2";
       return props("Find advanced through MosaicHost");
     }
+    if (request.event.type === "zoomIn") {
+      zoomPercent += 25;
+      return props("Zoom updated through MosaicHost");
+    }
+    if (request.event.type === "zoomReset") {
+      zoomPercent = 100;
+      return props("Zoom reset through MosaicHost");
+    }
     return request.event.type === "navigate"
       ? props("Navigated through MosaicHost")
       : undefined;
@@ -98,7 +111,7 @@ test("React and Electron renderer controls cross the Mosaic host seam", async ()
 
   expect(document.body.textContent).toContain("Venture React acceptance");
   expect(document.body.textContent).toContain("React host surface");
-  for (const label of ["Back", "Forward", "Reload", "Bookmark", "Copy", "New Window", "Save", "Print", "Share", "Info", "Source", "Find", "Go"]) {
+  for (const label of ["Back", "Forward", "Reload", "Bookmark", "Copy", "New Window", "Save", "Print", "Share", "Info", "Zoom Out", "100%", "Zoom In", "Source", "Find", "Go"]) {
     const button = textButton(label);
     expect(button.disabled).toBe(true);
     button.click();
@@ -138,6 +151,18 @@ test("React and Electron renderer controls cross the Mosaic host seam", async ()
   await flush();
   expect(events[events.length - 1]?.event.type).toBe("navigate");
   expect(document.body.textContent).toContain("Navigated through MosaicHost");
+
+  await act(async () => {
+    textButton("Zoom In").click();
+  });
+  await flush();
+  expect(events[events.length - 1]?.event.type).toBe("zoomIn");
+  expect(document.body.textContent).toContain("125%");
+  await act(async () => {
+    textButton("125%").click();
+  });
+  await flush();
+  expect(events[events.length - 1]?.event.type).toBe("zoomReset");
 
   await act(async () => {
     textButton("Bookmark").click();

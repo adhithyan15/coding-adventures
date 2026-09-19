@@ -129,6 +129,11 @@ class VentureChromeInteractionTest {
             rule.waitForIdle()
             println("compose-live-stage=page-info")
 
+            rule.onNodeWithTag("zoom-in-button").assertIsEnabled().performClick()
+            rule.onNodeWithText("125%").assertExists().performClick()
+            rule.onNodeWithText("100%").assertExists()
+            println("compose-live-stage=page-zoom")
+
             rule.onNodeWithTag("view-source-button").assertIsEnabled().performClick()
             rule.waitUntil(10_000) { host.lastAuxiliaryDocument != null }
             val sourceDocument = assertNotNull(host.lastAuxiliaryDocument)

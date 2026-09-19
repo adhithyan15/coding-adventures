@@ -3,7 +3,7 @@
 This package is the shared Mosaic source of truth for Venture's native browser
 chrome. It authors the title, Back, Forward, Home, Reload, address input, Go
 action, bookmark, Copy Address, Open in New Window, Save Page, Print Page,
-Share Page, Page Information, View Source, and find-in-page controls, status
+Share Page, Page Information, bounded page zoom, View Source, and find-in-page controls, status
 line, disabled states, and dispatch contract once
 in MIL, MLL, and MSL.
 
@@ -31,6 +31,9 @@ recreating the surrounding chrome in backend-specific UI code.
   scrolling, native scrollbar offsets, link activation, and hover projection
   are shared by the macOS and Windows bridges. Platform crates supply only
   their text/page composition and final paint backends.
+- `BrowserSession` owns the 50%-200% page scale and maps physical host surfaces
+  to logical layout width, height, and paint scale. Zoom reflows the retained
+  page without refetching or changing history; native bridges only repaint.
 - Access keys retain an independent document order through layout and paint so
   targets with negative `tabindex` remain available without entering Tab
   traversal. Core resolves normalized duplicates, disabledness, modal scope,

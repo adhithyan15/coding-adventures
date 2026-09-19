@@ -64,6 +64,10 @@ TestCase {
                 "printPageDisabled": disabled,
                 "sharePageDisabled": disabled,
                 "pageInfoDisabled": disabled,
+                "zoomLabel": "100%",
+                "zoomOutDisabled": disabled,
+                "zoomResetDisabled": true,
+                "zoomInDisabled": disabled,
                 "viewSourceDisabled": disabled,
                 "findOpen": false,
                 "findQuery": "",
@@ -93,6 +97,9 @@ TestCase {
         verify(!nativeControl("print-page-button").enabled)
         verify(!nativeControl("share-page-button").enabled)
         verify(!nativeControl("page-info-button").enabled)
+        verify(!nativeControl("zoom-out-button").enabled)
+        verify(!nativeControl("zoom-reset-button").enabled)
+        verify(!nativeControl("zoom-in-button").enabled)
         verify(!nativeControl("view-source-button").enabled)
         verify(!nativeControl("find-button").enabled)
         verify(nativeControl("address-input").readOnly)
@@ -110,6 +117,9 @@ TestCase {
         mouseClick(nativeControl("print-page-button"))
         mouseClick(nativeControl("share-page-button"))
         mouseClick(nativeControl("page-info-button"))
+        mouseClick(nativeControl("zoom-out-button"))
+        mouseClick(nativeControl("zoom-reset-button"))
+        mouseClick(nativeControl("zoom-in-button"))
         mouseClick(nativeControl("view-source-button"))
         mouseClick(nativeControl("find-button"))
         mouseClick(nativeControl("go-button"))
@@ -231,6 +241,17 @@ TestCase {
         wait(0)
         compare(recordingHost.events.length, 1)
         compare(recordingHost.events[0].event, "onPageInfo")
+    }
+
+    function test_zoom_actions_cross_the_mosaic_host_seam() {
+        hydrate(false)
+        recordingHost.reset()
+        mouseClick(nativeControl("zoom-in-button"))
+        mouseClick(nativeControl("zoom-out-button"))
+        wait(0)
+        compare(recordingHost.events.length, 2)
+        compare(recordingHost.events[0].event, "onZoomIn")
+        compare(recordingHost.events[1].event, "onZoomOut")
     }
 
     function test_find_actions_cross_the_mosaic_host_seam() {

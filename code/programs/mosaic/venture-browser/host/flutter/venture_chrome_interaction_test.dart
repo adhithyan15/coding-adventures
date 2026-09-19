@@ -149,6 +149,14 @@ void main() {
       expect(host.lastPageInfoRequest?['status'], 200);
       debugPrint('flutter-live-stage=page-info');
 
+      await tester.tap(find.text('Zoom In'));
+      await tester.pumpAndSettle();
+      expect(find.text('125%'), findsOneWidget);
+      await tester.tap(find.text('125%'));
+      await tester.pumpAndSettle();
+      expect(find.text('100%'), findsOneWidget);
+      debugPrint('flutter-live-stage=page-zoom');
+
       await tester.tap(find.text('Source'));
       await tester.pumpAndSettle();
       expect(host.lastAuxiliaryDocument?['kind'], 'view-source');

@@ -8,7 +8,6 @@
 #[cfg(target_vendor = "apple")]
 use browser_bookmarks_file::{default_bookmark_path, FileBookmarkRepository};
 use html_to_layout::mosaic_html_theme;
-use html_to_paint::HtmlPaintViewport;
 use layout_text_measure_native::NativeMeasurer;
 use std::fmt;
 #[cfg(target_vendor = "apple")]
@@ -106,15 +105,15 @@ where
     let shaper = NativeShaper::new();
     let metrics = NativeMetrics::new();
     let resolver = NativeResolver::new();
+    let mut session = BrowserSession::new(start_url, height);
     let pipeline = BrowserPagePipeline::new(
         &theme,
-        HtmlPaintViewport::new(width, height, 1.0),
+        session.paint_viewport(width, height),
         &measurer,
         &shaper,
         &metrics,
         &resolver,
     );
-    let mut session = BrowserSession::new(start_url, height);
     session.execute(
         BrowserNavigation::Navigate(start_url.to_string()),
         &pipeline,
@@ -142,7 +141,7 @@ where
     let resolver = NativeResolver::new();
     let pipeline = BrowserPagePipeline::new(
         &theme,
-        HtmlPaintViewport::new(width, height, 1.0),
+        session.paint_viewport(width, height),
         &measurer,
         &shaper,
         &metrics,
@@ -173,7 +172,7 @@ where
     let resolver = NativeResolver::new();
     let pipeline = BrowserPagePipeline::new(
         &theme,
-        HtmlPaintViewport::new(width, height, 1.0),
+        session.paint_viewport(width, height),
         &measurer,
         &shaper,
         &metrics,
@@ -357,7 +356,7 @@ where
     let resolver = NativeResolver::new();
     let pipeline = BrowserPagePipeline::new(
         &theme,
-        HtmlPaintViewport::new(width, height, 1.0),
+        session.paint_viewport(width, height),
         &measurer,
         &shaper,
         &metrics,
@@ -490,7 +489,7 @@ where
     let resolver = NativeResolver::new();
     let pipeline = BrowserPagePipeline::new(
         &theme,
-        HtmlPaintViewport::new(width, height, 1.0),
+        session.paint_viewport(width, height),
         &measurer,
         &shaper,
         &metrics,
@@ -517,7 +516,7 @@ where
     let resolver = NativeResolver::new();
     let pipeline = BrowserPagePipeline::new(
         &theme,
-        HtmlPaintViewport::new(width, height, 1.0),
+        session.paint_viewport(width, height),
         &measurer,
         &shaper,
         &metrics,
@@ -540,7 +539,7 @@ pub fn complete_session_subresource(
     let resolver = NativeResolver::new();
     let pipeline = BrowserPagePipeline::new(
         &theme,
-        HtmlPaintViewport::new(width, height, 1.0),
+        session.paint_viewport(width, height),
         &measurer,
         &shaper,
         &metrics,
@@ -645,11 +644,15 @@ impl MacBrowserHost {
         let width = self.width;
         let height = self.height;
         let fetcher = &self.fetcher;
-        self.controller.handle_event_with_effect(
+        let outcome = self.controller.handle_event_with_effect(
             event,
             self.bookmarks.as_mut(),
             |session, navigation| navigate_session(session, navigation, width, height, fetcher),
-        )
+        )?;
+        if outcome.page_reflow_required {
+            self.reflow_retained(width, height);
+        }
+        Ok(outcome)
     }
 
     pub fn scroll_by(&mut self, delta_y: f64) -> bool {
@@ -697,7 +700,9 @@ impl MacBrowserHost {
         let resolver = NativeResolver::new();
         let pipeline = BrowserPagePipeline::new(
             &theme,
-            HtmlPaintViewport::new(self.width, self.height, 1.0),
+            self.controller
+                .session()
+                .paint_viewport(self.width, self.height),
             &measurer,
             &shaper,
             &metrics,
@@ -721,7 +726,9 @@ impl MacBrowserHost {
         let resolver = NativeResolver::new();
         let pipeline = BrowserPagePipeline::new(
             &theme,
-            HtmlPaintViewport::new(self.width, self.height, 1.0),
+            self.controller
+                .session()
+                .paint_viewport(self.width, self.height),
             &measurer,
             &shaper,
             &metrics,
@@ -752,7 +759,9 @@ impl MacBrowserHost {
         let resolver = NativeResolver::new();
         let pipeline = BrowserPagePipeline::new(
             &theme,
-            HtmlPaintViewport::new(self.width, self.height, 1.0),
+            self.controller
+                .session()
+                .paint_viewport(self.width, self.height),
             &measurer,
             &shaper,
             &metrics,
@@ -781,7 +790,9 @@ impl MacBrowserHost {
         let resolver = NativeResolver::new();
         let pipeline = BrowserPagePipeline::new(
             &theme,
-            HtmlPaintViewport::new(self.width, self.height, 1.0),
+            self.controller
+                .session()
+                .paint_viewport(self.width, self.height),
             &measurer,
             &shaper,
             &metrics,
@@ -847,7 +858,9 @@ impl MacBrowserHost {
         let resolver = NativeResolver::new();
         let pipeline = BrowserPagePipeline::new(
             &theme,
-            HtmlPaintViewport::new(self.width, self.height, 1.0),
+            self.controller
+                .session()
+                .paint_viewport(self.width, self.height),
             &measurer,
             &shaper,
             &metrics,
@@ -884,7 +897,9 @@ impl MacBrowserHost {
         let resolver = NativeResolver::new();
         let pipeline = BrowserPagePipeline::new(
             &theme,
-            HtmlPaintViewport::new(self.width, self.height, 1.0),
+            self.controller
+                .session()
+                .paint_viewport(self.width, self.height),
             &measurer,
             &shaper,
             &metrics,
@@ -934,7 +949,9 @@ impl MacBrowserHost {
         let resolver = NativeResolver::new();
         let pipeline = BrowserPagePipeline::new(
             &theme,
-            HtmlPaintViewport::new(self.width, self.height, 1.0),
+            self.controller
+                .session()
+                .paint_viewport(self.width, self.height),
             &measurer,
             &shaper,
             &metrics,
@@ -980,17 +997,7 @@ impl MacBrowserHost {
         )
     }
 
-    /// Reflow the retained page for a new logical content-surface size.
-    /// The HTML document and navigation history stay in the shared session;
-    /// only layout, paint, image placement, and scroll bounds are recomputed.
-    pub fn resize(&mut self, width: f64, height: f64) -> bool {
-        self.controller.clear_hover();
-        let width = finite_positive_or(width, self.width);
-        let height = finite_positive_or(height, self.height);
-        if self.width == width && self.height == height {
-            return false;
-        }
-
+    fn reflow_retained(&mut self, width: f64, height: f64) -> bool {
         let theme = mosaic_html_theme();
         let measurer = NativeMeasurer::new();
         let shaper = NativeShaper::new();
@@ -998,17 +1005,27 @@ impl MacBrowserHost {
         let resolver = NativeResolver::new();
         let pipeline = BrowserPagePipeline::new(
             &theme,
-            HtmlPaintViewport::new(width, height, 1.0),
+            self.controller.session().paint_viewport(width, height),
             &measurer,
             &shaper,
             &metrics,
             &resolver,
         );
-        let reflowed = self
-            .controller
+        self.controller
             .session_mut()
             .reflow(&pipeline, &self.fetcher, height)
-            .is_some();
+            .is_some()
+    }
+
+    /// Reflow the retained page for a new logical content-surface size.
+    pub fn resize(&mut self, width: f64, height: f64) -> bool {
+        self.controller.clear_hover();
+        let width = finite_positive_or(width, self.width);
+        let height = finite_positive_or(height, self.height);
+        if self.width == width && self.height == height {
+            return false;
+        }
+        let reflowed = self.reflow_retained(width, height);
         self.width = width;
         self.height = height;
         reflowed
@@ -1141,7 +1158,7 @@ mod mosaic_ffi {
             .map(|message| format!(",\"error\":{}", json_string(message)))
             .unwrap_or_default();
         let value = format!(
-            "{{\"props\":{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"bookmark-label\":{},\"bookmark-disabled\":{},\"copy-address-disabled\":{},\"open-page-disabled\":{},\"save-page-disabled\":{},\"print-page-disabled\":{},\"share-page-disabled\":{},\"page-info-disabled\":{},\"view-source-disabled\":{},\"find-open\":{},\"find-query\":{},\"find-result-label\":{},\"find-disabled\":{},\"navigation-disabled\":false}}{effect}{error}}}",
+            "{{\"props\":{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"bookmark-label\":{},\"bookmark-disabled\":{},\"copy-address-disabled\":{},\"open-page-disabled\":{},\"save-page-disabled\":{},\"print-page-disabled\":{},\"share-page-disabled\":{},\"page-info-disabled\":{},\"zoom-label\":{},\"zoom-out-disabled\":{},\"zoom-reset-disabled\":{},\"zoom-in-disabled\":{},\"view-source-disabled\":{},\"find-open\":{},\"find-query\":{},\"find-result-label\":{},\"find-disabled\":{},\"navigation-disabled\":false}}{effect}{error}}}",
             json_string(&props.address),
             json_string(&props.page_title),
             json_string(&props.status_text),
@@ -1155,6 +1172,10 @@ mod mosaic_ffi {
             props.print_page_disabled,
             props.share_page_disabled,
             props.page_info_disabled,
+            json_string(&props.zoom_label),
+            props.zoom_out_disabled,
+            props.zoom_reset_disabled,
+            props.zoom_in_disabled,
             props.view_source_disabled,
             props.find_open,
             json_string(&props.find_query),
@@ -1223,6 +1244,9 @@ mod mosaic_ffi {
             "onPrintPage" => Some(BrowserChromeEvent::PrintPage),
             "onSharePage" => Some(BrowserChromeEvent::SharePage),
             "onPageInfo" => Some(BrowserChromeEvent::PageInfo),
+            "onZoomOut" => Some(BrowserChromeEvent::ZoomOut),
+            "onZoomReset" => Some(BrowserChromeEvent::ZoomReset),
+            "onZoomIn" => Some(BrowserChromeEvent::ZoomIn),
             "onViewSource" => Some(BrowserChromeEvent::ViewSource),
             "onFindOpen" => Some(BrowserChromeEvent::FindOpen),
             "onFindChange" => string_arg(value).map(BrowserChromeEvent::FindChange),
