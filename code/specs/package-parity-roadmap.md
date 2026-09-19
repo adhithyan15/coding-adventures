@@ -13941,6 +13941,49 @@ two Malayalam, CLR, TLS, SPICE, and Mermaid commits have no implementation-path
 overlap with this tranche. Focused native, generator, CI-registry, corpus, Go,
 state-graph, parity, and diff checks all pass again after the rebase.
 
+### Post-PR #15646 refresh and OCaml representative-chain CI selection
+
+PR #15646 completed both protected final gates successfully with no failed
+check and a conflict-free mergeable head. Guarded squash auto-merge was enabled
+only after those required contexts were terminal, and GitHub merged the Dart
+core automatically at `2026-09-19T21:42:09Z` as
+`f4e7d4c3cdb6e69f777c809388f64db2307151f6` without a plain manual merge
+command.
+
+The collision-checked schema-3 inventory at that exact merged main now contains
+15 established lanes, 1,443 implementation identities, 4,668 implementation
+slots, and 1,483 all-reported identities. Completion bands are 175/265,
+123/934, 181/2,282, and 964/13,496; Rust has 784 singleton identities, OCaml
+remains an emerging five-package lane, and canonical collisions and unknown
+language buckets remain zero. The Dart build-tool program does not create a
+package identity. The two new identities since the preceding merged inventory
+are Rust-only `tls-server-identity` and `der-tlv`.
+
+Both new identities are portable, zero-runtime-dependency, empty-capability
+cores and now have explicit pending owners. The TLS identity owner first freezes
+typed-SAN neutral fixtures, including the malformed IPv4-looking dotted-decimal
+boundary, before established-lane ports; it excludes certificate parsing,
+trust, IDNA, transport, sockets, clocks, randomness, and credentials. The DER
+TLV owner first freezes canonical borrowed-byte framing fixtures and the Rust
+oracle before established-lane ports; it excludes ASN.1 schema decoding, X.509,
+cryptography, trust, TLS, and transport. They are independent P4 singleton
+waves: future X.509 work depends on DER framing, while a later TLS closure may
+compose both.
+
+The dependency/leverage pass selects
+`ocaml-representative-package-ci-execution` as the explicit roadmap successor.
+Its representative-core, exact toolchain, and capability-analyzer dependencies
+are merged, and it supplies the real Ubuntu, macOS, and Windows evidence needed
+before native OCaml build-tool qualification and lane promotion. The selected
+slice uses a separate OCAML07 contract, closed manifest, validator, and
+commit-pinned representative workflow so the exact OCAML03 job set remains
+unchanged and open Dependabot PR #15548's `build-ocaml.yml`/`ci.yml` overlap is
+avoided. It must prove real leaf-first format, test, per-production-file numeric
+coverage, install, archive, installed downstream, warning-clean odoc 3.0.0,
+retained evidence, analyzer enforcement, and no skip-success path on all three
+targets without promoting OCaml. The reconciled graph has 847 owners and 1,571
+edges: 220 merged, 626 pending, and exactly this owner in progress.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

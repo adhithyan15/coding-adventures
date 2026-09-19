@@ -11,35 +11,29 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 15646,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/15646",
-    "branch": "codex/parity-dart-core-20260919",
-    "implementation_revision": "da96c654b94495bb58e55cc3cff7dc4fb27fd0f9",
-    "status": "checks-pending"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-09-19T20:14:41Z",
+    "observed_at": "2026-09-19T21:42:09Z",
     "pr_number": 15646,
-    "status": "checks-pending",
-    "notes": "Ready-for-review PR #15646 is open at exact validated head da96c654b94495bb58e55cc3cff7dc4fb27fd0f9. GitHub reports the branch mergeable with CI, CodeQL, human-language, and OCaml jobs queued or in progress; auto-merge remains disabled while checks are nonterminal."
+    "status": "merged",
+    "notes": "PR #15646 reached terminal success on both protected final gates with no failed check and a conflict-free mergeable head. Guarded squash auto-merge was enabled and GitHub merged the reviewed head automatically at 2026-09-19T21:42:09Z as f4e7d4c3cdb6e69f777c809388f64db2307151f6; no plain manual merge command was used."
   },
   "last_inventory": {
-    "revision": "3467742ee4e6ad3f6fe4fd55c87ca3bcb8cfcecc",
+    "revision": "f4e7d4c3cdb6e69f777c809388f64db2307151f6",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1441,
-    "implementation_package_slots": 4666,
-    "all_reported_identities": 1481,
+    "implementation_identities": 1443,
+    "implementation_package_slots": 4668,
+    "all_reported_identities": 1483,
     "high_consensus_packages": 175,
     "high_consensus_missing_slots": 265,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 181,
     "two_to_four_missing_slots": 2282,
-    "singleton_packages": 962,
-    "singleton_missing_slots": 13468,
-    "rust_singletons": 782,
+    "singleton_packages": 964,
+    "singleton_missing_slots": 13496,
+    "rust_singletons": 784,
     "ocaml_packages": 5,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -3175,10 +3169,13 @@
     {
       "id": "ocaml-representative-package-ci-execution",
       "title": "Execute the real OCaml representative package chain on Ubuntu, macOS, and Windows CI",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["ocaml-representative-core", "ocaml-ci-toolchain", "ocaml-capability-analyzer"],
-      "branch": null,
+      "branch": "codex/parity-ocaml-representative-ci-20260919",
       "pr_number": null,
+      "selected_at": "2026-09-19T21:43:00Z",
+      "selection_revision": "f4e7d4c3cdb6e69f777c809388f64db2307151f6",
+      "selection_notes": "Selected after guarded auto-merge of PR #15646, an exact-main collision-checked inventory refresh, registration of the newly discovered tls-server-identity and der-tlv portable conformance owners, and a dependency/leverage pass. All three formal dependencies are merged, the reviewed OCaml 5.2.1/opam 2.5.2/Dune 3.17.2 toolchain is available, and this explicit roadmap successor unlocks native representative-chain CI evidence needed by later OCaml build-tool qualification and denominator promotion. Use a separate representative workflow and closed OCAML07 contract so the exact OCAML03 workflow job set remains unchanged and open Dependabot PR #15548's build-ocaml.yml/ci.yml overlap is avoided.",
       "notes": "Discovered during the ocaml-representative-core parallel validation audit. Execute logic-gates plus the leaf-first graph, directed-graph, and state-machine chain on Ubuntu, macOS, and Windows with real format, test, numeric coverage-floor, install, source-archive, installed downstream-consumer, retained-artifact, no-skip, warning-clean odoc, and merged analyzer enforcement evidence. Keep this execution-coupled owner separate from the process-free representative-core tranche and require it before lane promotion."
     },
     {
@@ -9408,7 +9405,7 @@
     {
       "id": "build-tool-dart-process-free-graph-diff-core",
       "title": "Implement Dart build-tool graph and diff-selection cores",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-tracked-artifact-unicode-version-contract"],
       "branch": "codex/parity-dart-core-20260919",
       "pr_number": 15646,
@@ -9422,8 +9419,30 @@
       "validation_revision": "6fab7535394627ca17b65fa616d83520225da0a9",
       "validation_notes": "Tests-first development exercised the exact eight graph and eleven diff-selection fixtures before completing the process-free Dart core. The native Dart 3.12.2 package passes strict formatting, fatal-info analysis, all three fixture-driven test groups, and branch/function-aware coverage above the 90% threshold through both literal BUILD fronts. The pinned Unicode 17 generator passes 39 focused tests, exact generated-artifact checking, and all 968 combining, 5,914 decomposition, 965 composition, 1,585 folding, and 1,581 uppercase official vectors against the exact reviewed Dart runtime in a bounded minimal environment. The generator and tests pass Ruff lint and formatting; Bandit medium/high reports no finding. The language-neutral corpus validates 162 cases and 285 files, while 85 semantic-runner, 25 schema, 15 CI-gate registry, 10 package-parity, 7 capability-taxonomy, 6 Haskell-capability, and 51 OCaml-lock tests pass with two expected skips. The complete Go build-tool suite, vet, trimpath build, and internal CI-gate tests pass. A real forced Dart dry plan evaluates 45 Starlark BUILD files, discovers 91 packages, validates every front, and reports all 91 WOULD-BUILD. The schema-3 parity inventory is collision-clean at 15 lanes, 1,442 implementation identities, 4,667 package directories, 1,482 all-reported identities, zero collisions, and zero unknown buckets. Documentation shards build and validate after a clean npm install; production npm audit reports zero vulnerabilities. BUILD and BUILD_windows are byte-identical; YAML, strict JSON, changelog digest, diff hygiene, and source-authority scans pass. Independent correctness, documentation/state, and security/CI reviews found and the branch repaired exact Dart-version validation, general-build SDK pinning, scalar-order documentation, and the descendant count. The 845-owner, 1,571-edge state is unique, dependency-complete, acyclic, lifecycle-valid, and contains exactly this item in progress. The branch rebased conflict-free onto 467b1196ed85cdfae078b2791acb546bb60475cb after six package-neutral main advances, with no implementation-path overlap.",
       "publication_notes": "Opened ready-for-review PR #15646 after a normal first push from exact rebased origin/main 467b1196ed85cdfae078b2791acb546bb60475cb. Immediately before publication, the two-commit worktree was clean, no other parity PR existed, the bounded 21-file implementation passed its native, generated-artifact, neutral-corpus, Go-oracle, inventory, documentation, security, state-graph, and diff validation, and all live implementation PRs had zero exact path overlap except Dependabot #15548's soft workflow-file overlap. GitHub reports the exact opened head mergeable; checks are queued or in progress, so auto-merge remains disabled.",
+      "merged_head_revision": "9af7f41e4f1ce5a43fc00419af19957f4f3b8685",
+      "merged_at": "2026-09-19T21:42:09Z",
+      "merge_revision": "f4e7d4c3cdb6e69f777c809388f64db2307151f6",
+      "merge_notes": "Both protected final gates completed successfully and every reported terminal check was acceptable, with one duplicate advisory push job still running. GitHub reported the reviewed head conflict-free and mergeable. Guarded squash auto-merge was enabled only after the protected checks were terminal, and GitHub merged PR #15646 without a plain manual merge command.",
       "selection_notes": "Selected after guarded auto-merge of PR #15615, a collision-clean exact-main inventory refresh, comprehensive all-lane ownership reconciliation, and a dependency/leverage pass. This consumer-backed core is the cleanest ready successor and unlocks 17 unfinished descendants without overlapping any live implementation PR.",
       "notes": "Implement only the process-free Dart graph and diff-selection domains against the exact eight graph and eleven diff cases, with deterministic topology, stable empty failures, closures, unknown-path policies, exact BUILD fronts, strict memoized Unicode-scalar globs, and the fixed operation-wide work ceiling. Extend the pinned Unicode 17 generator with a reusable Dart runtime for NFC, full-fold identity, and uppercase, and compare Dart runes directly for numeric Unicode-scalar ordering; the generated runtime remains process-free while generator host authority stays in its separate review. This bounded core is not a CLI or complete adapter and adds no filesystem, Git, process, environment, network, or credential authority."
+    },
+    {
+      "id": "tls-server-identity-portable-conformance",
+      "title": "Define portable TLS server-identity conformance and established-lane parity",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Exact post-PR #15646 inventory reconciliation found the new Rust-only tls-server-identity package with no existing parity owner. Classify it as a portable, zero-dependency, empty-capability RFC 9525 DNS-ID/IP-ID matcher over already-decoded typed SANs. First freeze closed language-neutral fixtures and the Rust oracle, including exact/wildcard DNS behavior, typed IP octets, strict bounds, redacted failures, and the malformed IPv4-looking dotted-decimal boundary; then deliver applicable established-lane ports. Keep X.509 parsing, path validation, trust roots, IDNA conversion, TLS transport, sockets, clocks, randomness, and credentials outside this owner. Priority 4 singleton portable-core wave; it has no dependency on DER TLV framing."
+    },
+    {
+      "id": "der-tlv-portable-conformance",
+      "title": "Define portable DER TLV framing conformance and established-lane parity",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Exact post-PR #15646 inventory reconciliation found the new Rust-only der-tlv package with no existing parity owner. Classify the allocation-free, zero-runtime-dependency, empty-capability borrowed-byte framing decoder as portable. Freeze closed neutral fixtures and the Rust oracle for identifier classes, constructed bits, tag and length canonicality, truncation, exact trailing rejection, configured limits, untouched remainders, sibling cursor offsets, non-advancement after failure, and payload-redacted kind/offset errors before applicable established-lane ports. Keep ASN.1 schema decoding, X.509, cryptography, trust, TLS, transport, and ambient authority outside this owner. Priority 4-high singleton portable-core wave because later repository-owned X.509 parsing will depend on this framing contract; it remains independent of the TLS server-identity owner."
     },
     {
       "id": "alpha-axp-simulator-two-lane-classification",
