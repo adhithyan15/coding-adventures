@@ -1,8 +1,10 @@
 {
   "schema_version": 1,
   "upstream": "mermaid@11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
   "family": "block",
-  "supported_subset": "Native grids, composite blocks, semicolon-delimited statements, named and default class styling, inline node declarations, sanitized HTML label text, decoded HTML entities, quoted labels across solid, dotted, and thick links, and tilde, directed, undirected, bidirectional, circle-marker, and cross-marker connections",
+  "level": "full",
+  "coverage": "Complete pinned Block parser productions and specs: native grids, spans and spaces, recursive composites, all documented shapes, semicolon-delimited statements, named and default class styling, inline node declarations, sanitized HTML label text, decoded HTML entities, labeled edge strokes, and tilde, directed, undirected, bidirectional, circle-marker, and cross-marker connections",
   "fixtures": [
     { "id": "basic-grid", "source": "block-beta\ncolumns auto\nA[\"Grammar Parser\"] B(\"Semantic IR\") C((\"Paint Output\"))" },
     { "id": "spaces-and-edges", "source": "block\ncolumns 2\nA[Source] space\nB[Output]\nA --> B\nA-- \"observes\" ---B" },
