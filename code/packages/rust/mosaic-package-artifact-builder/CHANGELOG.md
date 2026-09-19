@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Recognize implemented XAML numeric typography on text/input/button primitives;
+  retain the unsupported font-size diagnostic for HostTable (#15556).
+
 ### Added — non-gating platform behaviour degradations (UI29-6, #15491)
 
 `mosaic-degradations.json` now separates permanent platform limitations into
@@ -12,6 +15,7 @@ lowerings continue to fail the ordinary capability gate. Once those lowerings
 land, removing `primitive.navigation-split-unimplemented` will make strict
 consumer builds possible without hiding the collapse limitation in an
 allowlist. `collapse: never` records no behaviour degradation.
+
 
 ### Added — Flutter style-drop degradations (#12022)
 
