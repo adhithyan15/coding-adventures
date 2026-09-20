@@ -1,0 +1,7 @@
+opam pin add --no-action --working-dir --no-checksums -y coding-adventures-graph ../../../packages/ocaml/graph
+opam pin add --no-action --working-dir --no-checksums -y coding-adventures-directed-graph ../../../packages/ocaml/directed-graph
+opam install . --deps-only --with-test --with-dev-setup -y --require-checksums
+opam lint coding-adventures-build-tool.opam
+opam exec -- dune build @fmt @all @install
+rm -f bisect*.coverage && BISECT_FILE="$PWD/bisect" opam exec -- dune runtest --force --instrument-with bisect_ppx
+python test/check_coverage.py --coverage-glob "bisect*.coverage" --summary _build/coverage-summary.txt --source src/coding_adventures_build_tool.ml --minimum 95

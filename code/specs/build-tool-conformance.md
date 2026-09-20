@@ -146,17 +146,19 @@ over the canonical sorted 16-key registry, and enforce the shared per-file and
 aggregate ceilings without reading host state or gaining filesystem, process,
 environment, Git, clock, randomness, credential, or network authority.
 
-### Java, Kotlin, and Dart graph/diff core tranche
+### Java, Kotlin, Dart, and OCaml graph/diff core tranche
 
-Java, Kotlin, and Dart begin build-tool parity with independent, process-free native
-cores rooted at `code/programs/java/build-tool` and
-`code/programs/kotlin/build-tool`, and `code/programs/dart/build-tool`. This tranche is deliberately narrower than
-a complete build-tool implementation: it establishes the graph and
+Java, Kotlin, Dart, and emerging-lane OCaml begin build-tool parity with
+independent, process-free native cores rooted at
+`code/programs/java/build-tool`, `code/programs/kotlin/build-tool`,
+`code/programs/dart/build-tool`, and `code/programs/ocaml/build-tool`. This
+tranche is deliberately narrower than a complete build-tool implementation: it
+establishes the graph and
 `diff_selection` contracts through native module surfaces, but it does not add
 a CLI, conformance adapter, package discovery, build-file evaluation, planning,
 or execution authority. Until those later tranches are complete, the
-implementation manifest MUST continue to report the Java, Kotlin, and Dart front doors
-and adapters as missing.
+implementation manifest MUST continue to report the Java, Kotlin, Dart, and
+OCaml front doors and adapters as missing.
 
 Each core MUST expose native operations equivalent to:
 
@@ -170,8 +172,8 @@ tranche MUST NOT read files, environment variables, system properties, Git
 state, clocks, randomness, credentials, processes, or the network. JSON and
 fixture-path handling belong only to package-local tests.
 
-All three native suites MUST discover and independently evaluate the complete shared
-`graph` and `diff_selection` fixture set. They MUST assert the exact case-ID
+All four native suites MUST discover and independently evaluate the complete
+shared `graph` and `diff_selection` fixture set. They MUST assert the exact case-ID
 roster so a newly added case cannot be skipped silently. The required roster
 contains eight graph cases and eleven diff-selection cases. In addition to
 canonical edge ordering, deterministic levels, cycle rejection, transitive
@@ -205,7 +207,9 @@ glob implementation for the portable contract.
 
 Direct fixture consumption by these native suites is conformance evidence for
 this bounded core only. It MUST NOT be represented as a ready front door,
-adapter, or complete Java/Kotlin/Dart build-tool implementation.
+adapter, or complete Java/Kotlin/Dart/OCaml build-tool implementation. The
+OCaml-specific packaging, pure dependency, capability, and validation boundary
+is defined by [`OCAML08-build-tool-graph-diff-core.md`](OCAML08-build-tool-graph-diff-core.md).
 
 C and C++ remain emerging implementation lanes. OCaml also begins as emerging
 and must implement this contract before promotion. WASM is an execution target,

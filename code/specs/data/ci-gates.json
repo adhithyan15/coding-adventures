@@ -345,7 +345,8 @@
         "go/programs/build-tool",
         "java/programs/build-tool",
         "kotlin/programs/build-tool",
-        "dart/programs/build-tool"
+        "dart/programs/build-tool",
+        "ocaml/programs/build-tool"
       ],
       "paths": [
         "code/specs/fixtures/build-tool-v1/**",
@@ -357,7 +358,8 @@
         "code/programs/go/build-tool/**",
         "code/programs/java/build-tool/**",
         "code/programs/kotlin/build-tool/**",
-        "code/programs/dart/build-tool/**"
+        "code/programs/dart/build-tool/**",
+        "code/programs/ocaml/build-tool/**"
       ]
     },
     "contracts-capability-cage": {
