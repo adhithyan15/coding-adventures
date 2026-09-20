@@ -33,6 +33,10 @@
     {
       "id": "left-and-bidirectional-arrows",
       "source": "architecture-beta\nservice api(server)[API]\nservice db(database)[Database]\napi:R <-- L:db\napi:B <-[replicates]-> T:db"
+    },
+    {
+      "id": "group-edge-endpoints",
+      "source": "architecture-beta\ngroup public(cloud)[Public]\ngroup private(cloud)[Private]\nservice gateway(server)[Gateway] in public\nservice api(server)[API] in private\ngateway{group}:R --> L:api{group}"
     }
   ]
 }

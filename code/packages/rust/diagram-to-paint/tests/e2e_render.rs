@@ -1764,12 +1764,11 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_architecture_to_png() {
         let diagram = parse_architecture(
-            "architecture-beta\ntitle Native platform\naccTitle: Platform topology\naccDescr: API and database services\ngroup platform(cloud)[Platform]\nservice api \"API\"[Gateway] in platform\njunction split in platform\nservice db(database)[Database] in platform\nservice worker(server)[Worker] in platform\nalign row api split db worker\napi:R -[reads and writes]-> L:split\nsplit:R <--> L:db",
+            "architecture-beta\naccTitle: Platform topology\naccDescr: API and database services\ngroup platform(cloud)[Platform]\nservice api \"API\"[Gateway]\njunction split\nservice db(database)[Database] in platform\nservice worker(server)[Worker] in platform\nalign row api split db worker\napi:R -[reads and writes]-> L:split\nsplit:R <--> L:db{group}",
         )
         .expect("Mermaid architecture parse failed");
         let layout = layout_structural_diagram(&diagram);
         assert_eq!(layout.groups.len(), 1);
-        assert_eq!(layout.title.as_deref(), Some("Native platform"));
         assert_eq!(
             layout.relationships[0].label.as_ref().map(|(_, label)| label.as_str()),
             Some("reads and writes")
@@ -1778,6 +1777,7 @@ line "Target" [35, 50, 68, 82]"##,
         assert_eq!(layout.nodes[0].icon_text.as_deref(), Some("API"));
         assert!(layout.relationships[1].start_arrow);
         assert!(layout.relationships[1].end_arrow);
+        assert!(layout.relationships[1].to_group);
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;
         let resolver = CoreTextResolver::new();

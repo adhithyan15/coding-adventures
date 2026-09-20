@@ -35,7 +35,9 @@ lowering provide deterministic backend-neutral group, node, junction, edge, and 
 text rendering. Quoted service icon text is preserved as typed metadata, reserves
 layout geometry, and lowers to a backend-neutral badge plus shaped glyphs. Left,
 right, and bidirectional arrowheads survive semantic and layout IR and lower to
-backend-neutral path geometry. Group-edge modifiers, icon artwork, port-aware routing, and configuration remain
+backend-neutral path geometry. Group-edge modifiers on contained services resolve
+relationship endpoints to deterministic group-boundary geometry. Icon artwork,
+port-aware routing, and configuration remain
 outside the partial compatibility claim.
 
 The initial `kanban` subset preserves indentation-defined columns and cards,

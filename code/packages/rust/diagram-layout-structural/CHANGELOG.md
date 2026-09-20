@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.14.0
+
+- Resolve structural group-edge modifiers to deterministic group-boundary endpoints.
+
 ## 0.13.0
 
 - Carry structural start and end arrowhead intent into resolved relationship geometry.
