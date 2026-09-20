@@ -36,6 +36,10 @@ import {
   CancellationError,
   StageError,
 } from "@coding-adventures/forme-errors";
+import { randomUUID } from "node:crypto";
+import { mkdtemp, open, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import {
   consoleLogger,
   createCancellationTokenSource,
@@ -72,6 +76,7 @@ import type { ResolvedInstance, PipelineDag } from "./dag.js";
 import type { RunError, RunOutcome, StageRunSummary } from "./types.js";
 import {
   decodeCachedStageOutput,
+  decodeCacheValue,
   encodeCachedStageOutput,
   encodeCacheValue,
   type CachedStageOutput,
@@ -85,12 +90,16 @@ import {
 } from "./instance-checkpoint.js";
 import { createConcurrencyPool } from "./concurrency.js";
 import type { ConcurrencyPermit, ConcurrencyPool } from "./concurrency.js";
-import { createBoundedFanOut } from "./streaming.js";
+import { createBoundedFanOut, DEFAULT_STREAM_WINDOW } from "./streaming.js";
 import {
   commitStreamCheckpoint,
   createStreamCheckpointWriter,
   loadStreamCheckpoint,
+  STREAM_CHECKPOINT_NODE_SCHEMA,
+  streamCheckpointNodeKey,
+  streamCheckpointRevision,
 } from "./stream-checkpoint.js";
+import type { StreamCheckpointManifest } from "./stream-checkpoint.js";
 
 /** Per-instance run state held during execution. */
 interface RunState {
@@ -108,6 +117,16 @@ interface RunState {
   liveBranches: Map<string, AsyncIterable<unknown>>;
   /** Settles only after a published stream is fully consumed and finalized. */
   streamCompletion: Promise<void> | null;
+  /** Finalized stream tree awaiting publication at the final input key. */
+  pendingStreamCheckpoint: StreamCheckpointManifest | null;
+  /** Failure from background per-item production after readiness publication. */
+  backgroundFailure: { readonly present: true; readonly error: unknown } | null;
+  /** One transport failure observed while pulling this instance's stream. */
+  transportFailure: {
+    readonly error: unknown;
+    /** True when the failure originated in an upstream stream. */
+    readonly inherited: boolean;
+  } | null;
   /** Per-stage summary accumulator. */
   summary: {
     instanceId: string;
@@ -207,7 +226,10 @@ export async function executeDag(
   const states = new Map<string, RunState>();
   const errors: RunError[] = [];
   const outputs = new Map<string, unknown>();
+  const replaySpool = createReplaySpool();
   const lifecycle = createCancellationTokenSource();
+  let activeRunOptions: SchedulerOptions | null = null;
+  let disposed = false;
   let cancelled = options.cancellation.cancelled;
   const cancelLifecycle = (): void => {
     cancelled = true;
@@ -219,6 +241,12 @@ export async function executeDag(
     const runOptions: SchedulerOptions = {
       ...options,
       cancellation: lifecycle.token,
+    };
+    activeRunOptions = runOptions;
+    const disposeOnce = async (): Promise<void> => {
+      if (disposed) return;
+      disposed = true;
+      await disposeAll(dag, states, runOptions);
     };
     const pool = createConcurrencyPool(options.maxConcurrency, lifecycle.token);
 
@@ -240,7 +268,7 @@ export async function executeDag(
       // Init failure → fail the whole run (no per-input concept yet).
       const re = toRunError(err, inst);
       errors.push(re);
-      await disposeAll(dag, states, runOptions);
+      await disposeOnce();
       const summaries = Array.from(states.values()).map(s => ({
         ...s.summary,
         outcome: "failed" as const,
@@ -292,7 +320,8 @@ export async function executeDag(
     } catch (error) {
       if (!(error instanceof CancellationError)) {
         const invocationError = toRunError(error, inst);
-        if (!(invocationError.recoverable && runOptions.bestEffort)) {
+        if (!(invocationError.recoverable && runOptions.bestEffort)
+            && states.get(inst.id)?.transportFailure?.error !== error) {
           // Close the pool before this permit is released, so FIFO dispatch
           // cannot start the next queued invocation after a fatal failure.
           lifecycle.cancel(`fatal stage failure in ${inst.id}`);
@@ -310,6 +339,8 @@ export async function executeDag(
       readonly restored: boolean;
       readonly expectedOutputRevision?: RevisionId;
       readonly expectedItemCount?: number;
+      readonly inputPermitContext?: PermitContext;
+      readonly sourceUsesPool?: boolean;
     },
   ): void => {
     const edgeKeys = streamEdges.get(inst.id) ?? [];
@@ -317,20 +348,56 @@ export async function executeDag(
       && !optionsForStream.restored
       && canCheckpointInstance(inst);
     const needsOutputBranch = dag.sinks.includes(inst.id);
+    // A cache writer is fail-open and may detach after any append failure.
+    // Keep one cache-independent drain whenever no sink already guarantees a
+    // complete traversal, so cache health cannot truncate stream semantics or
+    // the logical output revision.
+    const needsRevisionBranch = !needsOutputBranch;
     const branchCount = edgeKeys.length
       + (needsCheckpointBranch ? 1 : 0)
-      + (needsOutputBranch ? 1 : 0);
-    const pooledSource = poolBackedIterable(source, inst, runInvocation);
+      + (needsOutputBranch ? 1 : 0)
+      + (needsRevisionBranch ? 1 : 0);
+    let sourceTerminalReported = false;
+    const reportSourceTerminal = (error: unknown): void => {
+      if (sourceTerminalReported) return;
+      sourceTerminalReported = true;
+      if (error instanceof CancellationError && lifecycle.token.cancelled) return;
+      const inherited = optionsForStream.inputPermitContext?.transportFailure?.error
+        === error;
+      state.transportFailure ??= { error, inherited };
+      if (inherited) return;
+      const terminal = toRunError(error, inst);
+      if (!(terminal.recoverable && runOptions.bestEffort)) {
+        // Prevent fresh work from starting, but allow already-yielded
+        // consumers to reacquire and observe the original terminal error
+        // after draining their buffered prefix.
+        anyFatal = true;
+        pool.stopNewTasks(`fatal stream failure in ${inst.id}`);
+      }
+    };
+    const pooledSource = optionsForStream.sourceUsesPool === false
+      ? source
+      : poolBackedIterable(
+          source,
+          pool,
+          reportSourceTerminal,
+          optionsForStream.inputPermitContext,
+        );
+    let sourceOpened = false;
     let settleSource!: () => void;
     let failSource!: (error: unknown) => void;
     const sourceFinished = new Promise<void>((resolve, reject) => {
       settleSource = resolve;
       failSource = reject;
     });
+    const revisionObserver = createStreamRevisionObserver();
     const trackedSource = trackIterableCompletion(
       pooledSource,
       settleSource,
       failSource,
+      () => { sourceOpened = true; },
+      value => { revisionObserver.append(value); },
+      reportSourceTerminal,
     );
     const fanOut = createBoundedFanOut(
       trackedSource,
@@ -351,16 +418,16 @@ export async function executeDag(
     }
 
     const internalTasks: Promise<void>[] = [];
-    let checkpointManifest: Awaited<ReturnType<ReturnType<typeof createStreamCheckpointWriter>["finalize"]>> | null = null;
+    const checkpoint = { manifest: null as StreamCheckpointManifest | null };
     if (needsCheckpointBranch) {
       const checkpointInput = takeBranch(branchIndex++);
       const writer = createStreamCheckpointWriter(runOptions.cache, lifecycle.token);
       internalTasks.push((async () => {
         try {
           for await (const item of checkpointInput) await writer.append(item);
-          checkpointManifest = await writer.finalize();
+          checkpoint.manifest = await writer.finalize();
         } catch (error) {
-          if (error instanceof CancellationError) throw error;
+          if (error instanceof CancellationError && lifecycle.token.cancelled) throw error;
           runOptions.logger.warn(
             `stream checkpoint write skipped for ${inst.stage.name} (${inst.id})`,
             { error: String(error) },
@@ -376,44 +443,54 @@ export async function executeDag(
         for await (const item of outputInput) sinkValues!.push(item);
       })());
     }
+    if (needsRevisionBranch) {
+      const revisionInput = takeBranch(branchIndex++);
+      internalTasks.push((async () => {
+        for await (const _item of revisionInput) {
+          // Pulling is the work: the revision observer runs before fan-out.
+        }
+      })());
+    }
 
     state.isStreamOutput = true;
     state.restored = optionsForStream.restored;
-    const transportFinished = Promise.race([sourceFinished, branchesFinished]);
-    state.streamCompletion = Promise.all([...internalTasks, transportFinished]).then(async () => {
+    const transportFinished = Promise.race([
+      sourceFinished,
+      branchesFinished.then(async () => {
+        if (sourceOpened) await sourceFinished;
+      }),
+    ]);
+    state.streamCompletion = (async () => {
+      const taskResults = await Promise.allSettled(internalTasks);
+      let transportFailed = false;
+      let transportError: unknown;
+      try {
+        await transportFinished;
+      } catch (error) {
+        transportFailed = true;
+        transportError = error;
+      }
+      const failedTask = taskResults.find(
+        (result): result is PromiseRejectedResult => result.status === "rejected",
+      );
+      if (transportFailed) throw transportError;
+      if (failedTask !== undefined) throw failedTask.reason;
+      const observedRevision = revisionObserver.finalize();
       state.output = sinkValues ?? undefined;
       state.summary.itemsProduced = optionsForStream.expectedItemCount
-        ?? checkpointManifest?.itemCount
+        ?? checkpoint.manifest?.itemCount
         ?? sinkValues?.length
-        ?? Math.max(0, fanOut.stats().upstreamPulls - 1);
+        ?? observedRevision?.itemCount
+        ?? revisionObserver.itemCount;
       state.summary.outputRevision = optionsForStream.expectedOutputRevision
-        ?? checkpointManifest?.outputRevision
+        ?? checkpoint.manifest?.outputRevision
+        ?? observedRevision?.outputRevision
         ?? (sinkValues === null ? null : revisionForValue(sinkValues));
-      if (
-        checkpointManifest !== null
-        && runOptions.checkpointNamespace !== undefined
-        && state.summary.inputRevision !== null
-        && canCheckpointInstance(inst)
-      ) {
-        try {
-          await commitStreamCheckpoint(
-            runOptions.cache,
-            instanceCheckpointKey(
-              runOptions.checkpointNamespace,
-              inst,
-              state.summary.inputRevision,
-            ),
-            checkpointManifest,
-          );
-        } catch (error) {
-          if (error instanceof CancellationError) throw error;
-          runOptions.logger.warn(
-            `stream checkpoint commit skipped for ${inst.stage.name} (${inst.id})`,
-            { error: String(error) },
-          );
-        }
-      }
-    });
+      state.pendingStreamCheckpoint = checkpoint.manifest;
+    })();
+    // The DAG may continue scheduling between publication and the final join.
+    // Observe rejection immediately while preserving it for final accounting.
+    void state.streamCompletion.catch(() => {});
   };
 
   const executeInstance = async (id: string, admission: AdmissionTurn): Promise<void> => {
@@ -430,7 +507,11 @@ export async function executeDag(
       // Sources have no input; non-sources read from their producer's
       // output (which we previously stored in `outputs`).
       const inputs = hasNamedInputs(inst)
-        ? collectPortInputs(inst, states)
+        ? collectPortInputs(inst, states, source =>
+            makeSpoolReplayableAsyncIterable(
+              source,
+              replaySpool,
+            ))
         : collectInputs(inst, states);
       const ctx: StageContext = makeRunContext(inst, runOptions, newClock);
       if (typeof inst.stage.externalState === "function") {
@@ -468,7 +549,7 @@ export async function executeDag(
         && runOptions.checkpointNamespace !== undefined
         && canCheckpointInstance(inst)
       ) {
-        if (inst.stage.produces.name === "Stream") {
+        if (inst.stage.produces.name === "Stream" || isPromotedStreamInstance(inst, states)) {
           const restoredStream = await loadStreamCheckpoint(
             runOptions.cache,
             instanceCheckpointKey(
@@ -550,16 +631,41 @@ export async function executeDag(
         // upstream progress. Stream outputs are published immediately rather
         // than materialized behind this invocation.
         const usesLiveInput = hasLiveProducer(inst, states);
+        const inputPermitContext: PermitContext = {
+          current: null,
+          inputTail: Promise.resolve(),
+          inputFailed: null,
+          transportFailure: null,
+        };
+        const guardedInput = permitAwareInput(inputs.value, inputPermitContext);
         const stored = await runInvocation(inst, async permit => {
           const execute = async (): Promise<CachedStageOutput> => {
             admission.release();
-            const result = await inst.stage.run(
-              permitAwareInput(inputs.value, permit) as never,
-              inst.config,
-              ctx,
-            );
-            if (isAsyncIterable(result)) return { value: result, isStream: true };
-            return materialize(result, inst.stage.produces.name === "Stream");
+            let liveOutput = false;
+            return withPermitContext(inputPermitContext, permit, async () => {
+              try {
+                const result = await inst.stage.run(
+                  guardedInput as never,
+                  inst.config,
+                  ctx,
+                );
+                if (isAsyncIterable(result)) {
+                  liveOutput = true;
+                  return { value: result, isStream: true };
+                }
+                return materialize(result, inst.stage.produces.name === "Stream");
+              } catch (error) {
+                if (inputPermitContext.transportFailure?.error === error) {
+                  state.transportFailure ??= { error, inherited: true };
+                }
+                throw error;
+              } finally {
+                // An output generator may consume its inputs only when the
+                // scheduler later pulls it. Its stream-completion path owns
+                // detachment; every ordinary return/failure closes now.
+                if (!liveOutput) await detachAsyncInputs(guardedInput);
+              }
+            });
           };
           if (inst.stage.produces.name === "Stream" || usesLiveInput) {
             return { ...(await execute()), cacheHit: false, cacheMiss: false };
@@ -570,15 +676,29 @@ export async function executeDag(
         state.summary.cacheMisses += stored.cacheMiss ? 1 : 0;
         state.summary.itemsConsumed = inputs.itemCount;
         if (stored.isStream && isAsyncIterable(stored.value)) {
+          if (!scheduledAffected && prior?.outputRevision != null) {
+            // The validated external/input revision is authoritative for a
+            // deterministic stage even when its output checkpoint failed
+            // open. This provisional value lets downstream exact scheduling
+            // proceed without waiting behind unstarted bounded branches.
+            state.summary.outputRevision = prior.outputRevision;
+          }
           publishLiveStream(inst, state, stored.value as AsyncIterable<unknown>, {
             restored: false,
+            inputPermitContext,
           });
+          state.streamCompletion = settleWithCleanup(
+            state.streamCompletion!,
+            () => detachAsyncInputs(guardedInput),
+            runOptions.logger,
+            `stream input cleanup failed for ${inst.stage.name} (${inst.id})`,
+          );
+          void state.streamCompletion.catch(() => {});
           state.summary.outcome = "success";
           state.affected = scheduledAffected;
           // On an incremental run, an un-restored producer must establish its
           // final content revision before affected-set scheduling can decide
           // whether downstream work is actually necessary.
-          if (prior?.outputRevision != null) await state.streamCompletion;
           return;
         }
         state.output = stored.value;
@@ -592,59 +712,190 @@ export async function executeDag(
         // materialized checkpoints retain the array path below.
         if (isAsyncIterable(inputs.value)) {
           const iterator = (inputs.value as AsyncIterable<unknown>)[Symbol.asyncIterator]();
-          const collected: unknown[] = [];
+          const channel = createBoundedAsyncChannel<unknown>(DEFAULT_STREAM_WINDOW);
+          if (!scheduledAffected && prior?.outputRevision != null) {
+            state.summary.outputRevision = prior.outputRevision;
+          }
+          publishLiveStream(inst, state, channel, {
+            restored: false,
+            sourceUsesPool: false,
+          });
+          state.summary.outcome = "success";
+          state.affected = scheduledAffected;
+          admission.release();
           let nextIndex = 0;
-          let firstItem = true;
+          let nextToEmit = 0;
           let nextTail = Promise.resolve<IteratorResult<unknown>>({
             done: false,
             value: undefined,
           });
+          let emitTail = Promise.resolve();
+          const pending = new Map<number, {
+            readonly result: CacheRunResult;
+            readonly reservedSlot: boolean;
+          }>();
+          let reorderSlots = DEFAULT_STREAM_WINDOW;
+          const reorderWaiters: Array<() => void> = [];
+          const acquireReorderSlot = async (): Promise<void> => {
+            if (reorderSlots > 0) {
+              reorderSlots -= 1;
+              return;
+            }
+            await new Promise<void>(resolve => { reorderWaiters.push(resolve); });
+          };
+          const releaseReorderSlot = (): void => {
+            const waiter = reorderWaiters.shift();
+            if (waiter !== undefined) waiter();
+            else reorderSlots += 1;
+          };
+          let successfulCacheHits = 0;
+          let successfulCacheMisses = 0;
+          let fatalFailure: { readonly index: number; readonly error: unknown } | null = null;
+          let recoverableFailure: { readonly index: number; readonly error: unknown } | null = null;
+          let cancellationFailure: { readonly index: number; readonly error: unknown } | null = null;
+          let reorderFailure: { readonly error: unknown } | null = null;
+          const currentReorderFailure = (): { readonly error: unknown } | null =>
+            reorderFailure;
+          const currentProcessingFailure = (): { readonly error: unknown } | null =>
+            fatalFailure ?? recoverableFailure ?? cancellationFailure;
+          const rememberFailure = (index: number, error: unknown): void => {
+            if (error instanceof CancellationError) {
+              if (cancellationFailure === null || index < cancellationFailure.index) {
+                cancellationFailure = { index, error };
+              }
+              return;
+            }
+            const itemError = toRunError(error, inst);
+            if (itemError.recoverable && runOptions.bestEffort) {
+              if (recoverableFailure === null || index < recoverableFailure.index) {
+                recoverableFailure = { index, error };
+              }
+            } else if (fatalFailure === null || index < fatalFailure.index) {
+              fatalFailure = { index, error };
+            }
+          };
+          const abortReorder = (error: unknown): void => {
+            reorderFailure ??= { error };
+            pending.clear();
+            while (reorderWaiters.length > 0) reorderWaiters.shift()!();
+            channel.fail(error);
+          };
           const takeNext = (): Promise<IteratorResult<unknown>> => {
             const next = nextTail.then(() => iterator.next());
             nextTail = next;
             return next;
           };
-          const worker = async (): Promise<CacheRunResult[]> => {
-            const results: CacheRunResult[] = [];
-            while (true) {
-              const itemResult = await runInvocation(inst, async permit => {
-                const next = await permit.yieldWhile(takeNext);
-                if (next.done) return null;
-                const index = nextIndex++;
-                lifecycle.token.throwIfCancelled();
-                const sub = await runCached(inst, next.value, runOptions, async () => {
-                  if (firstItem) {
-                    firstItem = false;
-                    admission.release();
-                  }
-                  return materialize(
-                    await inst.stage.run(next.value as never, inst.config, ctx),
-                    false,
-                  );
-                });
-                collected[index] = sub.value;
-                return sub;
-              });
-              if (itemResult === null) return results;
-              results.push(itemResult);
+          const emitOrdered = async (index: number, result: CacheRunResult): Promise<void> => {
+            // The next required index must always be able to enter and drain
+            // the reorder window; reserving a slot for it would deadlock when
+            // all other workers finish ahead of a slow index zero.
+            const reservedSlot = index !== nextToEmit;
+            if (reservedSlot) await acquireReorderSlot();
+            const failureBeforeQueue = currentReorderFailure();
+            if (failureBeforeQueue !== null) throw failureBeforeQueue.error;
+            const wait = emitTail;
+            let release!: () => void;
+            emitTail = new Promise<void>(resolve => { release = resolve; });
+            await wait;
+            try {
+              const failureBeforeEmit = currentReorderFailure();
+              if (failureBeforeEmit !== null) throw failureBeforeEmit.error;
+              pending.set(index, { result, reservedSlot });
+              while (pending.has(nextToEmit)) {
+                const ready = pending.get(nextToEmit)!;
+                pending.delete(nextToEmit);
+                await channel.push(ready.result.value);
+                if (ready.reservedSlot) releaseReorderSlot();
+                nextToEmit += 1;
+              }
+            } finally {
+              release();
             }
           };
-          const workerResults = await Promise.allSettled(
-            Array.from({ length: runOptions.maxConcurrency }, () => worker()),
-          );
-          admission.release();
-          const flattened: PromiseSettledResult<CacheRunResult>[] = [];
-          for (const result of workerResults) {
-            if (result.status === "rejected") flattened.push(result);
-            else for (const item of result.value) {
-              flattened.push({ status: "fulfilled", value: item });
+          const worker = async (): Promise<void> => {
+            while (true) {
+              let itemIndex = -1;
+              let itemResult: CacheRunResult | null;
+              try {
+                itemResult = await runInvocation(inst, async permit => {
+                  let next: IteratorResult<unknown>;
+                  try {
+                    next = await permit.yieldWhile(takeNext);
+                  } catch (error) {
+                    state.transportFailure ??= { error, inherited: true };
+                    throw error;
+                  }
+                  if (next.done) return null;
+                  itemIndex = nextIndex++;
+                  lifecycle.token.throwIfCancelled();
+                  return runCached(inst, next.value, runOptions, async () =>
+                    materialize(
+                      await inst.stage.run(next.value as never, inst.config, ctx),
+                      false,
+                    ));
+                });
+              } catch (error) {
+                rememberFailure(itemIndex < 0 ? Number.MAX_SAFE_INTEGER : itemIndex, error);
+                abortReorder(error);
+                throw error;
+              }
+              if (itemResult === null) return;
+              successfulCacheHits += itemResult.cacheHit ? 1 : 0;
+              successfulCacheMisses += itemResult.cacheMiss ? 1 : 0;
+              try {
+                await emitOrdered(itemIndex, itemResult);
+              } catch (error) {
+                rememberFailure(itemIndex, error);
+                abortReorder(error);
+                throw error;
+              }
             }
-          }
-          applyItemResults(flattened, state, inst, runOptions);
-          state.output = collected;
-          state.isStreamOutput = true;
-          state.summary.itemsConsumed = collected.length;
-          state.summary.itemsProduced = collected.length;
+          };
+          const processing = (async (): Promise<void> => {
+            let failed = false;
+            let primaryError: unknown;
+            try {
+              await Promise.allSettled(
+                Array.from(
+                  { length: Math.min(runOptions.maxConcurrency, DEFAULT_STREAM_WINDOW) },
+                  () => worker(),
+                ),
+              );
+              state.summary.cacheHits += successfulCacheHits;
+              state.summary.cacheMisses += successfulCacheMisses;
+              const selectedFailure = currentProcessingFailure();
+              if (selectedFailure !== null) throw selectedFailure.error;
+            } catch (error) {
+              failed = true;
+              primaryError = error;
+            } finally {
+              try {
+                if (typeof iterator.return === "function") await iterator.return();
+              } catch (cleanupError) {
+                runOptions.logger.warn(
+                  `stream input cleanup failed for ${inst.stage.name} (${inst.id})`,
+                  { error: String(cleanupError) },
+                );
+              }
+            }
+            if (failed) throw primaryError;
+            channel.close();
+          })();
+          void processing.catch(error => {
+            state.backgroundFailure = { present: true, error };
+            channel.fail(error);
+          });
+          const transportCompletion = state.streamCompletion!;
+          state.streamCompletion = (async () => {
+            const [work, transport] = await Promise.allSettled([
+              processing,
+              transportCompletion,
+            ]);
+            if (work.status === "rejected") throw work.reason;
+            if (transport.status === "rejected") throw transport.reason;
+          })();
+          void state.streamCompletion.catch(() => {});
+          return;
         } else {
         // Mark the result stream-shaped so downstream consumers iterate again.
         const list = inputs.value as unknown[];
@@ -679,7 +930,8 @@ export async function executeDag(
             } catch (error) {
               if (!(error instanceof CancellationError)) {
                 const itemError = toRunError(error, inst);
-                if (!(itemError.recoverable && runOptions.bestEffort)) {
+                if (!(itemError.recoverable && runOptions.bestEffort)
+                    && states.get(inst.id)?.transportFailure?.error !== error) {
                   lifecycle.cancel(`fatal stage failure in ${inst.id}`);
                 }
               }
@@ -757,6 +1009,11 @@ export async function executeDag(
         );
       }
     } catch (err) {
+      if (state.transportFailure?.inherited === true
+          && state.transportFailure.error === err) {
+        state.summary.outcome = "skipped";
+        return;
+      }
       if (err instanceof CancellationError) {
         state.summary.outcome = "skipped";
         if (!anyFatal && !lifecycle.token.cancelled) {
@@ -776,7 +1033,9 @@ export async function executeDag(
         // best-effort is best-effort.
       } else {
         anyFatal = true;
-        lifecycle.cancel(`fatal stage failure in ${inst.id}`);
+        if (state.transportFailure?.error !== err) {
+          lifecycle.cancel(`fatal stage failure in ${inst.id}`);
+        }
       }
     } finally {
       admission.release();
@@ -823,6 +1082,24 @@ export async function executeDag(
     if (!launched.has(id)) states.get(id)!.summary.outcome = "skipped";
   }
 
+  // Static fan-out edges whose consumers never reached input collection must
+  // still detach. Otherwise a fatal sibling or early cancellation leaves the
+  // producer waiting forever for a branch that nobody owns.
+  for (const id of dag.topoOrder) {
+    const state = states.get(id)!;
+    const unclaimed = [...state.liveBranches.values()];
+    state.liveBranches.clear();
+    const cleanupResults = await Promise.allSettled(unclaimed.map(detachAsyncInputs));
+    for (const result of cleanupResults) {
+      if (result.status === "rejected") {
+        runOptions.logger.warn(
+          `unclaimed stream branch cleanup failed for ${id}`,
+          { error: String(result.reason) },
+        );
+      }
+    }
+  }
+
   // Readiness is released when a stream transport is published, not when its
   // source finishes. Before finalizing the run, join every transport so
   // checkpoint manifests, item counts, and late iterator failures are fully
@@ -833,8 +1110,14 @@ export async function executeDag(
     try {
       await state.streamCompletion;
     } catch (error) {
+      if (state.transportFailure?.inherited === true
+          && state.transportFailure.error === error) {
+        state.summary.outcome = "skipped";
+        continue;
+      }
       if (error instanceof CancellationError) {
-        if (!anyFatal) cancelled = true;
+        if (!anyFatal && state.backgroundFailure === null) cancelled = true;
+        if (state.backgroundFailure === null) state.summary.outcome = "skipped";
       } else {
         const inst = dag.instances.get(id)!;
         const runError = toRunError(error, inst);
@@ -844,6 +1127,19 @@ export async function executeDag(
         if (runError.recoverable && options.bestEffort) anyRecoverableErrors = true;
         else anyFatal = true;
       }
+    }
+    if (state.backgroundFailure !== null) {
+      if (state.backgroundFailure.error instanceof CancellationError) {
+        state.summary.outcome = "skipped";
+        continue;
+      }
+      const inst = dag.instances.get(id)!;
+      const runError = toRunError(state.backgroundFailure.error, inst);
+      if (!errors.some(candidate => candidate.instanceId === id)) errors.push(runError);
+      state.summary.outcome = "failed";
+      state.summary.errorCount = 1;
+      if (runError.recoverable && options.bestEffort) anyRecoverableErrors = true;
+      else anyFatal = true;
     }
   }
 
@@ -884,6 +1180,39 @@ export async function executeDag(
     }
   }
 
+  // Publish stream manifests only after every live upstream has finalized and
+  // the consuming instance's final input revision is known.
+  for (const id of dag.topoOrder) {
+    const state = states.get(id)!;
+    const inst = dag.instances.get(id)!;
+    if (
+      state.pendingStreamCheckpoint === null
+      || state.summary.outcome !== "success"
+      || runOptions.checkpointNamespace === undefined
+      || state.summary.inputRevision === null
+      || !canCheckpointInstance(inst)
+    ) continue;
+    try {
+      await commitStreamCheckpoint(
+        runOptions.cache,
+        instanceCheckpointKey(
+          runOptions.checkpointNamespace,
+          inst,
+          state.summary.inputRevision,
+        ),
+        state.pendingStreamCheckpoint,
+      );
+    } catch (error) {
+      if (error instanceof CancellationError && lifecycle.token.cancelled) {
+        cancelled = true;
+      }
+      runOptions.logger.warn(
+        `stream checkpoint commit skipped for ${inst.stage.name} (${inst.id})`,
+        { error: String(error) },
+      );
+    }
+  }
+
   // Sinks → outputs map (keyed by instance id; OutputSpec naming
   // happens in the run.ts wrapper that knows about the config).
   for (const sinkId of dag.sinks) {
@@ -894,12 +1223,12 @@ export async function executeDag(
   }
 
   // Always dispose, regardless of outcome.
-  await disposeAll(dag, states, runOptions);
+  await disposeOnce();
 
-  const outcome: RunOutcome = cancelled
-    ? "cancelled"
-    : anyFatal
-      ? "failed"
+  const outcome: RunOutcome = anyFatal
+    ? "failed"
+    : cancelled
+      ? "cancelled"
       : anyRecoverableErrors
         ? "partial"
         : "success";
@@ -912,9 +1241,18 @@ export async function executeDag(
       topoIndex.get(left.instanceId)! - topoIndex.get(right.instanceId)!),
   };
   } finally {
+    if (!disposed && activeRunOptions !== null && states.size > 0) {
+      disposed = true;
+      await disposeAll(dag, states, activeRunOptions);
+    }
     // The caller may reuse a long-lived token across many runs. Do not retain
     // completed scheduler state through its AbortSignal listener.
     options.cancellation.signal.removeEventListener("abort", cancelLifecycle);
+    try {
+      await replaySpool.dispose();
+    } catch (error) {
+      options.logger.warn("named-input replay spool cleanup failed", { error: String(error) });
+    }
   }
 }
 
@@ -929,6 +1267,9 @@ function makeState(inst: ResolvedInstance): RunState {
     restored: false,
     liveBranches: new Map(),
     streamCompletion: null,
+    pendingStreamCheckpoint: null,
+    backgroundFailure: null,
+    transportFailure: null,
     summary: {
       instanceId: inst.id,
       stageName: inst.stage.name,
@@ -1043,6 +1384,17 @@ function isSingleProducer(
   return !prod.isStreamOutput;
 }
 
+function isPromotedStreamInstance(
+  inst: ResolvedInstance,
+  states: Map<string, RunState>,
+): boolean {
+  return inst.stage.inputPorts === undefined
+    && inst.stage.consumes.name !== "Stream"
+    && inst.stage.produces.name !== "Stream"
+    && inst.producer !== null
+    && states.get(inst.producer)?.isStreamOutput === true;
+}
+
 interface CollectedInput {
   value: unknown;
   itemCount: number;
@@ -1055,6 +1407,7 @@ function hasNamedInputs(inst: ResolvedInstance): boolean {
 function collectPortInputs(
   inst: ResolvedInstance,
   states: Map<string, RunState>,
+  replay: (source: AsyncIterable<unknown>, port: string) => AsyncIterable<unknown>,
 ): CollectedInput {
   const input: Record<string, unknown> = Object.create(null);
   const defaultInput = collectProducerInput(
@@ -1065,7 +1418,7 @@ function collectPortInputs(
     DEFAULT_EDGE_PORT,
   );
   input.default = isAsyncIterable(defaultInput.value)
-    ? makeReplayableAsyncIterable(defaultInput.value as AsyncIterable<unknown>)
+    ? replay(defaultInput.value as AsyncIterable<unknown>, DEFAULT_EDGE_PORT)
     : defaultInput.value;
   let itemCount = defaultInput.itemCount;
 
@@ -1085,7 +1438,7 @@ function collectPortInputs(
       port,
     );
     input[port] = isAsyncIterable(sideInput.value)
-      ? makeReplayableAsyncIterable(sideInput.value as AsyncIterable<unknown>)
+      ? replay(sideInput.value as AsyncIterable<unknown>, port)
       : sideInput.value;
     itemCount += sideInput.itemCount;
   }
@@ -1104,6 +1457,7 @@ function collectProducerInput(
   if (!producer) return { value: undefined, itemCount: 0 };
   const live = producer.liveBranches.get(streamEdgeKey(consumerId, port));
   if (live !== undefined) {
+    producer.liveBranches.delete(streamEdgeKey(consumerId, port));
     if (!expectsStream) {
       throw new Error(
         `scheduler: live stream from ${JSON.stringify(producerId)} cannot feed a single-value named input`,
@@ -1139,6 +1493,7 @@ function collectInputs(
   if (!prod) return { value: undefined, itemCount: 0 };
   const live = prod.liveBranches.get(streamEdgeKey(inst.id, DEFAULT_EDGE_PORT));
   if (live !== undefined) {
+    prod.liveBranches.delete(streamEdgeKey(inst.id, DEFAULT_EDGE_PORT));
     return { value: live, itemCount: prod.summary.itemsProduced };
   }
   if (prod.isStreamOutput) {
@@ -1177,30 +1532,66 @@ function rawProducerOutput(producerId: string | null, states: Map<string, RunSta
 }
 
 function streamEdgeKey(consumerId: string, port: string): string {
-  return `${consumerId}\u0000${port}`;
+  return JSON.stringify([consumerId, port]);
 }
 
 function poolBackedIterable<T>(
   source: AsyncIterable<T>,
-  inst: ResolvedInstance,
-  runInvocation: <R>(
-    instance: ResolvedInstance,
-    invoke: (permit: ConcurrencyPermit) => Promise<R> | R,
-  ) => Promise<R>,
+  pool: ConcurrencyPool,
+  onTerminal: (error: unknown) => void,
+  inputPermitContext?: PermitContext,
 ): AsyncIterable<T> {
+  let terminalReported = false;
+  const reportTerminal = (error: unknown): void => {
+    if (terminalReported) return;
+    terminalReported = true;
+    onTerminal(error);
+  };
   return {
     [Symbol.asyncIterator](): AsyncIterator<T> {
       const iterator = source[Symbol.asyncIterator]();
       return {
-        next: () => runInvocation(inst, () => iterator.next()),
-        return: value => runInvocation(inst, () =>
-          typeof iterator.return === "function"
+        next: async () => {
+          let started = false;
+          try {
+            return await pool.run(permit => {
+              started = true;
+              return inputPermitContext === undefined
+                ? iterator.next()
+                : withPermitContext(inputPermitContext, permit, () => iterator.next());
+            });
+          } catch (error) {
+            if (started) reportTerminal(error);
+            throw error;
+          }
+        },
+        return: async value => {
+          const operation = () => typeof iterator.return === "function"
             ? iterator.return(value)
-            : Promise.resolve({ done: true, value })),
-        throw: error => runInvocation(inst, () =>
-          typeof iterator.throw === "function"
+            : Promise.resolve({ done: true, value });
+          let started = false;
+          try {
+            return await pool.run(permit => {
+              started = true;
+              return inputPermitContext === undefined
+                ? operation()
+                : withPermitContext(inputPermitContext, permit, operation);
+            });
+          } catch (error) {
+            if (!(error instanceof CancellationError) || started) throw error;
+            // Admission is closed during cancellation, but iterator cleanup
+            // must still run and be awaited before disposal.
+            return operation();
+          }
+        },
+        throw: error => pool.run(permit => {
+          const operation = () => typeof iterator.throw === "function"
             ? iterator.throw(error)
-            : Promise.reject(error)),
+            : Promise.reject(error);
+          return inputPermitContext === undefined
+            ? operation()
+            : withPermitContext(inputPermitContext, permit, operation);
+        }),
       };
     },
   };
@@ -1210,6 +1601,9 @@ function trackIterableCompletion<T>(
   source: AsyncIterable<T>,
   complete: () => void,
   fail: (error: unknown) => void,
+  open: () => void,
+  observe: (value: T) => void,
+  terminal: (error: unknown) => void,
 ): AsyncIterable<T> {
   let settled = false;
   const finish = (): void => {
@@ -1224,14 +1618,24 @@ function trackIterableCompletion<T>(
   };
   return {
     [Symbol.asyncIterator](): AsyncIterator<T> {
-      const iterator = source[Symbol.asyncIterator]();
+      open();
+      let iterator: AsyncIterator<T>;
+      try {
+        iterator = source[Symbol.asyncIterator]();
+      } catch (error) {
+        terminal(error);
+        reject(error);
+        throw error;
+      }
       return {
         async next(): Promise<IteratorResult<T>> {
           try {
             const result = await iterator.next();
             if (result.done) finish();
+            else observe(result.value);
             return result;
           } catch (error) {
+            terminal(error);
             reject(error);
             throw error;
           }
@@ -1244,7 +1648,11 @@ function trackIterableCompletion<T>(
             finish();
             return result;
           } catch (error) {
-            reject(error);
+            // IteratorClose is cleanup, not a new logical source read. The
+            // fan-out close path owns whether to surface this error; always
+            // settle source completion so cancellation cleanup cannot replace
+            // the run's primary outcome or strand disposal.
+            finish();
             throw error;
           }
         },
@@ -1255,6 +1663,7 @@ function trackIterableCompletion<T>(
             if (result.done) finish();
             return result;
           } catch (caught) {
+            terminal(caught);
             reject(caught);
             throw caught;
           }
@@ -1310,38 +1719,152 @@ function trackBranchCompletion<T>(
   };
 }
 
-function permitAwareIterable<T>(
-  source: AsyncIterable<T>,
-  permit: ConcurrencyPermit,
-): AsyncIterable<T> {
-  return {
-    [Symbol.asyncIterator](): AsyncIterator<T> {
-      const iterator = source[Symbol.asyncIterator]();
-      return {
-        next: () => permit.yieldWhile(() => iterator.next()),
-        return: value => permit.yieldWhile(() =>
-          typeof iterator.return === "function"
-            ? iterator.return(value)
-            : Promise.resolve({ done: true, value })),
-        throw: error => permit.yieldWhile(() =>
-          typeof iterator.throw === "function"
-            ? iterator.throw(error)
-            : Promise.reject(error)),
-      };
-    },
-  };
+async function settleWithCleanup(
+  completion: Promise<void>,
+  cleanup: () => Promise<void>,
+  logger: Logger,
+  message: string,
+): Promise<void> {
+  let failed = false;
+  let primaryError: unknown;
+  try {
+    await completion;
+  } catch (error) {
+    failed = true;
+    primaryError = error;
+  }
+  try {
+    await cleanup();
+  } catch (error) {
+    logger.warn(message, { error: String(error) });
+  }
+  if (failed) throw primaryError;
 }
 
-function permitAwareInput(value: unknown, permit: ConcurrencyPermit): unknown {
-  if (isAsyncIterable(value)) {
-    return permitAwareIterable(value as AsyncIterable<unknown>, permit);
+interface PermitContext {
+  current: ConcurrencyPermit | null;
+  inputTail: Promise<void>;
+  inputFailed: { readonly error: unknown } | null;
+  transportFailure: { readonly error: unknown } | null;
+}
+
+async function withPermitContext<T>(
+  context: PermitContext,
+  permit: ConcurrencyPermit,
+  operation: () => Promise<T> | T,
+): Promise<T> {
+  if (context.current !== null) {
+    throw new Error("stream input permit context is already active");
   }
-  if (typeof value !== "object" || value === null || Array.isArray(value)) return value;
+  context.current = permit;
+  try {
+    return await operation();
+  } finally {
+    context.current = null;
+  }
+}
+
+function permitAwareIterable<T>(
+  source: AsyncIterable<T>,
+  context: PermitContext,
+): AsyncIterable<T> {
+  const active = new Set<AsyncIterator<T>>();
+  let opened = false;
+  const waitWithPermit = async <R>(operation: () => Promise<R>): Promise<R> => {
+    const permit = context.current;
+    if (permit === null) {
+      throw new Error("stream input read requires an active scheduler permit");
+    }
+    const wait = context.inputTail;
+    let release!: () => void;
+    context.inputTail = new Promise<void>(resolve => { release = resolve; });
+    await wait;
+    try {
+      if (context.inputFailed !== null) throw context.inputFailed.error;
+      return await permit.yieldWhile(operation);
+    } catch (error) {
+      context.inputFailed ??= { error };
+      context.transportFailure ??= { error };
+      throw error;
+    } finally {
+      release();
+    }
+  };
+  return {
+    [DETACH_ASYNC_INPUT]: async (): Promise<void> => {
+      const inherited = source as AsyncIterable<T> & {
+        [DETACH_ASYNC_INPUT]?: () => Promise<void>;
+      };
+      if (inherited[DETACH_ASYNC_INPUT] !== undefined) {
+        active.clear();
+        opened = true;
+        await inherited[DETACH_ASYNC_INPUT]();
+        return;
+      }
+      if (!opened) {
+        const iterator = source[Symbol.asyncIterator]();
+        opened = true;
+        active.add(iterator);
+      }
+      const iterators = [...active];
+      active.clear();
+      await Promise.all(iterators.map(iterator => {
+        if (typeof iterator.return !== "function") return Promise.resolve();
+        const operation = () => iterator.return!().then(() => undefined);
+        return context.current === null ? operation() : waitWithPermit(operation);
+      }));
+    },
+    [Symbol.asyncIterator](): AsyncIterator<T> {
+      const iterator = source[Symbol.asyncIterator]();
+      opened = true;
+      active.add(iterator);
+      return {
+        next: async () => {
+          try {
+            const result = await waitWithPermit(() => iterator.next());
+            if (result.done) active.delete(iterator);
+            return result;
+          } catch (error) {
+            active.delete(iterator);
+            throw error;
+          }
+        },
+        return: async value => {
+          try {
+            return await waitWithPermit(() =>
+              typeof iterator.return === "function"
+                ? iterator.return(value)
+                : Promise.resolve({ done: true, value }));
+          } finally {
+            active.delete(iterator);
+          }
+        },
+        throw: async error => {
+          try {
+            return await waitWithPermit(() =>
+              typeof iterator.throw === "function"
+                ? iterator.throw(error)
+                : Promise.reject(error));
+          } finally {
+            active.delete(iterator);
+          }
+        },
+      };
+    },
+  } as AsyncIterable<T>;
+}
+
+function permitAwareInput(value: unknown, context: PermitContext): unknown {
+  if (isAsyncIterable(value)) {
+    return permitAwareIterable(value as AsyncIterable<unknown>, context);
+  }
+  if (typeof value !== "object" || value === null
+      || Object.getPrototypeOf(value) !== null) return value;
   const mapped: Record<string, unknown> = Object.create(null);
   let changed = false;
   for (const [key, entry] of Object.entries(value)) {
     if (isAsyncIterable(entry)) {
-      mapped[key] = permitAwareIterable(entry as AsyncIterable<unknown>, permit);
+      mapped[key] = permitAwareIterable(entry as AsyncIterable<unknown>, context);
       changed = true;
     } else {
       mapped[key] = entry;
@@ -1353,45 +1876,6 @@ function permitAwareInput(value: unknown, permit: ConcurrencyPermit): unknown {
 interface CacheRunResult extends CachedStageOutput {
   readonly cacheHit: boolean;
   readonly cacheMiss: boolean;
-}
-
-function applyItemResults(
-  results: readonly PromiseSettledResult<CacheRunResult>[],
-  state: RunState,
-  inst: ResolvedInstance,
-  options: SchedulerOptions,
-): void {
-  let fatalFailed = false;
-  let fatalError: unknown;
-  let recoverableFailed = false;
-  let recoverableError: unknown;
-  let wasCancelled = false;
-  let cancellationError: unknown;
-  for (const result of results) {
-    if (result.status === "fulfilled") {
-      state.summary.cacheHits += result.value.cacheHit ? 1 : 0;
-      state.summary.cacheMisses += result.value.cacheMiss ? 1 : 0;
-    } else if (result.reason instanceof CancellationError) {
-      if (!wasCancelled) {
-        wasCancelled = true;
-        cancellationError = result.reason;
-      }
-    } else {
-      const itemError = toRunError(result.reason, inst);
-      if (itemError.recoverable && options.bestEffort) {
-        if (!recoverableFailed) {
-          recoverableFailed = true;
-          recoverableError = result.reason;
-        }
-      } else if (!fatalFailed) {
-        fatalFailed = true;
-        fatalError = result.reason;
-      }
-    }
-  }
-  if (fatalFailed) throw fatalError;
-  if (recoverableFailed) throw recoverableError;
-  if (wasCancelled) throw cancellationError;
 }
 
 async function runCached(
@@ -1479,6 +1963,169 @@ function isAsyncIterable(v: unknown): boolean {
     && typeof (v as { [Symbol.asyncIterator]?: unknown })[Symbol.asyncIterator] === "function";
 }
 
+interface RevisionNodeRef {
+  readonly key: string;
+  readonly count: number;
+}
+
+interface StreamRevisionObserver {
+  append(value: unknown): void;
+  finalize(): { itemCount: number; outputRevision: RevisionId } | null;
+  readonly itemCount: number;
+}
+
+function createStreamRevisionObserver(): StreamRevisionObserver {
+  const frontier: Array<RevisionNodeRef | undefined> = [];
+  let count = 0;
+  let failed = false;
+  const branch = (left: RevisionNodeRef, right: RevisionNodeRef): RevisionNodeRef => {
+    const node = {
+      schema: STREAM_CHECKPOINT_NODE_SCHEMA,
+      type: "branch" as const,
+      count: left.count + right.count,
+      left,
+      right,
+    };
+    return { key: streamCheckpointNodeKey(encodeCacheValue(node)), count: node.count };
+  };
+  return {
+    get itemCount() { return count; },
+    append(value: unknown): void {
+      count += 1;
+      if (failed) return;
+      try {
+        const leaf = {
+          schema: STREAM_CHECKPOINT_NODE_SCHEMA,
+          type: "leaf" as const,
+          count: 1 as const,
+          value,
+        };
+        let node: RevisionNodeRef = {
+          key: streamCheckpointNodeKey(encodeCacheValue(leaf)),
+          count: 1,
+        };
+        let level = 0;
+        while (frontier[level] !== undefined) {
+          node = branch(frontier[level]!, node);
+          frontier[level] = undefined;
+          level += 1;
+        }
+        frontier[level] = node;
+      } catch {
+        failed = true;
+        frontier.length = 0;
+      }
+    },
+    finalize(): { itemCount: number; outputRevision: RevisionId } | null {
+      if (failed) return null;
+      let root: RevisionNodeRef | null = null;
+      for (let level = 0; level < frontier.length; level++) {
+        const earlier = frontier[level];
+        if (earlier === undefined) continue;
+        root = root === null ? earlier : branch(earlier, root);
+      }
+      return {
+        itemCount: count,
+        outputRevision: streamCheckpointRevision(root?.key ?? null, count),
+      };
+    },
+  };
+}
+
+interface BoundedAsyncChannel<T> extends AsyncIterable<T> {
+  push(value: T): Promise<void>;
+  close(): void;
+  fail(error: unknown): void;
+}
+
+function createBoundedAsyncChannel<T>(capacity: number): BoundedAsyncChannel<T> {
+  const queue: T[] = [];
+  const readers: Array<{
+    resolve: (result: IteratorResult<T>) => void;
+    reject: (error: unknown) => void;
+  }> = [];
+  const spaceWaiters: Array<() => void> = [];
+  let terminal: { kind: "done" } | { kind: "error"; error: unknown } | null = null;
+  let iteratorTaken = false;
+
+  const releaseSpace = (): void => { spaceWaiters.shift()?.(); };
+  const settleReaders = (): void => {
+    while (readers.length > 0 && queue.length > 0) {
+      readers.shift()!.resolve({ done: false, value: queue.shift()! });
+      releaseSpace();
+    }
+    if (queue.length !== 0 || terminal === null) return;
+    for (const reader of readers.splice(0)) {
+      if (terminal.kind === "error") reader.reject(terminal.error);
+      else reader.resolve({ done: true, value: undefined });
+    }
+  };
+
+  return {
+    async push(value: T): Promise<void> {
+      while (true) {
+        if (terminal !== null) {
+          throw terminal.kind === "error"
+            ? terminal.error
+            : new CancellationError("stream channel is closed");
+        }
+        const reader = readers.shift();
+        if (reader !== undefined) {
+          reader.resolve({ done: false, value });
+          return;
+        }
+        if (queue.length < capacity) {
+          queue.push(value);
+          return;
+        }
+        await new Promise<void>(resolve => { spaceWaiters.push(resolve); });
+      }
+    },
+    close(): void {
+      if (terminal !== null) return;
+      terminal = { kind: "done" };
+      for (const wake of spaceWaiters.splice(0)) wake();
+      settleReaders();
+    },
+    fail(error: unknown): void {
+      if (terminal !== null) return;
+      terminal = { kind: "error", error };
+      for (const wake of spaceWaiters.splice(0)) wake();
+      settleReaders();
+    },
+    [Symbol.asyncIterator](): AsyncIterator<T> {
+      if (iteratorTaken) throw new Error("bounded async channel is single-use");
+      iteratorTaken = true;
+      return {
+        next(): Promise<IteratorResult<T>> {
+          if (queue.length > 0) {
+            const value = queue.shift()!;
+            releaseSpace();
+            return Promise.resolve({ done: false, value });
+          }
+          if (terminal !== null) {
+            return terminal.kind === "error"
+              ? Promise.reject(terminal.error)
+              : Promise.resolve({ done: true, value: undefined });
+          }
+          return new Promise<IteratorResult<T>>((resolve, reject) => {
+            readers.push({ resolve, reject });
+          });
+        },
+        async return(): Promise<IteratorResult<T>> {
+          if (terminal === null) {
+            terminal = { kind: "done" };
+            queue.length = 0;
+            for (const wake of spaceWaiters.splice(0)) wake();
+            settleReaders();
+          }
+          return { done: true, value: undefined };
+        },
+      };
+    },
+  };
+}
+
 function makeAsyncIterableFromArray<T>(arr: readonly T[]): AsyncIterable<T> {
   return {
     async *[Symbol.asyncIterator]() {
@@ -1487,55 +2134,246 @@ function makeAsyncIterableFromArray<T>(arr: readonly T[]): AsyncIterable<T> {
   };
 }
 
-/**
- * Named-input stages historically receive replayable streams. Preserve that
- * contract at the join boundary while the transport feeding the first pass
- * remains lazy and bounded.
- */
-function makeReplayableAsyncIterable<T>(source: AsyncIterable<T>): AsyncIterable<T> {
-  const values: T[] = [];
-  const upstream = source[Symbol.asyncIterator]();
-  let done = false;
-  let failed = false;
-  let failure: unknown;
-  let pull: Promise<void> | null = null;
-  const pullOne = async (): Promise<void> => {
-    if (done || failed) return;
-    if (pull !== null) return pull;
-    pull = (async () => {
-      try {
-        const next = await upstream.next();
-        if (next.done) done = true;
-        else values.push(next.value);
-      } catch (error) {
-        failed = true;
-        failure = error;
-      } finally {
-        pull = null;
-      }
-    })();
-    return pull;
+interface ReplaySpool {
+  allocatePath(): Promise<string>;
+  dispose(): Promise<void>;
+}
+
+function createReplaySpool(): ReplaySpool {
+  let root: Promise<string> | null = null;
+  const getRoot = (): Promise<string> => {
+    root ??= mkdtemp(join(tmpdir(), "forme-named-replay-"));
+    return root;
   };
   return {
+    async allocatePath(): Promise<string> {
+      return join(await getRoot(), `${randomUUID()}.spool`);
+    },
+    async dispose(): Promise<void> {
+      if (root === null) return;
+      await rm(await root, { recursive: true, force: true });
+    },
+  };
+}
+
+const MAX_REPLAY_FRAME_BYTES = 256 * 1024 * 1024;
+
+/** Replay named stream inputs from a run-scoped framed spool, never an array. */
+function makeSpoolReplayableAsyncIterable<T>(
+  source: AsyncIterable<T>,
+  spool: ReplaySpool,
+): AsyncIterable<T> {
+  const upstream = source[Symbol.asyncIterator]();
+  let path: string | null = null;
+  let writer: Awaited<ReturnType<typeof open>> | null = null;
+  let producedBytes = 0;
+  let finished = false;
+  let detached = false;
+  let spoolFailed = false;
+  let spoolFailure: unknown;
+  let sourceFailure: { readonly error: unknown } | null = null;
+  interface Reader {
+    position: number;
+    closed: boolean;
+    direct: boolean;
+    handle: Awaited<ReturnType<typeof open>> | null;
+  }
+  let owner: Reader | null = null;
+  const changeWaiters: Array<() => void> = [];
+  const readers = new Set<Reader>();
+  const notifyChange = (): void => {
+    for (const wake of changeWaiters.splice(0)) wake();
+  };
+  const waitForChange = (): Promise<void> =>
+    new Promise<void>(resolve => { changeWaiters.push(resolve); });
+  const ensureWriter = async () => {
+    if (writer !== null) return writer;
+    path ??= await spool.allocatePath();
+    writer = await open(path, "wx");
+    return writer;
+  };
+  const append = async (value: T): Promise<boolean> => {
+    if (spoolFailed) return false;
+    try {
+      const payload = encodeCacheValue(value);
+      if (payload.byteLength > MAX_REPLAY_FRAME_BYTES) {
+        throw new RangeError("named replay item exceeds the spool frame limit");
+      }
+      const header = Buffer.allocUnsafe(4);
+      header.writeUInt32BE(payload.byteLength, 0);
+      const handle = await ensureWriter();
+      await writeSpoolBytes(handle, header);
+      await writeSpoolBytes(handle, payload);
+      producedBytes += 4 + payload.byteLength;
+      notifyChange();
+      return true;
+    } catch (error) {
+      spoolFailed = true;
+      spoolFailure = error;
+      if (writer !== null) {
+        await writer.close().catch(() => {});
+        writer = null;
+      }
+      notifyChange();
+      return false;
+    }
+  };
+  const finish = async (): Promise<void> => {
+    if (finished) return;
+    finished = true;
+    if (writer !== null) {
+      try {
+        await writer.close();
+      } catch (error) {
+        spoolFailed = true;
+        spoolFailure = error;
+      }
+      writer = null;
+    }
+    notifyChange();
+  };
+  const fail = (error: unknown): void => {
+    finished = true;
+    sourceFailure = { error };
+    notifyChange();
+  };
+
+  const closeReader = async (reader: Reader): Promise<void> => {
+    if (reader.closed) return;
+    reader.closed = true;
+    readers.delete(reader);
+    if (owner === reader) owner = null;
+    if (reader.handle !== null) {
+      const handle = reader.handle;
+      reader.handle = null;
+      await handle.close();
+    }
+    notifyChange();
+  };
+  const readFrame = async (reader: Reader): Promise<T> => {
+    if (path === null || reader.position >= producedBytes) {
+      throw new Error("named replay spool frame is unavailable");
+    }
+    reader.handle ??= await open(path, "r");
+    const header = await readSpoolBytes(reader.handle, 4, reader.position, false);
+    const length = Buffer.from(header!).readUInt32BE(0);
+    const payloadPosition = reader.position + 4;
+    if (length > MAX_REPLAY_FRAME_BYTES || length > producedBytes - payloadPosition) {
+      throw new Error("named replay spool contains an invalid frame length");
+    }
+    const payload = await readSpoolBytes(reader.handle, length, payloadPosition, false);
+    reader.position = payloadPosition + length;
+    return decodeCacheValue(payload! as Uint8Array) as T;
+  };
+  const nextFor = async (reader: Reader): Promise<IteratorResult<T>> => {
+    while (true) {
+      if (reader.closed || detached) return { done: true, value: undefined };
+      if (!reader.direct && reader.position < producedBytes) {
+        return { done: false, value: await readFrame(reader) };
+      }
+      if (sourceFailure !== null) throw sourceFailure.error;
+      if (finished) {
+        if (spoolFailed && !reader.direct) throw spoolFailure;
+        await closeReader(reader);
+        return { done: true, value: undefined };
+      }
+      if (spoolFailed && !reader.direct) throw spoolFailure;
+      if (owner === null) owner = reader;
+      if (owner !== reader) {
+        await waitForChange();
+        continue;
+      }
+      try {
+        const next = await upstream.next();
+        if (next.done) {
+          await finish();
+          continue;
+        }
+        const stored = await append(next.value);
+        if (stored) reader.position = producedBytes;
+        else reader.direct = true;
+        return { done: false, value: next.value };
+      } catch (error) {
+        fail(error);
+        throw error;
+      }
+    }
+  };
+
+  const value: AsyncIterable<T> & { [DETACH_ASYNC_INPUT]: () => Promise<void> } = {
     [DETACH_ASYNC_INPUT]: async (): Promise<void> => {
-      done = true;
-      if (typeof upstream.return === "function") await upstream.return();
+      if (detached) return;
+      detached = true;
+      fail(new CancellationError("named stream input detached"));
+      const closeResults = await Promise.allSettled([...readers].map(closeReader));
+      const inherited = source as AsyncIterable<T> & {
+        [DETACH_ASYNC_INPUT]?: () => Promise<void>;
+      };
+      if (inherited[DETACH_ASYNC_INPUT] !== undefined) {
+        await inherited[DETACH_ASYNC_INPUT]();
+      } else if (typeof upstream.return === "function") {
+        await upstream.return();
+      }
+      if (writer !== null) {
+        await writer.close().catch(() => {});
+        writer = null;
+      }
+      const failedClose = closeResults.find(
+        (result): result is PromiseRejectedResult => result.status === "rejected",
+      );
+      if (failedClose !== undefined) throw failedClose.reason;
     },
     [Symbol.asyncIterator](): AsyncIterator<T> {
-      let index = 0;
+      const reader: Reader = {
+        position: 0,
+        closed: false,
+        direct: false,
+        handle: null,
+      };
+      readers.add(reader);
       return {
-        async next(): Promise<IteratorResult<T>> {
-          while (index >= values.length && !done && !failed) await pullOne();
-          if (index < values.length) return { done: false, value: values[index++]! };
-          if (failed) throw failure;
-          return { done: true, value: undefined };
-        },
-        async return(): Promise<IteratorResult<T>> {
+        next: () => nextFor(reader),
+        return: async () => {
+          await closeReader(reader);
           return { done: true, value: undefined };
         },
       };
     },
-  } as AsyncIterable<T>;
+  };
+  return value;
+}
+
+async function writeSpoolBytes(
+  handle: Awaited<ReturnType<typeof open>>,
+  value: Uint8Array,
+): Promise<void> {
+  let offset = 0;
+  while (offset < value.byteLength) {
+    const result = await handle.write(value, offset, value.byteLength - offset);
+    if (result.bytesWritten === 0) {
+      throw new Error("named replay spool write made no progress");
+    }
+    offset += result.bytesWritten;
+  }
+}
+
+async function readSpoolBytes(
+  handle: Awaited<ReturnType<typeof open>>,
+  length: number,
+  position: number,
+  allowEof: boolean,
+): Promise<Uint8Array | null> {
+  const bytes = Buffer.allocUnsafe(length);
+  let offset = 0;
+  while (offset < length) {
+    const result = await handle.read(bytes, offset, length - offset, position + offset);
+    if (result.bytesRead === 0) {
+      if (allowEof && offset === 0) return null;
+      throw new Error("named replay spool ended inside a frame");
+    }
+    offset += result.bytesRead;
+  }
+  return bytes;
 }
 
 async function detachAsyncInputs(value: unknown): Promise<void> {
@@ -1551,7 +2389,8 @@ async function detachAsyncInputs(value: unknown): Promise<void> {
     if (typeof iterator.return === "function") await iterator.return();
     return;
   }
-  if (typeof value !== "object" || value === null) return;
+  if (typeof value !== "object" || value === null
+      || Object.getPrototypeOf(value) !== null) return;
   await Promise.all(Object.values(value).map(detachAsyncInputs));
 }
 

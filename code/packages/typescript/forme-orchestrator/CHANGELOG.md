@@ -24,10 +24,13 @@
 
 ### Tests
 
-- Four scheduler integration cases prove pre-completion consumption,
+- Eleven scheduler integration cases prove pre-completion consumption,
   one-permit progress, one-traversal slow-branch backpressure beyond the
-  64-value window, and lazy source restoration with a conservative collector.
-- The complete orchestrator suite has 155 passing cases and exceeds the
+  64-value window, cache-failure-independent draining, fatal and recoverable
+  source-error provenance, promoted per-item restoration, hostile iterator
+  handling, and cancellation during an active pull. Named fan-in and reorder
+  tests additionally cover concurrent replay and a full 64-value window.
+- The complete orchestrator suite has 165 passing cases and exceeds the
   package's 85% line-coverage target.
 
 ## 0.11.0 — 2026-09-19
