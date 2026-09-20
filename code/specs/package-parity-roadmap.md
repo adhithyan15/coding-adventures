@@ -14227,18 +14227,21 @@ edges: 223 merged, 637 pending, and exactly DER ASN.1 in progress.
 ### DER ASN.1 portable implementation progress
 
 The closed 109-case, 22-error language-neutral contract now has complete
-package-native consumers in five of fifteen established lanes: Rust, Python,
-Go, Dart, and Java. Every consumer executes all 46 referenced DER TLV framing
+package-native consumers in six of fifteen established lanes: Rust, Python,
+Go, Dart, Java, and TypeScript. Every consumer executes all 46 referenced DER TLV framing
 cases rather than treating delegated rows as automatic success. Python passes
 110 tests at 97.45 percent line coverage; Rust passes its full suite, Clippy,
 and formatting; Go passes race, vet, trimpath build, and 90.7 percent coverage;
 Dart passes fatal analysis and its coverage gate with 96.97 percent line and
 98.18 percent function coverage; Java passes Java 21 warnings-as-errors and
-JaCoCo with 96.25 percent line and 94.44 percent branch coverage. All five use
+JaCoCo with 96.25 percent line and 94.44 percent branch coverage. TypeScript
+passes its production build, 120 Vitest tests, a zero-high-vulnerability npm
+audit, and coverage at 97.27 percent statements, 93.75 percent branches, 98.33
+percent functions, and 98.29 percent lines. All six use
 empty capability manifests, structural limits, shared work budgets,
 transactional cursors, unsigned-width-safe integer and OID handling, and
-payload-free diagnostics. C#, F#, Haskell, Elixir, Lua, Perl, Ruby, Swift,
-TypeScript, and Kotlin remain in this same serial work item; no parity PR is
+payload-free diagnostics. C#, F#, Haskell, Elixir, Lua, Perl, Ruby, Swift, and
+Kotlin remain in this same serial work item; no parity PR is
 open yet. Independent security review made validated element and primitive
 wrappers unforgeable in Python, Go, and Dart, hid raw DER framing helpers from
 typed package surfaces, and added adversarial Go zero-value tests.
