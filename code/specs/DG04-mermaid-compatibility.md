@@ -447,9 +447,9 @@ IR and lower to backend-neutral path geometry. Group-edge modifiers on contained
 services survive semantic IR and resolve to deterministic group-boundary endpoints.
 Explicit `L`, `R`, `T`, and `B` edge ports survive semantic and layout IR and
 anchor deterministic orthogonal relationship paths to the requested node or group
-boundary before backend-neutral PaintScene lowering. Icon artwork, obstacle
-avoidance, and configuration remain unsupported
-at the partial level.
+boundary before backend-neutral PaintScene lowering. Named service icons lower to
+canonical backend-neutral badge labels. Full vendor and group icon artwork,
+obstacle avoidance, and configuration remain unsupported at the partial level.
 
 ### Radar Native Slice
 

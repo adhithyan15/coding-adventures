@@ -14,7 +14,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.16.0";
+pub const VERSION: &str = "0.17.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -141,7 +141,7 @@ fn node_height(node: &StructuralNode) -> f64 {
         return 18.0;
     }
     let font_size = structural_style(node).font_size;
-    let header_height = if architecture_icon_text(node).is_some() {
+    let header_height = if architecture_icon_name(node).is_some() || architecture_icon_text(node).is_some() {
         72.0_f64.max(font_size * 2.4)
     } else {
         HEADER_H.max(font_size * 2.4)
@@ -152,6 +152,15 @@ fn node_height(node: &StructuralNode) -> f64 {
         h += COMP_PAD + comp.entries.len() as f64 * row_height + COMP_PAD;
     }
     h
+}
+
+fn architecture_icon_name(node: &StructuralNode) -> Option<&str> {
+    match node.metadata.as_ref() {
+        Some(StructuralNodeMetadata::ArchitectureService(metadata)) => {
+            metadata.icon_name.as_deref()
+        }
+        _ => None,
+    }
 }
 
 fn architecture_icon_text(node: &StructuralNode) -> Option<&str> {
@@ -197,7 +206,7 @@ fn layout_nodes(
         // Build layouted compartments.
         let style = structural_style(node);
         let row_height = ROW_H.max(style.font_size * 1.4);
-        let mut y_off = if architecture_icon_text(node).is_some() {
+        let mut y_off = if architecture_icon_name(node).is_some() || architecture_icon_text(node).is_some() {
             72.0_f64.max(style.font_size * 2.4)
         } else {
             HEADER_H.max(style.font_size * 2.4)
@@ -222,6 +231,7 @@ fn layout_nodes(
             height: nh,
             header: node.label.clone(),
             stereotype: node.stereotype.clone(),
+            icon_name: architecture_icon_name(node).map(str::to_string),
             icon_text: architecture_icon_text(node).map(str::to_string),
             style: structural_style(node),
             compartments: comps,
@@ -262,7 +272,7 @@ fn layout_directional_nodes(
 
         let style = structural_style(node);
         let row_height = ROW_H.max(style.font_size * 1.4);
-        let mut y_offset = if architecture_icon_text(node).is_some() {
+        let mut y_offset = if architecture_icon_name(node).is_some() || architecture_icon_text(node).is_some() {
             72.0_f64.max(style.font_size * 2.4)
         } else {
             HEADER_H.max(style.font_size * 2.4)
@@ -293,6 +303,7 @@ fn layout_directional_nodes(
                 height,
                 header: node.label.clone(),
                 stereotype: node.stereotype.clone(),
+                icon_name: architecture_icon_name(node).map(str::to_string),
                 icon_text: architecture_icon_text(node).map(str::to_string),
                 style: structural_style(node),
                 compartments,
@@ -734,7 +745,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.16.0");
+        assert_eq!(crate::VERSION, "0.17.0");
     }
 
     #[test]
@@ -929,11 +940,28 @@ mod tests {
         diagram.kind = StructuralKind::Architecture;
         diagram.nodes[0].metadata = Some(StructuralNodeMetadata::ArchitectureService(
             ArchitectureServiceMetadata {
+                icon_name: None,
                 icon_text: Some("API".into()),
             },
         ));
         let layout = layout_structural_diagram(&diagram);
         assert_eq!(layout.nodes[0].icon_text.as_deref(), Some("API"));
+        assert!(layout.nodes[0].height >= 72.0);
+        assert!(layout.nodes[0].height > layout.nodes[1].height);
+    }
+
+    #[test]
+    fn architecture_named_icon_reserves_header_geometry() {
+        let mut diagram = two_class_diagram();
+        diagram.kind = StructuralKind::Architecture;
+        diagram.nodes[0].metadata = Some(StructuralNodeMetadata::ArchitectureService(
+            ArchitectureServiceMetadata {
+                icon_name: Some("database".into()),
+                icon_text: None,
+            },
+        ));
+        let layout = layout_structural_diagram(&diagram);
+        assert_eq!(layout.nodes[0].icon_name.as_deref(), Some("database"));
         assert!(layout.nodes[0].height >= 72.0);
         assert!(layout.nodes[0].height > layout.nodes[1].height);
     }

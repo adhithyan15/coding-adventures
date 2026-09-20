@@ -1036,16 +1036,18 @@ pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError>
                 return Err(token_error(token, "duplicate architecture identifier"));
             }
             endpoint_ids.insert(declaration.id.clone());
+            let metadata = (declaration.icon.is_some() || declaration.icon_text.is_some()).then(|| {
+                StructuralNodeMetadata::ArchitectureService(ArchitectureServiceMetadata {
+                    icon_name: declaration.icon.clone(),
+                    icon_text: declaration.icon_text.clone(),
+                })
+            });
             diagram.nodes.push(StructuralNode {
                 id: declaration.id,
                 label: declaration.label,
-                stereotype: declaration.icon,
+                stereotype: None,
                 node_kind: StructuralNodeKind::Element,
-                metadata: declaration.icon_text.map(|icon_text| {
-                    StructuralNodeMetadata::ArchitectureService(ArchitectureServiceMetadata {
-                        icon_text: Some(icon_text),
-                    })
-                }),
+                metadata,
                 style: None,
                 compartments: Vec::new(),
                 parent_group: declaration.parent,
@@ -10528,6 +10530,11 @@ mod tests_dg04 {
         assert_eq!(diagram.groups.len(), 1);
         assert_eq!(diagram.nodes.len(), 2);
         assert_eq!(diagram.nodes[0].parent_group.as_deref(), Some("cloud"));
+        assert!(matches!(
+            &diagram.nodes[0].metadata,
+            Some(StructuralNodeMetadata::ArchitectureService(metadata))
+                if metadata.icon_name.as_deref() == Some("server")
+        ));
         assert_eq!(diagram.relationships.len(), 1);
     }
 
