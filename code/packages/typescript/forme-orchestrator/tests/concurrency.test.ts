@@ -155,6 +155,22 @@ describe("shared concurrency pool", () => {
     expect(pool.stats()).toMatchObject({ active: 0, queued: 0 });
   });
 
+  it("keeps an awaited and locally caught yielded failure terminal", async () => {
+    const pool = createConcurrencyPool(1, neverCancelledToken());
+    const failure = new Error("terminal upstream failure");
+    const task = pool.run(async permit => {
+      try {
+        await permit.yieldWhile(async () => { throw failure; });
+      } catch {
+        expect(pool.stats().active).toBe(1);
+        return "local recovery is not pipeline recovery";
+      }
+    });
+
+    await expect(task).rejects.toBe(failure);
+    expect(pool.stats()).toMatchObject({ active: 0, queued: 0 });
+  });
+
   it("settles and releases an unawaited successful yield before rejecting the task", async () => {
     const pool = createConcurrencyPool(1, neverCancelledToken());
     const wait = deferred<void>();

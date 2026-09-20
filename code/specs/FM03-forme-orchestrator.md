@@ -583,8 +583,9 @@ calling `next()`. If the wait succeeds, reacquisition joins the tail of the
 same FIFO queue before stage code resumes. A non-cancellation wait failure also
 reacquires before it is exposed to task code, so a caller that catches the
 error cannot continue outside the concurrency budget. Every yielded-wait
-failure remains terminal for the owning invocation, even if task code catches
-or discards its promise. Pipeline cancellation does not reacquire; it poisons
+failure remains terminal for the owning invocation and takes precedence over
+later task errors, even if task code awaits, catches, or discards its promise.
+Pipeline cancellation does not reacquire; it poisons
 the invocation so catching the local error cannot turn the cancelled task into
 success. This release/reacquire boundary
 is what allows a producer and consumer to make progress with

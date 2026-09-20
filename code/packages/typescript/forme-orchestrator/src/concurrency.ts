@@ -136,8 +136,8 @@ export function createConcurrencyPool(
               throw outcome.error;
             }
             if (outcome.kind === "error") {
-              // A task is allowed to catch an upstream error and continue, so
-              // restore its permit before exposing that error to task code.
+              // Restore the permit before exposing the terminal upstream
+              // error, so even a local catch cannot run outside the budget.
               await reacquire();
               throw outcome.error;
             }
@@ -150,8 +150,9 @@ export function createConcurrencyPool(
         })();
         inFlightYield = operation;
         // Observe rejection immediately even when task code discards the
-        // returned promise. The failure remains terminal for this invocation
-        // until run() settles, so a local catch cannot turn it into success.
+        // returned promise. Every yielded-wait failure is terminal for this
+        // invocation until run() settles, so a local catch cannot turn it into
+        // success or replace it with a later contextual error.
         void operation.catch(error => {
           yieldFailed = true;
           yieldError = error;
