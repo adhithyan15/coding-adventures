@@ -4,7 +4,9 @@ fn literal(value: Value) -> Vec<u8> {
     match value {
         Value::Int(n) => [vec![0x20], n.to_le_bytes().to_vec()].concat(),
         Value::Int64(n) => [vec![OP_LDC_I8], n.to_le_bytes().to_vec()].concat(),
-        Value::Ref(_) => unreachable!("reference is not an integer literal"),
+        Value::Ref(_) | Value::String(_) => {
+            unreachable!("reference is not an integer literal")
+        }
     }
 }
 

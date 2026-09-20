@@ -75,6 +75,7 @@ pub const OP_CALL: u8 = 0x28;
 /// Reserved host MemberRefs for strict encoded integer input.
 pub const BASIC_INPUT_I64_TOKEN: u32 = 0x0A00_0006;
 pub const BASIC_INPUT_MORE_TOKEN: u32 = 0x0A00_0007;
+pub const BASIC_INPUT_STR_TOKEN: u32 = 0x0A00_0008;
 pub const OP_RET: u8 = 0x2A;
 pub const OP_BR_S: u8 = 0x2B;
 pub const OP_BRFALSE_S: u8 = 0x2C;
@@ -163,6 +164,8 @@ pub enum Value {
     /// A distinct stack type: small int64 values must not become int32.
     Int64(i64),
     Ref(Option<usize>),
+    /// An immutable byte string in the simulator-owned string arena.
+    String(usize),
 }
 
 impl Value {
@@ -172,7 +175,9 @@ impl Value {
         match self {
             Value::Int(n) => n,
             Value::Int64(_) => panic!("expected int32, found int64"),
-            Value::Ref(_) => panic!("expected an int on the CLR stack, found a reference"),
+            Value::Ref(_) | Value::String(_) => {
+                panic!("expected an int on the CLR stack, found a reference")
+            }
         }
     }
 
@@ -186,7 +191,7 @@ impl Value {
             Value::Int(n) => n,
             Value::Int64(_) => panic!("int64 requires matched-width comparison"),
             Value::Ref(None) => 0,
-            Value::Ref(Some(_)) => 1,
+            Value::Ref(Some(_)) | Value::String(_) => 1,
         }
     }
 
@@ -197,6 +202,7 @@ impl Value {
             Value::Int(n) => n != 0,
             Value::Int64(n) => n != 0,
             Value::Ref(r) => r.is_some(),
+            Value::String(_) => true,
         }
     }
 }
@@ -208,6 +214,7 @@ impl fmt::Display for Value {
             Value::Int64(n) => write!(f, "{n}"),
             Value::Ref(None) => write!(f, "null"),
             Value::Ref(Some(i)) => write!(f, "obj#{i}"),
+            Value::String(i) => write!(f, "str#{i}"),
         }
     }
 }
@@ -260,6 +267,8 @@ pub struct CLRSimulator {
     /// The object heap: each entry is one allocated array (`object[]`). A
     /// `Value::Ref(Some(i))` references `heap[i]`.
     pub heap: Vec<Vec<Value>>,
+    /// Immutable byte strings returned by encoded string host calls.
+    strings: Vec<Vec<u8>>,
     pub pc: usize,
     pub bytecode: Vec<u8>,
     pub halted: bool,
@@ -284,6 +293,7 @@ impl CLRSimulator {
             stack: Vec::new(),
             locals: vec![None; 16],
             heap: Vec::new(),
+            strings: Vec::new(),
             pc: 0,
             bytecode: Vec::new(),
             halted: false,
@@ -304,9 +314,9 @@ impl CLRSimulator {
         self.input_pos = 0;
     }
 
-    fn read_input_i64(&mut self) -> i64 {
+    fn read_input_line(&mut self) -> Option<&[u8]> {
         if self.input_pos >= self.input.len() {
-            return 0;
+            return None;
         }
         let start = self.input_pos;
         while self.input_pos < self.input.len() && self.input[self.input_pos] != b'\n' {
@@ -316,11 +326,36 @@ impl CLRSimulator {
         if self.input_pos < self.input.len() {
             self.input_pos += 1;
         }
-        std::str::from_utf8(&self.input[start..end])
+        Some(&self.input[start..end])
+    }
+
+    fn read_input_i64(&mut self) -> i64 {
+        let Some(line) = self.read_input_line() else {
+            return 0;
+        };
+        std::str::from_utf8(line)
             .ok()
             .map(|line| line.trim_matches(|ch: char| ch.is_ascii_whitespace()))
             .and_then(|line| line.parse::<i64>().ok())
             .unwrap_or(0)
+    }
+
+    fn read_input_string(&mut self) -> Value {
+        let bytes = self
+            .read_input_line()
+            .map(|line| line.strip_suffix(b"\r").unwrap_or(line).to_vec())
+            .unwrap_or_default();
+        let index = self.strings.len();
+        self.strings.push(bytes);
+        Value::String(index)
+    }
+
+    /// Return the immutable bytes behind a string value, if its handle is valid.
+    pub fn string_bytes(&self, value: Value) -> Option<&[u8]> {
+        let Value::String(index) = value else {
+            return None;
+        };
+        self.strings.get(index).map(Vec::as_slice)
     }
 
     /// Load a single method's bytecode and configure local variable count. This
@@ -340,6 +375,7 @@ impl CLRSimulator {
         assert!(entry < methods.len(), "entry method index out of range");
         self.stack.clear();
         self.heap.clear();
+        self.strings.clear();
         self.frames.clear();
         self.cur_method = entry;
         self.bytecode = methods[entry].body.clone();
@@ -619,7 +655,7 @@ impl CLRSimulator {
             let result = match a {
                 Value::Int(n) => Value::Int(n.wrapping_neg()),
                 Value::Int64(n) => Value::Int64(n.wrapping_neg()),
-                Value::Ref(_) => panic!("neg requires an integer"),
+                Value::Ref(_) | Value::String(_) => panic!("neg requires an integer"),
             };
             self.stack.push(Some(result));
             self.pc += 1;
@@ -677,7 +713,7 @@ impl CLRSimulator {
             let result = match value {
                 Value::Int(n) => Value::Int(!n),
                 Value::Int64(n) => Value::Int64(!n),
-                Value::Ref(_) => panic!("not requires an integer operand"),
+                Value::Ref(_) | Value::String(_) => panic!("not requires an integer operand"),
             };
             *self.stack.last_mut().expect("validated operand") = Some(result);
             self.pc += 1;
@@ -702,14 +738,17 @@ impl CLRSimulator {
             ]);
             if token >> 24 == 0x0A {
                 let (name, value) = match token {
-                    BASIC_INPUT_I64_TOKEN => ("input_i64", self.read_input_i64()),
+                    BASIC_INPUT_I64_TOKEN => {
+                        ("input_i64", Value::Int64(self.read_input_i64()))
+                    }
                     BASIC_INPUT_MORE_TOKEN => (
                         "input_more",
-                        i64::from(self.input_pos < self.input.len()),
+                        Value::Int64(i64::from(self.input_pos < self.input.len())),
                     ),
+                    BASIC_INPUT_STR_TOKEN => ("input_str", self.read_input_string()),
                     _ => panic!("call: unsupported MemberRef token 0x{token:08X}"),
                 };
-                self.stack.push(Some(Value::Int64(value)));
+                self.stack.push(Some(value));
                 self.pc += 5;
                 return self.trace(pc, name, stack_before, format!("host {name}: {value}"));
             }
@@ -805,7 +844,9 @@ impl CLRSimulator {
         match r {
             Value::Ref(Some(i)) => &self.heap[i],
             Value::Ref(None) => panic!("System.NullReferenceException"),
-            Value::Int(_) | Value::Int64(_) => panic!("expected an array reference, found an int"),
+            Value::Int(_) | Value::Int64(_) | Value::String(_) => {
+                panic!("expected an array reference")
+            }
         }
     }
 
@@ -814,7 +855,9 @@ impl CLRSimulator {
         match r {
             Value::Ref(Some(i)) => &mut self.heap[i],
             Value::Ref(None) => panic!("System.NullReferenceException"),
-            Value::Int(_) | Value::Int64(_) => panic!("expected an array reference, found an int"),
+            Value::Int(_) | Value::Int64(_) | Value::String(_) => {
+                panic!("expected an array reference")
+            }
         }
     }
 

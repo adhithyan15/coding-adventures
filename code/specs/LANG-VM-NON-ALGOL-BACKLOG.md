@@ -10,6 +10,20 @@ roadmap is reconciled.
 
 ## Encoded CLR input prerequisites (selected 2026-09-19 after VM-058)
 
+### CLR14 source artifact API landed; CLR15 strict encoded string input selected (2026-09-20)
+
+PR #15808 merged as `cd406cc46f`. It exposes the opt-in strict source
+artifact API selected by the source-width audit while preserving the legacy
+encoded path and its refusal behavior.
+
+Select the next bounded ABI slice: reserve one exact MemberRef for strict
+`input_str`, add a distinct simulator string arena handle, and permit only
+typed string transport through locals, parameters, returns, moves, and direct
+calls. Preserve input bytes exactly while consuming LF/CRLF delimiters; EOF is
+an empty string. String constants and operations, default source migration,
+real PE host metadata, byte input, and general callbacks remain separate.
+See `CLR15-strict-encoded-string-input.md`. ALGOL remains separately owned.
+
 ### CLR13 landed; source width audit resumed (2026-09-20)
 
 PR #15780 merged externally as `fccff7c84f2da01c692b709c9f3bede0ec3103a2`.

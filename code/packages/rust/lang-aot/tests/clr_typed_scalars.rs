@@ -145,6 +145,54 @@ fn strict_encoded_integer_input_and_peek_execute() {
     assert!(sim.halted);
     assert_eq!(sim.stack, vec![Some(Value::Int64(9223372036854775795))]);
 }
+
+#[test]
+fn strict_encoded_string_input_transports_exact_bytes_through_a_call() {
+    let mut m = IIRModule::new("string-input", "test");
+    m.entry_point = Some("main".into());
+    m.add_or_replace(IIRFunction::new(
+        "main",
+        vec![],
+        "str",
+        vec![
+            instr("call_builtin", "raw", vec![var("input_str")], "str"),
+            instr("call", "answer", vec![var("echo"), var("raw")], "str"),
+            instr("ret", "", vec![var("answer")], "str"),
+        ],
+    ));
+    m.add_or_replace(IIRFunction::new(
+        "echo",
+        vec![("value".into(), "str".into())],
+        "str",
+        vec![
+            instr("mov", "copy", vec![var("value")], "str"),
+            instr("ret", "", vec![var("copy")], "str"),
+        ],
+    ));
+    let artifact = lower_typed_scalars_to_cil(&m, &IIRClrConfig::default()).unwrap();
+    let mut sim = CLRSimulator::new();
+    sim.load_program(
+        artifact
+            .methods
+            .iter()
+            .map(|method| MethodCode {
+                body: method.body.clone(),
+                num_locals: method.local_types.len(),
+                num_args: method.parameter_types.len(),
+            })
+            .collect(),
+        0,
+    );
+    sim.set_input(b"  exact \xff bytes  \r\nignored");
+    sim.run(10_000);
+    assert!(sim.halted);
+    assert_eq!(sim.stack.len(), 1);
+    assert_eq!(
+        sim.string_bytes(sim.stack[0].unwrap()),
+        Some(&b"  exact \xff bytes  "[..])
+    );
+}
+
 #[test]
 fn typed_calls_transport_wide_values_and_entry_label_is_resolved() {
     let mut m = module(

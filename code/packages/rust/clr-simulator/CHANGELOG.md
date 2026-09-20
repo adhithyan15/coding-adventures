@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased — strict encoded string input (CLR15)
+
+Reserve MemberRef row 8 for `input_str` and add immutable byte-string arena
+handles to the simulator value model. Line reads preserve content bytes exactly,
+strip LF/CRLF delimiters, return an empty string at EOF, and remain observable
+through a checked read-only accessor. Locals, arguments and returns transport
+handles without conflating them with object arrays or integers.
+
 ## Unreleased — strict encoded integer input (CLR13)
 
 Reserve MemberRef rows 6 and 7 for line-oriented `input_i64` and non-consuming
