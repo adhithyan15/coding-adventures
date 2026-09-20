@@ -1071,7 +1071,12 @@ pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError>
                 .alignments
                 .push(parse_architecture_alignment(token, value, &endpoint_ids)?);
         } else {
-            diagram.relationships.push(parse_architecture_edge(token, statement, &endpoint_ids)?);
+            diagram.relationships.push(parse_architecture_edge(
+                token,
+                statement,
+                &endpoint_ids,
+                &diagram.nodes,
+            )?);
         }
     }
     if diagram.nodes.is_empty() {
@@ -1235,6 +1240,7 @@ fn parse_architecture_edge(
     token: &Token,
     source: &str,
     ids: &HashSet<String>,
+    nodes: &[StructuralNode],
 ) -> Result<StructuralRelationship, ParseError> {
     let source_end = source
         .find(char::is_whitespace)
@@ -1247,13 +1253,12 @@ fn parse_architecture_edge(
     let operator = remainder[..target_start].trim();
     let target_endpoint = remainder[target_start..].trim();
 
-    let (from, from_direction) = source_endpoint.rsplit_once(':')
+    let (from_endpoint, from_direction) = source_endpoint.rsplit_once(':')
         .ok_or_else(|| token_error(token, "invalid architecture edge source"))?;
-    let (to_direction, to) = target_endpoint.split_once(':')
+    let (to_direction, to_endpoint) = target_endpoint.split_once(':')
         .ok_or_else(|| token_error(token, "invalid architecture edge target"))?;
-    if from.contains("{group}") || to.contains("{group}") {
-        return Err(token_error(token, "architecture group-edge modifiers are outside the supported subset"));
-    }
+    let (from, from_group) = parse_architecture_edge_endpoint(from_endpoint);
+    let (to, to_group) = parse_architecture_edge_endpoint(to_endpoint);
     for direction in [from_direction, to_direction] {
         if !matches!(direction, "L" | "R" | "T" | "B") {
             return Err(token_error(token, "invalid architecture edge direction"));
@@ -1264,6 +1269,20 @@ fn parse_architecture_edge(
     }
     if !ids.contains(from) || !ids.contains(to) {
         return Err(token_error(token, "architecture edge services must be declared first"));
+    }
+    for (id, uses_group) in [(from, from_group), (to, to_group)] {
+        if uses_group
+            && !nodes.iter().any(|node| {
+                node.id == id
+                    && node.node_kind == StructuralNodeKind::Element
+                    && node.parent_group.is_some()
+            })
+        {
+            return Err(token_error(
+                token,
+                "architecture group-edge endpoints require a grouped service",
+            ));
+        }
     }
     let start_arrow = operator.starts_with('<');
     let end_arrow = operator.ends_with('>');
@@ -1281,8 +1300,15 @@ fn parse_architecture_edge(
     Ok(StructuralRelationship {
         from: from.into(), to: to.into(), kind,
         start_arrow, end_arrow,
+        from_group, to_group,
         from_mult: None, to_mult: None, label,
     })
+}
+
+fn parse_architecture_edge_endpoint(source: &str) -> (&str, bool) {
+    source
+        .strip_suffix("{group}")
+        .map_or((source, false), |id| (id, true))
 }
 
 fn parse_architecture_labeled_edge_operator(
@@ -3383,6 +3409,8 @@ fn parse_requirement_relationship(token: &Token) -> Result<StructuralRelationshi
         kind: relationship_kind,
         start_arrow: false,
         end_arrow: true,
+        from_group: false,
+        to_group: false,
         from_mult: None,
         to_mult: None,
         label: Some(label),
@@ -3883,6 +3911,8 @@ fn parse_class_relationship(line: &str) -> Option<StructuralRelationship> {
                     kind: kind.clone(),
                     start_arrow: false,
                     end_arrow: true,
+                    from_group: false,
+                    to_group: false,
                     from_mult: None,
                     to_mult: None,
                     label,
@@ -8942,6 +8972,8 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                 },
                 start_arrow: false,
                 end_arrow: true,
+                from_group: false,
+                to_group: false,
                 from_mult: Some(from_mult),
                 to_mult: Some(to_mult),
                 label: (!label.is_empty()).then_some(label),
@@ -9197,6 +9229,8 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                     kind: RelKind::Association,
                     start_arrow: false,
                     end_arrow: true,
+                    from_group: false,
+                    to_group: false,
                     from_mult: None,
                     to_mult: None,
                     label: Some(args[2].clone()),
@@ -10604,6 +10638,22 @@ mod tests_dg04 {
         assert_eq!(diagram.relationships[3].label.as_deref(), Some("replicate"));
         assert!(diagram.relationships[3].start_arrow);
         assert!(diagram.relationships[3].end_arrow);
+    }
+
+    #[test]
+    fn architecture_preserves_group_edge_endpoints() {
+        let diagram = parse_architecture(
+            "architecture-beta\ngroup public(cloud)[Public]\ngroup private(cloud)[Private]\nservice gateway(server)[Gateway] in public\nservice api(server)[API] in private\ngateway{group}:R --> L:api{group}",
+        )
+        .unwrap();
+        assert!(diagram.relationships[0].from_group);
+        assert!(diagram.relationships[0].to_group);
+
+        let error = parse_architecture(
+            "architecture-beta\nservice api(server)[API]\nservice db(database)[DB]\napi{group}:R --> L:db",
+        )
+        .unwrap_err();
+        assert!(error.message.contains("grouped service"));
     }
 
     #[test]

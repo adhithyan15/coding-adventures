@@ -14,7 +14,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.13.0";
+pub const VERSION: &str = "0.14.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -60,7 +60,7 @@ pub fn layout_structural_diagram(diagram: &StructuralDiagram) -> LayoutedStructu
     let groups = layout_groups(diagram, &nodes);
     let canvas_w = canvas_width(&nodes, &groups);
     let canvas_h = canvas_height(&nodes, &groups);
-    let rels = layout_relationships(diagram, &nodes);
+    let rels = layout_relationships(diagram, &nodes, &groups);
     LayoutedStructuralDiagram {
         width: canvas_w,
         height: canvas_h,
@@ -452,7 +452,15 @@ fn find_node<'a>(
     nodes.iter().find(|n| n.id == id)
 }
 
-fn closest_sides(a: &LayoutedStructuralNode, b: &LayoutedStructuralNode) -> (Point, Point) {
+#[derive(Clone, Copy)]
+struct StructuralBounds {
+    x: f64,
+    y: f64,
+    width: f64,
+    height: f64,
+}
+
+fn closest_sides(a: StructuralBounds, b: StructuralBounds) -> (Point, Point) {
     let a_cx = a.x + a.width / 2.0;
     let a_cy = a.y + a.height / 2.0;
     let b_cx = b.x + b.width / 2.0;
@@ -504,6 +512,7 @@ fn closest_sides(a: &LayoutedStructuralNode, b: &LayoutedStructuralNode) -> (Poi
 fn layout_relationships(
     diagram: &StructuralDiagram,
     nodes: &[LayoutedStructuralNode],
+    groups: &[LayoutedStructuralGroup],
 ) -> Vec<LayoutedStructuralRelationship> {
     diagram
         .relationships
@@ -511,26 +520,57 @@ fn layout_relationships(
         .filter_map(|rel| {
             let a = find_node(nodes, &rel.from)?;
             let b = find_node(nodes, &rel.to)?;
-            let (p0, p1) = closest_sides(a, b);
+            let a_bounds = relationship_endpoint_bounds(a, rel.from_group, diagram, groups);
+            let b_bounds = relationship_endpoint_bounds(b, rel.to_group, diagram, groups);
+            let (p0, p1) = closest_sides(a_bounds, b_bounds);
+            let label = rel.label.as_ref().map(|label| {
+                (
+                    Point {
+                        x: (p0.x + p1.x) / 2.0,
+                        y: (p0.y + p1.y) / 2.0,
+                    },
+                    label.clone(),
+                )
+            });
             Some(LayoutedStructuralRelationship {
                 from_id: rel.from.clone(),
                 to_id: rel.to.clone(),
                 kind: rel.kind.clone(),
                 start_arrow: rel.start_arrow,
                 end_arrow: rel.end_arrow,
+                from_group: rel.from_group,
+                to_group: rel.to_group,
                 points: vec![p0, p1],
                 from_mult: rel.from_mult.clone(),
                 to_mult: rel.to_mult.clone(),
-                label: rel.label.as_ref().map(|l| {
-                    let a = find_node(nodes, &rel.from).unwrap();
-                    let b = find_node(nodes, &rel.to).unwrap();
-                    let mx = (a.x + a.width / 2.0 + b.x + b.width / 2.0) / 2.0;
-                    let my = (a.y + a.height / 2.0 + b.y + b.height / 2.0) / 2.0;
-                    (Point { x: mx, y: my }, l.clone())
-                }),
+                label,
             })
         })
         .collect()
+}
+
+fn relationship_endpoint_bounds(
+    node: &LayoutedStructuralNode,
+    use_group: bool,
+    diagram: &StructuralDiagram,
+    groups: &[LayoutedStructuralGroup],
+) -> StructuralBounds {
+    if use_group {
+        let parent = diagram
+            .nodes
+            .iter()
+            .find(|candidate| candidate.id == node.id)
+            .and_then(|candidate| candidate.parent_group.as_deref());
+        if let Some(group) = parent.and_then(|id| groups.iter().find(|group| group.id == id)) {
+            return StructuralBounds {
+                x: group.x,
+                y: group.y,
+                width: group.width,
+                height: group.height,
+            };
+        }
+    }
+    StructuralBounds { x: node.x, y: node.y, width: node.width, height: node.height }
 }
 
 // ── Tests ─────────────────────────────────────────────────────────────────
@@ -583,6 +623,8 @@ mod tests {
                 kind: RelKind::Inheritance,
                 start_arrow: false,
                 end_arrow: true,
+                from_group: false,
+                to_group: false,
                 from_mult: None,
                 to_mult: None,
                 label: None,
@@ -592,7 +634,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.13.0");
+        assert_eq!(crate::VERSION, "0.14.0");
     }
 
     #[test]
@@ -704,6 +746,31 @@ mod tests {
         assert!(group.y <= animal.y);
         assert!(group.x + group.width >= animal.x + animal.width);
         assert!(group.y + group.height >= animal.y + animal.height);
+    }
+
+    #[test]
+    fn group_edge_endpoints_resolve_to_group_bounds() {
+        let mut diagram = two_class_diagram();
+        diagram.nodes[0].parent_group = Some("domain".into());
+        diagram.groups.push(StructuralGroup {
+            id: "domain".into(),
+            label: "Domain".into(),
+            stereotype: None,
+            parent_group: None,
+        });
+        diagram.relationships[0].to_group = true;
+
+        let layout = layout_structural_diagram(&diagram);
+        let group = &layout.groups[0];
+        let relationship = &layout.relationships[0];
+        let endpoint = &relationship.points[1];
+        assert!(relationship.to_group);
+        assert!(
+            endpoint.x == group.x
+                || endpoint.x == group.x + group.width
+                || endpoint.y == group.y
+                || endpoint.y == group.y + group.height
+        );
     }
 
     #[test]
