@@ -22,8 +22,8 @@ mod schematic;
 
 pub use schematic::{
     SchematicAnalysis, SchematicAnalysisCard, SchematicAnalysisSettings, SchematicComponent,
-    SchematicComponentKind, SchematicDocument, SchematicError, SchematicNetLabel, SchematicPoint,
-    SchematicScopedOutputProbes, SchematicWire,
+    SchematicComponentKind, SchematicDocument, SchematicError, SchematicModelPolarity,
+    SchematicNetLabel, SchematicPoint, SchematicScopedOutputProbes, SchematicWire,
 };
 
 const SNAPSHOT_SCHEMA: &str = "spice-mosaic-app/state";
@@ -636,6 +636,27 @@ impl SpiceMosaicApp {
             .unwrap_or_default();
         let schematic_value_disabled = selected_schematic_component
             .is_none_or(|component| component.kind == SchematicComponentKind::Ground);
+        let (
+            schematic_model_polarity,
+            schematic_model_n_label,
+            schematic_model_p_label,
+            schematic_model_polarity_disabled,
+        ) = selected_schematic_component
+            .and_then(|component| {
+                let (n_label, p_label) = component.kind.model_polarity_labels()?;
+                let polarity = self
+                    .schematic
+                    .as_ref()?
+                    .component_model_polarity(&component.reference)
+                    .ok()??;
+                Some((
+                    polarity.label(component.kind).unwrap_or(n_label),
+                    n_label,
+                    p_label,
+                    false,
+                ))
+            })
+            .unwrap_or(("Not a transistor", "N", "P", true));
         let selected_schematic_analysis_card = self
             .schematic
             .as_ref()
@@ -904,6 +925,11 @@ impl SpiceMosaicApp {
             "schematic-value": selected_schematic_component.map(|component| component.value.as_str()).unwrap_or(""),
             "schematic-value-placeholder": "Select a non-ground component",
             "schematic-value-disabled": schematic_value_disabled,
+            "schematic-model-polarity-label": "Transistor polarity",
+            "selected-schematic-model-polarity": schematic_model_polarity,
+            "schematic-model-n-label": schematic_model_n_label,
+            "schematic-model-p-label": schematic_model_p_label,
+            "schematic-model-polarity-disabled": schematic_model_polarity_disabled,
             "remove-schematic-component-label": "Remove selected component",
             "remove-schematic-component-disabled": selected_schematic_component.is_none(),
             "route-schematic-label": "Route selected terminal to",
@@ -1145,7 +1171,8 @@ impl MosaicApp for SpiceMosaicApp {
         if !event.payload.is_object() {
             return Err(invalid("event payload must be an object"));
         }
-        match event_name(&event.name).as_str() {
+        let normalized_event_name = event_name(&event.name);
+        match normalized_event_name.as_str() {
             "netlistChange" => {
                 let deck = event.payload["value"]
                     .as_str()
@@ -1243,6 +1270,7 @@ impl MosaicApp for SpiceMosaicApp {
                     net_labels: Vec::new(),
                     output_probes: Vec::new(),
                     scoped_output_probes: Vec::new(),
+                    model_polarities: Default::default(),
                     analysis: SchematicAnalysis::default(),
                     analysis_settings: SchematicAnalysisSettings::default(),
                     analysis_cards: Vec::new(),
@@ -1274,6 +1302,7 @@ impl MosaicApp for SpiceMosaicApp {
                     net_labels: Vec::new(),
                     output_probes: Vec::new(),
                     scoped_output_probes: Vec::new(),
+                    model_polarities: Default::default(),
                     analysis: SchematicAnalysis::default(),
                     analysis_settings: SchematicAnalysisSettings::default(),
                     analysis_cards: Vec::new(),
@@ -1740,6 +1769,50 @@ impl MosaicApp for SpiceMosaicApp {
                 self.record_schematic_edit(history);
                 self.diagnostics =
                     format!("Updated {reference} value. Sync the netlist when ready.");
+                Ok(self.announced(self.diagnostics.clone()))
+            }
+            "schematicModelPolarityChange" => {
+                let polarity = event.payload["polarity"].as_str().ok_or_else(|| {
+                    invalid("schematicModelPolarityChange requires N or P polarity")
+                })?;
+                let polarity = SchematicModelPolarity::from_host_value(polarity)
+                    .map_err(|error| invalid(error.to_string()))?;
+                let reference = self.selected_schematic_component.clone().ok_or_else(|| {
+                    invalid("schematicModelPolarityChange requires a selected component")
+                })?;
+                let history = self.schematic_history_entry();
+                let document = self.schematic.as_mut().ok_or_else(|| {
+                    invalid("schematicModelPolarityChange requires a loaded schematic")
+                })?;
+                document
+                    .set_component_model_polarity(&reference, polarity)
+                    .map_err(|error| invalid(error.to_string()))?;
+                self.record_schematic_edit(history);
+                self.diagnostics = format!(
+                    "Updated {reference} transistor polarity. Sync the netlist when ready."
+                );
+                Ok(self.announced(self.diagnostics.clone()))
+            }
+            "setSchematicModelPolarityN" | "setSchematicModelPolarityP" => {
+                let polarity = if normalized_event_name == "setSchematicModelPolarityN" {
+                    SchematicModelPolarity::N
+                } else {
+                    SchematicModelPolarity::P
+                };
+                let reference = self.selected_schematic_component.clone().ok_or_else(|| {
+                    invalid("schematic model polarity requires a selected component")
+                })?;
+                let history = self.schematic_history_entry();
+                let document = self.schematic.as_mut().ok_or_else(|| {
+                    invalid("schematic model polarity requires a loaded schematic")
+                })?;
+                document
+                    .set_component_model_polarity(&reference, polarity)
+                    .map_err(|error| invalid(error.to_string()))?;
+                self.record_schematic_edit(history);
+                self.diagnostics = format!(
+                    "Updated {reference} transistor polarity. Sync the netlist when ready."
+                );
                 Ok(self.announced(self.diagnostics.clone()))
             }
             "schematicReferenceChange" => {
@@ -2981,6 +3054,55 @@ mod tests {
             ground.to_string(),
             "G1 ground symbol does not accept a SPICE value"
         );
+    }
+
+    #[test]
+    fn schematic_transistor_polarity_inspector_persists_and_syncs_a_p_model() {
+        let mut app = SpiceMosaicApp::default();
+        app.start(StartContext::new("en-US", Platform::Web))
+            .unwrap();
+        dispatch(
+            &mut app,
+            "schematicLoad",
+            json!({
+                "document": {
+                    "title": "PNP capture",
+                    "components": [
+                        {"reference":"Q1","kind":"Bjt","value":"BF=80","terminals":[{"x":0,"y":20},{"x":0,"y":20},{"x":0,"y":0}]},
+                        {"reference":"G1","kind":"Ground","value":"","terminals":[{"x":0,"y":0}]}
+                    ],
+                    "wires": []
+                }
+            }),
+        );
+        dispatch(
+            &mut app,
+            "onSelectSchematicComponent",
+            json!({"reference":"Q1"}),
+        );
+        let selected = dispatch(
+            &mut app,
+            "onSchematicModelPolarityChange",
+            json!({"polarity":"P"}),
+        );
+        assert_eq!(selected.props["schematic-model-n-label"], "NPN");
+        assert_eq!(selected.props["schematic-model-p-label"], "PNP");
+        assert_eq!(selected.props["selected-schematic-model-polarity"], "PNP");
+        assert_eq!(selected.props["schematic-model-polarity-disabled"], false);
+        let snapshot = app.snapshot().unwrap().unwrap();
+        let mut restored = SpiceMosaicApp::default();
+        let mut context = StartContext::new("en-US", Platform::Web);
+        context.restored_snapshot = Some(snapshot);
+        let restored_update = restored.start(context).unwrap();
+        assert_eq!(
+            restored_update.props["selected-schematic-model-polarity"],
+            "PNP"
+        );
+        let synchronized = dispatch(&mut restored, "onSynchronizeSchematic", json!({}));
+        assert!(synchronized.props["netlist-text"]
+            .as_str()
+            .unwrap()
+            .contains(".model SchematicQ1Model PNP(BF=80)"));
     }
 
     #[test]

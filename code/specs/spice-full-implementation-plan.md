@@ -337,6 +337,19 @@ model-card parameter, or a UI artifact is not a completion signal.
      model-card editing, vendor models, and expression outputs for later product
      phases; they need a separate coherent capture contract rather than an
      unstructured value field.
+   - **Mosaic schematic transistor-polarity configuration** (completed in this
+     typed polarity slice): discovery after nonlinear-current selection: the
+     schematic palette could lower only NPN, NJF, and NMOS model cards even
+     though the Berkeley parser already supports their P-family counterparts.
+     BJT, JFET, and MOSFET symbols now persist an explicit N/P selection keyed
+     by component reference, with legacy captures retaining the N-type default.
+     The inspector presents family-correct NPN/PNP, NJF/PJF, and NMOS/PMOS
+     controls; rename, removal, undo/history, snapshots, and canonical JSON
+     preserve that typed selection. Lowering emits the selected model keyword
+     while retaining deterministic per-instance names and the existing
+     one-token default parameter value. Keep multi-parameter model-card editing,
+     vendor model libraries, and expression-valued parameters for a later
+     structured capture phase rather than extending the scalar value field.
    - **Nonlinear branch-current result-map contract** (completed): export
      diode anode, BJT collector, JFET drain, and level-1 MOS drain currents as
      canonical `I(element)` values across Python, Rust, and TypeScript. Define
