@@ -138,6 +138,7 @@ pub struct SpiceMosaicApp {
     diagnostics: String,
     schematic: Option<SchematicDocument>,
     selected_schematic_component: Option<String>,
+    selected_schematic_model_parameter: Option<SchematicModelParameter>,
     selected_schematic_terminal: usize,
     selected_schematic_route_target: Option<String>,
     selected_schematic_analysis_card: usize,
@@ -167,6 +168,7 @@ impl Default for SpiceMosaicApp {
             diagnostics: "Edit a deck, then inspect its runnable analyses or run it.".to_owned(),
             schematic: None,
             selected_schematic_component: None,
+            selected_schematic_model_parameter: None,
             selected_schematic_terminal: 0,
             selected_schematic_route_target: None,
             selected_schematic_analysis_card: 0,
@@ -667,8 +669,14 @@ impl SpiceMosaicApp {
                     .ok()
             })
             .unwrap_or_default();
-        let schematic_model_parameter_one = schematic_model_parameters.first();
-        let schematic_model_parameter_two = schematic_model_parameters.get(1);
+        let selected_schematic_model_parameter = self
+            .selected_schematic_model_parameter
+            .and_then(|selected| {
+                schematic_model_parameters
+                    .iter()
+                    .find(|(parameter, _)| *parameter == selected)
+            })
+            .or_else(|| schematic_model_parameters.first());
         let selected_schematic_analysis_card = self
             .schematic
             .as_ref()
@@ -943,12 +951,10 @@ impl SpiceMosaicApp {
             "schematic-model-p-label": schematic_model_p_label,
             "schematic-model-polarity-disabled": schematic_model_polarity_disabled,
             "schematic-model-parameters-label": "Model parameters",
-            "schematic-model-parameter-one-label": schematic_model_parameter_one.map(|(parameter, _)| parameter.label()).unwrap_or(""),
-            "schematic-model-parameter-one-value": schematic_model_parameter_one.map(|(_, value)| value.as_str()).unwrap_or(""),
-            "schematic-model-parameter-one-disabled": schematic_model_parameter_one.is_none(),
-            "schematic-model-parameter-two-label": schematic_model_parameter_two.map(|(parameter, _)| parameter.label()).unwrap_or(""),
-            "schematic-model-parameter-two-value": schematic_model_parameter_two.map(|(_, value)| value.as_str()).unwrap_or(""),
-            "schematic-model-parameter-two-disabled": schematic_model_parameter_two.is_none(),
+            "schematic-model-parameter-options": schematic_model_parameters.iter().map(|(parameter, _)| parameter.key()).collect::<Vec<_>>(),
+            "selected-schematic-model-parameter-label": selected_schematic_model_parameter.map(|(parameter, _)| parameter.label()).unwrap_or("Select a nonlinear component"),
+            "schematic-selected-model-parameter-value": selected_schematic_model_parameter.map(|(_, value)| value.as_str()).unwrap_or(""),
+            "schematic-selected-model-parameter-disabled": selected_schematic_model_parameter.is_none(),
             "remove-schematic-component-label": "Remove selected component",
             "remove-schematic-component-disabled": selected_schematic_component.is_none(),
             "route-schematic-label": "Route selected terminal to",
@@ -1018,6 +1024,7 @@ impl SpiceMosaicApp {
             .validate()
             .map_err(|error| invalid(error.to_string()))?;
         self.selected_schematic_component = None;
+        self.selected_schematic_model_parameter = None;
         self.selected_schematic_terminal = 0;
         self.selected_schematic_route_target = None;
         self.selected_schematic_analysis_card = 0;
@@ -1299,6 +1306,7 @@ impl MosaicApp for SpiceMosaicApp {
                     .place_palette_component(kind)
                     .map_err(|error| invalid(error.to_string()))?;
                 self.selected_schematic_component = Some(reference.clone());
+                self.selected_schematic_model_parameter = None;
                 self.selected_schematic_terminal = 0;
                 self.selected_schematic_route_target = None;
                 self.record_schematic_edit(history);
@@ -1728,6 +1736,7 @@ impl MosaicApp for SpiceMosaicApp {
                     return Err(invalid("selectSchematicComponent reference is unknown"));
                 }
                 self.selected_schematic_component = Some(reference.to_owned());
+                self.selected_schematic_model_parameter = None;
                 self.selected_schematic_terminal = 0;
                 self.selected_schematic_route_target = None;
                 Ok(self.announced(format!("Selected {reference}.")))
@@ -1836,30 +1845,70 @@ impl MosaicApp for SpiceMosaicApp {
                 );
                 Ok(self.announced(self.diagnostics.clone()))
             }
-            "schematicModelParameterOneChange" | "schematicModelParameterTwoChange" => {
+            "selectSchematicModelParameter" => {
+                let key = event.payload["parameter"].as_str().ok_or_else(|| {
+                    invalid("selectSchematicModelParameter requires a parameter key")
+                })?;
+                let reference = self
+                    .selected_schematic_component
+                    .as_deref()
+                    .ok_or_else(|| {
+                        invalid("selectSchematicModelParameter requires a selected component")
+                    })?;
+                let parameter = self
+                    .schematic
+                    .as_ref()
+                    .ok_or_else(|| {
+                        invalid("selectSchematicModelParameter requires a loaded schematic")
+                    })?
+                    .component_model_parameters(reference)
+                    .map_err(|error| invalid(error.to_string()))?
+                    .into_iter()
+                    .find(|(parameter, _)| parameter.key() == key)
+                    .map(|(parameter, _)| parameter)
+                    .ok_or_else(|| {
+                        invalid("selected component does not support that model parameter")
+                    })?;
+                self.selected_schematic_model_parameter = Some(parameter);
+                Ok(self.announced(format!("Selected {}.", parameter.label())))
+            }
+            "schematicModelParameterChange" => {
                 let value = event.payload["value"].as_str().ok_or_else(|| {
                     invalid("schematic model parameter change requires a text value")
                 })?;
-                let index =
-                    usize::from(normalized_event_name == "schematicModelParameterTwoChange");
                 let reference = self.selected_schematic_component.clone().ok_or_else(|| {
                     invalid("schematic model parameter change requires a selected component")
                 })?;
+                let parameter = self
+                    .schematic
+                    .as_ref()
+                    .ok_or_else(|| {
+                        invalid("schematic model parameter change requires a loaded schematic")
+                    })?
+                    .component_model_parameters(&reference)
+                    .map_err(|error| invalid(error.to_string()))?
+                    .into_iter()
+                    .find(|(candidate, _)| {
+                        Some(*candidate) == self.selected_schematic_model_parameter
+                    })
+                    .or_else(|| {
+                        self.schematic
+                            .as_ref()?
+                            .component_model_parameters(&reference)
+                            .ok()?
+                            .into_iter()
+                            .next()
+                    })
+                    .map(|(parameter, _)| parameter)
+                    .ok_or_else(|| invalid("selected component has no model parameters"))?;
                 let history = self.schematic_history_entry();
                 let document = self.schematic.as_mut().ok_or_else(|| {
                     invalid("schematic model parameter change requires a loaded schematic")
                 })?;
-                let parameter = document
-                    .component_model_parameters(&reference)
-                    .map_err(|error| invalid(error.to_string()))?
-                    .get(index)
-                    .map(|(parameter, _)| *parameter)
-                    .ok_or_else(|| {
-                        invalid("selected component has no model parameter at that index")
-                    })?;
                 document
                     .set_component_model_parameter(&reference, parameter, value)
                     .map_err(|error| invalid(error.to_string()))?;
+                self.selected_schematic_model_parameter = Some(parameter);
                 self.record_schematic_edit(history);
                 self.diagnostics = format!(
                     "Updated {reference} {}. Sync the netlist when ready.",
@@ -3184,31 +3233,49 @@ mod tests {
         let selected = app.update();
         assert_eq!(selected.props["schematic-value-disabled"], true);
         assert_eq!(
-            selected.props["schematic-model-parameter-one-label"],
+            selected.props["schematic-model-parameter-options"],
+            json!(["IS", "BF", "CJE", "TF"])
+        );
+        assert_eq!(
+            selected.props["selected-schematic-model-parameter-label"],
             "Saturation current (IS)"
         );
-        assert_eq!(selected.props["schematic-model-parameter-one-value"], "");
-        assert_eq!(selected.props["schematic-model-parameter-two-value"], "80");
+        assert_eq!(
+            selected.props["schematic-selected-model-parameter-value"],
+            ""
+        );
+        let selected_capacitance = dispatch(
+            &mut app,
+            "onSelectSchematicModelParameter",
+            json!({"parameter":"CJE"}),
+        );
+        assert_eq!(
+            selected_capacitance.props["selected-schematic-model-parameter-label"],
+            "Base-emitter capacitance (CJE)"
+        );
 
         let edited = dispatch(
             &mut app,
-            "onSchematicModelParameterOneChange",
-            json!({"value":"2e-14"}),
+            "onSchematicModelParameterChange",
+            json!({"value":"2e-12"}),
         );
-        assert_eq!(edited.props["schematic-model-parameter-one-value"], "2e-14");
+        assert_eq!(
+            edited.props["schematic-selected-model-parameter-value"],
+            "2e-12"
+        );
         let snapshot = app.snapshot().unwrap().unwrap();
         let mut restored = SpiceMosaicApp::default();
         let mut context = StartContext::new("en-US", Platform::Web);
         context.restored_snapshot = Some(snapshot);
         assert_eq!(
-            restored.start(context).unwrap().props["schematic-model-parameter-one-value"],
-            "2e-14"
+            restored.start(context).unwrap().props["schematic-model-parameter-options"],
+            json!(["IS", "BF", "CJE", "TF"])
         );
         let synchronized = dispatch(&mut restored, "onSynchronizeSchematic", json!({}));
         assert!(synchronized.props["netlist-text"]
             .as_str()
             .unwrap()
-            .contains(".model SchematicQ1Model NPN(BF=80 IS=2e-14)"));
+            .contains(".model SchematicQ1Model NPN(BF=80 CJE=2e-12)"));
     }
 
     #[test]
