@@ -81,6 +81,14 @@ class VentureChromeInteractionTest {
             val surface = rule.onNodeWithTag("venture-content-surface").assertExists()
             println("compose-live-stage=shell-mounted")
 
+            rule.onNodeWithTag("bookmark-button").assertIsEnabled().performClick()
+            rule.onNodeWithText("Bookmarks (1)").assertExists().performClick()
+            rule.onNodeWithText("1 of 1").assertExists()
+            rule.onNodeWithText("Compose Start").assertExists()
+            rule.onNodeWithTag("bookmarks-close-button").performClick()
+            rule.onNodeWithTag("bookmarks-panel").assertDoesNotExist()
+            println("compose-live-stage=bookmark-catalog")
+
             rule.onNodeWithTag("copy-address-button").assertIsEnabled().performClick()
             rule.waitUntil(10_000) { host.lastClipboardText != null }
             assertEquals("${server.origin}/start", host.lastClipboardText)

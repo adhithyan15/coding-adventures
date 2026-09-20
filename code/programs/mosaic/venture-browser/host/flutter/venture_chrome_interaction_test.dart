@@ -104,6 +104,17 @@ void main() {
       await _pumpLiveVentureShell(tester, host);
       debugPrint('flutter-live-stage=shell-pumped');
 
+      await tester.tap(find.text('Bookmark'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Bookmarks (1)'));
+      await tester.pumpAndSettle();
+      expect(find.text('1 of 1'), findsOneWidget);
+      expect(find.text('Flutter Start'), findsWidgets);
+      await tester.tap(find.text('Close'));
+      await tester.pumpAndSettle();
+      expect(find.text('1 of 1'), findsNothing);
+      debugPrint('flutter-live-stage=bookmark-catalog');
+
       await tester.tap(find.text('Copy'));
       await tester.pumpAndSettle();
       expect(host.lastClipboardText, 'http://127.0.0.1:$port/start');

@@ -36,6 +36,12 @@ layout VentureChrome {
         state-when-disabled : slot: bookmark-disabled ,
         onClick : emit: onToggleBookmark
       )
+      HostButton [ bookmarks-button ] (
+        label : slot: bookmarks-label ,
+        disabled : slot: bookmarks-disabled ,
+        state-when-disabled : slot: bookmarks-disabled ,
+        onClick : emit: onBookmarksOpen
+      )
       HostInput [ address-input ] (
         value : slot: address ,
         placeholder : "Enter a URL" ,
@@ -118,6 +124,41 @@ layout VentureChrome {
         state-when-disabled : slot: view-source-disabled ,
         onClick : emit: onViewSource
       )
+    }
+
+    If ( when: slot: bookmarks-open ) {
+      Column [ bookmarks-panel ] {
+        Row [ bookmarks-header ] {
+          Text [ bookmarks-heading ] ( content : "Bookmarks" , a11y-role : heading )
+          Text [ bookmarks-position ] ( content : slot: bookmarks-position )
+          HostButton [ bookmarks-close-button ] (
+            label : "Close" ,
+            onClick : emit: onBookmarksClose
+          )
+        }
+        Text [ bookmarks-title ] ( content : slot: bookmarks-title )
+        Text [ bookmarks-address ] ( content : slot: bookmarks-address )
+        Row [ bookmarks-actions ] {
+          HostButton [ bookmarks-previous-button ] (
+            label : "Previous" ,
+            disabled : slot: bookmarks-previous-disabled ,
+            state-when-disabled : slot: bookmarks-previous-disabled ,
+            onClick : emit: onBookmarksPrevious
+          )
+          HostButton [ bookmarks-next-button ] (
+            label : "Next" ,
+            disabled : slot: bookmarks-next-disabled ,
+            state-when-disabled : slot: bookmarks-next-disabled ,
+            onClick : emit: onBookmarksNext
+          )
+          HostButton [ bookmarks-open-button ] (
+            label : "Open" ,
+            disabled : slot: bookmarks-navigate-disabled ,
+            state-when-disabled : slot: bookmarks-navigate-disabled ,
+            onClick : emit: onBookmarksNavigate
+          )
+        }
+      }
     }
 
     If ( when: slot: page-info-open ) {

@@ -206,6 +206,10 @@ public static class MosaicHost
                 var homeButton = await FindAutomationElementAsync<Button>(component, "home-button");
                 var reloadButton = await FindAutomationElementAsync<Button>(
                     component, "reload-button");
+                var bookmarkButton = await FindAutomationElementAsync<Button>(
+                    component, "bookmark-button");
+                var bookmarksButton = await FindAutomationElementAsync<Button>(
+                    component, "bookmarks-button");
                 var copyAddressButton = await FindAutomationElementAsync<Button>(
                     component, "copy-address-button");
                 var openPageButton = await FindAutomationElementAsync<Button>(
@@ -230,6 +234,8 @@ public static class MosaicHost
                     || forwardButton is null
                     || homeButton is null
                     || reloadButton is null
+                    || bookmarkButton is null
+                    || bookmarksButton is null
                     || copyAddressButton is null
                     || openPageButton is null
                     || savePageButton is null
@@ -322,6 +328,52 @@ public static class MosaicHost
                         backend = "xaml",
                         status = "error",
                         error = "native navigation controls did not update after navigation",
+                    });
+                    return;
+                }
+                var bookmarkProvider = new ButtonAutomationPeer(bookmarkButton) as IInvokeProvider;
+                bookmarkProvider?.Invoke();
+                if (bookmarkProvider is null
+                    || !await WaitForControlStateAsync(
+                        () => component.BookmarkLabel == "Remove Bookmark"
+                            && component.BookmarksLabel == "Bookmarks (1)"
+                            && bookmarksButton.IsEnabled))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native bookmark catalog did not receive the durable entry",
+                    });
+                    return;
+                }
+                (new ButtonAutomationPeer(bookmarksButton) as IInvokeProvider)?.Invoke();
+                if (!await WaitForControlStateAsync(
+                    () => component.BookmarksOpen
+                        && component.BookmarksPosition == "1 of 1"
+                        && component.BookmarksAddress == targetUrl))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native bookmark catalog did not open shared selection state",
+                    });
+                    return;
+                }
+                var bookmarksCloseButton = await FindAutomationElementAsync<Button>(
+                    component, "bookmarks-close-button");
+                (bookmarksCloseButton is null
+                    ? null
+                    : new ButtonAutomationPeer(bookmarksCloseButton) as IInvokeProvider)?.Invoke();
+                if (bookmarksCloseButton is null
+                    || !await WaitForControlStateAsync(() => !component.BookmarksOpen))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native bookmark catalog did not close through shared state",
                     });
                     return;
                 }
@@ -1076,6 +1128,24 @@ public static class MosaicHost
             SetIfChanged(component.BookmarkLabel, props.GetProperty("bookmark-label").GetString(),
                 value => component.BookmarkLabel = value);
             component.BookmarkDisabled = props.GetProperty("bookmark-disabled").GetBoolean();
+            SetIfChanged(component.BookmarksLabel, props.GetProperty("bookmarks-label").GetString(),
+                value => component.BookmarksLabel = value);
+            component.BookmarksDisabled = props.GetProperty("bookmarks-disabled").GetBoolean();
+            component.BookmarksOpen = props.GetProperty("bookmarks-open").GetBoolean();
+            SetIfChanged(component.BookmarksPosition,
+                props.GetProperty("bookmarks-position").GetString(),
+                value => component.BookmarksPosition = value);
+            SetIfChanged(component.BookmarksTitle, props.GetProperty("bookmarks-title").GetString(),
+                value => component.BookmarksTitle = value);
+            SetIfChanged(component.BookmarksAddress,
+                props.GetProperty("bookmarks-address").GetString(),
+                value => component.BookmarksAddress = value);
+            component.BookmarksPreviousDisabled =
+                props.GetProperty("bookmarks-previous-disabled").GetBoolean();
+            component.BookmarksNextDisabled =
+                props.GetProperty("bookmarks-next-disabled").GetBoolean();
+            component.BookmarksNavigateDisabled =
+                props.GetProperty("bookmarks-navigate-disabled").GetBoolean();
             component.CopyAddressDisabled = props.GetProperty("copy-address-disabled").GetBoolean();
             component.OpenPageDisabled = props.GetProperty("open-page-disabled").GetBoolean();
             component.SavePageDisabled = props.GetProperty("save-page-disabled").GetBoolean();

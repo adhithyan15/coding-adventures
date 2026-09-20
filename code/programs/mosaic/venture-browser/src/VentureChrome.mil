@@ -12,6 +12,15 @@ component VentureChrome {
   slot forward-disabled    : bool ;
   slot bookmark-label      : text ;
   slot bookmark-disabled   : bool ;
+  slot bookmarks-label     : text ;
+  slot bookmarks-disabled  : bool ;
+  slot bookmarks-open      : bool ;
+  slot bookmarks-position  : text ;
+  slot bookmarks-title     : text ;
+  slot bookmarks-address   : text ;
+  slot bookmarks-previous-disabled : bool ;
+  slot bookmarks-next-disabled : bool ;
+  slot bookmarks-navigate-disabled : bool ;
   slot copy-address-disabled : bool ;
   slot open-page-disabled   : bool ;
   slot save-page-disabled   : bool ;
@@ -45,6 +54,11 @@ component VentureChrome {
   emit onHome ;
   emit onReload ;
   emit onToggleBookmark ;
+  emit onBookmarksOpen ;
+  emit onBookmarksPrevious ;
+  emit onBookmarksNext ;
+  emit onBookmarksNavigate ;
+  emit onBookmarksClose ;
   emit onCopyAddress ;
   emit onOpenPageInNewWindow ;
   emit onSavePage ;
