@@ -4,6 +4,15 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+### Fixed — Compose startup no longer fails outside the window (#15786)
+
+The generated Compose Desktop app now paints a themed loading state before its
+Rust engine and saved workspace initialize. A failed runtime or snapshot load is
+shown in the window with its detail, an explicit statement that saved tasks were
+not changed, and a **Try again** action that creates a fresh host and reruns the
+initial props load. Generated UI acceptance drives loading, failure, and recovery
+in addition to the existing real-runtime task lifecycle.
+
 ### Fixed — local storage details remain legible (#15263)
 
 The persistence status and local data path now occupy separate lines. Their

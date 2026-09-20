@@ -74,6 +74,10 @@ fn manifest_declares_task_app() {
         acceptance.contains(&format!("Size({}f, {}f)", window.width, window.height)),
         "Compose acceptance viewport must match [app] initial window size"
     );
+    assert!(
+        acceptance.contains("generatedStartupFailureIsVisibleAndRetryRerunsInitialization"),
+        "Compose acceptance must drive the generated startup failure and retry path"
+    );
 }
 
 /// #15263: the persistence status and long local-data path must not compete

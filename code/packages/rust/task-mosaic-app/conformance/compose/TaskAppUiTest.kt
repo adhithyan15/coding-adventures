@@ -10,6 +10,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.runSkikoComposeUiTest
+import androidx.compose.material.Text
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.semantics.ScrollAxisRange
 import androidx.compose.ui.semantics.SemanticsNode
@@ -19,6 +20,9 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFails
 import kotlin.test.assertTrue
 import org.junit.Test
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicInteger
 
 private const val UI_TASK_NAME = "Native acceptance task"
 private const val UI_EDITED_TASK_NAME = "Edited native task"
@@ -49,6 +53,18 @@ private const val UI_SUMMARY = "1 task(s) · 0 done · projected finish 2026-01-
 //   * `performScrollTo()` hangs against the emitted scroll container, so
 //     scrolling is not currently an option for reaching content below a fold.
 private val ACCEPTANCE_VIEWPORT = Size(1280f, 900f)
+
+private class StartupRecoveryHost : MosaicComposeHost {
+    val propsCalls = AtomicInteger(0)
+
+    override fun props(): Map<String, Any?> {
+        propsCalls.incrementAndGet()
+        return mapOf("props" to emptyMap<String, Any?>())
+    }
+
+    override fun handleEvent(event: Map<String, Any?>): Map<String, Any?> =
+        mapOf("props" to emptyMap<String, Any?>())
+}
 
 /**
  * Asserts the app fits [ACCEPTANCE_VIEWPORT] vertically, with nothing pushed
@@ -160,6 +176,47 @@ private fun ComposeUiTest.assertStorageSummaryIsLegible() {
 class TaskAppUiTest {
     @OptIn(ExperimentalTestApi::class)
     @Test
+    fun generatedStartupFailureIsVisibleAndRetryRerunsInitialization() = runSkikoComposeUiTest {
+        val releaseFirstAttempt = CountDownLatch(1)
+        val attempts = AtomicInteger(0)
+        val recoveredHost = StartupRecoveryHost()
+
+        setContent {
+            MosaicStartup(
+                loadHost = {
+                    if (attempts.incrementAndGet() == 1) {
+                        check(releaseFirstAttempt.await(5, TimeUnit.SECONDS)) {
+                            "startup acceptance did not release the first attempt"
+                        }
+                        error("fixture initialization failed")
+                    }
+                    recoveredHost
+                },
+                content = { _, _ -> Text("Recovered TaskApp") },
+            )
+        }
+
+        onNodeWithTag("mosaic-startup-loading").assertIsDisplayed()
+        onNodeWithText("Starting TaskApp…").assertIsDisplayed()
+
+        releaseFirstAttempt.countDown()
+        waitUntil(timeoutMillis = 5_000) {
+            onAllNodesWithText("TaskApp could not start").fetchSemanticsNodes().isNotEmpty()
+        }
+        onNodeWithTag("mosaic-startup-failure").assertIsDisplayed()
+        onNodeWithText("TaskApp could not start").assertIsDisplayed()
+        onNodeWithText("Your saved tasks have not been changed. Retrying is safe.")
+            .assertIsDisplayed()
+        onNodeWithText("fixture initialization failed").assertIsDisplayed()
+
+        onNodeWithText("Try again").performClick()
+        waitUntil(timeoutMillis = 5_000) { attempts.get() == 2 }
+        onNodeWithText("Recovered TaskApp").assertIsDisplayed()
+        assertEquals(1, recoveredHost.propsCalls.get())
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
     fun generatedControlsDriveRustSchedulingLifecycle() = runSkikoComposeUiTest(
         size = ACCEPTANCE_VIEWPORT,
     ) {
@@ -169,7 +226,10 @@ class TaskAppUiTest {
         val host = checkNotNull(MosaicRuntimeHost.load()) {
             "standard Compose binding did not load the TaskApp Rust runtime"
         }
-        compose.setContent { MosaicApp(host) }
+        val initialResponse = checkNotNull(host.props()) {
+            "standard Compose binding returned no TaskApp startup props"
+        }
+        compose.setContent { MosaicApp(host, initialResponse) }
         compose.waitForIdle()
         compose.assertStorageSummaryIsLegible()
 

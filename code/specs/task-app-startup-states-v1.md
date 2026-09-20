@@ -90,10 +90,13 @@ already has a window before `task-mosaic-app` is ready, so requirement 1 is abou
 what fills that window, and requirements 2–4 are about what replaces it when the
 adapter or its snapshot fails to load.
 
-Today native hosts report a startup failure only through process and log evidence.
-Closing that is **not** in this change: it needs a per-backend surface in Qt,
-Flutter, Compose, SwiftUI, and WinUI, and belongs with the emitted-control contract
-work rather than inside a web-host fix. The requirements above are written
-host-neutral so that work has a contract to implement against rather than
-re-deriving one, and it is tracked in
+Compose Desktop now implements the contract in its strict generated shell: the
+window precedes runtime loading, initialization runs off the UI thread, failure
+detail and saved-data reassurance replace the loading state, and retry creates a
+fresh host and re-reads initial props. Generated Compose UI acceptance drives the
+loading, failure, and recovery sequence (#15786).
+
+Qt, Flutter, SwiftUI, and WinUI still report startup failure only through process
+and log evidence. Their backend-sized surfaces and emitted-control acceptance
+remain tracked in
 [#13984](https://github.com/adhithyan15/coding-adventures/issues/13984).
