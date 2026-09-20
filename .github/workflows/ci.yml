@@ -190,14 +190,28 @@ jobs:
             force_flag=(-force)
             shard_flags=(-shard-count 15 -emit-shard-matrix)
           fi
-          ./build-tool \
-            -root . \
-            -diff-base "${{ steps.diff-base.outputs.base }}" \
-            "${force_flag[@]}" \
-            -validate-build-files \
-            -detect-languages \
-            -emit-plan build-plan.json \
-            "${shard_flags[@]}"
+          emit_plan() {
+            ./build-tool \
+              -root . \
+              -diff-base "${{ steps.diff-base.outputs.base }}" \
+              "${force_flag[@]}" \
+              -validate-build-files \
+              -detect-languages \
+              -emit-plan build-plan.json \
+              "${shard_flags[@]}"
+          }
+          if plan_output="$(emit_plan 2>&1)"; then
+            printf '%s\n' "$plan_output"
+          else
+            plan_status=$?
+            printf '%s\n' "$plan_output"
+            if ! grep -Fqx "Error evaluating CI gate registry: CI_GATE_MATCH_LIMIT_EXCEEDED" <<< "$plan_output"; then
+              exit "$plan_status"
+            fi
+            echo "::notice::CI gate match-work ceiling exceeded; starting a separate forced run-all planning operation"
+            force_flag=(-force)
+            emit_plan
+          fi
 
       # Guard against the one failure mode gating introduces: if the build tool
       # emitted no verdicts (registry disabled, flag typo, plan written by an

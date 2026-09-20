@@ -112,13 +112,27 @@ jobs:
           if [ "$EVENT_NAME" = "schedule" ] || { [ "$GIT_REF" = "refs/heads/main" ] && [ "$EVENT_NAME" = "push" ]; }; then
             force_flag=(-force)
           fi
-          ./build-tool \
-            -root . \
-            -diff-base "${{ steps.diff-base.outputs.base }}" \
-            "${force_flag[@]}" \
-            -validate-build-files \
-            -detect-languages \
-            -emit-plan build-plan.json
+          emit_plan() {
+            ./build-tool \
+              -root . \
+              -diff-base "${{ steps.diff-base.outputs.base }}" \
+              "${force_flag[@]}" \
+              -validate-build-files \
+              -detect-languages \
+              -emit-plan build-plan.json
+          }
+          if plan_output="$(emit_plan 2>&1)"; then
+            printf '%s\n' "$plan_output"
+          else
+            plan_status=$?
+            printf '%s\n' "$plan_output"
+            if ! grep -Fqx "Error evaluating CI gate registry: CI_GATE_MATCH_LIMIT_EXCEEDED" <<< "$plan_output"; then
+              exit "$plan_status"
+            fi
+            echo "::notice::CI gate match-work ceiling exceeded; starting a separate forced run-all planning operation"
+            force_flag=(-force)
+            emit_plan
+          fi
 
       - name: Upload build plan
         uses: actions/upload-artifact@v7
