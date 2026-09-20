@@ -6816,12 +6816,33 @@ impl Compiler {
         if !visiting.insert(name.to_string()) {
             return false;
         }
+        let found = self
+            .static_body_actions_have_acyclic_dependency_recurrence_in_actions(
+                actions,
+                actions,
+                name,
+                target_name,
+                visiting,
+            )
+            .unwrap_or(false);
+        visiting.remove(name);
+        found
+    }
+
+    fn static_body_actions_have_acyclic_dependency_recurrence_in_actions(
+        &self,
+        actions: &[StaticBodyAction<'_>],
+        all_actions: &[StaticBodyAction<'_>],
+        name: &str,
+        target_name: &str,
+        visiting: &mut HashSet<String>,
+    ) -> Option<bool> {
         let mut found = false;
         for action in actions {
             match action {
                 StaticBodyAction::Assignment(assignment) if assignment.name == name => {
                     if found {
-                        return false;
+                        return None;
                     }
                     let mut dependencies = HashSet::new();
                     collect_expression_dependency_names(
@@ -6834,23 +6855,23 @@ impl Compiler {
                             continue;
                         }
                         let Ok(binding) = self.require_var(&dependency) else {
-                            return false;
+                            return None;
                         };
                         if binding.is_global
                             || binding.array.is_some()
                             || self.active_by_name_binding(&dependency).is_some()
                         {
-                            return false;
+                            return None;
                         }
-                        if Self::static_body_actions_write_name(actions, &dependency)
+                        if Self::static_body_actions_write_name(all_actions, &dependency)
                             && !self.static_body_actions_have_acyclic_dependency_recurrence(
-                                actions,
+                                all_actions,
                                 &dependency,
                                 target_name,
                                 visiting,
                             )
                         {
-                            return false;
+                            return None;
                         }
                     }
                     found = true;
@@ -6859,16 +6880,34 @@ impl Compiler {
                     then_actions,
                     else_actions,
                     ..
-                } if Self::static_body_actions_write_name(then_actions, name)
-                    || Self::static_body_actions_write_name(else_actions, name) =>
-                {
-                    return false;
+                } => {
+                    let then_found = self
+                        .static_body_actions_have_acyclic_dependency_recurrence_in_actions(
+                            then_actions,
+                            all_actions,
+                            name,
+                            target_name,
+                            visiting,
+                        )?;
+                    let else_found = self
+                        .static_body_actions_have_acyclic_dependency_recurrence_in_actions(
+                            else_actions,
+                            all_actions,
+                            name,
+                            target_name,
+                            visiting,
+                        )?;
+                    if then_found || else_found {
+                        if found {
+                            return None;
+                        }
+                        found = true;
+                    }
                 }
                 _ => {}
             }
         }
-        visiting.remove(name);
-        found
+        Some(found)
     }
 
     fn static_body_actions_write_only_name(actions: &[StaticBodyAction<'_>], name: &str) -> bool {
@@ -14666,13 +14705,12 @@ mod tests {
     }
 
     #[test]
-    fn al4_written_conditional_assignment_selector_remains_conservative() {
-        let err = compile_source(
+    fn al4_written_conditional_assignment_selector_tracks_selected_statement() {
+        compile_source(
             "begin integer i, n, guard; boolean choose; n := 3; guard := 1; choose := true; i := 0; for i := i + 1 while i < n do begin if guard = 0 then n := n + 1; guard := if choose then guard else 0; choose := false end; print(i + 0.25) end",
             "test",
         )
-        .expect_err("an assignment selector written by the body may choose another leaf later");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        .expect("an exact changing selector may choose bounded statement recurrence leaves");
     }
 
     #[test]

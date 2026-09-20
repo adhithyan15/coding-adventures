@@ -1035,7 +1035,7 @@ backend immediately) come before the enabler-dependent items.
   scalar recurrences; the next `while` element expression consumes the
   resulting exact control snapshot while the terminating sibling snapshots
   remain available after the loop. Labels, declarations, dynamic selectors or
-  effectful siblings, transitive or conditional dependency writes, string
+  effectful siblings, unsupported transitive dependency writes, string
   targets, overflow, non-finite values, and loops exceeding 4,096 evaluations
   remain conservative. Capped abstract execution also retains the first
   integer or finite binary64 control value whose predicate is false when its
@@ -1046,6 +1046,10 @@ backend immediately) come before the enabler-dependent items.
   recurrences. A recurrence in that acyclic graph may use a conditional
   expression selected by the controlled scalar or another exact local
   snapshot; capped execution re-evaluates the selected leaf on every pass.
+  The recurrence assignment may instead occur in one or both branches of a
+  conditional statement selected by those exact snapshots. A branch without
+  the assignment preserves the dependency for that pass; unknown selectors
+  and unsupported branch effects still fail closed.
   Read-only body uses, exact scalar
   self-assignments, checked numeric or boolean expressions that equal the
   tracked scalar and otherwise reference only known ordinary locals that are
