@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-S-02",
+  "category": "Vakya (the sentence)",
+  "label": "the verb comes last",
+  "probe": [
+    "HI-GRAMMAR-VERB-FINAL-01"
+  ],
+  "derivedFrom": "ES:A1-SV-06",
+  "note": "Closed by HI-C69-verb-last (chapter 69). The rule was chosen for the chapter that starts joining clauses rather than for an early one on purpose: verb-finality is what tells a listener where the first half of a joined sentence ends, and that is when a learner needs it stated rather than merely shown."
+}

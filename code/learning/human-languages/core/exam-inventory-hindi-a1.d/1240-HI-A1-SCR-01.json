@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-SCR-01",
+  "category": "Devanagari lipi (script and orthography)",
+  "label": "the shirorekha head-line letters hang from",
+  "probe": [
+    "HI-CONCEPT-W01-SHIROREKHA-NA-MA-01"
+  ],
+  "derivedFrom": "hindi-specific"
+}

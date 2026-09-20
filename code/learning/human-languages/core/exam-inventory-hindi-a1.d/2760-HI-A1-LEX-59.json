@@ -1,0 +1,12 @@
+{
+  "id": "HI-A1-LEX-59",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "fauna",
+  "probe": [
+    "HI-CONCEPT-C23-KUTTA-BILLI-01",
+    "HI-LEX-C54-ANIMAL-01",
+    "HI-LEX-C54-ANIMAL-03",
+    "HI-LEX-C60-YARD-01"
+  ],
+  "derivedFrom": "ES:A1-NE20-05"
+}

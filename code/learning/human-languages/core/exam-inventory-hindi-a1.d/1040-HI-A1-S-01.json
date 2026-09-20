@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-S-01",
+  "category": "Vakya (the sentence)",
+  "label": "the copular sentence: X Y hai",
+  "probe": [
+    "HI-CONCEPT-C02-MERANAAMHAI-01"
+  ],
+  "derivedFrom": "ES:A1-OS-05, ES:A1-SV-02"
+}

@@ -1,0 +1,13 @@
+{
+  "id": "HI-A1-LEX-08",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "parts of the body",
+  "probe": [
+    "HI-CONCEPT-C13-SIR-01",
+    "HI-CONCEPT-C13-HAATH-01",
+    "HI-CONCEPT-C38-AANKH-01",
+    "HI-LEX-C46-BODY-01",
+    "HI-LEX-C53-BODY-01"
+  ],
+  "derivedFrom": "ES:A1-NE01-01"
+}

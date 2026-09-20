@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-LEX-04",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "attractiveness: beautiful and ugly",
+  "probe": [
+    "HI-LEX-C80-LOOKS-01",
+    "HI-LEX-C80-LOOKS-02"
+  ],
+  "derivedFrom": "ES:A1-NG6-03",
+  "note": "sundar and its opposite badsurat are both introduced by HI-C80-sundar-badsurat. sundar carries the Sanskrit su- the track already met in suprabhat; badsurat is Persian bad plus Arabic surat, literally bad-faced."
+}

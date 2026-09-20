@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-V-21",
+  "category": "Kriya (the verb)",
+  "label": "chahiye for wanting and needing",
+  "probe": [
+    "HI-LEX-C95-NEED-01",
+    "HI-LEX-C95-NEED-02"
+  ],
+  "derivedFrom": "ES:A1-F3-04",
+  "note": "Introduced by HI-C95-chahiye and HI-C95-mujhe-chahiye. THE NOTE WAS RIGHT ON BOTH COUNTS, including the one a mechanical check denied. It said chaahiye needs the independent vowel e, which no Hindi writing lesson has drawn -- and the glyph check answered ok, because measureScriptClosure credits a glyph to any script lesson whose BODY contains it, and HI-S117-letter-ca lists `ek do tiin chaar paanch`. The letter was credited to the cha lesson. HI-S131-letter-e now draws it, at chapter 29. The note is also right that chaahnaa (HI-LEX-CHAHNA-01, chapter 70) is a different thing: chaahtaa takes another VERB and chaahiye takes a NOUN, so the two are told apart by what FOLLOWS rather than by what they mean, since English says want for both. Two further teachables the note does not name: chaahiye NEVER BENDS -- no gender, no number, the same five letters whoever is speaking -- and its wanter is DATIVE, which makes `mujhe chaay chaahiye` the liking sentence with one word swapped. Wanting a thing and liking a thing happen to you; wanting to act is something you do, and Hindi draws that line with the case of the first word."
+}

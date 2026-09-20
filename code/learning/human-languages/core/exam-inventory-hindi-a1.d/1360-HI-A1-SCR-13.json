@@ -1,0 +1,13 @@
+{
+  "id": "HI-A1-SCR-13",
+  "category": "Devanagari lipi (script and orthography)",
+  "label": "the matras aa, i, ii, u, e and ai",
+  "probe": [
+    "HI-CONCEPT-W03-MATRAS-NAAM-01",
+    "HI-SCRIPT-II-MATRA-01",
+    "HI-SCRIPT-U-MATRA-01",
+    "HI-SCRIPT-AI-MATRA-01",
+    "HI-SCRIPT-RECOG-112"
+  ],
+  "derivedFrom": "ES:A1-O1-02"
+}

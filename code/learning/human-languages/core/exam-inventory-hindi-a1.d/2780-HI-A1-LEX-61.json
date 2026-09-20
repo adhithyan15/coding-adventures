@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-LEX-61",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "naming a second language, and naming nationalities",
+  "probe": [
+    "HI-LEX-C68-ORIGIN-04",
+    "HI-LEX-C68-ORIGIN-05"
+  ],
+  "derivedFrom": "ES:A1-ADJ-02, ES:A1-F1-03",
+  "note": "`bhasha` and `angrezi` are taught in HI-C68-language and HI-C68-english, which is what mock 1 item 16 and mock 2 item 20 key on and what the writing papers' `bhasha` field needs. Naming a NATIONALITY still needs the relational adjective, which stays untaught and is enumerated separately at HI-A1-ADJ-05."
+}

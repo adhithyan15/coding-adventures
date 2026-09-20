@@ -1,0 +1,15 @@
+{
+  "id": "HI-A1-LEX-62",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "the words a town sign or a station announcement uses",
+  "probe": [
+    "HI-LEX-C69-GOING-03",
+    "HI-LEX-C74-SIGNS-01",
+    "HI-LEX-C74-SIGNS-02",
+    "HI-LEX-C74-SIGNS-03",
+    "HI-LEX-C74-SIGNS-04",
+    "HI-LEX-C74-SIGNS-05"
+  ],
+  "derivedFrom": "ES:A1-NG5-05",
+  "note": "HI-C74 teaches `khula`, `band`, `pravesh`, `nikas` and `der`, and HI-C69 teaches `steshan`. Six of the nine words this note used to list. `dhyan den`, `shuru`, `taiyar` and `platform` are still untaught."
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-V-25",
+  "category": "Kriya (the verb)",
+  "label": "jana, and the go-somewhere frame every A1 routine description needs",
+  "probe": [
+    "HI-LEX-C69-GOING-05",
+    "HI-CONCEPT-C05-BOLTAHUN-01"
+  ],
+  "derivedFrom": "ES:A1-V-02, ES:A1-NG3-04",
+  "note": "Covered by productive combination, the same liberty `probeSemantics` names for HI-A1-F-32: HI-C69-go introduces `jana`, and the habitual template is introduced as applying to any stem, so `main steshan jata hun` is buildable from taught parts -- and HI-C69-go's guided practice says exactly that sentence."
+}

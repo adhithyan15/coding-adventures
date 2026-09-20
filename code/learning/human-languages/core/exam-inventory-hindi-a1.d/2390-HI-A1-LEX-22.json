@@ -1,0 +1,12 @@
+{
+  "id": "HI-A1-LEX-22",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "the eating place: ordering, the server, the bill",
+  "probe": [
+    "HI-LEX-C73-EATING-01",
+    "HI-LEX-C73-EATING-03",
+    "HI-LEX-C73-EATING-04"
+  ],
+  "derivedFrom": "ES:A1-NE05-05",
+  "note": "Ordering was already taught (HI-A1-F-15). HI-C73 adds `hotal` for the eating house, `bil` for the bill and `vetar` for the server, which are the three the label names."
+}

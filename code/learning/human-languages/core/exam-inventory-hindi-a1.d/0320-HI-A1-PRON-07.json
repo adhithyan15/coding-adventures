@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-PRON-07",
+  "category": "Sarvanam (pronouns)",
+  "label": "a pronoun in front of a postposition (mere liye, mere sath, mere pas)",
+  "probe": [
+    "HI-LEX-C84-POSS-06",
+    "HI-LEX-C84-POSS-05"
+  ],
+  "derivedFrom": "ES:A1-PRON-08",
+  "note": "mere liye, mere saath and mere paas are taught together as one pattern by HI-C84-mere-liye and HI-C84-mere-paas. The oblique the note said was untaught is the chapter's central insight: chapter 2 taught mere as the PLURAL of mera, and it is also the oblique, so -aa becomes -e in front of any postposition. Identical spelling, two jobs, and only what follows tells you which."
+}

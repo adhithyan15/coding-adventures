@@ -1,0 +1,12 @@
+{
+  "id": "HI-A1-LEX-18",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "the meals of the day",
+  "probe": [
+    "HI-LEX-C79-MEALS-01",
+    "HI-LEX-C79-MEALS-02",
+    "HI-LEX-C73-EATING-02"
+  ],
+  "derivedFrom": "ES:A1-NE05-01",
+  "note": "nashta ('breakfast') is taught in HI-C73-breakfast and the doing-word sense of khana in HI-C73-drink. HI-C79-dopahar-raat-ka-khana now names the other two meals as the transparent compounds they are -- dopahar ka khana and rat ka khana -- so all three meals of the day are nameable. Neither new name adds a word the track did not already own."
+}

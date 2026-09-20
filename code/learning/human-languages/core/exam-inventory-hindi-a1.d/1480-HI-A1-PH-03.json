@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-PH-03",
+  "category": "Uccharan (pronunciation)",
+  "label": "nasalised vowels",
+  "probe": [
+    "HI-CONCEPT-C07-HAAN-01",
+    "HI-SCRIPT-CHANDRABINDU-01"
+  ],
+  "derivedFrom": "hindi-specific"
+}

@@ -17,9 +17,9 @@ derives the canonical schema-v2 lesson count while retaining complete
 measurement and zero-excess gates. Point-specific audit history stays with the
 inventory point's `note`, not in an ever-growing executable comment followed by
 hand-edited totals.
-Malayalam A1 point-specific audit history now lives with the corresponding
-direct owner under `core/exam-inventory-malayalam-a1.d/`; chapter agents must
-not recreate the retired aggregate inventory.
+Malayalam and Hindi A1 point-specific audit history now lives with the
+corresponding direct owner under `core/exam-inventory-<track>-a1.d/`; chapter
+agents must not recreate the retired aggregate inventories.
 
 The generated continuity and ramp ledger lives in
 `core/gentle-ramp-snapshots/<language>.d/{metrics,findings}/`, while modality lives in

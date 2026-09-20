@@ -1,0 +1,14 @@
+{
+  "id": "HI-A1-SCR-15",
+  "category": "Devanagari lipi (script and orthography)",
+  "label": "the full consonant series, ka-varga through pa-varga and the semivowels and sibilants",
+  "probe": [
+    "HI-SCRIPT-RECOG-142",
+    "HI-SCRIPT-RECOG-143",
+    "HI-SCRIPT-RECOG-145",
+    "HI-SCRIPT-RECOG-146",
+    "HI-SCRIPT-RECOG-147"
+  ],
+  "derivedFrom": "ES:A1-O1-01, ES:A1-O1-03",
+  "note": "CLOSED ON THE SECOND ATTEMPT, and the first attempt is the more useful record. The original note claimed FIFTEEN consonants were missing and named them. An earlier change probed this point as covered on a series that looked complete with two letters left; THAT PROBE WAS WITHDRAWN BEFORE MERGE, because the audit helper credited a glyph to any script lesson whose HEADWORD contained it and a headword can be a whole word -- a lesson about the head-line (shirorekhaa) was silently teaching sha, one about the danda (puurna viraam) was teaching va, and a form lesson carrying a name was teaching retroflex-na. HL-C383's bug one level up, logged as HL-C386. Under the corrected rule -- a glyph is taught only when its lesson's headword is a GLYPH INVENTORY, every token a base plus at most one combining mark -- sha, va and retroflex-na were real debt and are now drawn (HI-S145, HI-S146, HI-S147), alongside retroflex ta and tha. Every varga is complete. TWO GLYPHS REMAIN AND NEITHER IS DEBT: nya appears three times in the corpus and never standalone, always inside the conjunct j-nya that HI-W05-conjuncts teaches as one of its three special shapes; nga appears zero times and is not in data/scripts/devanagari.json at all (HL-C385). If that reasoning is rejected, this is the probe to remove -- and it has been removed once already."
+}

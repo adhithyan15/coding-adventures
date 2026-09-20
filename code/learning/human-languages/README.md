@@ -57,7 +57,7 @@ core/spine.d/*.json             ordered, language-independent can-do spine: one 
 core/book-generation.d/*/*.json chapter, backmatter, and script-set book declarations
 core/sound-tags.d/<language>.json authored pronunciation vocabulary, one owner per language
 core/reading-reach-floor.d/<language>--<level>.json reading-reach ratchet, one owner per task shape
-core/exam-inventory-malayalam-a1.d/*.json Malayalam A1 metadata + one owner per exam point
+core/exam-inventory-{malayalam,hindi}-a1.d/*.json direct A1 metadata + one owner per exam point
 core/latex-warning-baseline.json  per-track LaTeX warning debt the book gate holds the line on
 core/lesson-modality/<language>.d/*.json generated voice/sight/pen, one owner per lesson
 core/gentle-ramp-snapshots/<language>.d/ generated metric/finding owners; no flat aggregate
@@ -82,12 +82,13 @@ under `tests/exam-inventories/<language>.test.ts` or a track's older independent
 `tests/exam-inventory-<language>.test.ts`. Adding one track's lesson or probe must
 not edit a corpus-wide exam test.
 
-The Malayalam A1 inventory is point-owned as well. Its `_meta.json` holds the
-stable source/scope contract plus the ordered point-id completeness manifest;
-each `NNNN-<point-id>.json` owns exactly one full point. The loader reconstructs
-the unchanged public inventory, rejects missing/extra/reordered/noncanonical
-owners and aggregate resurrection, and lets independent chapter agents update
-different probes or notes without meeting in a 4,839-line file. See
+The Malayalam and Hindi A1 inventories are point-owned as well. Each
+`_meta.json` holds the stable source/scope contract plus the ordered point-id
+completeness manifest; each `NNNN-<point-id>.json` owns exactly one full point.
+The loader reconstructs the unchanged public inventories, rejects
+missing/extra/reordered/noncanonical owners and aggregate resurrection, and
+lets independent chapter agents update different probes or notes without
+meeting in one multi-thousand-line file. See
 [`HL37`](../../specs/HL37-sharded-exam-inventory-point-ownership.md).
 
 The two generated-hash families use stable four-digit chapter owners rather

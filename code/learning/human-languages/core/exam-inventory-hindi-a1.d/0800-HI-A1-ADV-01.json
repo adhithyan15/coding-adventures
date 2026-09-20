@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-ADV-01",
+  "category": "Kriya-visheshan (adverbs)",
+  "label": "place deictics: yahan and vahan",
+  "probe": [
+    "HI-LEX-C40-DEIXIS-03",
+    "HI-LEX-C40-DEIXIS-04"
+  ],
+  "derivedFrom": "ES:A1-ADV-01, ES:A1-NG3-01"
+}

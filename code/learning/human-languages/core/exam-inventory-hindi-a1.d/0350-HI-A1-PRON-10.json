@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-PRON-10",
+  "category": "Sarvanam (pronouns)",
+  "label": "the exclamative: kitna accha!",
+  "probe": [
+    "HI-LEX-C92-DEG-05",
+    "HI-LEX-C92-DEG-04"
+  ],
+  "derivedFrom": "ES:A1-PRON-07",
+  "note": "The exclamative is introduced by HI-C92-kitna-achchha, and the note is exactly right that kitna was introduced only inside the memorised age question. HI-C92-kitna lets the word out of that sentence first -- it bends like every other -aa word, and Hindi does not split how much from how many the way English does, because English sorts nouns into countable and uncountable and Hindi asks one question and lets the noun answer. The exclamative then adds nothing at all: it is the question word in front of an adjective with the verb and the rising voice taken away, exactly as English turns how good is it into how good. Both words bend together, so the phrase rhymes with itself in either gender, and the rhyme is a usable check."
+}

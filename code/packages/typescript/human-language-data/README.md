@@ -240,11 +240,11 @@ its language-owned test. The owned suites use `loadTrackLessons` rather than
 loading all 23 tracks, so parallel ownership does not multiply the full-corpus
 cost tracked by #12732.
 
-Malayalam A1's inventory is also shard-native. Stable document fields and the
-ordered identity manifest live in
-`core/exam-inventory-malayalam-a1.d/_meta.json`; every complete exam point lives
-in one canonical `NNNN-<point-id>.json` owner. `loadExamInventory` preserves the
-same public `ExamInventory` contract while rejecting missing, unexpected,
+Malayalam and Hindi A1 inventories are also shard-native. Stable document
+fields and each ordered identity manifest live in
+`core/exam-inventory-<track>-a1.d/_meta.json`; every complete exam point lives
+in one canonical `NNNN-<point-id>.json` owner. `loadExamInventory` preserves
+the same public `ExamInventory` contract while rejecting missing, unexpected,
 reordered, unsafe, noncanonical, nested, linked, or resurrected aggregate data.
 Ordinary lesson work edits only the points whose probes or notes changed.
 

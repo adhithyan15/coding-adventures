@@ -15,6 +15,7 @@ import {
   examInventoryOwnerContents,
   readExamInventoryOwnersIfPresent,
 } from "../src/exam-inventory-shards.js";
+import { defaultCurriculumRoot, loadExamInventory } from "../src/loader.js";
 
 const inventory: ExamInventory = {
   version: 1,
@@ -74,6 +75,23 @@ describe("exam-inventory direct point owners", () => {
       "0020-TEST-A1-TWO.json",
     ]);
     expect(read(aggregate)).toEqual(inventory);
+  });
+
+  it.each([
+    ["malayalam", "A1"],
+    ["hindi", "A1"],
+  ])("reconstructs the real %s/%s public inventory", (language, level) => {
+    const aggregate = join(
+      defaultCurriculumRoot(),
+      "core",
+      `exam-inventory-${language}-${level.toLowerCase()}.json`,
+    );
+    expect(
+      readExamInventoryOwnersIfPresent(aggregate, {
+        expectedLanguage: language,
+        expectedLevel: level,
+      }),
+    ).toEqual(loadExamInventory(language, level));
   });
 
   it("uses the metadata identity manifest to reject missing, extra, and reordered owners", () => {

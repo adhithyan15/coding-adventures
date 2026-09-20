@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-ADV-07",
+  "category": "Kriya-visheshan (adverbs)",
+  "label": "polarity adverbs: han and nahin",
+  "probe": [
+    "HI-CONCEPT-C07-HAAN-01",
+    "HI-CONCEPT-C07-NAHIN-01"
+  ],
+  "derivedFrom": "ES:A1-ADV-05"
+}

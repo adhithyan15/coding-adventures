@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-F-08",
+  "category": "Sanvad-karya (communicative functions)",
+  "label": "take leave, formally and casually",
+  "probe": [
+    "HI-CONCEPT-C01-ALVIDA-01",
+    "HI-CONCEPT-C04-PHIRMILENGE-01",
+    "HI-CONCEPT-C04-CHALTAHUN-01"
+  ],
+  "derivedFrom": "ES:A1-F5-11"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "HI-A1-LEX-32",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "unemployment, job-seeking, and rights at work",
+  "probe": null,
+  "derivedFrom": "ES:A1-NE07-04, ES:A1-NE07-05, ES:A1-NE07-06",
+  "note": "Untaught. The proxy places these at A1; whether they belong at A1 in Hindi is a judgement this file does not make, so the point is enumerated and left unmapped rather than dropped."
+}

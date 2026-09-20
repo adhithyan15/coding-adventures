@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-POST-03",
+  "category": "Parsarg (postpositions and case)",
+  "label": "the genitive ka / ke / ki for possession and belonging",
+  "probe": [
+    "HI-CONCEPT-C19-AGE-GRAMMAR-01"
+  ],
+  "derivedFrom": "ES:A1-SN-01, ES:A1-POS-03"
+}

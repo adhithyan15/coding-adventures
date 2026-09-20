@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-F-28",
+  "category": "Sanvad-karya (communicative functions)",
+  "label": "confirm or deny what was just said",
+  "probe": [
+    "HI-CONCEPT-C07-HAAN-01",
+    "HI-CONCEPT-C07-NAHIN-01"
+  ],
+  "derivedFrom": "ES:A1-F1-05, ES:A1-F2-06, ES:A1-F2-07"
+}

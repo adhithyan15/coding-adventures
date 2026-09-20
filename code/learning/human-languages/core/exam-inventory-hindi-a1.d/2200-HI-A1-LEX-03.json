@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-LEX-03",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "colour",
+  "probe": [
+    "HI-CONCEPT-C11-KAALAA-SAFED-01",
+    "HI-CONCEPT-C11-LAAL-NIILA-01",
+    "HI-CONCEPT-C24-HARA-PILA-01"
+  ],
+  "derivedFrom": "ES:A1-NG5-03"
+}

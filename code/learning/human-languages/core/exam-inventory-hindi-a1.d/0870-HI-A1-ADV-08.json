@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-ADV-08",
+  "category": "Kriya-visheshan (adverbs)",
+  "label": "the additive bhi, Hindi's 'also' and 'too'",
+  "probe": [
+    "HI-LEX-C71-TODAY-02"
+  ],
+  "derivedFrom": "ES:A1-ADV-06",
+  "note": "HI-C71-also teaches `bhi` and, because the placement is what beginners get wrong, teaches that it follows the word it adds to."
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-N-08",
+  "category": "Sangya (the noun)",
+  "label": "the oblique form a noun takes before a postposition (larka -> larke ko)",
+  "probe": [
+    "HI-LEX-C91-NOUN-06",
+    "HI-LEX-C91-NOUN-05"
+  ],
+  "derivedFrom": "hindi-specific",
+  "note": "The oblique is introduced by HI-C91-bacche-ko. The note is right that the corpus taught me and the ka genitive without the case change the noun undergoes -- and the lesson's point is that this is NOT a new rule: the -aa to -e bend in front of a postposition has been taught four times already on other kinds of word (the possessive mera -> mere paas, uska -> uske baad, the adjective, the habitual, the past copula), and a noun is the fourth and last kind to wear it. The load-bearing consequence is that -e now means two different things: bacce with nothing behind it is a plural, bacce with a postposition behind it is ONE child in the oblique, and the postposition is the only signal. A reader who misses it miscounts every sentence that has one."
+}

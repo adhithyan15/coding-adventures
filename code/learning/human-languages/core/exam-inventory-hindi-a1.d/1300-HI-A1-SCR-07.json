@@ -1,0 +1,12 @@
+{
+  "id": "HI-A1-SCR-07",
+  "category": "Devanagari lipi (script and orthography)",
+  "label": "the nasalisation marks: candrabindu, and the anusvara it is confused with",
+  "probe": [
+    "HI-SCRIPT-CHANDRABINDU-01",
+    "HI-CONCEPT-C07-HAAN-01",
+    "HI-SCRIPT-RECOG-148"
+  ],
+  "derivedFrom": "ES:A1-O2-02",
+  "note": "THIS POINT WAS HALF TRUE WHILE MARKED COVERED. Its label names the candrabindu AND the anusvaara it is confused with; the candrabindu had a lesson, the anusvaara had none, and HI-W12-chandrabindu said so in its own body -- 'there is a plain dot without the crescent ... FOR NOW: crescent plus dot means through the nose'. A lesson recording a debt it has no way to notice being paid, which is the fifth variety of stale claim catalogued in lessons.d. THE ANUSVAARA IS THE MOST-USED GLYPH THE CORPUS NEVER TAUGHT: 60 headwords, from chapter 2, including main, hain, mein and hindii. HI-S148-sign-anusvara draws it at chapter 16 and the candrabindu's deferral is rewritten to point back at it rather than forward at nothing."
+}

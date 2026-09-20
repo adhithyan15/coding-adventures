@@ -1,0 +1,12 @@
+{
+  "id": "HI-A1-ADV-06",
+  "category": "Kriya-visheshan (adverbs)",
+  "label": "evaluative manner: doing something well, and doing it badly",
+  "probe": [
+    "HI-LEX-C92-DEG-02",
+    "HI-LEX-C41-ADJ-03",
+    "HI-LEX-C83-CHAR-01"
+  ],
+  "derivedFrom": "ES:A1-ADV-04, ES:A1-NG6-07",
+  "note": "STALE NOTE, corrected. It said no word for badly, neither bura nor kharab, is introduced, so the proxy's bien/mal pair is half present and cannot be contrasted. buraa IS introduced, by HI-C83-buraa in chapter 91, which landed after the note was written -- so the pair was already whole in the corpus and what was actually missing was the ADVERBIAL use of both. HI-C92-achchha-buraa supplies it, and the observation worth keeping is that Hindi needs no second shelf of words: English splits good/well and bad/badly and marks the second with -ly, while Hindi uses the same word and lets its POSITION say which job it is doing. It still bends for gender even when it is doing an English adverb's work, which is the second half of the same instinct to unlearn."
+}

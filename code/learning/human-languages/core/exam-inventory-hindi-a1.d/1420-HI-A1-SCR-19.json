@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-SCR-19",
+  "category": "Devanagari lipi (script and orthography)",
+  "label": "completing a form field in Devanagari with no visible model",
+  "probe": [
+    "HI-FORM-NAME-NO-MODEL-01"
+  ],
+  "derivedFrom": "ES:A1-NE03-01"
+}

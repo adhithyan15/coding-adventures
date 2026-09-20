@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-SCR-03",
+  "category": "Devanagari lipi (script and orthography)",
+  "label": "matras replace the inherent vowel",
+  "probe": [
+    "HI-CONCEPT-W03-MATRAS-NAAM-01"
+  ],
+  "derivedFrom": "ES:A1-O1-02"
+}

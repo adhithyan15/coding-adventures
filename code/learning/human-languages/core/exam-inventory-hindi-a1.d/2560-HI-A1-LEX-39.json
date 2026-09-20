@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-LEX-39",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "domestic activities",
+  "probe": [
+    "HI-CONCEPT-C05-KARNA-01",
+    "HI-LEX-C61-FIRE-05"
+  ],
+  "derivedFrom": "ES:A1-NE10-03"
+}

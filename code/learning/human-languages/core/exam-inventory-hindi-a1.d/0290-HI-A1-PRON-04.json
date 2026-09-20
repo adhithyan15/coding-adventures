@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-PRON-04",
+  "category": "Sarvanam (pronouns)",
+  "label": "the subject pronoun paradigm as a whole, including ham and the plural third person",
+  "probe": [
+    "HI-LEX-C86-PRON-01",
+    "HI-LEX-C86-PRON-02"
+  ],
+  "derivedFrom": "ES:A1-PRON-01",
+  "note": "ham and ve are introduced by chapter 94, completing the subject paradigm beside the main and vah the track already had. The note named the item that needed it -- mock 2 reading item 10, ham station par milenge -- and the synthesis lesson reads that sentence. The ham lesson also carries the use an English speaker does not expect: ham often stands in for main, said modestly or as part of a household, which is the same instinct that makes hamaara parivaar the natural way to say my family."
+}

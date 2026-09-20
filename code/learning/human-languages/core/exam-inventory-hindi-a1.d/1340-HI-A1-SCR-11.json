@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-SCR-11",
+  "category": "Devanagari lipi (script and orthography)",
+  "label": "the independent vowel letters a, aa and ii, for words that begin with a vowel",
+  "probe": [
+    "HI-SCRIPT-AA-01",
+    "HI-SCRIPT-II-01",
+    "HI-SCRIPT-RECOG-03"
+  ],
+  "derivedFrom": "ES:A1-O1-02"
+}

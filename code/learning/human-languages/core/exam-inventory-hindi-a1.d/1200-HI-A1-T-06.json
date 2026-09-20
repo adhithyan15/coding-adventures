@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-T-06",
+  "category": "Samay aur tarikh (time and date)",
+  "label": "naming a clock time as an appointment: X baje",
+  "probe": [
+    "HI-LEX-C88-TIME-01"
+  ],
+  "derivedFrom": "ES:A1-NG4-01, ES:A1-NG1-04",
+  "note": "baje is introduced by HI-C88-baje. The note is exactly right about what was missing: chapter 18 teaches bajnaa as a PREDICATE -- ek baj rahaa hai, it IS one o'clock -- and never the adverbial form that sits beside a number to fix a time to act at. The lesson teaches it as the same bell verb in a different shape, states that Hindi has no separate word for 'at', and places the time phrase in the seat the place phrase already took, after the person and before the verb. It pairs with the future in the same chapter because that is how both mocks print it: a number, baje, and a future verb."
+}

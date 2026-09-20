@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-V-16",
+  "category": "Kriya (the verb)",
+  "label": "the plain and familiar imperatives (bol, bolo, boliye as a series)",
+  "probe": [
+    "HI-LEX-C85-IMP-01",
+    "HI-LEX-C85-IMP-02"
+  ],
+  "derivedFrom": "ES:A1-V-11",
+  "note": "Chapter 93 teaches the series the point asks for. bolo (-o, the tum level) and boliye (-iye, the aap level) are each introduced by their own lesson, and the bare-stem tu form is taught in the same chapter for RECOGNITION rather than production, because using it wrongly costs far more than using it gains. The -iye lesson also takes maaf kijiye apart, which the note named as the only place the form had appeared: it was a respectful command all along."
+}

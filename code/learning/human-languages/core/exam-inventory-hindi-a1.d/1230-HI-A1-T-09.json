@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-T-09",
+  "category": "Samay aur tarikh (time and date)",
+  "label": "before and after: pahle and baad",
+  "probe": [
+    "HI-LEX-C90-ROUT-05",
+    "HI-LEX-C90-ROUT-06"
+  ],
+  "derivedFrom": "ES:A1-NG4-03, ES:A1-NG3-06",
+  "note": "pahle and ke baad are introduced by HI-C90-pahle and HI-C90-baad. The note read in full 'Nothing can be sequenced in time', and that was true: the track could state facts about a day and not put two of them in an order, so a one-minute prepared description was four unrelated statements. The pair is asymmetric and the lessons say so rather than inventing a reason -- before takes se (X se pahle) and after takes ke (X ke baad) -- and ke baad is shown to be the possessive ka/ke/ki already taught for uska and hamara, used as glue: the after OF work."
+}

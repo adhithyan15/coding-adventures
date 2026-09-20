@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-T-03",
+  "category": "Samay aur tarikh (time and date)",
+  "label": "the seasons",
+  "probe": [
+    "HI-CONCEPT-C14-RITU-01"
+  ],
+  "derivedFrom": "ES:A1-NG4-02"
+}

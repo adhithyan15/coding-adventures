@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-Q-02",
+  "category": "Prashn (asking questions)",
+  "label": "kya in first position turning a statement into a yes/no question",
+  "probe": [
+    "HI-GRAMMAR-KYA-POLAR-01"
+  ],
+  "derivedFrom": "ES:A1-OS-02",
+  "note": "Closed by HI-C74-kya-polar (chapter 74), which realizes QUESTION-POLAR. The lesson teaches the fronted kya as a SECOND sense of a word the corpus already had, and sets the two positions side by side, which is what the earlier note said the kya lesson stopped short of."
+}

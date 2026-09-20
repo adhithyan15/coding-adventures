@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-PH-06",
+  "category": "Uccharan (pronunciation)",
+  "label": "rising intonation marks a yes/no question when no kya is present",
+  "probe": [
+    "HI-SOUND-QUESTION-RISE-01"
+  ],
+  "derivedFrom": "ES:A1-OS-02",
+  "note": "Closed by HI-C74-question-rise (chapter 74), which is its own lesson rather than a section of the kya lesson: the intonation question is a separate item and the combined lesson broke the computed five-minute ceiling, so the chapter was split rather than crammed."
+}

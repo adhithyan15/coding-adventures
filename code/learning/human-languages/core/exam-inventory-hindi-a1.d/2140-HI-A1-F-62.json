@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-F-62",
+  "category": "Sanvad-karya (communicative functions)",
+  "label": "ask what something costs",
+  "probe": [
+    "HI-LEX-C72-COST-03",
+    "HI-CONCEPT-C02-KYA-01"
+  ],
+  "derivedFrom": "ES:A1-NG6-02, ES:A1-NE12-03",
+  "note": "HI-C72-price teaches `dam` and builds `dam kya hai?` from it and the already-taught `kya`, and the lesson's guided practice and wrap-up both require the learner to produce that question. The exponent taught is `dam kya hai?`, NOT the `kitne ka` the earlier note named; both are current market Hindi. STATING an answer still needs numerals above twenty, which HI-A1-NUM-03 records as missing."
+}

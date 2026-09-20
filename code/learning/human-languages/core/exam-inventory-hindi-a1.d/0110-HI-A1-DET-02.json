@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-DET-02",
+  "category": "Nirdeshak (determiners and definiteness)",
+  "label": "the demonstratives yah and vah, and Hindi's two-way near/far split",
+  "probe": [
+    "HI-LEX-C40-DEIXIS-01",
+    "HI-LEX-C40-DEIXIS-02",
+    "HI-GRAMMAR-C40-DEIXIS-SYSTEM"
+  ],
+  "derivedFrom": "ES:A1-DEM-01, ES:A1-DEM-02"
+}
