@@ -1409,7 +1409,7 @@ Vbias in 0 DC 2.5 AC 1 90
 Iprobe out 0 AC 2m
 R1 in out 1k
 R2 out 0 1k
-.ac lin 1 1k 1k
+.ac dec 1 1k 1k
 "#,
     )
     .unwrap();
@@ -15526,6 +15526,48 @@ V1 in 0 DC 1
     assert!(err
         .to_string()
         .contains("SPICE_SYNTAX_CONTINUATION_WITHOUT_CARD"));
+}
+
+#[test]
+fn selects_nonlinear_branch_currents_across_result_kinds() {
+    for (probe, deck) in [
+        ("I(D1)", ".model dmod D(IS=1e-14)\nV1 in 0 1\nR1 in out 1k\nD1 out 0 dmod\n.save I(D1)\n.op\n.end\n"),
+        ("I(Q1)", ".model Qsmall NPN(BF=125)\nVcc vcc 0 5\nVbase base 0 0.72\nQ1 vcc base out Qsmall\nRload out 0 1k\n.save I(Q1)\n.op\n.end\n"),
+        ("I(J1)", ".model Jn NJF(BETA=9e-4 VTO=-1.8 LAMBDA=0.02)\nVdd vdd 0 10\nVg gate 0 0\nRd vdd drain 2k\nRs source 0 1k\nJ1 drain gate source Jn\n.save I(J1)\n.op\n.end\n"),
+        ("I(M1)", ".model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)\nVdd vdd 0 1.8\nVgate gate 0 1.8\nRload vdd out 1k\nM1 out gate 0 0 Mn\n.save I(M1)\n.op\n.end\n"),
+    ] {
+        let parsed = parse_netlist(deck).unwrap();
+        let results = parsed.run_analysis_plan().unwrap();
+        let outputs = parsed.select_outputs(&results).unwrap();
+        assert!(outputs[0].rows[0].values.contains_key(probe));
+    }
+
+    let parsed = parse_netlist(
+        r#"
+.model Mn NMOS(LEVEL=1 VTO=0.55 LAMBDA=0.04 NSUB=1.6 CBD=3e-13)
+Vdd vdd 0 DC 1.8
+Vgate gate 0 DC 1.8 AC 1
+Rload vdd out 1k
+M1 out gate 0 0 Mn
+.save I(M1)
+.print dc I(M1)
+.plot ac I(M1)
+.probe tran I(M1)
+.op
+.dc Vgate 0 1.8 0.9
+.ac dec 1 1k 1k
+.tran 1n 2n
+.end
+"#,
+    )
+    .unwrap();
+    let results = parsed.run_analysis_plan().unwrap();
+    let outputs = parsed.select_outputs(&results).unwrap();
+    assert_eq!(outputs.len(), 4);
+    assert!(outputs.iter().all(|output| output
+        .rows
+        .iter()
+        .all(|row| row.values.contains_key("I(M1)"))));
 }
 
 fn assert_error_type(_: NetlistParseError) {}

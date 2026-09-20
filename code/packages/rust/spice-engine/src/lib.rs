@@ -20582,6 +20582,11 @@ pub fn transient_with_method(
         )?;
         let mut branch_currents = linear_solution.branch_currents;
         insert_transient_capacitor_currents(&capacitor_states, &mut branch_currents);
+        insert_transient_nonlinear_charge_currents(
+            circuit,
+            &capacitor_states,
+            &mut branch_currents,
+        );
         branch_currents.extend(line_currents);
         points.push(TransientPoint {
             time,
@@ -20754,6 +20759,11 @@ pub fn transient_adaptive(
             proposed_time,
         )?;
         let mut branch_currents = linear_solution.branch_currents;
+        insert_transient_nonlinear_charge_currents(
+            circuit,
+            &capacitor_states,
+            &mut branch_currents,
+        );
         branch_currents.extend(line_currents);
         points.push(TransientPoint {
             time: proposed_time,
@@ -22216,6 +22226,7 @@ fn linear_solution_from_vector(
         );
     }
     insert_real_passive_branch_currents(circuit, &node_voltages, &mut branch_currents);
+    insert_real_nonlinear_branch_currents(circuit, &node_voltages, &mut branch_currents);
     insert_transient_inductor_currents(
         circuit,
         inductor_states,
@@ -22260,6 +22271,105 @@ fn insert_real_passive_branch_currents(
                     .or_insert(0.0);
             }
             _ => {}
+        }
+    }
+}
+
+fn insert_real_nonlinear_branch_currents(
+    circuit: &Circuit,
+    node_voltages: &BTreeMap<String, f64>,
+    branch_currents: &mut BTreeMap<String, f64>,
+) {
+    for element in circuit.elements() {
+        if let Element::Diode(diode) = element {
+            let current = if diode.series_resistance > 0.0 {
+                let intrinsic_anode = diode_intrinsic_anode_node(diode);
+                (voltage_at(node_voltages, &diode.anode)
+                    - voltage_at(node_voltages, &intrinsic_anode))
+                    / diode.series_resistance
+            } else {
+                let voltage = voltage_at(node_voltages, &diode.anode)
+                    - voltage_at(node_voltages, &diode.cathode);
+                diode_current_conductance(diode, voltage).0
+            };
+            branch_currents.insert(format!("I({})", diode.name), current);
+        } else if let Element::Bjt(bjt) = element {
+            let intrinsic_collector = bjt_intrinsic_collector_node(bjt);
+            let intrinsic_base = bjt_intrinsic_base_node(bjt);
+            let intrinsic_emitter = bjt_intrinsic_emitter_node(bjt);
+            let collector_voltage = voltage_at(node_voltages, &intrinsic_collector);
+            let base_voltage = voltage_at(node_voltages, &intrinsic_base);
+            let emitter_voltage = voltage_at(node_voltages, &intrinsic_emitter);
+            let (junction_voltage, reverse_voltage, output_voltage) = match bjt.polarity {
+                BjtPolarity::Npn => (
+                    base_voltage - emitter_voltage,
+                    base_voltage - collector_voltage,
+                    collector_voltage - emitter_voltage,
+                ),
+                BjtPolarity::Pnp => (
+                    emitter_voltage - base_voltage,
+                    collector_voltage - base_voltage,
+                    emitter_voltage - collector_voltage,
+                ),
+            };
+            let thermal_voltage = bjt.thermal_voltage * bjt.forward_emission_coefficient;
+            let exponent = (junction_voltage / thermal_voltage).clamp(-40.0, 40.0);
+            let exp_value = exponent.exp();
+            let diffusion_current = bjt.saturation_current * (exp_value - 1.0);
+            let diffusion_conductance = bjt.saturation_current / thermal_voltage * exp_value;
+            let (collector_current, _, _) = bjt_forward_transport(
+                bjt,
+                diffusion_current,
+                diffusion_conductance,
+                bjt_early_factor(bjt, junction_voltage, output_voltage),
+            );
+            let (collector_leakage, _) = bjt_base_collector_leakage(bjt, reverse_voltage);
+            let (reverse_base_current, _) = bjt_reverse_base_current(bjt, reverse_voltage);
+            let intrinsic_current = match bjt.polarity {
+                BjtPolarity::Npn => collector_current - collector_leakage - reverse_base_current,
+                BjtPolarity::Pnp => -collector_current + collector_leakage + reverse_base_current,
+            };
+            let current = if bjt.collector_resistance > 0.0 {
+                (voltage_at(node_voltages, &bjt.collector) - collector_voltage)
+                    / bjt.collector_resistance
+            } else {
+                intrinsic_current
+            };
+            branch_currents.insert(format!("I({})", bjt.name), current);
+        } else if let Element::Jfet(jfet) = element {
+            let intrinsic_drain = jfet_intrinsic_drain_node(jfet);
+            let intrinsic_source = jfet_intrinsic_source_node(jfet);
+            let drain_voltage = voltage_at(node_voltages, &intrinsic_drain);
+            let current = if jfet.drain_resistance > 0.0 {
+                (voltage_at(node_voltages, &jfet.drain) - drain_voltage) / jfet.drain_resistance
+            } else {
+                evaluate_jfet(
+                    jfet,
+                    voltage_at(node_voltages, &jfet.gate)
+                        - voltage_at(node_voltages, &intrinsic_source),
+                    drain_voltage - voltage_at(node_voltages, &intrinsic_source),
+                )
+                .drain_current
+            };
+            branch_currents.insert(format!("I({})", jfet.name), current);
+        } else if let Element::Mosfet(mosfet) = element {
+            let intrinsic_drain = mosfet_intrinsic_drain_node(mosfet);
+            let intrinsic_source = mosfet_intrinsic_source_node(mosfet);
+            let drain_voltage = voltage_at(node_voltages, &intrinsic_drain);
+            let source_voltage = voltage_at(node_voltages, &intrinsic_source);
+            let drain_resistance = mosfet_drain_resistance(mosfet);
+            let current = if drain_resistance > 0.0 {
+                (voltage_at(node_voltages, &mosfet.drain) - drain_voltage) / drain_resistance
+            } else {
+                evaluate_mosfet_level1(
+                    mosfet,
+                    voltage_at(node_voltages, &mosfet.gate) - source_voltage,
+                    drain_voltage - source_voltage,
+                    voltage_at(node_voltages, &mosfet.body) - source_voltage,
+                )
+                .drain_current
+            };
+            branch_currents.insert(format!("I({})", mosfet.name), current);
         }
     }
 }
@@ -22335,6 +22445,96 @@ fn insert_complex_passive_branch_currents(
                 );
             }
             _ => {}
+        }
+    }
+}
+
+fn insert_complex_nonlinear_branch_currents(
+    circuit: &Circuit,
+    omega: f64,
+    node_indices: &HashMap<String, usize>,
+    operating_point: &[f64],
+    node_voltages: &BTreeMap<String, Complex>,
+    branch_currents: &mut BTreeMap<String, Complex>,
+) -> Result<(), SpiceError> {
+    let node_count = node_indices.len();
+    for element in circuit.elements() {
+        let (terminal, name) = match element {
+            Element::Diode(diode) => (diode.anode.as_str(), diode.name.as_str()),
+            Element::Bjt(bjt) => (bjt.collector.as_str(), bjt.name.as_str()),
+            Element::Jfet(jfet) => (jfet.drain.as_str(), jfet.name.as_str()),
+            Element::Mosfet(mosfet) => (mosfet.drain.as_str(), mosfet.name.as_str()),
+            _ => continue,
+        };
+        let mut matrix = vec![vec![Complex::zero(); node_count]; node_count];
+        match element {
+            Element::Diode(diode) => {
+                validate_diode(diode)?;
+                let intrinsic_anode = diode_intrinsic_anode_node(diode);
+                let anode = node_index(node_indices, &intrinsic_anode);
+                let cathode = node_index(node_indices, &diode.cathode);
+                let voltage = vector_voltage(operating_point, anode)
+                    - vector_voltage(operating_point, cathode);
+                let (_, conductance) = diode_current_conductance(diode, voltage);
+                let capacitance = diode_dynamic_capacitance(diode, voltage);
+                stamp_complex_conductance(
+                    &mut matrix,
+                    anode,
+                    cathode,
+                    Complex::new(conductance, omega * capacitance),
+                );
+                if diode.series_resistance > 0.0 {
+                    stamp_complex_conductance(
+                        &mut matrix,
+                        node_index(node_indices, &diode.anode),
+                        anode,
+                        Complex::new(1.0 / diode.series_resistance, 0.0),
+                    );
+                }
+            }
+            Element::Bjt(bjt) => {
+                stamp_ac_bjt_small_signal(bjt, node_indices, &mut matrix, operating_point, omega)?
+            }
+            Element::Jfet(jfet) => {
+                stamp_ac_jfet_small_signal(jfet, node_indices, &mut matrix, operating_point, omega)?
+            }
+            Element::Mosfet(mosfet) => stamp_ac_mosfet_small_signal(
+                mosfet,
+                node_indices,
+                &mut matrix,
+                operating_point,
+                omega,
+            )?,
+            _ => unreachable!(),
+        }
+        branch_currents.insert(
+            format!("I({name})"),
+            ac_terminal_current(&matrix, node_indices, node_voltages, terminal),
+        );
+    }
+    Ok(())
+}
+
+fn ac_terminal_current(
+    matrix: &[Vec<Complex>],
+    node_indices: &HashMap<String, usize>,
+    node_voltages: &BTreeMap<String, Complex>,
+    terminal: &str,
+) -> Complex {
+    let row_current = |row: &[Complex]| {
+        node_indices
+            .iter()
+            .fold(Complex::zero(), |current, (node, index)| {
+                current + row[*index] * complex_voltage_at(node_voltages, node)
+            })
+    };
+    match node_index(node_indices, terminal) {
+        Some(index) => row_current(&matrix[index]),
+        None => {
+            let current = matrix
+                .iter()
+                .fold(Complex::zero(), |current, row| current + row_current(row));
+            Complex::new(-current.real, -current.imag)
         }
     }
 }
@@ -22499,6 +22699,14 @@ fn solve_ac_circuit(circuit: &Circuit, omega: f64) -> Result<AcSolution, SpiceEr
         );
     }
     insert_complex_passive_branch_currents(circuit, omega, &node_voltages, &mut branch_currents);
+    insert_complex_nonlinear_branch_currents(
+        circuit,
+        omega,
+        &node_indices,
+        &operating_point,
+        &node_voltages,
+        &mut branch_currents,
+    )?;
 
     Ok(AcSolution {
         node_voltages,
@@ -27236,6 +27444,73 @@ fn insert_transient_capacitor_currents(
 ) {
     for state in capacitor_states {
         branch_currents.insert(format!("I({})", state.name), state.previous_current);
+    }
+}
+
+fn insert_transient_nonlinear_charge_currents(
+    circuit: &Circuit,
+    capacitor_states: &[CapacitorState],
+    branch_currents: &mut BTreeMap<String, f64>,
+) {
+    let state_currents: HashMap<&str, f64> = capacitor_states
+        .iter()
+        .map(|state| (state.name.as_str(), state.previous_current))
+        .collect();
+    for element in circuit.elements() {
+        let (name, terminal, charge_states) = match element {
+            Element::Diode(diode) if diode.series_resistance == 0.0 => (
+                diode.name.as_str(),
+                diode.anode.as_str(),
+                vec![(
+                    diode_charge_state_name(diode),
+                    diode_intrinsic_anode_node(diode),
+                    diode.cathode.clone(),
+                )],
+            ),
+            Element::Bjt(bjt) if bjt.collector_resistance == 0.0 => (
+                bjt.name.as_str(),
+                bjt.collector.as_str(),
+                bjt_charge_state_specs(bjt)
+                    .into_iter()
+                    .map(|spec| (spec.name, spec.positive, spec.negative))
+                    .collect(),
+            ),
+            Element::Jfet(jfet) if jfet.drain_resistance == 0.0 => (
+                jfet.name.as_str(),
+                jfet.drain.as_str(),
+                jfet_charge_state_specs(jfet)
+                    .into_iter()
+                    .map(|spec| (spec.name, spec.positive, spec.negative))
+                    .collect(),
+            ),
+            Element::Mosfet(mosfet) if mosfet_drain_resistance(mosfet) == 0.0 => (
+                mosfet.name.as_str(),
+                mosfet.drain.as_str(),
+                mosfet_charge_state_specs(mosfet)
+                    .into_iter()
+                    .map(|spec| (spec.name, spec.positive, spec.negative))
+                    .collect(),
+            ),
+            _ => continue,
+        };
+        let current =
+            charge_states
+                .into_iter()
+                .fold(0.0, |current, (state, positive, negative)| {
+                    let state_current = state_currents.get(state.as_str()).copied().unwrap_or(0.0);
+                    current
+                        + if positive == terminal {
+                            state_current
+                        } else {
+                            0.0
+                        }
+                        - if negative == terminal {
+                            state_current
+                        } else {
+                            0.0
+                        }
+                });
+        *branch_currents.entry(format!("I({name})")).or_insert(0.0) += current;
     }
 }
 

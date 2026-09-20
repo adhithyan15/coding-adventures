@@ -325,13 +325,28 @@ model-card parameter, or a UI artifact is not a completion signal.
      Rust, and TypeScript. The follow-on schematic document and Mosaic controls
      now select R/C/L and voltage-source branch currents through the same ordered
      global and card-scoped output contract.
-   - **Mosaic schematic nonlinear-current selection** (current phase): discovery after
+   - **Mosaic schematic nonlinear-current selection** (audit completed): discovery after
      PR #15599: the canonical document can now author every linear passive
      branch current, but nonlinear device currents remain outside the shared
-     result-map contract. Re-audit executable diode, BJT, JFET, and MOS branch
-     currents across the three engines before extending schematic controls; keep
-     arbitrary arithmetic expressions, nested sweeps, and vendor-output controls
-     for later phases.
+     result-map contract. The executable audit confirms the same corpus blocker
+     in Python, Rust, and TypeScript: `.save I(D1)`, `.save I(Q1)`, `.save
+     I(J1)`, and `.save I(M1)` all parse but fail because no nonlinear branch
+     current is exported. Keep schematic controls out of scope until the shared
+     result map has those values.
+   - **Nonlinear branch-current result-map contract** (completed): export
+     diode anode, BJT collector, JFET drain, and level-1 MOS drain currents as
+     canonical `I(element)` values across Python, Rust, and TypeScript. Define
+     the values at the external first terminal so optional series resistances,
+     dynamic junction charge in transient analysis, and linearized small-signal
+     current in AC share a stable observable. Cover operating-point, DC sweep,
+     AC, and transient result rows plus `.save`, `.probe`, `.print`, and `.plot`
+     corpus fixtures before extending schematic controls. The Python, Rust, and
+     TypeScript parser suites now pin D/Q/J/M operating-point selection plus
+     MOS DC-sweep, AC, and transient rows; AC reads the exact small-signal
+     stamp and transient adds the accepted companion-state current without
+     double-counting an external series terminal. Keep arbitrary
+     arithmetic expressions, nested sweeps, and vendor-output controls for later
+     phases.
 
 ### Operating rules
 
