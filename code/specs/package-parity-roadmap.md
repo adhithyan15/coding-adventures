@@ -14013,6 +14013,52 @@ and CRLF receipt rewriting. No P0/P1 review finding remains. GitHub reports the
 opened head mergeable; checks are pending, so guarded auto-merge is not yet
 enabled and no second parity implementation may begin.
 
+### PR #15668 merge, exact-main inventory, and OCaml graph/diff selection
+
+Every required and advisory check on PR #15668 reached a terminal acceptable
+conclusion, including the real Ubuntu, macOS, and Windows representative-chain
+jobs and both protected final gates. GitHub reported the reviewed head clean and
+mergeable. Guarded squash auto-merge was enabled only after that evidence was
+complete, and GitHub merged it automatically at `2026-09-20T01:50:46Z` as
+`0fdac8165b42c629a74ffba7b47f7afe18c8fca0`; no plain manual merge command was
+used.
+
+The collision-checked schema-3 inventory at that exact merged main contains 15
+established lanes, 1,445 implementation identities, 4,670 implementation
+slots, and 1,485 all-reported identities. Completion bands are 175/265,
+123/934, 181/2,282, and 966/13,524; Rust has 786 singleton identities, OCaml
+remains an emerging five-package lane, and canonical collisions and unknown
+language buckets remain zero. The established-lane package counts are C# 199,
+Dart 86, Elixir 279, F# 198, Go 296, Haskell 204, Java 134, Kotlin 133, Lua 252,
+Perl 251, Python 503, Ruby 298, Rust 1,222, Swift 162, and TypeScript 453.
+
+The two newly unowned Rust singletons are now registered as portable pending
+owners. `der-asn1-portable-conformance` owns the typed, allocation-free ASN.1
+DER value layer above the existing DER TLV framing contract, with canonical
+primitive and wrapper fixtures, shared budgets, non-advancing failures, and no
+X.509, trust, signature, TLS, network, credential, or ambient authority.
+`x509-time-portable-conformance` owns the RFC 5280 UTCTime and GeneralizedTime
+core above both DER contracts, including the fixed 1950/2050 split, Gregorian
+and leap boundaries, fixed Zulu syntax, bounded work, and redacted failures;
+clocks, validity decisions, X.509 path/trust/signature behavior, and TLS remain
+outside it. Open downstream x509-validity work does not supersede that owner.
+
+The dependency/leverage pass selects
+`ocaml-build-tool-process-free-graph-diff-core` from exact main on branch
+`codex/parity-ocaml-build-tool-graph-diff-20260919`. All seven formal
+dependencies are merged, this is the next dependency-shaped OCaml promotion
+step, and it unlocks 19 unfinished descendants. The bounded tranche owns only
+the pure eight-case graph and eleven-case diff-selection core: deterministic
+topology and closures, exact stable failures, strict bounded Unicode-scalar
+glob matching, and no filesystem, Git, process, environment, network,
+credential, or execution authority. No open PR touches the prospective OCaml
+build-tool program, neutral graph/diff fixtures, or their conformance contract.
+Dependabot PR #15548 does overlap `.github/workflows/ci.yml`, so that shared
+file must be avoided or the collision reassessed immediately before
+publication; the already-governed OCaml graph and directed-graph package trees
+also remain outside this tranche. The reconciled graph has 849 owners and 1,574
+edges: 221 merged, 627 pending, and exactly this owner in progress.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
