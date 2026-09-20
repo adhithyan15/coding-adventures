@@ -18,10 +18,11 @@
 
 ### Tests
 
-- Fourteen focused cases cover input bounds, peak concurrency, FIFO starts and
+- Seventeen focused cases cover input bounds, peak concurrency, FIFO starts and
   reacquisition, sync/async failure cleanup, queued/future cancellation,
   cancellation during reacquisition, one-permit producer/consumer progress,
-  failed waits, concurrent-yield rejection, and already-cancelled pools.
+  failed waits, awaited and unawaited yield settlement, concurrent-yield
+  rejection, and already-cancelled pools.
 
 ## 0.9.0 — 2026-09-19
 

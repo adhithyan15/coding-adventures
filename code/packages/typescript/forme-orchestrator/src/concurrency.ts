@@ -46,6 +46,10 @@ export function createConcurrencyPool(
   let active = 0;
   let peakActive = 0;
   let closedError: CancellationError | null = null;
+  let resolveCancellation!: (error: CancellationError) => void;
+  const cancellationSignal = new Promise<CancellationError>(resolve => {
+    resolveCancellation = resolve;
+  });
 
   const dispatch = (): void => {
     if (closedError !== null) return;
@@ -66,13 +70,6 @@ export function createConcurrencyPool(
     }
     return new Promise<void>((resolve, reject) => {
       queue.push({ resolve, reject });
-      // Cancellation can fire synchronously through a custom token between
-      // the initial closed check and insertion. Recheck before returning.
-      if (closedError !== null) {
-        const index = queue.findIndex(waiter => waiter.resolve === resolve);
-        if (index >= 0) queue.splice(index, 1);
-        reject(closedError);
-      }
     });
   };
 
@@ -87,6 +84,7 @@ export function createConcurrencyPool(
   const close = (): void => {
     if (closedError !== null) return;
     closedError = cancellationError(cancellation);
+    resolveCancellation(closedError);
     const waiting = queue.splice(0, queue.length);
     for (const waiter of waiting) waiter.reject(closedError);
   };
@@ -99,30 +97,81 @@ export function createConcurrencyPool(
     await acquire();
     let held = true;
     let yielding = false;
+    let inFlightYield: Promise<unknown> | null = null;
+    let poisonedError: unknown = null;
     const permit: ConcurrencyPermit = {
-      async yieldWhile<R>(wait: () => Promise<R>): Promise<R> {
+      yieldWhile<R>(wait: () => Promise<R>): Promise<R> {
         if (yielding) {
-          throw new Error("concurrency permit allows only one yield in flight");
+          return Promise.reject(new Error("concurrency permit allows only one yield in flight"));
         }
         if (!held) {
-          throw new Error("yieldWhile requires an active permit");
+          return Promise.reject(new Error("yieldWhile requires an active permit"));
         }
         yielding = true;
         held = false;
         release();
-        try {
-          const value = await wait();
-          await acquire();
-          held = true;
-          return value;
-        } finally {
-          yielding = false;
-        }
+        let operation!: Promise<R>;
+        operation = (async (): Promise<R> => {
+          try {
+            const outcome = await Promise.race([
+              Promise.resolve().then(wait).then(
+                value => ({ kind: "value" as const, value }),
+                error => ({ kind: "error" as const, error }),
+              ),
+              cancellationSignal.then(error => ({ kind: "cancelled" as const, error })),
+            ]);
+            if (outcome.kind === "cancelled") {
+              poisonedError = outcome.error;
+              throw outcome.error;
+            }
+            if (outcome.kind === "error") {
+              // A task is allowed to catch an upstream error and continue, so
+              // restore its permit before exposing that error to task code.
+              await acquire();
+              held = true;
+              throw outcome.error;
+            }
+            try {
+              await acquire();
+            } catch (error) {
+              poisonedError = error;
+              throw error;
+            }
+            held = true;
+            return outcome.value;
+          } finally {
+            yielding = false;
+            if (inFlightYield === operation) inFlightYield = null;
+          }
+        })();
+        inFlightYield = operation;
+        return operation;
       },
     };
 
     try {
-      return await task(permit);
+      let value: T | undefined;
+      let taskError: unknown = null;
+      try {
+        value = await task(permit);
+      } catch (error) {
+        taskError = error;
+      }
+
+      const unfinishedYield = inFlightYield;
+      if (unfinishedYield !== null) {
+        try {
+          await unfinishedYield;
+          if (taskError === null) {
+            taskError = new Error("concurrency task must await yieldWhile before completing");
+          }
+        } catch (error) {
+          if (taskError === null) taskError = error;
+        }
+      }
+      if (poisonedError !== null) throw poisonedError;
+      if (taskError !== null) throw taskError;
+      return value as T;
     } finally {
       if (held) {
         held = false;

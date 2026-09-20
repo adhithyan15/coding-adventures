@@ -126,19 +126,71 @@ describe("shared concurrency pool", () => {
     expect(trace).toEqual(["holder-yield", "first", "second", "holder-resume"]);
   });
 
-  it("does not reacquire merely to propagate a failed wait", async () => {
+  it("reacquires before exposing a failed wait to task code", async () => {
     const pool = createConcurrencyPool(1, neverCancelledToken());
     const failure = new Error("upstream failed");
     const trace: string[] = [];
     const holder = pool.run(async permit => {
-      await permit.yieldWhile(async () => { throw failure; });
+      try {
+        await permit.yieldWhile(async () => { throw failure; });
+      } catch (error) {
+        trace.push(`holder-catch:${pool.stats().active}`);
+        throw error;
+      }
     });
     const follower = pool.run(async () => { trace.push("follower"); });
 
     await expect(holder).rejects.toBe(failure);
     await expect(follower).resolves.toBeUndefined();
-    expect(trace).toEqual(["follower"]);
+    expect(trace).toEqual(["follower", "holder-catch:1"]);
     expect(pool.stats()).toMatchObject({ active: 0, queued: 0 });
+  });
+
+  it("settles and releases an unawaited successful yield before rejecting the task", async () => {
+    const pool = createConcurrencyPool(1, neverCancelledToken());
+    const wait = deferred<void>();
+    const task = pool.run(permit => {
+      void permit.yieldWhile(() => wait.promise);
+      return "returned too early";
+    });
+    await flushMicrotasks();
+    expect(pool.stats()).toMatchObject({ active: 0 });
+
+    wait.resolve();
+    await expect(task).rejects.toThrow("must await yieldWhile");
+    expect(pool.stats()).toMatchObject({ active: 0, queued: 0 });
+    await expect(pool.run(async () => "still usable")).resolves.toBe("still usable");
+  });
+
+  it("contains an unawaited failed yield and releases its reacquired permit", async () => {
+    const pool = createConcurrencyPool(1, neverCancelledToken());
+    const wait = deferred<void>();
+    const failure = new Error("discarded wait failed");
+    const task = pool.run(permit => {
+      void permit.yieldWhile(() => wait.promise);
+    });
+    await flushMicrotasks();
+
+    wait.reject(failure);
+    await expect(task).rejects.toBe(failure);
+    expect(pool.stats()).toMatchObject({ active: 0, queued: 0 });
+    await expect(pool.run(async () => "still usable")).resolves.toBe("still usable");
+  });
+
+  it("contains an unawaited yielded wait when cancellation fires", async () => {
+    const cancellation = createCancellationTokenSource();
+    const pool = createConcurrencyPool(1, cancellation.token);
+    const wait = deferred<void>();
+    const task = pool.run(permit => {
+      void permit.yieldWhile(() => wait.promise);
+    });
+    await flushMicrotasks();
+
+    cancellation.cancel("stop yielded work");
+    await expect(task).rejects.toBeInstanceOf(CancellationError);
+    expect(pool.stats()).toMatchObject({ active: 0, queued: 0 });
+    wait.resolve();
+    await flushMicrotasks();
   });
 
   it("rejects cancellation while a yielded holder waits to reacquire", async () => {
@@ -194,12 +246,17 @@ describe("shared concurrency pool", () => {
 interface Deferred<T> {
   readonly promise: Promise<T>;
   readonly resolve: (value: T) => void;
+  readonly reject: (error: unknown) => void;
 }
 
 function deferred<T>(): Deferred<T> {
   let resolve!: (value: T) => void;
-  const promise = new Promise<T>(innerResolve => { resolve = innerResolve; });
-  return { promise, resolve };
+  let reject!: (error: unknown) => void;
+  const promise = new Promise<T>((innerResolve, innerReject) => {
+    resolve = innerResolve;
+    reject = innerReject;
+  });
+  return { promise, resolve, reject };
 }
 
 async function flushMicrotasks(): Promise<void> {

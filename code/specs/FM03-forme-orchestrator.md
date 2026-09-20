@@ -580,10 +580,14 @@ the permit exactly once.
 
 A holder that must wait for an upstream stream value yields its permit before
 calling `next()`. If the wait succeeds, reacquisition joins the tail of the
-same FIFO queue before stage code resumes. If the wait fails or pipeline
-cancellation occurs, the holder does not reacquire merely to unwind. This
-release/reacquire boundary is what allows a producer and consumer to make
-progress with `maxConcurrency: 1`; a holder may have only one yield in flight.
+same FIFO queue before stage code resumes. A non-cancellation wait failure also
+reacquires before it is exposed to task code, so a caller that catches the
+error cannot continue outside the concurrency budget. Pipeline cancellation
+does not reacquire; it poisons the invocation so catching the local error
+cannot turn the cancelled task into success. This release/reacquire boundary
+is what allows a producer and consumer to make progress with
+`maxConcurrency: 1`; a holder may have only one yield in flight, and the pool
+settles that yield before the owning task can finish.
 
 Pipeline cancellation rejects queued acquisitions with `CancellationError`
 and refuses new work. Active holders remain cooperatively cancellable through
