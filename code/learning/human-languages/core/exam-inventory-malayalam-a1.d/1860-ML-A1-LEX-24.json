@@ -1,0 +1,21 @@
+{
+  "id": "ML-A1-LEX-24",
+  "category": "Padakosham (lexicon by domain)",
+  "label": "what the air carries: wind, sand, mud, smoke, ember",
+  "probe": [
+    "ML-LEX-C59-AIR-01",
+    "ML-LEX-C59-AIR-02",
+    "ML-LEX-C59-AIR-03",
+    "ML-LEX-C59-AIR-04",
+    "ML-LEX-C59-AIR-05"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NE20-04"
+  ],
+  "malayalamSpecific": false
+}

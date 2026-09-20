@@ -1,0 +1,18 @@
+{
+  "id": "ML-A1-TIME-03",
+  "category": "Kaalavum theeyathiyum (time and date)",
+  "label": "the seasons",
+  "probe": [
+    "ML-CONCEPT-C14-KAALANGAL-01",
+    "ML-CONCEPT-C14-KAALANGAL-02"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NG4-02"
+  ],
+  "malayalamSpecific": false
+}

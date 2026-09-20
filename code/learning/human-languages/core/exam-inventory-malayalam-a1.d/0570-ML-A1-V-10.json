@@ -1,0 +1,20 @@
+{
+  "id": "ML-A1-V-10",
+  "category": "Kriya (the verb)",
+  "label": "the -aam form: I'll do it, shall we, it may be",
+  "probe": [
+    "ML-CONCEPT-C04-AAM-VOLITIONAL-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F4-07",
+    "A1-NG1-05",
+    "A1-NG6-05"
+  ],
+  "malayalamSpecific": false,
+  "note": "Taught inside the goodbye poyi varaam, and the corpus names the form. It is Malayalam's volitional-and-permissive, which is how offers, invitations and 'that would be all right' are all said."
+}

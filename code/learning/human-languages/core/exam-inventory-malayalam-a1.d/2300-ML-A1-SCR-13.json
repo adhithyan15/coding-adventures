@@ -1,0 +1,17 @@
+{
+  "id": "ML-A1-SCR-13",
+  "category": "Lipi (script and orthography)",
+  "label": "capital letters",
+  "probe": null,
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-O1-04",
+    "A1-O1-05"
+  ],
+  "malayalamSpecific": false,
+  "note": "Malayalam has no case distinction, so the Spanish points have no Malayalam counterpart. Enumerated rather than dropped: a reader comparing the files should see the answer."
+}

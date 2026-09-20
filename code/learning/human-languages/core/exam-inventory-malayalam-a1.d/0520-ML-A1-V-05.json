@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-V-05",
+  "category": "Kriya (the verb)",
+  "label": "the future tense",
+  "probe": [
+    "ML-CONCEPT-C32-POKUKA-02"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F3-05",
+    "A1-F3-06"
+  ],
+  "malayalamSpecific": false,
+  "note": "The third of pokuka's three endings, and the form plans and intentions are stated in."
+}

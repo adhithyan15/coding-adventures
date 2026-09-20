@@ -1,0 +1,21 @@
+{
+  "id": "ML-A1-F-16",
+  "category": "Vyavahaaram (communicative functions)",
+  "label": "ask for permission, and grant or refuse it",
+  "probe": [
+    "ML-LEX-C65-ASK-02",
+    "ML-LEX-C65-ASK-03",
+    "ML-LEX-C58-ANSWER-04"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F4-05",
+    "A1-F4-06"
+  ],
+  "malayalamSpecific": false,
+  "note": "anuvaadam, sammatam and venda. Chapter 65 gives the nouns; the verb form that asks for permission is the missing -aamo, so this is covered as vocabulary and not as a frame."
+}

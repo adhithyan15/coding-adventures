@@ -1,0 +1,21 @@
+{
+  "id": "ML-A1-F-27",
+  "category": "Vyavahaaram (communicative functions)",
+  "label": "express what one likes",
+  "probe": [
+    "ML-CONCEPT-C34-ISHTAM-01",
+    "ML-CONCEPT-C34-ISHTAM-02",
+    "ML-CONCEPT-C34-ISHTAM-03"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F3-01",
+    "A1-NG6-08"
+  ],
+  "malayalamSpecific": false,
+  "note": "enikku ... ishtamaanu. A noun plus the copula plus a dative person, which is Malayalam's gustar and is taught as a whole construction."
+}

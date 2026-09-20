@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-V-11",
+  "category": "Kriya (the verb)",
+  "label": "the -anam form: should, must, please do",
+  "probe": [
+    "ML-CONCEPT-C09-KSHAMIKKANAM-01",
+    "ML-CONCEPT-C09-KSHAMIKKANAM-02"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F4-02"
+  ],
+  "malayalamSpecific": false,
+  "note": "Taught inside kshamikkanam, 'you should forgive' -- which is how Malayalam apologises and also how it makes a softened request."
+}

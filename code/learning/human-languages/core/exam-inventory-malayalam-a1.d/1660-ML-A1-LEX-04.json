@@ -1,0 +1,21 @@
+{
+  "id": "ML-A1-LEX-04",
+  "category": "Padakosham (lexicon by domain)",
+  "label": "the frame: neck, back, lip, nail, bone",
+  "probe": [
+    "ML-LEX-C57-FRAME-01",
+    "ML-LEX-C57-FRAME-02",
+    "ML-LEX-C57-FRAME-03",
+    "ML-LEX-C57-FRAME-04",
+    "ML-LEX-C57-FRAME-05"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NE01-01"
+  ],
+  "malayalamSpecific": false
+}

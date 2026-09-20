@@ -1,0 +1,21 @@
+{
+  "id": "ML-A1-NUM-03",
+  "category": "Sankhya (numerals and quantity)",
+  "label": "cardinals eleven to twenty, and the additive pattern behind them",
+  "probe": [
+    "ML-CONCEPT-C20-PATHINONNU-IRUPATHU-01",
+    "ML-CONCEPT-C20-PATHINONNU-IRUPATHU-02"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-Q-01",
+    "A1-NG2-01",
+    "A1-NE16-01"
+  ],
+  "malayalamSpecific": false,
+  "note": "The lesson teaches the pattern, not only the ten words, which is what makes it carry the general notion of number as well."
+}

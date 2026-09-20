@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-TIME-02",
+  "category": "Kaalavum theeyathiyum (time and date)",
+  "label": "the months of the Kollam Era calendar",
+  "probe": [
+    "ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-01",
+    "ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-02"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NG4-02"
+  ],
+  "malayalamSpecific": false,
+  "note": "The track teaches the Malayalam solar calendar rather than the Gregorian months, which is a deliberate editorial choice and a genuine one -- but it means a learner cannot name the month on a form."
+}

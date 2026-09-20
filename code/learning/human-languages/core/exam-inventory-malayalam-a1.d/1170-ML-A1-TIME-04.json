@@ -1,0 +1,23 @@
+{
+  "id": "ML-A1-TIME-04",
+  "category": "Kaalavum theeyathiyum (time and date)",
+  "label": "the parts of the day: morning, noon, afternoon, evening, night, midnight",
+  "probe": [
+    "ML-CONCEPT-C26-RAAVILE-01",
+    "ML-CONCEPT-C17-UCHA-PAATHIRA-01",
+    "ML-CONCEPT-C28-UCHAKAZHINJU-01",
+    "ML-CONCEPT-C27-VAIKUNNERAM-01",
+    "ML-CONCEPT-C24-RATHRI-01",
+    "ML-CONCEPT-C17-PAATHIRA-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NG4-01"
+  ],
+  "malayalamSpecific": false,
+  "note": "Six words across six chapters, which is unusually complete: this is the track's strongest column."
+}

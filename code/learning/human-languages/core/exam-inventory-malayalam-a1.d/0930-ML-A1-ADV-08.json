@@ -1,0 +1,20 @@
+{
+  "id": "ML-A1-ADV-08",
+  "category": "Kriyaavisheshanam (adverbs)",
+  "label": "degree: very, quite, a bit",
+  "probe": [
+    "ML-LEX-C79-DEGREE-01",
+    "ML-LEX-C79-DEGREE-02",
+    "ML-GRAMMAR-C79-DEGREE-SLOT-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-ADV-03"
+  ],
+  "malayalamSpecific": false,
+  "note": "Chapter 79, the same three atoms as ML-A1-ADJ-05, because the gap was one gap seen from two sides. All three grades of the point are answered: 'very' is valare, 'quite/a lot' is orupadu, and 'a bit' is kuraccu -- which was ALREADY TAUGHT as a quantity word for rice and water and needed no new lesson, only the observation that it stands in the same slot pointing down instead of up. The grammar lesson names the slot rather than the words: immediately in front of the quality word, Malayalam keeps one open position for how much, and nothing else in the phrase reacts. That is what lets the next degree word the learner meets be understood on sight. orupadu also measures stuff rather than qualities (orupadu vellam, a lot of water, with no joining word), which is recorded in its own lesson and not claimed here."
+}

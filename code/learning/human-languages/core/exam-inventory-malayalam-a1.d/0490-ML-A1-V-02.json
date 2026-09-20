@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-V-02",
+  "category": "Kriya (the verb)",
+  "label": "the verb never agrees with its subject, in any person or number",
+  "probe": [
+    "ML-CONCEPT-C05-VERB-NEVER-AGREES-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-V-01",
+    "A1-SN-03"
+  ],
+  "malayalamSpecific": false,
+  "note": "The single largest simplification Malayalam offers, and the reason the pronoun cannot be dropped. Where Spanish spends fourteen verb points on paradigms, Malayalam spends one point saying there is no paradigm."
+}

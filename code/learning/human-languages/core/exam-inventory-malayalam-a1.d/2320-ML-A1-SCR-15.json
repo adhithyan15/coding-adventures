@@ -1,0 +1,30 @@
+{
+  "id": "ML-A1-SCR-15",
+  "category": "Lipi (script and orthography)",
+  "label": "punctuation: the full stop, comma, question mark and the rest",
+  "probe": [
+    "ML-PUNCT-FULL-STOP-01",
+    "ML-PUNCT-COMMA-01",
+    "ML-PUNCT-QUESTION-01",
+    "ML-PUNCT-QUOTATION-01",
+    "ML-PUNCT-SLASH-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-O3-01",
+    "A1-O3-02",
+    "A1-O3-03",
+    "A1-O3-04",
+    "A1-O3-05",
+    "A1-O3-06",
+    "A1-O3-07",
+    "A1-O3-08",
+    "A1-O3-09"
+  ],
+  "malayalamSpecific": false,
+  "note": "CLOSED BY CHAPTER 108, AND THE NOTE'S CLAIM WAS OPENED RATHER THAN TRUSTED. 'Modern Malayalam uses the European marks, and not one lesson teaches any of them' -- six lessons matched a punctuation grep and FIVE were 'command' matching 'comma'; the sixth, ML-C70-um-more, mentions ENGLISH's commas contrastively. True. NINE SPANISH POINTS (A1-O3-01..09) BEHIND THIS ONE, at zero new headwords and zero script debt. The marks were already on the page: ML-C02-ninre-peru-entaanu prints a question mark in its HEADWORD and ML-C72-ennu prints quotation marks around its quoted sentence, so each lesson opens where the reader has already seen its mark. The load-bearing fact is checkable: the Malayalam block U+0D00-U+0D7F contains ZERO characters of category P, so every mark here is borrowed, and the older answer is the danda that SA-C60-danda teaches in Sanskrit. THREE MARKS LAND ON JOBS MALAYALAM HAD ALREADY FILLED -- -um for the comma in a list, the question words and the -oo ending of ML-C03-sukhamaano for the question mark, ennu for the quotation marks -- and the recall drills exactly that. The Malayalam NAMES of the marks are deliberately not given: they exist and cannot be sourced here yet, the same call ML-S147-letter-ttha makes about stroke order."
+}

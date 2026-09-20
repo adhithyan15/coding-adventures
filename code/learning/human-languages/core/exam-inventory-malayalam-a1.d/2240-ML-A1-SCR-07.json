@@ -1,0 +1,21 @@
+{
+  "id": "ML-A1-SCR-07",
+  "category": "Lipi (script and orthography)",
+  "label": "the retroflex and the distinctively Dravidian consonants",
+  "probe": [
+    "ML-SCRIPT-RECOG-113",
+    "ML-SCRIPT-RECOG-117",
+    "ML-SCRIPT-RECOG-118",
+    "ML-SCRIPT-RECOG-136"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-O1-03"
+  ],
+  "malayalamSpecific": false,
+  "note": "nna, tta, the zha that Malayalam shares only with Tamil, and rra."
+}

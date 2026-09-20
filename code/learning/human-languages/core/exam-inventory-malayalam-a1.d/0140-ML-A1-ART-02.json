@@ -1,0 +1,18 @@
+{
+  "id": "ML-A1-ART-02",
+  "category": "Nirdeshakam (definiteness, and the article Malayalam does not have)",
+  "label": "the indefinite: oru before a noun",
+  "probe": [
+    "ML-LEX-ORU-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-ART-03"
+  ],
+  "malayalamSpecific": false,
+  "note": "CLOSED BY ML-C18-oru, AND IT IS A RELOCATION RATHER THAN AN ADDITION, exactly as the old note said. oru is never a headword and has no atom, yet it stands as a STANDALONE TOKEN in six lessons already -- ML-C18-mani, ML-C23-naal, ML-C39-chaaya, ML-C39-kaapi, ML-C39-paal and ML-C49-perhaps -- so a lesson appended at the end of the track would have left all six as forward references. ML-C18-oru lands at sequence 465, immediately before ML-C18-mani (470), the earliest of them. THE CENSUS WAS RE-DERIVED RATHER THAN TRUSTED and it matches: six files by a word-bounded count against the Malayalam block, ten by a bare substring grep, which also catches the orupaadu family in chapter 79 and a compound in ML-C51-blessing. THE 'NEVER TAUGHT' CLAIM NEEDED ONE QUALIFICATION, and finding it is what a relocation is for: ML-C49-perhaps:43 already glossed oru in prose, and glossed it LOOSELY, as 'the same numeral this book counted with'. The numeral this book counted with is onnu (ML-W07-number-words-1-5); oru is the shape it takes before a noun. That line is corrected in this tranche. PLACEMENT WAS DECIDED BY WHAT IS TEACHABLE. A first draft put the lesson in chapter 7 beside the numerals and drew its examples from oru maNi and oru caaya -- words taught LATER, which would have reintroduced the forward references being removed. Chapter 18 is the first user and everything through chapter 17 is available; even so the choice is narrow, because the colour, family, body-part and food words all sit inside MULTI-WORD headwords and own no single token. peru is the worked example as one of only five single-token nouns available before 465."
+}

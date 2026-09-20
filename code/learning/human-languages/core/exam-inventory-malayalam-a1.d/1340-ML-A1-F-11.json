@@ -1,0 +1,18 @@
+{
+  "id": "ML-A1-F-11",
+  "category": "Vyavahaaram (communicative functions)",
+  "label": "apologise",
+  "probe": [
+    "ML-CONCEPT-C09-KSHAMIKKANAM-01",
+    "ML-CONCEPT-C09-KSHAMIKKANAM-03"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F5-06"
+  ],
+  "malayalamSpecific": false
+}

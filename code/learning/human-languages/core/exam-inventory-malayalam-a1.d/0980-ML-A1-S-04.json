@@ -1,0 +1,18 @@
+{
+  "id": "ML-A1-S-04",
+  "category": "Vaakyam (the sentence)",
+  "label": "the dative-subject sentence, where the person is not the grammatical subject",
+  "probe": [
+    "ML-CONCEPT-C06-DATIVE-SUBJECT-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-SV-01"
+  ],
+  "malayalamSpecific": false,
+  "note": "enikku malayaalam ariyaam. The sentence type Spanish reaches with gustar, and Malayalam uses for knowing, liking, wanting and every bodily state."
+}

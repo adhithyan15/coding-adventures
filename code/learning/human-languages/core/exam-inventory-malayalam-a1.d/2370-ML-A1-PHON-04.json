@@ -1,0 +1,18 @@
+{
+  "id": "ML-A1-PHON-04",
+  "category": "Uccharanam (pronunciation)",
+  "label": "gemination: the doubled consonant",
+  "probe": [
+    "ML-CONCEPT-C85-GEMINATION-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-O1-07"
+  ],
+  "malayalamSpecific": false,
+  "note": "Chapter 85. The measurement that preceded it stands: 102 of the 292 taught tokens carry a doubled consonant, and the number of gemination minimal pairs AMONG TAUGHT WORDS was ZERO, so the contrast could not be shown from taught vocabulary alone. The fix was the one the measurement pointed at. kutti (child) was already taught in ML-C36-kutti, and kudi returned ZERO files, so the chapter teaches kudikkuka (to drink) FIRST -- which also fills a real hole, since the book had given the learner water, tea, coffee and milk and no verb to do anything with them -- and then uses its stem kudi against kutti. One consonant, held longer, carrying the entire difference in meaning. The lesson also names what the reader has been doing by imitation for a hundred words (amma, illa, uppu) and explains the spelling: the letter, the vowel-killing mark, the letter again, because the held front half genuinely has no vowel of its own. NOTE FOR A FUTURE PASS: kudi is shown as a form, not taught as a headword, so nothing owns that token. If a later lesson takes kudi as a headword it will inherit this chapter's uses -- the ML-C82-chechi-address trap."
+}

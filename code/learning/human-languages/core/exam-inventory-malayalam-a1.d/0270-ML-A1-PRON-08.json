@@ -1,0 +1,22 @@
+{
+  "id": "ML-A1-PRON-08",
+  "category": "Sarvanaamam (pronouns)",
+  "label": "the relative participle, which is Malayalam's answer to relative que",
+  "probe": [
+    "ML-GRAMMAR-C90-PARTICIPLE-01",
+    "ML-CONCEPT-C90-NO-RELATIVE-01",
+    "ML-GRAMMAR-C90-PAST-PARTICIPLE-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-PRON-05",
+    "A1-SUB-04",
+    "A1-SUB-05"
+  ],
+  "malayalamSpecific": false,
+  "note": "Chapter 90. The note called this STRUCTURALLY THE BIGGEST GAP IN THIS FILE and it was right about the gap: a sweep for attributive -unna forms across the whole corpus returned ZERO, while 16 distinct -unnu present forms were already in use. But the SIZE was the surprise. The describing form is the taught present or past with ONE VOWEL SIGN REMOVED from its last letter: pokunnu (he goes) becomes pokunna (that goes), vannu (he came) becomes vanna (that came). What is left is the final letter carrying its own inherent a, which is visible on the page, and the rule is about the LETTER rather than the tense -- a past form ending in -i loses that sign the same way. The form then stands IN FRONT of the noun, in the position a quality word has occupied since the adjective chapter, so Malayalam needed no new arrangement to let a verb describe a noun. TWO THINGS DIFFER FROM ENGLISH and the second is the one to watch: the clause moves to the FRONT, and THE JOINING WORD DISAPPEARS. English needs that, which or who; Malayalam has no such word and needs none, because the missing vowel sign already says the verb is describing and the noun after it is what is described. The lesson names the habit to drop: there is nothing to translate 'that' into. NO NEW VOCABULARY -- every verb and noun used is taught."
+}

@@ -1,0 +1,24 @@
+{
+  "id": "ML-A1-LEX-31",
+  "category": "Padakosham (lexicon by domain)",
+  "label": "shops, and the people in them",
+  "probe": [
+    "ML-LEX-C91-SHOP-01",
+    "ML-LEX-C91-MONEY-01",
+    "ML-LEX-C91-MONEY-02",
+    "ML-LEX-C91-MONEY-03",
+    "ML-LEX-C91-BUY-01",
+    "ML-CONCEPT-C91-PRICE-QUESTION-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NE12-01",
+    "A1-NE15-02"
+  ],
+  "malayalamSpecific": false,
+  "note": "Chapter 91, closed by the same atoms as ML-A1-LEX-30, which its own note pointed at. kada is taught, and it takes the locative with a -y- join exactly as its last sound predicts, so kadayil costs no new rule. See ML-A1-LEX-30 for the account of why the chapter was cheap: the grammar under a vocabulary chapter decides its price, and here the numbers, the question word and the object rule were all already built."
+}

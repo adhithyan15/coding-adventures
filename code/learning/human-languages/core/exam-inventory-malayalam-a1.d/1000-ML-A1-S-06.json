@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-S-06",
+  "category": "Vaakyam (the sentence)",
+  "label": "the yes-or-no question, and the wh-question",
+  "probe": [
+    "ML-CONCEPT-C03-QUESTION-PARTICLE-O-01",
+    "ML-LEX-ENTU-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-OS-02",
+    "A1-OS-03"
+  ],
+  "malayalamSpecific": false
+}

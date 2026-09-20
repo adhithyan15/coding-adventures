@@ -1,0 +1,16 @@
+{
+  "id": "ML-A1-JOIN-04",
+  "category": "Samuchayam (joining and subordination)",
+  "label": "distributive: one thing, then the other",
+  "probe": null,
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-CO-05"
+  ],
+  "malayalamSpecific": false,
+  "note": "Untaught, and its blocker is now gone: the coordinator it depended on arrives in chapter 70. The distributive -- one thing, then the other -- is a construction of its own rather than a second use of -um, so it needs its own lesson. Re-read this note against chapter 70 before picking it up."
+}

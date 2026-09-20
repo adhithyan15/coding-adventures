@@ -1,0 +1,16 @@
+{
+  "id": "ML-A1-JOIN-01",
+  "category": "Samuchayam (joining and subordination)",
+  "label": "and: joining two nouns, and joining two clauses",
+  "probe": null,
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-CO-01"
+  ],
+  "malayalamSpecific": false,
+  "note": "THE NOUN HALF IS NOW TAUGHT AND THE CLAUSE HALF IS NOT, so this point stays open. The finding that opened it was verified rather than assumed: the string -um appeared in exactly ONE of 307 lesson files, inside an etymology note as a morphological component of the word for evening, and the nine files containing the sequence u+m all had it INSIDE a word (veendum, kudumbam, hrudayam, the month names). Nothing taught it as a coordinator and the track had no joining atom at all -- a learner owning 69 chapters of vocabulary could not say 'water and rice'. Chapter 70 teaches exactly that: -um on EVERY item with nothing in the gap, across two lessons covering a pair and a longer list, with the three sandhi landings (-m to -vum, a y-glide after a vowel, and the chillu l unfurling). WHAT IT DOES NOT TEACH is this point's other half, joining two CLAUSES. That is deliberate: the everyday clause link in this corpus is the -i participle already covered by ML-A1-JOIN-11, and claiming clause coordination on the strength of the noun lessons would claim a range the corpus does not teach. Probe it when a lesson delivers it."
+}

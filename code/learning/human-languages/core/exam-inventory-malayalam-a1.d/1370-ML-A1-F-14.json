@@ -1,0 +1,18 @@
+{
+  "id": "ML-A1-F-14",
+  "category": "Vyavahaaram (communicative functions)",
+  "label": "ask for help",
+  "probe": [
+    "ML-CONCEPT-C34-SAHAAYIKKUKA-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F4-03"
+  ],
+  "malayalamSpecific": false,
+  "note": "The verb is taught; the request frame that would turn it into 'can you help me' is not -- see ML-A1-V-22."
+}

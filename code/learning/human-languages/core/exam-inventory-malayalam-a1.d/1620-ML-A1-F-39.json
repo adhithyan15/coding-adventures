@@ -1,0 +1,20 @@
+{
+  "id": "ML-A1-F-39",
+  "category": "Vyavahaaram (communicative functions)",
+  "label": "express trust, respect and good manners as things one can name",
+  "probe": [
+    "ML-LEX-C65-ASK-05",
+    "ML-LEX-C51-COURTESY-03",
+    "ML-LEX-C65-ASK-04"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NE02-01"
+  ],
+  "malayalamSpecific": false,
+  "note": "vishvaasam, bahumaanam, maryaada. The track teaches the vocabulary of character before it teaches any character adjective."
+}

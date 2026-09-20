@@ -1,0 +1,18 @@
+{
+  "id": "ML-A1-REG-05",
+  "category": "Bhaashaabhedam (register: Sanskritic and native, familiar and respectful)",
+  "label": "when to use the formal greeting and when the everyday one",
+  "probe": [
+    "ML-CONCEPT-C82-GREETING-REGISTER-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F5-01"
+  ],
+  "malayalamSpecific": false,
+  "note": "Chapter 82, and the note's own framing was the whole method: 'the evidence is in the lessons' own register fields; the guidance is not in their prose.' So the lesson states the rule those fields already encode and teaches NO NEW WORD. namaskaram carries register respectful-neutral and is tied to no hour -- it is the one that is never wrong. The four shubha-family greetings carry register formal and are read and heard far more than they are said: a notice, a broadcast, a speech. suprabhaatham is the exception inside its own family -- its own lesson records it as used in BOTH formal and informal contexts and as the most general morning greeting -- so it is an everyday word anybody can say before noon. The working rule is two lines: any time, anyone, namaskaram; before noon if you like, suprabhaatham. Knowing a word and knowing when it is used are two different pieces of knowledge, and the corpus had given the first and not the second."
+}

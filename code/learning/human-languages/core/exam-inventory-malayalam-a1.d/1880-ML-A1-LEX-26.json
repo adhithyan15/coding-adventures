@@ -1,0 +1,23 @@
+{
+  "id": "ML-A1-LEX-26",
+  "category": "Padakosham (lexicon by domain)",
+  "label": "the paddy field: paddy, grass, ear of grain, plough, harvest",
+  "probe": [
+    "ML-LEX-C66-PADDY-01",
+    "ML-LEX-C66-PADDY-02",
+    "ML-LEX-C66-PADDY-03",
+    "ML-LEX-C66-PADDY-04",
+    "ML-LEX-C66-PADDY-05"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NE07-02",
+    "A1-NE15-04"
+  ],
+  "malayalamSpecific": false,
+  "note": "The track's economy vocabulary is agricultural, which is an editorial choice about Kerala and is recorded as one. It does not answer the Spanish industry point, which is about factories and energy."
+}
