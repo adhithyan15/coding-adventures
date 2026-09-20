@@ -6,10 +6,10 @@
  *
  * v0 surface: `createOrchestrator()` → `buildPipeline(config)` →
  * `runOnce(pipeline, options?)` → `RunResult`, or `watch(pipeline)` for a
- * long-lived conservative rebuild loop. Explicit wires,
- * deterministic fan-out, stable topological execution, and partial
- * reproducible-build mode and watch lifecycle work; parallelism,
- * Side-effect replay, bounded streaming, and OpenTelemetry traces are deferred.
+ * long-lived rebuild loop. Explicit wires, bounded live fan-out, one shared
+ * concurrency budget, exact affected scheduling, side-effect replay, partial
+ * reproducible-build mode, and watch lifecycle work. OpenTelemetry traces and
+ * the remaining reproducibility policies are deferred.
  *
  * See FM03 §3 for the lifecycle, §9 for error handling, §10 for
  * cancellation.  See `scheduler.ts` for the v0 simplifications listed

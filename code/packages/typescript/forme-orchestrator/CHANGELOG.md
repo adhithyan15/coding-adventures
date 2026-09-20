@@ -1,5 +1,14 @@
 # Changelog — @coding-adventures/forme-orchestrator
 
+## Unreleased
+
+### Documentation
+
+- Reconciled the public entry-point, watch-loop, scheduler-state, and README
+  descriptions with the completed pipeline-wide concurrent scheduler. Bounded
+  live fan-out, exact affected scheduling, and explicit side-effect replay are
+  shipped behavior rather than deferred work.
+
 ## 0.12.0 — 2026-09-19
 
 ### Added — live bounded stream scheduling
