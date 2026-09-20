@@ -54,6 +54,13 @@ const fallbackProps = {
   "schematicLabel": "Sample SchematicLabel",
   "schematicModelNLabel": "Sample SchematicModelNLabel",
   "schematicModelPLabel": "Sample SchematicModelPLabel",
+  "schematicModelParameterOneDisabled": false,
+  "schematicModelParameterOneLabel": "Sample SchematicModelParameterOneLabel",
+  "schematicModelParameterOneValue": "Sample SchematicModelParameterOneValue",
+  "schematicModelParameterTwoDisabled": false,
+  "schematicModelParameterTwoLabel": "Sample SchematicModelParameterTwoLabel",
+  "schematicModelParameterTwoValue": "Sample SchematicModelParameterTwoValue",
+  "schematicModelParametersLabel": "Sample SchematicModelParametersLabel",
   "schematicModelPolarityDisabled": false,
   "schematicModelPolarityLabel": "Sample SchematicModelPolarityLabel",
   "schematicNetLabel": "Sample SchematicNetLabel",
@@ -219,6 +226,18 @@ const emitPayloads = {
     }
   ],
   "onSchematicAnalysisParameterTwoChange": [
+    {
+      "name": "value",
+      "type": "text"
+    }
+  ],
+  "onSchematicModelParameterOneChange": [
+    {
+      "name": "value",
+      "type": "text"
+    }
+  ],
+  "onSchematicModelParameterTwoChange": [
     {
       "name": "value",
       "type": "text"
