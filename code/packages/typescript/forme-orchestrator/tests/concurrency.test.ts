@@ -186,6 +186,25 @@ describe("shared concurrency pool", () => {
     await expect(pool.run(async () => "still usable")).resolves.toBe("still usable");
   });
 
+  it("retains a discarded yield failure until an independently waiting task settles", async () => {
+    const pool = createConcurrencyPool(1, neverCancelledToken());
+    const taskGate = deferred<void>();
+    const failure = new Error("discarded early failure");
+    const task = pool.run(async permit => {
+      void permit.yieldWhile(async () => { throw failure; });
+      await taskGate.promise;
+      return "must not succeed";
+    });
+    for (let attempt = 0; attempt < 10 && pool.stats().active !== 1; attempt += 1) {
+      await flushMicrotasks();
+    }
+    expect(pool.stats()).toMatchObject({ active: 1, queued: 0 });
+
+    taskGate.resolve();
+    await expect(task).rejects.toBe(failure);
+    expect(pool.stats()).toMatchObject({ active: 0, queued: 0 });
+  });
+
   it("contains an unawaited yielded wait when cancellation fires", async () => {
     const cancellation = createCancellationTokenSource();
     const pool = createConcurrencyPool(1, cancellation.token);
@@ -199,6 +218,27 @@ describe("shared concurrency pool", () => {
     await expect(task).rejects.toBeInstanceOf(CancellationError);
     expect(pool.stats()).toMatchObject({ active: 0, queued: 0 });
     wait.resolve();
+    await flushMicrotasks();
+  });
+
+  it("retains discarded-yield cancellation until an independent task wait settles", async () => {
+    const cancellation = createCancellationTokenSource();
+    const pool = createConcurrencyPool(1, cancellation.token);
+    const yieldedWait = deferred<void>();
+    const taskGate = deferred<void>();
+    const task = pool.run(async permit => {
+      void permit.yieldWhile(() => yieldedWait.promise);
+      await taskGate.promise;
+      return "must not succeed";
+    });
+    await flushMicrotasks();
+
+    cancellation.cancel("discarded yield cancelled");
+    await flushMicrotasks();
+    taskGate.resolve();
+    await expect(task).rejects.toBeInstanceOf(CancellationError);
+    expect(pool.stats()).toMatchObject({ active: 0, queued: 0 });
+    yieldedWait.resolve();
     await flushMicrotasks();
   });
 
@@ -218,6 +258,33 @@ describe("shared concurrency pool", () => {
     await expect(holder).rejects.toBeInstanceOf(CancellationError);
     blocker.resolve();
     await expect(other).resolves.toBeUndefined();
+    expect(pool.stats()).toMatchObject({ active: 0, queued: 0 });
+  });
+
+  it("cannot swallow cancellation of a failed-wait reacquisition", async () => {
+    const cancellation = createCancellationTokenSource();
+    const pool = createConcurrencyPool(1, cancellation.token);
+    const wait = deferred<void>();
+    const blockerGate = deferred<void>();
+    const holder = pool.run(async permit => {
+      try {
+        await permit.yieldWhile(() => wait.promise);
+      } catch {
+        return "caught locally";
+      }
+    });
+    const blocker = pool.run(async () => { await blockerGate.promise; });
+    await flushMicrotasks();
+
+    wait.reject(new Error("upstream failed first"));
+    await flushMicrotasks();
+    expect(pool.stats()).toMatchObject({ active: 1, queued: 1 });
+    cancellation.cancel("cancel queued reacquire");
+
+    await expect(holder).rejects.toBeInstanceOf(CancellationError);
+    expect(pool.stats()).toMatchObject({ active: 1, queued: 0 });
+    blockerGate.resolve();
+    await expect(blocker).resolves.toBeUndefined();
     expect(pool.stats()).toMatchObject({ active: 0, queued: 0 });
   });
 

@@ -98,7 +98,18 @@ export function createConcurrencyPool(
     let held = true;
     let yielding = false;
     let inFlightYield: Promise<unknown> | null = null;
+    let yieldFailed = false;
+    let yieldError: unknown;
     let poisonedError: unknown = null;
+    const reacquire = async (): Promise<void> => {
+      try {
+        await acquire();
+        held = true;
+      } catch (error) {
+        poisonedError = error;
+        throw error;
+      }
+    };
     const permit: ConcurrencyPermit = {
       yieldWhile<R>(wait: () => Promise<R>): Promise<R> {
         if (yielding) {
@@ -127,17 +138,10 @@ export function createConcurrencyPool(
             if (outcome.kind === "error") {
               // A task is allowed to catch an upstream error and continue, so
               // restore its permit before exposing that error to task code.
-              await acquire();
-              held = true;
+              await reacquire();
               throw outcome.error;
             }
-            try {
-              await acquire();
-            } catch (error) {
-              poisonedError = error;
-              throw error;
-            }
-            held = true;
+            await reacquire();
             return outcome.value;
           } finally {
             yielding = false;
@@ -145,6 +149,13 @@ export function createConcurrencyPool(
           }
         })();
         inFlightYield = operation;
+        // Observe rejection immediately even when task code discards the
+        // returned promise. The failure remains terminal for this invocation
+        // until run() settles, so a local catch cannot turn it into success.
+        void operation.catch(error => {
+          yieldFailed = true;
+          yieldError = error;
+        });
         return operation;
       },
     };
@@ -176,6 +187,7 @@ export function createConcurrencyPool(
         }
       }
       if (poisonedError !== null) throw poisonedError;
+      if (yieldFailed) throw yieldError;
       if (taskFailed) throw taskError;
       return value as T;
     } finally {
