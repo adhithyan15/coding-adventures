@@ -288,10 +288,15 @@ if ($isWindows -and (Test-Command "dotnet")) {
     if ($Release) {
         $acceptanceArgs += "--release"
     }
+    $xamlBookmarksPath = Join-Path $outputRoot "xaml/test-bookmarks.json"
+    Remove-Item -Force -ErrorAction SilentlyContinue $xamlBookmarksPath
     Push-Location $rustWorkspace
+    $previousBookmarksPath = $env:VENTURE_BOOKMARKS_PATH
     try {
+        $env:VENTURE_BOOKMARKS_PATH = $xamlBookmarksPath
         Invoke-Checked -Command "cargo" -Arguments $acceptanceArgs
     } finally {
+        $env:VENTURE_BOOKMARKS_PATH = $previousBookmarksPath
         Pop-Location
     }
 } elseif (-not $isWindows) {
@@ -336,8 +341,12 @@ if ($null -ne $flutterPlatform -and (Test-Command "flutter")) {
     Write-Host "==> Building flutter ($flutterPlatform)"
     Push-Location (Join-Path $outputRoot "flutter")
     $previousFlutterLibrary = $env:VENTURE_BROWSER_FLUTTER_LIBRARY
+    $previousBookmarksPath = $env:VENTURE_BOOKMARKS_PATH
+    $flutterBookmarksPath = Join-Path $outputRoot "flutter/test-bookmarks.json"
+    Remove-Item -Force -ErrorAction SilentlyContinue $flutterBookmarksPath
     try {
         $env:VENTURE_BROWSER_FLUTTER_LIBRARY = $flutterBridgePath
+        $env:VENTURE_BOOKMARKS_PATH = $flutterBookmarksPath
         Invoke-Checked -Command "flutter" -Arguments @("pub", "get")
         Invoke-Checked -Command "flutter" -Arguments @("analyze", "lib")
         Invoke-Checked -Command "flutter" -Arguments @("test", "test/venture_chrome_interaction_test.dart")
@@ -347,6 +356,7 @@ if ($null -ne $flutterPlatform -and (Test-Command "flutter")) {
         Invoke-Checked -Command "flutter" -Arguments @("build", $flutterPlatform)
     } finally {
         $env:VENTURE_BROWSER_FLUTTER_LIBRARY = $previousFlutterLibrary
+        $env:VENTURE_BOOKMARKS_PATH = $previousBookmarksPath
         Pop-Location
     }
 } elseif ($null -eq $flutterPlatform) {
@@ -404,11 +414,16 @@ if (-not (Test-Command "gradle")) {
     Write-Host "==> Testing and building compose"
     Push-Location (Join-Path $outputRoot "compose")
     $previousComposeLibrary = $env:VENTURE_BROWSER_COMPOSE_LIBRARY
+    $previousBookmarksPath = $env:VENTURE_BOOKMARKS_PATH
+    $composeBookmarksPath = Join-Path $outputRoot "compose/test-bookmarks.json"
+    Remove-Item -Force -ErrorAction SilentlyContinue $composeBookmarksPath
     try {
         $env:VENTURE_BROWSER_COMPOSE_LIBRARY = $composeBridgePath
+        $env:VENTURE_BOOKMARKS_PATH = $composeBookmarksPath
         Invoke-Checked -Command "gradle" -Arguments @("--no-daemon", "test", "build")
     } finally {
         $env:VENTURE_BROWSER_COMPOSE_LIBRARY = $previousComposeLibrary
+        $env:VENTURE_BOOKMARKS_PATH = $previousBookmarksPath
         Pop-Location
     }
 }

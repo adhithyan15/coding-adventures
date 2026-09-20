@@ -2093,6 +2093,17 @@ fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
         powershell.contains("cmd.exe /d /c \"java -version 2>&1\""),
         "Windows matrix must capture Java's stderr without turning it into a terminating error"
     );
+    assert!(
+        shell.contains("VENTURE_BOOKMARKS_PATH=\"$flutter_bookmarks_path\"")
+            && shell.contains("VENTURE_BOOKMARKS_PATH=\"$compose_bookmarks_path\""),
+        "POSIX native acceptance gates must use isolated bookmark profiles"
+    );
+    assert!(
+        powershell.contains("$env:VENTURE_BOOKMARKS_PATH = $xamlBookmarksPath")
+            && powershell.contains("$env:VENTURE_BOOKMARKS_PATH = $flutterBookmarksPath")
+            && powershell.contains("$env:VENTURE_BOOKMARKS_PATH = $composeBookmarksPath"),
+        "PowerShell native acceptance gates must use isolated bookmark profiles"
+    );
     let backends = [
         "react",
         "electron",
