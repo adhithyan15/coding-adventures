@@ -1187,6 +1187,24 @@ pub fn compile_source_to_cil_artifact(
         .map_err(|e| LangAotError::ClrBackendError(format!("{e:?}")))
 }
 
+/// Compile source through the opt-in strict scalar encoded CIL ABI.
+///
+/// The frontend IIR is passed unchanged to strict lowering. Only programs
+/// already satisfying its exact types, single assignment and forward-flow
+/// rules are accepted; dynamic and narrow types are not inferred or rewritten.
+/// Load the complete artifact into the simulator to observe full-width results.
+/// This does not change the default encoded API, textual CIL, or CLI routing.
+pub fn compile_source_to_typed_cil_artifact(
+    language: Language,
+    source: &str,
+    name: &str,
+) -> Result<iir_to_cil_bytecode::CILProgramArtifact, LangAotError> {
+    let module = compile_source_to_iir(language, source, name)?;
+    let config = iir_to_cil_bytecode::IIRClrConfig::new(name);
+    iir_to_cil_bytecode::lower_typed_scalars_to_cil(&module, &config)
+        .map_err(|e| LangAotError::ClrBackendError(format!("{e:?}")))
+}
+
 /// Compile `source` to **textual CIL** (`.il`) for the **real CoreCLR** path
 /// (CLR-real C1). Where [`compile_source_to_cil_artifact`] yields raw method bodies
 /// for the in-repo `clr-simulator`, this emits `.il` source that real `ilasm`

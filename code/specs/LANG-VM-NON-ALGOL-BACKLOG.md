@@ -10,6 +10,29 @@ roadmap is reconciled.
 
 ## Encoded CLR input prerequisites (selected 2026-09-19 after VM-058)
 
+### CLR13 landed; source width audit resumed (2026-09-20)
+
+PR #15780 merged externally as `fccff7c84f2da01c692b709c9f3bede0ec3103a2`.
+All four latest workflows passed at reviewed head
+`4e4cb545f85154a192191ff01d8013070e80301d`, including both Ubuntu CI jobs.
+No predecessor monitoring remains. Fresh open ownership found no CLR/BEAM
+overlap; ALGOL #15803 remains separate.
+
+A valid wide source from the existing `cil_emit.rs` test, McCarthy Lisp
+`4294967296`, compiles to raw IIR but strict lowering refuses `ref<any>`.
+Default encoded lowering correctly refuses the out-of-i32 literal. Textual
+CIL emits an int64 local and `ldc.i8 4294967296`, then `conv.i4` at the int32
+MccarthyEntry return boundary. This is emission evidence, not runtime proof
+of a full-width source result. The exploratory probe and log are preserved
+outside the checkout as `lang-vm-clr-wide-source-probe.rs` and `.log`.
+
+Next specify the intended scalar source result ABI and prove a valid wide
+arithmetic/helper program before selecting an opt-in adapter. Do not merely
+relabel ref/any or narrow types to i64. Existing Nib mutable locals, loops,
+narrow masks and integer comparison results also need explicit treatment.
+The prior source audit branch remains preserved separately. No production
+change or migration contract is introduced by this audit checkpoint.
+
 ### CLR13 strict encoded integer input selected (2026-09-20)
 
 CLR12 production and complementary conformance proofs landed in #15762 and
