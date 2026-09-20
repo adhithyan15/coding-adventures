@@ -423,6 +423,36 @@ describe("build and check", () => {
     expect(report).toContain('"sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"');
   });
 
+  it("canonicalizes report objects regardless of stage construction order", async () => {
+    const bytes = new TextEncoder().encode("hello");
+    const artifact = (reverse: boolean) => {
+      const target = reverse
+        ? { path: "index.html", kind: "file" }
+        : { kind: "file", path: "index.html" };
+      const route = reverse
+        ? { css: [], islands: [], target, pattern: "/index.html" }
+        : { pattern: "/index.html", target, islands: [], css: [] };
+      const manifest = reverse
+        ? { buildId: "blake2b:site", buildTime: "fixed", assets: [], routes: [route] }
+        : { routes: [route], assets: [], buildTime: "fixed", buildId: "blake2b:site" };
+      return {
+        variant: { kind: "dist-tree" },
+        files: { "index.html": bytes },
+        manifest,
+      };
+    };
+    const reportFor = async (reverse: boolean, path: string) => {
+      const io = makeIO();
+      const result = { ...successfulResult(), outputs: { site: artifact(reverse) } } as RunResult;
+      expect(await run(["build", "--report", path], io, {}, services(config(), result)))
+        .toBe(EXIT_OK);
+      return io.written.get(join(PROJECT_ROOT, path));
+    };
+
+    expect(await reportFor(false, "forward.json"))
+      .toBe(await reportFor(true, "reverse.json"));
+  });
+
   it("resolves configured cache roots beneath the project and preserves null", async () => {
     const roots: Array<string | null> = [];
     expect(await run(["check"], makeIO(), {}, services(
