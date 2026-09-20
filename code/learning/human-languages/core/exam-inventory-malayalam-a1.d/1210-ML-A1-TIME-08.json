@@ -1,0 +1,20 @@
+{
+  "id": "ML-A1-TIME-08",
+  "category": "Kaalavum theeyathiyum (time and date)",
+  "label": "asking and giving an age",
+  "probe": [
+    "ML-CONCEPT-C19-VAYASSU-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F1-03",
+    "A1-NG5-04",
+    "A1-NE03-01"
+  ],
+  "malayalamSpecific": false,
+  "note": "ningalkku ethra vayassundu -- a dative subject plus the existential, which is a genuinely different shape from Spanish tener. The numbers stop at twenty, so an adult cannot answer it."
+}

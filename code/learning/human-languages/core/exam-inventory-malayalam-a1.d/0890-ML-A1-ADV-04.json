@@ -1,0 +1,18 @@
+{
+  "id": "ML-A1-ADV-04",
+  "category": "Kriyaavisheshanam (adverbs)",
+  "label": "polarity: yes and no as one-word answers",
+  "probe": [
+    "ML-LEX-ATHE-01",
+    "ML-LEX-ILLA-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-ADV-05"
+  ],
+  "malayalamSpecific": false
+}

@@ -1,0 +1,16 @@
+{
+  "id": "ML-A1-LEX-49",
+  "category": "Padakosham (lexicon by domain)",
+  "label": "business and organisations",
+  "probe": null,
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NE15-03"
+  ],
+  "malayalamSpecific": false,
+  "note": "Nothing taught."
+}

@@ -1,0 +1,18 @@
+{
+  "id": "ML-A1-PHON-05",
+  "category": "Uccharanam (pronunciation)",
+  "label": "word stress",
+  "probe": [
+    "ML-CONCEPT-C85-STRESS-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-O2-01"
+  ],
+  "malayalamSpecific": false,
+  "note": "Chapter 85, paired with PHON-04 rather than with PHON-03, exactly as the corrected note proposed. The old note was right that Malayalam's stress is regular and that one lesson settles it: the weight falls on the first syllable and there is no list to learn. But the rule is not the valuable part. The valuable part is how LITTLE the weight is doing -- no two Malayalam words differ only in where it falls, so a learner who misplaces it is ACCENTED, NOT MISUNDERSTOOD. The lesson turns that into a redirection of attention: English spends stress on meaning and Malayalam spends LENGTH, so an English ear arrives trained on the wrong feature and should stop listening for emphasis and start listening for how long a sound is held. That is why it sits beside the gemination lesson -- kudi and kutti are NOT a stress pair, and saying so is what makes the point land."
+}

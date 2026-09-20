@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-NUM-01",
+  "category": "Sankhya (numerals and quantity)",
+  "label": "cardinals one to five",
+  "probe": [
+    "ML-CONCEPT-C07-NUMBERS-1-5-01",
+    "ML-CONCEPT-C07-NUMBERS-1-5-02",
+    "ML-CONCEPT-C07-NUMBERS-1-5-03"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-Q-01"
+  ],
+  "malayalamSpecific": false
+}

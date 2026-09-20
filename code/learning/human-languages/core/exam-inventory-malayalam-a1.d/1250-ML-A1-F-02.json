@@ -1,0 +1,21 @@
+{
+  "id": "ML-A1-F-02",
+  "category": "Vyavahaaram (communicative functions)",
+  "label": "greet by the time of day: good morning, good evening, good night, good afternoon",
+  "probe": [
+    "ML-CONCEPT-C29-SUPRABHAATHAM-01",
+    "ML-CONCEPT-C30-SHUBHA-SAYAAHNAM-01",
+    "ML-CONCEPT-C25-SHUBHA-RATHRI-01",
+    "ML-CONCEPT-C31-SHUBHA-MADHYAAHNAM-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F5-01"
+  ],
+  "malayalamSpecific": false,
+  "note": "Four chapters, four formal Sanskrit-tatsama greetings. Their register is the subject of ML-A1-REG-01."
+}

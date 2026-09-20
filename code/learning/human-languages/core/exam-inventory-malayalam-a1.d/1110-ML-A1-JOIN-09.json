@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-JOIN-09",
+  "category": "Samuchayam (joining and subordination)",
+  "label": "in order to: purpose",
+  "probe": [
+    "ML-GRAMMAR-C74-AAN-01",
+    "ML-GRAMMAR-C74-PURPOSE-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-SUB-07"
+  ],
+  "malayalamSpecific": false,
+  "note": "CLOSED by chapter 74, together with ML-A1-V-22 -- the note predicted that, because both are built on the same form. Verified first: the -aan form and kazhiyum each returned ZERO files across the corpus. THE CHAPTER IS ONE SWAP AND WHAT IT BUYS. Take -uka off a dictionary verb and put -aan on, stem untouched; the word that FOLLOWS the -aan form then decides which sentence you have said -- another verb gives purpose, kazhiyum gives ability. PURPOSE GOES IN FRONT, THE EVENT AT THE BACK: 'njaan vaayikkaan pokunnu' reads I - to-read - go. English puts the purpose after the verb and often needs a word for it; Malayalam needs none, because the ending is the whole of it. This is the same verb-last habit the quotative chapter named. ONLY ONE NEW WORD IN THE WHOLE CHAPTER. Every verb it uses comes from the reading and going chapters."
+}

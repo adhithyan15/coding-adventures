@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-NEG-04",
+  "category": "Nishedham (negation)",
+  "label": "refusing: no need, no thank you",
+  "probe": [
+    "ML-LEX-C58-ANSWER-04"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F4-09",
+    "A1-F4-06"
+  ],
+  "malayalamSpecific": false,
+  "note": "venda, chapter 58. It is the polite refusal and the refusal of permission at once, which is how Malayalam actually works."
+}

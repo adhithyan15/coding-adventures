@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-F-24",
+  "category": "Vyavahaaram (communicative functions)",
+  "label": "assert something as true, and as certain",
+  "probe": [
+    "ML-LEX-C49-REPLY-01",
+    "ML-LEX-C49-REPLY-03"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F2-10",
+    "A1-NG1-05"
+  ],
+  "malayalamSpecific": false
+}

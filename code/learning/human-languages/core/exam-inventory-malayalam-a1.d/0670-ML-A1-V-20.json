@@ -1,0 +1,20 @@
+{
+  "id": "ML-A1-V-20",
+  "category": "Kriya (the verb)",
+  "label": "the progressive: I am doing it right now",
+  "probe": [
+    "ML-GRAMMAR-C104-ONE-PRESENT-01",
+    "ML-GRAMMAR-C104-NOW-01",
+    "ML-GRAMMAR-C104-NO-COPULA-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-V-13"
+  ],
+  "malayalamSpecific": false,
+  "note": "CLOSED BY CHAPTER 104, AND THE OLD NOTE WAS HALF FALSE. It said the -unnu form is 'used inside ML-C05's sentence but NEVER NAMED AS A FORM'. It is named three times over, from sequence 660: ML-C32-pokuka states 'Malayalam's present tense is one word long', ML-C33-cintikkuka repeats it, ML-C50-parayuka says 'paRayunnu is the whole present tense'. What was genuinely missing is the MAPPING -- that this one form answers BOTH English presents, 'I go' and 'I am going' -- which no lesson said, even though ML-C74-purpose (2560) already translates nyaan pOkunnu as 'I am going'. Chapter 104 states the mapping, pins the present to this moment with ippOL (owned since 1390), and warns against the predictable error of putting aaNu where English puts 'am'. Malayalam's dedicated progressive in -koNTirikkunnu is NOT taught and is not claimed: at A1 the simple present IS how ongoing action is said, which is what this point asks for."
+}

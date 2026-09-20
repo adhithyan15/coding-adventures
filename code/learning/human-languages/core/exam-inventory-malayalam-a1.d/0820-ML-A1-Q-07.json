@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-Q-07",
+  "category": "Chodyam (asking questions)",
+  "label": "enthukondu: why",
+  "probe": [
+    "ML-LEX-C73-WHY-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-ADV-08",
+    "A1-SUB-06"
+  ],
+  "malayalamSpecific": false,
+  "note": "CLOSED by chapter 73 -- see ML-A1-JOIN-05, which the same chapter closes. The note was right that neither half existed. The question word is entukondu, and it is transparent: entu (what, chapter two) plus kondu (by means of). THREE OF THE FOUR QUESTION WORDS NOW OPEN ON E -- entu, evide and entukondu -- which is the asking letter ML-C41-deixis-system already named when it taught i- for near, a- for far and e- for a question. AARU (who) is the exception and starts on aa; a draft of the lesson claimed all four shared the letter and was corrected."
+}

@@ -1,0 +1,21 @@
+{
+  "id": "ML-A1-SCR-04",
+  "category": "Lipi (script and orthography)",
+  "label": "the chillu letters: consonants that end a word without a vowel",
+  "probe": [
+    "ML-SCRIPT-RECOG-06",
+    "ML-SCRIPT-RECOG-131",
+    "ML-SCRIPT-RECOG-142",
+    "ML-SCRIPT-RECOG-144"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-O1-03"
+  ],
+  "malayalamSpecific": false,
+  "note": "Malayalam has a distinct set of word-final consonant shapes that no other Indic script keeps in this form, and four of the six are taught."
+}

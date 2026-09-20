@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-REG-03",
+  "category": "Bhaashaabhedam (register: Sanskritic and native, familiar and respectful)",
+  "label": "respect expressed as plurality: nii against ningal",
+  "probe": [
+    "ML-LEX-NII-NINGAL-01",
+    "ML-CONCEPT-C02-RESPECT-BY-PLURAL-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-PRON-01"
+  ],
+  "malayalamSpecific": false,
+  "note": "The one register distinction a beginner must produce correctly from the first conversation."
+}

@@ -1,0 +1,18 @@
+{
+  "id": "ML-A1-F-06",
+  "category": "Vyavahaaram (communicative functions)",
+  "label": "respond to an introduction",
+  "probe": [
+    "ML-LEX-SANTOSHAM-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F5-05"
+  ],
+  "malayalamSpecific": false,
+  "note": "santosham, 'joy' -- which is the whole reply."
+}

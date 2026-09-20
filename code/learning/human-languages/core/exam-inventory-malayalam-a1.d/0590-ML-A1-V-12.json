@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-V-12",
+  "category": "Kriya (the verb)",
+  "label": "a noun plus ceyyuka, the way Malayalam makes new verbs",
+  "probe": [
+    "ML-CONCEPT-C05-NOUN-PLUS-CEYYUKA-01",
+    "ML-LEX-JOLI-CEYYUKA-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NE07-03"
+  ],
+  "malayalamSpecific": false,
+  "note": "joli ceyyuka, 'work-do'. Productive, and worth a point because it is how a learner turns any of the track's many Sanskrit nouns into something they can do."
+}

@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-F-07",
+  "category": "Vyavahaaram (communicative functions)",
+  "label": "ask how somebody is",
+  "probe": [
+    "ML-PHRASE-C03-ARE-YOU-WELL-01",
+    "ML-CONCEPT-C03-QUESTION-PARTICLE-O-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F1-02",
+    "A1-F6-02"
+  ],
+  "malayalamSpecific": false
+}

@@ -1,0 +1,20 @@
+{
+  "id": "ML-A1-REG-01",
+  "category": "Bhaashaabhedam (register: Sanskritic and native, familiar and respectful)",
+  "label": "the Sanskrit-tatsama greeting against the everyday one",
+  "probe": [
+    "ML-CONCEPT-C29-SUPRABHAATHAM-01",
+    "ML-CONCEPT-C25-SHUBHA-RATHRI-01",
+    "ML-LEX-NAMASKARAM-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F5-01"
+  ],
+  "malayalamSpecific": false,
+  "note": "MEASURED FROM THIS TRACK, NOT BORROWED FROM TAMIL. Four lessons in this corpus carry register: formal, and every one of them is a Sanskrit-tatsama time-of-day greeting; namaskaram is respectful-neutral and works at any hour. That is a lexical register split between borrowed and inherited words -- it is NOT Tamil's literary/spoken diglossia, and this file does not claim one."
+}

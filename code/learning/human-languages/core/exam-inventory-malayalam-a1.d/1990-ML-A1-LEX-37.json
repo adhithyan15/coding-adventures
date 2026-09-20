@@ -1,0 +1,23 @@
+{
+  "id": "ML-A1-LEX-37",
+  "category": "Padakosham (lexicon by domain)",
+  "label": "free time, sport, games, shows",
+  "probe": [
+    "ML-LEX-C98-GAME-01",
+    "ML-LEX-C98-PLAY-01",
+    "ML-LEX-C98-CINEMA-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NE08-01",
+    "A1-NE08-02",
+    "A1-NE08-03",
+    "A1-NE08-04"
+  ],
+  "malayalamSpecific": false,
+  "note": "Chapter 98. THE OLD NOTE WAS OVERSTATED and is kept here so the correction is on the record: it said not one leisure word is taught, but vaayikkuka (ch33), kaaNuka (ch32) and pusthakam (ch46) are all owned, and its lesson count had rotted by well over a hundred files. The real gap was sport, games and shows, and kali, kalikkuka and sinima close it. FREE TIME IS DELIBERATELY LEFT OPEN: ozhivusamayam would be a compound of an unowned part, since samayam is not taught, and building it would have smuggled in a headword nothing teaches. All seven candidates -- kali, kalikkuka, sinima, paattu, ozhivu, nrtthaM and vishramaM -- were grepped as tokens (zero occurrences) and glyph-checked with the control validated first. NO NEW GRAMMAR IS NEEDED: kali ends in -i exactly as bhangi and kutti do, so the aaNu weld is one the learner already built, and seven -ikkuka verbs are owned, so kalikkuka's ending arrives asking nothing. THE GENERALISING SENTENCE WAS AGAIN THE DANGER, three chapters running, AND IT TOOK TWO ROUNDS TO GET RIGHT. Round one: the draft said the ya 'comes anyway', which reads as 'a vowel brings ya', and that is FALSE of a word the learner has had since chapter 60 -- pashu gives pashuvaaNu, with va. No va glide after a vowel is attested anywhere in the corpus, so no gate and no earlier lesson could have contradicted it; the claim was latent-false. ROUND TWO FOUND THE REPLACEMENT LATENT-FALSE IN ITS TURN, one layer down. 'The last vowel chooses, and -u takes va' is refuted by enthu + aaNu = enthaaNu, taught at sequence 130, and by ithu sitting un-glided inside this very lesson's own example sentence -- because ML-C69-words (sequence 2360) teaches word-final chandrakkala as A FAINT HALF-U, so by the book's own account those words ARE vowel-final and take nothing at all. The rule is now stated of FULL vowels, and the half-u is given its own paragraph and its own recall question, which turns the chapter's worst claim into one of its better rows. TEN MERGED LESSONS CARRIED THE BROAD YA-RULE -- and the count is not the point, the names are, because it went three -> five -> eight -> ten across three review rounds and would rot again on the eleventh. They are ML-C70-um (2390), ML-C70-um-more (2400), ML-C70-o (2410), ML-R70-cherkkuka (2420), ML-C83-keralathil (2900), ML-C87-animacy (3050), ML-R87-object-recall (3070), ML-C91-kada (3200), ML-C97-bhangi (body AND Wrap-up, 3450) and ML-R97-beauty-recall (3470). Each now names the vowel instead of vowel-hood. THE SWEEP RULE THIS PRODUCED: whenever ML-Cnn-x is narrowed, ML-Rnn-* is a site until checked. Chapter 98 learned that on ML-C97-bhangi, whose body was narrowed while its Wrap-up still carried the claim, and then failed to generalise it -- so the recall partners of three more narrowed lessons were missed for another round. THREE FURTHER SITES ARE FILED AS HL-C402 RATHER THAN PATCHED: ML-C78-ude (2700), ML-R78-genitive-recall (2710) and ML-C84-mukalil (2920) state the claim of the GENITIVE, where it selects an ENDING rather than a glide, and pashu lands in the wrong column (pashuvinte, not *pashuyute) as well as taking the wrong glide -- so naming the vowel is not sufficient on its own. ML-R78 repeats the table AND supplies the false answer as a Wrap-up drill. All thirteen are latent-false the same way: pashu is the only u-final noun taught and none of its oblique forms appears anywhere in the corpus, so no token contradicts any of them. ML-C70-o's fix was itself wrong on the first try -- it called chaaya AA-final when ML-C39-chaaya's own romanization, chaaya, makes it A-final, the same vowel as sinima. ML-C70's separate chillu over-generalisation, tracked in HL-C401, is fixed in a follow-up commit on the same branch."
+}

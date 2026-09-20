@@ -1,0 +1,18 @@
+{
+  "id": "ML-A1-ADV-03",
+  "category": "Kriyaavisheshanam (adverbs)",
+  "label": "manner: that way, just so",
+  "probe": [
+    "ML-LEX-C49-REPLY-05"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-ADV-04"
+  ],
+  "malayalamSpecific": false,
+  "note": "angane. bhangiyaayi ('well') and mosham ('badly') are not taught, so manner is answerable and not describable."
+}

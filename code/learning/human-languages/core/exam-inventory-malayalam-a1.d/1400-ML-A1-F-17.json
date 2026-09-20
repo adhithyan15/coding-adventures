@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-F-17",
+  "category": "Vyavahaaram (communicative functions)",
+  "label": "make a request politely, and name what a request is",
+  "probe": [
+    "ML-LEX-C65-ASK-01",
+    "ML-LEX-C65-ASK-04"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F4-02"
+  ],
+  "malayalamSpecific": false,
+  "note": "apeksha and maryaada -- chapter 65 is unusual in teaching the METALANGUAGE of politeness alongside the forms."
+}

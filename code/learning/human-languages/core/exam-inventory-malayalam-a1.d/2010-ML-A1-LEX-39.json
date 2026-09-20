@@ -1,0 +1,17 @@
+{
+  "id": "ML-A1-LEX-39",
+  "category": "Padakosham (lexicon by domain)",
+  "label": "press, television and radio",
+  "probe": null,
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NE09-04",
+    "A1-NE09-05"
+  ],
+  "malayalamSpecific": false,
+  "note": "Nothing taught."
+}

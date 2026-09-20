@@ -1,0 +1,18 @@
+{
+  "id": "ML-A1-TIME-07",
+  "category": "Kaalavum theeyathiyum (time and date)",
+  "label": "the day itself: divasam, and the native naal beside it",
+  "probe": [
+    "ML-CONCEPT-C23-DIVASAM-01",
+    "ML-CONCEPT-C23-NAAL-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-N-02"
+  ],
+  "malayalamSpecific": false
+}

@@ -1,0 +1,21 @@
+{
+  "id": "ML-A1-LEX-43",
+  "category": "Padakosham (lexicon by domain)",
+  "label": "travel, accommodation and transport",
+  "probe": [
+    "ML-LEX-C50-LEAVE-03",
+    "ML-LEX-C55-GROUND-04"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NE14-01",
+    "A1-NE14-02",
+    "A1-NE14-03"
+  ],
+  "malayalamSpecific": false,
+  "note": "yaathra ('a journey') and vazhi ('a path') are the whole of it. No vehicle, no ticket, no place to stay -- so this is recorded as covered for the NOTION of a journey and the three Spanish points behind it remain thin."
+}

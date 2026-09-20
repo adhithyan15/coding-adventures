@@ -1,0 +1,21 @@
+{
+  "id": "ML-A1-ADJ-01",
+  "category": "Visheshanam (the adjective)",
+  "label": "qualifying adjectives used before a noun",
+  "probe": [
+    "ML-LEX-C42-ADJ-01",
+    "ML-LEX-C42-ADJ-02",
+    "ML-LEX-C42-ADJ-03",
+    "ML-GRAMMAR-C42-ADJ-SYSTEM"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-ADJ-01"
+  ],
+  "malayalamSpecific": false,
+  "note": "valiya, cheriya and nalla, plus the rule that ties them together."
+}

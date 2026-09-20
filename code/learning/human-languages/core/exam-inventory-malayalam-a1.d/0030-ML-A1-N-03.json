@@ -1,0 +1,20 @@
+{
+  "id": "ML-A1-N-03",
+  "category": "Naamam (the noun)",
+  "label": "common nouns naming stretches of time",
+  "probe": [
+    "ML-CONCEPT-C23-DIVASAM-01",
+    "ML-CONCEPT-C18-MANI-01",
+    "ML-CONCEPT-C14-KAALANGAL-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-N-02"
+  ],
+  "malayalamSpecific": false,
+  "note": "divasam (day), mani (hour) and the four kaalangal (seasons) between them cover the day, the hour and the year."
+}
