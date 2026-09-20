@@ -2216,7 +2216,10 @@ jobs:
             taskapp_pid=$!
             trap 'kill "$taskapp_pid" 2>/dev/null || true' EXIT
             sleep 5
-            kill -0 "$taskapp_pid"
+            if ! kill -0 "$taskapp_pid" 2>/dev/null; then
+              cat "$taskapp_log"
+              exit 1
+            fi
             kill "$taskapp_pid"
             wait "$taskapp_pid" || true
             trap - EXIT

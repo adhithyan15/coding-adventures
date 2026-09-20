@@ -200,7 +200,10 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn(
             'env -u MOSAIC_APP_LIBRARY "$installed_taskapp"', swift_runtime_step
         )
-        self.assertIn('kill -0 "$taskapp_pid"', swift_runtime_step)
+        self.assertIn(
+            'if ! kill -0 "$taskapp_pid" 2>/dev/null; then', swift_runtime_step
+        )
+        self.assertIn('cat "$taskapp_log"', swift_runtime_step)
         self.assertIn("Mosaic Rust runtime unavailable", swift_runtime_step)
         self.assertIn("missing required MIL prop", swift_runtime_step)
         self.assertIn(
