@@ -10,6 +10,20 @@ roadmap is reconciled.
 
 ## Encoded CLR input prerequisites (selected 2026-09-19 after VM-058)
 
+### CLR09 landed; CLR10 canonical strict minus-one selected (2026-09-20)
+
+CLR09 compact `ldc.i4.m1` execution merged in #15711 as
+`3a67aec819c35f59a0a9d52f6c73ee6b0c6c31f4` after all required checks passed.
+The merged simulator now accepts the builder's canonical one-byte encoding.
+Fresh main and open-PR audits show no non-ALGOL CLR overlap; ALGOL remains
+separately owned.
+
+Select CLR10 to remove CLR08's now-obsolete five-byte minus-one workaround from
+the explicit strict scalar entrypoint. Require exact compact artifact bytes and
+actual simulator execution while preserving i64 encoding and every input/type
+gate. Keep branches, default source migration and encoded host input as later
+contracts.
+
 ### CLR08 landed; CLR09 compact minus-one execution selected (2026-09-20)
 
 CLR08 strict scalar comparisons merged in #15698 as
