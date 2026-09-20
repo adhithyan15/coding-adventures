@@ -12,6 +12,16 @@ code/packages/rust/html-parser/tests/fixtures/html5lib-tree-construction-smoke.d
 code/learning/human-languages/BACKLOG.d/*.md whitespace=-blank-at-eof
 code/learning/human-languages/hindi/CHANGELOG.d/*.md whitespace=-blank-at-eof
 code/learning/human-languages/malayalam/CHANGELOG.d/*.md whitespace=-blank-at-eof
+code/learning/human-languages/bengali/CHANGELOG.d/*.md whitespace=-blank-at-eof
+code/learning/human-languages/gujarati/CHANGELOG.d/*.md whitespace=-blank-at-eof
+code/learning/human-languages/kannada/CHANGELOG.d/*.md whitespace=-blank-at-eof
+code/learning/human-languages/marathi/CHANGELOG.d/*.md whitespace=-blank-at-eof
+code/learning/human-languages/marwadi/CHANGELOG.d/*.md whitespace=-blank-at-eof
+code/learning/human-languages/punjabi/CHANGELOG.d/*.md whitespace=-blank-at-eof
+code/learning/human-languages/sanskrit/CHANGELOG.d/*.md whitespace=-blank-at-eof
+code/learning/human-languages/tamil/CHANGELOG.d/*.md whitespace=-blank-at-eof
+code/learning/human-languages/telugu/CHANGELOG.d/*.md whitespace=-blank-at-eof
+code/learning/human-languages/urdu/CHANGELOG.d/*.md whitespace=-blank-at-eof
 code/packages/typescript/human-language-data/CHANGELOG.d/*.md whitespace=-blank-at-eof
 code/packages/typescript/script-ductus/CHANGELOG.d/*.md whitespace=-blank-at-eof
 code/programs/typescript/language-ladder/CHANGELOG.d/*.md whitespace=-blank-at-eof

@@ -39,7 +39,8 @@ Every track shares the same shape:
 ```text
 <language>/
   README.md                  what this track is, how to use it, current progress
-  CHANGELOG.md                per-chapter content additions (rendered from CHANGELOG.d in sharded tracks)
+  CHANGELOG.d/               append-only per-chapter release-note owners in sharded tracks
+  CHANGELOG.md               ignored local view rendered from CHANGELOG.d when needed
   curriculum.d/              ordered shared-spine path + extensions, sharded by entry
   curriculum-membership.d/   one direct path/extension membership owner per lesson
   chapters.d/                authored chapter can-dos and payoffs, one file per chapter
@@ -49,6 +50,10 @@ Every track shares the same shape:
   lessons/*.md                 deep one-word practice lessons (slug-named)
   book/                        authored LaTeX fragments + chapters; book.tex is projected on demand
 ```
+
+For every track with a `CHANGELOG.d/`, add one ranked fragment there; never
+edit or commit the rendered `CHANGELOG.md`. The document-shard check rejects
+missing, malformed, linked, case-fold-colliding, or resurrected owners.
 
 The machine-readable layer alongside the tracks is:
 

@@ -165,6 +165,28 @@ export const DOC_SHARD_PLANS: readonly DocShardPlan[] = [
     headingLevel: 2,
     newestFirst: true,
   },
+  // The remaining Indian-track changelogs crossed the same contention
+  // threshold in the 500-commit audit for #15740. Keep these together: each
+  // document is newest-first, split at its independently authored level-2
+  // chapter/release-note headings, and rendered only as a local view.
+  ...[
+    "bengali",
+    "gujarati",
+    "kannada",
+    "marathi",
+    "marwadi",
+    "punjabi",
+    "sanskrit",
+    "tamil",
+    "telugu",
+    "urdu",
+  ].map(
+    (track): DocShardPlan => ({
+      path: `code/learning/human-languages/${track}/CHANGELOG.md`,
+      headingLevel: 2,
+      newestFirst: true,
+    }),
+  ),
   {
     // Script Ductus release notes are independently authored alongside script
     // evidence. Split at level 3 so each note owns one file; historical level-2
