@@ -673,8 +673,9 @@ replace an earlier cancellation or source failure.
 
 When `Stage.run` returns an `AsyncIterable`, the instance publishes one live
 transport before the iterable completes. Every statically known downstream
-input edge receives one bounded branch, and a separate internal branch feeds
-the stream-checkpoint writer. A terminal stream output may add one output
+input edge receives one bounded branch. When the instance is eligible for an
+exact checkpoint, a separate internal branch feeds the stream-checkpoint
+writer. A terminal stream output may add one output
 collector branch because returning that stream in `RunResult.outputs`
 necessarily materializes the caller-visible value. The stage iterable is
 opened once; consumers and checkpointing never invoke the producer again.

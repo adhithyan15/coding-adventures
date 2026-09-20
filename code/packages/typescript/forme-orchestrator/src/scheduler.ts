@@ -2,14 +2,7 @@
  * Pipeline scheduler — executes a stable DAG-ready queue with one shared
  * stage/per-item concurrency budget.
  *
- * v0 simplifications (deferred to follow-up):
- *
- *   - **No streaming pipelining.**  When a stage produces a Stream<X>,
- *     we drain it fully into memory before passing per-value to the
- *     downstream consumer. Legacy single-input consumers are invoked
- *     once per value; named-input stages receive replayable streams in
- *     one fan-in invocation. This is correct but not lazy — large streams
- *     allocate fully. Lazy streaming lands in v1 alongside parallelism.
+ * Remaining v0 simplifications:
  *
  *   - **Exact affected scheduling with explicit side effects.** Observed
  *     sources and untouched capability-free instances restore validated
@@ -27,8 +20,9 @@
  *
  * What v0 *does* implement:
  *
- *   - Topological execution
  *   - Stable concurrent DAG readiness and ordered per-item parallelism
+ *   - Live, bounded stream fan-out with permit-aware upstream pulls
+ *   - Lazy validated stream-checkpoint restoration
  *   - Per-stage StageContext construction with denied-by-default
  *     capability APIs
  *   - init/dispose lifecycle hooks
@@ -85,10 +79,18 @@ import {
 import type { PipelineRevisionLedger } from "./revision-ledger.js";
 import {
   canCheckpointInstance,
+  instanceCheckpointKey,
   loadInstanceCheckpoint,
   persistInstanceCheckpoint,
 } from "./instance-checkpoint.js";
 import { createConcurrencyPool } from "./concurrency.js";
+import type { ConcurrencyPermit, ConcurrencyPool } from "./concurrency.js";
+import { createBoundedFanOut } from "./streaming.js";
+import {
+  commitStreamCheckpoint,
+  createStreamCheckpointWriter,
+  loadStreamCheckpoint,
+} from "./stream-checkpoint.js";
 
 /** Per-instance run state held during execution. */
 interface RunState {
@@ -102,6 +104,10 @@ interface RunState {
   affected: boolean;
   /** Output was restored as one validated materialized checkpoint. */
   restored: boolean;
+  /** Published live branches, keyed by the consuming instance and port. */
+  liveBranches: Map<string, AsyncIterable<unknown>>;
+  /** Settles only after a published stream is fully consumed and finalized. */
+  streamCompletion: Promise<void> | null;
   /** Per-stage summary accumulator. */
   summary: {
     instanceId: string;
@@ -119,6 +125,9 @@ interface RunState {
     inputChanged: boolean | null;
   };
 }
+
+const DEFAULT_EDGE_PORT = "default";
+const DETACH_ASYNC_INPUT = Symbol("forme.detachAsyncInput");
 
 /** Stable hand-off that orders each ready instance's first run admission. */
 interface AdmissionTurn {
@@ -247,12 +256,39 @@ export async function executeDag(
   let anyRecoverableErrors = false;
   let anyFatal = false;
   const topoIndex = new Map(dag.topoOrder.map((id, index) => [id, index]));
+  const remainingDependencies = new Map<string, number>();
+  const consumers = new Map<string, string[]>();
+  const streamEdges = new Map<string, string[]>();
+  for (const id of dag.topoOrder) {
+    const inst = dag.instances.get(id)!;
+    const dependencies = new Set<string>();
+    if (inst.producer !== null) {
+      dependencies.add(inst.producer);
+      const edges = streamEdges.get(inst.producer) ?? [];
+      edges.push(streamEdgeKey(id, DEFAULT_EDGE_PORT));
+      streamEdges.set(inst.producer, edges);
+    }
+    for (const [port, producerId] of inst.inputProducers) {
+      dependencies.add(producerId);
+      const edges = streamEdges.get(producerId) ?? [];
+      edges.push(streamEdgeKey(id, port));
+      streamEdges.set(producerId, edges);
+    }
+    remainingDependencies.set(id, dependencies.size);
+    for (const producerId of dependencies) {
+      const downstream = consumers.get(producerId) ?? [];
+      downstream.push(id);
+      downstream.sort((left, right) => topoIndex.get(left)! - topoIndex.get(right)!);
+      consumers.set(producerId, downstream);
+    }
+  }
+
   const runInvocation = async <T>(
     inst: ResolvedInstance,
-    invoke: () => Promise<T> | T,
-  ): Promise<T> => pool.run(async () => {
+    invoke: (permit: ConcurrencyPermit) => Promise<T> | T,
+  ): Promise<T> => pool.run(async permit => {
     try {
-      return await invoke();
+      return await invoke(permit);
     } catch (error) {
       if (!(error instanceof CancellationError)) {
         const invocationError = toRunError(error, inst);
@@ -265,6 +301,120 @@ export async function executeDag(
       throw error;
     }
   });
+
+  const publishLiveStream = (
+    inst: ResolvedInstance,
+    state: RunState,
+    source: AsyncIterable<unknown>,
+    optionsForStream: {
+      readonly restored: boolean;
+      readonly expectedOutputRevision?: RevisionId;
+      readonly expectedItemCount?: number;
+    },
+  ): void => {
+    const edgeKeys = streamEdges.get(inst.id) ?? [];
+    const needsCheckpointBranch = runOptions.useCache
+      && !optionsForStream.restored
+      && canCheckpointInstance(inst);
+    const needsOutputBranch = dag.sinks.includes(inst.id);
+    const branchCount = edgeKeys.length
+      + (needsCheckpointBranch ? 1 : 0)
+      + (needsOutputBranch ? 1 : 0);
+    const pooledSource = poolBackedIterable(source, inst, runInvocation);
+    let settleSource!: () => void;
+    let failSource!: (error: unknown) => void;
+    const sourceFinished = new Promise<void>((resolve, reject) => {
+      settleSource = resolve;
+      failSource = reject;
+    });
+    const trackedSource = trackIterableCompletion(
+      pooledSource,
+      settleSource,
+      failSource,
+    );
+    const fanOut = createBoundedFanOut(
+      trackedSource,
+      branchCount,
+      lifecycle.token,
+    );
+    let activeBranches = branchCount;
+    let settleBranches!: () => void;
+    const branchesFinished = new Promise<void>(resolve => { settleBranches = resolve; });
+    const takeBranch = (index: number): AsyncIterable<unknown> =>
+      trackBranchCompletion(fanOut.branches[index]!, () => {
+        activeBranches -= 1;
+        if (activeBranches === 0) settleBranches();
+      });
+    let branchIndex = 0;
+    for (const key of edgeKeys) {
+      state.liveBranches.set(key, takeBranch(branchIndex++));
+    }
+
+    const internalTasks: Promise<void>[] = [];
+    let checkpointManifest: Awaited<ReturnType<ReturnType<typeof createStreamCheckpointWriter>["finalize"]>> | null = null;
+    if (needsCheckpointBranch) {
+      const checkpointInput = takeBranch(branchIndex++);
+      const writer = createStreamCheckpointWriter(runOptions.cache, lifecycle.token);
+      internalTasks.push((async () => {
+        try {
+          for await (const item of checkpointInput) await writer.append(item);
+          checkpointManifest = await writer.finalize();
+        } catch (error) {
+          if (error instanceof CancellationError) throw error;
+          runOptions.logger.warn(
+            `stream checkpoint write skipped for ${inst.stage.name} (${inst.id})`,
+            { error: String(error) },
+          );
+        }
+      })());
+    }
+
+    const sinkValues: unknown[] | null = needsOutputBranch ? [] : null;
+    if (needsOutputBranch) {
+      const outputInput = takeBranch(branchIndex++);
+      internalTasks.push((async () => {
+        for await (const item of outputInput) sinkValues!.push(item);
+      })());
+    }
+
+    state.isStreamOutput = true;
+    state.restored = optionsForStream.restored;
+    const transportFinished = Promise.race([sourceFinished, branchesFinished]);
+    state.streamCompletion = Promise.all([...internalTasks, transportFinished]).then(async () => {
+      state.output = sinkValues ?? undefined;
+      state.summary.itemsProduced = optionsForStream.expectedItemCount
+        ?? checkpointManifest?.itemCount
+        ?? sinkValues?.length
+        ?? Math.max(0, fanOut.stats().upstreamPulls - 1);
+      state.summary.outputRevision = optionsForStream.expectedOutputRevision
+        ?? checkpointManifest?.outputRevision
+        ?? (sinkValues === null ? null : revisionForValue(sinkValues));
+      if (
+        checkpointManifest !== null
+        && runOptions.checkpointNamespace !== undefined
+        && state.summary.inputRevision !== null
+        && canCheckpointInstance(inst)
+      ) {
+        try {
+          await commitStreamCheckpoint(
+            runOptions.cache,
+            instanceCheckpointKey(
+              runOptions.checkpointNamespace,
+              inst,
+              state.summary.inputRevision,
+            ),
+            checkpointManifest,
+          );
+        } catch (error) {
+          if (error instanceof CancellationError) throw error;
+          runOptions.logger.warn(
+            `stream checkpoint commit skipped for ${inst.stage.name} (${inst.id})`,
+            { error: String(error) },
+          );
+        }
+      }
+    });
+  };
 
   const executeInstance = async (id: string, admission: AdmissionTurn): Promise<void> => {
     const state = states.get(id)!;
@@ -318,6 +468,33 @@ export async function executeDag(
         && runOptions.checkpointNamespace !== undefined
         && canCheckpointInstance(inst)
       ) {
+        if (inst.stage.produces.name === "Stream") {
+          const restoredStream = await loadStreamCheckpoint(
+            runOptions.cache,
+            instanceCheckpointKey(
+              runOptions.checkpointNamespace,
+              inst,
+              state.summary.inputRevision!,
+            ),
+            prior.outputRevision,
+            lifecycle.token,
+            runOptions.logger,
+          );
+          if (restoredStream !== null) {
+            await detachAsyncInputs(inputs.value);
+            publishLiveStream(inst, state, restoredStream.values, {
+              restored: true,
+              expectedOutputRevision: restoredStream.outputRevision,
+              expectedItemCount: restoredStream.itemCount,
+            });
+            state.summary.itemsConsumed = inputs.itemCount;
+            state.summary.cacheHits = 1;
+            state.summary.outputRevision = restoredStream.outputRevision;
+            state.summary.outcome = "skipped";
+            admission.release();
+            return;
+          }
+        }
         const restored = await loadInstanceCheckpoint(
           runOptions.cache,
           runOptions.checkpointNamespace,
@@ -345,6 +522,7 @@ export async function executeDag(
             }
           }
           if (replaySucceeded) {
+            await detachAsyncInputs(inputs.value);
             state.output = restored.value;
             state.isStreamOutput = restored.isStream;
             state.restored = true;
@@ -365,50 +543,110 @@ export async function executeDag(
         || state.summary.inputChanged !== false
         || upstreamAffected;
 
-      if (hasNamedInputs(inst)) {
-        // Named fan-in is a join boundary: every producer has already been
-        // materialized, every stream gets a fresh replayable AsyncIterable,
-        // and the stage is invoked exactly once with the stable port object.
-        const stored = await runInvocation(inst, () =>
-          runCached(inst, cacheInputValue(inst, states), runOptions, async () => {
+      if (hasNamedInputs(inst) || inst.stage.consumes.name === "Stream"
+          || inst.stage.consumes.name === "Void" || isSingleProducer(inst, dag, states)) {
+        // One invocation. Live stream inputs release their permit around each
+        // iterator operation, so a one-permit pipeline can still make
+        // upstream progress. Stream outputs are published immediately rather
+        // than materialized behind this invocation.
+        const usesLiveInput = hasLiveProducer(inst, states);
+        const stored = await runInvocation(inst, async permit => {
+          const execute = async (): Promise<CachedStageOutput> => {
             admission.release();
-            return materialize(
-              await inst.stage.run(inputs.value as never, inst.config, ctx),
-              inst.stage.produces.name === "Stream",
+            const result = await inst.stage.run(
+              permitAwareInput(inputs.value, permit) as never,
+              inst.config,
+              ctx,
             );
-          }));
-        state.output = stored.value;
-        state.isStreamOutput = stored.isStream;
+            if (isAsyncIterable(result)) return { value: result, isStream: true };
+            return materialize(result, inst.stage.produces.name === "Stream");
+          };
+          if (inst.stage.produces.name === "Stream" || usesLiveInput) {
+            return { ...(await execute()), cacheHit: false, cacheMiss: false };
+          }
+          return runCached(inst, cacheInputValue(inst, states), runOptions, execute);
+        });
         state.summary.cacheHits += stored.cacheHit ? 1 : 0;
         state.summary.cacheMisses += stored.cacheMiss ? 1 : 0;
         state.summary.itemsConsumed = inputs.itemCount;
-        state.summary.itemsProduced = stored.isStream
-          ? (stored.value as unknown[]).length
-          : 1;
-      } else if (inst.stage.consumes.name === "Stream" || inst.stage.consumes.name === "Void"
-          || isSingleProducer(inst, dag, states)) {
-        // One invocation: source / collector-style / single-input.
-        const stored = await runInvocation(inst, () =>
-          runCached(inst, cacheInputValue(inst, states), runOptions, async () => {
-            admission.release();
-            return materialize(
-              await inst.stage.run(inputs.value as never, inst.config, ctx),
-              inst.stage.produces.name === "Stream",
-            );
-          }));
+        if (stored.isStream && isAsyncIterable(stored.value)) {
+          publishLiveStream(inst, state, stored.value as AsyncIterable<unknown>, {
+            restored: false,
+          });
+          state.summary.outcome = "success";
+          state.affected = scheduledAffected;
+          // On an incremental run, an un-restored producer must establish its
+          // final content revision before affected-set scheduling can decide
+          // whether downstream work is actually necessary.
+          if (prior?.outputRevision != null) await state.streamCompletion;
+          return;
+        }
         state.output = stored.value;
         state.isStreamOutput = stored.isStream;
-        state.summary.cacheHits += stored.cacheHit ? 1 : 0;
-        state.summary.cacheMisses += stored.cacheMiss ? 1 : 0;
-        state.summary.itemsConsumed = inputs.itemCount;
         state.summary.itemsProduced = stored.isStream
           ? (stored.value as unknown[]).length
           : 1;
       } else {
-        // Multi-invocation: producer was a stream, consumer takes one
-        // value at a time.  Iterate over the producer's drained array.
-        // Mark the result stream-shaped so downstream consumers
-        // iterate again — semantically this stage produced N values.
+        // Multi-invocation: a stream producer feeds a per-item consumer.
+        // Live inputs are pulled cooperatively under yielded permits; legacy
+        // materialized checkpoints retain the array path below.
+        if (isAsyncIterable(inputs.value)) {
+          const iterator = (inputs.value as AsyncIterable<unknown>)[Symbol.asyncIterator]();
+          const collected: unknown[] = [];
+          let nextIndex = 0;
+          let firstItem = true;
+          let nextTail = Promise.resolve<IteratorResult<unknown>>({
+            done: false,
+            value: undefined,
+          });
+          const takeNext = (): Promise<IteratorResult<unknown>> => {
+            const next = nextTail.then(() => iterator.next());
+            nextTail = next;
+            return next;
+          };
+          const worker = async (): Promise<CacheRunResult[]> => {
+            const results: CacheRunResult[] = [];
+            while (true) {
+              const itemResult = await runInvocation(inst, async permit => {
+                const next = await permit.yieldWhile(takeNext);
+                if (next.done) return null;
+                const index = nextIndex++;
+                lifecycle.token.throwIfCancelled();
+                const sub = await runCached(inst, next.value, runOptions, async () => {
+                  if (firstItem) {
+                    firstItem = false;
+                    admission.release();
+                  }
+                  return materialize(
+                    await inst.stage.run(next.value as never, inst.config, ctx),
+                    false,
+                  );
+                });
+                collected[index] = sub.value;
+                return sub;
+              });
+              if (itemResult === null) return results;
+              results.push(itemResult);
+            }
+          };
+          const workerResults = await Promise.allSettled(
+            Array.from({ length: runOptions.maxConcurrency }, () => worker()),
+          );
+          admission.release();
+          const flattened: PromiseSettledResult<CacheRunResult>[] = [];
+          for (const result of workerResults) {
+            if (result.status === "rejected") flattened.push(result);
+            else for (const item of result.value) {
+              flattened.push({ status: "fulfilled", value: item });
+            }
+          }
+          applyItemResults(flattened, state, inst, runOptions);
+          state.output = collected;
+          state.isStreamOutput = true;
+          state.summary.itemsConsumed = collected.length;
+          state.summary.itemsProduced = collected.length;
+        } else {
+        // Mark the result stream-shaped so downstream consumers iterate again.
         const list = inputs.value as unknown[];
         const collected = new Array<unknown>(list.length);
         let itemAdmissionTail = Promise.resolve();
@@ -495,6 +733,7 @@ export async function executeDag(
         state.isStreamOutput = true;
         state.summary.itemsConsumed = list.length;
         state.summary.itemsProduced = collected.length;
+        }
       }
       state.summary.outputRevision = revisionForValue(state.output);
       state.summary.outcome = "success";
@@ -506,6 +745,7 @@ export async function executeDag(
         && state.summary.inputRevision !== null
         && state.summary.outputRevision !== null
         && canCheckpointInstance(inst)
+        && !hasLiveProducer(inst, states)
       ) {
         await persistInstanceCheckpoint(
           runOptions.cache,
@@ -544,22 +784,6 @@ export async function executeDag(
     }
   };
 
-  const remainingDependencies = new Map<string, number>();
-  const consumers = new Map<string, string[]>();
-  for (const id of dag.topoOrder) {
-    const inst = dag.instances.get(id)!;
-    const dependencies = new Set<string>();
-    if (inst.producer !== null) dependencies.add(inst.producer);
-    for (const producerId of inst.inputProducers.values()) dependencies.add(producerId);
-    remainingDependencies.set(id, dependencies.size);
-    for (const producerId of dependencies) {
-      const downstream = consumers.get(producerId) ?? [];
-      downstream.push(id);
-      downstream.sort((left, right) => topoIndex.get(left)! - topoIndex.get(right)!);
-      consumers.set(producerId, downstream);
-    }
-  }
-
   const ready = dag.topoOrder.filter(id => remainingDependencies.get(id) === 0);
   const inFlight = new Map<string, Promise<string>>();
   const launched = new Set<string>();
@@ -597,6 +821,67 @@ export async function executeDag(
   }
   for (const id of dag.topoOrder) {
     if (!launched.has(id)) states.get(id)!.summary.outcome = "skipped";
+  }
+
+  // Readiness is released when a stream transport is published, not when its
+  // source finishes. Before finalizing the run, join every transport so
+  // checkpoint manifests, item counts, and late iterator failures are fully
+  // accounted for.
+  for (const id of dag.topoOrder) {
+    const state = states.get(id)!;
+    if (state.streamCompletion === null) continue;
+    try {
+      await state.streamCompletion;
+    } catch (error) {
+      if (error instanceof CancellationError) {
+        if (!anyFatal) cancelled = true;
+      } else {
+        const inst = dag.instances.get(id)!;
+        const runError = toRunError(error, inst);
+        if (!errors.some(candidate => candidate.instanceId === id)) errors.push(runError);
+        state.summary.outcome = "failed";
+        state.summary.errorCount = 1;
+        if (runError.recoverable && options.bestEffort) anyRecoverableErrors = true;
+        else anyFatal = true;
+      }
+    }
+  }
+
+  // A live input's content revision is not known until its producer closes.
+  // Recompute those ledger fields now and publish non-stream checkpoints at
+  // their final keys rather than the provisional readiness-time key.
+  for (const id of dag.topoOrder) {
+    const state = states.get(id)!;
+    const inst = dag.instances.get(id)!;
+    if (!hasLiveProducer(inst, states)) continue;
+    state.summary.inputRevision = revisionForValue(cacheInputValue(inst, states));
+    state.summary.itemsConsumed = liveProducerItemCount(inst, states);
+    const prior = options.previousLedger?.instances[id];
+    state.summary.inputChanged = prior === undefined
+      ? null
+      : prior.inputRevision !== state.summary.inputRevision;
+    state.affected = prior === undefined
+      || state.summary.inputChanged !== false
+      || hasAffectedProducer(inst, states)
+      || prior.outputRevision !== state.summary.outputRevision;
+    if (
+      state.summary.outcome === "success"
+      && state.streamCompletion === null
+      && runOptions.useCache
+      && runOptions.checkpointNamespace !== undefined
+      && state.summary.inputRevision !== null
+      && state.summary.outputRevision !== null
+      && canCheckpointInstance(inst)
+    ) {
+      await persistInstanceCheckpoint(
+        runOptions.cache,
+        runOptions.checkpointNamespace,
+        inst,
+        state.summary.inputRevision,
+        { value: state.output, isStream: state.isStreamOutput },
+        runOptions.logger,
+      );
+    }
   }
 
   // Sinks → outputs map (keyed by instance id; OutputSpec naming
@@ -642,6 +927,8 @@ function makeState(inst: ResolvedInstance): RunState {
     initialized: false,
     affected: false,
     restored: false,
+    liveBranches: new Map(),
+    streamCompletion: null,
     summary: {
       instanceId: inst.id,
       stageName: inst.stage.name,
@@ -669,6 +956,30 @@ function hasAffectedProducer(
     if (states.get(producerId)?.affected) return true;
   }
   return false;
+}
+
+function hasLiveProducer(
+  inst: ResolvedInstance,
+  states: Map<string, RunState>,
+): boolean {
+  if (inst.producer !== null && states.get(inst.producer)?.streamCompletion != null) return true;
+  for (const producerId of inst.inputProducers.values()) {
+    if (states.get(producerId)?.streamCompletion != null) return true;
+  }
+  return false;
+}
+
+function liveProducerItemCount(
+  inst: ResolvedInstance,
+  states: Map<string, RunState>,
+): number {
+  let count = inst.producer === null
+    ? 0
+    : (states.get(inst.producer)?.summary.itemsProduced ?? 0);
+  for (const producerId of inst.inputProducers.values()) {
+    count += states.get(producerId)?.summary.itemsProduced ?? 0;
+  }
+  return count;
 }
 
 function revisionForValue(value: unknown): RevisionId | null {
@@ -750,8 +1061,12 @@ function collectPortInputs(
     inst.producer,
     inst.stage.consumes.name === "Stream",
     states,
+    inst.id,
+    DEFAULT_EDGE_PORT,
   );
-  input.default = defaultInput.value;
+  input.default = isAsyncIterable(defaultInput.value)
+    ? makeReplayableAsyncIterable(defaultInput.value as AsyncIterable<unknown>)
+    : defaultInput.value;
   let itemCount = defaultInput.itemCount;
 
   const declared: InputPortMap = inst.stage.inputPorts ?? {};
@@ -766,8 +1081,12 @@ function collectPortInputs(
       producerId,
       declared[port]!.name === "Stream",
       states,
+      inst.id,
+      port,
     );
-    input[port] = sideInput.value;
+    input[port] = isAsyncIterable(sideInput.value)
+      ? makeReplayableAsyncIterable(sideInput.value as AsyncIterable<unknown>)
+      : sideInput.value;
     itemCount += sideInput.itemCount;
   }
   return { value: Object.freeze(input), itemCount };
@@ -777,10 +1096,21 @@ function collectProducerInput(
   producerId: string | null,
   expectsStream: boolean,
   states: Map<string, RunState>,
+  consumerId: string,
+  port: string,
 ): CollectedInput {
   if (producerId === null) return { value: undefined, itemCount: 0 };
   const producer = states.get(producerId);
   if (!producer) return { value: undefined, itemCount: 0 };
+  const live = producer.liveBranches.get(streamEdgeKey(consumerId, port));
+  if (live !== undefined) {
+    if (!expectsStream) {
+      throw new Error(
+        `scheduler: live stream from ${JSON.stringify(producerId)} cannot feed a single-value named input`,
+      );
+    }
+    return { value: live, itemCount: producer.summary.itemsProduced };
+  }
   if (producer.isStreamOutput) {
     const list = producer.output as unknown[];
     if (!expectsStream) {
@@ -807,6 +1137,10 @@ function collectInputs(
   }
   const prod = states.get(inst.producer);
   if (!prod) return { value: undefined, itemCount: 0 };
+  const live = prod.liveBranches.get(streamEdgeKey(inst.id, DEFAULT_EDGE_PORT));
+  if (live !== undefined) {
+    return { value: live, itemCount: prod.summary.itemsProduced };
+  }
   if (prod.isStreamOutput) {
     // Stream-typed input: pass the array.  Consumer is a collector.
     if (inst.stage.consumes.name === "Stream") {
@@ -832,12 +1166,232 @@ function cacheInputValue(inst: ResolvedInstance, states: Map<string, RunState>):
 }
 
 function rawProducerOutput(producerId: string | null, states: Map<string, RunState>): unknown {
-  return producerId === null ? undefined : states.get(producerId)?.output;
+  if (producerId === null) return undefined;
+  const producer = states.get(producerId);
+  if (producer?.streamCompletion !== null && producer?.streamCompletion !== undefined) {
+    return producer.summary.outputRevision === null
+      ? { streamFrom: producerId }
+      : { streamRevision: producer.summary.outputRevision };
+  }
+  return producer?.output;
+}
+
+function streamEdgeKey(consumerId: string, port: string): string {
+  return `${consumerId}\u0000${port}`;
+}
+
+function poolBackedIterable<T>(
+  source: AsyncIterable<T>,
+  inst: ResolvedInstance,
+  runInvocation: <R>(
+    instance: ResolvedInstance,
+    invoke: (permit: ConcurrencyPermit) => Promise<R> | R,
+  ) => Promise<R>,
+): AsyncIterable<T> {
+  return {
+    [Symbol.asyncIterator](): AsyncIterator<T> {
+      const iterator = source[Symbol.asyncIterator]();
+      return {
+        next: () => runInvocation(inst, () => iterator.next()),
+        return: value => runInvocation(inst, () =>
+          typeof iterator.return === "function"
+            ? iterator.return(value)
+            : Promise.resolve({ done: true, value })),
+        throw: error => runInvocation(inst, () =>
+          typeof iterator.throw === "function"
+            ? iterator.throw(error)
+            : Promise.reject(error)),
+      };
+    },
+  };
+}
+
+function trackIterableCompletion<T>(
+  source: AsyncIterable<T>,
+  complete: () => void,
+  fail: (error: unknown) => void,
+): AsyncIterable<T> {
+  let settled = false;
+  const finish = (): void => {
+    if (settled) return;
+    settled = true;
+    complete();
+  };
+  const reject = (error: unknown): void => {
+    if (settled) return;
+    settled = true;
+    fail(error);
+  };
+  return {
+    [Symbol.asyncIterator](): AsyncIterator<T> {
+      const iterator = source[Symbol.asyncIterator]();
+      return {
+        async next(): Promise<IteratorResult<T>> {
+          try {
+            const result = await iterator.next();
+            if (result.done) finish();
+            return result;
+          } catch (error) {
+            reject(error);
+            throw error;
+          }
+        },
+        async return(value?: unknown): Promise<IteratorResult<T>> {
+          try {
+            const result = typeof iterator.return === "function"
+              ? await iterator.return(value)
+              : { done: true as const, value: value as T };
+            finish();
+            return result;
+          } catch (error) {
+            reject(error);
+            throw error;
+          }
+        },
+        async throw(error?: unknown): Promise<IteratorResult<T>> {
+          try {
+            if (typeof iterator.throw !== "function") throw error;
+            const result = await iterator.throw(error);
+            if (result.done) finish();
+            return result;
+          } catch (caught) {
+            reject(caught);
+            throw caught;
+          }
+        },
+      };
+    },
+  };
+}
+
+function trackBranchCompletion<T>(
+  source: AsyncIterable<T>,
+  complete: () => void,
+): AsyncIterable<T> {
+  let settled = false;
+  const finish = (): void => {
+    if (settled) return;
+    settled = true;
+    complete();
+  };
+  return {
+    [Symbol.asyncIterator](): AsyncIterator<T> {
+      const iterator = source[Symbol.asyncIterator]();
+      return {
+        async next(): Promise<IteratorResult<T>> {
+          try {
+            const result = await iterator.next();
+            if (result.done) finish();
+            return result;
+          } catch (error) {
+            finish();
+            throw error;
+          }
+        },
+        async return(value?: unknown): Promise<IteratorResult<T>> {
+          try {
+            return typeof iterator.return === "function"
+              ? await iterator.return(value)
+              : { done: true, value: value as T };
+          } finally {
+            finish();
+          }
+        },
+        async throw(error?: unknown): Promise<IteratorResult<T>> {
+          try {
+            if (typeof iterator.throw !== "function") throw error;
+            return await iterator.throw(error);
+          } finally {
+            finish();
+          }
+        },
+      };
+    },
+  };
+}
+
+function permitAwareIterable<T>(
+  source: AsyncIterable<T>,
+  permit: ConcurrencyPermit,
+): AsyncIterable<T> {
+  return {
+    [Symbol.asyncIterator](): AsyncIterator<T> {
+      const iterator = source[Symbol.asyncIterator]();
+      return {
+        next: () => permit.yieldWhile(() => iterator.next()),
+        return: value => permit.yieldWhile(() =>
+          typeof iterator.return === "function"
+            ? iterator.return(value)
+            : Promise.resolve({ done: true, value })),
+        throw: error => permit.yieldWhile(() =>
+          typeof iterator.throw === "function"
+            ? iterator.throw(error)
+            : Promise.reject(error)),
+      };
+    },
+  };
+}
+
+function permitAwareInput(value: unknown, permit: ConcurrencyPermit): unknown {
+  if (isAsyncIterable(value)) {
+    return permitAwareIterable(value as AsyncIterable<unknown>, permit);
+  }
+  if (typeof value !== "object" || value === null || Array.isArray(value)) return value;
+  const mapped: Record<string, unknown> = Object.create(null);
+  let changed = false;
+  for (const [key, entry] of Object.entries(value)) {
+    if (isAsyncIterable(entry)) {
+      mapped[key] = permitAwareIterable(entry as AsyncIterable<unknown>, permit);
+      changed = true;
+    } else {
+      mapped[key] = entry;
+    }
+  }
+  return changed ? Object.freeze(mapped) : value;
 }
 
 interface CacheRunResult extends CachedStageOutput {
   readonly cacheHit: boolean;
   readonly cacheMiss: boolean;
+}
+
+function applyItemResults(
+  results: readonly PromiseSettledResult<CacheRunResult>[],
+  state: RunState,
+  inst: ResolvedInstance,
+  options: SchedulerOptions,
+): void {
+  let fatalFailed = false;
+  let fatalError: unknown;
+  let recoverableFailed = false;
+  let recoverableError: unknown;
+  let wasCancelled = false;
+  let cancellationError: unknown;
+  for (const result of results) {
+    if (result.status === "fulfilled") {
+      state.summary.cacheHits += result.value.cacheHit ? 1 : 0;
+      state.summary.cacheMisses += result.value.cacheMiss ? 1 : 0;
+    } else if (result.reason instanceof CancellationError) {
+      if (!wasCancelled) {
+        wasCancelled = true;
+        cancellationError = result.reason;
+      }
+    } else {
+      const itemError = toRunError(result.reason, inst);
+      if (itemError.recoverable && options.bestEffort) {
+        if (!recoverableFailed) {
+          recoverableFailed = true;
+          recoverableError = result.reason;
+        }
+      } else if (!fatalFailed) {
+        fatalFailed = true;
+        fatalError = result.reason;
+      }
+    }
+  }
+  if (fatalFailed) throw fatalError;
+  if (recoverableFailed) throw recoverableError;
+  if (wasCancelled) throw cancellationError;
 }
 
 async function runCached(
@@ -931,6 +1485,74 @@ function makeAsyncIterableFromArray<T>(arr: readonly T[]): AsyncIterable<T> {
       for (const item of arr) yield item;
     },
   };
+}
+
+/**
+ * Named-input stages historically receive replayable streams. Preserve that
+ * contract at the join boundary while the transport feeding the first pass
+ * remains lazy and bounded.
+ */
+function makeReplayableAsyncIterable<T>(source: AsyncIterable<T>): AsyncIterable<T> {
+  const values: T[] = [];
+  const upstream = source[Symbol.asyncIterator]();
+  let done = false;
+  let failed = false;
+  let failure: unknown;
+  let pull: Promise<void> | null = null;
+  const pullOne = async (): Promise<void> => {
+    if (done || failed) return;
+    if (pull !== null) return pull;
+    pull = (async () => {
+      try {
+        const next = await upstream.next();
+        if (next.done) done = true;
+        else values.push(next.value);
+      } catch (error) {
+        failed = true;
+        failure = error;
+      } finally {
+        pull = null;
+      }
+    })();
+    return pull;
+  };
+  return {
+    [DETACH_ASYNC_INPUT]: async (): Promise<void> => {
+      done = true;
+      if (typeof upstream.return === "function") await upstream.return();
+    },
+    [Symbol.asyncIterator](): AsyncIterator<T> {
+      let index = 0;
+      return {
+        async next(): Promise<IteratorResult<T>> {
+          while (index >= values.length && !done && !failed) await pullOne();
+          if (index < values.length) return { done: false, value: values[index++]! };
+          if (failed) throw failure;
+          return { done: true, value: undefined };
+        },
+        async return(): Promise<IteratorResult<T>> {
+          return { done: true, value: undefined };
+        },
+      };
+    },
+  } as AsyncIterable<T>;
+}
+
+async function detachAsyncInputs(value: unknown): Promise<void> {
+  if (isAsyncIterable(value)) {
+    const detachable = value as AsyncIterable<unknown> & {
+      [DETACH_ASYNC_INPUT]?: () => Promise<void>;
+    };
+    if (detachable[DETACH_ASYNC_INPUT] !== undefined) {
+      await detachable[DETACH_ASYNC_INPUT]();
+      return;
+    }
+    const iterator = detachable[Symbol.asyncIterator]();
+    if (typeof iterator.return === "function") await iterator.return();
+    return;
+  }
+  if (typeof value !== "object" || value === null) return;
+  await Promise.all(Object.values(value).map(detachAsyncInputs));
 }
 
 /**
