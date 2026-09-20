@@ -1463,8 +1463,14 @@ pub struct RequirementElementMetadata {
     pub document_reference: Option<String>,
 }
 
+#[derive(Clone, Debug, PartialEq, Default)]
+pub struct ArchitectureServiceMetadata {
+    pub icon_text: Option<String>,
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub enum StructuralNodeMetadata {
+    ArchitectureService(ArchitectureServiceMetadata),
     Requirement(RequirementMetadata),
     RequirementElement(RequirementElementMetadata),
 }
@@ -1552,6 +1558,7 @@ pub struct LayoutedStructuralNode {
     pub height: f64,
     pub header: String,
     pub stereotype: Option<String>,
+    pub icon_text: Option<String>,
     pub style: ResolvedDiagramStyle,
     pub compartments: Vec<LayoutedCompartment>,
 }

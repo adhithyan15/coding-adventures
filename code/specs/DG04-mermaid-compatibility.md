@@ -440,8 +440,10 @@ PaintInstructions. Single-line accessibility titles and single-line or braced
 descriptions survive as PaintScene metadata.
 Sibling `align row` and `align column` constraints survive semantic IR and
 resolve declared member order to deterministic shared-axis layout geometry.
+Quoted service icon text survives as typed semantic metadata, reserves dedicated
+header geometry, and lowers to backend-neutral badge and shaped-text PaintInstructions.
 Group-edge modifiers, left and bidirectional
-arrows, custom icon text, icon artwork, port-aware routing, and configuration remain unsupported
+arrows, icon artwork, port-aware routing, and configuration remain unsupported
 at the partial level.
 
 ### Radar Native Slice

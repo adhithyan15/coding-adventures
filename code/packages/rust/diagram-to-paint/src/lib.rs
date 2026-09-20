@@ -2820,6 +2820,39 @@ where
             "#d1d5db",
             1.0,
         )));
+        let (header_x, header_width) = if let Some(icon_text) = &node.icon_text {
+            let icon_size = (header_height - 16.0).min(48.0);
+            instructions.push(PaintInstruction::Rect(PaintRect {
+                base: PaintBase::default(),
+                x: node.x + 8.0,
+                y: node.y + (header_height - icon_size) / 2.0,
+                width: icon_size,
+                height: icon_size,
+                fill: Some("#087ebf".into()),
+                stroke: None,
+                stroke_width: None,
+                corner_radius: Some(4.0),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }));
+            text_children.push(text_node(
+                icon_text,
+                node.x + 10.0,
+                node.y + (header_height - icon_size) / 2.0 + 4.0,
+                icon_size - 4.0,
+                icon_size - 8.0,
+                node_font.clone(),
+                Color {
+                    r: 255,
+                    g: 255,
+                    b: 255,
+                    a: 255,
+                },
+            ));
+            (node.x + icon_size + 16.0, node.width - icon_size - 24.0)
+        } else {
+            (node.x, node.width)
+        };
         // Header text (with optional stereotype)
         let header_label = if let Some(ref st) = node.stereotype {
             format!("«{}»\n{}", st, node.header)
@@ -2828,9 +2861,9 @@ where
         };
         text_children.push(text_node(
             &header_label,
-            node.x,
+            header_x,
             node.y + 8.0,
-            node.width,
+            header_width,
             header_height - 8.0,
             node_font.clone(),
             css_to_color(&node.style.text_color),
@@ -5230,6 +5263,50 @@ mod tests {
     #[test]
     fn version_exists() {
         assert_eq!(crate::VERSION, "0.63.0");
+    }
+
+    #[test]
+    fn architecture_icon_text_lowers_to_backend_neutral_badge_and_glyphs() {
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = LayoutedStructuralDiagram {
+            width: 200.0,
+            height: 100.0,
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            groups: vec![],
+            nodes: vec![diagram_ir::LayoutedStructuralNode {
+                id: "api".into(),
+                node_kind: StructuralNodeKind::Element,
+                x: 20.0,
+                y: 12.0,
+                width: 160.0,
+                height: 72.0,
+                header: "Gateway".into(),
+                stereotype: None,
+                icon_text: Some("API".into()),
+                style: default_style(),
+                compartments: vec![],
+            }],
+            relationships: vec![],
+        };
+
+        let scene = diagram_to_paint_structural(&layout, &opts);
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#087ebf")
+        )));
+        assert!(
+            scene
+                .instructions
+                .iter()
+                .filter(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_)))
+                .count()
+                >= 2
+        );
     }
 
     #[test]
