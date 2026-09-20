@@ -2672,11 +2672,39 @@ where
             Some(stereotype) => format!("«{stereotype}» {}", group.label),
             None => group.label.clone(),
         };
+        let (label_x, label_width) = if let Some(icon_name) = &group.icon_name {
+            let badge = architecture_icon_badge(icon_name);
+            instructions.push(PaintInstruction::Rect(PaintRect {
+                base: PaintBase::default(),
+                x: group.x + 10.0,
+                y: group.y + 6.0,
+                width: 28.0,
+                height: 20.0,
+                fill: Some("#087ebf".into()),
+                stroke: None,
+                stroke_width: None,
+                corner_radius: Some(2.0),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }));
+            text_children.push(text_node(
+                badge,
+                group.x + 10.0,
+                group.y + 8.0,
+                28.0,
+                ls,
+                lf.clone(),
+                Color { r: 255, g: 255, b: 255, a: 255 },
+            ));
+            (group.x + 46.0, group.width - 56.0)
+        } else {
+            (group.x + 10.0, group.width - 20.0)
+        };
         text_children.push(text_node(
             &label,
-            group.x + 10.0,
+            label_x,
             group.y + 6.0,
-            group.width - 20.0,
+            label_width,
             ls * 1.3,
             lf.clone(),
             Color {

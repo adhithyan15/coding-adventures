@@ -578,7 +578,8 @@ use diagram_ir::{
     SequenceArrowhead, SequenceBlockKind, SequenceCentralConnection, SequenceDiagram,
     SequenceEvent, SequenceLineStyle, SequenceLink, SequenceNotePlacement, SequenceParticipant,
     SequenceParticipantGroup, SequenceParticipantKind, SequenceProperty, SequenceTextWrap,
-    SeriesKind, StructuralAlignment, StructuralAlignmentAxis, StructuralDiagram, StructuralGroup, StructuralKind, StructuralNode,
+    SeriesKind, StructuralAlignment, StructuralAlignmentAxis, StructuralDiagram, StructuralGroup,
+    StructuralGroupMetadata, StructuralKind, StructuralNode,
     GanttTaskTags, StructuralNodeKind, StructuralNodeMetadata, StructuralPort,
     StructuralRelationship, StructuralRouting, TaskEnd, TaskStart, TemporalBody, TemporalDiagram,
     TemporalKind, TimelineDiagram, TimelineDirection,
@@ -1026,7 +1027,10 @@ pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError>
             diagram.groups.push(StructuralGroup {
                 id: declaration.id,
                 label: declaration.label,
-                stereotype: declaration.icon,
+                stereotype: None,
+                metadata: declaration.icon.map(|icon_name| {
+                    StructuralGroupMetadata::Architecture { icon_name }
+                }),
                 parent_group: declaration.parent,
             });
         } else if let Some(value) = statement.strip_prefix("service ") {
@@ -9198,6 +9202,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                     id: id.clone(),
                     label,
                     stereotype: Some(macro_token.value),
+                    metadata: None,
                     parent_group: group_stack.last().cloned(),
                 });
                 cursor.skip_terminators();
@@ -10528,6 +10533,10 @@ mod tests_dg04 {
         .unwrap();
         assert_eq!(diagram.kind, StructuralKind::Architecture);
         assert_eq!(diagram.groups.len(), 1);
+        assert!(matches!(
+            &diagram.groups[0].metadata,
+            Some(StructuralGroupMetadata::Architecture { icon_name }) if icon_name == "cloud"
+        ));
         assert_eq!(diagram.nodes.len(), 2);
         assert_eq!(diagram.nodes[0].parent_group.as_deref(), Some("cloud"));
         assert!(matches!(

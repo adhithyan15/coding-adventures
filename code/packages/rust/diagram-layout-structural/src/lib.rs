@@ -10,11 +10,11 @@ use diagram_ir::{
     resolve_style_with_base, DiagramDirection, LayoutedCompartment, LayoutedStructuralDiagram,
     LayoutedStructuralGroup, LayoutedStructuralNode, LayoutedStructuralRelationship, Point,
     StructuralAlignmentAxis, StructuralDiagram, StructuralNode, StructuralNodeKind,
-    StructuralNodeMetadata, StructuralPort, StructuralRouting,
+    StructuralGroupMetadata, StructuralNodeMetadata, StructuralPort, StructuralRouting,
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.17.0";
+pub const VERSION: &str = "0.18.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -89,10 +89,22 @@ fn apply_alignments(nodes: &mut [LayoutedStructuralNode], diagram: &StructuralDi
                     .iter()
                     .map(|index| nodes[*index].x)
                     .fold(f64::INFINITY, f64::min);
-                let y = indices
+                let natural_y = indices
                     .iter()
                     .map(|index| nodes[*index].y)
                     .fold(f64::INFINITY, f64::min);
+                let group_header_y = indices
+                    .iter()
+                    .filter_map(|index| {
+                        diagram.nodes.iter().find(|node| node.id == nodes[*index].id)
+                    })
+                    .map(|node| {
+                        COMP_PAD
+                            + group_depth(node.parent_group.as_deref(), &diagram.groups) as f64
+                                * GROUP_HEADER_H
+                    })
+                    .fold(COMP_PAD, f64::max);
+                let y = natural_y.max(group_header_y);
                 for index in indices {
                     nodes[index].x = cursor;
                     nodes[index].y = y;
@@ -371,6 +383,9 @@ fn layout_groups(
                 height: max_y - y,
                 label: group.label.clone(),
                 stereotype: group.stereotype.clone(),
+                icon_name: group.metadata.as_ref().map(
+                    |StructuralGroupMetadata::Architecture { icon_name }| icon_name.clone(),
+                ),
                 parent_group: group.parent_group.clone(),
             })
         })
@@ -745,7 +760,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.17.0");
+        assert_eq!(crate::VERSION, "0.18.0");
     }
 
     #[test]
@@ -839,6 +854,7 @@ mod tests {
             id: "domain".into(),
             label: "Domain".into(),
             stereotype: Some("System_Boundary".into()),
+            metadata: None,
             parent_group: None,
         });
 
@@ -867,6 +883,7 @@ mod tests {
             id: "domain".into(),
             label: "Domain".into(),
             stereotype: None,
+            metadata: None,
             parent_group: None,
         });
         diagram.relationships[0].to_group = true;
