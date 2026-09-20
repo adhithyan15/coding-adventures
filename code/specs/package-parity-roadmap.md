@@ -14204,8 +14204,9 @@ pending, and exactly DER ASN.1 in progress.
 
 ### Live-main refresh and serial-number ownership
 
-`origin/main` subsequently advanced to
-`2e2a32c06d5bd5be071ae1e6b7d265b860a815ad`. PR #15806 reached 21 successful
+`origin/main` subsequently advanced through two package-internal Mosaic and
+Venture repairs to `21ae2446feb19174412ce36caaeafa6a5cfd9829`; neither commit
+adds or removes a package identity. PR #15806 reached 21 successful
 checks, 27 path-gated skips, and no failure, cancellation, or pending result,
 then merged through guarded auto-merge as
 `f24c2e8c6a17ed4dd08f5c26a2e34291fe87fbf7`. The collision-checked exact-main

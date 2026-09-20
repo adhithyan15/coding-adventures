@@ -19,7 +19,7 @@
     "notes": "PR #15806 reached 21 successful checks with 27 path-gated skips, zero failures, zero cancellations, and zero pending checks. GitHub reported the reviewed head MERGEABLE, and guarded auto-merge merged it automatically at 2026-09-20T15:51:57Z as f24c2e8c6a17ed4dd08f5c26a2e34291fe87fbf7; no plain manual merge command was used."
   },
   "last_inventory": {
-    "revision": "2e2a32c06d5bd5be071ae1e6b7d265b860a815ad",
+    "revision": "21ae2446feb19174412ce36caaeafa6a5cfd9829",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1457,
