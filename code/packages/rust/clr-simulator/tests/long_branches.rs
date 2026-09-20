@@ -48,7 +48,7 @@ fn literal_long_branches_preserve_conditions_and_direction() {
 #[test]
 fn malformed_long_branches_refuse_without_mutation() {
     for op in [0x38, 0x39, 0x3a] {
-        let mut cases: Vec<(Vec<u8>, Vec<Option<Value>>, &str)> = vec![];
+        let mut cases = Vec::new();
         for len in 1..5 {
             cases.push((
                 vec![op; len],
