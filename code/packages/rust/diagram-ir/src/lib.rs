@@ -1510,6 +1510,18 @@ pub struct StructuralRelationship {
     pub label: Option<String>,
 }
 
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum StructuralAlignmentAxis {
+    Row,
+    Column,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct StructuralAlignment {
+    pub axis: StructuralAlignmentAxis,
+    pub members: Vec<String>,
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct StructuralDiagram {
     pub kind: StructuralKind,
@@ -1517,6 +1529,7 @@ pub struct StructuralDiagram {
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
     pub direction: Option<DiagramDirection>,
+    pub alignments: Vec<StructuralAlignment>,
     pub nodes: Vec<StructuralNode>,
     pub groups: Vec<StructuralGroup>,
     pub relationships: Vec<StructuralRelationship>,
@@ -2293,6 +2306,7 @@ mod tests {
             accessibility_title: None,
             accessibility_description: None,
             direction: None,
+            alignments: vec![],
             nodes: vec![node],
             groups: vec![],
             relationships: vec![],

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.11.0
+
+- Resolve structural row and column alignment constraints to deterministic geometry.
+
 ## 0.10.0
 
 - Resolve typed structural junctions to compact backend-neutral geometry.

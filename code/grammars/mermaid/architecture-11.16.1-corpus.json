@@ -21,6 +21,10 @@
     {
       "id": "junction-split",
       "source": "architecture-beta\ngroup platform(cloud)[Platform]\nservice api(server)[API] in platform\njunction split in platform\nservice db(database)[Database] in platform\napi:R --> L:split\nsplit:R --> L:db"
+    },
+    {
+      "id": "sibling-alignment",
+      "source": "architecture-beta\nservice a(server)[A]\nservice b(server)[B]\nservice c(server)[C]\nservice d(server)[D]\nalign row a b c d"
     }
   ]
 }

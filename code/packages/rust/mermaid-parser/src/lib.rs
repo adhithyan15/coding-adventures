@@ -577,7 +577,7 @@ use diagram_ir::{
     SequenceArrowhead, SequenceBlockKind, SequenceCentralConnection, SequenceDiagram,
     SequenceEvent, SequenceLineStyle, SequenceLink, SequenceNotePlacement, SequenceParticipant,
     SequenceParticipantGroup, SequenceParticipantKind, SequenceProperty, SequenceTextWrap,
-    SeriesKind, StructuralDiagram, StructuralGroup, StructuralKind, StructuralNode,
+    SeriesKind, StructuralAlignment, StructuralAlignmentAxis, StructuralDiagram, StructuralGroup, StructuralKind, StructuralNode,
     GanttTaskTags, StructuralNodeKind, StructuralNodeMetadata, StructuralRelationship, TaskEnd,
     TaskStart, TemporalBody, TemporalDiagram, TemporalKind, TimelineDiagram, TimelineDirection,
     TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, VennDiagram, VennRegion,
@@ -952,6 +952,7 @@ pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError>
         accessibility_title: None,
         accessibility_description: None,
         direction: None,
+        alignments: Vec::new(),
         nodes: Vec::new(),
         groups: Vec::new(),
         relationships: Vec::new(),
@@ -1001,7 +1002,7 @@ pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError>
     for token in tokens.iter().filter(|token| {
         matches!(
             token.type_name.as_deref(),
-            Some("JUNCTION_STATEMENT" | "STATEMENT_LINE")
+            Some("JUNCTION_STATEMENT" | "ALIGN_STATEMENT" | "STATEMENT_LINE")
         )
     }) {
         let statement = token.value.trim();
@@ -1051,8 +1052,10 @@ pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError>
                 compartments: Vec::new(),
                 parent_group: parent,
             });
-        } else if statement.starts_with("align ") {
-            return Err(token_error(token, "architecture alignments are outside the supported subset"));
+        } else if let Some(value) = statement.strip_prefix("align ") {
+            diagram
+                .alignments
+                .push(parse_architecture_alignment(token, value, &endpoint_ids)?);
         } else {
             diagram.relationships.push(parse_architecture_edge(token, statement, &endpoint_ids)?);
         }
@@ -1061,6 +1064,33 @@ pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError>
         return Err(ParseError { message: "architecture diagram requires a service".into(), line: 1, col: 1 });
     }
     Ok(diagram)
+}
+
+fn parse_architecture_alignment(
+    token: &Token,
+    source: &str,
+    endpoint_ids: &HashSet<String>,
+) -> Result<StructuralAlignment, ParseError> {
+    let mut words = source.split_whitespace();
+    let axis = match words.next() {
+        Some("row") => StructuralAlignmentAxis::Row,
+        Some("column") => StructuralAlignmentAxis::Column,
+        _ => return Err(token_error(token, "invalid architecture alignment axis")),
+    };
+    let members = words.map(str::to_string).collect::<Vec<_>>();
+    if members.len() < 2 {
+        return Err(token_error(token, "architecture alignment requires at least two members"));
+    }
+    let mut unique = HashSet::new();
+    for member in &members {
+        if !endpoint_ids.contains(member) {
+            return Err(token_error(token, "architecture alignment members must be declared first"));
+        }
+        if !unique.insert(member) {
+            return Err(token_error(token, "duplicate architecture alignment member"));
+        }
+    }
+    Ok(StructuralAlignment { axis, members })
 }
 
 fn parse_architecture_junction(
@@ -2927,6 +2957,7 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
         accessibility_title,
         accessibility_description,
         direction,
+        alignments: Vec::new(),
         nodes,
         groups: Vec::new(),
         relationships,
@@ -3732,6 +3763,7 @@ pub fn parse_class_diagram(source: &str) -> Result<StructuralDiagram, ParseError
         accessibility_title: None,
         accessibility_description: None,
         direction: None,
+        alignments: Vec::new(),
         nodes,
         groups: vec![],
         relationships,
@@ -8901,6 +8933,7 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
         accessibility_title: None,
         accessibility_description: None,
         direction: None,
+        alignments: Vec::new(),
         nodes,
         groups: vec![],
         relationships,
@@ -9107,6 +9140,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
         accessibility_title: None,
         accessibility_description: None,
         direction: None,
+        alignments: Vec::new(),
         nodes,
         groups,
         relationships,
@@ -10426,12 +10460,25 @@ mod tests_dg04 {
     }
 
     #[test]
-    fn architecture_rejects_unsupported_alignment() {
+    fn architecture_preserves_row_and_column_alignments() {
+        let diagram = parse_architecture(
+            "architecture-beta\nservice a(server)[A]\nservice b(server)[B]\nservice c(server)[C]\nalign row a b\nalign column b c",
+        )
+        .unwrap();
+        assert_eq!(diagram.alignments.len(), 2);
+        assert_eq!(diagram.alignments[0].axis, StructuralAlignmentAxis::Row);
+        assert_eq!(diagram.alignments[0].members, ["a", "b"]);
+        assert_eq!(diagram.alignments[1].axis, StructuralAlignmentAxis::Column);
+        assert_eq!(diagram.alignments[1].members, ["b", "c"]);
+    }
+
+    #[test]
+    fn architecture_rejects_invalid_alignment_members() {
         let error = parse_architecture(
-            "architecture-beta\nservice api(server)[API]\nservice db(database)[DB]\nalign row api db",
+            "architecture-beta\nservice api(server)[API]\nalign row api missing",
         )
         .unwrap_err();
-        assert!(error.message.contains("outside the supported subset"));
+        assert!(error.message.contains("declared first"));
     }
 
     #[test]
