@@ -1568,6 +1568,7 @@ pub struct LayoutedStructuralRelationship {
 pub struct LayoutedStructuralDiagram {
     pub width: f64,
     pub height: f64,
+    pub title: Option<String>,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
     pub groups: Vec<LayoutedStructuralGroup>,

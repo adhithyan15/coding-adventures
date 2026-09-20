@@ -958,6 +958,46 @@ pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError>
     };
     let mut ids = HashSet::new();
     let mut service_ids = HashSet::new();
+    for token in &tokens {
+        match token.type_name.as_deref() {
+            Some("TITLE_STATEMENT") => {
+                diagram.title = Some(normalize_mermaid_line_breaks(
+                    token.value["title".len()..].trim(),
+                ));
+            }
+            Some("ACC_TITLE_STATEMENT") => {
+                diagram.accessibility_title = token
+                    .value
+                    .split_once(':')
+                    .map(|(_, value)| value.trim().to_string());
+            }
+            Some("ACC_DESCR_STATEMENT") => {
+                diagram.accessibility_description = token
+                    .value
+                    .split_once(':')
+                    .map(|(_, value)| value.trim().to_string());
+            }
+            Some("ACC_DESCR_BLOCK") => {
+                let open = token
+                    .value
+                    .find('{')
+                    .expect("architecture accessibility token requires '{'");
+                let close = token
+                    .value
+                    .rfind('}')
+                    .expect("architecture accessibility token requires '}'");
+                diagram.accessibility_description = Some(
+                    token.value[open + 1..close]
+                        .lines()
+                        .map(str::trim)
+                        .filter(|line| !line.is_empty())
+                        .collect::<Vec<_>>()
+                        .join("\n"),
+                );
+            }
+            _ => {}
+        }
+    }
     for token in tokens.iter().filter(|token| token.type_name.as_deref() == Some("STATEMENT_LINE")) {
         let statement = token.value.trim();
         if let Some(value) = statement.strip_prefix("group ") {
@@ -10304,6 +10344,20 @@ mod tests_dg04 {
         .unwrap();
         assert_eq!(diagram.relationships[0].kind, RelKind::Link);
         assert_eq!(diagram.relationships[0].label.as_deref(), Some("shared data"));
+    }
+
+    #[test]
+    fn architecture_preserves_title_and_accessibility_metadata() {
+        let diagram = parse_architecture(
+            "architecture-beta title Native platform\naccTitle: Platform topology\naccDescr {\n  API and database services\n  grouped by platform\n}\nservice api(server)[API]",
+        )
+        .unwrap();
+        assert_eq!(diagram.title.as_deref(), Some("Native platform"));
+        assert_eq!(diagram.accessibility_title.as_deref(), Some("Platform topology"));
+        assert_eq!(
+            diagram.accessibility_description.as_deref(),
+            Some("API and database services\ngrouped by platform")
+        );
     }
 
     #[test]

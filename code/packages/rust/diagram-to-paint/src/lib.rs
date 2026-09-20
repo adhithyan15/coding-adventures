@@ -2624,6 +2624,23 @@ where
     let lf = options.label_font.clone();
     let ls = lf.size;
 
+    if let Some(title) = &diagram.title {
+        text_children.push(text_node(
+            title,
+            8.0,
+            6.0,
+            diagram.width - 16.0,
+            30.0,
+            options.title_font.clone(),
+            Color {
+                r: 15,
+                g: 23,
+                b: 42,
+                a: 255,
+            },
+        ));
+    }
+
     // Groups are backend-neutral containers. Draw outer groups first so nested
     // groups, relationships, and nodes naturally layer above them.
     for group in &diagram.groups {

@@ -13,7 +13,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.8.0";
+pub const VERSION: &str = "0.9.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -24,6 +24,7 @@ const ROW_GAP: f64 = 60.0;
 const COLS: usize = 3;
 const GROUP_PAD: f64 = 24.0;
 const GROUP_HEADER_H: f64 = 32.0;
+const TITLE_H: f64 = 44.0;
 
 fn structural_style(node: &StructuralNode) -> diagram_ir::ResolvedDiagramStyle {
     resolve_style_with_base(
@@ -45,10 +46,15 @@ fn structural_style(node: &StructuralNode) -> diagram_ir::ResolvedDiagramStyle {
 
 /// Lay out a `StructuralDiagram` using an explicit axis or the legacy grid.
 pub fn layout_structural_diagram(diagram: &StructuralDiagram) -> LayoutedStructuralDiagram {
-    let nodes = match diagram.direction.as_ref() {
+    let mut nodes = match diagram.direction.as_ref() {
         Some(direction) => layout_directional_nodes(&diagram.nodes, &diagram.groups, direction),
         None => layout_nodes(&diagram.nodes, &diagram.groups),
     };
+    if diagram.title.is_some() {
+        for node in &mut nodes {
+            node.y += TITLE_H;
+        }
+    }
     let groups = layout_groups(diagram, &nodes);
     let canvas_w = canvas_width(&nodes, &groups);
     let canvas_h = canvas_height(&nodes, &groups);
@@ -56,6 +62,7 @@ pub fn layout_structural_diagram(diagram: &StructuralDiagram) -> LayoutedStructu
     LayoutedStructuralDiagram {
         width: canvas_w,
         height: canvas_h,
+        title: diagram.title.clone(),
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
         groups,
@@ -502,7 +509,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.8.0");
+        assert_eq!(crate::VERSION, "0.9.0");
     }
 
     #[test]
@@ -539,6 +546,18 @@ mod tests {
         assert_eq!(label, "inherits from");
         assert!(position.x.is_finite());
         assert!(position.y.is_finite());
+    }
+
+    #[test]
+    fn title_reserves_vertical_geometry() {
+        let mut diagram = two_class_diagram();
+        diagram.title = None;
+        let without_title = layout_structural_diagram(&diagram);
+        diagram.title = Some("Domain model".into());
+        let with_title = layout_structural_diagram(&diagram);
+        assert_eq!(with_title.title.as_deref(), Some("Domain model"));
+        assert_eq!(with_title.nodes[0].y, without_title.nodes[0].y + TITLE_H);
+        assert!(with_title.height > without_title.height);
     }
 
     #[test]
