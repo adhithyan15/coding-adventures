@@ -43,7 +43,7 @@ visible so a local optimization cannot quietly close the project early.
 
 The implementation is substantial but not yet an end-to-end product:
 
-- 63 TypeScript `forme-*` packages and 185 package test files cover the kernel,
+- 64 TypeScript `forme-*` packages and 189 package test files cover the kernel,
   stage contracts, a bounded concurrent orchestrator, Style IR, AOT emitters, document
   transforms, collections, feeds, routing, and static output.
 - The blog proves a ten-stage routed DAG: source → parse → asset resolution →
@@ -63,7 +63,10 @@ The implementation is substantial but not yet an end-to-end product:
   formats stable diagnostics and exits, and cooperatively handles SIGINT. Watch
   serves only successful in-memory artifacts, coalesces project changes,
   reloads browsers over SSE, and retains the last good site across failures.
-  There is no plugin host, runtime sandbox, authoring shell, or deploy runner.
+  The pure deploy-runner core now validates manifests, plans complete owned
+  output sets, preflights content, and produces deterministic dry-run reports.
+  There is no effectful deploy adapter, plugin host, runtime sandbox, or
+  authoring shell.
 - The CLI now persists per-invocation cache entries and topology-scoped
   materialized checkpoints through a containment-checked project cache.
   Filesystem sources publish validated external-state manifests, and successful
@@ -80,7 +83,8 @@ The implementation is substantial but not yet an end-to-end product:
   shipped headless CLI/dev server, and the deploy-runner contract is FM08.
 - The completed concurrent scheduler now has product-level clean/incremental
   and reproducibility proof in both live sites. The remaining headless-product
-  path reconciles the specification map before implementing the deploy runner.
+  path has reconciled the specification map and is implementing the deploy
+  runner as four independently reviewed capability boundaries.
   Both live sites use the same product CLI, watch server,
   and centralized local-dependency bootstrap; site-local code is limited to
   content adapters and post-build artifact assertions.
@@ -141,14 +145,18 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 | 32 | FM-B040 | done | Complete the pipeline-wide concurrent scheduler | Depends on FM-B041–FM-B043. Stable ready scheduling and one shared permit budget enforce `settings.maxConcurrency`; waits suspend permits to avoid `maxConcurrency: 1` deadlocks; live fan-out and bounded checkpoints preserve deterministic output, summaries, cancellation, and disposal. |
 | 33 | FM-B010 | done | Prove the completed scheduler in live products | Depends on FM-B038–FM-B040. Both live sites pass clean and unchanged second-process builds in reproducible mode; build IDs and artifact hashes remain identical; reports prove the exact safe skip/replay set while ambient filesystem readers rerun conservatively; report serialization is canonical across live and restored values; and deterministic cancellation/reproducibility tests pass. |
 | 34 | FM-B011 | done | Reconcile the FM spec map | The canonical FM01–FM08 map is collision-free; Interactivity IR, AOT, CLI/dev-server, and deploy-runner locations exist; cross-links resolve; every FM spec publishes an implementation ledger; CI enforces the map. |
-| 35 | FM-B012 | active | Implement the deploy runner | Build the FM08 core, filesystem adapter, GitHub Pages adapter, dry-run/reporting path, rollback/idempotency tests, and `forme deploy` composition. Filesystem publication stages the complete named-output set, rejects cross-artifact path collisions, swaps it as one tree, and prunes stale files without crossing output ownership. |
-| 36 | FM-B013 | ready | Specify and implement Interactivity IR | Define the behavior/event/state schema and validator, integrate per-page island tracking, and prove a progressively enhanced interactive component with a no-JS fallback. |
-| 37 | FM-B014 | blocked | Implement the plugin host and wire protocol | Depends on FM-B011 and the existing manifest parser. Stage discovery, handshake, typed streaming, capability mediation, diagnostics, cancellation, and crash isolation pass cross-process contract tests. |
-| 38 | FM-B015 | blocked | Ship plugin installation, runtimes, and sandboxes | Depends on FM-B014. Signed/trusted install flow, grants persistence, TypeScript/Python/Rust runners, and macOS/Linux/Windows sandbox profiles pass adversarial filesystem/network/process tests. |
-| 39 | FM-B016 | blocked | Build the authoring shell | Depends on FM-B009, FM-B013, and FM-B015. A non-developer can create, edit, preview, configure, and publish a site without hand-editing source or config files. |
-| 40 | FM-B017 | blocked | Prove the backend boundary | Depends on FM-B005 and FM-B013. The same content and theme compile through HTML plus at least one of terminal, PDF/print, or email with explicit degradation tests. |
-| 41 | FM-B018 | blocked | Close release-quality gates | Depends on the v1 product path. Add 1,000-page clean/incremental benchmarks, Lighthouse/accessibility budgets, package/API versioning, migration docs, security review, and supported-platform CI. |
-| 42 | FM-B029 | later | Make duplicate PR CI cancellation and merge state unambiguous | One commit has one authoritative required CI suite; branch updates cancel obsolete runs completely; cancelling a redundant push suite cannot leave a stale final gate or misleading failed rollup; babysitting tooling identifies required checks and the current head. |
+| 35 | FM-B044 | active | Implement the pure deploy-runner core | Reconcile FM08's v0 target list with the headless roadmap, then ship a capability-free package that strictly validates bounded current and previous manifests, rejects portable-path and prefix collisions, computes a stable create/update/skip/delete plan, and emits deterministic reports. A manifest-bound, cancellable reader deduplicates dry-run preflight and gives adapters only the exact trusted byte snapshot it size/hash-verified. Tests cover adversarial manifests, previous-only ownership, mutable or changing stores, resource bounds, cancellation, and canonical ordering. |
+| 36 | FM-B045 | blocked | Implement atomic filesystem publication | Depends on FM-B044. Stage the complete planned output set in an exclusively created sibling tree, reject linked or escaping components and external hard-link mutation, swap the tree atomically with a same-parent backup, restore it on every post-begin failure or cancellation, and prove stale-file pruning plus idempotent retry. |
+| 37 | FM-B046 | blocked | Implement the GitHub Pages publication adapter | Depends on FM-B044. Package the validated complete output set for GitHub Pages without shell authority, retain exact output ownership, and prove hosted-target planning, cancellation, retry, and deterministic reporting against a mocked GitHub boundary. |
+| 38 | FM-B047 | blocked | Compose `forme deploy` and dogfood it | Depends on FM-B045 and FM-B046. Add the command through the repository CLI builder, implement directory/bundle/inline content-store selection and scoped capabilities, then make both live Pages workflows deploy through it with clean-checkout, dry-run, rollback, and availability assertions. |
+| 39 | FM-B012 | blocked | Complete the deploy runner | Depends on FM-B044–FM-B047. Close the FM08 implementation ledger after the core, filesystem and GitHub Pages adapters, deterministic reporting, `forme deploy` composition, and both live product paths are merged. |
+| 40 | FM-B013 | ready | Specify and implement Interactivity IR | Define the behavior/event/state schema and validator, integrate per-page island tracking, and prove a progressively enhanced interactive component with a no-JS fallback. |
+| 41 | FM-B014 | ready | Implement the plugin host and wire protocol | Depends on completed FM-B011 and the existing manifest parser. Stage discovery, handshake, typed streaming, capability mediation, diagnostics, cancellation, and crash isolation pass cross-process contract tests. |
+| 42 | FM-B015 | blocked | Ship plugin installation, runtimes, and sandboxes | Depends on FM-B014. Signed/trusted install flow, grants persistence, TypeScript/Python/Rust runners, and macOS/Linux/Windows sandbox profiles pass adversarial filesystem/network/process tests. |
+| 43 | FM-B016 | blocked | Build the authoring shell | Depends on FM-B009, FM-B013, and FM-B015. A non-developer can create, edit, preview, configure, and publish a site without hand-editing source or config files. |
+| 44 | FM-B017 | blocked | Prove the backend boundary | Depends on FM-B005 and FM-B013. The same content and theme compile through HTML plus at least one of terminal, PDF/print, or email with explicit degradation tests. |
+| 45 | FM-B018 | blocked | Close release-quality gates | Depends on the v1 product path. Add 1,000-page clean/incremental benchmarks, Lighthouse/accessibility budgets, package/API versioning, migration docs, security review, and supported-platform CI. |
+| 46 | FM-B029 | later | Make duplicate PR CI cancellation and merge state unambiguous | One commit has one authoritative required CI suite; branch updates cancel obsolete runs completely; cancelling a redundant push suite cannot leave a stale final gate or misleading failed rollup; babysitting tooling identifies required checks and the current head. |
 
 ## Dependency path
 
@@ -156,7 +164,7 @@ The shortest path to the current release target is:
 
 `FM-B002 → FM-B019 → FM-B003 → FM-B004`, alongside `FM-B005` and
 `FM-B025 → FM-B026 → FM-B027 → FM-B030 → FM-B028 → FM-B006`, then
-`FM-B007 → FM-B008 → FM-B009 → FM-B031 → FM-B033 → FM-B034 → FM-B035 → FM-B036 → FM-B037 → FM-B032 → FM-B038 → FM-B039 → FM-B041 → FM-B042 → FM-B043 → FM-B040 → FM-B010 → FM-B011 → FM-B012`.
+`FM-B007 → FM-B008 → FM-B009 → FM-B031 → FM-B033 → FM-B034 → FM-B035 → FM-B036 → FM-B037 → FM-B032 → FM-B038 → FM-B039 → FM-B041 → FM-B042 → FM-B043 → FM-B040 → FM-B010 → FM-B011 → FM-B044 → FM-B045 → FM-B046 → FM-B047 → FM-B012`.
 FM-B020 retires the temporary compatibility path after the routed product DAG
 is proven, but it does not block FM-B004.
 
@@ -237,6 +245,7 @@ work.
 | 2026-09-19 | Pipeline config validation accepted integers above JavaScript's safe range even though the shared permit contract requires an exact positive bound. Such a value cannot be reasoned about or instrumented precisely. | Resolved in FM-B042 by rejecting non-safe integers at config validation and again at the permit-pool boundary. |
 | 2026-09-19 | Clean and warm live-site builds produced semantically equal output reports with different nested object insertion order because restored checkpoints are canonically decoded while fresh stage values retain construction order. That makes the advertised deterministic report byte representation depend on whether a stage ran or restored. | Resolved in FM-B010 by recursively canonicalizing summarized report values and making both dogfood sites compare clean and warm output summaries byte-for-byte. |
 | 2026-09-20 | The Forme spec map was documentation-only, so a renamed or duplicate number could silently recreate broken package links. | Resolved in FM-B011 with an always-on metadata contract that checks the exact FM01–FM08 map, required implementation ledgers, roadmap links, and local Markdown targets. |
+| 2026-09-20 | FM-B012 combined four security-sensitive, independently testable boundaries in one PR, while FM08's implementation plan said each package ships separately and simultaneously listed GitHub Pages as both the required v0 hosted target and a future adapter. | Split FM-B012 into FM-B044–FM-B047. FM-B044 first reconciles the contract and lands only the capability-free validation/planning/reporting core; filesystem publication, GitHub Pages, and CLI/product composition follow as separate reviewed changes. |
 
 ## Loop protocol
 

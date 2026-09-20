@@ -249,7 +249,7 @@ See the [Mosaic overview](./code/specs/UI00-mosaic.md) and
 
 Forme is the repository's universal authoring pipeline: typed, capability-aware
 stages turn content into web pages, documentation sites, feeds, search indexes,
-and deployment artifacts. Its 63 TypeScript packages now cover the kernel and
+and deployment artifacts. Its 64 TypeScript packages now cover the kernel and
 orchestrator, filesystem and Markdown sources, routing and collection,
 transformations, Style IR, HTML/AOT emitters, metadata, sitemaps, feeds,
 fingerprinted assets, an in-memory live-preview server, and a complete
@@ -273,8 +273,11 @@ loopback preview, live reload, last-good-output behavior, deterministic
 cross-process affected-stage scheduling, and bounded concurrent streaming
 through one pipeline-wide permit budget. Filesystem emitters can replay
 validated artifacts to reconstruct a deleted output tree without rerunning
-unrelated pure stages. Forme is not yet a turnkey site generator: the remaining
-product layer includes the deploy runner, plugin host and OS sandboxes,
+unrelated pure stages. The capability-free deploy core now validates complete
+manifests, plans owned creates/updates/skips/deletes, verifies content hashes,
+and emits reproducible dry-run reports; atomic filesystem and GitHub Pages
+adapters remain pending. Forme is not yet a turnkey site generator: the
+remaining product layer includes those deploy adapters, plugin host and OS sandboxes,
 interactivity, and the authoring shell. Its canonical specification map now
 runs collision-free from FM01 through FM08, with an implementation ledger in
 every Forme specification and an always-on CI contract guarding the map.

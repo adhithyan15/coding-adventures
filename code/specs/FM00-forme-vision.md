@@ -12,7 +12,7 @@
 | Surface | Status | Evidence / next step |
 |---|---|---|
 | Headless build/check/preview | Implemented | FM01, FM03, FM04, FM06, and FM07 have live product coverage. |
-| Headless deployment | Active | [FM08](FM08-forme-deploy-runner.md) and FM-B012 own the remaining v0 boundary. |
+| Headless deployment | Active | [FM08](FM08-forme-deploy-runner.md) and FM-B044–FM-B047 feed the FM-B012 completion milestone. |
 | Third-party plugin runtime | Pending | [FM02](FM02-forme-plugin-host.md) is specified; FM-B014/FM-B015 own implementation. |
 | Interactivity IR | Pending | [FM05](FM05-forme-interactivity-ir.md) reserves the contract; FM-B013 owns implementation. |
 | Authoring shell and multi-backend proof | Pending | Tracked by FM-B016–FM-B018 in the [roadmap](FM00-forme-completion-roadmap.md). |
