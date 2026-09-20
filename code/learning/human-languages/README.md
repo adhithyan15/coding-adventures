@@ -56,6 +56,7 @@ core/languages.json             complete active-language registry and default mi
 core/spine.d/*.json             ordered, language-independent can-do spine: one file per node
 core/book-generation.d/*/*.json chapter, backmatter, and script-set book declarations
 core/sound-tags.d/<language>.json authored pronunciation vocabulary, one owner per language
+core/reading-reach-floor.d/<language>--<level>.json reading-reach ratchet, one owner per task shape
 core/latex-warning-baseline.json  per-track LaTeX warning debt the book gate holds the line on
 core/lesson-modality/<language>.d/*.json generated voice/sight/pen, one owner per lesson
 core/gentle-ramp-snapshots/<language>.d/ generated metric/finding owners; no flat aggregate
@@ -144,6 +145,14 @@ track's sorted tags and repeats the language identity inside the record. The
 loader requires the exact filename set from `core/languages.json` before it
 opens owner bytes, so deleting a language owner cannot silently shrink the
 vocabulary. There is no `core/sound-tags.json` compatibility aggregate.
+
+Reading-reach floors are shard-only too. Every registered task-shape inventory
+has one self-binding `core/reading-reach-floor.d/<language>--<level>.json`
+owner, including an explicit zero owner before the first passage reaches an exam
+part. The loader proves that owner set against task-shape identities before it
+opens any owner bytes, folds only positive floors into the historical public
+ratchet, and rejects a resurrected `core/reading-reach-floor.json` aggregate.
+Raising one track/rung therefore never edits another track's policy owner.
 
 Generated Class-B figures live beside the book that consumes them under
 `<language>/book/figures/`. The data package renders them from canonical lesson

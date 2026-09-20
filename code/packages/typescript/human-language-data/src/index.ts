@@ -155,6 +155,7 @@ export {
   loadSoundTagRegistry,
   loadTaskShapeInventory,
   listTaskShapeInventories,
+  loadReadingReachFloors,
   loadCurriculumSpine,
   loadLanguageCurricula,
   loadTrackChapters,

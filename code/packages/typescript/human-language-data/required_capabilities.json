@@ -7,13 +7,13 @@
       "category": "fs",
       "action": "read",
       "target": "../../learning/human-languages/**",
-      "justification": "The loader/CLI read the curriculum's lesson Markdown, concept taxonomy, per-language sound-tag owners, per-lesson modality owners, gentle-ramp metric/finding owners, and script JSON from the repo working tree to build and validate the cross-language dataset."
+      "justification": "The loader/CLI read the curriculum's lesson Markdown, concept taxonomy, per-language sound-tag owners, per-task-shape reading-reach floor owners, per-lesson modality owners, gentle-ramp metric/finding owners, and script JSON from the repo working tree to build and validate the cross-language dataset."
     },
     {
       "category": "fs",
       "action": "list",
       "target": "../../learning/human-languages/**",
-      "justification": "The loader enumerates each track's lessons/ directory, core/sound-tags.d/, core/lesson-modality/*.d/, core/gentle-ramp-snapshots/*.d/, and data/scripts/ to discover and verify the exact files to parse."
+      "justification": "The loader enumerates each track's lessons/ directory, core/sound-tags.d/, core/reading-reach-floor.d/, core/lesson-modality/*.d/, core/gentle-ramp-snapshots/*.d/, and data/scripts/ to discover and verify the exact files to parse."
     },
     {
       "category": "fs",
