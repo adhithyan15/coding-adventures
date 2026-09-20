@@ -43,7 +43,7 @@ visible so a local optimization cannot quietly close the project early.
 
 The implementation is substantial but not yet an end-to-end product:
 
-- 64 TypeScript `forme-*` packages and 189 package test files cover the kernel,
+- 65 TypeScript `forme-*` packages and 190 package test files cover the kernel,
   stage contracts, a bounded concurrent orchestrator, Style IR, AOT emitters, document
   transforms, collections, feeds, routing, and static output.
 - The blog proves a ten-stage routed DAG: source → parse → asset resolution →
@@ -63,10 +63,10 @@ The implementation is substantial but not yet an end-to-end product:
   formats stable diagnostics and exits, and cooperatively handles SIGINT. Watch
   serves only successful in-memory artifacts, coalesces project changes,
   reloads browsers over SSE, and retains the last good site across failures.
-  The pure deploy-runner core now validates manifests, plans complete owned
-  output sets, preflights content, and produces deterministic dry-run reports.
-  There is no effectful deploy adapter, plugin host, runtime sandbox, or
-  authoring shell.
+  The pure deploy-runner core validates manifests, plans complete owned output
+  sets, preflights content, and produces deterministic dry-run reports. The
+  filesystem adapter stages and reversibly swaps complete validated trees; the
+  hosted adapter, plugin host, runtime sandbox, and authoring shell remain.
 - The CLI now persists per-invocation cache entries and topology-scoped
   materialized checkpoints through a containment-checked project cache.
   Filesystem sources publish validated external-state manifests, and successful
@@ -145,9 +145,9 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 | 32 | FM-B040 | done | Complete the pipeline-wide concurrent scheduler | Depends on FM-B041–FM-B043. Stable ready scheduling and one shared permit budget enforce `settings.maxConcurrency`; waits suspend permits to avoid `maxConcurrency: 1` deadlocks; live fan-out and bounded checkpoints preserve deterministic output, summaries, cancellation, and disposal. |
 | 33 | FM-B010 | done | Prove the completed scheduler in live products | Depends on FM-B038–FM-B040. Both live sites pass clean and unchanged second-process builds in reproducible mode; build IDs and artifact hashes remain identical; reports prove the exact safe skip/replay set while ambient filesystem readers rerun conservatively; report serialization is canonical across live and restored values; and deterministic cancellation/reproducibility tests pass. |
 | 34 | FM-B011 | done | Reconcile the FM spec map | The canonical FM01–FM08 map is collision-free; Interactivity IR, AOT, CLI/dev-server, and deploy-runner locations exist; cross-links resolve; every FM spec publishes an implementation ledger; CI enforces the map. |
-| 35 | FM-B044 | active | Implement the pure deploy-runner core | Reconcile FM08's v0 target list with the headless roadmap, then ship a capability-free package that strictly validates bounded current and previous manifests, rejects portable-path and prefix collisions, computes a stable create/update/skip/delete plan, and emits deterministic reports. A manifest-bound, cancellable reader deduplicates dry-run preflight and gives adapters only the exact trusted byte snapshot it size/hash-verified. Tests cover adversarial manifests, previous-only ownership, mutable or changing stores, resource bounds, cancellation, and canonical ordering. |
-| 36 | FM-B045 | blocked | Implement atomic filesystem publication | Depends on FM-B044. Stage the complete planned output set in an exclusively created sibling tree, reject linked or escaping components and external hard-link mutation, swap the tree atomically with a same-parent backup, restore it on every post-begin failure or cancellation, and prove stale-file pruning plus idempotent retry. |
-| 37 | FM-B046 | blocked | Implement the GitHub Pages publication adapter | Depends on FM-B044. Package the validated complete output set for GitHub Pages without shell authority, retain exact output ownership, and prove hosted-target planning, cancellation, retry, and deterministic reporting against a mocked GitHub boundary. |
+| 35 | FM-B044 | done | Implement the pure deploy-runner core | `forme-deploy-runner-core` strictly validates bounded current and previous manifests, rejects portable-path and prefix collisions, computes a stable immutable complete-set plan, and emits deterministic reports. Its cancellable manifest-bound reader deduplicates dry-run preflight and gives adapters only the exact trusted byte snapshot it size/hash-verified. Adversarial tests cover previous-only ownership, mutable or changing stores, resource bounds, cancellation, and canonical ordering. |
+| 36 | FM-B045 | active | Implement atomic filesystem publication | Depends on completed FM-B044. `forme-deploy-runner-fs-adapter` stages the complete planned output set in an exclusively created sibling tree, rejects linked or escaping components and external hard-link mutation, swaps through a retained same-parent backup, restores every pre-finalize failure or cancellation, and proves stale-file/directory pruning plus write-free exact retries. |
+| 37 | FM-B046 | ready | Implement the GitHub Pages publication adapter | Depends on completed FM-B044. Package the validated complete output set for GitHub Pages without shell authority, retain exact output ownership, and prove hosted-target planning, cancellation, retry, and deterministic reporting against a mocked GitHub boundary. |
 | 38 | FM-B047 | blocked | Compose `forme deploy` and dogfood it | Depends on FM-B045 and FM-B046. Add the command through the repository CLI builder, implement directory/bundle/inline content-store selection and scoped capabilities, then make both live Pages workflows deploy through it with clean-checkout, dry-run, rollback, and availability assertions. |
 | 39 | FM-B012 | blocked | Complete the deploy runner | Depends on FM-B044–FM-B047. Close the FM08 implementation ledger after the core, filesystem and GitHub Pages adapters, deterministic reporting, `forme deploy` composition, and both live product paths are merged. |
 | 40 | FM-B013 | ready | Specify and implement Interactivity IR | Define the behavior/event/state schema and validator, integrate per-page island tracking, and prove a progressively enhanced interactive component with a no-JS fallback. |

@@ -12,7 +12,7 @@
 |---|---|---|
 | Deploy manifest producer | Implemented | `forme-aot-deploy-manifest-emitter` produces the input contract. |
 | Core planning and validation | Implemented in FM-B044 | `forme-deploy-runner-core` validates manifests, plans complete output sets, preflights bytes, and emits deterministic dry-run reports without capabilities. |
-| Filesystem adapter | Pending | FM-B045 must prove atomic tree replacement, rollback, idempotency, and stale-file pruning. |
+| Filesystem adapter | Implemented in FM-B045 | `forme-deploy-runner-fs-adapter` proves atomic tree replacement, rollback, idempotency, stale-file/directory pruning, and adversarial containment. |
 | GitHub Pages adapter | Pending | FM-B046 owns the first hosted target integration. |
 | `forme deploy` composition | Pending | FM-B047 will add this command to the FM07 CLI surface and dogfood both live sites. |
 
@@ -110,8 +110,26 @@ canonical parent remains inside the staging root. Before the final swap it MUST
 reject a configured root that is itself a link and verify the canonical parent
 contains both the root and staging tree. The old root is moved to a same-parent
 backup, the complete staging tree is renamed into place, and failure restores
-the backup. No per-file write or cleanup may follow a link or mutate an
-external hard-link target.
+the backup. A prepared filesystem transaction therefore has explicit `commit`,
+`finalize`, and `rollback` phases: `commit` performs the swap but retains the
+old tree, `finalize` removes that backup only after post-publish checks succeed,
+and `rollback` restores the backup (or removes a newly published root when no
+old root existed). No per-file write or cleanup may follow a link or mutate an
+external hard-link target. The convenience publication operation MUST roll
+back any commit failure. Finalization is the explicit irreversible boundary:
+if backup cleanup fails after it starts, the new root remains published and the
+adapter reports cleanup residue rather than attempting to restore a potentially
+partial backup.
+
+The adapter binds the canonical parent and every transaction-owned lock,
+staging, backup, and rollback directory to its filesystem identity. It MUST
+revalidate identity and direct-child containment before each rename, recursive
+deletion, or lock release. Rollback records whether the new root was displaced
+and whether the old root was restored; cleanup retries after restoration MUST
+never move or delete the restored root. A rollback or cleanup failure is
+secondary to the content, cancellation, or commit failure that triggered it and
+is attached as structured diagnostic context without replacing the primary
+error code.
 
 #### 3.1.2 v0 resource limits
 
@@ -122,6 +140,11 @@ and content limits. Output paths remain capped at 2,048 characters and 255
 bytes per segment. Entries that share one SHA-256 digest MUST declare the same
 byte length. A future large-site profile may make these limits configurable,
 but adapters MUST NOT silently raise or bypass the reviewed defaults.
+
+The v0 filesystem adapter streams directory entries and fails closed when an
+existing or staged tree exceeds 200,000 entries, 256 directory levels, or
+67,108,864 bytes of accumulated portable-path metadata. A caller may lower,
+but cannot raise, these adapter ceilings.
 
 ### 3.2 Required: content store
 
@@ -196,7 +219,7 @@ The runner produces:
 {
   "version": 1,
   "manifestSha256": "<base64>",
-  "target": "fs | s3 | netlify | ...",
+  "target": "fs | github-pages | ...",
   "startedAt": "<ISO-8601>",
   "finishedAt": "<ISO-8601>",
   "status": "success | partial | failed | rolled-back",
@@ -366,6 +389,30 @@ Future v1+ adapters: S3, Netlify, Cloudflare Pages, and Vercel. Their
 per-object versus transactional guarantees remain governed by the generic
 adapter contract below but do not block the repository's headless v0 target.
 
+The concrete filesystem package exposes the complete-tree boundary directly:
+
+```ts
+interface FilesystemPublication {
+  readonly state: "prepared" | "committed" | "finalized" | "rolled-back";
+  readonly changed: boolean;
+  readonly commit: () => Promise<void>;
+  readonly finalize: () => Promise<void>;
+  readonly rollback: () => Promise<void>;
+}
+
+prepareFilesystemPublication(options): Promise<FilesystemPublication>;
+publishFilesystemSite(options): Promise<{
+  readonly status: "published" | "unchanged";
+  readonly fileCount: number;
+  readonly totalSizeBytes: number;
+}>;
+```
+
+Preparation validates the manifest before target access, returns without a
+write for an exact regular unlinked tree, and otherwise holds an exclusive
+per-root lock until finalize or rollback. The host must obtain project-storage
+or explicit external-filesystem authority before passing the selected root.
+
 ## 7. Atomicity guarantees
 
 ### 7.1 Per object (always)
@@ -501,6 +548,22 @@ Error codes are stable for tooling: a CI job can grep `jq
 all write failures. `CONTENT_ABORTED` maps to the deploy's cancelled failure
 path: after `begin()` it triggers rollback under §7.3; before `begin()` it
 terminates without opening a transaction.
+
+The filesystem transaction boundary additionally exposes stable adapter codes:
+
+- `ROOT_UNSAFE` / `TARGET_UNSAFE` — the configured root or an existing entry
+  is linked, non-regular, multiply linked, escaping, or otherwise outside the
+  complete-tree contract.
+- `TARGET_BUSY` — another cooperative publication owns the root lock.
+- `STAGING_FAILED` / `STAGING_UNSAFE` — the private sibling tree could not be
+  materialized or did not exactly match the manifest after staging.
+- `COMMIT_FAILED` / `ROLLBACK_FAILED` — the atomic swap or restoration failed;
+  rollback failure takes precedence so operators know recovery is required.
+- `CLEANUP_FAILED` — publication committed, but irreversible backup or lock
+  cleanup did not complete.
+- `ABORTED` — cancellation was observed at the filesystem transaction layer.
+- `INVALID_STATE` — a transaction operation was requested outside its
+  documented lifecycle.
 
 ## 12. Content addressing
 
