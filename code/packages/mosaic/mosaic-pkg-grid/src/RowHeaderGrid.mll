@@ -46,6 +46,7 @@ layout RowHeaderGrid {
             Box [data-cell] (table-cell-role: data) {
               pkg::mosaic-pkg-grid::Cell (
                 height: slot: row-height,
+                editor-label: slot: editor-label,
                 value: (v), row: (r), col: (c), edit-content: slot: edit-content,
                 is-editing: (r == editRow && c == editCol),
                 is-selected: (r == selectedRow && c == selectedCol),

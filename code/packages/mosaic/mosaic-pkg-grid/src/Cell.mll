@@ -83,6 +83,7 @@ layout Cell {
       // than 0.5px.
       HostInput [ cell-editor ] (
         auto-focus: true ,
+        a11y-label: slot: editor-label ,
         value:    slot: edit-content ,
         onChange: emit: onChange ,
         onCommit: emit: onCommit ,
