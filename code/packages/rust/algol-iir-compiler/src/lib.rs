@@ -6450,7 +6450,7 @@ impl Compiler {
                 let Some(actions) = recurrence_actions.as_ref() else {
                     return (None, None);
                 };
-                if !Self::static_body_actions_have_simple_dependency_recurrence(
+                if !self.static_body_actions_have_simple_dependency_recurrence(
                     actions,
                     dependency,
                     &target_name,
@@ -6545,7 +6545,7 @@ impl Compiler {
                 return None;
             }
             if body_writes_dependency
-                && !Self::static_body_actions_have_simple_dependency_recurrence(
+                && !self.static_body_actions_have_simple_dependency_recurrence(
                     &actions,
                     dependency,
                     &target_name,
@@ -6793,6 +6793,7 @@ impl Compiler {
     }
 
     fn static_body_actions_have_simple_dependency_recurrence(
+        &self,
         actions: &[StaticBodyAction<'_>],
         name: &str,
         target_name: &str,
@@ -6810,11 +6811,20 @@ impl Compiler {
                         name,
                         &mut dependencies,
                     );
-                    if dependencies
-                        .iter()
-                        .any(|dependency| dependency != target_name)
-                    {
-                        return false;
+                    for dependency in dependencies {
+                        if dependency == target_name {
+                            continue;
+                        }
+                        let Ok(binding) = self.require_var(&dependency) else {
+                            return false;
+                        };
+                        if binding.is_global
+                            || binding.array.is_some()
+                            || self.active_by_name_binding(&dependency).is_some()
+                            || Self::static_body_actions_write_name(actions, &dependency)
+                        {
+                            return false;
+                        }
                     }
                     found = true;
                 }
@@ -15275,6 +15285,20 @@ mod tests {
             "test",
         )
         .expect("a bounded while loop may evolve a local predicate dependency");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "3.25")
+        }));
+    }
+
+    #[test]
+    fn al4_while_dependency_recurrence_reads_stable_local_input() {
+        let module = compile_source(
+            "begin integer i, n, delta; real r; i := 0; n := 5; delta := 2; r := 0.25; for i := i + 1 while i <= n do begin r := r + i; n := n - delta end; print(r) end",
+            "test",
+        )
+        .expect("a bounded while dependency recurrence may read a stable local scalar");
         let main = module.get_function("main").expect("has main");
         assert!(main.instructions.iter().any(|instr| {
             instr.op == "str_const"
