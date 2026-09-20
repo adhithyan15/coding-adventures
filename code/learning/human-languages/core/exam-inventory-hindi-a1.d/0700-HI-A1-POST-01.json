@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-POST-01",
+  "category": "Parsarg (postpositions and case)",
+  "label": "postpositions follow their noun where the proxy language would put a preposition in front",
+  "probe": [
+    "HI-CONCEPT-C05-RAHNA-01",
+    "HI-CONCEPT-C19-AGE-GRAMMAR-01"
+  ],
+  "derivedFrom": "hindi-specific",
+  "note": "The structural inversion the proxy cannot express. Spanish has no postpositions at all."
+}

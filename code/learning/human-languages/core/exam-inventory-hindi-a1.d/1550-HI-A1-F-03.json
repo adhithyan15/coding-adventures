@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-F-03",
+  "category": "Sanvad-karya (communicative functions)",
+  "label": "greet in the morning",
+  "probe": [
+    "HI-CONCEPT-C31-SUPRABHAT-01"
+  ],
+  "derivedFrom": "ES:A1-F5-01"
+}

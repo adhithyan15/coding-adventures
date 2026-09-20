@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-F-58",
+  "category": "Sanvad-karya (communicative functions)",
+  "label": "describe the weather",
+  "probe": [
+    "HI-CONCEPT-C20-MAUSAM-01"
+  ],
+  "derivedFrom": "ES:A1-NE20-04"
+}

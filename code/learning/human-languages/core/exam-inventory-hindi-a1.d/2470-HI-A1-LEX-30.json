@@ -1,0 +1,12 @@
+{
+  "id": "HI-A1-LEX-30",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "workplaces, tools and work clothing",
+  "probe": [
+    "HI-LEX-C56-ROAD-05",
+    "HI-LEX-C56-ROAD-04",
+    "HI-LEX-C62-HANDS-02",
+    "HI-LEX-C45-ASK-02"
+  ],
+  "derivedFrom": "ES:A1-NE07-02"
+}

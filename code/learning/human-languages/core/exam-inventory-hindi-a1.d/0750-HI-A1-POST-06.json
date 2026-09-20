@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-POST-06",
+  "category": "Parsarg (postpositions and case)",
+  "label": "ko marking an animate or definite object, and a recipient",
+  "probe": [
+    "HI-LEX-C91-NOUN-05"
+  ],
+  "derivedFrom": "ES:A1-SV-04, ES:A1-SV-05, ES:A1-PRON-02",
+  "note": "ko is introduced by HI-C91-ko, and the note is exactly right that only the fused mujhe was present. The lesson takes aapko apart in front of the reader -- aap plus ko -- so the postposition is recovered from a word they already say rather than presented as new. It teaches both jobs the point names: the recipient (bacce ko, TO the child) and the marker a definite or human object wears (aadmi ko). The note's own observation is carried into the lesson, that this is the exact counterpart of the proxy's a before a human direct object, so the demand is not unique to Hindi and only the marker is."
+}

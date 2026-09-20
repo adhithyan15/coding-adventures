@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-V-15",
+  "category": "Kriya (the verb)",
+  "label": "the polite -iye imperative used for requests (dijiye, kijiye)",
+  "probe": [
+    "HI-CONCEPT-C37-CHAI-01",
+    "HI-CONCEPT-C09-MAAF-KIJIYE-01"
+  ],
+  "derivedFrom": "ES:A1-V-11, ES:A1-F4-01"
+}

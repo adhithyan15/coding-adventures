@@ -1,0 +1,12 @@
+{
+  "id": "HI-A1-LEX-56",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "geography: country, town, city, capital",
+  "probe": [
+    "HI-LEX-C68-ORIGIN-01",
+    "HI-LEX-C68-ORIGIN-02",
+    "HI-LEX-C68-ORIGIN-03"
+  ],
+  "derivedFrom": "ES:A1-NE20-02",
+  "note": "`gaon` was already taught; `desh`, `Bharat` and `shahar` are now taught in HI-C68. The word for a capital is still not, which is the remaining quarter of this point's label."
+}

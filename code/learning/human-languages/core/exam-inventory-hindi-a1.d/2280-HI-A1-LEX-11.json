@@ -1,0 +1,16 @@
+{
+  "id": "HI-A1-LEX-11",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "character and personality adjectives",
+  "probe": [
+    "HI-LEX-C41-ADJ-03",
+    "HI-LEX-C83-CHAR-01",
+    "HI-LEX-C83-CHAR-02",
+    "HI-LEX-C83-CHAR-03",
+    "HI-LEX-C83-CHAR-04",
+    "HI-LEX-C83-CHAR-05",
+    "HI-LEX-C83-CHAR-06"
+  ],
+  "derivedFrom": "ES:A1-NE02-01",
+  "note": "achha was the only disposition word the track had. Chapter 91 adds six: buraa (bad), hoshiyaar (clever), mehnati (hard-working), sharmeela (shy), milansaar (sociable) and gambhir (serious). These are settled character rather than mood, which is the distinction the point turns on, and the sharmeela lesson makes it explicit: the -ila ending builds a standing trait where -i would only say the person has the thing."
+}

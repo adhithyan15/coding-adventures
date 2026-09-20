@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-ADV-02",
+  "category": "Kriya-visheshan (adverbs)",
+  "label": "time deictics: abhi, ab, and kal for both yesterday and tomorrow",
+  "probe": [
+    "HI-LEX-C49-LEAVE-01",
+    "HI-LEX-C64-MEASURE-01",
+    "HI-CONCEPT-C04-KALMILTEHAIN-01"
+  ],
+  "derivedFrom": "ES:A1-ADV-02"
+}

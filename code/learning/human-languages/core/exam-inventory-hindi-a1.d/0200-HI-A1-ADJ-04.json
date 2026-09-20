@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-ADJ-04",
+  "category": "Visheshan (the adjective)",
+  "label": "predicative use: an adjective plus the copula (main thik hun)",
+  "probe": [
+    "HI-CONCEPT-C03-THIK-01"
+  ],
+  "derivedFrom": "ES:A1-ADJ-01, ES:A1-SV-03"
+}

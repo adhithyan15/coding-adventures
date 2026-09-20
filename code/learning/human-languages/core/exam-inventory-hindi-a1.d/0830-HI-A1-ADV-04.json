@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-ADV-04",
+  "category": "Kriya-visheshan (adverbs)",
+  "label": "parson, the day after tomorrow",
+  "probe": [
+    "HI-LEX-C49-LEAVE-02"
+  ],
+  "derivedFrom": "ES:A1-ADV-02"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-POST-10",
+  "category": "Parsarg (postpositions and case)",
+  "label": "ke liye for purpose and benefit",
+  "probe": [
+    "HI-LEX-C93-REL-06",
+    "HI-LEX-C93-REL-07"
+  ],
+  "derivedFrom": "ES:A1-SUB-07, ES:A1-PRON-08",
+  "note": "The note's claim that neither the postposition nor the oblique infinitive is taught was half stale: HI-C84-mere-liye teaches `mere liye` in chapter 92, so the postposition was already in the corpus with a pronoun in front of it. What was genuinely missing was `ke liye` after a NOUN -- which needs the separate `ke` a pronoun carries inside itself -- and the oblique infinitive, which chapter 101 supplies as the fifth kind of word to wear the oblique -e."
+}

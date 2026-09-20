@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-V-22",
+  "category": "Kriya (the verb)",
+  "label": "chahna, to want to do something",
+  "probe": [
+    "HI-LEX-CHAHNA-01"
+  ],
+  "derivedFrom": "ES:A1-F3-04, ES:A1-SUB-02",
+  "note": "Closed by HI-C70-chahna (chapter 70), which realizes VERB-WANT on SPINE-SAY-WHAT-I-WANT; that node's omission ledger is now empty. chaahiye (HI-A1-V-21) is still absent and is a different construction, exactly as this pair of points says."
+}

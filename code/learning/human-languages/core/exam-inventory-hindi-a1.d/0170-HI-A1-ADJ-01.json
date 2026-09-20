@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-ADJ-01",
+  "category": "Visheshan (the adjective)",
+  "label": "an attributive adjective stands in front of its noun",
+  "probe": [
+    "HI-GRAMMAR-C41-ADJ-SYSTEM"
+  ],
+  "derivedFrom": "ES:A1-ADJ-01, ES:A1-ADJ-05"
+}

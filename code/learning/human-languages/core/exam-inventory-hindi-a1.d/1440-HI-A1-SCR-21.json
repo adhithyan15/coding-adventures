@@ -1,0 +1,8 @@
+{
+  "id": "HI-A1-SCR-21",
+  "category": "Devanagari lipi (script and orthography)",
+  "label": "the comma, and the question mark Hindi borrows from the Latin script",
+  "probe": null,
+  "derivedFrom": "ES:A1-O3-02, ES:A1-O3-04",
+  "note": "Hindi writes a question mark but never an opening one, and uses the Latin comma. Neither is introduced, and the danda (HI-A1-S-04) is the only terminator the corpus touches at all."
+}

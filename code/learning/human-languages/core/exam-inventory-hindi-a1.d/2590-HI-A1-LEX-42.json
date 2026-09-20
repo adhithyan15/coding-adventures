@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-LEX-42",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "hygiene",
+  "probe": [
+    "HI-LEX-C45-ASK-05",
+    "HI-CONCEPT-C15-PAANI-ROTI-01"
+  ],
+  "derivedFrom": "ES:A1-NE13-04"
+}

@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-N-09",
+  "category": "Sangya (the noun)",
+  "label": "a numeral stands in front of the noun it counts (ek chay)",
+  "probe": [
+    "HI-CONCEPT-C06-NUMBERS-1-5-01",
+    "HI-CONCEPT-C37-CHAI-01"
+  ],
+  "derivedFrom": "ES:A1-Q-01"
+}

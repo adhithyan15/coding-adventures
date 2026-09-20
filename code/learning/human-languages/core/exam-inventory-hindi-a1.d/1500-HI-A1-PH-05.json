@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-PH-05",
+  "category": "Uccharan (pronunciation)",
+  "label": "the borrowed consonants z, f and q as sounds, not just as spellings",
+  "probe": [
+    "HI-SCRIPT-RECOG-141"
+  ],
+  "derivedFrom": "hindi-specific",
+  "note": "The spoken twin of HI-A1-SCR-16, closed the way PH-01 through PH-04 were: on a script atom that teaches the contrast rather than a separate pronunciation lesson. HI-S141-nuqta-borrowed names z, f, x and q as sounds, places the last two further back in the mouth than their plain letters, and says plainly that many speakers merge them. It builds on HI-C37-khaana, which had already named the nuqta for ONE pair -- khaanaa food against khaanaa a compartment -- as a fact about those two words, and told the truth that the dot is often left off in print."
+}

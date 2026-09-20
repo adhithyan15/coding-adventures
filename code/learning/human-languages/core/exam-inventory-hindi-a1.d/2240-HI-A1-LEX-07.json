@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-LEX-07",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "reflection and knowledge",
+  "probe": [
+    "HI-CONCEPT-C34-SOCHNA-01",
+    "HI-CONCEPT-C34-SAMAJHNA-01",
+    "HI-CONCEPT-C35-PUCHNA-01"
+  ],
+  "derivedFrom": "ES:A1-NG7-01"
+}

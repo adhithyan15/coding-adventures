@@ -1,0 +1,8 @@
+{
+  "id": "HI-A1-SCR-17",
+  "category": "Devanagari lipi (script and orthography)",
+  "label": "Devanagari has no capital letters, so the proxy's capitalisation rules do not apply",
+  "probe": null,
+  "derivedFrom": "ES:A1-O1-04, ES:A1-O1-05",
+  "note": "Recorded rather than dropped, because a learner coming from a bicameral script has to be told once that sentence-initial and proper-noun capitals have no Devanagari equivalent. No atom says it."
+}

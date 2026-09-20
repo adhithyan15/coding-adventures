@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-LEX-58",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "climate and weather",
+  "probe": [
+    "HI-CONCEPT-C20-MAUSAM-01"
+  ],
+  "derivedFrom": "ES:A1-NE20-04"
+}

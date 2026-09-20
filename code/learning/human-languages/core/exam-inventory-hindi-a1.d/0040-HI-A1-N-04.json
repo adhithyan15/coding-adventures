@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-N-04",
+  "category": "Sangya (the noun)",
+  "label": "common nouns naming periods of time",
+  "probe": [
+    "HI-CONCEPT-C25-DIN-01",
+    "HI-CONCEPT-C26-RAAT-01",
+    "HI-CONCEPT-C18-GHANTA-01"
+  ],
+  "derivedFrom": "ES:A1-N-02"
+}

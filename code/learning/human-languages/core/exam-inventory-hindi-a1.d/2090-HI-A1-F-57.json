@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-F-57",
+  "category": "Sanvad-karya (communicative functions)",
+  "label": "point at a thing and ask what it is",
+  "probe": [
+    "HI-LEX-C40-DEIXIS-01",
+    "HI-CONCEPT-C02-KYA-01"
+  ],
+  "derivedFrom": "ES:A1-F1-02"
+}

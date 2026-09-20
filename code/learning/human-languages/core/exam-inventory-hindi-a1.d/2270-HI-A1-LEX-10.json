@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-LEX-10",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "actions and positions of the body",
+  "probe": [
+    "HI-LEX-SIT",
+    "HI-LEX-STAND",
+    "HI-LEX-COME"
+  ],
+  "derivedFrom": "ES:A1-NE01-03, ES:A1-NG3-04"
+}

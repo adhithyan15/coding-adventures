@@ -1,0 +1,12 @@
+{
+  "id": "HI-A1-LEX-37",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "types and parts of a dwelling",
+  "probe": [
+    "HI-CONCEPT-C36-GHAR-01",
+    "HI-CONCEPT-C36-KAMRA-01",
+    "HI-CONCEPT-C36-DARVAAZA-01",
+    "HI-LEX-C58-HOUSE-03"
+  ],
+  "derivedFrom": "ES:A1-NE10-02"
+}

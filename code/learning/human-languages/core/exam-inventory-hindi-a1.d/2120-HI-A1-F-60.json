@@ -1,0 +1,13 @@
+{
+  "id": "HI-A1-F-60",
+  "category": "Sanvad-karya (communicative functions)",
+  "label": "read a public sign: entrance, exit, open, closed",
+  "probe": [
+    "HI-LEX-C74-SIGNS-01",
+    "HI-LEX-C74-SIGNS-02",
+    "HI-LEX-C74-SIGNS-03",
+    "HI-LEX-C74-SIGNS-04"
+  ],
+  "derivedFrom": "ES:A1-NG5-05",
+  "note": "Exactly the four words the label names, taught in HI-C74-open, HI-C74-closed, HI-C74-entrance and HI-C74-exit. These carry items 1 to 4 of both mocks' reading papers."
+}

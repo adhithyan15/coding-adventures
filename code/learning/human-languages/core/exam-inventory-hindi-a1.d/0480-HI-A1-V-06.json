@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-V-06",
+  "category": "Kriya (the verb)",
+  "label": "negating a statement by putting nahin in front of the verb",
+  "probe": [
+    "HI-CONCEPT-C07-NAHIN-01"
+  ],
+  "derivedFrom": "ES:A1-OS-01"
+}

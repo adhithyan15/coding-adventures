@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-V-09",
+  "category": "Kriya (the verb)",
+  "label": "possession: mere pas X hai",
+  "probe": [
+    "HI-LEX-C84-POSS-05"
+  ],
+  "derivedFrom": "ES:A1-NG1-01",
+  "note": "mere paas is introduced by HI-C84-mere-paas. The lesson teaches the construction as the note describes it -- Hindi has no verb to have, so possession is at me there is -- and makes the agreement explicit: the thing owned is the subject, so hai agrees with it and not with the possessor."
+}

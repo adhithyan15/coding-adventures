@@ -1,0 +1,12 @@
+{
+  "id": "HI-A1-LEX-60",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "flora",
+  "probe": [
+    "HI-LEX-C51-WELCOME-01",
+    "HI-LEX-C66-FIELD-04",
+    "HI-LEX-C66-FIELD-01",
+    "HI-LEX-C66-FIELD-03"
+  ],
+  "derivedFrom": "ES:A1-NE20-06"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-V-19",
+  "category": "Kriya (the verb)",
+  "label": "noun + karna compound verbs (kam karna, madad karna, pasand karna)",
+  "probe": [
+    "HI-CONCEPT-C05-KARNA-01",
+    "HI-CONCEPT-C35-MADAD-01"
+  ],
+  "derivedFrom": "hindi-specific",
+  "note": "No Spanish counterpart. Hindi makes most of its borrowed vocabulary verbal this way, and the corpus teaches the pattern explicitly."
+}

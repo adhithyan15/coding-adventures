@@ -17,9 +17,9 @@ derives the canonical schema-v2 lesson count while retaining complete
 measurement and zero-excess gates. Point-specific audit history stays with the
 inventory point's `note`, not in an ever-growing executable comment followed by
 hand-edited totals.
-Malayalam A1 point-specific audit history now lives with the corresponding
-direct owner under `core/exam-inventory-malayalam-a1.d/`; chapter agents must
-not recreate the retired aggregate inventory.
+Hindi and Malayalam A1 point-specific audit history now lives with the
+corresponding direct owner under `core/exam-inventory-<language>-a1.d/`; chapter
+agents must not recreate either retired aggregate inventory.
 
 Continuity and ramp reports are derived directly from each track's canonical
 lessons and authored policy. The shared assertion helper retains stable hard

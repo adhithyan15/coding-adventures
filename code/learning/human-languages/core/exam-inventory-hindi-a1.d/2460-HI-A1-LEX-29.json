@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-LEX-29",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "professions and posts",
+  "probe": [
+    "HI-LEX-C47-ROLE-01",
+    "HI-LEX-C47-ROLE-02",
+    "HI-LEX-C47-ROLE-03"
+  ],
+  "derivedFrom": "ES:A1-NE07-01"
+}

@@ -3,15 +3,16 @@
 Exam inventories are authored external or editorial targets. Their metadata,
 scope, provenance, and points remain one public `ExamInventory`, but the source
 need not be one conflict domain. Malayalam A1 crossed that threshold at 4,839
-lines and 39 touches in the latest 200 human-language commits.
+lines and 39 touches in the latest 200 human-language commits; Hindi A1 followed
+at 2,881 lines and 22 touches after the same boundary proved stable.
 
 ## Canonical layout
 
-The Malayalam A1 source is:
+Each migrated A1 source is:
 
 ```text
-core/exam-inventory-malayalam-a1.d/_meta.json
-core/exam-inventory-malayalam-a1.d/NNNN-<POINT-ID>.json
+core/exam-inventory-<language>-a1.d/_meta.json
+core/exam-inventory-<language>-a1.d/NNNN-<POINT-ID>.json
 ```
 
 Metadata owns every top-level field except `points`, plus `pointIds`: the exact
@@ -37,6 +38,6 @@ reserved categories, and duplicate ids retain their existing semantics.
 ## Parallel authoring
 
 A chapter agent edits only the point files whose evidence changed. New work
-must not recreate `core/exam-inventory-malayalam-a1.json` or copy point history
-into a shared test. Other languages remain compatible monoliths until their own
-measured contention justifies the same migration.
+must not recreate a retired sibling `core/exam-inventory-<language>-a1.json` or
+copy point history into a shared test. Other languages remain compatible
+monoliths until their own measured contention justifies the same migration.

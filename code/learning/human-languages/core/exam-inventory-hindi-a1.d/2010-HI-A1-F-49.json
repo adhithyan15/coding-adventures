@@ -1,0 +1,12 @@
+{
+  "id": "HI-A1-F-49",
+  "category": "Sanvad-karya (communicative functions)",
+  "label": "say why you cannot do something",
+  "probe": [
+    "HI-JOIN-KYONKI-01",
+    "HI-LEX-SAKNA-01",
+    "HI-CONCEPT-C07-NAHIN-01"
+  ],
+  "derivedFrom": "ES:A1-SUB-06, ES:A1-F4-09",
+  "note": "Closed, and it took all three atoms this note named -- kyonki plus a negated modal. HI-C71-kyonki's worked example is the mock's own writing task: maiM kal nahiiM aa saktaa kyonki maiM kaam kartaa huuM."
+}

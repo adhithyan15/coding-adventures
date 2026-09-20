@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-F-20",
+  "category": "Sanvad-karya (communicative functions)",
+  "label": "ask how someone is",
+  "probe": [
+    "HI-CONCEPT-C03-AAPKAISEHAIN-01"
+  ],
+  "derivedFrom": "ES:A1-F6-02"
+}

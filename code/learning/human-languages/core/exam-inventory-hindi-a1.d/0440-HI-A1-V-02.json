@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-V-02",
+  "category": "Kriya (the verb)",
+  "label": "the present copula hona: hun, hai, hain",
+  "probe": [
+    "HI-CONCEPT-C03-HUN-01",
+    "HI-CONCEPT-C02-HAI-01",
+    "HI-CONCEPT-C05-BOLTAHUN-01"
+  ],
+  "derivedFrom": "ES:A1-V-02, ES:A1-SV-02, ES:A1-NG1-03"
+}

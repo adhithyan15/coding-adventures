@@ -1,0 +1,8 @@
+{
+  "id": "HI-A1-T-08",
+  "category": "Samay aur tarikh (time and date)",
+  "label": "writing today's date",
+  "probe": null,
+  "derivedFrom": "ES:A1-NE03-01",
+  "note": "Mock 1's writing paper requires `aj ki tarikh` as one of six form fields worth 16 of that task's 40 content points. Neither `tarikh` nor a date format is taught, and the numerals above twenty needed to write one are absent too."
+}

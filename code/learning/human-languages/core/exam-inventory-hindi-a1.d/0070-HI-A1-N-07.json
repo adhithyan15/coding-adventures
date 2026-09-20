@@ -1,0 +1,13 @@
+{
+  "id": "HI-A1-N-07",
+  "category": "Sangya (the noun)",
+  "label": "number: forming the plural of a masculine -a noun, a feminine -i noun, and a consonant-final noun",
+  "probe": [
+    "HI-LEX-C91-NOUN-01",
+    "HI-LEX-C91-NOUN-02",
+    "HI-LEX-C91-NOUN-03",
+    "HI-LEX-C91-NOUN-04"
+  ],
+  "derivedFrom": "ES:A1-N-05",
+  "note": "Chapter 99 supplies all four plural shapes, one lesson each, using ZERO new nouns -- baccha, kitaab, bhaasha and aadmi were all already taught, so the chapter is pure morphology on known vocabulary. The note is exactly right that no atom taught plural morphology and that log was a lexical item only. The item it names, do bhaashaaen boltii hai, is read back in the synthesis lesson. The organising question is gender FIRST and ending second: a masculine -aa noun swaps the vowel, both feminine shapes add a nasal, and a masculine noun not ending in -aa does nothing at all, so the number lives in the numeral, the verb and any adjective rather than in the word."
+}

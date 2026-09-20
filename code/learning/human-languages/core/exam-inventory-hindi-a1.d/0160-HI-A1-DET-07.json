@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-DET-07",
+  "category": "Nirdeshak (determiners and definiteness)",
+  "label": "the reflexive possessive apna, which replaces the possessive when the owner is the subject",
+  "probe": [
+    "HI-LEX-C84-POSS-04"
+  ],
+  "derivedFrom": "ES:A1-PRON-04",
+  "note": "apna is introduced by HI-C84-apna, which states the requirement the note named: main mera kaam is wrong where main apna kaam is right. One Hindi word covers my own, your own, their own and our own, and it also removes an ambiguity English cannot -- uski kitab is somebody else's book, apni kitab is his own."
+}

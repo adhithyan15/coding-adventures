@@ -1,0 +1,12 @@
+{
+  "id": "HI-A1-POST-08",
+  "category": "Parsarg (postpositions and case)",
+  "label": "spatial compound postpositions: ke pas, ke samne, ke piche",
+  "probe": [
+    "HI-LEX-C93-REL-03",
+    "HI-LEX-C93-REL-04",
+    "HI-LEX-C93-REL-05"
+  ],
+  "derivedFrom": "ES:A1-NG3-02, ES:A1-NG3-03, ES:A1-NG3-05",
+  "note": "All three are introduced in chapter 101: ke paas by HI-C93-ke-paas, ke saamne by HI-C93-ke-saamne and ke piichhe by HI-C93-ke-piichhe, so the note's mock 2 items -- listening item 6 `bas station ke saamne hai` and item 11 `nahiin, paas hai` -- are both now decodable. The note is right that the proxy spends three separate A1 points on relative position, distance and direction while Hindi routes all three through one construction, and that is exactly why one chapter closes all three. The load-bearing distinction the lessons drill is that paas answers a DIFFERENT QUESTION from the other two: it gives distance and no direction, while saamne and piichhe give a side and say nothing about distance. Mock 2's own pair of items tests precisely that, since item 11 concedes the weaker claim after item 6 made the stronger one. paas also arrives with a debt already paid: HI-C84-mere-paas taught it in chapter 92 as the phrase for HAVING without ever saying what the word means, and the physical sense taught here is the one the possessive sense was borrowed from."
+}

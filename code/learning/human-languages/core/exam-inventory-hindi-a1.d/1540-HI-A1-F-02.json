@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-F-02",
+  "category": "Sanvad-karya (communicative functions)",
+  "label": "respond to a greeting",
+  "probe": [
+    "HI-CONCEPT-C01-NAMASTE-01"
+  ],
+  "derivedFrom": "ES:A1-F5-02, ES:A1-F6-02"
+}

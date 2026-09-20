@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-V-08",
+  "category": "Kriya (the verb)",
+  "label": "the existential: X hai for 'there is'",
+  "probe": [
+    "HI-CONCEPT-C20-MAUSAM-01"
+  ],
+  "derivedFrom": "ES:A1-V-02, ES:A1-OS-04, ES:A1-NG1-01, ES:A1-NG1-02"
+}

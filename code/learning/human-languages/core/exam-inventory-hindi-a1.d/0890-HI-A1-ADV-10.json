@@ -1,0 +1,13 @@
+{
+  "id": "HI-A1-ADV-10",
+  "category": "Kriya-visheshan (adverbs)",
+  "label": "short response adverbs: sach, bas, zarur, shayad, bilkul",
+  "probe": [
+    "HI-LEX-C48-REPLY-01",
+    "HI-LEX-C48-REPLY-02",
+    "HI-LEX-C48-REPLY-03",
+    "HI-LEX-C48-REPLY-04",
+    "HI-LEX-C48-REPLY-05"
+  ],
+  "derivedFrom": "ES:A1-NG1-05"
+}

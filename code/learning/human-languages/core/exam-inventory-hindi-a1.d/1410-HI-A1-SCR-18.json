@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-SCR-18",
+  "category": "Devanagari lipi (script and orthography)",
+  "label": "writing a complete known sentence, with word spacing",
+  "probe": [
+    "HI-CONCEPT-W04-WRITE-MERA-NAAM-01"
+  ],
+  "derivedFrom": "ES:A1-O1-07"
+}

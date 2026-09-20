@@ -1,0 +1,12 @@
+{
+  "id": "HI-A1-N-03",
+  "category": "Sangya (the noun)",
+  "label": "place names: the city you live in, and the country",
+  "probe": [
+    "HI-LEX-C68-ORIGIN-01",
+    "HI-LEX-C68-ORIGIN-02",
+    "HI-LEX-C68-ORIGIN-03"
+  ],
+  "derivedFrom": "ES:A1-N-01, ES:A1-NE20-02",
+  "note": "Covered by HI-C68-country, HI-C68-india and HI-C68-city: `desh`, the country name `Bharat`, and `shahar`, the form field both mocks' writing papers require. No settlement name below the country is taught, so a candidate can write the city LABEL but must supply their own city as a proper noun."
+}

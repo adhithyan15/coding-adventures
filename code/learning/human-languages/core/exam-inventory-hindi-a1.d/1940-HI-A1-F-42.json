@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-F-42",
+  "category": "Sanvad-karya (communicative functions)",
+  "label": "respond to an order or request",
+  "probe": [
+    "HI-CONCEPT-C03-THIK-01",
+    "HI-LEX-C48-REPLY-03"
+  ],
+  "derivedFrom": "ES:A1-F4-04"
+}

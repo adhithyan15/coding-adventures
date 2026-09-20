@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-F-63",
+  "category": "Sanvad-karya (communicative functions)",
+  "label": "ask when something happens",
+  "probe": [
+    "HI-JOIN-KAB-01"
+  ],
+  "derivedFrom": "ES:A1-OS-03",
+  "note": "Closed by HI-C72-kab (chapter 72)."
+}

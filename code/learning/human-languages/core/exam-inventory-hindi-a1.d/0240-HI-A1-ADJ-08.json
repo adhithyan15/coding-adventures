@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-ADJ-08",
+  "category": "Visheshan (the adjective)",
+  "label": "thoda as a hedging quantifier",
+  "probe": [
+    "HI-LEX-C92-DEG-01"
+  ],
+  "derivedFrom": "ES:A1-NG2-03",
+  "note": "thoda is introduced by HI-C92-thoda, and the note's item is what the lesson is built on: mock 1 listening item 12 keys on haan, thodii. The lesson makes the ending the subject rather than the word, because that is what the item actually tests -- the answer is thodii and not thoda because hindii is feminine and the hedge agrees with what it hedges, not with the person speaking. An English speaker is caught out here because a little is a fixed lump in English and an adjective in Hindi."
+}

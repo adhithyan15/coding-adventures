@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-PRON-08",
+  "category": "Sarvanam (pronouns)",
+  "label": "the y- / v- / k- system: one stem set gives near, far and interrogative",
+  "probe": [
+    "HI-GRAMMAR-C40-DEIXIS-SYSTEM"
+  ],
+  "derivedFrom": "hindi-specific",
+  "note": "No Spanish counterpart. Spanish's deictic series are three unrelated stems; Hindi's are one machine with a swappable first consonant, and the corpus teaches it as such."
+}
