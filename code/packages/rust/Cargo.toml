@@ -767,6 +767,7 @@ members = [
     "x509-subject-public-key-info",
     "x509-extension",
     "x509-extensions",
+    "x509-basic-constraints",
     "tls-server-identity",
     "tls-platform",
     "dns-message",
