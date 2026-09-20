@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.15.0
+
+- Resolve explicit structural relationship ports to deterministic boundary anchors.
+
 ## 0.14.0
 
 - Resolve structural group-edge modifiers to deterministic group-boundary endpoints.
