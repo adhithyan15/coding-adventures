@@ -1,4 +1,10 @@
 component VisiCalcStartup {
+  slot font-eyebrow : number = 10 ;
+  slot font-input : number = 14 ;
+  slot font-signature : number = 15 ;
+  slot font-heading : number = 19 ;
+  slot font-brand : number = 44 ;
+
   slot heading : text ;
   slot message : text ;
   slot can-retry : bool ;

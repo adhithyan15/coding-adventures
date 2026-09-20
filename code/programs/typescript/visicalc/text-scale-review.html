@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><title>VisiCalc text scale review</title>
+<style>html,body{margin:0;height:100%;} #root{height:100%;}</style>
+<div id="root"></div>
+<script type="module">
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import { App } from '/src/app/App.tsx';
+import { loadMosaicModule } from '../../../packages/rust/mosaic-app-wasm/js/mosaic-host.mjs';
+const params = new URLSearchParams(location.search);
+const width = Number(params.get('width')) || 900;
+const scale = Number(params.get('scale')) || 1;
+const theme = params.get('theme') === 'dark' ? 'dark' : 'light';
+document.querySelector('#root').style.width = width + 'px';
+async function load(textScale) {
+  const response = await fetch('/visicalc_mosaic_app.wasm');
+  const module = await loadMosaicModule(await response.arrayBuffer());
+  return module.create({textScale, colorScheme: theme, protocolVersion:2});
+}
+createRoot(document.querySelector('#root')).render(React.createElement(App,{load,textScale:scale}));
+</script></html>

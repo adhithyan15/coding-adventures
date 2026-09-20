@@ -37,6 +37,7 @@ layout Cell {
   // ADDITION to the structural If branch that swaps Text for
   // HostInput.
   Box [ cell ] (
+    height: slot: height ,
     // Use the `slot:` form (not the `( name )` expression form) so
     // the UI34 package resolver's `rewrite_bindings` step
     // substitutes the call-site's bound value at compile time.

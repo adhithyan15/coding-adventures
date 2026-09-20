@@ -6,15 +6,19 @@ import { VisiCalcStartup as StartupDark } from "../components/dark/react/VisiCal
 import { loadMosaicModule, type MosaicHost, type MosaicUpdate } from "../../../../../packages/rust/mosaic-app-wasm/js/mosaic-host.mjs";
 import { createBrowserFileEffects, type MosaicFileEffects } from "../../../../../packages/rust/mosaic-app-wasm/js/mosaic-file-effects.mjs";
 
-export async function loadApplication(): Promise<MosaicHost> {
+function validScale(value: number): number { return Number.isFinite(value) && value > 0 ? value : 1; }
+function preferredTextScale(): number { return validScale(parseFloat(getComputedStyle(document.documentElement).fontSize) / 16); }
+
+export async function loadApplication(textScale = preferredTextScale()): Promise<MosaicHost> {
   const response = await fetch("/visicalc_mosaic_app.wasm");
   if (!response.ok) throw new Error(`Could not load VisiCalc (${response.status})`);
   const module = await loadMosaicModule(await response.arrayBuffer());
-  return module.create({ protocolVersion: 2, colorScheme: window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light" });
+  return module.create({ textScale: validScale(textScale), protocolVersion: 2, colorScheme: window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light" });
 }
 
 // The host translates browser input into semantic events; Rust owns all state.
-export function App({ load = loadApplication }: { load?: () => Promise<MosaicHost> }) {
+export function App({ load = loadApplication, textScale }: { load?: (textScale: number) => Promise<MosaicHost>; textScale?: number }) {
+  const initialScale = useRef(validScale(textScale ?? preferredTextScale()));
   const host = useRef<MosaicHost | null>(null);
   const files = useRef<MosaicFileEffects | null>(null);
   const surface = useRef<HTMLDivElement | null>(null);
@@ -26,7 +30,7 @@ export function App({ load = loadApplication }: { load?: () => Promise<MosaicHos
     let owned: MosaicHost | null = null;
     setError("");
     setUpdate(null);
-    Promise.resolve().then(load).then(app => {
+    Promise.resolve().then(() => load(initialScale.current)).then(app => {
       owned = app;
       if (!live) { app.dispose(); return; }
       host.current = app;
@@ -36,6 +40,12 @@ export function App({ load = loadApplication }: { load?: () => Promise<MosaicHos
     return () => { live = false; files.current?.dispose(); files.current = null; owned?.dispose(); host.current = null; };
   }, [load, attempt]);
   const started = update !== null;
+  useEffect(() => {
+    if (textScale === undefined || !host.current) return;
+    const scale = validScale(textScale);
+    if (host.current.update.props["text-scale"] === scale) return;
+    setUpdate(host.current.dispatch("setTextScale", { scale }));
+  }, [textScale, started]);
   useEffect(() => {
     if (started && attempt > 0) surface.current?.querySelector<HTMLTableElement>('table[tabindex="0"]')?.focus();
   }, [started, attempt]);
@@ -81,8 +91,9 @@ export function App({ load = loadApplication }: { load?: () => Promise<MosaicHos
   };
   if (!update) {
     const Startup = window.matchMedia?.("(prefers-color-scheme: dark)").matches ? StartupDark : StartupLight;
+    const scale = validScale(textScale ?? initialScale.current);
     return <section role={error ? "alert" : "status"}>
-      <Startup heading={error ? "Your workbook couldn’t open" : "Opening your workbook"}
+      <Startup fontEyebrow={10 * scale} fontInput={14 * scale} fontSignature={15 * scale} fontHeading={19 * scale} fontBrand={44 * scale} heading={error ? "Your workbook couldn’t open" : "Opening your workbook"}
         message={error ? "VisiCalc couldn’t start. Check your connection and try again." : "Making space for your numbers, notes and next big idea."}
         canRetry={!!error} dispatch={() => setAttempt(value => value + 1)} />
     </section>;

@@ -6,6 +6,8 @@ the package follows semantic versioning.
 
 ## Unreleased
 
+- Expose RowHeaderGrid font, row-label and row-height slots for consistent scaled typography and geometry (#14690).
+
 ### Added -- `cell-editor` part, so the inline editor stops changing the row's height (#15048)
 
 `Cell`'s `HostInput` had no part name, so no stylesheet could reach it and

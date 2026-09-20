@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-12
+
+- Bind workbook/startup typography and add accessible text-size controls. Keep scaled rows uniform and allow chrome to scroll on narrow screens.
+
 ## Unreleased
 
 - Fix stale totals after formula edits through the shared spreadsheet engine; cover the generated React root and real Rust WASM lifecycle (#15519).
