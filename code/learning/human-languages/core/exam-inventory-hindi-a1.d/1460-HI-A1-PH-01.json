@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-PH-01",
+  "category": "Uccharan (pronunciation)",
+  "label": "the aspirated/unaspirated contrast changes the word",
+  "probe": [
+    "HI-SCRIPT-BHA-01"
+  ],
+  "derivedFrom": "hindi-specific"
+}

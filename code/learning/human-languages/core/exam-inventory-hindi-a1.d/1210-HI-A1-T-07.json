@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-T-07",
+  "category": "Samay aur tarikh (time and date)",
+  "label": "giving and asking an age",
+  "probe": [
+    "HI-CONCEPT-C19-UMR-01",
+    "HI-CONCEPT-C19-AGE-GRAMMAR-01"
+  ],
+  "derivedFrom": "ES:A1-NG5-04, ES:A1-F1-03"
+}

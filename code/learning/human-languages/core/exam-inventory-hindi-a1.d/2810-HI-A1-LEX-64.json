@@ -1,0 +1,15 @@
+{
+  "id": "HI-A1-LEX-64",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "everyday action verbs",
+  "probe": [
+    "HI-LEX-COME",
+    "HI-LEX-SIT",
+    "HI-LEX-STAND",
+    "HI-LEX-GIVE",
+    "HI-LEX-LOOK",
+    "HI-LEX-LISTEN",
+    "HI-LEX-SPEAK"
+  ],
+  "derivedFrom": "ES:A1-NE01-03"
+}

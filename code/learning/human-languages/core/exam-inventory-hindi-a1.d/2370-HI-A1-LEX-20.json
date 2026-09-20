@@ -1,0 +1,12 @@
+{
+  "id": "HI-A1-LEX-20",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "foodstuffs",
+  "probe": [
+    "HI-LEX-C52-KITCHEN-01",
+    "HI-LEX-C52-KITCHEN-02",
+    "HI-LEX-C52-KITCHEN-04",
+    "HI-LEX-C52-KITCHEN-05"
+  ],
+  "derivedFrom": "ES:A1-NE05-03"
+}

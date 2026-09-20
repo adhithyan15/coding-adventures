@@ -1,0 +1,12 @@
+{
+  "id": "HI-A1-POST-09",
+  "category": "Parsarg (postpositions and case)",
+  "label": "se ... tak for a span of days or hours",
+  "probe": [
+    "HI-LEX-C94-SPAN-01",
+    "HI-LEX-C94-SPAN-02",
+    "HI-LEX-C94-SPAN-03"
+  ],
+  "derivedFrom": "ES:A1-NG3-06",
+  "note": "Introduced by HI-C94-tak (the tak postposition on its own), HI-C94-se-tak-din (somvaar se shukravaar tak) and HI-C94-se-tak-samay (the same frame over parts of a day and over clock hours). The note was EXACTLY RIGHT and needed no correction: the weekday nouns were taught in chapter 10 and se in chapter 98, so the only thing missing was tak and the permission to use the two together. The teachable part is that English builds a span out of from and to standing IN FRONT of their days while Hindi marks each end from behind, so the phrase reads as two packages rather than one long string: [somvaar se] [shukravaar tak]. tak does not require se -- paanch baje tak is complete on its own and is how the word most often appears on a sign -- so the lessons teach it alone before pairing it."
+}

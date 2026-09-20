@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-F-43",
+  "category": "Sanvad-karya (communicative functions)",
+  "label": "grant permission",
+  "probe": [
+    "HI-LEX-C48-REPLY-03"
+  ],
+  "derivedFrom": "ES:A1-F4-05"
+}

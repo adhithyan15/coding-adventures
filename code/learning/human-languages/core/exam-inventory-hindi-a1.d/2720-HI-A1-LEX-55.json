@@ -1,0 +1,12 @@
+{
+  "id": "HI-A1-LEX-55",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "the universe and the sky",
+  "probe": [
+    "HI-LEX-C55-SKY-01",
+    "HI-LEX-C55-SKY-02",
+    "HI-LEX-C55-SKY-03",
+    "HI-LEX-C55-SKY-05"
+  ],
+  "derivedFrom": "ES:A1-NE20-01"
+}

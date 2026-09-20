@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-NEG-01",
+  "category": "Nishedh (negation)",
+  "label": "nahin as the bare answer 'no'",
+  "probe": [
+    "HI-CONCEPT-C07-NAHIN-01"
+  ],
+  "derivedFrom": "ES:A1-ADV-05, ES:A1-F1-05"
+}

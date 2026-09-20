@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-Q-10",
+  "category": "Prashn (asking questions)",
+  "label": "the tag question: ... hai na?",
+  "probe": [
+    "HI-JOIN-TAG-NA-01"
+  ],
+  "derivedFrom": "ES:A1-F1-04",
+  "note": "Closed by HI-C74-na-tag (chapter 74), which also sets the tag against the fronted kya -- the tag believes the answer, the particle does not."
+}

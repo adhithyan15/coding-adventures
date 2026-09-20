@@ -1,0 +1,12 @@
+{
+  "id": "HI-A1-LEX-34",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "sport and games",
+  "probe": [
+    "HI-LEX-C70-LEISURE-01",
+    "HI-LEX-C70-LEISURE-02",
+    "HI-LEX-C70-LEISURE-03"
+  ],
+  "derivedFrom": "ES:A1-NE08-03, ES:A1-NE08-04",
+  "note": "HI-C70 teaches the game, the doing word and `kriket` itself, which is the game mock 2's listening profile has Imran playing."
+}

@@ -1,0 +1,13 @@
+{
+  "id": "HI-A1-SCR-14",
+  "category": "Devanagari lipi (script and orthography)",
+  "label": "the remaining matras: uu, o, au and the vocalic ri",
+  "probe": [
+    "HI-SCRIPT-RECOG-149",
+    "HI-SCRIPT-RECOG-150",
+    "HI-SCRIPT-RECOG-134",
+    "HI-SCRIPT-RECOG-144"
+  ],
+  "derivedFrom": "ES:A1-O1-02",
+  "note": "All four are now drawn, and three of them were on the undrawn list only because nobody had checked which lesson was actually teaching them. The uu-maatraa was credited to HI-W06-name-sentence-stop, a lesson about the DANDA whose headword is puurna viraam; the o-maatraa to HI-W01-shirorekha-na-ma, a lesson about the HEAD-LINE whose headword is shirorekhaa (HL-C386). The au-maatraa had a real lesson already. The vocalic-r sign is the one that arrives ON TIME, at chapter 7, because its carrier ka is drawn at chapter 7 and its only headword kripayaa is at chapter 8 -- HL-C384 had wrongly listed it among glyphs that can never be on time, counting Sanskrit roots quoted in etymology notes as first use. The uu-maatraa is taught off its short twin (same hook, longer tail, longer vowel) and the o-maatraa off DO, one consonant and one mark, the plainest example in the language."
+}

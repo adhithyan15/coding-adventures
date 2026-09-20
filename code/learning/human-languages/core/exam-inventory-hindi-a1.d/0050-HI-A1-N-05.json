@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-N-05",
+  "category": "Sangya (the noun)",
+  "label": "grammatical gender is inherent: the -a/-i lean helps and then fails, so gender is learned with the word",
+  "probe": [
+    "HI-CONCEPT-C36-KURSI-01",
+    "HI-CONCEPT-C37-CHAI-01"
+  ],
+  "derivedFrom": "ES:A1-N-03, ES:A1-ADJ-03"
+}

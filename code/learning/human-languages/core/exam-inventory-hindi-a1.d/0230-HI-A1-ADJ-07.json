@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-ADJ-07",
+  "category": "Visheshan (the adjective)",
+  "label": "kam and zyada as everyday quantifiers",
+  "probe": [
+    "HI-LEX-C64-MEASURE-04",
+    "HI-LEX-C64-MEASURE-05"
+  ],
+  "derivedFrom": "ES:A1-Q-03, ES:A1-NG2-02, ES:A1-ADV-03"
+}

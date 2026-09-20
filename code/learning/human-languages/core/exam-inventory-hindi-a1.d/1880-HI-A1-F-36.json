@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-F-36",
+  "category": "Sanvad-karya (communicative functions)",
+  "label": "ask a preference by offering alternatives",
+  "probe": [
+    "HI-JOIN-YA-01"
+  ],
+  "derivedFrom": "ES:A1-F3-02",
+  "note": "Closed by HI-C68-ya (chapter 68), whose worked example IS this move: chaay yaa duudh?"
+}

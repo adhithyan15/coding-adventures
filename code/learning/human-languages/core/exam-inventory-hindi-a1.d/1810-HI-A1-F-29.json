@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-F-29",
+  "category": "Sanvad-karya (communicative functions)",
+  "label": "ask for an evaluation (kaisa hai?)",
+  "probe": [
+    "HI-CONCEPT-C03-KAISE-01",
+    "HI-CONCEPT-C02-HAI-01"
+  ],
+  "derivedFrom": "ES:A1-F2-03"
+}

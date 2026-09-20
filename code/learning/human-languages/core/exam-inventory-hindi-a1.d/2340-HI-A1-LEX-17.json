@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-LEX-17",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "celebrations and social occasions",
+  "probe": [
+    "HI-LEX-C57-GIFT-01",
+    "HI-LEX-C57-GIFT-02",
+    "HI-LEX-C51-WELCOME-02"
+  ],
+  "derivedFrom": "ES:A1-NE04-03"
+}

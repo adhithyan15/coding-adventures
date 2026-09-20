@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-LEX-14",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "personal objects",
+  "probe": [
+    "HI-CONCEPT-C37-KITAAB-01",
+    "HI-LEX-C45-ASK-02",
+    "HI-LEX-C45-ASK-05"
+  ],
+  "derivedFrom": "ES:A1-NE03-03"
+}

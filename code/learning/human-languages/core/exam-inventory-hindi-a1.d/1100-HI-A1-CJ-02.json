@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-CJ-02",
+  "category": "Samuchchay (joining clauses)",
+  "label": "the alternative ya",
+  "probe": [
+    "HI-JOIN-YA-01"
+  ],
+  "derivedFrom": "ES:A1-CO-03",
+  "note": "Closed by HI-C68-ya (chapter 68). Every glyph in it was already taught, so unlike `aur` it is writable the day it is met, and the lesson says so."
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-SCR-16",
+  "category": "Devanagari lipi (script and orthography)",
+  "label": "the nuqta letters qa, kha, ga, za, fa and the flapped ra, rha",
+  "probe": [
+    "HI-SCRIPT-RECOG-140",
+    "HI-SCRIPT-RECOG-141"
+  ],
+  "derivedFrom": "hindi-specific",
+  "note": "Was the single sharpest finding in this file. The corpus's own headwords carry a nuqta in 36 places -- khushi, maaf, safed, farvari, padhna, darvaza, bada, zarur, safar, mulaqat, mez, sabzi, sadak, bazar, tohfa, khushbu, bukhar, zyada, fasal and more -- the first of them in the second chapter, and the mark itself was never taught. HI-C37-khaana named it for ONE pair, khaanaa against khaanaa, as a fact about those two words; nothing generalised it to the other 34. HI-S140-nuqta draws the dot and the two flaps it makes; HI-S141-nuqta-borrowed draws the four that carry borrowed sounds. The mark had to wait for its carriers: retroflex da was not drawn until chapter 59, so no honest lesson could come earlier. A CORRECTION TO THIS NOTE'S OWN EVIDENCE: it used to lead with shukriya, which carries no nuqta at all. Fourteen examples, one of them wrong, and nobody had checked. Of the seven carriers the script data inventories, ga is the one the corpus never once uses with a dot, so neither lesson teaches it."
+}

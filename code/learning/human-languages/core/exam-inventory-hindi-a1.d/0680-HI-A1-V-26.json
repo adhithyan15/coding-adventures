@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-V-26",
+  "category": "Kriya (the verb)",
+  "label": "khana and pina as verbs, distinguished from khana the noun",
+  "probe": [
+    "HI-LEX-C73-EATING-05",
+    "HI-CONCEPT-C37-KHAANA-01"
+  ],
+  "derivedFrom": "ES:A1-NE05-01",
+  "note": "HI-C73-drink introduces `pina` and, in the same lesson, the doing-word sense of `khana` set against the noun the learner already holds. The lesson's wrap-up assesses the distinction the label asks for."
+}

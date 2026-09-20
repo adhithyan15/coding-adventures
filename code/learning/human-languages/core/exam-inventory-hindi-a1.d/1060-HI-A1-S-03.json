@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-S-03",
+  "category": "Vakya (the sentence)",
+  "label": "the vocative: addressing a named reader or hearer",
+  "probe": [
+    "HI-CONCEPT-C97-ADDRESS-01"
+  ],
+  "derivedFrom": "ES:A1-SN-04",
+  "note": "The writing task in both mocks is addressed to a named person -- Reema, Mohan -- and the rubric awards 10 of that task's 60 points for a clear named reader. HI-C97-naam-ji introduces the address itself: a name with जी after it, the honorific the track taught long ago, now in a new position. HI-C97-priya adds the written opening that sits on the other side of the name, but the probe rests on the address atom alone, which is what the rubric line names."
+}

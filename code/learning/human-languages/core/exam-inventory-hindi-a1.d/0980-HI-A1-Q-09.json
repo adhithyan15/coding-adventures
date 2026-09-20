@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-Q-09",
+  "category": "Prashn (asking questions)",
+  "label": "a question word sits in the clause's normal slot rather than being fronted",
+  "probe": [
+    "HI-JOIN-KYON-01",
+    "HI-JOIN-KAB-01"
+  ],
+  "derivedFrom": "ES:A1-OS-03",
+  "note": "Closed, and by a CLAIM rather than a pattern, which is what this note demanded. HI-C71-kyon and HI-C72-kab each state in as many words that the question word stays in the clause's ordinary slot in front of the verb and is not fronted the way English fronts it. Two atoms because one lesson stating it once is an example; two lessons stating it of two different words is the rule."
+}

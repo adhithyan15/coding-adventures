@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-ADJ-03",
+  "category": "Visheshan (the adjective)",
+  "label": "invariable adjectives that never change shape (lal, safed, thik)",
+  "probe": [
+    "HI-CONCEPT-C11-LAAL-NIILA-01",
+    "HI-CONCEPT-C03-THIK-01"
+  ],
+  "derivedFrom": "ES:A1-ADJ-03"
+}

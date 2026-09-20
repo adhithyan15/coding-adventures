@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-Q-07",
+  "category": "Prashn (asking questions)",
+  "label": "kab for time",
+  "probe": [
+    "HI-JOIN-KAB-01"
+  ],
+  "derivedFrom": "ES:A1-OS-03",
+  "note": "Closed by HI-C72-kab (chapter 72)."
+}

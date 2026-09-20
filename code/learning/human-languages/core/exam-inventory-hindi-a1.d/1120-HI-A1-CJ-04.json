@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-CJ-04",
+  "category": "Samuchchay (joining clauses)",
+  "label": "the complementiser ki, for reporting what someone thinks or says",
+  "probe": [
+    "HI-JOIN-KI-01",
+    "HI-CONCEPT-C34-SOCHNA-01"
+  ],
+  "derivedFrom": "ES:A1-SUB-03, ES:A1-F2-02, ES:A1-F2-11",
+  "note": "Closed by HI-C69-ki (chapter 69). Both atoms are required because the point is REPORTING a thought, not the complementiser in the abstract: `sochna` was already taught and had nothing it could attach to."
+}

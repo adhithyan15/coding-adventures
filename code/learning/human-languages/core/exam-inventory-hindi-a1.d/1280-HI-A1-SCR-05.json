@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-SCR-05",
+  "category": "Devanagari lipi (script and orthography)",
+  "label": "the virama stops a consonant's vowel",
+  "probe": [
+    "HI-CONCEPT-W05-VIRAMA-NAMASTE-01"
+  ],
+  "derivedFrom": "hindi-specific"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-Q-08",
+  "category": "Prashn (asking questions)",
+  "label": "kyon for reason, and kyonki for giving one",
+  "probe": [
+    "HI-JOIN-KYON-01",
+    "HI-JOIN-KYONKI-01"
+  ],
+  "derivedFrom": "ES:A1-ADV-08, ES:A1-SUB-06",
+  "note": "Closed by HI-C71-kyon and HI-C71-kyonki (chapter 71); the second realizes CONNECTIVE-BECAUSE on SPINE-SAY-WHY and empties that node's omission ledger. Both atoms are required, which is what the point asks for: asking why and giving one."
+}

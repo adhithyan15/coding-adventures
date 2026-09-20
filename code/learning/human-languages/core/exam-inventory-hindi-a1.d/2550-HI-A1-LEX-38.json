@@ -1,0 +1,12 @@
+{
+  "id": "HI-A1-LEX-38",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "household objects and furniture",
+  "probe": [
+    "HI-CONCEPT-C36-KURSI-01",
+    "HI-LEX-C51-WELCOME-04",
+    "HI-LEX-C61-FIRE-02",
+    "HI-LEX-C58-HOUSE-05"
+  ],
+  "derivedFrom": "ES:A1-NE10-04"
+}

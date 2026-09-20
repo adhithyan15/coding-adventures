@@ -1,0 +1,13 @@
+{
+  "id": "HI-A1-LEX-15",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "family relationships",
+  "probe": [
+    "HI-CONCEPT-C12-PITAA-MAATAA-01",
+    "HI-CONCEPT-C12-BHAAI-BAHIN-01",
+    "HI-LEX-FAMILY",
+    "HI-LEX-SON",
+    "HI-LEX-DAUGHTER"
+  ],
+  "derivedFrom": "ES:A1-NE04-01"
+}

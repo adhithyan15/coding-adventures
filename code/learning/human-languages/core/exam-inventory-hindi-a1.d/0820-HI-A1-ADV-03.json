@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-ADV-03",
+  "category": "Kriya-visheshan (adverbs)",
+  "label": "aaj, the word for today",
+  "probe": [
+    "HI-LEX-C71-TODAY-01"
+  ],
+  "derivedFrom": "ES:A1-ADV-02, ES:A1-NG4-02",
+  "note": "Taught in HI-C71-today, which places it beside the `kal` and `parson` the track already had. It carries mock 1 reading items 3 and 9 and listening item 6, mock 2 reading items 8 and 11, and the whole of mock 2's writing task, which is about why you cannot meet TODAY."
+}

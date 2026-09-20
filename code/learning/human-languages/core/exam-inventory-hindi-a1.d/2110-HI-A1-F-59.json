@@ -1,0 +1,15 @@
+{
+  "id": "HI-A1-F-59",
+  "category": "Sanvad-karya (communicative functions)",
+  "label": "describe a daily routine",
+  "probe": [
+    "HI-LEX-C90-ROUT-03",
+    "HI-LEX-C90-ROUT-04",
+    "HI-LEX-C90-ROUT-01",
+    "HI-LEX-C90-ROUT-05",
+    "HI-LEX-C90-ROUT-06",
+    "HI-LEX-C88-TIME-01"
+  ],
+  "derivedFrom": "ES:A1-V-03",
+  "note": "PARTLY STALE NOTE, corrected. It said the habitual tense is taught but jana, uthna, baje, se and par -- everything a routine is made of besides the tense -- are not. THREE of those five were already covered by the time it was re-read: jaana has been a headword since HI-C69-go, par was introduced by HI-C87-par in chapter 95, and baje by HI-C88-baje in chapter 96. The real gap was uthna and se, plus the sequencing words the note did not mention, and chapter 98 supplies all of them. The synthesis lesson reads a four-sentence routine in which every word is taught, then asks the reader to say their own and repeat it as the other gender changing nothing but the endings -- which is exactly the shape of the one-minute prepared description both mocks set."
+}

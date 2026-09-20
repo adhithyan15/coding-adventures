@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-LEX-16",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "social relationships: friend, neighbour, guest",
+  "probe": [
+    "HI-CONCEPT-C39-DOST-01",
+    "HI-LEX-C47-ROLE-04",
+    "HI-LEX-C47-ROLE-05"
+  ],
+  "derivedFrom": "ES:A1-NE04-02"
+}
