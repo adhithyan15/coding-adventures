@@ -10,6 +10,15 @@ roadmap is reconciled.
 
 ## Encoded CLR input prerequisites (selected 2026-09-19 after VM-058)
 
+### CLR09 owned; CLR10 long branches held locally (2026-09-20)
+
+Ready PR #15711 owns CLR09 compact ldc.i4.m1 execution. Keep the independently
+specified long branch implementation local until it merges. The CLR10 contract
+was committed under its original CLR09 name before implementation; see
+`CLR10-encoded-long-branches.md`. Baseline probes proved br/brfalse/brtrue
+unknown; literal and automatic builder-promotion execution tests now pass.
+Strict CFG lowering still needs its own subsequent contract. Preserve gates.
+
 ### CLR08 landed; strict scalar control-flow audit selected (2026-09-20)
 
 CLR08 merged in #15698 as `13e17dec1c05c48570c0c7b3e12dc6b9a599ae8e`

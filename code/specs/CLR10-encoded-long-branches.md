@@ -1,4 +1,4 @@
-# CLR09 encoded long branch execution
+# CLR10 encoded long branch execution
 
 Status: implementation contract, committed before production changes.
 
@@ -52,3 +52,7 @@ No strict scalar branch lowering, CFG validation, default source routing,
 CLR01 literal/input gate changes, compact ldc.i4.m1 repair, or other branch
 families. The next strict control-flow contract still needs definite assignment
 at joins, logical Bool conditions, labels, return and reachability validation.
+
+Numbering note: originally specified as CLR09 before implementation; renamed
+to CLR10 after discovering active PR #15711 owns compact constant CLR09.
+Keep long-branch publication local until that implementation PR merges.

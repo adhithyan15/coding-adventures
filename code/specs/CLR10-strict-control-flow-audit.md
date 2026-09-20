@@ -1,4 +1,4 @@
-# CLR09 strict control-flow audit
+# CLR10 strict control-flow audit
 
 Status: audit checkpoint, not an implementation contract (2026-09-20).
 
@@ -38,3 +38,7 @@ bytes for opcode values: immediate payloads can contain those same bytes.
 Choose bounded acyclic flow or general CFG deliberately; preserve scalar
 widths, 256 slot limits, structural i32 indices and CLR01 literal/input gates.
 Default source routing and source i64 narrowing remain separate work.
+
+Numbering note: originally specified as CLR09 before implementation; renamed
+to CLR10 after discovering active PR #15711 owns compact constant CLR09.
+Keep long-branch publication local until that implementation PR merges.

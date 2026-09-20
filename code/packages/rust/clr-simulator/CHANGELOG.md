@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — checked long branches (CLR10)
+
+Execute br, brfalse and brtrue with signed four-byte offsets. Validate operand
+length, target range and initialized conditions before changing stack or pc.
+Preserve existing Int/Int64/Ref truthiness. Literal tests and builder-promotion
+execution cover both outcomes, signed offsets and malformed state.
+
 ## Unreleased — remainder and bitwise NOT (CLR07)
 
 Execute signed `rem` and bitwise `not` for Int and Int64 values, preserving
