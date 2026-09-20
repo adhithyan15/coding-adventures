@@ -40,8 +40,10 @@ Host input injection and stream lifetime retain CLR13's separate contract.
 
 ## Validation
 
-Permanent source-level tests must execute complete artifacts for a wide Twig
-literal, wide arithmetic crossing i32, and a small arithmetic control. Assert
+Permanent source-level tests must execute complete artifacts for Twig wide
+arithmetic crossing i32 and a small arithmetic control. The existing strict
+CLR01 literal gate rejects out-of-i32 constants even with an i64 hint; assert
+that refusal rather than expanding the backend literal contract. Assert
 exact return/local types and Int64 values, not just successful compilation.
 Demonstrate the default API's existing wide-literal refusal and arithmetic
 wrapping separately, without claiming to fix its overflow behavior. Assert
