@@ -13,6 +13,7 @@ let findOpen = false;
 let findQuery = "";
 let findResultLabel = "";
 let zoomPercent = 100;
+let pageInfoOpen = false;
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 const props = (statusText: string) => ({
@@ -30,6 +31,12 @@ const props = (statusText: string) => ({
     printPageDisabled: navigationDisabled,
     sharePageDisabled: navigationDisabled,
     pageInfoDisabled: navigationDisabled,
+    pageInfoOpen,
+    pageInfoTitle: "Venture React acceptance",
+    pageInfoAddress: "http://venture.test/final",
+    pageInfoRequestedAddress: "http://venture.test/start",
+    pageInfoStatus: "HTTP 200",
+    pageInfoResources: "Images: 2 (0 failed)  Stylesheets: 1 (0 failed)",
     zoomLabel: `${zoomPercent}%`,
     zoomOutDisabled: navigationDisabled || zoomPercent === 50,
     zoomResetDisabled: navigationDisabled || zoomPercent === 100,
@@ -78,6 +85,14 @@ window.mosaicHost = {
     if (request.event.type === "zoomReset") {
       zoomPercent = 100;
       return props("Zoom reset through MosaicHost");
+    }
+    if (request.event.type === "pageInfo") {
+      pageInfoOpen = true;
+      return props("Page information shown through MosaicHost");
+    }
+    if (request.event.type === "pageInfoClose") {
+      pageInfoOpen = false;
+      return props("Page information closed through MosaicHost");
     }
     return request.event.type === "navigate"
       ? props("Navigated through MosaicHost")
@@ -207,6 +222,14 @@ test("React and Electron renderer controls cross the Mosaic host seam", async ()
   });
   await flush();
   expect(events[events.length - 1]?.event.type).toBe("pageInfo");
+  expect(document.body.textContent).toContain("Venture React acceptance");
+  expect(document.body.textContent).toContain("HTTP 200");
+  await act(async () => {
+    textButton("Close").click();
+  });
+  await flush();
+  expect(events[events.length - 1]?.event.type).toBe("pageInfoClose");
+  expect(document.body.textContent).not.toContain("Images: 2 (0 failed)");
 
   await act(async () => {
     textButton("Source").click();

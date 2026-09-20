@@ -78,9 +78,10 @@ recreating the surrounding chrome in backend-specific UI code.
   page identity, disabledness, status projection, and encoding remain shared.
 - Page Information snapshots the retained request URL, final response URL,
   normalized title, response status, and image/stylesheet resource and failure
-  counts without navigating or refetching. Generated hosts only present that
-  typed snapshot; response identity, diagnostics, disabledness, status
-  projection, and encoding remain shared.
+  counts without navigating or refetching. Mosaic renders the same retained
+  snapshot in a shared closable panel on every generated host, while richer
+  platform presenters can still consume the typed effect; response identity,
+  diagnostics, lifecycle, disabledness, and encoding remain shared.
 - Both themes expose the same parts and interaction states.
 - `tests/package_compiles.rs` guards the package contract; the package artifact
   builder compiles these exact sources, emits project shells, and verifies a

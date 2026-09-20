@@ -1052,16 +1052,31 @@ fn share_page_uses_one_typed_presenter_request_across_generated_hosts() {
 fn page_info_uses_one_typed_response_snapshot_across_generated_hosts() {
     let interface = read_package_file("src/VentureChrome.mil");
     let layout = read_package_file("src/VentureChrome.mll");
-    assert!(interface.contains("slot page-info-disabled"));
-    assert!(interface.contains("emit onPageInfo"));
-    assert!(layout.contains("HostButton [ page-info-button ]"));
+    for symbol in [
+        "slot page-info-disabled",
+        "slot page-info-open",
+        "slot page-info-title",
+        "slot page-info-address",
+        "slot page-info-requested-address",
+        "slot page-info-status",
+        "slot page-info-resources",
+        "emit onPageInfo",
+        "emit onPageInfoClose",
+    ] {
+        assert!(interface.contains(symbol), "page-info interface omits {symbol}");
+    }
+    for control in ["page-info-button", "page-info-panel", "page-info-close-button"] {
+        assert!(layout.contains(control), "page-info layout omits {control}");
+    }
 
     let core = read_package_file("../../../packages/rust/venture-browser-core/src/lib.rs");
     for symbol in [
         "BrowserChromeAction::PageInfo",
         "BrowserHostEffect::PageInfo",
         "BrowserPageInfoRequest",
-        "Page information requested",
+        "Page information shown",
+        "show_page_info",
+        "page_info_resources",
         "image_resource_count",
         "stylesheet_failure_count",
     ] {

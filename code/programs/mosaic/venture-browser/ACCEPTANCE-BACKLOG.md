@@ -5,6 +5,12 @@ cross-platform proving application. Items are ordered by risk and dependency.
 
 ## Prioritized discoveries
 
+- [x] **P1 browser convergence - shared page-information presentation.** Keep
+  the typed Page Information host effect for richer platform integrations, but
+  also retain and render one core-owned metadata snapshot in the Mosaic chrome
+  so every generated shell gives users visible title, requested/final address,
+  status, and resource diagnostics with the same close lifecycle.
+
 - [x] **P1 browser architecture - shared native bridge codec.** Move the
   generated Mosaic event vocabulary, value validation, chrome-prop JSON, and
   typed host-effect JSON into `venture-browser-core`. Keep macOS, Windows, and

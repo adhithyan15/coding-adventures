@@ -18,6 +18,12 @@ component VentureChrome {
   slot print-page-disabled  : bool ;
   slot share-page-disabled  : bool ;
   slot page-info-disabled   : bool ;
+  slot page-info-open       : bool ;
+  slot page-info-title      : text ;
+  slot page-info-address    : text ;
+  slot page-info-requested-address : text ;
+  slot page-info-status     : text ;
+  slot page-info-resources  : text ;
   slot zoom-label           : text ;
   slot zoom-out-disabled    : bool ;
   slot zoom-reset-disabled  : bool ;
@@ -41,6 +47,7 @@ component VentureChrome {
   emit onPrintPage ;
   emit onSharePage ;
   emit onPageInfo ;
+  emit onPageInfoClose ;
   emit onZoomOut ;
   emit onZoomReset ;
   emit onZoomIn ;

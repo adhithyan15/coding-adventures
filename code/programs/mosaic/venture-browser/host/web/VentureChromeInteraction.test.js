@@ -34,6 +34,12 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
       printPageDisabled: true,
       sharePageDisabled: true,
       pageInfoDisabled: true,
+      pageInfoOpen: false,
+      pageInfoTitle: "Initial page",
+      pageInfoAddress: "https://venture.test/final",
+      pageInfoRequestedAddress: "https://venture.test/initial",
+      pageInfoStatus: "HTTP 200",
+      pageInfoResources: "Images: 2 (0 failed)  Stylesheets: 1 (0 failed)",
       zoomLabel: "100%",
       zoomOutDisabled: true,
       zoomResetDisabled: true,
@@ -76,6 +82,12 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
         }
         if (request.event.type === "zoomReset") {
           props = { ...props, zoomLabel: "100%", zoomResetDisabled: true };
+        }
+        if (request.event.type === "pageInfo") {
+          props = { ...props, pageInfoOpen: true };
+        }
+        if (request.event.type === "pageInfoClose") {
+          props = { ...props, pageInfoOpen: false };
         }
         props = {
           ...props,
@@ -204,6 +216,12 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     controls.pageInfo.click();
     await settle();
     assert.equal(calls.at(-1)?.type, "pageInfo");
+    assert.match(renderScope(root).textContent, /Initial page/);
+    assert.match(renderScope(root).textContent, /HTTP 200/);
+    buttonByLabel(root, "Close").click();
+    await settle();
+    assert.equal(calls.at(-1)?.type, "pageInfoClose");
+    assert.doesNotMatch(renderScope(root).textContent, /Images: 2 \(0 failed\)/);
 
     controls = readControls(root);
     controls.zoomIn.click();
@@ -266,7 +284,7 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     assert.equal(calls.at(-1)?.type, "navigate");
     assert.deepEqual(
       calls.map(event => event.type),
-      ["toggleBookmark", "copyAddress", "openPageInNewWindow", "savePage", "printPage", "sharePage", "pageInfo", "zoomIn", "zoomReset", "viewSource", "findOpen", "findChange", "findNext", "findClose", "addressChange", "navigate", "navigate"],
+      ["toggleBookmark", "copyAddress", "openPageInNewWindow", "savePage", "printPage", "sharePage", "pageInfo", "pageInfoClose", "zoomIn", "zoomReset", "viewSource", "findOpen", "findChange", "findNext", "findClose", "addressChange", "navigate", "navigate"],
     );
     assert.match(renderScope(root).textContent, /Handled navigate through MosaicHost/);
   } finally {
@@ -302,6 +320,13 @@ function findRoot() {
 
 function renderScope(root) {
   return backend === "html" ? root : root.shadowRoot;
+}
+
+function buttonByLabel(root, label) {
+  const button = [...renderScope(root).querySelectorAll("button")]
+    .find(candidate => candidate.textContent.trim() === label);
+  assert.ok(button, `${label} button must exist`);
+  return button;
 }
 
 function readControls(root) {
