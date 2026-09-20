@@ -10627,6 +10627,17 @@ mod tests_dg04 {
     }
 
     #[test]
+    fn architecture_preserves_namespaced_service_icons() {
+        let diagram = parse_architecture("architecture-beta\nservice worker(aws:lambda)[Worker]")
+            .unwrap();
+        assert!(matches!(
+            &diagram.nodes[0].metadata,
+            Some(StructuralNodeMetadata::ArchitectureService(metadata))
+                if metadata.icon_name.as_deref() == Some("aws:lambda")
+        ));
+    }
+
+    #[test]
     fn architecture_rejects_custom_group_icon_text() {
         let error = parse_architecture("architecture-beta\ngroup api \"API\"[Gateway]")
             .unwrap_err();
