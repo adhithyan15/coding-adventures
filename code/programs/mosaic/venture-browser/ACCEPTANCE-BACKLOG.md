@@ -5,6 +5,13 @@ cross-platform proving application. Items are ordered by risk and dependency.
 
 ## Prioritized discoveries
 
+- [x] **P1 browser usability - browsable session-history catalog.** Project
+  the ordered navigation stack into one core-owned Mosaic panel with stable
+  entry identity, address, current position, wraparound Previous/Next
+  selection, and direct Open traversal. Core and generated-host acceptance
+  cover repeated URLs, exact per-entry form and scroll restoration, and
+  fetch-free stack movement without toolkit-owned history policy.
+
 - [x] **P1 browser convergence - exact Copy Source transaction.** Add one
   semantic Copy Source event to the shared panel, copy the retained raw
   response bytes through the existing typed clipboard effect, keep the panel

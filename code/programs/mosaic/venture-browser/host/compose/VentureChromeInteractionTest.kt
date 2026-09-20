@@ -188,6 +188,16 @@ class VentureChromeInteractionTest {
             rule.waitUntil(10_000) {
                 runCatching { rule.onNodeWithText("Compose Start").assertExists() }.isSuccess
             }
+            rule.onNodeWithText("History (2)").assertExists().performClick()
+            rule.onNodeWithTag("history-next-button").assertIsEnabled().performClick()
+            rule.onNodeWithTag("history-open-button").assertIsEnabled().performClick()
+            rule.waitUntil(10_000) {
+                runCatching { rule.onNodeWithText("Compose Address Target").assertExists() }.isSuccess
+            }
+            rule.onNodeWithTag("back-button").assertIsEnabled().performClick()
+            rule.waitUntil(10_000) {
+                runCatching { rule.onNodeWithText("Compose Start").assertExists() }.isSuccess
+            }
             println("compose-live-stage=history")
 
             val beforeScroll = assertNotNull(host.scrollMetrics)

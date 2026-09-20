@@ -68,6 +68,14 @@ TestCase {
                 "bookmarksPreviousDisabled": true,
                 "bookmarksNextDisabled": true,
                 "bookmarksNavigateDisabled": disabled,
+                "historyLabel": "History (2)",
+                "historyDisabled": disabled,
+                "historyOpen": false,
+                "historyPosition": "2 of 2",
+                "historyAddress": "http://venture.test/start",
+                "historyPreviousDisabled": disabled,
+                "historyNextDisabled": disabled,
+                "historyNavigateDisabled": true,
                 "copyAddressDisabled": disabled,
                 "openPageDisabled": disabled,
                 "savePageDisabled": disabled,
@@ -259,6 +267,38 @@ TestCase {
         wait(0)
         compare(recordingHost.events.length, 1)
         compare(recordingHost.events[0].event, "onCopyAddress")
+    }
+
+    function test_history_catalog_crosses_the_mosaic_host_seam() {
+        hydrate(false)
+        recordingHost.reset()
+        const historyButton = nativeControl("history-button")
+        verify(historyButton.enabled)
+        historyButton.forceActiveFocus()
+        keyClick(Qt.Key_Space)
+        wait(0)
+        compare(recordingHost.events.length, 1)
+        compare(recordingHost.events[0].event, "onHistoryOpen")
+
+        chrome.applyMosaicResponse({
+            "props": {
+                "historyOpen": true,
+                "historyPosition": "2 of 2",
+                "historyAddress": "http://venture.test/start",
+                "historyPreviousDisabled": false,
+                "historyNextDisabled": false,
+                "historyNavigateDisabled": true
+            }
+        })
+        wait(0)
+        compare(chrome.historyOpen, true)
+        const previousButton = nativeControl("history-previous-button")
+        verify(previousButton.enabled)
+        previousButton.forceActiveFocus()
+        keyClick(Qt.Key_Space)
+        wait(0)
+        compare(recordingHost.events.length, 2)
+        compare(recordingHost.events[1].event, "onHistoryPrevious")
     }
 
     function test_open_page_crosses_the_mosaic_host_seam() {

@@ -1178,6 +1178,73 @@ fn bookmark_catalog_uses_one_ordered_shared_state_machine_across_generated_hosts
 }
 
 #[test]
+fn history_catalog_uses_one_identity_preserving_transaction_across_generated_hosts() {
+    let interface = read_package_file("src/VentureChrome.mil");
+    let layout = read_package_file("src/VentureChrome.mll");
+    for symbol in [
+        "slot history-label",
+        "slot history-open",
+        "slot history-position",
+        "slot history-address",
+        "emit onHistoryOpen",
+        "emit onHistoryPrevious",
+        "emit onHistoryNext",
+        "emit onHistoryNavigate",
+        "emit onHistoryClose",
+    ] {
+        assert!(interface.contains(symbol), "history interface omits {symbol}");
+    }
+    for control in [
+        "history-button",
+        "history-panel",
+        "history-previous-button",
+        "history-next-button",
+        "history-open-button",
+        "history-close-button",
+    ] {
+        assert!(layout.contains(control), "history layout omits {control}");
+    }
+
+    let core = read_package_file("../../../packages/rust/venture-browser-core/src/lib.rs");
+    for symbol in [
+        "OpenHistoryCatalog",
+        "BrowseHistoryCatalog",
+        "CloseHistoryCatalog",
+        "history_selection",
+        "History ({})",
+        "history_catalog_wraps_and_traverses_to_stable_duplicate_entries",
+    ] {
+        assert!(core.contains(symbol), "shared history core omits {symbol}");
+    }
+
+    for path in [
+        "host/compose/VentureChromeInteractionTest.kt",
+        "host/flutter/venture_chrome_interaction_test.dart",
+        "host/qt/tst_venture_chrome.qml",
+        "host/react/VentureChromeInteraction.test.tsx",
+        "host/swiftui/MosaicHost.swift",
+        "host/web/VentureChromeInteraction.test.js",
+        "host/xaml/MosaicHost.cs",
+    ] {
+        let acceptance = read_package_file(path);
+        assert!(
+            acceptance.contains("history-button") || acceptance.contains("History (2)"),
+            "{path} omits history catalog acceptance"
+        );
+    }
+
+    for (path, mapping) in [
+        ("host/qt/MosaicHost.cpp", "historyPosition"),
+        ("host/xaml/MosaicHost.cs", "HistoryPosition"),
+    ] {
+        assert!(
+            read_package_file(path).contains(mapping),
+            "{path} omits history catalog bridge hydration"
+        );
+    }
+}
+
+#[test]
 fn page_info_uses_one_typed_response_snapshot_across_generated_hosts() {
     let interface = read_package_file("src/VentureChrome.mil");
     let layout = read_package_file("src/VentureChrome.mll");
