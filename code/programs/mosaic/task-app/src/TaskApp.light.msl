@@ -138,8 +138,7 @@ style TaskApp {
     gap : 5 ;
   }
   part storage-summary {
-    gap : 10 ;
-    align : center-vertical ;
+    gap : 4 ;
   }
   part storage-status {
     color : "#2b2723" ;

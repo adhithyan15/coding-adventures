@@ -4,6 +4,14 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+### Fixed — local storage details remain legible (#15263)
+
+The persistence status and local data path now occupy separate lines. Their
+combined intrinsic width exceeded the generated Compose window, causing the
+old horizontal row to paint both strings over each other in every acceptance
+frame. The stacked summary keeps both pieces of recovery information visible
+without weakening Compose's no-starvation rule for row children.
+
 ### Fixed — generated desktop windows fit TaskApp on first launch (#14789)
 
 TaskApp now declares a 1280 x 900 initial desktop window in its Mosaic package

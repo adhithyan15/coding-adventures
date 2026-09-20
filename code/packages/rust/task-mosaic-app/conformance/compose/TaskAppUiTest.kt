@@ -17,6 +17,7 @@ import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.onRoot
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
+import kotlin.test.assertTrue
 import org.junit.Test
 
 private const val UI_TASK_NAME = "Native acceptance task"
@@ -136,6 +137,26 @@ private fun ComposeUiTest.assertTopbarIsNotStarved(stage: String) {
     )
 }
 
+/**
+ * #15263: the status sentence and recovery path must occupy distinct lines.
+ * Presence assertions passed while the old Row painted both glyph runs over
+ * each other, so compare the rendered bounds directly.
+ */
+@OptIn(ExperimentalTestApi::class)
+private fun ComposeUiTest.assertStorageSummaryIsLegible() {
+    val status = onNodeWithText("Saved locally on this device")
+        .fetchSemanticsNode()
+        .boundsInRoot
+    val location = onNodeWithText("Local only", substring = true)
+        .fetchSemanticsNode()
+        .boundsInRoot
+    assertTrue(status.width > 0f && location.width > 0f, "storage summary text was starved")
+    assertTrue(
+        status.bottom <= location.top,
+        "storage summary lines overlap: status=$status location=$location",
+    )
+}
+
 class TaskAppUiTest {
     @OptIn(ExperimentalTestApi::class)
     @Test
@@ -150,6 +171,7 @@ class TaskAppUiTest {
         }
         compose.setContent { MosaicApp(host) }
         compose.waitForIdle()
+        compose.assertStorageSummaryIsLegible()
 
         if (restoredOnLaunch) {
             compose.onNodeWithText(UI_PERSISTED_TASK_NAME).assertIsDisplayed()
