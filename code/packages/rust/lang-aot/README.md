@@ -957,3 +957,14 @@ item), **this closes every non-ALGOL BEAM gap in
 ## [0.348.0] - 2026-09-19 - VM-058 INSPECT region intersection
 
 Add an INSPECT two-boundary tally row after execution on all eight backends. COBOL now declares 59 rows / 472 cells; non-ALGOL declares 211 rows / 1688 cells.
+
+
+### Opt-in strict encoded CLR source API (CLR14)
+
+`compile_source_to_typed_cil_artifact(language, source, name)` passes the
+frontend's unmodified IIR to strict scalar lowering. Twig `(+ 2147483647 1)`
+executes as `Int64(2147483648)` when the complete artifact is loaded into the
+CLR simulator. Acceptance depends on the actual IIR: dynamic helper boundaries,
+McCarthy `ref<any>` and Nib narrow types remain unsupported, and the CLR01
+out-of-i32 literal gate remains in force. No type inference or fallback occurs.
+The default encoded API, CLI and textual result ABI retain their behavior.
