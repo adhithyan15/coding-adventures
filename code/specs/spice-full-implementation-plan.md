@@ -376,6 +376,14 @@ model-card parameter, or a UI artifact is not a completion signal.
      lowering, and Mosaic host coverage. Keep vendor libraries, arbitrary
      parameter names, expression-valued fields, and the full post-Berkeley
      model-library catalog for a separate product phase.
+   - **Mosaic SPICE WebAssembly lifecycle contract** (in progress): discovery
+     after the Berkeley-core audit: `spice-mosaic-app` exports the standard
+     `mosaic_wasm_*` ABI, but its package gate validates only native Rust state.
+     Add one compiled workbench artifact gate that drives the public browser
+     host through initialization, canonical schematic synchronization,
+     protocol-2 awaited file completion, snapshot restore, and disposal. This
+     is a single product-boundary contract, not a generic transport change or
+     another schematic control slice.
    - **Nonlinear branch-current result-map contract** (completed): export
      diode anode, BJT collector, JFET drain, and level-1 MOS drain currents as
      canonical `I(element)` values across Python, Rust, and TypeScript. Define
