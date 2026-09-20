@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Added — author-declared desktop window size (#14789)
+
+Optional `[app]` metadata may now declare paired portable-range
+`initial-window-width` and `initial-window-height` values. The validated
+`WindowSize` is consumed by generated desktop project shells; omitting the
+section preserves every backend's existing default.
+
 ### Added — `[host_effects]`, so a package can supply an effect handler
 
 Every Mosaic host template can answer an `Effect`, and an application can emit

@@ -12,10 +12,10 @@
 //! 2. **What does it publish?**           → `[components]` (PascalCase exports)
 //! 3. **What does it need from me?**      → `[dependencies]` and `[kernel]`
 //!
-//! Those core sections plus optional `[styles]` and `[host_assets]` resources
-//! answer those questions, and **nothing else** is permitted to depend on file
-//! layout or directory scanning. The manifest is the single source of truth
-//! for what a package is.
+//! Those core sections plus optional `[styles]`, `[app]`, and `[host_assets]`
+//! metadata answer those questions, and **nothing else** is permitted to
+//! depend on file layout or directory scanning. The manifest is the single
+//! source of truth for what a package is.
 //!
 //! ## Worked example
 //!
@@ -69,6 +69,7 @@
 //! | `InvalidComponentName`  | an entry in `components.exports` not PascalCase       |
 //! | `InvalidKernelVersion`  | `kernel.version` is anything other than `"1"`         |
 //! | `InvalidSemverString`   | `package.version` or a dependency value not semver-y  |
+//! | `InvalidInitialWindowSize` | either `[app]` initial-window dimension is zero |
 //! | `InvalidStylePath`      | `[styles].token_palette` is not a safe relative JSON path |
 //! | `DuplicateHostEffectHandler` | two `[host_effects].handlers` for one backend |
 //! | `HostEffectFileWithoutHandler` | a `[host_effects].files` backend declares no handler |
@@ -100,6 +101,7 @@ pub struct MosaicPackage {
     pub components: ComponentsSection,
     pub dependencies: HashMap<String, String>,
     pub styles: StylesSection,
+    pub app: AppSection,
     pub host_assets: HostAssetsSection,
     pub host_effects: HostEffectsSection,
     pub kernel: KernelSection,
@@ -114,6 +116,24 @@ pub struct MosaicPackage {
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct StylesSection {
     pub token_palette: Option<String>,
+}
+
+/// Optional metadata for the generated application shell.
+///
+/// This is deliberately separate from component layout: the same component
+/// can be embedded in a host-owned surface or mounted as the root of a desktop
+/// project shell. Only the latter owns a window whose initial size can be
+/// chosen here.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct AppSection {
+    pub initial_window_size: Option<WindowSize>,
+}
+
+/// A desktop window's initial logical-pixel dimensions.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct WindowSize {
+    pub width: u32,
+    pub height: u32,
 }
 
 /// The `[package]` table: identity + metadata.
@@ -265,6 +285,9 @@ pub enum ManifestError {
     /// A version string (in `[package].version` or a `[dependencies]` value)
     /// did not match the semver-like regex.
     InvalidSemverString(String),
+    /// `[app]` declared a desktop window outside the portable positive
+    /// signed-32-bit range accepted by every target window API.
+    InvalidInitialWindowSize { width: u32, height: u32 },
     /// `[styles].token_palette` was not a safe, portable package-relative
     /// JSON path.
     InvalidStylePath(String),
@@ -340,6 +363,10 @@ impl std::fmt::Display for ManifestError {
             Self::InvalidSemverString(v) => {
                 write!(f, "invalid semver-like version string `{v}`")
             }
+            Self::InvalidInitialWindowSize { width, height } => write!(
+                f,
+                "invalid `[app]` initial window size {width}x{height} (both dimensions must be between 1 and 2147483647)"
+            ),
             Self::InvalidStylePath(path) => write!(
                 f,
                 "invalid style resource path `{path}` (must be a package-relative .json path without `.` or `..` components)"
@@ -408,6 +435,7 @@ struct RawManifest {
     components: Option<RawComponents>,
     dependencies: Option<HashMap<String, String>>,
     styles: Option<RawStyles>,
+    app: Option<RawApp>,
     host_assets: Option<RawHostAssets>,
     host_effects: Option<RawHostEffects>,
     kernel: Option<RawKernel>,
@@ -417,6 +445,15 @@ struct RawManifest {
 #[serde(deny_unknown_fields)]
 struct RawStyles {
     token_palette: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct RawApp {
+    #[serde(rename = "initial-window-width")]
+    initial_window_width: Option<u32>,
+    #[serde(rename = "initial-window-height")]
+    initial_window_height: Option<u32>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -628,11 +665,14 @@ pub fn parse(toml_source: &str) -> Result<MosaicPackage, ManifestError> {
     // Step 6: validate optional package-owned style resources.
     let styles = validate_styles(raw.styles)?;
 
-    // Step 7: validate optional host asset declarations.
+    // Step 7: validate optional generated-application metadata.
+    let app = validate_app(raw.app)?;
+
+    // Step 8: validate optional host asset declarations.
     let host_assets = validate_host_assets(raw_host_assets)?;
     let host_effects = validate_host_effects(raw_host_effects)?;
 
-    // Step 8: validate `[kernel]`.
+    // Step 9: validate `[kernel]`.
     let kernel = validate_kernel(raw_kernel)?;
 
     Ok(MosaicPackage {
@@ -640,9 +680,42 @@ pub fn parse(toml_source: &str) -> Result<MosaicPackage, ManifestError> {
         components,
         dependencies,
         styles,
+        app,
         host_assets,
         host_effects,
         kernel,
+    })
+}
+
+fn validate_app(raw: Option<RawApp>) -> Result<AppSection, ManifestError> {
+    let Some(raw) = raw else {
+        return Ok(AppSection::default());
+    };
+    let initial_window_size = match (raw.initial_window_width, raw.initial_window_height) {
+        (None, None) => None,
+        (Some(width), Some(height))
+            if width > 0 && height > 0 && width <= i32::MAX as u32 && height <= i32::MAX as u32 =>
+        {
+            Some(WindowSize { width, height })
+        }
+        (Some(width), Some(height)) => {
+            return Err(ManifestError::InvalidInitialWindowSize { width, height });
+        }
+        (None, Some(_)) => {
+            return Err(ManifestError::MissingField {
+                section: "app".into(),
+                field: "initial-window-width".into(),
+            });
+        }
+        (Some(_), None) => {
+            return Err(ManifestError::MissingField {
+                section: "app".into(),
+                field: "initial-window-height".into(),
+            });
+        }
+    };
+    Ok(AppSection {
+        initial_window_size,
     })
 }
 
@@ -975,8 +1048,91 @@ version = "1"
         assert_eq!(pkg.components.exports, vec!["Grid", "Cell", "Column"]);
         assert!(pkg.dependencies.is_empty());
         assert!(pkg.styles.token_palette.is_none());
+        assert!(pkg.app.initial_window_size.is_none());
         assert!(pkg.host_assets.files.is_empty());
         assert_eq!(pkg.kernel.version, "1");
+    }
+
+    #[test]
+    fn parses_optional_initial_window_size() {
+        let src = r#"
+[package]
+name = "task-app"
+version = "0.1.0"
+description = "Task application"
+license = "MIT"
+[components]
+exports = ["TaskApp"]
+[app]
+initial-window-width = 1280
+initial-window-height = 900
+[kernel]
+version = "1"
+"#;
+        let pkg = parse(src).expect("manifest valid");
+        assert_eq!(
+            pkg.app.initial_window_size,
+            Some(WindowSize {
+                width: 1280,
+                height: 900,
+            })
+        );
+    }
+
+    #[test]
+    fn initial_window_dimensions_must_be_declared_together() {
+        for (field, declaration) in [
+            ("initial-window-height", "initial-window-width = 1280"),
+            ("initial-window-width", "initial-window-height = 900"),
+        ] {
+            let src = format!(
+                r#"
+[package]
+name = "task-app"
+version = "0.1.0"
+description = "Task application"
+license = "MIT"
+[components]
+exports = ["TaskApp"]
+[app]
+{declaration}
+[kernel]
+version = "1"
+"#
+            );
+            let err = parse(&src).unwrap_err();
+            assert!(
+                matches!(err, ManifestError::MissingField { ref section, field: ref actual } if section == "app" && actual == field),
+                "got {err:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn initial_window_dimensions_must_fit_every_target_api() {
+        for (width, height) in [(0, 900), (1280, 0), (i32::MAX as u32 + 1, 900)] {
+            let src = format!(
+                r#"
+[package]
+name = "task-app"
+version = "0.1.0"
+description = "Task application"
+license = "MIT"
+[components]
+exports = ["TaskApp"]
+[app]
+initial-window-width = {width}
+initial-window-height = {height}
+[kernel]
+version = "1"
+"#
+            );
+            let err = parse(&src).unwrap_err();
+            assert!(
+                matches!(err, ManifestError::InvalidInitialWindowSize { width: actual_width, height: actual_height } if actual_width == width && actual_height == height),
+                "got {err:?}"
+            );
+        }
     }
 
     #[test]

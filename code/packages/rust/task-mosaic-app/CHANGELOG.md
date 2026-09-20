@@ -1,5 +1,11 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — acceptance uses TaskApp's declared window (#14789)
+
+The 1280 x 900 Compose acceptance viewport is now pinned to TaskApp's `[app]`
+manifest declaration. The generated desktop app and its fit/overflow assertions
+therefore measure the same window instead of two unrelated constants.
+
 ## [Unreleased] — complete native Board column rows (#15473)
 
 `board-columns` now supplies the count and theme-aware accent cells that the

@@ -55,6 +55,21 @@ fn manifest_declares_task_app() {
     let package = mosaic_package_manifest::parse(&manifest_src).expect("manifest must parse");
     assert_eq!(package.package.name, "task-app");
     assert_eq!(package.components.exports, ["TaskApp"]);
+    let window = package
+        .app
+        .initial_window_size
+        .expect("TaskApp must declare the desktop window used by acceptance tests");
+    assert_eq!((window.width, window.height), (1280, 900));
+
+    let acceptance = fs::read_to_string(
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../packages/rust/task-mosaic-app/conformance/compose/TaskAppUiTest.kt"),
+    )
+    .expect("Compose acceptance source must exist");
+    assert!(
+        acceptance.contains(&format!("Size({}f, {}f)", window.width, window.height)),
+        "Compose acceptance viewport must match [app] initial window size"
+    );
 }
 
 /// #15486: TaskApp delegates narrow-window adaptation and the project-pane
