@@ -5339,6 +5339,7 @@ mod tests {
                 to_group: false,
                 from_port: None,
                 to_port: None,
+                routing: diagram_ir::StructuralRouting::Direct,
                 points: vec![Point { x: 20.0, y: 40.0 }, Point { x: 180.0, y: 40.0 }],
                 from_mult: None,
                 to_mult: None,

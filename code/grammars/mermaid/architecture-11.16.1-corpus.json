@@ -37,6 +37,10 @@
     {
       "id": "group-edge-endpoints",
       "source": "architecture-beta\ngroup public(cloud)[Public]\ngroup private(cloud)[Private]\nservice gateway(server)[Gateway] in public\nservice api(server)[API] in private\ngateway{group}:R --> L:api{group}"
+    },
+    {
+      "id": "perpendicular-port-routing",
+      "source": "architecture-beta\nservice gateway(server)[Gateway]\nservice queue(disk)[Queue]\ngateway:R -[publishes]-> T:queue"
     }
   ]
 }

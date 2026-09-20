@@ -38,8 +38,9 @@ right, and bidirectional arrowheads survive semantic and layout IR and lower to
 backend-neutral path geometry. Group-edge modifiers on contained services resolve
 relationship endpoints to deterministic group-boundary geometry. Explicit `L`,
 `R`, `T`, and `B` ports survive semantic and layout IR and anchor relationship
-geometry to the requested node or group boundary. Icon artwork, obstacle-aware
-routing, and configuration remain
+geometry to the requested node or group boundary. Architecture edges resolve to
+deterministic orthogonal polylines before backend-neutral PaintScene lowering.
+Icon artwork, obstacle avoidance, and configuration remain
 outside the partial compatibility claim.
 
 The initial `kanban` subset preserves indentation-defined columns and cards,

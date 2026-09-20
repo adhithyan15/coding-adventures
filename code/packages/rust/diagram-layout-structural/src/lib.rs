@@ -10,11 +10,11 @@ use diagram_ir::{
     resolve_style_with_base, DiagramDirection, LayoutedCompartment, LayoutedStructuralDiagram,
     LayoutedStructuralGroup, LayoutedStructuralNode, LayoutedStructuralRelationship, Point,
     StructuralAlignmentAxis, StructuralDiagram, StructuralNode, StructuralNodeKind,
-    StructuralNodeMetadata, StructuralPort,
+    StructuralNodeMetadata, StructuralPort, StructuralRouting,
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.15.0";
+pub const VERSION: &str = "0.16.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -530,6 +530,82 @@ fn point_on_port(bounds: StructuralBounds, port: StructuralPort) -> Point {
     }
 }
 
+fn port_is_horizontal(port: StructuralPort) -> bool {
+    matches!(port, StructuralPort::Left | StructuralPort::Right)
+}
+
+fn push_distinct(points: &mut Vec<Point>, point: Point) {
+    if points.last() != Some(&point) {
+        points.push(point);
+    }
+}
+
+fn orthogonal_path(
+    from: Point,
+    to: Point,
+    from_port: StructuralPort,
+    to_port: StructuralPort,
+) -> Vec<Point> {
+    let mut points = vec![from.clone()];
+    match (port_is_horizontal(from_port), port_is_horizontal(to_port)) {
+        (true, true) => {
+            let middle_x = (from.x + to.x) / 2.0;
+            push_distinct(&mut points, Point { x: middle_x, y: from.y });
+            push_distinct(&mut points, Point { x: middle_x, y: to.y });
+        }
+        (false, false) => {
+            let middle_y = (from.y + to.y) / 2.0;
+            push_distinct(&mut points, Point { x: from.x, y: middle_y });
+            push_distinct(&mut points, Point { x: to.x, y: middle_y });
+        }
+        (true, false) => push_distinct(&mut points, Point { x: to.x, y: from.y }),
+        (false, true) => push_distinct(&mut points, Point { x: from.x, y: to.y }),
+    }
+    push_distinct(&mut points, to);
+    points
+}
+
+fn relationship_path(
+    from: Point,
+    to: Point,
+    routing: StructuralRouting,
+    from_port: Option<StructuralPort>,
+    to_port: Option<StructuralPort>,
+) -> Vec<Point> {
+    match (routing, from_port, to_port) {
+        (StructuralRouting::Orthogonal, Some(from_port), Some(to_port)) => {
+            orthogonal_path(from, to, from_port, to_port)
+        }
+        _ => vec![from, to],
+    }
+}
+
+fn path_midpoint(points: &[Point]) -> Point {
+    let total_length: f64 = points
+        .windows(2)
+        .map(|segment| {
+            let dx = segment[1].x - segment[0].x;
+            let dy = segment[1].y - segment[0].y;
+            dx.hypot(dy)
+        })
+        .sum();
+    let mut remaining = total_length / 2.0;
+    for segment in points.windows(2) {
+        let dx = segment[1].x - segment[0].x;
+        let dy = segment[1].y - segment[0].y;
+        let length = dx.hypot(dy);
+        if remaining <= length && length > 0.0 {
+            let progress = remaining / length;
+            return Point {
+                x: segment[0].x + dx * progress,
+                y: segment[0].y + dy * progress,
+            };
+        }
+        remaining -= length;
+    }
+    points.last().cloned().unwrap_or(Point { x: 0.0, y: 0.0 })
+}
+
 fn layout_relationships(
     diagram: &StructuralDiagram,
     nodes: &[LayoutedStructuralNode],
@@ -546,14 +622,9 @@ fn layout_relationships(
             let (default_p0, default_p1) = closest_sides(a_bounds, b_bounds);
             let p0 = rel.from_port.map_or(default_p0, |port| point_on_port(a_bounds, port));
             let p1 = rel.to_port.map_or(default_p1, |port| point_on_port(b_bounds, port));
+            let points = relationship_path(p0, p1, rel.routing, rel.from_port, rel.to_port);
             let label = rel.label.as_ref().map(|label| {
-                (
-                    Point {
-                        x: (p0.x + p1.x) / 2.0,
-                        y: (p0.y + p1.y) / 2.0,
-                    },
-                    label.clone(),
-                )
+                (path_midpoint(&points), label.clone())
             });
             Some(LayoutedStructuralRelationship {
                 from_id: rel.from.clone(),
@@ -565,7 +636,8 @@ fn layout_relationships(
                 to_group: rel.to_group,
                 from_port: rel.from_port,
                 to_port: rel.to_port,
-                points: vec![p0, p1],
+                routing: rel.routing,
+                points,
                 from_mult: rel.from_mult.clone(),
                 to_mult: rel.to_mult.clone(),
                 label,
@@ -652,6 +724,7 @@ mod tests {
                 to_group: false,
                 from_port: None,
                 to_port: None,
+                routing: StructuralRouting::Direct,
                 from_mult: None,
                 to_mult: None,
                 label: None,
@@ -661,7 +734,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.15.0");
+        assert_eq!(crate::VERSION, "0.16.0");
     }
 
     #[test]
@@ -801,10 +874,11 @@ mod tests {
     }
 
     #[test]
-    fn explicit_ports_resolve_to_requested_boundary_anchors() {
+    fn explicit_ports_resolve_to_orthogonal_boundary_routes() {
         let mut diagram = two_class_diagram();
         diagram.relationships[0].from_port = Some(StructuralPort::Top);
         diagram.relationships[0].to_port = Some(StructuralPort::Bottom);
+        diagram.relationships[0].routing = StructuralRouting::Orthogonal;
 
         let layout = layout_structural_diagram(&diagram);
         let dog = layout.nodes.iter().find(|node| node.id == "Dog").unwrap();
@@ -812,6 +886,7 @@ mod tests {
         let relationship = &layout.relationships[0];
         assert_eq!(relationship.from_port, Some(StructuralPort::Top));
         assert_eq!(relationship.to_port, Some(StructuralPort::Bottom));
+        assert_eq!(relationship.routing, StructuralRouting::Orthogonal);
         assert_eq!(
             relationship.points[0],
             Point {
@@ -820,12 +895,16 @@ mod tests {
             }
         );
         assert_eq!(
-            relationship.points[1],
+            *relationship.points.last().unwrap(),
             Point {
                 x: animal.x + animal.width / 2.0,
                 y: animal.y + animal.height,
             }
         );
+        assert!(relationship.points.len() >= 3);
+        assert!(relationship.points.windows(2).all(|segment| {
+            segment[0].x == segment[1].x || segment[0].y == segment[1].y
+        }));
     }
 
     #[test]
