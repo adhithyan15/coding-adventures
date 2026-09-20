@@ -6,6 +6,8 @@ import {
   silentLogger,
 } from "@coding-adventures/forme-stage";
 import { StageError } from "@coding-adventures/forme-errors";
+import { memoryCache, type CacheBackend } from "@coding-adventures/forme-cache";
+import { computeRevisionId } from "@coding-adventures/forme-identity";
 import type { PipelineConfig } from "@coding-adventures/forme-pipeline-config";
 import { createOrchestrator } from "../src/index.js";
 
@@ -54,6 +56,73 @@ function config(
     },
     stages,
     wires,
+  };
+}
+
+function controllableCache(): {
+  readonly backend: CacheBackend;
+  readonly calls: () => number;
+  readonly peakGets: () => number;
+  delayGet(ordinal: number, missFollowing?: boolean): {
+    readonly entered: Promise<void>;
+    readonly release: () => void;
+  };
+  reset(): void;
+} {
+  const inner = memoryCache();
+  let getCalls = 0;
+  let activeGets = 0;
+  let peakGets = 0;
+  let delayedOrdinal: number | null = null;
+  let delayedGate: Deferred<void> | null = null;
+  let delayedEntered: Deferred<void> | null = null;
+  let missFollowing = false;
+  const backend: CacheBackend = {
+    async get(key) {
+      getCalls += 1;
+      const ordinal = getCalls;
+      activeGets += 1;
+      peakGets = Math.max(peakGets, activeGets);
+      try {
+        if (ordinal === delayedOrdinal) {
+          delayedEntered!.resolve();
+          await delayedGate!.promise;
+        }
+        if (missFollowing && delayedOrdinal !== null && ordinal >= delayedOrdinal) return null;
+        return inner.get(key);
+      } finally {
+        activeGets -= 1;
+      }
+    },
+    put: (key, entry) => inner.put(key, entry),
+    invalidate: key => inner.invalidate(key),
+    invalidatePrefix: prefix => inner.invalidatePrefix(prefix),
+    gc: olderThanMs => inner.gc(olderThanMs),
+    dispose: () => inner.dispose(),
+  };
+  return {
+    backend,
+    calls: () => getCalls,
+    peakGets: () => peakGets,
+    delayGet(ordinal, miss = false) {
+      delayedOrdinal = ordinal;
+      delayedGate = deferred<void>();
+      delayedEntered = deferred<void>();
+      missFollowing = miss;
+      return {
+        entered: delayedEntered.promise,
+        release: () => delayedGate!.resolve(),
+      };
+    },
+    reset() {
+      getCalls = 0;
+      activeGets = 0;
+      peakGets = 0;
+      delayedOrdinal = null;
+      delayedGate = null;
+      delayedEntered = null;
+      missFollowing = false;
+    },
   };
 }
 
@@ -154,6 +223,96 @@ describe("concurrent scheduler", () => {
       itemsConsumed: 3,
       itemsProduced: 3,
     });
+    await orchestrator.dispose();
+  });
+
+  it("keeps per-item cache admission in source order", async () => {
+    const cache = controllableCache();
+    const delayed = cache.delayGet(2);
+    const starts: string[] = [];
+    const source = defineStage({
+      name: "@test/cache-order-source",
+      version: "0.1.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "two cacheable items",
+      consumes: Kinds.Void,
+      produces: streamOf(Kinds.ContentSource),
+      capabilities: [],
+      configSchema: null,
+      async *run() { yield content("a"); yield content("b"); },
+    });
+    const transform = defineStage({
+      name: "@test/cache-order-transform",
+      version: "0.1.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "records cache-miss invocation order",
+      consumes: Kinds.ContentSource,
+      produces: Kinds.ContentSource,
+      capabilities: [],
+      configSchema: null,
+      async run(input) {
+        starts.push((input as { path: string }).path);
+        return input;
+      },
+    });
+    const orchestrator = createOrchestrator({ cache: cache.backend, logger: silentLogger() });
+    const pipeline = await orchestrator.buildPipeline(config([
+      { id: "source", stage: source },
+      { id: "transform", stage: transform },
+    ], 2));
+    const running = orchestrator.runOnce(pipeline);
+
+    await delayed.entered;
+    expect(cache.calls()).toBe(2);
+    expect(starts).toEqual([]);
+    delayed.release();
+
+    expect((await running).outcome).toBe("success");
+    expect(starts).toEqual(["a", "b"]);
+    expect(cache.peakGets()).toBe(1);
+    await orchestrator.dispose();
+  });
+
+  it("keeps ready-stage admission stable across delayed checkpoint misses", async () => {
+    const cache = controllableCache();
+    const starts: string[] = [];
+    const manifest = {
+      version: 1 as const,
+      entries: [],
+      revision: computeRevisionId({ version: 1, entries: [] }),
+    };
+    const stages = ["a", "b"].map(id => ({
+      id,
+      stage: defineStage({
+        name: `@test/checkpoint-order-${id}`,
+        version: "0.1.0",
+        apiVersion: KERNEL_API_VERSION,
+        description: `checkpointed source ${id}`,
+        consumes: Kinds.Void,
+        produces: Kinds.ContentSource,
+        capabilities: [],
+        configSchema: null,
+        async externalState() { return manifest; },
+        async run() { starts.push(id); return content(id); },
+      }),
+    }));
+    const orchestrator = createOrchestrator({ cache: cache.backend, logger: silentLogger() });
+    const pipeline = await orchestrator.buildPipeline(config(stages, 2));
+    expect((await orchestrator.runOnce(pipeline)).outcome).toBe("success");
+    expect(starts).toEqual(["a", "b"]);
+
+    starts.length = 0;
+    cache.reset();
+    const delayed = cache.delayGet(2, true);
+    const running = orchestrator.runOnce(pipeline);
+    await delayed.entered;
+    expect(cache.calls()).toBe(2);
+    expect(starts).toEqual([]);
+    delayed.release();
+
+    expect((await running).outcome).toBe("success");
+    expect(starts).toEqual(["a", "b"]);
+    expect(cache.peakGets()).toBe(1);
     await orchestrator.dispose();
   });
 

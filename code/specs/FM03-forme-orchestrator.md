@@ -552,6 +552,14 @@ invocations are rejected and no newly ready instance is submitted. Already
 active invocations observe the shared cancellation token and unwind
 cooperatively before disposal begins.
 
+Async cache and checkpoint reads cannot reorder admission. A ready instance
+retains its stable turn until its first `Stage.run` call has started or a
+validated cache/checkpoint hit has removed the need to call it. Cache lookups
+for per-item work make the same source-ordered hand-off when they hit or when
+their `Stage.run` call begins. Per-invocation cache lookups remain inside the
+shared permit budget; whole-instance checkpoint reads retain the single stable
+ready turn until they resolve.
+
 ### 4.2 Streaming and fan-out
 
 For stages that produce a `Stream<K>`, the orchestrator does not wait

@@ -19,11 +19,12 @@
 
 ### Tests
 
-- Nine scheduler cases cover stable ready order, out-of-order item completion,
+- Eleven scheduler cases cover stable ready order, out-of-order item completion,
   one shared stage/item budget, fail-fast queue closure, and external
   cancellation, including falsy per-item failures and invalid external-state
-  manifests, mixed recoverable/fatal item severity, and caller-token listener
-  cleanup. The full orchestrator suite has 149 passing cases.
+  manifests, mixed recoverable/fatal item severity, caller-token listener
+  cleanup, and delayed cache/checkpoint admission. The full orchestrator suite
+  has 151 passing cases.
 
 ## 0.10.0 — 2026-09-19
 

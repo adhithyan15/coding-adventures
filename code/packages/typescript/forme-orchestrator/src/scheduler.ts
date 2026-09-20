@@ -120,6 +120,12 @@ interface RunState {
   };
 }
 
+/** Stable hand-off that orders each ready instance's first run admission. */
+interface AdmissionTurn {
+  readonly wait: Promise<void>;
+  release(): void;
+}
+
 export interface SchedulerOptions {
   readonly logger: Logger;
   readonly cancellation: CancellationToken;
@@ -201,11 +207,11 @@ export async function executeDag(
   if (options.cancellation.cancelled) cancelLifecycle();
   else options.cancellation.signal.addEventListener("abort", cancelLifecycle, { once: true });
   try {
-  const runOptions: SchedulerOptions = {
-    ...options,
-    cancellation: lifecycle.token,
-  };
-  const pool = createConcurrencyPool(options.maxConcurrency, lifecycle.token);
+    const runOptions: SchedulerOptions = {
+      ...options,
+      cancellation: lifecycle.token,
+    };
+    const pool = createConcurrencyPool(options.maxConcurrency, lifecycle.token);
 
   // Choose a clock factory once for the whole run.  Reproducible-build
   // mode hands every stage a frozenClock; otherwise systemClock.
@@ -260,16 +266,17 @@ export async function executeDag(
     }
   });
 
-  const executeInstance = async (id: string): Promise<void> => {
+  const executeInstance = async (id: string, admission: AdmissionTurn): Promise<void> => {
     const state = states.get(id)!;
     const inst = dag.instances.get(id)!;
-    if (lifecycle.token.cancelled) {
-      state.summary.outcome = "skipped";
-      return;
-    }
+    await admission.wait;
     const startMonotonic = Date.now();
 
     try {
+      if (lifecycle.token.cancelled) {
+        state.summary.outcome = "skipped";
+        return;
+      }
       // Sources have no input; non-sources read from their producer's
       // output (which we previously stored in `outputs`).
       const inputs = hasNamedInputs(inst)
@@ -362,11 +369,14 @@ export async function executeDag(
         // Named fan-in is a join boundary: every producer has already been
         // materialized, every stream gets a fresh replayable AsyncIterable,
         // and the stage is invoked exactly once with the stable port object.
-        const stored = await runCached(inst, cacheInputValue(inst, states), runOptions, () =>
-          runInvocation(inst, async () => materialize(
-            await inst.stage.run(inputs.value as never, inst.config, ctx),
-            inst.stage.produces.name === "Stream",
-          )));
+        const stored = await runInvocation(inst, () =>
+          runCached(inst, cacheInputValue(inst, states), runOptions, async () => {
+            admission.release();
+            return materialize(
+              await inst.stage.run(inputs.value as never, inst.config, ctx),
+              inst.stage.produces.name === "Stream",
+            );
+          }));
         state.output = stored.value;
         state.isStreamOutput = stored.isStream;
         state.summary.cacheHits += stored.cacheHit ? 1 : 0;
@@ -378,11 +388,14 @@ export async function executeDag(
       } else if (inst.stage.consumes.name === "Stream" || inst.stage.consumes.name === "Void"
           || isSingleProducer(inst, dag, states)) {
         // One invocation: source / collector-style / single-input.
-        const stored = await runCached(inst, cacheInputValue(inst, states), runOptions, () =>
-          runInvocation(inst, async () => materialize(
-            await inst.stage.run(inputs.value as never, inst.config, ctx),
-            inst.stage.produces.name === "Stream",
-          )));
+        const stored = await runInvocation(inst, () =>
+          runCached(inst, cacheInputValue(inst, states), runOptions, async () => {
+            admission.release();
+            return materialize(
+              await inst.stage.run(inputs.value as never, inst.config, ctx),
+              inst.stage.produces.name === "Stream",
+            );
+          }));
         state.output = stored.value;
         state.isStreamOutput = stored.isStream;
         state.summary.cacheHits += stored.cacheHit ? 1 : 0;
@@ -398,26 +411,52 @@ export async function executeDag(
         // iterate again — semantically this stage produced N values.
         const list = inputs.value as unknown[];
         const collected = new Array<unknown>(list.length);
-        const itemResults = await Promise.allSettled(list.map(async (item, index) => {
-          lifecycle.token.throwIfCancelled();
-          try {
-            const sub = await runCached(inst, item, runOptions, () =>
-              runInvocation(inst, async () => materialize(
-                await inst.stage.run(item as never, inst.config, ctx),
-                false,
-              )));
-            collected[index] = sub.value;
-            return sub;
-          } catch (error) {
-            if (!(error instanceof CancellationError)) {
-              const itemError = toRunError(error, inst);
-              if (!(itemError.recoverable && runOptions.bestEffort)) {
-                lifecycle.cancel(`fatal stage failure in ${inst.id}`);
+        let itemAdmissionTail = Promise.resolve();
+        const itemTasks = list.map((item, index) => {
+          const waitForPriorItem = itemAdmissionTail;
+          let releaseNextItem!: () => void;
+          itemAdmissionTail = new Promise<void>(resolve => { releaseNextItem = resolve; });
+          let itemReleased = false;
+          const releaseItem = (): void => {
+            if (itemReleased) return;
+            itemReleased = true;
+            releaseNextItem();
+          };
+          return (async () => {
+            try {
+              const sub = await runInvocation(inst, async () => {
+                await waitForPriorItem;
+                lifecycle.token.throwIfCancelled();
+                return runCached(inst, item, runOptions, async () => {
+                  releaseItem();
+                  if (index === 0) admission.release();
+                  return materialize(
+                    await inst.stage.run(item as never, inst.config, ctx),
+                    false,
+                  );
+                });
+              });
+              collected[index] = sub.value;
+              return sub;
+            } catch (error) {
+              if (!(error instanceof CancellationError)) {
+                const itemError = toRunError(error, inst);
+                if (!(itemError.recoverable && runOptions.bestEffort)) {
+                  lifecycle.cancel(`fatal stage failure in ${inst.id}`);
+                }
               }
+              throw error;
+            } finally {
+              // Cache hits never enter the execute callback; cancellation can
+              // reject before the invocation callback starts. Either way the
+              // ordered admission chain must continue.
+              releaseItem();
+              if (index === 0) admission.release();
             }
-            throw error;
-          }
-        }));
+          })();
+        });
+        if (itemTasks.length === 0) admission.release();
+        const itemResults = await Promise.allSettled(itemTasks);
         let fatalItemFailed = false;
         let firstFatalItemError: unknown;
         let recoverableItemFailed = false;
@@ -500,6 +539,7 @@ export async function executeDag(
         lifecycle.cancel(`fatal stage failure in ${inst.id}`);
       }
     } finally {
+      admission.release();
       state.summary.elapsedMs = Date.now() - startMonotonic;
     }
   };
@@ -523,11 +563,24 @@ export async function executeDag(
   const ready = dag.topoOrder.filter(id => remainingDependencies.get(id) === 0);
   const inFlight = new Map<string, Promise<string>>();
   const launched = new Set<string>();
+  let admissionTail = Promise.resolve();
   while (ready.length > 0 || inFlight.size > 0) {
     while (ready.length > 0 && !lifecycle.token.cancelled && !anyFatal) {
       const id = ready.shift()!;
       launched.add(id);
-      inFlight.set(id, executeInstance(id).then(() => id));
+      const wait = admissionTail;
+      let releaseNext!: () => void;
+      admissionTail = new Promise<void>(resolve => { releaseNext = resolve; });
+      let released = false;
+      const admission: AdmissionTurn = {
+        wait,
+        release() {
+          if (released) return;
+          released = true;
+          releaseNext();
+        },
+      };
+      inFlight.set(id, executeInstance(id, admission).then(() => id));
     }
     if (inFlight.size === 0) break;
     const completedId = await Promise.race(inFlight.values());
