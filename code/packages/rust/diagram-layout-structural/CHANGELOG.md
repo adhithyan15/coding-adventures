@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.0
+
+- Reserve a deterministic title band in structural diagram geometry.
+
 ## 0.8.0
 
 - Reserve structural node geometry from resolved typography styles.

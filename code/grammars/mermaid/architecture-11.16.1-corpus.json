@@ -13,6 +13,10 @@
     {
       "id": "labeled-edge",
       "source": "architecture-beta\nservice api(server)[API]\nservice db(database)[Database]\napi:R -[reads and writes]-> L:db"
+    },
+    {
+      "id": "title-and-accessibility",
+      "source": "architecture-beta title Native platform\naccTitle: Platform topology\naccDescr {\n  API and database services\n  grouped by platform\n}\nservice api(server)[API]"
     }
   ]
 }
