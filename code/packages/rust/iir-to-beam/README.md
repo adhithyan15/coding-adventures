@@ -4,6 +4,10 @@
 `interpreter-ir` crate) directly to a `BEAMModule` (from the `ir-to-beam`
 encoder) **without going through the deprecated `compiler-ir` layer**.
 
+Character output saves live values in Y slots and reserves its list cell with
+only the character in x0 visible to garbage collection. Future or clobbered
+X registers are excluded from that root set.
+
 ## Overview
 
 ```

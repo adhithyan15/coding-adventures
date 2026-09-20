@@ -2646,13 +2646,18 @@ pub fn lower_iir_to_beam(
                     let source = operand_reg!(get_src!(instr, 1));
                     let cur_idx = instr_idx - 1;
                     save_live_across_imported_call!(cur_idx);
-                    // A character list has one two-word cons cell. test_heap
-                    // may collect, so keep the source registers live first.
+                    // Saved Y slots preserve values needed after the call.
+                    // Only the character is an X root here: the remaining
+                    // preallocated registers may be uninitialized or clobbered
+                    // by an earlier imported call. Compact before any GC.
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(source), BEAMOperand::x(0),
+                    ]));
                     instrs.push(BEAMInstruction::new(OP_TEST_HEAP, vec![
-                        BEAMOperand::u(2), BEAMOperand::u(live),
+                        BEAMOperand::u(2), BEAMOperand::u(1),
                     ]));
                     instrs.push(BEAMInstruction::new(OP_PUT_LIST, vec![
-                        BEAMOperand::x(source), BEAMOperand::a(0), BEAMOperand::x(0),
+                        BEAMOperand::x(0), BEAMOperand::a(0), BEAMOperand::x(0),
                     ]));
                     instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
                         BEAMOperand::u(1), BEAMOperand::u(import_put_chars as u64),

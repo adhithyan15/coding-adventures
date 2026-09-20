@@ -4821,3 +4821,24 @@ fn narrow_operations_mask_but_i64_remains_unbounded() {
         }
     }
 }
+
+#[test]
+fn putchar_gc_scans_only_initialized_character_root() {
+    use ir_to_beam::encoder::BEAMOperand;
+    let module = make_module_single(vec![
+        IIRInstr::new("const", Some("keep".into()), vec![Operand::Int(42)], "i64"),
+        IIRInstr::new("const", Some("ch".into()), vec![Operand::Int(65)], "i64"),
+        IIRInstr::new("call_builtin", None, vec![Operand::Var("putchar".into()), Operand::Var("ch".into())], "void"),
+        IIRInstr::new("const", Some("future".into()), vec![Operand::Int(1)], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("keep".into())], "i64"),
+    ]);
+    let beam = lower_iir_to_beam(&module, &cfg()).unwrap();
+    let i = beam.instructions.iter().position(|i| i.opcode == 16).unwrap();
+    assert_eq!(beam.instructions[i].operands, vec![BEAMOperand::u(2), BEAMOperand::u(1)]);
+    assert_eq!(beam.instructions[i-1].opcode, 64);
+    assert_eq!(beam.instructions[i-1].operands, vec![BEAMOperand::x(1), BEAMOperand::x(0)]);
+    assert_eq!(beam.instructions[i-2].operands, vec![BEAMOperand::x(0), BEAMOperand::y(0)]);
+    assert_eq!(beam.instructions[i+1].opcode, 69);
+    assert_eq!(beam.instructions[i+1].operands, vec![BEAMOperand::x(0), BEAMOperand::a(0), BEAMOperand::x(0)]);
+    assert_eq!(beam.instructions[i+3].operands, vec![BEAMOperand::y(0), BEAMOperand::x(0)]);
+}
