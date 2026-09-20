@@ -80,3 +80,12 @@ operands refuse before changing stack or pc.
 Signed remainder and bitwise NOT also preserve matched Int/Int64 widths.
 Remainder follows truncation-toward-zero division, rejects zero and MIN/-1,
 and keeps the dividend's sign. Invalid operands refuse without state mutation.
+
+### Checked long branches (CLR10)
+
+The simulator executes `br` (0x38), `brfalse` (0x39) and `brtrue` (0x3a)
+using signed little-endian i32 displacements from the next instruction.
+Truncated operands, out-of-method targets and missing or uninitialized
+conditions refuse before state changes. Targets are range-checked even for
+untaken branches. This is execution support, not full CIL verification of
+instruction boundaries or exception regions; short branches are unchanged.

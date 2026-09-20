@@ -96,3 +96,6 @@ clr-simulator = { path = "../clr-simulator" }
 mccarthy-lisp-vm = { path = "../mccarthy-lisp-vm" }
 macsyma-vm = { path = "../macsyma-vm" }
 iir-to-jvm-class-file = { path = "../iir-to-jvm-class-file" }
+
+# Builder-to-simulator promotion proof for encoded CLR branches.
+ir-to-cil-bytecode = { path = "../ir-to-cil-bytecode" }
