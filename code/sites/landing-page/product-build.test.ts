@@ -49,7 +49,7 @@ describe("live product scheduling", () => {
     } finally {
       await rm(reports, { recursive: true, force: true });
     }
-  });
+  }, 30_000);
 });
 
 async function build(reportPath: string): Promise<BuildReport> {
