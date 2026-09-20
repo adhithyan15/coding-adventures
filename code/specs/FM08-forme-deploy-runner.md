@@ -13,7 +13,7 @@
 | Deploy manifest producer | Implemented | `forme-aot-deploy-manifest-emitter` produces the input contract. |
 | Core planning and validation | Implemented in FM-B044 | `forme-deploy-runner-core` validates manifests, plans complete output sets, preflights bytes, and emits deterministic dry-run reports without capabilities. |
 | Filesystem adapter | Implemented in FM-B045 | `forme-deploy-runner-fs-adapter` proves atomic tree replacement, rollback, idempotency, stale-file/directory pruning, and adversarial containment. |
-| GitHub Pages adapter | Pending | FM-B046 owns the first hosted target integration. |
+| GitHub Pages source-branch adapter | Implemented in FM-B046 | Publishes one owned prefix of the repository's shared `gh-pages` source branch through atomic Git ref updates. |
 | `forme deploy` composition | Pending | FM-B047 will add this command to the FM07 CLI surface and dogfood both live sites. |
 
 FM08 was originally checked in as FM05. FM-B011 moved it without changing its
@@ -380,10 +380,60 @@ The v0 spec covers two reference adapters:
   `filesystem:user` capability. The adapter exposes the tree swap as a
   transaction so rollback can restore the same-parent backup.
 - **`GitHubPagesAdapter`** — prepares and publishes the complete validated
-  output set through GitHub Pages' artifact/deployment boundary. Capabilities
-  are limited to the exact GitHub endpoint plus only the selected token
-  variable. FM-B046 defines the final transaction and retry mapping against
-  that API before implementation.
+  owned output set beneath one configured prefix of a GitHub Pages source
+  branch. It uses GitHub's Git Data API to create immutable blobs, a tree, and
+  a commit, then advances the configured ref with `force: false`. The built-in
+  v0 REST boundary is fixed to `https://api.github.com`; alternate enterprise
+  transports require a separately reviewed host-bound boundary. The single
+  ref update is the publication point: readers see either the prior commit or
+  the new complete commit, while paths outside this adapter's ownership remain
+  unchanged. Capabilities are limited to the exact GitHub API origin plus only
+  the selected token variable; shell and subprocess authority are forbidden.
+
+  Each owner has a validated identifier and a reserved manifest at
+  `.forme/deployments/<owner>.json`. That manifest records the portable paths
+  and exact Git blob identities the owner published in its previous successful
+  commit. Before trusting its deletion or reuse authority, the adapter MUST
+  compare every recorded identity with the regular-file entries in a bounded
+  target-tree snapshot. Missing, linked, non-regular, truncated, or mismatched
+  target state fails closed. The adapter may
+  delete only previous-manifest paths beneath the same configured destination
+  prefix. Missing or malformed ownership state fails closed before the ref
+  update when deletion would be required; it never grants authority over an
+  unlisted sibling or an unowned exact path. Existing content adoption requires
+  a separate explicit migration that proves the expected target identities;
+  the normal publish path never infers ownership from destination alone. The
+  reserved `.forme` namespace cannot be selected as a destination or appear in
+  a user manifest.
+
+  Preparation reads the source ref and its base commit, verifies the prior
+  ownership manifest, resolves each new file through `VerifiedContentReader`,
+  and creates immutable Git objects. Commit submits one non-forced ref update.
+  Before that update, the adapter MUST verify the immutable candidate commit
+  through the same complete, bounded target-tree and ownership reads used for
+  a future deployment. It MUST reject projected per-owner, owner-count, and
+  aggregate ownership state that the next run could not read without
+  truncation. Combined destination/output paths remain within the same portable
+  path bound as standalone output paths.
+  A `409` or `422` caused by a concurrent ref advance discards that candidate,
+  rereads the new base, replans ownership-preserving tree changes, and retries
+  up to the caller's bounded retry budget. Authentication/authorization
+  failures (`401`/`403`), missing repository/ref errors (`404`), validation
+  failures unrelated to ref races, and all other permanent errors are never
+  retried. Before the publication point, `429`, `502`, `503`, and `504` may
+  retry with a server-provided bounded delay. A definite `429` ref-update
+  rejection may also retry, but a network or gateway error during the atomic
+  ref update is never retried blindly: the adapter rereads the target and
+  confirms the candidate ownership state. Cancellation stops new requests
+  immediately. Cancellation after the ref update begins is indeterminate
+  unless that update has already returned success. Rollback before
+  the ref update is object abandonment; after it succeeds, a compensating
+  forced ref move is forbidden because it could erase another publisher's
+  commit. A failed post-commit confirmation reports an indeterminate outcome
+  that callers resolve by reading the ref and ownership manifest. The reference
+  implementation performs that confirmation itself after a network or gateway
+  failure and returns an explicit `INDETERMINATE` error if the
+  published ownership state still cannot be proved.
 
 Future v1+ adapters: S3, Netlify, Cloudflare Pages, and Vercel. Their
 per-object versus transactional guarantees remain governed by the generic

@@ -417,8 +417,10 @@ console.log(prose, nested);
         # +1: forme-deploy-runner-core, the capability-free deployment planner.
         # +1: der-tlv, the standalone portable DER framing lane.
         # +1: forme-deploy-runner-fs-adapter, the atomic publication boundary.
-        self.assertEqual(summary.total_projects, 474)
-        self.assertEqual(summary.shared_projects, 295)
+        # +1: forme-deploy-runner-github-pages-adapter, the hosted publication
+        # boundary over GitHub's Git Data API.
+        self.assertEqual(summary.total_projects, 475)
+        self.assertEqual(summary.shared_projects, 296)
         self.assertEqual(summary.inherited_root_dir, 130)
         self.assertEqual(summary.inherited_out_dir, 133)
         self.assertEqual(summary.standalone_emit_projects, 149)
@@ -457,7 +459,9 @@ console.log(prose, nested);
         # fallback for hosts that report no usable count.
         # +1: forme-deploy-runner-core hashes verified publication snapshots.
         # +1: forme-deploy-runner-fs-adapter owns its filesystem transaction.
-        self.assertEqual(summary.node_api_projects, 73)
+        # +1: forme-deploy-runner-github-pages-adapter encodes verified bytes
+        # and ownership manifests through the Node Buffer API.
+        self.assertEqual(summary.node_api_projects, 74)
         # +1: script-ductus owns `@types/node` directly, because its tests
         # read the shipped fonts off disk to verify the pen paths.
         # +1: chief-of-staff-channel-store owns the test-only Node provider.
@@ -475,7 +479,9 @@ console.log(prose, nested);
         # hardware-concurrency default.
         # +1: forme-deploy-runner-core owns the Node crypto type provider.
         # +1: forme-deploy-runner-fs-adapter owns its Node filesystem provider.
-        self.assertEqual(summary.node_provider_projects, 73)
+        # +1: forme-deploy-runner-github-pages-adapter owns its Node Buffer
+        # provider for binary Git blob transport.
+        self.assertEqual(summary.node_provider_projects, 74)
         self.assertEqual(summary.missing_node_provider_projects, 0)
         self.assertEqual(summary.stale_node_provider_locks, 0)
         self.assertEqual(summary.node_lock_exemptions, 1)
@@ -503,7 +509,9 @@ console.log(prose, nested);
         # +1: forme-deploy-runner-core commits its compiler and test lockfile.
         # +1: der-tlv commits its compiler and test dependency lockfile.
         # +1: forme-deploy-runner-fs-adapter locks its compiler and test graph.
-        self.assertEqual(summary.locked_compilers, 473)
+        # +1: forme-deploy-runner-github-pages-adapter locks its compiler and
+        # test graph.
+        self.assertEqual(summary.locked_compilers, 474)
 
 
 if __name__ == "__main__":
