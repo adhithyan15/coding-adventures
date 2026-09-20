@@ -73,3 +73,6 @@ pub use il_text::emit_il;
 // Re-export the artifact types so callers don't need to depend on
 // `ir-to-cil-bytecode` directly.
 pub use ir_to_cil_bytecode::{CILProgramArtifact, CILMethodArtifact};
+
+pub mod typed_scalar;
+pub use typed_scalar::lower_typed_scalars_to_cil;
