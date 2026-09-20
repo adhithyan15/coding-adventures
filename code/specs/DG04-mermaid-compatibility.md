@@ -442,8 +442,9 @@ Sibling `align row` and `align column` constraints survive semantic IR and
 resolve declared member order to deterministic shared-axis layout geometry.
 Quoted service icon text survives as typed semantic metadata, reserves dedicated
 header geometry, and lowers to backend-neutral badge and shaped-text PaintInstructions.
-Group-edge modifiers, left and bidirectional
-arrows, icon artwork, port-aware routing, and configuration remain unsupported
+Left, right, and bidirectional relationship arrowheads survive semantic and layout
+IR and lower to backend-neutral path geometry. Group-edge modifiers, icon artwork,
+port-aware routing, and configuration remain unsupported
 at the partial level.
 
 ### Radar Native Slice

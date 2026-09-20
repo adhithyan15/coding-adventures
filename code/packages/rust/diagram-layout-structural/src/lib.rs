@@ -14,7 +14,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.12.0";
+pub const VERSION: &str = "0.13.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -516,6 +516,8 @@ fn layout_relationships(
                 from_id: rel.from.clone(),
                 to_id: rel.to.clone(),
                 kind: rel.kind.clone(),
+                start_arrow: rel.start_arrow,
+                end_arrow: rel.end_arrow,
                 points: vec![p0, p1],
                 from_mult: rel.from_mult.clone(),
                 to_mult: rel.to_mult.clone(),
@@ -579,6 +581,8 @@ mod tests {
                 from: "Dog".into(),
                 to: "Animal".into(),
                 kind: RelKind::Inheritance,
+                start_arrow: false,
+                end_arrow: true,
                 from_mult: None,
                 to_mult: None,
                 label: None,
@@ -588,7 +592,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.12.0");
+        assert_eq!(crate::VERSION, "0.13.0");
     }
 
     #[test]
