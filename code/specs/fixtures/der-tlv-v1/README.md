@@ -23,16 +23,19 @@ must materialize the segments in memory and must not interpret fixture data as
 paths, commands, or code.
 
 The fixture-only `"host-max"` value for `limits.max_value_len` means the
-largest value representable by the consumer's native index type. It exists
-solely to prove that a wire `u64::MAX` declaration reports the same
-`length-host-overflow` kind and length-prefix offset on 32-bit and 64-bit
-hosts. It is not a production configuration value.
+largest value representable by the consumer's supported index domain in the
+test runtime. It exists solely to prove that a wire `u64::MAX` declaration
+reports the required `length-host-overflow` kind and length-prefix offset. It
+is not a production configuration value or evidence for untested architecture
+widths.
 
 The fixture result is deliberately smaller than an implementation's public
 element object. Byte ranges are derived from `element_offset`, `header_len`,
 `encoded_len`, and `remainder_offset`, which lets each package prove that its
-header, value, encoded value, and remainder are exact slices of the supplied
-input without copying large expected payloads into JSON.
+header, value, encoded value, and remainder are byte-exact projections of the
+supplied input without copying large expected payloads into JSON. The portable
+contract does not prescribe whether a language represents those projections
+as borrowed views or copied byte containers.
 
 Errors are normalized to one of the 17 closed identifiers plus an input byte
 offset. Diagnostic strings are implementation-specific, but must remain

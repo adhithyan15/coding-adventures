@@ -14107,11 +14107,11 @@ The selected tranche now has a closed language-neutral DER TLV v1 behavior
 suite with 54 cases and 17 stable error kinds, plus package-native consumers in
 all 15 established implementation lanes: Rust, Python, Go, TypeScript, Dart,
 Elixir, Ruby, Perl, Lua, Java, Kotlin, Swift, Haskell, C#, and F#. The contract
-pins exact borrowed slices and untouched remainders, transactional cursor
-advancement, host-width-independent limits, canonical identifier and length
-encoding, exact-input rejection, payload-blind errors, and empty capability
-manifests. ASN.1 value decoding, X.509 policy, cryptography, trust, TLS,
-transport, and ambient authority remain outside this owner.
+pins byte-exact projections and untouched remainders, transactional cursor
+advancement, explicit supported-index overflow handling, canonical identifier
+and length encoding, exact-input rejection, payload-blind errors, and empty
+capability manifests. ASN.1 value decoding, X.509 policy, cryptography, trust,
+TLS, transport, and ambient authority remain outside this owner.
 
 The closed consumer registry is itself schema-checked and the aggregate gate
 rejects missing, duplicated, escaped, cross-wired, or unexpected consumers,

@@ -2,7 +2,7 @@
 
 ## Status
 
-Specification for a zero-external-dependency, allocation-free decoder of the
+Specification for a zero-external-dependency, in-memory decoder of the
 identifier and definite-length framing shared by ASN.1 Distinguished Encoding
 Rules (DER) values. This is the next repository-owned primitive required before
 X.509 certificate parsing and therefore before OAuth can gain concrete HTTPS.
@@ -64,11 +64,11 @@ limit, and then checked against the remaining input. A cursor consumes at most
 `max_elements`; depth is deliberately absent because this layer does not walk
 constructed children recursively.
 
-The wire-length domain is always the unsigned 64-bit domain, independent of
-the host index width. A declared length that cannot be represented by the host,
-or that cannot be added to the already-decoded header without overflowing the
-host index type, reports `LengthHostOverflow` at the length-prefix byte. This
-keeps both the error kind and offset stable on 32-bit and 64-bit consumers.
+The wire-length domain is the unsigned 64-bit domain. A declared length that
+cannot be represented by a consumer's supported index domain, or that cannot
+be added to the already-decoded header without overflowing that domain,
+reports `LengthHostOverflow` at the length-prefix byte. The contract fixes the
+error kind and offset; it does not claim validation on every architecture.
 
 ## Public Contract
 
@@ -114,13 +114,18 @@ impl<'a> DerCursor<'a> {
 }
 ```
 
-`decode_one` returns the first borrowed element and untouched remainder.
+The Rust-shaped API above is the zero-copy reference surface. Other language
+implementations return byte-exact header, value, encoding, and remainder
+projections using their native byte-container semantics; allocation strategy
+is not part of the portable contract.
+
+`decode_one` returns the first element and untouched remainder.
 `decode_exact` additionally requires that the element consume all input, so a
 canonical zero-length value cannot hide trailing bytes. `DerCursor` performs
-bounded, iterative sibling decoding without allocation or recursion. A later
-typed decoder may open an element's value with another cursor, but it must own
-and enforce one shared tree-depth and total-work budget; this package does not
-claim that independent cursor limits compose into a whole-document bound.
+bounded, iterative sibling decoding without recursion. A later typed decoder
+may open an element's value with another cursor, but it must own and enforce one
+shared tree-depth and total-work budget; this package does not claim that
+independent cursor limits compose into a whole-document bound.
 
 ## Error Contract
 
