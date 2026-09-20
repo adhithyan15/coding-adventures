@@ -113,7 +113,7 @@ function committedInventories(root = defaultCurriculumRoot()): CommittedInventor
     });
 }
 
-/** Every `*.test.ts` under `tests/`, so a pin may live wherever it belongs. */
+/** Every test entrypoint and owned case shard under `tests/`, wherever a pin belongs. */
 function suiteSources(directory = TESTS_ROOT): { path: string; text: string }[] {
   const found: { path: string; text: string }[] = [];
   for (const entry of readdirSync(directory, { withFileTypes: true }).sort((a, b) =>
@@ -121,7 +121,9 @@ function suiteSources(directory = TESTS_ROOT): { path: string; text: string }[] 
   )) {
     const path = join(directory, entry.name);
     if (entry.isDirectory()) found.push(...suiteSources(path));
-    else if (entry.name.endsWith(".test.ts")) found.push({ path, text: readFileSync(path, "utf8") });
+    else if (entry.name.endsWith(".test.ts") || entry.name.endsWith(".case.ts")) {
+      found.push({ path, text: readFileSync(path, "utf8") });
+    }
   }
   return found;
 }
