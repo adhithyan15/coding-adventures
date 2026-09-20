@@ -43,4 +43,3 @@ Authoritative CIL references:
 - `not` is opcode `0x66` and returns the bitwise complement with the same stack
   type as its operand:
   https://learn.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.not
-
