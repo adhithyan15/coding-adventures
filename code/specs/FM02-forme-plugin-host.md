@@ -12,6 +12,17 @@
 > contribute to (FM04 Style IR, FM05 Interactivity IR), the AOT
 > compiler (FM06), the dev server and CLI (FM07).
 
+## Implementation status
+
+| Surface | Status | Evidence / next step |
+|---|---|---|
+| Manifest parser | Implemented | `forme-manifest` validates the current first-party manifest shape. |
+| Plugin discovery and handshake | Pending | FM-B014 owns discovery, negotiation, and typed streaming. |
+| Capability mediation and crash isolation | Pending | FM-B014 must prove denial, cancellation, and failure boundaries. |
+| TypeScript/Python/Rust runners | Blocked | FM-B015 follows the host wire protocol. |
+| OS sandbox profiles | Blocked | FM-B015 owns macOS, Linux, and Windows enforcement. |
+| Install/trust CLI | Blocked | FM07 exposes it only after FM-B014/FM-B015 land. |
+
 ---
 
 ## 0. Preface
@@ -2018,9 +2029,10 @@ for the broader vocabulary.
 - **FM01** — Kernel: types, kinds, stages, capabilities, identity
 - **FM03** — Orchestrator: pipeline config, DAG, scheduling, cache, watch, repro
 - **FM04** — Style IR (consumed by plugins)
-- **FM05** — Interactivity IR (consumed by plugins)
-- **FM06** — AOT compiler
-- **FM07** — Dev server, CLI, shell integration (consumes `forme install`)
+- **[FM05](FM05-forme-interactivity-ir.md)** — Interactivity IR (consumed by plugins)
+- **[FM06](FM06-forme-aot-compiler.md)** — AOT compiler
+- **[FM07](FM07-forme-cli-dev-server.md)** — Dev server, CLI, shell integration (consumes `forme install`)
+- **[FM08](FM08-forme-deploy-runner.md)** — Deploy runner
 
 ## Appendix E — This is a living document
 

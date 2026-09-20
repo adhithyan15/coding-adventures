@@ -12,6 +12,17 @@
 > first-party-only configuration that imports stages directly works
 > against FM03 today, with FM02 layering in third-party plugins later.
 
+## Implementation status
+
+| Surface | Status | Evidence / next step |
+|---|---|---|
+| Config validation and typed DAG | Implemented | `forme-pipeline-config` and `forme-orchestrator` power both live sites. |
+| Deterministic fan-in/fan-out | Implemented | Named ports, bounded multicast, and stable ordering are tested. |
+| Persistent cache and affected set | Implemented | External source ledgers and topology checkpoints work across CLI processes. |
+| Concurrent scheduling and cancellation | Implemented | One FIFO permit pool bounds ready stages, items, and iterator pulls. |
+| Reproducible reports | Implemented | Clean and warm live builds compare canonical reports and artifact hashes. |
+| Third-party stage loading | Pending | [FM02](FM02-forme-plugin-host.md) owns the host boundary. |
+
 ---
 
 ## 0. Preface
@@ -247,8 +258,9 @@ export default config;
 The orchestrator is invoked via:
 
 ```bash
-forme run                            # default forme.config.ts
-forme run --config pipelines/blog.ts # explicit
+forme build                            # default forme.config.ts
+forme build --config pipelines/blog.ts # explicit
+# `forme run` is an exact compatibility alias.
 forme watch                          # config + watcher
 ```
 
@@ -1673,9 +1685,10 @@ Appendix B for the broader Forme vocabulary.
 - **FM01** — Kernel: types, kinds, stages, capabilities, identity, manifest
 - **FM02** (next) — Plugin host: loading, sandboxing, extension registry
 - **FM04** — Style IR
-- **FM05** — Interactivity IR
-- **FM06** — AOT compiler
-- **FM07** — Dev server, CLI, and shell integration
+- **[FM05](FM05-forme-interactivity-ir.md)** — Interactivity IR
+- **[FM06](FM06-forme-aot-compiler.md)** — AOT compiler
+- **[FM07](FM07-forme-cli-dev-server.md)** — Dev server, CLI, and shell integration
+- **[FM08](FM08-forme-deploy-runner.md)** — Deploy runner
 
 ## Appendix D — This is a living document
 

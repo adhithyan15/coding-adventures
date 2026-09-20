@@ -1,10 +1,24 @@
-# FM05 — Forme Deploy Runner
+# FM08 — Forme Deploy Runner
 
 > **Status:** v0 specification.  Implementation pending.
-> **Layer:** FM05 (last layer of the FM00 vision — applies a
+> **Layer:** FM08 (last layer of the FM00 vision — applies a
 > deploy manifest to a real target).
 > **Predecessor:** `forme-aot-deploy-manifest-emitter` produces
 > the manifest this runner consumes.
+
+## Implementation status
+
+| Surface | Status | Evidence / next step |
+|---|---|---|
+| Deploy manifest producer | Implemented | `forme-aot-deploy-manifest-emitter` produces the input contract. |
+| Core planning and validation | Pending | FM-B012 owns the pure deploy-plan implementation. |
+| Filesystem adapter | Pending | FM-B012 must prove atomic tree replacement, rollback, idempotency, and stale-file pruning. |
+| GitHub Pages adapter | Pending | FM-B012 owns the first hosted target integration. |
+| `forme deploy` composition | Pending | FM-B012 will add this command to the FM07 CLI surface. |
+
+FM08 was originally checked in as FM05. FM-B011 moved it without changing its
+deploy contract so FM05 can retain the Interactivity IR number reserved by
+FM01–FM04.
 
 ## 1. Purpose
 
@@ -15,11 +29,11 @@ content from a content store, and writes every file to a
 deployment target — local filesystem, S3 bucket, Netlify edge,
 Cloudflare Pages, etc.
 
-It is the **first FM00-cluster component with non-`[]`
-capabilities** (it needs `fs` and/or `net`).  Every package
-upstream of it stays a pure transform; the runner is the
-trust-boundary where in-memory bytes become files on disk or
-objects in a remote store.
+It is the **publication trust boundary** where already-built artifacts become
+files or remote objects. Earlier filesystem sources and emitters already use
+narrow `storage:*` authority; this runner may additionally require an explicit
+`filesystem:user`, `network:<host>`, or `env:<name>` grant for the selected
+target. Pure planning stays in the capability-free core package.
 
 ## 2. Why a spec before implementation
 
@@ -30,10 +44,11 @@ Three reasons the runner ships as a spec first:
    adapter interface before any single adapter exists prevents
    the first adapter from accidentally setting the contract for
    the rest.
-2. **Capability budget.**  This is the only FM00 component
-   that touches the outside world.  We want the capability
-   shape (which env vars, which fs paths, which network hosts)
-   nailed down in one place that reviewers can audit.
+2. **Capability budget.** This is the publication boundary and therefore the
+   broadest effectful FM00 component. Filesystem sources and emitters already
+   hold narrowly scoped storage capabilities; deployment may additionally need
+   an explicitly selected external root, credential variables, or network
+   hosts. Those scopes must be reviewable in one place.
 3. **Atomicity semantics.**  Atomicity is harder than it
    looks — partial deploys, retry storms, and rollback all
    need to be designed-not-discovered.  Putting the
@@ -71,6 +86,32 @@ The runner **MUST** re-validate the manifest before acting on
 it (re-run `parsePageBundle`-style shape checks) — it cannot
 trust the manifest content even though the upstream emitter
 validated it.
+
+#### 3.1.1 Portable output paths and ownership
+
+Every manifest map key MUST equal its entry's `outputPath`. An output path is a
+portable relative artifact path made from non-empty `/`-separated segments.
+Validation MUST reject an empty path; leading `/` or `\\`; a Windows drive or
+UNC prefix; `\\` as a separator; `.` or `..` segments; NUL/control characters;
+colon-bearing segments (including NTFS alternate streams); duplicate normalized
+paths; and file/directory prefix collisions such as `assets` plus
+`assets/app.css`. A target MAY additionally reject collisions in its own
+case-folding or normalization model. The complete new manifest and any previous
+manifest MUST pass these checks before the runner reads target state or starts
+a transaction.
+
+The validated new manifest is the complete owned output set. A previous
+manifest grants deletion authority only for its own validated paths beneath the
+same target root; it never grants authority over an unlisted sibling. The
+filesystem adapter MUST stage the complete new set in an exclusively created
+sibling tree, reject symlinks or other linked path components and pre-existing
+final targets in that tree, create files exclusively, and verify every
+canonical parent remains inside the staging root. Before the final swap it MUST
+reject a configured root that is itself a link and verify the canonical parent
+contains both the root and staging tree. The old root is moved to a same-parent
+backup, the complete staging tree is renamed into place, and failure restores
+the backup. No per-file write or cleanup may follow a link or mutate an
+external hard-link target.
 
 ### 3.2 Required: content store
 
@@ -112,9 +153,10 @@ If supplied via `--previous <path>`, the runner uses it to
 compute a **diff plan**: which files are new, changed, or
 unchanged compared to the previous deploy.  Unchanged files
 are skipped (no write); changed files are atomically replaced;
-new files are atomically added; missing files (in the new
-manifest but absent from the previous) are deleted at the end
-of a successful deploy.
+new files are atomically added; stale files (present in the previous manifest
+but absent from the new one) are deleted only as part of successful
+complete-set publication and only within the validated ownership and
+containment rules in §3.1.1.
 
 ## 4. Outputs
 
@@ -263,8 +305,9 @@ interface DeployTarget {
    * atomic multi-file commit (e.g. Netlify's deploy API),
    * `begin` returns a transaction handle and `commit` /
    * `rollback` complete or abort the batch.  Targets that
-   * don't support this (fs, S3) return `null` and the runner
-   * falls back to per-file atomicity only.
+   * don't support this (for example S3) return `null` and the runner falls
+   * back to per-object atomicity only. The v0 filesystem adapter implements a
+   * complete-tree transaction as required by §3.1.1.
    */
   readonly begin: () => Promise<Transaction | null>;
 }
@@ -279,72 +322,66 @@ interface Transaction {
 
 The v0 spec covers three reference adapters:
 
-- **`FsAdapter`** — writes to a local directory rooted at
-  `--target-config { "root": "<path>" }`.  Per-file atomicity
-  via temp-file (`<outputPath>.tmp.<random>`) + `rename` (POSIX
-  rename is atomic within a filesystem).  No transaction
-  support.  Capabilities: `fs:write`.
+- **`FsAdapter`** — publishes to a local directory rooted at
+  `--target-config { "root": "<path>" }` through the complete-tree staging and
+  swap contract in §3.1.1. A project-contained root uses `storage:write`; an
+  explicitly selected root outside project storage requires the sensitive
+  `filesystem:user` capability. The adapter exposes the tree swap as a
+  transaction so rollback can restore the same-parent backup.
 - **`S3Adapter`** — `s3:PutObject` per file.  Per-file
   atomicity is S3's native model (PUTs are atomic on the
   object).  No transaction support across objects.  Auth via
   env-named `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` (or
-  IAM instance profile).  Capabilities: `net:s3:*`.
+  IAM instance profile). Capabilities: the exact configured S3 endpoint as
+  `network:<host>` plus only the selected credential variables, such as
+  `env:AWS_ACCESS_KEY_ID` and `env:AWS_SECRET_ACCESS_KEY`.
 - **`NetlifyAdapter`** — uses Netlify Deploy API.  Creates a
   deploy, uploads required files, finalizes.  **Supports
   transactions** — `begin` creates a draft deploy, `commit`
-  publishes, `rollback` discards.  Capabilities:
-  `net:netlify:*`, `env:NETLIFY_AUTH_TOKEN`.
+  publishes, `rollback` discards. Capabilities:
+  `network:api.netlify.com`, `env:NETLIFY_AUTH_TOKEN`.
 
 Future v1+ adapters: Cloudflare Pages, Vercel, GitHub Pages.
 
 ## 7. Atomicity guarantees
 
-### 7.1 Per-file (always)
+### 7.1 Per object (always)
 
 Every adapter MUST guarantee that for any single `outputPath`,
 the file is either fully written or unchanged.  A half-written
 file (truncated, partially overwritten, mid-PUT) MUST NOT be
 observable.
 
-### 7.2 Per-bundle (when supported)
+### 7.2 Transactional publication
 
 When `target.begin()` returns a transaction, the runner uses
 it: all `writeFile` calls happen on the transaction; on success
-`commit()`; on any failure `rollback()`.  Either all files are
-applied or none are.
+`commit()`. The `FsAdapter` MUST always return a transaction and implement it
+with the exclusive complete-tree staging, same-parent swap, backup, and restore
+contract in §3.1.1. Netlify's draft deploy supplies the corresponding remote
+transaction. Either the complete named-output set is published or the previous
+set remains available.
 
-When transactions aren't supported (fs, S3), the runner does
-per-file atomic writes in dependency-aware order:
-
-1. **Phase 1**: write all files with their final paths suffixed
-   `.deploying-<random>`.  This populates the target without
-   touching anything callers might be reading.
-2. **Phase 2**: atomically rename every `.deploying-<random>`
-   to the final path (in dependency order: HTML last so
-   internal links never point at a missing asset).
-3. **Phase 3**: delete files that were in the previous deploy
-   but are missing from the new one.
-
-If Phase 1 fails: clean up `.deploying-*` and exit non-zero.
-If Phase 2 fails partway: the deploy is in a mixed state; exit
-code `1` (partial), report indicates which files made it.  We
-do NOT auto-roll-back partial Phase 2 — re-running the deploy
-is the recovery path.
+A remote adapter with no bundle transaction, such as S3, guarantees only
+per-object atomic PUT/DELETE. It MUST NOT emulate filesystem rename semantics or
+claim whole-deploy atomicity. It uploads new/changed objects first, verifies
+them, then deletes previous-only owned keys. A mid-operation failure can leave a
+mixed remote set; the report marks every completed operation and a retry is the
+recovery path. Such an adapter is unsuitable when the caller requires atomic
+whole-site publication.
 
 ### 7.3 Rollback
 
-Automatic rollback only fires when:
+After `begin()` succeeds, every write, verification, commit, timeout,
+cancellation, or adapter failure MUST attempt `rollback()`. A rollback failure
+is appended to the report but never replaces the primary failure or changes a
+failed/cancelled result into success. The filesystem adapter restores its
+same-parent backup before reporting rollback success.
 
-- The target supports transactions and `commit` failed → call
-  `rollback`.
-- The user passed `--rollback-on-error` AND we have a previous
-  manifest AND we haven't yet completed Phase 2 of the
-  non-transactional flow.
-
-Without an explicit opt-in or transaction support, the runner
-**does not roll back** — partial state is reported and the
-operator decides.  Hidden rollback is worse than visible
-partial state.
+An adapter that returned `null` from `begin()` has no automatic whole-deploy
+rollback. Partial remote state is reported explicitly and the operator retries
+or repairs it; the runner must not imply that per-object atomicity provides a
+transaction.
 
 ## 8. Idempotency
 
@@ -450,18 +487,22 @@ emitters).  Two implications:
    long-lived caching is safe.  This is opt-in per file (the
    manifest emitter doesn't do it by default; v1+ may add as
    an option).  The runner doesn't care either way — it
-   writes whatever path the manifest says.
+   writes only a path that passed the portable-path, collision, ownership, and
+   adapter-containment contract in §3.1.1.
 
 ## 13. Capability requirements
 
 The runner runs at capability level:
 
-- **`fs:write`** — for `FsAdapter` (and content `directory` /
-  `bundle` stores).
-- **`net:*`** — for remote adapters, scoped to the host(s)
-  named in the target config.
-- **`env`** — read-only, scoped to the env var names the
-  config references.
+- **`storage:read` / `storage:write`** — for content stores and deploy roots
+  contained by the project storage boundary.
+- **`filesystem:user`** — sensitive authority required only when the user
+  explicitly selects a deploy root or content store outside project storage;
+  adapters must still enforce their configured-root containment.
+- **`network:<host>`** — one entry for each exact remote endpoint selected by
+  target configuration; unrestricted `network:*` is not a v0 default.
+- **`env:<name>`** — one entry for each credential variable named by the
+  selected adapter; bare or wildcard environment access is not permitted.
 - **NEVER** `shell`, `subprocess`, or unrelated env reads.
 
 Each adapter declares its own `required_capabilities.json`
@@ -513,11 +554,12 @@ manifest aggregates them based on which adapter is selected.
    transform: takes a manifest + content store handles + an
    adapter handle, returns a deploy plan).
 2. `forme-deploy-runner-fs-adapter` package — `FsAdapter`.
-   Capabilities: `fs:write`.
+   Capabilities: `storage:write` for a project root, or the explicitly approved
+   `filesystem:user` boundary for a user-selected external root.
 3. `forme-deploy-runner-s3-adapter` package — `S3Adapter`.
-   Capabilities: `net:s3:*`, scoped env reads.
+   Capabilities: exact `network:<host>` endpoint and scoped `env:<name>` reads.
 4. `forme-deploy-runner-netlify-adapter` package —
-   `NetlifyAdapter`.  Capabilities: `net:netlify:*`,
+   `NetlifyAdapter`.  Capabilities: `network:api.netlify.com`,
    `env:NETLIFY_AUTH_TOKEN`.
 5. `forme-deploy` program — CLI binary composing the above.
    Capabilities: union of selected adapter + content store.

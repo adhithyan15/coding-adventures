@@ -274,15 +274,21 @@ cross-process affected-stage scheduling, and bounded concurrent streaming
 through one pipeline-wide permit budget. Filesystem emitters can replay
 validated artifacts to reconstruct a deleted output tree without rerunning
 unrelated pure stages. Forme is not yet a turnkey site generator: the remaining
-product layer includes a reconciled specification map, the deploy runner, the
-plugin host and OS sandboxes, interactivity, and the authoring shell.
+product layer includes the deploy runner, plugin host and OS sandboxes,
+interactivity, and the authoring shell. Its canonical specification map now
+runs collision-free from FM01 through FM08, with an implementation ledger in
+every Forme specification and an always-on CI contract guarding the map.
 The checked-in [completion roadmap](./code/specs/FM00-forme-completion-roadmap.md)
 tracks that path and the gaps discovered while dogfooding both live sites.
 
 Start with the [Forme vision](./code/specs/FM00-forme-vision.md),
 [kernel](./code/specs/FM01-forme-kernel.md),
 [orchestrator](./code/specs/FM03-forme-orchestrator.md), and
-[Style IR](./code/specs/FM04-forme-style-ir.md).
+[Style IR](./code/specs/FM04-forme-style-ir.md). The remaining canonical map is
+[Interactivity IR](./code/specs/FM05-forme-interactivity-ir.md),
+[AOT compiler](./code/specs/FM06-forme-aot-compiler.md),
+[CLI and development server](./code/specs/FM07-forme-cli-dev-server.md), and
+[deploy runner](./code/specs/FM08-forme-deploy-runner.md).
 
 ### Applications and product experiments
 

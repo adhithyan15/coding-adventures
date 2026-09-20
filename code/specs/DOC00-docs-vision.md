@@ -412,7 +412,7 @@ component that would need capabilities (`fs:watch`,
 separate program.
 
 The deploy step uses the FM00 deploy runner (capabilities
-documented separately in FM05).
+documented separately in [FM08](FM08-forme-deploy-runner.md)).
 
 ## 9. Integration with FM00
 
@@ -425,7 +425,7 @@ its own content type (`application/json` or
 
 The resulting page bundle JSON flows through the FM00 chain
 unchanged: `forme-aot-deploy-manifest-emitter` composes it
-with sitemap.xml / robots.txt / extras, and the FM05 deploy
+with sitemap.xml / robots.txt / extras, and the FM08 deploy
 runner applies the result to whatever target.
 
 Net effect: **docs sites are FM00 deployments**.  Same trust

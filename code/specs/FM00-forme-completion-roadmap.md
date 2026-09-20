@@ -1,9 +1,23 @@
 # Forme Completion Roadmap
 
-> **Status:** Living delivery backlog, last prioritized 2026-09-19.
+> **Status:** Living delivery backlog, last prioritized 2026-09-20.
 > This roadmap turns the north-star in [FM00](FM00-forme-vision.md) into
 > merge-sized work. Update it whenever implementation work discovers a new
 > gap, and reprioritize it after every merged Forme pull request.
+
+## Implementation status
+
+| Surface | Status | Canonical specification |
+|---|---|---|
+| Vision and delivery backlog | Active | [FM00 vision](FM00-forme-vision.md) and this roadmap |
+| Kernel | Implemented | [FM01](FM01-forme-kernel.md) |
+| Plugin host | Specified; implementation pending | [FM02](FM02-forme-plugin-host.md) |
+| Orchestrator | Headless v0 implemented | [FM03](FM03-forme-orchestrator.md) |
+| Style IR | Implemented | [FM04](FM04-forme-style-ir.md) |
+| Interactivity IR | Location reserved; contract pending | [FM05](FM05-forme-interactivity-ir.md) |
+| AOT compiler | Static v0 implemented | [FM06](FM06-forme-aot-compiler.md) |
+| CLI and development server | Headless v0 implemented | [FM07](FM07-forme-cli-dev-server.md) |
+| Deploy runner | Active | [FM08](FM08-forme-deploy-runner.md) |
 
 ## What “complete” means
 
@@ -61,9 +75,9 @@ The implementation is substantial but not yet an end-to-end product:
   bounded fan-out while a content-addressed checkpoint branch publishes its
   manifest last. One shared FIFO permit pool bounds ready stages, per-item work,
   and iterator pulls without deadlocking at `maxConcurrency: 1`.
-- Interactivity IR has no numbered spec or package. The AOT implementation
-  refers to a missing FM06 spec, and the existing FM05 deploy-runner spec
-  collides with older FM01–FM04 references that use FM05 for Interactivity IR.
+- Interactivity IR now has a canonical FM05 location but no normative schema or
+  package. FM06 reconciles the existing static AOT family, FM07 records the
+  shipped headless CLI/dev server, and the deploy-runner contract is FM08.
 - The completed concurrent scheduler now has product-level clean/incremental
   and reproducibility proof in both live sites. The remaining headless-product
   path reconciles the specification map before implementing the deploy runner.
@@ -126,8 +140,8 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 | 31 | FM-B043 | done | Connect live streams to checkpoints and the concurrent DAG | Depends on FM-B038, FM-B039, and FM-B042. Stream producers publish bounded consumer branches before completion and feed checkpointable output through the content-addressed writer in the same traversal; iterator work shares the permit pool, consumers yield while waiting, validated stream checkpoints restore lazily, revisions finalize after ordered completion, and restored consumers detach unused branches without weakening exact affected-set reuse. |
 | 32 | FM-B040 | done | Complete the pipeline-wide concurrent scheduler | Depends on FM-B041–FM-B043. Stable ready scheduling and one shared permit budget enforce `settings.maxConcurrency`; waits suspend permits to avoid `maxConcurrency: 1` deadlocks; live fan-out and bounded checkpoints preserve deterministic output, summaries, cancellation, and disposal. |
 | 33 | FM-B010 | done | Prove the completed scheduler in live products | Depends on FM-B038–FM-B040. Both live sites pass clean and unchanged second-process builds in reproducible mode; build IDs and artifact hashes remain identical; reports prove the exact safe skip/replay set while ambient filesystem readers rerun conservatively; report serialization is canonical across live and restored values; and deterministic cancellation/reproducibility tests pass. |
-| 34 | FM-B011 | active | Reconcile the FM spec map | Resolve the FM05 numbering collision, publish the missing Interactivity IR/AOT/CLI spec locations, repair stale cross-links, and add an implementation-status ledger to every FM spec. |
-| 35 | FM-B012 | ready | Implement the deploy runner | Build the FM05 core, filesystem adapter, GitHub Pages adapter, dry-run/reporting path, rollback/idempotency tests, and `forme deploy` composition. Filesystem publication stages the complete named-output set, rejects cross-artifact path collisions, swaps it as one tree, and prunes stale files without crossing output ownership. |
+| 34 | FM-B011 | done | Reconcile the FM spec map | The canonical FM01–FM08 map is collision-free; Interactivity IR, AOT, CLI/dev-server, and deploy-runner locations exist; cross-links resolve; every FM spec publishes an implementation ledger; CI enforces the map. |
+| 35 | FM-B012 | active | Implement the deploy runner | Build the FM08 core, filesystem adapter, GitHub Pages adapter, dry-run/reporting path, rollback/idempotency tests, and `forme deploy` composition. Filesystem publication stages the complete named-output set, rejects cross-artifact path collisions, swaps it as one tree, and prunes stale files without crossing output ownership. |
 | 36 | FM-B013 | ready | Specify and implement Interactivity IR | Define the behavior/event/state schema and validator, integrate per-page island tracking, and prove a progressively enhanced interactive component with a no-JS fallback. |
 | 37 | FM-B014 | blocked | Implement the plugin host and wire protocol | Depends on FM-B011 and the existing manifest parser. Stage discovery, handshake, typed streaming, capability mediation, diagnostics, cancellation, and crash isolation pass cross-process contract tests. |
 | 38 | FM-B015 | blocked | Ship plugin installation, runtimes, and sandboxes | Depends on FM-B014. Signed/trusted install flow, grants persistence, TypeScript/Python/Rust runners, and macOS/Linux/Windows sandbox profiles pass adversarial filesystem/network/process tests. |
@@ -164,7 +178,7 @@ work.
 | 2026-08-27 | `forme-router` exists, but the blog renderer still derives routes from `sourcePath`; collection output has no path back into page rendering. | FM-B003 |
 | 2026-08-27 | Index and feed packages exist, while the deployed blog root remains missing. | FM-B004 |
 | 2026-08-27 | `forme-render-static` hard-codes a light classless theme instead of consuming Style IR. | FM-B005 |
-| 2026-08-27 | FM01–FM04 reserve FM05/FM06/FM07 for Interactivity IR, AOT, and CLI, but FM05 is now the deploy runner and FM06/FM07 files are absent. | FM-B011 |
+| 2026-08-27 | FM01–FM04 reserve FM05/FM06/FM07 for Interactivity IR, AOT, and CLI, but FM05 is now the deploy runner and FM06/FM07 files are absent. | Resolved in FM-B011: FM05/FM06/FM07 now own those reserved contracts, the deploy runner moved to FM08, and a CI contract prevents another collision. |
 | 2026-08-27 | The orchestrator README understates the implemented reproducible-build support, while caching, bounded streaming, fan-out, and concurrency remain incomplete. | FM-B010 and FM-B011 |
 | 2026-08-27 | The Forme blog workflow can succeed while the public blog root is missing, so deployment success alone is not an end-to-end availability check. | FM-B004 and FM-B012 |
 | 2026-08-27 | The DAG builder ignores explicit `wires` and assigns one inferred producer per instance. Routed nodes therefore cannot feed article rendering and collection building in the same blog run. | Added FM-B019 and moved it ahead of FM-B003. |
@@ -203,7 +217,7 @@ work.
 | 2026-08-28 | The blog has two disjoint deploy sinks sharing `dist`: articles need page/asset fan-in, while collection-derived index/feed/sitemap output owns no assets. | Resolved in FM-B006 by migrating only `emit-articles` to `forme-emit-site-fs`; `emit-surface` remains the compatible page-only sink, and build assertions reject asset ownership drift. |
 | 2026-08-28 | The backend-neutral Style IR intentionally lacks web-only grid/flex layout, pseudo-elements, and responsive breakpoint primitives needed to reproduce the approved landing design. | Resolved for FM-B007 with an explicit two-layer theme: portable color/typography rules compile through Style IR and AOT, while a separate documented web layout layer owns browser-only primitives. Backend convergence remains visible in FM-B017 instead of leaking CSS concepts into the portable core. |
 | 2026-08-28 | Both live Forme sites need nearly identical local dependency bootstrap and build-driver plumbing because no general product CLI exists yet. | Folded into FM-B008: the CLI must replace site-local bootstrap/driver ceremony rather than merely wrap it. |
-| 2026-08-28 | FM03 documents `forme run`, while the completion backlog and common static-site vocabulary use `forme build`. | Resolved in FM-B008 by making `build` canonical in product diagnostics and retaining `run` as an exact compatibility alias; FM-B011 should update the spec examples. |
+| 2026-08-28 | FM03 documents `forme run`, while the completion backlog and common static-site vocabulary use `forme build`. | Resolved in FM-B008 and reconciled in FM-B011: `build` is canonical in product diagnostics and specification examples; `run` remains an exact compatibility alias. |
 | 2026-08-28 | `PipelineConfig` has no explicit cleanup target contract, and arbitrary stage configs may contain fields named `outDir`. | Resolved safely for the current headless product in FM-B008: `clean` considers `outDir` only on direct stages whose declared output kind is `DeployArtifact`, adds `settings.cacheDir`, deduplicates targets, and refuses the project root or outside paths. A future config-shape migration belongs in FM-B011 if non-filesystem emitters need a broader lifecycle hook. |
 | 2026-08-31 | FM-B009's original “affected set” wording duplicated FM-B010, while FM04 explicitly says watch mode re-runs the full pipeline until incremental scheduling lands. | FM-B009 now owns conservative full-pipeline rebuilds, coalescing, live preview, and last-good-output behavior. FM-B010 retains persistent cache hits and exact affected-stage scheduling. |
 | 2026-09-01 | FM-B010 combined three independently risky changes: output serialization/cache reuse, external-state affected-set scheduling, and lazy concurrent streaming. Caching filesystem readers or emitters before explicit external revisions/replay would make clean builds silently incomplete. | Split FM-B031 (safe pure-stage cache reuse), FM-B032 (project persistence + exact affected set), and a narrowed FM-B010 (bounded streaming + parallelism). |
@@ -222,6 +236,7 @@ work.
 | 2026-09-19 | After FM-B043 merged, the roadmap baseline, root README, orchestrator entry-point header, and watch-loop comment still described concurrency, bounded streaming, side-effect replay, or exact affected scheduling as deferred. | Close FM-B040 by reconciling those status surfaces with the shipped scheduler. Keep product-level clean/incremental and reproducibility proof in the now-active FM-B010 milestone. |
 | 2026-09-19 | Pipeline config validation accepted integers above JavaScript's safe range even though the shared permit contract requires an exact positive bound. Such a value cannot be reasoned about or instrumented precisely. | Resolved in FM-B042 by rejecting non-safe integers at config validation and again at the permit-pool boundary. |
 | 2026-09-19 | Clean and warm live-site builds produced semantically equal output reports with different nested object insertion order because restored checkpoints are canonically decoded while fresh stage values retain construction order. That makes the advertised deterministic report byte representation depend on whether a stage ran or restored. | Resolved in FM-B010 by recursively canonicalizing summarized report values and making both dogfood sites compare clean and warm output summaries byte-for-byte. |
+| 2026-09-20 | The Forme spec map was documentation-only, so a renamed or duplicate number could silently recreate broken package links. | Resolved in FM-B011 with an always-on metadata contract that checks the exact FM01–FM08 map, required implementation ledgers, roadmap links, and local Markdown targets. |
 
 ## Loop protocol
 
