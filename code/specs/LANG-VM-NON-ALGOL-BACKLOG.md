@@ -10,6 +10,21 @@ roadmap is reconciled.
 
 ## Encoded CLR input prerequisites (selected 2026-09-19 after VM-058)
 
+### CLR06 landed; strict scalar comparison audit selected (2026-09-20)
+
+CLR06 merged in #15675 as `4b1cb8ebcfc73315a285ab30099eb6bac342f0b9`
+after all 48 checks completed (15 success, 33 skipped). Main is refreshed and
+open ownership shows no encoded CLR overlap. The explicit strict entrypoint
+preserves scalar widths, but default source routing still narrows i64 hints.
+
+Next audit comparison result types and transport in the strict API: matched
+integer operands produce an i32 stack result in the simulator. Establish the
+IIR bool contract, metadata and call/return/move rules before choosing a bounded
+extension. Do not infer Bool from an integer hint or silently widen comparison
+results. Commit a detailed spec before implementation and execute actual artifacts.
+Branches and source migration follow only after their own validation contracts.
+Keep CLR01 immediate/input gates, structural indices and default routing intact.
+
 ### CLR05 landed; typed scalar lowering audit selected (2026-09-19)
 
 CLR05 merged in #15654 as `294271884bc4ebad60d49707d8a670bea2713c20`
