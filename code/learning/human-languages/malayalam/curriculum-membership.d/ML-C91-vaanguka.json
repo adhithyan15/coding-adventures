@@ -1,0 +1,11 @@
+{
+  "id": "ML-C91-vaanguka",
+  "pathSegment": "ML-PATH-91-SHOPPING",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-91-SHOPPING",
+      "order": 3
+    }
+  ]
+}

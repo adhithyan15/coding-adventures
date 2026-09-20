@@ -1,0 +1,11 @@
+{
+  "id": "MR-C05-mi-marathi-bolto",
+  "pathSegment": "MR-PATH-019",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-019-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

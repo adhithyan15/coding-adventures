@@ -1,0 +1,11 @@
+{
+  "id": "GE-C09-september",
+  "pathSegment": "GE-PATH-016-B-B",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-016-B-B-ZAHLMONATE",
+      "order": 2
+    }
+  ]
+}

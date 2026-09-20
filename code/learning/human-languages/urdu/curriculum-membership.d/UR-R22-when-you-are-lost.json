@@ -1,0 +1,11 @@
+{
+  "id": "UR-R22-when-you-are-lost",
+  "pathSegment": "UR-PATH-023",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-033-REPAIR-KIT",
+      "order": 3
+    }
+  ]
+}

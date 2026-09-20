@@ -1,0 +1,11 @@
+{
+  "id": "IT-C29-daccordo",
+  "pathSegment": "IT-PATH-033",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-033-SI-E-NO",
+      "order": 3
+    }
+  ]
+}

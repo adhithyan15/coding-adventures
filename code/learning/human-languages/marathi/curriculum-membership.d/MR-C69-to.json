@@ -1,0 +1,11 @@
+{
+  "id": "MR-C69-to",
+  "pathSegment": "MR-PATH-071",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-084-POINTING-WORDS",
+      "order": 1
+    }
+  ]
+}

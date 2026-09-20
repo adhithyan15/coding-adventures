@@ -1,0 +1,11 @@
+{
+  "id": "ES-C423-repaso-caracter",
+  "pathSegment": "ES-PATH-423-CHARACTER",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ES-EXT-423-CHARACTER",
+      "order": 6
+    }
+  ]
+}

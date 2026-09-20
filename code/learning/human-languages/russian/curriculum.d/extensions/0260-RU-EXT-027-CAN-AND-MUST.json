@@ -6,9 +6,5 @@
   "canDo": "I can say what I can and cannot do, and state an obligation in a sentence with no subject.",
   "prerequisites": [
     "RU-EXT-026-WANT"
-  ],
-  "lessons": [
-    "RU-C20-moch",
-    "RU-C20-nado"
   ]
 }

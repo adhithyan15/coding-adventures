@@ -1,0 +1,11 @@
+{
+  "id": "ES-C15-comer-preterite",
+  "pathSegment": "ES-PATH-039-COMER-PRETERITE-CH15",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-039-COMER-PRETERITE-CH15",
+      "order": 0
+    }
+  ]
+}

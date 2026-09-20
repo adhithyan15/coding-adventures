@@ -1,0 +1,11 @@
+{
+  "id": "MR-W40-i-independent",
+  "pathSegment": "MR-PATH-042",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MR-EXT-055-HERE",
+      "order": 0
+    }
+  ]
+}

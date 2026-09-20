@@ -1,0 +1,11 @@
+{
+  "id": "MW-C05-practice",
+  "pathSegment": "MW-PATH-005",
+  "pathOrder": 17,
+  "extensions": [
+    {
+      "id": "MW-EXT-014-EXCHANGE-NAMES",
+      "order": 0
+    }
+  ]
+}

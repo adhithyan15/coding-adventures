@@ -6,11 +6,5 @@
   "canDo": "I can say that something happens before or after a named time or a named event.",
   "prerequisites": [
     "ML-EXT-105-PLACES"
-  ],
-  "lessons": [
-    "ML-C106-munpu",
-    "ML-C106-shesham",
-    "ML-C106-ordering",
-    "ML-R106-before-after-recall"
   ]
 }

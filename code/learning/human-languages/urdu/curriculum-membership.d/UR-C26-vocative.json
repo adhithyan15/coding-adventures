@@ -1,0 +1,11 @@
+{
+  "id": "UR-C26-vocative",
+  "pathSegment": "UR-PATH-027",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-037-POSSESSION-AND-ADDRESS",
+      "order": 3
+    }
+  ]
+}

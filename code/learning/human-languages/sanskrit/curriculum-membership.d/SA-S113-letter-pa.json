@@ -1,0 +1,11 @@
+{
+  "id": "SA-S113-letter-pa",
+  "pathSegment": "SA-PATH-100",
+  "pathOrder": 14,
+  "extensions": [
+    {
+      "id": "SA-EXT-100-SCRIPT-RECOGNITION",
+      "order": 14
+    }
+  ]
+}

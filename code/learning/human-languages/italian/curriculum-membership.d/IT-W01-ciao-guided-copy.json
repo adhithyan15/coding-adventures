@@ -1,0 +1,11 @@
+{
+  "id": "IT-W01-ciao-guided-copy",
+  "pathSegment": "IT-PATH-001",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-001-WRITING-START",
+      "order": 0
+    }
+  ]
+}

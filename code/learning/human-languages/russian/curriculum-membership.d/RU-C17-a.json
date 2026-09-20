@@ -1,0 +1,11 @@
+{
+  "id": "RU-C17-a",
+  "pathSegment": "RU-PATH-018",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-023-CONTRAST",
+      "order": 1
+    }
+  ]
+}

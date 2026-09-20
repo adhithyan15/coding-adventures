@@ -1,0 +1,11 @@
+{
+  "id": "MR-C35-saathi",
+  "pathSegment": "MR-PATH-037",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-050-CLAUSE-INSIDE-CLAUSE",
+      "order": 1
+    }
+  ]
+}

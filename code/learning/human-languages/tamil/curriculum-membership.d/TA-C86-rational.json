@@ -1,0 +1,11 @@
+{
+  "id": "TA-C86-rational",
+  "pathSegment": "TA-PATH-86-ACCUSATIVE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-86-ACCUSATIVE",
+      "order": 2
+    }
+  ]
+}

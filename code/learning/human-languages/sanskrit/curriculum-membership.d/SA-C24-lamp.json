@@ -1,0 +1,11 @@
+{
+  "id": "SA-C24-lamp",
+  "pathSegment": "SA-PATH-24-ASK",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-24-ASK",
+      "order": 4
+    }
+  ]
+}

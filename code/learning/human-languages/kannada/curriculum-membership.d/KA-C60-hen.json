@@ -1,0 +1,11 @@
+{
+  "id": "KA-C60-hen",
+  "pathSegment": "KA-PATH-60-ANIMAL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-60-ANIMAL",
+      "order": 2
+    }
+  ]
+}

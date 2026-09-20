@@ -1,0 +1,11 @@
+{
+  "id": "GE-R32-nichts-davon",
+  "pathSegment": "GE-PATH-A1-NEGATION",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-A1-NEGATION",
+      "order": 5
+    }
+  ]
+}

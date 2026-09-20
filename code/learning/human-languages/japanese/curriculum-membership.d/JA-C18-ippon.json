@@ -1,0 +1,11 @@
+{
+  "id": "JA-C18-ippon",
+  "pathSegment": "JA-PATH-017",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "JA-EXT-025-COUNTERS",
+      "order": 7
+    }
+  ]
+}

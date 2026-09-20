@@ -1,0 +1,11 @@
+{
+  "id": "GE-C05-wir",
+  "pathSegment": "GE-PATH-014",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-014-VERB-MACHINE",
+      "order": 2
+    }
+  ]
+}

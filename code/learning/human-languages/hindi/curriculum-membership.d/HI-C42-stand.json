@@ -1,0 +1,11 @@
+{
+  "id": "HI-C42-stand",
+  "pathSegment": "HI-PATH-42-VERBS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-42-VERBS",
+      "order": 2
+    }
+  ]
+}

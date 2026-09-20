@@ -1,0 +1,11 @@
+{
+  "id": "GU-R17-shun-r4",
+  "pathSegment": "GU-PATH-019",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-024-R4-BRIDGE-C-NAMES",
+      "order": 1
+    }
+  ]
+}

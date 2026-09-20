@@ -1,0 +1,11 @@
+{
+  "id": "ML-C36-makal",
+  "pathSegment": "ML-PATH-030",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-030-CHILD-SON-DAUGHTER",
+      "order": 2
+    }
+  ]
+}

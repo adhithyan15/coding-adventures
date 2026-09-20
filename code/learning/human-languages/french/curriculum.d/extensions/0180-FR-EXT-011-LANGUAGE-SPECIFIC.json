@@ -4,8 +4,5 @@
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can choose between the informal, formal and neutral ways of asking how someone is.",
-  "prerequisites": [],
-  "lessons": [
-    "FR-C03-comment-registers"
-  ]
+  "prerequisites": []
 }

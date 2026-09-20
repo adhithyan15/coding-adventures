@@ -1,0 +1,11 @@
+{
+  "id": "ES-C08-tienen",
+  "pathSegment": "ES-PATH-030-TENER-PLURAL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-030-TENER-PLURAL",
+      "order": 1
+    }
+  ]
+}

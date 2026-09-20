@@ -1,0 +1,11 @@
+{
+  "id": "PA-C43-kitthe",
+  "pathSegment": "PA-PATH-045",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-065-QUESTIONS",
+      "order": 3
+    }
+  ]
+}

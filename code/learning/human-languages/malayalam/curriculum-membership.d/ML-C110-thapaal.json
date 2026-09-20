@@ -1,0 +1,11 @@
+{
+  "id": "ML-C110-thapaal",
+  "pathSegment": "ML-PATH-110-MESSAGE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-110-MESSAGE",
+      "order": 3
+    }
+  ]
+}

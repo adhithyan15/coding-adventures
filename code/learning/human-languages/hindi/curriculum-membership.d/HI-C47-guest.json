@@ -1,0 +1,11 @@
+{
+  "id": "HI-C47-guest",
+  "pathSegment": "HI-PATH-47-ROLE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-47-ROLE",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C399-guapo",
+  "pathSegment": "ES-PATH-399-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-399-QUALITY",
+      "order": 1
+    }
+  ]
+}

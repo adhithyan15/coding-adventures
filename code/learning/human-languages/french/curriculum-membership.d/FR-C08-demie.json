@@ -1,0 +1,11 @@
+{
+  "id": "FR-C08-demie",
+  "pathSegment": "FR-PATH-029",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "FR-EXT-029-LANGUAGE-SPECIFIC",
+      "order": 6
+    }
+  ]
+}

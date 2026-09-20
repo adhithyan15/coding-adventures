@@ -1,0 +1,11 @@
+{
+  "id": "KA-C75-on-a-sign",
+  "pathSegment": "KA-PATH-75-ORDINAL",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "KA-EXT-75-ORDINAL",
+      "order": 7
+    }
+  ]
+}

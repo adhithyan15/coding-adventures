@@ -1,0 +1,11 @@
+{
+  "id": "AR-C36-tabaq",
+  "pathSegment": "AR-PATH-033",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-033-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

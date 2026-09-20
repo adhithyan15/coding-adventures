@@ -1,0 +1,11 @@
+{
+  "id": "ML-R87-object-recall",
+  "pathSegment": "ML-PATH-87-ACCUSATIVE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-87-ACCUSATIVE",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-S150-vowel-sign-o",
+  "pathSegment": "HI-PATH-100",
+  "pathOrder": 58,
+  "extensions": [
+    {
+      "id": "HI-EXT-100-SCRIPT-RECOGNITION",
+      "order": 47
+    }
+  ]
+}

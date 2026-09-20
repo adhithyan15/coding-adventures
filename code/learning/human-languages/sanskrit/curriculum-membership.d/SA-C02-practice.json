@@ -1,0 +1,11 @@
+{
+  "id": "SA-C02-practice",
+  "pathSegment": "SA-PATH-005",
+  "pathOrder": 9,
+  "extensions": [
+    {
+      "id": "SA-EXT-56-CH2-RECAP",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-W06-name-sentence-stop",
+  "pathSegment": "HI-PATH-004A",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-006-CONNECTED-WRITING",
+      "order": 1
+    }
+  ]
+}

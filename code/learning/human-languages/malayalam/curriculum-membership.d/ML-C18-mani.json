@@ -1,0 +1,11 @@
+{
+  "id": "ML-C18-mani",
+  "pathSegment": "ML-PATH-020",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-020-LANGUAGE-SPECIFIC",
+      "order": 4
+    }
+  ]
+}

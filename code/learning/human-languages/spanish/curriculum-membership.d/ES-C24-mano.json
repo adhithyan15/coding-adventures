@@ -1,0 +1,11 @@
+{
+  "id": "ES-C24-mano",
+  "pathSegment": "ES-PATH-022",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-022-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

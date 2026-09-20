@@ -1,0 +1,11 @@
+{
+  "id": "HI-C54-fish",
+  "pathSegment": "HI-PATH-54-ANIMAL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-54-ANIMAL",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C01-nomoshkar",
+  "pathSegment": "BN-PATH-001",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "BN-EXT-001-INLINE-SCRIPT",
+      "order": 0
+    }
+  ]
+}

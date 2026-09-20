@@ -1,0 +1,11 @@
+{
+  "id": "RU-C20-khochu-chitat",
+  "pathSegment": "RU-PATH-021",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-026-WANT",
+      "order": 1
+    }
+  ]
+}

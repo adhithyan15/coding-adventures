@@ -6,8 +6,5 @@
   "canDo": "I can ask how someone is in Bengali, say that I am well, and wave away a small trouble.",
   "prerequisites": [
     "BN-EXT-009-LANGUAGE-SPECIFIC"
-  ],
-  "lessons": [
-    "BN-C03-practice"
   ]
 }

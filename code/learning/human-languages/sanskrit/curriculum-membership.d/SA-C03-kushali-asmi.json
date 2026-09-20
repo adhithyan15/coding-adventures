@@ -1,0 +1,11 @@
+{
+  "id": "SA-C03-kushali-asmi",
+  "pathSegment": "SA-PATH-006",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-53-WELLREPLY",
+      "order": 0
+    }
+  ]
+}

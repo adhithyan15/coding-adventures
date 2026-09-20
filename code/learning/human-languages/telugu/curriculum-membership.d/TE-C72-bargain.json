@@ -1,0 +1,11 @@
+{
+  "id": "TE-C72-bargain",
+  "pathSegment": "TE-PATH-72-MARKET",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-72-MARKET",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C67-or",
+  "pathSegment": "KA-PATH-67-LINK",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-67-LINK",
+      "order": 1
+    }
+  ]
+}

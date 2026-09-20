@@ -1,0 +1,11 @@
+{
+  "id": "ML-C05-practice",
+  "pathSegment": "ML-PATH-011",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-011-CONSOLIDATION",
+      "order": 0
+    }
+  ]
+}

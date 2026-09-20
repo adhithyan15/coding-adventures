@@ -1,0 +1,11 @@
+{
+  "id": "TA-C24-night-register-darkness",
+  "pathSegment": "TA-PATH-027",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-027-REGISTER",
+      "order": 1
+    }
+  ]
+}

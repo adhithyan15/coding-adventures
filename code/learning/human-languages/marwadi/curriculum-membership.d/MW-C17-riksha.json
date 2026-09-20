@@ -1,0 +1,11 @@
+{
+  "id": "MW-C17-riksha",
+  "pathSegment": "MW-PATH-016",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-030-TRANSPORT-FIVE",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C07-hattu",
+  "pathSegment": "KA-PATH-011",
+  "pathOrder": 9,
+  "extensions": [
+    {
+      "id": "KA-EXT-011-LANGUAGE-SPECIFIC",
+      "order": 9
+    }
+  ]
+}

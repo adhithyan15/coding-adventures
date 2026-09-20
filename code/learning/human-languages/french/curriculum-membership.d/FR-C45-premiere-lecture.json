@@ -1,0 +1,11 @@
+{
+  "id": "FR-C45-premiere-lecture",
+  "pathSegment": "FR-PATH-A1-LECTURE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-A1-LECTURE",
+      "order": 2
+    }
+  ]
+}

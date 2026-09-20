@@ -1,0 +1,11 @@
+{
+  "id": "FR-R40-combien",
+  "pathSegment": "FR-PATH-A1-QUANTITY",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-A1-QUANTITY",
+      "order": 5
+    }
+  ]
+}

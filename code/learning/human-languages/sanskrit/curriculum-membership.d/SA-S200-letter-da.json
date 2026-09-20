@@ -1,0 +1,11 @@
+{
+  "id": "SA-S200-letter-da",
+  "pathSegment": "SA-PATH-100",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-100-SCRIPT-RECOGNITION",
+      "order": 4
+    }
+  ]
+}

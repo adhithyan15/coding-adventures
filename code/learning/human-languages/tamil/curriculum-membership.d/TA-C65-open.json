@@ -1,0 +1,11 @@
+{
+  "id": "TA-C65-open",
+  "pathSegment": "TA-PATH-65-DOING",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-65-DOING",
+      "order": 4
+    }
+  ]
+}

@@ -1,9 +1,6 @@
 {
   "id": "PT-PATH-002",
   "spine_node": "SPINE-CHECK-WELLBEING",
-  "lessons": [
-    "PT-C01-bom"
-  ],
   "before": [],
   "inline": [],
   "after": []

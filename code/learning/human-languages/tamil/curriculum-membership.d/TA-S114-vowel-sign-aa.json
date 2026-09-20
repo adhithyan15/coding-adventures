@@ -1,0 +1,11 @@
+{
+  "id": "TA-S114-vowel-sign-aa",
+  "pathSegment": "TA-PATH-100",
+  "pathOrder": 14,
+  "extensions": [
+    {
+      "id": "TA-EXT-100-SCRIPT-RECOGNITION",
+      "order": 5
+    }
+  ]
+}

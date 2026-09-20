@@ -1,0 +1,11 @@
+{
+  "id": "FR-C23-vert-jaune",
+  "pathSegment": "FR-PATH-022",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-022-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C82-greeting-register",
+  "pathSegment": "ML-PATH-82-ADDRESS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-82-ADDRESS",
+      "order": 2
+    }
+  ]
+}

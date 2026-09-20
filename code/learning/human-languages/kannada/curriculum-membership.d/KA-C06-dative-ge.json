@@ -1,0 +1,11 @@
+{
+  "id": "KA-C06-dative-ge",
+  "pathSegment": "KA-PATH-010",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "KA-EXT-010-LANGUAGE-SPECIFIC",
+      "order": 4
+    }
+  ]
+}

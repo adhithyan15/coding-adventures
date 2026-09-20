@@ -1,0 +1,11 @@
+{
+  "id": "ES-C44-sintesis-mas-de-uno",
+  "pathSegment": "ES-PATH-003-SYNTH-PLURAL",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-003-SYNTH-PLURAL",
+      "order": 0
+    }
+  ]
+}

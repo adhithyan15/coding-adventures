@@ -1,0 +1,11 @@
+{
+  "id": "ES-C377-frase",
+  "pathSegment": "ES-PATH-377-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-377-REF",
+      "order": 1
+    }
+  ]
+}

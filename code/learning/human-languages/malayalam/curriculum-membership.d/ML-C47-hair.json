@@ -1,0 +1,11 @@
+{
+  "id": "ML-C47-hair",
+  "pathSegment": "ML-PATH-47-BODY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-47-BODY",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C36-numbered-exchange",
+  "pathSegment": "MW-PATH-030",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "MW-EXT-044-NUMBERED-EXCHANGE",
+      "order": 5
+    }
+  ]
+}

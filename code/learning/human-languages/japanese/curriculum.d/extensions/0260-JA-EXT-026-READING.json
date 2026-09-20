@@ -6,10 +6,5 @@
   "canDo": "I can read a Japanese word, a greeting and a classroom cue off a page without hearing it first.",
   "prerequisites": [
     "JA-EXT-025-COUNTERS"
-  ],
-  "lessons": [
-    "JA-C19-words",
-    "JA-C19-greetings",
-    "JA-C19-kyoushitsu"
   ]
 }

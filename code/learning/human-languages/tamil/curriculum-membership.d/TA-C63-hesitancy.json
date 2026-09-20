@@ -1,0 +1,11 @@
+{
+  "id": "TA-C63-hesitancy",
+  "pathSegment": "TA-PATH-63-MANNERS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-63-MANNERS",
+      "order": 2
+    }
+  ]
+}

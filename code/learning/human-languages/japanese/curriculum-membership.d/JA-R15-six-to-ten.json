@@ -1,0 +1,11 @@
+{
+  "id": "JA-R15-six-to-ten",
+  "pathSegment": "JA-PATH-014",
+  "pathOrder": 13,
+  "extensions": [
+    {
+      "id": "JA-EXT-022-NUMBERS-SIX-TO-TEN",
+      "order": 7
+    }
+  ]
+}

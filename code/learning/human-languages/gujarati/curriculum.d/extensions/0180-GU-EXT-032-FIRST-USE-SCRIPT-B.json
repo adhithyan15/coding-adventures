@@ -6,12 +6,5 @@
   "canDo": "I can trace, copy, recall, read, and write લ, પ, ચ, and બ before any name-exchange lesson uses them.",
   "prerequisites": [
     "GU-EXT-031-FIRST-USE-SCRIPT-A"
-  ],
-  "lessons": [
-    "GU-W05-la",
-    "GU-W05-pa",
-    "GU-W05-cha",
-    "GU-W05-ba",
-    "GU-R05-second-four-r1"
   ]
 }

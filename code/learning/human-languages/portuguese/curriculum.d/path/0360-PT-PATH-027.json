@@ -1,11 +1,6 @@
 {
   "id": "PT-PATH-027",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
-  "lessons": [
-    "PT-C23-cafe",
-    "PT-C23-cha",
-    "PT-C23-leite"
-  ],
   "before": [],
   "inline": [
     "PT-EXT-027-LANGUAGE-SPECIFIC"

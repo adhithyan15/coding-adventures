@@ -1,0 +1,11 @@
+{
+  "id": "HI-S112-vowel-sign-e",
+  "pathSegment": "HI-PATH-100",
+  "pathOrder": 10,
+  "extensions": [
+    {
+      "id": "HI-EXT-100-SCRIPT-RECOGNITION",
+      "order": 10
+    }
+  ]
+}

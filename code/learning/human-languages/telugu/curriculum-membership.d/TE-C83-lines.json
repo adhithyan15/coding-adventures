@@ -1,0 +1,11 @@
+{
+  "id": "TE-C83-lines",
+  "pathSegment": "TE-PATH-83-READING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-83-READING",
+      "order": 1
+    }
+  ]
+}

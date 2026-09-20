@@ -1,0 +1,11 @@
+{
+  "id": "MW-C15-mahango",
+  "pathSegment": "MW-PATH-014",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-028-SHOPPING-SEVEN",
+      "order": 4
+    }
+  ]
+}

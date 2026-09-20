@@ -4,12 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can say importante, interesante, favorito, fácil and difícil.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-C398-importante",
-    "ES-C398-interesante",
-    "ES-C398-favorito",
-    "ES-C398-facil",
-    "ES-C398-dificil"
-  ]
+  "prerequisites": []
 }

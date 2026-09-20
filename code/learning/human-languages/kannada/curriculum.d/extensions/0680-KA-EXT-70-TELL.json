@@ -4,11 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can report what was said, give a reason, and say what I think.",
-  "prerequisites": [],
-  "lessons": [
-    "KA-C70-say",
-    "KA-C70-quotative",
-    "KA-C70-because",
-    "KA-C70-i-think"
-  ]
+  "prerequisites": []
 }

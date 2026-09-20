@@ -1,0 +1,11 @@
+{
+  "id": "ES-C403-food-recall-1",
+  "pathSegment": "ES-PATH-403-FOOD",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-403-FOOD",
+      "order": 3
+    }
+  ]
+}

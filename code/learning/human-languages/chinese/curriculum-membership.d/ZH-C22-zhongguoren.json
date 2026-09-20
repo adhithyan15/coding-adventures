@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C22-zhongguoren",
+  "pathSegment": "ZH-PATH-021",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-056-NO-ENDINGS",
+      "order": 3
+    }
+  ]
+}

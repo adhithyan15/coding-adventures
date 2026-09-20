@@ -1,0 +1,11 @@
+{
+  "id": "IT-C23-nome",
+  "pathSegment": "IT-PATH-027",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-027-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

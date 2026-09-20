@@ -4,8 +4,5 @@
   "kind": "supporting",
   "category": "etymology",
   "canDo": "I can use this Marathi word history as a memory hook without confusing origin and current use.",
-  "prerequisites": [],
-  "lessons": [
-    "MR-C06-number-differences"
-  ]
+  "prerequisites": []
 }

@@ -4,8 +4,5 @@
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can say I am having a meal in Kannada, using the word Chapter 32 used before ever teaching it.",
-  "prerequisites": [],
-  "lessons": [
-    "KA-C40-oota"
-  ]
+  "prerequisites": []
 }

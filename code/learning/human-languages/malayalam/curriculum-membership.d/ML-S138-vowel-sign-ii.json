@@ -1,0 +1,11 @@
+{
+  "id": "ML-S138-vowel-sign-ii",
+  "pathSegment": "ML-PATH-100",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "ML-EXT-100-SCRIPT-RECOGNITION",
+      "order": 7
+    }
+  ]
+}

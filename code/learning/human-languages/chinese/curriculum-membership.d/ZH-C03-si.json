@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C03-si",
+  "pathSegment": "ZH-PATH-002",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "ZH-EXT-008-BOX-STROKE-RULE",
+      "order": 1
+    }
+  ]
+}

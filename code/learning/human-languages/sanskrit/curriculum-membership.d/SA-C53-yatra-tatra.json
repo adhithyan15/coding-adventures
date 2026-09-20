@@ -1,0 +1,11 @@
+{
+  "id": "SA-C53-yatra-tatra",
+  "pathSegment": "SA-PATH-53-CORRELATIVE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-053-CORRELATIVE",
+      "order": 3
+    }
+  ]
+}

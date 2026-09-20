@@ -1,0 +1,11 @@
+{
+  "id": "TE-C71-brother-in-law",
+  "pathSegment": "TE-PATH-71-KIN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-71-KIN",
+      "order": 2
+    }
+  ]
+}

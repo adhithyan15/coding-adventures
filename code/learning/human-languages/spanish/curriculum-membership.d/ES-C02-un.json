@@ -1,0 +1,11 @@
+{
+  "id": "ES-C02-un",
+  "pathSegment": "ES-PATH-006",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-006-INDEFINITE-ARTICLE",
+      "order": 0
+    }
+  ]
+}

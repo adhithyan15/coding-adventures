@@ -1,0 +1,11 @@
+{
+  "id": "PA-C39-but-checkpoint",
+  "pathSegment": "PA-PATH-041",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-061-BUT-AND-DOUBLET",
+      "order": 4
+    }
+  ]
+}

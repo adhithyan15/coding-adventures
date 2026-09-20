@@ -1,0 +1,11 @@
+{
+  "id": "ES-C65-unos-unas",
+  "pathSegment": "ES-PATH-A1-UNOS",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-A1-UNOS",
+      "order": 0
+    }
+  ]
+}

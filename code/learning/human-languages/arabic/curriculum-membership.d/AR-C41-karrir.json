@@ -1,0 +1,11 @@
+{
+  "id": "AR-C41-karrir",
+  "pathSegment": "AR-PATH-038",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-038-CALL-AND-REPAIR",
+      "order": 1
+    }
+  ]
+}

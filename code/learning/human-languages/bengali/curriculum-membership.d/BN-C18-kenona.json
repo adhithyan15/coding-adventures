@@ -1,0 +1,11 @@
+{
+  "id": "BN-C18-kenona",
+  "pathSegment": "BN-PATH-025",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-026-AGREE-AND-EXPLAIN",
+      "order": 2
+    }
+  ]
+}

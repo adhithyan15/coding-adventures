@@ -1,0 +1,11 @@
+{
+  "id": "MR-R53-very",
+  "pathSegment": "MR-PATH-056",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-069-DEGREE",
+      "order": 3
+    }
+  ]
+}

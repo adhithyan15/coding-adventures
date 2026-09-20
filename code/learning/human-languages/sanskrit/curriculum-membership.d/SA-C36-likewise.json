@@ -1,0 +1,11 @@
+{
+  "id": "SA-C36-likewise",
+  "pathSegment": "SA-PATH-36-REPLY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-36-REPLY",
+      "order": 2
+    }
+  ]
+}

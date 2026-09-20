@@ -1,0 +1,11 @@
+{
+  "id": "ES-C30-llueve",
+  "pathSegment": "ES-PATH-025",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-025-LANGUAGE-SPECIFIC",
+      "order": 5
+    }
+  ]
+}

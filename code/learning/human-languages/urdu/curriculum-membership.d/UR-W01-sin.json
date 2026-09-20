@@ -1,0 +1,11 @@
+{
+  "id": "UR-W01-sin",
+  "pathSegment": "UR-PATH-003",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-002C-SCRIPT-SIN",
+      "order": 0
+    }
+  ]
+}

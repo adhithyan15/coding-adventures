@@ -1,0 +1,11 @@
+{
+  "id": "ML-C88-ninety-hundred",
+  "pathSegment": "ML-PATH-88-TENS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-88-TENS",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-W06-write-illai",
+  "pathSegment": "TA-PATH-003",
+  "pathOrder": 9,
+  "extensions": [
+    {
+      "id": "TA-EXT-003-SCRIPT",
+      "order": 9
+    }
+  ]
+}

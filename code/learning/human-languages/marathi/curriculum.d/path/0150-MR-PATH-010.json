@@ -1,14 +1,6 @@
 {
   "id": "MR-PATH-010",
   "spine_node": "SPINE-TAKE-LEAVE",
-  "lessons": [
-    "MR-C04-punha",
-    "MR-C04-bhetu",
-    "MR-C04-punha-bhetu",
-    "MR-C04-udya-bhetu",
-    "MR-C04-kalji-ghya",
-    "MR-C04-practice"
-  ],
   "before": [
     "MR-EXT-010-LANGUAGE-SPECIFIC"
   ],

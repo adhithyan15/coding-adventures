@@ -1,0 +1,11 @@
+{
+  "id": "TA-W04-i-sign-write-nandri",
+  "pathSegment": "TA-PATH-003",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "TA-EXT-003-SCRIPT",
+      "order": 7
+    }
+  ]
+}

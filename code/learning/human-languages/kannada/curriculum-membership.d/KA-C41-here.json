@@ -1,0 +1,11 @@
+{
+  "id": "KA-C41-here",
+  "pathSegment": "KA-PATH-200",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-200-DEIXIS",
+      "order": 2
+    }
+  ]
+}

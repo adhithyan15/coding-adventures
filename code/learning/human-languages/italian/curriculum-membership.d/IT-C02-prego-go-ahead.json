@@ -1,0 +1,11 @@
+{
+  "id": "IT-C02-prego-go-ahead",
+  "pathSegment": "IT-PATH-007",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-007-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

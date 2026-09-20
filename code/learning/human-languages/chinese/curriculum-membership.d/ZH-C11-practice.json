@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C11-practice",
+  "pathSegment": "ZH-PATH-010",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-028-PHONETIC-COMPONENT",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C12-mausam",
+  "pathSegment": "MW-PATH-012",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-026-WEATHER-SIX",
+      "order": 2
+    }
+  ]
+}

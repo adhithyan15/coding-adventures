@@ -1,0 +1,11 @@
+{
+  "id": "PA-C38-na-na",
+  "pathSegment": "PA-PATH-040",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-060-COORDINATORS",
+      "order": 4
+    }
+  ]
+}

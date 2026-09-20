@@ -1,0 +1,11 @@
+{
+  "id": "BN-C27-tritiyo",
+  "pathSegment": "BN-PATH-035",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-036-ORDINALS-ONE-TO-FIVE",
+      "order": 1
+    }
+  ]
+}

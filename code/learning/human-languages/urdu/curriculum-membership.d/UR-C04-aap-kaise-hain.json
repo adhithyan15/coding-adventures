@@ -1,0 +1,11 @@
+{
+  "id": "UR-C04-aap-kaise-hain",
+  "pathSegment": "UR-PATH-005",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-008-HONORIFIC-COPULA",
+      "order": 0
+    }
+  ]
+}

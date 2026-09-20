@@ -1,0 +1,11 @@
+{
+  "id": "GU-R04-doorway-nine-r2",
+  "pathSegment": "GU-PATH-005",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "GU-EXT-019-DOORWAY-RETRIEVAL",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-S124-letter-e",
+  "pathSegment": "TE-PATH-100",
+  "pathOrder": 43,
+  "extensions": [
+    {
+      "id": "TE-EXT-100-SCRIPT-RECOGNITION",
+      "order": 43
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-R18-agree-and-differ",
+  "pathSegment": "BN-PATH-025",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-026-AGREE-AND-EXPLAIN",
+      "order": 3
+    }
+  ]
+}

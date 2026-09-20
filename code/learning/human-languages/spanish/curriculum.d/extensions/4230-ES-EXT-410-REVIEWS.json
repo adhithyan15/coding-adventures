@@ -6,9 +6,5 @@
   "canDo": "I can retrieve academy, French, student and exam as one education chain.",
   "prerequisites": [
     "ES-EXT-410-EDUCATION"
-  ],
-  "lessons": [
-    "ES-C410-education-recall-1",
-    "ES-C410-education-recall-2"
   ]
 }

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C85-tum-ho",
+  "pathSegment": "HI-PATH-93-IMPERATIVE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-93-IMPERATIVE",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C07-read-later",
+  "pathSegment": "MW-PATH-007",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "MW-EXT-020-WRITE-LATER",
+      "order": 4
+    }
+  ]
+}

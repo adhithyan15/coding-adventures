@@ -6,11 +6,5 @@
   "canDo": "I can name a person who is not present, at either level of respect, and choose between Tamil's two words for we.",
   "prerequisites": [
     "TA-EXT-84-READING"
-  ],
-  "lessons": [
-    "TA-C85-avan-aval",
-    "TA-C85-avargal",
-    "TA-C85-naam-naangal",
-    "TA-R85-avarkal-recall"
   ]
 }

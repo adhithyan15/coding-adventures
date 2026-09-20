@@ -1,0 +1,11 @@
+{
+  "id": "TE-C32-cuudu",
+  "pathSegment": "TE-PATH-026-C",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-026-CORE-VERBS-C",
+      "order": 1
+    }
+  ]
+}

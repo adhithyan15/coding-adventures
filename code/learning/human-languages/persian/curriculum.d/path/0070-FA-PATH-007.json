@@ -1,10 +1,6 @@
 {
   "id": "FA-PATH-007",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
-  "lessons": [
-    "FA-C06-budan",
-    "FA-C06-raftan"
-  ],
   "before": [],
   "inline": [],
   "after": []

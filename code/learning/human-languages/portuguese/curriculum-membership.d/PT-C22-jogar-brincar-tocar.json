@@ -1,0 +1,11 @@
+{
+  "id": "PT-C22-jogar-brincar-tocar",
+  "pathSegment": "PT-PATH-026",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-026-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

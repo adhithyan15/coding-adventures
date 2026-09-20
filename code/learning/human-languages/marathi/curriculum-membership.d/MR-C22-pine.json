@@ -1,0 +1,11 @@
+{
+  "id": "MR-C22-pine",
+  "pathSegment": "MR-PATH-024",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-027-REQUEST-VERBS",
+      "order": 1
+    }
+  ]
+}

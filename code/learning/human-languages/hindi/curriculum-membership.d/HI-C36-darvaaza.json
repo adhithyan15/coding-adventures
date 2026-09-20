@@ -1,0 +1,11 @@
+{
+  "id": "HI-C36-darvaaza",
+  "pathSegment": "HI-PATH-030",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-030-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

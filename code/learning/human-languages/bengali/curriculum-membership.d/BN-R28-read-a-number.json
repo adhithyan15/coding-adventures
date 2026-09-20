@@ -1,0 +1,11 @@
+{
+  "id": "BN-R28-read-a-number",
+  "pathSegment": "BN-PATH-036",
+  "pathOrder": 11,
+  "extensions": [
+    {
+      "id": "BN-EXT-037-DIGITS",
+      "order": 11
+    }
+  ]
+}

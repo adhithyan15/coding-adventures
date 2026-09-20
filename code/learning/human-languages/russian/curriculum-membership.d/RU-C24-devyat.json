@@ -1,0 +1,11 @@
+{
+  "id": "RU-C24-devyat",
+  "pathSegment": "RU-PATH-026",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-031-COUNT-TEN",
+      "order": 3
+    }
+  ]
+}

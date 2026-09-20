@@ -1,0 +1,11 @@
+{
+  "id": "BN-W02-hyan-read",
+  "pathSegment": "BN-PATH-001",
+  "pathOrder": 23,
+  "extensions": [
+    {
+      "id": "BN-EXT-022-SCRIPT-MARKS-AND-FLAPS",
+      "order": 2
+    }
+  ]
+}

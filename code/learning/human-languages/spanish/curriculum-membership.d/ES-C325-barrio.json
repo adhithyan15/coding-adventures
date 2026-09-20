@@ -1,0 +1,11 @@
+{
+  "id": "ES-C325-barrio",
+  "pathSegment": "ES-PATH-325-01",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-325-PLACE",
+      "order": 2
+    }
+  ]
+}

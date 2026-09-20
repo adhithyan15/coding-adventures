@@ -1,0 +1,11 @@
+{
+  "id": "ES-C09-sois",
+  "pathSegment": "ES-PATH-030-SER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-030-SER-PLURAL",
+      "order": 2
+    }
+  ]
+}

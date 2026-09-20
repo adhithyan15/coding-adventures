@@ -12,6 +12,8 @@ export * from "./assessment.js";
 export * from "./artifact-presence.js";
 export * from "./assessment-artifacts.js";
 export * from "./task-shapes.js";
+export * from "./curriculum-membership.js";
+export * from "./curriculum-membership-shards.js";
 export * from "./sound-tags.js";
 export * from "./sound-tag-shards.js";
 export * from "./writing-stages.js";

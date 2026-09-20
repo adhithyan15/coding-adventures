@@ -1,0 +1,11 @@
+{
+  "id": "FA-W00-alef-dictation",
+  "pathSegment": "FA-PATH-001",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-001-INLINE-SCRIPT",
+      "order": 3
+    }
+  ]
+}

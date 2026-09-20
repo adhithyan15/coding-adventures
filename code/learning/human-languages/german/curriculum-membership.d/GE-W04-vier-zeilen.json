@@ -1,0 +1,11 @@
+{
+  "id": "GE-W04-vier-zeilen",
+  "pathSegment": "GE-PATH-053-WRITING",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-053-WRITING",
+      "order": 2
+    }
+  ]
+}

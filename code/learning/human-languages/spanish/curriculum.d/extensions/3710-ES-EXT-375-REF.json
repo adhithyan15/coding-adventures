@@ -4,12 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can name la uña, el labio, el pulgar, el beso and el sobrino.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-C375-una",
-    "ES-C375-labio",
-    "ES-C375-pulgar",
-    "ES-C375-beso",
-    "ES-C375-sobrino"
-  ]
+  "prerequisites": []
 }

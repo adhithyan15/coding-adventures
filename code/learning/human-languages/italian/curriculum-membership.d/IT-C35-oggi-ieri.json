@@ -1,0 +1,11 @@
+{
+  "id": "IT-C35-oggi-ieri",
+  "pathSegment": "IT-PATH-039",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-039-SAPERE",
+      "order": 2
+    }
+  ]
+}

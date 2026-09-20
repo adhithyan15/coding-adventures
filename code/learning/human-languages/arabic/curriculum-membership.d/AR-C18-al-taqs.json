@@ -1,0 +1,11 @@
+{
+  "id": "AR-C18-al-taqs",
+  "pathSegment": "AR-PATH-020",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "AR-EXT-020-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

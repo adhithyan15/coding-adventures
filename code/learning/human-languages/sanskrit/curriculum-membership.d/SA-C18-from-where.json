@@ -1,0 +1,11 @@
+{
+  "id": "SA-C18-from-where",
+  "pathSegment": "SA-PATH-204",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-204-ASK",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C69-railway",
+  "pathSegment": "HI-PATH-69-GOING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-69-GOING",
+      "order": 1
+    }
+  ]
+}

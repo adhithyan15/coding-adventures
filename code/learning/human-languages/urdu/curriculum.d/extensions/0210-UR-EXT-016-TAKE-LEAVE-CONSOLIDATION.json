@@ -6,8 +6,5 @@
   "canDo": "I can open and close a short respectful Urdu interaction using only independently learned lines.",
   "prerequisites": [
     "UR-EXT-015-FAREWELL-SPACING-REGISTER"
-  ],
-  "lessons": [
-    "UR-C05-practice"
   ]
 }

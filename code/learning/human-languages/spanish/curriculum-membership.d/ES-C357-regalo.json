@@ -1,0 +1,11 @@
+{
+  "id": "ES-C357-regalo",
+  "pathSegment": "ES-PATH-357-01",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-357-SPAN",
+      "order": 3
+    }
+  ]
+}

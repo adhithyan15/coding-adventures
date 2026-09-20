@@ -1,0 +1,11 @@
+{
+  "id": "ML-S119-vowel-sign-oo",
+  "pathSegment": "ML-PATH-100",
+  "pathOrder": 36,
+  "extensions": [
+    {
+      "id": "ML-EXT-100-SCRIPT-RECOGNITION",
+      "order": 36
+    }
+  ]
+}

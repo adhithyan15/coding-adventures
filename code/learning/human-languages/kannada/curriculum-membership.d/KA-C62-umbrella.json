@@ -1,0 +1,11 @@
+{
+  "id": "KA-C62-umbrella",
+  "pathSegment": "KA-PATH-62-MADE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-62-MADE",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C407-debajo",
+  "pathSegment": "ES-PATH-407-LOCATIONS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-407-LOCATIONS",
+      "order": 1
+    }
+  ]
+}

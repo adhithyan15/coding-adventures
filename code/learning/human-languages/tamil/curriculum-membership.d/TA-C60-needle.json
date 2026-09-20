@@ -1,0 +1,11 @@
+{
+  "id": "TA-C60-needle",
+  "pathSegment": "TA-PATH-60-MADE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-60-MADE",
+      "order": 0
+    }
+  ]
+}

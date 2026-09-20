@@ -1,0 +1,11 @@
+{
+  "id": "KA-C51-salutation",
+  "pathSegment": "KA-PATH-51-COURTESY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-51-COURTESY",
+      "order": 4
+    }
+  ]
+}

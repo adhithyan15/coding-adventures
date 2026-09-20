@@ -1,0 +1,11 @@
+{
+  "id": "ML-S01-letter-ka",
+  "pathSegment": "ML-PATH-100",
+  "pathOrder": 26,
+  "extensions": [
+    {
+      "id": "ML-EXT-100-SCRIPT-RECOGNITION",
+      "order": 26
+    }
+  ]
+}

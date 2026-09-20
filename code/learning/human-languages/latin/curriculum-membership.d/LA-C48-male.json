@@ -1,0 +1,11 @@
+{
+  "id": "LA-C48-male",
+  "pathSegment": "LA-PATH-032",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-048-DENY",
+      "order": 1
+    }
+  ]
+}

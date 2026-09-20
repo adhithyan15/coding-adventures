@@ -1,0 +1,11 @@
+{
+  "id": "TA-W13-read-irukkirirgal",
+  "pathSegment": "TA-PATH-003",
+  "pathOrder": 16,
+  "extensions": [
+    {
+      "id": "TA-EXT-003-SCRIPT",
+      "order": 16
+    }
+  ]
+}

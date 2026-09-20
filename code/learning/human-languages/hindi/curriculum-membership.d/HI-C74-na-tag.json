@@ -1,0 +1,11 @@
+{
+  "id": "HI-C74-na-tag",
+  "pathSegment": "HI-PATH-74-ASK",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-074-POLAR-QUESTION",
+      "order": 2
+    }
+  ]
+}

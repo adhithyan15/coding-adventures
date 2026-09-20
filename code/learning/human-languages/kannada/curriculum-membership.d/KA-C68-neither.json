@@ -1,0 +1,11 @@
+{
+  "id": "KA-C68-neither",
+  "pathSegment": "KA-PATH-68-DENY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-68-DENY",
+      "order": 1
+    }
+  ]
+}

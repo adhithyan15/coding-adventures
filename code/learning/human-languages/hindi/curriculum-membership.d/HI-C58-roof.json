@@ -1,0 +1,11 @@
+{
+  "id": "HI-C58-roof",
+  "pathSegment": "HI-PATH-58-HOUSE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-58-HOUSE",
+      "order": 1
+    }
+  ]
+}

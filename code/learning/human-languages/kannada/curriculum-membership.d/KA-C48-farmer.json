@@ -1,0 +1,11 @@
+{
+  "id": "KA-C48-farmer",
+  "pathSegment": "KA-PATH-48-ROLE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-48-ROLE",
+      "order": 3
+    }
+  ]
+}

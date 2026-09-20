@@ -1,0 +1,11 @@
+{
+  "id": "UR-C20-thik-hai",
+  "pathSegment": "UR-PATH-021",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-031-JOINING",
+      "order": 3
+    }
+  ]
+}

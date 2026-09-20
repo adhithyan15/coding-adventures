@@ -1,0 +1,11 @@
+{
+  "id": "ES-C320-molestia",
+  "pathSegment": "ES-PATH-320-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-320-COURT",
+      "order": 1
+    }
+  ]
+}

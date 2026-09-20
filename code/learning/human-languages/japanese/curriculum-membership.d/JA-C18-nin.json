@@ -1,0 +1,11 @@
+{
+  "id": "JA-C18-nin",
+  "pathSegment": "JA-PATH-017",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-025-COUNTERS",
+      "order": 1
+    }
+  ]
+}

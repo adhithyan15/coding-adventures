@@ -1,0 +1,11 @@
+{
+  "id": "SA-C24-cloth",
+  "pathSegment": "SA-PATH-24-ASK",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-24-ASK",
+      "order": 3
+    }
+  ]
+}

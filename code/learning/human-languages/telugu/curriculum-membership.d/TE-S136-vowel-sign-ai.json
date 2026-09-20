@@ -1,0 +1,11 @@
+{
+  "id": "TE-S136-vowel-sign-ai",
+  "pathSegment": "TE-PATH-100",
+  "pathOrder": 38,
+  "extensions": [
+    {
+      "id": "TE-EXT-100-SCRIPT-RECOGNITION",
+      "order": 38
+    }
+  ]
+}

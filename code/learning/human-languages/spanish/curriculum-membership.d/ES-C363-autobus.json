@@ -1,0 +1,11 @@
+{
+  "id": "ES-C363-autobus",
+  "pathSegment": "ES-PATH-363-01",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-363-WHERE",
+      "order": 3
+    }
+  ]
+}

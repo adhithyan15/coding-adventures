@@ -1,0 +1,11 @@
+{
+  "id": "KA-C19-vayassu",
+  "pathSegment": "KA-PATH-020",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-020-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

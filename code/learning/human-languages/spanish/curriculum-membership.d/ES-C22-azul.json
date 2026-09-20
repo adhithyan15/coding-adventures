@@ -1,0 +1,11 @@
+{
+  "id": "ES-C22-azul",
+  "pathSegment": "ES-PATH-020",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-020-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

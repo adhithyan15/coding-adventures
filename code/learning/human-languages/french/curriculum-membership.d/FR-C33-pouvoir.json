@@ -1,0 +1,11 @@
+{
+  "id": "FR-C33-pouvoir",
+  "pathSegment": "FR-PATH-031",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-030-MODAL-CHAIN",
+      "order": 0
+    }
+  ]
+}

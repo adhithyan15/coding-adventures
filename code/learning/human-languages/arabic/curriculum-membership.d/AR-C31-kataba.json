@@ -1,0 +1,11 @@
+{
+  "id": "AR-C31-kataba",
+  "pathSegment": "AR-PATH-028-B",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-028-LANGUAGE-SPECIFIC-B",
+      "order": 2
+    }
+  ]
+}

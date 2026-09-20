@@ -1,0 +1,11 @@
+{
+  "id": "TA-C72-anger",
+  "pathSegment": "TA-PATH-72-FEEL",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-72-FEEL",
+      "order": 0
+    }
+  ]
+}

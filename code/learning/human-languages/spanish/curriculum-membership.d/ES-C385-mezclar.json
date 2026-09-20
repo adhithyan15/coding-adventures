@@ -1,0 +1,11 @@
+{
+  "id": "ES-C385-mezclar",
+  "pathSegment": "ES-PATH-385-01",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-385-VERB",
+      "order": 2
+    }
+  ]
+}

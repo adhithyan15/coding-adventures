@@ -1,0 +1,11 @@
+{
+  "id": "MW-R25-script-close",
+  "pathSegment": "MW-PATH-024",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "MW-EXT-038-BRING-REQUEST",
+      "order": 6
+    }
+  ]
+}

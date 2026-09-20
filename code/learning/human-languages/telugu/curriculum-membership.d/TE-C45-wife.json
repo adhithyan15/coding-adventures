@@ -1,0 +1,11 @@
+{
+  "id": "TE-C45-wife",
+  "pathSegment": "TE-PATH-45-FAMILY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-45-FAMILY",
+      "order": 3
+    }
+  ]
+}

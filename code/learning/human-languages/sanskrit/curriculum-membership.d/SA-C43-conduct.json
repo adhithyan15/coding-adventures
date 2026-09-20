@@ -1,0 +1,11 @@
+{
+  "id": "SA-C43-conduct",
+  "pathSegment": "SA-PATH-43-COURTESY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-43-COURTESY",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-W03-ha",
+  "pathSegment": "MW-PATH-003",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MW-EXT-005-POLITE-AFFIRMATIVE",
+      "order": 0
+    }
+  ]
+}

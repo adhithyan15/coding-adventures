@@ -1,0 +1,11 @@
+{
+  "id": "FR-R38-ce-quon-nentend-pas",
+  "pathSegment": "FR-PATH-A1-SILENT",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-A1-SILENT",
+      "order": 5
+    }
+  ]
+}

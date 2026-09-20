@@ -1,0 +1,11 @@
+{
+  "id": "FR-C28-sucre",
+  "pathSegment": "FR-PATH-025",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-025-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

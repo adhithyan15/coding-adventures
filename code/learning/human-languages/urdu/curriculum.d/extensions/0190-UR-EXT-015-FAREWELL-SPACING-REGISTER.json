@@ -6,8 +6,5 @@
   "canDo": "I can read spaced خدا حافظ, distinguish its Urdu spelling from Persian's joined form, and use it as a broadly polite close.",
   "prerequisites": [
     "UR-EXT-014-HAFIZ-ARABIC-ROOT"
-  ],
-  "lessons": [
-    "UR-C05-khuda-hafiz"
   ]
 }

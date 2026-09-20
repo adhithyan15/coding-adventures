@@ -1,0 +1,11 @@
+{
+  "id": "ES-C48-repaso-dos-pasados",
+  "pathSegment": "ES-PATH-040-REVIEW-PASTS",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-040-REVIEW-PASTS",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C313-boleto",
+  "pathSegment": "ES-PATH-313-01",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-313-ASK",
+      "order": 0
+    }
+  ]
+}

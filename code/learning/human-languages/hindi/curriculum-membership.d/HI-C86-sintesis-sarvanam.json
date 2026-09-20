@@ -1,0 +1,11 @@
+{
+  "id": "HI-C86-sintesis-sarvanam",
+  "pathSegment": "HI-PATH-94-PRONOUNS",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "HI-EXT-94-PRONOUNS",
+      "order": 6
+    }
+  ]
+}

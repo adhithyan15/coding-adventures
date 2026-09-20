@@ -1,0 +1,11 @@
+{
+  "id": "ML-C105-thalasthaanam",
+  "pathSegment": "ML-PATH-105-PLACES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-105-PLACES",
+      "order": 2
+    }
+  ]
+}

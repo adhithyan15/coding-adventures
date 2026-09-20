@@ -6,10 +6,5 @@
   "canDo": "I can deny an identity and ask for agreement.",
   "prerequisites": [
     "ML-EXT-76-WANT"
-  ],
-  "lessons": [
-    "ML-C77-alla",
-    "ML-C77-alle",
-    "ML-R77-not-so-recall"
   ]
 }

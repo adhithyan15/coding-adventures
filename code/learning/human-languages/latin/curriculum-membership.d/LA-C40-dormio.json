@@ -1,0 +1,11 @@
+{
+  "id": "LA-C40-dormio",
+  "pathSegment": "LA-PATH-028",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-028-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

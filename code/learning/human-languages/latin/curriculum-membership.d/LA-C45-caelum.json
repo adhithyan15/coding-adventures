@@ -1,0 +1,11 @@
+{
+  "id": "LA-C45-caelum",
+  "pathSegment": "LA-PATH-023",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "LA-EXT-045-WORLD",
+      "order": 3
+    }
+  ]
+}

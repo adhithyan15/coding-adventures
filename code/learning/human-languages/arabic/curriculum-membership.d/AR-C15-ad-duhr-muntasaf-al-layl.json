@@ -1,0 +1,11 @@
+{
+  "id": "AR-C15-ad-duhr-muntasaf-al-layl",
+  "pathSegment": "AR-PATH-018",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-018-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-R36-food-numbered",
+  "pathSegment": "MW-PATH-030",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-044-NUMBERED-EXCHANGE",
+      "order": 2
+    }
+  ]
+}

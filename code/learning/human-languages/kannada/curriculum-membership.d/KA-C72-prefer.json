@@ -1,0 +1,11 @@
+{
+  "id": "KA-C72-prefer",
+  "pathSegment": "KA-PATH-72-WANT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-72-WANT",
+      "order": 3
+    }
+  ]
+}

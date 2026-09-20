@@ -1,0 +1,11 @@
+{
+  "id": "ML-S06-letter-chillu-ll",
+  "pathSegment": "ML-PATH-100",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "ML-EXT-100-SCRIPT-RECOGNITION",
+      "order": 8
+    }
+  ]
+}

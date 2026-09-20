@@ -1,0 +1,11 @@
+{
+  "id": "PA-C40-kyon",
+  "pathSegment": "PA-PATH-042",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-062-THAT-AND-WHY",
+      "order": 3
+    }
+  ]
+}

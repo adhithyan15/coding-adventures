@@ -1,9 +1,6 @@
 {
   "id": "PT-PATH-024-C-B",
   "spine_node": "SPINE-SAY-WHAT-I-LIKE",
-  "lessons": [
-    "PT-C20-gostar"
-  ],
   "before": [],
   "inline": [
     "PT-EXT-024-LANGUAGE-SPECIFIC-D"

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C68-price",
+  "pathSegment": "TA-PATH-68-SHOP",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-68-SHOP",
+      "order": 1
+    }
+  ]
+}

@@ -4,8 +4,5 @@
   "kind": "required",
   "category": "phonology",
   "canDo": "I can hear that a Mandarin syllable's pitch changes which word it is, and I can name the four marked tones.",
-  "prerequisites": [],
-  "lessons": [
-    "ZH-C01-tones"
-  ]
+  "prerequisites": []
 }

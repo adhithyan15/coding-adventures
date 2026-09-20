@@ -1,0 +1,11 @@
+{
+  "id": "GU-R16-anand-r4",
+  "pathSegment": "GU-PATH-018",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-022-R4-BRIDGE-B",
+      "order": 4
+    }
+  ]
+}

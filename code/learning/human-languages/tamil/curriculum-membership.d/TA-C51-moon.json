@@ -1,0 +1,11 @@
+{
+  "id": "TA-C51-moon",
+  "pathSegment": "TA-PATH-51-SKY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-51-SKY",
+      "order": 2
+    }
+  ]
+}

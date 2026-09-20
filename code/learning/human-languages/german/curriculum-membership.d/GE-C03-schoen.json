@@ -1,0 +1,11 @@
+{
+  "id": "GE-C03-schoen",
+  "pathSegment": "GE-PATH-010",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-010-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

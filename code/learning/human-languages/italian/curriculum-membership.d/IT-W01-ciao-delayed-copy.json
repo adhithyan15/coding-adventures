@@ -1,0 +1,11 @@
+{
+  "id": "IT-W01-ciao-delayed-copy",
+  "pathSegment": "IT-PATH-001",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-001-WRITING-START",
+      "order": 1
+    }
+  ]
+}

@@ -6,11 +6,5 @@
   "canDo": "I can join two Marathi sentences with and, offer a choice with or, and contradict the first half with but.",
   "prerequisites": [
     "MR-EXT-030-VERB-CONSOLIDATION"
-  ],
-  "lessons": [
-    "MR-C30-aani",
-    "MR-C30-kinva",
-    "MR-C30-pan",
-    "MR-R30-three-joins"
   ]
 }

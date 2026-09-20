@@ -1,0 +1,11 @@
+{
+  "id": "PA-W09-chacha",
+  "pathSegment": "PA-PATH-034",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-039-PREA1-GOOD-AND-SOSO",
+      "order": 1
+    }
+  ]
+}

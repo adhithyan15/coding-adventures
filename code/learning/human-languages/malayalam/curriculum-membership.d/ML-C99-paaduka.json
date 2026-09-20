@@ -1,0 +1,11 @@
+{
+  "id": "ML-C99-paaduka",
+  "pathSegment": "ML-PATH-99-ARTS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-99-ARTS",
+      "order": 1
+    }
+  ]
+}

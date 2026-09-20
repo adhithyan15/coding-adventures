@@ -1,0 +1,11 @@
+{
+  "id": "FR-C37-ne-chute",
+  "pathSegment": "FR-PATH-A1-VERB-WAYS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-A1-VERB-WAYS",
+      "order": 3
+    }
+  ]
+}

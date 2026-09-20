@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C07-practice",
+  "pathSegment": "ZH-PATH-006",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-019-GREETING-FRAME",
+      "order": 1
+    }
+  ]
+}

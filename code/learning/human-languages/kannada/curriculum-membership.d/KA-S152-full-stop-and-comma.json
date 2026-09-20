@@ -1,0 +1,11 @@
+{
+  "id": "KA-S152-full-stop-and-comma",
+  "pathSegment": "KA-PATH-77-MARKS",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-77-MARKS",
+      "order": 0
+    }
+  ]
+}

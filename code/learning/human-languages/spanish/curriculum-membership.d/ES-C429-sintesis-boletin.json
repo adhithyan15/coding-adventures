@@ -1,0 +1,11 @@
+{
+  "id": "ES-C429-sintesis-boletin",
+  "pathSegment": "ES-PATH-429-EDUCACION",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ES-EXT-429-EDUCACION",
+      "order": 6
+    }
+  ]
+}

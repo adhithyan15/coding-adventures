@@ -1,0 +1,11 @@
+{
+  "id": "SA-C41-pot",
+  "pathSegment": "SA-PATH-41-CRAFT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-41-CRAFT",
+      "order": 1
+    }
+  ]
+}

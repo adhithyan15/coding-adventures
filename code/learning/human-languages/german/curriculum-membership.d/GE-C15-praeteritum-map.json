@@ -1,0 +1,11 @@
+{
+  "id": "GE-C15-praeteritum-map",
+  "pathSegment": "GE-PATH-020-C",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "GE-EXT-020-C-ETYMOLOGY",
+      "order": 1
+    }
+  ]
+}

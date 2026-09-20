@@ -1,0 +1,11 @@
+{
+  "id": "MW-C39-koni",
+  "pathSegment": "MW-PATH-032",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-046-REFUSAL",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C04-thik",
+  "pathSegment": "UR-PATH-005",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "UR-EXT-010-SCRIPT-BRIDGE",
+      "order": 0
+    }
+  ]
+}

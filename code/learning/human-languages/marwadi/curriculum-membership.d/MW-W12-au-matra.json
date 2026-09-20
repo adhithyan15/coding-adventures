@@ -1,0 +1,11 @@
+{
+  "id": "MW-W12-au-matra",
+  "pathSegment": "MW-PATH-012",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-026-WEATHER-SIX",
+      "order": 1
+    }
+  ]
+}

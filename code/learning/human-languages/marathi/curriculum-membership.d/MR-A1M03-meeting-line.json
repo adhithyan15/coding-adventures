@@ -1,0 +1,11 @@
+{
+  "id": "MR-A1M03-meeting-line",
+  "pathSegment": "MR-PATH-022",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-025-A1-NAMED-READER-MESSAGE",
+      "order": 2
+    }
+  ]
+}

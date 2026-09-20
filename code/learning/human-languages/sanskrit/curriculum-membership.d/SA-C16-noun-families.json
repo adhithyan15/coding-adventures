@@ -1,0 +1,11 @@
+{
+  "id": "SA-C16-noun-families",
+  "pathSegment": "SA-PATH-202",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "SA-EXT-202-PLACE",
+      "order": 5
+    }
+  ]
+}

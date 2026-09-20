@@ -1,0 +1,11 @@
+{
+  "id": "ML-C92-bill",
+  "pathSegment": "ML-PATH-92-EATING-OUT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-92-EATING-OUT",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C345-cada",
+  "pathSegment": "ES-PATH-345-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-345-REF",
+      "order": 1
+    }
+  ]
+}

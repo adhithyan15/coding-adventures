@@ -1,0 +1,11 @@
+{
+  "id": "ES-C380-alegre",
+  "pathSegment": "ES-PATH-380-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-380-COUNT",
+      "order": 1
+    }
+  ]
+}

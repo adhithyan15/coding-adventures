@@ -1,0 +1,11 @@
+{
+  "id": "TA-C65-walk",
+  "pathSegment": "TA-PATH-65-DOING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-65-DOING",
+      "order": 1
+    }
+  ]
+}

@@ -1,10 +1,6 @@
 {
   "id": "GU-PATH-010",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
-  "lessons": [
-    "GU-C07-hovun",
-    "GU-C07-javun"
-  ],
   "before": [],
   "inline": [],
   "after": []

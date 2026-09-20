@@ -1,0 +1,11 @@
+{
+  "id": "SA-C29-favour",
+  "pathSegment": "SA-PATH-29-COURTESY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-29-COURTESY",
+      "order": 3
+    }
+  ]
+}

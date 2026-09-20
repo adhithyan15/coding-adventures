@@ -1,0 +1,11 @@
+{
+  "id": "MR-C04-kalji-ghya",
+  "pathSegment": "MR-PATH-010",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-040-FAREWELL-CARE-AND-CONSOLIDATION",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C05-rahevun",
+  "pathSegment": "GU-PATH-016",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-016-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C17-ucha-paathira",
+  "pathSegment": "ML-PATH-020",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-020-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

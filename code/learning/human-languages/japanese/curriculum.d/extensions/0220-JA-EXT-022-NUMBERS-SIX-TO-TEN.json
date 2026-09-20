@@ -6,15 +6,5 @@
   "canDo": "I can say and write one to ten in Japanese and build any number up to ninety-nine from those ten words.",
   "prerequisites": [
     "JA-EXT-021-NUMBERS-ONE-TO-FIVE"
-  ],
-  "lessons": [
-    "JA-C15-nana",
-    "JA-C15-hachi",
-    "JA-C15-ku",
-    "JA-W15-ro",
-    "JA-C15-roku",
-    "JA-W15-small-yu",
-    "JA-C15-juu",
-    "JA-R15-six-to-ten"
   ]
 }

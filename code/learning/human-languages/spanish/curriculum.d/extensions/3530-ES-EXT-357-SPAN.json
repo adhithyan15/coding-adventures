@@ -4,12 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can name the two feasts a Spanish year turns on, the day before one, and what arrives with it.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-C357-navidad",
-    "ES-C357-pascua",
-    "ES-C357-vispera",
-    "ES-C357-regalo",
-    "ES-C357-tarjeta"
-  ]
+  "prerequisites": []
 }

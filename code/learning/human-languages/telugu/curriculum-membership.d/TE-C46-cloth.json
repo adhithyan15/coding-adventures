@@ -1,0 +1,11 @@
+{
+  "id": "TE-C46-cloth",
+  "pathSegment": "TE-PATH-46-ASK",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-46-ASK",
+      "order": 1
+    }
+  ]
+}

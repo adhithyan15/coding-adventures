@@ -1,0 +1,11 @@
+{
+  "id": "MR-R54-how-much",
+  "pathSegment": "MR-PATH-057",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-070-AMOUNTS",
+      "order": 4
+    }
+  ]
+}

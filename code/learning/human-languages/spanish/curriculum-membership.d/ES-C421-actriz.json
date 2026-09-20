@@ -1,0 +1,11 @@
+{
+  "id": "ES-C421-actriz",
+  "pathSegment": "ES-PATH-421-ARTS-PEOPLE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-421-ARTS-PEOPLE",
+      "order": 1
+    }
+  ]
+}

@@ -6,10 +6,5 @@
   "canDo": "I can read a Bengali word by its shape, read a line I would say to a stranger, and read a short passage without translating word by word.",
   "prerequisites": [
     "BN-EXT-037-DIGITS"
-  ],
-  "lessons": [
-    "BN-C40-words",
-    "BN-C40-lines",
-    "BN-C40-prothom-path"
   ]
 }

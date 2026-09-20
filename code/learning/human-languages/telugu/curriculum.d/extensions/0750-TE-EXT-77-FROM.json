@@ -4,12 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can say which town and country I am from in Telugu, count past twenty, and give my age.",
-  "prerequisites": [],
-  "lessons": [
-    "TE-C77-from",
-    "TE-C77-town",
-    "TE-C77-country",
-    "TE-C77-india",
-    "TE-C77-thirty"
-  ]
+  "prerequisites": []
 }

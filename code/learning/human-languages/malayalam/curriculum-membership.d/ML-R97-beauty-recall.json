@@ -1,0 +1,11 @@
+{
+  "id": "ML-R97-beauty-recall",
+  "pathSegment": "ML-PATH-97-BEAUTY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-97-BEAUTY",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C37-baayi",
+  "pathSegment": "KA-PATH-029",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-030-FACE-WORDS",
+      "order": 3
+    }
+  ]
+}

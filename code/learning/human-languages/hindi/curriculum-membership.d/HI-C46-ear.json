@@ -1,0 +1,11 @@
+{
+  "id": "HI-C46-ear",
+  "pathSegment": "HI-PATH-46-BODY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-46-BODY",
+      "order": 2
+    }
+  ]
+}

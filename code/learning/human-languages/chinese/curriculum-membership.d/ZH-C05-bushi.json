@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C05-bushi",
+  "pathSegment": "ZH-PATH-004",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-014-BU-SANDHI",
+      "order": 0
+    }
+  ]
+}

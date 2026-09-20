@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W17-wen-observe",
+  "pathSegment": "ZH-PATH-016",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-046-LANGUAGE-COUNTRY-SCRIPT",
+      "order": 0
+    }
+  ]
+}

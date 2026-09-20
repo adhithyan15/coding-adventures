@@ -1,0 +1,11 @@
+{
+  "id": "TE-C51-respect",
+  "pathSegment": "TE-PATH-51-COURTESY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-51-COURTESY",
+      "order": 2
+    }
+  ]
+}

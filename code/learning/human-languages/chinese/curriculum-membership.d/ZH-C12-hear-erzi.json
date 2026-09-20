@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C12-hear-erzi",
+  "pathSegment": "ZH-PATH-011",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-030-FAMILY-MEANING-FIRST",
+      "order": 2
+    }
+  ]
+}

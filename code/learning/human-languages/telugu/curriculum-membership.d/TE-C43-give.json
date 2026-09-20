@@ -1,0 +1,11 @@
+{
+  "id": "TE-C43-give",
+  "pathSegment": "TE-PATH-43-VERBS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-43-VERBS",
+      "order": 3
+    }
+  ]
+}

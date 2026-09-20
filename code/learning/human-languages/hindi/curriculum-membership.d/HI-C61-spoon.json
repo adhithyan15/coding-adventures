@@ -1,0 +1,11 @@
+{
+  "id": "HI-C61-spoon",
+  "pathSegment": "HI-PATH-61-FIRE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-61-FIRE",
+      "order": 1
+    }
+  ]
+}

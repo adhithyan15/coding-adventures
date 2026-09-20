@@ -1,0 +1,11 @@
+{
+  "id": "TA-C66-whichway-recall",
+  "pathSegment": "TA-PATH-66-WHICHWAY",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "TA-EXT-66-WHICHWAY",
+      "order": 7
+    }
+  ]
+}

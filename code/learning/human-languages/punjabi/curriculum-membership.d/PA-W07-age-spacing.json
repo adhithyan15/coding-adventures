@@ -1,0 +1,11 @@
+{
+  "id": "PA-W07-age-spacing",
+  "pathSegment": "PA-PATH-031",
+  "pathOrder": 9,
+  "extensions": [
+    {
+      "id": "PA-EXT-036-A1-AGE-FIELD",
+      "order": 9
+    }
+  ]
+}

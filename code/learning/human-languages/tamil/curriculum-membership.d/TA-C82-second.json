@@ -1,0 +1,11 @@
+{
+  "id": "TA-C82-second",
+  "pathSegment": "TA-PATH-82-ORDINAL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-82-ORDINAL",
+      "order": 1
+    }
+  ]
+}

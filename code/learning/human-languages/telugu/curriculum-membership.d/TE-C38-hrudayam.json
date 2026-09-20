@@ -1,0 +1,11 @@
+{
+  "id": "TE-C38-hrudayam",
+  "pathSegment": "TE-PATH-031",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-032-HEART",
+      "order": 1
+    }
+  ]
+}

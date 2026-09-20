@@ -1,0 +1,11 @@
+{
+  "id": "TA-C46-guest",
+  "pathSegment": "TA-PATH-46-ROLE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-46-ROLE",
+      "order": 4
+    }
+  ]
+}

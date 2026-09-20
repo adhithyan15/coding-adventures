@@ -1,0 +1,11 @@
+{
+  "id": "TA-W32-read-sol",
+  "pathSegment": "TA-PATH-77-SAY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-77-SAY",
+      "order": 2
+    }
+  ]
+}

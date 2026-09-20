@@ -1,0 +1,11 @@
+{
+  "id": "ES-C386-crecer",
+  "pathSegment": "ES-PATH-386-01",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-386-VERB",
+      "order": 3
+    }
+  ]
+}

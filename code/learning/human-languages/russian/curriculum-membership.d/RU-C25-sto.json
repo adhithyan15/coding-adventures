@@ -1,0 +1,11 @@
+{
+  "id": "RU-C25-sto",
+  "pathSegment": "RU-PATH-027",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-032-ROUND-AMOUNTS",
+      "order": 1
+    }
+  ]
+}

@@ -6,9 +6,5 @@
   "canDo": "I can retrieve a class sign-up instruction in a simple notice.",
   "prerequisites": [
     "ES-EXT-414-SIGNUP"
-  ],
-  "lessons": [
-    "ES-C414-signup-recall-1",
-    "ES-C414-signup-recall-2"
   ]
 }

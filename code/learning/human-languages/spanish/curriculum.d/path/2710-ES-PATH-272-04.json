@@ -1,10 +1,6 @@
 {
   "id": "ES-PATH-272-04",
   "spine_node": "SPINE-INFER-IMPLICIT-MEANING",
-  "lessons": [
-    "ES-C272-mira",
-    "ES-C272-practice"
-  ],
   "before": [],
   "inline": [
     "ES-EXT-272-IMPLICIT"

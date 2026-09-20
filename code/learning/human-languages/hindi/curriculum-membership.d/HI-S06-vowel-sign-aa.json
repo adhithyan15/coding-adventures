@@ -1,0 +1,11 @@
+{
+  "id": "HI-S06-vowel-sign-aa",
+  "pathSegment": "HI-PATH-100",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "HI-EXT-100-SCRIPT-RECOGNITION",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C05-rahna",
+  "pathSegment": "PA-PATH-010",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-010-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

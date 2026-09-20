@@ -1,0 +1,11 @@
+{
+  "id": "ES-C279-ventana",
+  "pathSegment": "ES-PATH-279-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-279-HABITACION",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C39-repaso-cambios",
+  "pathSegment": "ES-PATH-035-B",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-035-CONSOLIDATION-SPLITS",
+      "order": 0
+    }
+  ]
+}

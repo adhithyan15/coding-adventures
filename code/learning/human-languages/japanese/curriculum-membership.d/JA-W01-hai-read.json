@@ -1,0 +1,11 @@
+{
+  "id": "JA-W01-hai-read",
+  "pathSegment": "JA-PATH-001",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-008-HIRAGANA-YES-NO",
+      "order": 2
+    }
+  ]
+}

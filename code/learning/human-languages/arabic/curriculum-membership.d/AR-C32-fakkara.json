@@ -1,0 +1,11 @@
+{
+  "id": "AR-C32-fakkara",
+  "pathSegment": "AR-PATH-029",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-029-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

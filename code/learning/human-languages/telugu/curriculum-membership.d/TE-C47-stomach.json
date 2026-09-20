@@ -1,0 +1,11 @@
+{
+  "id": "TE-C47-stomach",
+  "pathSegment": "TE-PATH-47-BODY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-47-BODY",
+      "order": 4
+    }
+  ]
+}

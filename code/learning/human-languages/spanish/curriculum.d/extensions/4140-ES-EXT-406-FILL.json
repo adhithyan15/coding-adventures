@@ -4,8 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can understand the instruction to fill in a form.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-C406-rellenar"
-  ]
+  "prerequisites": []
 }

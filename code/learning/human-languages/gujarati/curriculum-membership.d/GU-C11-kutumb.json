@@ -1,0 +1,11 @@
+{
+  "id": "GU-C11-kutumb",
+  "pathSegment": "GU-PATH-014",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-014-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-S08-vowel-sign-aa",
+  "pathSegment": "KA-PATH-100",
+  "pathOrder": 10,
+  "extensions": [
+    {
+      "id": "KA-EXT-100-SCRIPT-RECOGNITION",
+      "order": 10
+    }
+  ]
+}

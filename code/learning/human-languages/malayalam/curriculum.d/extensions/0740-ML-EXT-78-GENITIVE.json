@@ -6,10 +6,5 @@
   "canDo": "I can make any noun the owner of something.",
   "prerequisites": [
     "ML-EXT-77-NOT-SO"
-  ],
-  "lessons": [
-    "ML-C78-nre",
-    "ML-C78-ude",
-    "ML-R78-genitive-recall"
   ]
 }

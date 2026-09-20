@@ -1,0 +1,11 @@
+{
+  "id": "BN-W04-chha",
+  "pathSegment": "BN-PATH-001",
+  "pathOrder": 40,
+  "extensions": [
+    {
+      "id": "BN-EXT-022-SCRIPT-MARKS-AND-FLAPS",
+      "order": 4
+    }
+  ]
+}

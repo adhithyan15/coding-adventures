@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W18-shu-delayed",
+  "pathSegment": "ZH-PATH-017",
+  "pathOrder": 13,
+  "extensions": [
+    {
+      "id": "ZH-EXT-049-LOOKING-READING-SCRIPT",
+      "order": 8
+    }
+  ]
+}

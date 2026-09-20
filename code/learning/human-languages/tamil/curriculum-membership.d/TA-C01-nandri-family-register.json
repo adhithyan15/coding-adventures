@@ -1,0 +1,11 @@
+{
+  "id": "TA-C01-nandri-family-register",
+  "pathSegment": "TA-PATH-005",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-005-REGISTER",
+      "order": 0
+    }
+  ]
+}

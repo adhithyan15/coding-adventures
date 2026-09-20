@@ -1,0 +1,11 @@
+{
+  "id": "ML-C100-saari",
+  "pathSegment": "ML-PATH-100-CLOTHING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-100-CLOTHING",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C01-die-plural",
+  "pathSegment": "GE-PATH-006",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-006-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

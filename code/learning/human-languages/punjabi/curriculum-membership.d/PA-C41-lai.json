@@ -1,0 +1,11 @@
+{
+  "id": "PA-C41-lai",
+  "pathSegment": "PA-PATH-043",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-063-CONDITION",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-R18-wellbeing-r4",
+  "pathSegment": "PA-PATH-020",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "PA-EXT-025-A1-RESIDENCE-FIELD",
+      "order": 6
+    }
+  ]
+}

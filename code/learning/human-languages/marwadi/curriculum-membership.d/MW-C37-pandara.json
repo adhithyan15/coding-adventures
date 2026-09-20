@@ -1,0 +1,11 @@
+{
+  "id": "MW-C37-pandara",
+  "pathSegment": "MW-PATH-031",
+  "pathOrder": 10,
+  "extensions": [
+    {
+      "id": "MW-EXT-045-TEENS",
+      "order": 10
+    }
+  ]
+}

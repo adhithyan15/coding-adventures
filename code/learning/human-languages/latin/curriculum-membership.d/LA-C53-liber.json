@@ -1,0 +1,11 @@
+{
+  "id": "LA-C53-liber",
+  "pathSegment": "LA-PATH-037",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-053-SCHOOL",
+      "order": 4
+    }
+  ]
+}

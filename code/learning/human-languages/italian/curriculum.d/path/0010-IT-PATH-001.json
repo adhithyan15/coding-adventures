@@ -1,12 +1,6 @@
 {
   "id": "IT-PATH-001",
   "spine_node": "SPINE-MEET-GREET",
-  "lessons": [
-    "IT-C01-ciao",
-    "IT-W01-ciao-guided-copy",
-    "IT-W01-ciao-delayed-copy",
-    "IT-W01-ciao-dictation"
-  ],
   "before": [],
   "inline": [],
   "after": [

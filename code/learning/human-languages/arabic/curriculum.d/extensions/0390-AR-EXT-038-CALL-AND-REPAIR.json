@@ -6,10 +6,5 @@
   "canDo": "I can call somebody by name and ask them to say it again, and I can run the first meeting of this book with the repair kit inside it.",
   "prerequisites": [
     "AR-EXT-037-WHY-THAT-WHEN"
-  ],
-  "lessons": [
-    "AR-C41-ya",
-    "AR-C41-karrir",
-    "AR-R41-calling-and-asking-again"
   ]
 }

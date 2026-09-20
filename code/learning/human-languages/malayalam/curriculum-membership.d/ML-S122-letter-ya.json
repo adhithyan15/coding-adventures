@@ -1,0 +1,11 @@
+{
+  "id": "ML-S122-letter-ya",
+  "pathSegment": "ML-PATH-100",
+  "pathOrder": 19,
+  "extensions": [
+    {
+      "id": "ML-EXT-100-SCRIPT-RECOGNITION",
+      "order": 19
+    }
+  ]
+}

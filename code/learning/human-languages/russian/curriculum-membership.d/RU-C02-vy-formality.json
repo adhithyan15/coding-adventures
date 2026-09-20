@@ -1,0 +1,11 @@
+{
+  "id": "RU-C02-vy-formality",
+  "pathSegment": "RU-PATH-006",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-006-REGISTER",
+      "order": 0
+    }
+  ]
+}

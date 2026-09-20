@@ -1,0 +1,11 @@
+{
+  "id": "MW-R32-script-close",
+  "pathSegment": "MW-PATH-026",
+  "pathOrder": 13,
+  "extensions": [
+    {
+      "id": "MW-EXT-040-COUNT-FIVE",
+      "order": 13
+    }
+  ]
+}

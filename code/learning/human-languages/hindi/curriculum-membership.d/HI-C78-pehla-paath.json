@@ -1,0 +1,11 @@
+{
+  "id": "HI-C78-pehla-paath",
+  "pathSegment": "HI-PATH-78-READING",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-78-READING",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C58-less",
+  "pathSegment": "KA-PATH-58-REPLY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-58-REPLY",
+      "order": 2
+    }
+  ]
+}

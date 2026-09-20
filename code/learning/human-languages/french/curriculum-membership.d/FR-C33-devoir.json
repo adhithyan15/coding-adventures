@@ -1,0 +1,11 @@
+{
+  "id": "FR-C33-devoir",
+  "pathSegment": "FR-PATH-031",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-030-MODAL-CHAIN",
+      "order": 1
+    }
+  ]
+}

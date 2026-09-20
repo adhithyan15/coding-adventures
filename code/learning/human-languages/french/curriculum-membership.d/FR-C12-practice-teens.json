@@ -1,0 +1,11 @@
+{
+  "id": "FR-C12-practice-teens",
+  "pathSegment": "FR-PATH-015",
+  "pathOrder": 61,
+  "extensions": [
+    {
+      "id": "FR-EXT-015-LANGUAGE-SPECIFIC",
+      "order": 61
+    }
+  ]
+}

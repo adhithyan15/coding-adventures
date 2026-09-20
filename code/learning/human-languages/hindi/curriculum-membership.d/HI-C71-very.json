@@ -1,0 +1,11 @@
+{
+  "id": "HI-C71-very",
+  "pathSegment": "HI-PATH-71-TODAY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-71-TODAY",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C40-curd",
+  "pathSegment": "SA-PATH-40-FOOD",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-40-FOOD",
+      "order": 0
+    }
+  ]
+}

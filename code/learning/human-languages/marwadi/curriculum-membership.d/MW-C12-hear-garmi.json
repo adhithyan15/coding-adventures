@@ -1,0 +1,11 @@
+{
+  "id": "MW-C12-hear-garmi",
+  "pathSegment": "MW-PATH-012",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-026-WEATHER-SIX",
+      "order": 3
+    }
+  ]
+}

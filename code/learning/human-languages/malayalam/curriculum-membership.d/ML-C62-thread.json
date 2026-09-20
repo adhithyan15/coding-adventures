@@ -1,0 +1,11 @@
+{
+  "id": "ML-C62-thread",
+  "pathSegment": "ML-PATH-62-HAND",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-62-HAND",
+      "order": 1
+    }
+  ]
+}

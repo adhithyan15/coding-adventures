@@ -1,0 +1,11 @@
+{
+  "id": "ES-C391-supermercado",
+  "pathSegment": "ES-PATH-391-01",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-391-THING",
+      "order": 3
+    }
+  ]
+}

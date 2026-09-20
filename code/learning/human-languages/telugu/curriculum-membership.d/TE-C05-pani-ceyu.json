@@ -1,0 +1,11 @@
+{
+  "id": "TE-C05-pani-ceyu",
+  "pathSegment": "TE-PATH-011",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-011-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

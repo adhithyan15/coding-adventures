@@ -1,0 +1,11 @@
+{
+  "id": "MW-C10-haath",
+  "pathSegment": "MW-PATH-010",
+  "pathOrder": 10,
+  "extensions": [
+    {
+      "id": "MW-EXT-024-TRAVEL-FIVE",
+      "order": 10
+    }
+  ]
+}

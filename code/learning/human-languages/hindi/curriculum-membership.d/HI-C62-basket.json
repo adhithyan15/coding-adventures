@@ -1,0 +1,11 @@
+{
+  "id": "HI-C62-basket",
+  "pathSegment": "HI-PATH-62-HANDS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-62-HANDS",
+      "order": 2
+    }
+  ]
+}

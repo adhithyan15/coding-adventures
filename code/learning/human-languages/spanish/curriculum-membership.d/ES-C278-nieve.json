@@ -1,0 +1,11 @@
+{
+  "id": "ES-C278-nieve",
+  "pathSegment": "ES-PATH-278-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-278-AFUERA",
+      "order": 1
+    }
+  ]
+}

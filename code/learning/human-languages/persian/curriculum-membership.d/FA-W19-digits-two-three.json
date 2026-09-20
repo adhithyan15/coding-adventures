@@ -1,0 +1,11 @@
+{
+  "id": "FA-W19-digits-two-three",
+  "pathSegment": "FA-PATH-020",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-027-DIGITS",
+      "order": 1
+    }
+  ]
+}

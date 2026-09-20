@@ -1,9 +1,6 @@
 {
   "id": "ES-PATH-273-01",
   "spine_node": "SPINE-STRUCTURE-EXTENDED-TEXT",
-  "lessons": [
-    "ES-C273-en-primer-lugar"
-  ],
   "before": [],
   "inline": [],
   "after": []

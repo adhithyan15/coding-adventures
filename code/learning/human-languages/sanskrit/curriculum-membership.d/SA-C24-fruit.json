@@ -1,0 +1,11 @@
+{
+  "id": "SA-C24-fruit",
+  "pathSegment": "SA-PATH-24-ASK",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-24-ASK",
+      "order": 2
+    }
+  ]
+}

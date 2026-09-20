@@ -1,0 +1,11 @@
+{
+  "id": "GE-W02-umlauts",
+  "pathSegment": "GE-PATH-013",
+  "pathOrder": 13,
+  "extensions": [
+    {
+      "id": "GE-EXT-013-WRITING-KIT",
+      "order": 1
+    }
+  ]
+}

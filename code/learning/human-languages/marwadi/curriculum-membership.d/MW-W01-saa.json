@@ -1,0 +1,11 @@
+{
+  "id": "MW-W01-saa",
+  "pathSegment": "MW-PATH-001",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-002-WRITE-SAA",
+      "order": 1
+    }
+  ]
+}

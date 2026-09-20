@@ -4,8 +4,5 @@
   "kind": "required",
   "category": "register",
   "canDo": "I can choose the Tamil form that fits this relationship and setting.",
-  "prerequisites": [],
-  "lessons": [
-    "TA-C01-vanakkam-family-register"
-  ]
+  "prerequisites": []
 }

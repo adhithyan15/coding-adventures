@@ -1,0 +1,11 @@
+{
+  "id": "GU-C24-hear-atyaare",
+  "pathSegment": "GU-PATH-023",
+  "pathOrder": 10,
+  "extensions": [
+    {
+      "id": "GU-EXT-035-TIME-EIGHT",
+      "order": 10
+    }
+  ]
+}

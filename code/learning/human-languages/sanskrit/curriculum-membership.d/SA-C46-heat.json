@@ -1,0 +1,11 @@
+{
+  "id": "SA-C46-heat",
+  "pathSegment": "SA-PATH-46-LIGHT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-46-LIGHT",
+      "order": 4
+    }
+  ]
+}

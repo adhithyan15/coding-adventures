@@ -4,12 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can say a thing is my own or somebody else's, say two things are the same or different, and ask what kind it is.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-C350-propio",
-    "ES-C350-ajeno",
-    "ES-C350-igual",
-    "ES-C350-distinto",
-    "ES-C350-tipo"
-  ]
+  "prerequisites": []
 }

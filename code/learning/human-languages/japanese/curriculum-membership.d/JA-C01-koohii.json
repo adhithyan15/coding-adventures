@@ -1,0 +1,11 @@
+{
+  "id": "JA-C01-koohii",
+  "pathSegment": "JA-PATH-006",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-004-KATAKANA-LOANWORDS",
+      "order": 0
+    }
+  ]
+}

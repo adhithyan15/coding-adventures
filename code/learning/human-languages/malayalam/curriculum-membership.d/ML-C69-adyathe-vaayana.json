@@ -1,0 +1,11 @@
+{
+  "id": "ML-C69-adyathe-vaayana",
+  "pathSegment": "ML-PATH-69-READING",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-69-READING",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C64-crop",
+  "pathSegment": "TA-PATH-64-HARVEST",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-64-HARVEST",
+      "order": 2
+    }
+  ]
+}

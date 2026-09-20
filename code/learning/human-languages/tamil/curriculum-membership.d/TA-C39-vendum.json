@@ -1,0 +1,11 @@
+{
+  "id": "TA-C39-vendum",
+  "pathSegment": "TA-PATH-036",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-036-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

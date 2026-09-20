@@ -1,0 +1,11 @@
+{
+  "id": "TA-W28-read-inru",
+  "pathSegment": "TA-PATH-73-WHEN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-73-WHEN",
+      "order": 2
+    }
+  ]
+}

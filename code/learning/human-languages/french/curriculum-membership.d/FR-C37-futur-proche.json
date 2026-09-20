@@ -1,0 +1,11 @@
+{
+  "id": "FR-C37-futur-proche",
+  "pathSegment": "FR-PATH-A1-VERB-WAYS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-A1-VERB-WAYS",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C18-food-three",
+  "pathSegment": "MW-PATH-017",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "MW-EXT-031-FOOD-THREE",
+      "order": 7
+    }
+  ]
+}

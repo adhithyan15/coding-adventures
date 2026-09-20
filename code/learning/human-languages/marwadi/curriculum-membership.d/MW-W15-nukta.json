@@ -1,0 +1,11 @@
+{
+  "id": "MW-W15-nukta",
+  "pathSegment": "MW-PATH-014",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-028-SHOPPING-SEVEN",
+      "order": 1
+    }
+  ]
+}

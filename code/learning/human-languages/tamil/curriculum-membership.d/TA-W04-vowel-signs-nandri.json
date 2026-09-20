@@ -1,0 +1,11 @@
+{
+  "id": "TA-W04-vowel-signs-nandri",
+  "pathSegment": "TA-PATH-003",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "TA-EXT-003-SCRIPT",
+      "order": 6
+    }
+  ]
+}

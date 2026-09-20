@@ -1,0 +1,11 @@
+{
+  "id": "AR-C08-al-jumua-as-sabt",
+  "pathSegment": "AR-PATH-012",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-012-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

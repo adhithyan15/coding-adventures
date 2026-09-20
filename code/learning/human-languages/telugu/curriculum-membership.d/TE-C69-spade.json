@@ -1,0 +1,11 @@
+{
+  "id": "TE-C69-spade",
+  "pathSegment": "TE-PATH-69-TOOL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-69-TOOL",
+      "order": 2
+    }
+  ]
+}

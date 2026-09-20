@@ -6,9 +6,5 @@
   "canDo": "I can identify the action of signing up and the reception desk.",
   "prerequisites": [
     "ES-EXT-342-CLOCK"
-  ],
-  "lessons": [
-    "ES-C414-apuntarse",
-    "ES-C414-recepcion"
   ]
 }

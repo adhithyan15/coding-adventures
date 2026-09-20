@@ -1,0 +1,11 @@
+{
+  "id": "TA-C50-betel-leaf",
+  "pathSegment": "TA-PATH-50-WELCOME",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-50-WELCOME",
+      "order": 3
+    }
+  ]
+}

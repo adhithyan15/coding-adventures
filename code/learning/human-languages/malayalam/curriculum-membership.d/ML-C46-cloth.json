@@ -1,0 +1,11 @@
+{
+  "id": "ML-C46-cloth",
+  "pathSegment": "ML-PATH-46-ASK",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-46-ASK",
+      "order": 1
+    }
+  ]
+}

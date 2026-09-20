@@ -1,0 +1,11 @@
+{
+  "id": "SA-C21-laugh",
+  "pathSegment": "SA-PATH-21-VERBS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-21-VERBS",
+      "order": 1
+    }
+  ]
+}

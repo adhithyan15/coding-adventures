@@ -1,0 +1,11 @@
+{
+  "id": "GE-C02-mich",
+  "pathSegment": "GE-PATH-007",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-007-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

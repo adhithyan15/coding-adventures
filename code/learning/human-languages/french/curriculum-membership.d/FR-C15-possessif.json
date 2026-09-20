@@ -1,0 +1,11 @@
+{
+  "id": "FR-C15-possessif",
+  "pathSegment": "FR-PATH-017",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-017-LANGUAGE-SPECIFIC",
+      "order": 5
+    }
+  ]
+}

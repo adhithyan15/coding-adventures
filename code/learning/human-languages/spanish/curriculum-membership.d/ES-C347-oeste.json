@@ -1,0 +1,11 @@
+{
+  "id": "ES-C347-oeste",
+  "pathSegment": "ES-PATH-347-01",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-347-PLACE",
+      "order": 2
+    }
+  ]
+}

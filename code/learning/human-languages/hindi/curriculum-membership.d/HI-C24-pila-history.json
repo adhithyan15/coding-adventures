@@ -1,0 +1,11 @@
+{
+  "id": "HI-C24-pila-history",
+  "pathSegment": "HI-PATH-023",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-023-ETYMOLOGY",
+      "order": 1
+    }
+  ]
+}

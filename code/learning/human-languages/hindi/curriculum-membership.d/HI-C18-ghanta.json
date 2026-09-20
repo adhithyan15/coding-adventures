@@ -1,0 +1,11 @@
+{
+  "id": "HI-C18-ghanta",
+  "pathSegment": "HI-PATH-019",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-019-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

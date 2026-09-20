@@ -1,0 +1,11 @@
+{
+  "id": "ES-C62-hablando",
+  "pathSegment": "ES-PATH-A1-HABLANDO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-A1-HABLANDO",
+      "order": 0
+    }
+  ]
+}

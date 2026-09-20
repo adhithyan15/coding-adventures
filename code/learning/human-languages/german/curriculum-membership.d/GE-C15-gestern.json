@@ -1,0 +1,11 @@
+{
+  "id": "GE-C15-gestern",
+  "pathSegment": "GE-PATH-020-B",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "GE-EXT-020-B-PERFEKT",
+      "order": 6
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C54-bibo",
+  "pathSegment": "LA-PATH-038",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-054-BODY",
+      "order": 1
+    }
+  ]
+}

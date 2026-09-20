@@ -1,0 +1,11 @@
+{
+  "id": "ML-C72-ennu-more",
+  "pathSegment": "ML-PATH-72-QUOTATIVE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-72-QUOTATIVE",
+      "order": 1
+    }
+  ]
+}

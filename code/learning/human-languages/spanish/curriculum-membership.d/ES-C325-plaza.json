@@ -1,0 +1,11 @@
+{
+  "id": "ES-C325-plaza",
+  "pathSegment": "ES-PATH-325-01",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-325-PLACE",
+      "order": 3
+    }
+  ]
+}

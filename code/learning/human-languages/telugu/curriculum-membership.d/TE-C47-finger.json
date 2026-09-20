@@ -1,0 +1,11 @@
+{
+  "id": "TE-C47-finger",
+  "pathSegment": "TE-PATH-47-BODY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-47-BODY",
+      "order": 3
+    }
+  ]
+}

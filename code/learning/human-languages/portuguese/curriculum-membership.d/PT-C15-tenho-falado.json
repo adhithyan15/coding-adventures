@@ -1,0 +1,11 @@
+{
+  "id": "PT-C15-tenho-falado",
+  "pathSegment": "PT-PATH-019",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-019-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

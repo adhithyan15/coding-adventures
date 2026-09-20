@@ -1,0 +1,11 @@
+{
+  "id": "GE-W02-eigene-zeile",
+  "pathSegment": "GE-PATH-053-WRITING",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-053-WRITING",
+      "order": 0
+    }
+  ]
+}

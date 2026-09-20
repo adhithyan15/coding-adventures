@@ -1,0 +1,11 @@
+{
+  "id": "GE-C15-partizip",
+  "pathSegment": "GE-PATH-020",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-020-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

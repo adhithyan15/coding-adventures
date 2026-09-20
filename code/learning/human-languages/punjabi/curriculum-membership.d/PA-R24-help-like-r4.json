@@ -1,0 +1,11 @@
+{
+  "id": "PA-R24-help-like-r4",
+  "pathSegment": "PA-PATH-023",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-028-A1-ACTION-R4",
+      "order": 3
+    }
+  ]
+}

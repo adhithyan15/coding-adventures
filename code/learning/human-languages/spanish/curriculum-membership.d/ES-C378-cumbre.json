@@ -1,0 +1,11 @@
+{
+  "id": "ES-C378-cumbre",
+  "pathSegment": "ES-PATH-378-01",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-378-WHERE",
+      "order": 3
+    }
+  ]
+}

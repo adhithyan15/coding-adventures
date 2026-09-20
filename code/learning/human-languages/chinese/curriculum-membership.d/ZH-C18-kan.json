@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C18-kan",
+  "pathSegment": "ZH-PATH-017",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-049-LOOKING-READING-SCRIPT",
+      "order": 3
+    }
+  ]
+}

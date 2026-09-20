@@ -1,0 +1,11 @@
+{
+  "id": "IT-C36-prima-lettura",
+  "pathSegment": "IT-PATH-040",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-040-READING",
+      "order": 2
+    }
+  ]
+}

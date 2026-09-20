@@ -1,0 +1,11 @@
+{
+  "id": "RU-W05-privet-delayed-copy",
+  "pathSegment": "RU-PATH-001",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "RU-EXT-001-INLINE-SCRIPT",
+      "order": 8
+    }
+  ]
+}

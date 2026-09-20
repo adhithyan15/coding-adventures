@@ -1,0 +1,11 @@
+{
+  "id": "TE-C48-farmer",
+  "pathSegment": "TE-PATH-48-ROLE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-48-ROLE",
+      "order": 3
+    }
+  ]
+}

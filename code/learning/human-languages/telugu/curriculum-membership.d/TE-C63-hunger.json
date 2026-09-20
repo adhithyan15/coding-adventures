@@ -1,0 +1,11 @@
+{
+  "id": "TE-C63-hunger",
+  "pathSegment": "TE-PATH-63-HEALTH",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-63-HEALTH",
+      "order": 0
+    }
+  ]
+}

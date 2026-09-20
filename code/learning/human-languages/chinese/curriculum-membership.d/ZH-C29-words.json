@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C29-words",
+  "pathSegment": "ZH-PATH-028",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-063-READING",
+      "order": 1
+    }
+  ]
+}

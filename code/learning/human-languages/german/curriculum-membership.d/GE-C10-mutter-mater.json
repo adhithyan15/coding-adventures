@@ -1,0 +1,11 @@
+{
+  "id": "GE-C10-mutter-mater",
+  "pathSegment": "GE-PATH-016-C",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-016-C-FAMILIE",
+      "order": 3
+    }
+  ]
+}

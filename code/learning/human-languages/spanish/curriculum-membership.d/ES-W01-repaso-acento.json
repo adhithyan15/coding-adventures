@@ -1,0 +1,11 @@
+{
+  "id": "ES-W01-repaso-acento",
+  "pathSegment": "ES-PATH-011",
+  "pathOrder": 15,
+  "extensions": [
+    {
+      "id": "ES-EXT-011-CONSOLIDATION-ACENTO",
+      "order": 0
+    }
+  ]
+}

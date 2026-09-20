@@ -1,0 +1,11 @@
+{
+  "id": "ES-C307-tio",
+  "pathSegment": "ES-PATH-307-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-307-KIN",
+      "order": 1
+    }
+  ]
+}

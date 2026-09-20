@@ -1,0 +1,11 @@
+{
+  "id": "ES-C08-numeros-6-10",
+  "pathSegment": "ES-PATH-016",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-016-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-W01-sa",
+  "pathSegment": "GU-PATH-001",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "GU-EXT-016-SCRIPT-FIRST-PIECES",
+      "order": 5
+    }
+  ]
+}

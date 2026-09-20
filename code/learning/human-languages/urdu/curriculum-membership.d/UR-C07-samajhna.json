@@ -1,0 +1,11 @@
+{
+  "id": "UR-C07-samajhna",
+  "pathSegment": "UR-PATH-008",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-018-MIND-VERBS",
+      "order": 1
+    }
+  ]
+}

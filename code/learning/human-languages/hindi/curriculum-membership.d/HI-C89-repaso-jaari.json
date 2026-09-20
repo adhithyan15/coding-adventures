@@ -1,0 +1,11 @@
+{
+  "id": "HI-C89-repaso-jaari",
+  "pathSegment": "HI-PATH-97-CONTINUOUS",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "HI-EXT-97-CONTINUOUS",
+      "order": 5
+    }
+  ]
+}

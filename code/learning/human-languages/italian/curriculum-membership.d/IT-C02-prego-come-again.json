@@ -1,0 +1,11 @@
+{
+  "id": "IT-C02-prego-come-again",
+  "pathSegment": "IT-PATH-007",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-007-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

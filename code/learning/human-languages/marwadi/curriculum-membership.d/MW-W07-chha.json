@@ -1,0 +1,11 @@
+{
+  "id": "MW-W07-chha",
+  "pathSegment": "MW-PATH-007",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-020-WRITE-LATER",
+      "order": 0
+    }
+  ]
+}

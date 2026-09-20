@@ -1,0 +1,11 @@
+{
+  "id": "JA-C17-muttsu",
+  "pathSegment": "JA-PATH-016",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-024-NATIVE-COUNT-SIX-TO-TEN",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C43-sit",
+  "pathSegment": "TE-PATH-43-VERBS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-43-VERBS",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C74-or",
+  "pathSegment": "TE-PATH-74-LINK",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-74-LINK",
+      "order": 2
+    }
+  ]
+}

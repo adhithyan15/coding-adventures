@@ -1,0 +1,11 @@
+{
+  "id": "ML-C33-manassilaakkuka",
+  "pathSegment": "ML-PATH-027",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-027-MIND-VERBS",
+      "order": 1
+    }
+  ]
+}

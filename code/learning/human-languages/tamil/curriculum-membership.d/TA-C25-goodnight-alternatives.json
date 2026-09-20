@@ -1,0 +1,11 @@
+{
+  "id": "TA-C25-goodnight-alternatives",
+  "pathSegment": "TA-PATH-027",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "TA-EXT-027-ETYMOLOGY",
+      "order": 0
+    }
+  ]
+}

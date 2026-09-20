@@ -1,0 +1,11 @@
+{
+  "id": "ES-C420-exposicion",
+  "pathSegment": "ES-PATH-420-ARTS-PLACES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-420-ARTS-PLACES",
+      "order": 1
+    }
+  ]
+}

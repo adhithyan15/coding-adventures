@@ -1,0 +1,11 @@
+{
+  "id": "TA-C67-sandal",
+  "pathSegment": "TA-PATH-67-WEAR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-67-WEAR",
+      "order": 4
+    }
+  ]
+}

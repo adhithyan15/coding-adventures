@@ -1,0 +1,11 @@
+{
+  "id": "IT-C13-rosso-blu",
+  "pathSegment": "IT-PATH-018",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-018-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

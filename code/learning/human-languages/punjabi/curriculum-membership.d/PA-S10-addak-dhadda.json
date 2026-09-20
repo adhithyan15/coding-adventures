@@ -1,0 +1,11 @@
+{
+  "id": "PA-S10-addak-dhadda",
+  "pathSegment": "PA-PATH-014",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PA-EXT-053-PREA1-SCRIPT-RUNWAY-C10",
+      "order": 1
+    }
+  ]
+}

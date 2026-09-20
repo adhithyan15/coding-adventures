@@ -1,0 +1,11 @@
+{
+  "id": "LA-C19-valeo-family",
+  "pathSegment": "LA-PATH-019",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-019-ETYMOLOGY",
+      "order": 0
+    }
+  ]
+}

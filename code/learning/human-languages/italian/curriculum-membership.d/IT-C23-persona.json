@@ -1,0 +1,11 @@
+{
+  "id": "IT-C23-persona",
+  "pathSegment": "IT-PATH-027",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-027-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

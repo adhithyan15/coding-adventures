@@ -1,0 +1,11 @@
+{
+  "id": "HI-R70-can-want",
+  "pathSegment": "HI-PATH-70-INFINITIVE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-070-INFINITIVE-OBJECT",
+      "order": 1
+    }
+  ]
+}

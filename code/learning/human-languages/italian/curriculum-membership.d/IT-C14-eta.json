@@ -1,0 +1,11 @@
+{
+  "id": "IT-C14-eta",
+  "pathSegment": "IT-PATH-019",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-019-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

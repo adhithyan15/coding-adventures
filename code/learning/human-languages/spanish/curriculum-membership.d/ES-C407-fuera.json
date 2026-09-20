@@ -1,0 +1,11 @@
+{
+  "id": "ES-C407-fuera",
+  "pathSegment": "ES-PATH-407-LOCATIONS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-407-LOCATIONS",
+      "order": 2
+    }
+  ]
+}

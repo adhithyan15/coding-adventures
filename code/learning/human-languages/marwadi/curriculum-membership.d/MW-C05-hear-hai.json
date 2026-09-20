@@ -1,0 +1,11 @@
+{
+  "id": "MW-C05-hear-hai",
+  "pathSegment": "MW-PATH-005",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "MW-EXT-011-NAME-ANSWER",
+      "order": 3
+    }
+  ]
+}

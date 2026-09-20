@@ -1,0 +1,11 @@
+{
+  "id": "ML-C65-trust",
+  "pathSegment": "ML-PATH-65-ASK",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-65-ASK",
+      "order": 4
+    }
+  ]
+}

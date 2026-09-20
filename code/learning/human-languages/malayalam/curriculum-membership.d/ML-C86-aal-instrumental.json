@@ -1,0 +1,11 @@
+{
+  "id": "ML-C86-aal-instrumental",
+  "pathSegment": "ML-PATH-86-WITH",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-86-WITH",
+      "order": 2
+    }
+  ]
+}

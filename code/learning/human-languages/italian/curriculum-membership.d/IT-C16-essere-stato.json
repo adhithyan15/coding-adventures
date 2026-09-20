@@ -1,0 +1,11 @@
+{
+  "id": "IT-C16-essere-stato",
+  "pathSegment": "IT-PATH-020",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-020-ETYMOLOGY",
+      "order": 0
+    }
+  ]
+}

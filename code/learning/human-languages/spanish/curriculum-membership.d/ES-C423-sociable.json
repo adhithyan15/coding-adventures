@@ -1,0 +1,11 @@
+{
+  "id": "ES-C423-sociable",
+  "pathSegment": "ES-PATH-423-CHARACTER",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-423-CHARACTER",
+      "order": 5
+    }
+  ]
+}

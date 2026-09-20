@@ -1,0 +1,11 @@
+{
+  "id": "GE-C11-wasser-wein",
+  "pathSegment": "GE-PATH-016-D",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "GE-EXT-016-D-ESSEN",
+      "order": 6
+    }
+  ]
+}

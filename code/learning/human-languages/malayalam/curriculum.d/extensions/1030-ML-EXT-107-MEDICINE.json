@@ -6,12 +6,5 @@
   "canDo": "I can name medicine, treatment and cleanliness, and place them around the symptoms I can already say.",
   "prerequisites": [
     "ML-EXT-106-BEFORE-AFTER"
-  ],
-  "lessons": [
-    "ML-C107-marunnu",
-    "ML-C107-chikitsa",
-    "ML-C107-vrtthi",
-    "ML-C107-before-and-after",
-    "ML-R107-medicine-recall"
   ]
 }

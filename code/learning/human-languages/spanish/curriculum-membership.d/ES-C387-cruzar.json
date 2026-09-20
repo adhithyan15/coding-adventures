@@ -1,0 +1,11 @@
+{
+  "id": "ES-C387-cruzar",
+  "pathSegment": "ES-PATH-387-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-387-VERB",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C20-chaay",
+  "pathSegment": "MW-PATH-019",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-033-FOOD-SEVEN",
+      "order": 4
+    }
+  ]
+}

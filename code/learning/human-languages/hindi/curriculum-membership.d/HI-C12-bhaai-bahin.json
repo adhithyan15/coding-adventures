@@ -1,0 +1,11 @@
+{
+  "id": "HI-C12-bhaai-bahin",
+  "pathSegment": "HI-PATH-015",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-015-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

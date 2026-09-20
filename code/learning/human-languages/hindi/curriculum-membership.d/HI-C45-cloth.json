@@ -1,0 +1,11 @@
+{
+  "id": "HI-C45-cloth",
+  "pathSegment": "HI-PATH-45-ASK",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-45-ASK",
+      "order": 1
+    }
+  ]
+}

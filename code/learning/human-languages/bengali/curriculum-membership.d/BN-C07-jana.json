@@ -1,0 +1,11 @@
+{
+  "id": "BN-C07-jana",
+  "pathSegment": "BN-PATH-011-C",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-011-CORE-VERBS-C",
+      "order": 2
+    }
+  ]
+}

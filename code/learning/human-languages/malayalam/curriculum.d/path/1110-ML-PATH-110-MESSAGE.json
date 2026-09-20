@@ -1,14 +1,6 @@
 {
   "id": "ML-PATH-110-MESSAGE",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
-  "lessons": [
-    "ML-S148-letter-pha",
-    "ML-C110-phon",
-    "ML-C110-kattu",
-    "ML-C110-thapaal",
-    "ML-C110-imeyil",
-    "ML-R110-message-recall"
-  ],
   "before": [],
   "inline": [
     "ML-EXT-110-MESSAGE"

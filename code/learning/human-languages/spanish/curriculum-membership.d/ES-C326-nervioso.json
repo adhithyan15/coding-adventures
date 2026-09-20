@@ -1,0 +1,11 @@
+{
+  "id": "ES-C326-nervioso",
+  "pathSegment": "ES-PATH-326-01",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-326-STATE",
+      "order": 0
+    }
+  ]
+}

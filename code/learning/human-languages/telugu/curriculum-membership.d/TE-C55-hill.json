@@ -1,0 +1,11 @@
+{
+  "id": "TE-C55-hill",
+  "pathSegment": "TE-PATH-55-ROAD",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-55-ROAD",
+      "order": 2
+    }
+  ]
+}

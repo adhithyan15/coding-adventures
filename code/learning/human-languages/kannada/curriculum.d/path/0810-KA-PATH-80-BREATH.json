@@ -1,16 +1,6 @@
 {
   "id": "KA-PATH-80-BREATH",
   "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
-  "lessons": [
-    "KA-S167-letter-dha",
-    "KA-S168-letter-bha",
-    "KA-S169-letter-pha",
-    "KA-S170-letter-kha",
-    "KA-S171-letter-gha",
-    "KA-S172-letter-ddha",
-    "KA-S173-letter-ttha",
-    "KA-R80-the-breath"
-  ],
   "before": [],
   "inline": [
     "KA-EXT-80-BREATH"

@@ -1,9 +1,6 @@
 {
   "id": "PA-PATH-008",
   "spine_node": "SPINE-COURTESY-THANK",
-  "lessons": [
-    "PA-C03-koi-gall-nahin"
-  ],
   "before": [],
   "inline": [],
   "after": []

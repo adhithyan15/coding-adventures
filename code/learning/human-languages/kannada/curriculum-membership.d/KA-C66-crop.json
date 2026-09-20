@@ -1,0 +1,11 @@
+{
+  "id": "KA-C66-crop",
+  "pathSegment": "KA-PATH-66-FIELD",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-66-FIELD",
+      "order": 3
+    }
+  ]
+}

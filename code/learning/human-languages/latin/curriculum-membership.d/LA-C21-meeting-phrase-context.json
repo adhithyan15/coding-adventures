@@ -1,0 +1,11 @@
+{
+  "id": "LA-C21-meeting-phrase-context",
+  "pathSegment": "LA-PATH-020",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-020-CULTURE-PRAGMATICS",
+      "order": 0
+    }
+  ]
+}

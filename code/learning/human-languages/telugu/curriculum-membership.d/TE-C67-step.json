@@ -1,0 +1,11 @@
+{
+  "id": "TE-C67-step",
+  "pathSegment": "TE-PATH-67-WALL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-67-WALL",
+      "order": 3
+    }
+  ]
+}

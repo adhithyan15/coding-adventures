@@ -1,0 +1,11 @@
+{
+  "id": "ML-C57-neck",
+  "pathSegment": "ML-PATH-57-FRAME",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ML-EXT-57-FRAME",
+      "order": 0
+    }
+  ]
+}

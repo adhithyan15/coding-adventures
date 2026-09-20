@@ -1,0 +1,11 @@
+{
+  "id": "GE-C35-aber",
+  "pathSegment": "GE-PATH-A1-VERBINDUNGEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-A1-VERBINDUNGEN",
+      "order": 1
+    }
+  ]
+}

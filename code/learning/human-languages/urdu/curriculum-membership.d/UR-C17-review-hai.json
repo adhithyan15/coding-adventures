@@ -1,0 +1,11 @@
+{
+  "id": "UR-C17-review-hai",
+  "pathSegment": "UR-PATH-018",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "UR-EXT-028-SCRIPT-COPULA",
+      "order": 5
+    }
+  ]
+}

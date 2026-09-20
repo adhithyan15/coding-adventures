@@ -1,0 +1,11 @@
+{
+  "id": "ML-C87-avane",
+  "pathSegment": "ML-PATH-87-ACCUSATIVE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-87-ACCUSATIVE",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C100-thoppi",
+  "pathSegment": "ML-PATH-100-CLOTHING",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-100-CLOTHING",
+      "order": 3
+    }
+  ]
+}

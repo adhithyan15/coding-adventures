@@ -1,0 +1,11 @@
+{
+  "id": "MR-R50-small",
+  "pathSegment": "MR-PATH-053",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-066-INVARIABLE-ADJECTIVES",
+      "order": 3
+    }
+  ]
+}

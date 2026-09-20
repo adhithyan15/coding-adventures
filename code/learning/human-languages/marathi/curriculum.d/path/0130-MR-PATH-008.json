@@ -1,9 +1,6 @@
 {
   "id": "MR-PATH-008",
   "spine_node": "SPINE-CHECK-WELLBEING",
-  "lessons": [
-    "MR-C03-mi-bara-aahe"
-  ],
   "before": [],
   "inline": [],
   "after": []

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C34-ce-cette",
+  "pathSegment": "FR-PATH-A1-POINTING",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-A1-POINTING",
+      "order": 4
+    }
+  ]
+}

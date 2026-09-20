@@ -1,0 +1,11 @@
+{
+  "id": "TA-C57-ember",
+  "pathSegment": "TA-PATH-57-FIRE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-57-FIRE",
+      "order": 4
+    }
+  ]
+}

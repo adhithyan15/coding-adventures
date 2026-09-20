@@ -1,0 +1,11 @@
+{
+  "id": "TE-C53-cloud",
+  "pathSegment": "TE-PATH-53-SKY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-53-SKY",
+      "order": 4
+    }
+  ]
+}

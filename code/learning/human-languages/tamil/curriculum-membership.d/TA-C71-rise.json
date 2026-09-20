@@ -1,0 +1,11 @@
+{
+  "id": "TA-C71-rise",
+  "pathSegment": "TA-PATH-71-DAY",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-71-DAY",
+      "order": 0
+    }
+  ]
+}

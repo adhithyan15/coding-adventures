@@ -1,0 +1,11 @@
+{
+  "id": "GE-C16-haeufig-unregelmaessig",
+  "pathSegment": "GE-PATH-021-B",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "GE-EXT-021-B-ETYMOLOGY",
+      "order": 2
+    }
+  ]
+}

@@ -6,11 +6,5 @@
   "canDo": "I can name the place I am from and the people who are from there.",
   "prerequisites": [
     "ML-EXT-79-DEGREE"
-  ],
-  "lessons": [
-    "ML-C80-uuru",
-    "ML-C80-keralam",
-    "ML-C80-malayali",
-    "ML-R80-origin-recall"
   ]
 }

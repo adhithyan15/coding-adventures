@@ -1,0 +1,11 @@
+{
+  "id": "ML-C105-nagaram",
+  "pathSegment": "ML-PATH-105-PLACES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-105-PLACES",
+      "order": 1
+    }
+  ]
+}

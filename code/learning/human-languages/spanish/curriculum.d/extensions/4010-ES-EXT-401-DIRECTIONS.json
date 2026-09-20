@@ -4,8 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can identify la avenida as a familiar place word.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-C401-avenida"
-  ]
+  "prerequisites": []
 }

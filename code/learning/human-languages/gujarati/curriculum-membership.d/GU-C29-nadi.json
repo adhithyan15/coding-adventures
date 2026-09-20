@@ -1,0 +1,11 @@
+{
+  "id": "GU-C29-nadi",
+  "pathSegment": "GU-PATH-028",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "GU-EXT-040-SKY-FIVE",
+      "order": 6
+    }
+  ]
+}

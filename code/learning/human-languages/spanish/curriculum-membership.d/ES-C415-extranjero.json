@@ -1,0 +1,11 @@
+{
+  "id": "ES-C415-extranjero",
+  "pathSegment": "ES-PATH-415-PACKAGE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-415-PACKAGE",
+      "order": 1
+    }
+  ]
+}

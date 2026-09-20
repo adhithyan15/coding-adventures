@@ -1,0 +1,11 @@
+{
+  "id": "TE-C42-new",
+  "pathSegment": "TE-PATH-201",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-201-ADJ",
+      "order": 3
+    }
+  ]
+}

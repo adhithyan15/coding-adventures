@@ -4,8 +4,5 @@
   "kind": "required",
   "category": "script",
   "canDo": "I can read koī, using a vowel that needs no consonant to lean on.",
-  "prerequisites": [],
-  "lessons": [
-    "PA-S12-eeri"
-  ]
+  "prerequisites": []
 }

@@ -1,12 +1,6 @@
 {
   "id": "ML-PATH-98-LEISURE",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
-  "lessons": [
-    "ML-C98-kali",
-    "ML-C98-kalikkuka",
-    "ML-C98-sinima",
-    "ML-R98-leisure-recall"
-  ],
   "before": [],
   "inline": [
     "ML-EXT-98-LEISURE"

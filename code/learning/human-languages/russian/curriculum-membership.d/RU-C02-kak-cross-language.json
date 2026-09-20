@@ -1,0 +1,11 @@
+{
+  "id": "RU-C02-kak-cross-language",
+  "pathSegment": "RU-PATH-006",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "RU-EXT-006-GRAMMAR",
+      "order": 0
+    }
+  ]
+}

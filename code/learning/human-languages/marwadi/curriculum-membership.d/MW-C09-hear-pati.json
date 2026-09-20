@@ -1,0 +1,11 @@
+{
+  "id": "MW-C09-hear-pati",
+  "pathSegment": "MW-PATH-009",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-023-FAMILY-TWELVE",
+      "order": 4
+    }
+  ]
+}

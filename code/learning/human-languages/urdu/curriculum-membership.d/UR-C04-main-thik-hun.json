@@ -1,0 +1,11 @@
+{
+  "id": "UR-C04-main-thik-hun",
+  "pathSegment": "UR-PATH-005",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "UR-EXT-011-WELLBEING-WORD-ORDER",
+      "order": 0
+    }
+  ]
+}

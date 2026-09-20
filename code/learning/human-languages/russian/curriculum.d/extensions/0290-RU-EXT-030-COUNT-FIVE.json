@@ -4,12 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can say the Russian numbers one to five and answer skolko with each.",
-  "prerequisites": [],
-  "lessons": [
-    "RU-C23-dva",
-    "RU-C23-tri",
-    "RU-C23-chetyre",
-    "RU-C23-pyat",
-    "RU-C23-practice"
-  ]
+  "prerequisites": []
 }

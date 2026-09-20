@@ -1,0 +1,11 @@
+{
+  "id": "TA-W19-read-muunru",
+  "pathSegment": "TA-PATH-003",
+  "pathOrder": 22,
+  "extensions": [
+    {
+      "id": "TA-EXT-003-SCRIPT",
+      "order": 22
+    }
+  ]
+}

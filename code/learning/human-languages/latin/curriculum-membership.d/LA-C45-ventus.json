@@ -1,0 +1,11 @@
+{
+  "id": "LA-C45-ventus",
+  "pathSegment": "LA-PATH-023",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-045-WORLD",
+      "order": 2
+    }
+  ]
+}

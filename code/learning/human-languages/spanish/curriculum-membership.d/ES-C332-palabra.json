@@ -1,0 +1,11 @@
+{
+  "id": "ES-C332-palabra",
+  "pathSegment": "ES-PATH-332-01",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-332-WORD",
+      "order": 3
+    }
+  ]
+}

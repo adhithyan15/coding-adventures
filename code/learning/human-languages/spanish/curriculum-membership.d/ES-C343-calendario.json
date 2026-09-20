@@ -1,0 +1,11 @@
+{
+  "id": "ES-C343-calendario",
+  "pathSegment": "ES-PATH-343-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-343-CLOCK",
+      "order": 1
+    }
+  ]
+}

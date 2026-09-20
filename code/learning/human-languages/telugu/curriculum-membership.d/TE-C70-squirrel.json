@@ -1,0 +1,11 @@
+{
+  "id": "TE-C70-squirrel",
+  "pathSegment": "TE-PATH-70-CREATURE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-70-CREATURE",
+      "order": 3
+    }
+  ]
+}

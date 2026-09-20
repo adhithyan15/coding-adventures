@@ -1,0 +1,11 @@
+{
+  "id": "ES-C284-exacto",
+  "pathSegment": "ES-PATH-284-01",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-284-RESPUESTAS",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C37-nanban",
+  "pathSegment": "TA-PATH-033",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-033-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

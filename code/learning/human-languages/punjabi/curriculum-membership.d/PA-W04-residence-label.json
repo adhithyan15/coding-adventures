@@ -1,0 +1,11 @@
+{
+  "id": "PA-W04-residence-label",
+  "pathSegment": "PA-PATH-020",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-025-A1-RESIDENCE-FIELD",
+      "order": 2
+    }
+  ]
+}

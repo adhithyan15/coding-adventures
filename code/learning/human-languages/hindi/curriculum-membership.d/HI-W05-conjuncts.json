@@ -1,0 +1,11 @@
+{
+  "id": "HI-W05-conjuncts",
+  "pathSegment": "HI-PATH-004",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "HI-EXT-004-SCRIPT",
+      "order": 5
+    }
+  ]
+}

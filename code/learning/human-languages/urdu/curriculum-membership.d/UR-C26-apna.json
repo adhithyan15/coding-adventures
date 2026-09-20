@@ -1,0 +1,11 @@
+{
+  "id": "UR-C26-apna",
+  "pathSegment": "UR-PATH-027",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-037-POSSESSION-AND-ADDRESS",
+      "order": 1
+    }
+  ]
+}

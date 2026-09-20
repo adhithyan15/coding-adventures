@@ -1,0 +1,11 @@
+{
+  "id": "AR-C09-ahmar-azraq",
+  "pathSegment": "AR-PATH-013",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-013-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

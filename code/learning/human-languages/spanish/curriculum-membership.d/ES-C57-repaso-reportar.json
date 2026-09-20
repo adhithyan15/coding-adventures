@@ -1,0 +1,11 @@
+{
+  "id": "ES-C57-repaso-reportar",
+  "pathSegment": "ES-PATH-B2-REVIEW-REPORT",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-B2-REVIEW-REPORT",
+      "order": 0
+    }
+  ]
+}

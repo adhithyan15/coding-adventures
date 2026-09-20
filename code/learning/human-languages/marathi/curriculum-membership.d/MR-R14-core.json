@@ -1,0 +1,11 @@
+{
+  "id": "MR-R14-core",
+  "pathSegment": "MR-PATH-020",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "MR-EXT-020-FAMILY-RETRIEVAL",
+      "order": 8
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C29-raa",
+  "pathSegment": "AR-PATH-027-C",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-027-LANGUAGE-SPECIFIC-C",
+      "order": 1
+    }
+  ]
+}

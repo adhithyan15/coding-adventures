@@ -1,0 +1,11 @@
+{
+  "id": "MR-R14-mind",
+  "pathSegment": "MR-PATH-020",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "MR-EXT-020-FAMILY-RETRIEVAL",
+      "order": 7
+    }
+  ]
+}

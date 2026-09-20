@@ -1,0 +1,11 @@
+{
+  "id": "LA-C37-video",
+  "pathSegment": "LA-PATH-025-C",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-025-LANGUAGE-SPECIFIC-C",
+      "order": 1
+    }
+  ]
+}

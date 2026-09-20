@@ -6,11 +6,5 @@
   "canDo": "I can say where a thing is in relation to another thing.",
   "prerequisites": [
     "ML-EXT-83-ABLATIVE"
-  ],
-  "lessons": [
-    "ML-C84-mukalil",
-    "ML-C84-thaazhe",
-    "ML-C84-munnil-pinnil",
-    "ML-R84-place-recall"
   ]
 }

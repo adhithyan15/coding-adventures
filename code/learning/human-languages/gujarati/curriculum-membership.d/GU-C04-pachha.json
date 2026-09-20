@@ -1,0 +1,11 @@
+{
+  "id": "GU-C04-pachha",
+  "pathSegment": "GU-PATH-008",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-008-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

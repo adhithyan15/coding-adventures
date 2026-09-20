@@ -1,0 +1,11 @@
+{
+  "id": "TA-S118-letter-tta",
+  "pathSegment": "TA-PATH-100",
+  "pathOrder": 18,
+  "extensions": [
+    {
+      "id": "TA-EXT-100-SCRIPT-RECOGNITION",
+      "order": 9
+    }
+  ]
+}

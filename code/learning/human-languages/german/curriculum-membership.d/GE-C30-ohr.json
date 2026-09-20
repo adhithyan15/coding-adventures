@@ -1,0 +1,11 @@
+{
+  "id": "GE-C30-ohr",
+  "pathSegment": "GE-PATH-033",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-033-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

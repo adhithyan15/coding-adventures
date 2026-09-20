@@ -1,0 +1,11 @@
+{
+  "id": "MR-C08-samajne",
+  "pathSegment": "MR-PATH-013",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-013-MIND-VERBS",
+      "order": 1
+    }
+  ]
+}

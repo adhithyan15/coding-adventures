@@ -1,9 +1,6 @@
 {
   "id": "KA-PATH-030",
   "spine_node": "SPINE-CHECK-WELLBEING",
-  "lessons": [
-    "KA-C38-hrudaya"
-  ],
   "before": [],
   "inline": [
     "KA-EXT-031-HEART"

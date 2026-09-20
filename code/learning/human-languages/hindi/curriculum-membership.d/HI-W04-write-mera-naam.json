@@ -1,0 +1,11 @@
+{
+  "id": "HI-W04-write-mera-naam",
+  "pathSegment": "HI-PATH-004",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-004-SCRIPT",
+      "order": 3
+    }
+  ]
+}

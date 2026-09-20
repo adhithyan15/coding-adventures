@@ -1,0 +1,11 @@
+{
+  "id": "HI-C88-aaunga",
+  "pathSegment": "HI-PATH-96-FUTURE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-96-FUTURE",
+      "order": 1
+    }
+  ]
+}

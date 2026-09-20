@@ -6,9 +6,5 @@
   "canDo": "I can retrieve gym and sport in opening-hours and routine messages.",
   "prerequisites": [
     "ES-EXT-412-FITNESS"
-  ],
-  "lessons": [
-    "ES-C412-fitness-recall-1",
-    "ES-C412-fitness-recall-2"
   ]
 }

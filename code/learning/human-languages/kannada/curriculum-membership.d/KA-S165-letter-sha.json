@@ -1,0 +1,11 @@
+{
+  "id": "KA-S165-letter-sha",
+  "pathSegment": "KA-PATH-79-SIGNS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-79-SIGNS",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C40-deixis-system",
+  "pathSegment": "TA-PATH-200",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "TA-EXT-200-DEIXIS",
+      "order": 6
+    }
+  ]
+}

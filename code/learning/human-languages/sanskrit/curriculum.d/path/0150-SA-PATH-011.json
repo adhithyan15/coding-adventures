@@ -1,10 +1,6 @@
 {
   "id": "SA-PATH-011",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
-  "lessons": [
-    "SA-C08-cintayati",
-    "SA-C08-avagacchati"
-  ],
   "before": [],
   "inline": [],
   "after": []

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C29-enfant",
+  "pathSegment": "FR-PATH-026",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-026-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

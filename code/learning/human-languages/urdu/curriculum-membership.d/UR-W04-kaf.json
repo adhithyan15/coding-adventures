@@ -1,0 +1,11 @@
+{
+  "id": "UR-W04-kaf",
+  "pathSegment": "UR-PATH-005",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-009B-SCRIPT-JOINING",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C14-b-verlust",
+  "pathSegment": "GE-PATH-018",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-018-HABEN",
+      "order": 3
+    }
+  ]
+}

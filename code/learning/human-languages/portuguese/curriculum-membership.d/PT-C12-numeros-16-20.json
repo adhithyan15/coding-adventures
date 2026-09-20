@@ -1,0 +1,11 @@
+{
+  "id": "PT-C12-numeros-16-20",
+  "pathSegment": "PT-PATH-017",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-017-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

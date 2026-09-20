@@ -1,0 +1,11 @@
+{
+  "id": "HI-C91-ko",
+  "pathSegment": "HI-PATH-99-NOUN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-99-NOUN",
+      "order": 4
+    }
+  ]
+}

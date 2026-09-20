@@ -4,8 +4,5 @@
   "kind": "supporting",
   "category": "language-specific",
   "canDo": "I can ask how someone is faring with the attested Latin question ut valēs? without treating reconstructed conversation as a single fixed modern standard.",
-  "prerequisites": [],
-  "lessons": [
-    "LA-C19-ut-vales"
-  ]
+  "prerequisites": []
 }

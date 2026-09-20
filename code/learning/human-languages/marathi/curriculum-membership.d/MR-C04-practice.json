@@ -1,0 +1,11 @@
+{
+  "id": "MR-C04-practice",
+  "pathSegment": "MR-PATH-010",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "MR-EXT-040-FAREWELL-CARE-AND-CONSOLIDATION",
+      "order": 1
+    }
+  ]
+}

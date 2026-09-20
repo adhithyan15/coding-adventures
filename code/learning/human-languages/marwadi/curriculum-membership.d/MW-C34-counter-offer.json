@@ -1,0 +1,11 @@
+{
+  "id": "MW-C34-counter-offer",
+  "pathSegment": "MW-PATH-028",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "MW-EXT-042-NUMBERED-PRICE",
+      "order": 7
+    }
+  ]
+}

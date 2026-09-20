@@ -1,0 +1,11 @@
+{
+  "id": "KA-C69-isnt-it",
+  "pathSegment": "KA-PATH-69-ASK",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-69-ASK",
+      "order": 1
+    }
+  ]
+}

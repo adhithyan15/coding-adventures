@@ -1,0 +1,11 @@
+{
+  "id": "RU-C02-practice-cases",
+  "pathSegment": "RU-PATH-006",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "RU-EXT-006-CONSOLIDATION",
+      "order": 1
+    }
+  ]
+}

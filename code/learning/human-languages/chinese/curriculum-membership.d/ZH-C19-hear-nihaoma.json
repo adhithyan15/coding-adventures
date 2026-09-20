@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C19-hear-nihaoma",
+  "pathSegment": "ZH-PATH-018",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-051-ASKING-MEANING-FIRST",
+      "order": 1
+    }
+  ]
+}

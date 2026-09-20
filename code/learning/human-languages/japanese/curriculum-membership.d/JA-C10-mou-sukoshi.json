@@ -1,0 +1,11 @@
+{
+  "id": "JA-C10-mou-sukoshi",
+  "pathSegment": "JA-PATH-010",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "JA-EXT-017-REPAIR-SLOWER",
+      "order": 8
+    }
+  ]
+}

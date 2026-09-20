@@ -1,0 +1,11 @@
+{
+  "id": "SA-C43-humility",
+  "pathSegment": "SA-PATH-43-COURTESY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-43-COURTESY",
+      "order": 2
+    }
+  ]
+}

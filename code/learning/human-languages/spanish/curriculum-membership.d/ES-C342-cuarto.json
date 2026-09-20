@@ -1,0 +1,11 @@
+{
+  "id": "ES-C342-cuarto",
+  "pathSegment": "ES-PATH-342-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-342-CLOCK",
+      "order": 1
+    }
+  ]
+}

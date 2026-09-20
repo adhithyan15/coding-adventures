@@ -1,0 +1,11 @@
+{
+  "id": "RU-C17-odin",
+  "pathSegment": "RU-PATH-018",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-023-CONTRAST",
+      "order": 2
+    }
+  ]
+}

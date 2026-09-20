@@ -1,0 +1,11 @@
+{
+  "id": "GU-W06-independent-u",
+  "pathSegment": "GU-PATH-FINAL-SCRIPT-CLOSURE-A",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-033-FINAL-SCRIPT-CLOSURE-A",
+      "order": 3
+    }
+  ]
+}

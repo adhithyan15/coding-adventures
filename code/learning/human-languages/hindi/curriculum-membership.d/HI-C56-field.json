@@ -1,0 +1,11 @@
+{
+  "id": "HI-C56-field",
+  "pathSegment": "HI-PATH-56-ROAD",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-56-ROAD",
+      "order": 4
+    }
+  ]
+}

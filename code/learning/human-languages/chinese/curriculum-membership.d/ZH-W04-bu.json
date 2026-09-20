@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W04-bu",
+  "pathSegment": "ZH-PATH-003",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-011-NEGATION",
+      "order": 0
+    }
+  ]
+}

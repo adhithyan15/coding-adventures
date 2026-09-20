@@ -4,8 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can understand whether taking photographs is permitted.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-C405-permitir"
-  ]
+  "prerequisites": []
 }

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C362-tierra",
+  "pathSegment": "ES-PATH-362-01",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-362-WHERE",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-S03-nnna",
+  "pathSegment": "TA-PATH-100",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-100-SCRIPT-DRIZZLE",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C59-social-exchange",
+  "pathSegment": "LA-PATH-043",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-059-READING",
+      "order": 3
+    }
+  ]
+}

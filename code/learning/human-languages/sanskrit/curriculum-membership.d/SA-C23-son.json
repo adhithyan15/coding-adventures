@@ -1,0 +1,11 @@
+{
+  "id": "SA-C23-son",
+  "pathSegment": "SA-PATH-23-KIN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-23-KIN",
+      "order": 2
+    }
+  ]
+}

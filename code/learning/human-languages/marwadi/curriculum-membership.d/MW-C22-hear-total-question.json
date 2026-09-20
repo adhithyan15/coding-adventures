@@ -1,0 +1,11 @@
+{
+  "id": "MW-C22-hear-total-question",
+  "pathSegment": "MW-PATH-021",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "MW-EXT-035-PRICE-QUESTION",
+      "order": 5
+    }
+  ]
+}

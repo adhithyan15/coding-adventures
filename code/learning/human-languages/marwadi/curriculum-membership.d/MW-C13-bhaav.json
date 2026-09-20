@@ -1,0 +1,11 @@
+{
+  "id": "MW-C13-bhaav",
+  "pathSegment": "MW-PATH-013",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "MW-EXT-027-SHOPPING-FIVE",
+      "order": 6
+    }
+  ]
+}

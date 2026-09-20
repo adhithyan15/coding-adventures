@@ -1,0 +1,11 @@
+{
+  "id": "HI-C96-pachaas-saath",
+  "pathSegment": "HI-PATH-104-GINTI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-104-GINTI",
+      "order": 1
+    }
+  ]
+}

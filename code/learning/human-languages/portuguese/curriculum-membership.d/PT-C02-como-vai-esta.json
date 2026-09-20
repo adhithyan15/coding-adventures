@@ -1,0 +1,11 @@
+{
+  "id": "PT-C02-como-vai-esta",
+  "pathSegment": "PT-PATH-009",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-009-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

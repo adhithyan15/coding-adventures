@@ -4,9 +4,5 @@
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can name my family as a group and name a friend in Telugu, and say which of the two words is a Sanskrit loan and which is Telugu's own native word.",
-  "prerequisites": [],
-  "lessons": [
-    "TE-C35-kutumbam",
-    "TE-C35-snehitudu"
-  ]
+  "prerequisites": []
 }

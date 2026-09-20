@@ -4,9 +4,5 @@
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can say what I do with six everyday Bengali verbs, put the right honorific ending on each, and name the two things a Bengali verb never asks — the speaker's gender, and which of two be-verbs will carry the future.",
-  "prerequisites": [],
-  "lessons": [
-    "BN-C07-howa",
-    "BN-C07-jaowa"
-  ]
+  "prerequisites": []
 }

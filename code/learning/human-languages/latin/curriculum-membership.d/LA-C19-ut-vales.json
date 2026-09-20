@@ -1,0 +1,11 @@
+{
+  "id": "LA-C19-ut-vales",
+  "pathSegment": "LA-PATH-019",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-019-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

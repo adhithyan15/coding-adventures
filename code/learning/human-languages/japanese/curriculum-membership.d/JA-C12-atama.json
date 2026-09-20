@@ -1,0 +1,11 @@
+{
+  "id": "JA-C12-atama",
+  "pathSegment": "JA-PATH-012",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-019-BODY-SEVEN-MORE",
+      "order": 1
+    }
+  ]
+}

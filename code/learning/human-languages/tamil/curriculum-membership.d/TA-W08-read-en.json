@@ -1,0 +1,11 @@
+{
+  "id": "TA-W08-read-en",
+  "pathSegment": "TA-PATH-003",
+  "pathOrder": 11,
+  "extensions": [
+    {
+      "id": "TA-EXT-003-SCRIPT",
+      "order": 11
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-S201-sign-visarga",
+  "pathSegment": "SA-PATH-100",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "SA-EXT-100-SCRIPT-RECOGNITION",
+      "order": 6
+    }
+  ]
+}

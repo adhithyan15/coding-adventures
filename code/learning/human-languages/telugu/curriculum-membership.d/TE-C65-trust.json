@@ -1,0 +1,11 @@
+{
+  "id": "TE-C65-trust",
+  "pathSegment": "TE-PATH-65-MANNERS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-65-MANNERS",
+      "order": 4
+    }
+  ]
+}

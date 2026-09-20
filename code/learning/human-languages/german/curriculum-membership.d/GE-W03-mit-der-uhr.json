@@ -1,0 +1,11 @@
+{
+  "id": "GE-W03-mit-der-uhr",
+  "pathSegment": "GE-PATH-053-WRITING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-053-WRITING",
+      "order": 1
+    }
+  ]
+}

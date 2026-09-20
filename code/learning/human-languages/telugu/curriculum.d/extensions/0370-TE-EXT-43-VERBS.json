@@ -4,11 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can name four more everyday actions and say them in order.",
-  "prerequisites": [],
-  "lessons": [
-    "TE-C43-come",
-    "TE-C43-sit",
-    "TE-C43-stand",
-    "TE-C43-give"
-  ]
+  "prerequisites": []
 }

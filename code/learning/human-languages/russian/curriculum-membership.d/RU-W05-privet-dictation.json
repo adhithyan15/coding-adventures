@@ -1,0 +1,11 @@
+{
+  "id": "RU-W05-privet-dictation",
+  "pathSegment": "RU-PATH-001",
+  "pathOrder": 9,
+  "extensions": [
+    {
+      "id": "RU-EXT-001-INLINE-SCRIPT",
+      "order": 9
+    }
+  ]
+}

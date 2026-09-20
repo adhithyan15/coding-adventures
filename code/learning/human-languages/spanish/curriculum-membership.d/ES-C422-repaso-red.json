@@ -1,0 +1,11 @@
+{
+  "id": "ES-C422-repaso-red",
+  "pathSegment": "ES-PATH-422-WEB-PAGE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-422-WEB-PAGE",
+      "order": 1
+    }
+  ]
+}

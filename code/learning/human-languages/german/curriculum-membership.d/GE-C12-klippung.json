@@ -1,0 +1,11 @@
+{
+  "id": "GE-C12-klippung",
+  "pathSegment": "GE-PATH-017-B",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-017-B-ZAHLEN",
+      "order": 4
+    }
+  ]
+}

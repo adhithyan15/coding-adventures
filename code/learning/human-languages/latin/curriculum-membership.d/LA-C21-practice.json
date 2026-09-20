@@ -1,0 +1,11 @@
+{
+  "id": "LA-C21-practice",
+  "pathSegment": "LA-PATH-020",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-020-CONSOLIDATION",
+      "order": 0
+    }
+  ]
+}

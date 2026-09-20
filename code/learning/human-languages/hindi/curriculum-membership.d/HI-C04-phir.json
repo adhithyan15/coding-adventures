@@ -1,0 +1,11 @@
+{
+  "id": "HI-C04-phir",
+  "pathSegment": "HI-PATH-009",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-009-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

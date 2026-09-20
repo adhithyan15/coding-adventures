@@ -1,0 +1,11 @@
+{
+  "id": "UR-C04-practice",
+  "pathSegment": "UR-PATH-005",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "UR-EXT-012-WELLBEING-CONSOLIDATION",
+      "order": 0
+    }
+  ]
+}

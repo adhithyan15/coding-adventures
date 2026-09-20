@@ -1,0 +1,11 @@
+{
+  "id": "HI-C94-se-nahin",
+  "pathSegment": "HI-PATH-102-SPAN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-102-SPAN",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C66-ratra",
+  "pathSegment": "MR-PATH-068",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-081-PARTS-OF-THE-DAY",
+      "order": 3
+    }
+  ]
+}

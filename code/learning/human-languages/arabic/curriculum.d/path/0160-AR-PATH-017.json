@@ -1,9 +1,6 @@
 {
   "id": "AR-PATH-017",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
-  "lessons": [
-    "AR-C13-maa-khubz"
-  ],
   "before": [],
   "inline": [
     "AR-EXT-017-LANGUAGE-SPECIFIC"

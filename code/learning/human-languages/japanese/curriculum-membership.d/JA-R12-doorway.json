@@ -1,0 +1,11 @@
+{
+  "id": "JA-R12-doorway",
+  "pathSegment": "JA-PATH-012",
+  "pathOrder": 9,
+  "extensions": [
+    {
+      "id": "JA-EXT-019-BODY-SEVEN-MORE",
+      "order": 9
+    }
+  ]
+}

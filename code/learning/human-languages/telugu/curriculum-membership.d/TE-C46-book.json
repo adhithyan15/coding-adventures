@@ -1,0 +1,11 @@
+{
+  "id": "TE-C46-book",
+  "pathSegment": "TE-PATH-46-ASK",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-46-ASK",
+      "order": 4
+    }
+  ]
+}

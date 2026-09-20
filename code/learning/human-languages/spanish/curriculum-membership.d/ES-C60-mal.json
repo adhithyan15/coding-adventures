@@ -1,0 +1,11 @@
+{
+  "id": "ES-C60-mal",
+  "pathSegment": "ES-PATH-A1-MAL",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-A1-MAL",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-R22-more-than-one",
+  "pathSegment": "BN-PATH-030",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-031-PLURAL",
+      "order": 4
+    }
+  ]
+}

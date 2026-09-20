@@ -1,0 +1,11 @@
+{
+  "id": "MR-C39-tithe",
+  "pathSegment": "MR-PATH-041",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-054-THERE",
+      "order": 1
+    }
+  ]
+}

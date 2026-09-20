@@ -1,0 +1,11 @@
+{
+  "id": "PA-R44-first-to-fifth",
+  "pathSegment": "PA-PATH-046",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PA-EXT-066-ORDINALS",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C10-annam",
+  "pathSegment": "SA-PATH-013",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-013-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

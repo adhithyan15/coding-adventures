@@ -1,0 +1,11 @@
+{
+  "id": "MW-C37-hear-tera",
+  "pathSegment": "MW-PATH-031",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "MW-EXT-045-TEENS",
+      "order": 5
+    }
+  ]
+}

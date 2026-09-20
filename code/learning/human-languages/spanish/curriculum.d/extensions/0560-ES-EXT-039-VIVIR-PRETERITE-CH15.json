@@ -4,8 +4,5 @@
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can form the three singular completed-past forms of vivir and compare them with comer.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-C15-comer-vivir-preterite"
-  ]
+  "prerequisites": []
 }

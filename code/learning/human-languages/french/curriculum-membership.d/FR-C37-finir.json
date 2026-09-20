@@ -1,0 +1,11 @@
+{
+  "id": "FR-C37-finir",
+  "pathSegment": "FR-PATH-A1-VERB-WAYS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-A1-VERB-WAYS",
+      "order": 2
+    }
+  ]
+}

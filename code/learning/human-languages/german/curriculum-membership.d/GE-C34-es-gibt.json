@@ -1,0 +1,11 @@
+{
+  "id": "GE-C34-es-gibt",
+  "pathSegment": "GE-PATH-A1-AKKUSATIV",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-A1-AKKUSATIV",
+      "order": 4
+    }
+  ]
+}

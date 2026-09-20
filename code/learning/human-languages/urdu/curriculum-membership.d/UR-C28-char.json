@@ -1,0 +1,11 @@
+{
+  "id": "UR-C28-char",
+  "pathSegment": "UR-PATH-029",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-039-COUNT-FIVE",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C374-vela",
+  "pathSegment": "ES-PATH-374-01",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-374-REF",
+      "order": 3
+    }
+  ]
+}

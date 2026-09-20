@@ -1,0 +1,11 @@
+{
+  "id": "JA-C18-hon",
+  "pathSegment": "JA-PATH-017",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "JA-EXT-025-COUNTERS",
+      "order": 5
+    }
+  ]
+}

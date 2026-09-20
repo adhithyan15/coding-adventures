@@ -1,0 +1,11 @@
+{
+  "id": "MR-A1M16-closing-block",
+  "pathSegment": "MR-PATH-022",
+  "pathOrder": 15,
+  "extensions": [
+    {
+      "id": "MR-EXT-025-A1-NAMED-READER-MESSAGE",
+      "order": 15
+    }
+  ]
+}

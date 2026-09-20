@@ -1,0 +1,11 @@
+{
+  "id": "ES-C404-movil",
+  "pathSegment": "ES-PATH-404-MEDIA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-404-MEDIA",
+      "order": 1
+    }
+  ]
+}

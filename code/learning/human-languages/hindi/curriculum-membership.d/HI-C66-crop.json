@@ -1,0 +1,11 @@
+{
+  "id": "HI-C66-crop",
+  "pathSegment": "HI-PATH-66-FIELD",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-66-FIELD",
+      "order": 1
+    }
+  ]
+}

@@ -4,10 +4,5 @@
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can say that I did not understand and ask for it again more slowly.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-R01-no-entiendo",
-    "ES-R02-mas-despacio",
-    "ES-R03-repaso-reparar"
-  ]
+  "prerequisites": []
 }

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C15-er-hat-gemacht",
+  "pathSegment": "GE-PATH-020-B",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-020-B-PERFEKT",
+      "order": 3
+    }
+  ]
+}

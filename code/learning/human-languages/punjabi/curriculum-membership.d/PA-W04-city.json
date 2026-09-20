@@ -1,0 +1,11 @@
+{
+  "id": "PA-W04-city",
+  "pathSegment": "PA-PATH-020",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PA-EXT-025-A1-RESIDENCE-FIELD",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C06-hear-question",
+  "pathSegment": "MW-PATH-006",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MW-EXT-015-HEAR-WELLBEING-QUESTION",
+      "order": 0
+    }
+  ]
+}

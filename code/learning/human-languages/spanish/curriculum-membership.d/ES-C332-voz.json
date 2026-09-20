@@ -1,0 +1,11 @@
+{
+  "id": "ES-C332-voz",
+  "pathSegment": "ES-PATH-332-01",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ES-EXT-332-WORD",
+      "order": 4
+    }
+  ]
+}

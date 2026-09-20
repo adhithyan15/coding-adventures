@@ -1,0 +1,11 @@
+{
+  "id": "SA-C23-daughter",
+  "pathSegment": "SA-PATH-23-KIN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-23-KIN",
+      "order": 3
+    }
+  ]
+}

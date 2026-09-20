@@ -1,0 +1,11 @@
+{
+  "id": "GE-C14-alter",
+  "pathSegment": "GE-PATH-019",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-019-LANGUAGE-SPECIFIC",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C05-hafiz",
+  "pathSegment": "UR-PATH-006",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-014-HAFIZ-ARABIC-ROOT",
+      "order": 0
+    }
+  ]
+}

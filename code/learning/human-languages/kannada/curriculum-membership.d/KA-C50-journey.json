@@ -1,0 +1,11 @@
+{
+  "id": "KA-C50-journey",
+  "pathSegment": "KA-PATH-50-LEAVE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-50-LEAVE",
+      "order": 2
+    }
+  ]
+}

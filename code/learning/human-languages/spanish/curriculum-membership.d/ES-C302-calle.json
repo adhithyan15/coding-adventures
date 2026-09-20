@@ -1,0 +1,11 @@
+{
+  "id": "ES-C302-calle",
+  "pathSegment": "ES-PATH-302-01",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-302-CALLE",
+      "order": 0
+    }
+  ]
+}

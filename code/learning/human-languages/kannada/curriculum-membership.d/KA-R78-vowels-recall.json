@@ -1,0 +1,11 @@
+{
+  "id": "KA-R78-vowels-recall",
+  "pathSegment": "KA-PATH-78-VOWELS",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "KA-EXT-78-VOWELS",
+      "order": 6
+    }
+  ]
+}

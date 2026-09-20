@@ -1,0 +1,11 @@
+{
+  "id": "GU-C27-hear-tel",
+  "pathSegment": "GU-PATH-026",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-038-PLATE-FIVE",
+      "order": 3
+    }
+  ]
+}

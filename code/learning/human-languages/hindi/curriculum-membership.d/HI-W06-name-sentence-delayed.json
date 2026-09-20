@@ -1,0 +1,11 @@
+{
+  "id": "HI-W06-name-sentence-delayed",
+  "pathSegment": "HI-PATH-004A",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-006-CONNECTED-WRITING",
+      "order": 2
+    }
+  ]
+}

@@ -62,6 +62,11 @@ import {
   readLedgerFile,
   readMaybeSharded,
 } from "./shard.js";
+import {
+  attachCurriculumLessonMemberships,
+  type AuthoredLanguageCurriculum,
+} from "./curriculum-membership.js";
+import { readCurriculumMembershipOwners } from "./curriculum-membership-shards.js";
 import { CEFR_LEVELS, type CefrLevel } from "./levels.js";
 import { mergeScriptInventoryShards } from "./script-shards.js";
 import {
@@ -400,9 +405,11 @@ export function loadTrackGrammarCells(
   return readLedgerFile<TrackGrammarCells>(join(root, language, "grammar-cells.json"));
 }
 
-/** Read each track's authored shared-spine realization map. */
-export function loadLanguageCurricula(root = defaultCurriculumRoot()): LanguageCurriculum[] {
-  const out: LanguageCurriculum[] = [];
+/** Read the canonical curriculum owners before lesson membership is projected. */
+export function loadAuthoredLanguageCurricula(
+  root = defaultCurriculumRoot(),
+): AuthoredLanguageCurriculum[] {
+  const out: AuthoredLanguageCurriculum[] = [];
   for (const track of sortedEntries(root)) {
     if (!track.isDirectory()) continue;
     const path = join(root, track.name, "curriculum.json");
@@ -411,13 +418,23 @@ export function loadLanguageCurricula(root = defaultCurriculumRoot()): LanguageC
     // track has no authored curriculum", which would drop it from every gate.
     if (!existsSync(path) && !isSharded(path)) continue;
     out.push(
-      readMaybeSharded<LanguageCurriculum>(
+      readMaybeSharded<AuthoredLanguageCurriculum>(
         path,
-        (shards) => mergeCurriculumShards(shards) as unknown as LanguageCurriculum,
+        (shards) => mergeCurriculumShards(shards) as unknown as AuthoredLanguageCurriculum,
       ),
     );
   }
   return out.sort((left, right) => left.language.localeCompare(right.language));
+}
+
+/** Read each track's executable shared-spine map with derived lesson arrays. */
+export function loadLanguageCurricula(root = defaultCurriculumRoot()): LanguageCurriculum[] {
+  return loadAuthoredLanguageCurricula(root).map((authored) =>
+    attachCurriculumLessonMemberships(
+      authored,
+      readCurriculumMembershipOwners(root, authored.language).owners,
+    ),
+  );
 }
 
 /**

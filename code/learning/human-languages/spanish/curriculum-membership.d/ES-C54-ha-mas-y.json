@@ -1,0 +1,11 @@
+{
+  "id": "ES-C54-ha-mas-y",
+  "pathSegment": "ES-PATH-015-HAY-ETYM",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-015-HAY-ETYM",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C45-terra",
+  "pathSegment": "LA-PATH-023",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-045-WORLD",
+      "order": 0
+    }
+  ]
+}

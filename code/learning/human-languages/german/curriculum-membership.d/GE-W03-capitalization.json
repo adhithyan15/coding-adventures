@@ -1,0 +1,11 @@
+{
+  "id": "GE-W03-capitalization",
+  "pathSegment": "GE-PATH-013",
+  "pathOrder": 14,
+  "extensions": [
+    {
+      "id": "GE-EXT-013-WRITING-KIT",
+      "order": 2
+    }
+  ]
+}

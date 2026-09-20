@@ -1,0 +1,11 @@
+{
+  "id": "HI-C51-table",
+  "pathSegment": "HI-PATH-51-WELCOME",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-51-WELCOME",
+      "order": 3
+    }
+  ]
+}

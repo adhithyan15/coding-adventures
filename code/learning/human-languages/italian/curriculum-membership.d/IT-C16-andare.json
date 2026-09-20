@@ -1,0 +1,11 @@
+{
+  "id": "IT-C16-andare",
+  "pathSegment": "IT-PATH-020",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-020-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

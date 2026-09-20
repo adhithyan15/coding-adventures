@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C16-hear-hanzi",
+  "pathSegment": "ZH-PATH-015",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-042-LANGUAGE-IDENTITY-MEANING-FIRST",
+      "order": 1
+    }
+  ]
+}

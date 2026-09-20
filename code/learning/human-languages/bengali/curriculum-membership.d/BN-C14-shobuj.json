@@ -1,0 +1,11 @@
+{
+  "id": "BN-C14-shobuj",
+  "pathSegment": "BN-PATH-020",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-020-COLORS",
+      "order": 4
+    }
+  ]
+}

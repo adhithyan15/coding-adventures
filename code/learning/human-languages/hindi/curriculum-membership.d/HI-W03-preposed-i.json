@@ -1,0 +1,11 @@
+{
+  "id": "HI-W03-preposed-i",
+  "pathSegment": "HI-PATH-004",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-004-SCRIPT",
+      "order": 1
+    }
+  ]
+}

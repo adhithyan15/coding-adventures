@@ -1,0 +1,11 @@
+{
+  "id": "JA-W05-mouth-component",
+  "pathSegment": "JA-PATH-005",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-013-NIHONGO-KANJI",
+      "order": 4
+    }
+  ]
+}

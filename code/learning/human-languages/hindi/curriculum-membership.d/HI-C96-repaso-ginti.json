@@ -1,0 +1,11 @@
+{
+  "id": "HI-C96-repaso-ginti",
+  "pathSegment": "HI-PATH-104-GINTI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-104-GINTI",
+      "order": 3
+    }
+  ]
+}

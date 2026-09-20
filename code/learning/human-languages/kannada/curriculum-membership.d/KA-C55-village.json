@@ -1,0 +1,11 @@
+{
+  "id": "KA-C55-village",
+  "pathSegment": "KA-PATH-55-ROAD",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-55-ROAD",
+      "order": 3
+    }
+  ]
+}

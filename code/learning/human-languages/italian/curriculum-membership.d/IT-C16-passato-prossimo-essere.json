@@ -1,0 +1,11 @@
+{
+  "id": "IT-C16-passato-prossimo-essere",
+  "pathSegment": "IT-PATH-020",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-020-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

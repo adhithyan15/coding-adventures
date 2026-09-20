@@ -1,0 +1,11 @@
+{
+  "id": "HI-C95-jaante-hain",
+  "pathSegment": "HI-PATH-103-CHAAH",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-103-CHAAH",
+      "order": 1
+    }
+  ]
+}

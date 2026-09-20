@@ -4,11 +4,5 @@
   "kind": "required",
   "category": "script",
   "canDo": "I can copy one alef beside a visible model, draw it again once the model is covered, and produce it from the long vowel alone.",
-  "prerequisites": [],
-  "lessons": [
-    "FA-C01-salam",
-    "FA-W00-alef-guided-copy",
-    "FA-W00-alef-delayed-copy",
-    "FA-W00-alef-dictation"
-  ]
+  "prerequisites": []
 }

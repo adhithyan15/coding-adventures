@@ -1,0 +1,11 @@
+{
+  "id": "TE-C71-uncle",
+  "pathSegment": "TE-PATH-71-KIN",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-71-KIN",
+      "order": 0
+    }
+  ]
+}

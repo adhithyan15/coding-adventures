@@ -1,0 +1,11 @@
+{
+  "id": "TE-S131-vowel-sign-vocalic-r",
+  "pathSegment": "TE-PATH-100",
+  "pathOrder": 49,
+  "extensions": [
+    {
+      "id": "TE-EXT-100-SCRIPT-RECOGNITION",
+      "order": 49
+    }
+  ]
+}

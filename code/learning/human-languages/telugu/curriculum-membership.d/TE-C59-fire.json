@@ -1,0 +1,11 @@
+{
+  "id": "TE-C59-fire",
+  "pathSegment": "TE-PATH-59-WEATHER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-59-WEATHER",
+      "order": 4
+    }
+  ]
+}

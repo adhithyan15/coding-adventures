@@ -1,0 +1,11 @@
+{
+  "id": "ML-C48-doctor",
+  "pathSegment": "ML-PATH-48-ROLE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-48-ROLE",
+      "order": 2
+    }
+  ]
+}

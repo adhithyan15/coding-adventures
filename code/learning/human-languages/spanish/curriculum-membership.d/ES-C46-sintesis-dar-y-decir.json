@@ -1,0 +1,11 @@
+{
+  "id": "ES-C46-sintesis-dar-y-decir",
+  "pathSegment": "ES-PATH-003-SYNTH-IO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-003-SYNTH-IO",
+      "order": 0
+    }
+  ]
+}

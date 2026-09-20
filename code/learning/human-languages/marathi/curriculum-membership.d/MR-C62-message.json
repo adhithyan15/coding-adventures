@@ -1,0 +1,11 @@
+{
+  "id": "MR-C62-message",
+  "pathSegment": "MR-PATH-065",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-078-READING",
+      "order": 1
+    }
+  ]
+}

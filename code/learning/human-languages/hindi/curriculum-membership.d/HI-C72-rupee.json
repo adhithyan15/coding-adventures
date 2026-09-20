@@ -1,0 +1,11 @@
+{
+  "id": "HI-C72-rupee",
+  "pathSegment": "HI-PATH-72-COST",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-72-COST",
+      "order": 1
+    }
+  ]
+}

@@ -4,8 +4,5 @@
   "kind": "supporting",
   "category": "consolidation",
   "canDo": "I can run this chapter's material end to end without new vocabulary.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-C04-repaso-estar"
-  ]
+  "prerequisites": []
 }

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C90-kaam",
+  "pathSegment": "HI-PATH-98-ROUTINE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-98-ROUTINE",
+      "order": 3
+    }
+  ]
+}

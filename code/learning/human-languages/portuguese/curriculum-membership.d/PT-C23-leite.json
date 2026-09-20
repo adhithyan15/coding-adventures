@@ -1,0 +1,11 @@
+{
+  "id": "PT-C23-leite",
+  "pathSegment": "PT-PATH-027",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-027-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

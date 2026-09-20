@@ -1,0 +1,11 @@
+{
+  "id": "LA-C07-pater-mater",
+  "pathSegment": "LA-PATH-010",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-010-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

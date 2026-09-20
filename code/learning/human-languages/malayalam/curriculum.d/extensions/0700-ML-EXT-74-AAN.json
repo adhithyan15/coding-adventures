@@ -6,11 +6,5 @@
   "canDo": "I can say what I am going in order to do, and what I am able to do.",
   "prerequisites": [
     "ML-EXT-73-CAUSE"
-  ],
-  "lessons": [
-    "ML-C74-aan",
-    "ML-C74-purpose",
-    "ML-C74-kazhiyum",
-    "ML-R74-aan-recall"
   ]
 }

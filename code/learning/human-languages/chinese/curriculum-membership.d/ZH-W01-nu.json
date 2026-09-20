@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W01-nu",
+  "pathSegment": "ZH-PATH-001",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ZH-EXT-006-COMPONENT-INVENTORY",
+      "order": 4
+    }
+  ]
+}

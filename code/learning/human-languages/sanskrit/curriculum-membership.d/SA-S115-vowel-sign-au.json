@@ -1,0 +1,11 @@
+{
+  "id": "SA-S115-vowel-sign-au",
+  "pathSegment": "SA-PATH-100",
+  "pathOrder": 39,
+  "extensions": [
+    {
+      "id": "SA-EXT-100-SCRIPT-RECOGNITION",
+      "order": 39
+    }
+  ]
+}

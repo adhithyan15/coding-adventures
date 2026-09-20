@@ -4,11 +4,5 @@
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can say eleven and twelve in German and explain why neither of them follows the counting pattern.",
-  "prerequisites": [],
-  "lessons": [
-    "GE-C12-elf",
-    "GE-C12-zwoelf",
-    "GE-C12-lif",
-    "GE-C12-elf-zwoelf"
-  ]
+  "prerequisites": []
 }

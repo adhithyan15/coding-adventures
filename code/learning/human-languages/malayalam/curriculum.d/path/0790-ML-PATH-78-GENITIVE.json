@@ -1,11 +1,6 @@
 {
   "id": "ML-PATH-78-GENITIVE",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
-  "lessons": [
-    "ML-C78-nre",
-    "ML-C78-ude",
-    "ML-R78-genitive-recall"
-  ],
   "before": [],
   "inline": [
     "ML-EXT-78-GENITIVE"

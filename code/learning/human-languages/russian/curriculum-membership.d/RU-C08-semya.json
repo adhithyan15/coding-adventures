@@ -1,0 +1,11 @@
+{
+  "id": "RU-C08-semya",
+  "pathSegment": "RU-PATH-011",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-011-FRIEND-FAMILY",
+      "order": 4
+    }
+  ]
+}

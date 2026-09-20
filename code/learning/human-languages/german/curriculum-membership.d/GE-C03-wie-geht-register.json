@@ -1,0 +1,11 @@
+{
+  "id": "GE-C03-wie-geht-register",
+  "pathSegment": "GE-PATH-012",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-012-LANGUAGE-SPECIFIC",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C327-dormido",
+  "pathSegment": "ES-PATH-327-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-327-STATE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C56-si-tuviera",
+  "pathSegment": "ES-PATH-B1-SI-TUVIERA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-B1-SI-TUVIERA",
+      "order": 0
+    }
+  ]
+}

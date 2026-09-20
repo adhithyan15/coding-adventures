@@ -6,11 +6,5 @@
   "canDo": "I can ask where somebody lives and when they are coming, and I can turn a statement I already own into a question by putting the asking word in the answer's own slot.",
   "prerequisites": [
     "MR-EXT-052-WHO-AND-HOW-MANY"
-  ],
-  "lessons": [
-    "MR-C38-kuthe",
-    "MR-C38-kadhi",
-    "MR-C38-wh-order",
-    "MR-R38-where-when"
   ]
 }

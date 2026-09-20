@@ -1,0 +1,11 @@
+{
+  "id": "TA-C71-run",
+  "pathSegment": "TA-PATH-71-DAY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-71-DAY",
+      "order": 3
+    }
+  ]
+}

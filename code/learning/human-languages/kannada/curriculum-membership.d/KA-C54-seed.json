@@ -1,0 +1,11 @@
+{
+  "id": "KA-C54-seed",
+  "pathSegment": "KA-PATH-54-TREE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-54-TREE",
+      "order": 4
+    }
+  ]
+}

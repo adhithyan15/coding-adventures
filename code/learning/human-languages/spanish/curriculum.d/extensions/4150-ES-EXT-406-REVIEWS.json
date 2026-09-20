@@ -7,9 +7,5 @@
   "prerequisites": [
     "ES-EXT-406-DOCUMENTS",
     "ES-EXT-406-FILL"
-  ],
-  "lessons": [
-    "ES-C406-documents-recall-1",
-    "ES-C406-documents-recall-2"
   ]
 }

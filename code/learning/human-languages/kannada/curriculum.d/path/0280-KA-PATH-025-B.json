@@ -1,9 +1,6 @@
 {
   "id": "KA-PATH-025-B",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
-  "lessons": [
-    "KA-C32-baa"
-  ],
   "before": [],
   "inline": [
     "KA-EXT-025-CORE-VERBS-B"

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C21-show-three",
+  "pathSegment": "MW-PATH-020",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "MW-EXT-034-SHOW-REQUEST",
+      "order": 8
+    }
+  ]
+}

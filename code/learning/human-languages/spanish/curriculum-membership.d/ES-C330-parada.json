@@ -1,0 +1,11 @@
+{
+  "id": "ES-C330-parada",
+  "pathSegment": "ES-PATH-330-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-330-WAY",
+      "order": 1
+    }
+  ]
+}

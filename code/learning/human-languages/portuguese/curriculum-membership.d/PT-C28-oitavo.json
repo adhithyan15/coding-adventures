@@ -1,0 +1,11 @@
+{
+  "id": "PT-C28-oitavo",
+  "pathSegment": "PT-PATH-032",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-032-ORDINAIS-ATE-DECIMO",
+      "order": 2
+    }
+  ]
+}

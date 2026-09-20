@@ -1,0 +1,11 @@
+{
+  "id": "ES-C424-barra",
+  "pathSegment": "ES-PATH-424-SIGNOS",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "ES-EXT-424-SIGNOS",
+      "order": 7
+    }
+  ]
+}

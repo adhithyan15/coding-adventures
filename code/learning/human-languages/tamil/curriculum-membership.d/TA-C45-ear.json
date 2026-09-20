@@ -1,0 +1,11 @@
+{
+  "id": "TA-C45-ear",
+  "pathSegment": "TA-PATH-45-BODY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-45-BODY",
+      "order": 1
+    }
+  ]
+}

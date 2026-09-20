@@ -1,0 +1,11 @@
+{
+  "id": "HI-C94-sintesis-safar",
+  "pathSegment": "HI-PATH-102-SPAN",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "HI-EXT-102-SPAN",
+      "order": 6
+    }
+  ]
+}

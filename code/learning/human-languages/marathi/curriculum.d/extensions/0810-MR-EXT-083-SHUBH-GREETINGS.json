@@ -6,11 +6,5 @@
   "canDo": "I can read the time-of-day greetings and choose the one that is actually spoken.",
   "prerequisites": [
     "MR-EXT-082-THE-CLOCK"
-  ],
-  "lessons": [
-    "MR-C68-shubh-sakal",
-    "MR-C68-shubh-dupar",
-    "MR-C68-shubh-sandhyakal",
-    "MR-R68-greetings-recall"
   ]
 }

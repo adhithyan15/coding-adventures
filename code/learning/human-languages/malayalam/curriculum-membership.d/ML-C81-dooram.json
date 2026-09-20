@@ -1,0 +1,11 @@
+{
+  "id": "ML-C81-dooram",
+  "pathSegment": "ML-PATH-81-DISTANCE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-81-DISTANCE",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C14-wie-alt-bist-du",
+  "pathSegment": "GE-PATH-019",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-019-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

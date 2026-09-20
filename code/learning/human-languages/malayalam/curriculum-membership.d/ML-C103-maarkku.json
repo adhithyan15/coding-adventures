@@ -1,0 +1,11 @@
+{
+  "id": "ML-C103-maarkku",
+  "pathSegment": "ML-PATH-103-SCHOOL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-103-SCHOOL",
+      "order": 4
+    }
+  ]
+}

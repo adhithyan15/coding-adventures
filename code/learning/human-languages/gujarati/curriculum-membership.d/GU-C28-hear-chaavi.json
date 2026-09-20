@@ -1,0 +1,11 @@
+{
+  "id": "GU-C28-hear-chaavi",
+  "pathSegment": "GU-PATH-027",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-039-HOUSE-FIVE",
+      "order": 3
+    }
+  ]
+}

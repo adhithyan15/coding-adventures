@@ -1,0 +1,11 @@
+{
+  "id": "TA-C83-tenth",
+  "pathSegment": "TA-PATH-83-ORDINAL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-83-ORDINAL",
+      "order": 4
+    }
+  ]
+}

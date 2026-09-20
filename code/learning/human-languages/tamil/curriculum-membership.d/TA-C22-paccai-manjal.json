@@ -1,0 +1,11 @@
+{
+  "id": "TA-C22-paccai-manjal",
+  "pathSegment": "TA-PATH-026",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-026-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

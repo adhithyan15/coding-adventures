@@ -1,0 +1,11 @@
+{
+  "id": "PT-C17-cabeca-caput",
+  "pathSegment": "PT-PATH-021",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-021-ETYMOLOGY",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C03-practice",
+  "pathSegment": "TE-PATH-008",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-008-CONSOLIDATION",
+      "order": 0
+    }
+  ]
+}

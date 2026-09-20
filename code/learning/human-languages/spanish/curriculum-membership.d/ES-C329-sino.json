@@ -1,0 +1,11 @@
+{
+  "id": "ES-C329-sino",
+  "pathSegment": "ES-PATH-329-01",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-329-LINK",
+      "order": 3
+    }
+  ]
+}

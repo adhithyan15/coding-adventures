@@ -1,0 +1,11 @@
+{
+  "id": "PA-C40-kyunki",
+  "pathSegment": "PA-PATH-042",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-062-THAT-AND-WHY",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C01-raam-raam-saa",
+  "pathSegment": "MW-PATH-001",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "MW-EXT-003-RESPECTFUL-GREETING",
+      "order": 0
+    }
+  ]
+}

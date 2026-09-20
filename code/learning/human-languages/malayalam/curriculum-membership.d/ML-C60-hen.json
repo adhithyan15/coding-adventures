@@ -1,0 +1,11 @@
+{
+  "id": "ML-C60-hen",
+  "pathSegment": "ML-PATH-60-ANIMAL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-60-ANIMAL",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-W07-numbers-1-5-delayed-copy",
+  "pathSegment": "ML-PATH-012",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ML-EXT-012-LANGUAGE-SPECIFIC",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C41-kholi",
+  "pathSegment": "MR-PATH-043",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-056-HOUSE-AND-ROOM",
+      "order": 1
+    }
+  ]
+}

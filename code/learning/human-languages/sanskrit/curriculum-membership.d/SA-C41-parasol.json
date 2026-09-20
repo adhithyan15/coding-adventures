@@ -1,0 +1,11 @@
+{
+  "id": "SA-C41-parasol",
+  "pathSegment": "SA-PATH-41-CRAFT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-41-CRAFT",
+      "order": 4
+    }
+  ]
+}

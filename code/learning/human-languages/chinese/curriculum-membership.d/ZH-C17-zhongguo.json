@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C17-zhongguo",
+  "pathSegment": "ZH-PATH-016",
+  "pathOrder": 10,
+  "extensions": [
+    {
+      "id": "ZH-EXT-046-LANGUAGE-COUNTRY-SCRIPT",
+      "order": 7
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C37-noru",
+  "pathSegment": "TE-PATH-030",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-031-FACE-WORDS",
+      "order": 3
+    }
+  ]
+}

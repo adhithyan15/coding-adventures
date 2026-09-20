@@ -1,0 +1,11 @@
+{
+  "id": "MR-C53-reduplication",
+  "pathSegment": "MR-PATH-056",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-069-DEGREE",
+      "order": 2
+    }
+  ]
+}

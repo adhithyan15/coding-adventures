@@ -1,10 +1,6 @@
 {
   "id": "TA-PATH-028",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
-  "lessons": [
-    "TA-C32-iru",
-    "TA-C32-po"
-  ],
   "before": [],
   "inline": [
     "TA-EXT-028-CORE-VERBS"

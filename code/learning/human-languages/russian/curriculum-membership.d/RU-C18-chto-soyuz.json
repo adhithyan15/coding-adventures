@@ -1,0 +1,11 @@
+{
+  "id": "RU-C18-chto-soyuz",
+  "pathSegment": "RU-PATH-019",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-024-CHTO",
+      "order": 1
+    }
+  ]
+}

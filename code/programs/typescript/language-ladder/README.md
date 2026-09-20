@@ -37,8 +37,9 @@ needed to preserve the book-synced diagnostic.
 The spine of the app is [HL03](../../../specs/HL03-unified-language-learning-app.md)
 plus the stricter [HL04](../../../specs/HL04-shared-spine-and-content-pipeline.md)
 progression contract. A build-time virtual module folds every active
-`curriculum.d/` map into one lazy module per track, and `curriculum.ts` loads
-those bounded rollups. The shared spine is folded eagerly from `core/spine.d/`;
+`curriculum.d/` map plus its direct `curriculum-membership.d/` lesson owners
+into one lazy module per track, and `curriculum.ts` loads those bounded rollups.
+The shared spine is folded eagerly from `core/spine.d/`;
 the browser never enumerates one module per authored shard. The pure frontier
 planner returns exactly one safe next lesson per selected
 language. A language advances independently; paths are grouped only when their

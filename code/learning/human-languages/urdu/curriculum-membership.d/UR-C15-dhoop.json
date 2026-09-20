@@ -1,0 +1,11 @@
+{
+  "id": "UR-C15-dhoop",
+  "pathSegment": "UR-PATH-016",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-026-WEATHER",
+      "order": 1
+    }
+  ]
+}

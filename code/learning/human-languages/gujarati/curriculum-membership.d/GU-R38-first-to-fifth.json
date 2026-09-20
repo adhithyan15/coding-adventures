@@ -1,0 +1,11 @@
+{
+  "id": "GU-R38-first-to-fifth",
+  "pathSegment": "GU-PATH-037",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GU-EXT-049-ORDINALS-ONE-TO-FIVE",
+      "order": 5
+    }
+  ]
+}

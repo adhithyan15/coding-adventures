@@ -1,0 +1,11 @@
+{
+  "id": "HI-C97-sandesh",
+  "pathSegment": "HI-PATH-105-SAMBODHAN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-105-SAMBODHAN",
+      "order": 3
+    }
+  ]
+}

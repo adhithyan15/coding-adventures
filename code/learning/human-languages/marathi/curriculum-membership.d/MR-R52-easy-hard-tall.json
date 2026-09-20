@@ -1,0 +1,11 @@
+{
+  "id": "MR-R52-easy-hard-tall",
+  "pathSegment": "MR-PATH-055",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-068-EASY-HARD-TALL",
+      "order": 3
+    }
+  ]
+}

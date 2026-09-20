@@ -1,0 +1,11 @@
+{
+  "id": "ES-C369-polvo",
+  "pathSegment": "ES-PATH-369-01",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-369-WHERE",
+      "order": 2
+    }
+  ]
+}

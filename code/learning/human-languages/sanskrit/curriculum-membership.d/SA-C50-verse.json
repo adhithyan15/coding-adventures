@@ -1,0 +1,11 @@
+{
+  "id": "SA-C50-verse",
+  "pathSegment": "SA-PATH-50-SOUND",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-50-SOUND",
+      "order": 4
+    }
+  ]
+}

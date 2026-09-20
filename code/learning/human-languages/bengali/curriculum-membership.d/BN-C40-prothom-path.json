@@ -1,0 +1,11 @@
+{
+  "id": "BN-C40-prothom-path",
+  "pathSegment": "BN-PATH-037",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-038-READING",
+      "order": 2
+    }
+  ]
+}

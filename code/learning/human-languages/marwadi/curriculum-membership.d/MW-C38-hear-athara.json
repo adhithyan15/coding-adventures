@@ -1,0 +1,11 @@
+{
+  "id": "MW-C38-hear-athara",
+  "pathSegment": "MW-PATH-031",
+  "pathOrder": 18,
+  "extensions": [
+    {
+      "id": "MW-EXT-045-TEENS",
+      "order": 18
+    }
+  ]
+}

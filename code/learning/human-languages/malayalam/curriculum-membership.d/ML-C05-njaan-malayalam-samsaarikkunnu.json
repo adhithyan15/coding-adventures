@@ -1,0 +1,11 @@
+{
+  "id": "ML-C05-njaan-malayalam-samsaarikkunnu",
+  "pathSegment": "ML-PATH-011",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-011-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

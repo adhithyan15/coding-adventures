@@ -1,13 +1,6 @@
 {
   "id": "ML-PATH-99-ARTS",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
-  "lessons": [
-    "ML-C99-paattu",
-    "ML-C99-paaduka",
-    "ML-C99-nrttham",
-    "ML-C99-katha",
-    "ML-R99-arts-recall"
-  ],
   "before": [],
   "inline": [
     "ML-EXT-99-ARTS"

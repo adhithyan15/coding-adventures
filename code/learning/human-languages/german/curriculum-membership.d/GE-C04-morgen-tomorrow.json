@@ -1,0 +1,11 @@
+{
+  "id": "GE-C04-morgen-tomorrow",
+  "pathSegment": "GE-PATH-013",
+  "pathOrder": 10,
+  "extensions": [
+    {
+      "id": "GE-EXT-013-LANGUAGE-SPECIFIC",
+      "order": 6
+    }
+  ]
+}

@@ -1,19 +1,6 @@
 {
   "id": "ZH-PATH-002",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
-  "lessons": [
-    "ZH-W03-yi",
-    "ZH-C03-yi",
-    "ZH-W03-er",
-    "ZH-C03-er",
-    "ZH-W03-san",
-    "ZH-C03-san",
-    "ZH-W03-si",
-    "ZH-C03-si",
-    "ZH-W03-wu",
-    "ZH-C03-wu",
-    "ZH-C03-practice"
-  ],
   "before": [],
   "inline": [
     "ZH-EXT-007-NUMERAL-TRANSPARENCY",

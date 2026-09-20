@@ -1,0 +1,11 @@
+{
+  "id": "ES-C309-pareja",
+  "pathSegment": "ES-PATH-309-01",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-309-KIN",
+      "order": 3
+    }
+  ]
+}

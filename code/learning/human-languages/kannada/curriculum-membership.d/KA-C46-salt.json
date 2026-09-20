@@ -1,0 +1,11 @@
+{
+  "id": "KA-C46-salt",
+  "pathSegment": "KA-PATH-46-ASK",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-46-ASK",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C93-repaso-sambandh",
+  "pathSegment": "HI-PATH-101-RELATION",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "HI-EXT-101-RELATION",
+      "order": 7
+    }
+  ]
+}

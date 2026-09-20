@@ -1,0 +1,11 @@
+{
+  "id": "ML-C62-winnowing-tray",
+  "pathSegment": "ML-PATH-62-HAND",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-62-HAND",
+      "order": 4
+    }
+  ]
+}

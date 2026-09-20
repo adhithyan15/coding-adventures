@@ -1,0 +1,11 @@
+{
+  "id": "RU-W03-new-shapes-b-d",
+  "pathSegment": "RU-PATH-001",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-001-INLINE-SCRIPT",
+      "order": 3
+    }
+  ]
+}

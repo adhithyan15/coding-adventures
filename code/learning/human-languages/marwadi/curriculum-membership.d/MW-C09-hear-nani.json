@@ -1,0 +1,11 @@
+{
+  "id": "MW-C09-hear-nani",
+  "pathSegment": "MW-PATH-009",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-023-FAMILY-TWELVE",
+      "order": 2
+    }
+  ]
+}

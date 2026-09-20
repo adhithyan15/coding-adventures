@@ -1,0 +1,11 @@
+{
+  "id": "IT-C10-fratello-sorella",
+  "pathSegment": "IT-PATH-015",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-015-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

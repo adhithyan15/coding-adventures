@@ -1,0 +1,11 @@
+{
+  "id": "PA-W01-namaste-read",
+  "pathSegment": "PA-PATH-001S",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "PA-EXT-016-SCRIPT-FIRST-PIECES",
+      "order": 6
+    }
+  ]
+}

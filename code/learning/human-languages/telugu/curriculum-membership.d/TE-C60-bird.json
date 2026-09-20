@@ -1,0 +1,11 @@
+{
+  "id": "TE-C60-bird",
+  "pathSegment": "TE-PATH-60-ANIMAL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-60-ANIMAL",
+      "order": 4
+    }
+  ]
+}

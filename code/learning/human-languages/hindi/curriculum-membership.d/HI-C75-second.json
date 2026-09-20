@@ -1,0 +1,11 @@
+{
+  "id": "HI-C75-second",
+  "pathSegment": "HI-PATH-75-ORDINAL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-75-ORDINAL",
+      "order": 1
+    }
+  ]
+}

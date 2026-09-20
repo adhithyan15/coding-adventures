@@ -1,0 +1,11 @@
+{
+  "id": "TE-C48-student",
+  "pathSegment": "TE-PATH-48-ROLE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-48-ROLE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C12-zwanzig-zwei-zehn",
+  "pathSegment": "GE-PATH-017-B",
+  "pathOrder": 10,
+  "extensions": [
+    {
+      "id": "GE-EXT-017-B-ZAHLEN",
+      "order": 10
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C75-yesterday",
+  "pathSegment": "TE-PATH-75-WHEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-75-WHEN",
+      "order": 1
+    }
+  ]
+}

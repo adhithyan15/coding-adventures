@@ -1,0 +1,11 @@
+{
+  "id": "HI-W06-two-sentence-no-model",
+  "pathSegment": "HI-PATH-004A",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "HI-EXT-006-CONNECTED-WRITING",
+      "order": 5
+    }
+  ]
+}

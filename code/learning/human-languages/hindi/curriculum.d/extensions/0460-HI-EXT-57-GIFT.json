@@ -4,12 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can name five things that travel with gratitude.",
-  "prerequisites": [],
-  "lessons": [
-    "HI-C57-present",
-    "HI-C57-feast",
-    "HI-C57-platter",
-    "HI-C57-fragrance",
-    "HI-C57-sweetness"
-  ]
+  "prerequisites": []
 }

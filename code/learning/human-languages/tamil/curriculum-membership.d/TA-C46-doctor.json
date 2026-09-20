@@ -1,0 +1,11 @@
+{
+  "id": "TA-C46-doctor",
+  "pathSegment": "TA-PATH-46-ROLE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-46-ROLE",
+      "order": 2
+    }
+  ]
+}

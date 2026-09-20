@@ -1,0 +1,11 @@
+{
+  "id": "SA-C26-physician",
+  "pathSegment": "SA-PATH-26-ROLE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-26-ROLE",
+      "order": 4
+    }
+  ]
+}

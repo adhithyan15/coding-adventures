@@ -1,0 +1,11 @@
+{
+  "id": "FR-C03-comment-registers",
+  "pathSegment": "FR-PATH-011",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-011-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

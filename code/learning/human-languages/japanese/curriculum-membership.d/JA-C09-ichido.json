@@ -1,0 +1,11 @@
+{
+  "id": "JA-C09-ichido",
+  "pathSegment": "JA-PATH-009",
+  "pathOrder": 9,
+  "extensions": [
+    {
+      "id": "JA-EXT-016-REPAIR-REPEAT",
+      "order": 8
+    }
+  ]
+}

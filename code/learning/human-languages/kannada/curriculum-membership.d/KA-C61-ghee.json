@@ -1,0 +1,11 @@
+{
+  "id": "KA-C61-ghee",
+  "pathSegment": "KA-PATH-61-KITCHEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-61-KITCHEN",
+      "order": 1
+    }
+  ]
+}

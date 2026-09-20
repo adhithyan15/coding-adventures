@@ -1,0 +1,11 @@
+{
+  "id": "UR-W31-digits-four-five-six",
+  "pathSegment": "UR-PATH-032",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-042-DIGITS",
+      "order": 2
+    }
+  ]
+}

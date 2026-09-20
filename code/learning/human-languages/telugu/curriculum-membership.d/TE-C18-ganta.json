@@ -1,0 +1,11 @@
+{
+  "id": "TE-C18-ganta",
+  "pathSegment": "TE-PATH-020",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-020-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C95-akathu-purathu",
+  "pathSegment": "ML-PATH-95-OPEN-CLOSED",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-95-OPEN-CLOSED",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C28-journey",
+  "pathSegment": "SA-PATH-28-LEAVE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-28-LEAVE",
+      "order": 2
+    }
+  ]
+}

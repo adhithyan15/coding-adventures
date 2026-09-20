@@ -1,0 +1,11 @@
+{
+  "id": "GE-C14-alter-sein-haben",
+  "pathSegment": "GE-PATH-019",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-019-LANGUAGE-SPECIFIC",
+      "order": 5
+    }
+  ]
+}

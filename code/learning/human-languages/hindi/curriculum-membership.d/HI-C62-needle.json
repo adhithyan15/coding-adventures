@@ -1,0 +1,11 @@
+{
+  "id": "HI-C62-needle",
+  "pathSegment": "HI-PATH-62-HANDS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-62-HANDS",
+      "order": 1
+    }
+  ]
+}

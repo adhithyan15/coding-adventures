@@ -1,0 +1,11 @@
+{
+  "id": "BN-C22-gulo",
+  "pathSegment": "BN-PATH-030",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-031-PLURAL",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C56-basket",
+  "pathSegment": "TE-PATH-56-HOUSE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-56-HOUSE",
+      "order": 1
+    }
+  ]
+}

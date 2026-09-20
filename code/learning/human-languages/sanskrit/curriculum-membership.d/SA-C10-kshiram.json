@@ -1,0 +1,11 @@
+{
+  "id": "SA-C10-kshiram",
+  "pathSegment": "SA-PATH-013",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-013-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C67-repaso-la-terminacion-y-el-infinitivo",
+  "pathSegment": "ES-PATH-A1-ORDEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-A1-ORDEN",
+      "order": 1
+    }
+  ]
+}

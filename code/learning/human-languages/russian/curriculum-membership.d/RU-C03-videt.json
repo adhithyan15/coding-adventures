@@ -1,0 +1,11 @@
+{
+  "id": "RU-C03-videt",
+  "pathSegment": "RU-PATH-007",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-007-CORE-VERBS",
+      "order": 4
+    }
+  ]
+}

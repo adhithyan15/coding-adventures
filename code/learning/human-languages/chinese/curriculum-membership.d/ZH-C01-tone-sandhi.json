@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C01-tone-sandhi",
+  "pathSegment": "ZH-PATH-001",
+  "pathOrder": 11,
+  "extensions": [
+    {
+      "id": "ZH-EXT-003-TONE-SANDHI",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C48-goose",
+  "pathSegment": "SA-PATH-48-BEAST",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-48-BEAST",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C12-kutumba",
+  "pathSegment": "KA-PATH-015",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-015-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

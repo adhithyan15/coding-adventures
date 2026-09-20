@@ -1,0 +1,11 @@
+{
+  "id": "TE-C78-didntunderstand",
+  "pathSegment": "TE-PATH-78-YESNO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-78-YESNO",
+      "order": 3
+    }
+  ]
+}

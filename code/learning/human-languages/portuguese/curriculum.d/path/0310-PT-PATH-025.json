@@ -1,9 +1,6 @@
 {
   "id": "PT-PATH-025",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
-  "lessons": [
-    "PT-C21-trazer"
-  ],
   "before": [],
   "inline": [
     "PT-EXT-025-LANGUAGE-SPECIFIC"

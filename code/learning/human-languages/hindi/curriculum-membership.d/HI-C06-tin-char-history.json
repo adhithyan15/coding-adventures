@@ -1,0 +1,11 @@
+{
+  "id": "HI-C06-tin-char-history",
+  "pathSegment": "HI-PATH-010",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-010-ETYMOLOGY",
+      "order": 0
+    }
+  ]
+}

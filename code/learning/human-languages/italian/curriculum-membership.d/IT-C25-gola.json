@@ -1,0 +1,11 @@
+{
+  "id": "IT-C25-gola",
+  "pathSegment": "IT-PATH-029",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-029-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

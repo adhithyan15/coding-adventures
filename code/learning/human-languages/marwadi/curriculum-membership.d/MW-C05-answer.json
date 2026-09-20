@@ -1,0 +1,11 @@
+{
+  "id": "MW-C05-answer",
+  "pathSegment": "MW-PATH-005",
+  "pathOrder": 9,
+  "extensions": [
+    {
+      "id": "MW-EXT-011-NAME-ANSWER",
+      "order": 5
+    }
+  ]
+}

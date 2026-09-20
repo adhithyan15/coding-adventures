@@ -1,0 +1,11 @@
+{
+  "id": "FA-C17-haft",
+  "pathSegment": "FA-PATH-018",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-025-COUNT-TEN",
+      "order": 1
+    }
+  ]
+}

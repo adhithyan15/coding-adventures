@@ -1,0 +1,11 @@
+{
+  "id": "ES-C365-ancho",
+  "pathSegment": "ES-PATH-365-01",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-365-COUNT",
+      "order": 2
+    }
+  ]
+}

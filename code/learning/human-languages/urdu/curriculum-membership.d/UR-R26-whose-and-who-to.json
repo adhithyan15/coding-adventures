@@ -1,0 +1,11 @@
+{
+  "id": "UR-R26-whose-and-who-to",
+  "pathSegment": "UR-PATH-027",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-037-POSSESSION-AND-ADDRESS",
+      "order": 4
+    }
+  ]
+}

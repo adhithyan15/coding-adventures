@@ -1,0 +1,11 @@
+{
+  "id": "TA-W29-read-paalum",
+  "pathSegment": "TA-PATH-74-JOIN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-74-JOIN",
+      "order": 2
+    }
+  ]
+}

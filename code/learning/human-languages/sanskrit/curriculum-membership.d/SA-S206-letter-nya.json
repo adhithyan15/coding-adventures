@@ -1,0 +1,11 @@
+{
+  "id": "SA-S206-letter-nya",
+  "pathSegment": "SA-PATH-100",
+  "pathOrder": 18,
+  "extensions": [
+    {
+      "id": "SA-EXT-100-SCRIPT-RECOGNITION",
+      "order": 18
+    }
+  ]
+}

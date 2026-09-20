@@ -1,0 +1,11 @@
+{
+  "id": "ML-R78-genitive-recall",
+  "pathSegment": "ML-PATH-78-GENITIVE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-78-GENITIVE",
+      "order": 2
+    }
+  ]
+}

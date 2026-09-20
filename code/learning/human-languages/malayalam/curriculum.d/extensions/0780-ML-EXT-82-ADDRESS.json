@@ -6,11 +6,5 @@
   "canDo": "I can open a conversation with somebody I have never met.",
   "prerequisites": [
     "ML-EXT-81-DISTANCE"
-  ],
-  "lessons": [
-    "ML-C82-chettaa",
-    "ML-C82-chechi-address",
-    "ML-C82-greeting-register",
-    "ML-R82-address-recall"
   ]
 }

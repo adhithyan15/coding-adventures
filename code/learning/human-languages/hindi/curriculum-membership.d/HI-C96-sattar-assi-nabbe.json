@@ -1,0 +1,11 @@
+{
+  "id": "HI-C96-sattar-assi-nabbe",
+  "pathSegment": "HI-PATH-104-GINTI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-104-GINTI",
+      "order": 2
+    }
+  ]
+}

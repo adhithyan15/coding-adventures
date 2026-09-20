@@ -1,0 +1,11 @@
+{
+  "id": "ES-C319-despedida",
+  "pathSegment": "ES-PATH-319-02",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-319-SALIR",
+      "order": 1
+    }
+  ]
+}

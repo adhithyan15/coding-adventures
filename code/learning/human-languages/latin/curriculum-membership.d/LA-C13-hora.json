@@ -1,0 +1,11 @@
+{
+  "id": "LA-C13-hora",
+  "pathSegment": "LA-PATH-014",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-014-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

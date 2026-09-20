@@ -1,0 +1,11 @@
+{
+  "id": "ES-C392-destino",
+  "pathSegment": "ES-PATH-392-01",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-392-THING",
+      "order": 2
+    }
+  ]
+}

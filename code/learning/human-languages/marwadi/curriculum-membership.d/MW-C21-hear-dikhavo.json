@@ -1,0 +1,11 @@
+{
+  "id": "MW-C21-hear-dikhavo",
+  "pathSegment": "MW-PATH-020",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-034-SHOW-REQUEST",
+      "order": 2
+    }
+  ]
+}

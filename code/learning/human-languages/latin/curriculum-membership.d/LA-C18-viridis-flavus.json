@@ -1,0 +1,11 @@
+{
+  "id": "LA-C18-viridis-flavus",
+  "pathSegment": "LA-PATH-018",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-018-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

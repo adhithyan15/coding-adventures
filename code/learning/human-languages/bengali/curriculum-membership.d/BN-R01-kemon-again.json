@@ -1,0 +1,11 @@
+{
+  "id": "BN-R01-kemon-again",
+  "pathSegment": "BN-PATH-022",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "BN-EXT-023-DISTANT-BAND",
+      "order": 6
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C25-mulher",
+  "pathSegment": "PT-PATH-029",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-029-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

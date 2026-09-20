@@ -1,0 +1,11 @@
+{
+  "id": "FA-C05-khodahafez",
+  "pathSegment": "FA-PATH-006",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-015-FAREWELL-SCRIPT-REGISTER",
+      "order": 0
+    }
+  ]
+}

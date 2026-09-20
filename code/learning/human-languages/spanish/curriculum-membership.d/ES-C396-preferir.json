@@ -1,0 +1,11 @@
+{
+  "id": "ES-C396-preferir",
+  "pathSegment": "ES-PATH-396-01",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-396-VERB",
+      "order": 2
+    }
+  ]
+}

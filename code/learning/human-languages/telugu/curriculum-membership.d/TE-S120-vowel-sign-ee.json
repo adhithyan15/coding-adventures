@@ -1,0 +1,11 @@
+{
+  "id": "TE-S120-vowel-sign-ee",
+  "pathSegment": "TE-PATH-100",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-100-SCRIPT-RECOGNITION",
+      "order": 2
+    }
+  ]
+}

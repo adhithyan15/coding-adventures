@@ -1,0 +1,11 @@
+{
+  "id": "TA-W09-read-peyar",
+  "pathSegment": "TA-PATH-003",
+  "pathOrder": 12,
+  "extensions": [
+    {
+      "id": "TA-EXT-003-SCRIPT",
+      "order": 12
+    }
+  ]
+}

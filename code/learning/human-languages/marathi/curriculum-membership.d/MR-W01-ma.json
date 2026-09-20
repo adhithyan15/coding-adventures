@@ -1,0 +1,11 @@
+{
+  "id": "MR-W01-ma",
+  "pathSegment": "MR-PATH-001",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "MR-EXT-016-SCRIPT-FIRST-PIECES",
+      "order": 7
+    }
+  ]
+}

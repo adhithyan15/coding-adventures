@@ -1,0 +1,11 @@
+{
+  "id": "HI-C84-apna",
+  "pathSegment": "HI-PATH-92-POSSESSIVE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-92-POSSESSIVE",
+      "order": 3
+    }
+  ]
+}

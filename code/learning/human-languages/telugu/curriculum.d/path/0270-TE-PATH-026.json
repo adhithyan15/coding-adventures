@@ -1,10 +1,6 @@
 {
   "id": "TE-PATH-026",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
-  "lessons": [
-    "TE-C32-undu",
-    "TE-C32-vellu"
-  ],
   "before": [],
   "inline": [
     "TE-EXT-026-CORE-VERBS"

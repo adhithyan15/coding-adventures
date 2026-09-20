@@ -1,0 +1,11 @@
+{
+  "id": "KA-S172-letter-ddha",
+  "pathSegment": "KA-PATH-80-BREATH",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "KA-EXT-80-BREATH",
+      "order": 5
+    }
+  ]
+}

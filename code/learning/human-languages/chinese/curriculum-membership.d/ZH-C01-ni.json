@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C01-ni",
+  "pathSegment": "ZH-PATH-001",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-001-CHARACTER-DECOMPOSITION",
+      "order": 0
+    }
+  ]
+}

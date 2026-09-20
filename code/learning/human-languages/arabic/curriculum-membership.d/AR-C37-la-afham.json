@@ -1,0 +1,11 @@
+{
+  "id": "AR-C37-la-afham",
+  "pathSegment": "AR-PATH-034",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-034-PRESENT-TENSE",
+      "order": 1
+    }
+  ]
+}

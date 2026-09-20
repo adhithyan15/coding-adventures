@@ -1,0 +1,11 @@
+{
+  "id": "ES-C353-banco",
+  "pathSegment": "ES-PATH-353-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-353-PLACE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C66-la-terminacion-dice-quien",
+  "pathSegment": "ES-PATH-A1-CONCORDANCIA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-A1-CONCORDANCIA",
+      "order": 0
+    }
+  ]
+}

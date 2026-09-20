@@ -1,0 +1,11 @@
+{
+  "id": "BN-C24-tara",
+  "pathSegment": "BN-PATH-032",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-033-PLURAL-PRONOUNS",
+      "order": 2
+    }
+  ]
+}

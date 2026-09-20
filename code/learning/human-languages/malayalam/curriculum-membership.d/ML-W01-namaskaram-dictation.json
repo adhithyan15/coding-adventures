@@ -1,0 +1,11 @@
+{
+  "id": "ML-W01-namaskaram-dictation",
+  "pathSegment": "ML-PATH-001",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "ML-EXT-001-INLINE-SCRIPT",
+      "order": 8
+    }
+  ]
+}

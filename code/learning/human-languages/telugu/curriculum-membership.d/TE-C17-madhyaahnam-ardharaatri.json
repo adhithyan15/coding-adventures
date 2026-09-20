@@ -1,0 +1,11 @@
+{
+  "id": "TE-C17-madhyaahnam-ardharaatri",
+  "pathSegment": "TE-PATH-020",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-020-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

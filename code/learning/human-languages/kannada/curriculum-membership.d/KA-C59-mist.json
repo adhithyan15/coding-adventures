@@ -1,0 +1,11 @@
+{
+  "id": "KA-C59-mist",
+  "pathSegment": "KA-PATH-59-GROUND",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-59-GROUND",
+      "order": 1
+    }
+  ]
+}

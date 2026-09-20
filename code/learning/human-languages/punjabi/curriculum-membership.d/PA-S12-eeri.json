@@ -1,0 +1,11 @@
+{
+  "id": "PA-S12-eeri",
+  "pathSegment": "PA-PATH-016",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-055-PREA1-SCRIPT-RUNWAY-C12",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C49-good-wish",
+  "pathSegment": "TA-PATH-49-COURTESY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-49-COURTESY",
+      "order": 3
+    }
+  ]
+}

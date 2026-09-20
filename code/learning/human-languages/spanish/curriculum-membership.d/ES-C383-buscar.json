@@ -1,0 +1,11 @@
+{
+  "id": "ES-C383-buscar",
+  "pathSegment": "ES-PATH-383-01",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-383-VERB",
+      "order": 3
+    }
+  ]
+}

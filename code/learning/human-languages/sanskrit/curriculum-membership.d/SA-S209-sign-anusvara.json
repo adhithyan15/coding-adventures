@@ -1,0 +1,11 @@
+{
+  "id": "SA-S209-sign-anusvara",
+  "pathSegment": "SA-PATH-100",
+  "pathOrder": 25,
+  "extensions": [
+    {
+      "id": "SA-EXT-100-SCRIPT-RECOGNITION",
+      "order": 25
+    }
+  ]
+}

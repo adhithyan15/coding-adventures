@@ -1,0 +1,11 @@
+{
+  "id": "GE-C28-tee",
+  "pathSegment": "GE-PATH-031",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-031-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

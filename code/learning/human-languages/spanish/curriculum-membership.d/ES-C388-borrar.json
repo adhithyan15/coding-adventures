@@ -1,0 +1,11 @@
+{
+  "id": "ES-C388-borrar",
+  "pathSegment": "ES-PATH-388-01",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-388-VERB",
+      "order": 2
+    }
+  ]
+}

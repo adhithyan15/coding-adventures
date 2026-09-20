@@ -1,0 +1,11 @@
+{
+  "id": "TA-C19-age-register-grammar",
+  "pathSegment": "TA-PATH-023",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-023-REGISTER",
+      "order": 0
+    }
+  ]
+}

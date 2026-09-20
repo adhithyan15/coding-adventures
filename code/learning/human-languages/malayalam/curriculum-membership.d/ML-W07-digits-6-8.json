@@ -1,0 +1,11 @@
+{
+  "id": "ML-W07-digits-6-8",
+  "pathSegment": "ML-PATH-012",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "ML-EXT-012-LANGUAGE-SPECIFIC",
+      "order": 8
+    }
+  ]
+}

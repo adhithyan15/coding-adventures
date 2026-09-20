@@ -1,0 +1,11 @@
+{
+  "id": "ML-C92-hottal",
+  "pathSegment": "ML-PATH-92-EATING-OUT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-92-EATING-OUT",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-S06-vowel-sign-aa",
+  "pathSegment": "SA-PATH-100",
+  "pathOrder": 10,
+  "extensions": [
+    {
+      "id": "SA-EXT-100-SCRIPT-RECOGNITION",
+      "order": 10
+    }
+  ]
+}

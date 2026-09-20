@@ -6,12 +6,5 @@
   "canDo": "I can negate any sentence I can say, tell someone I did not follow them, and say I do not know.",
   "prerequisites": [
     "PA-EXT-058-C5-VERB-CHECKPOINT"
-  ],
-  "lessons": [
-    "PA-C37-nahin-vaak",
-    "PA-C37-samajh-nahin",
-    "PA-C37-nahin-write",
-    "PA-C37-nahin-pata",
-    "PA-C37-nahin-checkpoint"
   ]
 }

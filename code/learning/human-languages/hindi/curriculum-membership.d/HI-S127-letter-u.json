@@ -1,0 +1,11 @@
+{
+  "id": "HI-S127-letter-u",
+  "pathSegment": "HI-PATH-100",
+  "pathOrder": 28,
+  "extensions": [
+    {
+      "id": "HI-EXT-100-SCRIPT-RECOGNITION",
+      "order": 28
+    }
+  ]
+}

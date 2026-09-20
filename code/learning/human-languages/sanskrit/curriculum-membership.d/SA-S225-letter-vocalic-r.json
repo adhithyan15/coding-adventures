@@ -1,0 +1,11 @@
+{
+  "id": "SA-S225-letter-vocalic-r",
+  "pathSegment": "SA-PATH-61-SEASON",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-061-SEASON",
+      "order": 1
+    }
+  ]
+}

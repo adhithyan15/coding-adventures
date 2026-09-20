@@ -1,0 +1,11 @@
+{
+  "id": "ES-C09-sintesis-ocho",
+  "pathSegment": "ES-PATH-030-SYNTH-OCHO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-030-SYNTH-OCHO",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C07-lundi",
+  "pathSegment": "FR-PATH-015",
+  "pathOrder": 13,
+  "extensions": [
+    {
+      "id": "FR-EXT-015-LANGUAGE-SPECIFIC",
+      "order": 13
+    }
+  ]
+}

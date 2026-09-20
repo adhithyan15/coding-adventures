@@ -6,10 +6,5 @@
   "canDo": "I can deny a pair of things at once, and pick the right negative for what I am denying.",
   "prerequisites": [
     "ML-EXT-108-MARKS"
-  ],
-  "lessons": [
-    "ML-C109-neither-here",
-    "ML-C109-neither-so",
-    "ML-R109-neither-recall"
   ]
 }

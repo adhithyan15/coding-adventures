@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W03-san",
+  "pathSegment": "ZH-PATH-002",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-007-NUMERAL-TRANSPARENCY",
+      "order": 4
+    }
+  ]
+}

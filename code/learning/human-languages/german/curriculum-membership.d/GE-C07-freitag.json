@@ -1,0 +1,11 @@
+{
+  "id": "GE-C07-freitag",
+  "pathSegment": "GE-PATH-035",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "GE-EXT-035-LANGUAGE-SPECIFIC",
+      "order": 6
+    }
+  ]
+}

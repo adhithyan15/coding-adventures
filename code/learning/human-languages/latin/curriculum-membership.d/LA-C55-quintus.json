@@ -1,0 +1,11 @@
+{
+  "id": "LA-C55-quintus",
+  "pathSegment": "LA-PATH-039",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-055-ORDINAL",
+      "order": 4
+    }
+  ]
+}

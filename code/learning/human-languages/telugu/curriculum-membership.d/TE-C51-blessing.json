@@ -1,0 +1,11 @@
+{
+  "id": "TE-C51-blessing",
+  "pathSegment": "TE-PATH-51-COURTESY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-51-COURTESY",
+      "order": 3
+    }
+  ]
+}

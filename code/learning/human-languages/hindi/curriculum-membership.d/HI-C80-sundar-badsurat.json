@@ -1,0 +1,11 @@
+{
+  "id": "HI-C80-sundar-badsurat",
+  "pathSegment": "HI-PATH-88-ADJECTIVES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-88-ADJECTIVES",
+      "order": 1
+    }
+  ]
+}
