@@ -6417,7 +6417,6 @@ impl Compiler {
         let control_actions = body_writes_target.then(|| {
             self.for_body_recurrence_actions(body).filter(|actions| {
                 Self::static_body_actions_write_name(actions, &target_name)
-                    && Self::static_body_actions_write_only_name(actions, &target_name)
             })
         }).flatten();
         if body_writes_target && control_actions.is_none() {
@@ -6509,6 +6508,7 @@ impl Compiler {
         if target_binding.is_global || self.active_by_name_binding(&target_name).is_some() {
             return None;
         }
+        let target_slot = target_binding.slot.clone();
         let value = direct_nodes(elem)
             .into_iter()
             .find(|node| node.rule_name == "arith_expr")?;
@@ -6528,9 +6528,6 @@ impl Compiler {
         }
 
         let actions = self.for_body_recurrence_actions(body)?;
-        if Self::static_body_actions_write_name(&actions, &target_name) {
-            return None;
-        }
 
         let saved_reals = self.static_real_slots.clone();
         let saved_integers = self.static_integer_slots.clone();
@@ -6575,7 +6572,12 @@ impl Compiler {
         self.static_real_slots = saved_reals;
         self.static_integer_slots = saved_integers;
         self.static_boolean_slots = saved_booleans;
-        (exited && succeeded).then_some(snapshots)
+        if exited && succeeded {
+            snapshots.retain(|(slot, _)| slot != &target_slot);
+            Some(snapshots)
+        } else {
+            None
+        }
     }
 
     fn for_body_recurrence_actions<'a>(
@@ -13479,6 +13481,24 @@ mod tests {
         assert!(main.instructions.iter().any(|instr| {
             instr.op == "str_const"
                 && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "12.5")
+        }));
+    }
+
+    #[test]
+    fn al4_static_while_tracks_control_and_sibling_body_recurrences() {
+        let module = compile_source(
+            "begin integer i, total; i := 0; total := 0; for i := i + 1 while i <= 10 do begin total := total + i * 2; if i < 4 then i := i * 2 else i := i + 3 end; print(i + 0.25); print(total + 0.5) end",
+            "test",
+        )
+        .expect("bounded while controls may evolve beside supported scalar recurrences");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "11.25")
+        }));
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "22.5")
         }));
     }
 

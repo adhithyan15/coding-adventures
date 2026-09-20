@@ -1031,14 +1031,16 @@ backend immediately) come before the enabler-dependent items.
   statically decidable statement conditional may select one recursively
   supported branch on each pass, including when earlier recurrence writes make
   successive selections differ. The controlled scalar itself may also be
-  updated by such a recursively supported body when every changing branch
-  writes only that control; the next `while` element expression consumes the
-  resulting exact snapshot. Labels, declarations, dynamic selectors or
-  effectful siblings, other dependency writes, string targets, overflow,
-  non-finite values, and loops exceeding 4,096 evaluations remain conservative. Capped
-  abstract execution also retains the first integer or finite binary64 control
-  value whose predicate is false when its value and predicate reference only
-  the control and statically known ordinary local scalars that
+  updated by such a recursively supported body alongside other supported local
+  scalar recurrences; the next `while` element expression consumes the
+  resulting exact control snapshot while the terminating sibling snapshots
+  remain available after the loop. Labels, declarations, dynamic selectors or
+  effectful siblings, predicate-dependency writes, string targets, overflow,
+  non-finite values, and loops exceeding 4,096 evaluations remain
+  conservative. Capped abstract execution also retains the first integer or
+  finite binary64 control value whose predicate is false when its value and
+  predicate reference only the control and statically known ordinary local
+  scalars that
   the body does not change. Read-only body uses, exact scalar
   self-assignments, checked numeric or boolean expressions that equal the
   tracked scalar and otherwise reference only known ordinary locals that are
