@@ -252,6 +252,12 @@ test("React and Electron renderer controls cross the Mosaic host seam", async ()
   expect(document.body.textContent).toContain("<html><title>Venture React acceptance</title></html>");
   expect(document.body.textContent).toContain("http://venture.test/final");
   await act(async () => {
+    textButton("Copy Source").click();
+  });
+  await flush();
+  expect(events[events.length - 1]?.event.type).toBe("viewSourceCopy");
+  expect(document.body.textContent).toContain("<html><title>Venture React acceptance</title></html>");
+  await act(async () => {
     textButton("Close Source").click();
   });
   await flush();

@@ -9,6 +9,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mosaic_venture_chrome/main.dart';
 import 'package:mosaic_venture_chrome/mosaic_host.dart';
 
+String _startPageBody() => '''
+          <html><head><title>Flutter Start</title></head><body>
+          <a href="/link">Open the Flutter link target</a>
+          ${List<String>.generate(80, (index) => '<p>scroll row $index</p>').join()}
+          </body></html>
+        ''';
+
 Future<void> _servePages(SendPort port) async {
   final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
   port.send(server.port);
@@ -19,13 +26,7 @@ Future<void> _servePages(SendPort port) async {
     late final String body;
     switch (request.uri.path) {
       case '/start':
-        body =
-            '''
-          <html><head><title>Flutter Start</title></head><body>
-          <a href="/link">Open the Flutter link target</a>
-          ${List<String>.generate(80, (index) => '<p>scroll row $index</p>').join()}
-          </body></html>
-        ''';
+        body = _startPageBody();
         break;
       case '/target':
         body =
@@ -164,6 +165,10 @@ void main() {
         host.lastAuxiliaryDocument?['html'],
         contains('&lt;title&gt;Flutter Start&lt;/title&gt;'),
       );
+      await tester.tap(find.text('Copy Source'));
+      await tester.pumpAndSettle();
+      expect(host.lastClipboardText, _startPageBody());
+      expect(find.text('Copy Source'), findsOneWidget);
       debugPrint('flutter-live-stage=view-source');
 
       final input = find.byType(TextField);

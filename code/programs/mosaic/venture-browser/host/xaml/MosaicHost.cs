@@ -480,6 +480,42 @@ public static class MosaicHost
                     });
                     return;
                 }
+                var expectedSource = component.ViewSourceContent;
+                var copySourceButton = await FindAutomationElementAsync<Button>(
+                    component, "view-source-copy-button");
+                var copySourceProvider = copySourceButton is null
+                    ? null
+                    : new ButtonAutomationPeer(copySourceButton) as IInvokeProvider;
+                copySourceProvider?.Invoke();
+                var copiedSource = string.Empty;
+                for (var remaining = 20; remaining >= 0; remaining--)
+                {
+                    var clipboard = Clipboard.GetContent();
+                    if (clipboard.Contains(StandardDataFormats.Text))
+                    {
+                        copiedSource = await clipboard.GetTextAsync();
+                    }
+                    if (string.Equals(copiedSource, expectedSource, StringComparison.Ordinal)
+                        && component.ViewSourceOpen
+                        && component.StatusText == "Page source copied")
+                    {
+                        break;
+                    }
+                    await System.Threading.Tasks.Task.Delay(50);
+                }
+                if (copySourceProvider is null
+                    || !string.Equals(copiedSource, expectedSource, StringComparison.Ordinal)
+                    || !component.ViewSourceOpen
+                    || component.StatusText != "Page source copied")
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native Copy Source did not preserve exact retained source",
+                    });
+                    return;
+                }
                 var backProvider = new ButtonAutomationPeer(backButton) as IInvokeProvider;
                 if (backProvider is null)
                 {
@@ -1044,6 +1080,15 @@ public static class MosaicHost
             component.OpenPageDisabled = props.GetProperty("open-page-disabled").GetBoolean();
             component.SavePageDisabled = props.GetProperty("save-page-disabled").GetBoolean();
             component.ViewSourceDisabled = props.GetProperty("view-source-disabled").GetBoolean();
+            component.ViewSourceOpen = props.GetProperty("view-source-open").GetBoolean();
+            SetIfChanged(component.ViewSourceTitle, props.GetProperty("view-source-title").GetString(),
+                value => component.ViewSourceTitle = value);
+            SetIfChanged(component.ViewSourceAddress,
+                props.GetProperty("view-source-address").GetString(),
+                value => component.ViewSourceAddress = value);
+            SetIfChanged(component.ViewSourceContent,
+                props.GetProperty("view-source-content").GetString(),
+                value => component.ViewSourceContent = value);
             component.FindOpen = props.GetProperty("find-open").GetBoolean();
             SetIfChanged(component.FindQuery, props.GetProperty("find-query").GetString(),
                 value => component.FindQuery = value);

@@ -5,6 +5,21 @@ cross-platform proving application. Items are ordered by risk and dependency.
 
 ## Prioritized discoveries
 
+- [x] **P1 browser convergence - exact Copy Source transaction.** Add one
+  semantic Copy Source event to the shared panel, copy the retained raw
+  response bytes through the existing typed clipboard effect, keep the panel
+  open, and project one shared success status. Deterministic core and generated
+  host acceptance now prevent refetching, reconstruction, or toolkit-owned
+  source-selection policy.
+
+- [ ] **P1 browser usability - browsable bookmark catalog.** Durable bookmarks
+  can be toggled and restored, but shared chrome still has no catalog surface
+  from which users can inspect and open saved entries.
+
+- [ ] **P2 browser usability - cancel pending page loads.** The shared
+  subresource scheduler supports cancellation during navigation, but generated
+  chrome does not yet expose a Stop transaction while a page is loading.
+
 - [x] **P1 browser convergence - shared View Source presentation.** Preserve
   the typed auxiliary-document effect for richer platform integrations, while
   also retaining the exact response text in browser core and rendering it in

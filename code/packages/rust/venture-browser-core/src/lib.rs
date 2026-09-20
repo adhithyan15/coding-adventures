@@ -588,7 +588,7 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 33] = [
 pub const VENTURE_CHROME_HOST_SURFACE_SLOT_NAME: &str = "content-surface";
 
 /// Mosaic `VentureChrome` event names, in interface declaration order.
-pub const VENTURE_CHROME_EVENT_NAMES: [&str; 24] = [
+pub const VENTURE_CHROME_EVENT_NAMES: [&str; 25] = [
     "onBack",
     "onForward",
     "onHome",
@@ -605,6 +605,7 @@ pub const VENTURE_CHROME_EVENT_NAMES: [&str; 24] = [
     "onZoomReset",
     "onZoomIn",
     "onViewSource",
+    "onViewSourceCopy",
     "onViewSourceClose",
     "onFindOpen",
     "onFindChange",
@@ -1777,6 +1778,7 @@ pub enum BrowserChromeAction {
     ZoomReset,
     ZoomIn,
     ViewSource,
+    CopyViewSource,
     CloseViewSource,
     OpenFind,
     FindQuery(String),
@@ -1804,6 +1806,7 @@ pub enum BrowserChromeEvent {
     ZoomReset,
     ZoomIn,
     ViewSource,
+    ViewSourceCopy,
     ViewSourceClose,
     FindOpen,
     FindChange(String),
@@ -1839,6 +1842,7 @@ impl BrowserChromeEvent {
             Self::ZoomReset => "onZoomReset",
             Self::ZoomIn => "onZoomIn",
             Self::ViewSource => "onViewSource",
+            Self::ViewSourceCopy => "onViewSourceCopy",
             Self::ViewSourceClose => "onViewSourceClose",
             Self::FindOpen => "onFindOpen",
             Self::FindChange(_) => "onFindChange",
@@ -1873,6 +1877,7 @@ impl BrowserChromeEvent {
             "onZoomReset" => Self::ZoomReset,
             "onZoomIn" => Self::ZoomIn,
             "onViewSource" => Self::ViewSource,
+            "onViewSourceCopy" => Self::ViewSourceCopy,
             "onViewSourceClose" => Self::ViewSourceClose,
             "onFindOpen" => Self::FindOpen,
             "onFindChange" => Self::FindChange(
@@ -2159,6 +2164,12 @@ impl BrowserChromeController {
             let changed = self.source_view.take().is_some();
             return changed.then_some(BrowserChromeAction::CloseViewSource);
         }
+        if event == BrowserChromeEvent::ViewSourceCopy {
+            return self
+                .source_view
+                .is_some()
+                .then_some(BrowserChromeAction::CopyViewSource);
+        }
         if navigation_disabled {
             return None;
         }
@@ -2253,6 +2264,7 @@ impl BrowserChromeController {
             | BrowserChromeEvent::ZoomReset
             | BrowserChromeEvent::ZoomIn
             | BrowserChromeEvent::ViewSource
+            | BrowserChromeEvent::ViewSourceCopy
             | BrowserChromeEvent::ViewSourceClose
             | BrowserChromeEvent::FindOpen
             | BrowserChromeEvent::FindChange(_)
@@ -2607,6 +2619,18 @@ impl BrowserHostController {
                 self.status_text = "Page source shown".to_string();
                 Ok(BrowserHostEventOutcome::changed_effect(
                     BrowserHostEffect::OpenAuxiliaryDocument(auxiliary),
+                ))
+            }
+            BrowserChromeAction::CopyViewSource => {
+                let source = self
+                    .chrome
+                    .source_view()
+                    .expect("copy-source action requires an open source snapshot")
+                    .source
+                    .clone();
+                self.status_text = "Page source copied".to_string();
+                Ok(BrowserHostEventOutcome::effect(
+                    BrowserHostEffect::WriteClipboard(source),
                 ))
             }
             BrowserChromeAction::CloseViewSource => {
@@ -7596,6 +7620,7 @@ mod tests {
             ("onZoomReset", None, BrowserChromeEvent::ZoomReset),
             ("onZoomIn", None, BrowserChromeEvent::ZoomIn),
             ("onViewSource", None, BrowserChromeEvent::ViewSource),
+            ("onViewSourceCopy", None, BrowserChromeEvent::ViewSourceCopy),
             (
                 "onViewSourceClose",
                 None,
@@ -8083,6 +8108,7 @@ mod tests {
             BrowserChromeEvent::ZoomReset,
             BrowserChromeEvent::ZoomIn,
             BrowserChromeEvent::ViewSource,
+            BrowserChromeEvent::ViewSourceCopy,
             BrowserChromeEvent::ViewSourceClose,
             BrowserChromeEvent::FindOpen,
             BrowserChromeEvent::FindChange(String::new()),
@@ -8423,6 +8449,20 @@ mod tests {
         assert!(source_page.image_failures.is_empty());
         assert_eq!(host.session().history().current_url(), Some(url));
         assert_eq!(host.session().viewport().unwrap().page().source, raw_source);
+
+        let copied = host
+            .handle_event_with_effect(
+                BrowserChromeEvent::ViewSourceCopy,
+                &mut bookmarks,
+                |_, _| unreachable!("copying source must not navigate"),
+            )
+            .unwrap();
+        assert_eq!(
+            copied,
+            BrowserHostEventOutcome::effect(BrowserHostEffect::WriteClipboard(raw_source.into()))
+        );
+        assert!(host.props().view_source_open);
+        assert_eq!(host.props().status_text, "Page source copied");
 
         let closed = host
             .handle_event_with_effect(

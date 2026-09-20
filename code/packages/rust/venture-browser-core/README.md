@@ -88,6 +88,10 @@ URLs, response status, normalized title, and image/stylesheet resource and
 failure counts. Browser core also retains that bounded snapshot for a shared
 closable Mosaic panel, while native hosts may still present the typed effect in
 a richer platform surface. Navigation synchronization clears stale metadata.
+Copy Source reads the exact retained response from that panel snapshot and
+reuses the typed clipboard effect without refetching, reconstructing source, or
+closing the panel. Core owns the `Page source copied` status; hosts perform only
+the final platform clipboard write.
 
 The native Mosaic bridge protocol follows the same ownership rule.
 `BrowserChromeEvent::from_mosaic_event` owns event names and required values;

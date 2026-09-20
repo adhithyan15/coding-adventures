@@ -156,6 +156,10 @@ layout VentureChrome {
       Column [ view-source-panel ] {
         Row [ view-source-header ] {
           Text [ view-source-heading ] ( content : "Page Source" , a11y-role : heading )
+          HostButton [ view-source-copy-button ] (
+            label : "Copy Source" ,
+            onClick : emit: onViewSourceCopy
+          )
           HostButton [ view-source-close-button ] (
             label : "Close Source" ,
             onClick : emit: onViewSourceClose

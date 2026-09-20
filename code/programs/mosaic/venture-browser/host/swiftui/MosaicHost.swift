@@ -1020,15 +1020,15 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
       sourceOpen == true, sourceAddress == targetURL,
       sourceContent.contains("<title>Venture interaction acceptance</title>")
     {
-      let closeEvents = chromeEventCounts["onViewSourceClose", default: 0]
-      if !performNativeButtonClick(identifier: "view-source-close-button") {
-        _ = handleEvent([:], name: "onViewSourceClose")
+      let copyEvents = chromeEventCounts["onViewSourceCopy", default: 0]
+      if !performNativeButtonClick(identifier: "view-source-copy-button") {
+        _ = handleEvent([:], name: "onViewSourceCopy")
         propsChangedHandler?()
       }
       DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
-        self?.verifyViewSourceClosed(
+        self?.verifyViewSourceCopied(
           startURL: startURL, targetURL: targetURL, markerPath: markerPath,
-          eventCount: closeEvents, remaining: 50)
+          expectedSource: sourceContent, eventCount: copyEvents, remaining: 50)
       }
       return
     }
@@ -1047,6 +1047,44 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
       self?.verifyViewSource(
         startURL: startURL, targetURL: targetURL, markerPath: markerPath,
         eventCount: eventCount, remaining: remaining - 1)
+    }
+  }
+
+  private func verifyViewSourceCopied(
+    startURL: String, targetURL: String, markerPath: String, expectedSource: String,
+    eventCount: Int, remaining: Int
+  ) {
+    let copyEvents = chromeEventCounts["onViewSourceCopy", default: 0]
+    let sourceOpen = (applyProps()?["props"] as? NSDictionary)?["view-source-open"] as? Bool
+    let clipboardSource = NSPasteboard.general.string(forType: .string) ?? ""
+    if copyEvents == eventCount + 1, sourceOpen == true, clipboardSource == expectedSource {
+      let closeEvents = chromeEventCounts["onViewSourceClose", default: 0]
+      if !performNativeButtonClick(identifier: "view-source-close-button") {
+        _ = handleEvent([:], name: "onViewSourceClose")
+        propsChangedHandler?()
+      }
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
+        self?.verifyViewSourceClosed(
+          startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+          eventCount: closeEvents, remaining: 50)
+      }
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error",
+          "viewSourceCopyEvents": String(copyEvents),
+          "sourceOpen": String(sourceOpen ?? false),
+          "error": "native Copy Source did not preserve exact retained source",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifyViewSourceCopied(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        expectedSource: expectedSource, eventCount: eventCount, remaining: remaining - 1)
     }
   }
 
@@ -1709,6 +1747,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     case "zoom-reset-button": return ["50%", "75%", "100%", "125%", "150%", "175%", "200%"]
     case "zoom-in-button": return ["Zoom In"]
     case "view-source-button": return ["Source", "View Source"]
+    case "view-source-copy-button": return ["Copy Source"]
     case "view-source-close-button": return ["Close Source"]
     default: return []
     }
