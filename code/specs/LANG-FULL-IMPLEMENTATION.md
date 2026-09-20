@@ -1045,8 +1045,9 @@ backend immediately) come before the enabler-dependent items.
   scalars that are unchanged or evolve through a graph of supported
   recurrences. That graph may contain unconditional cross-assignment cycles
   because capped abstract execution evaluates each recognized local scalar
-  write in source order; conditionally selected cycles remain conservative. A
-  recurrence in the graph may use a conditional
+  write in source order. A cycle may contain conditional expressions selected
+  solely by the exact loop control; cycles selected by other values remain
+  conservative. A recurrence in the graph may use a conditional
   expression selected by the controlled scalar or another exact local
   snapshot; capped execution re-evaluates the selected leaf on every pass.
   The recurrence assignment may instead occur in one or both branches of a

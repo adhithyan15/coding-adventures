@@ -3383,6 +3383,23 @@ impl Compiler {
                 .any(|child| self.contains_conditional_expression(child))
     }
 
+    fn conditional_expression_selectors_use_only_target(
+        &self,
+        node: &GrammarASTNode,
+        target_name: &str,
+    ) -> bool {
+        if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
+            let mut dependencies = HashSet::new();
+            collect_expression_dependency_names(condition, target_name, &mut dependencies);
+            return dependencies.is_empty()
+                && self.conditional_expression_selectors_use_only_target(then_node, target_name)
+                && self.conditional_expression_selectors_use_only_target(else_node, target_name);
+        }
+        direct_nodes(node).into_iter().all(|child| {
+            self.conditional_expression_selectors_use_only_target(child, target_name)
+        })
+    }
+
     /// Recognize one pure integer-valued standard function over exact tracked
     /// integer arithmetic. User declarations shadow these built-ins and must
     /// retain their runtime call.
@@ -6818,7 +6835,8 @@ impl Compiler {
         if !visiting.insert(name.to_string()) {
             // Cross-assigned scalars are safe here: capped abstract execution
             // evaluates every recognized assignment in source order. Keep
-            // conditionally selected cycles conservative for now.
+            // conditionally selected cycles conservative unless every selector
+            // is controlled solely by the exact loop-control snapshot.
             return !conditional_path;
         }
         let found = self
@@ -6874,7 +6892,12 @@ impl Compiler {
                                 target_name,
                                 visiting,
                                 conditional_path
-                                    || self.contains_conditional_expression(assignment.expression),
+                                    || (self.contains_conditional_expression(
+                                        assignment.expression,
+                                    ) && !self.conditional_expression_selectors_use_only_target(
+                                        assignment.expression,
+                                        target_name,
+                                    )),
                             )
                         {
                             return None;
@@ -14622,6 +14645,22 @@ mod tests {
         .expect("capped execution can evaluate cross-assigned dependencies in source order");
         let main = module.get_function("main").expect("has main");
         for expected in ["3.25", "0.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_control_selected_assignment_dependency_cycle_tracks_source_order() {
+        let module = compile_source(
+            "begin integer i, n, delta; i := 0; n := 4; delta := 2; for i := i + 1 while i <= n do begin n := n - delta; delta := if i < 2 then n else n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("the exact loop control may select leaves in a cross-assigned cycle");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "0.5", "-0.75"] {
             assert!(main.instructions.iter().any(|instr| {
                 instr.op == "str_const"
                     && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
