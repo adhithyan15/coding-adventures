@@ -34,6 +34,46 @@ pub enum SchematicComponentKind {
     Ground,
 }
 
+/// The semiconductor polarity selected for transistor symbols.
+///
+/// The owning component kind determines the Berkeley model family: BJT uses
+/// NPN/PNP, JFET uses NJF/PJF, and MOSFET uses NMOS/PMOS.
+#[derive(Clone, Copy, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]
+pub enum SchematicModelPolarity {
+    #[default]
+    N,
+    P,
+}
+
+impl SchematicModelPolarity {
+    /// Parse the stable host-control values.
+    pub fn from_host_value(value: &str) -> Result<Self, SchematicError> {
+        match value {
+            "N" => Ok(Self::N),
+            "P" => Ok(Self::P),
+            _ => Err(invalid("schematic model polarity must be N or P")),
+        }
+    }
+
+    /// Return the Berkeley model keyword for one transistor family.
+    fn model_keyword(self, kind: SchematicComponentKind) -> Option<&'static str> {
+        match (kind, self) {
+            (SchematicComponentKind::Bjt, Self::N) => Some("NPN"),
+            (SchematicComponentKind::Bjt, Self::P) => Some("PNP"),
+            (SchematicComponentKind::Jfet, Self::N) => Some("NJF"),
+            (SchematicComponentKind::Jfet, Self::P) => Some("PJF"),
+            (SchematicComponentKind::Mosfet, Self::N) => Some("NMOS"),
+            (SchematicComponentKind::Mosfet, Self::P) => Some("PMOS"),
+            _ => None,
+        }
+    }
+
+    /// Return the inspector label for one transistor family.
+    pub fn label(self, kind: SchematicComponentKind) -> Option<&'static str> {
+        self.model_keyword(kind)
+    }
+}
+
 impl SchematicComponentKind {
     /// Parse the stable palette labels exposed by the Mosaic workbench.
     pub fn from_palette_label(label: &str) -> Result<Self, SchematicError> {
@@ -97,6 +137,20 @@ impl SchematicComponentKind {
             | Self::AcVoltage => 2,
             Self::Bjt | Self::Jfet => 3,
             Self::Mosfet => 4,
+        }
+    }
+
+    fn is_transistor(self) -> bool {
+        matches!(self, Self::Bjt | Self::Jfet | Self::Mosfet)
+    }
+
+    /// Return the N- and P-type model labels for inspector controls.
+    pub fn model_polarity_labels(self) -> Option<(&'static str, &'static str)> {
+        match self {
+            Self::Bjt => Some(("NPN", "PNP")),
+            Self::Jfet => Some(("NJF", "PJF")),
+            Self::Mosfet => Some(("NMOS", "PMOS")),
+            _ => None,
         }
     }
 }
@@ -292,6 +346,10 @@ pub struct SchematicDocument {
     pub output_probes: Vec<SchematicOutputProbe>,
     #[serde(default)]
     pub scoped_output_probes: Vec<SchematicScopedOutputProbes>,
+    /// Explicit transistor-polarity selections keyed by component reference.
+    /// Missing legacy entries retain the N-type default.
+    #[serde(default)]
+    pub model_polarities: BTreeMap<String, SchematicModelPolarity>,
     #[serde(default)]
     pub analysis: SchematicAnalysis,
     #[serde(default)]
@@ -706,6 +764,7 @@ impl SchematicDocument {
             .position(|component| component.reference == reference)
             .ok_or_else(|| invalid("schematic component reference is unknown"))?;
         let component = self.components.remove(index);
+        self.model_polarities.remove(reference);
         let terminals = component.terminals.into_iter().collect::<BTreeSet<_>>();
         let wire_count = self.wires.len();
         self.wires
@@ -871,6 +930,10 @@ impl SchematicDocument {
                 }
             }
         }
+        if let Some(polarity) = self.model_polarities.remove(&old_reference) {
+            self.model_polarities
+                .insert(new_reference.to_owned(), polarity);
+        }
         Ok(updated_cards)
     }
 
@@ -898,6 +961,45 @@ impl SchematicDocument {
             )));
         }
         component.value = value.to_owned();
+        Ok(())
+    }
+
+    /// Return the selected semiconductor polarity for one component.
+    pub fn component_model_polarity(
+        &self,
+        reference: &str,
+    ) -> Result<Option<SchematicModelPolarity>, SchematicError> {
+        let component = self
+            .components
+            .iter()
+            .find(|component| component.reference == reference)
+            .ok_or_else(|| invalid("schematic component reference is unknown"))?;
+        Ok(component.kind.is_transistor().then(|| {
+            self.model_polarities
+                .get(reference)
+                .copied()
+                .unwrap_or_default()
+        }))
+    }
+
+    /// Set the typed polarity of one BJT, JFET, or MOSFET symbol.
+    pub fn set_component_model_polarity(
+        &mut self,
+        reference: &str,
+        polarity: SchematicModelPolarity,
+    ) -> Result<(), SchematicError> {
+        let component = self
+            .components
+            .iter()
+            .find(|component| component.reference == reference)
+            .ok_or_else(|| invalid("schematic component reference is unknown"))?;
+        if !component.kind.is_transistor() {
+            return Err(invalid(format!(
+                "{} does not support a semiconductor model polarity",
+                component.reference
+            )));
+        }
+        self.model_polarities.insert(reference.to_owned(), polarity);
         Ok(())
     }
 
@@ -1620,6 +1722,23 @@ impl SchematicDocument {
                 ground_count += 1;
             }
         }
+        for reference in self.model_polarities.keys() {
+            let component = self
+                .components
+                .iter()
+                .find(|component| component.reference == *reference)
+                .ok_or_else(|| {
+                    invalid(format!(
+                        "model polarity references unknown component {reference}"
+                    ))
+                })?;
+            if !component.kind.is_transistor() {
+                return Err(invalid(format!(
+                    "{} does not support a semiconductor model polarity",
+                    component.reference
+                )));
+            }
+        }
         if ground_count == 0 {
             return Err(invalid("schematic requires at least one ground symbol"));
         }
@@ -1749,7 +1868,12 @@ impl SchematicDocument {
                 }
                 SchematicComponentKind::Bjt => {
                     let model = format!("Schematic{}Model", component.reference);
-                    lines.push(format!(".model {model} NPN({})", component.value));
+                    let model_kind = self
+                        .component_model_polarity(&component.reference)?
+                        .expect("BJT supports a model polarity")
+                        .model_keyword(component.kind)
+                        .expect("BJT model polarity has a keyword");
+                    lines.push(format!(".model {model} {model_kind}({})", component.value));
                     format!(
                         "{} {} {} {} {model}",
                         component.reference, terminals[0], terminals[1], terminals[2]
@@ -1757,7 +1881,12 @@ impl SchematicDocument {
                 }
                 SchematicComponentKind::Jfet => {
                     let model = format!("Schematic{}Model", component.reference);
-                    lines.push(format!(".model {model} NJF({})", component.value));
+                    let model_kind = self
+                        .component_model_polarity(&component.reference)?
+                        .expect("JFET supports a model polarity")
+                        .model_keyword(component.kind)
+                        .expect("JFET model polarity has a keyword");
+                    lines.push(format!(".model {model} {model_kind}({})", component.value));
                     format!(
                         "{} {} {} {} {model}",
                         component.reference, terminals[0], terminals[1], terminals[2]
@@ -1765,7 +1894,15 @@ impl SchematicDocument {
                 }
                 SchematicComponentKind::Mosfet => {
                     let model = format!("Schematic{}Model", component.reference);
-                    lines.push(format!(".model {model} NMOS(LEVEL=1 {})", component.value));
+                    let model_kind = self
+                        .component_model_polarity(&component.reference)?
+                        .expect("MOSFET supports a model polarity")
+                        .model_keyword(component.kind)
+                        .expect("MOSFET model polarity has a keyword");
+                    lines.push(format!(
+                        ".model {model} {model_kind}(LEVEL=1 {})",
+                        component.value
+                    ));
                     format!(
                         "{} {} {} {} {} {model}",
                         component.reference, terminals[0], terminals[1], terminals[2], terminals[3]
@@ -1848,6 +1985,7 @@ mod tests {
             net_labels: Vec::new(),
             output_probes: Vec::new(),
             scoped_output_probes: Vec::new(),
+            model_polarities: BTreeMap::new(),
             analysis: SchematicAnalysis::OperatingPoint,
             analysis_settings: SchematicAnalysisSettings::default(),
             analysis_cards: Vec::new(),
@@ -2001,6 +2139,7 @@ mod tests {
             net_labels: Vec::new(),
             output_probes: Vec::new(),
             scoped_output_probes: Vec::new(),
+            model_polarities: BTreeMap::new(),
             analysis: SchematicAnalysis::default(),
             analysis_settings: SchematicAnalysisSettings::default(),
             analysis_cards: Vec::new(),
@@ -2090,6 +2229,7 @@ mod tests {
             net_labels: Vec::new(),
             output_probes: Vec::new(),
             scoped_output_probes: Vec::new(),
+            model_polarities: BTreeMap::new(),
             analysis: SchematicAnalysis::AcSweep,
             analysis_settings: SchematicAnalysisSettings::default(),
             analysis_cards: Vec::new(),
@@ -2565,6 +2705,66 @@ mod tests {
         assert!(deck.contains(".save I(D1) I(Q1) I(J1) I(M1)"));
         assert!(deck.contains(".probe ac I(D1) I(Q1) I(J1) I(M1)"));
         parse_netlist(&deck).unwrap();
+    }
+
+    #[test]
+    fn transistor_polarities_are_typed_persisted_and_lowered_by_model_family() {
+        let mut document = rc_document();
+        document.components.extend([
+            SchematicComponent {
+                reference: "Q1".to_owned(),
+                kind: SchematicComponentKind::Bjt,
+                value: "BF=100".to_owned(),
+                terminals: vec![point(0, 20), point(0, 20), point(0, 0)],
+            },
+            SchematicComponent {
+                reference: "J1".to_owned(),
+                kind: SchematicComponentKind::Jfet,
+                value: "BETA=1m".to_owned(),
+                terminals: vec![point(0, 20), point(0, 0), point(0, 0)],
+            },
+            SchematicComponent {
+                reference: "M1".to_owned(),
+                kind: SchematicComponentKind::Mosfet,
+                value: "VTO=0.7".to_owned(),
+                terminals: vec![point(0, 20), point(0, 20), point(0, 0), point(0, 0)],
+            },
+        ]);
+        for reference in ["Q1", "J1", "M1"] {
+            document
+                .set_component_model_polarity(reference, SchematicModelPolarity::P)
+                .unwrap();
+        }
+        assert_eq!(
+            document.component_model_polarity("Q1").unwrap(),
+            Some(SchematicModelPolarity::P)
+        );
+        assert_eq!(
+            SchematicComponentKind::Mosfet.model_polarity_labels(),
+            Some(("NMOS", "PMOS"))
+        );
+        let deck = document.to_berkeley_netlist().unwrap();
+        for model in [
+            ".model SchematicQ1Model PNP(BF=100)",
+            ".model SchematicJ1Model PJF(BETA=1m)",
+            ".model SchematicM1Model PMOS(LEVEL=1 VTO=0.7)",
+        ] {
+            assert!(deck.contains(model), "missing {model} in {deck}");
+        }
+        document.rename_component("Q1", "QP1").unwrap();
+        assert_eq!(
+            document.component_model_polarity("QP1").unwrap(),
+            Some(SchematicModelPolarity::P)
+        );
+        document.remove_component("J1").unwrap();
+        assert!(!document.model_polarities.contains_key("J1"));
+        document
+            .model_polarities
+            .insert("R1".to_owned(), SchematicModelPolarity::P);
+        assert_eq!(
+            document.validate().unwrap_err().to_string(),
+            "R1 does not support a semiconductor model polarity"
+        );
     }
 
     #[test]
