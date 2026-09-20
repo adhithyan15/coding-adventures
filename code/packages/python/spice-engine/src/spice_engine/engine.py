@@ -7711,6 +7711,7 @@ def _dc_newton(
     node_v = {nd: x[i] for nd, i in node_to_idx.items()}
     branch_i = {f"I({el.name})": x[n + i] for i, el in enumerate(branch_srcs)}
     _insert_real_passive_branch_currents(circuit, node_v, branch_i)
+    _insert_real_nonlinear_branch_currents(circuit, node_v, branch_i)
     return DcResult(
         node_v,
         branch_i,
@@ -10442,6 +10443,92 @@ def _insert_real_passive_branch_currents(
             branch_currents.setdefault(f"I({element.name})", 0.0)
 
 
+def _insert_real_nonlinear_branch_currents(
+    circuit: Circuit,
+    node_voltages: dict[str, float],
+    branch_currents: dict[str, float],
+) -> None:
+    """Add external-terminal nonlinear currents to a real-valued result map."""
+    for element in circuit.elements:
+        if isinstance(element, Diode):
+            if element.Rs > 0.0:
+                intrinsic_anode = _diode_intrinsic_anode_node(element)
+                current = (
+                    _node_voltage(element.anode, node_voltages)
+                    - _node_voltage(intrinsic_anode, node_voltages)
+                ) / element.Rs
+            else:
+                voltage = _node_voltage(element.anode, node_voltages) - _node_voltage(
+                    element.cathode, node_voltages
+                )
+                current, _ = _diode_current_conductance(element, voltage)
+            branch_currents[f"I({element.name})"] = current
+        elif isinstance(element, BJT):
+            collector_voltage = _node_voltage(
+                _bjt_intrinsic_collector_node(element), node_voltages
+            )
+            base_voltage = _node_voltage(_bjt_intrinsic_base_node(element), node_voltages)
+            emitter_voltage = _node_voltage(_bjt_intrinsic_emitter_node(element), node_voltages)
+            if element.polarity == "NPN":
+                junction_voltage = base_voltage - emitter_voltage
+                reverse_voltage = base_voltage - collector_voltage
+                output_voltage = collector_voltage - emitter_voltage
+                polarity = 1.0
+            else:
+                junction_voltage = emitter_voltage - base_voltage
+                reverse_voltage = collector_voltage - base_voltage
+                output_voltage = emitter_voltage - collector_voltage
+                polarity = -1.0
+            thermal_voltage = element.Vt * element.Nf
+            exponent = max(-40.0, min(40.0, junction_voltage / thermal_voltage))
+            exp_value = math.exp(exponent)
+            diffusion_current = element.Is * (exp_value - 1.0)
+            diffusion_conductance = element.Is / thermal_voltage * exp_value
+            collector_current, _, _ = _bjt_forward_transport(
+                element,
+                diffusion_current,
+                diffusion_conductance,
+                _bjt_early_factor(element, junction_voltage, output_voltage),
+            )
+            collector_leakage, _ = _bjt_base_collector_leakage(element, reverse_voltage)
+            reverse_base_current, _ = _bjt_reverse_base_current(element, reverse_voltage)
+            intrinsic_current = polarity * (
+                collector_current - collector_leakage - reverse_base_current
+            )
+            current = (
+                (_node_voltage(element.collector, node_voltages) - collector_voltage) / element.Rc
+                if element.Rc > 0.0
+                else intrinsic_current
+            )
+            branch_currents[f"I({element.name})"] = current
+        elif isinstance(element, JFET):
+            drain_voltage = _node_voltage(_jfet_intrinsic_drain_node(element), node_voltages)
+            source_voltage = _node_voltage(_jfet_intrinsic_source_node(element), node_voltages)
+            if element.Rd > 0.0:
+                current = (_node_voltage(element.drain, node_voltages) - drain_voltage) / element.Rd
+            else:
+                current, _, _ = _eval_jfet(
+                    element,
+                    _node_voltage(element.gate, node_voltages) - source_voltage,
+                    drain_voltage - source_voltage,
+                )
+            branch_currents[f"I({element.name})"] = current
+        elif isinstance(element, Mosfet):
+            drain_voltage = _node_voltage(_mosfet_intrinsic_drain_node(element), node_voltages)
+            source_voltage = _node_voltage(_mosfet_intrinsic_source_node(element), node_voltages)
+            drain_resistance = _mosfet_drain_resistance(element)
+            current = (
+                (_node_voltage(element.drain, node_voltages) - drain_voltage) / drain_resistance
+                if drain_resistance > 0.0
+                else element.model.dc(  # type: ignore[attr-defined]
+                    _node_voltage(element.gate, node_voltages) - source_voltage,
+                    drain_voltage - source_voltage,
+                    _node_voltage(element.body, node_voltages) - source_voltage,
+                ).Id
+            )
+            branch_currents[f"I({element.name})"] = current
+
+
 def _insert_complex_passive_branch_currents(
     circuit: Circuit,
     omega: float,
@@ -10493,6 +10580,106 @@ def _insert_complex_passive_branch_currents(
                 if omega == 0.0
                 else voltage / (1j * omega * element.inductance)
             )
+
+
+def _insert_complex_nonlinear_branch_currents(
+    circuit: Circuit,
+    omega: float,
+    node_voltages: dict[str, complex],
+    branch_currents: dict[str, complex],
+    node_to_idx: dict[str, int],
+    dc_x: list[float],
+) -> None:
+    """Read nonlinear terminal currents from their exact AC stamp contribution."""
+    node_count = len(node_to_idx)
+    for element in circuit.elements:
+        if isinstance(element, Diode):
+            terminal = element.anode
+        elif isinstance(element, BJT):
+            terminal = element.collector
+        elif isinstance(element, JFET):
+            terminal = element.drain
+        elif isinstance(element, Mosfet):
+            terminal = element.drain
+        else:
+            continue
+        matrix = [[0j] * node_count for _ in range(node_count)]
+        _stamp_ac(
+            element,
+            matrix,
+            [0j] * node_count,
+            omega,
+            node_to_idx,
+            [],
+            dc_x,
+            {},
+            set(),
+        )
+        if _is_ground(terminal):
+            current = -sum(
+                _ac_matrix_row_current(row, node_to_idx, node_voltages) for row in matrix
+            )
+        else:
+            current = _ac_matrix_row_current(
+                matrix[node_to_idx[terminal]], node_to_idx, node_voltages
+            )
+        branch_currents[f"I({element.name})"] = current
+
+
+def _ac_matrix_row_current(
+    row: list[complex],
+    node_to_idx: dict[str, int],
+    node_voltages: dict[str, complex],
+) -> complex:
+    return sum(
+        row[index] * (0j if _is_ground(node) else node_voltages.get(node, 0j))
+        for node, index in node_to_idx.items()
+    )
+
+
+def _insert_transient_nonlinear_charge_currents(
+    circuit: Circuit,
+    capacitor_currents: dict[str, float],
+    branch_currents: dict[str, float],
+) -> None:
+    """Fold model-card companion currents into each external nonlinear probe."""
+    for element in circuit.elements:
+        if isinstance(element, Diode) and element.Rs == 0.0:
+            terminal = element.anode
+            states = [
+                (
+                    _diode_charge_state_name(element),
+                    _diode_intrinsic_anode_node(element),
+                    element.cathode,
+                )
+            ]
+        elif isinstance(element, BJT) and element.Rc == 0.0:
+            terminal = element.collector
+            states = [
+                (state_name, positive, negative)
+                for state_name, positive, negative, _ in _bjt_charge_state_specs(element)
+            ]
+        elif isinstance(element, JFET) and element.Rd == 0.0:
+            terminal = element.drain
+            states = [
+                (state_name, positive, negative)
+                for state_name, positive, negative, _ in _jfet_charge_state_specs(element)
+            ]
+        elif isinstance(element, Mosfet) and _mosfet_drain_resistance(element) == 0.0:
+            terminal = element.drain
+            states = [
+                (state_name, positive, negative)
+                for state_name, positive, negative, _ in _mosfet_charge_state_specs(element)
+            ]
+        else:
+            continue
+        charge_current = sum(
+            capacitor_currents.get(state_name, 0.0)
+            * ((1.0 if positive == terminal else 0.0) - (1.0 if negative == terminal else 0.0))
+            for state_name, positive, negative in states
+        )
+        key = f"I({element.name})"
+        branch_currents[key] = branch_currents.get(key, 0.0) + charge_current
 
 
 TransmissionLineSample = tuple[float, float, float, float, float]
@@ -11639,6 +11826,7 @@ def transient(
                 op.node_voltages,
             )
             branch_currents = dict(op.branch_currents)
+            _insert_transient_nonlinear_charge_currents(circuit, cap_currents, branch_currents)
             branch_currents.update(line_branch_currents)
             branch_currents.update({f"I({name})": current for name, current in cap_currents.items()})
             branch_currents.update(ind_currents)
@@ -11666,6 +11854,7 @@ def transient(
                 op.node_voltages,
             )
             branch_currents = dict(op.branch_currents)
+            _insert_transient_nonlinear_charge_currents(circuit, cap_currents, branch_currents)
             branch_currents.update(line_branch_currents)
             branch_currents.update({f"I({name})": current for name, current in cap_currents.items()})
             branch_currents.update(ind_currents)
@@ -13825,6 +14014,9 @@ def ac_sweep(
             f"I({src.name})": x_c[n_nodes + i] for i, src in enumerate(branch_srcs)
         }
         _insert_complex_passive_branch_currents(circuit, omega, node_v, branch_i)
+        _insert_complex_nonlinear_branch_currents(
+            circuit, omega, node_v, branch_i, node_to_idx, dc_x
+        )
         ac_points.append(AcPoint(freq=freq, node_voltages=node_v, branch_currents=branch_i))
 
     return AcResult(points=ac_points)

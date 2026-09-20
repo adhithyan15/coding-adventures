@@ -83,6 +83,51 @@ describe("shared concurrency pool", () => {
     expect(pool.stats()).toMatchObject({ active: 0, queued: 0 });
   });
 
+  it("stops new work while already-yielded holders reacquire in FIFO order", async () => {
+    const pool = createConcurrencyPool(1, neverCancelledToken());
+    const firstWait = deferred<void>();
+    const secondWait = deferred<void>();
+    const blockerGate = deferred<void>();
+    const trace: string[] = [];
+    const first = pool.run(async permit => {
+      trace.push("first-yield");
+      await permit.yieldWhile(() => firstWait.promise);
+      trace.push("first-resume");
+    });
+    const second = pool.run(async permit => {
+      trace.push("second-yield");
+      await permit.yieldWhile(() => secondWait.promise);
+      trace.push("second-resume");
+    });
+    const blocker = pool.run(async () => {
+      trace.push("blocker");
+      await blockerGate.promise;
+    });
+    const queued = pool.run(async () => { trace.push("queued"); });
+    for (let attempt = 0; attempt < 10 && !trace.includes("blocker"); attempt += 1) {
+      await flushMicrotasks();
+    }
+    expect(trace).toEqual(["first-yield", "second-yield", "blocker"]);
+
+    firstWait.resolve();
+    secondWait.resolve();
+    await flushMicrotasks();
+    pool.stopNewTasks("terminal source");
+    await expect(queued).rejects.toBeInstanceOf(CancellationError);
+    await expect(pool.run(async () => "late")).rejects.toBeInstanceOf(CancellationError);
+    blockerGate.resolve();
+
+    await Promise.all([first, second, blocker]);
+    expect(trace).toEqual([
+      "first-yield",
+      "second-yield",
+      "blocker",
+      "first-resume",
+      "second-resume",
+    ]);
+    expect(pool.stats()).toMatchObject({ active: 0, queued: 0 });
+  });
+
   it("lets a holder yield its only permit while waiting for upstream", async () => {
     const pool = createConcurrencyPool(1, neverCancelledToken());
     const upstream = deferred<number>();

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Implement WebComponent table numeric typography and scoped editor inheritance;
+  retain direct table input/button nodes and nested tables (#15713).
+
 - Recognize WebComponent text/control numeric typography; retain the degradation
   diagnostic for table-wide inheritance (#15692).
 

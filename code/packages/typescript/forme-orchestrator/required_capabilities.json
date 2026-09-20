@@ -3,5 +3,5 @@
   "version": 1,
   "package": "typescript/forme-orchestrator",
   "capabilities": [],
-  "justification": "Pure runtime: DAG construction, sequential execution, error/cancellation handling.  No I/O, no network — concrete StorageApi/NetworkApi implementations are plugged in by the caller (CLI, dev-server) and stages, both of which carry their own capability declarations."
+  "justification": "Pure runtime: DAG construction, bounded concurrent execution, live stream transport, error/cancellation handling. No ambient I/O or network — concrete StorageApi/NetworkApi implementations are plugged in by the caller (CLI, dev-server) and stages, both of which carry their own capability declarations."
 }

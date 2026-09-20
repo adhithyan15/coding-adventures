@@ -1,4 +1,4 @@
-# CLR10: canonical strict-scalar minus-one encoding
+# CLR11: canonical strict-scalar minus-one encoding
 
 ## Baseline and scope
 
@@ -27,3 +27,6 @@ strict-scalar artifact suite, and strict Clippy for the changed backend.
 
 Update backend documentation and changelog to remove the obsolete simulator
 qualification. No matrix declaration changes are involved.
+
+Numbering note: this contract was committed under CLR10 before implementation.
+It was renamed CLR11 after #15728 landed the independent CLR10 long-branch slice.

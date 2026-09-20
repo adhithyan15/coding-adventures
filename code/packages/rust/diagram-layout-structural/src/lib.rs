@@ -9,11 +9,11 @@
 use diagram_ir::{
     resolve_style_with_base, DiagramDirection, LayoutedCompartment, LayoutedStructuralDiagram,
     LayoutedStructuralGroup, LayoutedStructuralNode, LayoutedStructuralRelationship, Point,
-    StructuralDiagram, StructuralNode,
+    StructuralDiagram, StructuralNode, StructuralNodeKind,
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.9.0";
+pub const VERSION: &str = "0.10.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -72,6 +72,9 @@ pub fn layout_structural_diagram(diagram: &StructuralDiagram) -> LayoutedStructu
 }
 
 fn node_width(node: &StructuralNode) -> f64 {
+    if node.node_kind == StructuralNodeKind::Junction {
+        return 18.0;
+    }
     let style = structural_style(node);
     let max_entry = node
         .compartments
@@ -87,6 +90,9 @@ fn node_width(node: &StructuralNode) -> f64 {
 }
 
 fn node_height(node: &StructuralNode) -> f64 {
+    if node.node_kind == StructuralNodeKind::Junction {
+        return 18.0;
+    }
     let font_size = structural_style(node).font_size;
     let header_height = HEADER_H.max(font_size * 2.4);
     let row_height = ROW_H.max(font_size * 1.4);
@@ -145,6 +151,7 @@ fn layout_nodes(
 
         out.push(LayoutedStructuralNode {
             id: node.id.clone(),
+            node_kind: node.node_kind.clone(),
             x,
             y,
             width: nw,
@@ -210,6 +217,7 @@ fn layout_directional_nodes(
             index,
             LayoutedStructuralNode {
                 id: node.id.clone(),
+                node_kind: node.node_kind.clone(),
                 x,
                 y,
                 width,
@@ -509,7 +517,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.9.0");
+        assert_eq!(crate::VERSION, "0.10.0");
     }
 
     #[test]
@@ -621,5 +629,21 @@ mod tests {
         assert!(group.y <= animal.y);
         assert!(group.x + group.width >= animal.x + animal.width);
         assert!(group.y + group.height >= animal.y + animal.height);
+    }
+
+    #[test]
+    fn junctions_resolve_to_compact_typed_geometry() {
+        let mut diagram = two_class_diagram();
+        diagram.nodes[0].node_kind = StructuralNodeKind::Junction;
+        diagram.nodes[0].label.clear();
+        diagram.nodes[0].compartments.clear();
+        let layout = layout_structural_diagram(&diagram);
+        let junction = &layout.nodes[0];
+        assert_eq!(junction.node_kind, StructuralNodeKind::Junction);
+        assert_eq!((junction.width, junction.height), (18.0, 18.0));
+        assert_eq!(
+            layout.relationships[0].points[1].x,
+            junction.x + junction.width
+        );
     }
 }

@@ -8976,10 +8976,11 @@ layout AccessibleText {
                         | Backend::Xaml
                         | Backend::Flutter
                         | Backend::Html
+                        | Backend::WebComponent
                 ) {
                     0
                 } else {
-                    1 // WebComponent table inheritance remains unsupported.
+                    4
                 },
                 "{backend:?}"
             );

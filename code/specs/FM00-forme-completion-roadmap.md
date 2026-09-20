@@ -30,7 +30,7 @@ visible so a local optimization cannot quietly close the project early.
 The implementation is substantial but not yet an end-to-end product:
 
 - 63 TypeScript `forme-*` packages and 185 package test files cover the kernel,
-  stage contracts, a sequential orchestrator, Style IR, AOT emitters, document
+  stage contracts, a bounded concurrent orchestrator, Style IR, AOT emitters, document
   transforms, collections, feeds, routing, and static output.
 - The blog proves a ten-stage routed DAG: source → parse → asset resolution →
   router fans out to article rendering, asset loading, and chronological
@@ -57,15 +57,16 @@ The implementation is substantial but not yet an end-to-end product:
   restores untouched observed sources and capability-free stages across fresh
   processes; replay-capable filesystem emitters can reconstruct missing output
   trees from validated artifacts while other capability-bearing stages remain
-  conservative. Stream checkpoints now have a bounded content-addressed tree
-  representation with manifest-last publication and pre-replay validation;
-  scheduler integration remains in the active streaming tranche.
+  conservative. Live streams now traverse the concurrent DAG once through
+  bounded fan-out while a content-addressed checkpoint branch publishes its
+  manifest last. One shared FIFO permit pool bounds ready stages, per-item work,
+  and iterator pulls without deadlocking at `maxConcurrency: 1`.
 - Interactivity IR has no numbered spec or package. The AOT implementation
   refers to a missing FM06 spec, and the existing FM05 deploy-runner spec
   collides with older FM01–FM04 references that use FM05 for Interactivity IR.
-- The remaining headless-product gap is bounded concurrent streaming and the
-  deploy runner. Both live
-  sites now use the same product CLI, watch server,
+- The remaining headless-product gap is product-level clean/incremental proof
+  for the completed concurrent scheduler, followed by the deploy runner. Both
+  live sites now use the same product CLI, watch server,
   and centralized local-dependency bootstrap; site-local code is limited to
   content adapters and post-build artifact assertions.
 
@@ -121,9 +122,9 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 | 28 | FM-B039 | done | Implement bounded lazy stream fan-out | Depends on FM-B038. One lazily opened upstream iterator feeds every statically known consumer through ordered 64-item windows; a slow branch backpressures the producer, `return()` safely detaches a consumer, cancellation clears all branches and closes upstream once, source errors reach every attached branch after its queued prefix, and instrumentation tests bound both pulls and retained values. |
 | 29 | FM-B041 | done | Add the shared cancellation-aware permit pool | Depends on FM-B039. A FIFO permit pool bounds all work to a positive safe-integer limit, releases capacity on success/failure, rejects queued and future work on cancellation, lets a holder yield while awaiting upstream, and reacquires at the queue tail. Instrumented tests prove fairness, peak concurrency, cancellation, failure cleanup, and `maxConcurrency: 1` producer/consumer progress. |
 | 30 | FM-B042 | done | Schedule ready stages and per-item work concurrently | Depends on FM-B041. A stable DAG-ready queue uses the shared pool for stage and per-item invocations, preserves declaration/input order in outputs and summaries, implements hardware-concurrency defaults, and deterministically stops new work after fatal failure or cancellation. |
-| 31 | FM-B043 | active | Connect live streams to checkpoints and the concurrent DAG | Depends on FM-B038, FM-B039, and FM-B042. Stream producers feed consumer branches and the bounded checkpoint writer in one traversal; validated stream checkpoints restore lazily; revisions finalize only after ordered completion; and cancellation/error cleanup detaches every branch without weakening exact affected-set reuse. |
-| 32 | FM-B040 | blocked | Complete the pipeline-wide concurrent scheduler | Depends on FM-B041–FM-B043. Stable ready scheduling and one shared permit budget enforce `settings.maxConcurrency`; waits suspend permits to avoid `maxConcurrency: 1` deadlocks; live fan-out and bounded checkpoints preserve deterministic output, summaries, cancellation, and disposal. |
-| 33 | FM-B010 | blocked | Finish bounded streaming and parallel scheduling | Depends on FM-B038–FM-B040. Live fan-out, bounded checkpoints and buffers, backpressure, and pipeline-wide `maxConcurrency` replace eager stream draining without weakening exact affected-set reuse; clean and incremental product builds plus deterministic cancellation/reproducibility tests pass. |
+| 31 | FM-B043 | done | Connect live streams to checkpoints and the concurrent DAG | Depends on FM-B038, FM-B039, and FM-B042. Stream producers publish bounded consumer branches before completion and feed checkpointable output through the content-addressed writer in the same traversal; iterator work shares the permit pool, consumers yield while waiting, validated stream checkpoints restore lazily, revisions finalize after ordered completion, and restored consumers detach unused branches without weakening exact affected-set reuse. |
+| 32 | FM-B040 | done | Complete the pipeline-wide concurrent scheduler | Depends on FM-B041–FM-B043. Stable ready scheduling and one shared permit budget enforce `settings.maxConcurrency`; waits suspend permits to avoid `maxConcurrency: 1` deadlocks; live fan-out and bounded checkpoints preserve deterministic output, summaries, cancellation, and disposal. |
+| 33 | FM-B010 | active | Finish bounded streaming and parallel scheduling | Depends on FM-B038–FM-B040. Live fan-out, bounded checkpoints and buffers, backpressure, and pipeline-wide `maxConcurrency` replace eager stream draining without weakening exact affected-set reuse; clean and incremental product builds plus deterministic cancellation/reproducibility tests pass. |
 | 34 | FM-B011 | ready | Reconcile the FM spec map | Resolve the FM05 numbering collision, publish the missing Interactivity IR/AOT/CLI spec locations, repair stale cross-links, and add an implementation-status ledger to every FM spec. |
 | 35 | FM-B012 | ready | Implement the deploy runner | Build the FM05 core, filesystem adapter, GitHub Pages adapter, dry-run/reporting path, rollback/idempotency tests, and `forme deploy` composition. Filesystem publication stages the complete named-output set, rejects cross-artifact path collisions, swaps it as one tree, and prunes stale files without crossing output ownership. |
 | 36 | FM-B013 | ready | Specify and implement Interactivity IR | Define the behavior/event/state schema and validator, integrate per-page island tracking, and prove a progressively enhanced interactive component with a no-JS fallback. |
@@ -217,6 +218,7 @@ work.
 | 2026-09-19 | Per-file atomic writes cannot prune files that disappeared from one artifact or atomically publish the union of the blog's two sinks, because emitters intentionally share `dist` without an output-ownership contract. | Fold into FM-B012: the deploy runner must stage the complete named-output artifact set, reject cross-artifact path collisions, publish it as one tree, and remove stale files without letting one emitter delete a sibling's output. |
 | 2026-09-19 | Eager materialization currently serves two contracts at once: replayable fan-out and whole-instance checkpoints. Replacing only the fan-out array would still retain every value for the revision ledger/cache, while dropping stream checkpoints would regress exact affected-set reuse. | Split FM-B010 into FM-B038 (bounded content-addressed stream checkpoints), FM-B039 (bounded multicast/backpressure), and FM-B040 (pipeline-wide scheduling). Keep FM-B010 as the product-level integration milestone so each risky boundary is independently testable and reviewable. |
 | 2026-09-19 | FM-B040 still coupled three failure-sensitive mechanisms: fair permit accounting, concurrent DAG readiness, and one-pass live-stream/checkpoint integration. A permit leak or holding a permit across an upstream wait can deadlock the whole pipeline before scheduler behavior can be reviewed meaningfully. | Split the implementation into FM-B041 (FIFO cancellation-aware permit pool), FM-B042 (concurrent ready/per-item scheduling), and FM-B043 (live multicast plus bounded checkpoint integration). Keep FM-B040 as their scheduler completion milestone. |
+| 2026-09-19 | After FM-B043 merged, the roadmap baseline, root README, orchestrator entry-point header, and watch-loop comment still described concurrency, bounded streaming, side-effect replay, or exact affected scheduling as deferred. | Close FM-B040 by reconciling those status surfaces with the shipped scheduler. Keep product-level clean/incremental and reproducibility proof in the now-active FM-B010 milestone. |
 | 2026-09-19 | Pipeline config validation accepted integers above JavaScript's safe range even though the shared permit contract requires an exact positive bound. Such a value cannot be reasoned about or instrumented precisely. | Resolved in FM-B042 by rejecting non-safe integers at config validation and again at the permit-pool boundary. |
 
 ## Loop protocol

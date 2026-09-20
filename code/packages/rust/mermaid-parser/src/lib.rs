@@ -957,7 +957,7 @@ pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError>
         relationships: Vec::new(),
     };
     let mut ids = HashSet::new();
-    let mut service_ids = HashSet::new();
+    let mut endpoint_ids = HashSet::new();
     for token in &tokens {
         match token.type_name.as_deref() {
             Some("TITLE_STATEMENT") => {
@@ -998,7 +998,12 @@ pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError>
             _ => {}
         }
     }
-    for token in tokens.iter().filter(|token| token.type_name.as_deref() == Some("STATEMENT_LINE")) {
+    for token in tokens.iter().filter(|token| {
+        matches!(
+            token.type_name.as_deref(),
+            Some("JUNCTION_STATEMENT" | "STATEMENT_LINE")
+        )
+    }) {
         let statement = token.value.trim();
         if let Some(value) = statement.strip_prefix("group ") {
             let declaration = parse_architecture_declaration(token, value)?;
@@ -1018,7 +1023,7 @@ pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError>
             if !ids.insert(declaration.id.clone()) {
                 return Err(token_error(token, "duplicate architecture identifier"));
             }
-            service_ids.insert(declaration.id.clone());
+            endpoint_ids.insert(declaration.id.clone());
             diagram.nodes.push(StructuralNode {
                 id: declaration.id,
                 label: declaration.label,
@@ -1029,16 +1034,50 @@ pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError>
                 compartments: Vec::new(),
                 parent_group: declaration.parent,
             });
-        } else if statement.starts_with("junction ") || statement.starts_with("align ") {
-            return Err(token_error(token, "architecture junctions and alignments are outside the supported subset"));
+        } else if let Some(value) = statement.strip_prefix("junction ") {
+            let (id, parent) = parse_architecture_junction(token, value)?;
+            validate_architecture_parent(token, parent.as_deref(), &diagram.groups)?;
+            if !ids.insert(id.clone()) {
+                return Err(token_error(token, "duplicate architecture identifier"));
+            }
+            endpoint_ids.insert(id.clone());
+            diagram.nodes.push(StructuralNode {
+                id,
+                label: String::new(),
+                stereotype: None,
+                node_kind: StructuralNodeKind::Junction,
+                metadata: None,
+                style: None,
+                compartments: Vec::new(),
+                parent_group: parent,
+            });
+        } else if statement.starts_with("align ") {
+            return Err(token_error(token, "architecture alignments are outside the supported subset"));
         } else {
-            diagram.relationships.push(parse_architecture_edge(token, statement, &service_ids)?);
+            diagram.relationships.push(parse_architecture_edge(token, statement, &endpoint_ids)?);
         }
     }
     if diagram.nodes.is_empty() {
         return Err(ParseError { message: "architecture diagram requires a service".into(), line: 1, col: 1 });
     }
     Ok(diagram)
+}
+
+fn parse_architecture_junction(
+    token: &Token,
+    source: &str,
+) -> Result<(String, Option<String>), ParseError> {
+    let (id, parent) = match source.trim().split_once(" in ") {
+        Some((id, parent)) => (id.trim(), Some(parent.trim())),
+        None => (source.trim(), None),
+    };
+    if id.is_empty() || id.contains(char::is_whitespace) {
+        return Err(token_error(token, "invalid architecture junction identifier"));
+    }
+    if parent.is_some_and(|parent| parent.is_empty() || parent.contains(char::is_whitespace)) {
+        return Err(token_error(token, "invalid architecture parent group"));
+    }
+    Ok((id.to_string(), parent.map(str::to_string)))
 }
 
 struct ArchitectureDeclaration {
@@ -10358,6 +10397,22 @@ mod tests_dg04 {
             diagram.accessibility_description.as_deref(),
             Some("API and database services\ngrouped by platform")
         );
+    }
+
+    #[test]
+    fn architecture_parses_junctions_as_typed_endpoints() {
+        let diagram = parse_architecture(
+            "architecture-beta\ngroup platform(cloud)[Platform]\nservice api(server)[API] in platform\njunction split in platform\nservice db(database)[Database] in platform\napi:R --> L:split\nsplit:R --> L:db",
+        )
+        .unwrap();
+        let junction = diagram
+            .nodes
+            .iter()
+            .find(|node| node.id == "split")
+            .expect("junction node");
+        assert_eq!(junction.node_kind, StructuralNodeKind::Junction);
+        assert_eq!(junction.parent_group.as_deref(), Some("platform"));
+        assert_eq!(diagram.relationships.len(), 2);
     }
 
     #[test]

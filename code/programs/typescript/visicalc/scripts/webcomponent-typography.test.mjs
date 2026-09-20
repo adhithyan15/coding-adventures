@@ -43,3 +43,38 @@ test('generated custom element hydrates numeric font sizes and restores static f
   window.close();
 });
 
+
+test('generated custom element scopes table fonts and preserves authored overrides', async () => {
+  const path = process.env.MOSAIC_WC_TYPOGRAPHY_OUTPUT;
+  const dom = new JSDOM('<!doctype html><body></body>', { runScripts: 'dangerously' });
+  const { window } = dom;
+  window.eval(readFileSync(join(path, 'table/Tables.js'), 'utf8'));
+  const root = window.document.createElement('mos-tables');
+  root.setAttribute('rows', JSON.stringify(['First']));
+  window.document.body.append(root);
+  const actions = [];
+  root.addEventListener('mosaic:action', event => actions.push(event.detail));
+  let size = 18;
+  let rows;
+  const flush = () => new Promise(resolve => setTimeout(resolve, 0));
+  await flush();
+  for (size of [18, 27, 36, 0, -1, NaN, Infinity, '24', 24]) {
+    rows = ['First', 'New row'];
+    root.setAttribute('rows', JSON.stringify(rows));
+    root.setAttribute('size', String(size));
+    await flush();
+    const tables = [...root.shadowRoot.querySelectorAll('table')];
+    const valid = Number.isFinite(Number(size)) && Number(size) > 0;
+    assert.equal(tables[0].style.fontSize, valid ? `${size}px` : '17px');
+    assert.equal(tables[0].style.fontFamily, 'monospace');
+    assert.equal(tables[1].style.fontSize, 'initial');
+    const controls = [...root.shadowRoot.querySelectorAll('input, textarea, button')];
+    assert.deepEqual(controls.map(e => e.style.fontSize), ['', ...Array(6).fill('inherit'), 'inherit', 'inherit', '25px', '']);
+    const fixedRow = [...root.shadowRoot.querySelectorAll('tr')].find(e => e.textContent.includes('Fixed row'));
+    assert.equal(fixedRow.style.fontSize, '21px');
+    assert.ok([...root.shadowRoot.querySelectorAll('td')].some(e => e.textContent === 'New row'));
+  }
+  root.shadowRoot.querySelector('button').click();
+  assert.equal(actions.length, 1);
+  window.close();
+});

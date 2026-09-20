@@ -19,12 +19,15 @@ export interface ConcurrencyPermit {
 
 export interface ConcurrencyPool {
   run<T>(task: (permit: ConcurrencyPermit) => Promise<T> | T): Promise<T>;
+  /** Reject queued/future new tasks while allowing yielded active tasks to reacquire. */
+  stopNewTasks(reason?: string): void;
   stats(): ConcurrencyPoolStats;
 }
 
 interface Waiter {
   readonly resolve: () => void;
   readonly reject: (error: unknown) => void;
+  readonly reacquire: boolean;
 }
 
 /**
@@ -46,6 +49,7 @@ export function createConcurrencyPool(
   let active = 0;
   let peakActive = 0;
   let closedError: CancellationError | null = null;
+  let stoppedError: CancellationError | null = null;
   let resolveCancellation!: (error: CancellationError) => void;
   const cancellationSignal = new Promise<CancellationError>(resolve => {
     resolveCancellation = resolve;
@@ -61,15 +65,16 @@ export function createConcurrencyPool(
     }
   };
 
-  const acquire = async (): Promise<void> => {
+  const acquire = async (reacquire = false): Promise<void> => {
     if (closedError !== null) throw closedError;
+    if (stoppedError !== null && !reacquire) throw stoppedError;
     if (active < limit && queue.length === 0) {
       active += 1;
       peakActive = Math.max(peakActive, active);
       return;
     }
     return new Promise<void>((resolve, reject) => {
-      queue.push({ resolve, reject });
+      queue.push({ resolve, reject, reacquire });
     });
   };
 
@@ -89,12 +94,24 @@ export function createConcurrencyPool(
     for (const waiter of waiting) waiter.reject(closedError);
   };
 
+  const stopNewTasks = (reason?: string): void => {
+    if (closedError !== null || stoppedError !== null) return;
+    stoppedError = new CancellationError(reason ?? "concurrency pool stopped");
+    const retained: Waiter[] = [];
+    for (const waiter of queue.splice(0)) {
+      if (waiter.reacquire) retained.push(waiter);
+      else waiter.reject(stoppedError);
+    }
+    queue.push(...retained);
+    dispatch();
+  };
+
   cancellation.onCancel(close);
 
   const run = async <T>(
     task: (permit: ConcurrencyPermit) => Promise<T> | T,
   ): Promise<T> => {
-    await acquire();
+    await acquire(false);
     let held = true;
     let yielding = false;
     let inFlightYield: Promise<unknown> | null = null;
@@ -103,7 +120,7 @@ export function createConcurrencyPool(
     let poisonedError: unknown = null;
     const reacquire = async (): Promise<void> => {
       try {
-        await acquire();
+        await acquire(true);
         held = true;
       } catch (error) {
         poisonedError = error;
@@ -201,6 +218,7 @@ export function createConcurrencyPool(
 
   return {
     run,
+    stopNewTasks,
     stats: () => ({ active, queued: queue.length, peakActive }),
   };
 }

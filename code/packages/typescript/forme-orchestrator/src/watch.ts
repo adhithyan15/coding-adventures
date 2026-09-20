@@ -17,9 +17,10 @@ interface RebuildWaiter {
 /**
  * Create the FM03 watch loop around an injected runner.
  *
- * FM-B009 deliberately re-runs the complete pipeline. The persistent cache
- * and exact changed-and-downstream affected set belong to FM-B010; this loop
- * provides lifecycle, coalescing, cancellation, and the result stream.
+ * FM-B009 deliberately asks the runner for each rebuild rather than maintaining
+ * a second dependency scheduler here. The runner applies the persistent cache
+ * and exact changed-and-downstream affected set; this loop owns lifecycle,
+ * coalescing, cancellation, and the result stream.
  */
 export function createWatchSession(
   pipeline: Pipeline,

@@ -35,14 +35,10 @@ await o.dispose();
 | `buildDag`                | Direct DAG construction (used by `buildPipeline`; exported for tests).  |
 | `areKindsCompatible`      | Type-compatibility predicate (FM01 §2.6).                               |
 
-## v0 simplifications
+## v0 boundaries
 
-These are deferred to follow-up packages:
+These limits remain after the concurrent scheduler milestone:
 
-- **No streaming pipelining yet.** A `Stream<X>` producer is still fully drained
-  before downstream consumers see values. The bounded multicast transport and
-  content-addressed checkpoint tree are implemented; FM-B043 connects them to
-  the concurrent DAG without reintroducing eager retention.
 - **Replay is explicit.** Exact affected scheduling restores untouched pure
   stages directly and invokes `Stage.replay` before skipping an effectful
   collector. Capability-bearing stages without that hook still execute
@@ -55,8 +51,10 @@ These are deferred to follow-up packages:
 - Explicit `wires` with deterministic fan-out, typed named fan-in, and stable
   topological execution; unwired default inputs still infer the nearest
   compatible producer
-- One materialization per producer and a fresh replayable `AsyncIterable` for
-  every stream input port; a multi-input join is invoked exactly once
+- Live stream publication before producer completion, with one bounded branch
+  per statically known edge and one source traversal across fan-out
+- Replayable `AsyncIterable` inputs at named fan-in boundaries; a multi-input
+  join is invoked exactly once
 - Per-stage `StageContext` construction with denied-by-default capability APIs
 - `init` / `dispose` lifecycle hooks (init failure aborts before any `run`; dispose always runs)
 - Fail-fast and best-effort error handling
@@ -81,6 +79,9 @@ These are deferred to follow-up packages:
 - Stable DAG-ready scheduling and source-ordered per-item parallelism using
   that shared budget; `null` concurrency resolves to host hardware capacity,
   while fatal failure and cancellation reject queued work before it starts
+- Permit-aware stream pulls that make progress with `maxConcurrency: 1`, lazy
+  validated stream restore, manifest-last checkpoint publication, and exact
+  incremental fallback when a producer revision is not known at readiness
 - Deterministic tagged cache encoding for plain Forme values and bytes;
   per-invocation cache hits/misses for safe pure stages, with `useCache: false`
   bypass and fail-open behavior for unsupported/corrupt entries

@@ -226,6 +226,58 @@ describe("concurrent scheduler", () => {
     await orchestrator.dispose();
   });
 
+  it("lets the missing next index drain a full reorder window", async () => {
+    const releaseFirst = deferred<void>();
+    let starts = 0;
+    const source = defineStage({
+      name: "@test/full-reorder-source",
+      version: "0.1.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "more items than the reorder window",
+      consumes: Kinds.Void,
+      produces: streamOf(Kinds.ContentSource),
+      capabilities: [],
+      configSchema: null,
+      async *run() {
+        for (let index = 0; index < 70; index++) yield content(String(index));
+      },
+    });
+    const transform = defineStage({
+      name: "@test/full-reorder-transform",
+      version: "0.1.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "holds index zero while later values complete",
+      consumes: Kinds.ContentSource,
+      produces: Kinds.ContentSource,
+      capabilities: [],
+      configSchema: null,
+      async run(input) {
+        const path = (input as { path: string }).path;
+        starts += 1;
+        if (path === "0") await releaseFirst.promise;
+        return input;
+      },
+    });
+    const orchestrator = createOrchestrator({ logger: silentLogger() });
+    const pipeline = await orchestrator.buildPipeline(config([
+      { id: "source", stage: source },
+      { id: "transform", stage: transform },
+    ], 64));
+    const running = orchestrator.runOnce(pipeline);
+
+    await vi.waitFor(() => expect(starts).toBeGreaterThanOrEqual(64));
+    releaseFirst.resolve();
+    const result = await Promise.race([
+      running,
+      new Promise<never>((_resolve, reject) =>
+        setTimeout(() => reject(new Error("full reorder window deadlocked")), 2_000)),
+    ]);
+    expect(result.outcome).toBe("success");
+    expect((result.outputs.transform as Array<{ path: string }>).map(item => item.path))
+      .toEqual(Array.from({ length: 70 }, (_, index) => String(index)));
+    await orchestrator.dispose();
+  });
+
   it("keeps per-item cache admission in source order", async () => {
     const cache = controllableCache();
     const delayed = cache.delayGet(2);
@@ -467,7 +519,7 @@ describe("concurrent scheduler", () => {
 
     expect(result.outcome).toBe("failed");
     expect(starts).toEqual(["a"]);
-    expect(result.stages.map(stage => stage.outcome)).toEqual(["success", "failed", "skipped"]);
+    expect(result.stages.map(stage => stage.outcome)).toEqual(["skipped", "failed", "skipped"]);
     expect(result.errors).toMatchObject([{ instanceId: "fails", message: "null" }]);
     await orchestrator.dispose();
   });

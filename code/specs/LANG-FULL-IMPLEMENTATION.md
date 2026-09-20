@@ -1035,13 +1035,14 @@ backend immediately) come before the enabler-dependent items.
   scalar recurrences; the next `while` element expression consumes the
   resulting exact control snapshot while the terminating sibling snapshots
   remain available after the loop. Labels, declarations, dynamic selectors or
-  effectful siblings, predicate-dependency writes, string targets, overflow,
-  non-finite values, and loops exceeding 4,096 evaluations remain
-  conservative. Capped abstract execution also retains the first integer or
-  finite binary64 control value whose predicate is false when its value and
-  predicate reference only the control and statically known ordinary local
-  scalars that
-  the body does not change. Read-only body uses, exact scalar
+  effectful siblings, transitive or conditional dependency writes, string
+  targets, overflow, non-finite values, and loops exceeding 4,096 evaluations
+  remain conservative. Capped abstract execution also retains the first
+  integer or finite binary64 control value whose predicate is false when its
+  value and predicate reference only the control and statically known ordinary
+  local scalars that the body leaves unchanged, or directly updates through
+  one supported recurrence referencing only itself and the control. Read-only
+  body uses, exact scalar
   self-assignments, checked numeric or boolean expressions that equal the
   tracked scalar and otherwise reference only known ordinary locals that are
   never changed by the body; an exact bare self-assignment does not count as a

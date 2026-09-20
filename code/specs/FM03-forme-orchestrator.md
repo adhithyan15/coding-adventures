@@ -500,9 +500,9 @@ DAG is built as follows:
 
 Multiple consumers of one producer's output are allowed and treated as
 fan-out. Multiple producers feeding distinct ports of one consumer are fan-in.
-The v0 scheduler materializes each producer once and creates an independently
-replayable iterator for every stream port. FM-B010 replaces eager
-materialization with bounded multiplexing and backpressure.
+The scheduler opens each stream producer once and publishes one bounded branch
+per edge. Named fan-in preserves independently replayable iterators at the join
+boundary; ordinary stream edges remain single-pass and backpressured.
 
 ### 3.4 Type compatibility checking
 
@@ -668,6 +668,43 @@ window. An upstream exception is remembered and rethrown by every attached
 branch after its already-delivered and queued prefix, so a fast branch cannot
 hide the failure from a slow one. Upstream `return()` cleanup failures never
 replace an earlier cancellation or source failure.
+
+#### 4.4.2 Scheduler integration
+
+When `Stage.run` returns an `AsyncIterable`, the instance publishes one live
+transport before the iterable completes. Every statically known downstream
+input edge receives one bounded branch. When the instance is eligible for an
+exact checkpoint, a separate internal branch feeds the stream-checkpoint
+writer. A terminal stream output may add one output
+collector branch because returning that stream in `RunResult.outputs`
+necessarily materializes the caller-visible value. The stage iterable is
+opened once; consumers and checkpointing never invoke the producer again.
+
+The iterator's `next()`, `return()`, and `throw()` methods execute through the
+same shared permit pool as ordinary `Stage.run` calls. A collector or per-item
+consumer yields its held permit while awaiting its branch and reacquires at the
+FIFO tail before executing stage code. Per-item consumers may have multiple
+workers, but access to one branch is serialized: each value receives its
+source-order index before the next worker can take a value, and completed
+results occupy that index regardless of finish order. This permits progress at
+`maxConcurrency: 1` without an unbounded queue of scheduled item promises.
+
+Dependency readiness for a stream edge means that its branch has been
+published, not that the producer has completed. Instance completion still
+waits for the checkpoint branch to observe normal end-of-stream. Only then may
+the scheduler finalize `itemsProduced`, the ordered stream revision, the
+producer's output revision, downstream input revisions, and the next revision
+ledger. A checkpoint manifest is committed last. Cache-write failure is
+fail-open and leaves no visible partial manifest; source failure remains a
+pipeline failure even when no downstream consumer is attached.
+
+An unchanged stream instance validates its complete checkpoint tree before it
+publishes a lazy replay iterable. Replay then uses the same bounded fan-out and
+permit-aware pull path as a live producer. Missing, malformed, cyclic,
+count-mismatched, or revision-mismatched checkpoints fall back to one normal
+stage execution. Cancellation or fatal failure detaches every transport branch
+and closes each opened upstream iterator exactly once before stage disposal and
+before any successful revision ledger is written.
 
 ### 4.5 Resource limits
 

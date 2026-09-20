@@ -116,6 +116,7 @@ export function defaultRepoRoot(): string {
  * Per-language changelogs remain separate by default. Hindi became the measured
  * exception: 23 same-track commits touched its monolith in the window recorded
  * by #14245, so independently authored Hindi tranches were still serialized.
+ * Malayalam followed at 25 touches in the 200-commit window after #15661.
  */
 export const DOC_SHARD_PLANS: readonly DocShardPlan[] = [
   {
@@ -124,6 +125,14 @@ export const DOC_SHARD_PLANS: readonly DocShardPlan[] = [
     // name is derived from the heading text rather than from an id pattern —
     // an id-based scheme would have had to special-case it or reject the file.
     path: "code/learning/human-languages/BACKLOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+  },
+  {
+    // Malayalam's sustained chapter campaign made this the next per-track
+    // monolith to cross the measured contention threshold: 57 historical
+    // sections and 25 touches, now one stable owner per newest-first entry.
+    path: "code/learning/human-languages/malayalam/CHANGELOG.md",
     headingLevel: 2,
     newestFirst: true,
   },

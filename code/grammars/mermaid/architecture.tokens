@@ -12,4 +12,5 @@ HEADER              = /architecture(?:-beta)?[ \t]*/
 TITLE_STATEMENT     = /title[ \t]+[^\r\n]+/
 ACC_TITLE_STATEMENT = /accTitle[ \t]*:[^\r\n]+/
 ACC_DESCR_STATEMENT = /accDescr[ \t]*:[^\r\n]+/
+JUNCTION_STATEMENT  = /[ \t]*junction[ \t]+[^\r\n]+/
 STATEMENT_LINE      = /[ \t]*[^ \t\r\n][^\r\n]*/

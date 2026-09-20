@@ -10,19 +10,51 @@ roadmap is reconciled.
 
 ## Encoded CLR input prerequisites (selected 2026-09-19 after VM-058)
 
-### CLR09 landed; CLR10 canonical strict minus-one selected (2026-09-20)
+### CLR10 landed; CLR11 canonical strict minus-one follow-up active (2026-09-20)
 
-CLR09 compact `ldc.i4.m1` execution merged in #15711 as
-`3a67aec819c35f59a0a9d52f6c73ee6b0c6c31f4` after all required checks passed.
-The merged simulator now accepts the builder's canonical one-byte encoding.
-Fresh main and open-PR audits show no non-ALGOL CLR overlap; ALGOL remains
-separately owned.
+CLR10 checked long branches merged in #15728 as
+`379fcdf372e2cf41a4cf06f6bf3f3ddc8c4f7593` after all 48 checks completed
+(15 success, 33 skipped) and all four exact-head workflows succeeded.
+CLR09's four workflows also completed successfully.
 
-Select CLR10 to remove CLR08's now-obsolete five-byte minus-one workaround from
-the explicit strict scalar entrypoint. Require exact compact artifact bytes and
-actual simulator execution while preserving i64 encoding and every input/type
-gate. Keep branches, default source migration and encoded host input as later
-contracts.
+Existing PR #15730 owns removal of the strict i32 minus-one workaround. Its
+contract was committed as CLR10 before implementation and is renamed CLR11 to
+avoid the landed long-branch number. Preserve its exact compact-byte and actual
+execution proofs, i64 encoding, and every input/type gate. This is the only
+active implementation PR; strict CFG lowering remains a subsequent contract.
+
+### CLR09 landed; CLR10 long branches selected (2026-09-20)
+
+PR #15711 merged CLR09 compact ldc.i4.m1 execution as
+`3a67aec819c35f59a0a9d52f6c73ee6b0c6c31f4`. PR workflows passed; the
+push workflow was still queued when the merge was observed. Proceed with CLR10. The CLR10 contract
+was committed under its original CLR09 name before implementation; see
+`CLR10-encoded-long-branches.md`. Baseline probes proved br/brfalse/brtrue
+unknown; literal and automatic builder-promotion execution tests now pass.
+Strict CFG lowering still needs its own subsequent contract. Preserve gates.
+
+### CLR08 landed; strict scalar control-flow audit selected (2026-09-20)
+
+CLR08 merged in #15698 as `13e17dec1c05c48570c0c7b3e12dc6b9a599ae8e`
+after all 48 checks completed (15 success, 33 skipped), with all four
+exact-head workflows successful. Main is refreshed; no open CLR overlap found.
+CLR07's remaining push workflow also completed successfully.
+
+Next audit bounded control flow for the strict scalar API. Actual IIR operation
+names are `label`, `jmp`, `jmp_if_true`, and `jmp_if_false`; branch targets are
+Var operands, and conditional sources are [condition, target]. Current strict
+validation reads every instruction's scalar hint before dispatch and permits
+only one final return. A safe extension needs explicit control-instruction
+shapes/hints, label uniqueness and resolution, logical boolean branch conditions,
+and path-sensitive definite assignment at joins. Textual prior definition alone
+cannot justify a load when a branch skips its assignment.
+
+Establish actual-artifact refusal and branch execution baselines, decide a
+bounded acyclic or general CFG contract with explicit return/reachability rules,
+and commit the detailed CLR09 specification before production edits. Preserve
+single assignment, exact scalar types, structural i32 indices, slot bounds,
+CLR01 literal/input gates and default source routing. No control-flow contract
+or implementation is selected merely from builder availability.
 
 ### CLR08 landed; CLR09 compact minus-one execution selected (2026-09-20)
 

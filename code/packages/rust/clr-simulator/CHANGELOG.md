@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — checked long branches (CLR10)
+
+Execute br, brfalse and brtrue with signed four-byte offsets. Validate operand
+length, target range and initialized conditions before changing stack or pc.
+Preserve existing Int/Int64/Ref truthiness. Literal tests and builder-promotion
+execution cover both outcomes, signed offsets and malformed state.
+
 ## Unreleased — compact int32 minus one (CLR09)
 
 Execute standard `ldc.i4.m1` (`0x15`) as `Int(-1)` and make the public integer
