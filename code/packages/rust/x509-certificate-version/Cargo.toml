@@ -1,0 +1,8 @@
+[package]
+name = "x509-certificate-version"
+version = "0.1.0"
+edition = "2021"
+description = "Allocation-free RFC 5280 certificate version decoding"
+
+[dependencies]
+der-asn1 = { path = "../der-asn1" }
