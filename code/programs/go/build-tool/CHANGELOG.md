@@ -16,6 +16,21 @@ All notable changes to the Go build tool will be documented in this file.
   and segment matching now follows the neutral Python `fnmatchcase`
   character-class grammar instead of Go's incompatible host grammar.
 
+### Changed
+
+- CI-gate match-work preflight now deduplicates identical globs and applies a
+  sound literal path-segment prefix/suffix filter before charging the full glob
+  grid. Large path-sharded diffs under an unrelated subtree therefore keep
+  selective CI instead of crossing the ceiling solely because they contain
+  hundreds or thousands of direct-owner files; ambiguous pairs still pay the
+  full conservative cost and every hard error remains fail-open at the
+  workflow boundary. Measured on the real diffs, #15719 falls from 109,569,282
+  declared-product units to 833,868 bounded units with 27 candidate pairs, and
+  #15729 falls from 4,480,430,106 to 30,615,897 with 36 candidates. The former
+  plans in 3.9 seconds over 5,193 packages, requires TypeScript alone, and
+  selects zero of nineteen gated CI jobs instead of the 42-check run-all queue
+  observed before this change.
+
 ### Fixed
 
 - Strict Starlark diff selection now recognizes only the five canonical BUILD
