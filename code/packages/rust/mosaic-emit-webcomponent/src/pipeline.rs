@@ -104,6 +104,7 @@
 //! | `HostTableFoot` | `<tfoot>…</tfoot>` (children walked as `<tr>` rows of `<td>`)    |
 //! | `HostTableColGroup` | `<colgroup><col></colgroup>`                                 |
 //! | `HostDialog`    | `<dialog id="mos-dlg-N">…</dialog>` plus a post-`innerHTML` block in `_render()` that calls `showModal()`/`show()`/`close()` and wires `close`/`cancel` events (U29-1) |
+//! | `HostNavigationSplit` | flex shell with named `<nav>` pane and `<section>` detail (UI29-6) |
 //! | `If`            | `${(cond) ? `then-html` : `else-html`}` (Else is consumed from the next sibling) |
 //! | `Else`          | element of the surrounding `If` — never reached as a top-level node when paired; standalone `Else` produces an empty interpolation |
 //! | `For`           | `${collection.map((item, idx) => `body-html`).join('')}`         |
@@ -1174,6 +1175,13 @@ fn emit_html_tree(
         // title="${text}">…</span>`. Plain-text only in v1 per
         // UI29-4 §3.2; richer tooltips are reserved for UI29-5.
         "HostTooltip" => return emit_host_tooltip(node, ctx, part_styles),
+
+        // UI29-6 — a semantic pane/detail split. Web Components do not have
+        // a native adaptive split element, so this preserves the landmark and
+        // sizing contract while UI48 owns future viewport-driven collapse.
+        "HostNavigationSplit" => {
+            return emit_host_navigation_split(node, ctx, part_styles)
+        }
 
         // UI29-4 — `HostNumberInput` → `<input type="number"
         // inputmode="numeric" ...>` with onchange wired through
@@ -2368,6 +2376,60 @@ fn emit_host_tooltip(
         inner.push_str(&emit_html_tree(child, 0, ctx, part_styles)?);
     }
     Ok(format!("<span{attrs}>{inner}</span>"))
+}
+
+/// Lower UI29-6 `HostNavigationSplit` to a flex wrapper containing a named
+/// `<nav>` landmark and a `<section>` detail region. The preferred pane width
+/// is expressed as a fixed flex basis; the detail fills the remainder.
+fn emit_host_navigation_split(
+    node: &LayoutNode,
+    ctx: &mut RenderCtx<'_>,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let [pane, detail] = node.children.as_slice() else {
+        return Err(PipelineEmitError::InvalidPropValue(
+            "HostNavigationSplit requires exactly two children".to_string(),
+        ));
+    };
+    let wrapper_style = build_style_attr(node, "display: flex; flex-direction: row;", part_styles);
+
+    let mut label = String::new();
+    if let Some(value) = find_string(node, "pane-title") {
+        label.push_str(&format!(
+            r#" aria-label="{}""#,
+            escape_html_attribute(value)
+        ));
+    } else if let Some(slot) = find_slot_ref(node, "pane-title") {
+        let name = to_camel_case_first_lower(slot);
+        if is_safe_identifier(&name) {
+            label.push_str(&format!(
+                r#" aria-label="${{escapeHtmlAttribute({name})}}""#
+            ));
+        }
+    } else if let Some(LayoutPropValue::Expr(expr)) = node
+        .props
+        .iter()
+        .find(|prop| prop.name == "pane-title")
+        .map(|prop| &prop.value)
+    {
+        let expression = strip_outer_parens(expr.trim());
+        if !expression.is_empty() {
+            label.push_str(&format!(
+                r#" aria-label="${{escapeHtmlAttribute({expression})}}""#
+            ));
+        }
+    }
+
+    let pane_style = find_number(node, "pane-width")
+        .filter(|width| width.is_finite() && *width > 0.0)
+        .map(|width| format!(r#" style="flex: 0 0 {width}px""#))
+        .unwrap_or_default();
+
+    let pane_html = emit_html_tree(pane, 0, ctx, part_styles)?;
+    let detail_html = emit_html_tree(detail, 0, ctx, part_styles)?;
+    Ok(format!(
+        r#"<div{wrapper_style}><nav{label}{pane_style}>{pane_html}</nav><section style="flex: 1; min-width: 0">{detail_html}</section></div>"#
+    ))
 }
 
 /// Lower a `HostNumberInput` node to `<input type="number"
@@ -4482,6 +4544,65 @@ mod tests {
         assert!(
             out.contains(r#"style="overflow: auto;""#),
             "axis: both, got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn host_navigation_split_emits_named_nav_and_detail_regions() {
+        let render = |title: LayoutPropValue| {
+            let m = component(
+                "X",
+                vec![slot("nav-title", SlotType::Text, true)],
+                vec![],
+            );
+            let split = LayoutNode {
+                tag: "HostNavigationSplit".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "pane-title".to_string(),
+                        value: title,
+                    },
+                    LayoutProp {
+                        name: "pane-width".to_string(),
+                        value: LayoutPropValue::Number(236.0),
+                    },
+                ],
+                children: vec![
+                    leaf_with_props(
+                        "Text",
+                        vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::String("PANE".to_string()),
+                        }],
+                    ),
+                    leaf_with_props(
+                        "Text",
+                        vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::String("DETAIL".to_string()),
+                        }],
+                    ),
+                ],
+            };
+            from_pipeline(&m, &root_layout("X", split), &empty_style("X"))
+                .unwrap()
+                .output
+        };
+
+        let literal = render(LayoutPropValue::String("Projects".to_string()));
+        assert!(literal.contains(r#"<nav aria-label="Projects""#), "{literal}");
+        assert!(literal.contains(r#"style="flex: 0 0 236px""#), "{literal}");
+        assert!(
+            literal.contains(r#"<section style="flex: 1; min-width: 0">"#),
+            "{literal}"
+        );
+        assert!(literal.find("PANE").unwrap() < literal.find("DETAIL").unwrap());
+
+        let bound = render(LayoutPropValue::SlotRef("nav-title".to_string()));
+        assert!(
+            bound.contains(r#"<nav aria-label="${escapeHtmlAttribute(navTitle)}""#),
+            "{bound}"
         );
     }
 

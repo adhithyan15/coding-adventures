@@ -4,6 +4,12 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added -- `HostNavigationSplit` semantic web lowering (UI29-6, #15666)
+
+`HostNavigationSplit` now emits a named `<nav>` pane and `<section>` detail in
+a flex wrapper. The preferred pane width becomes its flex basis; UI48 retains
+ownership of future runtime collapse.
+
 ### Added -- `HostButton` `selected` lowers to `aria-pressed` (UI86, #15420)
 
 `selected : …` emits `aria-pressed`:

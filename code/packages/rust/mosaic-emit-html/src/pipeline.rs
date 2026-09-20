@@ -77,6 +77,7 @@
 //! | `HostTableBody`        | `<tbody>` with `<tr>`/`<td>` (sub-tag of `HostTable`)           |
 //! | `HostTableFoot`        | `<tfoot>` with `<tr>`/`<td>` (sub-tag of `HostTable`)           |
 //! | `HostDialog`           | `<dialog>` (UI29-1) — native browser modal/focus-trap/top-layer |
+//! | `HostNavigationSplit`  | flex shell with named `<nav>` pane and `<section>` detail (UI29-6) |
 //! | `If` / `Else`          | `<!-- mosaic-if when="…" -->` comment-bracketed branches        |
 //! | `For`                  | `<!-- mosaic-for each="…" as="…" index="…" -->` comment wrapper |
 //!
@@ -1739,6 +1740,13 @@ fn emit_html_tree(
         out.push_str(&emit_host_tooltip(node, indent, part_styles)?);
         return Ok(out);
     }
+    // UI29-6 — preserve the navigation landmark and the pane/detail split.
+    // Browsers do not expose a native adaptive split container, so collapse
+    // remains static until UI48 supplies a runtime viewport signal.
+    if node.tag == "HostNavigationSplit" {
+        out.push_str(&emit_host_navigation_split(node, indent, part_styles)?);
+        return Ok(out);
+    }
     // UI29-4 — `HostNumberInput` lowers to `<input type="number"
     // inputmode="numeric" ...>`. The inputmode triggers the mobile
     // numeric keyboard (one of the "what composition loses" items
@@ -2661,6 +2669,60 @@ fn emit_host_tooltip(
     let mut out = format!("{pad}<span{attrs}{style_attr}>\n");
     out.push_str(&emit_children(&node.children, indent + 2, part_styles)?);
     out.push_str(&format!("{pad}</span>\n"));
+    Ok(out)
+}
+
+/// Lower UI29-6 `HostNavigationSplit` to a flex wrapper with a named `<nav>`
+/// pane and a `<section>` detail region. The preferred `pane-width` becomes
+/// the pane's fixed flex basis; authored styles still apply to the outer part.
+fn emit_host_navigation_split(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let [pane, detail] = node.children.as_slice() else {
+        return Err(PipelineEmitError::InvalidPropValue(
+            "HostNavigationSplit requires exactly two children".to_string(),
+        ));
+    };
+    let pad = " ".repeat(indent);
+    let child_pad = " ".repeat(indent + 2);
+    let wrapper_style = build_style_attr(node, "display: flex; flex-direction: row", part_styles);
+
+    let label = match find_prop(node, "pane-title") {
+        Some(LayoutPropValue::String(value)) => {
+            format!(" aria-label=\"{}\"", escape_html_attr(value))
+        }
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            format!(" aria-label=\"{{{{{}}}}}\"", camel(slot))
+        }
+        Some(LayoutPropValue::Expr(expr)) => {
+            let trimmed = strip_outer_parens(expr.trim());
+            if let Some(path) = mustache_path(trimmed) {
+                let safe = escape_mustache_braces(&escape_html_attr(&path));
+                format!(" aria-label=\"{{{{{safe}}}}}\"")
+            } else {
+                String::new()
+            }
+        }
+        _ => String::new(),
+    };
+    let pane_style = match find_prop(node, "pane-width") {
+        Some(LayoutPropValue::Number(width)) if width.is_finite() && *width > 0.0 => {
+            format!(" style=\"flex: 0 0 {width}px\"")
+        }
+        _ => String::new(),
+    };
+
+    let mut out = format!("{pad}<div{wrapper_style}>\n");
+    out.push_str(&format!("{child_pad}<nav{label}{pane_style}>\n"));
+    out.push_str(&emit_html_tree(pane, indent + 4, part_styles)?);
+    out.push_str(&format!("{child_pad}</nav>\n"));
+    out.push_str(&format!(
+        "{child_pad}<section style=\"flex: 1; min-width: 0\">\n"
+    ));
+    out.push_str(&emit_html_tree(detail, indent + 4, part_styles)?);
+    out.push_str(&format!("{child_pad}</section>\n{pad}</div>\n"));
     Ok(out)
 }
 
@@ -6358,6 +6420,53 @@ mod tests {
                 "expected primitive {tag} to lower without error, got: {r:?}"
             );
         }
+    }
+
+    #[test]
+    fn host_navigation_split_emits_named_nav_and_detail_regions() {
+        let render = |title: LayoutPropValue| {
+            let split = node_with_props_and_children(
+                "HostNavigationSplit",
+                vec![
+                    LayoutProp {
+                        name: "pane-title".to_string(),
+                        value: title,
+                    },
+                    LayoutProp {
+                        name: "pane-width".to_string(),
+                        value: LayoutPropValue::Number(236.0),
+                    },
+                ],
+                vec![
+                    node_with_props("Text", vec![prop_string("content", "PANE")]),
+                    node_with_props("Text", vec![prop_string("content", "DETAIL")]),
+                ],
+            );
+            from_pipeline(
+                &component(
+                    "X",
+                    vec![SlotDecl {
+                        name: "nav-title".to_string(),
+                        r#type: SlotType::Text,
+                        required: true,
+                        default: None,
+                    }],
+                ),
+                &layout("X", split),
+                &empty_style("X"),
+            )
+            .unwrap()
+            .output
+        };
+
+        let literal = render(LayoutPropValue::String("Projects".to_string()));
+        assert!(literal.contains("<nav aria-label=\"Projects\""), "{literal}");
+        assert!(literal.contains("style=\"flex: 0 0 236px\""), "{literal}");
+        assert!(literal.contains("<section style=\"flex: 1; min-width: 0\">"), "{literal}");
+        assert!(literal.find("PANE").unwrap() < literal.find("DETAIL").unwrap());
+
+        let bound = render(LayoutPropValue::SlotRef("nav-title".to_string()));
+        assert!(bound.contains("<nav aria-label=\"{{navTitle}}\""), "{bound}");
     }
 
     // ===================================================================

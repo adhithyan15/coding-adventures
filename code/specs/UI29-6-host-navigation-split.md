@@ -207,7 +207,7 @@ make the consumers permanently impossible to build. The order is forced:
 | `U29-6-K-compose` | **done** — `NavigationSuiteScaffoldLayout`, adaptive Material 3 navigation |
 | `U29-6-K-qt` | **done** — `SplitView`, preferred pane width and pane landmark; static-collapse behaviour remains reported |
 | `U29-6-K-flutter` | **done** — Flutter pane/detail lowering with compact drawer behaviour |
-| `U29-6-K-web` | React, HTML, WebComponent landmarks |
+| `U29-6-K-web` | **done** — React, HTML and WebComponent flex shells with named pane landmarks |
 | `U29-6-P` | the four consumers, after every `K` has landed |
 
 ## 8. What this spec does not do
