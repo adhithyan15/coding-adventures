@@ -433,6 +433,9 @@ backend-neutral PaintScene instructions, with a native Metal-to-PNG fixture.
 Native `-[label]-` and `-[label]->` edge labels survive structural semantic IR,
 resolve to deterministic relationship geometry, and lower through the shared
 backend-neutral shaped-text PaintInstructions path.
+Document titles reserve resolved layout geometry and lower through shaped-text
+PaintInstructions. Single-line accessibility titles and single-line or braced
+descriptions survive as PaintScene metadata.
 Junctions, alignment hints, group-edge modifiers, left and bidirectional
 arrows, custom icon text, icon artwork, port-aware routing, and configuration remain unsupported
 at the partial level.
