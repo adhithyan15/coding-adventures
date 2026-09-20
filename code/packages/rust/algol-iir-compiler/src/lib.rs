@@ -6450,7 +6450,7 @@ impl Compiler {
                 let Some(actions) = recurrence_actions.as_ref() else {
                     return (None, None);
                 };
-                if !self.static_body_actions_have_simple_dependency_recurrence(
+                if !self.static_body_actions_have_supported_dependency_recurrence(
                     actions,
                     dependency,
                     &target_name,
@@ -6545,7 +6545,7 @@ impl Compiler {
                 return None;
             }
             if body_writes_dependency
-                && !self.static_body_actions_have_simple_dependency_recurrence(
+                && !self.static_body_actions_have_supported_dependency_recurrence(
                     &actions,
                     dependency,
                     &target_name,
@@ -6792,50 +6792,57 @@ impl Compiler {
         })
     }
 
-    fn static_body_actions_have_simple_dependency_recurrence(
+    fn static_body_actions_have_supported_dependency_recurrence(
         &self,
         actions: &[StaticBodyAction<'_>],
         name: &str,
         target_name: &str,
     ) -> bool {
-        self.static_body_actions_have_acyclic_dependency_recurrence(
+        self.static_body_actions_have_supported_dependency_recurrence_inner(
             actions,
             name,
             target_name,
             &mut HashSet::new(),
+            false,
         )
     }
 
-    fn static_body_actions_have_acyclic_dependency_recurrence(
+    fn static_body_actions_have_supported_dependency_recurrence_inner(
         &self,
         actions: &[StaticBodyAction<'_>],
         name: &str,
         target_name: &str,
         visiting: &mut HashSet<String>,
+        conditional_path: bool,
     ) -> bool {
         if !visiting.insert(name.to_string()) {
-            return false;
+            // Cross-assigned scalars are safe here: capped abstract execution
+            // evaluates every recognized assignment in source order. Keep
+            // conditionally selected cycles conservative for now.
+            return !conditional_path;
         }
         let found = self
-            .static_body_actions_have_acyclic_dependency_recurrence_in_actions(
+            .static_body_actions_have_supported_dependency_recurrence_in_actions(
                 actions,
                 actions,
                 name,
                 target_name,
                 visiting,
+                conditional_path,
             )
             .unwrap_or(false);
         visiting.remove(name);
         found
     }
 
-    fn static_body_actions_have_acyclic_dependency_recurrence_in_actions(
+    fn static_body_actions_have_supported_dependency_recurrence_in_actions(
         &self,
         actions: &[StaticBodyAction<'_>],
         all_actions: &[StaticBodyAction<'_>],
         name: &str,
         target_name: &str,
         visiting: &mut HashSet<String>,
+        conditional_path: bool,
     ) -> Option<bool> {
         let mut found = false;
         for action in actions {
@@ -6861,11 +6868,13 @@ impl Compiler {
                             return None;
                         }
                         if Self::static_body_actions_write_name(all_actions, &dependency)
-                            && !self.static_body_actions_have_acyclic_dependency_recurrence(
+                            && !self.static_body_actions_have_supported_dependency_recurrence_inner(
                                 all_actions,
                                 &dependency,
                                 target_name,
                                 visiting,
+                                conditional_path
+                                    || self.contains_conditional_expression(assignment.expression),
                             )
                         {
                             return None;
@@ -6879,20 +6888,22 @@ impl Compiler {
                     ..
                 } => {
                     let then_found = self
-                        .static_body_actions_have_acyclic_dependency_recurrence_in_actions(
+                        .static_body_actions_have_supported_dependency_recurrence_in_actions(
                             then_actions,
                             all_actions,
                             name,
                             target_name,
                             visiting,
+                            true,
                         )?;
                     let else_found = self
-                        .static_body_actions_have_acyclic_dependency_recurrence_in_actions(
+                        .static_body_actions_have_supported_dependency_recurrence_in_actions(
                             else_actions,
                             all_actions,
                             name,
                             target_name,
                             visiting,
+                            true,
                         )?;
                     if then_found || else_found {
                         found = true;
@@ -14603,12 +14614,28 @@ mod tests {
     }
 
     #[test]
-    fn al4_static_assignment_dependency_cycle_remains_conservative() {
-        let err = compile_source(
-            "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := n end; print(i + 0.25) end",
+    fn al4_static_assignment_dependency_cycle_tracks_source_order() {
+        let module = compile_source(
+            "begin integer i, n, delta; i := 0; n := 4; delta := 2; for i := i + 1 while i <= n do begin n := n - delta; delta := n end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
             "test",
         )
-        .expect_err("cross-assignment dependencies require iterative effect analysis");
+        .expect("capped execution can evaluate cross-assigned dependencies in source order");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "0.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_overflowing_cross_assignment_dependency_cycle_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; i := 0; n := 9223372036854775807; delta := 1; for i := i + 1 while i <= 1 do begin n := n + delta; delta := n end; print(n + 0.25) end",
+            "test",
+        )
+        .expect_err("checked overflow keeps cyclic dependency evaluation conservative");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
