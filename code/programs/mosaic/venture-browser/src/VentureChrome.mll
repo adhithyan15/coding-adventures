@@ -120,6 +120,38 @@ layout VentureChrome {
       )
     }
 
+    If ( when: slot: page-info-open ) {
+      Column [ page-info-panel ] {
+        Row [ page-info-header ] {
+          Text [ page-info-heading ] ( content : "Page Information" , a11y-role : heading )
+          HostButton [ page-info-close-button ] (
+            label : "Close" ,
+            onClick : emit: onPageInfoClose
+          )
+        }
+        Row [ page-info-title-row ] {
+          Text [ page-info-title-label ] ( content : "Title" )
+          Text [ page-info-title-value ] ( content : slot: page-info-title )
+        }
+        Row [ page-info-address-row ] {
+          Text [ page-info-address-label ] ( content : "Address" )
+          Text [ page-info-address-value ] ( content : slot: page-info-address )
+        }
+        Row [ page-info-requested-row ] {
+          Text [ page-info-requested-label ] ( content : "Requested" )
+          Text [ page-info-requested-value ] ( content : slot: page-info-requested-address )
+        }
+        Row [ page-info-status-row ] {
+          Text [ page-info-status-label ] ( content : "Status" )
+          Text [ page-info-status-value ] ( content : slot: page-info-status )
+        }
+        Row [ page-info-resources-row ] {
+          Text [ page-info-resources-label ] ( content : "Resources" )
+          Text [ page-info-resources-value ] ( content : slot: page-info-resources )
+        }
+      }
+    }
+
     If ( when: slot: find-open ) {
       Row [ find-bar ] {
         HostInput [ find-input ] (

@@ -201,10 +201,11 @@ host ABI. The
 tracked acceptance backlog is complete; each next phase starts from a fresh
 cross-host audit.
 
-The latest audit centralizes page-composition scale in `BrowserSession`.
-Shared 50%-200% zoom commands map each physical content surface to one logical
-layout viewport and paint scale, reflow retained content without refetching,
-and expose the same controls through every generated host.
+The latest audit closes the visible Page Information gap. Browser core retains
+one response metadata snapshot while Mosaic renders its title, requested and
+final address, HTTP status, and resource/failure counts in a shared closable
+panel. The existing typed host effect remains available for richer platform
+presentation, but a generated shell can no longer silently discard the action.
 
 These are browser-wiring and acceptance items. They do not relax the exact
 zero-missing WPT tree-construction or tokenizer coverage ratchets, and they do

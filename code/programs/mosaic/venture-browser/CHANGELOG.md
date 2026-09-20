@@ -1,5 +1,8 @@
 # Changelog
 
+- Render the core-owned Page Information snapshot in one shared closable Mosaic
+  panel across every generated host while preserving typed presenter effects.
+
 - Centralize generated Mosaic event decoding and native bridge response JSON
   in browser core so macOS, Windows, and Cairo share one protocol.
 

@@ -51,6 +51,20 @@ style VentureChrome {
     background : "#3b3630" ; color : "#f1eadf" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ;
     state hover { background : "#51483c" ; } state pressed { background : "#6a4a27" ; } state focused { outline-color : "#e1a45d" ; outline-width : 2 ; } state disabled { opacity : 0.45 ; }
   }
+  part page-info-panel { background : "#211e1a" ; color : "#f1eadf" ; padding : 10 ; gap : 6 ; border-bottom-width : 1 ; border-bottom-color : "#50483d" ; }
+  part page-info-header { gap : 12 ; align : center-vertical ; }
+  part page-info-heading { color : "#e1a45d" ; font-size : 14 ; font-weight : bold ; flex-grow : 1 ; }
+  part page-info-close-button { background : "#3b3630" ; color : "#f1eadf" ; padding : 6 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ; }
+  part page-info-title-row { gap : 8 ; }
+  part page-info-address-row { gap : 8 ; }
+  part page-info-requested-row { gap : 8 ; }
+  part page-info-status-row { gap : 8 ; }
+  part page-info-resources-row { gap : 8 ; }
+  part page-info-title-label { color : "#bdb4a7" ; font-weight : bold ; }
+  part page-info-address-label { color : "#bdb4a7" ; font-weight : bold ; }
+  part page-info-requested-label { color : "#bdb4a7" ; font-weight : bold ; }
+  part page-info-status-label { color : "#bdb4a7" ; font-weight : bold ; }
+  part page-info-resources-label { color : "#bdb4a7" ; font-weight : bold ; }
   part zoom-out-button {
     background : "#3b3630" ; color : "#f1eadf" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ;
     state hover { background : "#51483c" ; } state pressed { background : "#6a4a27" ; } state focused { outline-color : "#e1a45d" ; outline-width : 2 ; } state disabled { opacity : 0.45 ; }

@@ -900,9 +900,47 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     let address = lastPageInfoRequest?["address"] as? String ?? ""
     let title = lastPageInfoRequest?["title"] as? String ?? ""
     let status = lastPageInfoRequest?["status"] as? Int ?? 0
+    let pageInfoOpen = (applyProps()?["props"] as? NSDictionary)?["page-info-open"] as? Bool
     if pageInfoEvents == eventCount + 1, requestedAddress == targetURL, address == targetURL,
-      title == "Venture interaction acceptance", status == 200
+      title == "Venture interaction acceptance", status == 200, pageInfoOpen == true
     {
+      let closeEvents = chromeEventCounts["onPageInfoClose", default: 0]
+      if !performNativeButtonClick(identifier: "page-info-close-button") {
+        _ = handleEvent([:], name: "onPageInfoClose")
+        propsChangedHandler?()
+      }
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
+        self?.verifyPageInfoClosed(
+          startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+          eventCount: closeEvents, remaining: 50)
+      }
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error",
+          "pageInfoRequestedAddress": requestedAddress, "pageInfoAddress": address,
+          "pageInfoTitle": title, "pageInfoStatus": String(status),
+          "pageInfoEvents": String(pageInfoEvents), "pageInfoOpen": String(pageInfoOpen ?? false),
+          "error": "native Page Information effect did not preserve response identity",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifyPageInfo(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        eventCount: eventCount, remaining: remaining - 1)
+    }
+  }
+
+  private func verifyPageInfoClosed(
+    startURL: String, targetURL: String, markerPath: String, eventCount: Int, remaining: Int
+  ) {
+    let closeEvents = chromeEventCounts["onPageInfoClose", default: 0]
+    let pageInfoOpen = (applyProps()?["props"] as? NSDictionary)?["page-info-open"] as? Bool
+    if closeEvents == eventCount + 1, pageInfoOpen == false {
       let zoomEvents = chromeEventCounts["onZoomIn", default: 0]
       guard performNativeButtonClick(identifier: "zoom-in-button") else {
         writeInteractionResult(
@@ -921,16 +959,15 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
       writeInteractionResult(
         [
           "backend": "swiftui", "status": "error",
-          "pageInfoRequestedAddress": requestedAddress, "pageInfoAddress": address,
-          "pageInfoTitle": title, "pageInfoStatus": String(status),
-          "pageInfoEvents": String(pageInfoEvents),
-          "error": "native Page Information effect did not preserve response identity",
+          "pageInfoCloseEvents": String(closeEvents),
+          "pageInfoOpen": String(pageInfoOpen ?? true),
+          "error": "native Page Information panel did not close",
         ],
         to: markerPath)
       return
     }
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-      self?.verifyPageInfo(
+      self?.verifyPageInfoClosed(
         startURL: startURL, targetURL: targetURL, markerPath: markerPath,
         eventCount: eventCount, remaining: remaining - 1)
     }
@@ -1460,6 +1497,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
           "controls": "back-forward-reload-home-bookmark", "addressCommit": "native-return",
           "bookmarkPersistence": "native-toggle",
           "navigationState": "native-disabled-transitions",
+          "pageInfoPanel": "shared-open-close",
           "failedNavigation": "transaction-retained", "failureStatus": statusText,
           "failureAddress": failureURL,
           "surfaceWheel": "scroll", "surfaceFocus": "native",
@@ -1622,6 +1660,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     case "print-page-button": return ["Print", "Print Page"]
     case "share-page-button": return ["Share", "Share Page"]
     case "page-info-button": return ["Info", "Page Information"]
+    case "page-info-close-button": return ["Close"]
     case "zoom-out-button": return ["Zoom Out"]
     case "zoom-reset-button": return ["50%", "75%", "100%", "125%", "150%", "175%", "200%"]
     case "zoom-in-button": return ["Zoom In"]

@@ -548,7 +548,7 @@ fn positioned_node_breaks_find_text(node: &PositionedNode) -> bool {
 }
 
 /// Mosaic `VentureChrome` slot names, in interface declaration order.
-pub const VENTURE_CHROME_SLOT_NAMES: [&str; 23] = [
+pub const VENTURE_CHROME_SLOT_NAMES: [&str; 29] = [
     "address",
     "page-title",
     "status-text",
@@ -562,6 +562,12 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 23] = [
     "print-page-disabled",
     "share-page-disabled",
     "page-info-disabled",
+    "page-info-open",
+    "page-info-title",
+    "page-info-address",
+    "page-info-requested-address",
+    "page-info-status",
+    "page-info-resources",
     "zoom-label",
     "zoom-out-disabled",
     "zoom-reset-disabled",
@@ -578,7 +584,7 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 23] = [
 pub const VENTURE_CHROME_HOST_SURFACE_SLOT_NAME: &str = "content-surface";
 
 /// Mosaic `VentureChrome` event names, in interface declaration order.
-pub const VENTURE_CHROME_EVENT_NAMES: [&str; 22] = [
+pub const VENTURE_CHROME_EVENT_NAMES: [&str; 23] = [
     "onBack",
     "onForward",
     "onHome",
@@ -590,6 +596,7 @@ pub const VENTURE_CHROME_EVENT_NAMES: [&str; 22] = [
     "onPrintPage",
     "onSharePage",
     "onPageInfo",
+    "onPageInfoClose",
     "onZoomOut",
     "onZoomReset",
     "onZoomIn",
@@ -1544,6 +1551,14 @@ impl BrowserHostEventOutcome {
             effect: Some(effect),
         }
     }
+
+    pub fn changed_effect(effect: BrowserHostEffect) -> Self {
+        Self {
+            changed: true,
+            page_reflow_required: false,
+            effect: Some(effect),
+        }
+    }
 }
 
 /// The current loaded page and its viewport interaction state.
@@ -1731,6 +1746,7 @@ pub enum BrowserChromeAction {
     PrintPage,
     SharePage,
     PageInfo,
+    ClosePageInfo,
     ZoomOut,
     ZoomReset,
     ZoomIn,
@@ -1756,6 +1772,7 @@ pub enum BrowserChromeEvent {
     PrintPage,
     SharePage,
     PageInfo,
+    PageInfoClose,
     ZoomOut,
     ZoomReset,
     ZoomIn,
@@ -1789,6 +1806,7 @@ impl BrowserChromeEvent {
             Self::PrintPage => "onPrintPage",
             Self::SharePage => "onSharePage",
             Self::PageInfo => "onPageInfo",
+            Self::PageInfoClose => "onPageInfoClose",
             Self::ZoomOut => "onZoomOut",
             Self::ZoomReset => "onZoomReset",
             Self::ZoomIn => "onZoomIn",
@@ -1821,6 +1839,7 @@ impl BrowserChromeEvent {
             "onPrintPage" => Self::PrintPage,
             "onSharePage" => Self::SharePage,
             "onPageInfo" => Self::PageInfo,
+            "onPageInfoClose" => Self::PageInfoClose,
             "onZoomOut" => Self::ZoomOut,
             "onZoomReset" => Self::ZoomReset,
             "onZoomIn" => Self::ZoomIn,
@@ -1861,6 +1880,12 @@ pub struct BrowserChromeProps {
     pub print_page_disabled: bool,
     pub share_page_disabled: bool,
     pub page_info_disabled: bool,
+    pub page_info_open: bool,
+    pub page_info_title: String,
+    pub page_info_address: String,
+    pub page_info_requested_address: String,
+    pub page_info_status: String,
+    pub page_info_resources: String,
     pub zoom_label: String,
     pub zoom_out_disabled: bool,
     pub zoom_reset_disabled: bool,
@@ -1944,7 +1969,7 @@ impl BrowserChromeProps {
     /// Serialize all shared chrome slots using their authored MIL names.
     pub fn to_bridge_json(&self) -> String {
         format!(
-            "{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"bookmark-label\":{},\"bookmark-disabled\":{},\"copy-address-disabled\":{},\"open-page-disabled\":{},\"save-page-disabled\":{},\"print-page-disabled\":{},\"share-page-disabled\":{},\"page-info-disabled\":{},\"zoom-label\":{},\"zoom-out-disabled\":{},\"zoom-reset-disabled\":{},\"zoom-in-disabled\":{},\"view-source-disabled\":{},\"find-open\":{},\"find-query\":{},\"find-result-label\":{},\"find-disabled\":{},\"navigation-disabled\":{}}}",
+            "{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"bookmark-label\":{},\"bookmark-disabled\":{},\"copy-address-disabled\":{},\"open-page-disabled\":{},\"save-page-disabled\":{},\"print-page-disabled\":{},\"share-page-disabled\":{},\"page-info-disabled\":{},\"page-info-open\":{},\"page-info-title\":{},\"page-info-address\":{},\"page-info-requested-address\":{},\"page-info-status\":{},\"page-info-resources\":{},\"zoom-label\":{},\"zoom-out-disabled\":{},\"zoom-reset-disabled\":{},\"zoom-in-disabled\":{},\"view-source-disabled\":{},\"find-open\":{},\"find-query\":{},\"find-result-label\":{},\"find-disabled\":{},\"navigation-disabled\":{}}}",
             bridge_json_string(&self.address),
             bridge_json_string(&self.page_title),
             bridge_json_string(&self.status_text),
@@ -1958,6 +1983,12 @@ impl BrowserChromeProps {
             self.print_page_disabled,
             self.share_page_disabled,
             self.page_info_disabled,
+            self.page_info_open,
+            bridge_json_string(&self.page_info_title),
+            bridge_json_string(&self.page_info_address),
+            bridge_json_string(&self.page_info_requested_address),
+            bridge_json_string(&self.page_info_status),
+            bridge_json_string(&self.page_info_resources),
             bridge_json_string(&self.zoom_label),
             self.zoom_out_disabled,
             self.zoom_reset_disabled,
@@ -2027,6 +2058,7 @@ fn bridge_json_string(value: &str) -> String {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct BrowserChromeController {
     address_draft: String,
+    page_info: Option<BrowserPageInfoRequest>,
 }
 
 impl BrowserChromeController {
@@ -2037,6 +2069,7 @@ impl BrowserChromeController {
                 .current_url()
                 .unwrap_or_else(|| session.history().home_url())
                 .to_string(),
+            page_info: None,
         }
     }
 
@@ -2044,11 +2077,20 @@ impl BrowserChromeController {
         &self.address_draft
     }
 
+    pub fn page_info(&self) -> Option<&BrowserPageInfoRequest> {
+        self.page_info.as_ref()
+    }
+
+    pub fn show_page_info(&mut self, page_info: BrowserPageInfoRequest) {
+        self.page_info = Some(page_info);
+    }
+
     /// Synchronize the address slot after a successful page load or redirect.
     pub fn synchronize(&mut self, session: &BrowserSession) {
         if let Some(current_url) = session.history().current_url() {
             self.address_draft = current_url.to_string();
         }
+        self.page_info = None;
     }
 
     /// Reduce a Mosaic event to a Venture navigation command when appropriate.
@@ -2058,6 +2100,10 @@ impl BrowserChromeController {
         session: &BrowserSession,
         navigation_disabled: bool,
     ) -> Option<BrowserChromeAction> {
+        if event == BrowserChromeEvent::PageInfoClose {
+            let changed = self.page_info.take().is_some();
+            return changed.then_some(BrowserChromeAction::ClosePageInfo);
+        }
         if navigation_disabled {
             return None;
         }
@@ -2147,6 +2193,7 @@ impl BrowserChromeController {
             | BrowserChromeEvent::PrintPage
             | BrowserChromeEvent::SharePage
             | BrowserChromeEvent::PageInfo
+            | BrowserChromeEvent::PageInfoClose
             | BrowserChromeEvent::ZoomOut
             | BrowserChromeEvent::ZoomReset
             | BrowserChromeEvent::ZoomIn
@@ -2172,6 +2219,7 @@ impl BrowserChromeController {
             .filter(|title| !title.is_empty())
             .unwrap_or("")
             .to_string();
+        let page_info = self.page_info.as_ref();
 
         BrowserChromeProps {
             address: self.address_draft.clone(),
@@ -2192,6 +2240,28 @@ impl BrowserChromeController {
             print_page_disabled: navigation_disabled || session.viewport().is_none(),
             share_page_disabled: navigation_disabled || session.viewport().is_none(),
             page_info_disabled: navigation_disabled || session.viewport().is_none(),
+            page_info_open: page_info.is_some(),
+            page_info_title: page_info.map(|info| info.title.clone()).unwrap_or_default(),
+            page_info_address: page_info
+                .map(|info| info.address.clone())
+                .unwrap_or_default(),
+            page_info_requested_address: page_info
+                .map(|info| info.requested_address.clone())
+                .unwrap_or_default(),
+            page_info_status: page_info
+                .map(|info| format!("HTTP {}", info.status))
+                .unwrap_or_default(),
+            page_info_resources: page_info
+                .map(|info| {
+                    format!(
+                        "Images: {} ({} failed)  Stylesheets: {} ({} failed)",
+                        info.image_resource_count,
+                        info.image_failure_count,
+                        info.stylesheet_resource_count,
+                        info.stylesheet_failure_count,
+                    )
+                })
+                .unwrap_or_default(),
             zoom_label: format!("{}%", session.zoom_percent()),
             zoom_out_disabled: navigation_disabled
                 || session.viewport().is_none()
@@ -2408,22 +2478,21 @@ impl BrowserHostController {
                 )))
             }
             BrowserChromeAction::PageInfo => {
-                let page = self
-                    .session
-                    .viewport()
-                    .expect("page-info action requires a retained viewport")
-                    .page();
-                let title = page
-                    .document
-                    .title
-                    .as_deref()
-                    .map(str::trim)
-                    .filter(|title| !title.is_empty())
-                    .unwrap_or(&page.final_url)
-                    .to_string();
-                self.status_text = "Page information requested".to_string();
-                Ok(BrowserHostEventOutcome::effect(
-                    BrowserHostEffect::PageInfo(BrowserPageInfoRequest {
+                let page_info = {
+                    let page = self
+                        .session
+                        .viewport()
+                        .expect("page-info action requires a retained viewport")
+                        .page();
+                    let title = page
+                        .document
+                        .title
+                        .as_deref()
+                        .map(str::trim)
+                        .filter(|title| !title.is_empty())
+                        .unwrap_or(&page.final_url)
+                        .to_string();
+                    BrowserPageInfoRequest {
                         requested_address: page.requested_url.clone(),
                         address: page.final_url.clone(),
                         title,
@@ -2432,8 +2501,17 @@ impl BrowserHostController {
                         image_failure_count: page.image_failures.len(),
                         stylesheet_resource_count: page.stylesheet_resources.len(),
                         stylesheet_failure_count: page.stylesheet_failures.len(),
-                    }),
+                    }
+                };
+                self.chrome.show_page_info(page_info.clone());
+                self.status_text = "Page information shown".to_string();
+                Ok(BrowserHostEventOutcome::changed_effect(
+                    BrowserHostEffect::PageInfo(page_info),
                 ))
+            }
+            BrowserChromeAction::ClosePageInfo => {
+                self.status_text = "Ready".to_string();
+                Ok(BrowserHostEventOutcome::changed(true))
             }
             BrowserChromeAction::ZoomOut => {
                 let changed = self.session.zoom_out();
@@ -7440,6 +7518,7 @@ mod tests {
             ("onPrintPage", None, BrowserChromeEvent::PrintPage),
             ("onSharePage", None, BrowserChromeEvent::SharePage),
             ("onPageInfo", None, BrowserChromeEvent::PageInfo),
+            ("onPageInfoClose", None, BrowserChromeEvent::PageInfoClose),
             ("onZoomOut", None, BrowserChromeEvent::ZoomOut),
             ("onZoomReset", None, BrowserChromeEvent::ZoomReset),
             ("onZoomIn", None, BrowserChromeEvent::ZoomIn),
@@ -7568,6 +7647,12 @@ mod tests {
             print_page_disabled: false,
             share_page_disabled: true,
             page_info_disabled: false,
+            page_info_open: true,
+            page_info_title: "Example".into(),
+            page_info_address: "https://example.test/final".into(),
+            page_info_requested_address: "https://example.test/start".into(),
+            page_info_status: "HTTP 200".into(),
+            page_info_resources: "Images: 3 (1 failed)  Stylesheets: 2 (0 failed)".into(),
             zoom_label: "125%".into(),
             zoom_out_disabled: true,
             zoom_reset_disabled: false,
@@ -7583,7 +7668,7 @@ mod tests {
 
         assert_eq!(
             browser_bridge_response_json(&props, Some(&effect), Some("bad\nrequest")),
-            r#"{"props":{"address":"https://example.test/\"draft\"","page-title":"Line\nTitle","status-text":"Ready\tsoon","back-disabled":true,"forward-disabled":false,"bookmark-label":"Remove \"bookmark\"","bookmark-disabled":false,"copy-address-disabled":true,"open-page-disabled":false,"save-page-disabled":true,"print-page-disabled":false,"share-page-disabled":true,"page-info-disabled":false,"zoom-label":"125%","zoom-out-disabled":true,"zoom-reset-disabled":false,"zoom-in-disabled":true,"view-source-disabled":false,"find-open":true,"find-query":"a\\b","find-result-label":"1 of 2","find-disabled":false,"navigation-disabled":true},"effect":{"type":"write-clipboard","text":"copy\u0001"},"error":"bad\nrequest"}"#
+            r#"{"props":{"address":"https://example.test/\"draft\"","page-title":"Line\nTitle","status-text":"Ready\tsoon","back-disabled":true,"forward-disabled":false,"bookmark-label":"Remove \"bookmark\"","bookmark-disabled":false,"copy-address-disabled":true,"open-page-disabled":false,"save-page-disabled":true,"print-page-disabled":false,"share-page-disabled":true,"page-info-disabled":false,"page-info-open":true,"page-info-title":"Example","page-info-address":"https://example.test/final","page-info-requested-address":"https://example.test/start","page-info-status":"HTTP 200","page-info-resources":"Images: 3 (1 failed)  Stylesheets: 2 (0 failed)","zoom-label":"125%","zoom-out-disabled":true,"zoom-reset-disabled":false,"zoom-in-disabled":true,"view-source-disabled":false,"find-open":true,"find-query":"a\\b","find-result-label":"1 of 2","find-disabled":false,"navigation-disabled":true},"effect":{"type":"write-clipboard","text":"copy\u0001"},"error":"bad\nrequest"}"#
         );
     }
 
@@ -7650,6 +7735,12 @@ mod tests {
                 print_page_disabled: true,
                 share_page_disabled: true,
                 page_info_disabled: true,
+                page_info_open: false,
+                page_info_title: String::new(),
+                page_info_address: String::new(),
+                page_info_requested_address: String::new(),
+                page_info_status: String::new(),
+                page_info_resources: String::new(),
                 zoom_label: "100%".into(),
                 zoom_out_disabled: true,
                 zoom_reset_disabled: true,
@@ -7717,6 +7808,12 @@ mod tests {
                 print_page_disabled: false,
                 share_page_disabled: false,
                 page_info_disabled: false,
+                page_info_open: false,
+                page_info_title: String::new(),
+                page_info_address: String::new(),
+                page_info_requested_address: String::new(),
+                page_info_status: String::new(),
+                page_info_resources: String::new(),
                 zoom_label: "100%".into(),
                 zoom_out_disabled: false,
                 zoom_reset_disabled: true,
@@ -7891,6 +7988,7 @@ mod tests {
             BrowserChromeEvent::PrintPage,
             BrowserChromeEvent::SharePage,
             BrowserChromeEvent::PageInfo,
+            BrowserChromeEvent::PageInfoClose,
             BrowserChromeEvent::ZoomOut,
             BrowserChromeEvent::ZoomReset,
             BrowserChromeEvent::ZoomIn,
@@ -8136,7 +8234,7 @@ mod tests {
                 unreachable!("page info must not navigate or refetch the current context")
             })
             .unwrap();
-        assert!(!page_info.changed);
+        assert!(page_info.changed);
         assert_eq!(
             page_info.effect,
             Some(BrowserHostEffect::PageInfo(BrowserPageInfoRequest {
@@ -8150,7 +8248,26 @@ mod tests {
                 stylesheet_failure_count: 0,
             }))
         );
-        assert_eq!(host.props().status_text, "Page information requested");
+        let info_props = host.props();
+        assert_eq!(info_props.status_text, "Page information shown");
+        assert!(info_props.page_info_open);
+        assert_eq!(info_props.page_info_title, "Source test");
+        assert_eq!(info_props.page_info_address, url);
+        assert_eq!(info_props.page_info_requested_address, url);
+        assert_eq!(info_props.page_info_status, "HTTP 200");
+        assert_eq!(
+            info_props.page_info_resources,
+            "Images: 0 (0 failed)  Stylesheets: 0 (0 failed)"
+        );
+
+        let closed = host
+            .handle_event_with_effect(BrowserChromeEvent::PageInfoClose, &mut bookmarks, |_, _| {
+                unreachable!("closing page info must not navigate")
+            })
+            .unwrap();
+        assert_eq!(closed, BrowserHostEventOutcome::changed(true));
+        assert!(!host.props().page_info_open);
+        assert_eq!(host.props().status_text, "Ready");
 
         let zoomed = host
             .handle_event_with_effect(BrowserChromeEvent::ZoomIn, &mut bookmarks, |_, _| {

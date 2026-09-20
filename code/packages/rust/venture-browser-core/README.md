@@ -85,7 +85,9 @@ Share Page snapshots the same identity into one typed share request. None of
 these commands reads the editable address draft or mutates the current session.
 Page Information extends that boundary with the retained requested and final
 URLs, response status, normalized title, and image/stylesheet resource and
-failure counts. Native hosts only present the typed effects.
+failure counts. Browser core also retains that bounded snapshot for a shared
+closable Mosaic panel, while native hosts may still present the typed effect in
+a richer platform surface. Navigation synchronization clears stale metadata.
 
 The native Mosaic bridge protocol follows the same ownership rule.
 `BrowserChromeEvent::from_mosaic_event` owns event names and required values;
