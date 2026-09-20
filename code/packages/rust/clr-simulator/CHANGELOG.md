@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — compact int32 minus one (CLR09)
+
+Execute standard `ldc.i4.m1` (`0x15`) as `Int(-1)` and make the public integer
+encoding helper select that canonical one-byte form. Raw-byte, trace, program
+counter and encoding-boundary tests cover the new path.
+
 ## Unreleased — remainder and bitwise NOT (CLR07)
 
 Execute signed `rem` and bitwise `not` for Int and Int64 values, preserving

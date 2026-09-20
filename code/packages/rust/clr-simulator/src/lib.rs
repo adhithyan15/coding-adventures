@@ -55,6 +55,8 @@ pub const OP_STLOC_0: u8 = 0x0A;
 pub const OP_STLOC_3: u8 = 0x0D;
 pub const OP_LDLOC_S: u8 = 0x11;
 pub const OP_STLOC_S: u8 = 0x13;
+/// Push the compact signed int32 constant -1.
+pub const OP_LDC_I4_M1: u8 = 0x15;
 pub const OP_LDC_I4_0: u8 = 0x16;
 pub const OP_LDC_I4_8: u8 = 0x1E;
 pub const OP_LDC_I4_S: u8 = 0x1F;
@@ -370,6 +372,12 @@ impl CLRSimulator {
             self.stack.push(top);
             self.pc += 1;
             return self.trace(pc, "dup", stack_before, "duplicate top of stack".to_string());
+        }
+
+        if opcode_byte == OP_LDC_I4_M1 {
+            self.stack.push(Some(Value::Int(-1)));
+            self.pc += 1;
+            return self.trace(pc, "ldc.i4.m1", stack_before, "push -1".to_string());
         }
 
         // ldc.i4.N: push small integer constants 0-8.
@@ -876,6 +884,9 @@ impl Default for CLRSimulator {
 
 /// Encode ldc.i4 with automatic compact form selection.
 pub fn encode_ldc_i4(n: i32) -> Vec<u8> {
+    if n == -1 {
+        return vec![OP_LDC_I4_M1];
+    }
     if (0..=8).contains(&n) {
         return vec![(OP_LDC_I4_0 as i32 + n) as u8];
     }
