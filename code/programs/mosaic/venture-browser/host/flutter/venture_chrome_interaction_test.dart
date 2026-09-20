@@ -202,6 +202,15 @@ void main() {
 
       await tester.tap(find.text('Back'));
       await tester.pumpAndSettle();
+      await tester.tap(find.text('History (2)'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(ButtonStyleButton, 'Next'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Open'));
+      await tester.pumpAndSettle();
+      expect(find.text('Flutter Address Target'), findsOneWidget);
+      await tester.tap(find.text('Back'));
+      await tester.pumpAndSettle();
       debugPrint('flutter-live-stage=history');
       expect(find.text('Flutter Start'), findsOneWidget);
       await tester.tap(find.text('Forward'));

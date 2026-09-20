@@ -48,6 +48,12 @@ layout VentureChrome {
         state-when-disabled : slot: bookmarks-disabled ,
         onClick : emit: onBookmarksOpen
       )
+      HostButton [ history-button ] (
+        label : slot: history-label ,
+        disabled : slot: history-disabled ,
+        state-when-disabled : slot: history-disabled ,
+        onClick : emit: onHistoryOpen
+      )
       HostInput [ address-input ] (
         value : slot: address ,
         placeholder : "Enter a URL" ,
@@ -162,6 +168,40 @@ layout VentureChrome {
             disabled : slot: bookmarks-navigate-disabled ,
             state-when-disabled : slot: bookmarks-navigate-disabled ,
             onClick : emit: onBookmarksNavigate
+          )
+        }
+      }
+    }
+
+    If ( when: slot: history-open ) {
+      Column [ history-panel ] {
+        Row [ history-header ] {
+          Text [ history-heading ] ( content : "Session History" , a11y-role : heading )
+          Text [ history-position ] ( content : slot: history-position )
+          HostButton [ history-close-button ] (
+            label : "Close" ,
+            onClick : emit: onHistoryClose
+          )
+        }
+        Text [ history-address ] ( content : slot: history-address )
+        Row [ history-actions ] {
+          HostButton [ history-previous-button ] (
+            label : "Previous" ,
+            disabled : slot: history-previous-disabled ,
+            state-when-disabled : slot: history-previous-disabled ,
+            onClick : emit: onHistoryPrevious
+          )
+          HostButton [ history-next-button ] (
+            label : "Next" ,
+            disabled : slot: history-next-disabled ,
+            state-when-disabled : slot: history-next-disabled ,
+            onClick : emit: onHistoryNext
+          )
+          HostButton [ history-open-button ] (
+            label : "Open" ,
+            disabled : slot: history-navigate-disabled ,
+            state-when-disabled : slot: history-navigate-disabled ,
+            onClick : emit: onHistoryNavigate
           )
         }
       }

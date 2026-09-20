@@ -11,6 +11,8 @@ let navigationDisabled = true;
 let stopDisabled = true;
 let bookmarked = false;
 let bookmarksOpen = false;
+let historyOpen = false;
+let historyPosition = 2;
 let findOpen = false;
 let findQuery = "";
 let findResultLabel = "";
@@ -38,6 +40,14 @@ const props = (statusText: string) => ({
     bookmarksPreviousDisabled: true,
     bookmarksNextDisabled: true,
     bookmarksNavigateDisabled: navigationDisabled || !bookmarked,
+    historyLabel: "History (2)",
+    historyDisabled: navigationDisabled,
+    historyOpen,
+    historyPosition: `${historyPosition} of 2`,
+    historyAddress: historyPosition === 1 ? "http://venture.test/previous" : "http://venture.test/start",
+    historyPreviousDisabled: navigationDisabled,
+    historyNextDisabled: navigationDisabled,
+    historyNavigateDisabled: navigationDisabled || historyPosition === 2,
     copyAddressDisabled: navigationDisabled,
     openPageDisabled: navigationDisabled,
     savePageDisabled: navigationDisabled,
@@ -88,6 +98,18 @@ window.mosaicHost = {
     if (request.event.type === "bookmarksNavigate") {
       bookmarksOpen = false;
       return props("Bookmark opened through MosaicHost");
+    }
+    if (request.event.type === "historyOpen") {
+      historyOpen = true;
+      return props("History opened through MosaicHost");
+    }
+    if (request.event.type === "historyPrevious") {
+      historyPosition = 1;
+      return props("History selection changed through MosaicHost");
+    }
+    if (request.event.type === "historyClose" || request.event.type === "historyNavigate") {
+      historyOpen = false;
+      return props("History closed through MosaicHost");
     }
     if (request.event.type === "findChange") {
       findQuery = request.event.value ?? "";
@@ -168,7 +190,7 @@ test("React and Electron renderer controls cross the Mosaic host seam", async ()
 
   expect(document.body.textContent).toContain("Venture React acceptance");
   expect(document.body.textContent).toContain("React host surface");
-  for (const label of ["Back", "Forward", "Reload", "Stop", "Bookmark", "Bookmarks (0)", "Copy", "New Window", "Save", "Print", "Share", "Info", "Zoom Out", "100%", "Zoom In", "Source", "Find", "Go"]) {
+  for (const label of ["Back", "Forward", "Reload", "Stop", "Bookmark", "Bookmarks (0)", "History (2)", "Copy", "New Window", "Save", "Print", "Share", "Info", "Zoom Out", "100%", "Zoom In", "Source", "Find", "Go"]) {
     const button = textButton(label);
     expect(button.disabled).toBe(true);
     button.click();
@@ -254,6 +276,24 @@ test("React and Electron renderer controls cross the Mosaic host seam", async ()
   });
   await flush();
   expect(events[events.length - 1]?.event.type).toBe("bookmarksClose");
+
+  await act(async () => {
+    textButton("History (2)").click();
+  });
+  await flush();
+  expect(events[events.length - 1]?.event.type).toBe("historyOpen");
+  expect(document.body.textContent).toContain("2 of 2");
+  await act(async () => {
+    textButton("Previous").click();
+  });
+  await flush();
+  expect(events[events.length - 1]?.event.type).toBe("historyPrevious");
+  expect(document.body.textContent).toContain("http://venture.test/previous");
+  await act(async () => {
+    textButton("Open").click();
+  });
+  await flush();
+  expect(events[events.length - 1]?.event.type).toBe("historyNavigate");
 
   await act(async () => {
     textButton("Copy").click();

@@ -74,6 +74,34 @@ impl NavigationHistory {
         &self.forward_stack
     }
 
+    /// Return every session-history entry in traversal order.
+    ///
+    /// Repeated URLs remain distinct because callers select the stable entry
+    /// identifier rather than reconstructing navigation from the address.
+    pub fn entries(&self) -> Vec<(NavigationEntryId, &str)> {
+        self.back_entry_ids
+            .iter()
+            .copied()
+            .zip(self.back_stack.iter().map(String::as_str))
+            .chain(
+                self.current_entry_id
+                    .zip(self.current_url.as_deref())
+                    .into_iter(),
+            )
+            .chain(
+                self.forward_entry_ids
+                    .iter()
+                    .rev()
+                    .copied()
+                    .zip(self.forward_stack.iter().rev().map(String::as_str)),
+            )
+            .collect()
+    }
+
+    pub fn current_index(&self) -> Option<usize> {
+        self.current_entry_id.map(|_| self.back_stack.len())
+    }
+
     pub fn can_go_back(&self) -> bool {
         !self.back_stack.is_empty()
     }
@@ -134,6 +162,38 @@ impl NavigationHistory {
         } else {
             self.current_entry_id = Some(next_id);
         }
+        self.current_url()
+    }
+
+    /// Traverse directly to one existing entry without creating a new entry.
+    pub fn go_to_entry(&mut self, target: NavigationEntryId) -> Option<&str> {
+        if self.current_entry_id == Some(target) {
+            return self.current_url();
+        }
+        let entries = self
+            .entries()
+            .into_iter()
+            .map(|(id, url)| (id, url.to_string()))
+            .collect::<Vec<_>>();
+        let target_index = entries.iter().position(|(id, _)| *id == target)?;
+
+        self.back_entry_ids = entries[..target_index].iter().map(|(id, _)| *id).collect();
+        self.back_stack = entries[..target_index]
+            .iter()
+            .map(|(_, url)| url.clone())
+            .collect();
+        self.current_entry_id = Some(entries[target_index].0);
+        self.current_url = Some(entries[target_index].1.clone());
+        self.forward_entry_ids = entries[target_index + 1..]
+            .iter()
+            .rev()
+            .map(|(id, _)| *id)
+            .collect();
+        self.forward_stack = entries[target_index + 1..]
+            .iter()
+            .rev()
+            .map(|(_, url)| url.clone())
+            .collect();
         self.current_url()
     }
 
@@ -271,6 +331,47 @@ mod tests {
         assert_eq!(history.current_entry_id(), Some(second));
         history.replace_current("http://example.test/final");
         assert_eq!(history.current_entry_id(), Some(second));
+    }
+
+    #[test]
+    fn ordered_entries_support_direct_identity_preserving_traversal() {
+        let mut history = NavigationHistory::new("http://home.test/");
+        history.navigate("http://example.test/a");
+        let first = history.current_entry_id().unwrap();
+        history.navigate("http://example.test/repeated");
+        let repeated_first = history.current_entry_id().unwrap();
+        history.navigate("http://example.test/repeated");
+        let repeated_second = history.current_entry_id().unwrap();
+        history.navigate("http://example.test/d");
+
+        assert_eq!(history.current_index(), Some(3));
+        assert_eq!(
+            history
+                .entries()
+                .into_iter()
+                .map(|(id, url)| (id, url.to_string()))
+                .collect::<Vec<_>>(),
+            vec![
+                (first, "http://example.test/a".into()),
+                (repeated_first, "http://example.test/repeated".into()),
+                (repeated_second, "http://example.test/repeated".into()),
+                (
+                    history.current_entry_id().unwrap(),
+                    "http://example.test/d".into()
+                ),
+            ]
+        );
+
+        assert_eq!(
+            history.go_to_entry(repeated_first),
+            Some("http://example.test/repeated")
+        );
+        assert_eq!(history.current_entry_id(), Some(repeated_first));
+        assert_eq!(history.current_index(), Some(1));
+        assert_eq!(history.forward(), Some("http://example.test/repeated"));
+        assert_eq!(history.current_entry_id(), Some(repeated_second));
+        assert_eq!(history.back(), Some("http://example.test/repeated"));
+        assert_eq!(history.current_entry_id(), Some(repeated_first));
     }
 
     #[test]

@@ -221,6 +221,8 @@ public static class MosaicHost
                     component, "bookmark-button");
                 var bookmarksButton = await FindAutomationElementAsync<Button>(
                     component, "bookmarks-button");
+                var historyButton = await FindAutomationElementAsync<Button>(
+                    component, "history-button");
                 var copyAddressButton = await FindAutomationElementAsync<Button>(
                     component, "copy-address-button");
                 var openPageButton = await FindAutomationElementAsync<Button>(
@@ -248,6 +250,7 @@ public static class MosaicHost
                     || stopButton is null
                     || bookmarkButton is null
                     || bookmarksButton is null
+                    || historyButton is null
                     || copyAddressButton is null
                     || openPageButton is null
                     || savePageButton is null
@@ -341,6 +344,37 @@ public static class MosaicHost
                         backend = "xaml",
                         status = "error",
                         error = "native navigation controls did not update after navigation",
+                    });
+                    return;
+                }
+                (new ButtonAutomationPeer(historyButton) as IInvokeProvider)?.Invoke();
+                if (!await WaitForControlStateAsync(
+                    () => component.HistoryOpen
+                        && component.HistoryLabel == "History (2)"
+                        && component.HistoryPosition == "2 of 2"
+                        && component.HistoryAddress == targetUrl))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native history catalog did not expose shared traversal state",
+                    });
+                    return;
+                }
+                var historyCloseButton = await FindAutomationElementAsync<Button>(
+                    component, "history-close-button");
+                (historyCloseButton is null
+                    ? null
+                    : new ButtonAutomationPeer(historyCloseButton) as IInvokeProvider)?.Invoke();
+                if (historyCloseButton is null
+                    || !await WaitForControlStateAsync(() => !component.HistoryOpen))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native history catalog did not close through shared state",
                     });
                     return;
                 }
@@ -1160,6 +1194,22 @@ public static class MosaicHost
                 props.GetProperty("bookmarks-next-disabled").GetBoolean();
             component.BookmarksNavigateDisabled =
                 props.GetProperty("bookmarks-navigate-disabled").GetBoolean();
+            SetIfChanged(component.HistoryLabel, props.GetProperty("history-label").GetString(),
+                value => component.HistoryLabel = value);
+            component.HistoryDisabled = props.GetProperty("history-disabled").GetBoolean();
+            component.HistoryOpen = props.GetProperty("history-open").GetBoolean();
+            SetIfChanged(component.HistoryPosition,
+                props.GetProperty("history-position").GetString(),
+                value => component.HistoryPosition = value);
+            SetIfChanged(component.HistoryAddress,
+                props.GetProperty("history-address").GetString(),
+                value => component.HistoryAddress = value);
+            component.HistoryPreviousDisabled =
+                props.GetProperty("history-previous-disabled").GetBoolean();
+            component.HistoryNextDisabled =
+                props.GetProperty("history-next-disabled").GetBoolean();
+            component.HistoryNavigateDisabled =
+                props.GetProperty("history-navigate-disabled").GetBoolean();
             component.CopyAddressDisabled = props.GetProperty("copy-address-disabled").GetBoolean();
             component.OpenPageDisabled = props.GetProperty("open-page-disabled").GetBoolean();
             component.SavePageDisabled = props.GetProperty("save-page-disabled").GetBoolean();
