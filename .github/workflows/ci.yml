@@ -2918,14 +2918,14 @@ jobs:
           text = open(sys.argv[1]).read()
           install = text.index("installEngramEffects(it)")
 
-          # After the host exists: installing onto a host that has not been
-          # loaded yet would not compile, but installing after the UI is built
-          # would compile and silently miss every effect raised during the first
-          # composition.
-          creation = text.index("val mosaicHost = remember")
+          # After the host exists and before the loader returns it: installing
+          # onto a host that has not been loaded yet would not compile, while
+          # returning the host first would let the initial composition raise
+          # effects before the handler is attached.
+          creation = text.index("val mosaicHost =")
           assert creation < install, "install must follow the host's creation"
-          window = text.index("Window(onCloseRequest")
-          assert install < window, "install must precede the first composition"
+          returned = text.index("return mosaicHost", creation)
+          assert install < returned, "install must precede returning the host"
           PY
 
           # The gate: it builds. `compileKotlin` is enough -- this lane already
