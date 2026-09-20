@@ -6803,7 +6803,6 @@ impl Compiler {
             name,
             target_name,
             &mut HashSet::new(),
-            true,
         )
     }
 
@@ -6813,7 +6812,6 @@ impl Compiler {
         name: &str,
         target_name: &str,
         visiting: &mut HashSet<String>,
-        is_root: bool,
     ) -> bool {
         if !visiting.insert(name.to_string()) {
             return false;
@@ -6823,13 +6821,6 @@ impl Compiler {
             match action {
                 StaticBodyAction::Assignment(assignment) if assignment.name == name => {
                     if found {
-                        return false;
-                    }
-                    if !is_root
-                        && recursive_tokens(assignment.expression)
-                            .iter()
-                            .any(|token| token.value == "if")
-                    {
                         return false;
                     }
                     let mut dependencies = HashSet::new();
@@ -6857,7 +6848,6 @@ impl Compiler {
                                 &dependency,
                                 target_name,
                                 visiting,
-                                false,
                             )
                         {
                             return false;
@@ -13932,13 +13922,12 @@ mod tests {
     }
 
     #[test]
-    fn al4_written_conditional_selector_dependency_remains_conservative() {
-        let err = compile_source(
+    fn al4_written_conditional_selector_dependency_tracks_selected_recurrence() {
+        compile_source(
             "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := false end; print(i + 0.25) end",
             "test",
         )
-        .expect_err("a written conditional selector dependency may change the selected leaf");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        .expect("a bounded changing selector recurrence retains exact selected leaves");
     }
 
     #[test]
@@ -13951,13 +13940,12 @@ mod tests {
     }
 
     #[test]
-    fn al4_computed_conditional_selector_dependency_remains_conservative() {
-        let err = compile_source(
+    fn al4_computed_conditional_selector_dependency_tracks_selected_recurrence() {
+        compile_source(
             "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := not other end; print(i + 0.25) end",
             "test",
         )
-        .expect_err("a computed dependency assignment may change the selected leaf later");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        .expect("a bounded computed selector recurrence retains exact selected leaves");
     }
 
     #[test]
@@ -14551,23 +14539,21 @@ mod tests {
     }
 
     #[test]
-    fn al4_written_assignment_selector_remains_conservative_for_transitive_dependency() {
-        let err = compile_source(
+    fn al4_written_assignment_selector_tracks_transitive_dependency() {
+        compile_source(
             "begin integer i, n, limit; boolean choose; n := 3; limit := 3; choose := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose then limit else limit + 1; choose := false end; print(i + 0.25) end",
             "test",
         )
-        .expect_err("a selector written by the body may choose a changing leaf later");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        .expect("a bounded written selector recurrence retains its transitive dependency");
     }
 
     #[test]
-    fn al4_controlled_assignment_selector_remains_conservative_for_transitive_dependency() {
-        let err = compile_source(
+    fn al4_controlled_assignment_selector_tracks_transitive_dependency() {
+        compile_source(
             "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if i < 2 then limit else limit + 1 end; print(i + 0.25) end",
             "test",
         )
-        .expect_err("the changing loop control may select a different dependency leaf later");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        .expect("the exact loop control may select changing dependency leaves");
     }
 
     #[test]

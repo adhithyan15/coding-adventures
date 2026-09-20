@@ -214,12 +214,14 @@ different recursively supported branches on successive passes. Predicate-
 dependencies may remain stable. One directly assigned dependency may also
 evolve through a supported recurrence whose expression references itself, the
 controlled scalar, and ordinary local scalars that are unchanged or evolve
-through an acyclic graph of supported recurrences. The controlled scalar
-itself may likewise be updated alongside other supported local scalar
+through an acyclic graph of supported recurrences. Those changing dependency
+recurrences may contain conditional expressions when their selectors are the
+controlled scalar or other exact local snapshots in that acyclic graph. The
+controlled scalar itself may likewise be updated alongside other supported local scalar
 recurrences; the next `while`
 element expression consumes all resulting exact dependency and control
 snapshots, and terminating sibling snapshots remain available after the loop.
-Dynamic selectors, cyclic or conditional dependency writes, string targets,
+Dynamic selectors, cyclic dependency writes, string targets,
 and loops that do not reach false within 4,096 evaluations fail closed.
 A conditional predicate is also evaluated when its selector is statically
 known; only the selected branch participates in the proof.
