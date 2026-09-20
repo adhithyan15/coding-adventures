@@ -1132,6 +1132,16 @@ mod tests {
             panic!("view source must request an auxiliary document");
         };
         assert!(document.html.contains("&lt;title&gt;Home&lt;/title&gt;"));
+        let source_props = host.props();
+        assert!(source_props.view_source_open);
+        assert_eq!(
+            source_props.view_source_title,
+            "Source: http://example.test/"
+        );
+        assert_eq!(source_props.view_source_address, "http://example.test/");
+        assert!(source_props
+            .view_source_content
+            .contains("<title>Home</title>"));
         let link = host
             .controller
             .session()
@@ -1144,6 +1154,11 @@ mod tests {
         assert!(host.update_hover(link.x + link.width / 2.0, link.y + link.height / 2.0));
         assert_eq!(host.props().status_text, "http://example.test/next");
         assert!(!host.update_hover(f64::NAN, f64::NAN));
+        assert_eq!(host.props().status_text, "Page source shown");
+        assert!(host
+            .handle_event(BrowserChromeEvent::ViewSourceClose)
+            .expect("source panel closes"));
+        assert!(!host.props().view_source_open);
         assert_eq!(host.props().status_text, "Ready");
         host.handle_event(BrowserChromeEvent::AddressChange(
             "http://example.test/next".to_string(),

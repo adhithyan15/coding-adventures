@@ -5,6 +5,13 @@ cross-platform proving application. Items are ordered by risk and dependency.
 
 ## Prioritized discoveries
 
+- [x] **P1 browser convergence - shared View Source presentation.** Preserve
+  the typed auxiliary-document effect for richer platform integrations, while
+  also retaining the exact response text in browser core and rendering it in
+  one closable Mosaic panel. Every generated shell now visibly presents the
+  same title, committed address, raw source, and close lifecycle without a
+  refetch or toolkit-owned source reconstruction.
+
 - [x] **P1 browser convergence - shared page-information presentation.** Keep
   the typed Page Information host effect for richer platform integrations, but
   also retain and render one core-owned metadata snapshot in the Mosaic chrome

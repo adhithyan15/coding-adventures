@@ -149,6 +149,13 @@ style VentureChrome {
     state focused { outline-color : "#9a5b18" ; outline-width : 2 ; }
     state disabled { opacity : 0.45 ; }
   }
+  part view-source-panel { background : "#f6f1e7" ; color : "#211f1b" ; padding : 10 ; gap : 7 ; border-bottom-width : 1 ; border-bottom-color : "#c8c0b1" ; }
+  part view-source-header { gap : 12 ; align : center-vertical ; }
+  part view-source-heading { color : "#6d3d13" ; font-size : 14 ; font-weight : bold ; flex-grow : 1 ; }
+  part view-source-close-button { background : "#fffdf8" ; color : "#39342d" ; padding : 6 ; border-radius : 5 ; border-width : 1 ; border-color : "#b9b09f" ; }
+  part view-source-title { color : "#39342d" ; font-weight : bold ; }
+  part view-source-address { color : "#6d6559" ; font-family : monospace ; font-size : 11 ; }
+  part view-source-content { background : "#ffffff" ; color : "#211f1b" ; padding : 10 ; border-width : 1 ; border-color : "#c8c0b1" ; font-family : monospace ; font-size : 11 ; height : 180 ; max-width : 960 ; overflow : auto ; }
   part address-input {
     background : "#ffffff" ; color : "#211f1b" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#aaa08e" ; flex-grow : 1 ;
     state focused { border-color : "#9a5b18" ; outline-color : "#9a5b18" ; outline-width : 1 ; }

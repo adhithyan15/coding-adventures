@@ -152,6 +152,21 @@ layout VentureChrome {
       }
     }
 
+    If ( when: slot: view-source-open ) {
+      Column [ view-source-panel ] {
+        Row [ view-source-header ] {
+          Text [ view-source-heading ] ( content : "Page Source" , a11y-role : heading )
+          HostButton [ view-source-close-button ] (
+            label : "Close Source" ,
+            onClick : emit: onViewSourceClose
+          )
+        }
+        Text [ view-source-title ] ( content : slot: view-source-title )
+        Text [ view-source-address ] ( content : slot: view-source-address )
+        Text [ view-source-content ] ( content : slot: view-source-content )
+      }
+    }
+
     If ( when: slot: find-open ) {
       Row [ find-bar ] {
         HostInput [ find-input ] (

@@ -548,7 +548,7 @@ fn positioned_node_breaks_find_text(node: &PositionedNode) -> bool {
 }
 
 /// Mosaic `VentureChrome` slot names, in interface declaration order.
-pub const VENTURE_CHROME_SLOT_NAMES: [&str; 29] = [
+pub const VENTURE_CHROME_SLOT_NAMES: [&str; 33] = [
     "address",
     "page-title",
     "status-text",
@@ -573,6 +573,10 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 29] = [
     "zoom-reset-disabled",
     "zoom-in-disabled",
     "view-source-disabled",
+    "view-source-open",
+    "view-source-title",
+    "view-source-address",
+    "view-source-content",
     "find-open",
     "find-query",
     "find-result-label",
@@ -584,7 +588,7 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 29] = [
 pub const VENTURE_CHROME_HOST_SURFACE_SLOT_NAME: &str = "content-surface";
 
 /// Mosaic `VentureChrome` event names, in interface declaration order.
-pub const VENTURE_CHROME_EVENT_NAMES: [&str; 23] = [
+pub const VENTURE_CHROME_EVENT_NAMES: [&str; 24] = [
     "onBack",
     "onForward",
     "onHome",
@@ -601,6 +605,7 @@ pub const VENTURE_CHROME_EVENT_NAMES: [&str; 23] = [
     "onZoomReset",
     "onZoomIn",
     "onViewSource",
+    "onViewSourceClose",
     "onFindOpen",
     "onFindChange",
     "onFindNext",
@@ -1363,6 +1368,24 @@ pub struct BrowserAuxiliaryDocument {
     pub html: String,
 }
 
+/// Exact retained response text projected into Venture's shared source panel.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct BrowserSourceSnapshot {
+    pub address: String,
+    pub title: String,
+    pub source: String,
+}
+
+impl BrowserSourceSnapshot {
+    pub fn view_source(page: &BrowserPage) -> Self {
+        Self {
+            address: page.final_url.clone(),
+            title: format!("Source: {}", page.final_url),
+            source: page.source.clone(),
+        }
+    }
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum BrowserAuxiliaryDocumentKind {
     ViewSource,
@@ -1382,16 +1405,19 @@ impl BrowserAuxiliaryDocument {
     /// This is deliberately pure: it never invokes the resource fetcher and
     /// therefore reflects the exact response text used by the current page.
     pub fn view_source(page: &BrowserPage) -> Self {
-        let title = format!("Source: {}", page.final_url);
+        Self::from_source_snapshot(&BrowserSourceSnapshot::view_source(page))
+    }
+
+    fn from_source_snapshot(snapshot: &BrowserSourceSnapshot) -> Self {
         let html = format!(
             "<!doctype html><html><head><title>{}</title></head><body><pre>{}</pre></body></html>",
-            escape_html_text(&title),
-            escape_html_text(&page.source),
+            escape_html_text(&snapshot.title),
+            escape_html_text(&snapshot.source),
         );
         Self {
             kind: BrowserAuxiliaryDocumentKind::ViewSource,
-            address: format!("view-source:{}", page.final_url),
-            title,
+            address: format!("view-source:{}", snapshot.address),
+            title: snapshot.title.clone(),
             html,
         }
     }
@@ -1751,6 +1777,7 @@ pub enum BrowserChromeAction {
     ZoomReset,
     ZoomIn,
     ViewSource,
+    CloseViewSource,
     OpenFind,
     FindQuery(String),
     FindNext,
@@ -1777,6 +1804,7 @@ pub enum BrowserChromeEvent {
     ZoomReset,
     ZoomIn,
     ViewSource,
+    ViewSourceClose,
     FindOpen,
     FindChange(String),
     FindNext,
@@ -1811,6 +1839,7 @@ impl BrowserChromeEvent {
             Self::ZoomReset => "onZoomReset",
             Self::ZoomIn => "onZoomIn",
             Self::ViewSource => "onViewSource",
+            Self::ViewSourceClose => "onViewSourceClose",
             Self::FindOpen => "onFindOpen",
             Self::FindChange(_) => "onFindChange",
             Self::FindNext => "onFindNext",
@@ -1844,6 +1873,7 @@ impl BrowserChromeEvent {
             "onZoomReset" => Self::ZoomReset,
             "onZoomIn" => Self::ZoomIn,
             "onViewSource" => Self::ViewSource,
+            "onViewSourceClose" => Self::ViewSourceClose,
             "onFindOpen" => Self::FindOpen,
             "onFindChange" => Self::FindChange(
                 value
@@ -1891,6 +1921,10 @@ pub struct BrowserChromeProps {
     pub zoom_reset_disabled: bool,
     pub zoom_in_disabled: bool,
     pub view_source_disabled: bool,
+    pub view_source_open: bool,
+    pub view_source_title: String,
+    pub view_source_address: String,
+    pub view_source_content: String,
     pub find_open: bool,
     pub find_query: String,
     pub find_result_label: String,
@@ -1969,7 +2003,7 @@ impl BrowserChromeProps {
     /// Serialize all shared chrome slots using their authored MIL names.
     pub fn to_bridge_json(&self) -> String {
         format!(
-            "{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"bookmark-label\":{},\"bookmark-disabled\":{},\"copy-address-disabled\":{},\"open-page-disabled\":{},\"save-page-disabled\":{},\"print-page-disabled\":{},\"share-page-disabled\":{},\"page-info-disabled\":{},\"page-info-open\":{},\"page-info-title\":{},\"page-info-address\":{},\"page-info-requested-address\":{},\"page-info-status\":{},\"page-info-resources\":{},\"zoom-label\":{},\"zoom-out-disabled\":{},\"zoom-reset-disabled\":{},\"zoom-in-disabled\":{},\"view-source-disabled\":{},\"find-open\":{},\"find-query\":{},\"find-result-label\":{},\"find-disabled\":{},\"navigation-disabled\":{}}}",
+            "{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"bookmark-label\":{},\"bookmark-disabled\":{},\"copy-address-disabled\":{},\"open-page-disabled\":{},\"save-page-disabled\":{},\"print-page-disabled\":{},\"share-page-disabled\":{},\"page-info-disabled\":{},\"page-info-open\":{},\"page-info-title\":{},\"page-info-address\":{},\"page-info-requested-address\":{},\"page-info-status\":{},\"page-info-resources\":{},\"zoom-label\":{},\"zoom-out-disabled\":{},\"zoom-reset-disabled\":{},\"zoom-in-disabled\":{},\"view-source-disabled\":{},\"view-source-open\":{},\"view-source-title\":{},\"view-source-address\":{},\"view-source-content\":{},\"find-open\":{},\"find-query\":{},\"find-result-label\":{},\"find-disabled\":{},\"navigation-disabled\":{}}}",
             bridge_json_string(&self.address),
             bridge_json_string(&self.page_title),
             bridge_json_string(&self.status_text),
@@ -1994,6 +2028,10 @@ impl BrowserChromeProps {
             self.zoom_reset_disabled,
             self.zoom_in_disabled,
             self.view_source_disabled,
+            self.view_source_open,
+            bridge_json_string(&self.view_source_title),
+            bridge_json_string(&self.view_source_address),
+            bridge_json_string(&self.view_source_content),
             self.find_open,
             bridge_json_string(&self.find_query),
             bridge_json_string(&self.find_result_label),
@@ -2059,6 +2097,7 @@ fn bridge_json_string(value: &str) -> String {
 pub struct BrowserChromeController {
     address_draft: String,
     page_info: Option<BrowserPageInfoRequest>,
+    source_view: Option<BrowserSourceSnapshot>,
 }
 
 impl BrowserChromeController {
@@ -2070,6 +2109,7 @@ impl BrowserChromeController {
                 .unwrap_or_else(|| session.history().home_url())
                 .to_string(),
             page_info: None,
+            source_view: None,
         }
     }
 
@@ -2083,6 +2123,16 @@ impl BrowserChromeController {
 
     pub fn show_page_info(&mut self, page_info: BrowserPageInfoRequest) {
         self.page_info = Some(page_info);
+        self.source_view = None;
+    }
+
+    pub fn source_view(&self) -> Option<&BrowserSourceSnapshot> {
+        self.source_view.as_ref()
+    }
+
+    pub fn show_source_view(&mut self, source_view: BrowserSourceSnapshot) {
+        self.source_view = Some(source_view);
+        self.page_info = None;
     }
 
     /// Synchronize the address slot after a successful page load or redirect.
@@ -2091,6 +2141,7 @@ impl BrowserChromeController {
             self.address_draft = current_url.to_string();
         }
         self.page_info = None;
+        self.source_view = None;
     }
 
     /// Reduce a Mosaic event to a Venture navigation command when appropriate.
@@ -2103,6 +2154,10 @@ impl BrowserChromeController {
         if event == BrowserChromeEvent::PageInfoClose {
             let changed = self.page_info.take().is_some();
             return changed.then_some(BrowserChromeAction::ClosePageInfo);
+        }
+        if event == BrowserChromeEvent::ViewSourceClose {
+            let changed = self.source_view.take().is_some();
+            return changed.then_some(BrowserChromeAction::CloseViewSource);
         }
         if navigation_disabled {
             return None;
@@ -2198,6 +2253,7 @@ impl BrowserChromeController {
             | BrowserChromeEvent::ZoomReset
             | BrowserChromeEvent::ZoomIn
             | BrowserChromeEvent::ViewSource
+            | BrowserChromeEvent::ViewSourceClose
             | BrowserChromeEvent::FindOpen
             | BrowserChromeEvent::FindChange(_)
             | BrowserChromeEvent::FindNext
@@ -2220,6 +2276,7 @@ impl BrowserChromeController {
             .unwrap_or("")
             .to_string();
         let page_info = self.page_info.as_ref();
+        let source_view = self.source_view.as_ref();
 
         BrowserChromeProps {
             address: self.address_draft.clone(),
@@ -2273,6 +2330,16 @@ impl BrowserChromeController {
                 || session.viewport().is_none()
                 || !session.can_zoom_in(),
             view_source_disabled: navigation_disabled || session.viewport().is_none(),
+            view_source_open: source_view.is_some(),
+            view_source_title: source_view
+                .map(|source| source.title.clone())
+                .unwrap_or_default(),
+            view_source_address: source_view
+                .map(|source| source.address.clone())
+                .unwrap_or_default(),
+            view_source_content: source_view
+                .map(|source| source.source.clone())
+                .unwrap_or_default(),
             find_open: session.find_state().open,
             find_query: session.find_state().query.clone(),
             find_result_label: session.find_state().result_label(),
@@ -2529,16 +2596,22 @@ impl BrowserHostController {
                 Ok(BrowserHostEventOutcome::page_reflow(changed))
             }
             BrowserChromeAction::ViewSource => {
-                let page = self
-                    .session
-                    .viewport()
-                    .expect("view-source action requires a retained viewport")
-                    .page();
-                Ok(BrowserHostEventOutcome::effect(
-                    BrowserHostEffect::OpenAuxiliaryDocument(
-                        BrowserAuxiliaryDocument::view_source(page),
-                    ),
+                let source_view = BrowserSourceSnapshot::view_source(
+                    self.session
+                        .viewport()
+                        .expect("view-source action requires a retained viewport")
+                        .page(),
+                );
+                let auxiliary = BrowserAuxiliaryDocument::from_source_snapshot(&source_view);
+                self.chrome.show_source_view(source_view);
+                self.status_text = "Page source shown".to_string();
+                Ok(BrowserHostEventOutcome::changed_effect(
+                    BrowserHostEffect::OpenAuxiliaryDocument(auxiliary),
                 ))
+            }
+            BrowserChromeAction::CloseViewSource => {
+                self.status_text = "Ready".to_string();
+                Ok(BrowserHostEventOutcome::changed(true))
             }
             BrowserChromeAction::OpenFind => {
                 Ok(BrowserHostEventOutcome::changed(self.session.open_find()))
@@ -7523,6 +7596,11 @@ mod tests {
             ("onZoomReset", None, BrowserChromeEvent::ZoomReset),
             ("onZoomIn", None, BrowserChromeEvent::ZoomIn),
             ("onViewSource", None, BrowserChromeEvent::ViewSource),
+            (
+                "onViewSourceClose",
+                None,
+                BrowserChromeEvent::ViewSourceClose,
+            ),
             ("onFindOpen", None, BrowserChromeEvent::FindOpen),
             (
                 "onFindChange",
@@ -7658,6 +7736,10 @@ mod tests {
             zoom_reset_disabled: false,
             zoom_in_disabled: true,
             view_source_disabled: false,
+            view_source_open: true,
+            view_source_title: "Source: Example".into(),
+            view_source_address: "https://example.test/final".into(),
+            view_source_content: "<p>source</p>\n".into(),
             find_open: true,
             find_query: "a\\b".into(),
             find_result_label: "1 of 2".into(),
@@ -7668,7 +7750,7 @@ mod tests {
 
         assert_eq!(
             browser_bridge_response_json(&props, Some(&effect), Some("bad\nrequest")),
-            r#"{"props":{"address":"https://example.test/\"draft\"","page-title":"Line\nTitle","status-text":"Ready\tsoon","back-disabled":true,"forward-disabled":false,"bookmark-label":"Remove \"bookmark\"","bookmark-disabled":false,"copy-address-disabled":true,"open-page-disabled":false,"save-page-disabled":true,"print-page-disabled":false,"share-page-disabled":true,"page-info-disabled":false,"page-info-open":true,"page-info-title":"Example","page-info-address":"https://example.test/final","page-info-requested-address":"https://example.test/start","page-info-status":"HTTP 200","page-info-resources":"Images: 3 (1 failed)  Stylesheets: 2 (0 failed)","zoom-label":"125%","zoom-out-disabled":true,"zoom-reset-disabled":false,"zoom-in-disabled":true,"view-source-disabled":false,"find-open":true,"find-query":"a\\b","find-result-label":"1 of 2","find-disabled":false,"navigation-disabled":true},"effect":{"type":"write-clipboard","text":"copy\u0001"},"error":"bad\nrequest"}"#
+            r#"{"props":{"address":"https://example.test/\"draft\"","page-title":"Line\nTitle","status-text":"Ready\tsoon","back-disabled":true,"forward-disabled":false,"bookmark-label":"Remove \"bookmark\"","bookmark-disabled":false,"copy-address-disabled":true,"open-page-disabled":false,"save-page-disabled":true,"print-page-disabled":false,"share-page-disabled":true,"page-info-disabled":false,"page-info-open":true,"page-info-title":"Example","page-info-address":"https://example.test/final","page-info-requested-address":"https://example.test/start","page-info-status":"HTTP 200","page-info-resources":"Images: 3 (1 failed)  Stylesheets: 2 (0 failed)","zoom-label":"125%","zoom-out-disabled":true,"zoom-reset-disabled":false,"zoom-in-disabled":true,"view-source-disabled":false,"view-source-open":true,"view-source-title":"Source: Example","view-source-address":"https://example.test/final","view-source-content":"<p>source</p>\n","find-open":true,"find-query":"a\\b","find-result-label":"1 of 2","find-disabled":false,"navigation-disabled":true},"effect":{"type":"write-clipboard","text":"copy\u0001"},"error":"bad\nrequest"}"#
         );
     }
 
@@ -7746,6 +7828,10 @@ mod tests {
                 zoom_reset_disabled: true,
                 zoom_in_disabled: true,
                 view_source_disabled: true,
+                view_source_open: false,
+                view_source_title: String::new(),
+                view_source_address: String::new(),
+                view_source_content: String::new(),
                 find_open: false,
                 find_query: String::new(),
                 find_result_label: String::new(),
@@ -7819,6 +7905,10 @@ mod tests {
                 zoom_reset_disabled: true,
                 zoom_in_disabled: false,
                 view_source_disabled: false,
+                view_source_open: false,
+                view_source_title: String::new(),
+                view_source_address: String::new(),
+                view_source_content: String::new(),
                 find_open: false,
                 find_query: String::new(),
                 find_result_label: String::new(),
@@ -7993,6 +8083,7 @@ mod tests {
             BrowserChromeEvent::ZoomReset,
             BrowserChromeEvent::ZoomIn,
             BrowserChromeEvent::ViewSource,
+            BrowserChromeEvent::ViewSourceClose,
             BrowserChromeEvent::FindOpen,
             BrowserChromeEvent::FindChange(String::new()),
             BrowserChromeEvent::FindNext,
@@ -8297,7 +8388,7 @@ mod tests {
                 unreachable!("view source must not navigate or refetch")
             })
             .unwrap();
-        assert!(!outcome.changed);
+        assert!(outcome.changed);
         let BrowserHostEffect::OpenAuxiliaryDocument(auxiliary) = outcome.effect.unwrap() else {
             panic!("view source must produce an auxiliary document");
         };
@@ -8312,6 +8403,12 @@ mod tests {
             .html
             .contains("&lt;title&gt;Source test&lt;/title&gt;"));
         assert!(auxiliary.html.contains("&amp;lt;already escaped&amp;gt;"));
+        let source_props = host.props();
+        assert_eq!(source_props.status_text, "Page source shown");
+        assert!(source_props.view_source_open);
+        assert_eq!(source_props.view_source_title, format!("Source: {url}"));
+        assert_eq!(source_props.view_source_address, url);
+        assert_eq!(source_props.view_source_content, raw_source);
 
         let source_page = pipeline.compose_auxiliary_document(&auxiliary).unwrap();
         assert_eq!(source_page.final_url, auxiliary.address);
@@ -8326,6 +8423,17 @@ mod tests {
         assert!(source_page.image_failures.is_empty());
         assert_eq!(host.session().history().current_url(), Some(url));
         assert_eq!(host.session().viewport().unwrap().page().source, raw_source);
+
+        let closed = host
+            .handle_event_with_effect(
+                BrowserChromeEvent::ViewSourceClose,
+                &mut bookmarks,
+                |_, _| unreachable!("closing source must not navigate"),
+            )
+            .unwrap();
+        assert_eq!(closed, BrowserHostEventOutcome::changed(true));
+        assert!(!host.props().view_source_open);
+        assert_eq!(host.props().status_text, "Ready");
     }
 
     #[test]

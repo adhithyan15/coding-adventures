@@ -29,6 +29,10 @@ component VentureChrome {
   slot zoom-reset-disabled  : bool ;
   slot zoom-in-disabled     : bool ;
   slot view-source-disabled : bool ;
+  slot view-source-open     : bool ;
+  slot view-source-title    : text ;
+  slot view-source-address  : text ;
+  slot view-source-content  : text ;
   slot find-open           : bool ;
   slot find-query          : text ;
   slot find-result-label   : text ;
@@ -52,6 +56,7 @@ component VentureChrome {
   emit onZoomReset ;
   emit onZoomIn ;
   emit onViewSource ;
+  emit onViewSourceClose ;
   emit onFindOpen ;
   emit onFindChange ( value : text ) ;
   emit onFindNext ;

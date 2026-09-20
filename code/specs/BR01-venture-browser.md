@@ -201,11 +201,11 @@ host ABI. The
 tracked acceptance backlog is complete; each next phase starts from a fresh
 cross-host audit.
 
-The latest audit closes the visible Page Information gap. Browser core retains
-one response metadata snapshot while Mosaic renders its title, requested and
-final address, HTTP status, and resource/failure counts in a shared closable
-panel. The existing typed host effect remains available for richer platform
-presentation, but a generated shell can no longer silently discard the action.
+The latest audit closes the visible View Source gap. Browser core retains the
+exact response text while Mosaic renders its title, committed address, and raw
+source in a shared closable panel. The existing typed auxiliary-document effect
+remains available for richer platform presentation, but a generated shell can
+no longer silently discard the action or reconstruct source in toolkit code.
 
 These are browser-wiring and acceptance items. They do not relax the exact
 zero-missing WPT tree-construction or tokenizer coverage ratchets, and they do
@@ -599,13 +599,15 @@ system window color and felt "native."
 ### View Source
 
 - **Trigger**: Ctrl+U or menu View → Source.
-- Opens a **new window** showing the raw HTML text of the current page.
+- Shows the raw HTML text of the current page in shared generated chrome and
+  may also open a richer platform-owned auxiliary window.
 - Implementation: wrap the raw HTML in a synthetic `<pre>` document and run it
   through the same rendering pipeline. The "source" window is just another
   Venture window with a fabricated document.
-- The shared core performs escaping from the retained response text and emits
-  a typed `open-auxiliary-document` effect. Hosts own window presentation but
-  must not refetch, reinterpret, or toolkit-parse the source payload.
+- The shared core retains the exact response text for a closable Mosaic panel,
+  performs auxiliary-document escaping once, and emits a typed
+  `open-auxiliary-document` effect. Hosts may own richer window presentation
+  but must not refetch, reinterpret, or toolkit-parse the source payload.
 
 ### Dependencies (Cargo.toml)
 
