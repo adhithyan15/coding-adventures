@@ -1,11 +1,4 @@
 {
-  "segments": [
-    "LA-PATH-008",
-    "LA-PATH-012",
-    "LA-PATH-014",
-    "LA-PATH-016",
-    "LA-PATH-024"
-  ],
   "omits": [
     "GREETING-DAY"
   ],

@@ -95,6 +95,7 @@ import {
   isSharded,
   listShardNames,
   readLedgerFile,
+  mergeCurriculumShards,
   mergeGroupedShards,
   mergeSectionedShards,
   readShards,
@@ -269,7 +270,7 @@ export interface ShardPlan {
    */
   readonly grouping?: ShardGrouping;
   /** Bespoke owner projection for a ledger whose stable identity is not an ordinal. */
-  readonly projection?: "book-generation" | "sound-tags";
+  readonly projection?: "book-generation" | "sound-tags" | "curriculum";
   /** Independent logical-owner completeness for a removed generic shard plan. */
   readonly completeness?: ShardCompleteness;
   /** What becomes of `X.json` once `X.d/` exists. See `MonolithDisposition`. */
@@ -444,13 +445,12 @@ const CURRICULUM_SHARDED_TRACKS: readonly string[] = [
  * curriculum.d/_meta.json                        version, language, conceptAliases, _keys
  * curriculum.d/path/0010-ES-PATH-001.json        the authored ladder
  * curriculum.d/extensions/0010-ES-EXT-001-….json the track's own additions
- * curriculum.d/spine/0010-SPINE-MEET-GREET.json  ONE FILE PER SPINE NODE
+ * curriculum.d/spine/0010-SPINE-MEET-GREET.json  stable omits/relocates policy
  * ```
  *
- * `spine/` is the whole point. Every content tranche in every track appends to
- * `spine[<node>].segments`, and there are only 33 nodes for 23 tracks' worth of
- * authors to collide on — the single worst conflict point in the corpus. One
- * file per node means two tranches touching two different nodes never meet.
+ * Path membership is single-owned by each path shard's `spine_node`. The spine
+ * owners retain only independently authored omissions and relocations; the
+ * public reverse `segments` lists are derived in exact path order at read time.
  *
  * ALL THREE SECTIONS CARRY ORDINALS, including `spine`, and that last one
  * contradicts HL21 §5.2's reasoning. The spec argued that `spine` is keyed by
@@ -487,6 +487,7 @@ function curriculumPlan(track: string): ShardPlan {
       kind: "curriculum-cross-references",
       language: track,
     },
+    projection: "curriculum",
     // One lazy virtual module per track replaces the old monolith glob. Its
     // eager key count is bounded by tracks rather than path/spine elements.
     monolith: "removed",
@@ -1014,7 +1015,18 @@ export function shardContents(
             `already taken — two elements share an ordinal${id === undefined ? "" : ` or id`}`,
         );
       }
-      out.set(name, serialize(element));
+      let stored = element;
+      if (plan.projection === "curriculum" && section.key === "spine") {
+        if (typeof element !== "object" || element === null || Array.isArray(element)) {
+          throw new Error(`${plan.path}: spine${where} must be an object`);
+        }
+        stored = Object.fromEntries(
+          Object.entries(element as Record<string, unknown>).filter(
+            ([key]) => key !== "segments",
+          ),
+        );
+      }
+      out.set(name, serialize(stored));
     });
   }
   return out;
@@ -1129,9 +1141,11 @@ export function unshardContents(root: string, plan: ShardPlan): string {
   // monolith against THIS function, so it would report agreement while the app
   // read something else.
   return serialize(
-    plan.grouping === undefined
-      ? mergeSectionedShards(shards, plan.sections)
-      : mergeGroupedShards(shards, plan.grouping.keys),
+    plan.projection === "curriculum"
+      ? mergeCurriculumShards(shards)
+      : plan.grouping === undefined
+        ? mergeSectionedShards(shards, plan.sections)
+        : mergeGroupedShards(shards, plan.grouping.keys),
   );
 }
 

@@ -1,7 +1,4 @@
 {
-  "segments": [
-    "RU-PATH-022"
-  ],
   "omits": [
     "VERB-HAVE"
   ],

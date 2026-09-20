@@ -1,9 +1,4 @@
 {
-  "segments": [
-    "SA-PATH-010-B",
-    "SA-PATH-011-B",
-    "SA-PATH-012-B"
-  ],
   "omits": [
     "VERB-DRINK",
     "VERB-GIVE",

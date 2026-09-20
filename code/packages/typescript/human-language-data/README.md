@@ -53,6 +53,10 @@ Generated lesson modality uses the finer
 `core/lesson-modality/<language>.d/{_meta.json,<lesson-id>.json}` boundary. The
 metadata owner holds only stable derivation policy and each lesson file holds its
 own row and findings; flat per-language aggregates are forbidden.
+Curriculum path-to-spine membership is owned only by the new path shard's
+`spine_node`. Do not edit an existing `curriculum.d/spine/*.json` owner when
+adding a path segment: those files contain only stable `omits`/`relocates`
+policy, and the public `segments` lists are derived in path order at load time.
 Browser consumers fold only their respective canonical shards behind bounded
 build-time modules. Language Ladder does not import the modality owner corpus.
 
@@ -62,9 +66,9 @@ npm run check:shards
 
 CI rebuilds every shard set in memory and rejects a resurrected aggregate. For
 the 47 generic core-spine, chapter, and curriculum plans, it also compares the
-logical owner set with an independent source: curriculum spine maps prove the
+logical owner set with independent graph evidence: curriculum maps prove the
 core spine, generated narration chapter owners prove chapter capabilities, and
-core/path/extension references prove each curriculum section. A clean deletion,
+lesson/path/extension validation closes each curriculum section. A clean deletion,
 unexpected owner, duplicate identity, filename/body mismatch, or case-fold
 collision therefore fails even when the surviving shards still reconstruct.
 Ordinal prefixes remain ordering coordinates, so an id-bearing owner inserted

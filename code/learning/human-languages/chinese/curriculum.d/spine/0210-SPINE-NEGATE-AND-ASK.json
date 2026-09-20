@@ -1,7 +1,4 @@
 {
-  "segments": [
-    "ZH-PATH-025"
-  ],
   "omits": [
     "VERB-NEGATE",
     "QUESTION-POLAR"

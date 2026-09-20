@@ -1,11 +1,4 @@
 {
-  "segments": [
-    "FA-PATH-007",
-    "FA-PATH-007-C",
-    "FA-PATH-008",
-    "FA-PATH-009",
-    "FA-PATH-009-C"
-  ],
   "omits": [
     "VERB-INFINITIVE",
     "VERB-PRESENT-HABITUAL",

@@ -1,13 +1,4 @@
 {
-  "segments": [
-    "HI-PATH-013",
-    "HI-PATH-017",
-    "HI-PATH-019",
-    "HI-PATH-021",
-    "HI-PATH-024",
-    "HI-PATH-026",
-    "HI-PATH-102-SPAN"
-  ],
   "omits": [
     "GREETING-DAY"
   ],

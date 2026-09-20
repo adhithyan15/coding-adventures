@@ -1,8 +1,4 @@
 {
-  "segments": [
-    "IT-PATH-006",
-    "IT-PATH-010"
-  ],
   "omits": [
     "FAREWELL-CASUAL"
   ],

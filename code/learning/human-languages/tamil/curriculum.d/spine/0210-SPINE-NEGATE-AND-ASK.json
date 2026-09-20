@@ -1,7 +1,4 @@
 {
-  "segments": [
-    "TA-PATH-75-YESNO"
-  ],
   "omits": [
     "VERB-NEGATE"
   ],

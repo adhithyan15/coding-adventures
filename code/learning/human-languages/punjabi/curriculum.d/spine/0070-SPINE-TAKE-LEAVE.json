@@ -1,8 +1,4 @@
 {
-  "segments": [
-    "PA-PATH-009",
-    "PA-PATH-038"
-  ],
   "omits": [],
   "relocates": {}
 }

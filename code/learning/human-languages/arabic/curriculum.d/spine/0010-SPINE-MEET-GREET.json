@@ -1,8 +1,4 @@
 {
-  "segments": [
-    "AR-PATH-001",
-    "AR-PATH-003"
-  ],
   "omits": [
     "GREETING-WELCOME"
   ],

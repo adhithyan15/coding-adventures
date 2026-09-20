@@ -1,10 +1,4 @@
 {
-  "segments": [
-    "FA-PATH-004",
-    "FA-PATH-011",
-    "FA-PATH-013",
-    "FA-PATH-015"
-  ],
   "omits": [
     "PRONOUN-I",
     "PRONOUN-ME",

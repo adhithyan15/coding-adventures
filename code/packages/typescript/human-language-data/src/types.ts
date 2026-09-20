@@ -198,7 +198,7 @@ export interface CurriculumPathSegment {
 
 /** Coverage ledger for one shared node in one language. */
 export interface SpineRealizationMap {
-  /** Segment ids in their authored local order. */
+  /** Segment ids derived from `path[*].spine_node` in authored local order. */
   segments: string[];
   /** Canonical concepts deliberately absent from the current track corpus. */
   omits: string[];

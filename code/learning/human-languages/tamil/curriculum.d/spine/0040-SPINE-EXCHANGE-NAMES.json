@@ -1,18 +1,4 @@
 {
-  "segments": [
-    "TA-PATH-007",
-    "TA-PATH-009",
-    "TA-PATH-013",
-    "TA-PATH-018",
-    "TA-PATH-023",
-    "TA-PATH-033",
-    "TA-PATH-46-ROLE",
-    "TA-PATH-52-TREE",
-    "TA-PATH-59-KITCHEN",
-    "TA-PATH-70-ROOM",
-    "TA-PATH-85-THIRD-PERSON",
-    "TA-PATH-86-ACCUSATIVE"
-  ],
   "omits": [
     "PRONOUN-ME",
     "WORD-IS"

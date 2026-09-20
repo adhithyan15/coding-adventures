@@ -1,10 +1,4 @@
 {
-  "segments": [
-    "GU-PATH-003",
-    "GU-PATH-008",
-    "GU-PATH-C4P",
-    "GU-PATH-MALISHUN-R4"
-  ],
   "omits": [
     "FAREWELL-CASUAL",
     "FAREWELL-SOON",

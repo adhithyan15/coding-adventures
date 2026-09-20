@@ -1,8 +1,4 @@
 {
-  "segments": [
-    "LA-PATH-004",
-    "LA-PATH-032"
-  ],
   "omits": [
     "RESPONSE-YES",
     "RESPONSE-NO",

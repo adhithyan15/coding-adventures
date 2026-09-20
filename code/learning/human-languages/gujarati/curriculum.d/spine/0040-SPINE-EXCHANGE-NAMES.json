@@ -1,17 +1,4 @@
 {
-  "segments": [
-    "GU-PATH-FIRST-USE-SCRIPT-A",
-    "GU-PATH-FIRST-USE-SCRIPT-B",
-    "GU-PATH-FINAL-SCRIPT-CLOSURE-A",
-    "GU-PATH-FINAL-SCRIPT-CLOSURE-B",
-    "GU-PATH-005",
-    "GU-PATH-014",
-    "GU-PATH-C2P",
-    "GU-PATH-017",
-    "GU-PATH-018",
-    "GU-PATH-019",
-    "GU-PATH-021"
-  ],
   "omits": [
     "PRONOUN-ME"
   ],

@@ -1,16 +1,4 @@
 {
-  "segments": [
-    "ZH-PATH-007",
-    "ZH-PATH-008",
-    "ZH-PATH-011",
-    "ZH-PATH-012",
-    "ZH-PATH-013",
-    "ZH-PATH-014",
-    "ZH-PATH-015",
-    "ZH-PATH-016",
-    "ZH-PATH-017",
-    "ZH-PATH-018"
-  ],
   "omits": [
     "PRONOUN-ME",
     "PRONOUN-YOU",

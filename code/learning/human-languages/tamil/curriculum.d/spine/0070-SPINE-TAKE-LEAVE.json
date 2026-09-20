@@ -1,12 +1,4 @@
 {
-  "segments": [
-    "TA-PATH-012",
-    "TA-PATH-035",
-    "TA-PATH-48-LEAVE",
-    "TA-PATH-57-FIRE",
-    "TA-PATH-64-HARVEST",
-    "TA-PATH-69-GOING"
-  ],
   "omits": [
     "FAREWELL-CASUAL",
     "FAREWELL-SOON"

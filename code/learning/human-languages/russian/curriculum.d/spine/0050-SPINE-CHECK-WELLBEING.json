@@ -1,7 +1,4 @@
 {
-  "segments": [
-    "RU-PATH-012"
-  ],
   "omits": [
     "QUESTION-HOW",
     "STATE-HOW-ARE-YOU",

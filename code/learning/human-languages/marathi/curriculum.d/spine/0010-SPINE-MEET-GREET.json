@@ -1,7 +1,4 @@
 {
-  "segments": [
-    "MR-PATH-001"
-  ],
   "omits": [
     "GREETING-FORMAL",
     "GREETING-PEACE",
