@@ -1,5 +1,28 @@
 # Changelog — @coding-adventures/forme-orchestrator
 
+## 0.11.0 — 2026-09-19
+
+### Added — concurrent DAG and per-item scheduling
+
+- DAG-ready instances now submit `Stage.run` work in stable declaration order
+  through one pipeline-wide FIFO permit pool. Independent branches execute in
+  parallel without changing topological summary or named-output order.
+- Materialized stream-to-item stages invoke items concurrently through the same
+  pool and write results into source-order slots, keeping revisions, cache
+  checkpoints, output arrays, and item counts deterministic.
+- `settings.maxConcurrency: null` resolves once per run to the host's available
+  hardware parallelism. Explicit limits must be positive safe integers.
+- Fatal failure and external cancellation close the pool before the active
+  permit is released, so already queued invocations cannot start. Active work
+  receives the composed cooperative cancellation token and settles before
+  disposal.
+
+### Tests
+
+- Five scheduler cases cover stable ready order, out-of-order item completion,
+  one shared stage/item budget, fail-fast queue closure, and external
+  cancellation. The full orchestrator suite has 145 passing cases.
+
 ## 0.10.0 — 2026-09-19
 
 ### Added — shared scheduler permit pool
