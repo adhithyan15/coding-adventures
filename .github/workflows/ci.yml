@@ -2212,7 +2212,9 @@ jobs:
           taskapp_log="$RUNNER_TEMP/mosaic-swift-taskapp-launch.log"
           (
             cd /
-            env -u MOSAIC_APP_LIBRARY "$installed_taskapp" >"$taskapp_log" 2>&1 &
+            env -u MOSAIC_APP_LIBRARY \
+              SWIFT_BACKTRACE="enable=yes,interactive=no,output-to=stderr" \
+              "$installed_taskapp" >"$taskapp_log" 2>&1 &
             taskapp_pid=$!
             trap 'kill "$taskapp_pid" 2>/dev/null || true' EXIT
             sleep 5

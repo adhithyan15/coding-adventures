@@ -197,11 +197,14 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
             swift_runtime_step,
         )
         self.assertIn('installed_taskapp="$taskapp_bin/App"', swift_runtime_step)
-        self.assertIn(
-            'env -u MOSAIC_APP_LIBRARY "$installed_taskapp"', swift_runtime_step
-        )
+        self.assertIn('env -u MOSAIC_APP_LIBRARY \\', swift_runtime_step)
+        self.assertIn('"$installed_taskapp" >"$taskapp_log"', swift_runtime_step)
         self.assertIn(
             'if ! kill -0 "$taskapp_pid" 2>/dev/null; then', swift_runtime_step
+        )
+        self.assertIn(
+            'SWIFT_BACKTRACE="enable=yes,interactive=no,output-to=stderr"',
+            swift_runtime_step,
         )
         self.assertIn('cat "$taskapp_log"', swift_runtime_step)
         self.assertIn("Mosaic Rust runtime unavailable", swift_runtime_step)

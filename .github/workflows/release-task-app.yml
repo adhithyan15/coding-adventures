@@ -576,7 +576,9 @@ jobs:
             local log="$2"
             (
               cd /
-              env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$state" \
+              env -u MOSAIC_APP_LIBRARY \
+                SWIFT_BACKTRACE="enable=yes,interactive=no,output-to=stderr" \
+                MOSAIC_APP_STATE_PATH="$state" \
                 "$app/Contents/MacOS/Trestle" >"$log" 2>&1 &
               app_pid=$!
               trap 'kill "$app_pid" 2>/dev/null || true' EXIT
@@ -610,11 +612,15 @@ jobs:
             (
               cd /
               env -u MOSAIC_APP_LIBRARY -u MOSAIC_APP_STATE_PATH \
+                SWIFT_BACKTRACE="enable=yes,interactive=no,output-to=stderr" \
                 "$app/Contents/MacOS/Trestle" >"$log" 2>&1 &
               app_pid=$!
               trap 'kill "$app_pid" 2>/dev/null || true' EXIT
               sleep 5
-              kill -0 "$app_pid"
+              if ! kill -0 "$app_pid" 2>/dev/null; then
+                cat "$log"
+                exit 1
+              fi
               kill "$app_pid"
               wait "$app_pid" || true
               trap - EXIT
