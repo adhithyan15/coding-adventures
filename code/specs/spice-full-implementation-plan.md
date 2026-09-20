@@ -362,6 +362,20 @@ model-card parameter, or a UI artifact is not a completion signal.
      and lower through the Berkeley parser. Keep arbitrary parameter names,
      vendor libraries, and expression-valued fields for a later complete model
      library contract rather than reintroducing raw model-card text editing.
+   - **Mosaic schematic corpus-backed nonlinear model capture** (completed in
+     this selector-driven slice): discovery
+     after the primary-field slice: the frozen Berkeley corpus exercises
+     junction capacitance and storage time for diodes; junction capacitance and
+     transit time for BJTs; channel modulation and gate capacitances for JFETs;
+     and channel, substrate, overlap, and bulk-junction fields for Level-1 MOS.
+     The adapter currently hard-codes two inspector inputs, which prevents a
+     schematic author from recreating those runnable reference models without
+     raw document injection. Add one selector-driven, finite field catalog for
+     the corpus-backed D/Q/J/M parameters; preserve typed persistence,
+     rename/removal/history/snapshot behavior, deterministic model-card
+     lowering, and Mosaic host coverage. Keep vendor libraries, arbitrary
+     parameter names, expression-valued fields, and the full post-Berkeley
+     model-library catalog for a separate product phase.
    - **Nonlinear branch-current result-map contract** (completed): export
      diode anode, BJT collector, JFET drain, and level-1 MOS drain currents as
      canonical `I(element)` values across Python, Rust, and TypeScript. Define

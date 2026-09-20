@@ -47,28 +47,58 @@ pub enum SchematicModelPolarity {
 
 /// A finite, family-specific model-card field exposed by schematic capture.
 ///
-/// This deliberately covers the primary Berkeley parameters for each built-in
-/// nonlinear symbol. Vendor libraries and arbitrary parameter names remain a
-/// separate capture concern.
+/// This deliberately covers the primary and corpus-backed Berkeley parameters
+/// for each built-in nonlinear symbol. Vendor libraries and arbitrary
+/// parameter names remain a separate capture concern.
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Ord, PartialEq, PartialOrd, Serialize)]
 pub enum SchematicModelParameter {
     SaturationCurrent,
     EmissionCoefficient,
+    ZeroBiasJunctionCapacitance,
+    TransitTime,
     ForwardBeta,
+    BjtBaseEmitterCapacitance,
+    BjtForwardTransitTime,
     JfetTransconductance,
     ThresholdVoltage,
+    ChannelLengthModulation,
+    JfetGateSourceCapacitance,
+    JfetGateDrainCapacitance,
     MosfetTransconductance,
+    MosfetSubstrateDoping,
+    MosfetDrainBulkCapacitance,
+    MosfetGateSourceOverlapCapacitance,
+    MosfetGateDrainOverlapCapacitance,
+    MosfetGateBulkOverlapCapacitance,
+    MosfetSourceBulkCapacitance,
+    MosfetBulkJunctionPotential,
+    MosfetBulkJunctionGradingCoefficient,
 }
 
 impl SchematicModelParameter {
-    fn key(self) -> &'static str {
+    pub fn key(self) -> &'static str {
         match self {
             Self::SaturationCurrent => "IS",
             Self::EmissionCoefficient => "N",
+            Self::ZeroBiasJunctionCapacitance => "CJO",
+            Self::TransitTime => "TT",
             Self::ForwardBeta => "BF",
+            Self::BjtBaseEmitterCapacitance => "CJE",
+            Self::BjtForwardTransitTime => "TF",
             Self::JfetTransconductance => "BETA",
             Self::ThresholdVoltage => "VTO",
+            Self::ChannelLengthModulation => "LAMBDA",
+            Self::JfetGateSourceCapacitance => "CGS",
+            Self::JfetGateDrainCapacitance => "CGD",
             Self::MosfetTransconductance => "KP",
+            Self::MosfetSubstrateDoping => "NSUB",
+            Self::MosfetDrainBulkCapacitance => "CBD",
+            Self::MosfetGateSourceOverlapCapacitance => "CGSO",
+            Self::MosfetGateDrainOverlapCapacitance => "CGDO",
+            Self::MosfetGateBulkOverlapCapacitance => "CGBO",
+            Self::MosfetSourceBulkCapacitance => "CBS",
+            Self::MosfetBulkJunctionPotential => "PB",
+            Self::MosfetBulkJunctionGradingCoefficient => "MJ",
         }
     }
 
@@ -76,21 +106,62 @@ impl SchematicModelParameter {
         match self {
             Self::SaturationCurrent => "Saturation current (IS)",
             Self::EmissionCoefficient => "Emission coefficient (N)",
+            Self::ZeroBiasJunctionCapacitance => "Zero-bias junction capacitance (CJO)",
+            Self::TransitTime => "Transit time (TT)",
             Self::ForwardBeta => "Forward beta (BF)",
+            Self::BjtBaseEmitterCapacitance => "Base-emitter capacitance (CJE)",
+            Self::BjtForwardTransitTime => "Forward transit time (TF)",
             Self::JfetTransconductance => "Transconductance (BETA)",
             Self::ThresholdVoltage => "Threshold voltage (VTO)",
+            Self::ChannelLengthModulation => "Channel-length modulation (LAMBDA)",
+            Self::JfetGateSourceCapacitance => "Gate-source capacitance (CGS)",
+            Self::JfetGateDrainCapacitance => "Gate-drain capacitance (CGD)",
             Self::MosfetTransconductance => "Transconductance (KP)",
+            Self::MosfetSubstrateDoping => "Substrate doping (NSUB)",
+            Self::MosfetDrainBulkCapacitance => "Drain-bulk capacitance (CBD)",
+            Self::MosfetGateSourceOverlapCapacitance => "Gate-source overlap capacitance (CGSO)",
+            Self::MosfetGateDrainOverlapCapacitance => "Gate-drain overlap capacitance (CGDO)",
+            Self::MosfetGateBulkOverlapCapacitance => "Gate-bulk overlap capacitance (CGBO)",
+            Self::MosfetSourceBulkCapacitance => "Source-bulk capacitance (CBS)",
+            Self::MosfetBulkJunctionPotential => "Bulk junction potential (PB)",
+            Self::MosfetBulkJunctionGradingCoefficient => "Bulk junction grading coefficient (MJ)",
         }
     }
 
     fn for_kind(kind: SchematicComponentKind) -> &'static [Self] {
         match kind {
-            SchematicComponentKind::Diode => &[Self::SaturationCurrent, Self::EmissionCoefficient],
-            SchematicComponentKind::Bjt => &[Self::SaturationCurrent, Self::ForwardBeta],
-            SchematicComponentKind::Jfet => &[Self::JfetTransconductance, Self::ThresholdVoltage],
-            SchematicComponentKind::Mosfet => {
-                &[Self::ThresholdVoltage, Self::MosfetTransconductance]
-            }
+            SchematicComponentKind::Diode => &[
+                Self::SaturationCurrent,
+                Self::EmissionCoefficient,
+                Self::ZeroBiasJunctionCapacitance,
+                Self::TransitTime,
+            ],
+            SchematicComponentKind::Bjt => &[
+                Self::SaturationCurrent,
+                Self::ForwardBeta,
+                Self::BjtBaseEmitterCapacitance,
+                Self::BjtForwardTransitTime,
+            ],
+            SchematicComponentKind::Jfet => &[
+                Self::JfetTransconductance,
+                Self::ThresholdVoltage,
+                Self::ChannelLengthModulation,
+                Self::JfetGateSourceCapacitance,
+                Self::JfetGateDrainCapacitance,
+            ],
+            SchematicComponentKind::Mosfet => &[
+                Self::ThresholdVoltage,
+                Self::MosfetTransconductance,
+                Self::ChannelLengthModulation,
+                Self::MosfetSubstrateDoping,
+                Self::MosfetDrainBulkCapacitance,
+                Self::MosfetGateSourceOverlapCapacitance,
+                Self::MosfetGateDrainOverlapCapacitance,
+                Self::MosfetGateBulkOverlapCapacitance,
+                Self::MosfetSourceBulkCapacitance,
+                Self::MosfetBulkJunctionPotential,
+                Self::MosfetBulkJunctionGradingCoefficient,
+            ],
             _ => &[],
         }
     }
@@ -2941,9 +3012,81 @@ mod tests {
         ]);
         for (reference, parameter, value) in [
             ("D1", SchematicModelParameter::EmissionCoefficient, "1.2"),
+            (
+                "D1",
+                SchematicModelParameter::ZeroBiasJunctionCapacitance,
+                "1.5e-12",
+            ),
+            ("D1", SchematicModelParameter::TransitTime, "4e-9"),
             ("Q1", SchematicModelParameter::SaturationCurrent, "2e-14"),
+            (
+                "Q1",
+                SchematicModelParameter::BjtBaseEmitterCapacitance,
+                "2e-12",
+            ),
+            (
+                "Q1",
+                SchematicModelParameter::BjtForwardTransitTime,
+                "1e-10",
+            ),
             ("J1", SchematicModelParameter::ThresholdVoltage, "-2"),
+            (
+                "J1",
+                SchematicModelParameter::ChannelLengthModulation,
+                "0.02",
+            ),
+            (
+                "J1",
+                SchematicModelParameter::JfetGateSourceCapacitance,
+                "2n",
+            ),
+            (
+                "J1",
+                SchematicModelParameter::JfetGateDrainCapacitance,
+                "100p",
+            ),
             ("M1", SchematicModelParameter::MosfetTransconductance, "2m"),
+            (
+                "M1",
+                SchematicModelParameter::ChannelLengthModulation,
+                "0.04",
+            ),
+            ("M1", SchematicModelParameter::MosfetSubstrateDoping, "1.6"),
+            (
+                "M1",
+                SchematicModelParameter::MosfetDrainBulkCapacitance,
+                "3e-13",
+            ),
+            (
+                "M1",
+                SchematicModelParameter::MosfetGateSourceOverlapCapacitance,
+                "20p",
+            ),
+            (
+                "M1",
+                SchematicModelParameter::MosfetGateDrainOverlapCapacitance,
+                "5p",
+            ),
+            (
+                "M1",
+                SchematicModelParameter::MosfetGateBulkOverlapCapacitance,
+                "1p",
+            ),
+            (
+                "M1",
+                SchematicModelParameter::MosfetSourceBulkCapacitance,
+                "4e-13",
+            ),
+            (
+                "M1",
+                SchematicModelParameter::MosfetBulkJunctionPotential,
+                "0.9",
+            ),
+            (
+                "M1",
+                SchematicModelParameter::MosfetBulkJunctionGradingCoefficient,
+                "0.45",
+            ),
         ] {
             document
                 .set_component_model_parameter(reference, parameter, value)
@@ -2957,14 +3100,22 @@ mod tests {
                     "2e-14".to_owned()
                 ),
                 (SchematicModelParameter::ForwardBeta, "100".to_owned()),
+                (
+                    SchematicModelParameter::BjtBaseEmitterCapacitance,
+                    "2e-12".to_owned()
+                ),
+                (
+                    SchematicModelParameter::BjtForwardTransitTime,
+                    "1e-10".to_owned()
+                ),
             ]
         );
         let deck = document.to_berkeley_netlist().unwrap();
         for model in [
-            ".model SchematicD1Model D(IS=1e-14 N=1.2)",
-            ".model SchematicQ1Model NPN(BF=100 IS=2e-14)",
-            ".model SchematicJ1Model NJF(BETA=1m VTO=-2)",
-            ".model SchematicM1Model NMOS(LEVEL=1 VTO=0.7 KP=2m)",
+            ".model SchematicD1Model D(IS=1e-14 N=1.2 CJO=1.5e-12 TT=4e-9)",
+            ".model SchematicQ1Model NPN(BF=100 IS=2e-14 CJE=2e-12 TF=1e-10)",
+            ".model SchematicJ1Model NJF(BETA=1m VTO=-2 LAMBDA=0.02 CGS=2n CGD=100p)",
+            ".model SchematicM1Model NMOS(LEVEL=1 VTO=0.7 KP=2m LAMBDA=0.04 NSUB=1.6 CBD=3e-13 CGSO=20p CGDO=5p CGBO=1p CBS=4e-13 PB=0.9 MJ=0.45)",
         ] {
             assert!(deck.contains(model), "missing {model} in {deck}");
         }

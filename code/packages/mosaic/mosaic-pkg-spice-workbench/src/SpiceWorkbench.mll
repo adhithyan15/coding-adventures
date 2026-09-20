@@ -325,19 +325,20 @@ layout SpiceWorkbench {
           )
         }
         Text [ schematic-model-parameters-label ] ( content : slot: schematic-model-parameters-label )
-        Text [ schematic-model-parameter-one-label ] ( content : slot: schematic-model-parameter-one-label )
-        HostInput [ schematic-model-parameter-one-input ] (
-          value : slot: schematic-model-parameter-one-value ,
-          placeholder : slot: schematic-model-parameter-one-label ,
-          disabled : slot: schematic-model-parameter-one-disabled ,
-          onChange : emit: onSchematicModelParameterOneChange
-        )
-        Text [ schematic-model-parameter-two-label ] ( content : slot: schematic-model-parameter-two-label )
-        HostInput [ schematic-model-parameter-two-input ] (
-          value : slot: schematic-model-parameter-two-value ,
-          placeholder : slot: schematic-model-parameter-two-label ,
-          disabled : slot: schematic-model-parameter-two-disabled ,
-          onChange : emit: onSchematicModelParameterTwoChange
+        Row [ schematic-model-parameter-options ] {
+          For ( each: slot: schematic-model-parameter-options , as: parameter , index: parameter-index ) {
+            HostButton [ schematic-model-parameter-option ] (
+              label : ( parameter ) ,
+              onClick : emit: onSelectSchematicModelParameter
+            )
+          }
+        }
+        Text [ selected-schematic-model-parameter-label ] ( content : slot: selected-schematic-model-parameter-label )
+        HostInput [ schematic-selected-model-parameter-input ] (
+          value : slot: schematic-selected-model-parameter-value ,
+          placeholder : slot: selected-schematic-model-parameter-label ,
+          disabled : slot: schematic-selected-model-parameter-disabled ,
+          onChange : emit: onSchematicModelParameterChange
         )
         HostButton [ remove-schematic-component ] (
           label : slot: remove-schematic-component-label ,
