@@ -72,6 +72,9 @@ pub const OP_LDARG_S: u8 = 0x0E;
 /// `call <methodTok>` (0x28 + 4-byte token) — McCarthy W8b (lambda). Invoke
 /// another method: pop its arguments, push a call frame, transfer control.
 pub const OP_CALL: u8 = 0x28;
+/// Reserved host MemberRefs for strict encoded integer input.
+pub const BASIC_INPUT_I64_TOKEN: u32 = 0x0A00_0006;
+pub const BASIC_INPUT_MORE_TOKEN: u32 = 0x0A00_0007;
 pub const OP_RET: u8 = 0x2A;
 pub const OP_BR_S: u8 = 0x2B;
 pub const OP_BRFALSE_S: u8 = 0x2C;
@@ -270,6 +273,9 @@ pub struct CLRSimulator {
     cur_method: usize,
     /// The call stack of saved caller contexts (W8b).
     frames: Vec<Frame>,
+    /// Caller-supplied host input and the next unread byte.
+    input: Vec<u8>,
+    input_pos: usize,
 }
 
 impl CLRSimulator {
@@ -285,7 +291,36 @@ impl CLRSimulator {
             methods: Vec::new(),
             cur_method: 0,
             frames: Vec::new(),
+            input: Vec::new(),
+            input_pos: 0,
         }
+    }
+
+    /// Replace the simulator-owned input stream and rewind it to the start.
+    /// Loading bytecode does not otherwise clear or rewind this stream.
+    pub fn set_input(&mut self, input: impl AsRef<[u8]>) {
+        self.input.clear();
+        self.input.extend_from_slice(input.as_ref());
+        self.input_pos = 0;
+    }
+
+    fn read_input_i64(&mut self) -> i64 {
+        if self.input_pos >= self.input.len() {
+            return 0;
+        }
+        let start = self.input_pos;
+        while self.input_pos < self.input.len() && self.input[self.input_pos] != b'\n' {
+            self.input_pos += 1;
+        }
+        let end = self.input_pos;
+        if self.input_pos < self.input.len() {
+            self.input_pos += 1;
+        }
+        std::str::from_utf8(&self.input[start..end])
+            .ok()
+            .map(|line| line.trim_matches(|ch: char| ch.is_ascii_whitespace()))
+            .and_then(|line| line.parse::<i64>().ok())
+            .unwrap_or(0)
     }
 
     /// Load a single method's bytecode and configure local variable count. This
@@ -665,9 +700,21 @@ impl CLRSimulator {
                 self.bytecode[pc + 1], self.bytecode[pc + 2],
                 self.bytecode[pc + 3], self.bytecode[pc + 4],
             ]);
-            // A metadata row is meaningful only inside its table. MemberRef
-            // row 2 is not MethodDef row 2; without host resolution we must
-            // refuse it before consuming arguments or changing call frames.
+            if token >> 24 == 0x0A {
+                let (name, value) = match token {
+                    BASIC_INPUT_I64_TOKEN => ("input_i64", self.read_input_i64()),
+                    BASIC_INPUT_MORE_TOKEN => (
+                        "input_more",
+                        i64::from(self.input_pos < self.input.len()),
+                    ),
+                    _ => panic!("call: unsupported MemberRef token 0x{token:08X}"),
+                };
+                self.stack.push(Some(Value::Int64(value)));
+                self.pc += 5;
+                return self.trace(pc, name, stack_before, format!("host {name}: {value}"));
+            }
+            // A metadata row is meaningful only inside its table. Unknown
+            // MemberRefs must never alias a same-row internal MethodDef.
             assert!(
                 token >> 24 == 0x06,
                 "call: unsupported call token table in 0x{token:08X}; only MethodDef (0x06) is supported"
@@ -1115,7 +1162,11 @@ mod tests {
                 .expect_err("non-MethodDef token must not enter the same-row internal method");
             let message = failure.downcast_ref::<String>().map(String::as_str)
                 .or_else(|| failure.downcast_ref::<&str>().copied()).unwrap_or("");
-            assert!(message.contains("unsupported call token table"), "{message}");
+            if table == 0x0A {
+                assert!(message.contains("unsupported MemberRef token"), "{message}");
+            } else {
+                assert!(message.contains("unsupported call token table"), "{message}");
+            }
             assert_eq!(sim.pc, 0);
             assert_eq!(sim.cur_method, 0);
             assert_eq!(sim.bytecode, original_body);

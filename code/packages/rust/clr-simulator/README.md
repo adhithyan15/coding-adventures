@@ -15,7 +15,9 @@ ret, and two-byte comparison opcodes (ceq, cgt, clt).
 `Int64(i64)` preserves a separate 64-bit stack type. Integer arithmetic and
 comparisons require matching widths; array sizes and indices remain int32.
 Division rejects zero and signed overflow. This subset does not implement
-floating-point arithmetic, host input, or full CLR boxing/type verification.
+floating-point arithmetic, string/byte host input, or full CLR boxing/type
+verification. It does provide the bounded integer-input host calls described
+below.
 
 Since 0.2.0 it also executes **reference types**: a stack/local slot is a
 `Value` (`Int(i32)`, `Int64(i64)` or `Ref(Option<usize>)` into an object heap), and the
@@ -56,11 +58,17 @@ assert_eq!(sim.stack[0], Some(4));
 ### Call token tables
 
 Internal calls accept MethodDef tokens (`0x06` table) with valid one-based
-method ordinals. Other tables, including MemberRef (`0x0A`), panic with an
-explicit unsupported-table diagnostic before consuming arguments or changing
-call frames. A MemberRef row cannot alias the internal method at the same row.
-This follows the simulator's existing invalid-bytecode panic convention;
-host-call resolution and input readers are not implemented.
+method ordinals. MemberRef rows 6 and 7 are reserved for `input_i64` and
+`input_more`; all other MemberRefs and token tables panic with an explicit
+unsupported-token diagnostic before changing execution state. A MemberRef row
+cannot alias the internal method at the same row. This follows the simulator's
+existing invalid-bytecode panic convention.
+
+Call `set_input` to replace and rewind the simulator-owned byte stream.
+`input_more` returns an Int64 zero or one without consuming input. `input_i64`
+consumes one LF/CRLF/final line, trims ASCII whitespace and parses an exact
+signed i64; EOF, empty, malformed and overflowing lines return zero. Loading a
+program does not clear or rewind input.
 
 ### Explicit integer conversions (CLR03)
 

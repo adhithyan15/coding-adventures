@@ -46,6 +46,76 @@ fn i32_minus_one_uses_the_canonical_compact_encoding() {
     let artifact = lower_typed_scalars_to_cil(&m, &IIRClrConfig::default()).unwrap();
     assert_eq!(artifact.methods[0].body, vec![0x15, 0x0a, 0x06, 0x2a]);
 }
+
+#[test]
+fn encoded_input_builtins_use_exact_memberref_tokens() {
+    let mut m = IIRModule::new("strict", "test");
+    m.entry_point = Some("main".into());
+    m.add_or_replace(IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("call_builtin", Some("more".into()), vec![v("input_more")], "i64"),
+            IIRInstr::new("call_builtin", Some("value".into()), vec![v("input_i64")], "i64"),
+            IIRInstr::new("ret", None, vec![v("value")], "i64"),
+        ],
+    ));
+
+    let artifact = lower_typed_scalars_to_cil(&m, &IIRClrConfig::default()).unwrap();
+    assert_eq!(artifact.methods[0].local_types, vec!["int64", "int64"]);
+    assert_eq!(
+        artifact.methods[0].body,
+        vec![
+            0x28, 0x07, 0x00, 0x00, 0x0a, 0x0a, 0x28, 0x06, 0x00, 0x00, 0x0a, 0x0b,
+            0x07, 0x2a,
+        ]
+    );
+}
+
+#[test]
+fn encoded_input_builtins_refuse_malformed_shapes() {
+    for (instruction, diagnostic) in [
+        (
+            IIRInstr::new("call_builtin", Some("read".into()), vec![v("input_i64")], "i32"),
+            "result must be i64",
+        ),
+        (
+            IIRInstr::new("call_builtin", None, vec![v("input_i64")], "i64"),
+            "missing destination",
+        ),
+        (
+            IIRInstr::new("call_builtin", Some("read".into()), vec![], "i64"),
+            "operand count",
+        ),
+        (
+            IIRInstr::new(
+                "call_builtin",
+                Some("read".into()),
+                vec![v("input_i64"), v("x")],
+                "i64",
+            ),
+            "operand count",
+        ),
+        (
+            IIRInstr::new(
+                "call_builtin",
+                Some("read".into()),
+                vec![Operand::Int(1)],
+                "i64",
+            ),
+            "builtin name",
+        ),
+        (
+            IIRInstr::new("call_builtin", Some("read".into()), vec![v("input_str")], "i64"),
+            "UnsupportedOp",
+        ),
+    ] {
+        let mut m = base();
+        m.functions[0].instructions.insert(1, instruction);
+        refuses(m, diagnostic);
+    }
+}
 #[test]
 fn excluded_operations_and_types_never_fall_back() {
     for op in [

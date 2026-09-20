@@ -7,6 +7,9 @@ use ir_to_cil_bytecode::CILBranchKind;
 use ir_to_cil_bytecode::{CILMethodArtifact, CILProgramArtifact, SequentialCILTokenProvider};
 use std::collections::{HashMap, HashSet};
 
+const BASIC_INPUT_I64_TOKEN: u32 = 0x0A00_0006;
+const BASIC_INPUT_MORE_TOKEN: u32 = 0x0A00_0007;
+
 fn invalid(function: &str, detail: &str) -> IIRClrError {
     IIRClrError::InvalidOperand {
         function: function.into(),
@@ -114,7 +117,7 @@ fn validate_flow(f: &IIRFunction) -> Result<(), IIRClrError> {
         let reads: &[Operand] = match op {
             "const" | "label" | "jmp" => &[],
             "jmp_if_true" | "jmp_if_false" => &ins.srcs[..1],
-            "call" => ins.srcs.get(1..).unwrap_or(&[]),
+            "call" | "call_builtin" => ins.srcs.get(1..).unwrap_or(&[]),
             _ => &ins.srcs,
         };
         for src in reads {
@@ -246,7 +249,7 @@ pub fn lower_typed_scalars_to_cil(
             }
             let ty = width(&f.name, &ins.type_hint)?;
             let arity = match op {
-                "const" | "mov" | "neg" | "ret" => 1,
+                "const" | "mov" | "neg" | "ret" | "call_builtin" => 1,
                 "add" | "sub" | "mul" | "div" | "and" | "or" | "xor" | "cmp_eq" | "cmp_ne"
                 | "cmp_lt" | "cmp_le" | "cmp_gt" | "cmp_ge" => 2,
                 "call" => ins.srcs.len(),
@@ -337,6 +340,25 @@ pub fn lower_typed_scalars_to_cil(
                         b.emit_ldc_i4(0);
                         b.emit_ceq();
                     }
+                }
+                "call_builtin" => {
+                    if ty != ScalarType::I64 {
+                        return Err(invalid(&f.name, "input builtin result must be i64"));
+                    }
+                    let Some(Operand::Var(name)) = ins.srcs.first() else {
+                        return Err(invalid(&f.name, "missing input builtin name"));
+                    };
+                    let token = match name.as_str() {
+                        "input_i64" => BASIC_INPUT_I64_TOKEN,
+                        "input_more" => BASIC_INPUT_MORE_TOKEN,
+                        _ => {
+                            return Err(IIRClrError::UnsupportedOp {
+                                function: f.name.clone(),
+                                op: format!("call_builtin {name:?}"),
+                            })
+                        }
+                    };
+                    b.emit_call(token);
                 }
                 "call" => {
                     let Some(Operand::Var(name)) = ins.srcs.first() else {
