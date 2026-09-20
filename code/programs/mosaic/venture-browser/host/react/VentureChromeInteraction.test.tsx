@@ -8,6 +8,7 @@ type HostRequest = {
 
 const events: HostRequest[] = [];
 let navigationDisabled = true;
+let stopDisabled = true;
 let bookmarked = false;
 let bookmarksOpen = false;
 let findOpen = false;
@@ -25,6 +26,7 @@ const props = (statusText: string) => ({
     statusText,
     backDisabled: navigationDisabled,
     forwardDisabled: navigationDisabled,
+    stopDisabled,
     bookmarkLabel: bookmarked ? "Remove Bookmark" : "Bookmark",
     bookmarkDisabled: navigationDisabled,
     bookmarksLabel: `Bookmarks (${bookmarked ? 1 : 0})`,
@@ -130,6 +132,10 @@ window.mosaicHost = {
       viewSourceOpen = false;
       return props("Page source closed through MosaicHost");
     }
+    if (request.event.type === "stop") {
+      stopDisabled = true;
+      return props("Loading stopped through MosaicHost");
+    }
     return request.event.type === "navigate"
       ? props("Navigated through MosaicHost")
       : undefined;
@@ -162,7 +168,7 @@ test("React and Electron renderer controls cross the Mosaic host seam", async ()
 
   expect(document.body.textContent).toContain("Venture React acceptance");
   expect(document.body.textContent).toContain("React host surface");
-  for (const label of ["Back", "Forward", "Reload", "Bookmark", "Bookmarks (0)", "Copy", "New Window", "Save", "Print", "Share", "Info", "Zoom Out", "100%", "Zoom In", "Source", "Find", "Go"]) {
+  for (const label of ["Back", "Forward", "Reload", "Stop", "Bookmark", "Bookmarks (0)", "Copy", "New Window", "Save", "Print", "Share", "Info", "Zoom Out", "100%", "Zoom In", "Source", "Find", "Go"]) {
     const button = textButton(label);
     expect(button.disabled).toBe(true);
     button.click();
@@ -202,6 +208,19 @@ test("React and Electron renderer controls cross the Mosaic host seam", async ()
   await flush();
   expect(events[events.length - 1]?.event.type).toBe("navigate");
   expect(document.body.textContent).toContain("Navigated through MosaicHost");
+
+  stopDisabled = false;
+  await act(async () => {
+    window.dispatchEvent(new Event("mosaic-host-ready"));
+  });
+  await flush();
+  await act(async () => {
+    textButton("Stop").click();
+  });
+  await flush();
+  expect(events[events.length - 1]?.event.type).toBe("stop");
+  expect(textButton("Stop").disabled).toBe(true);
+  expect(document.body.textContent).toContain("Loading stopped through MosaicHost");
 
   await act(async () => {
     textButton("Zoom In").click();

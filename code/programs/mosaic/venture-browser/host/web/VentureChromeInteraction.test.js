@@ -26,6 +26,7 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
       statusText: "Ready from MosaicHost",
       backDisabled: true,
       forwardDisabled: false,
+      stopDisabled: true,
       bookmarkLabel: "Bookmark",
       bookmarkDisabled: true,
       bookmarksLabel: "Bookmarks (0)",
@@ -142,6 +143,7 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     assert.equal(controls.back.disabled, true);
     assert.equal(controls.forward.disabled, false);
     assert.equal(controls.reload.disabled, true);
+    assert.equal(controls.stop.disabled, true);
     assert.equal(controls.bookmark.disabled, true);
     assert.equal(controls.bookmarks.disabled, true);
     assert.equal(controls.copyAddress.disabled, true);
@@ -161,6 +163,7 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     assert.ok(root.querySelector(`[data-venture-host-surface="${backend}"]`));
 
     controls.back.click();
+    controls.stop.click();
     controls.bookmark.click();
     controls.bookmarks.click();
     controls.copyAddress.click();
@@ -202,6 +205,7 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     controls = readControls(root);
     assert.equal(controls.back.disabled, false);
     assert.equal(controls.reload.disabled, false);
+    assert.equal(controls.stop.disabled, true);
     assert.equal(controls.bookmark.disabled, false);
     assert.equal(controls.copyAddress.disabled, false);
     assert.equal(controls.openPage.disabled, false);
@@ -217,6 +221,20 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     assert.equal(controls.address.readOnly, false);
     assert.equal(controls.find, undefined);
     assert.match(renderScope(root).textContent, /Enabled by mosaic-host-ready/);
+
+    props = { ...props, stopDisabled: false };
+    window.dispatchEvent(new Event("mosaic-host-ready"));
+    await settle();
+    controls = readControls(root);
+    assert.equal(controls.stop.disabled, false);
+    controls.stop.click();
+    await settle();
+    assert.equal(calls.at(-1)?.type, "stop");
+    props = { ...props, stopDisabled: true };
+    window.dispatchEvent(new Event("mosaic-host-ready"));
+    await settle();
+    controls = readControls(root);
+    assert.equal(controls.stop.disabled, true);
 
     controls.bookmark.click();
     await settle();
@@ -341,7 +359,7 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     assert.equal(calls.at(-1)?.type, "navigate");
     assert.deepEqual(
       calls.map(event => event.type),
-      ["toggleBookmark", "bookmarksOpen", "bookmarksClose", "copyAddress", "openPageInNewWindow", "savePage", "printPage", "sharePage", "pageInfo", "pageInfoClose", "zoomIn", "zoomReset", "viewSource", "viewSourceCopy", "viewSourceClose", "findOpen", "findChange", "findNext", "findClose", "addressChange", "navigate", "navigate"],
+      ["stop", "toggleBookmark", "bookmarksOpen", "bookmarksClose", "copyAddress", "openPageInNewWindow", "savePage", "printPage", "sharePage", "pageInfo", "pageInfoClose", "zoomIn", "zoomReset", "viewSource", "viewSourceCopy", "viewSourceClose", "findOpen", "findChange", "findNext", "findClose", "addressChange", "navigate", "navigate"],
     );
     assert.match(renderScope(root).textContent, /Handled navigate through MosaicHost/);
   } finally {
@@ -394,7 +412,7 @@ function readControls(root) {
   );
   const [address, find] = scope.querySelectorAll("input");
   assert.ok(address, "address input must exist");
-  for (const label of ["Back", "Forward", "Reload", "Bookmark", "Remove Bookmark", "Copy", "New Window", "Save", "Print", "Share", "Info", "Zoom Out", "Zoom In", "Source", "Find", "Go"]) {
+  for (const label of ["Back", "Forward", "Reload", "Stop", "Bookmark", "Remove Bookmark", "Copy", "New Window", "Save", "Print", "Share", "Info", "Zoom Out", "Zoom In", "Source", "Find", "Go"]) {
     if (label === "Bookmark" || label === "Remove Bookmark") continue;
     assert.ok(buttons.has(label), `${label} button must exist`);
   }
@@ -406,6 +424,7 @@ function readControls(root) {
     back: buttons.get("Back"),
     forward: buttons.get("Forward"),
     reload: buttons.get("Reload"),
+    stop: buttons.get("Stop"),
     bookmark,
     bookmarks,
     copyAddress: buttons.get("Copy"),

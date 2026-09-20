@@ -19,9 +19,11 @@ cross-platform proving application. Items are ordered by risk and dependency.
   core acceptance cover empty, open, browse, close, and navigation dismissal
   without toolkit-owned catalog policy.
 
-- [ ] **P2 browser usability - cancel pending page loads.** The shared
-  subresource scheduler supports cancellation during navigation, but generated
-  chrome does not yet expose a Stop transaction while a page is loading.
+- [x] **P2 browser usability - cancel pending page loads.** Add one shared Stop
+  transaction that is enabled only for outstanding stylesheet or image work,
+  invalidates late completions, settles retained resources for fallback
+  reflow, preserves the committed document and history, and emits the ordered
+  typed cancellation list through every generated host scheduler seam.
 
 - [x] **P1 browser convergence - shared View Source presentation.** Preserve
   the typed auxiliary-document effect for richer platform integrations, while

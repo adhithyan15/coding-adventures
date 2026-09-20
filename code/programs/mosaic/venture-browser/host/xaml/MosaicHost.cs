@@ -39,12 +39,14 @@ public static class MosaicHost
     public static JsonElement? LastPrintRequest { get; private set; }
     public static JsonElement? LastShareRequest { get; private set; }
     public static JsonElement? LastPageInfoRequest { get; private set; }
+    public static JsonElement? LastCancelledSubresources { get; private set; }
     public static event Action<JsonElement>? AuxiliaryDocumentRequested;
     public static event Action<JsonElement>? BrowsingContextRequested;
     public static event Action<JsonElement>? DownloadRequested;
     public static event Action<JsonElement>? PrintRequested;
     public static event Action<JsonElement>? ShareRequested;
     public static event Action<JsonElement>? PageInfoRequested;
+    public static event Action<JsonElement>? SubresourcesCancelled;
     public static JsonElement? LastFilePickerRequest { get; private set; }
     public static event Action<JsonElement>? FilePickerRequested;
 
@@ -165,6 +167,13 @@ public static class MosaicHost
             LastPageInfoRequest = retained;
             PageInfoRequested?.Invoke(retained);
         }
+        else if (type.GetString() == "cancel-subresources"
+            && effect.TryGetProperty("requests", out var requests))
+        {
+            var retained = requests.Clone();
+            LastCancelledSubresources = retained;
+            SubresourcesCancelled?.Invoke(retained);
+        }
         else if (type.GetString() == "write-clipboard"
             && effect.TryGetProperty("text", out var text))
         {
@@ -206,6 +215,8 @@ public static class MosaicHost
                 var homeButton = await FindAutomationElementAsync<Button>(component, "home-button");
                 var reloadButton = await FindAutomationElementAsync<Button>(
                     component, "reload-button");
+                var stopButton = await FindAutomationElementAsync<Button>(
+                    component, "stop-button");
                 var bookmarkButton = await FindAutomationElementAsync<Button>(
                     component, "bookmark-button");
                 var bookmarksButton = await FindAutomationElementAsync<Button>(
@@ -234,6 +245,7 @@ public static class MosaicHost
                     || forwardButton is null
                     || homeButton is null
                     || reloadButton is null
+                    || stopButton is null
                     || bookmarkButton is null
                     || bookmarksButton is null
                     || copyAddressButton is null
@@ -260,6 +272,7 @@ public static class MosaicHost
                     () => !backButton.IsEnabled
                         && !forwardButton.IsEnabled
                         && reloadButton.IsEnabled
+                        && !stopButton.IsEnabled
                         && goButton.IsEnabled
                         && !addressInput.IsReadOnly))
                 {
@@ -1125,6 +1138,7 @@ public static class MosaicHost
                 value => component.StatusText = value);
             component.BackDisabled = props.GetProperty("back-disabled").GetBoolean();
             component.ForwardDisabled = props.GetProperty("forward-disabled").GetBoolean();
+            component.StopDisabled = props.GetProperty("stop-disabled").GetBoolean();
             SetIfChanged(component.BookmarkLabel, props.GetProperty("bookmark-label").GetString(),
                 value => component.BookmarkLabel = value);
             component.BookmarkDisabled = props.GetProperty("bookmark-disabled").GetBoolean();

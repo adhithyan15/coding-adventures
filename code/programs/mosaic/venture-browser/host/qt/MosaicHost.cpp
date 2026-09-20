@@ -710,6 +710,9 @@ void MosaicHost::consumeEffect(const QVariantMap &response)
              == QStringLiteral("page-info")) {
     emit pageInfoRequested(effect);
   } else if (effect.value(QStringLiteral("type")).toString()
+             == QStringLiteral("cancel-subresources")) {
+    emit subresourcesCancelled(effect.value(QStringLiteral("requests")).toList());
+  } else if (effect.value(QStringLiteral("type")).toString()
              == QStringLiteral("write-clipboard")) {
     QGuiApplication::clipboard()->setText(effect.value(QStringLiteral("text")).toString());
   }
@@ -722,6 +725,7 @@ QVariantMap MosaicHost::normalizeProps(const QVariantMap &props)
     {QStringLiteral("status-text"), QStringLiteral("statusText")},
     {QStringLiteral("back-disabled"), QStringLiteral("backDisabled")},
     {QStringLiteral("forward-disabled"), QStringLiteral("forwardDisabled")},
+    {QStringLiteral("stop-disabled"), QStringLiteral("stopDisabled")},
     {QStringLiteral("bookmark-label"), QStringLiteral("bookmarkLabel")},
     {QStringLiteral("bookmark-disabled"), QStringLiteral("bookmarkDisabled")},
     {QStringLiteral("bookmarks-label"), QStringLiteral("bookmarksLabel")},

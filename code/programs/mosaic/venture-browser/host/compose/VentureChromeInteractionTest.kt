@@ -81,6 +81,7 @@ class VentureChromeInteractionTest {
             rule.waitUntil(10_000) { host.renderedFrameCount.get() > 0 }
             rule.onNodeWithText("Compose Start").assertExists()
             val surface = rule.onNodeWithTag("venture-content-surface").assertExists()
+            rule.onNodeWithTag("stop-button").assertIsNotEnabled()
             println("compose-live-stage=shell-mounted")
 
             rule.onNodeWithTag("bookmark-button").assertIsEnabled().performClick()

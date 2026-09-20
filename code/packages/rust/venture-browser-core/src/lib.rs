@@ -548,12 +548,13 @@ fn positioned_node_breaks_find_text(node: &PositionedNode) -> bool {
 }
 
 /// Mosaic `VentureChrome` slot names, in interface declaration order.
-pub const VENTURE_CHROME_SLOT_NAMES: [&str; 42] = [
+pub const VENTURE_CHROME_SLOT_NAMES: [&str; 43] = [
     "address",
     "page-title",
     "status-text",
     "back-disabled",
     "forward-disabled",
+    "stop-disabled",
     "bookmark-label",
     "bookmark-disabled",
     "bookmarks-label",
@@ -597,11 +598,12 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 42] = [
 pub const VENTURE_CHROME_HOST_SURFACE_SLOT_NAME: &str = "content-surface";
 
 /// Mosaic `VentureChrome` event names, in interface declaration order.
-pub const VENTURE_CHROME_EVENT_NAMES: [&str; 30] = [
+pub const VENTURE_CHROME_EVENT_NAMES: [&str; 31] = [
     "onBack",
     "onForward",
     "onHome",
     "onReload",
+    "onStop",
     "onToggleBookmark",
     "onBookmarksOpen",
     "onBookmarksPrevious",
@@ -1448,6 +1450,7 @@ pub enum BrowserHostEffect {
     Share(BrowserShareRequest),
     PageInfo(BrowserPageInfoRequest),
     WriteClipboard(String),
+    CancelSubresources(Vec<BrowserSubresourceRequest>),
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -1597,6 +1600,14 @@ impl BrowserHostEventOutcome {
         Self {
             changed: true,
             page_reflow_required: false,
+            effect: Some(effect),
+        }
+    }
+
+    pub fn page_reflow_effect(effect: BrowserHostEffect) -> Self {
+        Self {
+            changed: true,
+            page_reflow_required: true,
             effect: Some(effect),
         }
     }
@@ -1780,6 +1791,7 @@ pub enum BrowserNavigation {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum BrowserChromeAction {
     Navigate(BrowserNavigation),
+    StopLoading,
     ToggleCurrentBookmark,
     OpenBookmarkCatalog,
     BrowseBookmarkCatalog,
@@ -1811,6 +1823,7 @@ pub enum BrowserChromeEvent {
     Forward,
     Home,
     Reload,
+    Stop,
     ToggleBookmark,
     BookmarksOpen,
     BookmarksPrevious,
@@ -1852,6 +1865,7 @@ impl BrowserChromeEvent {
             Self::Forward => "onForward",
             Self::Home => "onHome",
             Self::Reload => "onReload",
+            Self::Stop => "onStop",
             Self::ToggleBookmark => "onToggleBookmark",
             Self::BookmarksOpen => "onBookmarksOpen",
             Self::BookmarksPrevious => "onBookmarksPrevious",
@@ -1892,6 +1906,7 @@ impl BrowserChromeEvent {
             "onForward" => Self::Forward,
             "onHome" => Self::Home,
             "onReload" => Self::Reload,
+            "onStop" => Self::Stop,
             "onToggleBookmark" => Self::ToggleBookmark,
             "onBookmarksOpen" => Self::BookmarksOpen,
             "onBookmarksPrevious" => Self::BookmarksPrevious,
@@ -1939,6 +1954,7 @@ pub struct BrowserChromeProps {
     pub status_text: String,
     pub back_disabled: bool,
     pub forward_disabled: bool,
+    pub stop_disabled: bool,
     pub bookmark_label: String,
     pub bookmark_disabled: bool,
     pub bookmarks_label: String,
@@ -2041,6 +2057,23 @@ impl BrowserHostEffect {
                 "{{\"type\":\"write-clipboard\",\"text\":{}}}",
                 bridge_json_string(text),
             ),
+            Self::CancelSubresources(requests) => format!(
+                "{{\"type\":\"cancel-subresources\",\"requests\":[{}]}}",
+                requests
+                    .iter()
+                    .map(|request| format!(
+                        "{{\"navigationId\":{},\"kind\":{},\"ordinal\":{},\"url\":{}}}",
+                        request.navigation_id,
+                        bridge_json_string(match request.kind {
+                            BrowserSubresourceKind::Stylesheet => "stylesheet",
+                            BrowserSubresourceKind::Image => "image",
+                        }),
+                        request.ordinal,
+                        bridge_json_string(&request.url),
+                    ))
+                    .collect::<Vec<_>>()
+                    .join(","),
+            ),
         }
     }
 }
@@ -2049,12 +2082,13 @@ impl BrowserChromeProps {
     /// Serialize all shared chrome slots using their authored MIL names.
     pub fn to_bridge_json(&self) -> String {
         format!(
-            "{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"bookmark-label\":{},\"bookmark-disabled\":{},\"bookmarks-label\":{},\"bookmarks-disabled\":{},\"bookmarks-open\":{},\"bookmarks-position\":{},\"bookmarks-title\":{},\"bookmarks-address\":{},\"bookmarks-previous-disabled\":{},\"bookmarks-next-disabled\":{},\"bookmarks-navigate-disabled\":{},\"copy-address-disabled\":{},\"open-page-disabled\":{},\"save-page-disabled\":{},\"print-page-disabled\":{},\"share-page-disabled\":{},\"page-info-disabled\":{},\"page-info-open\":{},\"page-info-title\":{},\"page-info-address\":{},\"page-info-requested-address\":{},\"page-info-status\":{},\"page-info-resources\":{},\"zoom-label\":{},\"zoom-out-disabled\":{},\"zoom-reset-disabled\":{},\"zoom-in-disabled\":{},\"view-source-disabled\":{},\"view-source-open\":{},\"view-source-title\":{},\"view-source-address\":{},\"view-source-content\":{},\"find-open\":{},\"find-query\":{},\"find-result-label\":{},\"find-disabled\":{},\"navigation-disabled\":{}}}",
+            "{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"stop-disabled\":{},\"bookmark-label\":{},\"bookmark-disabled\":{},\"bookmarks-label\":{},\"bookmarks-disabled\":{},\"bookmarks-open\":{},\"bookmarks-position\":{},\"bookmarks-title\":{},\"bookmarks-address\":{},\"bookmarks-previous-disabled\":{},\"bookmarks-next-disabled\":{},\"bookmarks-navigate-disabled\":{},\"copy-address-disabled\":{},\"open-page-disabled\":{},\"save-page-disabled\":{},\"print-page-disabled\":{},\"share-page-disabled\":{},\"page-info-disabled\":{},\"page-info-open\":{},\"page-info-title\":{},\"page-info-address\":{},\"page-info-requested-address\":{},\"page-info-status\":{},\"page-info-resources\":{},\"zoom-label\":{},\"zoom-out-disabled\":{},\"zoom-reset-disabled\":{},\"zoom-in-disabled\":{},\"view-source-disabled\":{},\"view-source-open\":{},\"view-source-title\":{},\"view-source-address\":{},\"view-source-content\":{},\"find-open\":{},\"find-query\":{},\"find-result-label\":{},\"find-disabled\":{},\"navigation-disabled\":{}}}",
             bridge_json_string(&self.address),
             bridge_json_string(&self.page_title),
             bridge_json_string(&self.status_text),
             self.back_disabled,
             self.forward_disabled,
+            self.stop_disabled,
             bridge_json_string(&self.bookmark_label),
             self.bookmark_disabled,
             bridge_json_string(&self.bookmarks_label),
@@ -2267,6 +2301,10 @@ impl BrowserChromeController {
             self.bookmark_catalog_open = false;
             return changed.then_some(BrowserChromeAction::CloseBookmarkCatalog);
         }
+        if event == BrowserChromeEvent::Stop {
+            return (!session.pending_subresource_requests().is_empty())
+                .then_some(BrowserChromeAction::StopLoading);
+        }
         if navigation_disabled {
             return None;
         }
@@ -2371,9 +2409,10 @@ impl BrowserChromeController {
                 Some(BrowserChromeAction::FindPrevious)
             }
             BrowserChromeEvent::FindClose => Some(BrowserChromeAction::CloseFind),
-            BrowserChromeEvent::Back | BrowserChromeEvent::Forward | BrowserChromeEvent::Reload => {
-                None
-            }
+            BrowserChromeEvent::Back
+            | BrowserChromeEvent::Forward
+            | BrowserChromeEvent::Reload
+            | BrowserChromeEvent::Stop => None,
             BrowserChromeEvent::ToggleBookmark
             | BrowserChromeEvent::BookmarksOpen
             | BrowserChromeEvent::BookmarksPrevious
@@ -2428,6 +2467,7 @@ impl BrowserChromeController {
             status_text: status_text.into(),
             back_disabled: navigation_disabled || !session.history().can_go_back(),
             forward_disabled: navigation_disabled || !session.history().can_go_forward(),
+            stop_disabled: session.pending_subresource_requests().is_empty(),
             bookmark_label: if session.current_is_bookmarked() {
                 "Remove Bookmark"
             } else {
@@ -2602,6 +2642,13 @@ impl BrowserHostController {
                 .execute_navigation(navigation, execute)
                 .map(BrowserHostEventOutcome::changed)
                 .map_err(BrowserCommandError::Load),
+            BrowserChromeAction::StopLoading => {
+                let cancelled = self.session.stop_loading();
+                self.status_text = "Loading stopped".to_string();
+                Ok(BrowserHostEventOutcome::page_reflow_effect(
+                    BrowserHostEffect::CancelSubresources(cancelled),
+                ))
+            }
             BrowserChromeAction::ToggleCurrentBookmark => {
                 self.status_text = "Saving bookmark".to_string();
                 match self.session.toggle_current_bookmark(bookmarks) {
@@ -3326,6 +3373,46 @@ impl BrowserSession {
                 }),
         );
         requests
+    }
+
+    /// Cancel and settle every outstanding resource for the committed page.
+    ///
+    /// The returned requests are the scheduler work that is currently in
+    /// flight. Advancing the generation makes late completions harmless, while
+    /// settling all retained pending states lets the caller reflow stylesheet
+    /// fallback and failed-image presentation without changing history.
+    pub fn stop_loading(&mut self) -> Vec<BrowserSubresourceRequest> {
+        let cancelled = self.pending_subresource_requests();
+        if cancelled.is_empty() {
+            return cancelled;
+        }
+        let Some(viewport) = self.viewport.as_mut() else {
+            return Vec::new();
+        };
+        let page = &mut viewport.page;
+        for resource in &mut page.stylesheet_resources {
+            if matches!(resource.state, BrowserStylesheetResourceState::Pending) {
+                let url = resource
+                    .url
+                    .clone()
+                    .unwrap_or_else(|| resource.base_url.clone());
+                resource.state =
+                    BrowserStylesheetResourceState::Failed(BrowserStylesheetError::Fetch {
+                        url,
+                        message: "cancelled by user".into(),
+                    });
+            }
+        }
+        for resource in &mut page.image_resources {
+            if matches!(resource.state, BrowserImageResourceState::Pending) {
+                resource.state = BrowserImageResourceState::Failed(HtmlImageResourceError::Fetch {
+                    uri: resource.url.clone(),
+                    message: "cancelled by user".into(),
+                });
+            }
+        }
+        self.navigation_id = self.navigation_id.wrapping_add(1).max(1);
+        cancelled
     }
 
     pub fn resize(&mut self, viewport_height: f64) -> f64 {
@@ -7887,6 +7974,15 @@ mod tests {
                 BrowserHostEffect::WriteClipboard("quoted \"line\"\nnext".into()),
                 r#"{"type":"write-clipboard","text":"quoted \"line\"\nnext"}"#,
             ),
+            (
+                BrowserHostEffect::CancelSubresources(vec![BrowserSubresourceRequest {
+                    navigation_id: 7,
+                    kind: BrowserSubresourceKind::Image,
+                    ordinal: 2,
+                    url: "https://example.test/image.png".into(),
+                }]),
+                r#"{"type":"cancel-subresources","requests":[{"navigationId":7,"kind":"image","ordinal":2,"url":"https://example.test/image.png"}]}"#,
+            ),
         ];
 
         for (effect, expected) in cases {
@@ -7902,6 +7998,7 @@ mod tests {
             status_text: "Ready\tsoon".into(),
             back_disabled: true,
             forward_disabled: false,
+            stop_disabled: false,
             bookmark_label: "Remove \"bookmark\"".into(),
             bookmark_disabled: false,
             bookmarks_label: "Bookmarks (2)".into(),
@@ -7944,7 +8041,7 @@ mod tests {
 
         assert_eq!(
             browser_bridge_response_json(&props, Some(&effect), Some("bad\nrequest")),
-            r#"{"props":{"address":"https://example.test/\"draft\"","page-title":"Line\nTitle","status-text":"Ready\tsoon","back-disabled":true,"forward-disabled":false,"bookmark-label":"Remove \"bookmark\"","bookmark-disabled":false,"bookmarks-label":"Bookmarks (2)","bookmarks-disabled":false,"bookmarks-open":true,"bookmarks-position":"2 of 2","bookmarks-title":"Second","bookmarks-address":"https://example.test/second","bookmarks-previous-disabled":false,"bookmarks-next-disabled":false,"bookmarks-navigate-disabled":false,"copy-address-disabled":true,"open-page-disabled":false,"save-page-disabled":true,"print-page-disabled":false,"share-page-disabled":true,"page-info-disabled":false,"page-info-open":true,"page-info-title":"Example","page-info-address":"https://example.test/final","page-info-requested-address":"https://example.test/start","page-info-status":"HTTP 200","page-info-resources":"Images: 3 (1 failed)  Stylesheets: 2 (0 failed)","zoom-label":"125%","zoom-out-disabled":true,"zoom-reset-disabled":false,"zoom-in-disabled":true,"view-source-disabled":false,"view-source-open":true,"view-source-title":"Source: Example","view-source-address":"https://example.test/final","view-source-content":"<p>source</p>\n","find-open":true,"find-query":"a\\b","find-result-label":"1 of 2","find-disabled":false,"navigation-disabled":true},"effect":{"type":"write-clipboard","text":"copy\u0001"},"error":"bad\nrequest"}"#
+            r#"{"props":{"address":"https://example.test/\"draft\"","page-title":"Line\nTitle","status-text":"Ready\tsoon","back-disabled":true,"forward-disabled":false,"stop-disabled":false,"bookmark-label":"Remove \"bookmark\"","bookmark-disabled":false,"bookmarks-label":"Bookmarks (2)","bookmarks-disabled":false,"bookmarks-open":true,"bookmarks-position":"2 of 2","bookmarks-title":"Second","bookmarks-address":"https://example.test/second","bookmarks-previous-disabled":false,"bookmarks-next-disabled":false,"bookmarks-navigate-disabled":false,"copy-address-disabled":true,"open-page-disabled":false,"save-page-disabled":true,"print-page-disabled":false,"share-page-disabled":true,"page-info-disabled":false,"page-info-open":true,"page-info-title":"Example","page-info-address":"https://example.test/final","page-info-requested-address":"https://example.test/start","page-info-status":"HTTP 200","page-info-resources":"Images: 3 (1 failed)  Stylesheets: 2 (0 failed)","zoom-label":"125%","zoom-out-disabled":true,"zoom-reset-disabled":false,"zoom-in-disabled":true,"view-source-disabled":false,"view-source-open":true,"view-source-title":"Source: Example","view-source-address":"https://example.test/final","view-source-content":"<p>source</p>\n","find-open":true,"find-query":"a\\b","find-result-label":"1 of 2","find-disabled":false,"navigation-disabled":true},"effect":{"type":"write-clipboard","text":"copy\u0001"},"error":"bad\nrequest"}"#
         );
     }
 
@@ -8003,6 +8100,7 @@ mod tests {
                 status_text: "Ready".into(),
                 back_disabled: true,
                 forward_disabled: true,
+                stop_disabled: true,
                 bookmark_label: "Bookmark".into(),
                 bookmark_disabled: true,
                 bookmarks_label: "Bookmarks (0)".into(),
@@ -8089,6 +8187,7 @@ mod tests {
                 status_text: "Status: 200".into(),
                 back_disabled: false,
                 forward_disabled: true,
+                stop_disabled: true,
                 bookmark_label: "Bookmark".into(),
                 bookmark_disabled: false,
                 bookmarks_label: "Bookmarks (0)".into(),
@@ -8283,6 +8382,7 @@ mod tests {
             BrowserChromeEvent::Forward,
             BrowserChromeEvent::Home,
             BrowserChromeEvent::Reload,
+            BrowserChromeEvent::Stop,
             BrowserChromeEvent::ToggleBookmark,
             BrowserChromeEvent::BookmarksOpen,
             BrowserChromeEvent::BookmarksPrevious,
@@ -9964,6 +10064,95 @@ mod tests {
         assert_eq!(
             session.viewport().unwrap().page().final_url,
             "http://example.test/two.html"
+        );
+    }
+
+    #[test]
+    fn stop_loading_cancels_and_settles_pending_resources_without_navigation() {
+        let fetcher = |url: &str| {
+            assert_eq!(url, "http://example.test/page.html");
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                b"<title>Pending</title><link rel='stylesheet' href='page.css'><img src='page.gif'><p>Retained</p>"
+                    .to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(120.0, 40.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new("http://example.test/page.html", 40.0);
+        let navigation = session
+            .begin_execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+        assert_eq!(navigation.requests.len(), 2);
+        let stale_request = navigation.requests[0].clone();
+        let committed_url = session.history().current_url().unwrap().to_string();
+        let committed_navigation_id = session.navigation_id();
+        let chrome = BrowserChromeController::new(&session);
+        assert!(!chrome.props(&session, "Loading", false).stop_disabled);
+        assert_eq!(
+            chrome
+                .clone()
+                .handle_event(BrowserChromeEvent::Stop, &session, true),
+            Some(BrowserChromeAction::StopLoading),
+            "Stop remains available while the rest of navigation is disabled"
+        );
+
+        let mut host = BrowserHostController::new(session);
+        let mut bookmarks = MemoryBookmarkRepository::default();
+        let outcome = host
+            .handle_event_with_effect(BrowserChromeEvent::Stop, &mut bookmarks, |_, _| {
+                unreachable!("Stop must not start another navigation")
+            })
+            .unwrap();
+        assert!(outcome.changed);
+        assert!(outcome.page_reflow_required);
+        assert_eq!(
+            outcome.effect,
+            Some(BrowserHostEffect::CancelSubresources(
+                navigation.requests.clone()
+            ))
+        );
+        assert_eq!(host.props().status_text, "Loading stopped");
+        assert!(host.props().stop_disabled);
+        assert_eq!(
+            host.session().history().current_url(),
+            Some(committed_url.as_str())
+        );
+        assert_ne!(host.session().navigation_id(), committed_navigation_id);
+        assert!(host.session().pending_subresource_requests().is_empty());
+        let page = host.session().viewport().unwrap().page();
+        assert!(page
+            .stylesheet_resources
+            .iter()
+            .all(|resource| !matches!(resource.state, BrowserStylesheetResourceState::Pending)));
+        assert!(page
+            .image_resources
+            .iter()
+            .all(|resource| !matches!(resource.state, BrowserImageResourceState::Pending)));
+
+        let stale = host.session_mut().complete_subresource(
+            stale_request.resolve(&|url: &str| {
+                Ok(BrowserFetchResponse::new(
+                    url,
+                    200,
+                    Some("text/css".into()),
+                    b"p { color: red; }".to_vec(),
+                ))
+            }),
+            &pipeline,
+        );
+        assert_eq!(
+            stale.disposition,
+            BrowserSubresourceDisposition::IgnoredStaleNavigation
         );
     }
 

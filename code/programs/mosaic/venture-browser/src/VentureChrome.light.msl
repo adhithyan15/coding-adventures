@@ -67,6 +67,12 @@ style VentureChrome {
     state focused { outline-color : "#9a5b18" ; outline-width : 2 ; }
     state disabled { opacity : 0.45 ; }
   }
+  part stop-button {
+    background : "#fff0ed" ;
+    color : "#8d2d20" ;
+    border-color : "#d8a095" ;
+    state disabled { opacity : 0.42 ; }
+  }
   part bookmark-button {
     background : "#fffdf8" ; color : "#39342d" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#b9b09f" ;
     state hover { background : "#f7e6c7" ; }

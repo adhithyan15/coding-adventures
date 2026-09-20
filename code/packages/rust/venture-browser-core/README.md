@@ -32,6 +32,13 @@ diagnostics rather than fetch loops. Link, import, and rule media all evaluate
 against the pipeline's logical viewport. Image failures remain recoverable Mosaic-style bordered
 `alt` text.
 
+`BrowserSession::stop_loading` exposes the same lifecycle to browser chrome.
+It returns the currently dispatched requests in deterministic order, advances
+the generation so late deliveries are ignored, and settles every retained
+pending stylesheet and image as a user cancellation. The host reflows that
+retained page to expose stylesheet fallback and failed-image presentation;
+history, the committed document, and editable address state do not move.
+
 The default `HttpBrowserFetcher` adapts `http1-client`, but tests and platform
 hosts can inject any transport. Font measurement, shaping, metrics, resolution,
 and the final paint backend also remain caller-owned.

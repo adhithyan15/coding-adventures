@@ -103,6 +103,11 @@ void main() {
       debugPrint('flutter-live-stage=host-open');
       await _pumpLiveVentureShell(tester, host);
       debugPrint('flutter-live-stage=shell-pumped');
+      expect(find.text('Stop'), findsOneWidget);
+      final stopButton = tester.widget<ButtonStyleButton>(
+        find.widgetWithText(ButtonStyleButton, 'Stop'),
+      );
+      expect(stopButton.onPressed, isNull);
 
       await tester.tap(find.text('Bookmark'));
       await tester.pumpAndSettle();
