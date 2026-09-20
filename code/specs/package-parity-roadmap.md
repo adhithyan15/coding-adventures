@@ -14224,11 +14224,39 @@ signatures, trust, TLS, transport, clocks, entropy, credentials, and ambient
 authority remain outside it. The graph now has 861 owners and 1,596 dependency
 edges: 223 merged, 637 pending, and exactly DER ASN.1 in progress.
 
+### Post-#15812 certificate-version inventory refresh
+
+PR #15812 completed 21 successful checks with 27 path-gated skips and no
+failure, cancellation, or pending result, then merged through guarded
+auto-merge as `52f428eb5135e7abc746cf199cd04ad2091f23b1`. Its new Rust-only
+`x509-certificate-version` identity advances the collision-checked exact-main
+inventory to 1,458 implementation identities, 4,697 implementation slots, and
+1,498 all-reported identities. Completion bands are 176/265, 123/934,
+181/2,282, and 978/13,692; Rust has 796 singleton identities, OCaml remains an
+emerging five-package lane, and collisions and unknown language buckets remain
+zero.
+
+The backlog now explicitly owns the portable RFC 5280 Certificate Version
+contract above typed DER ASN.1: omitted v1 default, accepted explicit v2 and
+v3, DER rejection of explicit-default v1 and unsupported values, exact
+constructed context-specific tag zero with one canonical INTEGER child,
+shared budgets, local offsets, transactional failure, and redacted
+diagnostics. Complete `TBSCertificate` parsing, version-dependent field policy,
+paths, signatures, trust, revocation, clocks, TLS, transport, and ambient
+authority remain outside that owner. The graph has 862 owners and 1,597
+dependency edges: 223 merged, 638 pending, and exactly DER ASN.1 in progress.
+
+Subsequent merged package-internal Mermaid and ALGOL changes through exact
+`origin/main` revision `351361030127f89964e78a565d73f29e4eba8600` add no
+package identity, recognized manifest, BUILD root, or parity-owner gap. The
+collision-checked inventory therefore retains the counts above, and the DER
+ASN.1 branch is rebased onto that exact revision.
+
 ### DER ASN.1 portable implementation progress
 
 The closed 109-case, 22-error language-neutral contract now has complete
-package-native consumers in six of fifteen established lanes: Rust, Python,
-Go, Dart, Java, and TypeScript. Every consumer executes all 46 referenced DER TLV framing
+package-native consumers in seven of fifteen established lanes: Rust, Python,
+Go, Dart, Java, TypeScript, and Kotlin. Every consumer executes all 46 referenced DER TLV framing
 cases rather than treating delegated rows as automatic success. Python passes
 110 tests at 97.45 percent line coverage; Rust passes its full suite, Clippy,
 and formatting; Go passes race, vet, trimpath build, and 90.7 percent coverage;
@@ -14237,14 +14265,17 @@ Dart passes fatal analysis and its coverage gate with 96.97 percent line and
 JaCoCo with 96.25 percent line and 94.44 percent branch coverage. TypeScript
 passes its production build, 120 Vitest tests, a zero-high-vulnerability npm
 audit, and coverage at 97.27 percent statements, 93.75 percent branches, 98.33
-percent functions, and 98.29 percent lines. All six use
+percent functions, and 98.29 percent lines. Kotlin passes Java 21
+warnings-as-errors, 116 JUnit tests, and its JaCoCo gate at 95.26 percent line
+coverage. All seven use
 empty capability manifests, structural limits, shared work budgets,
 transactional cursors, unsigned-width-safe integer and OID handling, and
-payload-free diagnostics. C#, F#, Haskell, Elixir, Lua, Perl, Ruby, Swift, and
-Kotlin remain in this same serial work item; no parity PR is
+payload-free diagnostics. C#, F#, Haskell, Elixir, Lua, Perl, Ruby, and Swift
+remain in this same serial work item; no parity PR is
 open yet. Independent security review made validated element and primitive
-wrappers unforgeable in Python, Go, and Dart, hid raw DER framing helpers from
-typed package surfaces, and added adversarial Go zero-value tests.
+wrappers unforgeable in Python, Go, Dart, TypeScript, and Kotlin, hid raw DER
+framing helpers from typed package surfaces, and added adversarial zero-value,
+runtime-token, immutable-snapshot, and redaction tests.
 
 ## Autonomous Loop Protocol
 

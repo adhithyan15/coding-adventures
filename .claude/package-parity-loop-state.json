@@ -13,27 +13,27 @@
   },
   "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-09-20T15:51:57Z",
-    "pr_number": 15806,
+    "observed_at": "2026-09-20T16:37:56Z",
+    "pr_number": 15812,
     "status": "merged",
-    "notes": "PR #15806 reached 21 successful checks with 27 path-gated skips, zero failures, zero cancellations, and zero pending checks. GitHub reported the reviewed head MERGEABLE, and guarded auto-merge merged it automatically at 2026-09-20T15:51:57Z as f24c2e8c6a17ed4dd08f5c26a2e34291fe87fbf7; no plain manual merge command was used."
+    "notes": "PR #15812 reached 21 successful checks with 27 path-gated skips, zero failures, zero cancellations, and zero pending checks. Guarded auto-merge merged it automatically at 2026-09-20T16:37:56Z as 52f428eb5135e7abc746cf199cd04ad2091f23b1; no plain manual merge command was used."
   },
   "last_inventory": {
-    "revision": "5c18b8d6a6bbdb79656e360c475abb46a29fef91",
+    "revision": "351361030127f89964e78a565d73f29e4eba8600",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1457,
-    "implementation_package_slots": 4696,
-    "all_reported_identities": 1497,
+    "implementation_identities": 1458,
+    "implementation_package_slots": 4697,
+    "all_reported_identities": 1498,
     "high_consensus_packages": 176,
     "high_consensus_missing_slots": 265,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 181,
     "two_to_four_missing_slots": 2282,
-    "singleton_packages": 977,
-    "singleton_missing_slots": 13678,
-    "rust_singletons": 795,
+    "singleton_packages": 978,
+    "singleton_missing_slots": 13692,
+    "rust_singletons": 796,
     "ocaml_packages": 5,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -9512,7 +9512,16 @@
       "selection_revision": "82f851dc277b5f1931a3e64276466cd1d742e3d0",
       "selection_notes": "Selected after PR #15761 merged through guarded auto-merge, followed by a collision-checked exact-main inventory refresh and bounded package, owner, fixture, and validation audits. DER ASN.1 is the sole dependency-shaped root immediately unlocked by DER TLV and now directly gates ten confirmed Rust X.509 consumers plus six registered extension-family owners. The dedicated worktree was rebased to origin/main 346be10b6e86467693e064eb9eba433d61fe3e60 after PR #15798 merged; that refresh added the Subject Alternative Name owner without changing the selected in-progress item.",
       "notes": "Own the portable empty-capability typed ASN.1 DER layer above the merged DER TLV contract. Freeze a language-neutral semantic suite that references rather than copies the DER TLV framing corpus, then deliver all 15 established lanes for canonical BOOLEAN, INTEGER, BIT STRING, OCTET STRING, IA5String, NULL, OID, implicit primitive values, exact SEQUENCE, SET, and context-specific wrappers, shared budgets, transactional failures, and payload-redacted local offsets. Keep X.509 schema, path validation, trust, signatures, TLS, network, credentials, and ambient authority outside this owner.",
-      "progress_notes": "The neutral 109-case, 22-error contract and aggregate gate are committed. Rust, Python, Go, Dart, Java, and TypeScript now consume the complete suite and all 46 referenced DER TLV cases. Python passes 110 tests at 97.45% line coverage; Rust passes its full suite, Clippy, and formatting; Go passes race, vet, trimpath build, and 90.7% coverage; Dart passes fatal analysis and coverage with 96.97% line and 98.18% function coverage; Java passes Java 21 warnings-as-errors and JaCoCo with 96.25% line and 94.44% branch coverage; TypeScript passes build, 120 Vitest tests, and coverage at 97.27% statements, 93.75% branches, 98.33% functions, and 98.29% lines. Security review made validated element and primitive wrappers unforgeable in Python, Go, Dart, and TypeScript, hid raw framing helpers from typed package surfaces, and added defensive zero-value or runtime-token tests. Nine established lanes remain before publication: C#, F#, Haskell, Elixir, Lua, Perl, Ruby, Swift, and Kotlin."
+      "progress_notes": "The neutral 109-case, 22-error contract and aggregate gate are committed. Rust, Python, Go, Dart, Java, TypeScript, and Kotlin now consume the complete suite and all 46 referenced DER TLV cases. Python passes 110 tests at 97.45% line coverage; Rust passes its full suite, Clippy, and formatting; Go passes race, vet, trimpath build, and 90.7% coverage; Dart passes fatal analysis and coverage with 96.97% line and 98.18% function coverage; Java passes Java 21 warnings-as-errors and JaCoCo with 96.25% line and 94.44% branch coverage; TypeScript passes build, 120 Vitest tests, and coverage at 97.27% statements, 93.75% branches, 98.33% functions, and 98.29% lines; Kotlin passes Java 21 warnings-as-errors, 116 JUnit tests, and JaCoCo with 95.26% line coverage. Security review made validated element and primitive wrappers unforgeable in Python, Go, Dart, TypeScript, and Kotlin, hid raw framing helpers from typed package surfaces, rejected oversized Kotlin input before copying, made Kotlin OID arc lists runtime-immutable to Java callers, and added defensive zero-value, runtime-token, immutable-snapshot, published-JVM-surface, and redaction tests. Eight established lanes remain before publication: C#, F#, Haskell, Elixir, Lua, Perl, Ruby, and Swift."
+    },
+    {
+      "id": "x509-certificate-version-portable-conformance",
+      "title": "Define portable X.509 Certificate Version conformance and established-lane parity",
+      "status": "pending",
+      "depends_on": ["der-asn1-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked exact-main refresh after merged PR #15812 added the Rust-only x509-certificate-version identity. Own the optional RFC 5280 [0] EXPLICIT Version field: omitted v1 default, accepted explicit v2 and v3, DER rejection of explicit default v1 and unsupported values, exact constructed context-specific tag zero, one canonical INTEGER child, shared depth and element budgets, local offsets, transactional failure, and redacted diagnostics. Keep complete TBSCertificate parsing, version-dependent field policy, paths, signatures, trust, revocation, clocks, TLS, transport, and ambient authority outside this owner."
     },
     {
       "id": "x509-extension-portable-conformance",
