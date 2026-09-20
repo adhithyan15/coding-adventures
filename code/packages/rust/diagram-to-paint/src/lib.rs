@@ -41,7 +41,7 @@ use diagram_ir::{
     LayoutedTemporalDiagram, LayoutedTemporalItem, Orientation, Point, RelKind, SequenceArrowhead,
     SequenceBlockKind, SequenceCentralConnection, SequenceLineStyle, SequenceParticipantKind,
     GanttTaskTags, SequenceProperty, SwimlaneEdgeKind, TextAlign as GeoTextAlign, TreeViewNodeKind,
-    RailroadElementKind,
+    RailroadElementKind, StructuralNodeKind,
 };
 use layout_ir::{Color, Content, FontSpec, PositionedNode, TextAlign, TextContent};
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
@@ -2766,6 +2766,21 @@ where
 
     // ── Node boxes ───────────────────────────────────────────────────────────
     for node in &diagram.nodes {
+        if node.node_kind == StructuralNodeKind::Junction {
+            instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+                base: PaintBase::default(),
+                cx: node.x + node.width / 2.0,
+                cy: node.y + node.height / 2.0,
+                rx: node.width / 2.0,
+                ry: node.height / 2.0,
+                fill: Some("#334155".into()),
+                stroke: Some("#0f172a".into()),
+                stroke_width: Some(1.5),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }));
+            continue;
+        }
         let header_height = node
             .compartments
             .first()

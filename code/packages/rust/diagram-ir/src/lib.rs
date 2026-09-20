@@ -1405,6 +1405,7 @@ pub enum StructuralNodeKind {
     Entity,
     Requirement,
     Element,
+    Junction,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -1531,6 +1532,7 @@ pub struct LayoutedCompartment {
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedStructuralNode {
     pub id: String,
+    pub node_kind: StructuralNodeKind,
     pub x: f64,
     pub y: f64,
     pub width: f64,

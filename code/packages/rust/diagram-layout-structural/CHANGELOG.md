@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.10.0
+
+- Resolve typed structural junctions to compact backend-neutral geometry.
+
 ## 0.9.0
 
 - Reserve a deterministic title band in structural diagram geometry.
