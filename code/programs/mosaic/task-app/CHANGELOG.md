@@ -4,6 +4,14 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+### Fixed — Qt startup failures stay visible and recoverable (#15818)
+
+The generated Qt app now opens on a system-themed loading surface before its
+Rust engine and saved workspace initialize. Runtime and initial-props failures
+remain in the window with diagnostic text, explicit saved-data reassurance, and
+a **Try again** action that discards any partial host and starts fresh. The Linux
+acceptance lane forces the failure and drives the emitted retry control.
+
 ### Fixed — Compose startup no longer fails outside the window (#15786)
 
 The generated Compose Desktop app now paints a themed loading state before its

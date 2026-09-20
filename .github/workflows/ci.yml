@@ -2439,6 +2439,24 @@ jobs:
           ! grep -F "Mosaic Rust runtime unavailable" "$taskapp_log"
           ! grep -E "missing required MIL prop|ReferenceError|TypeError" "$taskapp_log"
 
+          # Rebuild the exact generated shell with its compile-time acceptance
+          # seam, force runtime loading to fail, and drive the emitted Try again
+          # button. The probe exits successfully only after the second visible
+          # failure, proving retry creates a fresh host instead of merely
+          # checking source markers around a blank window.
+          task_startup_source="$RUNNER_TEMP/mosaic-qt-taskapp-startup-conformance"
+          cp -R "$taskapp_output/qt" "$task_startup_source"
+          cmake -S "$task_startup_source" -B "$task_startup_source/startup-build" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_CXX_FLAGS=-DMOSAIC_STARTUP_CONFORMANCE=1
+          cmake --build "$task_startup_source/startup-build" --config Release --parallel
+          task_startup_log="$RUNNER_TEMP/mosaic-qt-taskapp-startup.log"
+          env QT_QPA_PLATFORM=offscreen \
+            MOSAIC_APP_LIBRARY="$RUNNER_TEMP/does-not-exist/libtask_mosaic_app.so" \
+            MOSAIC_APP_STATE_PATH="$RUNNER_TEMP/mosaic-qt-taskapp-startup-state.json" \
+            timeout 10s "$task_startup_source/startup-build/TaskApp" >"$task_startup_log" 2>&1
+          grep -F "Qt startup failure/retry conformance passed" "$task_startup_log"
+
           task_ui_source="$RUNNER_TEMP/mosaic-qt-taskapp-ui-conformance"
           cp -R "$taskapp_output/qt" "$task_ui_source"
           cp code/packages/rust/task-mosaic-app/conformance/qt/ui-main.cpp "$task_ui_source/main.cpp"
