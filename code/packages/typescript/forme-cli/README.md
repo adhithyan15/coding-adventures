@@ -36,7 +36,9 @@ project.
   that invocation without mutating the imported value. `--report` writes a
   deterministic JSON summary of per-stage cache statistics and revisions,
   prior-run input changes, output manifests, and per-file hashes without
-  duplicating artifact bytes. When
+  duplicating artifact bytes. Nested output keys are canonicalized, so an
+  unchanged artifact has the same report representation whether its stage ran
+  or restored a checkpoint. When
   `settings.cacheDir` is configured, unchanged capability-free downstream
   invocations are restored across separate CLI processes from a
   containment-checked filesystem cache beneath the project root.

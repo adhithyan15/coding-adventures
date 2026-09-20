@@ -62,6 +62,11 @@ Local post images are emitted under `dist/blog/assets/` with complete content
 hashes, making changed bytes produce a new cache-safe URL while unchanged bytes
 keep the same URL.
 
+The test suite also runs a clean and an unchanged second-process build in
+reproducible mode. It requires identical build IDs, canonical output reports,
+and file hashes; verifies that the source, pure transforms, and replay-capable
+emitters skip safely; and keeps ambient asset readers conservative.
+
 The installed `forme` launcher registers `tsx` for TypeScript-first packages;
 the site uses `tsx` directly only for its post-build verifier and unit tests.
 

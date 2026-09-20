@@ -274,9 +274,8 @@ cross-process affected-stage scheduling, and bounded concurrent streaming
 through one pipeline-wide permit budget. Filesystem emitters can replay
 validated artifacts to reconstruct a deleted output tree without rerunning
 unrelated pure stages. Forme is not yet a turnkey site generator: the remaining
-product layer includes product-level incremental-build proof, the deploy runner,
-a reconciled specification map, the plugin host and OS sandboxes, interactivity,
-and the authoring shell.
+product layer includes a reconciled specification map, the deploy runner, the
+plugin host and OS sandboxes, interactivity, and the authoring shell.
 The checked-in [completion roadmap](./code/specs/FM00-forme-completion-roadmap.md)
 tracks that path and the gaps discovered while dogfooding both live sites.
 
