@@ -3383,20 +3383,50 @@ impl Compiler {
                 .any(|child| self.contains_conditional_expression(child))
     }
 
-    fn conditional_expression_selectors_use_only_target(
+    fn conditional_expression_selectors_are_cycle_stable(
         &self,
         node: &GrammarASTNode,
+        actions: &[StaticBodyAction<'_>],
         target_name: &str,
     ) -> bool {
         if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
             let mut dependencies = HashSet::new();
             collect_expression_dependency_names(condition, target_name, &mut dependencies);
-            return dependencies.is_empty()
-                && self.conditional_expression_selectors_use_only_target(then_node, target_name)
-                && self.conditional_expression_selectors_use_only_target(else_node, target_name);
+            return dependencies
+                .iter()
+                .all(|name| {
+                    !Self::static_body_actions_write_name(actions, name)
+                        && self.require_var(name).is_ok_and(|binding| {
+                            !binding.is_global
+                                && binding.array.is_none()
+                                && self.active_by_name_binding(name).is_none()
+                                && match binding.ty {
+                                    ScalarType::Integer => {
+                                        self.static_integer_slots.contains_key(&binding.slot)
+                                    }
+                                    ScalarType::Real => {
+                                        self.static_real_slots.contains_key(&binding.slot)
+                                    }
+                                    ScalarType::Boolean => {
+                                        self.static_boolean_slots.contains_key(&binding.slot)
+                                    }
+                                    ScalarType::String => false,
+                                }
+                        })
+                })
+                && self.conditional_expression_selectors_are_cycle_stable(
+                    then_node,
+                    actions,
+                    target_name,
+                )
+                && self.conditional_expression_selectors_are_cycle_stable(
+                    else_node,
+                    actions,
+                    target_name,
+                );
         }
         direct_nodes(node).into_iter().all(|child| {
-            self.conditional_expression_selectors_use_only_target(child, target_name)
+            self.conditional_expression_selectors_are_cycle_stable(child, actions, target_name)
         })
     }
 
@@ -6894,8 +6924,9 @@ impl Compiler {
                                 conditional_path
                                     || (self.contains_conditional_expression(
                                         assignment.expression,
-                                    ) && !self.conditional_expression_selectors_use_only_target(
+                                    ) && !self.conditional_expression_selectors_are_cycle_stable(
                                         assignment.expression,
+                                        all_actions,
                                         target_name,
                                     )),
                             )
@@ -14661,6 +14692,22 @@ mod tests {
         .expect("the exact loop control may select leaves in a cross-assigned cycle");
         let main = module.get_function("main").expect("has main");
         for expected in ["3.25", "0.5", "-0.75"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_stable_local_selected_assignment_dependency_cycle_tracks_source_order() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; choose := false; for i := i + 1 while i <= n do begin n := n - delta; delta := if choose then n else n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an unchanged exact local may select leaves in a cross-assigned cycle");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
             assert!(main.instructions.iter().any(|instr| {
                 instr.op == "str_const"
                     && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
