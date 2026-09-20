@@ -1042,8 +1042,11 @@ backend immediately) come before the enabler-dependent items.
   value and predicate reference only the control and statically known ordinary
   local scalars that the body leaves unchanged, or directly updates through
   one supported recurrence referencing itself, the control, and ordinary local
-  scalars that are unchanged or evolve through an acyclic graph of supported
-  recurrences. A recurrence in that acyclic graph may use a conditional
+  scalars that are unchanged or evolve through a graph of supported
+  recurrences. That graph may contain unconditional cross-assignment cycles
+  because capped abstract execution evaluates each recognized local scalar
+  write in source order; conditionally selected cycles remain conservative. A
+  recurrence in the graph may use a conditional
   expression selected by the controlled scalar or another exact local
   snapshot; capped execution re-evaluates the selected leaf on every pass.
   The recurrence assignment may instead occur in one or both branches of a
@@ -1181,8 +1184,8 @@ backend immediately) come before the enabler-dependent items.
   computed, or otherwise
   unsupported selector-dependency writes, dynamically selected differing selector leaves,
   dynamically selected differing dependency leaves, loop controls, and
-  cross-assigned dependency writes remain conservative without recursive
-  effect inference. Conditional
+  cross-assigned dependency writes remain conservative in selector-preservation
+  proofs that do not enter capped recurrence execution. Conditional
   assignments whose leaves are all that same bare scalar are permitted. A
   variable-free statically known
   conditional assignment scans only its selected leaf, as may a statically

@@ -214,9 +214,12 @@ different recursively supported branches on successive passes. Predicate-
 dependencies may remain stable. One directly assigned dependency may also
 evolve through a supported recurrence whose expression references itself, the
 controlled scalar, and ordinary local scalars that are unchanged or evolve
-through an acyclic graph of supported recurrences. Those changing dependency
+through a graph of supported recurrences. Capped source-order execution also
+handles unconditional cross-assigned dependency cycles when every participating
+write is a supported local scalar assignment. Conditionally selected cycles
+remain conservative. Those changing dependency
 recurrences may contain conditional expressions when their selectors are the
-controlled scalar or other exact local snapshots in that acyclic graph. The
+controlled scalar or other exact local snapshots in that graph. The
 recurrence assignment itself may also appear in one or both branches of a
 conditional statement selected by those snapshots; a branch without the
 assignment leaves the dependency unchanged for that pass. The controlled
@@ -225,8 +228,9 @@ recurrences. A dependency may be assigned repeatedly in one body pass; bounded
 execution applies every supported write in source order. The next `while`
 element expression consumes all resulting exact dependency and control
 snapshots, and terminating sibling snapshots remain available after the loop.
-Unknown selectors, cyclic dependency writes, string targets,
-and loops that do not reach false within 4,096 evaluations fail closed.
+Unknown selectors, unsupported dependency writes, string targets, overflow,
+non-finite values, and loops that do not reach false within 4,096 evaluations
+fail closed.
 A conditional predicate is also evaluated when its selector is statically
 known; only the selected branch participates in the proof.
 Local string slots carry an empty verifier seed, but this is not a source-level
