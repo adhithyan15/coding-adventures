@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><title>WebComponent table typography acceptance</title>
+<body>
+<h1>Generated WebComponent table typography</h1>
+<button onclick="setSize(18)">18px</button>
+<button onclick="setSize(27)">27px</button>
+<button onclick="setSize(36)">36px</button>
+<button onclick="setSize(0)">Invalid size</button>
+<p id="status">Ready</p>
+<iframe title="Generated controls" src="table/index.html" style="width:100%;height:650px" onload="connect()"></iframe>
+<script>
+let size = 18;
+function connect() {
+  const child = document.querySelector('iframe').contentWindow;
+  child.mosaicHost = {
+    getProps: () => ({size, rows: ['First', 'New row']}),
+    handleEvent: ({event}) => { document.querySelector('#status').textContent = 'Event: ' + JSON.stringify(event); },
+  };
+  child.dispatchEvent(new Event('mosaic-host-ready'));
+}
+function setSize(value) { size = value; connect(); document.querySelector('#status').textContent = 'Size: ' + value; }
+</script></body></html>

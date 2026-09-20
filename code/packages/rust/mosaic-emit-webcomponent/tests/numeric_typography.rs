@@ -87,3 +87,86 @@ fn literal_projection_and_invalid_authoring() {
     }
     assert!(fixture("slot: text-size", "text").is_err());
 }
+
+#[test]
+fn generate_table_typography_fixture() {
+    let model = mosmodel_compiler::compile(
+        "component Tables { slot size : number; slot rows : list<text>; emit onAction; }",
+    )
+    .unwrap();
+    let layout = moslayout_compiler::compile(r#"layout Tables { Column {
+        HostInput [ outside ] (value: "Outside")
+        HostTable [ table ] (font-size: slot: size) {
+            HostTableHead { Row { Text (content: "Header") } }
+            HostTableBody {
+                For (each: slot: rows, as: size) { Row { Text (content: (size)) HostInput (value: "Editor") Input (multiline: true, value: "Notes") HostButton (label: "Action", onClick: emit: onAction) } }
+                Row [ fixedrow ] { Text (content: "Fixed row") HostInput (value: "Row editor") }
+                Row { Column [ container ] { HostInput (value: "Container editor") } HostInput [ fixed ] (value: "Fixed editor") }
+                Row { HostTable { HostTableBody { Row { Text (content: "Nested") HostInput (value: "Nested editor") } } } }
+            }
+            HostTableFoot { Row { Text (content: "Footer") } }
+        }
+    } }"#, Some(&model.descriptor_json)).unwrap();
+    let style = mosstyle_compiler::compile(
+        r#"style Tables {
+        part table { font-size: 17; font-family: monospace; }
+        part fixedrow { font-size: 21; }
+        part container { font-size: 23; }
+        part fixed { font-size: 25; }
+    }"#,
+        None,
+    )
+    .unwrap();
+    let result = from_pipeline_with_options(
+        &model.component,
+        &layout.def,
+        &style.def,
+        &EmitOptions {
+            emit_project: true,
+            ..Default::default()
+        },
+    )
+    .unwrap();
+    assert!(result.output.contains("font-size: inherit"));
+    assert!(result.output.contains("font-size: initial"));
+    assert!(result.output.contains("<tr style=\"font-size: 21px\">"));
+    for (value, valid) in [
+        (22.5, true),
+        (0.0, false),
+        (-1.0, false),
+        (f64::NAN, false),
+        (f64::INFINITY, false),
+    ] {
+        let mut literal = layout.def.clone();
+        literal.root.children[1]
+            .props
+            .iter_mut()
+            .find(|p| p.name == "font-size")
+            .unwrap()
+            .value = moslayout_compiler::LayoutPropValue::Number(value);
+        let emitted = from_pipeline_with_options(
+            &model.component,
+            &literal,
+            &style.def,
+            &EmitOptions::default(),
+        );
+        assert_eq!(emitted.is_ok(), valid);
+        if valid {
+            assert!(emitted.unwrap().output.contains("font-size: 22.5px"));
+        }
+    }
+    if let Some(path) = std::env::var_os("MOSAIC_WC_TYPOGRAPHY_OUTPUT") {
+        let path = std::path::PathBuf::from(path);
+        std::fs::create_dir_all(&path).unwrap();
+        std::fs::create_dir_all(path.join("table")).unwrap();
+        std::fs::write(
+            path.join("table-acceptance.html"),
+            include_str!("fixtures/table-acceptance.html"),
+        )
+        .unwrap();
+        std::fs::write(path.join("table/Tables.js"), &result.output).unwrap();
+        let project = result.project.unwrap();
+        std::fs::write(path.join("table/index.html"), project.index_html).unwrap();
+        std::fs::write(path.join("table/main.js"), project.main_js).unwrap();
+    }
+}
