@@ -2,6 +2,10 @@
 
 ## 2026-09-20
 
+- Prevent programmatic selection reveal and intermediate row-window geometry from feeding back into native table scrolling (#15753).
+
+## 2026-09-20
+
 - Name inline cell editors through the shared grid editor-label slot and the Rust-selected absolute cell address (#15752).
 
 ## 2026-09-12

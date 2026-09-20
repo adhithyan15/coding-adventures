@@ -1,4 +1,4 @@
-const mosaic$tableCapacities = new WeakMap<HTMLTableElement, { rows?: number; pitch?: number; wheelRows?: number; offset?: number; virtualPitch?: number; requestedOffset?: number; problem?: string }>();
+const mosaic$tableCapacities = new WeakMap<HTMLTableElement, { rows?: number; pitch?: number; wheelRows?: number; offset?: number; virtualPitch?: number; requestedOffset?: number; scrollTop?: number; problem?: string }>();
 
 // A callback-ref factory supports both React 18's null cleanup and React 19.
 // Last capacity belongs to the DOM table, not the render's callback identity.
@@ -26,6 +26,8 @@ export function mosaic$tableCapacityRef(onRows: (rows: number) => void, reveal?:
     if (!virtual) reveal?.(table);
     const maximum = () => Math.max(0, (window?.total ?? 0) - (body?.rows.length ?? 0));
     const origin = () => table.getBoundingClientRect().top - scrollFrame.getBoundingClientRect().top - scrollFrame.clientTop + scrollFrame.scrollTop;
+    // Retain the origin of this render across ResizeObserver deliveries.
+    const fromScroll = !!window && state.requestedOffset === window.offset;
     let live = true;
     let pending = 0;
     const measure = () => {
@@ -58,12 +60,13 @@ export function mosaic$tableCapacityRef(onRows: (rows: number) => void, reveal?:
         after.style.display = window.total > window.offset + rows.length ? '' : 'none';
         before.style.height = `${window.offset * pitch}px`;
         after.style.height = `${Math.max(0, window.total - window.offset - rows.length) * pitch}px`;
-        const fromScroll = state.requestedOffset === window.offset;
         if (!fromScroll && (state.offset !== window.offset || Math.abs((state.virtualPitch ?? pitch) - pitch) > 0.5)) scrollFrame.scrollTop = origin() + window.offset * pitch;
         state.offset = window.offset;
         state.virtualPitch = pitch;
         state.requestedOffset = undefined;
         if (!fromScroll) reveal?.(table);
+        // Native scroll events are asynchronous, including our own writes.
+        state.scrollTop = scrollFrame.scrollTop;
       }
       // Include the partial trailing row in a physical scroll window.
       const capacity = Math.max(1, virtual ? Math.ceil(available / pitch) + 1 : Math.floor(available / pitch));
@@ -90,6 +93,9 @@ export function mosaic$tableCapacityRef(onRows: (rows: number) => void, reveal?:
     };
     const scroll = () => {
       if (!live || !virtual || !window || !state.pitch) return;
+      // A render can replace rows before its measuring frame updates spacers.
+      // Do not interpret that intermediate geometry as physical user travel.
+      if (state.offset !== window.offset || Math.abs(scrollFrame.scrollTop - (state.scrollTop ?? scrollFrame.scrollTop)) < 0.5) return;
       const offset = Math.max(0, Math.min(maximum(), Math.floor((scrollFrame.scrollTop - origin()) / state.pitch)));
       const previous = state.requestedOffset ?? window.offset;
       if (offset === previous) return;
