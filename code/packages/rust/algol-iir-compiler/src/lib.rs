@@ -6412,7 +6412,15 @@ impl Compiler {
         let Ok(target_name) = self.simple_variable_name(target) else {
             return (None, None);
         };
-        if self.for_body_writes_name(body, &target_name, &target_name, body) {
+        let body_writes_target =
+            self.for_body_writes_name(body, &target_name, &target_name, body);
+        let control_actions = body_writes_target.then(|| {
+            self.for_body_recurrence_actions(body).filter(|actions| {
+                Self::static_body_actions_write_name(actions, &target_name)
+                    && Self::static_body_actions_write_only_name(actions, &target_name)
+            })
+        }).flatten();
+        if body_writes_target && control_actions.is_none() {
             return (None, None);
         }
         let Some(value) = direct_nodes(elem)
@@ -6444,6 +6452,7 @@ impl Compiler {
         let saved_integers = self.static_integer_slots.clone();
         let saved_booleans = self.static_boolean_slots.clone();
         let mut exit = (None, None);
+        let mut snapshots = Vec::new();
         for _ in 0..MAX_STATIC_WHILE_ITERATIONS {
             let static_real = (target_ty == ScalarType::Real)
                 .then(|| self.static_assigned_real_value(value))
@@ -6469,6 +6478,14 @@ impl Compiler {
                 }
                 Some(true) => {}
                 None => break,
+            }
+            if let Some(actions) = control_actions.as_deref() {
+                if self
+                    .evaluate_static_body_actions(actions, &mut snapshots)
+                    .is_none()
+                {
+                    break;
+                }
             }
         }
         self.static_real_slots = saved_reals;
@@ -13445,6 +13462,34 @@ mod tests {
             "test",
         )
         .expect("bounded binary64 while progress has a static exit value");
+    }
+
+    #[test]
+    fn al4_static_while_tracks_conditional_control_body_recurrences() {
+        let module = compile_source(
+            "begin integer i; real x; i := 0; for i := i + 1 while i <= 10 do if i < 4 then i := i * 2 else i := i + 3; print(i + 0.25); x := 0.5; for x := x + 0.5 while x <= 10.0 do if x < 4.0 then x := x * 2.0 else x := x + 3.0; print(x) end",
+            "test",
+        )
+        .expect("bounded while controls may consume statically selected body updates");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "11.25")
+        }));
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "12.5")
+        }));
+    }
+
+    #[test]
+    fn al4_static_while_rejects_dynamic_control_body_selector() {
+        let err = compile_source(
+            "begin integer i; boolean take; i := 0; for i := i + 1 while i <= 10 do if take then i := i * 2 else i := i + 3; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a dynamic body selector keeps while-control evolution conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]

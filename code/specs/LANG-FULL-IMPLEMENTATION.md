@@ -1030,9 +1030,12 @@ backend immediately) come before the enabler-dependent items.
   on every bounded pass, retaining all exact terminating snapshots. A
   statically decidable statement conditional may select one recursively
   supported branch on each pass, including when earlier recurrence writes make
-  successive selections differ. Labels, declarations, dynamic selectors or
-  effectful siblings, dependency writes, string targets, overflow, non-finite
-  values, and loops exceeding 4,096 evaluations remain conservative. Capped
+  successive selections differ. The controlled scalar itself may also be
+  updated by such a recursively supported body when every changing branch
+  writes only that control; the next `while` element expression consumes the
+  resulting exact snapshot. Labels, declarations, dynamic selectors or
+  effectful siblings, other dependency writes, string targets, overflow,
+  non-finite values, and loops exceeding 4,096 evaluations remain conservative. Capped
   abstract execution also retains the first integer or finite binary64 control
   value whose predicate is false when its value and predicate reference only
   the control and statically known ordinary local scalars that
