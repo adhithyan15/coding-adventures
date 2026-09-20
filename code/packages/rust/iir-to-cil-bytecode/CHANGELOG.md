@@ -1,12 +1,18 @@
 # Changelog — iir-to-cil-bytecode
 
+## Unreleased — canonical strict minus-one encoding (CLR11)
+
+Remove the strict scalar emitter's obsolete full-width i32 -1 workaround now
+that the simulator executes `ldc.i4.m1`. Exact artifact bytes use the canonical
+one-byte opcode; actual execution coverage preserves distinct i32/i64 values.
+
 ## Unreleased — strict comparisons and boolean transport (CLR08)
 
 Extend the opt-in strict entrypoint with six signed/equality comparisons and
 logical bool constants, moves, parameters, calls and returns. Keep bool distinct
 from i32 during validation while using normalized int32 result metadata.
-Reject mixed widths, malformed comparisons and bool arithmetic. Emit full
-ldc.i4 for i32 -1 to avoid the simulator's unsupported compact encoding.
+Reject mixed widths, malformed comparisons and bool arithmetic. CLR11 replaces
+this release's full i32 -1 workaround with canonical compact encoding.
 Actual artifact tests cover both widths, truth cases, negative/high values,
 comparison bytes and boolean call transport. Default source routing and gates
 remain unchanged.

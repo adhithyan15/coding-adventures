@@ -10,6 +10,19 @@ roadmap is reconciled.
 
 ## Encoded CLR input prerequisites (selected 2026-09-19 after VM-058)
 
+### CLR10 landed; CLR11 canonical strict minus-one follow-up active (2026-09-20)
+
+CLR10 checked long branches merged in #15728 as
+`379fcdf372e2cf41a4cf06f6bf3f3ddc8c4f7593` after all 48 checks completed
+(15 success, 33 skipped) and all four exact-head workflows succeeded.
+CLR09's four workflows also completed successfully.
+
+Existing PR #15730 owns removal of the strict i32 minus-one workaround. Its
+contract was committed as CLR10 before implementation and is renamed CLR11 to
+avoid the landed long-branch number. Preserve its exact compact-byte and actual
+execution proofs, i64 encoding, and every input/type gate. This is the only
+active implementation PR; strict CFG lowering remains a subsequent contract.
+
 ### CLR09 landed; CLR10 long branches selected (2026-09-20)
 
 PR #15711 merged CLR09 compact ldc.i4.m1 execution as

@@ -27,7 +27,7 @@ variables. Results have logical `bool` type and normalized int32 zero/one
 representation. Bool constants use `Operand::Bool`; moves, parameters, calls
 and returns retain the logical type even though metadata uses int32. Bool
 arithmetic and implicit bool/integer conversions are refused. Signed i32 -1
-uses full ldc.i4 encoding because the simulator lacks compact ldc.i4.m1.
+uses the canonical compact `ldc.i4.m1` encoding supported by the simulator.
 
 ## What is CIL?
 

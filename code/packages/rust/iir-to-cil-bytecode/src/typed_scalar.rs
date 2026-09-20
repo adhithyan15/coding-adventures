@@ -170,9 +170,6 @@ pub fn lower_typed_scalars_to_cil(
                         .map_err(|_| invalid(&f.name, "integer immediate exceeds CLR01 range"))?;
                     if ty == ScalarType::I64 {
                         b.emit_ldc_i8(n);
-                    } else if narrow == -1 {
-                        // The simulator does not yet execute compact ldc.i4.m1.
-                        b.emit_raw(vec![0x20, 0xff, 0xff, 0xff, 0xff]);
                     } else {
                         b.emit_ldc_i4(narrow);
                     }
