@@ -92,6 +92,7 @@ build_output.txt
 # absent: `git add -A` puts it straight back, and the hot spot returns with it.
 /code/learning/human-languages/BACKLOG.md
 /code/learning/human-languages/hindi/CHANGELOG.md
+/code/learning/human-languages/malayalam/CHANGELOG.md
 /code/packages/typescript/human-language-data/CHANGELOG.md
 /code/programs/typescript/language-ladder/CHANGELOG.md
 /code/packages/rust/lang-aot/CHANGELOG.md
