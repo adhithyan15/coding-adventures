@@ -1,5 +1,15 @@
 # Changelog — iir-to-beam
 
+## Unreleased - initialize and restore normal GC roots
+
+Initialize non-parameter X registers to nil at entry and clear clobbered normal
+registers after imported and local call restoration, preserving results and
+live values. This closes additional invalid-prefix hazards in tape index and
+scalar arithmetic; putchar compaction alone did not resolve the Linux crash.
+Independent emitted-root tracking and real Erlang byte-call tests cover future
+locals, calls, tape references, aliased destinations and scalar arithmetic.
+Linux CI remains required before treating the persistent crash as resolved.
+
 ## Unreleased - compact putchar GC root
 
 Save live values in Y slots and compact the character into x0 before reserving

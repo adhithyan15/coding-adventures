@@ -1060,10 +1060,10 @@ fn test_ret_with_value() {
 /// The instruction count with `type_assert` should equal the count without it.
 #[test]
 fn test_type_assert_is_nop() {
-    let without = make_module_single(vec![
+    let without = make_module_fn("main", vec![("x", "i32")], "void", vec![
         IIRInstr::new("ret_void", None, vec![], "void"),
     ]);
-    let with_assert = make_module_single(vec![
+    let with_assert = make_module_fn("main", vec![("x", "i32")], "void", vec![
         IIRInstr::new(
             "type_assert",
             None,
@@ -4841,4 +4841,110 @@ fn putchar_gc_scans_only_initialized_character_root() {
     assert_eq!(beam.instructions[i+1].opcode, 69);
     assert_eq!(beam.instructions[i+1].operands, vec![BEAMOperand::x(0), BEAMOperand::a(0), BEAMOperand::x(0)]);
     assert_eq!(beam.instructions[i+3].operands, vec![BEAMOperand::y(0), BEAMOperand::x(0)]);
+}
+
+// Model the root contract independently of the lowering's liveness analysis.
+// Calls destroy X registers; GC preserves only the declared prefix and result.
+fn assert_valid_gc_roots(beam: &iir_to_beam::BEAMModule, arity: usize) {
+    use ir_to_beam::encoder::BEAMTag;
+    use std::collections::{HashMap, VecDeque};
+    let labels: HashMap<u64, usize> = beam.instructions.iter().enumerate()
+        .filter(|(_, i)| i.opcode == 1)
+        .map(|(pc, i)| (i.operands[0].value, pc)).collect();
+    let entry = labels[&(beam.exports[0].label as u64)];
+    let mut initial = vec![false; 512];
+    initial[..arity].fill(true);
+    let mut states: HashMap<usize, Vec<bool>> = HashMap::new();
+    let mut todo = VecDeque::from([(entry, initial)]);
+    while let Some((pc, mut valid)) = todo.pop_front() {
+        if let Some(old) = states.get_mut(&pc) {
+            let merged: Vec<bool> = old.iter().zip(&valid).map(|(a, b)| *a && *b).collect();
+            if *old == merged { continue; }
+            *old = merged.clone();
+            valid = merged;
+        } else { states.insert(pc, valid.clone()); }
+        let ins = &beam.instructions[pc];
+        let a = &ins.operands;
+        let slot = |o: &ir_to_beam::encoder::BEAMOperand| match o.tag {
+            BEAMTag::X => Some(o.value as usize),
+            BEAMTag::Y => Some(256 + o.value as usize),
+            _ => None,
+        };
+        let read = |o: &ir_to_beam::encoder::BEAMOperand, state: &[bool]| {
+            if let Some(r) = slot(o) { assert!(state[r], "invalid read at {pc}: {ins:?}, slot {r}"); }
+        };
+        let mut next = vec![pc + 1];
+        match ins.opcode {
+            1 => {}, // label
+            64 => { read(&a[0], &valid); valid[slot(&a[1]).unwrap()] = true; },
+            12 | 16 | 124 | 125 => {
+                let live = a[1].value as usize;
+                assert!(valid[..live].iter().all(|v| *v), "invalid GC prefix at {pc}: {ins:?}");
+                if matches!(ins.opcode, 124 | 125) {
+                    for source in &a[3..a.len()-1] { read(source, &valid); }
+                }
+                valid[live..256].fill(false);
+                if ins.opcode == 12 { valid[256..256+a[0].value as usize].fill(false); }
+                if matches!(ins.opcode, 124 | 125) { valid[slot(a.last().unwrap()).unwrap()] = true; }
+            },
+            4 | 7 => { // local / imported call
+                assert!(valid[..a[0].value as usize].iter().all(|v| *v));
+                valid[..256].fill(false);
+                valid[0] = true;
+            },
+            69 => { read(&a[0], &valid); read(&a[1], &valid); valid[slot(&a[2]).unwrap()] = true; },
+            43 => { // is_eq_exact, both paths including getchar EOF
+                read(&a[1], &valid); read(&a[2], &valid);
+                next.push(labels[&a[0].value]);
+            },
+            61 => { next = vec![labels[&a[0].value]]; },
+            18 => {}, // deallocate
+            19 => { read(&ir_to_beam::encoder::BEAMOperand::x(0), &valid); next.clear(); },
+            _ => panic!("unmodeled opcode at {pc}: {ins:?}"),
+        }
+        for target in next { todo.push_back((target, valid.clone())); }
+    }
+}
+
+#[test]
+fn gc_roots_survive_byte_calls_and_future_locals() {
+    let v = |s: &str| Operand::Var(s.into());
+    let module = make_module_fn("main", vec![("n", "i64")], "i64", vec![
+        IIRInstr::new("alloc_bytes", Some("tape".into()), vec![v("n")], "i64"),
+        IIRInstr::new("const", Some("idx".into()), vec![Operand::Int(0)], "i64"),
+        IIRInstr::new("call_builtin", Some("byte".into()), vec![v("getchar")], "i64"),
+        IIRInstr::new("store_byte", None, vec![v("tape"), v("idx"), v("byte")], "void"),
+        IIRInstr::new("call_builtin", None, vec![v("putchar"), v("byte")], "void"),
+        IIRInstr::new("load_byte", Some("byte".into()), vec![v("tape"), v("idx")], "i64"),
+        IIRInstr::new("add", Some("sum".into()), vec![v("byte"), v("n")], "i64"),
+        IIRInstr::new("const", Some("future".into()), vec![Operand::Int(99)], "i64"),
+        IIRInstr::new("ret", None, vec![v("sum")], "i64"),
+    ]);
+    assert_valid_gc_roots(&lower_iir_to_beam(&module, &cfg()).unwrap(), 1);
+    if erl_available() {
+        let name = "iir_gc_prefix_byte_calls";
+        let beam = lower_iir_to_beam(&module, &IIRBeamConfig::new(name)).unwrap();
+        let tmp = std::env::temp_dir().join(format!("iir_gc_prefix_{}", std::process::id()));
+        std::fs::create_dir_all(&tmp).unwrap();
+        std::fs::write(tmp.join(format!("{name}.beam")), iir_to_beam::encode_beam(&beam)).unwrap();
+        let output = run_erl_with_stdin(&tmp,
+            "io:format(\"~p\",[iir_gc_prefix_byte_calls:main(1)]),halt(0).", b"A");
+        assert!(output.status.success(), "{}", String::from_utf8_lossy(&output.stderr));
+        assert_eq!(output.stdout, b"A66");
+    }
+}
+
+#[test]
+fn gc_roots_cover_future_locals_before_arithmetic_and_after_local_call() {
+    let v = |s: &str| Operand::Var(s.into());
+    let mut module = make_module_fn("main", vec![("a", "i64")], "i64", vec![
+        IIRInstr::new("add", Some("b".into()), vec![v("a"), v("a")], "i64"),
+        IIRInstr::new("call", Some("b".into()), vec![v("helper"), v("b")], "i64"),
+        IIRInstr::new("add", Some("c".into()), vec![v("a"), v("b")], "i64"),
+        IIRInstr::new("const", Some("future".into()), vec![Operand::Int(99)], "i64"),
+        IIRInstr::new("ret", None, vec![v("c")], "i64"),
+    ]);
+    module.functions.push(IIRFunction::new("helper", vec![("x".into(), "i64".into())], "i64",
+        vec![IIRInstr::new("ret", None, vec![v("x")], "i64")]));
+    assert_valid_gc_roots(&lower_iir_to_beam(&module, &cfg()).unwrap(), 1);
 }
