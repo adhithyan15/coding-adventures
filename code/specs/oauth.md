@@ -546,6 +546,14 @@ fixed 64-purpose bound. It preserves arbitrary canonical purpose OIDs in wire
 order without embedding a purpose registry. It does not authorize a purpose,
 assign a certificate role, enforce outer criticality, or intersect the result
 with Key Usage or Basic Constraints policy.
+A bounded `x509-subject-alt-name` semantic layer now recognizes only the RFC
+5280 Subject Alternative Name OID and decodes at most 256 non-empty GeneralName
+envelopes. It retains allocation-free DNS-ID strings and typed IPv4/IPv6 IP-ID
+values for the separate server-identity matcher, validates every primitive
+choice, and keeps constructed choices bounded and opaque for later schema
+packages. It does not validate DNS syntax, establish identity, interpret
+constructed names, parse a certificate, build paths, verify signatures, or
+select trust roots.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
