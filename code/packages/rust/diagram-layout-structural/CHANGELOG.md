@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.16.0
+
+- Route structural relationships through deterministic orthogonal polylines when requested.
+
 ## 0.15.0
 
 - Resolve explicit structural relationship ports to deterministic boundary anchors.

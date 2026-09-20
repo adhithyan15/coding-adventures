@@ -1514,6 +1514,12 @@ pub enum StructuralPort {
     Bottom,
 }
 
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum StructuralRouting {
+    Direct,
+    Orthogonal,
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct StructuralRelationship {
     pub from: String,
@@ -1525,6 +1531,7 @@ pub struct StructuralRelationship {
     pub to_group: bool,
     pub from_port: Option<StructuralPort>,
     pub to_port: Option<StructuralPort>,
+    pub routing: StructuralRouting,
     pub from_mult: Option<String>,
     pub to_mult: Option<String>,
     pub label: Option<String>,
@@ -1600,6 +1607,7 @@ pub struct LayoutedStructuralRelationship {
     pub to_group: bool,
     pub from_port: Option<StructuralPort>,
     pub to_port: Option<StructuralPort>,
+    pub routing: StructuralRouting,
     pub points: Vec<Point>,
     pub from_mult: Option<String>,
     pub to_mult: Option<String>,

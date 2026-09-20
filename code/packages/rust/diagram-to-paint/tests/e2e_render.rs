@@ -1781,7 +1781,14 @@ line "Target" [35, 50, 68, 82]"##,
             layout.relationships[0].points[0].x,
             layout.nodes[0].x + layout.nodes[0].width
         );
-        assert_eq!(layout.relationships[0].points[1].y, layout.nodes[1].y);
+        assert_eq!(
+            layout.relationships[0].points.last().unwrap().y,
+            layout.nodes[1].y
+        );
+        assert_eq!(layout.relationships[0].routing, diagram_ir::StructuralRouting::Orthogonal);
+        assert!(layout.relationships[0].points.windows(2).all(|segment| {
+            segment[0].x == segment[1].x || segment[0].y == segment[1].y
+        }));
         assert!(layout.relationships[1].start_arrow);
         assert!(layout.relationships[1].end_arrow);
         assert!(layout.relationships[1].to_group);

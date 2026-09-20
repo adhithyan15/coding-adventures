@@ -580,8 +580,8 @@ use diagram_ir::{
     SequenceParticipantGroup, SequenceParticipantKind, SequenceProperty, SequenceTextWrap,
     SeriesKind, StructuralAlignment, StructuralAlignmentAxis, StructuralDiagram, StructuralGroup, StructuralKind, StructuralNode,
     GanttTaskTags, StructuralNodeKind, StructuralNodeMetadata, StructuralPort,
-    StructuralRelationship, TaskEnd, TaskStart, TemporalBody, TemporalDiagram, TemporalKind,
-    TimelineDiagram, TimelineDirection,
+    StructuralRelationship, StructuralRouting, TaskEnd, TaskStart, TemporalBody, TemporalDiagram,
+    TemporalKind, TimelineDiagram, TimelineDirection,
     TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, VennDiagram, VennRegion,
     VennStyle, VennText, XyAxisConfig, XyChartConfig,
     CynefinDiagram, CynefinDomain, CynefinTransition, IshikawaCause, IshikawaDiagram,
@@ -1304,6 +1304,7 @@ fn parse_architecture_edge(
         from_group, to_group,
         from_port: Some(parse_architecture_port(from_direction)),
         to_port: Some(parse_architecture_port(to_direction)),
+        routing: StructuralRouting::Orthogonal,
         from_mult: None, to_mult: None, label,
     })
 }
@@ -3426,6 +3427,7 @@ fn parse_requirement_relationship(token: &Token) -> Result<StructuralRelationshi
         to_group: false,
         from_port: None,
         to_port: None,
+        routing: StructuralRouting::Direct,
         from_mult: None,
         to_mult: None,
         label: Some(label),
@@ -3930,6 +3932,7 @@ fn parse_class_relationship(line: &str) -> Option<StructuralRelationship> {
                     to_group: false,
                     from_port: None,
                     to_port: None,
+                    routing: StructuralRouting::Direct,
                     from_mult: None,
                     to_mult: None,
                     label,
@@ -8993,6 +8996,7 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                 to_group: false,
                 from_port: None,
                 to_port: None,
+                routing: StructuralRouting::Direct,
                 from_mult: Some(from_mult),
                 to_mult: Some(to_mult),
                 label: (!label.is_empty()).then_some(label),
@@ -9252,6 +9256,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                     to_group: false,
                     from_port: None,
                     to_port: None,
+                    routing: StructuralRouting::Direct,
                     from_mult: None,
                     to_mult: None,
                     label: Some(args[2].clone()),
@@ -10657,6 +10662,7 @@ mod tests_dg04 {
         assert!(diagram.relationships[1].end_arrow);
         assert_eq!(diagram.relationships[0].from_port, Some(StructuralPort::Right));
         assert_eq!(diagram.relationships[0].to_port, Some(StructuralPort::Left));
+        assert_eq!(diagram.relationships[0].routing, StructuralRouting::Orthogonal);
         assert_eq!(diagram.relationships[1].from_port, Some(StructuralPort::Bottom));
         assert_eq!(diagram.relationships[1].to_port, Some(StructuralPort::Top));
         assert_eq!(diagram.relationships[2].label.as_deref(), Some("sync"));
