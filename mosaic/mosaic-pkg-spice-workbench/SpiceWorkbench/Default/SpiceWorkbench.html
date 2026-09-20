@@ -211,12 +211,15 @@
           <button data-disabled="{{schematicModelPolarityDisabled}}" data-on-click="onSetSchematicModelPolarityP">{{schematicModelPLabel}}</button>
         </div>
         <span>{{schematicModelParametersLabel}}</span>
-        <span>{{schematicModelParameterOneLabel}}</span>
-        <!-- emit "onSchematicModelParameterOneChange" dropped: HTML is static -->
-        <input type="text" value="{{schematicModelParameterOneValue}}" placeholder="{{schematicModelParameterOneLabel}}" data-disabled="{{schematicModelParameterOneDisabled}}" data-on-change="onSchematicModelParameterOneChange">
-        <span>{{schematicModelParameterTwoLabel}}</span>
-        <!-- emit "onSchematicModelParameterTwoChange" dropped: HTML is static -->
-        <input type="text" value="{{schematicModelParameterTwoValue}}" placeholder="{{schematicModelParameterTwoLabel}}" data-disabled="{{schematicModelParameterTwoDisabled}}" data-on-change="onSchematicModelParameterTwoChange">
+        <div style="display: flex; flex-direction: row">
+          <!-- mosaic-for each="schematicModelParameterOptions" as="parameter" index="parameter-index" -->
+            <!-- emit "onSelectSchematicModelParameter" dropped: HTML is static -->
+            <button data-on-click="onSelectSchematicModelParameter">{{parameter}}</button>
+          <!-- /mosaic-for -->
+        </div>
+        <span>{{selectedSchematicModelParameterLabel}}</span>
+        <!-- emit "onSchematicModelParameterChange" dropped: HTML is static -->
+        <input type="text" value="{{schematicSelectedModelParameterValue}}" placeholder="{{selectedSchematicModelParameterLabel}}" data-disabled="{{schematicSelectedModelParameterDisabled}}" data-on-change="onSchematicModelParameterChange">
         <!-- emit "onRemoveSchematicComponent" dropped: HTML is static -->
         <button data-disabled="{{removeSchematicComponentDisabled}}" data-on-click="onRemoveSchematicComponent">{{removeSchematicComponentLabel}}</button>
       </div>

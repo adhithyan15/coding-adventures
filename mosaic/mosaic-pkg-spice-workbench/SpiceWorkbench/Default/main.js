@@ -54,12 +54,7 @@ const fallbackProps = {
   "schematicLabel": "Sample SchematicLabel",
   "schematicModelNLabel": "Sample SchematicModelNLabel",
   "schematicModelPLabel": "Sample SchematicModelPLabel",
-  "schematicModelParameterOneDisabled": false,
-  "schematicModelParameterOneLabel": "Sample SchematicModelParameterOneLabel",
-  "schematicModelParameterOneValue": "Sample SchematicModelParameterOneValue",
-  "schematicModelParameterTwoDisabled": false,
-  "schematicModelParameterTwoLabel": "Sample SchematicModelParameterTwoLabel",
-  "schematicModelParameterTwoValue": "Sample SchematicModelParameterTwoValue",
+  "schematicModelParameterOptions": [],
   "schematicModelParametersLabel": "Sample SchematicModelParametersLabel",
   "schematicModelPolarityDisabled": false,
   "schematicModelPolarityLabel": "Sample SchematicModelPolarityLabel",
@@ -103,6 +98,8 @@ const fallbackProps = {
   "schematicScopedOutputRows": [],
   "schematicScopedOutputVoltageLabel": "Sample SchematicScopedOutputVoltageLabel",
   "schematicScopedOutputVoltageOptions": [],
+  "schematicSelectedModelParameterDisabled": false,
+  "schematicSelectedModelParameterValue": "Sample SchematicSelectedModelParameterValue",
   "schematicTerminalControls": [],
   "schematicTerminalDisabled": false,
   "schematicTerminalLabel": "Sample SchematicTerminalLabel",
@@ -122,6 +119,7 @@ const fallbackProps = {
   "selectedSchematicAnalysisSourceLabel": "Sample SelectedSchematicAnalysisSourceLabel",
   "selectedSchematicKindLabel": "Sample SelectedSchematicKindLabel",
   "selectedSchematicLabel": "Sample SelectedSchematicLabel",
+  "selectedSchematicModelParameterLabel": "Sample SelectedSchematicModelParameterLabel",
   "selectedSchematicModelPolarity": "Sample SelectedSchematicModelPolarity",
   "selectedSchematicRouteTargetLabel": "Sample SelectedSchematicRouteTargetLabel",
   "selectedSchematicTerminalLabel": "Sample SelectedSchematicTerminalLabel",
@@ -231,13 +229,7 @@ const emitPayloads = {
       "type": "text"
     }
   ],
-  "onSchematicModelParameterOneChange": [
-    {
-      "name": "value",
-      "type": "text"
-    }
-  ],
-  "onSchematicModelParameterTwoChange": [
+  "onSchematicModelParameterChange": [
     {
       "name": "value",
       "type": "text"
@@ -318,6 +310,12 @@ const emitPayloads = {
   "onSelectSchematicComponent": [
     {
       "name": "reference",
+      "type": "text"
+    }
+  ],
+  "onSelectSchematicModelParameter": [
+    {
+      "name": "parameter",
       "type": "text"
     }
   ],
