@@ -61,3 +61,18 @@ fn twig_scalar_emits_and_runs_on_clr() {
     // Reusability: Twig flows through the identical CLR scalar path.
     assert_eq!(compile_and_run(Language::Twig, "42"), 42, "Twig 42");
 }
+
+#[test]
+fn nib_remainder_and_not_execute_on_encoded_clr() {
+    assert_eq!(
+        compile_and_run(Language::Nib, "fn main() -> u8 { return 86 % 7; }"),
+        2,
+    );
+    assert_eq!(
+        compile_and_run(
+            Language::Nib,
+            "fn main() -> u8 { let x: u8 = 0; return ~x; }"
+        ),
+        255,
+    );
+}

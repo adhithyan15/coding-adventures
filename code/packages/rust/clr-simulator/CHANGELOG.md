@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — remainder and bitwise NOT (CLR07)
+
+Execute signed `rem` and bitwise `not` for Int and Int64 values, preserving
+operand width. Remainder rejects zero and MIN/-1 overflow. Missing,
+uninitialized, reference and mixed-width operands refuse before stack or pc
+mutation. Raw-byte and source-to-artifact execution tests cover both opcodes.
+
 ## Unreleased — bitwise AND and OR (CLR05)
 
 Execute and/or on matched Int or Int64 operands, preserving every bit and width.

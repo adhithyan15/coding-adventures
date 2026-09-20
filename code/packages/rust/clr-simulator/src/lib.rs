@@ -78,6 +78,8 @@ pub const OP_ADD: u8 = 0x58;
 pub const OP_SUB: u8 = 0x59;
 pub const OP_MUL: u8 = 0x5A;
 pub const OP_DIV: u8 = 0x5B;
+/// Signed integer remainder, preserving the matched operand width.
+pub const OP_REM: u8 = 0x5D;
 /// `xor` (0x61) — McCarthy W7 logical `not` lowers to `x ^ 1`.
 pub const OP_XOR: u8 = 0x61;
 /// Per-bit conjunction, preserving the integer width.
@@ -96,6 +98,8 @@ pub const OP_SHR: u8 = 0x63;
 /// dispatch never implemented it, so it fell through to the "unknown opcode"
 /// panic. Real CoreCLR (via `ilasm`/`dotnet`) already supports `neg` natively.
 pub const OP_NEG: u8 = 0x65;
+/// Per-bit complement, preserving the integer width.
+pub const OP_NOT: u8 = 0x66;
 /// Explicit signed integer width conversions; narrowing discards high bits.
 pub const OP_CONV_I4: u8 = 0x69;
 pub const OP_CONV_I8: u8 = 0x6A;
@@ -582,6 +586,60 @@ impl CLRSimulator {
                 assert!(b != 0, "System.DivideByZeroException: division by zero");
                 a.checked_div(b).expect("System.ArithmeticException: division overflow")
             });
+        }
+        if opcode_byte == OP_REM {
+            // Validate and compute before consuming either operand. This keeps
+            // malformed bytecode and arithmetic exceptions observable without
+            // partially mutating the simulator state.
+            let len = self.stack.len();
+            assert!(len >= 2, "rem requires two initialized integer operands");
+            let result = match (self.stack[len - 2], self.stack[len - 1]) {
+                (Some(Value::Int(a)), Some(Value::Int(b))) => {
+                    assert!(b != 0, "System.DivideByZeroException: remainder by zero");
+                    Value::Int(
+                        a.checked_rem(b)
+                            .expect("System.ArithmeticException: remainder overflow"),
+                    )
+                }
+                (Some(Value::Int64(a)), Some(Value::Int64(b))) => {
+                    assert!(b != 0, "System.DivideByZeroException: remainder by zero");
+                    Value::Int64(
+                        a.checked_rem(b)
+                            .expect("System.ArithmeticException: remainder overflow"),
+                    )
+                }
+                _ => panic!("rem requires initialized integers of matching widths"),
+            };
+            self.stack.truncate(len - 2);
+            self.stack.push(Some(result));
+            self.pc += 1;
+            return self.trace(
+                pc,
+                "rem",
+                stack_before,
+                format!("signed remainder: {result}"),
+            );
+        }
+        if opcode_byte == OP_NOT {
+            let value = self
+                .stack
+                .last()
+                .copied()
+                .flatten()
+                .unwrap_or_else(|| panic!("not requires an initialized integer operand"));
+            let result = match value {
+                Value::Int(n) => Value::Int(!n),
+                Value::Int64(n) => Value::Int64(!n),
+                Value::Ref(_) => panic!("not requires an integer operand"),
+            };
+            *self.stack.last_mut().expect("validated operand") = Some(result);
+            self.pc += 1;
+            return self.trace(
+                pc,
+                "not",
+                stack_before,
+                format!("complement {value}: {result}"),
+            );
         }
 
         // ── call <methodTok> (0x28) — McCarthy W8b (lambda) ──
