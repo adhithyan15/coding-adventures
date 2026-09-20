@@ -5,6 +5,7 @@ import {
   defineStage,
   silentLogger,
 } from "@coding-adventures/forme-stage";
+import { StageError } from "@coding-adventures/forme-errors";
 import type { PipelineConfig } from "@coding-adventures/forme-pipeline-config";
 import { createOrchestrator } from "../src/index.js";
 
@@ -253,6 +254,167 @@ describe("concurrent scheduler", () => {
     expect(result.outcome).toBe("failed");
     expect(starts).toEqual(["fatal"]);
     expect(result.stages.map(stage => stage.outcome)).toEqual(["failed", "skipped", "skipped"]);
+    await orchestrator.dispose();
+  });
+
+  it("treats a falsy per-item rejection as fatal and cancels queued siblings", async () => {
+    const starts: string[] = [];
+    const source = defineStage({
+      name: "@test/falsy-source",
+      version: "0.1.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "source for a falsy item failure",
+      consumes: Kinds.Void,
+      produces: streamOf(Kinds.ContentSource),
+      capabilities: [],
+      configSchema: null,
+      async *run() {
+        for (const id of ["a", "b", "c"]) yield content(id);
+      },
+    });
+    const fails = defineStage({
+      name: "@test/falsy-item-failure",
+      version: "0.1.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "throws null for the first stream item",
+      consumes: Kinds.ContentSource,
+      produces: Kinds.ContentSource,
+      capabilities: [],
+      configSchema: null,
+      async run(input) {
+        starts.push((input as { path: string }).path);
+        throw null;
+      },
+    });
+    const downstream = defineStage({
+      name: "@test/after-falsy-item-failure",
+      version: "0.1.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "must remain unscheduled",
+      consumes: Kinds.ContentSource,
+      produces: Kinds.ContentSource,
+      capabilities: [],
+      configSchema: null,
+      async run(input) { starts.push("downstream"); return input; },
+    });
+    const orchestrator = createOrchestrator({ logger: silentLogger() });
+    const pipeline = await orchestrator.buildPipeline(config([
+      { id: "source", stage: source },
+      { id: "fails", stage: fails },
+      { id: "downstream", stage: downstream },
+    ], 1));
+
+    const result = await orchestrator.runOnce(pipeline);
+
+    expect(result.outcome).toBe("failed");
+    expect(starts).toEqual(["a"]);
+    expect(result.stages.map(stage => stage.outcome)).toEqual(["success", "failed", "skipped"]);
+    expect(result.errors).toMatchObject([{ instanceId: "fails", message: "null" }]);
+    await orchestrator.dispose();
+  });
+
+  it("rejects an invalid external manifest before queued stage work starts", async () => {
+    const starts: string[] = [];
+    const invalidSource = defineStage({
+      name: "@test/invalid-external-state",
+      version: "0.1.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "returns an invalid external-state manifest",
+      consumes: Kinds.Void,
+      produces: Kinds.ContentSource,
+      capabilities: [],
+      configSchema: null,
+      async externalState() {
+        starts.push("external-state");
+        return { version: 1, revision: "not-a-revision", entries: [] } as never;
+      },
+      async run() { starts.push("invalid-run"); return content("invalid"); },
+    });
+    const queued = defineStage({
+      name: "@test/queued-after-invalid-manifest",
+      version: "0.1.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "must not start after manifest validation fails",
+      consumes: Kinds.Void,
+      produces: Kinds.ContentSource,
+      capabilities: [],
+      configSchema: null,
+      async run() { starts.push("queued-run"); return content("queued"); },
+    });
+    const orchestrator = createOrchestrator({ logger: silentLogger() });
+    const pipeline = await orchestrator.buildPipeline(config([
+      { id: "invalid", stage: invalidSource },
+      { id: "queued", stage: queued },
+    ], 1));
+
+    const result = await orchestrator.runOnce(pipeline);
+
+    expect(result.outcome).toBe("failed");
+    expect(starts).toEqual(["external-state"]);
+    expect(result.stages.map(stage => stage.outcome)).toEqual(["failed", "skipped"]);
+    expect(result.errors[0]?.message).toContain("revision is malformed");
+    await orchestrator.dispose();
+  });
+
+  it("reports a fatal item ahead of an earlier recoverable sibling", async () => {
+    const starts: string[] = [];
+    const release = deferred<void>();
+    const source = defineStage({
+      name: "@test/mixed-failure-source",
+      version: "0.1.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "two items with different failure severity",
+      consumes: Kinds.Void,
+      produces: streamOf(Kinds.ContentSource),
+      capabilities: [],
+      configSchema: null,
+      async *run() { yield content("recoverable"); yield content("fatal"); },
+    });
+    const mixedFailures = defineStage({
+      name: "@test/mixed-item-failures",
+      version: "0.1.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "fails both concurrently running items",
+      consumes: Kinds.ContentSource,
+      produces: Kinds.ContentSource,
+      capabilities: [],
+      configSchema: null,
+      async run(input) {
+        const path = (input as { path: string }).path;
+        starts.push(path);
+        await release.promise;
+        throw new StageError({
+          code: path === "recoverable" ? "SOFT" : "HARD",
+          message: path,
+          recoverable: path === "recoverable",
+        });
+      },
+    });
+    const orchestrator = createOrchestrator({ logger: silentLogger() });
+    const pipeline = await orchestrator.buildPipeline({
+      ...config([
+        { id: "source", stage: source },
+        { id: "mixed", stage: mixedFailures },
+      ], 2),
+      settings: {
+        ...config([], 2).settings,
+        bestEffort: true,
+      },
+    });
+    const running = orchestrator.runOnce(pipeline);
+    await vi.waitFor(() => expect(starts).toEqual(["recoverable", "fatal"]));
+    release.resolve();
+
+    const result = await running;
+
+    expect(result.outcome).toBe("failed");
+    expect(result.stages.map(stage => stage.outcome)).toEqual(["success", "failed"]);
+    expect(result.errors).toMatchObject([{
+      instanceId: "mixed",
+      code: "HARD",
+      message: "fatal",
+      recoverable: false,
+    }]);
     await orchestrator.dispose();
   });
 

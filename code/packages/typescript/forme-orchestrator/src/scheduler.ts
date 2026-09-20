@@ -279,11 +279,13 @@ export async function executeDag(
             `scheduler: externalState is only valid on source instances; ${JSON.stringify(inst.id)} has producers`,
           );
         }
-        const manifest = await runInvocation(
-          inst,
-          () => inst.stage.externalState!(inst.config, ctx),
-        );
-        validateExternalStateManifest(manifest, inst.id);
+        const manifest = await runInvocation(inst, async () => {
+          const observed = await inst.stage.externalState!(inst.config, ctx);
+          // Validation is part of the guarded invocation: an invalid manifest
+          // must close queued work before this permit can dispatch it.
+          validateExternalStateManifest(observed, inst.id);
+          return observed;
+        });
         state.summary.externalStateRevision = manifest.revision;
       }
       state.summary.inputRevision = state.summary.externalStateRevision
@@ -413,16 +415,40 @@ export async function executeDag(
             throw error;
           }
         }));
-        let firstItemError: unknown = null;
+        let fatalItemFailed = false;
+        let firstFatalItemError: unknown;
+        let recoverableItemFailed = false;
+        let firstRecoverableItemError: unknown;
+        let cancelledItem = false;
+        let firstItemCancellation: unknown;
         for (const result of itemResults) {
           if (result.status === "fulfilled") {
             state.summary.cacheHits += result.value.cacheHit ? 1 : 0;
             state.summary.cacheMisses += result.value.cacheMiss ? 1 : 0;
-          } else if (firstItemError === null || firstItemError instanceof CancellationError) {
-            firstItemError = result.reason;
+          } else if (result.reason instanceof CancellationError) {
+            if (!cancelledItem) {
+              cancelledItem = true;
+              firstItemCancellation = result.reason;
+            }
+          } else {
+            const itemError = toRunError(result.reason, inst);
+            if (itemError.recoverable && runOptions.bestEffort) {
+              if (!recoverableItemFailed) {
+                recoverableItemFailed = true;
+                firstRecoverableItemError = result.reason;
+              }
+            } else if (!fatalItemFailed) {
+              fatalItemFailed = true;
+              firstFatalItemError = result.reason;
+            }
           }
         }
-        if (firstItemError !== null) throw firstItemError;
+        // A later fatal sibling must not be hidden by an earlier recoverable
+        // error. Within each severity, Promise.allSettled preserves input
+        // order, which makes the selected diagnostic deterministic.
+        if (fatalItemFailed) throw firstFatalItemError;
+        if (recoverableItemFailed) throw firstRecoverableItemError;
+        if (cancelledItem) throw firstItemCancellation;
         state.output = collected;
         state.isStreamOutput = true;
         state.summary.itemsConsumed = list.length;
