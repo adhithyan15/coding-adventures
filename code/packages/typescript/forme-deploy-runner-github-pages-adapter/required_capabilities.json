@@ -1,0 +1,32 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "typescript/forme-deploy-runner-github-pages-adapter",
+  "capabilities": [
+    {
+      "category": "net",
+      "action": "connect",
+      "target": "api.github.com:443",
+      "justification": "Connects only to the built-in v0 api.github.com endpoint to read the configured Pages source ref and ownership manifests, create immutable Git objects, and advance that ref with a non-forced atomic update."
+    },
+    {
+      "category": "net",
+      "action": "dns",
+      "target": "api.github.com",
+      "justification": "Resolves the single built-in v0 GitHub API hostname before connecting on port 443."
+    },
+    {
+      "category": "time",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads wall-clock time only to interpret an HTTP-date Retry-After response from GitHub."
+    },
+    {
+      "category": "time",
+      "action": "sleep",
+      "target": "bounded retry delay up to 300000ms",
+      "justification": "Sleeps between bounded retries for rate limits and transient pre-publication API failures."
+    }
+  ],
+  "justification": "Publishes one exact owned prefix of a GitHub Pages source branch through GitHub's Git Data API while preserving sibling owners. Credential selection and environment access belong to the composing FM07 CLI in FM-B047."
+}
