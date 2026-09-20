@@ -45,6 +45,9 @@ fn compile_and_run(language: Language, source: &str) -> i32 {
         Some(Value::Ref(_)) => {
             panic!("`{source}` left an object reference, not an int, on the stack")
         }
+        Some(Value::String(_)) => {
+            panic!("`{source}` left a string reference, not an int, on the stack")
+        }
         None => panic!("`{source}` left no value on the stack"),
     }
 }
