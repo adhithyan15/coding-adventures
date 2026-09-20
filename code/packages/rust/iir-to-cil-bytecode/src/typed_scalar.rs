@@ -12,10 +12,27 @@ fn invalid(function: &str, detail: &str) -> IIRClrError {
         detail: detail.into(),
     }
 }
-fn width(function: &str, hint: &str) -> Result<&'static str, IIRClrError> {
+// Logical types remain distinct even when the evaluation stack representation
+// is shared. In particular, a normalized boolean is not an arithmetic i32.
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum ScalarType {
+    I32,
+    I64,
+    Bool,
+}
+impl ScalarType {
+    fn metadata(self) -> &'static str {
+        match self {
+            Self::I64 => "int64",
+            Self::I32 | Self::Bool => "int32",
+        }
+    }
+}
+fn width(function: &str, hint: &str) -> Result<ScalarType, IIRClrError> {
     match hint {
-        "i32" => Ok("int32"),
-        "i64" => Ok("int64"),
+        "i32" => Ok(ScalarType::I32),
+        "i64" => Ok(ScalarType::I64),
+        "bool" => Ok(ScalarType::Bool),
         _ => Err(IIRClrError::UnsupportedType {
             function: function.into(),
             type_hint: hint.into(),
@@ -24,7 +41,7 @@ fn width(function: &str, hint: &str) -> Result<&'static str, IIRClrError> {
 }
 #[derive(Clone, Copy)]
 struct Slot {
-    ty: &'static str,
+    ty: ScalarType,
     index: u16,
     argument: bool,
 }
@@ -37,7 +54,7 @@ fn load(b: &mut CILBytecodeBuilder, s: Slot) {
     }
 }
 
-/// Lower only explicitly typed straight-line i32/i64 scalar functions.
+/// Lower only explicitly typed straight-line i32/i64/bool scalar functions.
 ///
 /// Unsupported operations or inconsistent signatures return an error, never a
 /// legacy fallback. Integer immediates retain the CLR01 i32 range restriction;
@@ -93,7 +110,8 @@ pub fn lower_typed_scalars_to_cil(
             let op = ins.op.as_str();
             let arity = match op {
                 "const" | "mov" | "neg" | "ret" => 1,
-                "add" | "sub" | "mul" | "div" | "and" | "or" | "xor" => 2,
+                "add" | "sub" | "mul" | "div" | "and" | "or" | "xor" | "cmp_eq" | "cmp_ne"
+                | "cmp_lt" | "cmp_le" | "cmp_gt" | "cmp_ge" => 2,
                 "call" => ins.srcs.len(),
                 _ => {
                     return Err(IIRClrError::UnsupportedOp {
@@ -124,7 +142,7 @@ pub fn lower_typed_scalars_to_cil(
                     return Err(invalid(&f.name, "too many locals"));
                 }
             }
-            let operand = |src: &Operand, expected: &str| -> Result<Slot, IIRClrError> {
+            let operand = |src: &Operand, expected: ScalarType| -> Result<Slot, IIRClrError> {
                 let Operand::Var(name) = src else {
                     return Err(invalid(&f.name, "expected variable operand"));
                 };
@@ -138,16 +156,55 @@ pub fn lower_typed_scalars_to_cil(
                 Ok(slot)
             };
             match op {
+                "const" if ty == ScalarType::Bool => {
+                    let Operand::Bool(value) = ins.srcs[0] else {
+                        return Err(invalid(&f.name, "expected boolean literal"));
+                    };
+                    b.emit_ldc_i4(i32::from(value));
+                }
                 "const" => {
                     let Operand::Int(n) = ins.srcs[0] else {
                         return Err(invalid(&f.name, "expected integer literal"));
                     };
                     let narrow = i32::try_from(n)
                         .map_err(|_| invalid(&f.name, "integer immediate exceeds CLR01 range"))?;
-                    if ty == "int64" {
+                    if ty == ScalarType::I64 {
                         b.emit_ldc_i8(n);
+                    } else if narrow == -1 {
+                        // The simulator does not yet execute compact ldc.i4.m1.
+                        b.emit_raw(vec![0x20, 0xff, 0xff, 0xff, 0xff]);
                     } else {
                         b.emit_ldc_i4(narrow);
+                    }
+                }
+                "cmp_eq" | "cmp_ne" | "cmp_lt" | "cmp_le" | "cmp_gt" | "cmp_ge" => {
+                    if ty != ScalarType::Bool {
+                        return Err(invalid(&f.name, "comparison result must be bool"));
+                    }
+                    let Operand::Var(name) = &ins.srcs[0] else {
+                        return Err(invalid(&f.name, "expected variable operand"));
+                    };
+                    let input = slots
+                        .get(name.as_str())
+                        .copied()
+                        .ok_or_else(|| invalid(&f.name, "undefined or forward variable"))?;
+                    if input.ty == ScalarType::Bool {
+                        return Err(invalid(&f.name, "comparison requires integer operands"));
+                    }
+                    let right = operand(&ins.srcs[1], input.ty)?;
+                    load(&mut b, input);
+                    load(&mut b, right);
+                    match op {
+                        "cmp_eq" | "cmp_ne" => b.emit_ceq(),
+                        "cmp_lt" | "cmp_ge" => b.emit_clt(),
+                        "cmp_gt" | "cmp_le" => b.emit_cgt(),
+                        _ => unreachable!("comparison opcode"),
+                    }
+                    // Even an i64 comparison produces an i32 boolean. Invert
+                    // that result at its actual stack width, never with ldc.i8.
+                    if matches!(op, "cmp_ne" | "cmp_le" | "cmp_ge") {
+                        b.emit_ldc_i4(0);
+                        b.emit_ceq();
                     }
                 }
                 "call" => {
@@ -171,6 +228,9 @@ pub fn lower_typed_scalars_to_cil(
                     b.emit_call(0x06000000 | row);
                 }
                 _ => {
+                    if ty == ScalarType::Bool && !matches!(op, "mov" | "ret") {
+                        return Err(invalid(&f.name, "boolean arithmetic is unsupported"));
+                    }
                     for src in &ins.srcs {
                         load(&mut b, operand(src, ty)?);
                     }
@@ -193,7 +253,7 @@ pub fn lower_typed_scalars_to_cil(
                 let index = u16::try_from(locals.len())
                     .map_err(|_| invalid(&f.name, "local index overflow"))?;
                 b.emit_stloc(index);
-                locals.push(ty.to_string());
+                locals.push(ty.metadata().to_string());
                 slots.insert(
                     ins.dest.as_deref().expect("validated destination"),
                     Slot {
@@ -215,9 +275,9 @@ pub fn lower_typed_scalars_to_cil(
             parameter_types: f
                 .params
                 .iter()
-                .map(|(_, h)| width(&f.name, h).map(str::to_string))
+                .map(|(_, h)| width(&f.name, h).map(|ty| ty.metadata().to_string()))
                 .collect::<Result<_, _>>()?,
-            return_type: width(&f.name, &f.return_type)?,
+            return_type: width(&f.name, &f.return_type)?.metadata(),
         });
     }
     let labels: Vec<&str> = module.functions.iter().map(|f| f.name.as_str()).collect();

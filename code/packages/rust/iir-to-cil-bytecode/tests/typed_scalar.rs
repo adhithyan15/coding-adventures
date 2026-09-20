@@ -51,7 +51,6 @@ fn excluded_operations_and_types_never_fall_back() {
     for ty in [
         "any",
         "polymorphic",
-        "bool",
         "void",
         "f64",
         "str",
@@ -238,4 +237,91 @@ fn all_callee_bodies_and_argument_widths_are_validated() {
     m.functions[0].instructions.remove(1);
     m.functions[1].instructions[0].op = "input_i64".into();
     refuses(m, "UnsupportedOp");
+}
+
+#[test]
+fn comparisons_validate_logical_types_and_shapes() {
+    for op in ["cmp_eq", "cmp_ne", "cmp_lt", "cmp_le", "cmp_gt", "cmp_ge"] {
+        for (left, right, hint, diagnostic) in [
+            ("i32", "i64", "bool", "width mismatch"),
+            ("i64", "i32", "bool", "width mismatch"),
+            ("bool", "bool", "bool", "integer operands"),
+            ("i64", "i64", "i32", "result must be bool"),
+            ("i64", "i64", "i64", "result must be bool"),
+        ] {
+            let mut m = base();
+            m.functions[0].params = vec![("a".into(), left.into()), ("b".into(), right.into())];
+            m.functions[0].instructions.insert(
+                1,
+                IIRInstr::new(op, Some("c".into()), vec![v("a"), v("b")], hint),
+            );
+            refuses(m, diagnostic);
+        }
+        for srcs in [vec![], vec![v("x")], vec![v("x"), v("x"), v("x")]] {
+            let mut m = base();
+            m.functions[0]
+                .instructions
+                .insert(1, IIRInstr::new(op, Some("c".into()), srcs, "bool"));
+            refuses(m, "operand count");
+        }
+        for srcs in [vec![Operand::Int(1), v("x")], vec![v("x"), Operand::Int(1)]] {
+            let mut m = base();
+            m.functions[0]
+                .instructions
+                .insert(1, IIRInstr::new(op, Some("c".into()), srcs, "bool"));
+            refuses(m, "variable operand");
+        }
+    }
+}
+
+#[test]
+fn bool_is_not_an_alias_for_integer_arithmetic_or_transport() {
+    for op in ["add", "sub", "mul", "div", "and", "or", "xor", "neg"] {
+        let mut m = base();
+        m.functions[0].params = vec![("b".into(), "bool".into())];
+        let srcs = if op == "neg" {
+            vec![v("b")]
+        } else {
+            vec![v("b"), v("b")]
+        };
+        m.functions[0]
+            .instructions
+            .insert(1, IIRInstr::new(op, Some("c".into()), srcs, "bool"));
+        refuses(m, "boolean arithmetic");
+    }
+    for (source, target) in [
+        ("bool", "i32"),
+        ("i32", "bool"),
+        ("bool", "i64"),
+        ("i64", "bool"),
+    ] {
+        let mut m = base();
+        m.functions[0].params = vec![("p".into(), source.into())];
+        m.functions[0].instructions.insert(
+            1,
+            IIRInstr::new("mov", Some("c".into()), vec![v("p")], target),
+        );
+        refuses(m.clone(), "width mismatch");
+        m.functions[0].instructions.remove(1);
+        m.functions[0].return_type = target.into();
+        m.functions[0].instructions[1] = IIRInstr::new("ret", None, vec![v("p")], target);
+        refuses(m.clone(), "width mismatch");
+        m.functions.push(IIRFunction::new(
+            "callee",
+            vec![("q".into(), target.into())],
+            target,
+            vec![IIRInstr::new("ret", None, vec![v("q")], target)],
+        ));
+        m.functions[0].instructions.insert(
+            1,
+            IIRInstr::new("call", Some("c".into()), vec![v("callee"), v("p")], target),
+        );
+        refuses(m, "width mismatch");
+    }
+    let mut m = base();
+    m.functions[0].instructions[0].type_hint = "bool".into();
+    refuses(m, "boolean literal");
+    let mut m = base();
+    m.functions[0].instructions[0].srcs = vec![Operand::Bool(true)];
+    refuses(m, "integer literal");
 }

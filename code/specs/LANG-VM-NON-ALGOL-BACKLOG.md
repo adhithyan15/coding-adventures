@@ -10,20 +10,23 @@ roadmap is reconciled.
 
 ## Encoded CLR input prerequisites (selected 2026-09-19 after VM-058)
 
-### CLR06 landed; remainder/NOT execution selected (2026-09-20)
+### CLR07 landed; CLR08 strict comparisons selected (2026-09-20)
 
-CLR06 merged in #15675 as `4b1cb8ebcfc73315a285ab30099eb6bac342f0b9`
-after required checks passed. It adds an explicit strict typed-scalar artifact
-entrypoint without changing legacy source routing or the encoded input gate.
+CLR07 remainder/NOT execution merged in #15689 as
+`5f5bd1fcabddf882864a9770e24bf78fa6c5c530`. Its PR workflows passed;
+the exact-head push workflow was still running when the merge was observed.
+CLR06 previously merged as `4b1cb8ebcfc73315a285ab30099eb6bac342f0b9`.
 
-Reprioritization confirms the highest-ranked bounded correctness gap is the
-emitter/simulator mismatch recorded by the CLR06 audit: the default lowerer
-emits raw `rem` (0x5d) and `not` (0x66), while the simulator executes neither.
-Select CLR07 to execute both for matched Int/Int64 widths, with exact signed
-remainder, same-width complement, explicit zero/overflow behavior and
-malformed-state immutability. Prove source-to-artifact execution through Nib
-before returning to wider strict-scalar and host-input ABI work. No open PR
-overlaps the CLR paths; preserve the separately owned ALGOL work.
+CLR08 extends the explicit strict typed-scalar API with six matched-width
+integer comparisons and a logically distinct bool type transported using
+int32 metadata. The detailed contract was committed before implementation;
+actual artifact tests cover both widths, signed and high-bit values, boolean
+moves, calls and returns. See `CLR08-strict-scalar-comparisons.md`.
+
+Branches and default source migration remain separate future contracts.
+Keep CLR01 immediate/input gates and structural indices intact. Default
+source routing still narrows i64 hints; this extension does not repair it.
+
 
 ### CLR05 landed; typed scalar lowering audit selected (2026-09-19)
 
