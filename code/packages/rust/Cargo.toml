@@ -765,6 +765,7 @@ members = [
     "x509-validity",
     "x509-algorithm-identifier",
     "x509-subject-public-key-info",
+    "x509-extension",
     "tls-server-identity",
     "tls-platform",
     "dns-message",
