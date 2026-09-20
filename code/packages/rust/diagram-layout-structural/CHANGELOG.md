@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.17.0
+
+- Reserve structural header geometry for named Architecture service icon badges.
+
 ## 0.16.0
 
 - Route structural relationships through deterministic orthogonal polylines when requested.

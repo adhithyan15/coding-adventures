@@ -1465,6 +1465,7 @@ pub struct RequirementElementMetadata {
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub struct ArchitectureServiceMetadata {
+    pub icon_name: Option<String>,
     pub icon_text: Option<String>,
 }
 
@@ -1579,6 +1580,7 @@ pub struct LayoutedStructuralNode {
     pub height: f64,
     pub header: String,
     pub stereotype: Option<String>,
+    pub icon_name: Option<String>,
     pub icon_text: Option<String>,
     pub style: ResolvedDiagramStyle,
     pub compartments: Vec<LayoutedCompartment>,

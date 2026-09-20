@@ -40,8 +40,9 @@ relationship endpoints to deterministic group-boundary geometry. Explicit `L`,
 `R`, `T`, and `B` ports survive semantic and layout IR and anchor relationship
 geometry to the requested node or group boundary. Architecture edges resolve to
 deterministic orthogonal polylines before backend-neutral PaintScene lowering.
-Icon artwork, obstacle avoidance, and configuration remain
-outside the partial compatibility claim.
+Named service icons lower to canonical backend-neutral badge labels. Full vendor
+and group icon artwork, obstacle avoidance, and configuration remain outside the
+partial compatibility claim.
 
 The initial `kanban` subset preserves indentation-defined columns and cards,
 including plain labels and explicit `id[label]` forms, in typed board IR.

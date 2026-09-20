@@ -2603,6 +2603,17 @@ fn pie_slice_commands(cx: f64, cy: f64, r: f64, start: f64, end: f64) -> Vec<Pat
 // ============================================================================
 
 /// Lower a [`LayoutedStructuralDiagram`] into a [`PaintScene`].
+fn architecture_icon_badge(name: &str) -> &str {
+    match name {
+        "database" => "DB",
+        "server" => "SV",
+        "disk" => "DS",
+        "cloud" => "CL",
+        "internet" => "IN",
+        _ => "IC",
+    }
+}
+
 pub fn diagram_to_paint_structural<S, M, R>(
     diagram: &LayoutedStructuralDiagram,
     options: &DiagramToPaintOptions<'_, S, M, R>,
@@ -2826,7 +2837,11 @@ where
             "#d1d5db",
             1.0,
         )));
-        let (header_x, header_width) = if let Some(icon_text) = &node.icon_text {
+        let badge_text = node
+            .icon_text
+            .as_deref()
+            .or_else(|| node.icon_name.as_deref().map(architecture_icon_badge));
+        let (header_x, header_width) = if let Some(icon_text) = badge_text {
             let icon_size = (header_height - 16.0).min(48.0);
             instructions.push(PaintInstruction::Rect(PaintRect {
                 base: PaintBase::default(),
@@ -5293,6 +5308,7 @@ mod tests {
                 height: 72.0,
                 header: "Gateway".into(),
                 stereotype: None,
+                icon_name: None,
                 icon_text: Some("API".into()),
                 style: default_style(),
                 compartments: vec![],
@@ -5313,6 +5329,13 @@ mod tests {
                 .count()
                 >= 2
         );
+    }
+
+    #[test]
+    fn architecture_named_icon_lowers_to_canonical_badge() {
+        assert_eq!(architecture_icon_badge("database"), "DB");
+        assert_eq!(architecture_icon_badge("server"), "SV");
+        assert_eq!(architecture_icon_badge("unknown"), "IC");
     }
 
     #[test]

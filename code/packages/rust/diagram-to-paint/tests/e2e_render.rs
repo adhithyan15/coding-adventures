@@ -1775,6 +1775,8 @@ line "Target" [35, 50, 68, 82]"##,
         );
         assert!(layout.nodes.windows(2).all(|nodes| nodes[0].y == nodes[1].y));
         assert_eq!(layout.nodes[0].icon_text.as_deref(), Some("API"));
+        assert_eq!(layout.nodes[2].icon_name.as_deref(), Some("database"));
+        assert_eq!(layout.nodes[3].icon_name.as_deref(), Some("server"));
         assert_eq!(layout.relationships[0].from_port, Some(diagram_ir::StructuralPort::Right));
         assert_eq!(layout.relationships[0].to_port, Some(diagram_ir::StructuralPort::Top));
         assert_eq!(
