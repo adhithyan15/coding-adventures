@@ -33,3 +33,7 @@ category and local byte offset.
 This crate does not parse X.509 fields, time or string semantics, PEM, paths,
 signatures, trust roots, TLS, or network traffic. Successful decoding proves
 only canonical framing and the typed value checks invoked by the caller.
+
+The package-native conformance test executes the 109-case language-neutral
+DER ASN.1 v1 corpus. Its framing tranche resolves and executes the referenced
+DER TLV cases instead of treating the `upstream` marker as automatic success.
