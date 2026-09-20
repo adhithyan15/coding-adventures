@@ -1489,10 +1489,16 @@ pub struct StructuralNode {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+pub enum StructuralGroupMetadata {
+    Architecture { icon_name: String },
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub struct StructuralGroup {
     pub id: String,
     pub label: String,
     pub stereotype: Option<String>,
+    pub metadata: Option<StructuralGroupMetadata>,
     pub parent_group: Option<String>,
 }
 
@@ -1595,6 +1601,7 @@ pub struct LayoutedStructuralGroup {
     pub height: f64,
     pub label: String,
     pub stereotype: Option<String>,
+    pub icon_name: Option<String>,
     pub parent_group: Option<String>,
 }
 

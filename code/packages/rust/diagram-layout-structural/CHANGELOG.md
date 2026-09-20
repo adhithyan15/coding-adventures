@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.18.0
+
+- Preserve typed Mermaid Architecture group icon names in layout IR.
+
 ## 0.17.0
 
 - Reserve structural header geometry for named Architecture service icon badges.

@@ -1769,6 +1769,7 @@ line "Target" [35, 50, 68, 82]"##,
         .expect("Mermaid architecture parse failed");
         let layout = layout_structural_diagram(&diagram);
         assert_eq!(layout.groups.len(), 1);
+        assert_eq!(layout.groups[0].icon_name.as_deref(), Some("cloud"));
         assert_eq!(
             layout.relationships[0].label.as_ref().map(|(_, label)| label.as_str()),
             Some("reads and writes")
