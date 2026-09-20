@@ -2,11 +2,26 @@
   "id": "KA-PATH-64-JOIN",
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
-    "KA-C64-after",
-    "KA-C64-also",
-    "KA-C64-still",
-    "KA-C64-soon",
-    "KA-C64-in-that-case"
+    {
+      "lesson": "KA-C64-after",
+      "extension": "KA-EXT-64-JOIN"
+    },
+    {
+      "lesson": "KA-C64-also",
+      "extension": "KA-EXT-64-JOIN"
+    },
+    {
+      "lesson": "KA-C64-still",
+      "extension": "KA-EXT-64-JOIN"
+    },
+    {
+      "lesson": "KA-C64-soon",
+      "extension": "KA-EXT-64-JOIN"
+    },
+    {
+      "lesson": "KA-C64-in-that-case",
+      "extension": "KA-EXT-64-JOIN"
+    }
   ],
   "before": [],
   "inline": [

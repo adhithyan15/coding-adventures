@@ -2,11 +2,26 @@
   "id": "ES-PATH-376-01",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C376-harina",
-    "ES-C376-uva",
-    "ES-C376-maiz",
-    "ES-C376-chocolate",
-    "ES-C376-pimiento"
+    {
+      "lesson": "ES-C376-harina",
+      "extension": "ES-EXT-376-REF"
+    },
+    {
+      "lesson": "ES-C376-uva",
+      "extension": "ES-EXT-376-REF"
+    },
+    {
+      "lesson": "ES-C376-maiz",
+      "extension": "ES-EXT-376-REF"
+    },
+    {
+      "lesson": "ES-C376-chocolate",
+      "extension": "ES-EXT-376-REF"
+    },
+    {
+      "lesson": "ES-C376-pimiento",
+      "extension": "ES-EXT-376-REF"
+    }
   ],
   "before": [],
   "inline": [

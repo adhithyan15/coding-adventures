@@ -2,9 +2,18 @@
   "id": "HI-PATH-022",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "HI-C21-numbers-6-10",
-    "HI-C21-six-nine-ten-history",
-    "HI-C22-gyarah-bees"
+    {
+      "lesson": "HI-C21-numbers-6-10",
+      "extension": "HI-EXT-022-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "HI-C21-six-nine-ten-history",
+      "extension": "HI-EXT-022-ETYMOLOGY"
+    },
+    {
+      "lesson": "HI-C22-gyarah-bees",
+      "extension": "HI-EXT-022-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

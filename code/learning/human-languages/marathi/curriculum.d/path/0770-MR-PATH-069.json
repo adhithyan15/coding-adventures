@@ -2,9 +2,18 @@
   "id": "MR-PATH-069",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "MR-C67-vajle",
-    "MR-C67-vajta",
-    "MR-R67-clock-recall"
+    {
+      "lesson": "MR-C67-vajle",
+      "extension": "MR-EXT-082-THE-CLOCK"
+    },
+    {
+      "lesson": "MR-C67-vajta",
+      "extension": "MR-EXT-082-THE-CLOCK"
+    },
+    {
+      "lesson": "MR-R67-clock-recall",
+      "extension": "MR-EXT-082-THE-CLOCK"
+    }
   ],
   "before": [],
   "inline": [

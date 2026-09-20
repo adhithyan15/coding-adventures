@@ -2,12 +2,30 @@
   "id": "MR-PATH-064",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "MR-C61-sahava",
-    "MR-C61-satva",
-    "MR-C61-aathva",
-    "MR-C61-navva",
-    "MR-C61-dahava",
-    "MR-R61-sixth-to-tenth"
+    {
+      "lesson": "MR-C61-sahava",
+      "extension": "MR-EXT-077-ORDINALS-SIX-TO-TEN"
+    },
+    {
+      "lesson": "MR-C61-satva",
+      "extension": "MR-EXT-077-ORDINALS-SIX-TO-TEN"
+    },
+    {
+      "lesson": "MR-C61-aathva",
+      "extension": "MR-EXT-077-ORDINALS-SIX-TO-TEN"
+    },
+    {
+      "lesson": "MR-C61-navva",
+      "extension": "MR-EXT-077-ORDINALS-SIX-TO-TEN"
+    },
+    {
+      "lesson": "MR-C61-dahava",
+      "extension": "MR-EXT-077-ORDINALS-SIX-TO-TEN"
+    },
+    {
+      "lesson": "MR-R61-sixth-to-tenth",
+      "extension": "MR-EXT-077-ORDINALS-SIX-TO-TEN"
+    }
   ],
   "before": [],
   "inline": [

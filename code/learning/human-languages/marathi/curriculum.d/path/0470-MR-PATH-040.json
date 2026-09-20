@@ -2,10 +2,22 @@
   "id": "MR-PATH-040",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "MR-C38-kuthe",
-    "MR-C38-kadhi",
-    "MR-C38-wh-order",
-    "MR-R38-where-when"
+    {
+      "lesson": "MR-C38-kuthe",
+      "extension": "MR-EXT-053-WHERE-AND-WHEN"
+    },
+    {
+      "lesson": "MR-C38-kadhi",
+      "extension": "MR-EXT-053-WHERE-AND-WHEN"
+    },
+    {
+      "lesson": "MR-C38-wh-order",
+      "extension": "MR-EXT-053-WHERE-AND-WHEN"
+    },
+    {
+      "lesson": "MR-R38-where-when",
+      "extension": "MR-EXT-053-WHERE-AND-WHEN"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,14 +2,32 @@
   "id": "AR-PATH-009",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "AR-W10-ayn",
-    "AR-W11-ha-and-ta-marbuta",
-    "AR-W12-maa-salama",
-    "AR-C04-maa-with",
-    "AR-C04-al-salama",
+    {
+      "lesson": "AR-W10-ayn",
+      "extension": "AR-EXT-009-SCRIPT"
+    },
+    {
+      "lesson": "AR-W11-ha-and-ta-marbuta",
+      "extension": "AR-EXT-009-SCRIPT"
+    },
+    {
+      "lesson": "AR-W12-maa-salama",
+      "extension": "AR-EXT-009-SCRIPT"
+    },
+    {
+      "lesson": "AR-C04-maa-with",
+      "extension": "AR-EXT-009-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "AR-C04-al-salama",
+      "extension": "AR-EXT-009-LANGUAGE-SPECIFIC"
+    },
     "AR-C04-maa-salama",
     "AR-C04-ila-liqaa",
-    "AR-C04-practice"
+    {
+      "lesson": "AR-C04-practice",
+      "extension": "AR-EXT-009-CONSOLIDATION"
+    }
   ],
   "before": [
     "AR-EXT-009-SCRIPT",

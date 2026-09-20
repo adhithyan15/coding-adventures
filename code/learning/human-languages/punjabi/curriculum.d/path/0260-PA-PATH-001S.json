@@ -2,13 +2,34 @@
   "id": "PA-PATH-001S",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "PA-W01-na",
-    "PA-W01-ii-matra",
-    "PA-W01-ma",
-    "PA-W01-sa",
-    "PA-W01-ta",
-    "PA-W01-e-matra",
-    "PA-W01-namaste-read"
+    {
+      "lesson": "PA-W01-na",
+      "extension": "PA-EXT-016-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "PA-W01-ii-matra",
+      "extension": "PA-EXT-016-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "PA-W01-ma",
+      "extension": "PA-EXT-016-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "PA-W01-sa",
+      "extension": "PA-EXT-016-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "PA-W01-ta",
+      "extension": "PA-EXT-016-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "PA-W01-e-matra",
+      "extension": "PA-EXT-016-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "PA-W01-namaste-read",
+      "extension": "PA-EXT-016-SCRIPT-FIRST-PIECES"
+    }
   ],
   "before": [],
   "inline": [],

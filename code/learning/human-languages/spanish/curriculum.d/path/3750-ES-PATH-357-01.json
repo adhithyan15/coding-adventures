@@ -2,11 +2,26 @@
   "id": "ES-PATH-357-01",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "ES-C357-navidad",
-    "ES-C357-pascua",
-    "ES-C357-vispera",
-    "ES-C357-regalo",
-    "ES-C357-tarjeta"
+    {
+      "lesson": "ES-C357-navidad",
+      "extension": "ES-EXT-357-SPAN"
+    },
+    {
+      "lesson": "ES-C357-pascua",
+      "extension": "ES-EXT-357-SPAN"
+    },
+    {
+      "lesson": "ES-C357-vispera",
+      "extension": "ES-EXT-357-SPAN"
+    },
+    {
+      "lesson": "ES-C357-regalo",
+      "extension": "ES-EXT-357-SPAN"
+    },
+    {
+      "lesson": "ES-C357-tarjeta",
+      "extension": "ES-EXT-357-SPAN"
+    }
   ],
   "before": [],
   "inline": [

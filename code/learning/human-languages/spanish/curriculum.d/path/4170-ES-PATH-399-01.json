@@ -2,8 +2,14 @@
   "id": "ES-PATH-399-01",
   "spine_node": "SPINE-DESCRIBE-QUALITIES",
   "lessons": [
-    "ES-C399-bonito",
-    "ES-C399-guapo"
+    {
+      "lesson": "ES-C399-bonito",
+      "extension": "ES-EXT-399-QUALITY"
+    },
+    {
+      "lesson": "ES-C399-guapo",
+      "extension": "ES-EXT-399-QUALITY"
+    }
   ],
   "before": [],
   "inline": [

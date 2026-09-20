@@ -2,8 +2,14 @@
   "id": "TE-PATH-028",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "TE-C35-kutumbam",
-    "TE-C35-snehitudu"
+    {
+      "lesson": "TE-C35-kutumbam",
+      "extension": "TE-EXT-029-FAMILY-FRIENDS"
+    },
+    {
+      "lesson": "TE-C35-snehitudu",
+      "extension": "TE-EXT-029-FAMILY-FRIENDS"
+    }
   ],
   "before": [],
   "inline": [

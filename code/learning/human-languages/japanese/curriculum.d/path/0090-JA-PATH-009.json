@@ -3,17 +3,47 @@
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
     "JA-C09-sumimasen",
-    "JA-W09-mi",
-    "JA-W09-me",
-    "JA-C09-yoku",
-    "JA-W09-ku",
-    "JA-C09-wakarimasen",
-    "JA-W09-do",
-    "JA-C09-mou",
-    "JA-W09-mo",
-    "JA-C09-ichido",
+    {
+      "lesson": "JA-W09-mi",
+      "extension": "JA-EXT-016-REPAIR-REPEAT"
+    },
+    {
+      "lesson": "JA-W09-me",
+      "extension": "JA-EXT-016-REPAIR-REPEAT"
+    },
+    {
+      "lesson": "JA-C09-yoku",
+      "extension": "JA-EXT-016-REPAIR-REPEAT"
+    },
+    {
+      "lesson": "JA-W09-ku",
+      "extension": "JA-EXT-016-REPAIR-REPEAT"
+    },
+    {
+      "lesson": "JA-C09-wakarimasen",
+      "extension": "JA-EXT-016-REPAIR-REPEAT"
+    },
+    {
+      "lesson": "JA-W09-do",
+      "extension": "JA-EXT-016-REPAIR-REPEAT"
+    },
+    {
+      "lesson": "JA-C09-mou",
+      "extension": "JA-EXT-016-REPAIR-REPEAT"
+    },
+    {
+      "lesson": "JA-W09-mo",
+      "extension": "JA-EXT-016-REPAIR-REPEAT"
+    },
+    {
+      "lesson": "JA-C09-ichido",
+      "extension": "JA-EXT-016-REPAIR-REPEAT"
+    },
     "JA-C09-onegaishimasu",
-    "JA-C09-mou-ichido-onegaishimasu"
+    {
+      "lesson": "JA-C09-mou-ichido-onegaishimasu",
+      "extension": "JA-EXT-016-REPAIR-REPEAT"
+    }
   ],
   "before": [],
   "inline": [

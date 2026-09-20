@@ -2,11 +2,26 @@
   "id": "ML-PATH-52-WELCOME",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "ML-C52-door",
-    "ML-C52-chair",
-    "ML-C52-kolam",
-    "ML-C52-flower",
-    "ML-C52-garland"
+    {
+      "lesson": "ML-C52-door",
+      "extension": "ML-EXT-52-WELCOME"
+    },
+    {
+      "lesson": "ML-C52-chair",
+      "extension": "ML-EXT-52-WELCOME"
+    },
+    {
+      "lesson": "ML-C52-kolam",
+      "extension": "ML-EXT-52-WELCOME"
+    },
+    {
+      "lesson": "ML-C52-flower",
+      "extension": "ML-EXT-52-WELCOME"
+    },
+    {
+      "lesson": "ML-C52-garland",
+      "extension": "ML-EXT-52-WELCOME"
+    }
   ],
   "before": [],
   "inline": [

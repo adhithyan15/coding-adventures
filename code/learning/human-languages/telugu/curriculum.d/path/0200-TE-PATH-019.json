@@ -2,7 +2,10 @@
   "id": "TE-PATH-019",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "TE-C15-neellu-biyyam"
+    {
+      "lesson": "TE-C15-neellu-biyyam",
+      "extension": "TE-EXT-019-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

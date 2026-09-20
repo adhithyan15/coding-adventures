@@ -2,8 +2,14 @@
   "id": "AR-PATH-021",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "AR-C19-wahid-khamsa",
-    "AR-C20-ahada-ashar-ishrun"
+    {
+      "lesson": "AR-C19-wahid-khamsa",
+      "extension": "AR-EXT-021-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "AR-C20-ahada-ashar-ishrun",
+      "extension": "AR-EXT-021-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

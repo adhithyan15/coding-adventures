@@ -2,15 +2,42 @@
   "id": "MW-PATH-017",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "MW-C18-hear-daal",
-    "MW-C18-daal",
-    "MW-C18-hear-ghee",
-    "MW-C18-ghee",
-    "MW-C18-hear-sabji",
-    "MW-C18-sabji",
-    "MW-R18-food-three",
-    "MW-C18-food-three",
-    "MW-R18-food-close"
+    {
+      "lesson": "MW-C18-hear-daal",
+      "extension": "MW-EXT-031-FOOD-THREE"
+    },
+    {
+      "lesson": "MW-C18-daal",
+      "extension": "MW-EXT-031-FOOD-THREE"
+    },
+    {
+      "lesson": "MW-C18-hear-ghee",
+      "extension": "MW-EXT-031-FOOD-THREE"
+    },
+    {
+      "lesson": "MW-C18-ghee",
+      "extension": "MW-EXT-031-FOOD-THREE"
+    },
+    {
+      "lesson": "MW-C18-hear-sabji",
+      "extension": "MW-EXT-031-FOOD-THREE"
+    },
+    {
+      "lesson": "MW-C18-sabji",
+      "extension": "MW-EXT-031-FOOD-THREE"
+    },
+    {
+      "lesson": "MW-R18-food-three",
+      "extension": "MW-EXT-031-FOOD-THREE"
+    },
+    {
+      "lesson": "MW-C18-food-three",
+      "extension": "MW-EXT-031-FOOD-THREE"
+    },
+    {
+      "lesson": "MW-R18-food-close",
+      "extension": "MW-EXT-031-FOOD-THREE"
+    }
   ],
   "before": [],
   "inline": [

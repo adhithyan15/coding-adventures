@@ -2,8 +2,14 @@
   "id": "SA-PATH-61-SEASON",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "SA-C61-rtu",
-    "SA-S225-letter-vocalic-r"
+    {
+      "lesson": "SA-C61-rtu",
+      "extension": "SA-EXT-061-SEASON"
+    },
+    {
+      "lesson": "SA-S225-letter-vocalic-r",
+      "extension": "SA-EXT-061-SEASON"
+    }
   ],
   "before": [],
   "inline": [

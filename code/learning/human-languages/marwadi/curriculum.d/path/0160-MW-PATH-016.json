@@ -2,14 +2,38 @@
   "id": "MW-PATH-016",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "MW-C17-hear-riksha",
-    "MW-W17-sha",
-    "MW-C17-riksha",
-    "MW-C17-hear-ghodo",
-    "MW-C17-ghodo",
-    "MW-R17-transport-new-two",
-    "MW-C17-transport-five",
-    "MW-R17-script-close"
+    {
+      "lesson": "MW-C17-hear-riksha",
+      "extension": "MW-EXT-030-TRANSPORT-FIVE"
+    },
+    {
+      "lesson": "MW-W17-sha",
+      "extension": "MW-EXT-030-TRANSPORT-FIVE"
+    },
+    {
+      "lesson": "MW-C17-riksha",
+      "extension": "MW-EXT-030-TRANSPORT-FIVE"
+    },
+    {
+      "lesson": "MW-C17-hear-ghodo",
+      "extension": "MW-EXT-030-TRANSPORT-FIVE"
+    },
+    {
+      "lesson": "MW-C17-ghodo",
+      "extension": "MW-EXT-030-TRANSPORT-FIVE"
+    },
+    {
+      "lesson": "MW-R17-transport-new-two",
+      "extension": "MW-EXT-030-TRANSPORT-FIVE"
+    },
+    {
+      "lesson": "MW-C17-transport-five",
+      "extension": "MW-EXT-030-TRANSPORT-FIVE"
+    },
+    {
+      "lesson": "MW-R17-script-close",
+      "extension": "MW-EXT-030-TRANSPORT-FIVE"
+    }
   ],
   "before": [],
   "inline": [

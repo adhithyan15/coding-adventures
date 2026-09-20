@@ -3,12 +3,27 @@
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
     "AR-C01-marhaba",
-    "AR-W00-ra-ha",
-    "AR-W00-ba-family-marhaba",
+    {
+      "lesson": "AR-W00-ra-ha",
+      "extension": "AR-EXT-003-SCRIPT"
+    },
+    {
+      "lesson": "AR-W00-ba-family-marhaba",
+      "extension": "AR-EXT-003-SCRIPT"
+    },
     "AR-C01-as-salamu-alaykum",
-    "AR-W00-ayn-ya",
-    "AR-W00-kaf-waw-alaykum",
-    "AR-W00-full-greeting-recall"
+    {
+      "lesson": "AR-W00-ayn-ya",
+      "extension": "AR-EXT-003-SCRIPT"
+    },
+    {
+      "lesson": "AR-W00-kaf-waw-alaykum",
+      "extension": "AR-EXT-003-SCRIPT"
+    },
+    {
+      "lesson": "AR-W00-full-greeting-recall",
+      "extension": "AR-EXT-003-SCRIPT"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,11 +2,17 @@
   "id": "TA-PATH-012",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "TA-C04-po",
+    {
+      "lesson": "TA-C04-po",
+      "extension": "TA-EXT-012-LANGUAGE-SPECIFIC"
+    },
     "TA-C04-poy-varugiren",
     "TA-C04-mindum-sandippom",
     "TA-C04-naalai",
-    "TA-C04-practice"
+    {
+      "lesson": "TA-C04-practice",
+      "extension": "TA-EXT-012-CONSOLIDATION"
+    }
   ],
   "before": [
     "TA-EXT-012-LANGUAGE-SPECIFIC"

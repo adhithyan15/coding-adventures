@@ -2,9 +2,18 @@
   "id": "GE-PATH-053-WRITING",
   "spine_node": "SPINE-SAY-WHY",
   "lessons": [
-    "GE-W02-eigene-zeile",
-    "GE-W03-mit-der-uhr",
-    "GE-W04-vier-zeilen"
+    {
+      "lesson": "GE-W02-eigene-zeile",
+      "extension": "GE-EXT-053-WRITING"
+    },
+    {
+      "lesson": "GE-W03-mit-der-uhr",
+      "extension": "GE-EXT-053-WRITING"
+    },
+    {
+      "lesson": "GE-W04-vier-zeilen",
+      "extension": "GE-EXT-053-WRITING"
+    }
   ],
   "before": [],
   "inline": [

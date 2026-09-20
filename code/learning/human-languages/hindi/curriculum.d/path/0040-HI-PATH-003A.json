@@ -2,7 +2,10 @@
   "id": "HI-PATH-003A",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "HI-C01-practice"
+    {
+      "lesson": "HI-C01-practice",
+      "extension": "HI-EXT-001-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [

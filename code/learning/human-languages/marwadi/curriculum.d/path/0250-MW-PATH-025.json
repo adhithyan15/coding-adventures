@@ -2,12 +2,30 @@
   "id": "MW-PATH-025",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "MW-R26-shopping-counter",
-    "MW-R26-transport-counter",
-    "MW-R26-food-counter",
-    "MW-R26-letters-close",
-    "MW-C26-counter-exchange",
-    "MW-R26-script-close"
+    {
+      "lesson": "MW-R26-shopping-counter",
+      "extension": "MW-EXT-039-COUNTER-EXCHANGE"
+    },
+    {
+      "lesson": "MW-R26-transport-counter",
+      "extension": "MW-EXT-039-COUNTER-EXCHANGE"
+    },
+    {
+      "lesson": "MW-R26-food-counter",
+      "extension": "MW-EXT-039-COUNTER-EXCHANGE"
+    },
+    {
+      "lesson": "MW-R26-letters-close",
+      "extension": "MW-EXT-039-COUNTER-EXCHANGE"
+    },
+    {
+      "lesson": "MW-C26-counter-exchange",
+      "extension": "MW-EXT-039-COUNTER-EXCHANGE"
+    },
+    {
+      "lesson": "MW-R26-script-close",
+      "extension": "MW-EXT-039-COUNTER-EXCHANGE"
+    }
   ],
   "before": [],
   "inline": [

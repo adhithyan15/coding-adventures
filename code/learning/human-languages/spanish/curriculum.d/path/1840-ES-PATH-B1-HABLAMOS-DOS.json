@@ -2,7 +2,10 @@
   "id": "ES-PATH-B1-HABLAMOS-DOS",
   "spine_node": "SPINE-TALK-ABOUT-PAST",
   "lessons": [
-    "ES-C55-hablamos-dos"
+    {
+      "lesson": "ES-C55-hablamos-dos",
+      "extension": "ES-EXT-B1-HABLAMOS-DOS"
+    }
   ],
   "before": [],
   "inline": [

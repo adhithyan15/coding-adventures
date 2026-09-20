@@ -2,11 +2,26 @@
   "id": "SA-PATH-32-TREE",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "SA-C32-tree",
-    "SA-C32-leaf",
-    "SA-C32-grass",
-    "SA-C32-vine",
-    "SA-C32-wood"
+    {
+      "lesson": "SA-C32-tree",
+      "extension": "SA-EXT-32-TREE"
+    },
+    {
+      "lesson": "SA-C32-leaf",
+      "extension": "SA-EXT-32-TREE"
+    },
+    {
+      "lesson": "SA-C32-grass",
+      "extension": "SA-EXT-32-TREE"
+    },
+    {
+      "lesson": "SA-C32-vine",
+      "extension": "SA-EXT-32-TREE"
+    },
+    {
+      "lesson": "SA-C32-wood",
+      "extension": "SA-EXT-32-TREE"
+    }
   ],
   "before": [],
   "inline": [

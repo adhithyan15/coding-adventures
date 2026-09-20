@@ -2,7 +2,10 @@
   "id": "TA-PATH-017",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "TA-C11-nirangal"
+    {
+      "lesson": "TA-C11-nirangal",
+      "extension": "TA-EXT-017-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

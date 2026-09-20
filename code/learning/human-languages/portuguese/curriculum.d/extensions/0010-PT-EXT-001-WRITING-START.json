@@ -4,10 +4,5 @@
   "kind": "required",
   "category": "script",
   "canDo": "I can copy my first Portuguese greeting with the model visible, write it again once the model is covered, and produce it from the sound alone with its stress accent.",
-  "prerequisites": [],
-  "lessons": [
-    "PT-W01-ola-guided-copy",
-    "PT-W01-ola-delayed-copy",
-    "PT-W01-ola-dictation"
-  ]
+  "prerequisites": []
 }

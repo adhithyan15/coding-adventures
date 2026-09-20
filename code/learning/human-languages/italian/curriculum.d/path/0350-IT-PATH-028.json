@@ -2,10 +2,22 @@
   "id": "IT-PATH-028",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "IT-C24-cuore",
-    "IT-C24-occhio",
-    "IT-C24-orecchio",
-    "IT-C24-bocca"
+    {
+      "lesson": "IT-C24-cuore",
+      "extension": "IT-EXT-028-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "IT-C24-occhio",
+      "extension": "IT-EXT-028-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "IT-C24-orecchio",
+      "extension": "IT-EXT-028-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "IT-C24-bocca",
+      "extension": "IT-EXT-028-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

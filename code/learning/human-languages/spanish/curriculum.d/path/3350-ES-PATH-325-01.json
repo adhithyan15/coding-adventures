@@ -2,11 +2,26 @@
   "id": "ES-PATH-325-01",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "ES-C325-pais",
-    "ES-C325-ciudad",
-    "ES-C325-barrio",
-    "ES-C325-plaza",
-    "ES-C325-lugar"
+    {
+      "lesson": "ES-C325-pais",
+      "extension": "ES-EXT-325-PLACE"
+    },
+    {
+      "lesson": "ES-C325-ciudad",
+      "extension": "ES-EXT-325-PLACE"
+    },
+    {
+      "lesson": "ES-C325-barrio",
+      "extension": "ES-EXT-325-PLACE"
+    },
+    {
+      "lesson": "ES-C325-plaza",
+      "extension": "ES-EXT-325-PLACE"
+    },
+    {
+      "lesson": "ES-C325-lugar",
+      "extension": "ES-EXT-325-PLACE"
+    }
   ],
   "before": [],
   "inline": [

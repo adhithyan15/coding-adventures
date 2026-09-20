@@ -2,7 +2,10 @@
   "id": "ES-PATH-003-SYNTH-PLURAL",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C44-sintesis-mas-de-uno"
+    {
+      "lesson": "ES-C44-sintesis-mas-de-uno",
+      "extension": "ES-EXT-003-SYNTH-PLURAL"
+    }
   ],
   "before": [],
   "inline": [

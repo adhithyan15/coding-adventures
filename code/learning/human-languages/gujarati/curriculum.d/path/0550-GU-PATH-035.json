@@ -2,11 +2,26 @@
   "id": "GU-PATH-035",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "GU-C36-te",
-    "GU-C36-ame-aapne",
-    "GU-C36-te-write",
-    "GU-C36-je",
-    "GU-C36-je-te"
+    {
+      "lesson": "GU-C36-te",
+      "extension": "GU-EXT-047-PRONOUNS"
+    },
+    {
+      "lesson": "GU-C36-ame-aapne",
+      "extension": "GU-EXT-047-PRONOUNS"
+    },
+    {
+      "lesson": "GU-C36-te-write",
+      "extension": "GU-EXT-047-PRONOUNS"
+    },
+    {
+      "lesson": "GU-C36-je",
+      "extension": "GU-EXT-047-PRONOUNS"
+    },
+    {
+      "lesson": "GU-C36-je-te",
+      "extension": "GU-EXT-047-PRONOUNS"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,7 +2,10 @@
   "id": "ML-PATH-019",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "ML-C15-vellam-ari"
+    {
+      "lesson": "ML-C15-vellam-ari",
+      "extension": "ML-EXT-019-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

@@ -3,18 +3,54 @@
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
     "ES-C07-donde",
-    "ES-C07-practice",
-    "ES-C07-sintesis-preguntar",
-    "ES-C07-hablamos",
-    "ES-C07-hablan",
-    "ES-C07-hablais",
-    "ES-C07-repaso-presente-completo",
-    "ES-C07-sintesis-dos-continentes",
-    "ES-C07-comemos",
-    "ES-C07-vivimos",
-    "ES-C07-comeis-vivis",
-    "ES-C07-comen-viven",
-    "ES-C07-repaso-tres-familias"
+    {
+      "lesson": "ES-C07-practice",
+      "extension": "ES-EXT-015-CONSOLIDATION"
+    },
+    {
+      "lesson": "ES-C07-sintesis-preguntar",
+      "extension": "ES-EXT-015-CONSOLIDATION"
+    },
+    {
+      "lesson": "ES-C07-hablamos",
+      "extension": "ES-EXT-015-PRESENT-PLURAL"
+    },
+    {
+      "lesson": "ES-C07-hablan",
+      "extension": "ES-EXT-015-PRESENT-PLURAL"
+    },
+    {
+      "lesson": "ES-C07-hablais",
+      "extension": "ES-EXT-015-PRESENT-PLURAL"
+    },
+    {
+      "lesson": "ES-C07-repaso-presente-completo",
+      "extension": "ES-EXT-015-PRESENT-PLURAL"
+    },
+    {
+      "lesson": "ES-C07-sintesis-dos-continentes",
+      "extension": "ES-EXT-015-PRESENT-PLURAL"
+    },
+    {
+      "lesson": "ES-C07-comemos",
+      "extension": "ES-EXT-015-PRESENT-PLURAL"
+    },
+    {
+      "lesson": "ES-C07-vivimos",
+      "extension": "ES-EXT-015-PRESENT-PLURAL"
+    },
+    {
+      "lesson": "ES-C07-comeis-vivis",
+      "extension": "ES-EXT-015-PRESENT-PLURAL"
+    },
+    {
+      "lesson": "ES-C07-comen-viven",
+      "extension": "ES-EXT-015-PRESENT-PLURAL"
+    },
+    {
+      "lesson": "ES-C07-repaso-tres-familias",
+      "extension": "ES-EXT-015-PRESENT-PLURAL"
+    }
   ],
   "before": [],
   "inline": [

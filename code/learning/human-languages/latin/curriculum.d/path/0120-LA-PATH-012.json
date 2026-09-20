@@ -2,7 +2,10 @@
   "id": "LA-PATH-012",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "LA-C09-anni-tempora"
+    {
+      "lesson": "LA-C09-anni-tempora",
+      "extension": "LA-EXT-012-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

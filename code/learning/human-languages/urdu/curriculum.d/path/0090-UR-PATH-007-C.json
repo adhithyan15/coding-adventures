@@ -2,9 +2,18 @@
   "id": "UR-PATH-007-C",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "UR-C06-bolna",
-    "UR-C06-janna",
-    "UR-W07-alif-madda"
+    {
+      "lesson": "UR-C06-bolna",
+      "extension": "UR-EXT-017-CORE-VERBS-C"
+    },
+    {
+      "lesson": "UR-C06-janna",
+      "extension": "UR-EXT-017-CORE-VERBS-C"
+    },
+    {
+      "lesson": "UR-W07-alif-madda",
+      "extension": "UR-EXT-017D-SCRIPT-ALIF-MADDA"
+    }
   ],
   "before": [],
   "inline": [

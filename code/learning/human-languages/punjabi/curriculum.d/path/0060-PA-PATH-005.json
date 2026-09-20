@@ -2,10 +2,16 @@
   "id": "PA-PATH-005",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "PA-S03-nanna-bihari-dulava",
+    {
+      "lesson": "PA-S03-nanna-bihari-dulava",
+      "extension": "PA-EXT-045-PREA1-SCRIPT-RUNWAY-C3A"
+    },
     "PA-C03-kivein",
     "PA-C03-tusi-kivein-ho",
-    "PA-R03-wellbeing-r1"
+    {
+      "lesson": "PA-R03-wellbeing-r1",
+      "extension": "PA-EXT-020-WELLBEING-R1"
+    }
   ],
   "before": [],
   "inline": [

@@ -6,8 +6,5 @@
   "canDo": "I can run the whole first exchange -- greet formally or informally, answer yes or no, thank, and say please -- and I can hand-write every letter the greeting needs.",
   "prerequisites": [
     "RU-EXT-001-INLINE-SCRIPT"
-  ],
-  "lessons": [
-    "RU-C01-practice"
   ]
 }

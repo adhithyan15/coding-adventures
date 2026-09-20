@@ -2,7 +2,10 @@
   "id": "ES-PATH-042-CMD-TU",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "ES-C50-habla"
+    {
+      "lesson": "ES-C50-habla",
+      "extension": "ES-EXT-042-CMD-TU"
+    }
   ],
   "before": [],
   "inline": [

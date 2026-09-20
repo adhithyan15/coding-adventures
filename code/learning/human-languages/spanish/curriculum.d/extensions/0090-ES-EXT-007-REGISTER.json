@@ -4,8 +4,5 @@
   "kind": "required",
   "category": "register",
   "canDo": "I can choose the Spanish form that fits this relationship and setting.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-C03-tu-usted-register"
-  ]
+  "prerequisites": []
 }

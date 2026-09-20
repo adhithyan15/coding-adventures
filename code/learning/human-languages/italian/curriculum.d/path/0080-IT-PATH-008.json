@@ -3,13 +3,28 @@
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
     "IT-C02-come",
-    "IT-C02-stare",
+    {
+      "lesson": "IT-C02-stare",
+      "extension": "IT-EXT-008-LANGUAGE-SPECIFIC"
+    },
     "IT-C02-come-stai",
-    "IT-C02-come-sta",
-    "IT-C02-come-va",
+    {
+      "lesson": "IT-C02-come-sta",
+      "extension": "IT-EXT-008-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "IT-C02-come-va",
+      "extension": "IT-EXT-008-LANGUAGE-SPECIFIC"
+    },
     "IT-C02-cosi-cosi",
-    "IT-C02-non-ce-male",
-    "IT-C02-practice"
+    {
+      "lesson": "IT-C02-non-ce-male",
+      "extension": "IT-EXT-008-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "IT-C02-practice",
+      "extension": "IT-EXT-008-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [

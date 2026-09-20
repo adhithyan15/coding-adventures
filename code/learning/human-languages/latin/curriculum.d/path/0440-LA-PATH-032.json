@@ -2,11 +2,26 @@
   "id": "LA-PATH-032",
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
-    "LA-C48-nescio",
-    "LA-C48-male",
-    "LA-C48-malus",
-    "LA-C48-sed",
-    "LA-C48-aut"
+    {
+      "lesson": "LA-C48-nescio",
+      "extension": "LA-EXT-048-DENY"
+    },
+    {
+      "lesson": "LA-C48-male",
+      "extension": "LA-EXT-048-DENY"
+    },
+    {
+      "lesson": "LA-C48-malus",
+      "extension": "LA-EXT-048-DENY"
+    },
+    {
+      "lesson": "LA-C48-sed",
+      "extension": "LA-EXT-048-DENY"
+    },
+    {
+      "lesson": "LA-C48-aut",
+      "extension": "LA-EXT-048-DENY"
+    }
   ],
   "before": [],
   "inline": [],

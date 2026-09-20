@@ -2,9 +2,18 @@
   "id": "RU-PATH-021",
   "spine_node": "SPINE-SAY-WHAT-I-WANT",
   "lessons": [
-    "RU-C20-khotet",
-    "RU-C20-khochu-chitat",
-    "RU-C20-chtoby"
+    {
+      "lesson": "RU-C20-khotet",
+      "extension": "RU-EXT-026-WANT"
+    },
+    {
+      "lesson": "RU-C20-khochu-chitat",
+      "extension": "RU-EXT-026-WANT"
+    },
+    {
+      "lesson": "RU-C20-chtoby",
+      "extension": "RU-EXT-026-WANT"
+    }
   ],
   "before": [],
   "inline": [

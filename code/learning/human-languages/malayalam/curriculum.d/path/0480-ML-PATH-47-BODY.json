@@ -2,11 +2,26 @@
   "id": "ML-PATH-47-BODY",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "ML-C47-leg",
-    "ML-C47-tooth",
-    "ML-C47-hair",
-    "ML-C47-finger",
-    "ML-C47-stomach"
+    {
+      "lesson": "ML-C47-leg",
+      "extension": "ML-EXT-47-BODY"
+    },
+    {
+      "lesson": "ML-C47-tooth",
+      "extension": "ML-EXT-47-BODY"
+    },
+    {
+      "lesson": "ML-C47-hair",
+      "extension": "ML-EXT-47-BODY"
+    },
+    {
+      "lesson": "ML-C47-finger",
+      "extension": "ML-EXT-47-BODY"
+    },
+    {
+      "lesson": "ML-C47-stomach",
+      "extension": "ML-EXT-47-BODY"
+    }
   ],
   "before": [],
   "inline": [

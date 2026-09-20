@@ -2,8 +2,14 @@
   "id": "KA-PATH-023",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "KA-C21-naayi-bekku",
-    "KA-C22-hasiru-haladi"
+    {
+      "lesson": "KA-C21-naayi-bekku",
+      "extension": "KA-EXT-023-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "KA-C22-hasiru-haladi",
+      "extension": "KA-EXT-023-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

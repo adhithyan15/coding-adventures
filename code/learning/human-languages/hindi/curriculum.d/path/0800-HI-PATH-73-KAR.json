@@ -2,8 +2,14 @@
   "id": "HI-PATH-73-KAR",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "HI-C73-kar",
-    "HI-R73-chain"
+    {
+      "lesson": "HI-C73-kar",
+      "extension": "HI-EXT-073-CHAINED-ACTIONS"
+    },
+    {
+      "lesson": "HI-R73-chain",
+      "extension": "HI-EXT-073-CHAINED-ACTIONS"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,12 +2,30 @@
   "id": "TA-PATH-72-FEEL",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "TA-C72-anger",
-    "TA-C72-fear",
-    "TA-W27-read-payam",
-    "TA-C72-sorrow",
-    "TA-C72-laugh",
-    "TA-C72-cry"
+    {
+      "lesson": "TA-C72-anger",
+      "extension": "TA-EXT-72-FEEL"
+    },
+    {
+      "lesson": "TA-C72-fear",
+      "extension": "TA-EXT-72-FEEL"
+    },
+    {
+      "lesson": "TA-W27-read-payam",
+      "extension": "TA-EXT-72-FEEL"
+    },
+    {
+      "lesson": "TA-C72-sorrow",
+      "extension": "TA-EXT-72-FEEL"
+    },
+    {
+      "lesson": "TA-C72-laugh",
+      "extension": "TA-EXT-72-FEEL"
+    },
+    {
+      "lesson": "TA-C72-cry",
+      "extension": "TA-EXT-72-FEEL"
+    }
   ],
   "before": [],
   "inline": [

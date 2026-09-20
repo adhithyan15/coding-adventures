@@ -2,10 +2,22 @@
   "id": "GU-PATH-015",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "GU-C12-aankh",
-    "GU-C12-kaan",
-    "GU-C12-modhu",
-    "GU-C12-naak"
+    {
+      "lesson": "GU-C12-aankh",
+      "extension": "GU-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GU-C12-kaan",
+      "extension": "GU-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GU-C12-modhu",
+      "extension": "GU-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GU-C12-naak",
+      "extension": "GU-EXT-015-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

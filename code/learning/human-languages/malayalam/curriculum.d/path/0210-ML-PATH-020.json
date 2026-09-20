@@ -2,11 +2,26 @@
   "id": "ML-PATH-020",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "ML-C16-kollavarsham-maasangal",
-    "ML-C17-ucha-paathira",
-    "ML-C17-paathira",
-    "ML-C18-oru",
-    "ML-C18-mani"
+    {
+      "lesson": "ML-C16-kollavarsham-maasangal",
+      "extension": "ML-EXT-020-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ML-C17-ucha-paathira",
+      "extension": "ML-EXT-020-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ML-C17-paathira",
+      "extension": "ML-EXT-020-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ML-C18-oru",
+      "extension": "ML-EXT-020-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ML-C18-mani",
+      "extension": "ML-EXT-020-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

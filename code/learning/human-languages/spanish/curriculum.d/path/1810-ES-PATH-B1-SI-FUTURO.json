@@ -2,7 +2,10 @@
   "id": "ES-PATH-B1-SI-FUTURO",
   "spine_node": "SPINE-EXPRESS-CONDITION",
   "lessons": [
-    "ES-C55-si-futuro"
+    {
+      "lesson": "ES-C55-si-futuro",
+      "extension": "ES-EXT-B1-SI-FUTURO"
+    }
   ],
   "before": [],
   "inline": [

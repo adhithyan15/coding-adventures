@@ -2,15 +2,42 @@
   "id": "ES-PATH-041",
   "spine_node": "SPINE-TALK-ABOUT-FUTURE",
   "lessons": [
-    "ES-C17-futuro",
-    "ES-C17-comer-futuro",
-    "ES-C17-vivir-futuro",
-    "ES-C17-condicional",
-    "ES-C17-comer-condicional",
-    "ES-C17-vivir-condicional",
-    "ES-C17-irregulares",
-    "ES-C17-practice",
-    "ES-C17-sintesis-futuro-condicional"
+    {
+      "lesson": "ES-C17-futuro",
+      "extension": "ES-EXT-041-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C17-comer-futuro",
+      "extension": "ES-EXT-041-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C17-vivir-futuro",
+      "extension": "ES-EXT-041-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C17-condicional",
+      "extension": "ES-EXT-041-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C17-comer-condicional",
+      "extension": "ES-EXT-041-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C17-vivir-condicional",
+      "extension": "ES-EXT-041-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C17-irregulares",
+      "extension": "ES-EXT-041-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C17-practice",
+      "extension": "ES-EXT-041-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C17-sintesis-futuro-condicional",
+      "extension": "ES-EXT-041-CONSOLIDATION-FUTCOND"
+    }
   ],
   "before": [],
   "inline": [

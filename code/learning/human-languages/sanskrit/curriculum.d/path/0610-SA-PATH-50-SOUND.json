@@ -2,11 +2,26 @@
   "id": "SA-PATH-50-SOUND",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "SA-C50-sound",
-    "SA-C50-question",
-    "SA-C50-voice",
-    "SA-C50-song",
-    "SA-C50-verse"
+    {
+      "lesson": "SA-C50-sound",
+      "extension": "SA-EXT-50-SOUND"
+    },
+    {
+      "lesson": "SA-C50-question",
+      "extension": "SA-EXT-50-SOUND"
+    },
+    {
+      "lesson": "SA-C50-voice",
+      "extension": "SA-EXT-50-SOUND"
+    },
+    {
+      "lesson": "SA-C50-song",
+      "extension": "SA-EXT-50-SOUND"
+    },
+    {
+      "lesson": "SA-C50-verse",
+      "extension": "SA-EXT-50-SOUND"
+    }
   ],
   "before": [],
   "inline": [

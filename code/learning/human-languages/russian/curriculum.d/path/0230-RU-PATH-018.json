@@ -2,11 +2,26 @@
   "id": "RU-PATH-018",
   "spine_node": "SPINE-DESCRIBE-QUALITIES",
   "lessons": [
-    "RU-C17-no",
-    "RU-C17-a",
-    "RU-C17-odin",
-    "RU-C17-drugoy",
-    "RU-W08-tochka"
+    {
+      "lesson": "RU-C17-no",
+      "extension": "RU-EXT-023-CONTRAST"
+    },
+    {
+      "lesson": "RU-C17-a",
+      "extension": "RU-EXT-023-CONTRAST"
+    },
+    {
+      "lesson": "RU-C17-odin",
+      "extension": "RU-EXT-023-CONTRAST"
+    },
+    {
+      "lesson": "RU-C17-drugoy",
+      "extension": "RU-EXT-023-CONTRAST"
+    },
+    {
+      "lesson": "RU-W08-tochka",
+      "extension": "RU-EXT-023-CONTRAST"
+    }
   ],
   "before": [],
   "inline": [

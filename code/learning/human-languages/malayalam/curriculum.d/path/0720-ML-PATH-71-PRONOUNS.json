@@ -2,10 +2,22 @@
   "id": "ML-PATH-71-PRONOUNS",
   "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
   "lessons": [
-    "ML-C71-avan-aval",
-    "ML-C71-avar",
-    "ML-C71-njangal-naam",
-    "ML-R71-pronoun-recall"
+    {
+      "lesson": "ML-C71-avan-aval",
+      "extension": "ML-EXT-71-PRONOUNS"
+    },
+    {
+      "lesson": "ML-C71-avar",
+      "extension": "ML-EXT-71-PRONOUNS"
+    },
+    {
+      "lesson": "ML-C71-njangal-naam",
+      "extension": "ML-EXT-71-PRONOUNS"
+    },
+    {
+      "lesson": "ML-R71-pronoun-recall",
+      "extension": "ML-EXT-71-PRONOUNS"
+    }
   ],
   "before": [],
   "inline": [

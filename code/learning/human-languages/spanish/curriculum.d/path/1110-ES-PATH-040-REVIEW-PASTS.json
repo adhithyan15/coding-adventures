@@ -2,7 +2,10 @@
   "id": "ES-PATH-040-REVIEW-PASTS",
   "spine_node": "SPINE-TALK-ABOUT-PAST",
   "lessons": [
-    "ES-C48-repaso-dos-pasados"
+    {
+      "lesson": "ES-C48-repaso-dos-pasados",
+      "extension": "ES-EXT-040-REVIEW-PASTS"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,11 +2,26 @@
   "id": "ES-PATH-379-01",
   "spine_node": "SPINE-DESCRIBE-QUALITIES",
   "lessons": [
-    "ES-C379-seco",
-    "ES-C379-mojado",
-    "ES-C379-fresco",
-    "ES-C379-tibio",
-    "ES-C379-grueso"
+    {
+      "lesson": "ES-C379-seco",
+      "extension": "ES-EXT-379-COUNT"
+    },
+    {
+      "lesson": "ES-C379-mojado",
+      "extension": "ES-EXT-379-COUNT"
+    },
+    {
+      "lesson": "ES-C379-fresco",
+      "extension": "ES-EXT-379-COUNT"
+    },
+    {
+      "lesson": "ES-C379-tibio",
+      "extension": "ES-EXT-379-COUNT"
+    },
+    {
+      "lesson": "ES-C379-grueso",
+      "extension": "ES-EXT-379-COUNT"
+    }
   ],
   "before": [],
   "inline": [

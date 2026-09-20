@@ -3,9 +3,18 @@
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
     "GU-C01-haa-naa",
-    "GU-W01-haa-guided-copy",
-    "GU-W01-haa-delayed-copy",
-    "GU-W01-haa-dictation",
+    {
+      "lesson": "GU-W01-haa-guided-copy",
+      "extension": "GU-EXT-001-WRITING-RUNWAY"
+    },
+    {
+      "lesson": "GU-W01-haa-delayed-copy",
+      "extension": "GU-EXT-001-WRITING-RUNWAY"
+    },
+    {
+      "lesson": "GU-W01-haa-dictation",
+      "extension": "GU-EXT-001-WRITING-RUNWAY"
+    },
     "GU-C01-saarun"
   ],
   "before": [],

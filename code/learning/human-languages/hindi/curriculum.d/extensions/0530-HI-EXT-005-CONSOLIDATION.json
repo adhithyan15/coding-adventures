@@ -6,8 +6,5 @@
   "canDo": "I can say what I do in Hindi -- speak, live, make -- putting the verb last and matching it to myself.",
   "prerequisites": [
     "HI-EXT-100-SCRIPT-RECOGNITION"
-  ],
-  "lessons": [
-    "HI-C05-practice"
   ]
 }

@@ -3,8 +3,14 @@
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
     "GE-C03-danke",
-    "GE-C03-schoen",
-    "GE-C03-vielen-dank",
+    {
+      "lesson": "GE-C03-schoen",
+      "extension": "GE-EXT-010-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GE-C03-vielen-dank",
+      "extension": "GE-EXT-010-LANGUAGE-SPECIFIC"
+    },
     "GE-C03-bitte"
   ],
   "before": [

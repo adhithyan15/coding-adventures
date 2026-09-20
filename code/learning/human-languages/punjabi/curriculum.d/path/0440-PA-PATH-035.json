@@ -2,9 +2,18 @@
   "id": "PA-PATH-035",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "PA-C33-miharbani-karke",
-    "PA-W09-thattha",
-    "PA-C33-maaf-karo"
+    {
+      "lesson": "PA-C33-miharbani-karke",
+      "extension": "PA-EXT-040-PREA1-PLEASE-AND-SORRY"
+    },
+    {
+      "lesson": "PA-W09-thattha",
+      "extension": "PA-EXT-040-PREA1-PLEASE-AND-SORRY"
+    },
+    {
+      "lesson": "PA-C33-maaf-karo",
+      "extension": "PA-EXT-040-PREA1-PLEASE-AND-SORRY"
+    }
   ],
   "before": [],
   "inline": [

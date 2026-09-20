@@ -2,10 +2,22 @@
   "id": "ES-PATH-381-01",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "ES-C381-lavar",
-    "ES-C381-romper",
-    "ES-C381-saltar",
-    "ES-C381-sonar"
+    {
+      "lesson": "ES-C381-lavar",
+      "extension": "ES-EXT-381-VERB"
+    },
+    {
+      "lesson": "ES-C381-romper",
+      "extension": "ES-EXT-381-VERB"
+    },
+    {
+      "lesson": "ES-C381-saltar",
+      "extension": "ES-EXT-381-VERB"
+    },
+    {
+      "lesson": "ES-C381-sonar",
+      "extension": "ES-EXT-381-VERB"
+    }
   ],
   "before": [],
   "inline": [

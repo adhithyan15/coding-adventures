@@ -2,11 +2,26 @@
   "id": "ES-PATH-323-01",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "ES-C323-ya",
-    "ES-C323-entonces",
-    "ES-C323-antes",
-    "ES-C323-despues",
-    "ES-C323-mientras"
+    {
+      "lesson": "ES-C323-ya",
+      "extension": "ES-EXT-323-WHEN"
+    },
+    {
+      "lesson": "ES-C323-entonces",
+      "extension": "ES-EXT-323-WHEN"
+    },
+    {
+      "lesson": "ES-C323-antes",
+      "extension": "ES-EXT-323-WHEN"
+    },
+    {
+      "lesson": "ES-C323-despues",
+      "extension": "ES-EXT-323-WHEN"
+    },
+    {
+      "lesson": "ES-C323-mientras",
+      "extension": "ES-EXT-323-WHEN"
+    }
   ],
   "before": [],
   "inline": [

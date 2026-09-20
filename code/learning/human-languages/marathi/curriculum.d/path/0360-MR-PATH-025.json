@@ -2,11 +2,26 @@
   "id": "MR-PATH-025",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "MR-C23-basne",
-    "MR-C23-vatne",
-    "MR-C23-jhopne",
-    "MR-C23-chalne",
-    "MR-R23-wellbeing-verbs"
+    {
+      "lesson": "MR-C23-basne",
+      "extension": "MR-EXT-028-WELLBEING-VERBS"
+    },
+    {
+      "lesson": "MR-C23-vatne",
+      "extension": "MR-EXT-028-WELLBEING-VERBS"
+    },
+    {
+      "lesson": "MR-C23-jhopne",
+      "extension": "MR-EXT-028-WELLBEING-VERBS"
+    },
+    {
+      "lesson": "MR-C23-chalne",
+      "extension": "MR-EXT-028-WELLBEING-VERBS"
+    },
+    {
+      "lesson": "MR-R23-wellbeing-verbs",
+      "extension": "MR-EXT-028-WELLBEING-VERBS"
+    }
   ],
   "before": [],
   "inline": [

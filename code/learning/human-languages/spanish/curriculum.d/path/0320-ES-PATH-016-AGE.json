@@ -2,8 +2,14 @@
   "id": "ES-PATH-016-AGE",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "ES-C08-cuantos-anos",
-    "ES-C08-practice"
+    {
+      "lesson": "ES-C08-cuantos-anos",
+      "extension": "ES-EXT-016-AGE-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C08-practice",
+      "extension": "ES-EXT-016-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [

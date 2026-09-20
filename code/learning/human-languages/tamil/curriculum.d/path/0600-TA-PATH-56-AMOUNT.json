@@ -2,11 +2,26 @@
   "id": "TA-PATH-56-AMOUNT",
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
-    "TA-C56-a-little",
-    "TA-C56-a-lot",
-    "TA-C56-less",
-    "TA-C56-no-need",
-    "TA-C56-let-it-be"
+    {
+      "lesson": "TA-C56-a-little",
+      "extension": "TA-EXT-56-AMOUNT"
+    },
+    {
+      "lesson": "TA-C56-a-lot",
+      "extension": "TA-EXT-56-AMOUNT"
+    },
+    {
+      "lesson": "TA-C56-less",
+      "extension": "TA-EXT-56-AMOUNT"
+    },
+    {
+      "lesson": "TA-C56-no-need",
+      "extension": "TA-EXT-56-AMOUNT"
+    },
+    {
+      "lesson": "TA-C56-let-it-be",
+      "extension": "TA-EXT-56-AMOUNT"
+    }
   ],
   "before": [],
   "inline": [

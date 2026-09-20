@@ -2,9 +2,18 @@
   "id": "UR-PATH-008-B",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "UR-C07-parhna",
-    "UR-C07-likhna",
-    "UR-W08-vao"
+    {
+      "lesson": "UR-C07-parhna",
+      "extension": "UR-EXT-018-MIND-VERBS-B"
+    },
+    {
+      "lesson": "UR-C07-likhna",
+      "extension": "UR-EXT-018-MIND-VERBS-B"
+    },
+    {
+      "lesson": "UR-W08-vao",
+      "extension": "UR-EXT-018D-SCRIPT-VAO"
+    }
   ],
   "before": [],
   "inline": [

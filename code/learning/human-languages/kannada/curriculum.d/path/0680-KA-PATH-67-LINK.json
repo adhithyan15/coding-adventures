@@ -2,10 +2,22 @@
   "id": "KA-PATH-67-LINK",
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
-    "KA-C67-and",
-    "KA-C67-or",
-    "KA-C67-but",
-    "KA-C67-and-too"
+    {
+      "lesson": "KA-C67-and",
+      "extension": "KA-EXT-67-LINK"
+    },
+    {
+      "lesson": "KA-C67-or",
+      "extension": "KA-EXT-67-LINK"
+    },
+    {
+      "lesson": "KA-C67-but",
+      "extension": "KA-EXT-67-LINK"
+    },
+    {
+      "lesson": "KA-C67-and-too",
+      "extension": "KA-EXT-67-LINK"
+    }
   ],
   "before": [],
   "inline": [

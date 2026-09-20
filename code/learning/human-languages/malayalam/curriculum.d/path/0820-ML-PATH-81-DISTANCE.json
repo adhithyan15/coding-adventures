@@ -2,10 +2,22 @@
   "id": "ML-PATH-81-DISTANCE",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "ML-C81-aduthu",
-    "ML-C81-akale",
-    "ML-C81-dooram",
-    "ML-R81-distance-recall"
+    {
+      "lesson": "ML-C81-aduthu",
+      "extension": "ML-EXT-81-DISTANCE"
+    },
+    {
+      "lesson": "ML-C81-akale",
+      "extension": "ML-EXT-81-DISTANCE"
+    },
+    {
+      "lesson": "ML-C81-dooram",
+      "extension": "ML-EXT-81-DISTANCE"
+    },
+    {
+      "lesson": "ML-R81-distance-recall",
+      "extension": "ML-EXT-81-DISTANCE"
+    }
   ],
   "before": [],
   "inline": [

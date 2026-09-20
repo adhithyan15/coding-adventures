@@ -2,7 +2,10 @@
   "id": "LA-PATH-026-C",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "LA-C38-intellego"
+    {
+      "lesson": "LA-C38-intellego",
+      "extension": "LA-EXT-026-LANGUAGE-SPECIFIC-C"
+    }
   ],
   "before": [],
   "inline": [

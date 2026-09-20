@@ -2,11 +2,26 @@
   "id": "GU-PATH-034",
   "spine_node": "SPINE-SAY-WHAT-I-WANT",
   "lessons": [
-    "GU-C35-jo",
-    "GU-C35-jo-to",
-    "GU-C35-jo-write",
-    "GU-C35-jyaare",
-    "GU-C35-condition-checkpoint"
+    {
+      "lesson": "GU-C35-jo",
+      "extension": "GU-EXT-046-CONDITION"
+    },
+    {
+      "lesson": "GU-C35-jo-to",
+      "extension": "GU-EXT-046-CONDITION"
+    },
+    {
+      "lesson": "GU-C35-jo-write",
+      "extension": "GU-EXT-046-CONDITION"
+    },
+    {
+      "lesson": "GU-C35-jyaare",
+      "extension": "GU-EXT-046-CONDITION"
+    },
+    {
+      "lesson": "GU-C35-condition-checkpoint",
+      "extension": "GU-EXT-046-CONDITION"
+    }
   ],
   "before": [],
   "inline": [

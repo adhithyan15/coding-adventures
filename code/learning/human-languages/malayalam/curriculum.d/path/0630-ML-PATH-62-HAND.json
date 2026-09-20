@@ -2,11 +2,26 @@
   "id": "ML-PATH-62-HAND",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "ML-C62-rope",
-    "ML-C62-thread",
-    "ML-C62-needle",
-    "ML-C62-broom",
-    "ML-C62-winnowing-tray"
+    {
+      "lesson": "ML-C62-rope",
+      "extension": "ML-EXT-62-HAND"
+    },
+    {
+      "lesson": "ML-C62-thread",
+      "extension": "ML-EXT-62-HAND"
+    },
+    {
+      "lesson": "ML-C62-needle",
+      "extension": "ML-EXT-62-HAND"
+    },
+    {
+      "lesson": "ML-C62-broom",
+      "extension": "ML-EXT-62-HAND"
+    },
+    {
+      "lesson": "ML-C62-winnowing-tray",
+      "extension": "ML-EXT-62-HAND"
+    }
   ],
   "before": [],
   "inline": [

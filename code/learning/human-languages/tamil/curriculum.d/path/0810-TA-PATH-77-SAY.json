@@ -2,10 +2,22 @@
   "id": "TA-PATH-77-SAY",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "TA-C77-say",
-    "TA-C77-quotative",
-    "TA-W32-read-sol",
-    "TA-C77-opinion"
+    {
+      "lesson": "TA-C77-say",
+      "extension": "TA-EXT-77-SAY"
+    },
+    {
+      "lesson": "TA-C77-quotative",
+      "extension": "TA-EXT-77-SAY"
+    },
+    {
+      "lesson": "TA-W32-read-sol",
+      "extension": "TA-EXT-77-SAY"
+    },
+    {
+      "lesson": "TA-C77-opinion",
+      "extension": "TA-EXT-77-SAY"
+    }
   ],
   "before": [],
   "inline": [

@@ -6,9 +6,5 @@
   "canDo": "I can retrieve four location frames as one map.",
   "prerequisites": [
     "ES-EXT-407-LOCATIONS"
-  ],
-  "lessons": [
-    "ES-C407-location-recall-1",
-    "ES-C407-location-recall-2"
   ]
 }

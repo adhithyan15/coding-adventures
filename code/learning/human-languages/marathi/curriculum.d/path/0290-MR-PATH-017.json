@@ -2,10 +2,22 @@
   "id": "MR-PATH-017",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "MR-C12-dola",
-    "MR-C12-kaan",
-    "MR-C12-tond",
-    "MR-C12-naak"
+    {
+      "lesson": "MR-C12-dola",
+      "extension": "MR-EXT-017-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "MR-C12-kaan",
+      "extension": "MR-EXT-017-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "MR-C12-tond",
+      "extension": "MR-EXT-017-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "MR-C12-naak",
+      "extension": "MR-EXT-017-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,8 +2,14 @@
   "id": "LA-PATH-018",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "LA-C17-canis-feles-cattus",
-    "LA-C18-viridis-flavus"
+    {
+      "lesson": "LA-C17-canis-feles-cattus",
+      "extension": "LA-EXT-018-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "LA-C18-viridis-flavus",
+      "extension": "LA-EXT-018-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

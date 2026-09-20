@@ -2,11 +2,26 @@
   "id": "ES-PATH-353-01",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "ES-C353-hospital",
-    "ES-C353-banco",
-    "ES-C353-farmacia",
-    "ES-C353-biblioteca",
-    "ES-C353-museo"
+    {
+      "lesson": "ES-C353-hospital",
+      "extension": "ES-EXT-353-PLACE"
+    },
+    {
+      "lesson": "ES-C353-banco",
+      "extension": "ES-EXT-353-PLACE"
+    },
+    {
+      "lesson": "ES-C353-farmacia",
+      "extension": "ES-EXT-353-PLACE"
+    },
+    {
+      "lesson": "ES-C353-biblioteca",
+      "extension": "ES-EXT-353-PLACE"
+    },
+    {
+      "lesson": "ES-C353-museo",
+      "extension": "ES-EXT-353-PLACE"
+    }
   ],
   "before": [],
   "inline": [

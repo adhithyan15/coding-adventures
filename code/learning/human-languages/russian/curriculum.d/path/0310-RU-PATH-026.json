@@ -2,12 +2,30 @@
   "id": "RU-PATH-026",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "RU-C24-shest",
-    "RU-C24-sem",
-    "RU-C24-vosem",
-    "RU-C24-devyat",
-    "RU-C24-desyat",
-    "RU-C24-practice"
+    {
+      "lesson": "RU-C24-shest",
+      "extension": "RU-EXT-031-COUNT-TEN"
+    },
+    {
+      "lesson": "RU-C24-sem",
+      "extension": "RU-EXT-031-COUNT-TEN"
+    },
+    {
+      "lesson": "RU-C24-vosem",
+      "extension": "RU-EXT-031-COUNT-TEN"
+    },
+    {
+      "lesson": "RU-C24-devyat",
+      "extension": "RU-EXT-031-COUNT-TEN"
+    },
+    {
+      "lesson": "RU-C24-desyat",
+      "extension": "RU-EXT-031-COUNT-TEN"
+    },
+    {
+      "lesson": "RU-C24-practice",
+      "extension": "RU-EXT-031-COUNT-TEN"
+    }
   ],
   "before": [],
   "inline": [],

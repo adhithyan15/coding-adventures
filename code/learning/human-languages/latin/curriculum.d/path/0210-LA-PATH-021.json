@@ -3,11 +3,26 @@
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
     "LA-C23-nihil-est",
-    "LA-C47-sal",
-    "LA-C47-mel",
-    "LA-C47-lac",
-    "LA-C47-ovum",
-    "LA-C47-piscis"
+    {
+      "lesson": "LA-C47-sal",
+      "extension": "LA-EXT-047-TABLE"
+    },
+    {
+      "lesson": "LA-C47-mel",
+      "extension": "LA-EXT-047-TABLE"
+    },
+    {
+      "lesson": "LA-C47-lac",
+      "extension": "LA-EXT-047-TABLE"
+    },
+    {
+      "lesson": "LA-C47-ovum",
+      "extension": "LA-EXT-047-TABLE"
+    },
+    {
+      "lesson": "LA-C47-piscis",
+      "extension": "LA-EXT-047-TABLE"
+    }
   ],
   "before": [],
   "inline": [],

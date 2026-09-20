@@ -2,11 +2,26 @@
   "id": "SA-PATH-52-JOINS",
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
-    "SA-C52-ca",
-    "SA-C52-va",
-    "SA-C52-kintu",
-    "SA-C52-na-na",
-    "SA-R52-joins"
+    {
+      "lesson": "SA-C52-ca",
+      "extension": "SA-EXT-052-JOINS"
+    },
+    {
+      "lesson": "SA-C52-va",
+      "extension": "SA-EXT-052-JOINS"
+    },
+    {
+      "lesson": "SA-C52-kintu",
+      "extension": "SA-EXT-052-JOINS"
+    },
+    {
+      "lesson": "SA-C52-na-na",
+      "extension": "SA-EXT-052-JOINS"
+    },
+    {
+      "lesson": "SA-R52-joins",
+      "extension": "SA-EXT-052-JOINS"
+    }
   ],
   "before": [],
   "inline": [

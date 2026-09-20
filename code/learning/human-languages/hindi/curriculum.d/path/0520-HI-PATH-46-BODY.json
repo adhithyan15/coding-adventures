@@ -2,11 +2,26 @@
   "id": "HI-PATH-46-BODY",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "HI-C46-hair",
-    "HI-C46-finger",
-    "HI-C46-ear",
-    "HI-C46-nose",
-    "HI-C46-throat"
+    {
+      "lesson": "HI-C46-hair",
+      "extension": "HI-EXT-46-BODY"
+    },
+    {
+      "lesson": "HI-C46-finger",
+      "extension": "HI-EXT-46-BODY"
+    },
+    {
+      "lesson": "HI-C46-ear",
+      "extension": "HI-EXT-46-BODY"
+    },
+    {
+      "lesson": "HI-C46-nose",
+      "extension": "HI-EXT-46-BODY"
+    },
+    {
+      "lesson": "HI-C46-throat",
+      "extension": "HI-EXT-46-BODY"
+    }
   ],
   "before": [],
   "inline": [

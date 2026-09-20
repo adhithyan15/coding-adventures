@@ -2,11 +2,26 @@
   "id": "ML-PATH-53-SKY",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "ML-C53-sky",
-    "ML-C53-sun",
-    "ML-C53-moon",
-    "ML-C53-star",
-    "ML-C53-sunshine"
+    {
+      "lesson": "ML-C53-sky",
+      "extension": "ML-EXT-53-SKY"
+    },
+    {
+      "lesson": "ML-C53-sun",
+      "extension": "ML-EXT-53-SKY"
+    },
+    {
+      "lesson": "ML-C53-moon",
+      "extension": "ML-EXT-53-SKY"
+    },
+    {
+      "lesson": "ML-C53-star",
+      "extension": "ML-EXT-53-SKY"
+    },
+    {
+      "lesson": "ML-C53-sunshine",
+      "extension": "ML-EXT-53-SKY"
+    }
   ],
   "before": [],
   "inline": [

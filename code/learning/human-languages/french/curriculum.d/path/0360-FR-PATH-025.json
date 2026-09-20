@@ -2,10 +2,22 @@
   "id": "FR-PATH-025",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "FR-C28-cafe",
-    "FR-C28-the",
-    "FR-C28-lait",
-    "FR-C28-sucre"
+    {
+      "lesson": "FR-C28-cafe",
+      "extension": "FR-EXT-025-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C28-the",
+      "extension": "FR-EXT-025-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C28-lait",
+      "extension": "FR-EXT-025-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C28-sucre",
+      "extension": "FR-EXT-025-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

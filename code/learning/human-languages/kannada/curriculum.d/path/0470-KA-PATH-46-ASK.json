@@ -2,11 +2,26 @@
   "id": "KA-PATH-46-ASK",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "KA-C46-fruit",
-    "KA-C46-cloth",
-    "KA-C46-lamp",
-    "KA-C46-salt",
-    "KA-C46-book"
+    {
+      "lesson": "KA-C46-fruit",
+      "extension": "KA-EXT-46-ASK"
+    },
+    {
+      "lesson": "KA-C46-cloth",
+      "extension": "KA-EXT-46-ASK"
+    },
+    {
+      "lesson": "KA-C46-lamp",
+      "extension": "KA-EXT-46-ASK"
+    },
+    {
+      "lesson": "KA-C46-salt",
+      "extension": "KA-EXT-46-ASK"
+    },
+    {
+      "lesson": "KA-C46-book",
+      "extension": "KA-EXT-46-ASK"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,10 +2,22 @@
   "id": "ML-PATH-95-OPEN-CLOSED",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ML-C95-thurakkuka",
-    "ML-C95-adaykkuka",
-    "ML-C95-akathu-purathu",
-    "ML-R95-open-closed-recall"
+    {
+      "lesson": "ML-C95-thurakkuka",
+      "extension": "ML-EXT-95-OPEN-CLOSED"
+    },
+    {
+      "lesson": "ML-C95-adaykkuka",
+      "extension": "ML-EXT-95-OPEN-CLOSED"
+    },
+    {
+      "lesson": "ML-C95-akathu-purathu",
+      "extension": "ML-EXT-95-OPEN-CLOSED"
+    },
+    {
+      "lesson": "ML-R95-open-closed-recall",
+      "extension": "ML-EXT-95-OPEN-CLOSED"
+    }
   ],
   "before": [],
   "inline": [

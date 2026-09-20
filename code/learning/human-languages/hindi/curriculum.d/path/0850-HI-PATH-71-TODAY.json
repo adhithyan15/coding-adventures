@@ -2,9 +2,18 @@
   "id": "HI-PATH-71-TODAY",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "HI-C71-today",
-    "HI-C71-also",
-    "HI-C71-very"
+    {
+      "lesson": "HI-C71-today",
+      "extension": "HI-EXT-71-TODAY"
+    },
+    {
+      "lesson": "HI-C71-also",
+      "extension": "HI-EXT-71-TODAY"
+    },
+    {
+      "lesson": "HI-C71-very",
+      "extension": "HI-EXT-71-TODAY"
+    }
   ],
   "before": [],
   "inline": [

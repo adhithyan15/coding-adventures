@@ -2,9 +2,18 @@
   "id": "TE-PATH-020",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "TE-C16-nelalu",
-    "TE-C17-madhyaahnam-ardharaatri",
-    "TE-C18-ganta"
+    {
+      "lesson": "TE-C16-nelalu",
+      "extension": "TE-EXT-020-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "TE-C17-madhyaahnam-ardharaatri",
+      "extension": "TE-EXT-020-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "TE-C18-ganta",
+      "extension": "TE-EXT-020-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

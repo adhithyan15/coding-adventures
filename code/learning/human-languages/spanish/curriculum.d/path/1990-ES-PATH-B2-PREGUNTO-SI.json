@@ -2,7 +2,10 @@
   "id": "ES-PATH-B2-PREGUNTO-SI",
   "spine_node": "SPINE-REPORT-WHAT-OTHERS-SAID",
   "lessons": [
-    "ES-C57-pregunto-si"
+    {
+      "lesson": "ES-C57-pregunto-si",
+      "extension": "ES-EXT-B2-PREGUNTO-SI"
+    }
   ],
   "before": [],
   "inline": [

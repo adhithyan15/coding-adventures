@@ -2,9 +2,18 @@
   "id": "MR-PATH-012-C",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "MR-C07-khane",
-    "MR-C07-pahne",
-    "MR-C07-mahit-asne"
+    {
+      "lesson": "MR-C07-khane",
+      "extension": "MR-EXT-012-CORE-VERBS-C"
+    },
+    {
+      "lesson": "MR-C07-pahne",
+      "extension": "MR-EXT-012-CORE-VERBS-C"
+    },
+    {
+      "lesson": "MR-C07-mahit-asne",
+      "extension": "MR-EXT-012-CORE-VERBS-C"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,8 +2,14 @@
   "id": "ES-PATH-003-REVIEW-ART",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C44-repaso-articulos",
-    "ES-C44-repaso-ir-ida"
+    {
+      "lesson": "ES-C44-repaso-articulos",
+      "extension": "ES-EXT-003-REVIEW-ART"
+    },
+    {
+      "lesson": "ES-C44-repaso-ir-ida",
+      "extension": "ES-EXT-003-REVIEW-ART"
+    }
   ],
   "before": [],
   "inline": [

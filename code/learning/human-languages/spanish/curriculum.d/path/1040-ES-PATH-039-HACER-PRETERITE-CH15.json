@@ -2,7 +2,10 @@
   "id": "ES-PATH-039-HACER-PRETERITE-CH15",
   "spine_node": "SPINE-TALK-ABOUT-PAST",
   "lessons": [
-    "ES-C15-hacer-preterite"
+    {
+      "lesson": "ES-C15-hacer-preterite",
+      "extension": "ES-EXT-039-HACER-PRETERITE-CH15"
+    }
   ],
   "before": [],
   "inline": [

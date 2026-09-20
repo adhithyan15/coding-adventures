@@ -2,10 +2,22 @@
   "id": "SA-PATH-21-VERBS",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "SA-C21-dance",
-    "SA-C21-laugh",
-    "SA-C21-stand",
-    "SA-C21-remember"
+    {
+      "lesson": "SA-C21-dance",
+      "extension": "SA-EXT-21-VERBS"
+    },
+    {
+      "lesson": "SA-C21-laugh",
+      "extension": "SA-EXT-21-VERBS"
+    },
+    {
+      "lesson": "SA-C21-stand",
+      "extension": "SA-EXT-21-VERBS"
+    },
+    {
+      "lesson": "SA-C21-remember",
+      "extension": "SA-EXT-21-VERBS"
+    }
   ],
   "before": [],
   "inline": [

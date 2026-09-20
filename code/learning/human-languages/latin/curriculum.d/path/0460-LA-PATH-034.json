@@ -2,11 +2,26 @@
   "id": "LA-PATH-034",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "LA-C50-hic",
-    "LA-C50-iste",
-    "LA-C50-ille",
-    "LA-C50-is",
-    "LA-C50-ibi"
+    {
+      "lesson": "LA-C50-hic",
+      "extension": "LA-EXT-050-POINT"
+    },
+    {
+      "lesson": "LA-C50-iste",
+      "extension": "LA-EXT-050-POINT"
+    },
+    {
+      "lesson": "LA-C50-ille",
+      "extension": "LA-EXT-050-POINT"
+    },
+    {
+      "lesson": "LA-C50-is",
+      "extension": "LA-EXT-050-POINT"
+    },
+    {
+      "lesson": "LA-C50-ibi",
+      "extension": "LA-EXT-050-POINT"
+    }
   ],
   "before": [],
   "inline": [],

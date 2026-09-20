@@ -2,11 +2,26 @@
   "id": "GU-PATH-036",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "GU-C37-kon",
-    "GU-C37-kyaan",
-    "GU-C37-kyaan-write",
-    "GU-C37-kyaare",
-    "GU-C37-ketla"
+    {
+      "lesson": "GU-C37-kon",
+      "extension": "GU-EXT-048-QUESTIONS"
+    },
+    {
+      "lesson": "GU-C37-kyaan",
+      "extension": "GU-EXT-048-QUESTIONS"
+    },
+    {
+      "lesson": "GU-C37-kyaan-write",
+      "extension": "GU-EXT-048-QUESTIONS"
+    },
+    {
+      "lesson": "GU-C37-kyaare",
+      "extension": "GU-EXT-048-QUESTIONS"
+    },
+    {
+      "lesson": "GU-C37-ketla",
+      "extension": "GU-EXT-048-QUESTIONS"
+    }
   ],
   "before": [],
   "inline": [

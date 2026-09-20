@@ -4,21 +4,5 @@
   "kind": "required",
   "category": "script",
   "canDo": "I can trace, copy, recall and take down from dictation the first Bengali letter, and draw one head-line across a pair rather than two short ones.",
-  "prerequisites": [],
-  "lessons": [
-    "BN-W01-na",
-    "BN-W01-na-trace",
-    "BN-W01-na-guided-copy",
-    "BN-W01-na-delayed-copy",
-    "BN-W01-na-dictation",
-    "BN-W01-aa-matra",
-    "BN-W01-aa",
-    "BN-W01-ha",
-    "BN-W01-ma",
-    "BN-W01-sa",
-    "BN-W01-ka",
-    "BN-W01-hasanta",
-    "BN-W01-ra",
-    "BN-W01-nomoshkar-read"
-  ]
+  "prerequisites": []
 }

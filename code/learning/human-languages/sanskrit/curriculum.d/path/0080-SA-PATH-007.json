@@ -3,7 +3,10 @@
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
     "SA-C03-na-cinta",
-    "SA-C03-practice"
+    {
+      "lesson": "SA-C03-practice",
+      "extension": "SA-EXT-55-CH3-RECAP"
+    }
   ],
   "before": [],
   "inline": [

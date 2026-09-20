@@ -2,8 +2,14 @@
   "id": "ES-PATH-A1-ORDEN",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C67-hoy-como-en-casa",
-    "ES-C67-repaso-la-terminacion-y-el-infinitivo"
+    {
+      "lesson": "ES-C67-hoy-como-en-casa",
+      "extension": "ES-EXT-A1-ORDEN"
+    },
+    {
+      "lesson": "ES-C67-repaso-la-terminacion-y-el-infinitivo",
+      "extension": "ES-EXT-A1-ORDEN"
+    }
   ],
   "before": [],
   "inline": [

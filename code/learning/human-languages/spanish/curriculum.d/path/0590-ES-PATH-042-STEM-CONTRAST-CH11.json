@@ -2,7 +2,10 @@
   "id": "ES-PATH-042-STEM-CONTRAST-CH11",
   "spine_node": "SPINE-SAY-WHAT-I-WANT",
   "lessons": [
-    "ES-C11-stem-changes"
+    {
+      "lesson": "ES-C11-stem-changes",
+      "extension": "ES-EXT-042-STEM-CONTRAST-CH11"
+    }
   ],
   "before": [],
   "inline": [

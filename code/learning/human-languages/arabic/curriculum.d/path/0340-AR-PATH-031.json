@@ -2,10 +2,22 @@
   "id": "AR-PATH-031",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "AR-C34-milh",
-    "AR-C34-lahm",
-    "AR-C34-jubn",
-    "AR-C34-taam"
+    {
+      "lesson": "AR-C34-milh",
+      "extension": "AR-EXT-031-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "AR-C34-lahm",
+      "extension": "AR-EXT-031-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "AR-C34-jubn",
+      "extension": "AR-EXT-031-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "AR-C34-taam",
+      "extension": "AR-EXT-031-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

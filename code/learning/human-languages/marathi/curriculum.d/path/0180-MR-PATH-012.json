@@ -2,8 +2,14 @@
   "id": "MR-PATH-012",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "MR-C07-asne",
-    "MR-C07-jane"
+    {
+      "lesson": "MR-C07-asne",
+      "extension": "MR-EXT-012-CORE-VERBS"
+    },
+    {
+      "lesson": "MR-C07-jane",
+      "extension": "MR-EXT-012-CORE-VERBS"
+    }
   ],
   "before": [],
   "inline": [

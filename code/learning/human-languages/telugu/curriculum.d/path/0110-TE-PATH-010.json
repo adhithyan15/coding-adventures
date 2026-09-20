@@ -2,11 +2,17 @@
   "id": "TE-PATH-010",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "TE-C04-vellu",
+    {
+      "lesson": "TE-C04-vellu",
+      "extension": "TE-EXT-010-LANGUAGE-SPECIFIC"
+    },
     "TE-C04-velli-vastaanu",
     "TE-C04-reepu-kaluddaam",
     "TE-C04-malli-kaluddaam",
-    "TE-C04-practice"
+    {
+      "lesson": "TE-C04-practice",
+      "extension": "TE-EXT-010-CONSOLIDATION"
+    }
   ],
   "before": [
     "TE-EXT-010-LANGUAGE-SPECIFIC"

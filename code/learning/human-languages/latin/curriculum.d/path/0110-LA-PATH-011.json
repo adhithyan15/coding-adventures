@@ -2,8 +2,14 @@
   "id": "LA-PATH-011",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "LA-C08-caput",
-    "LA-C08-manus"
+    {
+      "lesson": "LA-C08-caput",
+      "extension": "LA-EXT-011-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "LA-C08-manus",
+      "extension": "LA-EXT-011-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

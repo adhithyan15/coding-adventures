@@ -2,9 +2,18 @@
   "id": "GE-PATH-A1-LESUNG",
   "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
   "lessons": [
-    "GE-C52-words",
-    "GE-C52-saetze",
-    "GE-C52-erste-lesung"
+    {
+      "lesson": "GE-C52-words",
+      "extension": "GE-EXT-A1-LESUNG"
+    },
+    {
+      "lesson": "GE-C52-saetze",
+      "extension": "GE-EXT-A1-LESUNG"
+    },
+    {
+      "lesson": "GE-C52-erste-lesung",
+      "extension": "GE-EXT-A1-LESUNG"
+    }
   ],
   "before": [],
   "inline": [

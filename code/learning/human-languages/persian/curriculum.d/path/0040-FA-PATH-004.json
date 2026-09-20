@@ -3,11 +3,26 @@
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
     "FA-C02-esm-e-man",
-    "FA-C03-shoma-to",
-    "FA-C03-chist",
-    "FA-C03-esm-e-shoma-chist",
-    "FA-C03-khoshvaghtam",
-    "FA-C03-practice"
+    {
+      "lesson": "FA-C03-shoma-to",
+      "extension": "FA-EXT-002-REGISTER"
+    },
+    {
+      "lesson": "FA-C03-chist",
+      "extension": "FA-EXT-003-SCRIPT"
+    },
+    {
+      "lesson": "FA-C03-esm-e-shoma-chist",
+      "extension": "FA-EXT-004-GRAMMAR"
+    },
+    {
+      "lesson": "FA-C03-khoshvaghtam",
+      "extension": "FA-EXT-005-ETYMOLOGY"
+    },
+    {
+      "lesson": "FA-C03-practice",
+      "extension": "FA-EXT-006-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,13 +2,34 @@
   "id": "MW-PATH-007",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "MW-C07-hear-later",
-    "MW-W07-chha",
-    "MW-W07-e-matra",
-    "MW-W07-i-matra",
-    "MW-W07-la",
-    "MW-C07-read-later",
-    "MW-C07-practice"
+    {
+      "lesson": "MW-C07-hear-later",
+      "extension": "MW-EXT-019-HEAR-LATER"
+    },
+    {
+      "lesson": "MW-W07-chha",
+      "extension": "MW-EXT-020-WRITE-LATER"
+    },
+    {
+      "lesson": "MW-W07-e-matra",
+      "extension": "MW-EXT-020-WRITE-LATER"
+    },
+    {
+      "lesson": "MW-W07-i-matra",
+      "extension": "MW-EXT-020-WRITE-LATER"
+    },
+    {
+      "lesson": "MW-W07-la",
+      "extension": "MW-EXT-020-WRITE-LATER"
+    },
+    {
+      "lesson": "MW-C07-read-later",
+      "extension": "MW-EXT-020-WRITE-LATER"
+    },
+    {
+      "lesson": "MW-C07-practice",
+      "extension": "MW-EXT-021-FAREWELL-LATER"
+    }
   ],
   "before": [],
   "inline": [

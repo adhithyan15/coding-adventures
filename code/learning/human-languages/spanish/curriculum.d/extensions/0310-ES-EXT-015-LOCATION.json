@@ -4,8 +4,5 @@
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can locate someone with estar and en.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-C09-esta-en"
-  ]
+  "prerequisites": []
 }

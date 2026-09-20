@@ -2,8 +2,14 @@
   "id": "ES-PATH-409-REVIEWS",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "ES-C409-planning-recall-1",
-    "ES-C409-planning-recall-2"
+    {
+      "lesson": "ES-C409-planning-recall-1",
+      "extension": "ES-EXT-409-REVIEWS"
+    },
+    {
+      "lesson": "ES-C409-planning-recall-2",
+      "extension": "ES-EXT-409-REVIEWS"
+    }
   ],
   "before": [],
   "inline": [

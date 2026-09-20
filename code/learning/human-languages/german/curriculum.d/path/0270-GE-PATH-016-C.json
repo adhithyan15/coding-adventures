@@ -2,19 +2,58 @@
   "id": "GE-PATH-016-C",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "GE-C10-vater",
-    "GE-C10-vater-pater",
-    "GE-C10-mutter",
-    "GE-C10-mutter-mater",
-    "GE-C10-eltern",
-    "GE-C10-bruder",
-    "GE-C10-bruder-frater",
-    "GE-C10-schw",
-    "GE-C10-schwester",
-    "GE-C10-schwester-soror",
-    "GE-C10-geschwister-wort",
-    "GE-C10-ge-kollektiv",
-    "GE-C10-geschwister"
+    {
+      "lesson": "GE-C10-vater",
+      "extension": "GE-EXT-016-C-FAMILIE"
+    },
+    {
+      "lesson": "GE-C10-vater-pater",
+      "extension": "GE-EXT-016-C-FAMILIE"
+    },
+    {
+      "lesson": "GE-C10-mutter",
+      "extension": "GE-EXT-016-C-FAMILIE"
+    },
+    {
+      "lesson": "GE-C10-mutter-mater",
+      "extension": "GE-EXT-016-C-FAMILIE"
+    },
+    {
+      "lesson": "GE-C10-eltern",
+      "extension": "GE-EXT-016-C-FAMILIE"
+    },
+    {
+      "lesson": "GE-C10-bruder",
+      "extension": "GE-EXT-016-C-FAMILIE"
+    },
+    {
+      "lesson": "GE-C10-bruder-frater",
+      "extension": "GE-EXT-016-C-FAMILIE"
+    },
+    {
+      "lesson": "GE-C10-schw",
+      "extension": "GE-EXT-016-C-FAMILIE"
+    },
+    {
+      "lesson": "GE-C10-schwester",
+      "extension": "GE-EXT-016-C-FAMILIE"
+    },
+    {
+      "lesson": "GE-C10-schwester-soror",
+      "extension": "GE-EXT-016-C-FAMILIE"
+    },
+    {
+      "lesson": "GE-C10-geschwister-wort",
+      "extension": "GE-EXT-016-C-FAMILIE"
+    },
+    {
+      "lesson": "GE-C10-ge-kollektiv",
+      "extension": "GE-EXT-016-C-FAMILIE"
+    },
+    {
+      "lesson": "GE-C10-geschwister",
+      "extension": "GE-EXT-016-C-FAMILIE"
+    }
   ],
   "before": [],
   "inline": [

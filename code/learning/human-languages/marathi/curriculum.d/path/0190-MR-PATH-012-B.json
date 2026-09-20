@@ -2,7 +2,10 @@
   "id": "MR-PATH-012-B",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "MR-C07-yene"
+    {
+      "lesson": "MR-C07-yene",
+      "extension": "MR-EXT-012-CORE-VERBS-B"
+    }
   ],
   "before": [],
   "inline": [

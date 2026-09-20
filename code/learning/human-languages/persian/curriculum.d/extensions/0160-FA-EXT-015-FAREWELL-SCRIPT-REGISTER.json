@@ -6,8 +6,5 @@
   "canDo": "I can read joined خداحافظ and use it as a broadly polite close without supplying an unlearned verb.",
   "prerequisites": [
     "FA-EXT-014-HAFEZ-ROOT"
-  ],
-  "lessons": [
-    "FA-C05-khodahafez"
   ]
 }

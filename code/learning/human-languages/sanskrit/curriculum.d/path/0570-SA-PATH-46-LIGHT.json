@@ -2,11 +2,26 @@
   "id": "SA-PATH-46-LIGHT",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "SA-C46-sun",
-    "SA-C46-ray",
-    "SA-C46-light",
-    "SA-C46-shade",
-    "SA-C46-heat"
+    {
+      "lesson": "SA-C46-sun",
+      "extension": "SA-EXT-46-LIGHT"
+    },
+    {
+      "lesson": "SA-C46-ray",
+      "extension": "SA-EXT-46-LIGHT"
+    },
+    {
+      "lesson": "SA-C46-light",
+      "extension": "SA-EXT-46-LIGHT"
+    },
+    {
+      "lesson": "SA-C46-shade",
+      "extension": "SA-EXT-46-LIGHT"
+    },
+    {
+      "lesson": "SA-C46-heat",
+      "extension": "SA-EXT-46-LIGHT"
+    }
   ],
   "before": [],
   "inline": [

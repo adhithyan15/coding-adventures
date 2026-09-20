@@ -4,10 +4,5 @@
   "kind": "required",
   "category": "grammar",
   "canDo": "I can say what I like, with the dative experiencer and rocate.",
-  "prerequisites": [],
-  "lessons": [
-    "SA-C58-mahyam",
-    "SA-C58-rocate",
-    "SA-R58-likes"
-  ]
+  "prerequisites": []
 }

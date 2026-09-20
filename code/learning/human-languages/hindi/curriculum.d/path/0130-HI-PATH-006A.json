@@ -2,7 +2,10 @@
   "id": "HI-PATH-006A",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "HI-C03-practice"
+    {
+      "lesson": "HI-C03-practice",
+      "extension": "HI-EXT-003-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [

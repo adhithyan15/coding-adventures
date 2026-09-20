@@ -2,7 +2,10 @@
   "id": "ES-PATH-B1-SI-TUVIERA",
   "spine_node": "SPINE-EXPRESS-CONDITION",
   "lessons": [
-    "ES-C56-si-tuviera"
+    {
+      "lesson": "ES-C56-si-tuviera",
+      "extension": "ES-EXT-B1-SI-TUVIERA"
+    }
   ],
   "before": [],
   "inline": [

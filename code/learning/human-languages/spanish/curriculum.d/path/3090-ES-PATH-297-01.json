@@ -2,11 +2,26 @@
   "id": "ES-PATH-297-01",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "ES-C297-sarten",
-    "ES-C297-horno",
-    "ES-C297-tenedor",
-    "ES-C297-ajo",
-    "ES-C297-sopa"
+    {
+      "lesson": "ES-C297-sarten",
+      "extension": "ES-EXT-297-COCINA"
+    },
+    {
+      "lesson": "ES-C297-horno",
+      "extension": "ES-EXT-297-COCINA"
+    },
+    {
+      "lesson": "ES-C297-tenedor",
+      "extension": "ES-EXT-297-COCINA"
+    },
+    {
+      "lesson": "ES-C297-ajo",
+      "extension": "ES-EXT-297-COCINA"
+    },
+    {
+      "lesson": "ES-C297-sopa",
+      "extension": "ES-EXT-297-COCINA"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,9 +2,18 @@
   "id": "ML-PATH-72-QUOTATIVE",
   "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
   "lessons": [
-    "ML-C72-ennu",
-    "ML-C72-ennu-more",
-    "ML-R72-ennu-recall"
+    {
+      "lesson": "ML-C72-ennu",
+      "extension": "ML-EXT-72-QUOTATIVE"
+    },
+    {
+      "lesson": "ML-C72-ennu-more",
+      "extension": "ML-EXT-72-QUOTATIVE"
+    },
+    {
+      "lesson": "ML-R72-ennu-recall",
+      "extension": "ML-EXT-72-QUOTATIVE"
+    }
   ],
   "before": [],
   "inline": [

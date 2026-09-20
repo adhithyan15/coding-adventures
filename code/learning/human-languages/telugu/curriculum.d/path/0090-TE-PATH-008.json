@@ -3,7 +3,10 @@
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
     "TE-C03-baagaa",
-    "TE-C03-practice"
+    {
+      "lesson": "TE-C03-practice",
+      "extension": "TE-EXT-008-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [

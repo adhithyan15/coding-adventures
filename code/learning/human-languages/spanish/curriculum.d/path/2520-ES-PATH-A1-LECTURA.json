@@ -2,9 +2,18 @@
   "id": "ES-PATH-A1-LECTURA",
   "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
   "lessons": [
-    "ES-C67-primera-lectura",
-    "ES-C67-segunda-lectura",
-    "ES-C67-tercera-lectura"
+    {
+      "lesson": "ES-C67-primera-lectura",
+      "extension": "ES-EXT-A1-LECTURA"
+    },
+    {
+      "lesson": "ES-C67-segunda-lectura",
+      "extension": "ES-EXT-A1-LECTURA"
+    },
+    {
+      "lesson": "ES-C67-tercera-lectura",
+      "extension": "ES-EXT-A1-LECTURA"
+    }
   ],
   "before": [],
   "inline": [

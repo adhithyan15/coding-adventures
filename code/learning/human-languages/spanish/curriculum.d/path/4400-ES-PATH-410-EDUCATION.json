@@ -2,9 +2,18 @@
   "id": "ES-PATH-410-EDUCATION",
   "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
   "lessons": [
-    "ES-C410-academia",
-    "ES-C410-frances",
-    "ES-C410-examen"
+    {
+      "lesson": "ES-C410-academia",
+      "extension": "ES-EXT-410-EDUCATION"
+    },
+    {
+      "lesson": "ES-C410-frances",
+      "extension": "ES-EXT-410-EDUCATION"
+    },
+    {
+      "lesson": "ES-C410-examen",
+      "extension": "ES-EXT-410-EDUCATION"
+    }
   ],
   "before": [],
   "inline": [

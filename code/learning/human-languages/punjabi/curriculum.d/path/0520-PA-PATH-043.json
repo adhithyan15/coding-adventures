@@ -2,11 +2,26 @@
   "id": "PA-PATH-043",
   "spine_node": "SPINE-SAY-WHAT-I-WANT",
   "lessons": [
-    "PA-C41-je",
-    "PA-C41-je-tan",
-    "PA-C41-je-write",
-    "PA-C41-jadon",
-    "PA-C41-lai"
+    {
+      "lesson": "PA-C41-je",
+      "extension": "PA-EXT-063-CONDITION"
+    },
+    {
+      "lesson": "PA-C41-je-tan",
+      "extension": "PA-EXT-063-CONDITION"
+    },
+    {
+      "lesson": "PA-C41-je-write",
+      "extension": "PA-EXT-063-CONDITION"
+    },
+    {
+      "lesson": "PA-C41-jadon",
+      "extension": "PA-EXT-063-CONDITION"
+    },
+    {
+      "lesson": "PA-C41-lai",
+      "extension": "PA-EXT-063-CONDITION"
+    }
   ],
   "before": [],
   "inline": [

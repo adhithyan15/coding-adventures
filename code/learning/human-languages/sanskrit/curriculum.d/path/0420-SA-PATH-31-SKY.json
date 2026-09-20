@@ -2,11 +2,26 @@
   "id": "SA-PATH-31-SKY",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "SA-C31-sky",
-    "SA-C31-moon",
-    "SA-C31-star",
-    "SA-C31-wind",
-    "SA-C31-snow"
+    {
+      "lesson": "SA-C31-sky",
+      "extension": "SA-EXT-31-SKY"
+    },
+    {
+      "lesson": "SA-C31-moon",
+      "extension": "SA-EXT-31-SKY"
+    },
+    {
+      "lesson": "SA-C31-star",
+      "extension": "SA-EXT-31-SKY"
+    },
+    {
+      "lesson": "SA-C31-wind",
+      "extension": "SA-EXT-31-SKY"
+    },
+    {
+      "lesson": "SA-C31-snow",
+      "extension": "SA-EXT-31-SKY"
+    }
   ],
   "before": [],
   "inline": [

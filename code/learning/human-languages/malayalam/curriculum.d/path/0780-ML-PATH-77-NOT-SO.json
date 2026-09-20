@@ -2,9 +2,18 @@
   "id": "ML-PATH-77-NOT-SO",
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
-    "ML-C77-alla",
-    "ML-C77-alle",
-    "ML-R77-not-so-recall"
+    {
+      "lesson": "ML-C77-alla",
+      "extension": "ML-EXT-77-NOT-SO"
+    },
+    {
+      "lesson": "ML-C77-alle",
+      "extension": "ML-EXT-77-NOT-SO"
+    },
+    {
+      "lesson": "ML-R77-not-so-recall",
+      "extension": "ML-EXT-77-NOT-SO"
+    }
   ],
   "before": [],
   "inline": [

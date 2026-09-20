@@ -2,11 +2,26 @@
   "id": "TA-PATH-55-BODY",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "TA-C55-neck",
-    "TA-C55-back",
-    "TA-C55-lip",
-    "TA-C55-nail",
-    "TA-C55-bone"
+    {
+      "lesson": "TA-C55-neck",
+      "extension": "TA-EXT-55-BODY"
+    },
+    {
+      "lesson": "TA-C55-back",
+      "extension": "TA-EXT-55-BODY"
+    },
+    {
+      "lesson": "TA-C55-lip",
+      "extension": "TA-EXT-55-BODY"
+    },
+    {
+      "lesson": "TA-C55-nail",
+      "extension": "TA-EXT-55-BODY"
+    },
+    {
+      "lesson": "TA-C55-bone",
+      "extension": "TA-EXT-55-BODY"
+    }
   ],
   "before": [],
   "inline": [

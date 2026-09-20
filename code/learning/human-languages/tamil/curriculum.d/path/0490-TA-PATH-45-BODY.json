@@ -2,11 +2,26 @@
   "id": "TA-PATH-45-BODY",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "TA-C45-eye",
-    "TA-C45-ear",
-    "TA-C45-nose",
-    "TA-C45-tooth",
-    "TA-C45-stomach"
+    {
+      "lesson": "TA-C45-eye",
+      "extension": "TA-EXT-45-BODY"
+    },
+    {
+      "lesson": "TA-C45-ear",
+      "extension": "TA-EXT-45-BODY"
+    },
+    {
+      "lesson": "TA-C45-nose",
+      "extension": "TA-EXT-45-BODY"
+    },
+    {
+      "lesson": "TA-C45-tooth",
+      "extension": "TA-EXT-45-BODY"
+    },
+    {
+      "lesson": "TA-C45-stomach",
+      "extension": "TA-EXT-45-BODY"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,9 +2,18 @@
   "id": "SA-PATH-009",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "SA-C06-numbers-1-5",
-    "SA-C06-number-cognates",
-    "SA-C06-pancha-travels"
+    {
+      "lesson": "SA-C06-numbers-1-5",
+      "extension": "SA-EXT-009-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "SA-C06-number-cognates",
+      "extension": "SA-EXT-009-ETYMOLOGY"
+    },
+    {
+      "lesson": "SA-C06-pancha-travels",
+      "extension": "SA-EXT-009-ETYMOLOGY"
+    }
   ],
   "before": [],
   "inline": [

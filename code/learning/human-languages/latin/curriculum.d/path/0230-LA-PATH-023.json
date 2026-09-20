@@ -4,11 +4,26 @@
   "lessons": [
     "LA-C26-quomodo",
     "LA-C27-bene",
-    "LA-C45-terra",
-    "LA-C45-ignis",
-    "LA-C45-ventus",
-    "LA-C45-caelum",
-    "LA-C45-mare"
+    {
+      "lesson": "LA-C45-terra",
+      "extension": "LA-EXT-045-WORLD"
+    },
+    {
+      "lesson": "LA-C45-ignis",
+      "extension": "LA-EXT-045-WORLD"
+    },
+    {
+      "lesson": "LA-C45-ventus",
+      "extension": "LA-EXT-045-WORLD"
+    },
+    {
+      "lesson": "LA-C45-caelum",
+      "extension": "LA-EXT-045-WORLD"
+    },
+    {
+      "lesson": "LA-C45-mare",
+      "extension": "LA-EXT-045-WORLD"
+    }
   ],
   "before": [],
   "inline": [],

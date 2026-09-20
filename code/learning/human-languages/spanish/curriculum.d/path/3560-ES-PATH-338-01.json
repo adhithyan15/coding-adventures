@@ -2,7 +2,10 @@
   "id": "ES-PATH-338-01",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "ES-W01-ficha-personal"
+    {
+      "lesson": "ES-W01-ficha-personal",
+      "extension": "ES-EXT-338-WRITING"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,10 +2,22 @@
   "id": "MR-PATH-054",
   "spine_node": "SPINE-DESCRIBE-QUALITIES",
   "lessons": [
-    "MR-C51-changla",
-    "MR-C51-kharaab",
-    "MR-C51-hushaar",
-    "MR-R51-good-and-bad"
+    {
+      "lesson": "MR-C51-changla",
+      "extension": "MR-EXT-067-GOOD-AND-BAD"
+    },
+    {
+      "lesson": "MR-C51-kharaab",
+      "extension": "MR-EXT-067-GOOD-AND-BAD"
+    },
+    {
+      "lesson": "MR-C51-hushaar",
+      "extension": "MR-EXT-067-GOOD-AND-BAD"
+    },
+    {
+      "lesson": "MR-R51-good-and-bad",
+      "extension": "MR-EXT-067-GOOD-AND-BAD"
+    }
   ],
   "before": [],
   "inline": [

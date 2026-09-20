@@ -2,8 +2,14 @@
   "id": "ES-PATH-A1-MAL",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C60-mal",
-    "ES-C60-apocope"
+    {
+      "lesson": "ES-C60-mal",
+      "extension": "ES-EXT-A1-MAL"
+    },
+    {
+      "lesson": "ES-C60-apocope",
+      "extension": "ES-EXT-A1-MAL"
+    }
   ],
   "before": [],
   "inline": [

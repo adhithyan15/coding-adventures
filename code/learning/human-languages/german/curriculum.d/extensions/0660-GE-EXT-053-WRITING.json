@@ -4,10 +4,5 @@
   "kind": "required",
   "category": "consolidation",
   "canDo": "I can write my own line, produce the Start Deutsch 1 writing paper under its clock, and join four lines with und, aber and weil.",
-  "prerequisites": [],
-  "lessons": [
-    "GE-W02-eigene-zeile",
-    "GE-W03-mit-der-uhr",
-    "GE-W04-vier-zeilen"
-  ]
+  "prerequisites": []
 }

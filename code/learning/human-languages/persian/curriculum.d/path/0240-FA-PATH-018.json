@@ -2,12 +2,30 @@
   "id": "FA-PATH-018",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "FA-C17-shesh",
-    "FA-C17-haft",
-    "FA-C17-hasht",
-    "FA-C17-noh",
-    "FA-C17-dah",
-    "FA-C17-practice"
+    {
+      "lesson": "FA-C17-shesh",
+      "extension": "FA-EXT-025-COUNT-TEN"
+    },
+    {
+      "lesson": "FA-C17-haft",
+      "extension": "FA-EXT-025-COUNT-TEN"
+    },
+    {
+      "lesson": "FA-C17-hasht",
+      "extension": "FA-EXT-025-COUNT-TEN"
+    },
+    {
+      "lesson": "FA-C17-noh",
+      "extension": "FA-EXT-025-COUNT-TEN"
+    },
+    {
+      "lesson": "FA-C17-dah",
+      "extension": "FA-EXT-025-COUNT-TEN"
+    },
+    {
+      "lesson": "FA-C17-practice",
+      "extension": "FA-EXT-025-COUNT-TEN"
+    }
   ],
   "before": [],
   "inline": [],

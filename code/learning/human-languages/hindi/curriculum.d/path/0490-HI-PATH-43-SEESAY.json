@@ -2,10 +2,22 @@
   "id": "HI-PATH-43-SEESAY",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "HI-C43-look",
-    "HI-C43-listen",
-    "HI-C43-speak",
-    "HI-C43-write"
+    {
+      "lesson": "HI-C43-look",
+      "extension": "HI-EXT-43-SEESAY"
+    },
+    {
+      "lesson": "HI-C43-listen",
+      "extension": "HI-EXT-43-SEESAY"
+    },
+    {
+      "lesson": "HI-C43-speak",
+      "extension": "HI-EXT-43-SEESAY"
+    },
+    {
+      "lesson": "HI-C43-write",
+      "extension": "HI-EXT-43-SEESAY"
+    }
   ],
   "before": [],
   "inline": [

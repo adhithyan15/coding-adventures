@@ -2,8 +2,14 @@
   "id": "ES-PATH-030-TENER-PLURAL",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "ES-C08-tenemos",
-    "ES-C08-tienen"
+    {
+      "lesson": "ES-C08-tenemos",
+      "extension": "ES-EXT-030-TENER-PLURAL"
+    },
+    {
+      "lesson": "ES-C08-tienen",
+      "extension": "ES-EXT-030-TENER-PLURAL"
+    }
   ],
   "before": [],
   "inline": [

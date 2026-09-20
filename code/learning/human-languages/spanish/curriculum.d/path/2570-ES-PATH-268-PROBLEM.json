@@ -3,7 +3,10 @@
   "spine_node": "SPINE-HANDLE-TRAVEL",
   "lessons": [
     "ES-C268-problema",
-    "ES-C268-repaso-dos-finales-dos-generos"
+    {
+      "lesson": "ES-C268-repaso-dos-finales-dos-generos",
+      "extension": "ES-EXT-268-CONSOLIDATION-GENDER"
+    }
   ],
   "before": [],
   "inline": [

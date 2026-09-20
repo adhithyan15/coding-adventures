@@ -6,9 +6,5 @@
   "canDo": "I can recognise स, reuse the ा mark to make सा, and write it after a short delay.",
   "prerequisites": [
     "MW-EXT-001-WRITE-RAAM"
-  ],
-  "lessons": [
-    "MW-W01-sa",
-    "MW-W01-saa"
   ]
 }

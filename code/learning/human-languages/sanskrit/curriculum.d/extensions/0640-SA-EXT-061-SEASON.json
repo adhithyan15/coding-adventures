@@ -4,9 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can name a season and write the independent vowel its name begins with.",
-  "prerequisites": [],
-  "lessons": [
-    "SA-C61-rtu",
-    "SA-S225-letter-vocalic-r"
-  ]
+  "prerequisites": []
 }

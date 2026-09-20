@@ -2,11 +2,26 @@
   "id": "RU-PATH-011",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "RU-C07-drug",
-    "RU-C07-podruga",
-    "RU-C07-brat",
-    "RU-C07-sestra",
-    "RU-C08-semya"
+    {
+      "lesson": "RU-C07-drug",
+      "extension": "RU-EXT-011-FRIEND-FAMILY"
+    },
+    {
+      "lesson": "RU-C07-podruga",
+      "extension": "RU-EXT-011-FRIEND-FAMILY"
+    },
+    {
+      "lesson": "RU-C07-brat",
+      "extension": "RU-EXT-011-FRIEND-FAMILY"
+    },
+    {
+      "lesson": "RU-C07-sestra",
+      "extension": "RU-EXT-011-FRIEND-FAMILY"
+    },
+    {
+      "lesson": "RU-C08-semya",
+      "extension": "RU-EXT-011-FRIEND-FAMILY"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,9 +2,18 @@
   "id": "AR-PATH-039",
   "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
   "lessons": [
-    "AR-C42-words",
-    "AR-C42-lines",
-    "AR-C42-first-passage"
+    {
+      "lesson": "AR-C42-words",
+      "extension": "AR-EXT-039-READING"
+    },
+    {
+      "lesson": "AR-C42-lines",
+      "extension": "AR-EXT-039-READING"
+    },
+    {
+      "lesson": "AR-C42-first-passage",
+      "extension": "AR-EXT-039-READING"
+    }
   ],
   "before": [],
   "inline": [

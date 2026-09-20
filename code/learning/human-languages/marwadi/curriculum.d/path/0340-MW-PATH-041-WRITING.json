@@ -2,8 +2,14 @@
   "id": "MW-PATH-041-WRITING",
   "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
   "lessons": [
-    "MW-W02-mharo-khud-ro-line",
-    "MW-W03-ghadi-saathe"
+    {
+      "lesson": "MW-W02-mharo-khud-ro-line",
+      "extension": "MW-EXT-041-WRITING"
+    },
+    {
+      "lesson": "MW-W03-ghadi-saathe",
+      "extension": "MW-EXT-041-WRITING"
+    }
   ],
   "before": [],
   "inline": [

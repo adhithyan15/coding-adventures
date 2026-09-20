@@ -2,10 +2,22 @@
   "id": "ML-PATH-75-WHEN-IF",
   "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
   "lessons": [
-    "ML-C75-eppol",
-    "ML-C75-umbol",
-    "ML-C75-aal",
-    "ML-R75-when-and-if-recall"
+    {
+      "lesson": "ML-C75-eppol",
+      "extension": "ML-EXT-75-WHEN-IF"
+    },
+    {
+      "lesson": "ML-C75-umbol",
+      "extension": "ML-EXT-75-WHEN-IF"
+    },
+    {
+      "lesson": "ML-C75-aal",
+      "extension": "ML-EXT-75-WHEN-IF"
+    },
+    {
+      "lesson": "ML-R75-when-and-if-recall",
+      "extension": "ML-EXT-75-WHEN-IF"
+    }
   ],
   "before": [],
   "inline": [

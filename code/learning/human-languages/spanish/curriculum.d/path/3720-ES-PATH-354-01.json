@@ -2,11 +2,26 @@
   "id": "ES-PATH-354-01",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "ES-C354-hotel",
-    "ES-C354-restaurante",
-    "ES-C354-cine",
-    "ES-C354-parque",
-    "ES-C354-jardin"
+    {
+      "lesson": "ES-C354-hotel",
+      "extension": "ES-EXT-354-PLACE"
+    },
+    {
+      "lesson": "ES-C354-restaurante",
+      "extension": "ES-EXT-354-PLACE"
+    },
+    {
+      "lesson": "ES-C354-cine",
+      "extension": "ES-EXT-354-PLACE"
+    },
+    {
+      "lesson": "ES-C354-parque",
+      "extension": "ES-EXT-354-PLACE"
+    },
+    {
+      "lesson": "ES-C354-jardin",
+      "extension": "ES-EXT-354-PLACE"
+    }
   ],
   "before": [],
   "inline": [

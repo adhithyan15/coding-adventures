@@ -2,14 +2,38 @@
   "id": "ES-PATH-427-OFICIOS",
   "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
   "lessons": [
-    "ES-C427-vendedor",
-    "ES-C427-comprador",
-    "ES-C427-policia",
-    "ES-C427-bombero",
-    "ES-C427-abogado",
-    "ES-C427-empresa",
-    "ES-C427-repaso-oficios",
-    "ES-C427-sintesis-profesion"
+    {
+      "lesson": "ES-C427-vendedor",
+      "extension": "ES-EXT-427-OFICIOS"
+    },
+    {
+      "lesson": "ES-C427-comprador",
+      "extension": "ES-EXT-427-OFICIOS"
+    },
+    {
+      "lesson": "ES-C427-policia",
+      "extension": "ES-EXT-427-OFICIOS"
+    },
+    {
+      "lesson": "ES-C427-bombero",
+      "extension": "ES-EXT-427-OFICIOS"
+    },
+    {
+      "lesson": "ES-C427-abogado",
+      "extension": "ES-EXT-427-OFICIOS"
+    },
+    {
+      "lesson": "ES-C427-empresa",
+      "extension": "ES-EXT-427-OFICIOS"
+    },
+    {
+      "lesson": "ES-C427-repaso-oficios",
+      "extension": "ES-EXT-427-OFICIOS"
+    },
+    {
+      "lesson": "ES-C427-sintesis-profesion",
+      "extension": "ES-EXT-427-OFICIOS"
+    }
   ],
   "before": [],
   "inline": [

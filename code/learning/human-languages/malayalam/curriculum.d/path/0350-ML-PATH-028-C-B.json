@@ -2,7 +2,10 @@
   "id": "ML-PATH-028-C-B",
   "spine_node": "SPINE-SAY-WHAT-I-LIKE",
   "lessons": [
-    "ML-C34-ishtam"
+    {
+      "lesson": "ML-C34-ishtam",
+      "extension": "ML-EXT-028-DOING-VERBS-D"
+    }
   ],
   "before": [],
   "inline": [

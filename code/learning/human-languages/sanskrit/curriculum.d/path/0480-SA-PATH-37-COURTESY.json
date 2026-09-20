@@ -2,11 +2,26 @@
   "id": "SA-PATH-37-COURTESY",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "SA-C37-peace",
-    "SA-C37-respectfully",
-    "SA-C37-gracious",
-    "SA-C37-congratulations",
-    "SA-C37-blessing"
+    {
+      "lesson": "SA-C37-peace",
+      "extension": "SA-EXT-37-COURTESY"
+    },
+    {
+      "lesson": "SA-C37-respectfully",
+      "extension": "SA-EXT-37-COURTESY"
+    },
+    {
+      "lesson": "SA-C37-gracious",
+      "extension": "SA-EXT-37-COURTESY"
+    },
+    {
+      "lesson": "SA-C37-congratulations",
+      "extension": "SA-EXT-37-COURTESY"
+    },
+    {
+      "lesson": "SA-C37-blessing",
+      "extension": "SA-EXT-37-COURTESY"
+    }
   ],
   "before": [],
   "inline": [

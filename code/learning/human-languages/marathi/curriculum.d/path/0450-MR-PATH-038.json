@@ -2,10 +2,22 @@
   "id": "MR-PATH-038",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "MR-C36-jevha",
-    "MR-C36-lyaavar",
-    "MR-C36-sudhaa",
-    "MR-R36-joined"
+    {
+      "lesson": "MR-C36-jevha",
+      "extension": "MR-EXT-051-TIME-JOINS"
+    },
+    {
+      "lesson": "MR-C36-lyaavar",
+      "extension": "MR-EXT-051-TIME-JOINS"
+    },
+    {
+      "lesson": "MR-C36-sudhaa",
+      "extension": "MR-EXT-051-TIME-JOINS"
+    },
+    {
+      "lesson": "MR-R36-joined",
+      "extension": "MR-EXT-051-TIME-JOINS"
+    }
   ],
   "before": [],
   "inline": [

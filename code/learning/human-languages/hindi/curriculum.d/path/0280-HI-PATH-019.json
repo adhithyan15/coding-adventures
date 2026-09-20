@@ -2,9 +2,18 @@
   "id": "HI-PATH-019",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "HI-C16-mahine",
-    "HI-C17-dopahar-aadhi-raat",
-    "HI-C18-ghanta"
+    {
+      "lesson": "HI-C16-mahine",
+      "extension": "HI-EXT-019-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "HI-C17-dopahar-aadhi-raat",
+      "extension": "HI-EXT-019-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "HI-C18-ghanta",
+      "extension": "HI-EXT-019-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

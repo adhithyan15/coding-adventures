@@ -2,12 +2,30 @@
   "id": "FA-PATH-005",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "FA-C04-hal",
-    "FA-C04-chetor",
-    "FA-C04-hal-e-shoma-chetor-ast",
-    "FA-C04-khub",
-    "FA-C04-khubam",
-    "FA-C04-practice"
+    {
+      "lesson": "FA-C04-hal",
+      "extension": "FA-EXT-007-STATE-ETYMOLOGY"
+    },
+    {
+      "lesson": "FA-C04-chetor",
+      "extension": "FA-EXT-008-QUESTION-SCRIPT"
+    },
+    {
+      "lesson": "FA-C04-hal-e-shoma-chetor-ast",
+      "extension": "FA-EXT-009-EZAFE-REGISTER"
+    },
+    {
+      "lesson": "FA-C04-khub",
+      "extension": "FA-EXT-010-INHERITED-LEXICON"
+    },
+    {
+      "lesson": "FA-C04-khubam",
+      "extension": "FA-EXT-011-PERSONAL-COPULA"
+    },
+    {
+      "lesson": "FA-C04-practice",
+      "extension": "FA-EXT-012-WELLBEING-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [

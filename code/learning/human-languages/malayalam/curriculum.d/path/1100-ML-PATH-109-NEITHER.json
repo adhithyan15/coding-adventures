@@ -2,9 +2,18 @@
   "id": "ML-PATH-109-NEITHER",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ML-C109-neither-here",
-    "ML-C109-neither-so",
-    "ML-R109-neither-recall"
+    {
+      "lesson": "ML-C109-neither-here",
+      "extension": "ML-EXT-109-NEITHER"
+    },
+    {
+      "lesson": "ML-C109-neither-so",
+      "extension": "ML-EXT-109-NEITHER"
+    },
+    {
+      "lesson": "ML-R109-neither-recall",
+      "extension": "ML-EXT-109-NEITHER"
+    }
   ],
   "before": [],
   "inline": [

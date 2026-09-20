@@ -2,7 +2,10 @@
   "id": "HI-PATH-009A",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "HI-C04-practice"
+    {
+      "lesson": "HI-C04-practice",
+      "extension": "HI-EXT-004-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [

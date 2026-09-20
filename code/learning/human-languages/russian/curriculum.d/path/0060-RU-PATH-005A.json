@@ -2,7 +2,10 @@
   "id": "RU-PATH-005A",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "RU-C01-practice"
+    {
+      "lesson": "RU-C01-practice",
+      "extension": "RU-EXT-001-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [

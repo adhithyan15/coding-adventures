@@ -2,11 +2,26 @@
   "id": "HI-PATH-74-SIGNS",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "HI-C74-open",
-    "HI-C74-closed",
-    "HI-C74-entrance",
-    "HI-C74-exit",
-    "HI-C74-late"
+    {
+      "lesson": "HI-C74-open",
+      "extension": "HI-EXT-74-SIGNS"
+    },
+    {
+      "lesson": "HI-C74-closed",
+      "extension": "HI-EXT-74-SIGNS"
+    },
+    {
+      "lesson": "HI-C74-entrance",
+      "extension": "HI-EXT-74-SIGNS"
+    },
+    {
+      "lesson": "HI-C74-exit",
+      "extension": "HI-EXT-74-SIGNS"
+    },
+    {
+      "lesson": "HI-C74-late",
+      "extension": "HI-EXT-74-SIGNS"
+    }
   ],
   "before": [],
   "inline": [

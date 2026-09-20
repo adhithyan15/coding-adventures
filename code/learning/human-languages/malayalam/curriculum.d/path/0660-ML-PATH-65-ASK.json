@@ -2,11 +2,26 @@
   "id": "ML-PATH-65-ASK",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "ML-C65-request",
-    "ML-C65-permission",
-    "ML-C65-consent",
-    "ML-C65-manners",
-    "ML-C65-trust"
+    {
+      "lesson": "ML-C65-request",
+      "extension": "ML-EXT-65-ASK"
+    },
+    {
+      "lesson": "ML-C65-permission",
+      "extension": "ML-EXT-65-ASK"
+    },
+    {
+      "lesson": "ML-C65-consent",
+      "extension": "ML-EXT-65-ASK"
+    },
+    {
+      "lesson": "ML-C65-manners",
+      "extension": "ML-EXT-65-ASK"
+    },
+    {
+      "lesson": "ML-C65-trust",
+      "extension": "ML-EXT-65-ASK"
+    }
   ],
   "before": [],
   "inline": [

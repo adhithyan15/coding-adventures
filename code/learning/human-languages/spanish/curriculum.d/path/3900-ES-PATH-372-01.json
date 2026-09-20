@@ -2,11 +2,26 @@
   "id": "ES-PATH-372-01",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C372-gris",
-    "ES-C372-rosa",
-    "ES-C372-oscuro",
-    "ES-C372-palido",
-    "ES-C372-suave"
+    {
+      "lesson": "ES-C372-gris",
+      "extension": "ES-EXT-372-REF"
+    },
+    {
+      "lesson": "ES-C372-rosa",
+      "extension": "ES-EXT-372-REF"
+    },
+    {
+      "lesson": "ES-C372-oscuro",
+      "extension": "ES-EXT-372-REF"
+    },
+    {
+      "lesson": "ES-C372-palido",
+      "extension": "ES-EXT-372-REF"
+    },
+    {
+      "lesson": "ES-C372-suave",
+      "extension": "ES-EXT-372-REF"
+    }
   ],
   "before": [],
   "inline": [

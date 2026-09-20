@@ -4,8 +4,5 @@
   "kind": "required",
   "category": "script",
   "canDo": "I can recognize the first Marathi script pattern inside a greeting I already understand.",
-  "prerequisites": [],
-  "lessons": [
-    "MR-C01-namaskar"
-  ]
+  "prerequisites": []
 }

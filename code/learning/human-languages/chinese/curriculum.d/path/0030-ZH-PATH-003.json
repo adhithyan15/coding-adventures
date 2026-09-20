@@ -2,13 +2,34 @@
   "id": "ZH-PATH-003",
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
-    "ZH-W04-kou",
-    "ZH-C04-kou",
-    "ZH-W04-ri",
-    "ZH-C04-ri",
-    "ZH-W04-bu",
-    "ZH-C04-bu",
-    "ZH-C04-practice"
+    {
+      "lesson": "ZH-W04-kou",
+      "extension": "ZH-EXT-010-BOX-REUSE"
+    },
+    {
+      "lesson": "ZH-C04-kou",
+      "extension": "ZH-EXT-010-BOX-REUSE"
+    },
+    {
+      "lesson": "ZH-W04-ri",
+      "extension": "ZH-EXT-010-BOX-REUSE"
+    },
+    {
+      "lesson": "ZH-C04-ri",
+      "extension": "ZH-EXT-010-BOX-REUSE"
+    },
+    {
+      "lesson": "ZH-W04-bu",
+      "extension": "ZH-EXT-011-NEGATION"
+    },
+    {
+      "lesson": "ZH-C04-bu",
+      "extension": "ZH-EXT-011-NEGATION"
+    },
+    {
+      "lesson": "ZH-C04-practice",
+      "extension": "ZH-EXT-012-NEGATE-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [

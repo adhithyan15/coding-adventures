@@ -2,11 +2,26 @@
   "id": "TE-PATH-80-WISH",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "TE-C80-want",
-    "TE-C80-that",
-    "TE-C80-may",
-    "TE-C80-comein",
-    "TE-C80-congratulations"
+    {
+      "lesson": "TE-C80-want",
+      "extension": "TE-EXT-80-WISH"
+    },
+    {
+      "lesson": "TE-C80-that",
+      "extension": "TE-EXT-80-WISH"
+    },
+    {
+      "lesson": "TE-C80-may",
+      "extension": "TE-EXT-80-WISH"
+    },
+    {
+      "lesson": "TE-C80-comein",
+      "extension": "TE-EXT-80-WISH"
+    },
+    {
+      "lesson": "TE-C80-congratulations",
+      "extension": "TE-EXT-80-WISH"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,9 +2,18 @@
   "id": "LA-PATH-042",
   "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
   "lessons": [
-    "LA-C58-labels",
-    "LA-C58-phrases",
-    "LA-C58-prima-lectio"
+    {
+      "lesson": "LA-C58-labels",
+      "extension": "LA-EXT-058-READING"
+    },
+    {
+      "lesson": "LA-C58-phrases",
+      "extension": "LA-EXT-058-READING"
+    },
+    {
+      "lesson": "LA-C58-prima-lectio",
+      "extension": "LA-EXT-058-READING"
+    }
   ],
   "before": [],
   "inline": [

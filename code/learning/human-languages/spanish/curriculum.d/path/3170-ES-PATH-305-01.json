@@ -2,11 +2,26 @@
   "id": "ES-PATH-305-01",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "ES-C305-nombre",
-    "ES-C305-apellido",
-    "ES-C305-senor",
-    "ES-C305-senora",
-    "ES-C305-encantado"
+    {
+      "lesson": "ES-C305-nombre",
+      "extension": "ES-EXT-305-PRESENTARSE"
+    },
+    {
+      "lesson": "ES-C305-apellido",
+      "extension": "ES-EXT-305-PRESENTARSE"
+    },
+    {
+      "lesson": "ES-C305-senor",
+      "extension": "ES-EXT-305-PRESENTARSE"
+    },
+    {
+      "lesson": "ES-C305-senora",
+      "extension": "ES-EXT-305-PRESENTARSE"
+    },
+    {
+      "lesson": "ES-C305-encantado",
+      "extension": "ES-EXT-305-PRESENTARSE"
+    }
   ],
   "before": [],
   "inline": [

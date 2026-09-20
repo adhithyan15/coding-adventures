@@ -2,11 +2,26 @@
   "id": "ES-PATH-295-01",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "ES-C295-sendero",
-    "ES-C295-puente",
-    "ES-C295-orilla",
-    "ES-C295-isla",
-    "ES-C295-niebla"
+    {
+      "lesson": "ES-C295-sendero",
+      "extension": "ES-EXT-295-SENDERO"
+    },
+    {
+      "lesson": "ES-C295-puente",
+      "extension": "ES-EXT-295-SENDERO"
+    },
+    {
+      "lesson": "ES-C295-orilla",
+      "extension": "ES-EXT-295-SENDERO"
+    },
+    {
+      "lesson": "ES-C295-isla",
+      "extension": "ES-EXT-295-SENDERO"
+    },
+    {
+      "lesson": "ES-C295-niebla",
+      "extension": "ES-EXT-295-SENDERO"
+    }
   ],
   "before": [],
   "inline": [

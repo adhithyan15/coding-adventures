@@ -2,11 +2,26 @@
   "id": "ES-PATH-311-01",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "ES-C311-tienda",
-    "ES-C311-cuenta",
-    "ES-C311-precio",
-    "ES-C311-bolsa",
-    "ES-C311-asiento"
+    {
+      "lesson": "ES-C311-tienda",
+      "extension": "ES-EXT-311-ASK"
+    },
+    {
+      "lesson": "ES-C311-cuenta",
+      "extension": "ES-EXT-311-ASK"
+    },
+    {
+      "lesson": "ES-C311-precio",
+      "extension": "ES-EXT-311-ASK"
+    },
+    {
+      "lesson": "ES-C311-bolsa",
+      "extension": "ES-EXT-311-ASK"
+    },
+    {
+      "lesson": "ES-C311-asiento",
+      "extension": "ES-EXT-311-ASK"
+    }
   ],
   "before": [],
   "inline": [

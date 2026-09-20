@@ -2,7 +2,10 @@
   "id": "BN-PATH-013-C-B",
   "spine_node": "SPINE-SAY-WHAT-I-LIKE",
   "lessons": [
-    "BN-C09-bhalo-laga"
+    {
+      "lesson": "BN-C09-bhalo-laga",
+      "extension": "BN-EXT-013-CONJUNCT-VERBS-D"
+    }
   ],
   "before": [],
   "inline": [

@@ -3,7 +3,10 @@
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
     "ES-C08-numeros-1-5",
-    "ES-C08-numeros-6-10"
+    {
+      "lesson": "ES-C08-numeros-6-10",
+      "extension": "ES-EXT-016-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

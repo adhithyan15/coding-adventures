@@ -2,11 +2,26 @@
   "id": "TE-PATH-74-LINK",
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
-    "TE-C74-and",
-    "TE-C74-but",
-    "TE-C74-or",
-    "TE-C74-why",
-    "TE-C74-because"
+    {
+      "lesson": "TE-C74-and",
+      "extension": "TE-EXT-74-LINK"
+    },
+    {
+      "lesson": "TE-C74-but",
+      "extension": "TE-EXT-74-LINK"
+    },
+    {
+      "lesson": "TE-C74-or",
+      "extension": "TE-EXT-74-LINK"
+    },
+    {
+      "lesson": "TE-C74-why",
+      "extension": "TE-EXT-74-LINK"
+    },
+    {
+      "lesson": "TE-C74-because",
+      "extension": "TE-EXT-74-LINK"
+    }
   ],
   "before": [],
   "inline": [

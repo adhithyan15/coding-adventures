@@ -2,7 +2,10 @@
   "id": "PA-PATH-007",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "PA-S03-retroflex-row",
+    {
+      "lesson": "PA-S03-retroflex-row",
+      "extension": "PA-EXT-046-PREA1-SCRIPT-RUNWAY-C3B"
+    },
     "PA-C03-thik"
   ],
   "before": [],

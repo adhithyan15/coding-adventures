@@ -2,10 +2,22 @@
   "id": "MR-PATH-045",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "MR-C42-madhye",
-    "MR-C42-var",
-    "MR-C42-khaali",
-    "MR-R42-inside-outside"
+    {
+      "lesson": "MR-C42-madhye",
+      "extension": "MR-EXT-058-IN-ON-UNDER"
+    },
+    {
+      "lesson": "MR-C42-var",
+      "extension": "MR-EXT-058-IN-ON-UNDER"
+    },
+    {
+      "lesson": "MR-C42-khaali",
+      "extension": "MR-EXT-058-IN-ON-UNDER"
+    },
+    {
+      "lesson": "MR-R42-inside-outside",
+      "extension": "MR-EXT-058-IN-ON-UNDER"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,13 +2,34 @@
   "id": "GE-PATH-019",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "GE-C14-alt",
-    "GE-C14-jahr",
-    "GE-C14-jahr-alt",
-    "GE-C14-wie-alt-bist-du",
-    "GE-C14-alter",
-    "GE-C14-alter-sein-haben",
-    "GE-C14-alter-practice"
+    {
+      "lesson": "GE-C14-alt",
+      "extension": "GE-EXT-019-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GE-C14-jahr",
+      "extension": "GE-EXT-019-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GE-C14-jahr-alt",
+      "extension": "GE-EXT-019-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GE-C14-wie-alt-bist-du",
+      "extension": "GE-EXT-019-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GE-C14-alter",
+      "extension": "GE-EXT-019-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GE-C14-alter-sein-haben",
+      "extension": "GE-EXT-019-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GE-C14-alter-practice",
+      "extension": "GE-EXT-019-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [

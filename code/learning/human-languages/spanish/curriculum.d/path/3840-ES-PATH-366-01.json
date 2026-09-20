@@ -2,11 +2,26 @@
   "id": "ES-PATH-366-01",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C366-caja",
-    "ES-C366-lampara",
-    "ES-C366-almohada",
-    "ES-C366-escalera",
-    "ES-C366-armario"
+    {
+      "lesson": "ES-C366-caja",
+      "extension": "ES-EXT-366-REF"
+    },
+    {
+      "lesson": "ES-C366-lampara",
+      "extension": "ES-EXT-366-REF"
+    },
+    {
+      "lesson": "ES-C366-almohada",
+      "extension": "ES-EXT-366-REF"
+    },
+    {
+      "lesson": "ES-C366-escalera",
+      "extension": "ES-EXT-366-REF"
+    },
+    {
+      "lesson": "ES-C366-armario",
+      "extension": "ES-EXT-366-REF"
+    }
   ],
   "before": [],
   "inline": [

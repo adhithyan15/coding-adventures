@@ -2,9 +2,18 @@
   "id": "MR-PATH-041",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "MR-W39-tha",
-    "MR-C39-tithe",
-    "MR-R39-there"
+    {
+      "lesson": "MR-W39-tha",
+      "extension": "MR-EXT-054-THERE"
+    },
+    {
+      "lesson": "MR-C39-tithe",
+      "extension": "MR-EXT-054-THERE"
+    },
+    {
+      "lesson": "MR-R39-there",
+      "extension": "MR-EXT-054-THERE"
+    }
   ],
   "before": [],
   "inline": [

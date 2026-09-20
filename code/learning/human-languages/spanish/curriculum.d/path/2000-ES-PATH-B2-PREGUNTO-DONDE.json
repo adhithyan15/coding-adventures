@@ -2,7 +2,10 @@
   "id": "ES-PATH-B2-PREGUNTO-DONDE",
   "spine_node": "SPINE-REPORT-WHAT-OTHERS-SAID",
   "lessons": [
-    "ES-C57-pregunto-donde"
+    {
+      "lesson": "ES-C57-pregunto-donde",
+      "extension": "ES-EXT-B2-PREGUNTO-DONDE"
+    }
   ],
   "before": [],
   "inline": [

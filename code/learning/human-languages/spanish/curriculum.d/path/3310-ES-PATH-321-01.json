@@ -2,11 +2,26 @@
   "id": "ES-PATH-321-01",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "ES-C321-placer",
-    "ES-C321-razon",
-    "ES-C321-respeto",
-    "ES-C321-paciencia",
-    "ES-C321-consejo"
+    {
+      "lesson": "ES-C321-placer",
+      "extension": "ES-EXT-321-COURT"
+    },
+    {
+      "lesson": "ES-C321-razon",
+      "extension": "ES-EXT-321-COURT"
+    },
+    {
+      "lesson": "ES-C321-respeto",
+      "extension": "ES-EXT-321-COURT"
+    },
+    {
+      "lesson": "ES-C321-paciencia",
+      "extension": "ES-EXT-321-COURT"
+    },
+    {
+      "lesson": "ES-C321-consejo",
+      "extension": "ES-EXT-321-COURT"
+    }
   ],
   "before": [],
   "inline": [

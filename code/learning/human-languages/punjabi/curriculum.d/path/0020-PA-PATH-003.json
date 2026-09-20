@@ -3,13 +3,34 @@
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
     "PA-C01-han-nahin",
-    "PA-W01-ha",
-    "PA-W01-aa-matra",
-    "PA-W01-bindi",
-    "PA-W01-haan-assemble",
-    "PA-W01-haan-guided-copy",
-    "PA-W01-haan-delayed-copy",
-    "PA-W01-haan-dictation"
+    {
+      "lesson": "PA-W01-ha",
+      "extension": "PA-EXT-003-HAAN-WRITING"
+    },
+    {
+      "lesson": "PA-W01-aa-matra",
+      "extension": "PA-EXT-003-HAAN-WRITING"
+    },
+    {
+      "lesson": "PA-W01-bindi",
+      "extension": "PA-EXT-003-HAAN-WRITING"
+    },
+    {
+      "lesson": "PA-W01-haan-assemble",
+      "extension": "PA-EXT-003-HAAN-WRITING"
+    },
+    {
+      "lesson": "PA-W01-haan-guided-copy",
+      "extension": "PA-EXT-003-HAAN-WRITING"
+    },
+    {
+      "lesson": "PA-W01-haan-delayed-copy",
+      "extension": "PA-EXT-003-HAAN-WRITING"
+    },
+    {
+      "lesson": "PA-W01-haan-dictation",
+      "extension": "PA-EXT-003-HAAN-WRITING"
+    }
   ],
   "before": [],
   "inline": [],

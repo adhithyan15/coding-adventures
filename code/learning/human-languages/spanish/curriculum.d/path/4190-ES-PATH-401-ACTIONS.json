@@ -2,8 +2,14 @@
   "id": "ES-PATH-401-ACTIONS",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "ES-C401-seguir",
-    "ES-C401-cambiar"
+    {
+      "lesson": "ES-C401-seguir",
+      "extension": "ES-EXT-401-ACTIONS"
+    },
+    {
+      "lesson": "ES-C401-cambiar",
+      "extension": "ES-EXT-401-ACTIONS"
+    }
   ],
   "before": [],
   "inline": [

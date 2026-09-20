@@ -2,11 +2,26 @@
   "id": "KA-PATH-63-HEALTH",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "KA-C63-hunger",
-    "KA-C63-sleep",
-    "KA-C63-fever",
-    "KA-C63-pain",
-    "KA-C63-health"
+    {
+      "lesson": "KA-C63-hunger",
+      "extension": "KA-EXT-63-HEALTH"
+    },
+    {
+      "lesson": "KA-C63-sleep",
+      "extension": "KA-EXT-63-HEALTH"
+    },
+    {
+      "lesson": "KA-C63-fever",
+      "extension": "KA-EXT-63-HEALTH"
+    },
+    {
+      "lesson": "KA-C63-pain",
+      "extension": "KA-EXT-63-HEALTH"
+    },
+    {
+      "lesson": "KA-C63-health",
+      "extension": "KA-EXT-63-HEALTH"
+    }
   ],
   "before": [],
   "inline": [

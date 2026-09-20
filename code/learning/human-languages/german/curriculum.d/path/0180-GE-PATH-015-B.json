@@ -2,10 +2,22 @@
   "id": "GE-PATH-015-B",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "GE-C06-vier",
-    "GE-C06-fuenf",
-    "GE-C06-zahlen-1-5",
-    "GE-C06-ein-eine"
+    {
+      "lesson": "GE-C06-vier",
+      "extension": "GE-EXT-015-B-VIER-FUENF"
+    },
+    {
+      "lesson": "GE-C06-fuenf",
+      "extension": "GE-EXT-015-B-VIER-FUENF"
+    },
+    {
+      "lesson": "GE-C06-zahlen-1-5",
+      "extension": "GE-EXT-015-B-VIER-FUENF"
+    },
+    {
+      "lesson": "GE-C06-ein-eine",
+      "extension": "GE-EXT-015-B-VIER-FUENF"
+    }
   ],
   "before": [],
   "inline": [

@@ -3,7 +3,10 @@
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
     "MR-C03-kaahi-harkat-nahi",
-    "MR-C03-practice"
+    {
+      "lesson": "MR-C03-practice",
+      "extension": "MR-EXT-039-WELLBEING-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [

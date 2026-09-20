@@ -2,11 +2,26 @@
   "id": "SA-PATH-26-ROLE",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "SA-C26-teacher",
-    "SA-C26-student",
-    "SA-C26-king",
-    "SA-C26-guest",
-    "SA-C26-physician"
+    {
+      "lesson": "SA-C26-teacher",
+      "extension": "SA-EXT-26-ROLE"
+    },
+    {
+      "lesson": "SA-C26-student",
+      "extension": "SA-EXT-26-ROLE"
+    },
+    {
+      "lesson": "SA-C26-king",
+      "extension": "SA-EXT-26-ROLE"
+    },
+    {
+      "lesson": "SA-C26-guest",
+      "extension": "SA-EXT-26-ROLE"
+    },
+    {
+      "lesson": "SA-C26-physician",
+      "extension": "SA-EXT-26-ROLE"
+    }
   ],
   "before": [],
   "inline": [

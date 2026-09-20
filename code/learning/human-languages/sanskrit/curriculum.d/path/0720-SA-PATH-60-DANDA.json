@@ -2,7 +2,10 @@
   "id": "SA-PATH-60-DANDA",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "SA-C60-danda"
+    {
+      "lesson": "SA-C60-danda",
+      "extension": "SA-EXT-060-DANDA"
+    }
   ],
   "before": [],
   "inline": [

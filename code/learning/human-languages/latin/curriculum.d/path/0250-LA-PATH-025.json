@@ -2,9 +2,18 @@
   "id": "LA-PATH-025",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "LA-C37-sum",
-    "LA-C37-habeo",
-    "LA-C37-eo"
+    {
+      "lesson": "LA-C37-sum",
+      "extension": "LA-EXT-025-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "LA-C37-habeo",
+      "extension": "LA-EXT-025-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "LA-C37-eo",
+      "extension": "LA-EXT-025-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

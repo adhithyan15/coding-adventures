@@ -2,7 +2,10 @@
   "id": "ES-PATH-037-POR",
   "spine_node": "SPINE-GIVE-REASONS",
   "lessons": [
-    "ES-C51-por"
+    {
+      "lesson": "ES-C51-por",
+      "extension": "ES-EXT-037-POR"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,7 +2,10 @@
   "id": "UR-PATH-012",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "UR-C11-dil"
+    {
+      "lesson": "UR-C11-dil",
+      "extension": "UR-EXT-022-HEART"
+    }
   ],
   "before": [],
   "inline": [

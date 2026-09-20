@@ -2,8 +2,14 @@
   "id": "ES-PATH-319-04",
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
-    "ES-C319-repaso-respuestas",
-    "ES-C319-otro-y-poco"
+    {
+      "lesson": "ES-C319-repaso-respuestas",
+      "extension": "ES-EXT-319-RESPUESTAS"
+    },
+    {
+      "lesson": "ES-C319-otro-y-poco",
+      "extension": "ES-EXT-319-RESPUESTAS"
+    }
   ],
   "before": [],
   "inline": [

@@ -8,11 +8,20 @@
     "PA-C02-mera-naam-hai",
     "PA-C02-tu-tusi",
     "PA-C02-ki",
-    "PA-S02-mamma-rara-lava",
+    {
+      "lesson": "PA-S02-mamma-rara-lava",
+      "extension": "PA-EXT-044-PREA1-SCRIPT-RUNWAY-C2"
+    },
     "PA-C02-tuhada-naam-ki-hai",
     "PA-C02-khushi",
-    "PA-S02-sassa-tatta-sihari",
-    "PA-C02-practice"
+    {
+      "lesson": "PA-S02-sassa-tatta-sihari",
+      "extension": "PA-EXT-044-PREA1-SCRIPT-RUNWAY-C2"
+    },
+    {
+      "lesson": "PA-C02-practice",
+      "extension": "PA-EXT-018-INTRODUCTION-CHECKPOINT"
+    }
   ],
   "before": [],
   "inline": [

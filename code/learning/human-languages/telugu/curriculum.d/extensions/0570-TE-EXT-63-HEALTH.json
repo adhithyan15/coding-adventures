@@ -4,12 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can say in Telugu that I am hungry, sleepy or unwell, and ask after somebody else's health.",
-  "prerequisites": [],
-  "lessons": [
-    "TE-C63-hunger",
-    "TE-C63-sleep",
-    "TE-C63-cough",
-    "TE-C63-disease",
-    "TE-C63-health"
-  ]
+  "prerequisites": []
 }

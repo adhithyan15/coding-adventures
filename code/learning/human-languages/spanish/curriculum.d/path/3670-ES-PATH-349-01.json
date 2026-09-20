@@ -2,11 +2,26 @@
   "id": "ES-PATH-349-01",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "ES-C349-jornada",
-    "ES-C349-decada",
-    "ES-C349-fiesta",
-    "ES-C349-aniversario",
-    "ES-C349-agenda"
+    {
+      "lesson": "ES-C349-jornada",
+      "extension": "ES-EXT-349-SPAN"
+    },
+    {
+      "lesson": "ES-C349-decada",
+      "extension": "ES-EXT-349-SPAN"
+    },
+    {
+      "lesson": "ES-C349-fiesta",
+      "extension": "ES-EXT-349-SPAN"
+    },
+    {
+      "lesson": "ES-C349-aniversario",
+      "extension": "ES-EXT-349-SPAN"
+    },
+    {
+      "lesson": "ES-C349-agenda",
+      "extension": "ES-EXT-349-SPAN"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,10 +2,22 @@
   "id": "ML-PATH-80-ORIGIN",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "ML-C80-uuru",
-    "ML-C80-keralam",
-    "ML-C80-malayali",
-    "ML-R80-origin-recall"
+    {
+      "lesson": "ML-C80-uuru",
+      "extension": "ML-EXT-80-ORIGIN"
+    },
+    {
+      "lesson": "ML-C80-keralam",
+      "extension": "ML-EXT-80-ORIGIN"
+    },
+    {
+      "lesson": "ML-C80-malayali",
+      "extension": "ML-EXT-80-ORIGIN"
+    },
+    {
+      "lesson": "ML-R80-origin-recall",
+      "extension": "ML-EXT-80-ORIGIN"
+    }
   ],
   "before": [],
   "inline": [

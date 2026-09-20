@@ -2,12 +2,30 @@
   "id": "GE-PATH-A1-POSSESSIV",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "GE-C36-mein",
-    "GE-C36-dein",
-    "GE-C36-sein-his",
-    "GE-C36-ihr-her",
-    "GE-C36-das-ist",
-    "GE-R36-wer-ist-das"
+    {
+      "lesson": "GE-C36-mein",
+      "extension": "GE-EXT-A1-POSSESSIV"
+    },
+    {
+      "lesson": "GE-C36-dein",
+      "extension": "GE-EXT-A1-POSSESSIV"
+    },
+    {
+      "lesson": "GE-C36-sein-his",
+      "extension": "GE-EXT-A1-POSSESSIV"
+    },
+    {
+      "lesson": "GE-C36-ihr-her",
+      "extension": "GE-EXT-A1-POSSESSIV"
+    },
+    {
+      "lesson": "GE-C36-das-ist",
+      "extension": "GE-EXT-A1-POSSESSIV"
+    },
+    {
+      "lesson": "GE-R36-wer-ist-das",
+      "extension": "GE-EXT-A1-POSSESSIV"
+    }
   ],
   "before": [],
   "inline": [

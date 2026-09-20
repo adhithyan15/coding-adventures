@@ -3,7 +3,10 @@
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
     "GE-C02-wie-heissen-sie",
-    "GE-C02-practice"
+    {
+      "lesson": "GE-C02-practice",
+      "extension": "GE-EXT-009-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [],

@@ -2,11 +2,26 @@
   "id": "HI-PATH-73-EATING",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "HI-C73-eating-house",
-    "HI-C73-breakfast",
-    "HI-C73-bill",
-    "HI-C73-waiter",
-    "HI-C73-drink"
+    {
+      "lesson": "HI-C73-eating-house",
+      "extension": "HI-EXT-73-EATING"
+    },
+    {
+      "lesson": "HI-C73-breakfast",
+      "extension": "HI-EXT-73-EATING"
+    },
+    {
+      "lesson": "HI-C73-bill",
+      "extension": "HI-EXT-73-EATING"
+    },
+    {
+      "lesson": "HI-C73-waiter",
+      "extension": "HI-EXT-73-EATING"
+    },
+    {
+      "lesson": "HI-C73-drink",
+      "extension": "HI-EXT-73-EATING"
+    }
   ],
   "before": [],
   "inline": [

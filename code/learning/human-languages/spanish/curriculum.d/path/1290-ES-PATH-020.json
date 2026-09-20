@@ -2,10 +2,22 @@
   "id": "ES-PATH-020",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C22-negro-blanco",
-    "ES-C22-blanco-germanico",
-    "ES-C22-rojo",
-    "ES-C22-azul"
+    {
+      "lesson": "ES-C22-negro-blanco",
+      "extension": "ES-EXT-020-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C22-blanco-germanico",
+      "extension": "ES-EXT-020-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C22-rojo",
+      "extension": "ES-EXT-020-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C22-azul",
+      "extension": "ES-EXT-020-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

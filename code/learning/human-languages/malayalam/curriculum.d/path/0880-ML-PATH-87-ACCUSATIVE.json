@@ -2,10 +2,22 @@
   "id": "ML-PATH-87-ACCUSATIVE",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ML-C87-accusative",
-    "ML-C87-animacy",
-    "ML-C87-avane",
-    "ML-R87-object-recall"
+    {
+      "lesson": "ML-C87-accusative",
+      "extension": "ML-EXT-87-ACCUSATIVE"
+    },
+    {
+      "lesson": "ML-C87-animacy",
+      "extension": "ML-EXT-87-ACCUSATIVE"
+    },
+    {
+      "lesson": "ML-C87-avane",
+      "extension": "ML-EXT-87-ACCUSATIVE"
+    },
+    {
+      "lesson": "ML-R87-object-recall",
+      "extension": "ML-EXT-87-ACCUSATIVE"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,12 +2,30 @@
   "id": "ZH-PATH-007",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "ZH-W08-wo",
-    "ZH-C08-wo",
-    "ZH-W08-ming",
-    "ZH-W08-zi",
-    "ZH-C08-mingzi",
-    "ZH-C08-practice"
+    {
+      "lesson": "ZH-W08-wo",
+      "extension": "ZH-EXT-020-WO-SCRIPT"
+    },
+    {
+      "lesson": "ZH-C08-wo",
+      "extension": "ZH-EXT-021-NO-INFLECTION"
+    },
+    {
+      "lesson": "ZH-W08-ming",
+      "extension": "ZH-EXT-022-MINGZI"
+    },
+    {
+      "lesson": "ZH-W08-zi",
+      "extension": "ZH-EXT-022-MINGZI"
+    },
+    {
+      "lesson": "ZH-C08-mingzi",
+      "extension": "ZH-EXT-022-MINGZI"
+    },
+    {
+      "lesson": "ZH-C08-practice",
+      "extension": "ZH-EXT-021-NO-INFLECTION"
+    }
   ],
   "before": [],
   "inline": [

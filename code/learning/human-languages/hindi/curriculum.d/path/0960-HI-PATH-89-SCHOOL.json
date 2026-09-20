@@ -2,10 +2,22 @@
   "id": "HI-PATH-89-SCHOOL",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "HI-C81-skool",
-    "HI-C81-vidyalaya",
-    "HI-C81-repaso-skool",
-    "HI-C81-sintesis-skool"
+    {
+      "lesson": "HI-C81-skool",
+      "extension": "HI-EXT-89-SCHOOL"
+    },
+    {
+      "lesson": "HI-C81-vidyalaya",
+      "extension": "HI-EXT-89-SCHOOL"
+    },
+    {
+      "lesson": "HI-C81-repaso-skool",
+      "extension": "HI-EXT-89-SCHOOL"
+    },
+    {
+      "lesson": "HI-C81-sintesis-skool",
+      "extension": "HI-EXT-89-SCHOOL"
+    }
   ],
   "before": [],
   "inline": [

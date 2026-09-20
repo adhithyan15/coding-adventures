@@ -2,7 +2,10 @@
   "id": "ES-PATH-030-YO-GO-CH12",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "ES-C12-yo-go"
+    {
+      "lesson": "ES-C12-yo-go",
+      "extension": "ES-EXT-030-YO-GO-CH12"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,11 +2,26 @@
   "id": "ES-PATH-301-01",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "ES-C301-cuerda",
-    "ES-C301-aguja",
-    "ES-C301-hilo",
-    "ES-C301-cesta",
-    "ES-C301-papel"
+    {
+      "lesson": "ES-C301-cuerda",
+      "extension": "ES-EXT-301-PEDIR"
+    },
+    {
+      "lesson": "ES-C301-aguja",
+      "extension": "ES-EXT-301-PEDIR"
+    },
+    {
+      "lesson": "ES-C301-hilo",
+      "extension": "ES-EXT-301-PEDIR"
+    },
+    {
+      "lesson": "ES-C301-cesta",
+      "extension": "ES-EXT-301-PEDIR"
+    },
+    {
+      "lesson": "ES-C301-papel",
+      "extension": "ES-EXT-301-PEDIR"
+    }
   ],
   "before": [],
   "inline": [

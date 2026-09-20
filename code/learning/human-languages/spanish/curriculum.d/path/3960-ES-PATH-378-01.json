@@ -2,11 +2,26 @@
   "id": "ES-PATH-378-01",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "ES-C378-selva",
-    "ES-C378-prado",
-    "ES-C378-volcan",
-    "ES-C378-cumbre",
-    "ES-C378-edificio"
+    {
+      "lesson": "ES-C378-selva",
+      "extension": "ES-EXT-378-WHERE"
+    },
+    {
+      "lesson": "ES-C378-prado",
+      "extension": "ES-EXT-378-WHERE"
+    },
+    {
+      "lesson": "ES-C378-volcan",
+      "extension": "ES-EXT-378-WHERE"
+    },
+    {
+      "lesson": "ES-C378-cumbre",
+      "extension": "ES-EXT-378-WHERE"
+    },
+    {
+      "lesson": "ES-C378-edificio",
+      "extension": "ES-EXT-378-WHERE"
+    }
   ],
   "before": [],
   "inline": [

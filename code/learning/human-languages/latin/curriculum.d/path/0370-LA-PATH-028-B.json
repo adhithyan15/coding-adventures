@@ -2,7 +2,10 @@
   "id": "LA-PATH-028-B",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "LA-C40-sto"
+    {
+      "lesson": "LA-C40-sto",
+      "extension": "LA-EXT-028-LANGUAGE-SPECIFIC-B"
+    }
   ],
   "before": [],
   "inline": [

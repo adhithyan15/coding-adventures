@@ -2,13 +2,34 @@
   "id": "ES-PATH-429-EDUCACION",
   "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
   "lessons": [
-    "ES-C429-instituto",
-    "ES-C429-nota",
-    "ES-C429-calificacion",
-    "ES-C429-aprobar",
-    "ES-C429-suspender",
-    "ES-C429-repaso-notas",
-    "ES-C429-sintesis-boletin"
+    {
+      "lesson": "ES-C429-instituto",
+      "extension": "ES-EXT-429-EDUCACION"
+    },
+    {
+      "lesson": "ES-C429-nota",
+      "extension": "ES-EXT-429-EDUCACION"
+    },
+    {
+      "lesson": "ES-C429-calificacion",
+      "extension": "ES-EXT-429-EDUCACION"
+    },
+    {
+      "lesson": "ES-C429-aprobar",
+      "extension": "ES-EXT-429-EDUCACION"
+    },
+    {
+      "lesson": "ES-C429-suspender",
+      "extension": "ES-EXT-429-EDUCACION"
+    },
+    {
+      "lesson": "ES-C429-repaso-notas",
+      "extension": "ES-EXT-429-EDUCACION"
+    },
+    {
+      "lesson": "ES-C429-sintesis-boletin",
+      "extension": "ES-EXT-429-EDUCACION"
+    }
   ],
   "before": [],
   "inline": [

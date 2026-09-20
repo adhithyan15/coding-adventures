@@ -2,11 +2,26 @@
   "id": "RU-PATH-028",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "RU-C26-pervyy",
-    "RU-C26-vtoroy-tretiy",
-    "RU-W26-ordinal-hyphen",
-    "RU-C26-practice",
-    "RU-R26-close"
+    {
+      "lesson": "RU-C26-pervyy",
+      "extension": "RU-EXT-033-ORDINALS"
+    },
+    {
+      "lesson": "RU-C26-vtoroy-tretiy",
+      "extension": "RU-EXT-033-ORDINALS"
+    },
+    {
+      "lesson": "RU-W26-ordinal-hyphen",
+      "extension": "RU-EXT-033-ORDINALS"
+    },
+    {
+      "lesson": "RU-C26-practice",
+      "extension": "RU-EXT-033-ORDINALS"
+    },
+    {
+      "lesson": "RU-R26-close",
+      "extension": "RU-EXT-033-ORDINALS"
+    }
   ],
   "before": [],
   "inline": [],

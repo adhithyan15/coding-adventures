@@ -4,7 +4,10 @@
   "lessons": [
     "TE-C01-ledu",
     "TE-C01-sare",
-    "TE-C01-practice"
+    {
+      "lesson": "TE-C01-practice",
+      "extension": "TE-EXT-004-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [

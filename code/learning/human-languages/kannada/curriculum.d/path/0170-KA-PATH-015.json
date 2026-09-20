@@ -2,7 +2,10 @@
   "id": "KA-PATH-015",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "KA-C12-kutumba"
+    {
+      "lesson": "KA-C12-kutumba",
+      "extension": "KA-EXT-015-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

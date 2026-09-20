@@ -2,13 +2,34 @@
   "id": "SA-PATH-200",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "SA-C14-this",
-    "SA-C14-that",
-    "SA-C14-here",
-    "SA-C14-there",
-    "SA-C14-who",
-    "SA-C14-where",
-    "SA-C14-deixis-system"
+    {
+      "lesson": "SA-C14-this",
+      "extension": "SA-EXT-200-DEIXIS"
+    },
+    {
+      "lesson": "SA-C14-that",
+      "extension": "SA-EXT-200-DEIXIS"
+    },
+    {
+      "lesson": "SA-C14-here",
+      "extension": "SA-EXT-200-DEIXIS"
+    },
+    {
+      "lesson": "SA-C14-there",
+      "extension": "SA-EXT-200-DEIXIS"
+    },
+    {
+      "lesson": "SA-C14-who",
+      "extension": "SA-EXT-200-DEIXIS"
+    },
+    {
+      "lesson": "SA-C14-where",
+      "extension": "SA-EXT-200-DEIXIS"
+    },
+    {
+      "lesson": "SA-C14-deixis-system",
+      "extension": "SA-EXT-200-DEIXIS"
+    }
   ],
   "before": [],
   "inline": [

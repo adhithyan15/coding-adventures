@@ -2,11 +2,26 @@
   "id": "TE-PATH-66-FIELD",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "TE-C66-field",
-    "TE-C66-paddy",
-    "TE-C66-grass",
-    "TE-C66-threshing-floor",
-    "TE-C66-harvest"
+    {
+      "lesson": "TE-C66-field",
+      "extension": "TE-EXT-66-FIELD"
+    },
+    {
+      "lesson": "TE-C66-paddy",
+      "extension": "TE-EXT-66-FIELD"
+    },
+    {
+      "lesson": "TE-C66-grass",
+      "extension": "TE-EXT-66-FIELD"
+    },
+    {
+      "lesson": "TE-C66-threshing-floor",
+      "extension": "TE-EXT-66-FIELD"
+    },
+    {
+      "lesson": "TE-C66-harvest",
+      "extension": "TE-EXT-66-FIELD"
+    }
   ],
   "before": [],
   "inline": [

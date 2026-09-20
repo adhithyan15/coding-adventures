@@ -2,14 +2,38 @@
   "id": "MR-PATH-029",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "MR-W06-kha",
-    "MR-W06-ga",
-    "MR-W06-gha",
-    "MR-W06-ca",
-    "MR-W06-cha",
-    "MR-W06-ja",
-    "MR-W06-jha",
-    "MR-R06-two-rows-recall"
+    {
+      "lesson": "MR-W06-kha",
+      "extension": "MR-EXT-032-TWO-ROWS-RUNWAY"
+    },
+    {
+      "lesson": "MR-W06-ga",
+      "extension": "MR-EXT-032-TWO-ROWS-RUNWAY"
+    },
+    {
+      "lesson": "MR-W06-gha",
+      "extension": "MR-EXT-032-TWO-ROWS-RUNWAY"
+    },
+    {
+      "lesson": "MR-W06-ca",
+      "extension": "MR-EXT-032-TWO-ROWS-RUNWAY"
+    },
+    {
+      "lesson": "MR-W06-cha",
+      "extension": "MR-EXT-032-TWO-ROWS-RUNWAY"
+    },
+    {
+      "lesson": "MR-W06-ja",
+      "extension": "MR-EXT-032-TWO-ROWS-RUNWAY"
+    },
+    {
+      "lesson": "MR-W06-jha",
+      "extension": "MR-EXT-032-TWO-ROWS-RUNWAY"
+    },
+    {
+      "lesson": "MR-R06-two-rows-recall",
+      "extension": "MR-EXT-032-TWO-ROWS-RUNWAY"
+    }
   ],
   "before": [],
   "inline": [],

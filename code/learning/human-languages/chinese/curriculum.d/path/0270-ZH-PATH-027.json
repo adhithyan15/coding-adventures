@@ -2,11 +2,26 @@
   "id": "ZH-PATH-027",
   "spine_node": "SPINE-SAY-WHAT-I-LIKE",
   "lessons": [
-    "ZH-W28-xi",
-    "ZH-W28-huan",
-    "ZH-C28-xihuan",
-    "ZH-C28-xihuan-shenme",
-    "ZH-C28-practice"
+    {
+      "lesson": "ZH-W28-xi",
+      "extension": "ZH-EXT-062-XIHUAN"
+    },
+    {
+      "lesson": "ZH-W28-huan",
+      "extension": "ZH-EXT-062-XIHUAN"
+    },
+    {
+      "lesson": "ZH-C28-xihuan",
+      "extension": "ZH-EXT-062-XIHUAN"
+    },
+    {
+      "lesson": "ZH-C28-xihuan-shenme",
+      "extension": "ZH-EXT-062-XIHUAN"
+    },
+    {
+      "lesson": "ZH-C28-practice",
+      "extension": "ZH-EXT-062-XIHUAN"
+    }
   ],
   "before": [],
   "inline": [],

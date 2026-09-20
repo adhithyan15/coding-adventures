@@ -2,11 +2,26 @@
   "id": "ML-PATH-60-ANIMAL",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "ML-C60-cow",
-    "ML-C60-goat",
-    "ML-C60-hen",
-    "ML-C60-crow",
-    "ML-C60-elephant"
+    {
+      "lesson": "ML-C60-cow",
+      "extension": "ML-EXT-60-ANIMAL"
+    },
+    {
+      "lesson": "ML-C60-goat",
+      "extension": "ML-EXT-60-ANIMAL"
+    },
+    {
+      "lesson": "ML-C60-hen",
+      "extension": "ML-EXT-60-ANIMAL"
+    },
+    {
+      "lesson": "ML-C60-crow",
+      "extension": "ML-EXT-60-ANIMAL"
+    },
+    {
+      "lesson": "ML-C60-elephant",
+      "extension": "ML-EXT-60-ANIMAL"
+    }
   ],
   "before": [],
   "inline": [

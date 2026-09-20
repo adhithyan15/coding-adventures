@@ -2,13 +2,34 @@
   "id": "HI-PATH-102-SPAN",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "HI-C94-tak",
-    "HI-C94-se-tak-din",
-    "HI-C94-se-tak-samay",
-    "HI-C94-train",
-    "HI-C94-se-nahin",
-    "HI-C94-repaso-safar",
-    "HI-C94-sintesis-safar"
+    {
+      "lesson": "HI-C94-tak",
+      "extension": "HI-EXT-102-SPAN"
+    },
+    {
+      "lesson": "HI-C94-se-tak-din",
+      "extension": "HI-EXT-102-SPAN"
+    },
+    {
+      "lesson": "HI-C94-se-tak-samay",
+      "extension": "HI-EXT-102-SPAN"
+    },
+    {
+      "lesson": "HI-C94-train",
+      "extension": "HI-EXT-102-SPAN"
+    },
+    {
+      "lesson": "HI-C94-se-nahin",
+      "extension": "HI-EXT-102-SPAN"
+    },
+    {
+      "lesson": "HI-C94-repaso-safar",
+      "extension": "HI-EXT-102-SPAN"
+    },
+    {
+      "lesson": "HI-C94-sintesis-safar",
+      "extension": "HI-EXT-102-SPAN"
+    }
   ],
   "before": [],
   "inline": [

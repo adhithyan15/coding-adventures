@@ -2,7 +2,10 @@
   "id": "BN-PATH-013",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "BN-C09-neowa"
+    {
+      "lesson": "BN-C09-neowa",
+      "extension": "BN-EXT-013-CONJUNCT-VERBS"
+    }
   ],
   "before": [],
   "inline": [

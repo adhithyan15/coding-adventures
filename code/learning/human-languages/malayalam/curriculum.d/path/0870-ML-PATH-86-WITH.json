@@ -2,10 +2,22 @@
   "id": "ML-PATH-86-WITH",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "ML-C86-oppam",
-    "ML-C86-koode",
-    "ML-C86-aal-instrumental",
-    "ML-R86-with-recall"
+    {
+      "lesson": "ML-C86-oppam",
+      "extension": "ML-EXT-86-WITH"
+    },
+    {
+      "lesson": "ML-C86-koode",
+      "extension": "ML-EXT-86-WITH"
+    },
+    {
+      "lesson": "ML-C86-aal-instrumental",
+      "extension": "ML-EXT-86-WITH"
+    },
+    {
+      "lesson": "ML-R86-with-recall",
+      "extension": "ML-EXT-86-WITH"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,8 +2,14 @@
   "id": "KA-PATH-026-B",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "KA-C33-oodu",
-    "KA-C33-bare"
+    {
+      "lesson": "KA-C33-oodu",
+      "extension": "KA-EXT-026-MIND-VERBS-B"
+    },
+    {
+      "lesson": "KA-C33-bare",
+      "extension": "KA-EXT-026-MIND-VERBS-B"
+    }
   ],
   "before": [],
   "inline": [

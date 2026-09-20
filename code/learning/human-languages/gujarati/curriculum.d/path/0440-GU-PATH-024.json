@@ -2,14 +2,38 @@
   "id": "GU-PATH-024",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "GU-C25-savaar",
-    "GU-C25-bapor",
-    "GU-C25-saanj",
-    "GU-C25-divas",
-    "GU-C25-mahino",
-    "GU-C25-atyaare",
-    "GU-C25-time-written",
-    "GU-R25-time-written-r1"
+    {
+      "lesson": "GU-C25-savaar",
+      "extension": "GU-EXT-036-TIME-WORDS-WRITTEN"
+    },
+    {
+      "lesson": "GU-C25-bapor",
+      "extension": "GU-EXT-036-TIME-WORDS-WRITTEN"
+    },
+    {
+      "lesson": "GU-C25-saanj",
+      "extension": "GU-EXT-036-TIME-WORDS-WRITTEN"
+    },
+    {
+      "lesson": "GU-C25-divas",
+      "extension": "GU-EXT-036-TIME-WORDS-WRITTEN"
+    },
+    {
+      "lesson": "GU-C25-mahino",
+      "extension": "GU-EXT-036-TIME-WORDS-WRITTEN"
+    },
+    {
+      "lesson": "GU-C25-atyaare",
+      "extension": "GU-EXT-036-TIME-WORDS-WRITTEN"
+    },
+    {
+      "lesson": "GU-C25-time-written",
+      "extension": "GU-EXT-036-TIME-WORDS-WRITTEN"
+    },
+    {
+      "lesson": "GU-R25-time-written-r1",
+      "extension": "GU-EXT-036-TIME-WORDS-WRITTEN"
+    }
   ],
   "before": [],
   "inline": [

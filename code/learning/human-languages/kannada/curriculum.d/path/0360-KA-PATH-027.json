@@ -2,8 +2,14 @@
   "id": "KA-PATH-027",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "KA-C35-kutumba",
-    "KA-C35-snehita"
+    {
+      "lesson": "KA-C35-kutumba",
+      "extension": "KA-EXT-028-FAMILY-FRIENDS"
+    },
+    {
+      "lesson": "KA-C35-snehita",
+      "extension": "KA-EXT-028-FAMILY-FRIENDS"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,11 +2,26 @@
   "id": "SA-PATH-47-DWELL",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "SA-C47-wall",
-    "SA-C47-window",
-    "SA-C47-stair",
-    "SA-C47-pillar",
-    "SA-C47-floor"
+    {
+      "lesson": "SA-C47-wall",
+      "extension": "SA-EXT-47-DWELL"
+    },
+    {
+      "lesson": "SA-C47-window",
+      "extension": "SA-EXT-47-DWELL"
+    },
+    {
+      "lesson": "SA-C47-stair",
+      "extension": "SA-EXT-47-DWELL"
+    },
+    {
+      "lesson": "SA-C47-pillar",
+      "extension": "SA-EXT-47-DWELL"
+    },
+    {
+      "lesson": "SA-C47-floor",
+      "extension": "SA-EXT-47-DWELL"
+    }
   ],
   "before": [],
   "inline": [

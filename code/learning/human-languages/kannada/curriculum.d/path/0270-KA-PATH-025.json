@@ -2,8 +2,14 @@
   "id": "KA-PATH-025",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "KA-C32-iru",
-    "KA-C32-hoogu"
+    {
+      "lesson": "KA-C32-iru",
+      "extension": "KA-EXT-025-CORE-VERBS"
+    },
+    {
+      "lesson": "KA-C32-hoogu",
+      "extension": "KA-EXT-025-CORE-VERBS"
+    }
   ],
   "before": [],
   "inline": [

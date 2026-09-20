@@ -2,10 +2,22 @@
   "id": "RU-PATH-015",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "RU-C13-moloko",
-    "RU-C13-syr",
-    "RU-C13-sok",
-    "RU-C13-sup"
+    {
+      "lesson": "RU-C13-moloko",
+      "extension": "RU-EXT-015-MORE-FOOD-DRINK"
+    },
+    {
+      "lesson": "RU-C13-syr",
+      "extension": "RU-EXT-015-MORE-FOOD-DRINK"
+    },
+    {
+      "lesson": "RU-C13-sok",
+      "extension": "RU-EXT-015-MORE-FOOD-DRINK"
+    },
+    {
+      "lesson": "RU-C13-sup",
+      "extension": "RU-EXT-015-MORE-FOOD-DRINK"
+    }
   ],
   "before": [],
   "inline": [

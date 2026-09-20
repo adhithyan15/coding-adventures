@@ -2,13 +2,34 @@
   "id": "HI-PATH-97-CONTINUOUS",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "HI-C89-kar-raha-hun",
-    "HI-C89-kar-rahi-hun",
-    "HI-C89-kar-raha-hai",
-    "HI-C89-kar-rahe-hain",
-    "HI-C89-karta-vs-kar-raha",
-    "HI-C89-repaso-jaari",
-    "HI-C89-sintesis-jaari"
+    {
+      "lesson": "HI-C89-kar-raha-hun",
+      "extension": "HI-EXT-97-CONTINUOUS"
+    },
+    {
+      "lesson": "HI-C89-kar-rahi-hun",
+      "extension": "HI-EXT-97-CONTINUOUS"
+    },
+    {
+      "lesson": "HI-C89-kar-raha-hai",
+      "extension": "HI-EXT-97-CONTINUOUS"
+    },
+    {
+      "lesson": "HI-C89-kar-rahe-hain",
+      "extension": "HI-EXT-97-CONTINUOUS"
+    },
+    {
+      "lesson": "HI-C89-karta-vs-kar-raha",
+      "extension": "HI-EXT-97-CONTINUOUS"
+    },
+    {
+      "lesson": "HI-C89-repaso-jaari",
+      "extension": "HI-EXT-97-CONTINUOUS"
+    },
+    {
+      "lesson": "HI-C89-sintesis-jaari",
+      "extension": "HI-EXT-97-CONTINUOUS"
+    }
   ],
   "before": [],
   "inline": [

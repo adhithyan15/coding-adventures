@@ -2,10 +2,22 @@
   "id": "TA-PATH-74-JOIN",
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
-    "TA-C74-and",
-    "TA-C74-also",
-    "TA-W29-read-paalum",
-    "TA-C74-neither"
+    {
+      "lesson": "TA-C74-and",
+      "extension": "TA-EXT-74-JOIN"
+    },
+    {
+      "lesson": "TA-C74-also",
+      "extension": "TA-EXT-74-JOIN"
+    },
+    {
+      "lesson": "TA-W29-read-paalum",
+      "extension": "TA-EXT-74-JOIN"
+    },
+    {
+      "lesson": "TA-C74-neither",
+      "extension": "TA-EXT-74-JOIN"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,11 +2,26 @@
   "id": "ES-PATH-344-01",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "ES-C344-cero",
-    "ES-C344-numero",
-    "ES-C344-mitad",
-    "ES-C344-docena",
-    "ES-C344-doble"
+    {
+      "lesson": "ES-C344-cero",
+      "extension": "ES-EXT-344-COUNT"
+    },
+    {
+      "lesson": "ES-C344-numero",
+      "extension": "ES-EXT-344-COUNT"
+    },
+    {
+      "lesson": "ES-C344-mitad",
+      "extension": "ES-EXT-344-COUNT"
+    },
+    {
+      "lesson": "ES-C344-docena",
+      "extension": "ES-EXT-344-COUNT"
+    },
+    {
+      "lesson": "ES-C344-doble",
+      "extension": "ES-EXT-344-COUNT"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,7 +2,10 @@
   "id": "ES-PATH-A1-QUIEN",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C61-quien"
+    {
+      "lesson": "ES-C61-quien",
+      "extension": "ES-EXT-A1-QUIEN"
+    }
   ],
   "before": [],
   "inline": [

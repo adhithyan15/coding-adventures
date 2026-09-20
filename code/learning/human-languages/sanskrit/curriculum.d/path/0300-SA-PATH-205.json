@@ -2,12 +2,30 @@
   "id": "SA-PATH-205",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "SA-C19-six",
-    "SA-C19-seven",
-    "SA-C19-eight",
-    "SA-C19-nine",
-    "SA-C19-ten",
-    "SA-C19-number-family"
+    {
+      "lesson": "SA-C19-six",
+      "extension": "SA-EXT-205-NUM"
+    },
+    {
+      "lesson": "SA-C19-seven",
+      "extension": "SA-EXT-205-NUM"
+    },
+    {
+      "lesson": "SA-C19-eight",
+      "extension": "SA-EXT-205-NUM"
+    },
+    {
+      "lesson": "SA-C19-nine",
+      "extension": "SA-EXT-205-NUM"
+    },
+    {
+      "lesson": "SA-C19-ten",
+      "extension": "SA-EXT-205-NUM"
+    },
+    {
+      "lesson": "SA-C19-number-family",
+      "extension": "SA-EXT-205-NUM"
+    }
   ],
   "before": [],
   "inline": [

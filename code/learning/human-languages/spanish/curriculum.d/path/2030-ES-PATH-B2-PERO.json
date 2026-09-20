@@ -2,7 +2,10 @@
   "id": "ES-PATH-B2-PERO",
   "spine_node": "SPINE-ARGUE-A-VIEW",
   "lessons": [
-    "ES-C58-pero"
+    {
+      "lesson": "ES-C58-pero",
+      "extension": "ES-EXT-B2-PERO"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,7 +2,10 @@
   "id": "PT-PATH-025-D",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "PT-C21-comprar"
+    {
+      "lesson": "PT-C21-comprar",
+      "extension": "PT-EXT-025-LANGUAGE-SPECIFIC-D"
+    }
   ],
   "before": [],
   "inline": [

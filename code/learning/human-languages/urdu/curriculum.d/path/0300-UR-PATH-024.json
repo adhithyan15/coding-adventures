@@ -2,12 +2,30 @@
   "id": "UR-PATH-024",
   "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
   "lessons": [
-    "UR-C23-kamra",
-    "UR-C23-oblique",
-    "UR-C23-ko",
-    "UR-C23-mein",
-    "UR-C23-par",
-    "UR-R23-into-and-onto"
+    {
+      "lesson": "UR-C23-kamra",
+      "extension": "UR-EXT-034-OBLIQUE-AND-POSTPOSITIONS"
+    },
+    {
+      "lesson": "UR-C23-oblique",
+      "extension": "UR-EXT-034-OBLIQUE-AND-POSTPOSITIONS"
+    },
+    {
+      "lesson": "UR-C23-ko",
+      "extension": "UR-EXT-034-OBLIQUE-AND-POSTPOSITIONS"
+    },
+    {
+      "lesson": "UR-C23-mein",
+      "extension": "UR-EXT-034-OBLIQUE-AND-POSTPOSITIONS"
+    },
+    {
+      "lesson": "UR-C23-par",
+      "extension": "UR-EXT-034-OBLIQUE-AND-POSTPOSITIONS"
+    },
+    {
+      "lesson": "UR-R23-into-and-onto",
+      "extension": "UR-EXT-034-OBLIQUE-AND-POSTPOSITIONS"
+    }
   ],
   "before": [],
   "inline": [

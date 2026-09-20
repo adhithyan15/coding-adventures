@@ -2,11 +2,26 @@
   "id": "TE-PATH-54-TREE",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "TE-C54-tree",
-    "TE-C54-branch",
-    "TE-C54-root",
-    "TE-C54-seed",
-    "TE-C54-seedling"
+    {
+      "lesson": "TE-C54-tree",
+      "extension": "TE-EXT-54-TREE"
+    },
+    {
+      "lesson": "TE-C54-branch",
+      "extension": "TE-EXT-54-TREE"
+    },
+    {
+      "lesson": "TE-C54-root",
+      "extension": "TE-EXT-54-TREE"
+    },
+    {
+      "lesson": "TE-C54-seed",
+      "extension": "TE-EXT-54-TREE"
+    },
+    {
+      "lesson": "TE-C54-seedling",
+      "extension": "TE-EXT-54-TREE"
+    }
   ],
   "before": [],
   "inline": [

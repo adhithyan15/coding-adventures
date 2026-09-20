@@ -2,11 +2,26 @@
   "id": "TE-PATH-51-COURTESY",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "TE-C51-gratitude",
-    "TE-C51-favour",
-    "TE-C51-respect",
-    "TE-C51-blessing",
-    "TE-C51-salutation"
+    {
+      "lesson": "TE-C51-gratitude",
+      "extension": "TE-EXT-51-COURTESY"
+    },
+    {
+      "lesson": "TE-C51-favour",
+      "extension": "TE-EXT-51-COURTESY"
+    },
+    {
+      "lesson": "TE-C51-respect",
+      "extension": "TE-EXT-51-COURTESY"
+    },
+    {
+      "lesson": "TE-C51-blessing",
+      "extension": "TE-EXT-51-COURTESY"
+    },
+    {
+      "lesson": "TE-C51-salutation",
+      "extension": "TE-EXT-51-COURTESY"
+    }
   ],
   "before": [],
   "inline": [

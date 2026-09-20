@@ -2,7 +2,10 @@
   "id": "GU-PATH-VANDHO-R4",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "GU-R18-no-problem-r4"
+    {
+      "lesson": "GU-R18-no-problem-r4",
+      "extension": "GU-EXT-027-VANDHO-R4"
+    }
   ],
   "before": [],
   "inline": [

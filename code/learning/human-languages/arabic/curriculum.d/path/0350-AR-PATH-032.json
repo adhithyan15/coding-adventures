@@ -2,9 +2,18 @@
   "id": "AR-PATH-032",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "AR-C35-jar",
-    "AR-C35-ibn-bint",
-    "AR-C35-sadiq"
+    {
+      "lesson": "AR-C35-jar",
+      "extension": "AR-EXT-032-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "AR-C35-ibn-bint",
+      "extension": "AR-EXT-032-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "AR-C35-sadiq",
+      "extension": "AR-EXT-032-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

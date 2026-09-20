@@ -2,10 +2,22 @@
   "id": "ES-PATH-406-DOCUMENTS",
   "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
   "lessons": [
-    "ES-C406-cliente",
-    "ES-C406-documento",
-    "ES-C406-dato",
-    "ES-C406-impreso"
+    {
+      "lesson": "ES-C406-cliente",
+      "extension": "ES-EXT-406-DOCUMENTS"
+    },
+    {
+      "lesson": "ES-C406-documento",
+      "extension": "ES-EXT-406-DOCUMENTS"
+    },
+    {
+      "lesson": "ES-C406-dato",
+      "extension": "ES-EXT-406-DOCUMENTS"
+    },
+    {
+      "lesson": "ES-C406-impreso",
+      "extension": "ES-EXT-406-DOCUMENTS"
+    }
   ],
   "before": [],
   "inline": [

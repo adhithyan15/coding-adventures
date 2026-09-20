@@ -2,11 +2,26 @@
   "id": "ML-PATH-100-CLOTHING",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ML-C100-mundu",
-    "ML-C100-saari",
-    "ML-C100-cheruppu",
-    "ML-C100-thoppi",
-    "ML-R100-clothing-recall"
+    {
+      "lesson": "ML-C100-mundu",
+      "extension": "ML-EXT-100-CLOTHING"
+    },
+    {
+      "lesson": "ML-C100-saari",
+      "extension": "ML-EXT-100-CLOTHING"
+    },
+    {
+      "lesson": "ML-C100-cheruppu",
+      "extension": "ML-EXT-100-CLOTHING"
+    },
+    {
+      "lesson": "ML-C100-thoppi",
+      "extension": "ML-EXT-100-CLOTHING"
+    },
+    {
+      "lesson": "ML-R100-clothing-recall",
+      "extension": "ML-EXT-100-CLOTHING"
+    }
   ],
   "before": [],
   "inline": [

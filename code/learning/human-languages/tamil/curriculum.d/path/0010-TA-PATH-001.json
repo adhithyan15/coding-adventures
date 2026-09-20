@@ -2,8 +2,14 @@
   "id": "TA-PATH-001",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "TA-C01-vanakkam",
-    "TA-W00-va-guided-copy"
+    {
+      "lesson": "TA-C01-vanakkam",
+      "extension": "TA-EXT-001-INLINE-SCRIPT"
+    },
+    {
+      "lesson": "TA-W00-va-guided-copy",
+      "extension": "TA-EXT-001-INLINE-SCRIPT"
+    }
   ],
   "before": [],
   "inline": [

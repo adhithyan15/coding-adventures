@@ -2,7 +2,10 @@
   "id": "TA-PATH-020",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "TA-C14-kaalangal"
+    {
+      "lesson": "TA-C14-kaalangal",
+      "extension": "TA-EXT-020-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

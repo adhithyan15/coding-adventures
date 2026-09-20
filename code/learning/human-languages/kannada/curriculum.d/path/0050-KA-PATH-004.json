@@ -9,7 +9,10 @@
     "KA-C02-enu",
     "KA-C02-nimma-hesaru-enu",
     "KA-C02-santosha",
-    "KA-C02-practice"
+    {
+      "lesson": "KA-C02-practice",
+      "extension": "KA-EXT-004-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [],

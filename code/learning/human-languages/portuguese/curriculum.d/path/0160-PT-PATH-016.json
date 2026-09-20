@@ -2,8 +2,14 @@
   "id": "PT-PATH-016",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "PT-C11-pao",
-    "PT-C11-agua-vinho"
+    {
+      "lesson": "PT-C11-pao",
+      "extension": "PT-EXT-016-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "PT-C11-agua-vinho",
+      "extension": "PT-EXT-016-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

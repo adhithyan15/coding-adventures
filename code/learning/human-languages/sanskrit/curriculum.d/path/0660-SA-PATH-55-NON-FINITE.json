@@ -2,9 +2,18 @@
   "id": "SA-PATH-55-NON-FINITE",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "SA-C55-gatva",
-    "SA-C55-gantum",
-    "SA-R55-non-finite"
+    {
+      "lesson": "SA-C55-gatva",
+      "extension": "SA-EXT-055-NON-FINITE"
+    },
+    {
+      "lesson": "SA-C55-gantum",
+      "extension": "SA-EXT-055-NON-FINITE"
+    },
+    {
+      "lesson": "SA-R55-non-finite",
+      "extension": "SA-EXT-055-NON-FINITE"
+    }
   ],
   "before": [],
   "inline": [

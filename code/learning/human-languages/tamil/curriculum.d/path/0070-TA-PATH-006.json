@@ -4,7 +4,10 @@
   "lessons": [
     "TA-C01-sari",
     "TA-C01-answering",
-    "TA-C01-practice"
+    {
+      "lesson": "TA-C01-practice",
+      "extension": "TA-EXT-006-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [

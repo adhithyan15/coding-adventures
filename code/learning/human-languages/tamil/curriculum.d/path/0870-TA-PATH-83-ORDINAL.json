@@ -2,14 +2,38 @@
   "id": "TA-PATH-83-ORDINAL",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "TA-C83-sixth",
-    "TA-C83-seventh",
-    "TA-C83-eighth",
-    "TA-C83-ninth",
-    "TA-C83-tenth",
-    "TA-C83-eleventh",
-    "TA-C83-date",
-    "TA-R83-ordinal-recall"
+    {
+      "lesson": "TA-C83-sixth",
+      "extension": "TA-EXT-83-ORDINAL"
+    },
+    {
+      "lesson": "TA-C83-seventh",
+      "extension": "TA-EXT-83-ORDINAL"
+    },
+    {
+      "lesson": "TA-C83-eighth",
+      "extension": "TA-EXT-83-ORDINAL"
+    },
+    {
+      "lesson": "TA-C83-ninth",
+      "extension": "TA-EXT-83-ORDINAL"
+    },
+    {
+      "lesson": "TA-C83-tenth",
+      "extension": "TA-EXT-83-ORDINAL"
+    },
+    {
+      "lesson": "TA-C83-eleventh",
+      "extension": "TA-EXT-83-ORDINAL"
+    },
+    {
+      "lesson": "TA-C83-date",
+      "extension": "TA-EXT-83-ORDINAL"
+    },
+    {
+      "lesson": "TA-R83-ordinal-recall",
+      "extension": "TA-EXT-83-ORDINAL"
+    }
   ],
   "before": [],
   "inline": [

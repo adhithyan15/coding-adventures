@@ -2,9 +2,18 @@
   "id": "JA-PATH-018",
   "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
   "lessons": [
-    "JA-C19-words",
-    "JA-C19-greetings",
-    "JA-C19-kyoushitsu"
+    {
+      "lesson": "JA-C19-words",
+      "extension": "JA-EXT-026-READING"
+    },
+    {
+      "lesson": "JA-C19-greetings",
+      "extension": "JA-EXT-026-READING"
+    },
+    {
+      "lesson": "JA-C19-kyoushitsu",
+      "extension": "JA-EXT-026-READING"
+    }
   ],
   "before": [],
   "inline": [

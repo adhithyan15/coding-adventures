@@ -2,11 +2,26 @@
   "id": "TA-PATH-49-COURTESY",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "TA-C49-affection",
-    "TA-C49-respect",
-    "TA-C49-gladness",
-    "TA-C49-good-wish",
-    "TA-C49-many-thanks"
+    {
+      "lesson": "TA-C49-affection",
+      "extension": "TA-EXT-49-COURTESY"
+    },
+    {
+      "lesson": "TA-C49-respect",
+      "extension": "TA-EXT-49-COURTESY"
+    },
+    {
+      "lesson": "TA-C49-gladness",
+      "extension": "TA-EXT-49-COURTESY"
+    },
+    {
+      "lesson": "TA-C49-good-wish",
+      "extension": "TA-EXT-49-COURTESY"
+    },
+    {
+      "lesson": "TA-C49-many-thanks",
+      "extension": "TA-EXT-49-COURTESY"
+    }
   ],
   "before": [],
   "inline": [

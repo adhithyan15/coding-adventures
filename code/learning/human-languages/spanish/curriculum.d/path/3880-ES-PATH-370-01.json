@@ -2,11 +2,26 @@
   "id": "ES-PATH-370-01",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "ES-C370-tormenta",
-    "ES-C370-trueno",
-    "ES-C370-hielo",
-    "ES-C370-cueva",
-    "ES-C370-costa"
+    {
+      "lesson": "ES-C370-tormenta",
+      "extension": "ES-EXT-370-WHERE"
+    },
+    {
+      "lesson": "ES-C370-trueno",
+      "extension": "ES-EXT-370-WHERE"
+    },
+    {
+      "lesson": "ES-C370-hielo",
+      "extension": "ES-EXT-370-WHERE"
+    },
+    {
+      "lesson": "ES-C370-cueva",
+      "extension": "ES-EXT-370-WHERE"
+    },
+    {
+      "lesson": "ES-C370-costa",
+      "extension": "ES-EXT-370-WHERE"
+    }
   ],
   "before": [],
   "inline": [

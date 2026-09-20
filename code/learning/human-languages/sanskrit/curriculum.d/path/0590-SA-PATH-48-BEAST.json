@@ -2,11 +2,26 @@
   "id": "SA-PATH-48-BEAST",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "SA-C48-lion",
-    "SA-C48-wolf",
-    "SA-C48-goat",
-    "SA-C48-monkey",
-    "SA-C48-goose"
+    {
+      "lesson": "SA-C48-lion",
+      "extension": "SA-EXT-48-BEAST"
+    },
+    {
+      "lesson": "SA-C48-wolf",
+      "extension": "SA-EXT-48-BEAST"
+    },
+    {
+      "lesson": "SA-C48-goat",
+      "extension": "SA-EXT-48-BEAST"
+    },
+    {
+      "lesson": "SA-C48-monkey",
+      "extension": "SA-EXT-48-BEAST"
+    },
+    {
+      "lesson": "SA-C48-goose",
+      "extension": "SA-EXT-48-BEAST"
+    }
   ],
   "before": [],
   "inline": [

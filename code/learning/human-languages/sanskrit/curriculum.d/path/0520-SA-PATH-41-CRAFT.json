@@ -2,11 +2,26 @@
   "id": "SA-PATH-41-CRAFT",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "SA-C41-wheel",
-    "SA-C41-pot",
-    "SA-C41-boat",
-    "SA-C41-mirror",
-    "SA-C41-parasol"
+    {
+      "lesson": "SA-C41-wheel",
+      "extension": "SA-EXT-41-CRAFT"
+    },
+    {
+      "lesson": "SA-C41-pot",
+      "extension": "SA-EXT-41-CRAFT"
+    },
+    {
+      "lesson": "SA-C41-boat",
+      "extension": "SA-EXT-41-CRAFT"
+    },
+    {
+      "lesson": "SA-C41-mirror",
+      "extension": "SA-EXT-41-CRAFT"
+    },
+    {
+      "lesson": "SA-C41-parasol",
+      "extension": "SA-EXT-41-CRAFT"
+    }
   ],
   "before": [],
   "inline": [

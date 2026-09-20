@@ -2,7 +2,10 @@
   "id": "PA-PATH-026",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "PA-R25-kin-eye-r4"
+    {
+      "lesson": "PA-R25-kin-eye-r4",
+      "extension": "PA-EXT-031-A1-KIN-BODY-R4"
+    }
   ],
   "before": [],
   "inline": [

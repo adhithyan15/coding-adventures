@@ -2,12 +2,30 @@
   "id": "PA-PATH-014",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "PA-C10-paani",
-    "PA-C10-chaa",
-    "PA-S10-chachcha",
-    "PA-C10-dudh",
-    "PA-C10-roti",
-    "PA-S10-addak-dhadda"
+    {
+      "lesson": "PA-C10-paani",
+      "extension": "PA-EXT-014-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "PA-C10-chaa",
+      "extension": "PA-EXT-014-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "PA-S10-chachcha",
+      "extension": "PA-EXT-053-PREA1-SCRIPT-RUNWAY-C10"
+    },
+    {
+      "lesson": "PA-C10-dudh",
+      "extension": "PA-EXT-014-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "PA-C10-roti",
+      "extension": "PA-EXT-014-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "PA-S10-addak-dhadda",
+      "extension": "PA-EXT-053-PREA1-SCRIPT-RUNWAY-C10"
+    }
   ],
   "before": [],
   "inline": [

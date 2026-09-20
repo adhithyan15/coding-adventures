@@ -2,11 +2,26 @@
   "id": "ES-PATH-346-01",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "ES-C346-escuela",
-    "ES-C346-iglesia",
-    "ES-C346-mercado",
-    "ES-C346-oficina",
-    "ES-C346-estacion"
+    {
+      "lesson": "ES-C346-escuela",
+      "extension": "ES-EXT-346-PLACE"
+    },
+    {
+      "lesson": "ES-C346-iglesia",
+      "extension": "ES-EXT-346-PLACE"
+    },
+    {
+      "lesson": "ES-C346-mercado",
+      "extension": "ES-EXT-346-PLACE"
+    },
+    {
+      "lesson": "ES-C346-oficina",
+      "extension": "ES-EXT-346-PLACE"
+    },
+    {
+      "lesson": "ES-C346-estacion",
+      "extension": "ES-EXT-346-PLACE"
+    }
   ],
   "before": [],
   "inline": [

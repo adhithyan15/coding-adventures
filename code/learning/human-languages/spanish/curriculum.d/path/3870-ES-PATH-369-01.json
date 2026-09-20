@@ -2,11 +2,26 @@
   "id": "ES-PATH-369-01",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "ES-C369-rio",
-    "ES-C369-arena",
-    "ES-C369-polvo",
-    "ES-C369-humo",
-    "ES-C369-ceniza"
+    {
+      "lesson": "ES-C369-rio",
+      "extension": "ES-EXT-369-WHERE"
+    },
+    {
+      "lesson": "ES-C369-arena",
+      "extension": "ES-EXT-369-WHERE"
+    },
+    {
+      "lesson": "ES-C369-polvo",
+      "extension": "ES-EXT-369-WHERE"
+    },
+    {
+      "lesson": "ES-C369-humo",
+      "extension": "ES-EXT-369-WHERE"
+    },
+    {
+      "lesson": "ES-C369-ceniza",
+      "extension": "ES-EXT-369-WHERE"
+    }
   ],
   "before": [],
   "inline": [

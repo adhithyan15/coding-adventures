@@ -3,7 +3,10 @@
   "spine_node": "SPINE-READ-CULTURAL-WEIGHT",
   "lessons": [
     "ES-C274-tener-gracia",
-    "ES-C274-practice"
+    {
+      "lesson": "ES-C274-practice",
+      "extension": "ES-EXT-274-WEIGHT"
+    }
   ],
   "before": [],
   "inline": [

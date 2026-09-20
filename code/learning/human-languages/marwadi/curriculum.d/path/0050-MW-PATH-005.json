@@ -2,24 +2,78 @@
   "id": "MW-PATH-005",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "MW-C05-hear-mharo",
-    "MW-W05-virama",
-    "MW-W05-o-matra",
-    "MW-C05-mharo",
-    "MW-C05-hear-naam",
-    "MW-W05-na",
-    "MW-C05-naam",
-    "MW-C05-hear-hai",
-    "MW-W05-ai-matra",
-    "MW-C05-answer",
-    "MW-C05-hear-tharo",
-    "MW-W05-tha",
-    "MW-C05-tharo",
-    "MW-C05-hear-kain",
-    "MW-W05-ka",
-    "MW-W05-ii-independent",
-    "MW-C05-kain",
-    "MW-C05-practice"
+    {
+      "lesson": "MW-C05-hear-mharo",
+      "extension": "MW-EXT-009-HEAR-MHARO"
+    },
+    {
+      "lesson": "MW-W05-virama",
+      "extension": "MW-EXT-010-WRITE-MHARO"
+    },
+    {
+      "lesson": "MW-W05-o-matra",
+      "extension": "MW-EXT-010-WRITE-MHARO"
+    },
+    {
+      "lesson": "MW-C05-mharo",
+      "extension": "MW-EXT-010-WRITE-MHARO"
+    },
+    {
+      "lesson": "MW-C05-hear-naam",
+      "extension": "MW-EXT-011-NAME-ANSWER"
+    },
+    {
+      "lesson": "MW-W05-na",
+      "extension": "MW-EXT-011-NAME-ANSWER"
+    },
+    {
+      "lesson": "MW-C05-naam",
+      "extension": "MW-EXT-011-NAME-ANSWER"
+    },
+    {
+      "lesson": "MW-C05-hear-hai",
+      "extension": "MW-EXT-011-NAME-ANSWER"
+    },
+    {
+      "lesson": "MW-W05-ai-matra",
+      "extension": "MW-EXT-011-NAME-ANSWER"
+    },
+    {
+      "lesson": "MW-C05-answer",
+      "extension": "MW-EXT-011-NAME-ANSWER"
+    },
+    {
+      "lesson": "MW-C05-hear-tharo",
+      "extension": "MW-EXT-012-HEAR-THARO"
+    },
+    {
+      "lesson": "MW-W05-tha",
+      "extension": "MW-EXT-013-WRITE-NAME-QUESTION"
+    },
+    {
+      "lesson": "MW-C05-tharo",
+      "extension": "MW-EXT-013-WRITE-NAME-QUESTION"
+    },
+    {
+      "lesson": "MW-C05-hear-kain",
+      "extension": "MW-EXT-013-WRITE-NAME-QUESTION"
+    },
+    {
+      "lesson": "MW-W05-ka",
+      "extension": "MW-EXT-013-WRITE-NAME-QUESTION"
+    },
+    {
+      "lesson": "MW-W05-ii-independent",
+      "extension": "MW-EXT-013-WRITE-NAME-QUESTION"
+    },
+    {
+      "lesson": "MW-C05-kain",
+      "extension": "MW-EXT-013-WRITE-NAME-QUESTION"
+    },
+    {
+      "lesson": "MW-C05-practice",
+      "extension": "MW-EXT-014-EXCHANGE-NAMES"
+    }
   ],
   "before": [],
   "inline": [

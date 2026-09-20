@@ -2,7 +2,10 @@
   "id": "ML-PATH-034",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "ML-C40-oon"
+    {
+      "lesson": "ML-C40-oon",
+      "extension": "ML-EXT-034-MEAL"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,7 +2,10 @@
   "id": "ES-PATH-A1-VOS-PRET-AR",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C63-hablasteis"
+    {
+      "lesson": "ES-C63-hablasteis",
+      "extension": "ES-EXT-A1-VOS-PRET-AR"
+    }
   ],
   "before": [],
   "inline": [

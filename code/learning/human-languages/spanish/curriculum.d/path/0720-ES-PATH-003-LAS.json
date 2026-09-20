@@ -2,7 +2,10 @@
   "id": "ES-PATH-003-LAS",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C44-las"
+    {
+      "lesson": "ES-C44-las",
+      "extension": "ES-EXT-003-LAS"
+    }
   ],
   "before": [],
   "inline": [

@@ -3,7 +3,10 @@
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
     "AR-C01-shukran",
-    "AR-C01-practice"
+    {
+      "lesson": "AR-C01-practice",
+      "extension": "AR-EXT-005-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [],

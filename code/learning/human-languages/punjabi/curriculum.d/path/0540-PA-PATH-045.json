@@ -2,11 +2,26 @@
   "id": "PA-PATH-045",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "PA-C43-kaun",
-    "PA-C43-kadon",
-    "PA-W10-thatha",
-    "PA-C43-kitthe",
-    "PA-C43-kinne"
+    {
+      "lesson": "PA-C43-kaun",
+      "extension": "PA-EXT-065-QUESTIONS"
+    },
+    {
+      "lesson": "PA-C43-kadon",
+      "extension": "PA-EXT-065-QUESTIONS"
+    },
+    {
+      "lesson": "PA-W10-thatha",
+      "extension": "PA-EXT-065-QUESTIONS"
+    },
+    {
+      "lesson": "PA-C43-kitthe",
+      "extension": "PA-EXT-065-QUESTIONS"
+    },
+    {
+      "lesson": "PA-C43-kinne",
+      "extension": "PA-EXT-065-QUESTIONS"
+    }
   ],
   "before": [],
   "inline": [

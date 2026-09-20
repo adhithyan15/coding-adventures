@@ -2,10 +2,22 @@
   "id": "TA-PATH-032",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "TA-C36-teneer",
-    "TA-C36-paal",
-    "TA-C36-unavu",
-    "TA-C36-tavaru"
+    {
+      "lesson": "TA-C36-teneer",
+      "extension": "TA-EXT-032-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "TA-C36-paal",
+      "extension": "TA-EXT-032-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "TA-C36-unavu",
+      "extension": "TA-EXT-032-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "TA-C36-tavaru",
+      "extension": "TA-EXT-032-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

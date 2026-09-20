@@ -2,11 +2,26 @@
   "id": "GU-PATH-FINAL-SCRIPT-CLOSURE-A",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "GU-W06-ga",
-    "GU-W06-independent-e",
-    "GU-W06-kha",
-    "GU-W06-independent-u",
-    "GU-R06-first-four-r1"
+    {
+      "lesson": "GU-W06-ga",
+      "extension": "GU-EXT-033-FINAL-SCRIPT-CLOSURE-A"
+    },
+    {
+      "lesson": "GU-W06-independent-e",
+      "extension": "GU-EXT-033-FINAL-SCRIPT-CLOSURE-A"
+    },
+    {
+      "lesson": "GU-W06-kha",
+      "extension": "GU-EXT-033-FINAL-SCRIPT-CLOSURE-A"
+    },
+    {
+      "lesson": "GU-W06-independent-u",
+      "extension": "GU-EXT-033-FINAL-SCRIPT-CLOSURE-A"
+    },
+    {
+      "lesson": "GU-R06-first-four-r1",
+      "extension": "GU-EXT-033-FINAL-SCRIPT-CLOSURE-A"
+    }
   ],
   "before": [],
   "inline": [],

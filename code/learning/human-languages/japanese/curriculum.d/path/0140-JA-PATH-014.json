@@ -2,20 +2,62 @@
   "id": "JA-PATH-014",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "JA-C14-ichi",
-    "JA-C14-go",
-    "JA-C14-ni",
-    "JA-C14-san",
-    "JA-C14-yon",
-    "JA-R14-one-to-five",
-    "JA-C15-nana",
-    "JA-C15-hachi",
-    "JA-C15-ku",
-    "JA-W15-ro",
-    "JA-C15-roku",
-    "JA-W15-small-yu",
-    "JA-C15-juu",
-    "JA-R15-six-to-ten"
+    {
+      "lesson": "JA-C14-ichi",
+      "extension": "JA-EXT-021-NUMBERS-ONE-TO-FIVE"
+    },
+    {
+      "lesson": "JA-C14-go",
+      "extension": "JA-EXT-021-NUMBERS-ONE-TO-FIVE"
+    },
+    {
+      "lesson": "JA-C14-ni",
+      "extension": "JA-EXT-021-NUMBERS-ONE-TO-FIVE"
+    },
+    {
+      "lesson": "JA-C14-san",
+      "extension": "JA-EXT-021-NUMBERS-ONE-TO-FIVE"
+    },
+    {
+      "lesson": "JA-C14-yon",
+      "extension": "JA-EXT-021-NUMBERS-ONE-TO-FIVE"
+    },
+    {
+      "lesson": "JA-R14-one-to-five",
+      "extension": "JA-EXT-021-NUMBERS-ONE-TO-FIVE"
+    },
+    {
+      "lesson": "JA-C15-nana",
+      "extension": "JA-EXT-022-NUMBERS-SIX-TO-TEN"
+    },
+    {
+      "lesson": "JA-C15-hachi",
+      "extension": "JA-EXT-022-NUMBERS-SIX-TO-TEN"
+    },
+    {
+      "lesson": "JA-C15-ku",
+      "extension": "JA-EXT-022-NUMBERS-SIX-TO-TEN"
+    },
+    {
+      "lesson": "JA-W15-ro",
+      "extension": "JA-EXT-022-NUMBERS-SIX-TO-TEN"
+    },
+    {
+      "lesson": "JA-C15-roku",
+      "extension": "JA-EXT-022-NUMBERS-SIX-TO-TEN"
+    },
+    {
+      "lesson": "JA-W15-small-yu",
+      "extension": "JA-EXT-022-NUMBERS-SIX-TO-TEN"
+    },
+    {
+      "lesson": "JA-C15-juu",
+      "extension": "JA-EXT-022-NUMBERS-SIX-TO-TEN"
+    },
+    {
+      "lesson": "JA-R15-six-to-ten",
+      "extension": "JA-EXT-022-NUMBERS-SIX-TO-TEN"
+    }
   ],
   "before": [],
   "inline": [

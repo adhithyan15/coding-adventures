@@ -2,22 +2,70 @@
   "id": "MW-PATH-010",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "MW-C10-hear-bajar",
-    "MW-W10-ja",
-    "MW-C10-bajar",
-    "MW-C10-hear-ghar",
-    "MW-W10-gha",
-    "MW-C10-ghar",
-    "MW-C10-hear-mandir",
-    "MW-C10-mandir",
-    "MW-R10-places-three",
-    "MW-C10-hear-haath",
-    "MW-C10-haath",
-    "MW-C10-hear-paisa",
-    "MW-C10-paisa",
-    "MW-R10-travel-five",
-    "MW-C10-travel-five",
-    "MW-R10-script-close"
+    {
+      "lesson": "MW-C10-hear-bajar",
+      "extension": "MW-EXT-024-TRAVEL-FIVE"
+    },
+    {
+      "lesson": "MW-W10-ja",
+      "extension": "MW-EXT-024-TRAVEL-FIVE"
+    },
+    {
+      "lesson": "MW-C10-bajar",
+      "extension": "MW-EXT-024-TRAVEL-FIVE"
+    },
+    {
+      "lesson": "MW-C10-hear-ghar",
+      "extension": "MW-EXT-024-TRAVEL-FIVE"
+    },
+    {
+      "lesson": "MW-W10-gha",
+      "extension": "MW-EXT-024-TRAVEL-FIVE"
+    },
+    {
+      "lesson": "MW-C10-ghar",
+      "extension": "MW-EXT-024-TRAVEL-FIVE"
+    },
+    {
+      "lesson": "MW-C10-hear-mandir",
+      "extension": "MW-EXT-024-TRAVEL-FIVE"
+    },
+    {
+      "lesson": "MW-C10-mandir",
+      "extension": "MW-EXT-024-TRAVEL-FIVE"
+    },
+    {
+      "lesson": "MW-R10-places-three",
+      "extension": "MW-EXT-024-TRAVEL-FIVE"
+    },
+    {
+      "lesson": "MW-C10-hear-haath",
+      "extension": "MW-EXT-024-TRAVEL-FIVE"
+    },
+    {
+      "lesson": "MW-C10-haath",
+      "extension": "MW-EXT-024-TRAVEL-FIVE"
+    },
+    {
+      "lesson": "MW-C10-hear-paisa",
+      "extension": "MW-EXT-024-TRAVEL-FIVE"
+    },
+    {
+      "lesson": "MW-C10-paisa",
+      "extension": "MW-EXT-024-TRAVEL-FIVE"
+    },
+    {
+      "lesson": "MW-R10-travel-five",
+      "extension": "MW-EXT-024-TRAVEL-FIVE"
+    },
+    {
+      "lesson": "MW-C10-travel-five",
+      "extension": "MW-EXT-024-TRAVEL-FIVE"
+    },
+    {
+      "lesson": "MW-R10-script-close",
+      "extension": "MW-EXT-024-TRAVEL-FIVE"
+    }
   ],
   "before": [],
   "inline": [

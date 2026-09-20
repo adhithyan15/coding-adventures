@@ -6,11 +6,5 @@
   "canDo": "I can offer an opinion rather than only describe.",
   "prerequisites": [
     "ML-EXT-88-TENS"
-  ],
-  "lessons": [
-    "ML-C89-nallathu",
-    "ML-C89-mosham",
-    "ML-C89-opinion",
-    "ML-R89-opinion-recall"
   ]
 }

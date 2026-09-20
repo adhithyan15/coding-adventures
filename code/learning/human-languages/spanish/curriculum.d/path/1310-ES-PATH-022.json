@@ -2,8 +2,14 @@
   "id": "ES-PATH-022",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "ES-C24-cabeza",
-    "ES-C24-mano"
+    {
+      "lesson": "ES-C24-cabeza",
+      "extension": "ES-EXT-022-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C24-mano",
+      "extension": "ES-EXT-022-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

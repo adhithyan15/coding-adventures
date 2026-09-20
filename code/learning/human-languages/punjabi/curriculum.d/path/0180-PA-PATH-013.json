@@ -2,8 +2,14 @@
   "id": "PA-PATH-013",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "PA-C09-laina",
-    "PA-S09-aunkar-tippi"
+    {
+      "lesson": "PA-C09-laina",
+      "extension": "PA-EXT-013-DOING-VERBS"
+    },
+    {
+      "lesson": "PA-S09-aunkar-tippi",
+      "extension": "PA-EXT-051-PREA1-SCRIPT-RUNWAY-C9A"
+    }
   ],
   "before": [],
   "inline": [

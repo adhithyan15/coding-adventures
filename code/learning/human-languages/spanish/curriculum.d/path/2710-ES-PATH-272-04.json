@@ -3,7 +3,10 @@
   "spine_node": "SPINE-INFER-IMPLICIT-MEANING",
   "lessons": [
     "ES-C272-mira",
-    "ES-C272-practice"
+    {
+      "lesson": "ES-C272-practice",
+      "extension": "ES-EXT-272-IMPLICIT"
+    }
   ],
   "before": [],
   "inline": [

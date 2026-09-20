@@ -2,11 +2,26 @@
   "id": "ES-PATH-302-01",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "ES-C302-calle",
-    "ES-C302-esquina",
-    "ES-C302-huella",
-    "ES-C302-puerto",
-    "ES-C302-faro"
+    {
+      "lesson": "ES-C302-calle",
+      "extension": "ES-EXT-302-CALLE"
+    },
+    {
+      "lesson": "ES-C302-esquina",
+      "extension": "ES-EXT-302-CALLE"
+    },
+    {
+      "lesson": "ES-C302-huella",
+      "extension": "ES-EXT-302-CALLE"
+    },
+    {
+      "lesson": "ES-C302-puerto",
+      "extension": "ES-EXT-302-CALLE"
+    },
+    {
+      "lesson": "ES-C302-faro",
+      "extension": "ES-EXT-302-CALLE"
+    }
   ],
   "before": [],
   "inline": [

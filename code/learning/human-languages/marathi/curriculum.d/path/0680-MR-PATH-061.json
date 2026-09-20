@@ -2,11 +2,26 @@
   "id": "MR-PATH-061",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "MR-C58-satra",
-    "MR-C58-athra",
-    "MR-C58-vis",
-    "MR-C58-ekonis",
-    "MR-R58-seventeen-to-twenty"
+    {
+      "lesson": "MR-C58-satra",
+      "extension": "MR-EXT-074-SEVENTEEN-TO-TWENTY"
+    },
+    {
+      "lesson": "MR-C58-athra",
+      "extension": "MR-EXT-074-SEVENTEEN-TO-TWENTY"
+    },
+    {
+      "lesson": "MR-C58-vis",
+      "extension": "MR-EXT-074-SEVENTEEN-TO-TWENTY"
+    },
+    {
+      "lesson": "MR-C58-ekonis",
+      "extension": "MR-EXT-074-SEVENTEEN-TO-TWENTY"
+    },
+    {
+      "lesson": "MR-R58-seventeen-to-twenty",
+      "extension": "MR-EXT-074-SEVENTEEN-TO-TWENTY"
+    }
   ],
   "before": [],
   "inline": [

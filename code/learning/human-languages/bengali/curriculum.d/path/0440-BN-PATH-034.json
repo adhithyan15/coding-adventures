@@ -2,11 +2,26 @@
   "id": "BN-PATH-034",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "BN-W05-tha",
-    "BN-C26-ekhane",
-    "BN-C26-okhane",
-    "BN-C26-kothay",
-    "BN-R26-here-there-where"
+    {
+      "lesson": "BN-W05-tha",
+      "extension": "BN-EXT-035-PLACE-DEIXIS"
+    },
+    {
+      "lesson": "BN-C26-ekhane",
+      "extension": "BN-EXT-035-PLACE-DEIXIS"
+    },
+    {
+      "lesson": "BN-C26-okhane",
+      "extension": "BN-EXT-035-PLACE-DEIXIS"
+    },
+    {
+      "lesson": "BN-C26-kothay",
+      "extension": "BN-EXT-035-PLACE-DEIXIS"
+    },
+    {
+      "lesson": "BN-R26-here-there-where",
+      "extension": "BN-EXT-035-PLACE-DEIXIS"
+    }
   ],
   "before": [],
   "inline": [

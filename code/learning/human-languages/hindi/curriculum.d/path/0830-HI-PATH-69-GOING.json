@@ -2,11 +2,26 @@
   "id": "HI-PATH-69-GOING",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "HI-C69-vehicle",
-    "HI-C69-railway",
-    "HI-C69-station",
-    "HI-C69-ticket",
-    "HI-C69-go"
+    {
+      "lesson": "HI-C69-vehicle",
+      "extension": "HI-EXT-69-GOING"
+    },
+    {
+      "lesson": "HI-C69-railway",
+      "extension": "HI-EXT-69-GOING"
+    },
+    {
+      "lesson": "HI-C69-station",
+      "extension": "HI-EXT-69-GOING"
+    },
+    {
+      "lesson": "HI-C69-ticket",
+      "extension": "HI-EXT-69-GOING"
+    },
+    {
+      "lesson": "HI-C69-go",
+      "extension": "HI-EXT-69-GOING"
+    }
   ],
   "before": [],
   "inline": [

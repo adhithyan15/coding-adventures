@@ -2,11 +2,26 @@
   "id": "SA-PATH-44-COLOUR",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "SA-C44-white",
-    "SA-C44-dark",
-    "SA-C44-yellow",
-    "SA-C44-green",
-    "SA-C44-blue"
+    {
+      "lesson": "SA-C44-white",
+      "extension": "SA-EXT-44-COLOUR"
+    },
+    {
+      "lesson": "SA-C44-dark",
+      "extension": "SA-EXT-44-COLOUR"
+    },
+    {
+      "lesson": "SA-C44-yellow",
+      "extension": "SA-EXT-44-COLOUR"
+    },
+    {
+      "lesson": "SA-C44-green",
+      "extension": "SA-EXT-44-COLOUR"
+    },
+    {
+      "lesson": "SA-C44-blue",
+      "extension": "SA-EXT-44-COLOUR"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,11 +2,26 @@
   "id": "ES-PATH-304-01",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "ES-C304-tranquilo",
-    "ES-C304-enfermo",
-    "ES-C304-contento",
-    "ES-C304-ocupado",
-    "ES-C304-triste"
+    {
+      "lesson": "ES-C304-tranquilo",
+      "extension": "ES-EXT-304-ESTADO"
+    },
+    {
+      "lesson": "ES-C304-enfermo",
+      "extension": "ES-EXT-304-ESTADO"
+    },
+    {
+      "lesson": "ES-C304-contento",
+      "extension": "ES-EXT-304-ESTADO"
+    },
+    {
+      "lesson": "ES-C304-ocupado",
+      "extension": "ES-EXT-304-ESTADO"
+    },
+    {
+      "lesson": "ES-C304-triste",
+      "extension": "ES-EXT-304-ESTADO"
+    }
   ],
   "before": [],
   "inline": [

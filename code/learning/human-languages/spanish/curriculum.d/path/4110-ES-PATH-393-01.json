@@ -2,11 +2,26 @@
   "id": "ES-PATH-393-01",
   "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
   "lessons": [
-    "ES-C393-ordenador",
-    "ES-C393-internet",
-    "ES-C393-correo-electronico",
-    "ES-C393-direccion",
-    "ES-C393-nacionalidad"
+    {
+      "lesson": "ES-C393-ordenador",
+      "extension": "ES-EXT-393-THING"
+    },
+    {
+      "lesson": "ES-C393-internet",
+      "extension": "ES-EXT-393-THING"
+    },
+    {
+      "lesson": "ES-C393-correo-electronico",
+      "extension": "ES-EXT-393-THING"
+    },
+    {
+      "lesson": "ES-C393-direccion",
+      "extension": "ES-EXT-393-THING"
+    },
+    {
+      "lesson": "ES-C393-nacionalidad",
+      "extension": "ES-EXT-393-THING"
+    }
   ],
   "before": [],
   "inline": [

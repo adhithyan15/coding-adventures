@@ -3,10 +3,22 @@
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
     "ES-C01-hola",
-    "ES-W00-hola-observe",
-    "ES-W00-hola-guided-copy",
-    "ES-W00-hola-delayed-copy",
-    "ES-W00-hola-dictation"
+    {
+      "lesson": "ES-W00-hola-observe",
+      "extension": "ES-EXT-001-WRITING-RUNWAY"
+    },
+    {
+      "lesson": "ES-W00-hola-guided-copy",
+      "extension": "ES-EXT-001-WRITING-RUNWAY"
+    },
+    {
+      "lesson": "ES-W00-hola-delayed-copy",
+      "extension": "ES-EXT-001-WRITING-RUNWAY"
+    },
+    {
+      "lesson": "ES-W00-hola-dictation",
+      "extension": "ES-EXT-001-WRITING-RUNWAY"
+    }
   ],
   "before": [],
   "inline": [],

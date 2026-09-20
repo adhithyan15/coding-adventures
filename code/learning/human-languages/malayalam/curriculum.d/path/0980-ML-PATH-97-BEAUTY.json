@@ -2,10 +2,22 @@
   "id": "ML-PATH-97-BEAUTY",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ML-C97-sundaram",
-    "ML-C97-bhangi",
-    "ML-C97-alla-sundaram",
-    "ML-R97-beauty-recall"
+    {
+      "lesson": "ML-C97-sundaram",
+      "extension": "ML-EXT-97-BEAUTY"
+    },
+    {
+      "lesson": "ML-C97-bhangi",
+      "extension": "ML-EXT-97-BEAUTY"
+    },
+    {
+      "lesson": "ML-C97-alla-sundaram",
+      "extension": "ML-EXT-97-BEAUTY"
+    },
+    {
+      "lesson": "ML-R97-beauty-recall",
+      "extension": "ML-EXT-97-BEAUTY"
+    }
   ],
   "before": [],
   "inline": [

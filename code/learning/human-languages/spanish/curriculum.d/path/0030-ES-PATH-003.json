@@ -3,7 +3,10 @@
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
     "ES-C01-el-la",
-    "ES-C01-genero-gramatical"
+    {
+      "lesson": "ES-C01-genero-gramatical",
+      "extension": "ES-EXT-003-GRAMMAR"
+    }
   ],
   "before": [],
   "inline": [],

@@ -2,9 +2,18 @@
   "id": "LA-PATH-029-B",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "LA-C41-curro",
-    "LA-C41-aperio",
-    "LA-C41-claudo"
+    {
+      "lesson": "LA-C41-curro",
+      "extension": "LA-EXT-029-LANGUAGE-SPECIFIC-B"
+    },
+    {
+      "lesson": "LA-C41-aperio",
+      "extension": "LA-EXT-029-LANGUAGE-SPECIFIC-B"
+    },
+    {
+      "lesson": "LA-C41-claudo",
+      "extension": "LA-EXT-029-LANGUAGE-SPECIFIC-B"
+    }
   ],
   "before": [],
   "inline": [

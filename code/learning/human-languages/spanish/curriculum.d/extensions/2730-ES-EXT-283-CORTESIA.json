@@ -4,12 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can apologise, ask to pass, call someone kind and thank them at more than one weight in Spanish.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-C283-disculpe",
-    "ES-C283-permiso",
-    "ES-C283-amable",
-    "ES-C283-mil-gracias",
-    "ES-C283-no-hay-de-que"
-  ]
+  "prerequisites": []
 }

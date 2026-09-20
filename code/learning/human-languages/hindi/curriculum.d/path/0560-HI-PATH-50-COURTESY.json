@@ -2,11 +2,26 @@
   "id": "HI-PATH-50-COURTESY",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "HI-C50-gratitude",
-    "HI-C50-favour",
-    "HI-C50-respect",
-    "HI-C50-blessing",
-    "HI-C50-salutation"
+    {
+      "lesson": "HI-C50-gratitude",
+      "extension": "HI-EXT-50-COURTESY"
+    },
+    {
+      "lesson": "HI-C50-favour",
+      "extension": "HI-EXT-50-COURTESY"
+    },
+    {
+      "lesson": "HI-C50-respect",
+      "extension": "HI-EXT-50-COURTESY"
+    },
+    {
+      "lesson": "HI-C50-blessing",
+      "extension": "HI-EXT-50-COURTESY"
+    },
+    {
+      "lesson": "HI-C50-salutation",
+      "extension": "HI-EXT-50-COURTESY"
+    }
   ],
   "before": [],
   "inline": [

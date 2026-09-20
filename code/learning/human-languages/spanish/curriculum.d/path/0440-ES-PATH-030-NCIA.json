@@ -2,7 +2,10 @@
   "id": "ES-PATH-030-NCIA",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "ES-C09-ncia"
+    {
+      "lesson": "ES-C09-ncia",
+      "extension": "ES-EXT-030-NCIA"
+    }
   ],
   "before": [],
   "inline": [

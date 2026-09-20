@@ -2,14 +2,38 @@
   "id": "JA-PATH-015",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "JA-W16-hi",
-    "JA-C16-hitotsu",
-    "JA-W16-fu",
-    "JA-C16-futatsu",
-    "JA-C16-mittsu",
-    "JA-C16-yottsu",
-    "JA-C16-itsutsu",
-    "JA-R16-first-five-things"
+    {
+      "lesson": "JA-W16-hi",
+      "extension": "JA-EXT-023-NATIVE-COUNT-ONE-TO-FIVE"
+    },
+    {
+      "lesson": "JA-C16-hitotsu",
+      "extension": "JA-EXT-023-NATIVE-COUNT-ONE-TO-FIVE"
+    },
+    {
+      "lesson": "JA-W16-fu",
+      "extension": "JA-EXT-023-NATIVE-COUNT-ONE-TO-FIVE"
+    },
+    {
+      "lesson": "JA-C16-futatsu",
+      "extension": "JA-EXT-023-NATIVE-COUNT-ONE-TO-FIVE"
+    },
+    {
+      "lesson": "JA-C16-mittsu",
+      "extension": "JA-EXT-023-NATIVE-COUNT-ONE-TO-FIVE"
+    },
+    {
+      "lesson": "JA-C16-yottsu",
+      "extension": "JA-EXT-023-NATIVE-COUNT-ONE-TO-FIVE"
+    },
+    {
+      "lesson": "JA-C16-itsutsu",
+      "extension": "JA-EXT-023-NATIVE-COUNT-ONE-TO-FIVE"
+    },
+    {
+      "lesson": "JA-R16-first-five-things",
+      "extension": "JA-EXT-023-NATIVE-COUNT-ONE-TO-FIVE"
+    }
   ],
   "before": [],
   "inline": [

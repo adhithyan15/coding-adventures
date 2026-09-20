@@ -2,7 +2,10 @@
   "id": "ML-PATH-022",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "ML-C20-pathinonnu-irupathu"
+    {
+      "lesson": "ML-C20-pathinonnu-irupathu",
+      "extension": "ML-EXT-022-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

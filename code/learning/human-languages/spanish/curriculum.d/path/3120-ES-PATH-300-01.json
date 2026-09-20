@@ -2,11 +2,26 @@
   "id": "ES-PATH-300-01",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "ES-C300-sed",
-    "ES-C300-sueno",
-    "ES-C300-piel",
-    "ES-C300-sangre",
-    "ES-C300-remedio"
+    {
+      "lesson": "ES-C300-sed",
+      "extension": "ES-EXT-300-CUERPO"
+    },
+    {
+      "lesson": "ES-C300-sueno",
+      "extension": "ES-EXT-300-CUERPO"
+    },
+    {
+      "lesson": "ES-C300-piel",
+      "extension": "ES-EXT-300-CUERPO"
+    },
+    {
+      "lesson": "ES-C300-sangre",
+      "extension": "ES-EXT-300-CUERPO"
+    },
+    {
+      "lesson": "ES-C300-remedio",
+      "extension": "ES-EXT-300-CUERPO"
+    }
   ],
   "before": [],
   "inline": [

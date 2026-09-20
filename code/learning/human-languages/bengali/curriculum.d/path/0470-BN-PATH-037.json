@@ -2,9 +2,18 @@
   "id": "BN-PATH-037",
   "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
   "lessons": [
-    "BN-C40-words",
-    "BN-C40-lines",
-    "BN-C40-prothom-path"
+    {
+      "lesson": "BN-C40-words",
+      "extension": "BN-EXT-038-READING"
+    },
+    {
+      "lesson": "BN-C40-lines",
+      "extension": "BN-EXT-038-READING"
+    },
+    {
+      "lesson": "BN-C40-prothom-path",
+      "extension": "BN-EXT-038-READING"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,7 +2,10 @@
   "id": "ES-PATH-A1-DEIXIS-LUGAR",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C65-ahi-alli"
+    {
+      "lesson": "ES-C65-ahi-alli",
+      "extension": "ES-EXT-A1-DEIXIS-LUGAR"
+    }
   ],
   "before": [],
   "inline": [

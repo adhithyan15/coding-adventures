@@ -2,8 +2,14 @@
   "id": "AR-PATH-022",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "AR-C21-kalb-qitt",
-    "AR-C22-akhdar-asfar"
+    {
+      "lesson": "AR-C21-kalb-qitt",
+      "extension": "AR-EXT-022-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "AR-C22-akhdar-asfar",
+      "extension": "AR-EXT-022-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,7 +2,10 @@
   "id": "ES-PATH-A1-IMP-PL-AR",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C63-hablabamos"
+    {
+      "lesson": "ES-C63-hablabamos",
+      "extension": "ES-EXT-A1-IMP-PL-AR"
+    }
   ],
   "before": [],
   "inline": [

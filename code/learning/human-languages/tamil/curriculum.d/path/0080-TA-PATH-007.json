@@ -9,7 +9,10 @@
     "TA-C02-nii-niingal",
     "TA-C02-enna",
     "TA-C02-ungal-peyar-enna",
-    "TA-C02-practice"
+    {
+      "lesson": "TA-C02-practice",
+      "extension": "TA-EXT-007-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [

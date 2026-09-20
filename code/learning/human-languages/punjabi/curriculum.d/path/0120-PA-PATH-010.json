@@ -2,17 +2,50 @@
   "id": "PA-PATH-010",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "PA-C05-bolna",
-    "PA-C05-panjabi",
-    "PA-C05-main-punjabi-bolda-han",
-    "PA-C05-rahna",
-    "PA-C05-karna",
-    "PA-C05-kamm-karna",
-    "PA-S05-babba-lalla-hora",
-    "PA-C05-practice",
-    "PA-S06-kakka-aira-aara",
-    "PA-C06-numbers-1-5",
-    "PA-C06-panj-convergence"
+    {
+      "lesson": "PA-C05-bolna",
+      "extension": "PA-EXT-010-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "PA-C05-panjabi",
+      "extension": "PA-EXT-010-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "PA-C05-main-punjabi-bolda-han",
+      "extension": "PA-EXT-010-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "PA-C05-rahna",
+      "extension": "PA-EXT-010-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "PA-C05-karna",
+      "extension": "PA-EXT-010-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "PA-C05-kamm-karna",
+      "extension": "PA-EXT-010-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "PA-S05-babba-lalla-hora",
+      "extension": "PA-EXT-048-PREA1-SCRIPT-RUNWAY-C5C6"
+    },
+    {
+      "lesson": "PA-C05-practice",
+      "extension": "PA-EXT-058-C5-VERB-CHECKPOINT"
+    },
+    {
+      "lesson": "PA-S06-kakka-aira-aara",
+      "extension": "PA-EXT-048-PREA1-SCRIPT-RUNWAY-C5C6"
+    },
+    {
+      "lesson": "PA-C06-numbers-1-5",
+      "extension": "PA-EXT-010-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "PA-C06-panj-convergence",
+      "extension": "PA-EXT-010-ETYMOLOGY"
+    }
   ],
   "before": [],
   "inline": [

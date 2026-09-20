@@ -2,10 +2,22 @@
   "id": "FA-PATH-013",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "FA-C12-nam",
-    "FA-C12-del",
-    "FA-C12-dar",
-    "FA-C12-ketab"
+    {
+      "lesson": "FA-C12-nam",
+      "extension": "FA-EXT-020-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FA-C12-del",
+      "extension": "FA-EXT-020-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FA-C12-dar",
+      "extension": "FA-EXT-020-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FA-C12-ketab",
+      "extension": "FA-EXT-020-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

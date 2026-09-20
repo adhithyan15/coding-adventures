@@ -2,11 +2,26 @@
   "id": "SA-PATH-45-DAYTIME",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "SA-C45-morning",
-    "SA-C45-noon",
-    "SA-C45-evening",
-    "SA-C45-month",
-    "SA-C45-year"
+    {
+      "lesson": "SA-C45-morning",
+      "extension": "SA-EXT-45-DAYTIME"
+    },
+    {
+      "lesson": "SA-C45-noon",
+      "extension": "SA-EXT-45-DAYTIME"
+    },
+    {
+      "lesson": "SA-C45-evening",
+      "extension": "SA-EXT-45-DAYTIME"
+    },
+    {
+      "lesson": "SA-C45-month",
+      "extension": "SA-EXT-45-DAYTIME"
+    },
+    {
+      "lesson": "SA-C45-year",
+      "extension": "SA-EXT-45-DAYTIME"
+    }
   ],
   "before": [],
   "inline": [

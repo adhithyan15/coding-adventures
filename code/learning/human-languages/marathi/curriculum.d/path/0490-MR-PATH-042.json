@@ -2,9 +2,18 @@
   "id": "MR-PATH-042",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "MR-W40-i-independent",
-    "MR-C40-ithe",
-    "MR-R40-asking-column"
+    {
+      "lesson": "MR-W40-i-independent",
+      "extension": "MR-EXT-055-HERE"
+    },
+    {
+      "lesson": "MR-C40-ithe",
+      "extension": "MR-EXT-055-HERE"
+    },
+    {
+      "lesson": "MR-R40-asking-column",
+      "extension": "MR-EXT-055-HERE"
+    }
   ],
   "before": [],
   "inline": [

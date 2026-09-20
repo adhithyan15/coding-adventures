@@ -2,8 +2,14 @@
   "id": "TE-PATH-024",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "TE-C21-kukka-pilli",
-    "TE-C22-pacha-pasupu"
+    {
+      "lesson": "TE-C21-kukka-pilli",
+      "extension": "TE-EXT-024-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "TE-C22-pacha-pasupu",
+      "extension": "TE-EXT-024-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,7 +2,10 @@
   "id": "AR-PATH-024",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "AR-C24-ila-al-ghad"
+    {
+      "lesson": "AR-C24-ila-al-ghad",
+      "extension": "AR-EXT-024-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

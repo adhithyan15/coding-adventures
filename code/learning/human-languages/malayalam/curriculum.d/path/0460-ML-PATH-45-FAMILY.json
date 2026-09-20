@@ -2,10 +2,22 @@
   "id": "ML-PATH-45-FAMILY",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ML-C45-grandfather",
-    "ML-C45-grandmother",
-    "ML-C45-husband",
-    "ML-C45-wife"
+    {
+      "lesson": "ML-C45-grandfather",
+      "extension": "ML-EXT-45-FAMILY"
+    },
+    {
+      "lesson": "ML-C45-grandmother",
+      "extension": "ML-EXT-45-FAMILY"
+    },
+    {
+      "lesson": "ML-C45-husband",
+      "extension": "ML-EXT-45-FAMILY"
+    },
+    {
+      "lesson": "ML-C45-wife",
+      "extension": "ML-EXT-45-FAMILY"
+    }
   ],
   "before": [],
   "inline": [

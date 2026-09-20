@@ -2,14 +2,38 @@
   "id": "GE-PATH-020",
   "spine_node": "SPINE-TALK-ABOUT-PAST",
   "lessons": [
-    "GE-C15-sagen",
-    "GE-C15-gesagt",
-    "GE-C15-partizip",
-    "GE-C15-gemacht",
-    "GE-C15-gelernt",
-    "GE-C15-gewohnt",
-    "GE-C15-ge-praefix",
-    "GE-C15-partizip-practice"
+    {
+      "lesson": "GE-C15-sagen",
+      "extension": "GE-EXT-020-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GE-C15-gesagt",
+      "extension": "GE-EXT-020-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GE-C15-partizip",
+      "extension": "GE-EXT-020-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GE-C15-gemacht",
+      "extension": "GE-EXT-020-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GE-C15-gelernt",
+      "extension": "GE-EXT-020-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GE-C15-gewohnt",
+      "extension": "GE-EXT-020-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GE-C15-ge-praefix",
+      "extension": "GE-EXT-020-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GE-C15-partizip-practice",
+      "extension": "GE-EXT-020-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [

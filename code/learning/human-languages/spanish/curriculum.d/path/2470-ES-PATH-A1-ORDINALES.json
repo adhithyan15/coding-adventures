@@ -2,8 +2,14 @@
   "id": "ES-PATH-A1-ORDINALES",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C67-primero",
-    "ES-C67-primer-libro"
+    {
+      "lesson": "ES-C67-primero",
+      "extension": "ES-EXT-A1-ORDINALES"
+    },
+    {
+      "lesson": "ES-C67-primer-libro",
+      "extension": "ES-EXT-A1-ORDINALES"
+    }
   ],
   "before": [],
   "inline": [

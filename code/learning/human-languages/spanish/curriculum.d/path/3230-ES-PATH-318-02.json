@@ -2,7 +2,10 @@
   "id": "ES-PATH-318-02",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "ES-C318-repaso-disculparse"
+    {
+      "lesson": "ES-C318-repaso-disculparse",
+      "extension": "ES-EXT-318-DISCULPA"
+    }
   ],
   "before": [],
   "inline": [

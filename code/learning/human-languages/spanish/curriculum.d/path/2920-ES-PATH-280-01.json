@@ -2,10 +2,22 @@
   "id": "ES-PATH-280-01",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C280-queso",
-    "ES-C280-huevo",
-    "ES-C280-manzana",
-    "ES-C280-dinero"
+    {
+      "lesson": "ES-C280-queso",
+      "extension": "ES-EXT-280-COMPRA"
+    },
+    {
+      "lesson": "ES-C280-huevo",
+      "extension": "ES-EXT-280-COMPRA"
+    },
+    {
+      "lesson": "ES-C280-manzana",
+      "extension": "ES-EXT-280-COMPRA"
+    },
+    {
+      "lesson": "ES-C280-dinero",
+      "extension": "ES-EXT-280-COMPRA"
+    }
   ],
   "before": [],
   "inline": [

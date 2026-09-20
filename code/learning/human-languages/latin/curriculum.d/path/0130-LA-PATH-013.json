@@ -2,13 +2,34 @@
   "id": "LA-PATH-013",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "LA-C10-aqua-vinum",
-    "LA-C10-panis",
-    "LA-C44-domus",
-    "LA-C44-porta",
-    "LA-C44-murus",
-    "LA-C44-hortus",
-    "LA-C44-focus"
+    {
+      "lesson": "LA-C10-aqua-vinum",
+      "extension": "LA-EXT-013-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "LA-C10-panis",
+      "extension": "LA-EXT-013-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "LA-C44-domus",
+      "extension": "LA-EXT-044-HOUSE"
+    },
+    {
+      "lesson": "LA-C44-porta",
+      "extension": "LA-EXT-044-HOUSE"
+    },
+    {
+      "lesson": "LA-C44-murus",
+      "extension": "LA-EXT-044-HOUSE"
+    },
+    {
+      "lesson": "LA-C44-hortus",
+      "extension": "LA-EXT-044-HOUSE"
+    },
+    {
+      "lesson": "LA-C44-focus",
+      "extension": "LA-EXT-044-HOUSE"
+    }
   ],
   "before": [],
   "inline": [

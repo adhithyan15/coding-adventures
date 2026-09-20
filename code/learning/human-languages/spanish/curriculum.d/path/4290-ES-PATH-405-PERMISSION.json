@@ -2,7 +2,10 @@
   "id": "ES-PATH-405-PERMISSION",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "ES-C405-permitir"
+    {
+      "lesson": "ES-C405-permitir",
+      "extension": "ES-EXT-405-PERMISSION"
+    }
   ],
   "before": [],
   "inline": [

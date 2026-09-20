@@ -2,9 +2,18 @@
   "id": "AR-PATH-043-WRITING",
   "spine_node": "SPINE-SAY-WHY",
   "lessons": [
-    "AR-W02-satri-al-khass",
-    "AR-W03-maa-al-saaa",
-    "AR-W04-arbaa-sutur"
+    {
+      "lesson": "AR-W02-satri-al-khass",
+      "extension": "AR-EXT-043-WRITING"
+    },
+    {
+      "lesson": "AR-W03-maa-al-saaa",
+      "extension": "AR-EXT-043-WRITING"
+    },
+    {
+      "lesson": "AR-W04-arbaa-sutur",
+      "extension": "AR-EXT-043-WRITING"
+    }
   ],
   "before": [],
   "inline": [

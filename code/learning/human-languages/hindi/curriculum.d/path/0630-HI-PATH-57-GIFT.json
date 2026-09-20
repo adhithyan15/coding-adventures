@@ -2,11 +2,26 @@
   "id": "HI-PATH-57-GIFT",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "HI-C57-present",
-    "HI-C57-feast",
-    "HI-C57-platter",
-    "HI-C57-fragrance",
-    "HI-C57-sweetness"
+    {
+      "lesson": "HI-C57-present",
+      "extension": "HI-EXT-57-GIFT"
+    },
+    {
+      "lesson": "HI-C57-feast",
+      "extension": "HI-EXT-57-GIFT"
+    },
+    {
+      "lesson": "HI-C57-platter",
+      "extension": "HI-EXT-57-GIFT"
+    },
+    {
+      "lesson": "HI-C57-fragrance",
+      "extension": "HI-EXT-57-GIFT"
+    },
+    {
+      "lesson": "HI-C57-sweetness",
+      "extension": "HI-EXT-57-GIFT"
+    }
   ],
   "before": [],
   "inline": [

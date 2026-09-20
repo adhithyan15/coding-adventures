@@ -2,15 +2,42 @@
   "id": "HI-PATH-99-NOUN",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "HI-C91-bacche-plural",
-    "HI-C91-kitaben",
-    "HI-C91-bhashaen",
-    "HI-C91-aadmi-unchanged",
-    "HI-C91-ko",
-    "HI-C91-bacche-ko",
-    "HI-C91-yah-kitab",
-    "HI-C91-repaso-sangya",
-    "HI-C91-sintesis-sangya"
+    {
+      "lesson": "HI-C91-bacche-plural",
+      "extension": "HI-EXT-99-NOUN"
+    },
+    {
+      "lesson": "HI-C91-kitaben",
+      "extension": "HI-EXT-99-NOUN"
+    },
+    {
+      "lesson": "HI-C91-bhashaen",
+      "extension": "HI-EXT-99-NOUN"
+    },
+    {
+      "lesson": "HI-C91-aadmi-unchanged",
+      "extension": "HI-EXT-99-NOUN"
+    },
+    {
+      "lesson": "HI-C91-ko",
+      "extension": "HI-EXT-99-NOUN"
+    },
+    {
+      "lesson": "HI-C91-bacche-ko",
+      "extension": "HI-EXT-99-NOUN"
+    },
+    {
+      "lesson": "HI-C91-yah-kitab",
+      "extension": "HI-EXT-99-NOUN"
+    },
+    {
+      "lesson": "HI-C91-repaso-sangya",
+      "extension": "HI-EXT-99-NOUN"
+    },
+    {
+      "lesson": "HI-C91-sintesis-sangya",
+      "extension": "HI-EXT-99-NOUN"
+    }
   ],
   "before": [],
   "inline": [

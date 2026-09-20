@@ -2,7 +2,10 @@
   "id": "GU-PATH-021",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "GU-R19-doorway-nine-r4"
+    {
+      "lesson": "GU-R19-doorway-nine-r4",
+      "extension": "GU-EXT-030-DOORWAY-R4"
+    }
   ],
   "before": [],
   "inline": [

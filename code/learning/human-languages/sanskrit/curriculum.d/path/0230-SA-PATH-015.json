@@ -2,9 +2,18 @@
   "id": "SA-PATH-015",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "SA-C12-akshi",
-    "SA-C12-karnah",
-    "SA-C12-mukham"
+    {
+      "lesson": "SA-C12-akshi",
+      "extension": "SA-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "SA-C12-karnah",
+      "extension": "SA-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "SA-C12-mukham",
+      "extension": "SA-EXT-015-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

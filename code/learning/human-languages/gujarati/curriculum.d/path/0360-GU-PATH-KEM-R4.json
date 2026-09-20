@@ -2,7 +2,10 @@
   "id": "GU-PATH-KEM-R4",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "GU-R17-kem-r4"
+    {
+      "lesson": "GU-R17-kem-r4",
+      "extension": "GU-EXT-025-KEM-R4"
+    }
   ],
   "before": [],
   "inline": [

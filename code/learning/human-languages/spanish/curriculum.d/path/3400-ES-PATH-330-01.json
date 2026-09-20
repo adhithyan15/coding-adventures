@@ -2,11 +2,26 @@
   "id": "ES-PATH-330-01",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "ES-C330-camino",
-    "ES-C330-parada",
-    "ES-C330-mundo",
-    "ES-C330-vida",
-    "ES-C330-vez"
+    {
+      "lesson": "ES-C330-camino",
+      "extension": "ES-EXT-330-WAY"
+    },
+    {
+      "lesson": "ES-C330-parada",
+      "extension": "ES-EXT-330-WAY"
+    },
+    {
+      "lesson": "ES-C330-mundo",
+      "extension": "ES-EXT-330-WAY"
+    },
+    {
+      "lesson": "ES-C330-vida",
+      "extension": "ES-EXT-330-WAY"
+    },
+    {
+      "lesson": "ES-C330-vez",
+      "extension": "ES-EXT-330-WAY"
+    }
   ],
   "before": [],
   "inline": [

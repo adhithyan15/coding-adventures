@@ -2,11 +2,26 @@
   "id": "ES-PATH-308-01",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "ES-C308-nino",
-    "ES-C308-nina",
-    "ES-C308-chico",
-    "ES-C308-chica",
-    "ES-C308-gente"
+    {
+      "lesson": "ES-C308-nino",
+      "extension": "ES-EXT-308-KIN"
+    },
+    {
+      "lesson": "ES-C308-nina",
+      "extension": "ES-EXT-308-KIN"
+    },
+    {
+      "lesson": "ES-C308-chico",
+      "extension": "ES-EXT-308-KIN"
+    },
+    {
+      "lesson": "ES-C308-chica",
+      "extension": "ES-EXT-308-KIN"
+    },
+    {
+      "lesson": "ES-C308-gente",
+      "extension": "ES-EXT-308-KIN"
+    }
   ],
   "before": [],
   "inline": [

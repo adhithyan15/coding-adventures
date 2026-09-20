@@ -6,11 +6,5 @@
   "canDo": "I can grade a quality instead of only naming it.",
   "prerequisites": [
     "ML-EXT-78-GENITIVE"
-  ],
-  "lessons": [
-    "ML-C79-valare",
-    "ML-C79-orupadu",
-    "ML-C79-degree-slot",
-    "ML-R79-degree-recall"
   ]
 }

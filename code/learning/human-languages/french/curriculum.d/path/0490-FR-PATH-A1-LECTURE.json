@@ -2,9 +2,18 @@
   "id": "FR-PATH-A1-LECTURE",
   "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
   "lessons": [
-    "FR-C45-instructions",
-    "FR-C45-details",
-    "FR-C45-premiere-lecture"
+    {
+      "lesson": "FR-C45-instructions",
+      "extension": "FR-EXT-A1-LECTURE"
+    },
+    {
+      "lesson": "FR-C45-details",
+      "extension": "FR-EXT-A1-LECTURE"
+    },
+    {
+      "lesson": "FR-C45-premiere-lecture",
+      "extension": "FR-EXT-A1-LECTURE"
+    }
   ],
   "before": [],
   "inline": [

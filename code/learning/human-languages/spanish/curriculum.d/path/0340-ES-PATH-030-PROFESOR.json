@@ -2,7 +2,10 @@
   "id": "ES-PATH-030-PROFESOR",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "ES-C09-profesor"
+    {
+      "lesson": "ES-C09-profesor",
+      "extension": "ES-EXT-030-PROFESOR"
+    }
   ],
   "before": [],
   "inline": [

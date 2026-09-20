@@ -2,14 +2,38 @@
   "id": "GU-PATH-028",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "GU-C29-hear-sooraj",
-    "GU-C29-hear-chandra",
-    "GU-C29-hear-aakaash",
-    "GU-C29-hear-varsaad",
-    "GU-C29-hear-nadi",
-    "GU-C29-sky-five",
-    "GU-C29-nadi",
-    "GU-R29-sky-five-r1"
+    {
+      "lesson": "GU-C29-hear-sooraj",
+      "extension": "GU-EXT-040-SKY-FIVE"
+    },
+    {
+      "lesson": "GU-C29-hear-chandra",
+      "extension": "GU-EXT-040-SKY-FIVE"
+    },
+    {
+      "lesson": "GU-C29-hear-aakaash",
+      "extension": "GU-EXT-040-SKY-FIVE"
+    },
+    {
+      "lesson": "GU-C29-hear-varsaad",
+      "extension": "GU-EXT-040-SKY-FIVE"
+    },
+    {
+      "lesson": "GU-C29-hear-nadi",
+      "extension": "GU-EXT-040-SKY-FIVE"
+    },
+    {
+      "lesson": "GU-C29-sky-five",
+      "extension": "GU-EXT-040-SKY-FIVE"
+    },
+    {
+      "lesson": "GU-C29-nadi",
+      "extension": "GU-EXT-040-SKY-FIVE"
+    },
+    {
+      "lesson": "GU-R29-sky-five-r1",
+      "extension": "GU-EXT-040-SKY-FIVE"
+    }
   ],
   "before": [],
   "inline": [

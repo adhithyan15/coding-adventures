@@ -2,11 +2,26 @@
   "id": "SA-PATH-36-REPLY",
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
-    "SA-C36-also",
-    "SA-C36-all",
-    "SA-C36-likewise",
-    "SA-C36-slowly",
-    "SA-C36-rightly"
+    {
+      "lesson": "SA-C36-also",
+      "extension": "SA-EXT-36-REPLY"
+    },
+    {
+      "lesson": "SA-C36-all",
+      "extension": "SA-EXT-36-REPLY"
+    },
+    {
+      "lesson": "SA-C36-likewise",
+      "extension": "SA-EXT-36-REPLY"
+    },
+    {
+      "lesson": "SA-C36-slowly",
+      "extension": "SA-EXT-36-REPLY"
+    },
+    {
+      "lesson": "SA-C36-rightly",
+      "extension": "SA-EXT-36-REPLY"
+    }
   ],
   "before": [],
   "inline": [

@@ -3,7 +3,10 @@
   "spine_node": "SPINE-STRUCTURE-EXTENDED-TEXT",
   "lessons": [
     "ES-C273-lo-cual",
-    "ES-C273-practice"
+    {
+      "lesson": "ES-C273-practice",
+      "extension": "ES-EXT-273-COHESION"
+    }
   ],
   "before": [],
   "inline": [

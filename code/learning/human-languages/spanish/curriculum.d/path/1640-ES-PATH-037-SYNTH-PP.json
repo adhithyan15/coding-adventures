@@ -2,7 +2,10 @@
   "id": "ES-PATH-037-SYNTH-PP",
   "spine_node": "SPINE-GIVE-REASONS",
   "lessons": [
-    "ES-C51-sintesis-regalo-motivo"
+    {
+      "lesson": "ES-C51-sintesis-regalo-motivo",
+      "extension": "ES-EXT-037-SYNTH-PP"
+    }
   ],
   "before": [],
   "inline": [

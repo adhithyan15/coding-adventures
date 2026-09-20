@@ -2,11 +2,26 @@
   "id": "AR-PATH-037",
   "spine_node": "SPINE-SAY-WHY",
   "lessons": [
-    "AR-C40-limadha",
-    "AR-C40-lianna",
-    "AR-C40-anna",
-    "AR-C40-hinama",
-    "AR-R40-why-that-when"
+    {
+      "lesson": "AR-C40-limadha",
+      "extension": "AR-EXT-037-WHY-THAT-WHEN"
+    },
+    {
+      "lesson": "AR-C40-lianna",
+      "extension": "AR-EXT-037-WHY-THAT-WHEN"
+    },
+    {
+      "lesson": "AR-C40-anna",
+      "extension": "AR-EXT-037-WHY-THAT-WHEN"
+    },
+    {
+      "lesson": "AR-C40-hinama",
+      "extension": "AR-EXT-037-WHY-THAT-WHEN"
+    },
+    {
+      "lesson": "AR-R40-why-that-when",
+      "extension": "AR-EXT-037-WHY-THAT-WHEN"
+    }
   ],
   "before": [],
   "inline": [

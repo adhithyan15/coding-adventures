@@ -2,7 +2,10 @@
   "id": "TE-PATH-022",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "TE-C20-padakondu-iravai"
+    {
+      "lesson": "TE-C20-padakondu-iravai",
+      "extension": "TE-EXT-022-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

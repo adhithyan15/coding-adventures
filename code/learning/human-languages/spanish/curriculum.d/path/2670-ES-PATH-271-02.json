@@ -3,7 +3,10 @@
   "spine_node": "SPINE-DISCUSS-ABSTRACT",
   "lessons": [
     "ES-C271-supongo-que",
-    "ES-C271-practice"
+    {
+      "lesson": "ES-C271-practice",
+      "extension": "ES-EXT-271-HEDGING"
+    }
   ],
   "before": [],
   "inline": [

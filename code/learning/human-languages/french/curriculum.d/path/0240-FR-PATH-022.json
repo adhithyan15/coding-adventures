@@ -2,8 +2,14 @@
   "id": "FR-PATH-022",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "FR-C22-chien-chat",
-    "FR-C23-vert-jaune"
+    {
+      "lesson": "FR-C22-chien-chat",
+      "extension": "FR-EXT-022-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C23-vert-jaune",
+      "extension": "FR-EXT-022-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

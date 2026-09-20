@@ -2,8 +2,14 @@
   "id": "HI-PATH-70-INFINITIVE",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "HI-C70-infinitive-object",
-    "HI-R70-can-want"
+    {
+      "lesson": "HI-C70-infinitive-object",
+      "extension": "HI-EXT-070-INFINITIVE-OBJECT"
+    },
+    {
+      "lesson": "HI-R70-can-want",
+      "extension": "HI-EXT-070-INFINITIVE-OBJECT"
+    }
   ],
   "before": [],
   "inline": [

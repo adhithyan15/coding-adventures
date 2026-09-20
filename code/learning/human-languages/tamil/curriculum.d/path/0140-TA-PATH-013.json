@@ -2,15 +2,42 @@
   "id": "TA-PATH-013",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "TA-C05-pesu",
-    "TA-C05-naan-tamizh-pesugiren",
-    "TA-C05-vaazh",
-    "TA-C05-velai-sey",
-    "TA-C05-practice",
-    "TA-C06-dative-ukku",
-    "TA-C06-dative-stacking",
-    "TA-C06-dative-subject",
-    "TA-C06-dative-subject-family"
+    {
+      "lesson": "TA-C05-pesu",
+      "extension": "TA-EXT-013-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "TA-C05-naan-tamizh-pesugiren",
+      "extension": "TA-EXT-013-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "TA-C05-vaazh",
+      "extension": "TA-EXT-013-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "TA-C05-velai-sey",
+      "extension": "TA-EXT-013-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "TA-C05-practice",
+      "extension": "TA-EXT-013-CONSOLIDATION"
+    },
+    {
+      "lesson": "TA-C06-dative-ukku",
+      "extension": "TA-EXT-013-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "TA-C06-dative-stacking",
+      "extension": "TA-EXT-013-GRAMMAR"
+    },
+    {
+      "lesson": "TA-C06-dative-subject",
+      "extension": "TA-EXT-013-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "TA-C06-dative-subject-family",
+      "extension": "TA-EXT-013-GRAMMAR"
+    }
   ],
   "before": [],
   "inline": [

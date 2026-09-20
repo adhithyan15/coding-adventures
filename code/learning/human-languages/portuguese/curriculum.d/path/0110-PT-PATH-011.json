@@ -6,7 +6,10 @@
     "PT-C04-ate-logo",
     "PT-C04-ate-amanha",
     "PT-C04-ate-breve",
-    "PT-C04-practice"
+    {
+      "lesson": "PT-C04-practice",
+      "extension": "PT-EXT-011-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [],

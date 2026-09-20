@@ -2,11 +2,26 @@
   "id": "ES-PATH-420-ARTS-PLACES",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "ES-C420-teatro",
-    "ES-C420-exposicion",
-    "ES-C420-circo",
-    "ES-C420-repaso-lugares",
-    "ES-C420-sintesis-salir"
+    {
+      "lesson": "ES-C420-teatro",
+      "extension": "ES-EXT-420-ARTS-PLACES"
+    },
+    {
+      "lesson": "ES-C420-exposicion",
+      "extension": "ES-EXT-420-ARTS-PLACES"
+    },
+    {
+      "lesson": "ES-C420-circo",
+      "extension": "ES-EXT-420-ARTS-PLACES"
+    },
+    {
+      "lesson": "ES-C420-repaso-lugares",
+      "extension": "ES-EXT-420-ARTS-PLACES"
+    },
+    {
+      "lesson": "ES-C420-sintesis-salir",
+      "extension": "ES-EXT-420-ARTS-PLACES"
+    }
   ],
   "before": [],
   "inline": [

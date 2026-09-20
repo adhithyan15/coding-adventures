@@ -2,7 +2,10 @@
   "id": "ES-PATH-028-REVIEW-FR",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "ES-C56-repaso-amigos"
+    {
+      "lesson": "ES-C56-repaso-amigos",
+      "extension": "ES-EXT-028-REVIEW-FR"
+    }
   ],
   "before": [],
   "inline": [

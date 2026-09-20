@@ -2,7 +2,10 @@
   "id": "HI-PATH-70-CAN",
   "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
   "lessons": [
-    "HI-C70-sakna"
+    {
+      "lesson": "HI-C70-sakna",
+      "extension": "HI-EXT-070-ABILITY"
+    }
   ],
   "before": [],
   "inline": [

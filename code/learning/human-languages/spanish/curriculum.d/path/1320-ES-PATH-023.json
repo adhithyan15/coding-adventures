@@ -2,7 +2,10 @@
   "id": "ES-PATH-023",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "ES-C25-las-estaciones"
+    {
+      "lesson": "ES-C25-las-estaciones",
+      "extension": "ES-EXT-023-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

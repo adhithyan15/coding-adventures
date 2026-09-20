@@ -2,10 +2,22 @@
   "id": "MR-PATH-055",
   "spine_node": "SPINE-DESCRIBE-QUALITIES",
   "lessons": [
-    "MR-C52-sopa",
-    "MR-C52-kathin",
-    "MR-C52-unch",
-    "MR-R52-easy-hard-tall"
+    {
+      "lesson": "MR-C52-sopa",
+      "extension": "MR-EXT-068-EASY-HARD-TALL"
+    },
+    {
+      "lesson": "MR-C52-kathin",
+      "extension": "MR-EXT-068-EASY-HARD-TALL"
+    },
+    {
+      "lesson": "MR-C52-unch",
+      "extension": "MR-EXT-068-EASY-HARD-TALL"
+    },
+    {
+      "lesson": "MR-R52-easy-hard-tall",
+      "extension": "MR-EXT-068-EASY-HARD-TALL"
+    }
   ],
   "before": [],
   "inline": [

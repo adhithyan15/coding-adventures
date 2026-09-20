@@ -2,9 +2,18 @@
   "id": "AR-PATH-018",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "AR-C14-ashhur",
-    "AR-C15-ad-duhr-muntasaf-al-layl",
-    "AR-C16-al-saa"
+    {
+      "lesson": "AR-C14-ashhur",
+      "extension": "AR-EXT-018-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "AR-C15-ad-duhr-muntasaf-al-layl",
+      "extension": "AR-EXT-018-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "AR-C16-al-saa",
+      "extension": "AR-EXT-018-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

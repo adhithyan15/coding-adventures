@@ -2,11 +2,26 @@
   "id": "PA-PATH-039",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "PA-C37-nahin-vaak",
-    "PA-C37-samajh-nahin",
-    "PA-C37-nahin-write",
-    "PA-C37-nahin-pata",
-    "PA-C37-nahin-checkpoint"
+    {
+      "lesson": "PA-C37-nahin-vaak",
+      "extension": "PA-EXT-059-NEGATED-CLAUSE"
+    },
+    {
+      "lesson": "PA-C37-samajh-nahin",
+      "extension": "PA-EXT-059-NEGATED-CLAUSE"
+    },
+    {
+      "lesson": "PA-C37-nahin-write",
+      "extension": "PA-EXT-059-NEGATED-CLAUSE"
+    },
+    {
+      "lesson": "PA-C37-nahin-pata",
+      "extension": "PA-EXT-059-NEGATED-CLAUSE"
+    },
+    {
+      "lesson": "PA-C37-nahin-checkpoint",
+      "extension": "PA-EXT-059-NEGATED-CLAUSE"
+    }
   ],
   "before": [],
   "inline": [

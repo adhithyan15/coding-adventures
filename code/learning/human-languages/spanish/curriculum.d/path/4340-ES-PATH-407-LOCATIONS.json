@@ -2,10 +2,22 @@
   "id": "ES-PATH-407-LOCATIONS",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "ES-C407-medio",
-    "ES-C407-debajo",
-    "ES-C407-fuera",
-    "ES-C407-lado"
+    {
+      "lesson": "ES-C407-medio",
+      "extension": "ES-EXT-407-LOCATIONS"
+    },
+    {
+      "lesson": "ES-C407-debajo",
+      "extension": "ES-EXT-407-LOCATIONS"
+    },
+    {
+      "lesson": "ES-C407-fuera",
+      "extension": "ES-EXT-407-LOCATIONS"
+    },
+    {
+      "lesson": "ES-C407-lado",
+      "extension": "ES-EXT-407-LOCATIONS"
+    }
   ],
   "before": [],
   "inline": [

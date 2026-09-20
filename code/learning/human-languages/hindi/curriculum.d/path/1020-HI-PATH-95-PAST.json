@@ -2,14 +2,38 @@
   "id": "HI-PATH-95-PAST",
   "spine_node": "SPINE-TALK-ABOUT-PAST",
   "lessons": [
-    "HI-C87-par",
-    "HI-C87-thaa",
-    "HI-C87-thii",
-    "HI-C87-the",
-    "HI-C87-nahin-thaa",
-    "HI-C87-bolta-thaa",
-    "HI-C87-repaso-atit",
-    "HI-C87-sintesis-atit"
+    {
+      "lesson": "HI-C87-par",
+      "extension": "HI-EXT-95-PAST"
+    },
+    {
+      "lesson": "HI-C87-thaa",
+      "extension": "HI-EXT-95-PAST"
+    },
+    {
+      "lesson": "HI-C87-thii",
+      "extension": "HI-EXT-95-PAST"
+    },
+    {
+      "lesson": "HI-C87-the",
+      "extension": "HI-EXT-95-PAST"
+    },
+    {
+      "lesson": "HI-C87-nahin-thaa",
+      "extension": "HI-EXT-95-PAST"
+    },
+    {
+      "lesson": "HI-C87-bolta-thaa",
+      "extension": "HI-EXT-95-PAST"
+    },
+    {
+      "lesson": "HI-C87-repaso-atit",
+      "extension": "HI-EXT-95-PAST"
+    },
+    {
+      "lesson": "HI-C87-sintesis-atit",
+      "extension": "HI-EXT-95-PAST"
+    }
   ],
   "before": [],
   "inline": [

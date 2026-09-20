@@ -4,14 +4,29 @@
   "lessons": [
     "RU-C02-ya",
     "RU-C02-ty-vy",
-    "RU-C02-vy-formality",
+    {
+      "lesson": "RU-C02-vy-formality",
+      "extension": "RU-EXT-006-REGISTER"
+    },
     "RU-C02-menya-zovut",
     "RU-C02-kak-vas-zovut",
-    "RU-C02-kak-cross-language",
+    {
+      "lesson": "RU-C02-kak-cross-language",
+      "extension": "RU-EXT-006-GRAMMAR"
+    },
     "RU-C02-ochen-priyatno",
-    "RU-C02-practice",
-    "RU-C02-practice-cases",
-    "RU-C02-practice-zero-copula"
+    {
+      "lesson": "RU-C02-practice",
+      "extension": "RU-EXT-006-CONSOLIDATION"
+    },
+    {
+      "lesson": "RU-C02-practice-cases",
+      "extension": "RU-EXT-006-CONSOLIDATION"
+    },
+    {
+      "lesson": "RU-C02-practice-zero-copula",
+      "extension": "RU-EXT-006-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [

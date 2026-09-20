@@ -2,11 +2,26 @@
   "id": "TA-PATH-59-KITCHEN",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "TA-C59-curd",
-    "TA-C59-ghee",
-    "TA-C59-oil",
-    "TA-C59-jaggery",
-    "TA-C59-sugar"
+    {
+      "lesson": "TA-C59-curd",
+      "extension": "TA-EXT-59-KITCHEN"
+    },
+    {
+      "lesson": "TA-C59-ghee",
+      "extension": "TA-EXT-59-KITCHEN"
+    },
+    {
+      "lesson": "TA-C59-oil",
+      "extension": "TA-EXT-59-KITCHEN"
+    },
+    {
+      "lesson": "TA-C59-jaggery",
+      "extension": "TA-EXT-59-KITCHEN"
+    },
+    {
+      "lesson": "TA-C59-sugar",
+      "extension": "TA-EXT-59-KITCHEN"
+    }
   ],
   "before": [],
   "inline": [

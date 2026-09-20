@@ -2,65 +2,242 @@
   "id": "HI-PATH-100",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "HI-S01-letter-ma",
-    "HI-S02-letter-na",
-    "HI-S03-letter-a",
-    "HI-S04-letter-aa",
-    "HI-S05-sign-virama",
-    "HI-S06-vowel-sign-aa",
-    "HI-S07-letter-ta",
-    "HI-S08-letter-sa",
-    "HI-S110-letter-ra",
-    "HI-S111-letter-ka",
-    "HI-S112-vowel-sign-e",
-    "HI-S113-letter-pa",
-    "HI-S114-letter-ha",
-    "HI-S115-letter-ya",
-    "HI-S116-vowel-sign-ii",
-    "HI-S117-letter-ca",
-    "HI-S118-sign-candrabindu",
-    "HI-S119-letter-ssa",
-    "HI-S120-vowel-sign-u",
-    "HI-S121-letter-la",
-    "HI-S122-letter-kha",
-    "HI-S123-letter-da",
-    "HI-S124-letter-dha",
-    "HI-S126-letter-tha",
-    "HI-S130-letter-chha",
-    "HI-S131-letter-e",
-    "HI-S132-letter-ja",
-    "HI-S133-letter-jha",
-    "HI-S127-letter-u",
-    "HI-S128-letter-uu",
-    "HI-S129-letter-o",
-    "HI-S134-vowel-sign-au",
-    "HI-S135-letter-au",
-    "HI-W12-schwa-drop",
-    "HI-W12-ii-matra",
-    "HI-W12-u-matra",
-    "HI-W12-ai-matra",
-    "HI-W12-aa",
-    "HI-W12-ii",
-    "HI-W12-chandrabindu",
-    "HI-W12-bha",
-    "HI-W12-ya",
-    "HI-W12-ba",
-    "HI-W12-da-retroflex",
-    "HI-S136-letter-gha",
-    "HI-S137-letter-dha-retroflex",
-    "HI-S138-letter-ga",
-    "HI-S139-letter-pha",
-    "HI-S140-nuqta",
-    "HI-S141-nuqta-borrowed",
-    "HI-S142-letter-ta-retroflex",
-    "HI-S143-letter-tha-retroflex",
-    "HI-S144-vowel-sign-vocalic-r",
-    "HI-S145-letter-sha",
-    "HI-S146-letter-va",
-    "HI-S147-letter-na-retroflex",
-    "HI-S148-sign-anusvara",
-    "HI-S149-vowel-sign-uu",
-    "HI-S150-vowel-sign-o"
+    {
+      "lesson": "HI-S01-letter-ma",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S02-letter-na",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S03-letter-a",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S04-letter-aa",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S05-sign-virama",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S06-vowel-sign-aa",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S07-letter-ta",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S08-letter-sa",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S110-letter-ra",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S111-letter-ka",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S112-vowel-sign-e",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S113-letter-pa",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S114-letter-ha",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S115-letter-ya",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S116-vowel-sign-ii",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S117-letter-ca",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S118-sign-candrabindu",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S119-letter-ssa",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S120-vowel-sign-u",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S121-letter-la",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S122-letter-kha",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S123-letter-da",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S124-letter-dha",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S126-letter-tha",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S130-letter-chha",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S131-letter-e",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S132-letter-ja",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S133-letter-jha",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S127-letter-u",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S128-letter-uu",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S129-letter-o",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S134-vowel-sign-au",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S135-letter-au",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-W12-schwa-drop",
+      "extension": "HI-EXT-060-SCRIPT-SECOND-WAVE"
+    },
+    {
+      "lesson": "HI-W12-ii-matra",
+      "extension": "HI-EXT-060-SCRIPT-SECOND-WAVE"
+    },
+    {
+      "lesson": "HI-W12-u-matra",
+      "extension": "HI-EXT-060-SCRIPT-SECOND-WAVE"
+    },
+    {
+      "lesson": "HI-W12-ai-matra",
+      "extension": "HI-EXT-060-SCRIPT-SECOND-WAVE"
+    },
+    {
+      "lesson": "HI-W12-aa",
+      "extension": "HI-EXT-060-SCRIPT-SECOND-WAVE"
+    },
+    {
+      "lesson": "HI-W12-ii",
+      "extension": "HI-EXT-060-SCRIPT-SECOND-WAVE"
+    },
+    {
+      "lesson": "HI-W12-chandrabindu",
+      "extension": "HI-EXT-060-SCRIPT-SECOND-WAVE"
+    },
+    {
+      "lesson": "HI-W12-bha",
+      "extension": "HI-EXT-060-SCRIPT-SECOND-WAVE"
+    },
+    {
+      "lesson": "HI-W12-ya",
+      "extension": "HI-EXT-060-SCRIPT-SECOND-WAVE"
+    },
+    {
+      "lesson": "HI-W12-ba",
+      "extension": "HI-EXT-060-SCRIPT-SECOND-WAVE"
+    },
+    {
+      "lesson": "HI-W12-da-retroflex",
+      "extension": "HI-EXT-060-SCRIPT-SECOND-WAVE"
+    },
+    {
+      "lesson": "HI-S136-letter-gha",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S137-letter-dha-retroflex",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S138-letter-ga",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S139-letter-pha",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S140-nuqta",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S141-nuqta-borrowed",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S142-letter-ta-retroflex",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S143-letter-tha-retroflex",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S144-vowel-sign-vocalic-r",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S145-letter-sha",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S146-letter-va",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S147-letter-na-retroflex",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S148-sign-anusvara",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S149-vowel-sign-uu",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "HI-S150-vowel-sign-o",
+      "extension": "HI-EXT-100-SCRIPT-RECOGNITION"
+    }
   ],
   "before": [],
   "inline": [

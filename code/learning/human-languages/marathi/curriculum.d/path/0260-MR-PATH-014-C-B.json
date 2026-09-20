@@ -2,7 +2,10 @@
   "id": "MR-PATH-014-C-B",
   "spine_node": "SPINE-SAY-WHAT-I-LIKE",
   "lessons": [
-    "MR-C09-avadne"
+    {
+      "lesson": "MR-C09-avadne",
+      "extension": "MR-EXT-014-DOING-VERBS-D"
+    }
   ],
   "before": [],
   "inline": [

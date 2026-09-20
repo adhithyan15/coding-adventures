@@ -2,10 +2,22 @@
   "id": "FA-PATH-021",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "FA-C20-avval",
-    "FA-C20-dovvom-sevvom",
-    "FA-C20-chaharom",
-    "FA-C20-practice"
+    {
+      "lesson": "FA-C20-avval",
+      "extension": "FA-EXT-028-ORDINALS"
+    },
+    {
+      "lesson": "FA-C20-dovvom-sevvom",
+      "extension": "FA-EXT-028-ORDINALS"
+    },
+    {
+      "lesson": "FA-C20-chaharom",
+      "extension": "FA-EXT-028-ORDINALS"
+    },
+    {
+      "lesson": "FA-C20-practice",
+      "extension": "FA-EXT-028-ORDINALS"
+    }
   ],
   "before": [],
   "inline": [],

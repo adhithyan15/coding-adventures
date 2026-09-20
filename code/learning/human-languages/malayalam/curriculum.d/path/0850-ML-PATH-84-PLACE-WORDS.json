@@ -2,10 +2,22 @@
   "id": "ML-PATH-84-PLACE-WORDS",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "ML-C84-mukalil",
-    "ML-C84-thaazhe",
-    "ML-C84-munnil-pinnil",
-    "ML-R84-place-recall"
+    {
+      "lesson": "ML-C84-mukalil",
+      "extension": "ML-EXT-84-PLACE-WORDS"
+    },
+    {
+      "lesson": "ML-C84-thaazhe",
+      "extension": "ML-EXT-84-PLACE-WORDS"
+    },
+    {
+      "lesson": "ML-C84-munnil-pinnil",
+      "extension": "ML-EXT-84-PLACE-WORDS"
+    },
+    {
+      "lesson": "ML-R84-place-recall",
+      "extension": "ML-EXT-84-PLACE-WORDS"
+    }
   ],
   "before": [],
   "inline": [

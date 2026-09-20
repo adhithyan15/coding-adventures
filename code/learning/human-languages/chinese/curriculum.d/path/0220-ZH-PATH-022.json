@@ -2,11 +2,26 @@
   "id": "ZH-PATH-022",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ZH-W23-de",
-    "ZH-C23-de",
-    "ZH-C23-de-mingci",
-    "ZH-C23-huati",
-    "ZH-C23-practice"
+    {
+      "lesson": "ZH-W23-de",
+      "extension": "ZH-EXT-057-DE"
+    },
+    {
+      "lesson": "ZH-C23-de",
+      "extension": "ZH-EXT-057-DE"
+    },
+    {
+      "lesson": "ZH-C23-de-mingci",
+      "extension": "ZH-EXT-057-DE"
+    },
+    {
+      "lesson": "ZH-C23-huati",
+      "extension": "ZH-EXT-057-DE"
+    },
+    {
+      "lesson": "ZH-C23-practice",
+      "extension": "ZH-EXT-057-DE"
+    }
   ],
   "before": [],
   "inline": [],

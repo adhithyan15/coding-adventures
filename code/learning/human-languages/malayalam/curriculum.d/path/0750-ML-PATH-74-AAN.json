@@ -2,10 +2,22 @@
   "id": "ML-PATH-74-AAN",
   "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
   "lessons": [
-    "ML-C74-aan",
-    "ML-C74-purpose",
-    "ML-C74-kazhiyum",
-    "ML-R74-aan-recall"
+    {
+      "lesson": "ML-C74-aan",
+      "extension": "ML-EXT-74-AAN"
+    },
+    {
+      "lesson": "ML-C74-purpose",
+      "extension": "ML-EXT-74-AAN"
+    },
+    {
+      "lesson": "ML-C74-kazhiyum",
+      "extension": "ML-EXT-74-AAN"
+    },
+    {
+      "lesson": "ML-R74-aan-recall",
+      "extension": "ML-EXT-74-AAN"
+    }
   ],
   "before": [],
   "inline": [

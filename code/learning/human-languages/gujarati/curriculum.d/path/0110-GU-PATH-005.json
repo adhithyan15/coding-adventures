@@ -10,7 +10,10 @@
     "GU-C02-shun",
     "GU-C02-tu-tame",
     "GU-C02-tamarun-naam-shun-chhe",
-    "GU-R04-doorway-nine-r2",
+    {
+      "lesson": "GU-R04-doorway-nine-r2",
+      "extension": "GU-EXT-019-DOORWAY-RETRIEVAL"
+    },
     "GU-C03-hun"
   ],
   "before": [],

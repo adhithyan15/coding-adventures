@@ -2,7 +2,10 @@
   "id": "ES-PATH-015-HAY",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "ES-C54-hay"
+    {
+      "lesson": "ES-C54-hay",
+      "extension": "ES-EXT-015-HAY"
+    }
   ],
   "before": [],
   "inline": [

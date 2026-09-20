@@ -2,7 +2,10 @@
   "id": "TE-PATH-021",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "TE-C19-vayasu"
+    {
+      "lesson": "TE-C19-vayasu",
+      "extension": "TE-EXT-021-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,15 +2,42 @@
   "id": "JA-PATH-016",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "JA-W17-mu",
-    "JA-C17-muttsu",
-    "JA-C17-nanatsu",
-    "JA-W17-ya",
-    "JA-C17-yattsu",
-    "JA-W17-no",
-    "JA-C17-kokonotsu",
-    "JA-C17-too",
-    "JA-R17-the-other-ten"
+    {
+      "lesson": "JA-W17-mu",
+      "extension": "JA-EXT-024-NATIVE-COUNT-SIX-TO-TEN"
+    },
+    {
+      "lesson": "JA-C17-muttsu",
+      "extension": "JA-EXT-024-NATIVE-COUNT-SIX-TO-TEN"
+    },
+    {
+      "lesson": "JA-C17-nanatsu",
+      "extension": "JA-EXT-024-NATIVE-COUNT-SIX-TO-TEN"
+    },
+    {
+      "lesson": "JA-W17-ya",
+      "extension": "JA-EXT-024-NATIVE-COUNT-SIX-TO-TEN"
+    },
+    {
+      "lesson": "JA-C17-yattsu",
+      "extension": "JA-EXT-024-NATIVE-COUNT-SIX-TO-TEN"
+    },
+    {
+      "lesson": "JA-W17-no",
+      "extension": "JA-EXT-024-NATIVE-COUNT-SIX-TO-TEN"
+    },
+    {
+      "lesson": "JA-C17-kokonotsu",
+      "extension": "JA-EXT-024-NATIVE-COUNT-SIX-TO-TEN"
+    },
+    {
+      "lesson": "JA-C17-too",
+      "extension": "JA-EXT-024-NATIVE-COUNT-SIX-TO-TEN"
+    },
+    {
+      "lesson": "JA-R17-the-other-ten",
+      "extension": "JA-EXT-024-NATIVE-COUNT-SIX-TO-TEN"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,7 +2,10 @@
   "id": "AR-PATH-029-B",
   "spine_node": "SPINE-SAY-WHAT-I-LIKE",
   "lessons": [
-    "AR-C32-ahabba"
+    {
+      "lesson": "AR-C32-ahabba",
+      "extension": "AR-EXT-029-LANGUAGE-SPECIFIC-B"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,8 +2,14 @@
   "id": "ES-PATH-031-C",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "ES-C34-repaso-mente",
-    "ES-C34-sintesis-mente",
+    {
+      "lesson": "ES-C34-repaso-mente",
+      "extension": "ES-EXT-031-CONSOLIDATION"
+    },
+    {
+      "lesson": "ES-C34-sintesis-mente",
+      "extension": "ES-EXT-031-CONSOLIDATION"
+    },
     "ES-C35-tomar"
   ],
   "before": [],

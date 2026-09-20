@@ -2,10 +2,22 @@
   "id": "BN-PATH-014",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "BN-C10-cha",
-    "BN-C10-jol",
-    "BN-C10-dudh",
-    "BN-C10-bhat"
+    {
+      "lesson": "BN-C10-cha",
+      "extension": "BN-EXT-014-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "BN-C10-jol",
+      "extension": "BN-EXT-014-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "BN-C10-dudh",
+      "extension": "BN-EXT-014-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "BN-C10-bhat",
+      "extension": "BN-EXT-014-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

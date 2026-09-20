@@ -2,7 +2,10 @@
   "id": "TE-PATH-017",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "TE-C13-sharira-bhagalu"
+    {
+      "lesson": "TE-C13-sharira-bhagalu",
+      "extension": "TE-EXT-017-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

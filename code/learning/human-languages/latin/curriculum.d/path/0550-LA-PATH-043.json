@@ -2,11 +2,26 @@
   "id": "LA-PATH-043",
   "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
   "lessons": [
-    "LA-C59-a-objects",
-    "LA-C59-m-objects",
-    "LA-C59-place",
-    "LA-C59-social-exchange",
-    "LA-C59-dies-meus"
+    {
+      "lesson": "LA-C59-a-objects",
+      "extension": "LA-EXT-059-READING"
+    },
+    {
+      "lesson": "LA-C59-m-objects",
+      "extension": "LA-EXT-059-READING"
+    },
+    {
+      "lesson": "LA-C59-place",
+      "extension": "LA-EXT-059-READING"
+    },
+    {
+      "lesson": "LA-C59-social-exchange",
+      "extension": "LA-EXT-059-READING"
+    },
+    {
+      "lesson": "LA-C59-dies-meus",
+      "extension": "LA-EXT-059-READING"
+    }
   ],
   "before": [],
   "inline": [

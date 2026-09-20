@@ -2,11 +2,26 @@
   "id": "ES-PATH-347-01",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "ES-C347-norte",
-    "ES-C347-sur",
-    "ES-C347-oeste",
-    "ES-C347-centro",
-    "ES-C347-alrededor"
+    {
+      "lesson": "ES-C347-norte",
+      "extension": "ES-EXT-347-PLACE"
+    },
+    {
+      "lesson": "ES-C347-sur",
+      "extension": "ES-EXT-347-PLACE"
+    },
+    {
+      "lesson": "ES-C347-oeste",
+      "extension": "ES-EXT-347-PLACE"
+    },
+    {
+      "lesson": "ES-C347-centro",
+      "extension": "ES-EXT-347-PLACE"
+    },
+    {
+      "lesson": "ES-C347-alrededor",
+      "extension": "ES-EXT-347-PLACE"
+    }
   ],
   "before": [],
   "inline": [

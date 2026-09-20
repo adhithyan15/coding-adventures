@@ -4,8 +4,5 @@
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can name the heart in Marathi and know it as the surest cognate this track has taught.",
-  "prerequisites": [],
-  "lessons": [
-    "MR-C13-hrudaya"
-  ]
+  "prerequisites": []
 }

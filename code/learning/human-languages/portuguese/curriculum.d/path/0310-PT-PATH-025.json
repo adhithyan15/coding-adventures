@@ -2,7 +2,10 @@
   "id": "PT-PATH-025",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "PT-C21-trazer"
+    {
+      "lesson": "PT-C21-trazer",
+      "extension": "PT-EXT-025-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

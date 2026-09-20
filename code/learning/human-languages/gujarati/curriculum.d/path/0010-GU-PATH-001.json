@@ -2,17 +2,50 @@
   "id": "GU-PATH-001",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "GU-C01-namaste",
-    "GU-W01-ha",
-    "GU-W01-aa-matra",
-    "GU-W01-aa",
-    "GU-W01-na",
-    "GU-W01-ma",
-    "GU-W01-sa",
-    "GU-W01-ta",
-    "GU-W01-e-matra",
-    "GU-W01-virama",
-    "GU-W01-namaste-read"
+    {
+      "lesson": "GU-C01-namaste",
+      "extension": "GU-EXT-001-INLINE-SCRIPT"
+    },
+    {
+      "lesson": "GU-W01-ha",
+      "extension": "GU-EXT-016-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "GU-W01-aa-matra",
+      "extension": "GU-EXT-016-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "GU-W01-aa",
+      "extension": "GU-EXT-016-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "GU-W01-na",
+      "extension": "GU-EXT-016-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "GU-W01-ma",
+      "extension": "GU-EXT-016-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "GU-W01-sa",
+      "extension": "GU-EXT-016-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "GU-W01-ta",
+      "extension": "GU-EXT-016-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "GU-W01-e-matra",
+      "extension": "GU-EXT-016-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "GU-W01-virama",
+      "extension": "GU-EXT-016-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "GU-W01-namaste-read",
+      "extension": "GU-EXT-016-SCRIPT-FIRST-PIECES"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,8 +2,14 @@
   "id": "ES-PATH-415-PACKAGE",
   "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
   "lessons": [
-    "ES-C415-paquete",
-    "ES-C415-extranjero"
+    {
+      "lesson": "ES-C415-paquete",
+      "extension": "ES-EXT-415-PACKAGE"
+    },
+    {
+      "lesson": "ES-C415-extranjero",
+      "extension": "ES-EXT-415-PACKAGE"
+    }
   ],
   "before": [],
   "inline": [

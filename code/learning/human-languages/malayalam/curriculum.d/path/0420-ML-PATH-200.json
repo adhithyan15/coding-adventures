@@ -2,13 +2,34 @@
   "id": "ML-PATH-200",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ML-C41-this",
-    "ML-C41-that",
-    "ML-C41-here",
-    "ML-C41-there",
-    "ML-C41-who",
-    "ML-C41-where",
-    "ML-C41-deixis-system"
+    {
+      "lesson": "ML-C41-this",
+      "extension": "ML-EXT-200-DEIXIS"
+    },
+    {
+      "lesson": "ML-C41-that",
+      "extension": "ML-EXT-200-DEIXIS"
+    },
+    {
+      "lesson": "ML-C41-here",
+      "extension": "ML-EXT-200-DEIXIS"
+    },
+    {
+      "lesson": "ML-C41-there",
+      "extension": "ML-EXT-200-DEIXIS"
+    },
+    {
+      "lesson": "ML-C41-who",
+      "extension": "ML-EXT-200-DEIXIS"
+    },
+    {
+      "lesson": "ML-C41-where",
+      "extension": "ML-EXT-200-DEIXIS"
+    },
+    {
+      "lesson": "ML-C41-deixis-system",
+      "extension": "ML-EXT-200-DEIXIS"
+    }
   ],
   "before": [],
   "inline": [

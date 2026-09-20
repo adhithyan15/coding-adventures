@@ -2,10 +2,22 @@
   "id": "MR-PATH-033",
   "spine_node": "SPINE-SAY-WHAT-I-LIKE",
   "lessons": [
-    "MR-C31-naa-naa",
-    "MR-C31-naa-tag",
-    "MR-C31-dusra",
-    "MR-R31-pairs"
+    {
+      "lesson": "MR-C31-naa-naa",
+      "extension": "MR-EXT-046-PAIRED-JOINS"
+    },
+    {
+      "lesson": "MR-C31-naa-tag",
+      "extension": "MR-EXT-046-PAIRED-JOINS"
+    },
+    {
+      "lesson": "MR-C31-dusra",
+      "extension": "MR-EXT-046-PAIRED-JOINS"
+    },
+    {
+      "lesson": "MR-R31-pairs",
+      "extension": "MR-EXT-046-PAIRED-JOINS"
+    }
   ],
   "before": [],
   "inline": [

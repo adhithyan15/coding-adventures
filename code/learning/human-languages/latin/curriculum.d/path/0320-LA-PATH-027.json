@@ -2,7 +2,10 @@
   "id": "LA-PATH-027",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "LA-C39-capio"
+    {
+      "lesson": "LA-C39-capio",
+      "extension": "LA-EXT-027-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,11 +2,26 @@
   "id": "ES-PATH-390-01",
   "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
   "lessons": [
-    "ES-C390-terraza",
-    "ES-C390-sala",
-    "ES-C390-planta",
-    "ES-C390-ascensor",
-    "ES-C390-piscina"
+    {
+      "lesson": "ES-C390-terraza",
+      "extension": "ES-EXT-390-THING"
+    },
+    {
+      "lesson": "ES-C390-sala",
+      "extension": "ES-EXT-390-THING"
+    },
+    {
+      "lesson": "ES-C390-planta",
+      "extension": "ES-EXT-390-THING"
+    },
+    {
+      "lesson": "ES-C390-ascensor",
+      "extension": "ES-EXT-390-THING"
+    },
+    {
+      "lesson": "ES-C390-piscina",
+      "extension": "ES-EXT-390-THING"
+    }
   ],
   "before": [],
   "inline": [

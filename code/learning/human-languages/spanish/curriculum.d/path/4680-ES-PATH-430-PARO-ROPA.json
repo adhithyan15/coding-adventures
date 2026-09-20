@@ -2,12 +2,30 @@
   "id": "ES-PATH-430-PARO-ROPA",
   "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
   "lessons": [
-    "ES-C430-estar-en-paro",
-    "ES-C430-vaqueros",
-    "ES-C430-jersey",
-    "ES-C430-bolso",
-    "ES-C430-repaso-piezas",
-    "ES-C430-sintesis-anuncio"
+    {
+      "lesson": "ES-C430-estar-en-paro",
+      "extension": "ES-EXT-430-PARO-ROPA"
+    },
+    {
+      "lesson": "ES-C430-vaqueros",
+      "extension": "ES-EXT-430-PARO-ROPA"
+    },
+    {
+      "lesson": "ES-C430-jersey",
+      "extension": "ES-EXT-430-PARO-ROPA"
+    },
+    {
+      "lesson": "ES-C430-bolso",
+      "extension": "ES-EXT-430-PARO-ROPA"
+    },
+    {
+      "lesson": "ES-C430-repaso-piezas",
+      "extension": "ES-EXT-430-PARO-ROPA"
+    },
+    {
+      "lesson": "ES-C430-sintesis-anuncio",
+      "extension": "ES-EXT-430-PARO-ROPA"
+    }
   ],
   "before": [],
   "inline": [

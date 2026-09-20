@@ -2,18 +2,54 @@
   "id": "GE-PATH-017-B",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "GE-C12-ziffer-plus-zehn",
-    "GE-C12-dreizehn",
-    "GE-C12-vierzehn",
-    "GE-C12-fuenfzehn",
-    "GE-C12-klippung",
-    "GE-C12-sechzehn",
-    "GE-C12-siebzehn",
-    "GE-C12-achtzehn",
-    "GE-C12-neunzehn",
-    "GE-C12-zwanzig",
-    "GE-C12-zwanzig-zwei-zehn",
-    "GE-C12-zahlen-13-20"
+    {
+      "lesson": "GE-C12-ziffer-plus-zehn",
+      "extension": "GE-EXT-017-B-ZAHLEN"
+    },
+    {
+      "lesson": "GE-C12-dreizehn",
+      "extension": "GE-EXT-017-B-ZAHLEN"
+    },
+    {
+      "lesson": "GE-C12-vierzehn",
+      "extension": "GE-EXT-017-B-ZAHLEN"
+    },
+    {
+      "lesson": "GE-C12-fuenfzehn",
+      "extension": "GE-EXT-017-B-ZAHLEN"
+    },
+    {
+      "lesson": "GE-C12-klippung",
+      "extension": "GE-EXT-017-B-ZAHLEN"
+    },
+    {
+      "lesson": "GE-C12-sechzehn",
+      "extension": "GE-EXT-017-B-ZAHLEN"
+    },
+    {
+      "lesson": "GE-C12-siebzehn",
+      "extension": "GE-EXT-017-B-ZAHLEN"
+    },
+    {
+      "lesson": "GE-C12-achtzehn",
+      "extension": "GE-EXT-017-B-ZAHLEN"
+    },
+    {
+      "lesson": "GE-C12-neunzehn",
+      "extension": "GE-EXT-017-B-ZAHLEN"
+    },
+    {
+      "lesson": "GE-C12-zwanzig",
+      "extension": "GE-EXT-017-B-ZAHLEN"
+    },
+    {
+      "lesson": "GE-C12-zwanzig-zwei-zehn",
+      "extension": "GE-EXT-017-B-ZAHLEN"
+    },
+    {
+      "lesson": "GE-C12-zahlen-13-20",
+      "extension": "GE-EXT-017-B-ZAHLEN"
+    }
   ],
   "before": [],
   "inline": [

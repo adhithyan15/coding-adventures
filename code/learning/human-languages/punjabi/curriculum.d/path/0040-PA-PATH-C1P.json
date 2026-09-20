@@ -2,7 +2,10 @@
   "id": "PA-PATH-C1P",
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
-    "PA-C01-practice"
+    {
+      "lesson": "PA-C01-practice",
+      "extension": "PA-EXT-001-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [

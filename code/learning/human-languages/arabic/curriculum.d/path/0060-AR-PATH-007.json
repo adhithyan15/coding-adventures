@@ -9,7 +9,10 @@
     "AR-C02-maa",
     "AR-C02-maa-ismuka",
     "AR-C02-tasharrafna",
-    "AR-C02-practice"
+    {
+      "lesson": "AR-C02-practice",
+      "extension": "AR-EXT-007-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [],

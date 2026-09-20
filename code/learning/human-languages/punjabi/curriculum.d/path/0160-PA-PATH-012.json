@@ -2,10 +2,22 @@
   "id": "PA-PATH-012",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "PA-C08-sochna",
-    "PA-S08-khakkha-jhajja-pairin",
-    "PA-C08-samajhna",
-    "PA-S08-pappa"
+    {
+      "lesson": "PA-C08-sochna",
+      "extension": "PA-EXT-012-MIND-VERBS"
+    },
+    {
+      "lesson": "PA-S08-khakkha-jhajja-pairin",
+      "extension": "PA-EXT-050-PREA1-SCRIPT-RUNWAY-C8"
+    },
+    {
+      "lesson": "PA-C08-samajhna",
+      "extension": "PA-EXT-012-MIND-VERBS"
+    },
+    {
+      "lesson": "PA-S08-pappa",
+      "extension": "PA-EXT-050-PREA1-SCRIPT-RUNWAY-C8"
+    }
   ],
   "before": [],
   "inline": [

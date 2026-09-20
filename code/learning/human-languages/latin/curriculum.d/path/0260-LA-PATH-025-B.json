@@ -2,7 +2,10 @@
   "id": "LA-PATH-025-B",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "LA-C37-venio"
+    {
+      "lesson": "LA-C37-venio",
+      "extension": "LA-EXT-025-LANGUAGE-SPECIFIC-B"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,10 +2,22 @@
   "id": "KA-PATH-70-TELL",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "KA-C70-say",
-    "KA-C70-quotative",
-    "KA-C70-because",
-    "KA-C70-i-think"
+    {
+      "lesson": "KA-C70-say",
+      "extension": "KA-EXT-70-TELL"
+    },
+    {
+      "lesson": "KA-C70-quotative",
+      "extension": "KA-EXT-70-TELL"
+    },
+    {
+      "lesson": "KA-C70-because",
+      "extension": "KA-EXT-70-TELL"
+    },
+    {
+      "lesson": "KA-C70-i-think",
+      "extension": "KA-EXT-70-TELL"
+    }
   ],
   "before": [],
   "inline": [

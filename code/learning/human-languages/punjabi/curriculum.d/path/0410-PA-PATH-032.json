@@ -2,21 +2,66 @@
   "id": "PA-PATH-032",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "PA-W08-pha",
-    "PA-W08-pairin-bindi",
-    "PA-W08-hora",
-    "PA-W08-phone-label",
-    "PA-W08-digit-zero",
-    "PA-W08-phone-a",
-    "PA-W08-phone-b",
-    "PA-W08-digit-recognition",
-    "PA-W08-phone-select",
-    "PA-W08-phone-supported",
-    "PA-W08-phone-grouping",
-    "PA-W08-phone-delayed",
-    "PA-W08-phone-dictation",
-    "PA-W08-phone-repair",
-    "PA-W08-phone-no-model"
+    {
+      "lesson": "PA-W08-pha",
+      "extension": "PA-EXT-037-A1-PHONE-FIELD"
+    },
+    {
+      "lesson": "PA-W08-pairin-bindi",
+      "extension": "PA-EXT-037-A1-PHONE-FIELD"
+    },
+    {
+      "lesson": "PA-W08-hora",
+      "extension": "PA-EXT-037-A1-PHONE-FIELD"
+    },
+    {
+      "lesson": "PA-W08-phone-label",
+      "extension": "PA-EXT-037-A1-PHONE-FIELD"
+    },
+    {
+      "lesson": "PA-W08-digit-zero",
+      "extension": "PA-EXT-037-A1-PHONE-FIELD"
+    },
+    {
+      "lesson": "PA-W08-phone-a",
+      "extension": "PA-EXT-037-A1-PHONE-FIELD"
+    },
+    {
+      "lesson": "PA-W08-phone-b",
+      "extension": "PA-EXT-037-A1-PHONE-FIELD"
+    },
+    {
+      "lesson": "PA-W08-digit-recognition",
+      "extension": "PA-EXT-037-A1-PHONE-FIELD"
+    },
+    {
+      "lesson": "PA-W08-phone-select",
+      "extension": "PA-EXT-037-A1-PHONE-FIELD"
+    },
+    {
+      "lesson": "PA-W08-phone-supported",
+      "extension": "PA-EXT-037-A1-PHONE-FIELD"
+    },
+    {
+      "lesson": "PA-W08-phone-grouping",
+      "extension": "PA-EXT-037-A1-PHONE-FIELD"
+    },
+    {
+      "lesson": "PA-W08-phone-delayed",
+      "extension": "PA-EXT-037-A1-PHONE-FIELD"
+    },
+    {
+      "lesson": "PA-W08-phone-dictation",
+      "extension": "PA-EXT-037-A1-PHONE-FIELD"
+    },
+    {
+      "lesson": "PA-W08-phone-repair",
+      "extension": "PA-EXT-037-A1-PHONE-FIELD"
+    },
+    {
+      "lesson": "PA-W08-phone-no-model",
+      "extension": "PA-EXT-037-A1-PHONE-FIELD"
+    }
   ],
   "before": [],
   "inline": [

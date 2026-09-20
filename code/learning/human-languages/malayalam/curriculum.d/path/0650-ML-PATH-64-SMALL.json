@@ -2,11 +2,26 @@
   "id": "ML-PATH-64-SMALL",
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
-    "ML-C64-then",
-    "ML-C64-soon",
-    "ML-C64-sometimes",
-    "ML-C64-only",
-    "ML-C64-but"
+    {
+      "lesson": "ML-C64-then",
+      "extension": "ML-EXT-64-SMALL"
+    },
+    {
+      "lesson": "ML-C64-soon",
+      "extension": "ML-EXT-64-SMALL"
+    },
+    {
+      "lesson": "ML-C64-sometimes",
+      "extension": "ML-EXT-64-SMALL"
+    },
+    {
+      "lesson": "ML-C64-only",
+      "extension": "ML-EXT-64-SMALL"
+    },
+    {
+      "lesson": "ML-C64-but",
+      "extension": "ML-EXT-64-SMALL"
+    }
   ],
   "before": [],
   "inline": [

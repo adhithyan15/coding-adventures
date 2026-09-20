@@ -2,16 +2,46 @@
   "id": "MW-PATH-029",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "MW-W35-digits-zero-one-two",
-    "MW-C35-read-ten-ticket",
-    "MW-W35-digits-three-four-five",
-    "MW-C35-read-five-ticket",
-    "MW-W35-digits-six-seven-eight",
-    "MW-C35-read-eight-ticket",
-    "MW-W35-digit-nine",
-    "MW-C35-read-ticket",
-    "MW-C35-ticket-four",
-    "MW-R35-script-close"
+    {
+      "lesson": "MW-W35-digits-zero-one-two",
+      "extension": "MW-EXT-043-DIGITS"
+    },
+    {
+      "lesson": "MW-C35-read-ten-ticket",
+      "extension": "MW-EXT-043-DIGITS"
+    },
+    {
+      "lesson": "MW-W35-digits-three-four-five",
+      "extension": "MW-EXT-043-DIGITS"
+    },
+    {
+      "lesson": "MW-C35-read-five-ticket",
+      "extension": "MW-EXT-043-DIGITS"
+    },
+    {
+      "lesson": "MW-W35-digits-six-seven-eight",
+      "extension": "MW-EXT-043-DIGITS"
+    },
+    {
+      "lesson": "MW-C35-read-eight-ticket",
+      "extension": "MW-EXT-043-DIGITS"
+    },
+    {
+      "lesson": "MW-W35-digit-nine",
+      "extension": "MW-EXT-043-DIGITS"
+    },
+    {
+      "lesson": "MW-C35-read-ticket",
+      "extension": "MW-EXT-043-DIGITS"
+    },
+    {
+      "lesson": "MW-C35-ticket-four",
+      "extension": "MW-EXT-043-DIGITS"
+    },
+    {
+      "lesson": "MW-R35-script-close",
+      "extension": "MW-EXT-043-DIGITS"
+    }
   ],
   "before": [],
   "inline": [

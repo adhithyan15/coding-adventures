@@ -2,11 +2,26 @@
   "id": "TA-PATH-54-HOUSE",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "TA-C54-mat",
-    "TA-C54-basket",
-    "TA-C54-knife",
-    "TA-C54-bowl",
-    "TA-C54-box"
+    {
+      "lesson": "TA-C54-mat",
+      "extension": "TA-EXT-54-HOUSE"
+    },
+    {
+      "lesson": "TA-C54-basket",
+      "extension": "TA-EXT-54-HOUSE"
+    },
+    {
+      "lesson": "TA-C54-knife",
+      "extension": "TA-EXT-54-HOUSE"
+    },
+    {
+      "lesson": "TA-C54-bowl",
+      "extension": "TA-EXT-54-HOUSE"
+    },
+    {
+      "lesson": "TA-C54-box",
+      "extension": "TA-EXT-54-HOUSE"
+    }
   ],
   "before": [],
   "inline": [

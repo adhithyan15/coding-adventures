@@ -4,17 +4,50 @@
   "lessons": [
     "RU-C01-da",
     "RU-C01-net",
-    "RU-W06-u",
-    "RU-W06-z",
-    "RU-W06-k",
-    "RU-W06-l",
-    "RU-W06-m",
-    "RU-W06-y",
-    "RU-W06-zh",
-    "RU-W06-ch",
-    "RU-W06-sh",
-    "RU-W06-soft-sign",
-    "RU-W06-ya"
+    {
+      "lesson": "RU-W06-u",
+      "extension": "RU-EXT-020-SCRIPT-ELEVEN"
+    },
+    {
+      "lesson": "RU-W06-z",
+      "extension": "RU-EXT-020-SCRIPT-ELEVEN"
+    },
+    {
+      "lesson": "RU-W06-k",
+      "extension": "RU-EXT-020-SCRIPT-ELEVEN"
+    },
+    {
+      "lesson": "RU-W06-l",
+      "extension": "RU-EXT-020-SCRIPT-ELEVEN"
+    },
+    {
+      "lesson": "RU-W06-m",
+      "extension": "RU-EXT-020-SCRIPT-ELEVEN"
+    },
+    {
+      "lesson": "RU-W06-y",
+      "extension": "RU-EXT-020-SCRIPT-ELEVEN"
+    },
+    {
+      "lesson": "RU-W06-zh",
+      "extension": "RU-EXT-020-SCRIPT-ELEVEN"
+    },
+    {
+      "lesson": "RU-W06-ch",
+      "extension": "RU-EXT-020-SCRIPT-ELEVEN"
+    },
+    {
+      "lesson": "RU-W06-sh",
+      "extension": "RU-EXT-020-SCRIPT-ELEVEN"
+    },
+    {
+      "lesson": "RU-W06-soft-sign",
+      "extension": "RU-EXT-020-SCRIPT-ELEVEN"
+    },
+    {
+      "lesson": "RU-W06-ya",
+      "extension": "RU-EXT-020-SCRIPT-ELEVEN"
+    }
   ],
   "before": [],
   "inline": [],

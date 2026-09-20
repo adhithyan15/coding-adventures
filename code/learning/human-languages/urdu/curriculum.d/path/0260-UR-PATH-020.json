@@ -2,10 +2,22 @@
   "id": "UR-PATH-020",
   "spine_node": "SPINE-NEGATE-AND-ASK",
   "lessons": [
-    "UR-C19-nahin-verb",
-    "UR-C19-kya-polar",
-    "UR-C19-na-na",
-    "UR-R19-three-refusals"
+    {
+      "lesson": "UR-C19-nahin-verb",
+      "extension": "UR-EXT-030-THREE-REFUSALS"
+    },
+    {
+      "lesson": "UR-C19-kya-polar",
+      "extension": "UR-EXT-030-THREE-REFUSALS"
+    },
+    {
+      "lesson": "UR-C19-na-na",
+      "extension": "UR-EXT-030-THREE-REFUSALS"
+    },
+    {
+      "lesson": "UR-R19-three-refusals",
+      "extension": "UR-EXT-030-THREE-REFUSALS"
+    }
   ],
   "before": [],
   "inline": [

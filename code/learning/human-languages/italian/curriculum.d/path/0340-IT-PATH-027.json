@@ -2,10 +2,22 @@
   "id": "IT-PATH-027",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "IT-C23-amico-amica",
-    "IT-C23-famiglia",
-    "IT-C23-nome",
-    "IT-C23-persona"
+    {
+      "lesson": "IT-C23-amico-amica",
+      "extension": "IT-EXT-027-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "IT-C23-famiglia",
+      "extension": "IT-EXT-027-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "IT-C23-nome",
+      "extension": "IT-EXT-027-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "IT-C23-persona",
+      "extension": "IT-EXT-027-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

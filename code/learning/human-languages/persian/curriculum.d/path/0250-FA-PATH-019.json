@@ -2,11 +2,26 @@
   "id": "FA-PATH-019",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "FA-C18-yazdah",
-    "FA-C18-sizdah",
-    "FA-C18-panzdah",
-    "FA-C18-bist-sad",
-    "FA-C18-practice"
+    {
+      "lesson": "FA-C18-yazdah",
+      "extension": "FA-EXT-026-TEENS"
+    },
+    {
+      "lesson": "FA-C18-sizdah",
+      "extension": "FA-EXT-026-TEENS"
+    },
+    {
+      "lesson": "FA-C18-panzdah",
+      "extension": "FA-EXT-026-TEENS"
+    },
+    {
+      "lesson": "FA-C18-bist-sad",
+      "extension": "FA-EXT-026-TEENS"
+    },
+    {
+      "lesson": "FA-C18-practice",
+      "extension": "FA-EXT-026-TEENS"
+    }
   ],
   "before": [],
   "inline": [],

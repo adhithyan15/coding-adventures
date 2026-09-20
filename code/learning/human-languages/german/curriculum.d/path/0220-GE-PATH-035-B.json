@@ -2,12 +2,30 @@
   "id": "GE-PATH-035-B",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "GE-C07-sonne",
-    "GE-C07-sonntag",
-    "GE-C07-sabbat",
-    "GE-C07-samstag",
-    "GE-C07-sonnabend",
-    "GE-C07-wochentage-2"
+    {
+      "lesson": "GE-C07-sonne",
+      "extension": "GE-EXT-035-B-WOCHENENDE"
+    },
+    {
+      "lesson": "GE-C07-sonntag",
+      "extension": "GE-EXT-035-B-WOCHENENDE"
+    },
+    {
+      "lesson": "GE-C07-sabbat",
+      "extension": "GE-EXT-035-B-WOCHENENDE"
+    },
+    {
+      "lesson": "GE-C07-samstag",
+      "extension": "GE-EXT-035-B-WOCHENENDE"
+    },
+    {
+      "lesson": "GE-C07-sonnabend",
+      "extension": "GE-EXT-035-B-WOCHENENDE"
+    },
+    {
+      "lesson": "GE-C07-wochentage-2",
+      "extension": "GE-EXT-035-B-WOCHENENDE"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,11 +2,26 @@
   "id": "KA-PATH-60-ANIMAL",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "KA-C60-cow",
-    "KA-C60-goat",
-    "KA-C60-hen",
-    "KA-C60-crow",
-    "KA-C60-bird"
+    {
+      "lesson": "KA-C60-cow",
+      "extension": "KA-EXT-60-ANIMAL"
+    },
+    {
+      "lesson": "KA-C60-goat",
+      "extension": "KA-EXT-60-ANIMAL"
+    },
+    {
+      "lesson": "KA-C60-hen",
+      "extension": "KA-EXT-60-ANIMAL"
+    },
+    {
+      "lesson": "KA-C60-crow",
+      "extension": "KA-EXT-60-ANIMAL"
+    },
+    {
+      "lesson": "KA-C60-bird",
+      "extension": "KA-EXT-60-ANIMAL"
+    }
   ],
   "before": [],
   "inline": [

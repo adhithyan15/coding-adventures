@@ -2,12 +2,24 @@
   "id": "MR-PATH-010",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "MR-C04-punha",
-    "MR-C04-bhetu",
+    {
+      "lesson": "MR-C04-punha",
+      "extension": "MR-EXT-010-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "MR-C04-bhetu",
+      "extension": "MR-EXT-010-LANGUAGE-SPECIFIC"
+    },
     "MR-C04-punha-bhetu",
     "MR-C04-udya-bhetu",
-    "MR-C04-kalji-ghya",
-    "MR-C04-practice"
+    {
+      "lesson": "MR-C04-kalji-ghya",
+      "extension": "MR-EXT-040-FAREWELL-CARE-AND-CONSOLIDATION"
+    },
+    {
+      "lesson": "MR-C04-practice",
+      "extension": "MR-EXT-040-FAREWELL-CARE-AND-CONSOLIDATION"
+    }
   ],
   "before": [
     "MR-EXT-010-LANGUAGE-SPECIFIC"

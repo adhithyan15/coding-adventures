@@ -3,7 +3,10 @@
   "spine_node": "SPINE-SUMMARIZE-FROM-SOURCES",
   "lessons": [
     "ES-C277-en-resumen",
-    "ES-C277-practice"
+    {
+      "lesson": "ES-C277-practice",
+      "extension": "ES-EXT-277-SOURCES"
+    }
   ],
   "before": [],
   "inline": [

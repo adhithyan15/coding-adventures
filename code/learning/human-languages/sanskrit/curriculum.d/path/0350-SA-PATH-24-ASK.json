@@ -2,11 +2,26 @@
   "id": "SA-PATH-24-ASK",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "SA-C24-water",
-    "SA-C24-rice",
-    "SA-C24-fruit",
-    "SA-C24-cloth",
-    "SA-C24-lamp"
+    {
+      "lesson": "SA-C24-water",
+      "extension": "SA-EXT-24-ASK"
+    },
+    {
+      "lesson": "SA-C24-rice",
+      "extension": "SA-EXT-24-ASK"
+    },
+    {
+      "lesson": "SA-C24-fruit",
+      "extension": "SA-EXT-24-ASK"
+    },
+    {
+      "lesson": "SA-C24-cloth",
+      "extension": "SA-EXT-24-ASK"
+    },
+    {
+      "lesson": "SA-C24-lamp",
+      "extension": "SA-EXT-24-ASK"
+    }
   ],
   "before": [],
   "inline": [

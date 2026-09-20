@@ -2,7 +2,10 @@
   "id": "TE-PATH-027-E",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "TE-C34-sahayam-ceyu"
+    {
+      "lesson": "TE-C34-sahayam-ceyu",
+      "extension": "TE-EXT-028-SOCIAL-VERBS-C"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,10 +2,22 @@
   "id": "ZH-PATH-004",
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
-    "ZH-W05-shi",
-    "ZH-C05-shi",
-    "ZH-C05-bushi",
-    "ZH-C05-practice"
+    {
+      "lesson": "ZH-W05-shi",
+      "extension": "ZH-EXT-013-SHI-BUILD"
+    },
+    {
+      "lesson": "ZH-C05-shi",
+      "extension": "ZH-EXT-013-SHI-BUILD"
+    },
+    {
+      "lesson": "ZH-C05-bushi",
+      "extension": "ZH-EXT-014-BU-SANDHI"
+    },
+    {
+      "lesson": "ZH-C05-practice",
+      "extension": "ZH-EXT-014-BU-SANDHI"
+    }
   ],
   "before": [],
   "inline": [

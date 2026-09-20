@@ -2,9 +2,18 @@
   "id": "BN-PATH-027",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "BN-C19-abar-bolben",
-    "BN-C19-dhire",
-    "BN-R19-lost-and-found"
+    {
+      "lesson": "BN-C19-abar-bolben",
+      "extension": "BN-EXT-028-REPAIR-KIT"
+    },
+    {
+      "lesson": "BN-C19-dhire",
+      "extension": "BN-EXT-028-REPAIR-KIT"
+    },
+    {
+      "lesson": "BN-R19-lost-and-found",
+      "extension": "BN-EXT-028-REPAIR-KIT"
+    }
   ],
   "before": [],
   "inline": [

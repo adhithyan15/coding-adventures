@@ -2,10 +2,22 @@
   "id": "FA-PATH-006",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "FA-C05-khoda",
-    "FA-C05-hafez",
-    "FA-C05-khodahafez",
-    "FA-C05-practice"
+    {
+      "lesson": "FA-C05-khoda",
+      "extension": "FA-EXT-013-KHODA-HISTORY"
+    },
+    {
+      "lesson": "FA-C05-hafez",
+      "extension": "FA-EXT-014-HAFEZ-ROOT"
+    },
+    {
+      "lesson": "FA-C05-khodahafez",
+      "extension": "FA-EXT-015-FAREWELL-SCRIPT-REGISTER"
+    },
+    {
+      "lesson": "FA-C05-practice",
+      "extension": "FA-EXT-016-TAKE-LEAVE-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,11 +2,26 @@
   "id": "SA-PATH-38-EARTH",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "SA-C38-fire",
-    "SA-C38-ash",
-    "SA-C38-stone",
-    "SA-C38-sand",
-    "SA-C38-soil"
+    {
+      "lesson": "SA-C38-fire",
+      "extension": "SA-EXT-38-EARTH"
+    },
+    {
+      "lesson": "SA-C38-ash",
+      "extension": "SA-EXT-38-EARTH"
+    },
+    {
+      "lesson": "SA-C38-stone",
+      "extension": "SA-EXT-38-EARTH"
+    },
+    {
+      "lesson": "SA-C38-sand",
+      "extension": "SA-EXT-38-EARTH"
+    },
+    {
+      "lesson": "SA-C38-soil",
+      "extension": "SA-EXT-38-EARTH"
+    }
   ],
   "before": [],
   "inline": [

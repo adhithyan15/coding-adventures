@@ -2,11 +2,26 @@
   "id": "TE-PATH-62-MADE",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "TE-C62-thread",
-    "TE-C62-needle",
-    "TE-C62-broom",
-    "TE-C62-umbrella",
-    "TE-C62-mirror"
+    {
+      "lesson": "TE-C62-thread",
+      "extension": "TE-EXT-62-MADE"
+    },
+    {
+      "lesson": "TE-C62-needle",
+      "extension": "TE-EXT-62-MADE"
+    },
+    {
+      "lesson": "TE-C62-broom",
+      "extension": "TE-EXT-62-MADE"
+    },
+    {
+      "lesson": "TE-C62-umbrella",
+      "extension": "TE-EXT-62-MADE"
+    },
+    {
+      "lesson": "TE-C62-mirror",
+      "extension": "TE-EXT-62-MADE"
+    }
   ],
   "before": [],
   "inline": [

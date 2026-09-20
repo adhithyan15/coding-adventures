@@ -2,11 +2,26 @@
   "id": "ES-PATH-293-01",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "ES-C293-cuello",
-    "ES-C293-hombro",
-    "ES-C293-espalda",
-    "ES-C293-rodilla",
-    "ES-C293-tobillo"
+    {
+      "lesson": "ES-C293-cuello",
+      "extension": "ES-EXT-293-CUERPO"
+    },
+    {
+      "lesson": "ES-C293-hombro",
+      "extension": "ES-EXT-293-CUERPO"
+    },
+    {
+      "lesson": "ES-C293-espalda",
+      "extension": "ES-EXT-293-CUERPO"
+    },
+    {
+      "lesson": "ES-C293-rodilla",
+      "extension": "ES-EXT-293-CUERPO"
+    },
+    {
+      "lesson": "ES-C293-tobillo",
+      "extension": "ES-EXT-293-CUERPO"
+    }
   ],
   "before": [],
   "inline": [

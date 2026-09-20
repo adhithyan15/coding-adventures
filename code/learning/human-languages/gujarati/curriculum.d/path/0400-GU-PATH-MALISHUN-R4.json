@@ -2,7 +2,10 @@
   "id": "GU-PATH-MALISHUN-R4",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "GU-R18-farewell-r4"
+    {
+      "lesson": "GU-R18-farewell-r4",
+      "extension": "GU-EXT-029-FAREWELL-R4"
+    }
   ],
   "before": [],
   "inline": [

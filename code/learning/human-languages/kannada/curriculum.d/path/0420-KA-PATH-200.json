@@ -2,13 +2,34 @@
   "id": "KA-PATH-200",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "KA-C41-this",
-    "KA-C41-that",
-    "KA-C41-here",
-    "KA-C41-there",
-    "KA-C41-who",
-    "KA-C41-where",
-    "KA-C41-deixis-system"
+    {
+      "lesson": "KA-C41-this",
+      "extension": "KA-EXT-200-DEIXIS"
+    },
+    {
+      "lesson": "KA-C41-that",
+      "extension": "KA-EXT-200-DEIXIS"
+    },
+    {
+      "lesson": "KA-C41-here",
+      "extension": "KA-EXT-200-DEIXIS"
+    },
+    {
+      "lesson": "KA-C41-there",
+      "extension": "KA-EXT-200-DEIXIS"
+    },
+    {
+      "lesson": "KA-C41-who",
+      "extension": "KA-EXT-200-DEIXIS"
+    },
+    {
+      "lesson": "KA-C41-where",
+      "extension": "KA-EXT-200-DEIXIS"
+    },
+    {
+      "lesson": "KA-C41-deixis-system",
+      "extension": "KA-EXT-200-DEIXIS"
+    }
   ],
   "before": [],
   "inline": [

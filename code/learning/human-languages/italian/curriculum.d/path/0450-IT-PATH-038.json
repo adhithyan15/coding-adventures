@@ -2,11 +2,26 @@
   "id": "IT-PATH-038",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "IT-C34-mio-tuo-suo",
-    "IT-C34-nostro-vostro",
-    "IT-C34-il-mio-nome",
-    "IT-C34-signore-signora",
-    "IT-C34-per-me"
+    {
+      "lesson": "IT-C34-mio-tuo-suo",
+      "extension": "IT-EXT-038-POSSESSIVI"
+    },
+    {
+      "lesson": "IT-C34-nostro-vostro",
+      "extension": "IT-EXT-038-POSSESSIVI"
+    },
+    {
+      "lesson": "IT-C34-il-mio-nome",
+      "extension": "IT-EXT-038-POSSESSIVI"
+    },
+    {
+      "lesson": "IT-C34-signore-signora",
+      "extension": "IT-EXT-038-POSSESSIVI"
+    },
+    {
+      "lesson": "IT-C34-per-me",
+      "extension": "IT-EXT-038-POSSESSIVI"
+    }
   ],
   "before": [],
   "inline": [],

@@ -2,12 +2,30 @@
   "id": "GE-PATH-A1-AKKUSATIV",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "GE-C34-welcher",
-    "GE-C34-wie-viel",
-    "GE-C34-den",
-    "GE-C34-praedikativ",
-    "GE-C34-es-gibt",
-    "GE-R34-welchen"
+    {
+      "lesson": "GE-C34-welcher",
+      "extension": "GE-EXT-A1-AKKUSATIV"
+    },
+    {
+      "lesson": "GE-C34-wie-viel",
+      "extension": "GE-EXT-A1-AKKUSATIV"
+    },
+    {
+      "lesson": "GE-C34-den",
+      "extension": "GE-EXT-A1-AKKUSATIV"
+    },
+    {
+      "lesson": "GE-C34-praedikativ",
+      "extension": "GE-EXT-A1-AKKUSATIV"
+    },
+    {
+      "lesson": "GE-C34-es-gibt",
+      "extension": "GE-EXT-A1-AKKUSATIV"
+    },
+    {
+      "lesson": "GE-R34-welchen",
+      "extension": "GE-EXT-A1-AKKUSATIV"
+    }
   ],
   "before": [],
   "inline": [

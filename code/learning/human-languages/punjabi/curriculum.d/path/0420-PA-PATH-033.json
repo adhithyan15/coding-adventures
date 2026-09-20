@@ -2,10 +2,22 @@
   "id": "PA-PATH-033",
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
-    "PA-C31-ji",
-    "PA-C31-achchha",
-    "PA-W09-chhachha",
-    "PA-C31-na"
+    {
+      "lesson": "PA-C31-ji",
+      "extension": "PA-EXT-038-PREA1-THREE-ANSWERS"
+    },
+    {
+      "lesson": "PA-C31-achchha",
+      "extension": "PA-EXT-038-PREA1-THREE-ANSWERS"
+    },
+    {
+      "lesson": "PA-W09-chhachha",
+      "extension": "PA-EXT-038-PREA1-THREE-ANSWERS"
+    },
+    {
+      "lesson": "PA-C31-na",
+      "extension": "PA-EXT-038-PREA1-THREE-ANSWERS"
+    }
   ],
   "before": [],
   "inline": [

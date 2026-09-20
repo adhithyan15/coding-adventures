@@ -2,9 +2,18 @@
   "id": "BN-PATH-018",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "BN-C13-doya-kore",
-    "BN-C13-dukkhito",
-    "BN-C13-maf-korben"
+    {
+      "lesson": "BN-C13-doya-kore",
+      "extension": "BN-EXT-018-COURTESY-AND-WELCOME"
+    },
+    {
+      "lesson": "BN-C13-dukkhito",
+      "extension": "BN-EXT-018-COURTESY-AND-WELCOME"
+    },
+    {
+      "lesson": "BN-C13-maf-korben",
+      "extension": "BN-EXT-018-COURTESY-AND-WELCOME"
+    }
   ],
   "before": [],
   "inline": [

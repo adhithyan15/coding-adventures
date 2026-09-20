@@ -2,11 +2,26 @@
   "id": "SA-PATH-29-COURTESY",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "SA-C29-please",
-    "SA-C29-pardon",
-    "SA-C29-bow",
-    "SA-C29-favour",
-    "SA-C29-fortunate"
+    {
+      "lesson": "SA-C29-please",
+      "extension": "SA-EXT-29-COURTESY"
+    },
+    {
+      "lesson": "SA-C29-pardon",
+      "extension": "SA-EXT-29-COURTESY"
+    },
+    {
+      "lesson": "SA-C29-bow",
+      "extension": "SA-EXT-29-COURTESY"
+    },
+    {
+      "lesson": "SA-C29-favour",
+      "extension": "SA-EXT-29-COURTESY"
+    },
+    {
+      "lesson": "SA-C29-fortunate",
+      "extension": "SA-EXT-29-COURTESY"
+    }
   ],
   "before": [],
   "inline": [

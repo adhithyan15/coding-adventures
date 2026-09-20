@@ -2,7 +2,10 @@
   "id": "ML-PATH-014",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "ML-C10-azhcha"
+    {
+      "lesson": "ML-C10-azhcha",
+      "extension": "ML-EXT-014-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

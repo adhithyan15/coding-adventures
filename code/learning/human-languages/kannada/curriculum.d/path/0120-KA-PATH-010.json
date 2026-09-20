@@ -2,14 +2,38 @@
   "id": "KA-PATH-010",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "KA-C05-maatanaadu",
-    "KA-C05-iru",
-    "KA-C05-kelasa-maadu",
-    "KA-C05-naanu-kannada-maatanaaduttene",
-    "KA-C05-practice",
-    "KA-C06-dative-ge",
-    "KA-C06-dative-stacking",
-    "KA-C06-dative-subject"
+    {
+      "lesson": "KA-C05-maatanaadu",
+      "extension": "KA-EXT-010-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "KA-C05-iru",
+      "extension": "KA-EXT-010-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "KA-C05-kelasa-maadu",
+      "extension": "KA-EXT-010-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "KA-C05-naanu-kannada-maatanaaduttene",
+      "extension": "KA-EXT-010-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "KA-C05-practice",
+      "extension": "KA-EXT-010-CONSOLIDATION"
+    },
+    {
+      "lesson": "KA-C06-dative-ge",
+      "extension": "KA-EXT-010-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "KA-C06-dative-stacking",
+      "extension": "KA-EXT-010-GRAMMAR"
+    },
+    {
+      "lesson": "KA-C06-dative-subject",
+      "extension": "KA-EXT-010-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

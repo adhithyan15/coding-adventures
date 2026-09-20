@@ -2,9 +2,18 @@
   "id": "AR-PATH-038",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "AR-C41-ya",
-    "AR-C41-karrir",
-    "AR-R41-calling-and-asking-again"
+    {
+      "lesson": "AR-C41-ya",
+      "extension": "AR-EXT-038-CALL-AND-REPAIR"
+    },
+    {
+      "lesson": "AR-C41-karrir",
+      "extension": "AR-EXT-038-CALL-AND-REPAIR"
+    },
+    {
+      "lesson": "AR-R41-calling-and-asking-again",
+      "extension": "AR-EXT-038-CALL-AND-REPAIR"
+    }
   ],
   "before": [],
   "inline": [

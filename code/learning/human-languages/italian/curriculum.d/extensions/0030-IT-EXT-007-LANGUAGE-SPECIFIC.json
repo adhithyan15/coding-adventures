@@ -4,10 +4,5 @@
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can use prego in three additional everyday situations without learning several meanings in one step.",
-  "prerequisites": [],
-  "lessons": [
-    "IT-C02-prego-go-ahead",
-    "IT-C02-prego-here-you-are",
-    "IT-C02-prego-come-again"
-  ]
+  "prerequisites": []
 }

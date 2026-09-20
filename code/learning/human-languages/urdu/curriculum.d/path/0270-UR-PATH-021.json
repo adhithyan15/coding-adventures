@@ -2,11 +2,26 @@
   "id": "UR-PATH-021",
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
-    "UR-C20-aur",
-    "UR-C20-ya",
-    "UR-C20-lekin",
-    "UR-C20-thik-hai",
-    "UR-R20-joined-and-turned"
+    {
+      "lesson": "UR-C20-aur",
+      "extension": "UR-EXT-031-JOINING"
+    },
+    {
+      "lesson": "UR-C20-ya",
+      "extension": "UR-EXT-031-JOINING"
+    },
+    {
+      "lesson": "UR-C20-lekin",
+      "extension": "UR-EXT-031-JOINING"
+    },
+    {
+      "lesson": "UR-C20-thik-hai",
+      "extension": "UR-EXT-031-JOINING"
+    },
+    {
+      "lesson": "UR-R20-joined-and-turned",
+      "extension": "UR-EXT-031-JOINING"
+    }
   ],
   "before": [],
   "inline": [

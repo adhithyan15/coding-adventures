@@ -2,11 +2,26 @@
   "id": "ES-PATH-392-01",
   "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
   "lessons": [
-    "ES-C392-aeropuerto",
-    "ES-C392-vacaciones",
-    "ES-C392-destino",
-    "ES-C392-pasajero",
-    "ES-C392-agosto"
+    {
+      "lesson": "ES-C392-aeropuerto",
+      "extension": "ES-EXT-392-THING"
+    },
+    {
+      "lesson": "ES-C392-vacaciones",
+      "extension": "ES-EXT-392-THING"
+    },
+    {
+      "lesson": "ES-C392-destino",
+      "extension": "ES-EXT-392-THING"
+    },
+    {
+      "lesson": "ES-C392-pasajero",
+      "extension": "ES-EXT-392-THING"
+    },
+    {
+      "lesson": "ES-C392-agosto",
+      "extension": "ES-EXT-392-THING"
+    }
   ],
   "before": [],
   "inline": [

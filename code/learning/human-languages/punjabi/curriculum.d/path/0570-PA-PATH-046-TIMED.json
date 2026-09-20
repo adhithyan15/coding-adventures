@@ -2,7 +2,10 @@
   "id": "PA-PATH-046-TIMED",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "PA-W10-a1-con-reloj"
+    {
+      "lesson": "PA-W10-a1-con-reloj",
+      "extension": "PA-EXT-046-TIMED"
+    }
   ],
   "before": [],
   "inline": [

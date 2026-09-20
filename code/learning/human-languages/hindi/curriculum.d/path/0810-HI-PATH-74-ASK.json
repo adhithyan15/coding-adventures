@@ -2,10 +2,22 @@
   "id": "HI-PATH-74-ASK",
   "spine_node": "SPINE-NEGATE-AND-ASK",
   "lessons": [
-    "HI-C74-kya-polar",
-    "HI-C74-question-rise",
-    "HI-C74-na-tag",
-    "HI-R74-ask"
+    {
+      "lesson": "HI-C74-kya-polar",
+      "extension": "HI-EXT-074-POLAR-QUESTION"
+    },
+    {
+      "lesson": "HI-C74-question-rise",
+      "extension": "HI-EXT-074-POLAR-QUESTION"
+    },
+    {
+      "lesson": "HI-C74-na-tag",
+      "extension": "HI-EXT-074-POLAR-QUESTION"
+    },
+    {
+      "lesson": "HI-R74-ask",
+      "extension": "HI-EXT-074-POLAR-QUESTION"
+    }
   ],
   "before": [],
   "inline": [

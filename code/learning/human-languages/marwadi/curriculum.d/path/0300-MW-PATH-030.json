@@ -2,13 +2,34 @@
   "id": "MW-PATH-030",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "MW-R36-count-at-distance",
-    "MW-R36-shopping-numbered",
-    "MW-R36-food-numbered",
-    "MW-R36-transport-numbered",
-    "MW-R36-letters-close",
-    "MW-C36-numbered-exchange",
-    "MW-R36-script-close"
+    {
+      "lesson": "MW-R36-count-at-distance",
+      "extension": "MW-EXT-044-NUMBERED-EXCHANGE"
+    },
+    {
+      "lesson": "MW-R36-shopping-numbered",
+      "extension": "MW-EXT-044-NUMBERED-EXCHANGE"
+    },
+    {
+      "lesson": "MW-R36-food-numbered",
+      "extension": "MW-EXT-044-NUMBERED-EXCHANGE"
+    },
+    {
+      "lesson": "MW-R36-transport-numbered",
+      "extension": "MW-EXT-044-NUMBERED-EXCHANGE"
+    },
+    {
+      "lesson": "MW-R36-letters-close",
+      "extension": "MW-EXT-044-NUMBERED-EXCHANGE"
+    },
+    {
+      "lesson": "MW-C36-numbered-exchange",
+      "extension": "MW-EXT-044-NUMBERED-EXCHANGE"
+    },
+    {
+      "lesson": "MW-R36-script-close",
+      "extension": "MW-EXT-044-NUMBERED-EXCHANGE"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,17 +2,50 @@
   "id": "ZH-PATH-002",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "ZH-W03-yi",
-    "ZH-C03-yi",
-    "ZH-W03-er",
-    "ZH-C03-er",
-    "ZH-W03-san",
-    "ZH-C03-san",
-    "ZH-W03-si",
-    "ZH-C03-si",
-    "ZH-W03-wu",
-    "ZH-C03-wu",
-    "ZH-C03-practice"
+    {
+      "lesson": "ZH-W03-yi",
+      "extension": "ZH-EXT-007-NUMERAL-TRANSPARENCY"
+    },
+    {
+      "lesson": "ZH-C03-yi",
+      "extension": "ZH-EXT-007-NUMERAL-TRANSPARENCY"
+    },
+    {
+      "lesson": "ZH-W03-er",
+      "extension": "ZH-EXT-007-NUMERAL-TRANSPARENCY"
+    },
+    {
+      "lesson": "ZH-C03-er",
+      "extension": "ZH-EXT-007-NUMERAL-TRANSPARENCY"
+    },
+    {
+      "lesson": "ZH-W03-san",
+      "extension": "ZH-EXT-007-NUMERAL-TRANSPARENCY"
+    },
+    {
+      "lesson": "ZH-C03-san",
+      "extension": "ZH-EXT-007-NUMERAL-TRANSPARENCY"
+    },
+    {
+      "lesson": "ZH-W03-si",
+      "extension": "ZH-EXT-008-BOX-STROKE-RULE"
+    },
+    {
+      "lesson": "ZH-C03-si",
+      "extension": "ZH-EXT-008-BOX-STROKE-RULE"
+    },
+    {
+      "lesson": "ZH-W03-wu",
+      "extension": "ZH-EXT-009-COUNT-CONSOLIDATION"
+    },
+    {
+      "lesson": "ZH-C03-wu",
+      "extension": "ZH-EXT-009-COUNT-CONSOLIDATION"
+    },
+    {
+      "lesson": "ZH-C03-practice",
+      "extension": "ZH-EXT-009-COUNT-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,10 +2,22 @@
   "id": "FR-PATH-031",
   "spine_node": "SPINE-SAY-WHAT-I-WANT",
   "lessons": [
-    "FR-C33-vouloir",
-    "FR-C33-pouvoir",
-    "FR-C33-devoir",
-    "FR-C33-practice"
+    {
+      "lesson": "FR-C33-vouloir",
+      "extension": "FR-EXT-031-REQUEST-REGISTER"
+    },
+    {
+      "lesson": "FR-C33-pouvoir",
+      "extension": "FR-EXT-030-MODAL-CHAIN"
+    },
+    {
+      "lesson": "FR-C33-devoir",
+      "extension": "FR-EXT-030-MODAL-CHAIN"
+    },
+    {
+      "lesson": "FR-C33-practice",
+      "extension": "FR-EXT-030-MODAL-CHAIN"
+    }
   ],
   "before": [],
   "inline": [

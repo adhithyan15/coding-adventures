@@ -2,11 +2,26 @@
   "id": "BN-PATH-031",
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
-    "BN-C23-she",
-    "BN-C23-tini",
-    "BN-C23-o-pron",
-    "BN-C23-tar",
-    "BN-R23-somebody-else"
+    {
+      "lesson": "BN-C23-she",
+      "extension": "BN-EXT-032-THIRD-PERSON"
+    },
+    {
+      "lesson": "BN-C23-tini",
+      "extension": "BN-EXT-032-THIRD-PERSON"
+    },
+    {
+      "lesson": "BN-C23-o-pron",
+      "extension": "BN-EXT-032-THIRD-PERSON"
+    },
+    {
+      "lesson": "BN-C23-tar",
+      "extension": "BN-EXT-032-THIRD-PERSON"
+    },
+    {
+      "lesson": "BN-R23-somebody-else",
+      "extension": "BN-EXT-032-THIRD-PERSON"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,11 +2,26 @@
   "id": "HI-PATH-76-ORDINAL",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "HI-C76-sixth",
-    "HI-C76-seventh",
-    "HI-C76-eighth",
-    "HI-C76-ninth",
-    "HI-C76-tenth"
+    {
+      "lesson": "HI-C76-sixth",
+      "extension": "HI-EXT-76-ORDINAL"
+    },
+    {
+      "lesson": "HI-C76-seventh",
+      "extension": "HI-EXT-76-ORDINAL"
+    },
+    {
+      "lesson": "HI-C76-eighth",
+      "extension": "HI-EXT-76-ORDINAL"
+    },
+    {
+      "lesson": "HI-C76-ninth",
+      "extension": "HI-EXT-76-ORDINAL"
+    },
+    {
+      "lesson": "HI-C76-tenth",
+      "extension": "HI-EXT-76-ORDINAL"
+    }
   ],
   "before": [],
   "inline": [

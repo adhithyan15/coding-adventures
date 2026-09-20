@@ -2,11 +2,26 @@
   "id": "ML-PATH-51-COURTESY",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "ML-C51-gratitude",
-    "ML-C51-favour",
-    "ML-C51-respect",
-    "ML-C51-blessing",
-    "ML-C51-salutation"
+    {
+      "lesson": "ML-C51-gratitude",
+      "extension": "ML-EXT-51-COURTESY"
+    },
+    {
+      "lesson": "ML-C51-favour",
+      "extension": "ML-EXT-51-COURTESY"
+    },
+    {
+      "lesson": "ML-C51-respect",
+      "extension": "ML-EXT-51-COURTESY"
+    },
+    {
+      "lesson": "ML-C51-blessing",
+      "extension": "ML-EXT-51-COURTESY"
+    },
+    {
+      "lesson": "ML-C51-salutation",
+      "extension": "ML-EXT-51-COURTESY"
+    }
   ],
   "before": [],
   "inline": [

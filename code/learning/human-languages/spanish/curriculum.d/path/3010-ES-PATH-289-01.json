@@ -2,11 +2,26 @@
   "id": "ES-PATH-289-01",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "ES-C289-amanecer",
-    "ES-C289-cielo",
-    "ES-C289-nube",
-    "ES-C289-estrella",
-    "ES-C289-sombra"
+    {
+      "lesson": "ES-C289-amanecer",
+      "extension": "ES-EXT-289-CIELO"
+    },
+    {
+      "lesson": "ES-C289-cielo",
+      "extension": "ES-EXT-289-CIELO"
+    },
+    {
+      "lesson": "ES-C289-nube",
+      "extension": "ES-EXT-289-CIELO"
+    },
+    {
+      "lesson": "ES-C289-estrella",
+      "extension": "ES-EXT-289-CIELO"
+    },
+    {
+      "lesson": "ES-C289-sombra",
+      "extension": "ES-EXT-289-CIELO"
+    }
   ],
   "before": [],
   "inline": [

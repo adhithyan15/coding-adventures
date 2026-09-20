@@ -2,13 +2,34 @@
   "id": "JA-PATH-002",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "JA-W01-ko",
-    "JA-W01-n",
-    "JA-W01-ni",
-    "JA-W01-chi",
-    "JA-W01-wa",
-    "JA-W01-konnichiwa-read",
-    "JA-C01-konnichiwa"
+    {
+      "lesson": "JA-W01-ko",
+      "extension": "JA-EXT-009-HIRAGANA-GREETING"
+    },
+    {
+      "lesson": "JA-W01-n",
+      "extension": "JA-EXT-009-HIRAGANA-GREETING"
+    },
+    {
+      "lesson": "JA-W01-ni",
+      "extension": "JA-EXT-009-HIRAGANA-GREETING"
+    },
+    {
+      "lesson": "JA-W01-chi",
+      "extension": "JA-EXT-009-HIRAGANA-GREETING"
+    },
+    {
+      "lesson": "JA-W01-wa",
+      "extension": "JA-EXT-009-HIRAGANA-GREETING"
+    },
+    {
+      "lesson": "JA-W01-konnichiwa-read",
+      "extension": "JA-EXT-009-HIRAGANA-GREETING"
+    },
+    {
+      "lesson": "JA-C01-konnichiwa",
+      "extension": "JA-EXT-002-TOPIC-PARTICLE-SPELLING"
+    }
   ],
   "before": [],
   "inline": [

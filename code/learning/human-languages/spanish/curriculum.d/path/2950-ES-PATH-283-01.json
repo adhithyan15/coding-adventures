@@ -2,11 +2,26 @@
   "id": "ES-PATH-283-01",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "ES-C283-disculpe",
-    "ES-C283-permiso",
-    "ES-C283-amable",
-    "ES-C283-mil-gracias",
-    "ES-C283-no-hay-de-que"
+    {
+      "lesson": "ES-C283-disculpe",
+      "extension": "ES-EXT-283-CORTESIA"
+    },
+    {
+      "lesson": "ES-C283-permiso",
+      "extension": "ES-EXT-283-CORTESIA"
+    },
+    {
+      "lesson": "ES-C283-amable",
+      "extension": "ES-EXT-283-CORTESIA"
+    },
+    {
+      "lesson": "ES-C283-mil-gracias",
+      "extension": "ES-EXT-283-CORTESIA"
+    },
+    {
+      "lesson": "ES-C283-no-hay-de-que",
+      "extension": "ES-EXT-283-CORTESIA"
+    }
   ],
   "before": [],
   "inline": [

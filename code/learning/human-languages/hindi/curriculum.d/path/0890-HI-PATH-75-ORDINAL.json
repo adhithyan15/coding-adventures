@@ -2,11 +2,26 @@
   "id": "HI-PATH-75-ORDINAL",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "HI-C75-first",
-    "HI-C75-second",
-    "HI-C75-third",
-    "HI-C75-fourth",
-    "HI-C75-fifth"
+    {
+      "lesson": "HI-C75-first",
+      "extension": "HI-EXT-75-ORDINAL"
+    },
+    {
+      "lesson": "HI-C75-second",
+      "extension": "HI-EXT-75-ORDINAL"
+    },
+    {
+      "lesson": "HI-C75-third",
+      "extension": "HI-EXT-75-ORDINAL"
+    },
+    {
+      "lesson": "HI-C75-fourth",
+      "extension": "HI-EXT-75-ORDINAL"
+    },
+    {
+      "lesson": "HI-C75-fifth",
+      "extension": "HI-EXT-75-ORDINAL"
+    }
   ],
   "before": [],
   "inline": [

@@ -4,8 +4,5 @@
   "kind": "required",
   "category": "script",
   "canDo": "I can recognize the first mātrā written below the line, and read pasand.",
-  "prerequisites": [],
-  "lessons": [
-    "PA-S09-aunkar-tippi"
-  ]
+  "prerequisites": []
 }

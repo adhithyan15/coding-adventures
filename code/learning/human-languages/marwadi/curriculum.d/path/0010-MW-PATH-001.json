@@ -2,13 +2,34 @@
   "id": "MW-PATH-001",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "MW-W01-ra",
-    "MW-W01-aa-matra",
-    "MW-W01-raam",
-    "MW-W01-sa",
-    "MW-W01-saa",
-    "MW-C01-raam-raam-saa",
-    "MW-C01-practice"
+    {
+      "lesson": "MW-W01-ra",
+      "extension": "MW-EXT-001-WRITE-RAAM"
+    },
+    {
+      "lesson": "MW-W01-aa-matra",
+      "extension": "MW-EXT-001-WRITE-RAAM"
+    },
+    {
+      "lesson": "MW-W01-raam",
+      "extension": "MW-EXT-001-WRITE-RAAM"
+    },
+    {
+      "lesson": "MW-W01-sa",
+      "extension": "MW-EXT-002-WRITE-SAA"
+    },
+    {
+      "lesson": "MW-W01-saa",
+      "extension": "MW-EXT-002-WRITE-SAA"
+    },
+    {
+      "lesson": "MW-C01-raam-raam-saa",
+      "extension": "MW-EXT-003-RESPECTFUL-GREETING"
+    },
+    {
+      "lesson": "MW-C01-practice",
+      "extension": "MW-EXT-003-RESPECTFUL-GREETING"
+    }
   ],
   "before": [],
   "inline": [

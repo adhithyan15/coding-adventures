@@ -4,7 +4,10 @@
   "lessons": [
     "FA-C01-bale",
     "FA-C01-na",
-    "FA-C01-practice"
+    {
+      "lesson": "FA-C01-practice",
+      "extension": "FA-EXT-001-GREETING-PAYOFF"
+    }
   ],
   "before": [],
   "inline": [

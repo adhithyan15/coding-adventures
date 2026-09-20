@@ -2,11 +2,26 @@
   "id": "ES-PATH-342-01",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "ES-C342-minuto",
-    "ES-C342-cuarto",
-    "ES-C342-punto",
-    "ES-C342-horario",
-    "ES-C342-madrugada"
+    {
+      "lesson": "ES-C342-minuto",
+      "extension": "ES-EXT-342-CLOCK"
+    },
+    {
+      "lesson": "ES-C342-cuarto",
+      "extension": "ES-EXT-342-CLOCK"
+    },
+    {
+      "lesson": "ES-C342-punto",
+      "extension": "ES-EXT-342-CLOCK"
+    },
+    {
+      "lesson": "ES-C342-horario",
+      "extension": "ES-EXT-342-CLOCK"
+    },
+    {
+      "lesson": "ES-C342-madrugada",
+      "extension": "ES-EXT-342-CLOCK"
+    }
   ],
   "before": [],
   "inline": [

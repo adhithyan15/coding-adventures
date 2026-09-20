@@ -2,11 +2,26 @@
   "id": "IT-PATH-030",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "IT-C26-primo",
-    "IT-C26-secondo",
-    "IT-C26-terzo",
-    "IT-C26-quarto",
-    "IT-C26-quinto"
+    {
+      "lesson": "IT-C26-primo",
+      "extension": "IT-EXT-030-ORDINALI"
+    },
+    {
+      "lesson": "IT-C26-secondo",
+      "extension": "IT-EXT-030-ORDINALI"
+    },
+    {
+      "lesson": "IT-C26-terzo",
+      "extension": "IT-EXT-030-ORDINALI"
+    },
+    {
+      "lesson": "IT-C26-quarto",
+      "extension": "IT-EXT-030-ORDINALI"
+    },
+    {
+      "lesson": "IT-C26-quinto",
+      "extension": "IT-EXT-030-ORDINALI"
+    }
   ],
   "before": [],
   "inline": [],

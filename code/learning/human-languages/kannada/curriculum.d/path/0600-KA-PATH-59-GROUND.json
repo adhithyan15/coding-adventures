@@ -2,11 +2,26 @@
   "id": "KA-PATH-59-GROUND",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "KA-C59-wind",
-    "KA-C59-mist",
-    "KA-C59-sand",
-    "KA-C59-mud",
-    "KA-C59-fire"
+    {
+      "lesson": "KA-C59-wind",
+      "extension": "KA-EXT-59-GROUND"
+    },
+    {
+      "lesson": "KA-C59-mist",
+      "extension": "KA-EXT-59-GROUND"
+    },
+    {
+      "lesson": "KA-C59-sand",
+      "extension": "KA-EXT-59-GROUND"
+    },
+    {
+      "lesson": "KA-C59-mud",
+      "extension": "KA-EXT-59-GROUND"
+    },
+    {
+      "lesson": "KA-C59-fire",
+      "extension": "KA-EXT-59-GROUND"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,14 +2,38 @@
   "id": "MW-PATH-019",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "MW-C20-hear-churma",
-    "MW-C20-churma",
-    "MW-C20-hear-chaay",
-    "MW-W20-ya",
-    "MW-C20-chaay",
-    "MW-R20-food-new-two",
-    "MW-C20-food-seven",
-    "MW-R20-script-close"
+    {
+      "lesson": "MW-C20-hear-churma",
+      "extension": "MW-EXT-033-FOOD-SEVEN"
+    },
+    {
+      "lesson": "MW-C20-churma",
+      "extension": "MW-EXT-033-FOOD-SEVEN"
+    },
+    {
+      "lesson": "MW-C20-hear-chaay",
+      "extension": "MW-EXT-033-FOOD-SEVEN"
+    },
+    {
+      "lesson": "MW-W20-ya",
+      "extension": "MW-EXT-033-FOOD-SEVEN"
+    },
+    {
+      "lesson": "MW-C20-chaay",
+      "extension": "MW-EXT-033-FOOD-SEVEN"
+    },
+    {
+      "lesson": "MW-R20-food-new-two",
+      "extension": "MW-EXT-033-FOOD-SEVEN"
+    },
+    {
+      "lesson": "MW-C20-food-seven",
+      "extension": "MW-EXT-033-FOOD-SEVEN"
+    },
+    {
+      "lesson": "MW-R20-script-close",
+      "extension": "MW-EXT-033-FOOD-SEVEN"
+    }
   ],
   "before": [],
   "inline": [

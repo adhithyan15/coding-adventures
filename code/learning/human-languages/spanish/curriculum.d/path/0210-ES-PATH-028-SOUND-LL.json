@@ -2,7 +2,10 @@
   "id": "ES-PATH-028-SOUND-LL",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "ES-C57-ll"
+    {
+      "lesson": "ES-C57-ll",
+      "extension": "ES-EXT-028-SOUND-LL"
+    }
   ],
   "before": [],
   "inline": [

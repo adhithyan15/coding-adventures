@@ -2,11 +2,26 @@
   "id": "ES-PATH-290-01",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "ES-C290-trigo",
-    "ES-C290-arroz",
-    "ES-C290-cebolla",
-    "ES-C290-tomate",
-    "ES-C290-miel"
+    {
+      "lesson": "ES-C290-trigo",
+      "extension": "ES-EXT-290-COSECHA"
+    },
+    {
+      "lesson": "ES-C290-arroz",
+      "extension": "ES-EXT-290-COSECHA"
+    },
+    {
+      "lesson": "ES-C290-cebolla",
+      "extension": "ES-EXT-290-COSECHA"
+    },
+    {
+      "lesson": "ES-C290-tomate",
+      "extension": "ES-EXT-290-COSECHA"
+    },
+    {
+      "lesson": "ES-C290-miel",
+      "extension": "ES-EXT-290-COSECHA"
+    }
   ],
   "before": [],
   "inline": [

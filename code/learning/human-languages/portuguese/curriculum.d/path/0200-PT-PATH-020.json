@@ -2,10 +2,22 @@
   "id": "PT-PATH-020",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "PT-C16-ser",
-    "PT-C16-ser-roots",
-    "PT-C16-ser-vs-estar",
-    "PT-C16-ser-estar-meaning"
+    {
+      "lesson": "PT-C16-ser",
+      "extension": "PT-EXT-020-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "PT-C16-ser-roots",
+      "extension": "PT-EXT-020-ETYMOLOGY"
+    },
+    {
+      "lesson": "PT-C16-ser-vs-estar",
+      "extension": "PT-EXT-020-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "PT-C16-ser-estar-meaning",
+      "extension": "PT-EXT-020-GRAMMAR"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,10 +2,22 @@
   "id": "ML-PATH-44-SEESAY",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "ML-C44-look",
-    "ML-C44-listen",
-    "ML-C44-speak",
-    "ML-C44-write"
+    {
+      "lesson": "ML-C44-look",
+      "extension": "ML-EXT-44-SEESAY"
+    },
+    {
+      "lesson": "ML-C44-listen",
+      "extension": "ML-EXT-44-SEESAY"
+    },
+    {
+      "lesson": "ML-C44-speak",
+      "extension": "ML-EXT-44-SEESAY"
+    },
+    {
+      "lesson": "ML-C44-write",
+      "extension": "ML-EXT-44-SEESAY"
+    }
   ],
   "before": [],
   "inline": [

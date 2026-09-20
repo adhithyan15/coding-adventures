@@ -4,12 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can take my leave in Telugu and say when I will be back.",
-  "prerequisites": [],
-  "lessons": [
-    "TE-C50-now",
-    "TE-C50-day-after",
-    "TE-C50-journey",
-    "TE-C50-set-out",
-    "TE-C50-farewell"
-  ]
+  "prerequisites": []
 }

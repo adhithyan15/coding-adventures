@@ -6,7 +6,10 @@
     "IT-C04-a-domani",
     "IT-C04-a-presto",
     "IT-C04-a-piu-tardi",
-    "IT-C04-practice"
+    {
+      "lesson": "IT-C04-practice",
+      "extension": "IT-EXT-010-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [],

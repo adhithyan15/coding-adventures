@@ -2,11 +2,26 @@
   "id": "TE-PATH-77-FROM",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "TE-C77-from",
-    "TE-C77-town",
-    "TE-C77-country",
-    "TE-C77-india",
-    "TE-C77-thirty"
+    {
+      "lesson": "TE-C77-from",
+      "extension": "TE-EXT-77-FROM"
+    },
+    {
+      "lesson": "TE-C77-town",
+      "extension": "TE-EXT-77-FROM"
+    },
+    {
+      "lesson": "TE-C77-country",
+      "extension": "TE-EXT-77-FROM"
+    },
+    {
+      "lesson": "TE-C77-india",
+      "extension": "TE-EXT-77-FROM"
+    },
+    {
+      "lesson": "TE-C77-thirty",
+      "extension": "TE-EXT-77-FROM"
+    }
   ],
   "before": [],
   "inline": [

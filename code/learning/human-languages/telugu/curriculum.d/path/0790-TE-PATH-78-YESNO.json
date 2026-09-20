@@ -2,11 +2,26 @@
   "id": "TE-PATH-78-YESNO",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "TE-C78-isit",
-    "TE-C78-doyouknow",
-    "TE-C78-dontknow",
-    "TE-C78-didntunderstand",
-    "TE-C78-isthere"
+    {
+      "lesson": "TE-C78-isit",
+      "extension": "TE-EXT-78-YESNO"
+    },
+    {
+      "lesson": "TE-C78-doyouknow",
+      "extension": "TE-EXT-78-YESNO"
+    },
+    {
+      "lesson": "TE-C78-dontknow",
+      "extension": "TE-EXT-78-YESNO"
+    },
+    {
+      "lesson": "TE-C78-didntunderstand",
+      "extension": "TE-EXT-78-YESNO"
+    },
+    {
+      "lesson": "TE-C78-isthere",
+      "extension": "TE-EXT-78-YESNO"
+    }
   ],
   "before": [],
   "inline": [

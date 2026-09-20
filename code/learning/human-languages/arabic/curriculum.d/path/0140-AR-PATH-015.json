@@ -2,8 +2,14 @@
   "id": "AR-PATH-015",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "AR-C11-ras",
-    "AR-C11-yad"
+    {
+      "lesson": "AR-C11-ras",
+      "extension": "AR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "AR-C11-yad",
+      "extension": "AR-EXT-015-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

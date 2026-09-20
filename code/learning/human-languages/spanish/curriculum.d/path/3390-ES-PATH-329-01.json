@@ -2,11 +2,26 @@
   "id": "ES-PATH-329-01",
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
-    "ES-C329-tal",
-    "ES-C329-cual",
-    "ES-C329-pues",
-    "ES-C329-sino",
-    "ES-C329-salvo"
+    {
+      "lesson": "ES-C329-tal",
+      "extension": "ES-EXT-329-LINK"
+    },
+    {
+      "lesson": "ES-C329-cual",
+      "extension": "ES-EXT-329-LINK"
+    },
+    {
+      "lesson": "ES-C329-pues",
+      "extension": "ES-EXT-329-LINK"
+    },
+    {
+      "lesson": "ES-C329-sino",
+      "extension": "ES-EXT-329-LINK"
+    },
+    {
+      "lesson": "ES-C329-salvo",
+      "extension": "ES-EXT-329-LINK"
+    }
   ],
   "before": [],
   "inline": [

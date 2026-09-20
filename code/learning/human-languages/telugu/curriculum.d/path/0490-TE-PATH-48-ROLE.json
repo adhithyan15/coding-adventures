@@ -2,11 +2,26 @@
   "id": "TE-PATH-48-ROLE",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "TE-C48-teacher",
-    "TE-C48-student",
-    "TE-C48-doctor",
-    "TE-C48-farmer",
-    "TE-C48-guest"
+    {
+      "lesson": "TE-C48-teacher",
+      "extension": "TE-EXT-48-ROLE"
+    },
+    {
+      "lesson": "TE-C48-student",
+      "extension": "TE-EXT-48-ROLE"
+    },
+    {
+      "lesson": "TE-C48-doctor",
+      "extension": "TE-EXT-48-ROLE"
+    },
+    {
+      "lesson": "TE-C48-farmer",
+      "extension": "TE-EXT-48-ROLE"
+    },
+    {
+      "lesson": "TE-C48-guest",
+      "extension": "TE-EXT-48-ROLE"
+    }
   ],
   "before": [],
   "inline": [

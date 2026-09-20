@@ -3,7 +3,10 @@
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
     "TA-C01-nandri",
-    "TA-C01-nandri-family-register"
+    {
+      "lesson": "TA-C01-nandri-family-register",
+      "extension": "TA-EXT-005-REGISTER"
+    }
   ],
   "before": [],
   "inline": [],

@@ -2,14 +2,38 @@
   "id": "ES-PATH-423-CHARACTER",
   "spine_node": "SPINE-DESCRIBE-QUALITIES",
   "lessons": [
-    "ES-C423-antipatico",
-    "ES-C423-inteligente",
-    "ES-C423-trabajador",
-    "ES-C423-serio",
-    "ES-C423-timido",
-    "ES-C423-sociable",
-    "ES-C423-repaso-caracter",
-    "ES-C423-sintesis-persona"
+    {
+      "lesson": "ES-C423-antipatico",
+      "extension": "ES-EXT-423-CHARACTER"
+    },
+    {
+      "lesson": "ES-C423-inteligente",
+      "extension": "ES-EXT-423-CHARACTER"
+    },
+    {
+      "lesson": "ES-C423-trabajador",
+      "extension": "ES-EXT-423-CHARACTER"
+    },
+    {
+      "lesson": "ES-C423-serio",
+      "extension": "ES-EXT-423-CHARACTER"
+    },
+    {
+      "lesson": "ES-C423-timido",
+      "extension": "ES-EXT-423-CHARACTER"
+    },
+    {
+      "lesson": "ES-C423-sociable",
+      "extension": "ES-EXT-423-CHARACTER"
+    },
+    {
+      "lesson": "ES-C423-repaso-caracter",
+      "extension": "ES-EXT-423-CHARACTER"
+    },
+    {
+      "lesson": "ES-C423-sintesis-persona",
+      "extension": "ES-EXT-423-CHARACTER"
+    }
   ],
   "before": [],
   "inline": [

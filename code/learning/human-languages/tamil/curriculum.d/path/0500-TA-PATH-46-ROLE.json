@@ -2,11 +2,26 @@
   "id": "TA-PATH-46-ROLE",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "TA-C46-teacher",
-    "TA-C46-student",
-    "TA-C46-doctor",
-    "TA-C46-farmer",
-    "TA-C46-guest"
+    {
+      "lesson": "TA-C46-teacher",
+      "extension": "TA-EXT-46-ROLE"
+    },
+    {
+      "lesson": "TA-C46-student",
+      "extension": "TA-EXT-46-ROLE"
+    },
+    {
+      "lesson": "TA-C46-doctor",
+      "extension": "TA-EXT-46-ROLE"
+    },
+    {
+      "lesson": "TA-C46-farmer",
+      "extension": "TA-EXT-46-ROLE"
+    },
+    {
+      "lesson": "TA-C46-guest",
+      "extension": "TA-EXT-46-ROLE"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,7 +2,10 @@
   "id": "PT-PATH-024-C",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "PT-C20-ajudar"
+    {
+      "lesson": "PT-C20-ajudar",
+      "extension": "PT-EXT-024-LANGUAGE-SPECIFIC-C"
+    }
   ],
   "before": [],
   "inline": [

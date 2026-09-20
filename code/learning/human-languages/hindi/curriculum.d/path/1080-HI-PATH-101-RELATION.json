@@ -2,15 +2,42 @@
   "id": "HI-PATH-101-RELATION",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "HI-C93-ke-saath",
-    "HI-C93-ke-binaa",
-    "HI-C93-ke-paas",
-    "HI-C93-ke-saamne",
-    "HI-C93-ke-piichhe",
-    "HI-C93-ke-liye",
-    "HI-C93-karne-ke-liye",
-    "HI-C93-repaso-sambandh",
-    "HI-C93-sintesis-sambandh"
+    {
+      "lesson": "HI-C93-ke-saath",
+      "extension": "HI-EXT-101-RELATION"
+    },
+    {
+      "lesson": "HI-C93-ke-binaa",
+      "extension": "HI-EXT-101-RELATION"
+    },
+    {
+      "lesson": "HI-C93-ke-paas",
+      "extension": "HI-EXT-101-RELATION"
+    },
+    {
+      "lesson": "HI-C93-ke-saamne",
+      "extension": "HI-EXT-101-RELATION"
+    },
+    {
+      "lesson": "HI-C93-ke-piichhe",
+      "extension": "HI-EXT-101-RELATION"
+    },
+    {
+      "lesson": "HI-C93-ke-liye",
+      "extension": "HI-EXT-101-RELATION"
+    },
+    {
+      "lesson": "HI-C93-karne-ke-liye",
+      "extension": "HI-EXT-101-RELATION"
+    },
+    {
+      "lesson": "HI-C93-repaso-sambandh",
+      "extension": "HI-EXT-101-RELATION"
+    },
+    {
+      "lesson": "HI-C93-sintesis-sambandh",
+      "extension": "HI-EXT-101-RELATION"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,12 +2,30 @@
   "id": "HI-PATH-93-IMPERATIVE",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "HI-C85-bolo",
-    "HI-C85-boliye",
-    "HI-C85-tum-ho",
-    "HI-C85-mat",
-    "HI-C85-repaso-adesh",
-    "HI-C85-sintesis-suchna"
+    {
+      "lesson": "HI-C85-bolo",
+      "extension": "HI-EXT-93-IMPERATIVE"
+    },
+    {
+      "lesson": "HI-C85-boliye",
+      "extension": "HI-EXT-93-IMPERATIVE"
+    },
+    {
+      "lesson": "HI-C85-tum-ho",
+      "extension": "HI-EXT-93-IMPERATIVE"
+    },
+    {
+      "lesson": "HI-C85-mat",
+      "extension": "HI-EXT-93-IMPERATIVE"
+    },
+    {
+      "lesson": "HI-C85-repaso-adesh",
+      "extension": "HI-EXT-93-IMPERATIVE"
+    },
+    {
+      "lesson": "HI-C85-sintesis-suchna",
+      "extension": "HI-EXT-93-IMPERATIVE"
+    }
   ],
   "before": [],
   "inline": [

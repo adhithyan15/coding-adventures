@@ -2,22 +2,64 @@
   "id": "ES-PATH-011",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "ES-C04-estar",
-    "ES-C04-estar-estado",
+    {
+      "lesson": "ES-C04-estar",
+      "extension": "ES-EXT-011-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C04-estar-estado",
+      "extension": "ES-EXT-011-GRAMMAR"
+    },
     "ES-C04-como-esta",
-    "ES-C04-repaso-como-esta",
-    "ES-C04-como-estas-register",
+    {
+      "lesson": "ES-C04-repaso-como-esta",
+      "extension": "ES-EXT-011-CONSOLIDATION-COMOESTA"
+    },
+    {
+      "lesson": "ES-C04-como-estas-register",
+      "extension": "ES-EXT-011-REGISTER"
+    },
     "ES-C04-regular",
-    "ES-C04-y",
-    "ES-W01-acento",
-    "ES-W01-tilde-diacritica",
-    "ES-W02-enye",
-    "ES-W02-enye-formas",
-    "ES-W03-inverted",
-    "ES-W03-question-span",
-    "ES-C04-practice",
-    "ES-C04-repaso-estar",
-    "ES-W01-repaso-acento"
+    {
+      "lesson": "ES-C04-y",
+      "extension": "ES-EXT-011-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-W01-acento",
+      "extension": "ES-EXT-011-SCRIPT"
+    },
+    {
+      "lesson": "ES-W01-tilde-diacritica",
+      "extension": "ES-EXT-011-SCRIPT"
+    },
+    {
+      "lesson": "ES-W02-enye",
+      "extension": "ES-EXT-011-SCRIPT"
+    },
+    {
+      "lesson": "ES-W02-enye-formas",
+      "extension": "ES-EXT-011-SCRIPT"
+    },
+    {
+      "lesson": "ES-W03-inverted",
+      "extension": "ES-EXT-011-SCRIPT"
+    },
+    {
+      "lesson": "ES-W03-question-span",
+      "extension": "ES-EXT-011-SCRIPT"
+    },
+    {
+      "lesson": "ES-C04-practice",
+      "extension": "ES-EXT-011-CONSOLIDATION"
+    },
+    {
+      "lesson": "ES-C04-repaso-estar",
+      "extension": "ES-EXT-011-CONSOLIDATION-ESTAR"
+    },
+    {
+      "lesson": "ES-W01-repaso-acento",
+      "extension": "ES-EXT-011-CONSOLIDATION-ACENTO"
+    }
   ],
   "before": [],
   "inline": [

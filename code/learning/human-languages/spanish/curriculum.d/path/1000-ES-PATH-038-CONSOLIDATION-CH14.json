@@ -2,7 +2,10 @@
   "id": "ES-PATH-038-CONSOLIDATION-CH14",
   "spine_node": "SPINE-TALK-ABOUT-PAST",
   "lessons": [
-    "ES-C14-practice"
+    {
+      "lesson": "ES-C14-practice",
+      "extension": "ES-EXT-038-CONSOLIDATION-CH14"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,11 +2,26 @@
   "id": "TE-PATH-65-MANNERS",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "TE-C65-welcome",
-    "TE-C65-manners",
-    "TE-C65-request",
-    "TE-C65-permission",
-    "TE-C65-trust"
+    {
+      "lesson": "TE-C65-welcome",
+      "extension": "TE-EXT-65-MANNERS"
+    },
+    {
+      "lesson": "TE-C65-manners",
+      "extension": "TE-EXT-65-MANNERS"
+    },
+    {
+      "lesson": "TE-C65-request",
+      "extension": "TE-EXT-65-MANNERS"
+    },
+    {
+      "lesson": "TE-C65-permission",
+      "extension": "TE-EXT-65-MANNERS"
+    },
+    {
+      "lesson": "TE-C65-trust",
+      "extension": "TE-EXT-65-MANNERS"
+    }
   ],
   "before": [],
   "inline": [

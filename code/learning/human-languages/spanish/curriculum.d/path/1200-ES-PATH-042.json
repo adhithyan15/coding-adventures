@@ -2,15 +2,42 @@
   "id": "ES-PATH-042",
   "spine_node": "SPINE-SAY-WHAT-I-WANT",
   "lessons": [
-    "ES-C18-quiero-que",
-    "ES-C18-subjuntivo",
-    "ES-C18-comer-subjuntivo",
-    "ES-C18-vivir-subjuntivo",
-    "ES-C18-querer-subjuntivo",
-    "ES-C18-poder-subjuntivo",
-    "ES-C18-hacer-subjuntivo",
-    "ES-C18-ojala",
-    "ES-C18-practice",
+    {
+      "lesson": "ES-C18-quiero-que",
+      "extension": "ES-EXT-042-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C18-subjuntivo",
+      "extension": "ES-EXT-042-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C18-comer-subjuntivo",
+      "extension": "ES-EXT-042-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C18-vivir-subjuntivo",
+      "extension": "ES-EXT-042-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C18-querer-subjuntivo",
+      "extension": "ES-EXT-042-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C18-poder-subjuntivo",
+      "extension": "ES-EXT-042-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C18-hacer-subjuntivo",
+      "extension": "ES-EXT-042-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C18-ojala",
+      "extension": "ES-EXT-042-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C18-practice",
+      "extension": "ES-EXT-042-LANGUAGE-SPECIFIC"
+    },
     "ES-C18-repaso-el-yo-que-viaja",
     "ES-C18-sintesis-subjuntivo"
   ],

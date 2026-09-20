@@ -2,11 +2,26 @@
   "id": "ES-PATH-316-01",
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
-    "ES-C316-llanto",
-    "ES-C316-nunca",
-    "ES-C316-siempre",
-    "ES-C316-todo",
-    "ES-C316-nada"
+    {
+      "lesson": "ES-C316-llanto",
+      "extension": "ES-EXT-316-ANSW"
+    },
+    {
+      "lesson": "ES-C316-nunca",
+      "extension": "ES-EXT-316-ANSW"
+    },
+    {
+      "lesson": "ES-C316-siempre",
+      "extension": "ES-EXT-316-ANSW"
+    },
+    {
+      "lesson": "ES-C316-todo",
+      "extension": "ES-EXT-316-ANSW"
+    },
+    {
+      "lesson": "ES-C316-nada",
+      "extension": "ES-EXT-316-ANSW"
+    }
   ],
   "before": [],
   "inline": [

@@ -10,8 +10,14 @@
     "MR-C02-kaay",
     "MR-C02-tumche-naav-kaay-aahe",
     "MR-C02-anand",
-    "MR-C02-practice",
-    "MR-R09-runway-tail-r2"
+    {
+      "lesson": "MR-C02-practice",
+      "extension": "MR-EXT-038-INTRODUCTIONS-CONSOLIDATION"
+    },
+    {
+      "lesson": "MR-R09-runway-tail-r2",
+      "extension": "MR-EXT-037-SECOND-RUNWAY-FIRST-RETRIEVAL"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,12 +2,30 @@
   "id": "GE-PATH-A1-VERBINDUNGEN",
   "spine_node": "SPINE-SAY-WHY",
   "lessons": [
-    "GE-C35-oder",
-    "GE-C35-aber",
-    "GE-C35-sondern",
-    "GE-C35-denn",
-    "GE-C35-weil",
-    "GE-R35-zwei-gedanken"
+    {
+      "lesson": "GE-C35-oder",
+      "extension": "GE-EXT-A1-VERBINDUNGEN"
+    },
+    {
+      "lesson": "GE-C35-aber",
+      "extension": "GE-EXT-A1-VERBINDUNGEN"
+    },
+    {
+      "lesson": "GE-C35-sondern",
+      "extension": "GE-EXT-A1-VERBINDUNGEN"
+    },
+    {
+      "lesson": "GE-C35-denn",
+      "extension": "GE-EXT-A1-VERBINDUNGEN"
+    },
+    {
+      "lesson": "GE-C35-weil",
+      "extension": "GE-EXT-A1-VERBINDUNGEN"
+    },
+    {
+      "lesson": "GE-R35-zwei-gedanken",
+      "extension": "GE-EXT-A1-VERBINDUNGEN"
+    }
   ],
   "before": [],
   "inline": [

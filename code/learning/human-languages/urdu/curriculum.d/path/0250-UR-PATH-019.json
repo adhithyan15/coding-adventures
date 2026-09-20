@@ -2,13 +2,34 @@
   "id": "UR-PATH-019",
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
-    "UR-C18-aam",
-    "UR-C18-aasmaan",
-    "UR-C18-purana",
-    "UR-C18-review-madda",
-    "UR-C18-voh",
-    "UR-C18-review-aap",
-    "UR-C18-practice"
+    {
+      "lesson": "UR-C18-aam",
+      "extension": "UR-EXT-029-SCRIPT-MEETING"
+    },
+    {
+      "lesson": "UR-C18-aasmaan",
+      "extension": "UR-EXT-029-SCRIPT-MEETING"
+    },
+    {
+      "lesson": "UR-C18-purana",
+      "extension": "UR-EXT-029-SCRIPT-MEETING"
+    },
+    {
+      "lesson": "UR-C18-review-madda",
+      "extension": "UR-EXT-029-SCRIPT-MEETING"
+    },
+    {
+      "lesson": "UR-C18-voh",
+      "extension": "UR-EXT-029-SCRIPT-MEETING"
+    },
+    {
+      "lesson": "UR-C18-review-aap",
+      "extension": "UR-EXT-029-SCRIPT-MEETING"
+    },
+    {
+      "lesson": "UR-C18-practice",
+      "extension": "UR-EXT-029-SCRIPT-MEETING"
+    }
   ],
   "before": [],
   "inline": [],

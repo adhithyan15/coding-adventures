@@ -2,11 +2,26 @@
   "id": "ES-PATH-285-01",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "ES-C285-vecino",
-    "ES-C285-amiga",
-    "ES-C285-maestro",
-    "ES-C285-enfermera",
-    "ES-C285-cocinero"
+    {
+      "lesson": "ES-C285-vecino",
+      "extension": "ES-EXT-285-QUIEN"
+    },
+    {
+      "lesson": "ES-C285-amiga",
+      "extension": "ES-EXT-285-QUIEN"
+    },
+    {
+      "lesson": "ES-C285-maestro",
+      "extension": "ES-EXT-285-QUIEN"
+    },
+    {
+      "lesson": "ES-C285-enfermera",
+      "extension": "ES-EXT-285-QUIEN"
+    },
+    {
+      "lesson": "ES-C285-cocinero",
+      "extension": "ES-EXT-285-QUIEN"
+    }
   ],
   "before": [],
   "inline": [

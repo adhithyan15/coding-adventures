@@ -2,8 +2,14 @@
   "id": "LA-PATH-006",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "LA-C02-numbers-1-5",
-    "LA-C02-numbers-6-10"
+    {
+      "lesson": "LA-C02-numbers-1-5",
+      "extension": "LA-EXT-006-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "LA-C02-numbers-6-10",
+      "extension": "LA-EXT-006-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,11 +2,26 @@
   "id": "PA-PATH-038",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "PA-C35-changa-ji",
-    "PA-C35-jaldi-milaange",
-    "PA-C36-kall-milaange",
-    "PA-W09-aunkar",
-    "PA-C36-shubh-raat"
+    {
+      "lesson": "PA-C35-changa-ji",
+      "extension": "PA-EXT-043-PREA1-FOUR-FAREWELLS"
+    },
+    {
+      "lesson": "PA-C35-jaldi-milaange",
+      "extension": "PA-EXT-043-PREA1-FOUR-FAREWELLS"
+    },
+    {
+      "lesson": "PA-C36-kall-milaange",
+      "extension": "PA-EXT-043-PREA1-FOUR-FAREWELLS"
+    },
+    {
+      "lesson": "PA-W09-aunkar",
+      "extension": "PA-EXT-043-PREA1-FOUR-FAREWELLS"
+    },
+    {
+      "lesson": "PA-C36-shubh-raat",
+      "extension": "PA-EXT-043-PREA1-FOUR-FAREWELLS"
+    }
   ],
   "before": [],
   "inline": [

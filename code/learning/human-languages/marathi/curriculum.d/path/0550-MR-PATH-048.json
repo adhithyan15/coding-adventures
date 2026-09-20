@@ -2,11 +2,26 @@
   "id": "MR-PATH-048",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "MR-C45-barobar",
-    "MR-C45-pron-oblique",
-    "MR-C45-shii",
-    "MR-C45-ne",
-    "MR-R45-with"
+    {
+      "lesson": "MR-C45-barobar",
+      "extension": "MR-EXT-061-WITH-WHOM"
+    },
+    {
+      "lesson": "MR-C45-pron-oblique",
+      "extension": "MR-EXT-061-WITH-WHOM"
+    },
+    {
+      "lesson": "MR-C45-shii",
+      "extension": "MR-EXT-061-WITH-WHOM"
+    },
+    {
+      "lesson": "MR-C45-ne",
+      "extension": "MR-EXT-061-WITH-WHOM"
+    },
+    {
+      "lesson": "MR-R45-with",
+      "extension": "MR-EXT-061-WITH-WHOM"
+    }
   ],
   "before": [],
   "inline": [

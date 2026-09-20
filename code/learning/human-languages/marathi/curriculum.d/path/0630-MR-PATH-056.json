@@ -2,10 +2,22 @@
   "id": "MR-PATH-056",
   "spine_node": "SPINE-DESCRIBE-QUALITIES",
   "lessons": [
-    "MR-C53-khuup",
-    "MR-C53-jara",
-    "MR-C53-reduplication",
-    "MR-R53-very"
+    {
+      "lesson": "MR-C53-khuup",
+      "extension": "MR-EXT-069-DEGREE"
+    },
+    {
+      "lesson": "MR-C53-jara",
+      "extension": "MR-EXT-069-DEGREE"
+    },
+    {
+      "lesson": "MR-C53-reduplication",
+      "extension": "MR-EXT-069-DEGREE"
+    },
+    {
+      "lesson": "MR-R53-very",
+      "extension": "MR-EXT-069-DEGREE"
+    }
   ],
   "before": [],
   "inline": [

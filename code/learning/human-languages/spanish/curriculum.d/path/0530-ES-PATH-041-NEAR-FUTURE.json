@@ -2,7 +2,10 @@
   "id": "ES-PATH-041-NEAR-FUTURE",
   "spine_node": "SPINE-TALK-ABOUT-FUTURE",
   "lessons": [
-    "ES-C10-ir-a-futuro"
+    {
+      "lesson": "ES-C10-ir-a-futuro",
+      "extension": "ES-EXT-041-NEAR-FUTURE"
+    }
   ],
   "before": [],
   "inline": [

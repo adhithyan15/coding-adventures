@@ -2,10 +2,22 @@
   "id": "ES-PATH-384-01",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "ES-C384-enviar",
-    "ES-C384-subir",
-    "ES-C384-morir",
-    "ES-C384-olvidar"
+    {
+      "lesson": "ES-C384-enviar",
+      "extension": "ES-EXT-384-VERB"
+    },
+    {
+      "lesson": "ES-C384-subir",
+      "extension": "ES-EXT-384-VERB"
+    },
+    {
+      "lesson": "ES-C384-morir",
+      "extension": "ES-EXT-384-VERB"
+    },
+    {
+      "lesson": "ES-C384-olvidar",
+      "extension": "ES-EXT-384-VERB"
+    }
   ],
   "before": [],
   "inline": [

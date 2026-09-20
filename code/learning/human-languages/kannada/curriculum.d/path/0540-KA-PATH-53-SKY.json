@@ -2,11 +2,26 @@
   "id": "KA-PATH-53-SKY",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "KA-C53-sky",
-    "KA-C53-sunshine",
-    "KA-C53-moon",
-    "KA-C53-star",
-    "KA-C53-cloud"
+    {
+      "lesson": "KA-C53-sky",
+      "extension": "KA-EXT-53-SKY"
+    },
+    {
+      "lesson": "KA-C53-sunshine",
+      "extension": "KA-EXT-53-SKY"
+    },
+    {
+      "lesson": "KA-C53-moon",
+      "extension": "KA-EXT-53-SKY"
+    },
+    {
+      "lesson": "KA-C53-star",
+      "extension": "KA-EXT-53-SKY"
+    },
+    {
+      "lesson": "KA-C53-cloud",
+      "extension": "KA-EXT-53-SKY"
+    }
   ],
   "before": [],
   "inline": [

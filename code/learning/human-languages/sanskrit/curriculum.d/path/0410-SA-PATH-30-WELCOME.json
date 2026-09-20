@@ -2,11 +2,26 @@
   "id": "SA-PATH-30-WELCOME",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "SA-C30-door",
-    "SA-C30-seat",
-    "SA-C30-flower",
-    "SA-C30-garland",
-    "SA-C30-anjali"
+    {
+      "lesson": "SA-C30-door",
+      "extension": "SA-EXT-30-WELCOME"
+    },
+    {
+      "lesson": "SA-C30-seat",
+      "extension": "SA-EXT-30-WELCOME"
+    },
+    {
+      "lesson": "SA-C30-flower",
+      "extension": "SA-EXT-30-WELCOME"
+    },
+    {
+      "lesson": "SA-C30-garland",
+      "extension": "SA-EXT-30-WELCOME"
+    },
+    {
+      "lesson": "SA-C30-anjali",
+      "extension": "SA-EXT-30-WELCOME"
+    }
   ],
   "before": [],
   "inline": [

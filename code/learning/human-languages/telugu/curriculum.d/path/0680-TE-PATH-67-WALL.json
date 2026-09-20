@@ -2,11 +2,26 @@
   "id": "TE-PATH-67-WALL",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "TE-C67-wall",
-    "TE-C67-roof",
-    "TE-C67-threshold",
-    "TE-C67-step",
-    "TE-C67-window"
+    {
+      "lesson": "TE-C67-wall",
+      "extension": "TE-EXT-67-WALL"
+    },
+    {
+      "lesson": "TE-C67-roof",
+      "extension": "TE-EXT-67-WALL"
+    },
+    {
+      "lesson": "TE-C67-threshold",
+      "extension": "TE-EXT-67-WALL"
+    },
+    {
+      "lesson": "TE-C67-step",
+      "extension": "TE-EXT-67-WALL"
+    },
+    {
+      "lesson": "TE-C67-window",
+      "extension": "TE-EXT-67-WALL"
+    }
   ],
   "before": [],
   "inline": [

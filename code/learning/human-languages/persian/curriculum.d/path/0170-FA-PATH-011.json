@@ -2,10 +2,22 @@
   "id": "FA-PATH-011",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "FA-C10-madar",
-    "FA-C10-pedar",
-    "FA-C10-baradar",
-    "FA-C10-dokhtar"
+    {
+      "lesson": "FA-C10-madar",
+      "extension": "FA-EXT-018-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FA-C10-pedar",
+      "extension": "FA-EXT-018-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FA-C10-baradar",
+      "extension": "FA-EXT-018-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FA-C10-dokhtar",
+      "extension": "FA-EXT-018-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

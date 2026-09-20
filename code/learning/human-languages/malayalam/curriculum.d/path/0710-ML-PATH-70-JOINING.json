@@ -2,10 +2,22 @@
   "id": "ML-PATH-70-JOINING",
   "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
   "lessons": [
-    "ML-C70-um",
-    "ML-C70-um-more",
-    "ML-C70-o",
-    "ML-R70-cherkkuka"
+    {
+      "lesson": "ML-C70-um",
+      "extension": "ML-EXT-70-JOINING"
+    },
+    {
+      "lesson": "ML-C70-um-more",
+      "extension": "ML-EXT-70-JOINING"
+    },
+    {
+      "lesson": "ML-C70-o",
+      "extension": "ML-EXT-70-JOINING"
+    },
+    {
+      "lesson": "ML-R70-cherkkuka",
+      "extension": "ML-EXT-70-JOINING"
+    }
   ],
   "before": [],
   "inline": [

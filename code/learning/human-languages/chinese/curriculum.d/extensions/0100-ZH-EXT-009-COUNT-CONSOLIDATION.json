@@ -6,10 +6,5 @@
   "canDo": "I can count from one to five aloud and read the five characters out of order, off a lift panel or a price board, without a sentence around them.",
   "prerequisites": [
     "ZH-EXT-008-BOX-STROKE-RULE"
-  ],
-  "lessons": [
-    "ZH-W03-wu",
-    "ZH-C03-wu",
-    "ZH-C03-practice"
   ]
 }

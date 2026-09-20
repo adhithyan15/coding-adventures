@@ -2,12 +2,30 @@
   "id": "TA-PATH-82-ORDINAL",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "TA-C82-first",
-    "TA-C82-second",
-    "TA-C82-first-full",
-    "TA-C82-third",
-    "TA-C82-fourth",
-    "TA-C82-fifth"
+    {
+      "lesson": "TA-C82-first",
+      "extension": "TA-EXT-82-ORDINAL"
+    },
+    {
+      "lesson": "TA-C82-second",
+      "extension": "TA-EXT-82-ORDINAL"
+    },
+    {
+      "lesson": "TA-C82-first-full",
+      "extension": "TA-EXT-82-ORDINAL"
+    },
+    {
+      "lesson": "TA-C82-third",
+      "extension": "TA-EXT-82-ORDINAL"
+    },
+    {
+      "lesson": "TA-C82-fourth",
+      "extension": "TA-EXT-82-ORDINAL"
+    },
+    {
+      "lesson": "TA-C82-fifth",
+      "extension": "TA-EXT-82-ORDINAL"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,16 +2,46 @@
   "id": "RU-PATH-001",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "RU-C01-privet",
-    "RU-W01-false-friends-v-r",
-    "RU-W02-false-friends-s-n",
-    "RU-W03-new-shapes-b-d",
-    "RU-W04-privet-letters-p-i",
-    "RU-W05-privet-letters-e-t",
-    "RU-W05-privet-observe",
-    "RU-W05-privet-guided-copy",
-    "RU-W05-privet-delayed-copy",
-    "RU-W05-privet-dictation"
+    {
+      "lesson": "RU-C01-privet",
+      "extension": "RU-EXT-001-INLINE-SCRIPT"
+    },
+    {
+      "lesson": "RU-W01-false-friends-v-r",
+      "extension": "RU-EXT-001-INLINE-SCRIPT"
+    },
+    {
+      "lesson": "RU-W02-false-friends-s-n",
+      "extension": "RU-EXT-001-INLINE-SCRIPT"
+    },
+    {
+      "lesson": "RU-W03-new-shapes-b-d",
+      "extension": "RU-EXT-001-INLINE-SCRIPT"
+    },
+    {
+      "lesson": "RU-W04-privet-letters-p-i",
+      "extension": "RU-EXT-001-INLINE-SCRIPT"
+    },
+    {
+      "lesson": "RU-W05-privet-letters-e-t",
+      "extension": "RU-EXT-001-INLINE-SCRIPT"
+    },
+    {
+      "lesson": "RU-W05-privet-observe",
+      "extension": "RU-EXT-001-INLINE-SCRIPT"
+    },
+    {
+      "lesson": "RU-W05-privet-guided-copy",
+      "extension": "RU-EXT-001-INLINE-SCRIPT"
+    },
+    {
+      "lesson": "RU-W05-privet-delayed-copy",
+      "extension": "RU-EXT-001-INLINE-SCRIPT"
+    },
+    {
+      "lesson": "RU-W05-privet-dictation",
+      "extension": "RU-EXT-001-INLINE-SCRIPT"
+    }
   ],
   "before": [],
   "inline": [

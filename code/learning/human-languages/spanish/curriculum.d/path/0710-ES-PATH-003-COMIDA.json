@@ -2,7 +2,10 @@
   "id": "ES-PATH-003-COMIDA",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C43-comida"
+    {
+      "lesson": "ES-C43-comida",
+      "extension": "ES-EXT-003-COMIDA"
+    }
   ],
   "before": [],
   "inline": [

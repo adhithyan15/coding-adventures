@@ -2,11 +2,26 @@
   "id": "TE-PATH-69-TOOL",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "TE-C69-axe",
-    "TE-C69-saw",
-    "TE-C69-spade",
-    "TE-C69-hammer",
-    "TE-C69-stick"
+    {
+      "lesson": "TE-C69-axe",
+      "extension": "TE-EXT-69-TOOL"
+    },
+    {
+      "lesson": "TE-C69-saw",
+      "extension": "TE-EXT-69-TOOL"
+    },
+    {
+      "lesson": "TE-C69-spade",
+      "extension": "TE-EXT-69-TOOL"
+    },
+    {
+      "lesson": "TE-C69-hammer",
+      "extension": "TE-EXT-69-TOOL"
+    },
+    {
+      "lesson": "TE-C69-stick",
+      "extension": "TE-EXT-69-TOOL"
+    }
   ],
   "before": [],
   "inline": [

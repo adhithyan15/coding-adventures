@@ -4,12 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can name the street, the corner, the footprint, the harbour and the lighthouse in Spanish.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-C302-calle",
-    "ES-C302-esquina",
-    "ES-C302-huella",
-    "ES-C302-puerto",
-    "ES-C302-faro"
-  ]
+  "prerequisites": []
 }

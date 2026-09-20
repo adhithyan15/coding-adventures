@@ -2,9 +2,18 @@
   "id": "SA-PATH-013",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "SA-C10-paniyam",
-    "SA-C10-kshiram",
-    "SA-C10-annam"
+    {
+      "lesson": "SA-C10-paniyam",
+      "extension": "SA-EXT-013-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "SA-C10-kshiram",
+      "extension": "SA-EXT-013-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "SA-C10-annam",
+      "extension": "SA-EXT-013-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

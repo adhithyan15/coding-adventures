@@ -6,8 +6,5 @@
   "canDo": "I can disagree in Mandarin for the first time, answering a yes-or-no question by negating the word it asked about.",
   "prerequisites": [
     "ZH-EXT-011-NEGATION"
-  ],
-  "lessons": [
-    "ZH-C04-practice"
   ]
 }

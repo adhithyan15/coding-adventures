@@ -2,12 +2,30 @@
   "id": "JA-PATH-008",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "JA-C08-hear-sayounara",
-    "JA-W08-yo",
-    "JA-W08-na",
-    "JA-W08-ra",
-    "JA-W08-sayounara-read",
-    "JA-C08-sayounara"
+    {
+      "lesson": "JA-C08-hear-sayounara",
+      "extension": "JA-EXT-015-SAYOUNARA-FAREWELL"
+    },
+    {
+      "lesson": "JA-W08-yo",
+      "extension": "JA-EXT-015-SAYOUNARA-FAREWELL"
+    },
+    {
+      "lesson": "JA-W08-na",
+      "extension": "JA-EXT-015-SAYOUNARA-FAREWELL"
+    },
+    {
+      "lesson": "JA-W08-ra",
+      "extension": "JA-EXT-015-SAYOUNARA-FAREWELL"
+    },
+    {
+      "lesson": "JA-W08-sayounara-read",
+      "extension": "JA-EXT-015-SAYOUNARA-FAREWELL"
+    },
+    {
+      "lesson": "JA-C08-sayounara",
+      "extension": "JA-EXT-015-SAYOUNARA-FAREWELL"
+    }
   ],
   "before": [],
   "inline": [

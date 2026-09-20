@@ -2,10 +2,22 @@
   "id": "ES-PATH-278-01",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C278-viento",
-    "ES-C278-nieve",
-    "ES-C278-arbol",
-    "ES-C278-flor"
+    {
+      "lesson": "ES-C278-viento",
+      "extension": "ES-EXT-278-AFUERA"
+    },
+    {
+      "lesson": "ES-C278-nieve",
+      "extension": "ES-EXT-278-AFUERA"
+    },
+    {
+      "lesson": "ES-C278-arbol",
+      "extension": "ES-EXT-278-AFUERA"
+    },
+    {
+      "lesson": "ES-C278-flor",
+      "extension": "ES-EXT-278-AFUERA"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,11 +2,26 @@
   "id": "ES-PATH-360-01",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C360-ropa",
-    "ES-C360-vestido",
-    "ES-C360-zapato",
-    "ES-C360-pantalon",
-    "ES-C360-boton"
+    {
+      "lesson": "ES-C360-ropa",
+      "extension": "ES-EXT-360-REF"
+    },
+    {
+      "lesson": "ES-C360-vestido",
+      "extension": "ES-EXT-360-REF"
+    },
+    {
+      "lesson": "ES-C360-zapato",
+      "extension": "ES-EXT-360-REF"
+    },
+    {
+      "lesson": "ES-C360-pantalon",
+      "extension": "ES-EXT-360-REF"
+    },
+    {
+      "lesson": "ES-C360-boton",
+      "extension": "ES-EXT-360-REF"
+    }
   ],
   "before": [],
   "inline": [

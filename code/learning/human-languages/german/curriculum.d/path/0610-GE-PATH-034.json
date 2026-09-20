@@ -2,10 +2,22 @@
   "id": "GE-PATH-034",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "GE-C31-arm",
-    "GE-C31-finger",
-    "GE-C31-fuss",
-    "GE-C31-herz"
+    {
+      "lesson": "GE-C31-arm",
+      "extension": "GE-EXT-034-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GE-C31-finger",
+      "extension": "GE-EXT-034-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GE-C31-fuss",
+      "extension": "GE-EXT-034-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GE-C31-herz",
+      "extension": "GE-EXT-034-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

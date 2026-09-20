@@ -2,7 +2,10 @@
   "id": "ES-PATH-028-SYNTH-FR",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "ES-C56-sintesis-leer"
+    {
+      "lesson": "ES-C56-sintesis-leer",
+      "extension": "ES-EXT-028-SYNTH-FR"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,7 +2,10 @@
   "id": "PA-PATH-013-C",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "PA-C09-madad-karna"
+    {
+      "lesson": "PA-C09-madad-karna",
+      "extension": "PA-EXT-013-DOING-VERBS-C"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,7 +2,10 @@
   "id": "HI-PATH-86-TIMED",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "HI-W10-a1-con-reloj"
+    {
+      "lesson": "HI-W10-a1-con-reloj",
+      "extension": "HI-EXT-86-TIMED"
+    }
   ],
   "before": [],
   "inline": [

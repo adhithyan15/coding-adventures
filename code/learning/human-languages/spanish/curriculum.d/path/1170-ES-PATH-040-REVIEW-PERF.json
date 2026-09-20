@@ -2,7 +2,10 @@
   "id": "ES-PATH-040-REVIEW-PERF",
   "spine_node": "SPINE-TALK-ABOUT-PAST",
   "lessons": [
-    "ES-C49-repaso-perfecto"
+    {
+      "lesson": "ES-C49-repaso-perfecto",
+      "extension": "ES-EXT-040-REVIEW-PERF"
+    }
   ],
   "before": [],
   "inline": [

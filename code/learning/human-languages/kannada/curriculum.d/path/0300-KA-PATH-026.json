@@ -2,8 +2,14 @@
   "id": "KA-PATH-026",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "KA-C33-yocisu",
-    "KA-C33-artha-maadiko"
+    {
+      "lesson": "KA-C33-yocisu",
+      "extension": "KA-EXT-026-MIND-VERBS"
+    },
+    {
+      "lesson": "KA-C33-artha-maadiko",
+      "extension": "KA-EXT-026-MIND-VERBS"
+    }
   ],
   "before": [],
   "inline": [

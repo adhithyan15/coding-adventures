@@ -2,10 +2,22 @@
   "id": "FR-PATH-026",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "FR-C29-ami",
-    "FR-C29-famille",
-    "FR-C29-enfant",
-    "FR-C29-personne"
+    {
+      "lesson": "FR-C29-ami",
+      "extension": "FR-EXT-026-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C29-famille",
+      "extension": "FR-EXT-026-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C29-enfant",
+      "extension": "FR-EXT-026-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C29-personne",
+      "extension": "FR-EXT-026-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

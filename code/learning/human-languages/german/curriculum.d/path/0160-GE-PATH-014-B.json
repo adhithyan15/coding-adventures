@@ -2,12 +2,27 @@
   "id": "GE-PATH-014-B",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "GE-C05-was",
+    {
+      "lesson": "GE-C05-was",
+      "extension": "GE-EXT-014-SENTENCE-PIECES"
+    },
     "GE-C05-lernen",
-    "GE-C05-deutsch",
-    "GE-C05-ich-lerne-deutsch",
-    "GE-C05-pronomen-regel",
-    "GE-C05-practice"
+    {
+      "lesson": "GE-C05-deutsch",
+      "extension": "GE-EXT-014-SENTENCE-PIECES"
+    },
+    {
+      "lesson": "GE-C05-ich-lerne-deutsch",
+      "extension": "GE-EXT-014-CONSOLIDATION"
+    },
+    {
+      "lesson": "GE-C05-pronomen-regel",
+      "extension": "GE-EXT-014-CONSOLIDATION"
+    },
+    {
+      "lesson": "GE-C05-practice",
+      "extension": "GE-EXT-014-CONSOLIDATION"
+    }
   ],
   "before": [
     "GE-EXT-014-SENTENCE-PIECES"

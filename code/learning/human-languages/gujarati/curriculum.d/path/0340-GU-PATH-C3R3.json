@@ -2,7 +2,10 @@
   "id": "GU-PATH-C3R3",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "GU-R16-wellbeing-r3"
+    {
+      "lesson": "GU-R16-wellbeing-r3",
+      "extension": "GU-EXT-023-WELLBEING-R3"
+    }
   ],
   "before": [],
   "inline": [

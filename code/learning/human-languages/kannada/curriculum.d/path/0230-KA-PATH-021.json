@@ -2,7 +2,10 @@
   "id": "KA-PATH-021",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "KA-C20-hannondu-ippattu"
+    {
+      "lesson": "KA-C20-hannondu-ippattu",
+      "extension": "KA-EXT-021-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

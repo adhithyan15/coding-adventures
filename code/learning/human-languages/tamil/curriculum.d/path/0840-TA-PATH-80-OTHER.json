@@ -2,10 +2,22 @@
   "id": "TA-PATH-80-OTHER",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "TA-C80-other",
-    "TA-C80-one-and-other",
-    "TA-W35-read-marradu",
-    "TA-C80-price"
+    {
+      "lesson": "TA-C80-other",
+      "extension": "TA-EXT-80-OTHER"
+    },
+    {
+      "lesson": "TA-C80-one-and-other",
+      "extension": "TA-EXT-80-OTHER"
+    },
+    {
+      "lesson": "TA-W35-read-marradu",
+      "extension": "TA-EXT-80-OTHER"
+    },
+    {
+      "lesson": "TA-C80-price",
+      "extension": "TA-EXT-80-OTHER"
+    }
   ],
   "before": [],
   "inline": [

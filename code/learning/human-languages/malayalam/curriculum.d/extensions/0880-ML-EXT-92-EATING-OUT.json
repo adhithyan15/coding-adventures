@@ -6,11 +6,5 @@
   "canDo": "I can eat somewhere other than at home.",
   "prerequisites": [
     "ML-EXT-91-SHOPPING"
-  ],
-  "lessons": [
-    "ML-C92-bhakshanam",
-    "ML-C92-hottal",
-    "ML-C92-bill",
-    "ML-R92-eating-out-recall"
   ]
 }

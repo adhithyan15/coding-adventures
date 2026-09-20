@@ -2,11 +2,26 @@
   "id": "ES-PATH-284-01",
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
-    "ES-C284-de-acuerdo",
-    "ES-C284-seguro",
-    "ES-C284-cierto",
-    "ES-C284-exacto",
-    "ES-C284-por-supuesto"
+    {
+      "lesson": "ES-C284-de-acuerdo",
+      "extension": "ES-EXT-284-RESPUESTAS"
+    },
+    {
+      "lesson": "ES-C284-seguro",
+      "extension": "ES-EXT-284-RESPUESTAS"
+    },
+    {
+      "lesson": "ES-C284-cierto",
+      "extension": "ES-EXT-284-RESPUESTAS"
+    },
+    {
+      "lesson": "ES-C284-exacto",
+      "extension": "ES-EXT-284-RESPUESTAS"
+    },
+    {
+      "lesson": "ES-C284-por-supuesto",
+      "extension": "ES-EXT-284-RESPUESTAS"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,11 +2,26 @@
   "id": "ZH-PATH-025",
   "spine_node": "SPINE-NEGATE-AND-ASK",
   "lessons": [
-    "ZH-W26-ne",
-    "ZH-C26-ne",
-    "ZH-W26-dui",
-    "ZH-C26-dui",
-    "ZH-C26-practice"
+    {
+      "lesson": "ZH-W26-ne",
+      "extension": "ZH-EXT-060-NE-DUI"
+    },
+    {
+      "lesson": "ZH-C26-ne",
+      "extension": "ZH-EXT-060-NE-DUI"
+    },
+    {
+      "lesson": "ZH-W26-dui",
+      "extension": "ZH-EXT-060-NE-DUI"
+    },
+    {
+      "lesson": "ZH-C26-dui",
+      "extension": "ZH-EXT-060-NE-DUI"
+    },
+    {
+      "lesson": "ZH-C26-practice",
+      "extension": "ZH-EXT-060-NE-DUI"
+    }
   ],
   "before": [],
   "inline": [],

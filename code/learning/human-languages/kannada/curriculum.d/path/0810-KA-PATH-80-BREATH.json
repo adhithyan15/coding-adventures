@@ -2,14 +2,38 @@
   "id": "KA-PATH-80-BREATH",
   "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
   "lessons": [
-    "KA-S167-letter-dha",
-    "KA-S168-letter-bha",
-    "KA-S169-letter-pha",
-    "KA-S170-letter-kha",
-    "KA-S171-letter-gha",
-    "KA-S172-letter-ddha",
-    "KA-S173-letter-ttha",
-    "KA-R80-the-breath"
+    {
+      "lesson": "KA-S167-letter-dha",
+      "extension": "KA-EXT-80-BREATH"
+    },
+    {
+      "lesson": "KA-S168-letter-bha",
+      "extension": "KA-EXT-80-BREATH"
+    },
+    {
+      "lesson": "KA-S169-letter-pha",
+      "extension": "KA-EXT-80-BREATH"
+    },
+    {
+      "lesson": "KA-S170-letter-kha",
+      "extension": "KA-EXT-80-BREATH"
+    },
+    {
+      "lesson": "KA-S171-letter-gha",
+      "extension": "KA-EXT-80-BREATH"
+    },
+    {
+      "lesson": "KA-S172-letter-ddha",
+      "extension": "KA-EXT-80-BREATH"
+    },
+    {
+      "lesson": "KA-S173-letter-ttha",
+      "extension": "KA-EXT-80-BREATH"
+    },
+    {
+      "lesson": "KA-R80-the-breath",
+      "extension": "KA-EXT-80-BREATH"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,7 +2,10 @@
   "id": "ES-PATH-040-PARTICIPLE",
   "spine_node": "SPINE-TALK-ABOUT-PAST",
   "lessons": [
-    "ES-C49-participio"
+    {
+      "lesson": "ES-C49-participio",
+      "extension": "ES-EXT-040-PARTICIPLE"
+    }
   ],
   "before": [],
   "inline": [

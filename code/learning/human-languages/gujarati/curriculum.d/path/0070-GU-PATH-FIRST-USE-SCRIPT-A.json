@@ -2,11 +2,26 @@
   "id": "GU-PATH-FIRST-USE-SCRIPT-A",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "GU-W04-lla",
-    "GU-W04-tha",
-    "GU-W04-independent-a",
-    "GU-W04-i-matra",
-    "GU-R04-first-four-r1"
+    {
+      "lesson": "GU-W04-lla",
+      "extension": "GU-EXT-031-FIRST-USE-SCRIPT-A"
+    },
+    {
+      "lesson": "GU-W04-tha",
+      "extension": "GU-EXT-031-FIRST-USE-SCRIPT-A"
+    },
+    {
+      "lesson": "GU-W04-independent-a",
+      "extension": "GU-EXT-031-FIRST-USE-SCRIPT-A"
+    },
+    {
+      "lesson": "GU-W04-i-matra",
+      "extension": "GU-EXT-031-FIRST-USE-SCRIPT-A"
+    },
+    {
+      "lesson": "GU-R04-first-four-r1",
+      "extension": "GU-EXT-031-FIRST-USE-SCRIPT-A"
+    }
   ],
   "before": [],
   "inline": [],

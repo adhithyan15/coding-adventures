@@ -2,8 +2,14 @@
   "id": "ES-PATH-039-CONSOLIDATION-CH15",
   "spine_node": "SPINE-TALK-ABOUT-PAST",
   "lessons": [
-    "ES-C15-practice",
-    "ES-C15-sintesis-preterito"
+    {
+      "lesson": "ES-C15-practice",
+      "extension": "ES-EXT-039-CONSOLIDATION-CH15"
+    },
+    {
+      "lesson": "ES-C15-sintesis-preterito",
+      "extension": "ES-EXT-039-CONSOLIDATION-PRETERITE"
+    }
   ],
   "before": [],
   "inline": [

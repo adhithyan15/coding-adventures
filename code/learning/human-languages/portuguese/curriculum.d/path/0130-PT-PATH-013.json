@@ -2,8 +2,14 @@
   "id": "PT-PATH-013",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "PT-C06-numeros-1-5",
-    "PT-C06-numeros-6-10"
+    {
+      "lesson": "PT-C06-numeros-1-5",
+      "extension": "PT-EXT-013-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "PT-C06-numeros-6-10",
+      "extension": "PT-EXT-013-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

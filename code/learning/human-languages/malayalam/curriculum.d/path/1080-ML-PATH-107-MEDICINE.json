@@ -2,11 +2,26 @@
   "id": "ML-PATH-107-MEDICINE",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ML-C107-marunnu",
-    "ML-C107-chikitsa",
-    "ML-C107-vrtthi",
-    "ML-C107-before-and-after",
-    "ML-R107-medicine-recall"
+    {
+      "lesson": "ML-C107-marunnu",
+      "extension": "ML-EXT-107-MEDICINE"
+    },
+    {
+      "lesson": "ML-C107-chikitsa",
+      "extension": "ML-EXT-107-MEDICINE"
+    },
+    {
+      "lesson": "ML-C107-vrtthi",
+      "extension": "ML-EXT-107-MEDICINE"
+    },
+    {
+      "lesson": "ML-C107-before-and-after",
+      "extension": "ML-EXT-107-MEDICINE"
+    },
+    {
+      "lesson": "ML-R107-medicine-recall",
+      "extension": "ML-EXT-107-MEDICINE"
+    }
   ],
   "before": [],
   "inline": [

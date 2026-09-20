@@ -2,7 +2,10 @@
   "id": "ML-PATH-028-B",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "ML-C34-codikkuka"
+    {
+      "lesson": "ML-C34-codikkuka",
+      "extension": "ML-EXT-028-DOING-VERBS-B"
+    }
   ],
   "before": [],
   "inline": [

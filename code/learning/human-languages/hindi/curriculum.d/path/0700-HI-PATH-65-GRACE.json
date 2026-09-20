@@ -2,11 +2,26 @@
   "id": "HI-PATH-65-GRACE",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "HI-C65-kindness",
-    "HI-C65-entreaty",
-    "HI-C65-permission",
-    "HI-C65-trust",
-    "HI-C65-manners"
+    {
+      "lesson": "HI-C65-kindness",
+      "extension": "HI-EXT-65-GRACE"
+    },
+    {
+      "lesson": "HI-C65-entreaty",
+      "extension": "HI-EXT-65-GRACE"
+    },
+    {
+      "lesson": "HI-C65-permission",
+      "extension": "HI-EXT-65-GRACE"
+    },
+    {
+      "lesson": "HI-C65-trust",
+      "extension": "HI-EXT-65-GRACE"
+    },
+    {
+      "lesson": "HI-C65-manners",
+      "extension": "HI-EXT-65-GRACE"
+    }
   ],
   "before": [],
   "inline": [

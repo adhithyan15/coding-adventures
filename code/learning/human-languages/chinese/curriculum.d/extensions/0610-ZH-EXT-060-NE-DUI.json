@@ -4,12 +4,5 @@
   "kind": "required",
   "category": "grammar",
   "canDo": "I can write 呢 and 对, use 呢 after a noun to repeat the last question, and use 对 to agree and inside 对不对.",
-  "prerequisites": [],
-  "lessons": [
-    "ZH-W26-ne",
-    "ZH-C26-ne",
-    "ZH-W26-dui",
-    "ZH-C26-dui",
-    "ZH-C26-practice"
-  ]
+  "prerequisites": []
 }

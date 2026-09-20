@@ -2,7 +2,10 @@
   "id": "LA-PATH-030-C",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "LA-C42-exspecto"
+    {
+      "lesson": "LA-C42-exspecto",
+      "extension": "LA-EXT-030-LANGUAGE-SPECIFIC-C"
+    }
   ],
   "before": [],
   "inline": [

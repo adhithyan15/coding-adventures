@@ -2,10 +2,22 @@
   "id": "MW-PATH-002",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "MW-W02-aa-independent",
-    "MW-W02-bha",
-    "MW-C02-aabhaar",
-    "MW-C02-practice"
+    {
+      "lesson": "MW-W02-aa-independent",
+      "extension": "MW-EXT-004-FORMAL-THANKS"
+    },
+    {
+      "lesson": "MW-W02-bha",
+      "extension": "MW-EXT-004-FORMAL-THANKS"
+    },
+    {
+      "lesson": "MW-C02-aabhaar",
+      "extension": "MW-EXT-004-FORMAL-THANKS"
+    },
+    {
+      "lesson": "MW-C02-practice",
+      "extension": "MW-EXT-004-FORMAL-THANKS"
+    }
   ],
   "before": [],
   "inline": [

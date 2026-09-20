@@ -2,7 +2,10 @@
   "id": "ML-PATH-021",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "ML-C19-vayassu"
+    {
+      "lesson": "ML-C19-vayassu",
+      "extension": "ML-EXT-021-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

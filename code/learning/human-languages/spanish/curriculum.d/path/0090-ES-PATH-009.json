@@ -2,11 +2,20 @@
   "id": "ES-PATH-009",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "ES-C03-se-llama",
+    {
+      "lesson": "ES-C03-se-llama",
+      "extension": "ES-EXT-009-LANGUAGE-SPECIFIC"
+    },
     "ES-C03-como-se-llama",
-    "ES-C03-mucho",
+    {
+      "lesson": "ES-C03-mucho",
+      "extension": "ES-EXT-009-LANGUAGE-SPECIFIC"
+    },
     "ES-C03-gusto",
-    "ES-C03-practice"
+    {
+      "lesson": "ES-C03-practice",
+      "extension": "ES-EXT-009-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [

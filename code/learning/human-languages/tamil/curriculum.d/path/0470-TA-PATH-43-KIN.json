@@ -2,10 +2,22 @@
   "id": "TA-PATH-43-KIN",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "TA-C43-child",
-    "TA-C43-son",
-    "TA-C43-daughter",
-    "TA-C43-family"
+    {
+      "lesson": "TA-C43-child",
+      "extension": "TA-EXT-43-KIN"
+    },
+    {
+      "lesson": "TA-C43-son",
+      "extension": "TA-EXT-43-KIN"
+    },
+    {
+      "lesson": "TA-C43-daughter",
+      "extension": "TA-EXT-43-KIN"
+    },
+    {
+      "lesson": "TA-C43-family",
+      "extension": "TA-EXT-43-KIN"
+    }
   ],
   "before": [],
   "inline": [

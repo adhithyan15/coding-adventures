@@ -2,7 +2,10 @@
   "id": "MR-PATH-014",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "MR-C09-ghene"
+    {
+      "lesson": "MR-C09-ghene",
+      "extension": "MR-EXT-014-DOING-VERBS"
+    }
   ],
   "before": [],
   "inline": [

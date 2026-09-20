@@ -2,10 +2,22 @@
   "id": "ML-PATH-89-OPINION",
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
-    "ML-C89-nallathu",
-    "ML-C89-mosham",
-    "ML-C89-opinion",
-    "ML-R89-opinion-recall"
+    {
+      "lesson": "ML-C89-nallathu",
+      "extension": "ML-EXT-89-OPINION"
+    },
+    {
+      "lesson": "ML-C89-mosham",
+      "extension": "ML-EXT-89-OPINION"
+    },
+    {
+      "lesson": "ML-C89-opinion",
+      "extension": "ML-EXT-89-OPINION"
+    },
+    {
+      "lesson": "ML-R89-opinion-recall",
+      "extension": "ML-EXT-89-OPINION"
+    }
   ],
   "before": [],
   "inline": [

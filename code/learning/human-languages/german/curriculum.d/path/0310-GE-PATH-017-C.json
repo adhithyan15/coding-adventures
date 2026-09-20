@@ -2,13 +2,34 @@
   "id": "GE-PATH-017-C",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "GE-C13-schwarz",
-    "GE-C13-schwarz-swarthy",
-    "GE-C13-weiss",
-    "GE-C13-weiss-white",
-    "GE-C13-blank",
-    "GE-C13-blank-blanc",
-    "GE-C13-schwarz-weiss"
+    {
+      "lesson": "GE-C13-schwarz",
+      "extension": "GE-EXT-017-C-FARBEN"
+    },
+    {
+      "lesson": "GE-C13-schwarz-swarthy",
+      "extension": "GE-EXT-017-C-FARBEN"
+    },
+    {
+      "lesson": "GE-C13-weiss",
+      "extension": "GE-EXT-017-C-FARBEN"
+    },
+    {
+      "lesson": "GE-C13-weiss-white",
+      "extension": "GE-EXT-017-C-FARBEN"
+    },
+    {
+      "lesson": "GE-C13-blank",
+      "extension": "GE-EXT-017-C-FARBEN"
+    },
+    {
+      "lesson": "GE-C13-blank-blanc",
+      "extension": "GE-EXT-017-C-FARBEN"
+    },
+    {
+      "lesson": "GE-C13-schwarz-weiss",
+      "extension": "GE-EXT-017-C-FARBEN"
+    }
   ],
   "before": [],
   "inline": [

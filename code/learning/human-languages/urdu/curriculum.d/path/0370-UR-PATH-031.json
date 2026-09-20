@@ -2,9 +2,18 @@
   "id": "UR-PATH-031",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "UR-C30-bees",
-    "UR-C30-sau",
-    "UR-C30-practice"
+    {
+      "lesson": "UR-C30-bees",
+      "extension": "UR-EXT-041-ROUND-AMOUNTS"
+    },
+    {
+      "lesson": "UR-C30-sau",
+      "extension": "UR-EXT-041-ROUND-AMOUNTS"
+    },
+    {
+      "lesson": "UR-C30-practice",
+      "extension": "UR-EXT-041-ROUND-AMOUNTS"
+    }
   ],
   "before": [],
   "inline": [],

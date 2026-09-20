@@ -2,19 +2,58 @@
   "id": "MW-PATH-012",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "MW-C12-hear-mausam",
-    "MW-W12-au-matra",
-    "MW-C12-mausam",
-    "MW-C12-hear-garmi",
-    "MW-W12-ga",
-    "MW-C12-garmi",
-    "MW-R12-weather-first-two",
-    "MW-C12-hear-thandi",
-    "MW-W12-dda",
-    "MW-C12-thandi",
-    "MW-R12-weather-new-three",
-    "MW-C12-weather-six",
-    "MW-R12-script-close"
+    {
+      "lesson": "MW-C12-hear-mausam",
+      "extension": "MW-EXT-026-WEATHER-SIX"
+    },
+    {
+      "lesson": "MW-W12-au-matra",
+      "extension": "MW-EXT-026-WEATHER-SIX"
+    },
+    {
+      "lesson": "MW-C12-mausam",
+      "extension": "MW-EXT-026-WEATHER-SIX"
+    },
+    {
+      "lesson": "MW-C12-hear-garmi",
+      "extension": "MW-EXT-026-WEATHER-SIX"
+    },
+    {
+      "lesson": "MW-W12-ga",
+      "extension": "MW-EXT-026-WEATHER-SIX"
+    },
+    {
+      "lesson": "MW-C12-garmi",
+      "extension": "MW-EXT-026-WEATHER-SIX"
+    },
+    {
+      "lesson": "MW-R12-weather-first-two",
+      "extension": "MW-EXT-026-WEATHER-SIX"
+    },
+    {
+      "lesson": "MW-C12-hear-thandi",
+      "extension": "MW-EXT-026-WEATHER-SIX"
+    },
+    {
+      "lesson": "MW-W12-dda",
+      "extension": "MW-EXT-026-WEATHER-SIX"
+    },
+    {
+      "lesson": "MW-C12-thandi",
+      "extension": "MW-EXT-026-WEATHER-SIX"
+    },
+    {
+      "lesson": "MW-R12-weather-new-three",
+      "extension": "MW-EXT-026-WEATHER-SIX"
+    },
+    {
+      "lesson": "MW-C12-weather-six",
+      "extension": "MW-EXT-026-WEATHER-SIX"
+    },
+    {
+      "lesson": "MW-R12-script-close",
+      "extension": "MW-EXT-026-WEATHER-SIX"
+    }
   ],
   "before": [],
   "inline": [

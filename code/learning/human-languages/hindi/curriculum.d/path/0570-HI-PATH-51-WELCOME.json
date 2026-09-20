@@ -2,11 +2,26 @@
   "id": "HI-PATH-51-WELCOME",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "HI-C51-flower",
-    "HI-C51-garland",
-    "HI-C51-courtyard",
-    "HI-C51-table",
-    "HI-C51-sweet"
+    {
+      "lesson": "HI-C51-flower",
+      "extension": "HI-EXT-51-WELCOME"
+    },
+    {
+      "lesson": "HI-C51-garland",
+      "extension": "HI-EXT-51-WELCOME"
+    },
+    {
+      "lesson": "HI-C51-courtyard",
+      "extension": "HI-EXT-51-WELCOME"
+    },
+    {
+      "lesson": "HI-C51-table",
+      "extension": "HI-EXT-51-WELCOME"
+    },
+    {
+      "lesson": "HI-C51-sweet",
+      "extension": "HI-EXT-51-WELCOME"
+    }
   ],
   "before": [],
   "inline": [

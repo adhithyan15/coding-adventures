@@ -2,8 +2,14 @@
   "id": "HI-PATH-013",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "HI-C10-somavaar-shukravaar",
-    "HI-C10-shanivaar-ravivaar"
+    {
+      "lesson": "HI-C10-somavaar-shukravaar",
+      "extension": "HI-EXT-013-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "HI-C10-shanivaar-ravivaar",
+      "extension": "HI-EXT-013-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

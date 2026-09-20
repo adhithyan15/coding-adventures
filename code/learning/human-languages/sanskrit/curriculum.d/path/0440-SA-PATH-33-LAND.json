@@ -2,11 +2,26 @@
   "id": "SA-PATH-33-LAND",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "SA-C33-river",
-    "SA-C33-bridge",
-    "SA-C33-mountain",
-    "SA-C33-town",
-    "SA-C33-sea"
+    {
+      "lesson": "SA-C33-river",
+      "extension": "SA-EXT-33-LAND"
+    },
+    {
+      "lesson": "SA-C33-bridge",
+      "extension": "SA-EXT-33-LAND"
+    },
+    {
+      "lesson": "SA-C33-mountain",
+      "extension": "SA-EXT-33-LAND"
+    },
+    {
+      "lesson": "SA-C33-town",
+      "extension": "SA-EXT-33-LAND"
+    },
+    {
+      "lesson": "SA-C33-sea",
+      "extension": "SA-EXT-33-LAND"
+    }
   ],
   "before": [],
   "inline": [

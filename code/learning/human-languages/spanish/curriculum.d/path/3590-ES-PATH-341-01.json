@@ -2,11 +2,26 @@
   "id": "ES-PATH-341-01",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "ES-C341-arriba",
-    "ES-C341-abajo",
-    "ES-C341-delante",
-    "ES-C341-detras",
-    "ES-C341-dentro"
+    {
+      "lesson": "ES-C341-arriba",
+      "extension": "ES-EXT-341-WHERE"
+    },
+    {
+      "lesson": "ES-C341-abajo",
+      "extension": "ES-EXT-341-WHERE"
+    },
+    {
+      "lesson": "ES-C341-delante",
+      "extension": "ES-EXT-341-WHERE"
+    },
+    {
+      "lesson": "ES-C341-detras",
+      "extension": "ES-EXT-341-WHERE"
+    },
+    {
+      "lesson": "ES-C341-dentro",
+      "extension": "ES-EXT-341-WHERE"
+    }
   ],
   "before": [],
   "inline": [

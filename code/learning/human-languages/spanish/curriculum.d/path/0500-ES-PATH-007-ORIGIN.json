@@ -2,7 +2,10 @@
   "id": "ES-PATH-007-ORIGIN",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "ES-C09-soy-de"
+    {
+      "lesson": "ES-C09-soy-de",
+      "extension": "ES-EXT-007-ORIGIN"
+    }
   ],
   "before": [],
   "inline": [

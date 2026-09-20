@@ -2,7 +2,10 @@
   "id": "RU-PATH-009-C",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "RU-C05-pomogat"
+    {
+      "lesson": "RU-C05-pomogat",
+      "extension": "RU-EXT-009-HAND-VERBS-C"
+    }
   ],
   "before": [],
   "inline": [

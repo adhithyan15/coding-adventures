@@ -2,10 +2,22 @@
   "id": "ES-PATH-421-ARTS-PEOPLE",
   "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
   "lessons": [
-    "ES-C421-actor",
-    "ES-C421-actriz",
-    "ES-C421-repaso-escena",
-    "ES-C421-sintesis-espectaculo"
+    {
+      "lesson": "ES-C421-actor",
+      "extension": "ES-EXT-421-ARTS-PEOPLE"
+    },
+    {
+      "lesson": "ES-C421-actriz",
+      "extension": "ES-EXT-421-ARTS-PEOPLE"
+    },
+    {
+      "lesson": "ES-C421-repaso-escena",
+      "extension": "ES-EXT-421-ARTS-PEOPLE"
+    },
+    {
+      "lesson": "ES-C421-sintesis-espectaculo",
+      "extension": "ES-EXT-421-ARTS-PEOPLE"
+    }
   ],
   "before": [],
   "inline": [

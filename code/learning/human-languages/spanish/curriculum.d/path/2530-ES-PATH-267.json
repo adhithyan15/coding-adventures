@@ -2,11 +2,26 @@
   "id": "ES-PATH-267",
   "spine_node": "SPINE-NEGATE-AND-ASK",
   "lessons": [
-    "ES-C267-no-verbo",
-    "ES-C267-no-nada",
-    "ES-C267-pregunta-si-no",
-    "ES-C267-verdad-no",
-    "ES-C267-negar-preguntar"
+    {
+      "lesson": "ES-C267-no-verbo",
+      "extension": "ES-EXT-267-NEGATE-ASK"
+    },
+    {
+      "lesson": "ES-C267-no-nada",
+      "extension": "ES-EXT-267-NEGATE-ASK"
+    },
+    {
+      "lesson": "ES-C267-pregunta-si-no",
+      "extension": "ES-EXT-267-NEGATE-ASK"
+    },
+    {
+      "lesson": "ES-C267-verdad-no",
+      "extension": "ES-EXT-267-NEGATE-ASK"
+    },
+    {
+      "lesson": "ES-C267-negar-preguntar",
+      "extension": "ES-EXT-267-NEGATE-ASK"
+    }
   ],
   "before": [],
   "inline": [

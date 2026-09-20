@@ -57,6 +57,10 @@ Curriculum path-to-spine membership is owned only by the new path shard's
 `spine_node`. Do not edit an existing `curriculum.d/spine/*.json` owner when
 adding a path segment: those files contain only stable `omits`/`relocates`
 policy, and the public `segments` lists are derived in path order at load time.
+Extension-owned lessons likewise live only in the ordered path owner, as
+`{ "lesson": "…", "extension": "…" }` entries. Keep path-core lessons as
+plain strings. Do not add a reverse `lessons` array to an extension whose path
+uses tagged entries; the loader derives that public array in exact path order.
 Browser consumers fold only their respective canonical shards behind bounded
 build-time modules. Language Ladder does not import the modality owner corpus.
 

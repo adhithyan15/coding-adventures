@@ -2,7 +2,10 @@
   "id": "SA-PATH-57-CAN",
   "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
   "lessons": [
-    "SA-C57-shaknoti"
+    {
+      "lesson": "SA-C57-shaknoti",
+      "extension": "SA-EXT-057-CAN"
+    }
   ],
   "before": [],
   "inline": [

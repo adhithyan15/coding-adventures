@@ -2,11 +2,26 @@
   "id": "ES-PATH-343-01",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "ES-C343-fecha",
-    "ES-C343-calendario",
-    "ES-C343-proximo",
-    "ES-C343-epoca",
-    "ES-C343-siglo"
+    {
+      "lesson": "ES-C343-fecha",
+      "extension": "ES-EXT-343-CLOCK"
+    },
+    {
+      "lesson": "ES-C343-calendario",
+      "extension": "ES-EXT-343-CLOCK"
+    },
+    {
+      "lesson": "ES-C343-proximo",
+      "extension": "ES-EXT-343-CLOCK"
+    },
+    {
+      "lesson": "ES-C343-epoca",
+      "extension": "ES-EXT-343-CLOCK"
+    },
+    {
+      "lesson": "ES-C343-siglo",
+      "extension": "ES-EXT-343-CLOCK"
+    }
   ],
   "before": [],
   "inline": [

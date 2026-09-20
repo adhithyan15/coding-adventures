@@ -2,11 +2,26 @@
   "id": "MR-PATH-058",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "MR-C55-saha",
-    "MR-C55-saat",
-    "MR-C55-aath",
-    "MR-C55-nau",
-    "MR-R55-six-to-nine"
+    {
+      "lesson": "MR-C55-saha",
+      "extension": "MR-EXT-071-SIX-TO-NINE"
+    },
+    {
+      "lesson": "MR-C55-saat",
+      "extension": "MR-EXT-071-SIX-TO-NINE"
+    },
+    {
+      "lesson": "MR-C55-aath",
+      "extension": "MR-EXT-071-SIX-TO-NINE"
+    },
+    {
+      "lesson": "MR-C55-nau",
+      "extension": "MR-EXT-071-SIX-TO-NINE"
+    },
+    {
+      "lesson": "MR-R55-six-to-nine",
+      "extension": "MR-EXT-071-SIX-TO-NINE"
+    }
   ],
   "before": [],
   "inline": [

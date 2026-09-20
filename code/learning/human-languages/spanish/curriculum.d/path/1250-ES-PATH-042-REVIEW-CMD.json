@@ -2,7 +2,10 @@
   "id": "ES-PATH-042-REVIEW-CMD",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "ES-C50-repaso-mandatos"
+    {
+      "lesson": "ES-C50-repaso-mandatos",
+      "extension": "ES-EXT-042-REVIEW-CMD"
+    }
   ],
   "before": [],
   "inline": [

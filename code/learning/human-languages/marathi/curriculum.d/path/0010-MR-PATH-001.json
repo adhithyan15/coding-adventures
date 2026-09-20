@@ -2,20 +2,62 @@
   "id": "MR-PATH-001",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "MR-C01-namaskar",
-    "MR-W01-ha",
-    "MR-W01-o-matra",
-    "MR-W01-ho-delayed-copy",
-    "MR-W01-ho-dictation",
-    "MR-W01-na",
-    "MR-W01-aa-matra",
-    "MR-W01-ii-matra",
-    "MR-W01-ma",
-    "MR-W01-sa",
-    "MR-W01-ka",
-    "MR-W01-virama",
-    "MR-W01-ra",
-    "MR-W01-namaskar-read"
+    {
+      "lesson": "MR-C01-namaskar",
+      "extension": "MR-EXT-001-INLINE-SCRIPT"
+    },
+    {
+      "lesson": "MR-W01-ha",
+      "extension": "MR-EXT-016-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "MR-W01-o-matra",
+      "extension": "MR-EXT-016-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "MR-W01-ho-delayed-copy",
+      "extension": "MR-EXT-016-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "MR-W01-ho-dictation",
+      "extension": "MR-EXT-016-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "MR-W01-na",
+      "extension": "MR-EXT-016-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "MR-W01-aa-matra",
+      "extension": "MR-EXT-016-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "MR-W01-ii-matra",
+      "extension": "MR-EXT-016-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "MR-W01-ma",
+      "extension": "MR-EXT-016-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "MR-W01-sa",
+      "extension": "MR-EXT-016-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "MR-W01-ka",
+      "extension": "MR-EXT-016-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "MR-W01-virama",
+      "extension": "MR-EXT-016-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "MR-W01-ra",
+      "extension": "MR-EXT-016-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "MR-W01-namaskar-read",
+      "extension": "MR-EXT-016-SCRIPT-FIRST-PIECES"
+    }
   ],
   "before": [],
   "inline": [

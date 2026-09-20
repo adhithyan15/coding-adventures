@@ -2,11 +2,26 @@
   "id": "KA-PATH-61-KITCHEN",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "KA-C61-curd",
-    "KA-C61-ghee",
-    "KA-C61-oil",
-    "KA-C61-jaggery",
-    "KA-C61-sugar"
+    {
+      "lesson": "KA-C61-curd",
+      "extension": "KA-EXT-61-KITCHEN"
+    },
+    {
+      "lesson": "KA-C61-ghee",
+      "extension": "KA-EXT-61-KITCHEN"
+    },
+    {
+      "lesson": "KA-C61-oil",
+      "extension": "KA-EXT-61-KITCHEN"
+    },
+    {
+      "lesson": "KA-C61-jaggery",
+      "extension": "KA-EXT-61-KITCHEN"
+    },
+    {
+      "lesson": "KA-C61-sugar",
+      "extension": "KA-EXT-61-KITCHEN"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,19 +2,58 @@
   "id": "MW-PATH-027",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "MW-C33-hear-chha",
-    "MW-C33-chha",
-    "MW-C33-hear-saat",
-    "MW-C33-saat",
-    "MW-C33-hear-aath",
-    "MW-C33-aath",
-    "MW-C33-hear-no-nine",
-    "MW-C33-no-nine",
-    "MW-C33-hear-das",
-    "MW-C33-das",
-    "MW-R33-count-recall",
-    "MW-C33-count-ten",
-    "MW-R33-script-close"
+    {
+      "lesson": "MW-C33-hear-chha",
+      "extension": "MW-EXT-041-COUNT-TEN"
+    },
+    {
+      "lesson": "MW-C33-chha",
+      "extension": "MW-EXT-041-COUNT-TEN"
+    },
+    {
+      "lesson": "MW-C33-hear-saat",
+      "extension": "MW-EXT-041-COUNT-TEN"
+    },
+    {
+      "lesson": "MW-C33-saat",
+      "extension": "MW-EXT-041-COUNT-TEN"
+    },
+    {
+      "lesson": "MW-C33-hear-aath",
+      "extension": "MW-EXT-041-COUNT-TEN"
+    },
+    {
+      "lesson": "MW-C33-aath",
+      "extension": "MW-EXT-041-COUNT-TEN"
+    },
+    {
+      "lesson": "MW-C33-hear-no-nine",
+      "extension": "MW-EXT-041-COUNT-TEN"
+    },
+    {
+      "lesson": "MW-C33-no-nine",
+      "extension": "MW-EXT-041-COUNT-TEN"
+    },
+    {
+      "lesson": "MW-C33-hear-das",
+      "extension": "MW-EXT-041-COUNT-TEN"
+    },
+    {
+      "lesson": "MW-C33-das",
+      "extension": "MW-EXT-041-COUNT-TEN"
+    },
+    {
+      "lesson": "MW-R33-count-recall",
+      "extension": "MW-EXT-041-COUNT-TEN"
+    },
+    {
+      "lesson": "MW-C33-count-ten",
+      "extension": "MW-EXT-041-COUNT-TEN"
+    },
+    {
+      "lesson": "MW-R33-script-close",
+      "extension": "MW-EXT-041-COUNT-TEN"
+    }
   ],
   "before": [],
   "inline": [

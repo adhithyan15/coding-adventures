@@ -2,8 +2,14 @@
   "id": "ML-PATH-024",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ML-C21-naaya-poocha",
-    "ML-C22-paccha-manja"
+    {
+      "lesson": "ML-C21-naaya-poocha",
+      "extension": "ML-EXT-024-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ML-C22-paccha-manja",
+      "extension": "ML-EXT-024-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

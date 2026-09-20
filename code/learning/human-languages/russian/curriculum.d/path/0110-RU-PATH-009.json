@@ -2,7 +2,10 @@
   "id": "RU-PATH-009",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "RU-C05-brat"
+    {
+      "lesson": "RU-C05-brat",
+      "extension": "RU-EXT-009-HAND-VERBS"
+    }
   ],
   "before": [],
   "inline": [

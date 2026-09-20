@@ -2,11 +2,26 @@
   "id": "ES-PATH-326-01",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "ES-C326-nervioso",
-    "ES-C326-valiente",
-    "ES-C326-solo",
-    "ES-C326-libre",
-    "ES-C326-listo"
+    {
+      "lesson": "ES-C326-nervioso",
+      "extension": "ES-EXT-326-STATE"
+    },
+    {
+      "lesson": "ES-C326-valiente",
+      "extension": "ES-EXT-326-STATE"
+    },
+    {
+      "lesson": "ES-C326-solo",
+      "extension": "ES-EXT-326-STATE"
+    },
+    {
+      "lesson": "ES-C326-libre",
+      "extension": "ES-EXT-326-STATE"
+    },
+    {
+      "lesson": "ES-C326-listo",
+      "extension": "ES-EXT-326-STATE"
+    }
   ],
   "before": [],
   "inline": [

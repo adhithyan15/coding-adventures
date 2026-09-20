@@ -2,7 +2,10 @@
   "id": "TE-PATH-023",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "TE-C20-vatavaranam"
+    {
+      "lesson": "TE-C20-vatavaranam",
+      "extension": "TE-EXT-023-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

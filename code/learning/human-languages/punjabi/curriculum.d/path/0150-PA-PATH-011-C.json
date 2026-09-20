@@ -4,7 +4,10 @@
   "lessons": [
     "PA-C07-khana",
     "PA-C07-vekhna",
-    "PA-R07-wellbeing-r3",
+    {
+      "lesson": "PA-R07-wellbeing-r3",
+      "extension": "PA-EXT-022-WELLBEING-R3"
+    },
     "PA-C07-janna"
   ],
   "before": [],

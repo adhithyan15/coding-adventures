@@ -2,13 +2,34 @@
   "id": "BN-PATH-035",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "BN-C27-ditiyo",
-    "BN-C27-tritiyo",
-    "BN-C27-choturtho",
-    "BN-C27-prothom",
-    "BN-W06-nya",
-    "BN-C27-ponchom",
-    "BN-R27-first-to-fifth"
+    {
+      "lesson": "BN-C27-ditiyo",
+      "extension": "BN-EXT-036-ORDINALS-ONE-TO-FIVE"
+    },
+    {
+      "lesson": "BN-C27-tritiyo",
+      "extension": "BN-EXT-036-ORDINALS-ONE-TO-FIVE"
+    },
+    {
+      "lesson": "BN-C27-choturtho",
+      "extension": "BN-EXT-036-ORDINALS-ONE-TO-FIVE"
+    },
+    {
+      "lesson": "BN-C27-prothom",
+      "extension": "BN-EXT-036-ORDINALS-ONE-TO-FIVE"
+    },
+    {
+      "lesson": "BN-W06-nya",
+      "extension": "BN-EXT-036-ORDINALS-ONE-TO-FIVE"
+    },
+    {
+      "lesson": "BN-C27-ponchom",
+      "extension": "BN-EXT-036-ORDINALS-ONE-TO-FIVE"
+    },
+    {
+      "lesson": "BN-R27-first-to-fifth",
+      "extension": "BN-EXT-036-ORDINALS-ONE-TO-FIVE"
+    }
   ],
   "before": [],
   "inline": [

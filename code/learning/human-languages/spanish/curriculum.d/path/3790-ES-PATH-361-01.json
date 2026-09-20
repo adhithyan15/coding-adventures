@@ -2,11 +2,26 @@
   "id": "ES-PATH-361-01",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C361-carne",
-    "ES-C361-pescado",
-    "ES-C361-leche",
-    "ES-C361-sal",
-    "ES-C361-aceite"
+    {
+      "lesson": "ES-C361-carne",
+      "extension": "ES-EXT-361-REF"
+    },
+    {
+      "lesson": "ES-C361-pescado",
+      "extension": "ES-EXT-361-REF"
+    },
+    {
+      "lesson": "ES-C361-leche",
+      "extension": "ES-EXT-361-REF"
+    },
+    {
+      "lesson": "ES-C361-sal",
+      "extension": "ES-EXT-361-REF"
+    },
+    {
+      "lesson": "ES-C361-aceite",
+      "extension": "ES-EXT-361-REF"
+    }
   ],
   "before": [],
   "inline": [

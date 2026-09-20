@@ -2,9 +2,18 @@
   "id": "HI-PATH-78-READING",
   "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
   "lessons": [
-    "HI-C78-signs",
-    "HI-C78-notices",
-    "HI-C78-pehla-paath"
+    {
+      "lesson": "HI-C78-signs",
+      "extension": "HI-EXT-78-READING"
+    },
+    {
+      "lesson": "HI-C78-notices",
+      "extension": "HI-EXT-78-READING"
+    },
+    {
+      "lesson": "HI-C78-pehla-paath",
+      "extension": "HI-EXT-78-READING"
+    }
   ],
   "before": [],
   "inline": [

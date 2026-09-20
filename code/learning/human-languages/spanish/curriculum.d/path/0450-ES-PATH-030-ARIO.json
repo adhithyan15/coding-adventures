@@ -2,7 +2,10 @@
   "id": "ES-PATH-030-ARIO",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "ES-C09-ario"
+    {
+      "lesson": "ES-C09-ario",
+      "extension": "ES-EXT-030-ARIO"
+    }
   ],
   "before": [],
   "inline": [

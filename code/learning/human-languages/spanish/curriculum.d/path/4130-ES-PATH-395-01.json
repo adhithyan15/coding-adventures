@@ -2,11 +2,26 @@
   "id": "ES-PATH-395-01",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "ES-C395-entrar",
-    "ES-C395-volver",
-    "ES-C395-llegar",
-    "ES-C395-perder",
-    "ES-C395-necesitar"
+    {
+      "lesson": "ES-C395-entrar",
+      "extension": "ES-EXT-395-VERB"
+    },
+    {
+      "lesson": "ES-C395-volver",
+      "extension": "ES-EXT-395-VERB"
+    },
+    {
+      "lesson": "ES-C395-llegar",
+      "extension": "ES-EXT-395-VERB"
+    },
+    {
+      "lesson": "ES-C395-perder",
+      "extension": "ES-EXT-395-VERB"
+    },
+    {
+      "lesson": "ES-C395-necesitar",
+      "extension": "ES-EXT-395-VERB"
+    }
   ],
   "before": [],
   "inline": [

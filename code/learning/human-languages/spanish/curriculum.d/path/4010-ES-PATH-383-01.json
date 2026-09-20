@@ -2,10 +2,22 @@
   "id": "ES-PATH-383-01",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "ES-C383-guardar",
-    "ES-C383-dejar",
-    "ES-C383-sacar",
-    "ES-C383-buscar"
+    {
+      "lesson": "ES-C383-guardar",
+      "extension": "ES-EXT-383-VERB"
+    },
+    {
+      "lesson": "ES-C383-dejar",
+      "extension": "ES-EXT-383-VERB"
+    },
+    {
+      "lesson": "ES-C383-sacar",
+      "extension": "ES-EXT-383-VERB"
+    },
+    {
+      "lesson": "ES-C383-buscar",
+      "extension": "ES-EXT-383-VERB"
+    }
   ],
   "before": [],
   "inline": [

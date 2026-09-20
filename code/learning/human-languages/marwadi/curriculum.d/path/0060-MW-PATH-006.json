@@ -2,13 +2,34 @@
   "id": "MW-PATH-006",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "MW-C06-hear-question",
-    "MW-C06-question",
-    "MW-C06-hear-answer",
-    "MW-W06-uu-matra",
-    "MW-W06-ttha",
-    "MW-C06-answer",
-    "MW-C06-practice"
+    {
+      "lesson": "MW-C06-hear-question",
+      "extension": "MW-EXT-015-HEAR-WELLBEING-QUESTION"
+    },
+    {
+      "lesson": "MW-C06-question",
+      "extension": "MW-EXT-016-WRITE-WELLBEING-QUESTION"
+    },
+    {
+      "lesson": "MW-C06-hear-answer",
+      "extension": "MW-EXT-017-BUILD-WELLBEING-ANSWER"
+    },
+    {
+      "lesson": "MW-W06-uu-matra",
+      "extension": "MW-EXT-017-BUILD-WELLBEING-ANSWER"
+    },
+    {
+      "lesson": "MW-W06-ttha",
+      "extension": "MW-EXT-017-BUILD-WELLBEING-ANSWER"
+    },
+    {
+      "lesson": "MW-C06-answer",
+      "extension": "MW-EXT-017-BUILD-WELLBEING-ANSWER"
+    },
+    {
+      "lesson": "MW-C06-practice",
+      "extension": "MW-EXT-018-WELLBEING-EXCHANGE"
+    }
   ],
   "before": [],
   "inline": [

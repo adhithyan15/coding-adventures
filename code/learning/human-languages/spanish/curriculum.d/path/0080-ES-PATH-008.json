@@ -3,8 +3,14 @@
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
     "ES-C03-como",
-    "ES-C03-como-acento",
-    "ES-C03-familia-qu"
+    {
+      "lesson": "ES-C03-como-acento",
+      "extension": "ES-EXT-008-SCRIPT"
+    },
+    {
+      "lesson": "ES-C03-familia-qu",
+      "extension": "ES-EXT-008-ETYMOLOGY"
+    }
   ],
   "before": [],
   "inline": [

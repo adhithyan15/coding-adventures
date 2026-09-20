@@ -2,11 +2,26 @@
   "id": "ES-PATH-409-PLANNING",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "ES-C409-terminar",
-    "ES-C409-preparar",
-    "ES-C409-fin-de-semana",
-    "ES-C409-reservar",
-    "ES-C409-incluir"
+    {
+      "lesson": "ES-C409-terminar",
+      "extension": "ES-EXT-409-PLANNING"
+    },
+    {
+      "lesson": "ES-C409-preparar",
+      "extension": "ES-EXT-409-PLANNING"
+    },
+    {
+      "lesson": "ES-C409-fin-de-semana",
+      "extension": "ES-EXT-409-PLANNING"
+    },
+    {
+      "lesson": "ES-C409-reservar",
+      "extension": "ES-EXT-409-PLANNING"
+    },
+    {
+      "lesson": "ES-C409-incluir",
+      "extension": "ES-EXT-409-PLANNING"
+    }
   ],
   "before": [],
   "inline": [

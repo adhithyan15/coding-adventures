@@ -2,11 +2,26 @@
   "id": "TE-PATH-47-BODY",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "TE-C47-leg",
-    "TE-C47-tooth",
-    "TE-C47-hair",
-    "TE-C47-finger",
-    "TE-C47-stomach"
+    {
+      "lesson": "TE-C47-leg",
+      "extension": "TE-EXT-47-BODY"
+    },
+    {
+      "lesson": "TE-C47-tooth",
+      "extension": "TE-EXT-47-BODY"
+    },
+    {
+      "lesson": "TE-C47-hair",
+      "extension": "TE-EXT-47-BODY"
+    },
+    {
+      "lesson": "TE-C47-finger",
+      "extension": "TE-EXT-47-BODY"
+    },
+    {
+      "lesson": "TE-C47-stomach",
+      "extension": "TE-EXT-47-BODY"
+    }
   ],
   "before": [],
   "inline": [

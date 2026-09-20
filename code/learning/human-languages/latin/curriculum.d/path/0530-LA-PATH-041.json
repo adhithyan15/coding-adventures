@@ -2,9 +2,18 @@
   "id": "LA-PATH-041",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "LA-C57-ante",
-    "LA-C57-post",
-    "LA-C57-practice"
+    {
+      "lesson": "LA-C57-ante",
+      "extension": "LA-EXT-057-ORDER"
+    },
+    {
+      "lesson": "LA-C57-post",
+      "extension": "LA-EXT-057-ORDER"
+    },
+    {
+      "lesson": "LA-C57-practice",
+      "extension": "LA-EXT-057-ORDER"
+    }
   ],
   "before": [],
   "inline": [],

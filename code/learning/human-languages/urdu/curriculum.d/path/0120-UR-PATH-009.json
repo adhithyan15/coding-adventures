@@ -2,7 +2,10 @@
   "id": "UR-PATH-009",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "UR-C08-lena"
+    {
+      "lesson": "UR-C08-lena",
+      "extension": "UR-EXT-019-SOCIAL-VERBS"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,20 +2,62 @@
   "id": "MW-PATH-026",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "MW-W32-e",
-    "MW-C32-hear-ek",
-    "MW-C32-ek",
-    "MW-C32-hear-do-two",
-    "MW-C32-do-two",
-    "MW-C32-hear-teen",
-    "MW-C32-teen",
-    "MW-C32-hear-chaar",
-    "MW-C32-chaar",
-    "MW-C32-hear-paanch",
-    "MW-C32-paanch",
-    "MW-R32-count-recall",
-    "MW-C32-count-five",
-    "MW-R32-script-close"
+    {
+      "lesson": "MW-W32-e",
+      "extension": "MW-EXT-040-COUNT-FIVE"
+    },
+    {
+      "lesson": "MW-C32-hear-ek",
+      "extension": "MW-EXT-040-COUNT-FIVE"
+    },
+    {
+      "lesson": "MW-C32-ek",
+      "extension": "MW-EXT-040-COUNT-FIVE"
+    },
+    {
+      "lesson": "MW-C32-hear-do-two",
+      "extension": "MW-EXT-040-COUNT-FIVE"
+    },
+    {
+      "lesson": "MW-C32-do-two",
+      "extension": "MW-EXT-040-COUNT-FIVE"
+    },
+    {
+      "lesson": "MW-C32-hear-teen",
+      "extension": "MW-EXT-040-COUNT-FIVE"
+    },
+    {
+      "lesson": "MW-C32-teen",
+      "extension": "MW-EXT-040-COUNT-FIVE"
+    },
+    {
+      "lesson": "MW-C32-hear-chaar",
+      "extension": "MW-EXT-040-COUNT-FIVE"
+    },
+    {
+      "lesson": "MW-C32-chaar",
+      "extension": "MW-EXT-040-COUNT-FIVE"
+    },
+    {
+      "lesson": "MW-C32-hear-paanch",
+      "extension": "MW-EXT-040-COUNT-FIVE"
+    },
+    {
+      "lesson": "MW-C32-paanch",
+      "extension": "MW-EXT-040-COUNT-FIVE"
+    },
+    {
+      "lesson": "MW-R32-count-recall",
+      "extension": "MW-EXT-040-COUNT-FIVE"
+    },
+    {
+      "lesson": "MW-C32-count-five",
+      "extension": "MW-EXT-040-COUNT-FIVE"
+    },
+    {
+      "lesson": "MW-R32-script-close",
+      "extension": "MW-EXT-040-COUNT-FIVE"
+    }
   ],
   "before": [],
   "inline": [

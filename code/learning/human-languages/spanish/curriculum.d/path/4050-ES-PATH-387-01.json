@@ -2,10 +2,22 @@
   "id": "ES-PATH-387-01",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "ES-C387-quemar",
-    "ES-C387-cruzar",
-    "ES-C387-volar",
-    "ES-C387-girar"
+    {
+      "lesson": "ES-C387-quemar",
+      "extension": "ES-EXT-387-VERB"
+    },
+    {
+      "lesson": "ES-C387-cruzar",
+      "extension": "ES-EXT-387-VERB"
+    },
+    {
+      "lesson": "ES-C387-volar",
+      "extension": "ES-EXT-387-VERB"
+    },
+    {
+      "lesson": "ES-C387-girar",
+      "extension": "ES-EXT-387-VERB"
+    }
   ],
   "before": [],
   "inline": [

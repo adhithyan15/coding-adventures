@@ -2,10 +2,22 @@
   "id": "TE-PATH-44-SEESAY",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "TE-C44-look",
-    "TE-C44-listen",
-    "TE-C44-speak",
-    "TE-C44-write"
+    {
+      "lesson": "TE-C44-look",
+      "extension": "TE-EXT-44-SEESAY"
+    },
+    {
+      "lesson": "TE-C44-listen",
+      "extension": "TE-EXT-44-SEESAY"
+    },
+    {
+      "lesson": "TE-C44-speak",
+      "extension": "TE-EXT-44-SEESAY"
+    },
+    {
+      "lesson": "TE-C44-write",
+      "extension": "TE-EXT-44-SEESAY"
+    }
   ],
   "before": [],
   "inline": [

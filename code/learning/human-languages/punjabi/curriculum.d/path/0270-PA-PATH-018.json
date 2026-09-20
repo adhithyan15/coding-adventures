@@ -2,14 +2,38 @@
   "id": "PA-PATH-018",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "PA-W02-a",
-    "PA-W02-aman",
-    "PA-W02-manan",
-    "PA-W02-name-label",
-    "PA-W02-name-select",
-    "PA-W02-name-supported",
-    "PA-W02-name-delayed",
-    "PA-W02-name-no-model"
+    {
+      "lesson": "PA-W02-a",
+      "extension": "PA-EXT-023-A1-NAME-FIELD"
+    },
+    {
+      "lesson": "PA-W02-aman",
+      "extension": "PA-EXT-023-A1-NAME-FIELD"
+    },
+    {
+      "lesson": "PA-W02-manan",
+      "extension": "PA-EXT-023-A1-NAME-FIELD"
+    },
+    {
+      "lesson": "PA-W02-name-label",
+      "extension": "PA-EXT-023-A1-NAME-FIELD"
+    },
+    {
+      "lesson": "PA-W02-name-select",
+      "extension": "PA-EXT-023-A1-NAME-FIELD"
+    },
+    {
+      "lesson": "PA-W02-name-supported",
+      "extension": "PA-EXT-023-A1-NAME-FIELD"
+    },
+    {
+      "lesson": "PA-W02-name-delayed",
+      "extension": "PA-EXT-023-A1-NAME-FIELD"
+    },
+    {
+      "lesson": "PA-W02-name-no-model",
+      "extension": "PA-EXT-023-A1-NAME-FIELD"
+    }
   ],
   "before": [],
   "inline": [

@@ -6,10 +6,5 @@
   "canDo": "I can read a French instruction, a line off a form, and a short paragraph, without translating word by word.",
   "prerequisites": [
     "FR-EXT-A1-QUANTITY"
-  ],
-  "lessons": [
-    "FR-C45-instructions",
-    "FR-C45-details",
-    "FR-C45-premiere-lecture"
   ]
 }

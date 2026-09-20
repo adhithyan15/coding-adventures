@@ -2,7 +2,10 @@
   "id": "ML-PATH-028",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "ML-C34-edukkuka"
+    {
+      "lesson": "ML-C34-edukkuka",
+      "extension": "ML-EXT-028-DOING-VERBS"
+    }
   ],
   "before": [],
   "inline": [

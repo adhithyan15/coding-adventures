@@ -2,83 +2,314 @@
   "id": "FR-PATH-015",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "FR-C06-un",
-    "FR-C06-deux",
-    "FR-C06-trois",
-    "FR-C06-quatre",
-    "FR-C06-cinq",
-    "FR-C06-six",
-    "FR-C06-sept",
-    "FR-C06-huit",
-    "FR-C06-neuf",
-    "FR-C06-dix",
-    "FR-C06-mois-romains",
-    "FR-C06-practice",
-    "FR-C07-lune",
-    "FR-C07-lundi",
-    "FR-C07-mardi",
-    "FR-C07-mercredi",
-    "FR-C07-jeudi",
-    "FR-C07-vendredi",
-    "FR-C07-samedi",
-    "FR-C07-dimanche",
-    "FR-C07-practice",
-    "FR-C09-janvier",
-    "FR-C09-fevrier",
-    "FR-C09-mars",
-    "FR-C09-avril",
-    "FR-C09-mai",
-    "FR-C09-juin",
-    "FR-C09-mois-practice-1",
-    "FR-C09-juillet",
-    "FR-C09-aout",
-    "FR-C09-septembre",
-    "FR-C09-octobre",
-    "FR-C09-novembre",
-    "FR-C09-decembre",
-    "FR-C09-mois-practice-2",
-    "FR-C09-printemps",
-    "FR-C09-ete",
-    "FR-C09-automne",
-    "FR-C09-hiver",
-    "FR-C09-en-saison",
-    "FR-C09-saisons-practice",
-    "FR-C10-pere",
-    "FR-C10-mere",
-    "FR-C10-grimm",
-    "FR-C10-frere",
-    "FR-C10-soeur",
-    "FR-C10-oe",
-    "FR-C10-practice",
-    "FR-C11-pain",
-    "FR-C11-eau",
-    "FR-C11-vin",
-    "FR-C11-du",
-    "FR-C11-practice",
-    "FR-C12-onze",
-    "FR-C12-douze",
-    "FR-C12-ze-decem",
-    "FR-C12-treize",
-    "FR-C12-quatorze",
-    "FR-C12-quinze",
-    "FR-C12-seize",
-    "FR-C12-digit-first",
-    "FR-C12-practice-teens",
-    "FR-C12-dix-sept",
-    "FR-C12-seam",
-    "FR-C12-dix-huit",
-    "FR-C12-dix-neuf",
-    "FR-C12-vingt",
-    "FR-C12-vigesimal",
-    "FR-C12-practice-seam",
-    "FR-C13-noir",
-    "FR-C13-blanc",
-    "FR-C13-aube",
-    "FR-C13-rouge",
-    "FR-C13-bleu",
-    "FR-C13-vin-rouge",
-    "FR-C13-tricolore",
-    "FR-C13-practice"
+    {
+      "lesson": "FR-C06-un",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C06-deux",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C06-trois",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C06-quatre",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C06-cinq",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C06-six",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C06-sept",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C06-huit",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C06-neuf",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C06-dix",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C06-mois-romains",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C06-practice",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C07-lune",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C07-lundi",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C07-mardi",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C07-mercredi",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C07-jeudi",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C07-vendredi",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C07-samedi",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C07-dimanche",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C07-practice",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C09-janvier",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C09-fevrier",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C09-mars",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C09-avril",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C09-mai",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C09-juin",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C09-mois-practice-1",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C09-juillet",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C09-aout",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C09-septembre",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C09-octobre",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C09-novembre",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C09-decembre",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C09-mois-practice-2",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C09-printemps",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C09-ete",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C09-automne",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C09-hiver",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C09-en-saison",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C09-saisons-practice",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C10-pere",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C10-mere",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C10-grimm",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C10-frere",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C10-soeur",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C10-oe",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C10-practice",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C11-pain",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C11-eau",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C11-vin",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C11-du",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C11-practice",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C12-onze",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C12-douze",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C12-ze-decem",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C12-treize",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C12-quatorze",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C12-quinze",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C12-seize",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C12-digit-first",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C12-practice-teens",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C12-dix-sept",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C12-seam",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C12-dix-huit",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C12-dix-neuf",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C12-vingt",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C12-vigesimal",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C12-practice-seam",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C13-noir",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C13-blanc",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C13-aube",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C13-rouge",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C13-bleu",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C13-vin-rouge",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C13-tricolore",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C13-practice",
+      "extension": "FR-EXT-015-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

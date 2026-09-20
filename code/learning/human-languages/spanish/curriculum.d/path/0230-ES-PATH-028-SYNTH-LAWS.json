@@ -2,7 +2,10 @@
   "id": "ES-PATH-028-SYNTH-LAWS",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "ES-C57-sintesis-descifrar"
+    {
+      "lesson": "ES-C57-sintesis-descifrar",
+      "extension": "ES-EXT-028-SYNTH-LAWS"
+    }
   ],
   "before": [],
   "inline": [

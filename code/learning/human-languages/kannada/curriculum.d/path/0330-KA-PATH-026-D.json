@@ -2,7 +2,10 @@
   "id": "KA-PATH-026-D",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "KA-C34-keelu"
+    {
+      "lesson": "KA-C34-keelu",
+      "extension": "KA-EXT-027-SOCIAL-VERBS-B"
+    }
   ],
   "before": [],
   "inline": [

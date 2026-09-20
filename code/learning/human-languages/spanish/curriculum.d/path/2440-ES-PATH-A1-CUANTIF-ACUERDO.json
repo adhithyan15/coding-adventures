@@ -2,7 +2,10 @@
   "id": "ES-PATH-A1-CUANTIF-ACUERDO",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C66-mucha-agua"
+    {
+      "lesson": "ES-C66-mucha-agua",
+      "extension": "ES-EXT-A1-CUANTIF-ACUERDO"
+    }
   ],
   "before": [],
   "inline": [

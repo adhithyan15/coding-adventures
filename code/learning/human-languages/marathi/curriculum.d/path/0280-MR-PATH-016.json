@@ -2,12 +2,30 @@
   "id": "MR-PATH-016",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "MR-C11-mitra",
-    "MR-R11-mitra-r1",
-    "MR-C11-kutumb",
-    "MR-R11-kutumb-r1",
-    "MR-C11-bhau",
-    "MR-C11-bahin"
+    {
+      "lesson": "MR-C11-mitra",
+      "extension": "MR-EXT-016-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "MR-R11-mitra-r1",
+      "extension": "MR-EXT-016-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "MR-C11-kutumb",
+      "extension": "MR-EXT-016-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "MR-R11-kutumb-r1",
+      "extension": "MR-EXT-016-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "MR-C11-bhau",
+      "extension": "MR-EXT-016-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "MR-C11-bahin",
+      "extension": "MR-EXT-016-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,8 +2,14 @@
   "id": "ES-PATH-408-HEALTH",
   "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
   "lessons": [
-    "ES-C408-doctor",
-    "ES-C408-pastilla"
+    {
+      "lesson": "ES-C408-doctor",
+      "extension": "ES-EXT-408-HEALTH"
+    },
+    {
+      "lesson": "ES-C408-pastilla",
+      "extension": "ES-EXT-408-HEALTH"
+    }
   ],
   "before": [],
   "inline": [

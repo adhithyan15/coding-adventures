@@ -4,11 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can name four verbs of perceiving and expressing.",
-  "prerequisites": [],
-  "lessons": [
-    "ML-C44-look",
-    "ML-C44-listen",
-    "ML-C44-speak",
-    "ML-C44-write"
-  ]
+  "prerequisites": []
 }

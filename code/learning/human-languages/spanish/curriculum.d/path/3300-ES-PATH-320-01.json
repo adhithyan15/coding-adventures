@@ -2,11 +2,26 @@
   "id": "ES-PATH-320-01",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "ES-C320-favor",
-    "ES-C320-molestia",
-    "ES-C320-pena",
-    "ES-C320-suerte",
-    "ES-C320-culpa"
+    {
+      "lesson": "ES-C320-favor",
+      "extension": "ES-EXT-320-COURT"
+    },
+    {
+      "lesson": "ES-C320-molestia",
+      "extension": "ES-EXT-320-COURT"
+    },
+    {
+      "lesson": "ES-C320-pena",
+      "extension": "ES-EXT-320-COURT"
+    },
+    {
+      "lesson": "ES-C320-suerte",
+      "extension": "ES-EXT-320-COURT"
+    },
+    {
+      "lesson": "ES-C320-culpa",
+      "extension": "ES-EXT-320-COURT"
+    }
   ],
   "before": [],
   "inline": [

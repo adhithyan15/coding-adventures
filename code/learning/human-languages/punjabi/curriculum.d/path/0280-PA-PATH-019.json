@@ -2,21 +2,66 @@
   "id": "PA-PATH-019",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "PA-W03-bha",
-    "PA-W03-sha",
-    "PA-W03-language-label",
-    "PA-W03-pa",
-    "PA-W03-tippi",
-    "PA-W03-ja",
-    "PA-W03-ba",
-    "PA-W03-punjabi",
-    "PA-W03-sihari",
-    "PA-W03-da",
-    "PA-W03-hindi",
-    "PA-W03-language-select",
-    "PA-W03-language-supported",
-    "PA-W03-language-delayed",
-    "PA-W03-language-no-model"
+    {
+      "lesson": "PA-W03-bha",
+      "extension": "PA-EXT-024-A1-LANGUAGE-FIELD"
+    },
+    {
+      "lesson": "PA-W03-sha",
+      "extension": "PA-EXT-024-A1-LANGUAGE-FIELD"
+    },
+    {
+      "lesson": "PA-W03-language-label",
+      "extension": "PA-EXT-024-A1-LANGUAGE-FIELD"
+    },
+    {
+      "lesson": "PA-W03-pa",
+      "extension": "PA-EXT-024-A1-LANGUAGE-FIELD"
+    },
+    {
+      "lesson": "PA-W03-tippi",
+      "extension": "PA-EXT-024-A1-LANGUAGE-FIELD"
+    },
+    {
+      "lesson": "PA-W03-ja",
+      "extension": "PA-EXT-024-A1-LANGUAGE-FIELD"
+    },
+    {
+      "lesson": "PA-W03-ba",
+      "extension": "PA-EXT-024-A1-LANGUAGE-FIELD"
+    },
+    {
+      "lesson": "PA-W03-punjabi",
+      "extension": "PA-EXT-024-A1-LANGUAGE-FIELD"
+    },
+    {
+      "lesson": "PA-W03-sihari",
+      "extension": "PA-EXT-024-A1-LANGUAGE-FIELD"
+    },
+    {
+      "lesson": "PA-W03-da",
+      "extension": "PA-EXT-024-A1-LANGUAGE-FIELD"
+    },
+    {
+      "lesson": "PA-W03-hindi",
+      "extension": "PA-EXT-024-A1-LANGUAGE-FIELD"
+    },
+    {
+      "lesson": "PA-W03-language-select",
+      "extension": "PA-EXT-024-A1-LANGUAGE-FIELD"
+    },
+    {
+      "lesson": "PA-W03-language-supported",
+      "extension": "PA-EXT-024-A1-LANGUAGE-FIELD"
+    },
+    {
+      "lesson": "PA-W03-language-delayed",
+      "extension": "PA-EXT-024-A1-LANGUAGE-FIELD"
+    },
+    {
+      "lesson": "PA-W03-language-no-model",
+      "extension": "PA-EXT-024-A1-LANGUAGE-FIELD"
+    }
   ],
   "before": [],
   "inline": [

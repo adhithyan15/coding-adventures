@@ -4,17 +4,32 @@
   "lessons": [
     "LA-C28-dies",
     "LA-C29-nox",
-    "LA-C30-bonam-noctem",
+    {
+      "lesson": "LA-C30-bonam-noctem",
+      "extension": "LA-EXT-024-LANGUAGE-SPECIFIC"
+    },
     "LA-C31-mane",
     "LA-C32-bonum-mane",
     "LA-C33-vesper",
-    "LA-C33-vesper-afterlives",
-    "LA-C33-practice",
+    {
+      "lesson": "LA-C33-vesper-afterlives",
+      "extension": "LA-EXT-024-ETYMOLOGY"
+    },
+    {
+      "lesson": "LA-C33-practice",
+      "extension": "LA-EXT-024-CONSOLIDATION"
+    },
     "LA-C34-bonum-vesperum",
     "LA-C35-meridies",
     "LA-C36-salve-post-meridiem",
-    "LA-C36-timeless-salve",
-    "LA-C36-practice"
+    {
+      "lesson": "LA-C36-timeless-salve",
+      "extension": "LA-EXT-024-CULTURE-PRAGMATICS"
+    },
+    {
+      "lesson": "LA-C36-practice",
+      "extension": "LA-EXT-024-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [

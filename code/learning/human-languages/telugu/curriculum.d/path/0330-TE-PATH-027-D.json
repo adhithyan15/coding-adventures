@@ -2,7 +2,10 @@
   "id": "TE-PATH-027-D",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "TE-C34-adugu"
+    {
+      "lesson": "TE-C34-adugu",
+      "extension": "TE-EXT-028-SOCIAL-VERBS-B"
+    }
   ],
   "before": [],
   "inline": [

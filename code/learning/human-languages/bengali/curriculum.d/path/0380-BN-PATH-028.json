@@ -2,11 +2,26 @@
   "id": "BN-PATH-028",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "BN-W05-tta",
-    "BN-C20-tta-classifier",
-    "BN-C20-ekta",
-    "BN-C20-arekta",
-    "BN-R20-one-and-another"
+    {
+      "lesson": "BN-W05-tta",
+      "extension": "BN-EXT-029-CLASSIFIER"
+    },
+    {
+      "lesson": "BN-C20-tta-classifier",
+      "extension": "BN-EXT-029-CLASSIFIER"
+    },
+    {
+      "lesson": "BN-C20-ekta",
+      "extension": "BN-EXT-029-CLASSIFIER"
+    },
+    {
+      "lesson": "BN-C20-arekta",
+      "extension": "BN-EXT-029-CLASSIFIER"
+    },
+    {
+      "lesson": "BN-R20-one-and-another",
+      "extension": "BN-EXT-029-CLASSIFIER"
+    }
   ],
   "before": [],
   "inline": [

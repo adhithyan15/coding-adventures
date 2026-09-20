@@ -2,10 +2,22 @@
   "id": "KA-PATH-45-FAMILY",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "KA-C45-grandfather",
-    "KA-C45-grandmother",
-    "KA-C45-husband",
-    "KA-C45-wife"
+    {
+      "lesson": "KA-C45-grandfather",
+      "extension": "KA-EXT-45-FAMILY"
+    },
+    {
+      "lesson": "KA-C45-grandmother",
+      "extension": "KA-EXT-45-FAMILY"
+    },
+    {
+      "lesson": "KA-C45-husband",
+      "extension": "KA-EXT-45-FAMILY"
+    },
+    {
+      "lesson": "KA-C45-wife",
+      "extension": "KA-EXT-45-FAMILY"
+    }
   ],
   "before": [],
   "inline": [

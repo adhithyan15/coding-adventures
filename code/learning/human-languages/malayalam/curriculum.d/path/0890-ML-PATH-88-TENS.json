@@ -2,10 +2,22 @@
   "id": "ML-PATH-88-TENS",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ML-C88-tens",
-    "ML-C88-ninety-hundred",
-    "ML-C88-compound-numbers",
-    "ML-R88-numbers-recall"
+    {
+      "lesson": "ML-C88-tens",
+      "extension": "ML-EXT-88-TENS"
+    },
+    {
+      "lesson": "ML-C88-ninety-hundred",
+      "extension": "ML-EXT-88-TENS"
+    },
+    {
+      "lesson": "ML-C88-compound-numbers",
+      "extension": "ML-EXT-88-TENS"
+    },
+    {
+      "lesson": "ML-R88-numbers-recall",
+      "extension": "ML-EXT-88-TENS"
+    }
   ],
   "before": [],
   "inline": [

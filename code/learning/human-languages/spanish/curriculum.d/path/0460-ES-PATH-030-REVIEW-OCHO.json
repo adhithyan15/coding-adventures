@@ -2,7 +2,10 @@
   "id": "ES-PATH-030-REVIEW-OCHO",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "ES-C09-repaso-ocho"
+    {
+      "lesson": "ES-C09-repaso-ocho",
+      "extension": "ES-EXT-030-REVIEW-OCHO"
+    }
   ],
   "before": [],
   "inline": [

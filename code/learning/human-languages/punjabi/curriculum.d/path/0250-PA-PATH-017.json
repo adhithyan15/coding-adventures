@@ -2,9 +2,18 @@
   "id": "PA-PATH-017",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "PA-S13-pairin-bindi",
-    "PA-C13-dil",
-    "PA-C13-sir"
+    {
+      "lesson": "PA-S13-pairin-bindi",
+      "extension": "PA-EXT-056-PREA1-SCRIPT-RUNWAY-C13"
+    },
+    {
+      "lesson": "PA-C13-dil",
+      "extension": "PA-EXT-017-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "PA-C13-sir",
+      "extension": "PA-EXT-017-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

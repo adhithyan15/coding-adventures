@@ -7,8 +7,5 @@
   "prerequisites": [
     "UR-EXT-002-REGISTER",
     "UR-EXT-003-SCRIPT"
-  ],
-  "lessons": [
-    "UR-C03-aap-ka-naam-kya-hai"
   ]
 }

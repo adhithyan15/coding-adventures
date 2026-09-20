@@ -2,10 +2,22 @@
   "id": "ES-PATH-281-01",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C281-nuevo",
-    "ES-C281-viejo",
-    "ES-C281-limpio",
-    "ES-C281-sucio"
+    {
+      "lesson": "ES-C281-nuevo",
+      "extension": "ES-EXT-281-ADJETIVOS"
+    },
+    {
+      "lesson": "ES-C281-viejo",
+      "extension": "ES-EXT-281-ADJETIVOS"
+    },
+    {
+      "lesson": "ES-C281-limpio",
+      "extension": "ES-EXT-281-ADJETIVOS"
+    },
+    {
+      "lesson": "ES-C281-sucio",
+      "extension": "ES-EXT-281-ADJETIVOS"
+    }
   ],
   "before": [],
   "inline": [

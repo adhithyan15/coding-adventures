@@ -2,7 +2,10 @@
   "id": "ML-PATH-018",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "ML-C14-kaalangal"
+    {
+      "lesson": "ML-C14-kaalangal",
+      "extension": "ML-EXT-018-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

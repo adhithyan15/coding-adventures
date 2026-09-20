@@ -2,11 +2,26 @@
   "id": "ES-PATH-373-01",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C373-oro",
-    "ES-C373-botella",
-    "ES-C373-alfombra",
-    "ES-C373-falda",
-    "ES-C373-peine"
+    {
+      "lesson": "ES-C373-oro",
+      "extension": "ES-EXT-373-REF"
+    },
+    {
+      "lesson": "ES-C373-botella",
+      "extension": "ES-EXT-373-REF"
+    },
+    {
+      "lesson": "ES-C373-alfombra",
+      "extension": "ES-EXT-373-REF"
+    },
+    {
+      "lesson": "ES-C373-falda",
+      "extension": "ES-EXT-373-REF"
+    },
+    {
+      "lesson": "ES-C373-peine",
+      "extension": "ES-EXT-373-REF"
+    }
   ],
   "before": [],
   "inline": [

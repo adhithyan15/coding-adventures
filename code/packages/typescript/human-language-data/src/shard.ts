@@ -767,11 +767,33 @@ export function mergeCurriculumShards(shards: Shard[]): Record<string, unknown> 
   const document = mergeSectionedShards(shards, CURRICULUM_SECTIONS);
   const path = document.path;
   const spine = document.spine;
+  const extensions = document.extensions;
   if (!Array.isArray(path)) {
     throw new Error("curriculum shards: reconstructed path must be an array");
   }
   if (typeof spine !== "object" || spine === null || Array.isArray(spine)) {
     throw new Error("curriculum shards: reconstructed spine must be an object");
+  }
+  if (!Array.isArray(extensions)) {
+    throw new Error("curriculum shards: reconstructed extensions must be an array");
+  }
+
+  const extensionOwners = new Map<string, Record<string, unknown>>();
+  const derivedExtensionLessons = new Map<string, string[]>();
+  for (const [index, raw] of extensions.entries()) {
+    if (typeof raw !== "object" || raw === null || Array.isArray(raw)) {
+      throw new Error(`curriculum extensions[${index}]: owner must be an object`);
+    }
+    const owner = raw as Record<string, unknown>;
+    const id = owner.id;
+    if (typeof id !== "string" || id.length === 0) {
+      throw new Error(`curriculum extensions[${index}]: id must be a non-empty string`);
+    }
+    if (extensionOwners.has(id)) {
+      throw new Error(`curriculum extensions: duplicate extension id '${id}'`);
+    }
+    extensionOwners.set(id, owner);
+    if (!Object.hasOwn(owner, "lessons")) derivedExtensionLessons.set(id, []);
   }
 
   const derived: Record<string, unknown> = {};
@@ -812,6 +834,80 @@ export function mergeCurriculumShards(shards: Shard[]): Record<string, unknown> 
       );
     }
     memberships.get(node)!.push(id);
+
+    if (!Array.isArray(segment.lessons)) {
+      throw new Error(`curriculum path segment '${id}': lessons must be an array`);
+    }
+    const attached = new Set<string>();
+    for (const relation of ["before", "inline", "after"] as const) {
+      const values = segment[relation];
+      if (!Array.isArray(values)) {
+        throw new Error(`curriculum path segment '${id}': ${relation} must be an array`);
+      }
+      for (const extensionId of values) {
+        if (typeof extensionId !== "string") {
+          throw new Error(
+            `curriculum path segment '${id}': ${relation} entries must be strings`,
+          );
+        }
+        attached.add(extensionId);
+      }
+    }
+    const publicLessons: string[] = [];
+    for (const [lessonIndex, entry] of segment.lessons.entries()) {
+      if (typeof entry === "string") {
+        publicLessons.push(entry);
+        continue;
+      }
+      if (typeof entry !== "object" || entry === null || Array.isArray(entry)) {
+        throw new Error(
+          `curriculum path segment '${id}': lessons[${lessonIndex}] must be a lesson id or extension-owned lesson`,
+        );
+      }
+      const tagged = entry as Record<string, unknown>;
+      const lesson = tagged.lesson;
+      const extension = tagged.extension;
+      if (
+        Object.keys(tagged).length !== 2 ||
+        typeof lesson !== "string" ||
+        lesson.length === 0 ||
+        typeof extension !== "string" ||
+        extension.length === 0
+      ) {
+        throw new Error(
+          `curriculum path segment '${id}': lessons[${lessonIndex}] must contain exactly non-empty 'lesson' and 'extension' strings`,
+        );
+      }
+      const owner = extensionOwners.get(extension);
+      if (owner === undefined) {
+        throw new Error(
+          `curriculum path segment '${id}': lesson '${lesson}' names unknown extension '${extension}'; missing [${extension}]`,
+        );
+      }
+      if (!attached.has(extension)) {
+        throw new Error(
+          `curriculum path segment '${id}': lesson '${lesson}' names extension '${extension}' that is not attached by before/inline/after`,
+        );
+      }
+      const derived = derivedExtensionLessons.get(extension);
+      if (derived === undefined) {
+        throw new Error(
+          `curriculum extension '${extension}': must not store 'lessons' while path segment '${id}' owns tagged lesson '${lesson}'`,
+        );
+      }
+      if (derived.includes(lesson)) {
+        throw new Error(
+          `curriculum extension '${extension}': duplicate derived lesson '${lesson}'`,
+        );
+      }
+      derived.push(lesson);
+      publicLessons.push(lesson);
+    }
+    segment.lessons = publicLessons;
+  }
+
+  for (const [id, lessons] of derivedExtensionLessons) {
+    extensionOwners.get(id)!.lessons = lessons;
   }
 
   for (const [node, raw] of Object.entries(derived)) {

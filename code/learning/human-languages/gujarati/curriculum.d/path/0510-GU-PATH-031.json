@@ -2,11 +2,26 @@
   "id": "GU-PATH-031",
   "spine_node": "SPINE-DESCRIBE-QUALITIES",
   "lessons": [
-    "GU-C32-ane",
-    "GU-C32-ane-clauses",
-    "GU-C32-ane-write",
-    "GU-C32-athava",
-    "GU-C32-pan"
+    {
+      "lesson": "GU-C32-ane",
+      "extension": "GU-EXT-043-JOIN-THREE"
+    },
+    {
+      "lesson": "GU-C32-ane-clauses",
+      "extension": "GU-EXT-043-JOIN-THREE"
+    },
+    {
+      "lesson": "GU-C32-ane-write",
+      "extension": "GU-EXT-043-JOIN-THREE"
+    },
+    {
+      "lesson": "GU-C32-athava",
+      "extension": "GU-EXT-043-JOIN-THREE"
+    },
+    {
+      "lesson": "GU-C32-pan",
+      "extension": "GU-EXT-043-JOIN-THREE"
+    }
   ],
   "before": [],
   "inline": [

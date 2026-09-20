@@ -2,7 +2,10 @@
   "id": "TE-PATH-018",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "TE-C14-rutuvulu"
+    {
+      "lesson": "TE-C14-rutuvulu",
+      "extension": "TE-EXT-018-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

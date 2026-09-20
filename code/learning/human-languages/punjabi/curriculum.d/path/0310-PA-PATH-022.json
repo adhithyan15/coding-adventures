@@ -2,17 +2,50 @@
   "id": "PA-PATH-022",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "PA-W06-three-field-labels",
-    "PA-W06-three-field-cues",
-    "PA-W06-two-field-supported",
-    "PA-W06-three-field-supported",
-    "PA-W06-selection-repair",
-    "PA-W06-spelling-repair",
-    "PA-W06-spacing-repair",
-    "PA-W06-placement-repair",
-    "PA-W06-mixed-repair",
-    "PA-W06-three-field-no-model",
-    "PA-R23-three-no-model-r1"
+    {
+      "lesson": "PA-W06-three-field-labels",
+      "extension": "PA-EXT-027-A1-THREE-FIELD-INTEGRATION"
+    },
+    {
+      "lesson": "PA-W06-three-field-cues",
+      "extension": "PA-EXT-027-A1-THREE-FIELD-INTEGRATION"
+    },
+    {
+      "lesson": "PA-W06-two-field-supported",
+      "extension": "PA-EXT-027-A1-THREE-FIELD-INTEGRATION"
+    },
+    {
+      "lesson": "PA-W06-three-field-supported",
+      "extension": "PA-EXT-027-A1-THREE-FIELD-INTEGRATION"
+    },
+    {
+      "lesson": "PA-W06-selection-repair",
+      "extension": "PA-EXT-027-A1-THREE-FIELD-INTEGRATION"
+    },
+    {
+      "lesson": "PA-W06-spelling-repair",
+      "extension": "PA-EXT-027-A1-THREE-FIELD-INTEGRATION"
+    },
+    {
+      "lesson": "PA-W06-spacing-repair",
+      "extension": "PA-EXT-027-A1-THREE-FIELD-INTEGRATION"
+    },
+    {
+      "lesson": "PA-W06-placement-repair",
+      "extension": "PA-EXT-027-A1-THREE-FIELD-INTEGRATION"
+    },
+    {
+      "lesson": "PA-W06-mixed-repair",
+      "extension": "PA-EXT-027-A1-THREE-FIELD-INTEGRATION"
+    },
+    {
+      "lesson": "PA-W06-three-field-no-model",
+      "extension": "PA-EXT-027-A1-THREE-FIELD-INTEGRATION"
+    },
+    {
+      "lesson": "PA-R23-three-no-model-r1",
+      "extension": "PA-EXT-027-A1-THREE-FIELD-INTEGRATION"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,8 +2,14 @@
   "id": "ES-PATH-416-STAY",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "ES-C416-quedarse",
-    "ES-C416-mayo"
+    {
+      "lesson": "ES-C416-quedarse",
+      "extension": "ES-EXT-416-STAY"
+    },
+    {
+      "lesson": "ES-C416-mayo",
+      "extension": "ES-EXT-416-STAY"
+    }
   ],
   "before": [],
   "inline": [

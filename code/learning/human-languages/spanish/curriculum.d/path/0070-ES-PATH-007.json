@@ -3,15 +3,36 @@
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
     "ES-C03-me",
-    "ES-C03-llamar",
+    {
+      "lesson": "ES-C03-llamar",
+      "extension": "ES-EXT-007-LANGUAGE-SPECIFIC"
+    },
     "ES-C03-me-llamo",
     "ES-C03-tu-usted",
-    "ES-C03-tu-usted-register",
-    "ES-C03-vos",
-    "ES-C03-usted-origin",
-    "ES-C03-repaso-nombre",
-    "ES-C03-quien",
-    "ES-C03-repaso-tu-usted"
+    {
+      "lesson": "ES-C03-tu-usted-register",
+      "extension": "ES-EXT-007-REGISTER"
+    },
+    {
+      "lesson": "ES-C03-vos",
+      "extension": "ES-EXT-007-VARIETY"
+    },
+    {
+      "lesson": "ES-C03-usted-origin",
+      "extension": "ES-EXT-007-ETYMOLOGY"
+    },
+    {
+      "lesson": "ES-C03-repaso-nombre",
+      "extension": "ES-EXT-007-CONSOLIDATION-NOMBRE"
+    },
+    {
+      "lesson": "ES-C03-quien",
+      "extension": "ES-EXT-007-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C03-repaso-tu-usted",
+      "extension": "ES-EXT-007-CONSOLIDATION-USTED"
+    }
   ],
   "before": [],
   "inline": [

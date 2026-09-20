@@ -2,15 +2,42 @@
   "id": "MW-PATH-015",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "MW-C16-hear-bas",
-    "MW-C16-bas",
-    "MW-C16-hear-gaadi",
-    "MW-C16-gaadi",
-    "MW-C16-hear-thela",
-    "MW-C16-thela",
-    "MW-R16-transport-three",
-    "MW-C16-transport-three",
-    "MW-R16-transport-close"
+    {
+      "lesson": "MW-C16-hear-bas",
+      "extension": "MW-EXT-029-TRANSPORT-THREE"
+    },
+    {
+      "lesson": "MW-C16-bas",
+      "extension": "MW-EXT-029-TRANSPORT-THREE"
+    },
+    {
+      "lesson": "MW-C16-hear-gaadi",
+      "extension": "MW-EXT-029-TRANSPORT-THREE"
+    },
+    {
+      "lesson": "MW-C16-gaadi",
+      "extension": "MW-EXT-029-TRANSPORT-THREE"
+    },
+    {
+      "lesson": "MW-C16-hear-thela",
+      "extension": "MW-EXT-029-TRANSPORT-THREE"
+    },
+    {
+      "lesson": "MW-C16-thela",
+      "extension": "MW-EXT-029-TRANSPORT-THREE"
+    },
+    {
+      "lesson": "MW-R16-transport-three",
+      "extension": "MW-EXT-029-TRANSPORT-THREE"
+    },
+    {
+      "lesson": "MW-C16-transport-three",
+      "extension": "MW-EXT-029-TRANSPORT-THREE"
+    },
+    {
+      "lesson": "MW-R16-transport-close",
+      "extension": "MW-EXT-029-TRANSPORT-THREE"
+    }
   ],
   "before": [],
   "inline": [

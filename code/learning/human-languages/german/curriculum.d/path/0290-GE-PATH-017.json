@@ -2,10 +2,22 @@
   "id": "GE-PATH-017",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "GE-C12-elf",
-    "GE-C12-zwoelf",
-    "GE-C12-lif",
-    "GE-C12-elf-zwoelf"
+    {
+      "lesson": "GE-C12-elf",
+      "extension": "GE-EXT-017-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GE-C12-zwoelf",
+      "extension": "GE-EXT-017-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GE-C12-lif",
+      "extension": "GE-EXT-017-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GE-C12-elf-zwoelf",
+      "extension": "GE-EXT-017-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

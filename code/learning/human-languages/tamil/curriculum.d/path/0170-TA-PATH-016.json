@@ -2,7 +2,10 @@
   "id": "TA-PATH-016",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "TA-C10-vaara-kizhamai"
+    {
+      "lesson": "TA-C10-vaara-kizhamai",
+      "extension": "TA-EXT-016-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

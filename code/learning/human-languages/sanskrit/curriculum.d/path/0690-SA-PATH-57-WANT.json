@@ -2,7 +2,10 @@
   "id": "SA-PATH-57-WANT",
   "spine_node": "SPINE-SAY-WHAT-I-WANT",
   "lessons": [
-    "SA-C57-icchati"
+    {
+      "lesson": "SA-C57-icchati",
+      "extension": "SA-EXT-057-WANT"
+    }
   ],
   "before": [],
   "inline": [

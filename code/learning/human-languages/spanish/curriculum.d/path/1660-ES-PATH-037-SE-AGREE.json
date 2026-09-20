@@ -2,7 +2,10 @@
   "id": "ES-PATH-037-SE-AGREE",
   "spine_node": "SPINE-GIVE-REASONS",
   "lessons": [
-    "ES-C52-se-venden"
+    {
+      "lesson": "ES-C52-se-venden",
+      "extension": "ES-EXT-037-SE-AGREE"
+    }
   ],
   "before": [],
   "inline": [

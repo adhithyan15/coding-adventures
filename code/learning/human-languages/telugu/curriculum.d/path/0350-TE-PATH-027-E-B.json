@@ -2,7 +2,10 @@
   "id": "TE-PATH-027-E-B",
   "spine_node": "SPINE-SAY-WHAT-I-LIKE",
   "lessons": [
-    "TE-C34-ishtam"
+    {
+      "lesson": "TE-C34-ishtam",
+      "extension": "TE-EXT-028-SOCIAL-VERBS-D"
+    }
   ],
   "before": [],
   "inline": [

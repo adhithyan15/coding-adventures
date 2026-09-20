@@ -3,9 +3,18 @@
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
     "IT-C02-prego",
-    "IT-C02-prego-go-ahead",
-    "IT-C02-prego-here-you-are",
-    "IT-C02-prego-come-again"
+    {
+      "lesson": "IT-C02-prego-go-ahead",
+      "extension": "IT-EXT-007-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "IT-C02-prego-here-you-are",
+      "extension": "IT-EXT-007-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "IT-C02-prego-come-again",
+      "extension": "IT-EXT-007-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

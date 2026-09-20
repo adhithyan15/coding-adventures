@@ -2,7 +2,10 @@
   "id": "ES-PATH-040-PERFECT-ALL",
   "spine_node": "SPINE-TALK-ABOUT-PAST",
   "lessons": [
-    "ES-C49-haber-completo"
+    {
+      "lesson": "ES-C49-haber-completo",
+      "extension": "ES-EXT-040-PERFECT-ALL"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,7 +2,10 @@
   "id": "LA-PATH-005",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "LA-C01-practice"
+    {
+      "lesson": "LA-C01-practice",
+      "extension": "LA-EXT-005-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [

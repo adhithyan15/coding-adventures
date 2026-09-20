@@ -2,11 +2,26 @@
   "id": "HI-PATH-62-HANDS",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "HI-C62-rope",
-    "HI-C62-needle",
-    "HI-C62-basket",
-    "HI-C62-clay",
-    "HI-C62-wood"
+    {
+      "lesson": "HI-C62-rope",
+      "extension": "HI-EXT-62-HANDS"
+    },
+    {
+      "lesson": "HI-C62-needle",
+      "extension": "HI-EXT-62-HANDS"
+    },
+    {
+      "lesson": "HI-C62-basket",
+      "extension": "HI-EXT-62-HANDS"
+    },
+    {
+      "lesson": "HI-C62-clay",
+      "extension": "HI-EXT-62-HANDS"
+    },
+    {
+      "lesson": "HI-C62-wood",
+      "extension": "HI-EXT-62-HANDS"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,11 +2,26 @@
   "id": "TE-PATH-56-HOUSE",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "TE-C56-mat",
-    "TE-C56-basket",
-    "TE-C56-knife",
-    "TE-C56-vessel",
-    "TE-C56-box"
+    {
+      "lesson": "TE-C56-mat",
+      "extension": "TE-EXT-56-HOUSE"
+    },
+    {
+      "lesson": "TE-C56-basket",
+      "extension": "TE-EXT-56-HOUSE"
+    },
+    {
+      "lesson": "TE-C56-knife",
+      "extension": "TE-EXT-56-HOUSE"
+    },
+    {
+      "lesson": "TE-C56-vessel",
+      "extension": "TE-EXT-56-HOUSE"
+    },
+    {
+      "lesson": "TE-C56-box",
+      "extension": "TE-EXT-56-HOUSE"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,7 +2,10 @@
   "id": "KA-PATH-026-E-B",
   "spine_node": "SPINE-SAY-WHAT-I-LIKE",
   "lessons": [
-    "KA-C34-ishta"
+    {
+      "lesson": "KA-C34-ishta",
+      "extension": "KA-EXT-027-SOCIAL-VERBS-D"
+    }
   ],
   "before": [],
   "inline": [

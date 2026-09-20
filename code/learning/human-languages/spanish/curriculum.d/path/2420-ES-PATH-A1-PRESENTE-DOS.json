@@ -2,7 +2,10 @@
   "id": "ES-PATH-A1-PRESENTE-DOS",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C66-hablo-dos-lecturas"
+    {
+      "lesson": "ES-C66-hablo-dos-lecturas",
+      "extension": "ES-EXT-A1-PRESENTE-DOS"
+    }
   ],
   "before": [],
   "inline": [

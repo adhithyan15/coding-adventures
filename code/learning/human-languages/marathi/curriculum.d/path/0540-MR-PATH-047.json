@@ -2,9 +2,18 @@
   "id": "MR-PATH-047",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "MR-C44-ujva",
-    "MR-C44-daava",
-    "MR-R44-directions"
+    {
+      "lesson": "MR-C44-ujva",
+      "extension": "MR-EXT-060-RIGHT-AND-LEFT"
+    },
+    {
+      "lesson": "MR-C44-daava",
+      "extension": "MR-EXT-060-RIGHT-AND-LEFT"
+    },
+    {
+      "lesson": "MR-R44-directions",
+      "extension": "MR-EXT-060-RIGHT-AND-LEFT"
+    }
   ],
   "before": [],
   "inline": [

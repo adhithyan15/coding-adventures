@@ -2,7 +2,10 @@
   "id": "TA-PATH-035",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "TA-C38-vidai"
+    {
+      "lesson": "TA-C38-vidai",
+      "extension": "TA-EXT-035-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

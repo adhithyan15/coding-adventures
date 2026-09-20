@@ -2,11 +2,26 @@
   "id": "ML-PATH-59-AIR",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "ML-C59-wind",
-    "ML-C59-sand",
-    "ML-C59-mud",
-    "ML-C59-smoke",
-    "ML-C59-ember"
+    {
+      "lesson": "ML-C59-wind",
+      "extension": "ML-EXT-59-AIR"
+    },
+    {
+      "lesson": "ML-C59-sand",
+      "extension": "ML-EXT-59-AIR"
+    },
+    {
+      "lesson": "ML-C59-mud",
+      "extension": "ML-EXT-59-AIR"
+    },
+    {
+      "lesson": "ML-C59-smoke",
+      "extension": "ML-EXT-59-AIR"
+    },
+    {
+      "lesson": "ML-C59-ember",
+      "extension": "ML-EXT-59-AIR"
+    }
   ],
   "before": [],
   "inline": [

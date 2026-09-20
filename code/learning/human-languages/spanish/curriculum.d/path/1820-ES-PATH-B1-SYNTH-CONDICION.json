@@ -2,7 +2,10 @@
   "id": "ES-PATH-B1-SYNTH-CONDICION",
   "spine_node": "SPINE-EXPRESS-CONDITION",
   "lessons": [
-    "ES-C55-sintesis-condicion"
+    {
+      "lesson": "ES-C55-sintesis-condicion",
+      "extension": "ES-EXT-B1-SYNTH-CONDICION"
+    }
   ],
   "before": [],
   "inline": [

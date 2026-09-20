@@ -902,6 +902,121 @@ function needsKeyOrder(
 }
 
 /**
+ * Convert the public curriculum projection back to conflict-resistant owners.
+ *
+ * A path already owns the exact prerequisite-safe order. When every lesson of
+ * one attached extension appears exactly once in that path walk, and no lesson
+ * could belong to two attached extensions, tag those path entries with their
+ * extension owner and omit the extension's reverse `lessons` array. Ambiguous
+ * or partial shapes keep their existing arrays unchanged.
+ */
+function curriculumOwnerProjection(
+  document: Record<string, unknown>,
+): Record<string, unknown> {
+  if (!Array.isArray(document.path) || !Array.isArray(document.extensions)) {
+    throw new Error("curriculum projection: path and extensions must be arrays");
+  }
+
+  type Owner = Record<string, unknown>;
+  const paths = document.path.map((raw, index) => {
+    if (typeof raw !== "object" || raw === null || Array.isArray(raw)) {
+      throw new Error(`curriculum projection: path[${index}] must be an object`);
+    }
+    return { ...(raw as Owner) };
+  });
+  const extensions = document.extensions.map((raw, index) => {
+    if (typeof raw !== "object" || raw === null || Array.isArray(raw)) {
+      throw new Error(`curriculum projection: extensions[${index}] must be an object`);
+    }
+    return { ...(raw as Owner) };
+  });
+
+  const extensionLessons = new Map<string, string[]>();
+  for (const [index, extension] of extensions.entries()) {
+    if (typeof extension.id !== "string" || !Array.isArray(extension.lessons)) {
+      throw new Error(
+        `curriculum projection: extensions[${index}] needs string id and lessons array`,
+      );
+    }
+    if (!extension.lessons.every((lesson) => typeof lesson === "string")) {
+      throw new Error(
+        `curriculum projection: extension '${extension.id}' lessons must be strings`,
+      );
+    }
+    extensionLessons.set(extension.id, extension.lessons as string[]);
+  }
+
+  type Occurrence = { path: number; lesson: number; extension: string };
+  const occurrences = new Map<string, Occurrence[]>();
+  const ambiguousExtensions = new Set<string>();
+  for (const [pathIndex, path] of paths.entries()) {
+    if (!Array.isArray(path.lessons)) {
+      throw new Error(`curriculum projection: path[${pathIndex}].lessons must be an array`);
+    }
+    const attached = new Set<string>();
+    for (const relation of ["before", "inline", "after"] as const) {
+      const values = path[relation];
+      if (!Array.isArray(values) || !values.every((value) => typeof value === "string")) {
+        throw new Error(`curriculum projection: path[${pathIndex}].${relation} must be strings`);
+      }
+      for (const value of values as string[]) attached.add(value);
+    }
+    for (const [lessonIndex, lesson] of path.lessons.entries()) {
+      if (typeof lesson !== "string") {
+        throw new Error(
+          `curriculum projection: public path[${pathIndex}].lessons[${lessonIndex}] must be a string`,
+        );
+      }
+      const candidates = [...attached].filter((extension) =>
+        extensionLessons.get(extension)?.includes(lesson),
+      );
+      if (candidates.length > 1) {
+        for (const extension of candidates) ambiguousExtensions.add(extension);
+        continue;
+      }
+      if (candidates.length === 1) {
+        const extension = candidates[0]!;
+        const list = occurrences.get(extension) ?? [];
+        list.push({ path: pathIndex, lesson: lessonIndex, extension });
+        occurrences.set(extension, list);
+      }
+    }
+  }
+
+  const derived = new Set<string>();
+  for (const [extension, lessons] of extensionLessons) {
+    if (lessons.length === 0 || ambiguousExtensions.has(extension)) continue;
+    const found = occurrences.get(extension) ?? [];
+    const foundLessons = found.map(
+      ({ path, lesson }) => (paths[path]!.lessons as unknown[])[lesson],
+    );
+    if (
+      foundLessons.length === lessons.length &&
+      foundLessons.every((lesson, index) => lesson === lessons[index])
+    ) {
+      derived.add(extension);
+    }
+  }
+
+  for (const extension of extensions) {
+    if (derived.has(extension.id as string)) delete extension.lessons;
+  }
+  for (const extension of derived) {
+    for (const occurrence of occurrences.get(extension) ?? []) {
+      const path = paths[occurrence.path]!;
+      const lessons = [...(path.lessons as unknown[])];
+      lessons[occurrence.lesson] = {
+        lesson: lessons[occurrence.lesson],
+        extension,
+      };
+      path.lessons = lessons;
+    }
+  }
+
+  return { ...document, path: paths, extensions };
+}
+
+/**
  * The shard files a monolith would produce, as a filename -> contents map.
  *
  * Pure: it computes bytes and touches no disk, so `--shard` and `--check` share
@@ -924,12 +1039,17 @@ export function shardContents(
   if (plan.grouping !== undefined)
     return groupedShardContents(document, plan, plan.grouping);
 
+  const projected =
+    plan.projection === "curriculum"
+      ? curriculumOwnerProjection(document)
+      : document;
+
   const out = new Map<string, string>();
   out.set(
     META_SHARD,
     serialize(
       metaOf(
-        document,
+        projected,
         plan.sections.map((s) => s.key),
       ),
     ),
@@ -939,7 +1059,7 @@ export function shardContents(
     // An array section reads `[element, …]`; an object section reads
     // `{id: element, …}` and takes its id from the KEY rather than from `idOf`,
     // because that is where an object keeps it.
-    const raw = document[section.key];
+    const raw = projected[section.key];
     const entries: {
       element: unknown;
       id: string | undefined;

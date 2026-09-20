@@ -2,12 +2,30 @@
   "id": "FR-PATH-A1-PRONOUNS",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "FR-C39-qui",
-    "FR-C39-que",
-    "FR-C39-quoi",
-    "FR-C39-moi-toi",
-    "FR-C39-lui-elle",
-    "FR-R39-qui-est-ce"
+    {
+      "lesson": "FR-C39-qui",
+      "extension": "FR-EXT-A1-PRONOUNS"
+    },
+    {
+      "lesson": "FR-C39-que",
+      "extension": "FR-EXT-A1-PRONOUNS"
+    },
+    {
+      "lesson": "FR-C39-quoi",
+      "extension": "FR-EXT-A1-PRONOUNS"
+    },
+    {
+      "lesson": "FR-C39-moi-toi",
+      "extension": "FR-EXT-A1-PRONOUNS"
+    },
+    {
+      "lesson": "FR-C39-lui-elle",
+      "extension": "FR-EXT-A1-PRONOUNS"
+    },
+    {
+      "lesson": "FR-R39-qui-est-ce",
+      "extension": "FR-EXT-A1-PRONOUNS"
+    }
   ],
   "before": [],
   "inline": [

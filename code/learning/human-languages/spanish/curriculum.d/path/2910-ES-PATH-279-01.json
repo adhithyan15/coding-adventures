@@ -2,10 +2,22 @@
   "id": "ES-PATH-279-01",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C279-puerta",
-    "ES-C279-ventana",
-    "ES-C279-silla",
-    "ES-C279-cama"
+    {
+      "lesson": "ES-C279-puerta",
+      "extension": "ES-EXT-279-HABITACION"
+    },
+    {
+      "lesson": "ES-C279-ventana",
+      "extension": "ES-EXT-279-HABITACION"
+    },
+    {
+      "lesson": "ES-C279-silla",
+      "extension": "ES-EXT-279-HABITACION"
+    },
+    {
+      "lesson": "ES-C279-cama",
+      "extension": "ES-EXT-279-HABITACION"
+    }
   ],
   "before": [],
   "inline": [

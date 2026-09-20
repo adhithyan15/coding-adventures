@@ -2,11 +2,26 @@
   "id": "ES-PATH-362-01",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "ES-C362-tierra",
-    "ES-C362-mar",
-    "ES-C362-aire",
-    "ES-C362-fuego",
-    "ES-C362-luna"
+    {
+      "lesson": "ES-C362-tierra",
+      "extension": "ES-EXT-362-WHERE"
+    },
+    {
+      "lesson": "ES-C362-mar",
+      "extension": "ES-EXT-362-WHERE"
+    },
+    {
+      "lesson": "ES-C362-aire",
+      "extension": "ES-EXT-362-WHERE"
+    },
+    {
+      "lesson": "ES-C362-fuego",
+      "extension": "ES-EXT-362-WHERE"
+    },
+    {
+      "lesson": "ES-C362-luna",
+      "extension": "ES-EXT-362-WHERE"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,7 +2,10 @@
   "id": "UR-PATH-001",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "UR-C01-salam"
+    {
+      "lesson": "UR-C01-salam",
+      "extension": "UR-EXT-001-INLINE-SCRIPT"
+    }
   ],
   "before": [],
   "inline": [

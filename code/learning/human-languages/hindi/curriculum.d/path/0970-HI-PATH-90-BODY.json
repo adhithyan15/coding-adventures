@@ -2,12 +2,30 @@
   "id": "HI-PATH-90-BODY",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "HI-C82-lambaa",
-    "HI-C82-patlaa",
-    "HI-C82-motaa",
-    "HI-C82-naataa",
-    "HI-C82-repaso-shareer",
-    "HI-C82-sintesis-shareer"
+    {
+      "lesson": "HI-C82-lambaa",
+      "extension": "HI-EXT-90-BODY"
+    },
+    {
+      "lesson": "HI-C82-patlaa",
+      "extension": "HI-EXT-90-BODY"
+    },
+    {
+      "lesson": "HI-C82-motaa",
+      "extension": "HI-EXT-90-BODY"
+    },
+    {
+      "lesson": "HI-C82-naataa",
+      "extension": "HI-EXT-90-BODY"
+    },
+    {
+      "lesson": "HI-C82-repaso-shareer",
+      "extension": "HI-EXT-90-BODY"
+    },
+    {
+      "lesson": "HI-C82-sintesis-shareer",
+      "extension": "HI-EXT-90-BODY"
+    }
   ],
   "before": [],
   "inline": [

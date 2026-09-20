@@ -2,10 +2,22 @@
   "id": "TE-PATH-45-FAMILY",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "TE-C45-grandfather",
-    "TE-C45-grandmother",
-    "TE-C45-husband",
-    "TE-C45-wife"
+    {
+      "lesson": "TE-C45-grandfather",
+      "extension": "TE-EXT-45-FAMILY"
+    },
+    {
+      "lesson": "TE-C45-grandmother",
+      "extension": "TE-EXT-45-FAMILY"
+    },
+    {
+      "lesson": "TE-C45-husband",
+      "extension": "TE-EXT-45-FAMILY"
+    },
+    {
+      "lesson": "TE-C45-wife",
+      "extension": "TE-EXT-45-FAMILY"
+    }
   ],
   "before": [],
   "inline": [

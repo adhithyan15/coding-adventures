@@ -2,16 +2,46 @@
   "id": "MR-PATH-023",
   "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
   "lessons": [
-    "MR-A1F04-first-three-select",
-    "MR-A1F05-last-three-select",
-    "MR-A1F06-first-three-supported",
-    "MR-A1F07-first-three-spelling",
-    "MR-A1F08-last-three-supported",
-    "MR-A1F09-last-three-agreement",
-    "MR-A1F10-first-three-delayed",
-    "MR-A1F11-last-three-delayed",
-    "MR-A1F12-six-field-supported",
-    "MR-A1F13-six-field-independent"
+    {
+      "lesson": "MR-A1F04-first-three-select",
+      "extension": "MR-EXT-026-A1-PRACTICAL-FORM"
+    },
+    {
+      "lesson": "MR-A1F05-last-three-select",
+      "extension": "MR-EXT-026-A1-PRACTICAL-FORM"
+    },
+    {
+      "lesson": "MR-A1F06-first-three-supported",
+      "extension": "MR-EXT-026-A1-PRACTICAL-FORM"
+    },
+    {
+      "lesson": "MR-A1F07-first-three-spelling",
+      "extension": "MR-EXT-026-A1-PRACTICAL-FORM"
+    },
+    {
+      "lesson": "MR-A1F08-last-three-supported",
+      "extension": "MR-EXT-026-A1-PRACTICAL-FORM"
+    },
+    {
+      "lesson": "MR-A1F09-last-three-agreement",
+      "extension": "MR-EXT-026-A1-PRACTICAL-FORM"
+    },
+    {
+      "lesson": "MR-A1F10-first-three-delayed",
+      "extension": "MR-EXT-026-A1-PRACTICAL-FORM"
+    },
+    {
+      "lesson": "MR-A1F11-last-three-delayed",
+      "extension": "MR-EXT-026-A1-PRACTICAL-FORM"
+    },
+    {
+      "lesson": "MR-A1F12-six-field-supported",
+      "extension": "MR-EXT-026-A1-PRACTICAL-FORM"
+    },
+    {
+      "lesson": "MR-A1F13-six-field-independent",
+      "extension": "MR-EXT-026-A1-PRACTICAL-FORM"
+    }
   ],
   "before": [],
   "inline": [],

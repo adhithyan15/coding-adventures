@@ -2,11 +2,26 @@
   "id": "TE-PATH-55-ROAD",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "TE-C55-river",
-    "TE-C55-tank",
-    "TE-C55-hill",
-    "TE-C55-village",
-    "TE-C55-path"
+    {
+      "lesson": "TE-C55-river",
+      "extension": "TE-EXT-55-ROAD"
+    },
+    {
+      "lesson": "TE-C55-tank",
+      "extension": "TE-EXT-55-ROAD"
+    },
+    {
+      "lesson": "TE-C55-hill",
+      "extension": "TE-EXT-55-ROAD"
+    },
+    {
+      "lesson": "TE-C55-village",
+      "extension": "TE-EXT-55-ROAD"
+    },
+    {
+      "lesson": "TE-C55-path",
+      "extension": "TE-EXT-55-ROAD"
+    }
   ],
   "before": [],
   "inline": [

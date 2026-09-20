@@ -2,11 +2,26 @@
   "id": "MR-PATH-019",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "MR-C05-bolne",
-    "MR-C05-mi-marathi-bolto",
-    "MR-C05-rahne",
-    "MR-C05-kaam-karne",
-    "MR-C05-practice"
+    {
+      "lesson": "MR-C05-bolne",
+      "extension": "MR-EXT-019-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "MR-C05-mi-marathi-bolto",
+      "extension": "MR-EXT-019-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "MR-C05-rahne",
+      "extension": "MR-EXT-019-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "MR-C05-kaam-karne",
+      "extension": "MR-EXT-019-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "MR-C05-practice",
+      "extension": "MR-EXT-019-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

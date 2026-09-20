@@ -2,12 +2,30 @@
   "id": "ES-PATH-025",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "ES-C27-los-meses",
-    "ES-C28-mediodia-medianoche",
-    "ES-C29-la-hora",
-    "ES-C30-el-tiempo",
-    "ES-C30-hace-calor",
-    "ES-C30-llueve"
+    {
+      "lesson": "ES-C27-los-meses",
+      "extension": "ES-EXT-025-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C28-mediodia-medianoche",
+      "extension": "ES-EXT-025-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C29-la-hora",
+      "extension": "ES-EXT-025-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C30-el-tiempo",
+      "extension": "ES-EXT-025-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C30-hace-calor",
+      "extension": "ES-EXT-025-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C30-llueve",
+      "extension": "ES-EXT-025-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

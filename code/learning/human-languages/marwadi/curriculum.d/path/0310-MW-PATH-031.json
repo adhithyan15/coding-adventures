@@ -2,30 +2,102 @@
   "id": "MW-PATH-031",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "MW-W37-i",
-    "MW-C37-hear-igyaara",
-    "MW-C37-igyaara",
-    "MW-C37-hear-baara",
-    "MW-C37-baara",
-    "MW-C37-hear-tera",
-    "MW-C37-tera",
-    "MW-C37-hear-chauda",
-    "MW-C37-chauda",
-    "MW-C37-hear-pandara",
-    "MW-C37-pandara",
-    "MW-R37-count-fifteen",
-    "MW-W38-lla",
-    "MW-C38-hear-sola",
-    "MW-C38-sola",
-    "MW-W38-a",
-    "MW-C38-hear-satara",
-    "MW-C38-satara",
-    "MW-C38-hear-athara",
-    "MW-C38-athara",
-    "MW-W38-u",
-    "MW-C38-hear-ughanis",
-    "MW-C38-ughanis",
-    "MW-R38-count-twenty"
+    {
+      "lesson": "MW-W37-i",
+      "extension": "MW-EXT-045-TEENS"
+    },
+    {
+      "lesson": "MW-C37-hear-igyaara",
+      "extension": "MW-EXT-045-TEENS"
+    },
+    {
+      "lesson": "MW-C37-igyaara",
+      "extension": "MW-EXT-045-TEENS"
+    },
+    {
+      "lesson": "MW-C37-hear-baara",
+      "extension": "MW-EXT-045-TEENS"
+    },
+    {
+      "lesson": "MW-C37-baara",
+      "extension": "MW-EXT-045-TEENS"
+    },
+    {
+      "lesson": "MW-C37-hear-tera",
+      "extension": "MW-EXT-045-TEENS"
+    },
+    {
+      "lesson": "MW-C37-tera",
+      "extension": "MW-EXT-045-TEENS"
+    },
+    {
+      "lesson": "MW-C37-hear-chauda",
+      "extension": "MW-EXT-045-TEENS"
+    },
+    {
+      "lesson": "MW-C37-chauda",
+      "extension": "MW-EXT-045-TEENS"
+    },
+    {
+      "lesson": "MW-C37-hear-pandara",
+      "extension": "MW-EXT-045-TEENS"
+    },
+    {
+      "lesson": "MW-C37-pandara",
+      "extension": "MW-EXT-045-TEENS"
+    },
+    {
+      "lesson": "MW-R37-count-fifteen",
+      "extension": "MW-EXT-045-TEENS"
+    },
+    {
+      "lesson": "MW-W38-lla",
+      "extension": "MW-EXT-045-TEENS"
+    },
+    {
+      "lesson": "MW-C38-hear-sola",
+      "extension": "MW-EXT-045-TEENS"
+    },
+    {
+      "lesson": "MW-C38-sola",
+      "extension": "MW-EXT-045-TEENS"
+    },
+    {
+      "lesson": "MW-W38-a",
+      "extension": "MW-EXT-045-TEENS"
+    },
+    {
+      "lesson": "MW-C38-hear-satara",
+      "extension": "MW-EXT-045-TEENS"
+    },
+    {
+      "lesson": "MW-C38-satara",
+      "extension": "MW-EXT-045-TEENS"
+    },
+    {
+      "lesson": "MW-C38-hear-athara",
+      "extension": "MW-EXT-045-TEENS"
+    },
+    {
+      "lesson": "MW-C38-athara",
+      "extension": "MW-EXT-045-TEENS"
+    },
+    {
+      "lesson": "MW-W38-u",
+      "extension": "MW-EXT-045-TEENS"
+    },
+    {
+      "lesson": "MW-C38-hear-ughanis",
+      "extension": "MW-EXT-045-TEENS"
+    },
+    {
+      "lesson": "MW-C38-ughanis",
+      "extension": "MW-EXT-045-TEENS"
+    },
+    {
+      "lesson": "MW-R38-count-twenty",
+      "extension": "MW-EXT-045-TEENS"
+    }
   ],
   "before": [],
   "inline": [

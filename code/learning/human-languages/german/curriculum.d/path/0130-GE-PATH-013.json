@@ -2,22 +2,55 @@
   "id": "GE-PATH-013",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "GE-C04-sehen",
-    "GE-C04-wieder",
-    "GE-C04-auf",
+    {
+      "lesson": "GE-C04-sehen",
+      "extension": "GE-EXT-013-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GE-C04-wieder",
+      "extension": "GE-EXT-013-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GE-C04-auf",
+      "extension": "GE-EXT-013-LANGUAGE-SPECIFIC"
+    },
     "GE-C04-auf-wiedersehen",
     "GE-C04-tschuss",
-    "GE-C04-bis",
-    "GE-C04-bald",
+    {
+      "lesson": "GE-C04-bis",
+      "extension": "GE-EXT-013-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GE-C04-bald",
+      "extension": "GE-EXT-013-LANGUAGE-SPECIFIC"
+    },
     "GE-C04-bis-bald",
-    "GE-C04-spaet",
+    {
+      "lesson": "GE-C04-spaet",
+      "extension": "GE-EXT-013-LANGUAGE-SPECIFIC"
+    },
     "GE-C04-bis-spater",
-    "GE-C04-morgen-tomorrow",
+    {
+      "lesson": "GE-C04-morgen-tomorrow",
+      "extension": "GE-EXT-013-LANGUAGE-SPECIFIC"
+    },
     "GE-C04-bis-morgen",
-    "GE-W01-eszett",
-    "GE-W02-umlauts",
-    "GE-W03-capitalization",
-    "GE-C04-practice"
+    {
+      "lesson": "GE-W01-eszett",
+      "extension": "GE-EXT-013-WRITING-KIT"
+    },
+    {
+      "lesson": "GE-W02-umlauts",
+      "extension": "GE-EXT-013-WRITING-KIT"
+    },
+    {
+      "lesson": "GE-W03-capitalization",
+      "extension": "GE-EXT-013-WRITING-KIT"
+    },
+    {
+      "lesson": "GE-C04-practice",
+      "extension": "GE-EXT-013-CONSOLIDATION"
+    }
   ],
   "before": [
     "GE-EXT-013-LANGUAGE-SPECIFIC"

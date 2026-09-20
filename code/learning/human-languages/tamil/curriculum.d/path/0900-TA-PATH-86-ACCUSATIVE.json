@@ -2,10 +2,22 @@
   "id": "TA-PATH-86-ACCUSATIVE",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "TA-C86-ai",
-    "TA-C86-ennai-unnai",
-    "TA-C86-rational",
-    "TA-R86-ai-recall"
+    {
+      "lesson": "TA-C86-ai",
+      "extension": "TA-EXT-86-ACCUSATIVE"
+    },
+    {
+      "lesson": "TA-C86-ennai-unnai",
+      "extension": "TA-EXT-86-ACCUSATIVE"
+    },
+    {
+      "lesson": "TA-C86-rational",
+      "extension": "TA-EXT-86-ACCUSATIVE"
+    },
+    {
+      "lesson": "TA-R86-ai-recall",
+      "extension": "TA-EXT-86-ACCUSATIVE"
+    }
   ],
   "before": [],
   "inline": [

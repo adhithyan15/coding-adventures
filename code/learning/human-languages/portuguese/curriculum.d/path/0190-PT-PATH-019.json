@@ -2,10 +2,22 @@
   "id": "PT-PATH-019",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "PT-C14-ter",
-    "PT-C14-idade",
-    "PT-C15-preterito-perfeito",
-    "PT-C15-tenho-falado"
+    {
+      "lesson": "PT-C14-ter",
+      "extension": "PT-EXT-019-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "PT-C14-idade",
+      "extension": "PT-EXT-019-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "PT-C15-preterito-perfeito",
+      "extension": "PT-EXT-019-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "PT-C15-tenho-falado",
+      "extension": "PT-EXT-019-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,9 +2,18 @@
   "id": "LA-PATH-028",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "LA-C40-audio",
-    "LA-C40-dormio",
-    "LA-C40-sedeo"
+    {
+      "lesson": "LA-C40-audio",
+      "extension": "LA-EXT-028-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "LA-C40-dormio",
+      "extension": "LA-EXT-028-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "LA-C40-sedeo",
+      "extension": "LA-EXT-028-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

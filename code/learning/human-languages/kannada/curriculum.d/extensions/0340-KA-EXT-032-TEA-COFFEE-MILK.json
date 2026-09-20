@@ -4,10 +4,5 @@
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can politely ask for tea, coffee or milk in Kannada, and trace each word back along the road it travelled to get here.",
-  "prerequisites": [],
-  "lessons": [
-    "KA-C39-chaha",
-    "KA-C39-kaapi",
-    "KA-C39-haalu"
-  ]
+  "prerequisites": []
 }

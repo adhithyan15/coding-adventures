@@ -2,11 +2,26 @@
   "id": "ES-PATH-314-01",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "ES-C314-brazo",
-    "ES-C314-pierna",
-    "ES-C314-pie",
-    "ES-C314-diente",
-    "ES-C314-oido"
+    {
+      "lesson": "ES-C314-brazo",
+      "extension": "ES-EXT-314-BODY"
+    },
+    {
+      "lesson": "ES-C314-pierna",
+      "extension": "ES-EXT-314-BODY"
+    },
+    {
+      "lesson": "ES-C314-pie",
+      "extension": "ES-EXT-314-BODY"
+    },
+    {
+      "lesson": "ES-C314-diente",
+      "extension": "ES-EXT-314-BODY"
+    },
+    {
+      "lesson": "ES-C314-oido",
+      "extension": "ES-EXT-314-BODY"
+    }
   ],
   "before": [],
   "inline": [

@@ -3,9 +3,15 @@
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
     "HI-C04-chalta-hun",
-    "HI-C04-milenge",
+    {
+      "lesson": "HI-C04-milenge",
+      "extension": "HI-EXT-009-LANGUAGE-SPECIFIC"
+    },
     "HI-C04-kal-milte-hain",
-    "HI-C04-phir",
+    {
+      "lesson": "HI-C04-phir",
+      "extension": "HI-EXT-009-LANGUAGE-SPECIFIC"
+    },
     "HI-C04-phir-milenge"
   ],
   "before": [],

@@ -2,10 +2,22 @@
   "id": "TA-PATH-79-WHEN",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "TA-C79-when-question",
-    "TA-C79-then",
-    "TA-W34-read-eppothu",
-    "TA-C79-when-clause"
+    {
+      "lesson": "TA-C79-when-question",
+      "extension": "TA-EXT-79-WHEN"
+    },
+    {
+      "lesson": "TA-C79-then",
+      "extension": "TA-EXT-79-WHEN"
+    },
+    {
+      "lesson": "TA-W34-read-eppothu",
+      "extension": "TA-EXT-79-WHEN"
+    },
+    {
+      "lesson": "TA-C79-when-clause",
+      "extension": "TA-EXT-79-WHEN"
+    }
   ],
   "before": [],
   "inline": [

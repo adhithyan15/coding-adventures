@@ -4,10 +4,5 @@
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can produce the present-tense forms of the eight verbs Latin leans on hardest, and trace each one into the English words it left behind.",
-  "prerequisites": [],
-  "lessons": [
-    "LA-C37-sum",
-    "LA-C37-habeo",
-    "LA-C37-eo"
-  ]
+  "prerequisites": []
 }

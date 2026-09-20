@@ -2,12 +2,30 @@
   "id": "FR-PATH-A1-JOINERS",
   "spine_node": "SPINE-SAY-WHY",
   "lessons": [
-    "FR-C36-svo",
-    "FR-C36-et",
-    "FR-C36-ou-conj",
-    "FR-C36-mais",
-    "FR-C36-parce-que",
-    "FR-R36-deux-idees"
+    {
+      "lesson": "FR-C36-svo",
+      "extension": "FR-EXT-A1-JOINERS"
+    },
+    {
+      "lesson": "FR-C36-et",
+      "extension": "FR-EXT-A1-JOINERS"
+    },
+    {
+      "lesson": "FR-C36-ou-conj",
+      "extension": "FR-EXT-A1-JOINERS"
+    },
+    {
+      "lesson": "FR-C36-mais",
+      "extension": "FR-EXT-A1-JOINERS"
+    },
+    {
+      "lesson": "FR-C36-parce-que",
+      "extension": "FR-EXT-A1-JOINERS"
+    },
+    {
+      "lesson": "FR-R36-deux-idees",
+      "extension": "FR-EXT-A1-JOINERS"
+    }
   ],
   "before": [],
   "inline": [

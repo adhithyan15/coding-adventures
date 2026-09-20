@@ -2,7 +2,10 @@
   "id": "LA-PATH-026",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "LA-C38-cogito"
+    {
+      "lesson": "LA-C38-cogito",
+      "extension": "LA-EXT-026-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

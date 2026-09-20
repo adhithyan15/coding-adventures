@@ -2,10 +2,22 @@
   "id": "ML-PATH-82-ADDRESS",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "ML-C82-chettaa",
-    "ML-C82-chechi-address",
-    "ML-C82-greeting-register",
-    "ML-R82-address-recall"
+    {
+      "lesson": "ML-C82-chettaa",
+      "extension": "ML-EXT-82-ADDRESS"
+    },
+    {
+      "lesson": "ML-C82-chechi-address",
+      "extension": "ML-EXT-82-ADDRESS"
+    },
+    {
+      "lesson": "ML-C82-greeting-register",
+      "extension": "ML-EXT-82-ADDRESS"
+    },
+    {
+      "lesson": "ML-R82-address-recall",
+      "extension": "ML-EXT-82-ADDRESS"
+    }
   ],
   "before": [],
   "inline": [

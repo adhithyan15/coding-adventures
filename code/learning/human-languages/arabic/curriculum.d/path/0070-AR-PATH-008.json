@@ -2,20 +2,53 @@
   "id": "AR-PATH-008",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "AR-W04-dots-family-nun-ta",
-    "AR-W05-ya-and-my-name",
-    "AR-W06-harakat-and-hamza",
-    "AR-W06-sukun-shadda-tanwin",
-    "AR-W06-hamza",
-    "AR-W07-hook-family-ha-kha",
-    "AR-W08-kaf-and-ra",
-    "AR-W09-khayr-bikhayr",
+    {
+      "lesson": "AR-W04-dots-family-nun-ta",
+      "extension": "AR-EXT-008-SCRIPT"
+    },
+    {
+      "lesson": "AR-W05-ya-and-my-name",
+      "extension": "AR-EXT-008-SCRIPT"
+    },
+    {
+      "lesson": "AR-W06-harakat-and-hamza",
+      "extension": "AR-EXT-008-SCRIPT"
+    },
+    {
+      "lesson": "AR-W06-sukun-shadda-tanwin",
+      "extension": "AR-EXT-008-SCRIPT"
+    },
+    {
+      "lesson": "AR-W06-hamza",
+      "extension": "AR-EXT-008-SCRIPT"
+    },
+    {
+      "lesson": "AR-W07-hook-family-ha-kha",
+      "extension": "AR-EXT-008-SCRIPT"
+    },
+    {
+      "lesson": "AR-W08-kaf-and-ra",
+      "extension": "AR-EXT-008-SCRIPT"
+    },
+    {
+      "lesson": "AR-W09-khayr-bikhayr",
+      "extension": "AR-EXT-008-SCRIPT"
+    },
     "AR-C03-kayfa",
-    "AR-C03-hal",
+    {
+      "lesson": "AR-C03-hal",
+      "extension": "AR-EXT-008-LANGUAGE-SPECIFIC"
+    },
     "AR-C03-kayfa-haluka",
     "AR-C03-bi-khayr",
-    "AR-C03-al-hamdu-lillah",
-    "AR-C03-practice"
+    {
+      "lesson": "AR-C03-al-hamdu-lillah",
+      "extension": "AR-EXT-008-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "AR-C03-practice",
+      "extension": "AR-EXT-008-CONSOLIDATION"
+    }
   ],
   "before": [
     "AR-EXT-008-SCRIPT"

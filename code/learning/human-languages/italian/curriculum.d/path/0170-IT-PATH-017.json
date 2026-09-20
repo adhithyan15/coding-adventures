@@ -2,8 +2,14 @@
   "id": "IT-PATH-017",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "IT-C12-numeri-11-16",
-    "IT-C12-numeri-17-20"
+    {
+      "lesson": "IT-C12-numeri-11-16",
+      "extension": "IT-EXT-017-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "IT-C12-numeri-17-20",
+      "extension": "IT-EXT-017-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,14 +2,38 @@
   "id": "HI-PATH-92-POSSESSIVE",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "HI-C84-uska",
-    "HI-C84-hamara",
-    "HI-C84-tumhara",
-    "HI-C84-apna",
-    "HI-C84-mere-paas",
-    "HI-C84-mere-liye",
-    "HI-C84-repaso-kiska",
-    "HI-C84-sintesis-mere-paas"
+    {
+      "lesson": "HI-C84-uska",
+      "extension": "HI-EXT-92-POSSESSIVE"
+    },
+    {
+      "lesson": "HI-C84-hamara",
+      "extension": "HI-EXT-92-POSSESSIVE"
+    },
+    {
+      "lesson": "HI-C84-tumhara",
+      "extension": "HI-EXT-92-POSSESSIVE"
+    },
+    {
+      "lesson": "HI-C84-apna",
+      "extension": "HI-EXT-92-POSSESSIVE"
+    },
+    {
+      "lesson": "HI-C84-mere-paas",
+      "extension": "HI-EXT-92-POSSESSIVE"
+    },
+    {
+      "lesson": "HI-C84-mere-liye",
+      "extension": "HI-EXT-92-POSSESSIVE"
+    },
+    {
+      "lesson": "HI-C84-repaso-kiska",
+      "extension": "HI-EXT-92-POSSESSIVE"
+    },
+    {
+      "lesson": "HI-C84-sintesis-mere-paas",
+      "extension": "HI-EXT-92-POSSESSIVE"
+    }
   ],
   "before": [],
   "inline": [

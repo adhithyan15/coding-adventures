@@ -2,7 +2,10 @@
   "id": "ES-PATH-042-CMD-EIGHT",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "ES-C50-ocho-cortos"
+    {
+      "lesson": "ES-C50-ocho-cortos",
+      "extension": "ES-EXT-042-CMD-EIGHT"
+    }
   ],
   "before": [],
   "inline": [

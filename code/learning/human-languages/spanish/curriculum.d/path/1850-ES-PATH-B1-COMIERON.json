@@ -2,7 +2,10 @@
   "id": "ES-PATH-B1-COMIERON",
   "spine_node": "SPINE-TALK-ABOUT-PAST",
   "lessons": [
-    "ES-C55-comieron"
+    {
+      "lesson": "ES-C55-comieron",
+      "extension": "ES-EXT-B1-COMIERON"
+    }
   ],
   "before": [],
   "inline": [

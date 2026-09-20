@@ -2,18 +2,54 @@
   "id": "JA-PATH-011",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "JA-W11-small-tsu",
-    "JA-W11-te",
-    "JA-W11-ta",
-    "JA-W11-da",
-    "JA-C11-te-hand",
-    "JA-C11-mimi",
-    "JA-C11-kuchi",
-    "JA-C11-ashi",
-    "JA-C11-hana",
-    "JA-C11-kao",
-    "JA-C11-me-eye",
-    "JA-C11-body-map"
+    {
+      "lesson": "JA-W11-small-tsu",
+      "extension": "JA-EXT-018-BODY-SEVEN"
+    },
+    {
+      "lesson": "JA-W11-te",
+      "extension": "JA-EXT-018-BODY-SEVEN"
+    },
+    {
+      "lesson": "JA-W11-ta",
+      "extension": "JA-EXT-018-BODY-SEVEN"
+    },
+    {
+      "lesson": "JA-W11-da",
+      "extension": "JA-EXT-018-BODY-SEVEN"
+    },
+    {
+      "lesson": "JA-C11-te-hand",
+      "extension": "JA-EXT-018-BODY-SEVEN"
+    },
+    {
+      "lesson": "JA-C11-mimi",
+      "extension": "JA-EXT-018-BODY-SEVEN"
+    },
+    {
+      "lesson": "JA-C11-kuchi",
+      "extension": "JA-EXT-018-BODY-SEVEN"
+    },
+    {
+      "lesson": "JA-C11-ashi",
+      "extension": "JA-EXT-018-BODY-SEVEN"
+    },
+    {
+      "lesson": "JA-C11-hana",
+      "extension": "JA-EXT-018-BODY-SEVEN"
+    },
+    {
+      "lesson": "JA-C11-kao",
+      "extension": "JA-EXT-018-BODY-SEVEN"
+    },
+    {
+      "lesson": "JA-C11-me-eye",
+      "extension": "JA-EXT-018-BODY-SEVEN"
+    },
+    {
+      "lesson": "JA-C11-body-map",
+      "extension": "JA-EXT-018-BODY-SEVEN"
+    }
   ],
   "before": [],
   "inline": [

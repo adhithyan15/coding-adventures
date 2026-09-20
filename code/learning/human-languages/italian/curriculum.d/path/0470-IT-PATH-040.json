@@ -2,9 +2,18 @@
   "id": "IT-PATH-040",
   "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
   "lessons": [
-    "IT-C36-parole",
-    "IT-C36-frasi",
-    "IT-C36-prima-lettura"
+    {
+      "lesson": "IT-C36-parole",
+      "extension": "IT-EXT-040-READING"
+    },
+    {
+      "lesson": "IT-C36-frasi",
+      "extension": "IT-EXT-040-READING"
+    },
+    {
+      "lesson": "IT-C36-prima-lettura",
+      "extension": "IT-EXT-040-READING"
+    }
   ],
   "before": [],
   "inline": [

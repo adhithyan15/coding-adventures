@@ -2,11 +2,26 @@
   "id": "HI-PATH-63-STATE",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "HI-C63-hunger",
-    "HI-C63-thirst",
-    "HI-C63-sleep",
-    "HI-C63-fever",
-    "HI-C63-pain"
+    {
+      "lesson": "HI-C63-hunger",
+      "extension": "HI-EXT-63-STATE"
+    },
+    {
+      "lesson": "HI-C63-thirst",
+      "extension": "HI-EXT-63-STATE"
+    },
+    {
+      "lesson": "HI-C63-sleep",
+      "extension": "HI-EXT-63-STATE"
+    },
+    {
+      "lesson": "HI-C63-fever",
+      "extension": "HI-EXT-63-STATE"
+    },
+    {
+      "lesson": "HI-C63-pain",
+      "extension": "HI-EXT-63-STATE"
+    }
   ],
   "before": [],
   "inline": [

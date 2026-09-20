@@ -2,11 +2,26 @@
   "id": "ES-PATH-299-01",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "ES-C299-campo",
-    "ES-C299-granja",
-    "ES-C299-ganado",
-    "ES-C299-cosecha",
-    "ES-C299-pastor"
+    {
+      "lesson": "ES-C299-campo",
+      "extension": "ES-EXT-299-GRANJA"
+    },
+    {
+      "lesson": "ES-C299-granja",
+      "extension": "ES-EXT-299-GRANJA"
+    },
+    {
+      "lesson": "ES-C299-ganado",
+      "extension": "ES-EXT-299-GRANJA"
+    },
+    {
+      "lesson": "ES-C299-cosecha",
+      "extension": "ES-EXT-299-GRANJA"
+    },
+    {
+      "lesson": "ES-C299-pastor",
+      "extension": "ES-EXT-299-GRANJA"
+    }
   ],
   "before": [],
   "inline": [

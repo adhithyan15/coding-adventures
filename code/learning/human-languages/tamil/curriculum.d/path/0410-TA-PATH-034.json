@@ -2,8 +2,14 @@
   "id": "TA-PATH-034",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "TA-C38-udambu",
-    "TA-C38-sugam"
+    {
+      "lesson": "TA-C38-udambu",
+      "extension": "TA-EXT-034-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "TA-C38-sugam",
+      "extension": "TA-EXT-034-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

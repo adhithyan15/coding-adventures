@@ -2,8 +2,14 @@
   "id": "ES-PATH-405-IMAGES",
   "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
   "lessons": [
-    "ES-C405-fotografia",
-    "ES-C405-foto"
+    {
+      "lesson": "ES-C405-fotografia",
+      "extension": "ES-EXT-405-IMAGES"
+    },
+    {
+      "lesson": "ES-C405-foto",
+      "extension": "ES-EXT-405-IMAGES"
+    }
   ],
   "before": [],
   "inline": [

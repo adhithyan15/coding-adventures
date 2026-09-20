@@ -2,11 +2,26 @@
   "id": "GU-PATH-032",
   "spine_node": "SPINE-SAY-WHAT-I-LIKE",
   "lessons": [
-    "GU-C33-ke",
-    "GU-C33-vichaarun-ke",
-    "GU-C33-ke-write",
-    "GU-C33-jaanun-ke",
-    "GU-C33-ke-checkpoint"
+    {
+      "lesson": "GU-C33-ke",
+      "extension": "GU-EXT-044-KE-FRAMES"
+    },
+    {
+      "lesson": "GU-C33-vichaarun-ke",
+      "extension": "GU-EXT-044-KE-FRAMES"
+    },
+    {
+      "lesson": "GU-C33-ke-write",
+      "extension": "GU-EXT-044-KE-FRAMES"
+    },
+    {
+      "lesson": "GU-C33-jaanun-ke",
+      "extension": "GU-EXT-044-KE-FRAMES"
+    },
+    {
+      "lesson": "GU-C33-ke-checkpoint",
+      "extension": "GU-EXT-044-KE-FRAMES"
+    }
   ],
   "before": [],
   "inline": [

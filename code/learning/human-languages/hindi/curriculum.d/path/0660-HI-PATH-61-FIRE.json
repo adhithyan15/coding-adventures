@@ -2,11 +2,26 @@
   "id": "HI-PATH-61-FIRE",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "HI-C61-vessel",
-    "HI-C61-spoon",
-    "HI-C61-tumbler",
-    "HI-C61-griddle",
-    "HI-C61-stove"
+    {
+      "lesson": "HI-C61-vessel",
+      "extension": "HI-EXT-61-FIRE"
+    },
+    {
+      "lesson": "HI-C61-spoon",
+      "extension": "HI-EXT-61-FIRE"
+    },
+    {
+      "lesson": "HI-C61-tumbler",
+      "extension": "HI-EXT-61-FIRE"
+    },
+    {
+      "lesson": "HI-C61-griddle",
+      "extension": "HI-EXT-61-FIRE"
+    },
+    {
+      "lesson": "HI-C61-stove",
+      "extension": "HI-EXT-61-FIRE"
+    }
   ],
   "before": [],
   "inline": [

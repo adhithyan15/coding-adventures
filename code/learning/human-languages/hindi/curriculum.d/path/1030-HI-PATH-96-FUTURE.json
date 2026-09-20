@@ -2,14 +2,38 @@
   "id": "HI-PATH-96-FUTURE",
   "spine_node": "SPINE-TALK-ABOUT-FUTURE",
   "lessons": [
-    "HI-C88-karunga",
-    "HI-C88-aaunga",
-    "HI-C88-aaega",
-    "HI-C88-aaenge",
-    "HI-C88-aaoge",
-    "HI-C88-baje",
-    "HI-C88-repaso-bhavishya",
-    "HI-C88-sintesis-bhavishya"
+    {
+      "lesson": "HI-C88-karunga",
+      "extension": "HI-EXT-96-FUTURE"
+    },
+    {
+      "lesson": "HI-C88-aaunga",
+      "extension": "HI-EXT-96-FUTURE"
+    },
+    {
+      "lesson": "HI-C88-aaega",
+      "extension": "HI-EXT-96-FUTURE"
+    },
+    {
+      "lesson": "HI-C88-aaenge",
+      "extension": "HI-EXT-96-FUTURE"
+    },
+    {
+      "lesson": "HI-C88-aaoge",
+      "extension": "HI-EXT-96-FUTURE"
+    },
+    {
+      "lesson": "HI-C88-baje",
+      "extension": "HI-EXT-96-FUTURE"
+    },
+    {
+      "lesson": "HI-C88-repaso-bhavishya",
+      "extension": "HI-EXT-96-FUTURE"
+    },
+    {
+      "lesson": "HI-C88-sintesis-bhavishya",
+      "extension": "HI-EXT-96-FUTURE"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,11 +2,26 @@
   "id": "PA-PATH-042",
   "spine_node": "SPINE-SAY-WHY",
   "lessons": [
-    "PA-C40-ki",
-    "PA-C40-sochda-ki",
-    "PA-C40-ki-write",
-    "PA-C40-kyon",
-    "PA-C40-kyunki"
+    {
+      "lesson": "PA-C40-ki",
+      "extension": "PA-EXT-062-THAT-AND-WHY"
+    },
+    {
+      "lesson": "PA-C40-sochda-ki",
+      "extension": "PA-EXT-062-THAT-AND-WHY"
+    },
+    {
+      "lesson": "PA-C40-ki-write",
+      "extension": "PA-EXT-062-THAT-AND-WHY"
+    },
+    {
+      "lesson": "PA-C40-kyon",
+      "extension": "PA-EXT-062-THAT-AND-WHY"
+    },
+    {
+      "lesson": "PA-C40-kyunki",
+      "extension": "PA-EXT-062-THAT-AND-WHY"
+    }
   ],
   "before": [],
   "inline": [

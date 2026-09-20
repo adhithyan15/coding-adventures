@@ -2,15 +2,42 @@
   "id": "HI-PATH-004",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "HI-W03-matras-naam",
-    "HI-W03-preposed-i",
-    "HI-W04-ra-sa-mera-naam",
-    "HI-W04-write-mera-naam",
-    "HI-W05-virama-namaste",
-    "HI-W05-conjuncts",
-    "HI-W05-write-namaste",
-    "HI-W05-namaste-delayed-copy",
-    "HI-W05-namaste-dictation",
+    {
+      "lesson": "HI-W03-matras-naam",
+      "extension": "HI-EXT-004-SCRIPT"
+    },
+    {
+      "lesson": "HI-W03-preposed-i",
+      "extension": "HI-EXT-004-SCRIPT"
+    },
+    {
+      "lesson": "HI-W04-ra-sa-mera-naam",
+      "extension": "HI-EXT-004-SCRIPT"
+    },
+    {
+      "lesson": "HI-W04-write-mera-naam",
+      "extension": "HI-EXT-004-SCRIPT"
+    },
+    {
+      "lesson": "HI-W05-virama-namaste",
+      "extension": "HI-EXT-004-SCRIPT"
+    },
+    {
+      "lesson": "HI-W05-conjuncts",
+      "extension": "HI-EXT-004-SCRIPT"
+    },
+    {
+      "lesson": "HI-W05-write-namaste",
+      "extension": "HI-EXT-004-SCRIPT"
+    },
+    {
+      "lesson": "HI-W05-namaste-delayed-copy",
+      "extension": "HI-EXT-004-SCRIPT"
+    },
+    {
+      "lesson": "HI-W05-namaste-dictation",
+      "extension": "HI-EXT-004-SCRIPT"
+    },
     "HI-C02-naam",
     "HI-C02-aap-tum",
     "HI-C02-hai",

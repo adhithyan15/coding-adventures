@@ -2,11 +2,26 @@
   "id": "HI-PATH-56-ROAD",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "HI-C56-road",
-    "HI-C56-village",
-    "HI-C56-market",
-    "HI-C56-shop",
-    "HI-C56-field"
+    {
+      "lesson": "HI-C56-road",
+      "extension": "HI-EXT-56-ROAD"
+    },
+    {
+      "lesson": "HI-C56-village",
+      "extension": "HI-EXT-56-ROAD"
+    },
+    {
+      "lesson": "HI-C56-market",
+      "extension": "HI-EXT-56-ROAD"
+    },
+    {
+      "lesson": "HI-C56-shop",
+      "extension": "HI-EXT-56-ROAD"
+    },
+    {
+      "lesson": "HI-C56-field",
+      "extension": "HI-EXT-56-ROAD"
+    }
   ],
   "before": [],
   "inline": [

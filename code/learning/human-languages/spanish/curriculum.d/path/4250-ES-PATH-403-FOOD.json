@@ -2,11 +2,26 @@
   "id": "ES-PATH-403-FOOD",
   "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
   "lessons": [
-    "ES-C403-pollo",
-    "ES-C403-verdura",
-    "ES-C403-paella",
-    "ES-C403-food-recall-1",
-    "ES-C403-food-recall-2"
+    {
+      "lesson": "ES-C403-pollo",
+      "extension": "ES-EXT-403-FOOD"
+    },
+    {
+      "lesson": "ES-C403-verdura",
+      "extension": "ES-EXT-403-FOOD"
+    },
+    {
+      "lesson": "ES-C403-paella",
+      "extension": "ES-EXT-403-FOOD"
+    },
+    {
+      "lesson": "ES-C403-food-recall-1",
+      "extension": "ES-EXT-403-FOOD"
+    },
+    {
+      "lesson": "ES-C403-food-recall-2",
+      "extension": "ES-EXT-403-FOOD"
+    }
   ],
   "before": [],
   "inline": [

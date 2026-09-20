@@ -2,12 +2,30 @@
   "id": "FA-PATH-017",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "FA-C16-yek",
-    "FA-C16-do",
-    "FA-C16-se",
-    "FA-C16-chahar",
-    "FA-C16-panj",
-    "FA-C16-practice"
+    {
+      "lesson": "FA-C16-yek",
+      "extension": "FA-EXT-024-COUNT-FIVE"
+    },
+    {
+      "lesson": "FA-C16-do",
+      "extension": "FA-EXT-024-COUNT-FIVE"
+    },
+    {
+      "lesson": "FA-C16-se",
+      "extension": "FA-EXT-024-COUNT-FIVE"
+    },
+    {
+      "lesson": "FA-C16-chahar",
+      "extension": "FA-EXT-024-COUNT-FIVE"
+    },
+    {
+      "lesson": "FA-C16-panj",
+      "extension": "FA-EXT-024-COUNT-FIVE"
+    },
+    {
+      "lesson": "FA-C16-practice",
+      "extension": "FA-EXT-024-COUNT-FIVE"
+    }
   ],
   "before": [],
   "inline": [],

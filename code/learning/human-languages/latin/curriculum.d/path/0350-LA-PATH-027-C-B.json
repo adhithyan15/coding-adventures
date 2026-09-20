@@ -2,7 +2,10 @@
   "id": "LA-PATH-027-C-B",
   "spine_node": "SPINE-SAY-WHAT-I-LIKE",
   "lessons": [
-    "LA-C39-amo"
+    {
+      "lesson": "LA-C39-amo",
+      "extension": "LA-EXT-027-LANGUAGE-SPECIFIC-D"
+    }
   ],
   "before": [],
   "inline": [

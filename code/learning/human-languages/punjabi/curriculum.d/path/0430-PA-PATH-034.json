@@ -2,10 +2,22 @@
   "id": "PA-PATH-034",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "PA-C32-changa",
-    "PA-W09-chacha",
-    "PA-C32-thik-thak",
-    "PA-W09-gagga"
+    {
+      "lesson": "PA-C32-changa",
+      "extension": "PA-EXT-039-PREA1-GOOD-AND-SOSO"
+    },
+    {
+      "lesson": "PA-W09-chacha",
+      "extension": "PA-EXT-039-PREA1-GOOD-AND-SOSO"
+    },
+    {
+      "lesson": "PA-C32-thik-thak",
+      "extension": "PA-EXT-039-PREA1-GOOD-AND-SOSO"
+    },
+    {
+      "lesson": "PA-W09-gagga",
+      "extension": "PA-EXT-039-PREA1-GOOD-AND-SOSO"
+    }
   ],
   "before": [],
   "inline": [

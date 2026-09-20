@@ -2,11 +2,26 @@
   "id": "HI-PATH-105-SAMBODHAN",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "HI-C97-naam-ji",
-    "HI-C97-priya",
-    "HI-C97-repaso-sambodhan",
-    "HI-C97-sandesh",
-    "HI-C97-sintesis-sandesh"
+    {
+      "lesson": "HI-C97-naam-ji",
+      "extension": "HI-EXT-105-SAMBODHAN"
+    },
+    {
+      "lesson": "HI-C97-priya",
+      "extension": "HI-EXT-105-SAMBODHAN"
+    },
+    {
+      "lesson": "HI-C97-repaso-sambodhan",
+      "extension": "HI-EXT-105-SAMBODHAN"
+    },
+    {
+      "lesson": "HI-C97-sandesh",
+      "extension": "HI-EXT-105-SAMBODHAN"
+    },
+    {
+      "lesson": "HI-C97-sintesis-sandesh",
+      "extension": "HI-EXT-105-SAMBODHAN"
+    }
   ],
   "before": [],
   "inline": [

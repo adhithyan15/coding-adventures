@@ -2,11 +2,26 @@
   "id": "LA-PATH-038",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "LA-C54-edo",
-    "LA-C54-bibo",
-    "LA-C54-oculus",
-    "LA-C54-auris",
-    "LA-C54-pes"
+    {
+      "lesson": "LA-C54-edo",
+      "extension": "LA-EXT-054-BODY"
+    },
+    {
+      "lesson": "LA-C54-bibo",
+      "extension": "LA-EXT-054-BODY"
+    },
+    {
+      "lesson": "LA-C54-oculus",
+      "extension": "LA-EXT-054-BODY"
+    },
+    {
+      "lesson": "LA-C54-auris",
+      "extension": "LA-EXT-054-BODY"
+    },
+    {
+      "lesson": "LA-C54-pes",
+      "extension": "LA-EXT-054-BODY"
+    }
   ],
   "before": [],
   "inline": [],

@@ -3,7 +3,10 @@
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
     "FR-C03-comment-ca-va",
-    "FR-C03-comment-registers",
+    {
+      "lesson": "FR-C03-comment-registers",
+      "extension": "FR-EXT-011-LANGUAGE-SPECIFIC"
+    },
     "FR-C03-comme-ci-comme-ca"
   ],
   "before": [],

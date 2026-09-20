@@ -2,8 +2,14 @@
   "id": "LA-PATH-030-B",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "LA-C42-accipio",
-    "LA-C42-ludo"
+    {
+      "lesson": "LA-C42-accipio",
+      "extension": "LA-EXT-030-LANGUAGE-SPECIFIC-B"
+    },
+    {
+      "lesson": "LA-C42-ludo",
+      "extension": "LA-EXT-030-LANGUAGE-SPECIFIC-B"
+    }
   ],
   "before": [],
   "inline": [

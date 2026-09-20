@@ -2,8 +2,14 @@
   "id": "IT-PATH-018",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "IT-C13-nero-bianco",
-    "IT-C13-rosso-blu"
+    {
+      "lesson": "IT-C13-nero-bianco",
+      "extension": "IT-EXT-018-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "IT-C13-rosso-blu",
+      "extension": "IT-EXT-018-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

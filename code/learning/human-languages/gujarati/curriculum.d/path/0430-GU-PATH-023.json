@@ -2,20 +2,62 @@
   "id": "GU-PATH-023",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "GU-C24-hear-savaar",
-    "GU-C24-hear-bapor",
-    "GU-C24-hear-saanj",
-    "GU-C24-hear-raat",
-    "GU-C24-day-parts-four",
-    "GU-C24-raat",
-    "GU-C24-hear-divas",
-    "GU-C24-hear-mahino",
-    "GU-C24-hear-aaj",
-    "GU-C24-aaj",
-    "GU-C24-hear-atyaare",
-    "GU-C24-time-eight",
-    "GU-R24-time-eight-r1",
-    "GU-R24-map-ten-r3"
+    {
+      "lesson": "GU-C24-hear-savaar",
+      "extension": "GU-EXT-035-TIME-EIGHT"
+    },
+    {
+      "lesson": "GU-C24-hear-bapor",
+      "extension": "GU-EXT-035-TIME-EIGHT"
+    },
+    {
+      "lesson": "GU-C24-hear-saanj",
+      "extension": "GU-EXT-035-TIME-EIGHT"
+    },
+    {
+      "lesson": "GU-C24-hear-raat",
+      "extension": "GU-EXT-035-TIME-EIGHT"
+    },
+    {
+      "lesson": "GU-C24-day-parts-four",
+      "extension": "GU-EXT-035-TIME-EIGHT"
+    },
+    {
+      "lesson": "GU-C24-raat",
+      "extension": "GU-EXT-035-TIME-EIGHT"
+    },
+    {
+      "lesson": "GU-C24-hear-divas",
+      "extension": "GU-EXT-035-TIME-EIGHT"
+    },
+    {
+      "lesson": "GU-C24-hear-mahino",
+      "extension": "GU-EXT-035-TIME-EIGHT"
+    },
+    {
+      "lesson": "GU-C24-hear-aaj",
+      "extension": "GU-EXT-035-TIME-EIGHT"
+    },
+    {
+      "lesson": "GU-C24-aaj",
+      "extension": "GU-EXT-035-TIME-EIGHT"
+    },
+    {
+      "lesson": "GU-C24-hear-atyaare",
+      "extension": "GU-EXT-035-TIME-EIGHT"
+    },
+    {
+      "lesson": "GU-C24-time-eight",
+      "extension": "GU-EXT-035-TIME-EIGHT"
+    },
+    {
+      "lesson": "GU-R24-time-eight-r1",
+      "extension": "GU-EXT-035-TIME-EIGHT"
+    },
+    {
+      "lesson": "GU-R24-map-ten-r3",
+      "extension": "GU-EXT-035-TIME-EIGHT"
+    }
   ],
   "before": [],
   "inline": [

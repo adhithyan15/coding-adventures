@@ -2,13 +2,34 @@
   "id": "HI-PATH-94-PRONOUNS",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "HI-C86-ham",
-    "HI-C86-ve",
-    "HI-C86-hamen-tumhen",
-    "HI-C86-aapko-use",
-    "HI-C86-koi-article",
-    "HI-C86-repaso-sarvanam",
-    "HI-C86-sintesis-sarvanam"
+    {
+      "lesson": "HI-C86-ham",
+      "extension": "HI-EXT-94-PRONOUNS"
+    },
+    {
+      "lesson": "HI-C86-ve",
+      "extension": "HI-EXT-94-PRONOUNS"
+    },
+    {
+      "lesson": "HI-C86-hamen-tumhen",
+      "extension": "HI-EXT-94-PRONOUNS"
+    },
+    {
+      "lesson": "HI-C86-aapko-use",
+      "extension": "HI-EXT-94-PRONOUNS"
+    },
+    {
+      "lesson": "HI-C86-koi-article",
+      "extension": "HI-EXT-94-PRONOUNS"
+    },
+    {
+      "lesson": "HI-C86-repaso-sarvanam",
+      "extension": "HI-EXT-94-PRONOUNS"
+    },
+    {
+      "lesson": "HI-C86-sintesis-sarvanam",
+      "extension": "HI-EXT-94-PRONOUNS"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,13 +2,34 @@
   "id": "ML-PATH-011",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "ML-C05-samsaarikkuka",
-    "ML-C05-joli-ceyyuka",
-    "ML-C05-njaan-malayalam-samsaarikkunnu",
-    "ML-C05-taamasikkuka",
-    "ML-C05-practice",
-    "ML-C06-dative-ikku",
-    "ML-C06-dative-subject"
+    {
+      "lesson": "ML-C05-samsaarikkuka",
+      "extension": "ML-EXT-011-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ML-C05-joli-ceyyuka",
+      "extension": "ML-EXT-011-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ML-C05-njaan-malayalam-samsaarikkunnu",
+      "extension": "ML-EXT-011-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ML-C05-taamasikkuka",
+      "extension": "ML-EXT-011-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ML-C05-practice",
+      "extension": "ML-EXT-011-CONSOLIDATION"
+    },
+    {
+      "lesson": "ML-C06-dative-ikku",
+      "extension": "ML-EXT-011-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ML-C06-dative-subject",
+      "extension": "ML-EXT-011-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

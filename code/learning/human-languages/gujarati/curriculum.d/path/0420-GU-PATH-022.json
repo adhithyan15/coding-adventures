@@ -2,36 +2,126 @@
   "id": "GU-PATH-022",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "GU-C20-hear-bajar",
-    "GU-C20-bajar",
-    "GU-C20-hear-ghar",
-    "GU-W20-gha",
-    "GU-C20-ghar",
-    "GU-C20-hear-mandir",
-    "GU-C20-mandir",
-    "GU-C20-places-three",
-    "GU-C21-hear-haath",
-    "GU-C21-haath",
-    "GU-C21-hear-paisa",
-    "GU-W21-ai-matra",
-    "GU-C21-paisa",
-    "GU-R21-travel-five",
-    "GU-C21-travel-five",
-    "GU-C22-hear-shahar",
-    "GU-C22-shahar",
-    "GU-C22-hear-shaalaa",
-    "GU-C22-shaalaa",
-    "GU-C22-hear-rasto",
-    "GU-C22-rasto",
-    "GU-C22-route-three",
-    "GU-C23-hear-gaam",
-    "GU-R23-route-three-r1",
-    "GU-C23-gaam",
-    "GU-C23-hear-dukaan",
-    "GU-C23-dukaan",
-    "GU-R23-map-ten",
-    "GU-C23-map-ten",
-    "GU-R23-shaalaa-rasto-r2"
+    {
+      "lesson": "GU-C20-hear-bajar",
+      "extension": "GU-EXT-031-PLACES-THREE"
+    },
+    {
+      "lesson": "GU-C20-bajar",
+      "extension": "GU-EXT-031-PLACES-THREE"
+    },
+    {
+      "lesson": "GU-C20-hear-ghar",
+      "extension": "GU-EXT-031-PLACES-THREE"
+    },
+    {
+      "lesson": "GU-W20-gha",
+      "extension": "GU-EXT-031-PLACES-THREE"
+    },
+    {
+      "lesson": "GU-C20-ghar",
+      "extension": "GU-EXT-031-PLACES-THREE"
+    },
+    {
+      "lesson": "GU-C20-hear-mandir",
+      "extension": "GU-EXT-031-PLACES-THREE"
+    },
+    {
+      "lesson": "GU-C20-mandir",
+      "extension": "GU-EXT-031-PLACES-THREE"
+    },
+    {
+      "lesson": "GU-C20-places-three",
+      "extension": "GU-EXT-031-PLACES-THREE"
+    },
+    {
+      "lesson": "GU-C21-hear-haath",
+      "extension": "GU-EXT-032-TRAVEL-FIVE"
+    },
+    {
+      "lesson": "GU-C21-haath",
+      "extension": "GU-EXT-032-TRAVEL-FIVE"
+    },
+    {
+      "lesson": "GU-C21-hear-paisa",
+      "extension": "GU-EXT-032-TRAVEL-FIVE"
+    },
+    {
+      "lesson": "GU-W21-ai-matra",
+      "extension": "GU-EXT-032-TRAVEL-FIVE"
+    },
+    {
+      "lesson": "GU-C21-paisa",
+      "extension": "GU-EXT-032-TRAVEL-FIVE"
+    },
+    {
+      "lesson": "GU-R21-travel-five",
+      "extension": "GU-EXT-032-TRAVEL-FIVE"
+    },
+    {
+      "lesson": "GU-C21-travel-five",
+      "extension": "GU-EXT-032-TRAVEL-FIVE"
+    },
+    {
+      "lesson": "GU-C22-hear-shahar",
+      "extension": "GU-EXT-033-ROUTE-THREE"
+    },
+    {
+      "lesson": "GU-C22-shahar",
+      "extension": "GU-EXT-033-ROUTE-THREE"
+    },
+    {
+      "lesson": "GU-C22-hear-shaalaa",
+      "extension": "GU-EXT-033-ROUTE-THREE"
+    },
+    {
+      "lesson": "GU-C22-shaalaa",
+      "extension": "GU-EXT-033-ROUTE-THREE"
+    },
+    {
+      "lesson": "GU-C22-hear-rasto",
+      "extension": "GU-EXT-033-ROUTE-THREE"
+    },
+    {
+      "lesson": "GU-C22-rasto",
+      "extension": "GU-EXT-033-ROUTE-THREE"
+    },
+    {
+      "lesson": "GU-C22-route-three",
+      "extension": "GU-EXT-033-ROUTE-THREE"
+    },
+    {
+      "lesson": "GU-C23-hear-gaam",
+      "extension": "GU-EXT-034-MAP-TEN"
+    },
+    {
+      "lesson": "GU-R23-route-three-r1",
+      "extension": "GU-EXT-034-MAP-TEN"
+    },
+    {
+      "lesson": "GU-C23-gaam",
+      "extension": "GU-EXT-034-MAP-TEN"
+    },
+    {
+      "lesson": "GU-C23-hear-dukaan",
+      "extension": "GU-EXT-034-MAP-TEN"
+    },
+    {
+      "lesson": "GU-C23-dukaan",
+      "extension": "GU-EXT-034-MAP-TEN"
+    },
+    {
+      "lesson": "GU-R23-map-ten",
+      "extension": "GU-EXT-034-MAP-TEN"
+    },
+    {
+      "lesson": "GU-C23-map-ten",
+      "extension": "GU-EXT-034-MAP-TEN"
+    },
+    {
+      "lesson": "GU-R23-shaalaa-rasto-r2",
+      "extension": "GU-EXT-034-MAP-TEN"
+    }
   ],
   "before": [],
   "inline": [

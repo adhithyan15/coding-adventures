@@ -2,8 +2,14 @@
   "id": "LA-PATH-009",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "LA-C06-niger-albus",
-    "LA-C06-ruber-caeruleus"
+    {
+      "lesson": "LA-C06-niger-albus",
+      "extension": "LA-EXT-009-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "LA-C06-ruber-caeruleus",
+      "extension": "LA-EXT-009-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,10 +2,22 @@
   "id": "JA-PATH-006",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "JA-W06-ko-katakana",
-    "JA-W06-long-mark",
-    "JA-W06-hi-katakana",
-    "JA-C01-koohii"
+    {
+      "lesson": "JA-W06-ko-katakana",
+      "extension": "JA-EXT-014-KOOHII-KATAKANA"
+    },
+    {
+      "lesson": "JA-W06-long-mark",
+      "extension": "JA-EXT-014-KOOHII-KATAKANA"
+    },
+    {
+      "lesson": "JA-W06-hi-katakana",
+      "extension": "JA-EXT-014-KOOHII-KATAKANA"
+    },
+    {
+      "lesson": "JA-C01-koohii",
+      "extension": "JA-EXT-004-KATAKANA-LOANWORDS"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,10 +2,22 @@
   "id": "ML-PATH-85-HELD-SOUNDS",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "ML-C85-kudikkuka",
-    "ML-C85-gemination",
-    "ML-C85-stress",
-    "ML-R85-sounds-recall"
+    {
+      "lesson": "ML-C85-kudikkuka",
+      "extension": "ML-EXT-85-HELD-SOUNDS"
+    },
+    {
+      "lesson": "ML-C85-gemination",
+      "extension": "ML-EXT-85-HELD-SOUNDS"
+    },
+    {
+      "lesson": "ML-C85-stress",
+      "extension": "ML-EXT-85-HELD-SOUNDS"
+    },
+    {
+      "lesson": "ML-R85-sounds-recall",
+      "extension": "ML-EXT-85-HELD-SOUNDS"
+    }
   ],
   "before": [],
   "inline": [

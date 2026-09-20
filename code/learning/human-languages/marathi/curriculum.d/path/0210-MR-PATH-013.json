@@ -2,8 +2,14 @@
   "id": "MR-PATH-013",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "MR-C08-vichar-karne",
-    "MR-C08-samajne"
+    {
+      "lesson": "MR-C08-vichar-karne",
+      "extension": "MR-EXT-013-MIND-VERBS"
+    },
+    {
+      "lesson": "MR-C08-samajne",
+      "extension": "MR-EXT-013-MIND-VERBS"
+    }
   ],
   "before": [],
   "inline": [

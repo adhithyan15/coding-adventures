@@ -2,8 +2,14 @@
   "id": "TA-PATH-026",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "TA-C21-naay-poonai",
-    "TA-C22-paccai-manjal"
+    {
+      "lesson": "TA-C21-naay-poonai",
+      "extension": "TA-EXT-026-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "TA-C22-paccai-manjal",
+      "extension": "TA-EXT-026-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

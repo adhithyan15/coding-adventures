@@ -2,7 +2,10 @@
   "id": "ES-PATH-401-QUALITY",
   "spine_node": "SPINE-DESCRIBE-QUALITIES",
   "lessons": [
-    "ES-C401-recto"
+    {
+      "lesson": "ES-C401-recto",
+      "extension": "ES-EXT-401-QUALITY"
+    }
   ],
   "before": [],
   "inline": [

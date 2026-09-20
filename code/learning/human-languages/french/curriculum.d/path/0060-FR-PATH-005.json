@@ -3,7 +3,10 @@
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
     "FR-C01-bonne-nuit",
-    "FR-C01-practice"
+    {
+      "lesson": "FR-C01-practice",
+      "extension": "FR-EXT-005-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

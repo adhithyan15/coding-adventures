@@ -2,7 +2,10 @@
   "id": "BN-PATH-003A",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "BN-C03-practice"
+    {
+      "lesson": "BN-C03-practice",
+      "extension": "BN-EXT-003-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [

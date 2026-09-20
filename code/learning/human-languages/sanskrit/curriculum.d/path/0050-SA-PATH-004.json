@@ -4,7 +4,10 @@
   "lessons": [
     "SA-C01-am",
     "SA-C01-na",
-    "SA-C01-practice"
+    {
+      "lesson": "SA-C01-practice",
+      "extension": "SA-EXT-54-CH1-RECAP"
+    }
   ],
   "before": [],
   "inline": [

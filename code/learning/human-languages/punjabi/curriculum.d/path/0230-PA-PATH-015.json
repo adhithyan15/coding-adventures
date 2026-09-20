@@ -2,11 +2,26 @@
   "id": "PA-PATH-015",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "PA-C11-dost",
-    "PA-C11-parivar",
-    "PA-C11-bhara",
-    "PA-C11-bhain",
-    "PA-S11-bhabbha"
+    {
+      "lesson": "PA-C11-dost",
+      "extension": "PA-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "PA-C11-parivar",
+      "extension": "PA-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "PA-C11-bhara",
+      "extension": "PA-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "PA-C11-bhain",
+      "extension": "PA-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "PA-S11-bhabbha",
+      "extension": "PA-EXT-054-PREA1-SCRIPT-RUNWAY-C11"
+    }
   ],
   "before": [],
   "inline": [

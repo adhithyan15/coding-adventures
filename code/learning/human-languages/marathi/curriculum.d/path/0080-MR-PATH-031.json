@@ -2,13 +2,34 @@
   "id": "MR-PATH-031",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "MR-W08-la",
-    "MR-W08-sha",
-    "MR-W08-ssa",
-    "MR-W08-u-independent",
-    "MR-W08-uu-independent",
-    "MR-W08-e-independent",
-    "MR-R08-runway-recall"
+    {
+      "lesson": "MR-W08-la",
+      "extension": "MR-EXT-034-SIBILANT-RUNWAY"
+    },
+    {
+      "lesson": "MR-W08-sha",
+      "extension": "MR-EXT-034-SIBILANT-RUNWAY"
+    },
+    {
+      "lesson": "MR-W08-ssa",
+      "extension": "MR-EXT-034-SIBILANT-RUNWAY"
+    },
+    {
+      "lesson": "MR-W08-u-independent",
+      "extension": "MR-EXT-034-SIBILANT-RUNWAY"
+    },
+    {
+      "lesson": "MR-W08-uu-independent",
+      "extension": "MR-EXT-034-SIBILANT-RUNWAY"
+    },
+    {
+      "lesson": "MR-W08-e-independent",
+      "extension": "MR-EXT-034-SIBILANT-RUNWAY"
+    },
+    {
+      "lesson": "MR-R08-runway-recall",
+      "extension": "MR-EXT-034-SIBILANT-RUNWAY"
+    }
   ],
   "before": [],
   "inline": [],

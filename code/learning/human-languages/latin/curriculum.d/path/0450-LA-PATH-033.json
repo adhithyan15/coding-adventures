@@ -2,11 +2,26 @@
   "id": "LA-PATH-033",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "LA-C49-possum",
-    "LA-C49-volo",
-    "LA-C49-qui",
-    "LA-C49-et",
-    "LA-C49-quando"
+    {
+      "lesson": "LA-C49-possum",
+      "extension": "LA-EXT-049-FRAME"
+    },
+    {
+      "lesson": "LA-C49-volo",
+      "extension": "LA-EXT-049-FRAME"
+    },
+    {
+      "lesson": "LA-C49-qui",
+      "extension": "LA-EXT-049-FRAME"
+    },
+    {
+      "lesson": "LA-C49-et",
+      "extension": "LA-EXT-049-FRAME"
+    },
+    {
+      "lesson": "LA-C49-quando",
+      "extension": "LA-EXT-049-FRAME"
+    }
   ],
   "before": [],
   "inline": [],

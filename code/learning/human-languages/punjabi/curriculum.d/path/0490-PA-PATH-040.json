@@ -2,11 +2,26 @@
   "id": "PA-PATH-040",
   "spine_node": "SPINE-DESCRIBE-QUALITIES",
   "lessons": [
-    "PA-C38-ate",
-    "PA-C38-ate-vaak",
-    "PA-C38-ate-write",
-    "PA-C38-jaan",
-    "PA-C38-na-na"
+    {
+      "lesson": "PA-C38-ate",
+      "extension": "PA-EXT-060-COORDINATORS"
+    },
+    {
+      "lesson": "PA-C38-ate-vaak",
+      "extension": "PA-EXT-060-COORDINATORS"
+    },
+    {
+      "lesson": "PA-C38-ate-write",
+      "extension": "PA-EXT-060-COORDINATORS"
+    },
+    {
+      "lesson": "PA-C38-jaan",
+      "extension": "PA-EXT-060-COORDINATORS"
+    },
+    {
+      "lesson": "PA-C38-na-na",
+      "extension": "PA-EXT-060-COORDINATORS"
+    }
   ],
   "before": [],
   "inline": [

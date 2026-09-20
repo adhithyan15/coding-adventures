@@ -2,11 +2,26 @@
   "id": "TE-PATH-63-HEALTH",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "TE-C63-hunger",
-    "TE-C63-sleep",
-    "TE-C63-cough",
-    "TE-C63-disease",
-    "TE-C63-health"
+    {
+      "lesson": "TE-C63-hunger",
+      "extension": "TE-EXT-63-HEALTH"
+    },
+    {
+      "lesson": "TE-C63-sleep",
+      "extension": "TE-EXT-63-HEALTH"
+    },
+    {
+      "lesson": "TE-C63-cough",
+      "extension": "TE-EXT-63-HEALTH"
+    },
+    {
+      "lesson": "TE-C63-disease",
+      "extension": "TE-EXT-63-HEALTH"
+    },
+    {
+      "lesson": "TE-C63-health",
+      "extension": "TE-EXT-63-HEALTH"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,11 +2,26 @@
   "id": "TA-PATH-52-TREE",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "TA-C52-tree",
-    "TA-C52-branch",
-    "TA-C52-shoot",
-    "TA-C52-root",
-    "TA-C52-seed"
+    {
+      "lesson": "TA-C52-tree",
+      "extension": "TA-EXT-52-TREE"
+    },
+    {
+      "lesson": "TA-C52-branch",
+      "extension": "TA-EXT-52-TREE"
+    },
+    {
+      "lesson": "TA-C52-shoot",
+      "extension": "TA-EXT-52-TREE"
+    },
+    {
+      "lesson": "TA-C52-root",
+      "extension": "TA-EXT-52-TREE"
+    },
+    {
+      "lesson": "TA-C52-seed",
+      "extension": "TA-EXT-52-TREE"
+    }
   ],
   "before": [],
   "inline": [

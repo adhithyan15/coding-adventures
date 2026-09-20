@@ -6,8 +6,5 @@
   "canDo": "I can read hâfez and use the Arabic guard-and-preserve root as a memory hook for protector.",
   "prerequisites": [
     "FA-EXT-013-KHODA-HISTORY"
-  ],
-  "lessons": [
-    "FA-C05-hafez"
   ]
 }

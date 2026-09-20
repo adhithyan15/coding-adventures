@@ -2,11 +2,26 @@
   "id": "HI-PATH-68-ORIGIN",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "HI-C68-country",
-    "HI-C68-india",
-    "HI-C68-city",
-    "HI-C68-language",
-    "HI-C68-english"
+    {
+      "lesson": "HI-C68-country",
+      "extension": "HI-EXT-68-ORIGIN"
+    },
+    {
+      "lesson": "HI-C68-india",
+      "extension": "HI-EXT-68-ORIGIN"
+    },
+    {
+      "lesson": "HI-C68-city",
+      "extension": "HI-EXT-68-ORIGIN"
+    },
+    {
+      "lesson": "HI-C68-language",
+      "extension": "HI-EXT-68-ORIGIN"
+    },
+    {
+      "lesson": "HI-C68-english",
+      "extension": "HI-EXT-68-ORIGIN"
+    }
   ],
   "before": [],
   "inline": [

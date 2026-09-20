@@ -2,8 +2,14 @@
   "id": "ES-PATH-015-LOCATION",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "ES-C09-esta-en",
-    "ES-C09-practice"
+    {
+      "lesson": "ES-C09-esta-en",
+      "extension": "ES-EXT-015-LOCATION"
+    },
+    {
+      "lesson": "ES-C09-practice",
+      "extension": "ES-EXT-015-SER-ESTAR-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [

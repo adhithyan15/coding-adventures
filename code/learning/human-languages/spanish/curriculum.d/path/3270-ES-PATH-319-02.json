@@ -2,8 +2,14 @@
   "id": "ES-PATH-319-02",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "ES-C319-repaso-salir",
-    "ES-C319-despedida"
+    {
+      "lesson": "ES-C319-repaso-salir",
+      "extension": "ES-EXT-319-SALIR"
+    },
+    {
+      "lesson": "ES-C319-despedida",
+      "extension": "ES-EXT-319-SALIR"
+    }
   ],
   "before": [],
   "inline": [

@@ -3,7 +3,10 @@
   "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
   "lessons": [
     "ES-C268-habitacion",
-    "ES-C268-repaso-llegar-y-quedarse"
+    {
+      "lesson": "ES-C268-repaso-llegar-y-quedarse",
+      "extension": "ES-EXT-268-CONSOLIDATION-ROOM"
+    }
   ],
   "before": [],
   "inline": [

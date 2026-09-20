@@ -2,11 +2,26 @@
   "id": "TA-PATH-63-MANNERS",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "TA-C63-request",
-    "TA-C63-permission",
-    "TA-C63-hesitancy",
-    "TA-C63-trust",
-    "TA-C63-humility"
+    {
+      "lesson": "TA-C63-request",
+      "extension": "TA-EXT-63-MANNERS"
+    },
+    {
+      "lesson": "TA-C63-permission",
+      "extension": "TA-EXT-63-MANNERS"
+    },
+    {
+      "lesson": "TA-C63-hesitancy",
+      "extension": "TA-EXT-63-MANNERS"
+    },
+    {
+      "lesson": "TA-C63-trust",
+      "extension": "TA-EXT-63-MANNERS"
+    },
+    {
+      "lesson": "TA-C63-humility",
+      "extension": "TA-EXT-63-MANNERS"
+    }
   ],
   "before": [],
   "inline": [

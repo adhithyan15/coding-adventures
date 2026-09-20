@@ -2,9 +2,18 @@
   "id": "BN-PATH-011-C",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "BN-C07-khaowa",
-    "BN-C07-dekha",
-    "BN-C07-jana"
+    {
+      "lesson": "BN-C07-khaowa",
+      "extension": "BN-EXT-011-CORE-VERBS-C"
+    },
+    {
+      "lesson": "BN-C07-dekha",
+      "extension": "BN-EXT-011-CORE-VERBS-C"
+    },
+    {
+      "lesson": "BN-C07-jana",
+      "extension": "BN-EXT-011-CORE-VERBS-C"
+    }
   ],
   "before": [],
   "inline": [

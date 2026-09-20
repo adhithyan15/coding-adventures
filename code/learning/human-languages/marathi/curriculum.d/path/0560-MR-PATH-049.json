@@ -2,10 +2,22 @@
   "id": "MR-PATH-049",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "MR-C46-huun",
-    "MR-C46-paasun",
-    "MR-C46-kuthun",
-    "MR-R46-from"
+    {
+      "lesson": "MR-C46-huun",
+      "extension": "MR-EXT-062-WHERE-FROM"
+    },
+    {
+      "lesson": "MR-C46-paasun",
+      "extension": "MR-EXT-062-WHERE-FROM"
+    },
+    {
+      "lesson": "MR-C46-kuthun",
+      "extension": "MR-EXT-062-WHERE-FROM"
+    },
+    {
+      "lesson": "MR-R46-from",
+      "extension": "MR-EXT-062-WHERE-FROM"
+    }
   ],
   "before": [],
   "inline": [

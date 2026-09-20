@@ -2,20 +2,62 @@
   "id": "MW-PATH-022",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "MW-C23-hear-ghano",
-    "MW-C23-ghano",
-    "MW-C23-hear-price-answer",
-    "MW-C23-price-answer",
-    "MW-R23-answer-two",
-    "MW-C23-hear-thodu",
-    "MW-C23-thodu",
-    "MW-C23-hear-karo",
-    "MW-C23-karo",
-    "MW-C23-hear-bargain-request",
-    "MW-C23-bargain-request",
-    "MW-R23-bargain-two",
-    "MW-C23-counter-four",
-    "MW-R23-script-close"
+    {
+      "lesson": "MW-C23-hear-ghano",
+      "extension": "MW-EXT-036-BARGAIN"
+    },
+    {
+      "lesson": "MW-C23-ghano",
+      "extension": "MW-EXT-036-BARGAIN"
+    },
+    {
+      "lesson": "MW-C23-hear-price-answer",
+      "extension": "MW-EXT-036-BARGAIN"
+    },
+    {
+      "lesson": "MW-C23-price-answer",
+      "extension": "MW-EXT-036-BARGAIN"
+    },
+    {
+      "lesson": "MW-R23-answer-two",
+      "extension": "MW-EXT-036-BARGAIN"
+    },
+    {
+      "lesson": "MW-C23-hear-thodu",
+      "extension": "MW-EXT-036-BARGAIN"
+    },
+    {
+      "lesson": "MW-C23-thodu",
+      "extension": "MW-EXT-036-BARGAIN"
+    },
+    {
+      "lesson": "MW-C23-hear-karo",
+      "extension": "MW-EXT-036-BARGAIN"
+    },
+    {
+      "lesson": "MW-C23-karo",
+      "extension": "MW-EXT-036-BARGAIN"
+    },
+    {
+      "lesson": "MW-C23-hear-bargain-request",
+      "extension": "MW-EXT-036-BARGAIN"
+    },
+    {
+      "lesson": "MW-C23-bargain-request",
+      "extension": "MW-EXT-036-BARGAIN"
+    },
+    {
+      "lesson": "MW-R23-bargain-two",
+      "extension": "MW-EXT-036-BARGAIN"
+    },
+    {
+      "lesson": "MW-C23-counter-four",
+      "extension": "MW-EXT-036-BARGAIN"
+    },
+    {
+      "lesson": "MW-R23-script-close",
+      "extension": "MW-EXT-036-BARGAIN"
+    }
   ],
   "before": [],
   "inline": [

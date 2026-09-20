@@ -2,11 +2,26 @@
   "id": "HI-PATH-64-MEASURE",
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
-    "HI-C64-now",
-    "HI-C64-quickly",
-    "HI-C64-slowly",
-    "HI-C64-little",
-    "HI-C64-more"
+    {
+      "lesson": "HI-C64-now",
+      "extension": "HI-EXT-64-MEASURE"
+    },
+    {
+      "lesson": "HI-C64-quickly",
+      "extension": "HI-EXT-64-MEASURE"
+    },
+    {
+      "lesson": "HI-C64-slowly",
+      "extension": "HI-EXT-64-MEASURE"
+    },
+    {
+      "lesson": "HI-C64-little",
+      "extension": "HI-EXT-64-MEASURE"
+    },
+    {
+      "lesson": "HI-C64-more",
+      "extension": "HI-EXT-64-MEASURE"
+    }
   ],
   "before": [],
   "inline": [

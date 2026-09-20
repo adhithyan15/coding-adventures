@@ -2,7 +2,10 @@
   "id": "ES-PATH-038-AR-PRETERITE-CH14",
   "spine_node": "SPINE-TALK-ABOUT-PAST",
   "lessons": [
-    "ES-C14-hablar-preterite"
+    {
+      "lesson": "ES-C14-hablar-preterite",
+      "extension": "ES-EXT-038-AR-PRETERITE-CH14"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,11 +2,26 @@
   "id": "ZH-PATH-026",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "ZH-W27-sui",
-    "ZH-C27-sui",
-    "ZH-W27-he",
-    "ZH-C27-he",
-    "ZH-C27-practice"
+    {
+      "lesson": "ZH-W27-sui",
+      "extension": "ZH-EXT-061-AGE-AND"
+    },
+    {
+      "lesson": "ZH-C27-sui",
+      "extension": "ZH-EXT-061-AGE-AND"
+    },
+    {
+      "lesson": "ZH-W27-he",
+      "extension": "ZH-EXT-061-AGE-AND"
+    },
+    {
+      "lesson": "ZH-C27-he",
+      "extension": "ZH-EXT-061-AGE-AND"
+    },
+    {
+      "lesson": "ZH-C27-practice",
+      "extension": "ZH-EXT-061-AGE-AND"
+    }
   ],
   "before": [],
   "inline": [],

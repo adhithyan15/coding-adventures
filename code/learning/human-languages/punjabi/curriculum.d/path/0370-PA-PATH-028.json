@@ -2,8 +2,14 @@
   "id": "PA-PATH-028",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "PA-R27-ear-mouth-r4",
-    "PA-R27-nose-heart-r4"
+    {
+      "lesson": "PA-R27-ear-mouth-r4",
+      "extension": "PA-EXT-033-A1-BODY-WORDS-R4"
+    },
+    {
+      "lesson": "PA-R27-nose-heart-r4",
+      "extension": "PA-EXT-033-A1-BODY-WORDS-R4"
+    }
   ],
   "before": [],
   "inline": [

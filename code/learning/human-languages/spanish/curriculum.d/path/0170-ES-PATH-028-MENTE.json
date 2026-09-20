@@ -2,7 +2,10 @@
   "id": "ES-PATH-028-MENTE",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "ES-C56-mente"
+    {
+      "lesson": "ES-C56-mente",
+      "extension": "ES-EXT-028-MENTE"
+    }
   ],
   "before": [],
   "inline": [

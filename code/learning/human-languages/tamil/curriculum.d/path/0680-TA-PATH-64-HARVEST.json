@@ -2,11 +2,26 @@
   "id": "TA-PATH-64-HARVEST",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "TA-C64-paddy",
-    "TA-C64-grass",
-    "TA-C64-crop",
-    "TA-C64-threshing-floor",
-    "TA-C64-harvest"
+    {
+      "lesson": "TA-C64-paddy",
+      "extension": "TA-EXT-64-HARVEST"
+    },
+    {
+      "lesson": "TA-C64-grass",
+      "extension": "TA-EXT-64-HARVEST"
+    },
+    {
+      "lesson": "TA-C64-crop",
+      "extension": "TA-EXT-64-HARVEST"
+    },
+    {
+      "lesson": "TA-C64-threshing-floor",
+      "extension": "TA-EXT-64-HARVEST"
+    },
+    {
+      "lesson": "TA-C64-harvest",
+      "extension": "TA-EXT-64-HARVEST"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,9 +2,18 @@
   "id": "TA-PATH-036",
   "spine_node": "SPINE-SAY-WHAT-I-WANT",
   "lessons": [
-    "TA-C39-vendum",
-    "TA-C39-evvalavu",
-    "TA-C39-oru"
+    {
+      "lesson": "TA-C39-vendum",
+      "extension": "TA-EXT-036-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "TA-C39-evvalavu",
+      "extension": "TA-EXT-036-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "TA-C39-oru",
+      "extension": "TA-EXT-036-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

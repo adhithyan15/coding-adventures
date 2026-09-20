@@ -2,12 +2,30 @@
   "id": "HI-PATH-103-CHAAH",
   "spine_node": "SPINE-SAY-WHAT-I-WANT",
   "lessons": [
-    "HI-C95-jaanta-hun",
-    "HI-C95-jaante-hain",
-    "HI-C95-chahiye",
-    "HI-C95-mujhe-chahiye",
-    "HI-C95-repaso-chaah",
-    "HI-C95-sintesis-chaay"
+    {
+      "lesson": "HI-C95-jaanta-hun",
+      "extension": "HI-EXT-103-CHAAH"
+    },
+    {
+      "lesson": "HI-C95-jaante-hain",
+      "extension": "HI-EXT-103-CHAAH"
+    },
+    {
+      "lesson": "HI-C95-chahiye",
+      "extension": "HI-EXT-103-CHAAH"
+    },
+    {
+      "lesson": "HI-C95-mujhe-chahiye",
+      "extension": "HI-EXT-103-CHAAH"
+    },
+    {
+      "lesson": "HI-C95-repaso-chaah",
+      "extension": "HI-EXT-103-CHAAH"
+    },
+    {
+      "lesson": "HI-C95-sintesis-chaay",
+      "extension": "HI-EXT-103-CHAAH"
+    }
   ],
   "before": [],
   "inline": [

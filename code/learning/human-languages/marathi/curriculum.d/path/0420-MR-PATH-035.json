@@ -2,9 +2,18 @@
   "id": "MR-PATH-035",
   "spine_node": "SPINE-NEGATE-AND-ASK",
   "lessons": [
-    "MR-C33-kaa-polar",
-    "MR-W33-question-mark",
-    "MR-R33-ask-and-answer"
+    {
+      "lesson": "MR-C33-kaa-polar",
+      "extension": "MR-EXT-048-POLAR-QUESTION"
+    },
+    {
+      "lesson": "MR-W33-question-mark",
+      "extension": "MR-EXT-048-POLAR-QUESTION"
+    },
+    {
+      "lesson": "MR-R33-ask-and-answer",
+      "extension": "MR-EXT-048-POLAR-QUESTION"
+    }
   ],
   "before": [],
   "inline": [

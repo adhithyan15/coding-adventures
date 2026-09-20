@@ -2,11 +2,26 @@
   "id": "TE-PATH-53-SKY",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "TE-C53-sky",
-    "TE-C53-sun",
-    "TE-C53-moon",
-    "TE-C53-star",
-    "TE-C53-cloud"
+    {
+      "lesson": "TE-C53-sky",
+      "extension": "TE-EXT-53-SKY"
+    },
+    {
+      "lesson": "TE-C53-sun",
+      "extension": "TE-EXT-53-SKY"
+    },
+    {
+      "lesson": "TE-C53-moon",
+      "extension": "TE-EXT-53-SKY"
+    },
+    {
+      "lesson": "TE-C53-star",
+      "extension": "TE-EXT-53-SKY"
+    },
+    {
+      "lesson": "TE-C53-cloud",
+      "extension": "TE-EXT-53-SKY"
+    }
   ],
   "before": [],
   "inline": [

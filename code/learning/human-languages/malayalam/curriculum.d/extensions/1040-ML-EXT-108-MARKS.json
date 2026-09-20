@@ -6,13 +6,5 @@
   "canDo": "I can name and place the punctuation marks Malayalam prints, and say which Malayalam pieces were doing their work before they arrived.",
   "prerequisites": [
     "ML-EXT-107-MEDICINE"
-  ],
-  "lessons": [
-    "ML-W108-full-stop",
-    "ML-W108-comma",
-    "ML-W108-question-mark",
-    "ML-W108-quotation",
-    "ML-W108-the-rest",
-    "ML-R108-marks-recall"
   ]
 }

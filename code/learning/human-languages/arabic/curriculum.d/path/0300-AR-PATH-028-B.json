@@ -2,9 +2,18 @@
   "id": "AR-PATH-028-B",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "AR-C31-qaraa",
-    "AR-C31-saala",
-    "AR-C31-kataba"
+    {
+      "lesson": "AR-C31-qaraa",
+      "extension": "AR-EXT-028-LANGUAGE-SPECIFIC-B"
+    },
+    {
+      "lesson": "AR-C31-saala",
+      "extension": "AR-EXT-028-LANGUAGE-SPECIFIC-B"
+    },
+    {
+      "lesson": "AR-C31-kataba",
+      "extension": "AR-EXT-028-LANGUAGE-SPECIFIC-B"
+    }
   ],
   "before": [],
   "inline": [

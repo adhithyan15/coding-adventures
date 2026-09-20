@@ -2,7 +2,10 @@
   "id": "ES-PATH-037-REVIEW-SE",
   "spine_node": "SPINE-GIVE-REASONS",
   "lessons": [
-    "ES-C52-tres-ses"
+    {
+      "lesson": "ES-C52-tres-ses",
+      "extension": "ES-EXT-037-REVIEW-SE"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,11 +2,26 @@
   "id": "HI-PATH-53-BODY",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "HI-C53-shoulder",
-    "HI-C53-knee",
-    "HI-C53-forehead",
-    "HI-C53-back",
-    "HI-C53-lip"
+    {
+      "lesson": "HI-C53-shoulder",
+      "extension": "HI-EXT-53-BODY"
+    },
+    {
+      "lesson": "HI-C53-knee",
+      "extension": "HI-EXT-53-BODY"
+    },
+    {
+      "lesson": "HI-C53-forehead",
+      "extension": "HI-EXT-53-BODY"
+    },
+    {
+      "lesson": "HI-C53-back",
+      "extension": "HI-EXT-53-BODY"
+    },
+    {
+      "lesson": "HI-C53-lip",
+      "extension": "HI-EXT-53-BODY"
+    }
   ],
   "before": [],
   "inline": [

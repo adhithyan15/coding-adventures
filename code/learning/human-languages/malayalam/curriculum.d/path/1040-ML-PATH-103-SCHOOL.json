@@ -2,12 +2,30 @@
   "id": "ML-PATH-103-SCHOOL",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ML-C103-pallikkoodam",
-    "ML-S147-letter-ttha",
-    "ML-C103-paadam",
-    "ML-C103-pareeksha",
-    "ML-C103-maarkku",
-    "ML-R103-school-recall"
+    {
+      "lesson": "ML-C103-pallikkoodam",
+      "extension": "ML-EXT-103-SCHOOL"
+    },
+    {
+      "lesson": "ML-S147-letter-ttha",
+      "extension": "ML-EXT-103-SCHOOL"
+    },
+    {
+      "lesson": "ML-C103-paadam",
+      "extension": "ML-EXT-103-SCHOOL"
+    },
+    {
+      "lesson": "ML-C103-pareeksha",
+      "extension": "ML-EXT-103-SCHOOL"
+    },
+    {
+      "lesson": "ML-C103-maarkku",
+      "extension": "ML-EXT-103-SCHOOL"
+    },
+    {
+      "lesson": "ML-R103-school-recall",
+      "extension": "ML-EXT-103-SCHOOL"
+    }
   ],
   "before": [],
   "inline": [

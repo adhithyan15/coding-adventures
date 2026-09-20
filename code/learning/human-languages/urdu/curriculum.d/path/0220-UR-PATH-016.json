@@ -2,11 +2,26 @@
   "id": "UR-PATH-016",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "UR-C15-barish",
-    "UR-C15-dhoop",
-    "UR-C15-hawa",
-    "UR-C15-garmi",
-    "UR-C15-sardi"
+    {
+      "lesson": "UR-C15-barish",
+      "extension": "UR-EXT-026-WEATHER"
+    },
+    {
+      "lesson": "UR-C15-dhoop",
+      "extension": "UR-EXT-026-WEATHER"
+    },
+    {
+      "lesson": "UR-C15-hawa",
+      "extension": "UR-EXT-026-WEATHER"
+    },
+    {
+      "lesson": "UR-C15-garmi",
+      "extension": "UR-EXT-026-WEATHER"
+    },
+    {
+      "lesson": "UR-C15-sardi",
+      "extension": "UR-EXT-026-WEATHER"
+    }
   ],
   "before": [],
   "inline": [

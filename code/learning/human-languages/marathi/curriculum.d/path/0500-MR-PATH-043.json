@@ -2,8 +2,14 @@
   "id": "MR-PATH-043",
   "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
   "lessons": [
-    "MR-C41-ghar",
-    "MR-C41-kholi"
+    {
+      "lesson": "MR-C41-ghar",
+      "extension": "MR-EXT-056-HOUSE-AND-ROOM"
+    },
+    {
+      "lesson": "MR-C41-kholi",
+      "extension": "MR-EXT-056-HOUSE-AND-ROOM"
+    }
   ],
   "before": [],
   "inline": [

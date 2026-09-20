@@ -2,10 +2,22 @@
   "id": "IT-PATH-020",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "IT-C16-essere",
-    "IT-C16-essere-stato",
-    "IT-C16-andare",
-    "IT-C16-passato-prossimo-essere"
+    {
+      "lesson": "IT-C16-essere",
+      "extension": "IT-EXT-020-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "IT-C16-essere-stato",
+      "extension": "IT-EXT-020-ETYMOLOGY"
+    },
+    {
+      "lesson": "IT-C16-andare",
+      "extension": "IT-EXT-020-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "IT-C16-passato-prossimo-essere",
+      "extension": "IT-EXT-020-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

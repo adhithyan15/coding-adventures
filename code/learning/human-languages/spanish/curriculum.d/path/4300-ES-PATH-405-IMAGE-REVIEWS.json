@@ -2,8 +2,14 @@
   "id": "ES-PATH-405-IMAGE-REVIEWS",
   "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
   "lessons": [
-    "ES-C405-images-recall-1",
-    "ES-C405-images-recall-2"
+    {
+      "lesson": "ES-C405-images-recall-1",
+      "extension": "ES-EXT-405-IMAGE-REVIEWS"
+    },
+    {
+      "lesson": "ES-C405-images-recall-2",
+      "extension": "ES-EXT-405-IMAGE-REVIEWS"
+    }
   ],
   "before": [],
   "inline": [

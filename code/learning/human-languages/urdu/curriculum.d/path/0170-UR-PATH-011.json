@@ -2,10 +2,22 @@
   "id": "UR-PATH-011",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "UR-C10-kaan",
-    "UR-C10-naak",
-    "UR-C10-aankh",
-    "UR-C10-munh"
+    {
+      "lesson": "UR-C10-kaan",
+      "extension": "UR-EXT-021-FACE-WORDS"
+    },
+    {
+      "lesson": "UR-C10-naak",
+      "extension": "UR-EXT-021-FACE-WORDS"
+    },
+    {
+      "lesson": "UR-C10-aankh",
+      "extension": "UR-EXT-021-FACE-WORDS"
+    },
+    {
+      "lesson": "UR-C10-munh",
+      "extension": "UR-EXT-021-FACE-WORDS"
+    }
   ],
   "before": [],
   "inline": [

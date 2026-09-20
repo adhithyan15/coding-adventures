@@ -2,9 +2,18 @@
   "id": "AR-PATH-034",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "AR-C37-present",
-    "AR-C37-la-afham",
-    "AR-R37-now-and-not"
+    {
+      "lesson": "AR-C37-present",
+      "extension": "AR-EXT-034-PRESENT-TENSE"
+    },
+    {
+      "lesson": "AR-C37-la-afham",
+      "extension": "AR-EXT-034-PRESENT-TENSE"
+    },
+    {
+      "lesson": "AR-R37-now-and-not",
+      "extension": "AR-EXT-034-PRESENT-TENSE"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,10 +2,22 @@
   "id": "ML-PATH-105-PLACES",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ML-C105-raajyam",
-    "ML-C105-nagaram",
-    "ML-C105-thalasthaanam",
-    "ML-R105-places-recall"
+    {
+      "lesson": "ML-C105-raajyam",
+      "extension": "ML-EXT-105-PLACES"
+    },
+    {
+      "lesson": "ML-C105-nagaram",
+      "extension": "ML-EXT-105-PLACES"
+    },
+    {
+      "lesson": "ML-C105-thalasthaanam",
+      "extension": "ML-EXT-105-PLACES"
+    },
+    {
+      "lesson": "ML-R105-places-recall",
+      "extension": "ML-EXT-105-PLACES"
+    }
   ],
   "before": [],
   "inline": [

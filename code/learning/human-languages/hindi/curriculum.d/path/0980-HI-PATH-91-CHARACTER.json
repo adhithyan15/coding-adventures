@@ -2,14 +2,38 @@
   "id": "HI-PATH-91-CHARACTER",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "HI-C83-buraa",
-    "HI-C83-hoshiyaar",
-    "HI-C83-mehnati",
-    "HI-C83-sharmeela",
-    "HI-C83-milansaar",
-    "HI-C83-gambhir",
-    "HI-C83-repaso-svabhaav",
-    "HI-C83-sintesis-svabhaav"
+    {
+      "lesson": "HI-C83-buraa",
+      "extension": "HI-EXT-91-CHARACTER"
+    },
+    {
+      "lesson": "HI-C83-hoshiyaar",
+      "extension": "HI-EXT-91-CHARACTER"
+    },
+    {
+      "lesson": "HI-C83-mehnati",
+      "extension": "HI-EXT-91-CHARACTER"
+    },
+    {
+      "lesson": "HI-C83-sharmeela",
+      "extension": "HI-EXT-91-CHARACTER"
+    },
+    {
+      "lesson": "HI-C83-milansaar",
+      "extension": "HI-EXT-91-CHARACTER"
+    },
+    {
+      "lesson": "HI-C83-gambhir",
+      "extension": "HI-EXT-91-CHARACTER"
+    },
+    {
+      "lesson": "HI-C83-repaso-svabhaav",
+      "extension": "HI-EXT-91-CHARACTER"
+    },
+    {
+      "lesson": "HI-C83-sintesis-svabhaav",
+      "extension": "HI-EXT-91-CHARACTER"
+    }
   ],
   "before": [],
   "inline": [

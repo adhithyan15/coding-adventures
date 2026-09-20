@@ -2,9 +2,18 @@
   "id": "MR-PATH-037",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "MR-C35-kii",
-    "MR-C35-saathi",
-    "MR-R35-inside"
+    {
+      "lesson": "MR-C35-kii",
+      "extension": "MR-EXT-050-CLAUSE-INSIDE-CLAUSE"
+    },
+    {
+      "lesson": "MR-C35-saathi",
+      "extension": "MR-EXT-050-CLAUSE-INSIDE-CLAUSE"
+    },
+    {
+      "lesson": "MR-R35-inside",
+      "extension": "MR-EXT-050-CLAUSE-INSIDE-CLAUSE"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,8 +2,14 @@
   "id": "PT-PATH-015",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "PT-C10-pais",
-    "PT-C10-irmaos"
+    {
+      "lesson": "PT-C10-pais",
+      "extension": "PT-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "PT-C10-irmaos",
+      "extension": "PT-EXT-015-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,10 +2,22 @@
   "id": "UR-PATH-013",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "UR-C12-pani",
-    "UR-C12-chai",
-    "UR-C12-doodh",
-    "UR-C12-roti"
+    {
+      "lesson": "UR-C12-pani",
+      "extension": "UR-EXT-023-WATER-TEA-MILK-BREAD"
+    },
+    {
+      "lesson": "UR-C12-chai",
+      "extension": "UR-EXT-023-WATER-TEA-MILK-BREAD"
+    },
+    {
+      "lesson": "UR-C12-doodh",
+      "extension": "UR-EXT-023-WATER-TEA-MILK-BREAD"
+    },
+    {
+      "lesson": "UR-C12-roti",
+      "extension": "UR-EXT-023-WATER-TEA-MILK-BREAD"
+    }
   ],
   "before": [],
   "inline": [

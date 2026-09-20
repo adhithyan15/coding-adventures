@@ -2,10 +2,22 @@
   "id": "TA-PATH-76-CHOICE",
   "spine_node": "SPINE-SAY-WHAT-I-WANT",
   "lessons": [
-    "TA-C76-but",
-    "TA-C76-or",
-    "TA-W31-read-aanaal",
-    "TA-C76-choice"
+    {
+      "lesson": "TA-C76-but",
+      "extension": "TA-EXT-76-CHOICE"
+    },
+    {
+      "lesson": "TA-C76-or",
+      "extension": "TA-EXT-76-CHOICE"
+    },
+    {
+      "lesson": "TA-W31-read-aanaal",
+      "extension": "TA-EXT-76-CHOICE"
+    },
+    {
+      "lesson": "TA-C76-choice",
+      "extension": "TA-EXT-76-CHOICE"
+    }
   ],
   "before": [],
   "inline": [

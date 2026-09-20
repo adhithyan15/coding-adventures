@@ -2,10 +2,22 @@
   "id": "HI-PATH-44-FAMILY",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "HI-C44-son",
-    "HI-C44-daughter",
-    "HI-C44-family",
-    "HI-C44-people"
+    {
+      "lesson": "HI-C44-son",
+      "extension": "HI-EXT-44-FAMILY"
+    },
+    {
+      "lesson": "HI-C44-daughter",
+      "extension": "HI-EXT-44-FAMILY"
+    },
+    {
+      "lesson": "HI-C44-family",
+      "extension": "HI-EXT-44-FAMILY"
+    },
+    {
+      "lesson": "HI-C44-people",
+      "extension": "HI-EXT-44-FAMILY"
+    }
   ],
   "before": [],
   "inline": [

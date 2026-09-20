@@ -3,9 +3,18 @@
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
     "IT-C01-ciao",
-    "IT-W01-ciao-guided-copy",
-    "IT-W01-ciao-delayed-copy",
-    "IT-W01-ciao-dictation"
+    {
+      "lesson": "IT-W01-ciao-guided-copy",
+      "extension": "IT-EXT-001-WRITING-START"
+    },
+    {
+      "lesson": "IT-W01-ciao-delayed-copy",
+      "extension": "IT-EXT-001-WRITING-START"
+    },
+    {
+      "lesson": "IT-W01-ciao-dictation",
+      "extension": "IT-EXT-001-WRITING-START"
+    }
   ],
   "before": [],
   "inline": [],

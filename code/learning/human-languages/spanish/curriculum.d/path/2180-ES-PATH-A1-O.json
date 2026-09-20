@@ -2,7 +2,10 @@
   "id": "ES-PATH-A1-O",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C61-o"
+    {
+      "lesson": "ES-C61-o",
+      "extension": "ES-EXT-A1-O"
+    }
   ],
   "before": [],
   "inline": [

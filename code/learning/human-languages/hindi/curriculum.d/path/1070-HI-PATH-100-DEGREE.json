@@ -2,13 +2,34 @@
   "id": "HI-PATH-100-DEGREE",
   "spine_node": "SPINE-DESCRIBE-QUALITIES",
   "lessons": [
-    "HI-C92-thoda",
-    "HI-C92-achchha-buraa",
-    "HI-C92-se-comparison",
-    "HI-C92-kitna",
-    "HI-C92-kitna-achchha",
-    "HI-C92-repaso-maatra",
-    "HI-C92-sintesis-maatra"
+    {
+      "lesson": "HI-C92-thoda",
+      "extension": "HI-EXT-100-DEGREE"
+    },
+    {
+      "lesson": "HI-C92-achchha-buraa",
+      "extension": "HI-EXT-100-DEGREE"
+    },
+    {
+      "lesson": "HI-C92-se-comparison",
+      "extension": "HI-EXT-100-DEGREE"
+    },
+    {
+      "lesson": "HI-C92-kitna",
+      "extension": "HI-EXT-100-DEGREE"
+    },
+    {
+      "lesson": "HI-C92-kitna-achchha",
+      "extension": "HI-EXT-100-DEGREE"
+    },
+    {
+      "lesson": "HI-C92-repaso-maatra",
+      "extension": "HI-EXT-100-DEGREE"
+    },
+    {
+      "lesson": "HI-C92-sintesis-maatra",
+      "extension": "HI-EXT-100-DEGREE"
+    }
   ],
   "before": [],
   "inline": [

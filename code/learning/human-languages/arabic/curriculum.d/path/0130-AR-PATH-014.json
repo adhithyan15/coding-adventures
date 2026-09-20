@@ -2,8 +2,14 @@
   "id": "AR-PATH-014",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "AR-C10-ab-umm",
-    "AR-C10-akh-ukht"
+    {
+      "lesson": "AR-C10-ab-umm",
+      "extension": "AR-EXT-014-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "AR-C10-akh-ukht",
+      "extension": "AR-EXT-014-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

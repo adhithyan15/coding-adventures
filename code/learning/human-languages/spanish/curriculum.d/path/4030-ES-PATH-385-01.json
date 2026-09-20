@@ -2,10 +2,22 @@
   "id": "ES-PATH-385-01",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "ES-C385-usar",
-    "ES-C385-tocar",
-    "ES-C385-mezclar",
-    "ES-C385-colgar"
+    {
+      "lesson": "ES-C385-usar",
+      "extension": "ES-EXT-385-VERB"
+    },
+    {
+      "lesson": "ES-C385-tocar",
+      "extension": "ES-EXT-385-VERB"
+    },
+    {
+      "lesson": "ES-C385-mezclar",
+      "extension": "ES-EXT-385-VERB"
+    },
+    {
+      "lesson": "ES-C385-colgar",
+      "extension": "ES-EXT-385-VERB"
+    }
   ],
   "before": [],
   "inline": [

@@ -3,19 +3,37 @@
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
     "TA-C23-naal",
-    "TA-C23-day-family-register",
+    {
+      "lesson": "TA-C23-day-family-register",
+      "extension": "TA-EXT-027-REGISTER"
+    },
     "TA-C24-iravu",
-    "TA-C24-night-register-darkness",
-    "TA-C25-iniya-iravu",
-    "TA-C25-goodnight-alternatives",
+    {
+      "lesson": "TA-C24-night-register-darkness",
+      "extension": "TA-EXT-027-REGISTER"
+    },
+    {
+      "lesson": "TA-C25-iniya-iravu",
+      "extension": "TA-EXT-027-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "TA-C25-goodnight-alternatives",
+      "extension": "TA-EXT-027-ETYMOLOGY"
+    },
     "TA-C26-kaalai",
     "TA-C27-maalai",
     "TA-C28-pirpakal",
-    "TA-C28-afternoon-boundary",
+    {
+      "lesson": "TA-C28-afternoon-boundary",
+      "extension": "TA-EXT-027-ETYMOLOGY"
+    },
     "TA-C29-kaalai-vanakkam",
     "TA-C30-maalai-vanakkam",
     "TA-C31-matiya-vanakkam",
-    "TA-C31-afternoon-greeting-root"
+    {
+      "lesson": "TA-C31-afternoon-greeting-root",
+      "extension": "TA-EXT-027-ETYMOLOGY"
+    }
   ],
   "before": [],
   "inline": [

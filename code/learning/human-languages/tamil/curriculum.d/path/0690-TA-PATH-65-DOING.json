@@ -2,13 +2,34 @@
   "id": "TA-PATH-65-DOING",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "TA-C65-drink",
-    "TA-C65-walk",
-    "TA-W21-read-kudi",
-    "TA-C65-stop",
-    "TA-C65-open",
-    "TA-C65-close",
-    "TA-C65-doing-recall"
+    {
+      "lesson": "TA-C65-drink",
+      "extension": "TA-EXT-65-DOING"
+    },
+    {
+      "lesson": "TA-C65-walk",
+      "extension": "TA-EXT-65-DOING"
+    },
+    {
+      "lesson": "TA-W21-read-kudi",
+      "extension": "TA-EXT-65-DOING"
+    },
+    {
+      "lesson": "TA-C65-stop",
+      "extension": "TA-EXT-65-DOING"
+    },
+    {
+      "lesson": "TA-C65-open",
+      "extension": "TA-EXT-65-DOING"
+    },
+    {
+      "lesson": "TA-C65-close",
+      "extension": "TA-EXT-65-DOING"
+    },
+    {
+      "lesson": "TA-C65-doing-recall",
+      "extension": "TA-EXT-65-DOING"
+    }
   ],
   "before": [],
   "inline": [

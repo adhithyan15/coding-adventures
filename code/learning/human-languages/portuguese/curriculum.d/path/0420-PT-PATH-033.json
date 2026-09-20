@@ -2,9 +2,18 @@
   "id": "PT-PATH-033",
   "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
   "lessons": [
-    "PT-C29-palavras",
-    "PT-C29-linhas",
-    "PT-C29-primeira-leitura"
+    {
+      "lesson": "PT-C29-palavras",
+      "extension": "PT-EXT-033-READING"
+    },
+    {
+      "lesson": "PT-C29-linhas",
+      "extension": "PT-EXT-033-READING"
+    },
+    {
+      "lesson": "PT-C29-primeira-leitura",
+      "extension": "PT-EXT-033-READING"
+    }
   ],
   "before": [],
   "inline": [

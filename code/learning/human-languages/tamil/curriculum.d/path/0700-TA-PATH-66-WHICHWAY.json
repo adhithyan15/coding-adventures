@@ -2,14 +2,38 @@
   "id": "TA-PATH-66-WHICHWAY",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "TA-C66-up",
-    "TA-C66-down",
-    "TA-W22-read-mele",
-    "TA-C66-inside",
-    "TA-C66-outside",
-    "TA-C66-right",
-    "TA-C66-left",
-    "TA-C66-whichway-recall"
+    {
+      "lesson": "TA-C66-up",
+      "extension": "TA-EXT-66-WHICHWAY"
+    },
+    {
+      "lesson": "TA-C66-down",
+      "extension": "TA-EXT-66-WHICHWAY"
+    },
+    {
+      "lesson": "TA-W22-read-mele",
+      "extension": "TA-EXT-66-WHICHWAY"
+    },
+    {
+      "lesson": "TA-C66-inside",
+      "extension": "TA-EXT-66-WHICHWAY"
+    },
+    {
+      "lesson": "TA-C66-outside",
+      "extension": "TA-EXT-66-WHICHWAY"
+    },
+    {
+      "lesson": "TA-C66-right",
+      "extension": "TA-EXT-66-WHICHWAY"
+    },
+    {
+      "lesson": "TA-C66-left",
+      "extension": "TA-EXT-66-WHICHWAY"
+    },
+    {
+      "lesson": "TA-C66-whichway-recall",
+      "extension": "TA-EXT-66-WHICHWAY"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,30 +2,84 @@
   "id": "BN-PATH-001",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "BN-C01-nomoshkar",
-    "BN-W01-na",
-    "BN-W01-na-trace",
-    "BN-W01-na-guided-copy",
-    "BN-W01-na-delayed-copy",
-    "BN-W01-na-dictation",
-    "BN-W01-aa-matra",
-    "BN-W01-aa",
-    "BN-W01-ha",
-    "BN-W01-ma",
-    "BN-W01-sa",
-    "BN-W01-ka",
-    "BN-W01-hasanta",
-    "BN-W01-ra",
-    "BN-W01-nomoshkar-read",
+    {
+      "lesson": "BN-C01-nomoshkar",
+      "extension": "BN-EXT-001-INLINE-SCRIPT"
+    },
+    {
+      "lesson": "BN-W01-na",
+      "extension": "BN-EXT-018-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "BN-W01-na-trace",
+      "extension": "BN-EXT-018-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "BN-W01-na-guided-copy",
+      "extension": "BN-EXT-018-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "BN-W01-na-delayed-copy",
+      "extension": "BN-EXT-018-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "BN-W01-na-dictation",
+      "extension": "BN-EXT-018-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "BN-W01-aa-matra",
+      "extension": "BN-EXT-018-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "BN-W01-aa",
+      "extension": "BN-EXT-018-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "BN-W01-ha",
+      "extension": "BN-EXT-018-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "BN-W01-ma",
+      "extension": "BN-EXT-018-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "BN-W01-sa",
+      "extension": "BN-EXT-018-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "BN-W01-ka",
+      "extension": "BN-EXT-018-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "BN-W01-hasanta",
+      "extension": "BN-EXT-018-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "BN-W01-ra",
+      "extension": "BN-EXT-018-SCRIPT-FIRST-PIECES"
+    },
+    {
+      "lesson": "BN-W01-nomoshkar-read",
+      "extension": "BN-EXT-018-SCRIPT-FIRST-PIECES"
+    },
     "BN-W02-naam-read",
     "BN-W02-i-matra",
     "BN-W04-i-indep",
     "BN-W02-ta",
     "BN-W02-u-matra",
     "BN-W02-tumi-read",
-    "BN-W02-ya",
-    "BN-W02-chandrabindu",
-    "BN-W02-hyan-read",
+    {
+      "lesson": "BN-W02-ya",
+      "extension": "BN-EXT-022-SCRIPT-MARKS-AND-FLAPS"
+    },
+    {
+      "lesson": "BN-W02-chandrabindu",
+      "extension": "BN-EXT-022-SCRIPT-MARKS-AND-FLAPS"
+    },
+    {
+      "lesson": "BN-W02-hyan-read",
+      "extension": "BN-EXT-022-SCRIPT-MARKS-AND-FLAPS"
+    },
     "BN-W02-ami-read",
     "BN-W02-la",
     "BN-W02-e-matra",
@@ -37,29 +91,65 @@
     "BN-W03-bha",
     "BN-W03-bhalo-read",
     "BN-W03-kha",
-    "BN-W03-ga",
+    {
+      "lesson": "BN-W03-ga",
+      "extension": "BN-EXT-022-SCRIPT-MARKS-AND-FLAPS"
+    },
     "BN-W04-pa",
     "BN-W03-da",
     "BN-W03-dha",
     "BN-W04-cha",
-    "BN-W04-chha",
-    "BN-W04-achhi-read",
+    {
+      "lesson": "BN-W04-chha",
+      "extension": "BN-EXT-022-SCRIPT-MARKS-AND-FLAPS"
+    },
+    {
+      "lesson": "BN-W04-achhi-read",
+      "extension": "BN-EXT-022-SCRIPT-MARKS-AND-FLAPS"
+    },
     "BN-W04-ja",
-    "BN-W04-o-indep",
-    "BN-W04-nukta",
-    "BN-W04-howa-read",
+    {
+      "lesson": "BN-W04-o-indep",
+      "extension": "BN-EXT-022-SCRIPT-MARKS-AND-FLAPS"
+    },
+    {
+      "lesson": "BN-W04-nukta",
+      "extension": "BN-EXT-022-SCRIPT-MARKS-AND-FLAPS"
+    },
+    {
+      "lesson": "BN-W04-howa-read",
+      "extension": "BN-EXT-022-SCRIPT-MARKS-AND-FLAPS"
+    },
     "BN-W04-chaa-read",
     "BN-W04-jol-read",
     "BN-W03-dudh-read",
-    "BN-W04-dda",
-    "BN-W04-pora-read",
+    {
+      "lesson": "BN-W04-dda",
+      "extension": "BN-EXT-022-SCRIPT-MARKS-AND-FLAPS"
+    },
+    {
+      "lesson": "BN-W04-pora-read",
+      "extension": "BN-EXT-022-SCRIPT-MARKS-AND-FLAPS"
+    },
     "BN-W04-poribar-read",
     "BN-W04-bhai-read",
-    "BN-W04-chokh-read",
-    "BN-W04-nak-read",
+    {
+      "lesson": "BN-W04-chokh-read",
+      "extension": "BN-EXT-022-SCRIPT-MARKS-AND-FLAPS"
+    },
+    {
+      "lesson": "BN-W04-nak-read",
+      "extension": "BN-EXT-022-SCRIPT-MARKS-AND-FLAPS"
+    },
     "BN-W03-mukh-read",
-    "BN-W04-ri-matra",
-    "BN-W04-hridoy-read",
+    {
+      "lesson": "BN-W04-ri-matra",
+      "extension": "BN-EXT-022-SCRIPT-MARKS-AND-FLAPS"
+    },
+    {
+      "lesson": "BN-W04-hridoy-read",
+      "extension": "BN-EXT-022-SCRIPT-MARKS-AND-FLAPS"
+    },
     "BN-W02-lal-read",
     "BN-W03-kalo-read",
     "BN-W03-shada-read",

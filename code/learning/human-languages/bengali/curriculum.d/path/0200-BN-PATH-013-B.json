@@ -2,7 +2,10 @@
   "id": "BN-PATH-013-B",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "BN-C09-jijnasa-kora"
+    {
+      "lesson": "BN-C09-jijnasa-kora",
+      "extension": "BN-EXT-013-CONJUNCT-VERBS-B"
+    }
   ],
   "before": [],
   "inline": [

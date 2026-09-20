@@ -2,10 +2,22 @@
   "id": "HI-PATH-42-VERBS",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "HI-C42-come",
-    "HI-C42-sit",
-    "HI-C42-stand",
-    "HI-C42-give"
+    {
+      "lesson": "HI-C42-come",
+      "extension": "HI-EXT-42-VERBS"
+    },
+    {
+      "lesson": "HI-C42-sit",
+      "extension": "HI-EXT-42-VERBS"
+    },
+    {
+      "lesson": "HI-C42-stand",
+      "extension": "HI-EXT-42-VERBS"
+    },
+    {
+      "lesson": "HI-C42-give",
+      "extension": "HI-EXT-42-VERBS"
+    }
   ],
   "before": [],
   "inline": [

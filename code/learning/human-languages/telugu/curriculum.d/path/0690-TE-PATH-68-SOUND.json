@@ -2,11 +2,26 @@
   "id": "TE-PATH-68-SOUND",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "TE-C68-sound",
-    "TE-C68-voice",
-    "TE-C68-song",
-    "TE-C68-shout",
-    "TE-C68-message"
+    {
+      "lesson": "TE-C68-sound",
+      "extension": "TE-EXT-68-SOUND"
+    },
+    {
+      "lesson": "TE-C68-voice",
+      "extension": "TE-EXT-68-SOUND"
+    },
+    {
+      "lesson": "TE-C68-song",
+      "extension": "TE-EXT-68-SOUND"
+    },
+    {
+      "lesson": "TE-C68-shout",
+      "extension": "TE-EXT-68-SOUND"
+    },
+    {
+      "lesson": "TE-C68-message",
+      "extension": "TE-EXT-68-SOUND"
+    }
   ],
   "before": [],
   "inline": [

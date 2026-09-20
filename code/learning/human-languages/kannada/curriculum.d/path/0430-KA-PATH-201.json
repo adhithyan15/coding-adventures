@@ -2,12 +2,30 @@
   "id": "KA-PATH-201",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "KA-C42-big",
-    "KA-C42-small",
-    "KA-C42-good",
-    "KA-C42-new",
-    "KA-C42-old",
-    "KA-C42-adjective-system"
+    {
+      "lesson": "KA-C42-big",
+      "extension": "KA-EXT-201-ADJ"
+    },
+    {
+      "lesson": "KA-C42-small",
+      "extension": "KA-EXT-201-ADJ"
+    },
+    {
+      "lesson": "KA-C42-good",
+      "extension": "KA-EXT-201-ADJ"
+    },
+    {
+      "lesson": "KA-C42-new",
+      "extension": "KA-EXT-201-ADJ"
+    },
+    {
+      "lesson": "KA-C42-old",
+      "extension": "KA-EXT-201-ADJ"
+    },
+    {
+      "lesson": "KA-C42-adjective-system",
+      "extension": "KA-EXT-201-ADJ"
+    }
   ],
   "before": [],
   "inline": [

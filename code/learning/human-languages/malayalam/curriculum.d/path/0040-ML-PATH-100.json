@@ -2,52 +2,190 @@
   "id": "ML-PATH-100",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "ML-S133-letter-a",
-    "ML-S112-letter-pa",
-    "ML-S134-vowel-sign-ee",
-    "ML-S135-letter-e",
-    "ML-S136-letter-rra",
-    "ML-S137-letter-aa",
-    "ML-S113-letter-nna",
-    "ML-S138-vowel-sign-ii",
-    "ML-S06-letter-chillu-ll",
-    "ML-S07-vowel-sign-u",
-    "ML-S131-chillu-nn",
-    "ML-S126-letter-oo",
-    "ML-S139-vowel-sign-e",
-    "ML-S140-letter-i",
-    "ML-S110-letter-va",
-    "ML-S116-letter-u",
-    "ML-S141-vowel-sign-uu",
-    "ML-S115-letter-nya",
-    "ML-S142-chillu-n",
-    "ML-S122-letter-ya",
-    "ML-S143-vowel-sign-o",
-    "ML-S111-letter-ca",
-    "ML-S144-chillu-l",
-    "ML-S127-letter-ha",
-    "ML-S145-letter-ja",
-    "ML-S146-letter-la",
-    "ML-S01-letter-ka",
-    "ML-S109-letter-ra",
-    "ML-S02-sign-virama",
-    "ML-S03-vowel-sign-i",
-    "ML-S04-vowel-sign-aa",
-    "ML-S05-letter-na",
-    "ML-S114-letter-ma",
-    "ML-S08-letter-ta",
-    "ML-S117-letter-tta",
-    "ML-S118-letter-llla",
-    "ML-S119-vowel-sign-oo",
-    "ML-S120-sign-anusvara",
-    "ML-S121-letter-ssa",
-    "ML-S123-letter-da",
-    "ML-S124-letter-sa",
-    "ML-S129-letter-bha",
-    "ML-S125-letter-uu",
-    "ML-S128-vowel-sign-r",
-    "ML-S130-letter-tha",
-    "ML-S132-letter-ga"
+    {
+      "lesson": "ML-S133-letter-a",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S112-letter-pa",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S134-vowel-sign-ee",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S135-letter-e",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S136-letter-rra",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S137-letter-aa",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S113-letter-nna",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S138-vowel-sign-ii",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S06-letter-chillu-ll",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S07-vowel-sign-u",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S131-chillu-nn",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S126-letter-oo",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S139-vowel-sign-e",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S140-letter-i",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S110-letter-va",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S116-letter-u",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S141-vowel-sign-uu",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S115-letter-nya",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S142-chillu-n",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S122-letter-ya",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S143-vowel-sign-o",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S111-letter-ca",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S144-chillu-l",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S127-letter-ha",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S145-letter-ja",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S146-letter-la",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S01-letter-ka",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S109-letter-ra",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S02-sign-virama",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S03-vowel-sign-i",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S04-vowel-sign-aa",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S05-letter-na",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S114-letter-ma",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S08-letter-ta",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S117-letter-tta",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S118-letter-llla",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S119-vowel-sign-oo",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S120-sign-anusvara",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S121-letter-ssa",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S123-letter-da",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S124-letter-sa",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S129-letter-bha",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S125-letter-uu",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S128-vowel-sign-r",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S130-letter-tha",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    },
+    {
+      "lesson": "ML-S132-letter-ga",
+      "extension": "ML-EXT-100-SCRIPT-RECOGNITION"
+    }
   ],
   "before": [],
   "inline": [

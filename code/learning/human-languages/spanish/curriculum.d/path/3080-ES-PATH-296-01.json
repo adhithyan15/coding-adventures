@@ -2,11 +2,26 @@
   "id": "ES-PATH-296-01",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "ES-C296-caballo",
-    "ES-C296-vaca",
-    "ES-C296-oveja",
-    "ES-C296-gallina",
-    "ES-C296-burro"
+    {
+      "lesson": "ES-C296-caballo",
+      "extension": "ES-EXT-296-ANIMALES"
+    },
+    {
+      "lesson": "ES-C296-vaca",
+      "extension": "ES-EXT-296-ANIMALES"
+    },
+    {
+      "lesson": "ES-C296-oveja",
+      "extension": "ES-EXT-296-ANIMALES"
+    },
+    {
+      "lesson": "ES-C296-gallina",
+      "extension": "ES-EXT-296-ANIMALES"
+    },
+    {
+      "lesson": "ES-C296-burro",
+      "extension": "ES-EXT-296-ANIMALES"
+    }
   ],
   "before": [],
   "inline": [

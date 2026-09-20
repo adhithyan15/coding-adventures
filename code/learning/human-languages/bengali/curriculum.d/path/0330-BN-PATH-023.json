@@ -2,11 +2,26 @@
   "id": "BN-PATH-023",
   "spine_node": "SPINE-NEGATE-AND-ASK",
   "lessons": [
-    "BN-C16-na-verb",
-    "BN-C16-noy",
-    "BN-C16-nei",
-    "BN-C16-polar",
-    "BN-R16-three-noes"
+    {
+      "lesson": "BN-C16-na-verb",
+      "extension": "BN-EXT-024-THREE-NEGATORS"
+    },
+    {
+      "lesson": "BN-C16-noy",
+      "extension": "BN-EXT-024-THREE-NEGATORS"
+    },
+    {
+      "lesson": "BN-C16-nei",
+      "extension": "BN-EXT-024-THREE-NEGATORS"
+    },
+    {
+      "lesson": "BN-C16-polar",
+      "extension": "BN-EXT-024-THREE-NEGATORS"
+    },
+    {
+      "lesson": "BN-R16-three-noes",
+      "extension": "BN-EXT-024-THREE-NEGATORS"
+    }
   ],
   "before": [],
   "inline": [

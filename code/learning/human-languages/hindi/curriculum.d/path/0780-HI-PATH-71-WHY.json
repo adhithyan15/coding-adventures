@@ -2,9 +2,18 @@
   "id": "HI-PATH-71-WHY",
   "spine_node": "SPINE-SAY-WHY",
   "lessons": [
-    "HI-C71-kyon",
-    "HI-C71-kyonki",
-    "HI-R71-reasons"
+    {
+      "lesson": "HI-C71-kyon",
+      "extension": "HI-EXT-071-WHY-AND-BECAUSE"
+    },
+    {
+      "lesson": "HI-C71-kyonki",
+      "extension": "HI-EXT-071-WHY-AND-BECAUSE"
+    },
+    {
+      "lesson": "HI-R71-reasons",
+      "extension": "HI-EXT-071-WHY-AND-BECAUSE"
+    }
   ],
   "before": [],
   "inline": [

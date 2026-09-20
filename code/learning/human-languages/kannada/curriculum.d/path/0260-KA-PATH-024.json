@@ -4,7 +4,10 @@
   "lessons": [
     "KA-C23-dina",
     "KA-C24-ratri",
-    "KA-C25-shubha-ratri",
+    {
+      "lesson": "KA-C25-shubha-ratri",
+      "extension": "KA-EXT-024-LANGUAGE-SPECIFIC"
+    },
     "KA-C26-belagge",
     "KA-C27-sanje",
     "KA-C28-aparahna",

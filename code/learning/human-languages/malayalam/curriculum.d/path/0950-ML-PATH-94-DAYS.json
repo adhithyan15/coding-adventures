@@ -2,10 +2,22 @@
   "id": "ML-PATH-94-DAYS",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ML-C94-innu",
-    "ML-C94-innale",
-    "ML-C94-three-days",
-    "ML-R94-day-recall"
+    {
+      "lesson": "ML-C94-innu",
+      "extension": "ML-EXT-94-DAYS"
+    },
+    {
+      "lesson": "ML-C94-innale",
+      "extension": "ML-EXT-94-DAYS"
+    },
+    {
+      "lesson": "ML-C94-three-days",
+      "extension": "ML-EXT-94-DAYS"
+    },
+    {
+      "lesson": "ML-R94-day-recall",
+      "extension": "ML-EXT-94-DAYS"
+    }
   ],
   "before": [],
   "inline": [

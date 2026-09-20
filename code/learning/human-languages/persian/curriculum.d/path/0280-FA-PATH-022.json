@@ -2,9 +2,18 @@
   "id": "FA-PATH-022",
   "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
   "lessons": [
-    "FA-C21-words",
-    "FA-C21-answers",
-    "FA-C21-adad"
+    {
+      "lesson": "FA-C21-words",
+      "extension": "FA-EXT-029-READING"
+    },
+    {
+      "lesson": "FA-C21-answers",
+      "extension": "FA-EXT-029-READING"
+    },
+    {
+      "lesson": "FA-C21-adad",
+      "extension": "FA-EXT-029-READING"
+    }
   ],
   "before": [],
   "inline": [

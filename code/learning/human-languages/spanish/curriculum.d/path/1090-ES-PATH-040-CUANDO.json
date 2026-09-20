@@ -2,7 +2,10 @@
   "id": "ES-PATH-040-CUANDO",
   "spine_node": "SPINE-TALK-ABOUT-PAST",
   "lessons": [
-    "ES-C48-cuando"
+    {
+      "lesson": "ES-C48-cuando",
+      "extension": "ES-EXT-040-CUANDO"
+    }
   ],
   "before": [],
   "inline": [

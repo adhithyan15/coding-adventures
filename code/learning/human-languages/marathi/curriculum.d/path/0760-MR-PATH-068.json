@@ -2,12 +2,30 @@
   "id": "MR-PATH-068",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "MR-C66-sakal",
-    "MR-C66-dupar",
-    "MR-C66-sandhyakal",
-    "MR-C66-ratra",
-    "MR-C66-divas",
-    "MR-R66-day-recall"
+    {
+      "lesson": "MR-C66-sakal",
+      "extension": "MR-EXT-081-PARTS-OF-THE-DAY"
+    },
+    {
+      "lesson": "MR-C66-dupar",
+      "extension": "MR-EXT-081-PARTS-OF-THE-DAY"
+    },
+    {
+      "lesson": "MR-C66-sandhyakal",
+      "extension": "MR-EXT-081-PARTS-OF-THE-DAY"
+    },
+    {
+      "lesson": "MR-C66-ratra",
+      "extension": "MR-EXT-081-PARTS-OF-THE-DAY"
+    },
+    {
+      "lesson": "MR-C66-divas",
+      "extension": "MR-EXT-081-PARTS-OF-THE-DAY"
+    },
+    {
+      "lesson": "MR-R66-day-recall",
+      "extension": "MR-EXT-081-PARTS-OF-THE-DAY"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,8 +2,14 @@
   "id": "TE-PATH-032",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "TE-C39-tii",
-    "TE-C39-paalu"
+    {
+      "lesson": "TE-C39-tii",
+      "extension": "TE-EXT-033-TEA-MILK"
+    },
+    {
+      "lesson": "TE-C39-paalu",
+      "extension": "TE-EXT-033-TEA-MILK"
+    }
   ],
   "before": [],
   "inline": [

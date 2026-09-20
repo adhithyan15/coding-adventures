@@ -2,11 +2,26 @@
   "id": "RU-PATH-012",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "RU-C09-ukho",
-    "RU-C09-nos",
-    "RU-C09-rot",
-    "RU-C09-glaz",
-    "RU-C10-serdtse"
+    {
+      "lesson": "RU-C09-ukho",
+      "extension": "RU-EXT-012-BODY-PARTS"
+    },
+    {
+      "lesson": "RU-C09-nos",
+      "extension": "RU-EXT-012-BODY-PARTS"
+    },
+    {
+      "lesson": "RU-C09-rot",
+      "extension": "RU-EXT-012-BODY-PARTS"
+    },
+    {
+      "lesson": "RU-C09-glaz",
+      "extension": "RU-EXT-012-BODY-PARTS"
+    },
+    {
+      "lesson": "RU-C10-serdtse",
+      "extension": "RU-EXT-012-BODY-PARTS"
+    }
   ],
   "before": [],
   "inline": [

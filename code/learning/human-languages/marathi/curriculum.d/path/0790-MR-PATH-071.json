@@ -2,10 +2,22 @@
   "id": "MR-PATH-071",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "MR-C69-ha",
-    "MR-C69-to",
-    "MR-C69-dem-system",
-    "MR-R69-dem-recall"
+    {
+      "lesson": "MR-C69-ha",
+      "extension": "MR-EXT-084-POINTING-WORDS"
+    },
+    {
+      "lesson": "MR-C69-to",
+      "extension": "MR-EXT-084-POINTING-WORDS"
+    },
+    {
+      "lesson": "MR-C69-dem-system",
+      "extension": "MR-EXT-084-POINTING-WORDS"
+    },
+    {
+      "lesson": "MR-R69-dem-recall",
+      "extension": "MR-EXT-084-POINTING-WORDS"
+    }
   ],
   "before": [],
   "inline": [

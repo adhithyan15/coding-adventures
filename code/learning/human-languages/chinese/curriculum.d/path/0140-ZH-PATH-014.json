@@ -2,23 +2,74 @@
   "id": "ZH-PATH-014",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "ZH-C15-hear-zhong",
-    "ZH-W15-zhong",
-    "ZH-C15-zhong",
-    "ZH-C15-hear-zhongxue",
-    "ZH-C15-zhongxue",
-    "ZH-R15-school-map-1",
-    "ZH-C15-hear-zhongxuesheng",
-    "ZH-C15-zhongxuesheng",
-    "ZH-C15-hear-tongxue",
-    "ZH-W15-tong",
-    "ZH-C15-tongxue",
-    "ZH-R15-school-map-2",
-    "ZH-C15-hear-shangxue",
-    "ZH-C15-shangxue",
-    "ZH-R15-school-map-3",
-    "ZH-R15-school-map-4",
-    "ZH-C15-practice"
+    {
+      "lesson": "ZH-C15-hear-zhong",
+      "extension": "ZH-EXT-039-SCHOOL-COMPOUNDS-MEANING-FIRST"
+    },
+    {
+      "lesson": "ZH-W15-zhong",
+      "extension": "ZH-EXT-040-SCHOOL-COMPOUNDS-SCRIPT"
+    },
+    {
+      "lesson": "ZH-C15-zhong",
+      "extension": "ZH-EXT-040-SCHOOL-COMPOUNDS-SCRIPT"
+    },
+    {
+      "lesson": "ZH-C15-hear-zhongxue",
+      "extension": "ZH-EXT-039-SCHOOL-COMPOUNDS-MEANING-FIRST"
+    },
+    {
+      "lesson": "ZH-C15-zhongxue",
+      "extension": "ZH-EXT-040-SCHOOL-COMPOUNDS-SCRIPT"
+    },
+    {
+      "lesson": "ZH-R15-school-map-1",
+      "extension": "ZH-EXT-041-SCHOOL-COMPOUNDS-FOUR-SKILL"
+    },
+    {
+      "lesson": "ZH-C15-hear-zhongxuesheng",
+      "extension": "ZH-EXT-039-SCHOOL-COMPOUNDS-MEANING-FIRST"
+    },
+    {
+      "lesson": "ZH-C15-zhongxuesheng",
+      "extension": "ZH-EXT-040-SCHOOL-COMPOUNDS-SCRIPT"
+    },
+    {
+      "lesson": "ZH-C15-hear-tongxue",
+      "extension": "ZH-EXT-039-SCHOOL-COMPOUNDS-MEANING-FIRST"
+    },
+    {
+      "lesson": "ZH-W15-tong",
+      "extension": "ZH-EXT-040-SCHOOL-COMPOUNDS-SCRIPT"
+    },
+    {
+      "lesson": "ZH-C15-tongxue",
+      "extension": "ZH-EXT-040-SCHOOL-COMPOUNDS-SCRIPT"
+    },
+    {
+      "lesson": "ZH-R15-school-map-2",
+      "extension": "ZH-EXT-041-SCHOOL-COMPOUNDS-FOUR-SKILL"
+    },
+    {
+      "lesson": "ZH-C15-hear-shangxue",
+      "extension": "ZH-EXT-039-SCHOOL-COMPOUNDS-MEANING-FIRST"
+    },
+    {
+      "lesson": "ZH-C15-shangxue",
+      "extension": "ZH-EXT-040-SCHOOL-COMPOUNDS-SCRIPT"
+    },
+    {
+      "lesson": "ZH-R15-school-map-3",
+      "extension": "ZH-EXT-041-SCHOOL-COMPOUNDS-FOUR-SKILL"
+    },
+    {
+      "lesson": "ZH-R15-school-map-4",
+      "extension": "ZH-EXT-041-SCHOOL-COMPOUNDS-FOUR-SKILL"
+    },
+    {
+      "lesson": "ZH-C15-practice",
+      "extension": "ZH-EXT-041-SCHOOL-COMPOUNDS-FOUR-SKILL"
+    }
   ],
   "before": [],
   "inline": [

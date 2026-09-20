@@ -2,8 +2,14 @@
   "id": "TA-PATH-81-REGISTER",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "TA-C81-two-tamils",
-    "TA-C81-which-tamil"
+    {
+      "lesson": "TA-C81-two-tamils",
+      "extension": "TA-EXT-81-REGISTER"
+    },
+    {
+      "lesson": "TA-C81-which-tamil",
+      "extension": "TA-EXT-81-REGISTER"
+    }
   ],
   "before": [],
   "inline": [

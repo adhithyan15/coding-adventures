@@ -2,7 +2,10 @@
   "id": "ES-PATH-411-HELADO",
   "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
   "lessons": [
-    "ES-C411-helado"
+    {
+      "lesson": "ES-C411-helado",
+      "extension": "ES-EXT-411-HELADO"
+    }
   ],
   "before": [],
   "inline": [

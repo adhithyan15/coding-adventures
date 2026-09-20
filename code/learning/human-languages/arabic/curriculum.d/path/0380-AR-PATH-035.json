@@ -2,11 +2,26 @@
   "id": "AR-PATH-035",
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
-    "AR-C38-wa",
-    "AR-C38-aw",
-    "AR-C38-lakin",
-    "AR-C38-hasanan",
-    "AR-R38-two-at-once"
+    {
+      "lesson": "AR-C38-wa",
+      "extension": "AR-EXT-035-JOINING"
+    },
+    {
+      "lesson": "AR-C38-aw",
+      "extension": "AR-EXT-035-JOINING"
+    },
+    {
+      "lesson": "AR-C38-lakin",
+      "extension": "AR-EXT-035-JOINING"
+    },
+    {
+      "lesson": "AR-C38-hasanan",
+      "extension": "AR-EXT-035-JOINING"
+    },
+    {
+      "lesson": "AR-R38-two-at-once",
+      "extension": "AR-EXT-035-JOINING"
+    }
   ],
   "before": [],
   "inline": [

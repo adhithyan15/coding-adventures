@@ -2,11 +2,26 @@
   "id": "ES-PATH-030-VENIR-CH13-B",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "ES-C13-repaso-yo-go",
-    "ES-C13-sintesis-yo-go",
-    "ES-C13-plurales-cambio",
-    "ES-C13-plurales-yo-go",
-    "ES-C13-sintesis-derivar"
+    {
+      "lesson": "ES-C13-repaso-yo-go",
+      "extension": "ES-EXT-030-CONSOLIDATION-YOGO"
+    },
+    {
+      "lesson": "ES-C13-sintesis-yo-go",
+      "extension": "ES-EXT-030-CONSOLIDATION-YOGO"
+    },
+    {
+      "lesson": "ES-C13-plurales-cambio",
+      "extension": "ES-EXT-030-DERIVE-PLURALS"
+    },
+    {
+      "lesson": "ES-C13-plurales-yo-go",
+      "extension": "ES-EXT-030-DERIVE-PLURALS"
+    },
+    {
+      "lesson": "ES-C13-sintesis-derivar",
+      "extension": "ES-EXT-030-DERIVE-PLURALS"
+    }
   ],
   "before": [],
   "inline": [

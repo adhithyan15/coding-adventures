@@ -2,8 +2,14 @@
   "id": "AR-PATH-013",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "AR-C09-aswad-abyad",
-    "AR-C09-ahmar-azraq"
+    {
+      "lesson": "AR-C09-aswad-abyad",
+      "extension": "AR-EXT-013-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "AR-C09-ahmar-azraq",
+      "extension": "AR-EXT-013-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

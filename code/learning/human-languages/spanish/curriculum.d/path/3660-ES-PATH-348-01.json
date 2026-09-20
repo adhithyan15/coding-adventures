@@ -2,11 +2,26 @@
   "id": "ES-PATH-348-01",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "ES-C348-principio",
-    "ES-C348-fin",
-    "ES-C348-instante",
-    "ES-C348-demora",
-    "ES-C348-turno"
+    {
+      "lesson": "ES-C348-principio",
+      "extension": "ES-EXT-348-SPAN"
+    },
+    {
+      "lesson": "ES-C348-fin",
+      "extension": "ES-EXT-348-SPAN"
+    },
+    {
+      "lesson": "ES-C348-instante",
+      "extension": "ES-EXT-348-SPAN"
+    },
+    {
+      "lesson": "ES-C348-demora",
+      "extension": "ES-EXT-348-SPAN"
+    },
+    {
+      "lesson": "ES-C348-turno",
+      "extension": "ES-EXT-348-SPAN"
+    }
   ],
   "before": [],
   "inline": [

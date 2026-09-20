@@ -2,10 +2,22 @@
   "id": "TA-PATH-85-THIRD-PERSON",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "TA-C85-avan-aval",
-    "TA-C85-avargal",
-    "TA-C85-naam-naangal",
-    "TA-R85-avarkal-recall"
+    {
+      "lesson": "TA-C85-avan-aval",
+      "extension": "TA-EXT-85-THIRD-PERSON"
+    },
+    {
+      "lesson": "TA-C85-avargal",
+      "extension": "TA-EXT-85-THIRD-PERSON"
+    },
+    {
+      "lesson": "TA-C85-naam-naangal",
+      "extension": "TA-EXT-85-THIRD-PERSON"
+    },
+    {
+      "lesson": "TA-R85-avarkal-recall",
+      "extension": "TA-EXT-85-THIRD-PERSON"
+    }
   ],
   "before": [],
   "inline": [

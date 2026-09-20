@@ -2,13 +2,34 @@
   "id": "ES-PATH-345-01",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C345-mismo",
-    "ES-C345-cada",
-    "ES-C345-parte",
-    "ES-C345-persona",
-    "ES-C345-objeto",
-    "ES-C345-repaso-persona-objeto",
-    "ES-C345-repaso-cada-mismo-objeto"
+    {
+      "lesson": "ES-C345-mismo",
+      "extension": "ES-EXT-345-REF"
+    },
+    {
+      "lesson": "ES-C345-cada",
+      "extension": "ES-EXT-345-REF"
+    },
+    {
+      "lesson": "ES-C345-parte",
+      "extension": "ES-EXT-345-REF"
+    },
+    {
+      "lesson": "ES-C345-persona",
+      "extension": "ES-EXT-345-REF"
+    },
+    {
+      "lesson": "ES-C345-objeto",
+      "extension": "ES-EXT-345-REF"
+    },
+    {
+      "lesson": "ES-C345-repaso-persona-objeto",
+      "extension": "ES-EXT-345-REF"
+    },
+    {
+      "lesson": "ES-C345-repaso-cada-mismo-objeto",
+      "extension": "ES-EXT-345-REF"
+    }
   ],
   "before": [],
   "inline": [

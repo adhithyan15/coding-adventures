@@ -3,7 +3,10 @@
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
     "IT-C01-notte",
-    "IT-C01-practice"
+    {
+      "lesson": "IT-C01-practice",
+      "extension": "IT-EXT-006-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [],

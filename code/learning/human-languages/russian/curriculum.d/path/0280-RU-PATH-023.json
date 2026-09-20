@@ -2,11 +2,26 @@
   "id": "RU-PATH-023",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "RU-C21-izvinite",
-    "RU-C21-prostite",
-    "RU-C21-povtorite",
-    "RU-C21-medlenno",
-    "RU-C21-pomogite"
+    {
+      "lesson": "RU-C21-izvinite",
+      "extension": "RU-EXT-028-REPAIR"
+    },
+    {
+      "lesson": "RU-C21-prostite",
+      "extension": "RU-EXT-028-REPAIR"
+    },
+    {
+      "lesson": "RU-C21-povtorite",
+      "extension": "RU-EXT-028-REPAIR"
+    },
+    {
+      "lesson": "RU-C21-medlenno",
+      "extension": "RU-EXT-028-REPAIR"
+    },
+    {
+      "lesson": "RU-C21-pomogite",
+      "extension": "RU-EXT-028-REPAIR"
+    }
   ],
   "before": [],
   "inline": [

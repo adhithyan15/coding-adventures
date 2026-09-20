@@ -2,11 +2,26 @@
   "id": "LA-PATH-037",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "LA-C53-iterum",
-    "LA-C53-magister",
-    "LA-C53-discipulus",
-    "LA-C53-schola",
-    "LA-C53-liber"
+    {
+      "lesson": "LA-C53-iterum",
+      "extension": "LA-EXT-053-SCHOOL"
+    },
+    {
+      "lesson": "LA-C53-magister",
+      "extension": "LA-EXT-053-SCHOOL"
+    },
+    {
+      "lesson": "LA-C53-discipulus",
+      "extension": "LA-EXT-053-SCHOOL"
+    },
+    {
+      "lesson": "LA-C53-schola",
+      "extension": "LA-EXT-053-SCHOOL"
+    },
+    {
+      "lesson": "LA-C53-liber",
+      "extension": "LA-EXT-053-SCHOOL"
+    }
   ],
   "before": [],
   "inline": [],

@@ -2,7 +2,10 @@
   "id": "KA-PATH-026-E",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "KA-C34-sahaya-maadu"
+    {
+      "lesson": "KA-C34-sahaya-maadu",
+      "extension": "KA-EXT-027-SOCIAL-VERBS-C"
+    }
   ],
   "before": [],
   "inline": [

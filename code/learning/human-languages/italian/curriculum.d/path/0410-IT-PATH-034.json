@@ -2,11 +2,26 @@
   "id": "IT-PATH-034",
   "spine_node": "SPINE-NEGATE-AND-ASK",
   "lessons": [
-    "IT-C30-non",
-    "IT-C30-non-capisco",
-    "IT-C30-ne",
-    "IT-C30-anche",
-    "IT-C30-ce"
+    {
+      "lesson": "IT-C30-non",
+      "extension": "IT-EXT-034-NON"
+    },
+    {
+      "lesson": "IT-C30-non-capisco",
+      "extension": "IT-EXT-034-NON"
+    },
+    {
+      "lesson": "IT-C30-ne",
+      "extension": "IT-EXT-034-NON"
+    },
+    {
+      "lesson": "IT-C30-anche",
+      "extension": "IT-EXT-034-NON"
+    },
+    {
+      "lesson": "IT-C30-ce",
+      "extension": "IT-EXT-034-NON"
+    }
   ],
   "before": [],
   "inline": [],

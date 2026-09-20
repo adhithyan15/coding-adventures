@@ -2,9 +2,18 @@
   "id": "FR-PATH-046-WRITING",
   "spine_node": "SPINE-SAY-WHY",
   "lessons": [
-    "FR-W02-ma-propre-ligne",
-    "FR-W03-avec-la-montre",
-    "FR-W04-quatre-lignes"
+    {
+      "lesson": "FR-W02-ma-propre-ligne",
+      "extension": "FR-EXT-046-WRITING"
+    },
+    {
+      "lesson": "FR-W03-avec-la-montre",
+      "extension": "FR-EXT-046-WRITING"
+    },
+    {
+      "lesson": "FR-W04-quatre-lignes",
+      "extension": "FR-EXT-046-WRITING"
+    }
   ],
   "before": [],
   "inline": [

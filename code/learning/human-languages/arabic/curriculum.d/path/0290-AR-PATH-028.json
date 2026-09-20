@@ -2,7 +2,10 @@
   "id": "AR-PATH-028",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "AR-C31-fahima"
+    {
+      "lesson": "AR-C31-fahima",
+      "extension": "AR-EXT-028-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

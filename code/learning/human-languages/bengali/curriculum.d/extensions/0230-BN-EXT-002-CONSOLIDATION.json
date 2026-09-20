@@ -6,8 +6,5 @@
   "canDo": "I can ask someone's name in Bengali and give my own, choosing between the familiar and polite you.",
   "prerequisites": [
     "BN-EXT-009-LANGUAGE-SPECIFIC"
-  ],
-  "lessons": [
-    "BN-C02-practice"
   ]
 }

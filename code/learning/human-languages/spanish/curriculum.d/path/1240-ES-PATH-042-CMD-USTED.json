@@ -2,7 +2,10 @@
   "id": "ES-PATH-042-CMD-USTED",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "ES-C50-hable-usted"
+    {
+      "lesson": "ES-C50-hable-usted",
+      "extension": "ES-EXT-042-CMD-USTED"
+    }
   ],
   "before": [],
   "inline": [

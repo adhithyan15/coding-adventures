@@ -2,16 +2,46 @@
   "id": "MR-PATH-021",
   "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
   "lessons": [
-    "MR-A1F01-naav",
-    "MR-A1F01-shahar",
-    "MR-A1F01-bhasha",
-    "MR-A1F01-avdate-pey",
-    "MR-A1F01-avadti-kruti",
-    "MR-A1F01-mitrache-naav",
-    "MR-A1F02-first-three-copy",
-    "MR-A1F02-last-three-copy",
-    "MR-A1F03-first-three-delayed",
-    "MR-A1F03-last-three-delayed"
+    {
+      "lesson": "MR-A1F01-naav",
+      "extension": "MR-EXT-024-A1-FORM-LABELS"
+    },
+    {
+      "lesson": "MR-A1F01-shahar",
+      "extension": "MR-EXT-024-A1-FORM-LABELS"
+    },
+    {
+      "lesson": "MR-A1F01-bhasha",
+      "extension": "MR-EXT-024-A1-FORM-LABELS"
+    },
+    {
+      "lesson": "MR-A1F01-avdate-pey",
+      "extension": "MR-EXT-024-A1-FORM-LABELS"
+    },
+    {
+      "lesson": "MR-A1F01-avadti-kruti",
+      "extension": "MR-EXT-024-A1-FORM-LABELS"
+    },
+    {
+      "lesson": "MR-A1F01-mitrache-naav",
+      "extension": "MR-EXT-024-A1-FORM-LABELS"
+    },
+    {
+      "lesson": "MR-A1F02-first-three-copy",
+      "extension": "MR-EXT-024-A1-FORM-LABELS"
+    },
+    {
+      "lesson": "MR-A1F02-last-three-copy",
+      "extension": "MR-EXT-024-A1-FORM-LABELS"
+    },
+    {
+      "lesson": "MR-A1F03-first-three-delayed",
+      "extension": "MR-EXT-024-A1-FORM-LABELS"
+    },
+    {
+      "lesson": "MR-A1F03-last-three-delayed",
+      "extension": "MR-EXT-024-A1-FORM-LABELS"
+    }
   ],
   "before": [],
   "inline": [],

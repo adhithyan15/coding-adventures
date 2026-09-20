@@ -2,10 +2,22 @@
   "id": "AR-PATH-033",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "AR-C36-zayt",
-    "AR-C36-kub",
-    "AR-C36-tabaq",
-    "AR-C36-milaqa"
+    {
+      "lesson": "AR-C36-zayt",
+      "extension": "AR-EXT-033-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "AR-C36-kub",
+      "extension": "AR-EXT-033-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "AR-C36-tabaq",
+      "extension": "AR-EXT-033-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "AR-C36-milaqa",
+      "extension": "AR-EXT-033-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

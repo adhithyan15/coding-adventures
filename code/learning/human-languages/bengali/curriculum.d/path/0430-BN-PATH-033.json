@@ -2,11 +2,26 @@
   "id": "BN-PATH-033",
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
-    "BN-C25-ke-suffix",
-    "BN-C25-amake",
-    "BN-C25-tomake",
-    "BN-C25-ke-who",
-    "BN-R25-the-one-it-happens-to"
+    {
+      "lesson": "BN-C25-ke-suffix",
+      "extension": "BN-EXT-034-OBJECT-CASE"
+    },
+    {
+      "lesson": "BN-C25-amake",
+      "extension": "BN-EXT-034-OBJECT-CASE"
+    },
+    {
+      "lesson": "BN-C25-tomake",
+      "extension": "BN-EXT-034-OBJECT-CASE"
+    },
+    {
+      "lesson": "BN-C25-ke-who",
+      "extension": "BN-EXT-034-OBJECT-CASE"
+    },
+    {
+      "lesson": "BN-R25-the-one-it-happens-to",
+      "extension": "BN-EXT-034-OBJECT-CASE"
+    }
   ],
   "before": [],
   "inline": [

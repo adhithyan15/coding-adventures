@@ -2,20 +2,59 @@
   "id": "ZH-PATH-001",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "ZH-C01-tones",
-    "ZH-W01-ren",
-    "ZH-W01-ren-radical",
-    "ZH-W01-er",
-    "ZH-W01-ni-build",
-    "ZH-C01-ni",
-    "ZH-W01-nu",
-    "ZH-W01-zi",
-    "ZH-W01-hao-build",
-    "ZH-C01-hao",
+    {
+      "lesson": "ZH-C01-tones",
+      "extension": "ZH-EXT-000-TONE-INVENTORY"
+    },
+    {
+      "lesson": "ZH-W01-ren",
+      "extension": "ZH-EXT-006-COMPONENT-INVENTORY"
+    },
+    {
+      "lesson": "ZH-W01-ren-radical",
+      "extension": "ZH-EXT-006-COMPONENT-INVENTORY"
+    },
+    {
+      "lesson": "ZH-W01-er",
+      "extension": "ZH-EXT-006-COMPONENT-INVENTORY"
+    },
+    {
+      "lesson": "ZH-W01-ni-build",
+      "extension": "ZH-EXT-006-COMPONENT-INVENTORY"
+    },
+    {
+      "lesson": "ZH-C01-ni",
+      "extension": "ZH-EXT-001-CHARACTER-DECOMPOSITION"
+    },
+    {
+      "lesson": "ZH-W01-nu",
+      "extension": "ZH-EXT-006-COMPONENT-INVENTORY"
+    },
+    {
+      "lesson": "ZH-W01-zi",
+      "extension": "ZH-EXT-006-COMPONENT-INVENTORY"
+    },
+    {
+      "lesson": "ZH-W01-hao-build",
+      "extension": "ZH-EXT-006-COMPONENT-INVENTORY"
+    },
+    {
+      "lesson": "ZH-C01-hao",
+      "extension": "ZH-EXT-002-COMPONENT-HOOK"
+    },
     "ZH-C01-nihao",
-    "ZH-C01-tone-sandhi",
-    "ZH-C01-hao-fond",
-    "ZH-C01-practice"
+    {
+      "lesson": "ZH-C01-tone-sandhi",
+      "extension": "ZH-EXT-003-TONE-SANDHI"
+    },
+    {
+      "lesson": "ZH-C01-hao-fond",
+      "extension": "ZH-EXT-004-TONE-MINIMAL-PAIR"
+    },
+    {
+      "lesson": "ZH-C01-practice",
+      "extension": "ZH-EXT-005-GREETING-CONSOLIDATION"
+    }
   ],
   "before": [
     "ZH-EXT-000-TONE-INVENTORY"

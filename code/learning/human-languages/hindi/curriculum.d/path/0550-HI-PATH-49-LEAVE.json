@@ -2,11 +2,26 @@
   "id": "HI-PATH-49-LEAVE",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "HI-C49-now",
-    "HI-C49-day-after",
-    "HI-C49-journey",
-    "HI-C49-set-out",
-    "HI-C49-meeting"
+    {
+      "lesson": "HI-C49-now",
+      "extension": "HI-EXT-49-LEAVE"
+    },
+    {
+      "lesson": "HI-C49-day-after",
+      "extension": "HI-EXT-49-LEAVE"
+    },
+    {
+      "lesson": "HI-C49-journey",
+      "extension": "HI-EXT-49-LEAVE"
+    },
+    {
+      "lesson": "HI-C49-set-out",
+      "extension": "HI-EXT-49-LEAVE"
+    },
+    {
+      "lesson": "HI-C49-meeting",
+      "extension": "HI-EXT-49-LEAVE"
+    }
   ],
   "before": [],
   "inline": [

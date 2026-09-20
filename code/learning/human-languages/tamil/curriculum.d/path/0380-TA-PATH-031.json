@@ -2,10 +2,22 @@
   "id": "TA-PATH-031",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "TA-C35-veedu",
-    "TA-C35-kadavu",
-    "TA-C35-arai",
-    "TA-C35-naarkaali"
+    {
+      "lesson": "TA-C35-veedu",
+      "extension": "TA-EXT-031-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "TA-C35-kadavu",
+      "extension": "TA-EXT-031-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "TA-C35-arai",
+      "extension": "TA-EXT-031-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "TA-C35-naarkaali",
+      "extension": "TA-EXT-031-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

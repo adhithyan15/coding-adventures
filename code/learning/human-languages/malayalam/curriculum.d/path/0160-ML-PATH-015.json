@@ -2,7 +2,10 @@
   "id": "ML-PATH-015",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ML-C11-nirangal"
+    {
+      "lesson": "ML-C11-nirangal",
+      "extension": "ML-EXT-015-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

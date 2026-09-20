@@ -2,8 +2,14 @@
   "id": "MR-PATH-013-B",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "MR-C08-vachne",
-    "MR-C08-lihine"
+    {
+      "lesson": "MR-C08-vachne",
+      "extension": "MR-EXT-013-MIND-VERBS-B"
+    },
+    {
+      "lesson": "MR-C08-lihine",
+      "extension": "MR-EXT-013-MIND-VERBS-B"
+    }
   ],
   "before": [],
   "inline": [

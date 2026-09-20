@@ -2,12 +2,30 @@
   "id": "PT-PATH-032",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "PT-C28-sexto",
-    "PT-C28-setimo",
-    "PT-C28-oitavo",
-    "PT-C28-nono",
-    "PT-C28-decimo",
-    "PT-C28-indicador"
+    {
+      "lesson": "PT-C28-sexto",
+      "extension": "PT-EXT-032-ORDINAIS-ATE-DECIMO"
+    },
+    {
+      "lesson": "PT-C28-setimo",
+      "extension": "PT-EXT-032-ORDINAIS-ATE-DECIMO"
+    },
+    {
+      "lesson": "PT-C28-oitavo",
+      "extension": "PT-EXT-032-ORDINAIS-ATE-DECIMO"
+    },
+    {
+      "lesson": "PT-C28-nono",
+      "extension": "PT-EXT-032-ORDINAIS-ATE-DECIMO"
+    },
+    {
+      "lesson": "PT-C28-decimo",
+      "extension": "PT-EXT-032-ORDINAIS-ATE-DECIMO"
+    },
+    {
+      "lesson": "PT-C28-indicador",
+      "extension": "PT-EXT-032-ORDINAIS-ATE-DECIMO"
+    }
   ],
   "before": [],
   "inline": [],

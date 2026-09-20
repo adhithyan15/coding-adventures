@@ -2,22 +2,70 @@
   "id": "MW-PATH-009",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "MW-C09-hear-nana",
-    "MW-C09-nana",
-    "MW-C09-hear-nani",
-    "MW-C09-nani",
-    "MW-C09-hear-pati",
-    "MW-W09-ta",
-    "MW-C09-pati",
-    "MW-R09-maternal-three",
-    "MW-C09-hear-patni",
-    "MW-C09-patni",
-    "MW-C09-hear-bachcha",
-    "MW-W09-cha",
-    "MW-C09-bachcha",
-    "MW-R09-family-new-five",
-    "MW-C09-family-twelve",
-    "MW-R09-script-close"
+    {
+      "lesson": "MW-C09-hear-nana",
+      "extension": "MW-EXT-023-FAMILY-TWELVE"
+    },
+    {
+      "lesson": "MW-C09-nana",
+      "extension": "MW-EXT-023-FAMILY-TWELVE"
+    },
+    {
+      "lesson": "MW-C09-hear-nani",
+      "extension": "MW-EXT-023-FAMILY-TWELVE"
+    },
+    {
+      "lesson": "MW-C09-nani",
+      "extension": "MW-EXT-023-FAMILY-TWELVE"
+    },
+    {
+      "lesson": "MW-C09-hear-pati",
+      "extension": "MW-EXT-023-FAMILY-TWELVE"
+    },
+    {
+      "lesson": "MW-W09-ta",
+      "extension": "MW-EXT-023-FAMILY-TWELVE"
+    },
+    {
+      "lesson": "MW-C09-pati",
+      "extension": "MW-EXT-023-FAMILY-TWELVE"
+    },
+    {
+      "lesson": "MW-R09-maternal-three",
+      "extension": "MW-EXT-023-FAMILY-TWELVE"
+    },
+    {
+      "lesson": "MW-C09-hear-patni",
+      "extension": "MW-EXT-023-FAMILY-TWELVE"
+    },
+    {
+      "lesson": "MW-C09-patni",
+      "extension": "MW-EXT-023-FAMILY-TWELVE"
+    },
+    {
+      "lesson": "MW-C09-hear-bachcha",
+      "extension": "MW-EXT-023-FAMILY-TWELVE"
+    },
+    {
+      "lesson": "MW-W09-cha",
+      "extension": "MW-EXT-023-FAMILY-TWELVE"
+    },
+    {
+      "lesson": "MW-C09-bachcha",
+      "extension": "MW-EXT-023-FAMILY-TWELVE"
+    },
+    {
+      "lesson": "MW-R09-family-new-five",
+      "extension": "MW-EXT-023-FAMILY-TWELVE"
+    },
+    {
+      "lesson": "MW-C09-family-twelve",
+      "extension": "MW-EXT-023-FAMILY-TWELVE"
+    },
+    {
+      "lesson": "MW-R09-script-close",
+      "extension": "MW-EXT-023-FAMILY-TWELVE"
+    }
   ],
   "before": [],
   "inline": [

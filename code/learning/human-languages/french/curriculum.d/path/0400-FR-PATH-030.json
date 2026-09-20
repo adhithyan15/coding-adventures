@@ -2,15 +2,42 @@
   "id": "FR-PATH-030",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "FR-C32-intonation",
-    "FR-C32-est-ce-que",
-    "FR-C32-ou",
-    "FR-C32-quand",
-    "FR-C32-comment",
-    "FR-C32-combien",
-    "FR-C32-pourquoi",
-    "FR-C32-inversion",
-    "FR-C32-quel"
+    {
+      "lesson": "FR-C32-intonation",
+      "extension": "FR-EXT-029-ASKING"
+    },
+    {
+      "lesson": "FR-C32-est-ce-que",
+      "extension": "FR-EXT-029-ASKING"
+    },
+    {
+      "lesson": "FR-C32-ou",
+      "extension": "FR-EXT-029-ASKING"
+    },
+    {
+      "lesson": "FR-C32-quand",
+      "extension": "FR-EXT-029-ASKING"
+    },
+    {
+      "lesson": "FR-C32-comment",
+      "extension": "FR-EXT-029-ASKING"
+    },
+    {
+      "lesson": "FR-C32-combien",
+      "extension": "FR-EXT-029-ASKING"
+    },
+    {
+      "lesson": "FR-C32-pourquoi",
+      "extension": "FR-EXT-029-ASKING"
+    },
+    {
+      "lesson": "FR-C32-inversion",
+      "extension": "FR-EXT-029-ASKING"
+    },
+    {
+      "lesson": "FR-C32-quel",
+      "extension": "FR-EXT-029-ASKING"
+    }
   ],
   "before": [],
   "inline": [

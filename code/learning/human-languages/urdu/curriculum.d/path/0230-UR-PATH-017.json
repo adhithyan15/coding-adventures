@@ -2,7 +2,10 @@
   "id": "UR-PATH-017",
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
-    "UR-C16-practice"
+    {
+      "lesson": "UR-C16-practice",
+      "extension": "UR-EXT-027-SCRIPT-SEVEN"
+    }
   ],
   "before": [],
   "inline": [],

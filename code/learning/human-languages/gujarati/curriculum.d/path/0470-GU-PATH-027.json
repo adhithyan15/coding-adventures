@@ -2,14 +2,38 @@
   "id": "GU-PATH-027",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "GU-C28-hear-baarnun",
-    "GU-C28-hear-baari",
-    "GU-C28-hear-khurshi",
-    "GU-C28-hear-chaavi",
-    "GU-C28-hear-divo",
-    "GU-C28-house-five",
-    "GU-C28-baari",
-    "GU-R28-house-five-r1"
+    {
+      "lesson": "GU-C28-hear-baarnun",
+      "extension": "GU-EXT-039-HOUSE-FIVE"
+    },
+    {
+      "lesson": "GU-C28-hear-baari",
+      "extension": "GU-EXT-039-HOUSE-FIVE"
+    },
+    {
+      "lesson": "GU-C28-hear-khurshi",
+      "extension": "GU-EXT-039-HOUSE-FIVE"
+    },
+    {
+      "lesson": "GU-C28-hear-chaavi",
+      "extension": "GU-EXT-039-HOUSE-FIVE"
+    },
+    {
+      "lesson": "GU-C28-hear-divo",
+      "extension": "GU-EXT-039-HOUSE-FIVE"
+    },
+    {
+      "lesson": "GU-C28-house-five",
+      "extension": "GU-EXT-039-HOUSE-FIVE"
+    },
+    {
+      "lesson": "GU-C28-baari",
+      "extension": "GU-EXT-039-HOUSE-FIVE"
+    },
+    {
+      "lesson": "GU-R28-house-five-r1",
+      "extension": "GU-EXT-039-HOUSE-FIVE"
+    }
   ],
   "before": [],
   "inline": [

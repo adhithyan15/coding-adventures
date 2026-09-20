@@ -2,11 +2,26 @@
   "id": "KA-PATH-65-MANNERS",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "KA-C65-request",
-    "KA-C65-permission",
-    "KA-C65-hesitancy",
-    "KA-C65-trust",
-    "KA-C65-manners"
+    {
+      "lesson": "KA-C65-request",
+      "extension": "KA-EXT-65-MANNERS"
+    },
+    {
+      "lesson": "KA-C65-permission",
+      "extension": "KA-EXT-65-MANNERS"
+    },
+    {
+      "lesson": "KA-C65-hesitancy",
+      "extension": "KA-EXT-65-MANNERS"
+    },
+    {
+      "lesson": "KA-C65-trust",
+      "extension": "KA-EXT-65-MANNERS"
+    },
+    {
+      "lesson": "KA-C65-manners",
+      "extension": "KA-EXT-65-MANNERS"
+    }
   ],
   "before": [],
   "inline": [

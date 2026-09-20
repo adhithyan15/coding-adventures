@@ -2,12 +2,30 @@
   "id": "UR-PATH-029",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "UR-C28-ek",
-    "UR-C28-do",
-    "UR-C28-teen",
-    "UR-C28-char",
-    "UR-C28-panch",
-    "UR-C28-practice"
+    {
+      "lesson": "UR-C28-ek",
+      "extension": "UR-EXT-039-COUNT-FIVE"
+    },
+    {
+      "lesson": "UR-C28-do",
+      "extension": "UR-EXT-039-COUNT-FIVE"
+    },
+    {
+      "lesson": "UR-C28-teen",
+      "extension": "UR-EXT-039-COUNT-FIVE"
+    },
+    {
+      "lesson": "UR-C28-char",
+      "extension": "UR-EXT-039-COUNT-FIVE"
+    },
+    {
+      "lesson": "UR-C28-panch",
+      "extension": "UR-EXT-039-COUNT-FIVE"
+    },
+    {
+      "lesson": "UR-C28-practice",
+      "extension": "UR-EXT-039-COUNT-FIVE"
+    }
   ],
   "before": [],
   "inline": [],

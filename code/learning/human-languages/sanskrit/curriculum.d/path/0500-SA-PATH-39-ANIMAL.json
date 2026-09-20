@@ -2,11 +2,26 @@
   "id": "SA-PATH-39-ANIMAL",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "SA-C39-cow",
-    "SA-C39-bird",
-    "SA-C39-fish",
-    "SA-C39-dog",
-    "SA-C39-snake"
+    {
+      "lesson": "SA-C39-cow",
+      "extension": "SA-EXT-39-ANIMAL"
+    },
+    {
+      "lesson": "SA-C39-bird",
+      "extension": "SA-EXT-39-ANIMAL"
+    },
+    {
+      "lesson": "SA-C39-fish",
+      "extension": "SA-EXT-39-ANIMAL"
+    },
+    {
+      "lesson": "SA-C39-dog",
+      "extension": "SA-EXT-39-ANIMAL"
+    },
+    {
+      "lesson": "SA-C39-snake",
+      "extension": "SA-EXT-39-ANIMAL"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,15 +2,42 @@
   "id": "JA-PATH-017",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "JA-C18-tsu-counter",
-    "JA-C18-nin",
-    "JA-C18-hitori-futari",
-    "JA-C18-count-the-face",
-    "JA-W18-ho",
-    "JA-C18-hon",
-    "JA-W18-handakuten",
-    "JA-C18-ippon",
-    "JA-R18-counting-things"
+    {
+      "lesson": "JA-C18-tsu-counter",
+      "extension": "JA-EXT-025-COUNTERS"
+    },
+    {
+      "lesson": "JA-C18-nin",
+      "extension": "JA-EXT-025-COUNTERS"
+    },
+    {
+      "lesson": "JA-C18-hitori-futari",
+      "extension": "JA-EXT-025-COUNTERS"
+    },
+    {
+      "lesson": "JA-C18-count-the-face",
+      "extension": "JA-EXT-025-COUNTERS"
+    },
+    {
+      "lesson": "JA-W18-ho",
+      "extension": "JA-EXT-025-COUNTERS"
+    },
+    {
+      "lesson": "JA-C18-hon",
+      "extension": "JA-EXT-025-COUNTERS"
+    },
+    {
+      "lesson": "JA-W18-handakuten",
+      "extension": "JA-EXT-025-COUNTERS"
+    },
+    {
+      "lesson": "JA-C18-ippon",
+      "extension": "JA-EXT-025-COUNTERS"
+    },
+    {
+      "lesson": "JA-R18-counting-things",
+      "extension": "JA-EXT-025-COUNTERS"
+    }
   ],
   "before": [],
   "inline": [

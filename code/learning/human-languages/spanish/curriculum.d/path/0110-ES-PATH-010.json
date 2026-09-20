@@ -4,7 +4,10 @@
   "lessons": [
     "ES-C04-gracias",
     "ES-C04-de-nada",
-    "ES-C04-repaso-gracias"
+    {
+      "lesson": "ES-C04-repaso-gracias",
+      "extension": "ES-EXT-010-CONSOLIDATION-GRACIAS"
+    }
   ],
   "before": [],
   "inline": [],

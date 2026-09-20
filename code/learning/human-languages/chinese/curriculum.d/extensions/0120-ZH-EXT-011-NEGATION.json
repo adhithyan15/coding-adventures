@@ -6,9 +6,5 @@
   "canDo": "I can negate a word by putting 不 in front of it, and I know Mandarin has no standalone word for no.",
   "prerequisites": [
     "ZH-EXT-010-BOX-REUSE"
-  ],
-  "lessons": [
-    "ZH-W04-bu",
-    "ZH-C04-bu"
   ]
 }

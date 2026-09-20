@@ -6,7 +6,10 @@
     "IT-C03-mi-chiamo",
     "IT-C03-come-ti-chiami",
     "IT-C03-piacere",
-    "IT-C03-practice"
+    {
+      "lesson": "IT-C03-practice",
+      "extension": "IT-EXT-009-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [],

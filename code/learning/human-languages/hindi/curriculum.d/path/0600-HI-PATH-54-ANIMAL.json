@@ -2,11 +2,26 @@
   "id": "HI-PATH-54-ANIMAL",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "HI-C54-cow",
-    "HI-C54-horse",
-    "HI-C54-fish",
-    "HI-C54-bird",
-    "HI-C54-goat"
+    {
+      "lesson": "HI-C54-cow",
+      "extension": "HI-EXT-54-ANIMAL"
+    },
+    {
+      "lesson": "HI-C54-horse",
+      "extension": "HI-EXT-54-ANIMAL"
+    },
+    {
+      "lesson": "HI-C54-fish",
+      "extension": "HI-EXT-54-ANIMAL"
+    },
+    {
+      "lesson": "HI-C54-bird",
+      "extension": "HI-EXT-54-ANIMAL"
+    },
+    {
+      "lesson": "HI-C54-goat",
+      "extension": "HI-EXT-54-ANIMAL"
+    }
   ],
   "before": [],
   "inline": [

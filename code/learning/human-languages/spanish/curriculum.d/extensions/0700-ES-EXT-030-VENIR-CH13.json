@@ -4,8 +4,5 @@
   "kind": "required",
   "category": "grammar",
   "canDo": "I can use the three learned singular forms of venir and compare them with known tener.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-C13-venir"
-  ]
+  "prerequisites": []
 }

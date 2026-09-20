@@ -2,9 +2,18 @@
   "id": "MR-PATH-051",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "MR-C48-kade",
-    "MR-C48-possession",
-    "MR-R48-have-and-toward"
+    {
+      "lesson": "MR-C48-kade",
+      "extension": "MR-EXT-064-TOWARD-AND-HAVE"
+    },
+    {
+      "lesson": "MR-C48-possession",
+      "extension": "MR-EXT-064-TOWARD-AND-HAVE"
+    },
+    {
+      "lesson": "MR-R48-have-and-toward",
+      "extension": "MR-EXT-064-TOWARD-AND-HAVE"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,10 +2,22 @@
   "id": "UR-PATH-023",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "UR-C22-kahna",
-    "UR-C22-kya-kaha",
-    "UR-C22-aram-se",
-    "UR-R22-when-you-are-lost"
+    {
+      "lesson": "UR-C22-kahna",
+      "extension": "UR-EXT-033-REPAIR-KIT"
+    },
+    {
+      "lesson": "UR-C22-kya-kaha",
+      "extension": "UR-EXT-033-REPAIR-KIT"
+    },
+    {
+      "lesson": "UR-C22-aram-se",
+      "extension": "UR-EXT-033-REPAIR-KIT"
+    },
+    {
+      "lesson": "UR-R22-when-you-are-lost",
+      "extension": "UR-EXT-033-REPAIR-KIT"
+    }
   ],
   "before": [],
   "inline": [

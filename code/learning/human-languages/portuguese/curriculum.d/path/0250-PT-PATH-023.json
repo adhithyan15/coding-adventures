@@ -2,8 +2,14 @@
   "id": "PT-PATH-023",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "PT-C19-pensar",
-    "PT-C19-entender-compreender"
+    {
+      "lesson": "PT-C19-pensar",
+      "extension": "PT-EXT-023-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "PT-C19-entender-compreender",
+      "extension": "PT-EXT-023-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

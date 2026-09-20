@@ -2,9 +2,18 @@
   "id": "UR-PATH-008",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "UR-C07-sochna",
-    "UR-C07-samajhna",
-    "UR-W07-pe"
+    {
+      "lesson": "UR-C07-sochna",
+      "extension": "UR-EXT-018-MIND-VERBS"
+    },
+    {
+      "lesson": "UR-C07-samajhna",
+      "extension": "UR-EXT-018-MIND-VERBS"
+    },
+    {
+      "lesson": "UR-W07-pe",
+      "extension": "UR-EXT-018C-SCRIPT-PE"
+    }
   ],
   "before": [],
   "inline": [

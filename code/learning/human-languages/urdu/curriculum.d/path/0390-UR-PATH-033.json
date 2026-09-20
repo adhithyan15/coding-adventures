@@ -2,11 +2,26 @@
   "id": "UR-PATH-033",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "UR-C32-pehla",
-    "UR-C32-dusra-tisra",
-    "UR-C32-chautha",
-    "UR-C32-practice",
-    "UR-R32-close"
+    {
+      "lesson": "UR-C32-pehla",
+      "extension": "UR-EXT-043-ORDINALS"
+    },
+    {
+      "lesson": "UR-C32-dusra-tisra",
+      "extension": "UR-EXT-043-ORDINALS"
+    },
+    {
+      "lesson": "UR-C32-chautha",
+      "extension": "UR-EXT-043-ORDINALS"
+    },
+    {
+      "lesson": "UR-C32-practice",
+      "extension": "UR-EXT-043-ORDINALS"
+    },
+    {
+      "lesson": "UR-R32-close",
+      "extension": "UR-EXT-043-ORDINALS"
+    }
   ],
   "before": [],
   "inline": [],

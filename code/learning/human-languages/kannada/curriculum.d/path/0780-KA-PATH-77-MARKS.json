@@ -2,10 +2,22 @@
   "id": "KA-PATH-77-MARKS",
   "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
   "lessons": [
-    "KA-S152-full-stop-and-comma",
-    "KA-S153-question-mark",
-    "KA-S154-other-marks",
-    "KA-R77-marks-recall"
+    {
+      "lesson": "KA-S152-full-stop-and-comma",
+      "extension": "KA-EXT-77-MARKS"
+    },
+    {
+      "lesson": "KA-S153-question-mark",
+      "extension": "KA-EXT-77-MARKS"
+    },
+    {
+      "lesson": "KA-S154-other-marks",
+      "extension": "KA-EXT-77-MARKS"
+    },
+    {
+      "lesson": "KA-R77-marks-recall",
+      "extension": "KA-EXT-77-MARKS"
+    }
   ],
   "before": [],
   "inline": [

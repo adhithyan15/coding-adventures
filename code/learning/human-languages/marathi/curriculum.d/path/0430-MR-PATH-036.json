@@ -2,10 +2,22 @@
   "id": "MR-PATH-036",
   "spine_node": "SPINE-SAY-WHY",
   "lessons": [
-    "MR-C34-kaa-why",
-    "MR-C34-kaaran",
-    "MR-W34-comma",
-    "MR-R34-reasons"
+    {
+      "lesson": "MR-C34-kaa-why",
+      "extension": "MR-EXT-049-WHY-AND-BECAUSE"
+    },
+    {
+      "lesson": "MR-C34-kaaran",
+      "extension": "MR-EXT-049-WHY-AND-BECAUSE"
+    },
+    {
+      "lesson": "MR-W34-comma",
+      "extension": "MR-EXT-049-WHY-AND-BECAUSE"
+    },
+    {
+      "lesson": "MR-R34-reasons",
+      "extension": "MR-EXT-049-WHY-AND-BECAUSE"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,11 +2,26 @@
   "id": "UR-PATH-028",
   "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
   "lessons": [
-    "UR-C27-shahr",
-    "UR-C27-mulk",
-    "UR-C27-lahore",
-    "UR-C27-lahori",
-    "UR-R27-where-you-are-from"
+    {
+      "lesson": "UR-C27-shahr",
+      "extension": "UR-EXT-038-ORIGIN"
+    },
+    {
+      "lesson": "UR-C27-mulk",
+      "extension": "UR-EXT-038-ORIGIN"
+    },
+    {
+      "lesson": "UR-C27-lahore",
+      "extension": "UR-EXT-038-ORIGIN"
+    },
+    {
+      "lesson": "UR-C27-lahori",
+      "extension": "UR-EXT-038-ORIGIN"
+    },
+    {
+      "lesson": "UR-R27-where-you-are-from",
+      "extension": "UR-EXT-038-ORIGIN"
+    }
   ],
   "before": [],
   "inline": [

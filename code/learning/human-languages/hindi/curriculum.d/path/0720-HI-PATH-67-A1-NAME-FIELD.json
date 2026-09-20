@@ -2,11 +2,26 @@
   "id": "HI-PATH-67-A1-NAME-FIELD",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "HI-A1F01-name-label",
-    "HI-A1F01-name-select",
-    "HI-A1F01-name-supported",
-    "HI-A1F01-name-delayed",
-    "HI-A1F01-name-no-model"
+    {
+      "lesson": "HI-A1F01-name-label",
+      "extension": "HI-EXT-067-A1-NAME-FIELD"
+    },
+    {
+      "lesson": "HI-A1F01-name-select",
+      "extension": "HI-EXT-067-A1-NAME-FIELD"
+    },
+    {
+      "lesson": "HI-A1F01-name-supported",
+      "extension": "HI-EXT-067-A1-NAME-FIELD"
+    },
+    {
+      "lesson": "HI-A1F01-name-delayed",
+      "extension": "HI-EXT-067-A1-NAME-FIELD"
+    },
+    {
+      "lesson": "HI-A1F01-name-no-model",
+      "extension": "HI-EXT-067-A1-NAME-FIELD"
+    }
   ],
   "before": [],
   "inline": [

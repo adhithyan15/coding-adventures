@@ -2,8 +2,14 @@
   "id": "ML-PATH-032",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "ML-C38-hrudayam",
-    "ML-C38-nenchu"
+    {
+      "lesson": "ML-C38-hrudayam",
+      "extension": "ML-EXT-032-TWO-HEARTS"
+    },
+    {
+      "lesson": "ML-C38-nenchu",
+      "extension": "ML-EXT-032-TWO-HEARTS"
+    }
   ],
   "before": [],
   "inline": [

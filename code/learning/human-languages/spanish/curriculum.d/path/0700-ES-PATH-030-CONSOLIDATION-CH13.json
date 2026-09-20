@@ -2,7 +2,10 @@
   "id": "ES-PATH-030-CONSOLIDATION-CH13",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "ES-C13-practice"
+    {
+      "lesson": "ES-C13-practice",
+      "extension": "ES-EXT-030-CONSOLIDATION-CH13"
+    }
   ],
   "before": [],
   "inline": [

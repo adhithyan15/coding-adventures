@@ -3,12 +3,24 @@
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
     "PT-C02-como",
-    "PT-C02-tudo",
+    {
+      "lesson": "PT-C02-tudo",
+      "extension": "PT-EXT-009-LANGUAGE-SPECIFIC"
+    },
     "PT-C02-tudo-bem",
-    "PT-C02-como-vai-esta",
+    {
+      "lesson": "PT-C02-como-vai-esta",
+      "extension": "PT-EXT-009-LANGUAGE-SPECIFIC"
+    },
     "PT-C02-mais-ou-menos",
-    "PT-C02-practice",
-    "PT-C02-formal-practice"
+    {
+      "lesson": "PT-C02-practice",
+      "extension": "PT-EXT-009-CONSOLIDATION"
+    },
+    {
+      "lesson": "PT-C02-formal-practice",
+      "extension": "PT-EXT-009-REGISTER"
+    }
   ],
   "before": [],
   "inline": [

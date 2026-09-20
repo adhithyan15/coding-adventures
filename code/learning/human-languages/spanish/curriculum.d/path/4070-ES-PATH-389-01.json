@@ -2,8 +2,14 @@
   "id": "ES-PATH-389-01",
   "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
   "lessons": [
-    "ES-C389-saber",
-    "ES-C389-repaso-se-y-puedo"
+    {
+      "lesson": "ES-C389-saber",
+      "extension": "ES-EXT-389-ABILITY"
+    },
+    {
+      "lesson": "ES-C389-repaso-se-y-puedo",
+      "extension": "ES-EXT-389-ABILITY"
+    }
   ],
   "before": [],
   "inline": [

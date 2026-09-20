@@ -2,8 +2,14 @@
   "id": "ES-PATH-415-REVIEWS",
   "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
   "lessons": [
-    "ES-C415-package-recall-1",
-    "ES-C415-package-recall-2"
+    {
+      "lesson": "ES-C415-package-recall-1",
+      "extension": "ES-EXT-415-REVIEWS"
+    },
+    {
+      "lesson": "ES-C415-package-recall-2",
+      "extension": "ES-EXT-415-REVIEWS"
+    }
   ],
   "before": [],
   "inline": [

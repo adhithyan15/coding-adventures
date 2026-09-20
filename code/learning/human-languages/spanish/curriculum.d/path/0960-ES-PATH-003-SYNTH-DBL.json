@@ -2,7 +2,10 @@
   "id": "ES-PATH-003-SYNTH-DBL",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C47-sintesis-dos-a-la-vez"
+    {
+      "lesson": "ES-C47-sintesis-dos-a-la-vez",
+      "extension": "ES-EXT-003-SYNTH-DBL"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,14 +2,38 @@
   "id": "GU-PATH-026",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "GU-C27-hear-bhaat",
-    "GU-C27-hear-daal",
-    "GU-C27-hear-shaak",
-    "GU-C27-hear-tel",
-    "GU-C27-hear-keri",
-    "GU-C27-plate-five",
-    "GU-C27-bhaat",
-    "GU-R27-plate-five-r1"
+    {
+      "lesson": "GU-C27-hear-bhaat",
+      "extension": "GU-EXT-038-PLATE-FIVE"
+    },
+    {
+      "lesson": "GU-C27-hear-daal",
+      "extension": "GU-EXT-038-PLATE-FIVE"
+    },
+    {
+      "lesson": "GU-C27-hear-shaak",
+      "extension": "GU-EXT-038-PLATE-FIVE"
+    },
+    {
+      "lesson": "GU-C27-hear-tel",
+      "extension": "GU-EXT-038-PLATE-FIVE"
+    },
+    {
+      "lesson": "GU-C27-hear-keri",
+      "extension": "GU-EXT-038-PLATE-FIVE"
+    },
+    {
+      "lesson": "GU-C27-plate-five",
+      "extension": "GU-EXT-038-PLATE-FIVE"
+    },
+    {
+      "lesson": "GU-C27-bhaat",
+      "extension": "GU-EXT-038-PLATE-FIVE"
+    },
+    {
+      "lesson": "GU-R27-plate-five-r1",
+      "extension": "GU-EXT-038-PLATE-FIVE"
+    }
   ],
   "before": [],
   "inline": [

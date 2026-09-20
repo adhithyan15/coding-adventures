@@ -2,11 +2,26 @@
   "id": "ES-PATH-351-01",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "ES-C351-cien",
-    "ES-C351-cantidad",
-    "ES-C351-ambos",
-    "ES-C351-varios",
-    "ES-C351-triple"
+    {
+      "lesson": "ES-C351-cien",
+      "extension": "ES-EXT-351-COUNT"
+    },
+    {
+      "lesson": "ES-C351-cantidad",
+      "extension": "ES-EXT-351-COUNT"
+    },
+    {
+      "lesson": "ES-C351-ambos",
+      "extension": "ES-EXT-351-COUNT"
+    },
+    {
+      "lesson": "ES-C351-varios",
+      "extension": "ES-EXT-351-COUNT"
+    },
+    {
+      "lesson": "ES-C351-triple",
+      "extension": "ES-EXT-351-COUNT"
+    }
   ],
   "before": [],
   "inline": [

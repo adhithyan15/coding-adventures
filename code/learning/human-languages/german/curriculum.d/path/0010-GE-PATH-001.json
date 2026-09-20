@@ -3,9 +3,18 @@
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
     "GE-C01-hallo",
-    "GE-W01-hallo-guided-copy",
-    "GE-W01-hallo-delayed-copy",
-    "GE-W01-hallo-dictation"
+    {
+      "lesson": "GE-W01-hallo-guided-copy",
+      "extension": "GE-EXT-001-WRITING-START"
+    },
+    {
+      "lesson": "GE-W01-hallo-delayed-copy",
+      "extension": "GE-EXT-001-WRITING-START"
+    },
+    {
+      "lesson": "GE-W01-hallo-dictation",
+      "extension": "GE-EXT-001-WRITING-START"
+    }
   ],
   "before": [],
   "inline": [],

@@ -2,7 +2,10 @@
   "id": "ES-PATH-040-ASPECT",
   "spine_node": "SPINE-TALK-ABOUT-PAST",
   "lessons": [
-    "ES-C48-dos-miradas"
+    {
+      "lesson": "ES-C48-dos-miradas",
+      "extension": "ES-EXT-040-ASPECT"
+    }
   ],
   "before": [],
   "inline": [

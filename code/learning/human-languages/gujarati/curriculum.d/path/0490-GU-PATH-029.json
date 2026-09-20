@@ -2,14 +2,38 @@
   "id": "GU-PATH-029",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "GU-C30-hear-chhokro",
-    "GU-C30-hear-chhokri",
-    "GU-C30-hear-maanas",
-    "GU-C30-hear-pustak",
-    "GU-C30-hear-kaagal",
-    "GU-C30-people-five",
-    "GU-C30-kaagal",
-    "GU-R30-people-five-r1"
+    {
+      "lesson": "GU-C30-hear-chhokro",
+      "extension": "GU-EXT-041-PEOPLE-FIVE"
+    },
+    {
+      "lesson": "GU-C30-hear-chhokri",
+      "extension": "GU-EXT-041-PEOPLE-FIVE"
+    },
+    {
+      "lesson": "GU-C30-hear-maanas",
+      "extension": "GU-EXT-041-PEOPLE-FIVE"
+    },
+    {
+      "lesson": "GU-C30-hear-pustak",
+      "extension": "GU-EXT-041-PEOPLE-FIVE"
+    },
+    {
+      "lesson": "GU-C30-hear-kaagal",
+      "extension": "GU-EXT-041-PEOPLE-FIVE"
+    },
+    {
+      "lesson": "GU-C30-people-five",
+      "extension": "GU-EXT-041-PEOPLE-FIVE"
+    },
+    {
+      "lesson": "GU-C30-kaagal",
+      "extension": "GU-EXT-041-PEOPLE-FIVE"
+    },
+    {
+      "lesson": "GU-R30-people-five-r1",
+      "extension": "GU-EXT-041-PEOPLE-FIVE"
+    }
   ],
   "before": [],
   "inline": [

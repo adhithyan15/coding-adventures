@@ -2,10 +2,22 @@
   "id": "ZH-PATH-008",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "ZH-W09-shen",
-    "ZH-W09-me",
-    "ZH-C09-shenme",
-    "ZH-C09-practice"
+    {
+      "lesson": "ZH-W09-shen",
+      "extension": "ZH-EXT-023-SHENME-SCRIPT"
+    },
+    {
+      "lesson": "ZH-W09-me",
+      "extension": "ZH-EXT-023-SHENME-SCRIPT"
+    },
+    {
+      "lesson": "ZH-C09-shenme",
+      "extension": "ZH-EXT-024-QUESTION-WHAT"
+    },
+    {
+      "lesson": "ZH-C09-practice",
+      "extension": "ZH-EXT-024-QUESTION-WHAT"
+    }
   ],
   "before": [],
   "inline": [

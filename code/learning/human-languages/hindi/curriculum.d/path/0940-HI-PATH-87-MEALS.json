@@ -2,7 +2,10 @@
   "id": "HI-PATH-87-MEALS",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "HI-C79-dopahar-raat-ka-khana"
+    {
+      "lesson": "HI-C79-dopahar-raat-ka-khana",
+      "extension": "HI-EXT-87-MEALS"
+    }
   ],
   "before": [],
   "inline": [

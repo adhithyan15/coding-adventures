@@ -2,8 +2,14 @@
   "id": "ES-PATH-319-03",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "ES-C319-repaso-presentarse",
-    "ES-C319-dos-respuestas"
+    {
+      "lesson": "ES-C319-repaso-presentarse",
+      "extension": "ES-EXT-319-PRESENTARSE"
+    },
+    {
+      "lesson": "ES-C319-dos-respuestas",
+      "extension": "ES-EXT-319-PRESENTARSE"
+    }
   ],
   "before": [],
   "inline": [

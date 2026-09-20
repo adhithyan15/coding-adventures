@@ -2,9 +2,18 @@
   "id": "PT-PATH-021",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "PT-C17-cabeca",
-    "PT-C17-cabeca-caput",
-    "PT-C17-mao"
+    {
+      "lesson": "PT-C17-cabeca",
+      "extension": "PT-EXT-021-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "PT-C17-cabeca-caput",
+      "extension": "PT-EXT-021-ETYMOLOGY"
+    },
+    {
+      "lesson": "PT-C17-mao",
+      "extension": "PT-EXT-021-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

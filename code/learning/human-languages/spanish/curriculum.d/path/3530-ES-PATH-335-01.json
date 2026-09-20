@@ -2,7 +2,10 @@
   "id": "ES-PATH-335-01",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "ES-C335-repaso-seis-palabras"
+    {
+      "lesson": "ES-C335-repaso-seis-palabras",
+      "extension": "ES-EXT-335-REPASO"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,9 +2,18 @@
   "id": "KA-PATH-019",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "KA-C16-tingalugalu",
-    "KA-C17-madhyaahna-madhyaraatri",
-    "KA-C18-gante"
+    {
+      "lesson": "KA-C16-tingalugalu",
+      "extension": "KA-EXT-019-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "KA-C17-madhyaahna-madhyaraatri",
+      "extension": "KA-EXT-019-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "KA-C18-gante",
+      "extension": "KA-EXT-019-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

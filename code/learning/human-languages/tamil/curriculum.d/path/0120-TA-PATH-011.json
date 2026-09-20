@@ -3,7 +3,10 @@
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
     "TA-C03-paravayillai",
-    "TA-C03-practice"
+    {
+      "lesson": "TA-C03-practice",
+      "extension": "TA-EXT-011-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [

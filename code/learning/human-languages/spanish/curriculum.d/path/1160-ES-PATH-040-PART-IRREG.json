@@ -2,7 +2,10 @@
   "id": "ES-PATH-040-PART-IRREG",
   "spine_node": "SPINE-TALK-ABOUT-PAST",
   "lessons": [
-    "ES-C49-participios-irregulares"
+    {
+      "lesson": "ES-C49-participios-irregulares",
+      "extension": "ES-EXT-040-PART-IRREG"
+    }
   ],
   "before": [],
   "inline": [

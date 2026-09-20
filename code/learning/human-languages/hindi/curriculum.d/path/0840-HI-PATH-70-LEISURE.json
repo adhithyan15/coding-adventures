@@ -2,11 +2,26 @@
   "id": "HI-PATH-70-LEISURE",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "HI-C70-game",
-    "HI-C70-play",
-    "HI-C70-cricket",
-    "HI-C70-song",
-    "HI-C70-rest"
+    {
+      "lesson": "HI-C70-game",
+      "extension": "HI-EXT-70-LEISURE"
+    },
+    {
+      "lesson": "HI-C70-play",
+      "extension": "HI-EXT-70-LEISURE"
+    },
+    {
+      "lesson": "HI-C70-cricket",
+      "extension": "HI-EXT-70-LEISURE"
+    },
+    {
+      "lesson": "HI-C70-song",
+      "extension": "HI-EXT-70-LEISURE"
+    },
+    {
+      "lesson": "HI-C70-rest",
+      "extension": "HI-EXT-70-LEISURE"
+    }
   ],
   "before": [],
   "inline": [

@@ -3,7 +3,10 @@
   "spine_node": "SPINE-READ-LITERARY-AND-CLASSICAL",
   "lessons": [
     "ES-C276-asonancia",
-    "ES-C276-practice"
+    {
+      "lesson": "ES-C276-practice",
+      "extension": "ES-EXT-276-LITERARY"
+    }
   ],
   "before": [],
   "inline": [

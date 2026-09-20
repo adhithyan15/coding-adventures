@@ -2,7 +2,10 @@
   "id": "ES-PATH-A1-PROPIOS",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C66-nombres-propios"
+    {
+      "lesson": "ES-C66-nombres-propios",
+      "extension": "ES-EXT-A1-PROPIOS"
+    }
   ],
   "before": [],
   "inline": [

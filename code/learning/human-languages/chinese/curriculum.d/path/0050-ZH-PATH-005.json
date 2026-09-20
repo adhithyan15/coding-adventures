@@ -2,10 +2,22 @@
   "id": "ZH-PATH-005",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "ZH-W06-zai",
-    "ZH-W06-jian",
-    "ZH-C06-zaijian",
-    "ZH-C06-practice"
+    {
+      "lesson": "ZH-W06-zai",
+      "extension": "ZH-EXT-015-ZAIJIAN-LITERAL"
+    },
+    {
+      "lesson": "ZH-W06-jian",
+      "extension": "ZH-EXT-016-CONVERSATION-CLOSE"
+    },
+    {
+      "lesson": "ZH-C06-zaijian",
+      "extension": "ZH-EXT-015-ZAIJIAN-LITERAL"
+    },
+    {
+      "lesson": "ZH-C06-practice",
+      "extension": "ZH-EXT-016-CONVERSATION-CLOSE"
+    }
   ],
   "before": [],
   "inline": [

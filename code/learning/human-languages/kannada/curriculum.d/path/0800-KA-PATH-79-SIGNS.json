@@ -2,13 +2,34 @@
   "id": "KA-PATH-79-SIGNS",
   "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
   "lessons": [
-    "KA-S161-vowel-sign-ii",
-    "KA-S162-vowel-sign-ai",
-    "KA-S163-vowel-sign-au",
-    "KA-S164-letter-nna",
-    "KA-S165-letter-sha",
-    "KA-S166-letter-ssa",
-    "KA-R79-signs-and-sibilants"
+    {
+      "lesson": "KA-S161-vowel-sign-ii",
+      "extension": "KA-EXT-79-SIGNS"
+    },
+    {
+      "lesson": "KA-S162-vowel-sign-ai",
+      "extension": "KA-EXT-79-SIGNS"
+    },
+    {
+      "lesson": "KA-S163-vowel-sign-au",
+      "extension": "KA-EXT-79-SIGNS"
+    },
+    {
+      "lesson": "KA-S164-letter-nna",
+      "extension": "KA-EXT-79-SIGNS"
+    },
+    {
+      "lesson": "KA-S165-letter-sha",
+      "extension": "KA-EXT-79-SIGNS"
+    },
+    {
+      "lesson": "KA-S166-letter-ssa",
+      "extension": "KA-EXT-79-SIGNS"
+    },
+    {
+      "lesson": "KA-R79-signs-and-sibilants",
+      "extension": "KA-EXT-79-SIGNS"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,7 +2,10 @@
   "id": "ES-PATH-A1-REVIEW-DEM",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C59-repaso-demostrativos"
+    {
+      "lesson": "ES-C59-repaso-demostrativos",
+      "extension": "ES-EXT-A1-REVIEW-DEM"
+    }
   ],
   "before": [],
   "inline": [

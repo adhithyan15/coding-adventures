@@ -2,12 +2,30 @@
   "id": "HI-PATH-201",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "HI-C41-big",
-    "HI-C41-small",
-    "HI-C41-good",
-    "HI-C41-new",
-    "HI-C41-old",
-    "HI-C41-adjective-system"
+    {
+      "lesson": "HI-C41-big",
+      "extension": "HI-EXT-201-ADJ"
+    },
+    {
+      "lesson": "HI-C41-small",
+      "extension": "HI-EXT-201-ADJ"
+    },
+    {
+      "lesson": "HI-C41-good",
+      "extension": "HI-EXT-201-ADJ"
+    },
+    {
+      "lesson": "HI-C41-new",
+      "extension": "HI-EXT-201-ADJ"
+    },
+    {
+      "lesson": "HI-C41-old",
+      "extension": "HI-EXT-201-ADJ"
+    },
+    {
+      "lesson": "HI-C41-adjective-system",
+      "extension": "HI-EXT-201-ADJ"
+    }
   ],
   "before": [],
   "inline": [

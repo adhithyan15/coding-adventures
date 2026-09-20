@@ -2,12 +2,30 @@
   "id": "ES-PATH-402-THINGS",
   "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
   "lessons": [
-    "ES-C402-camisa",
-    "ES-C402-camiseta",
-    "ES-C402-talla",
-    "ES-C402-gorro",
-    "ES-C402-shopping-recall-1",
-    "ES-C402-shopping-recall-2"
+    {
+      "lesson": "ES-C402-camisa",
+      "extension": "ES-EXT-402-SHOPPING"
+    },
+    {
+      "lesson": "ES-C402-camiseta",
+      "extension": "ES-EXT-402-SHOPPING"
+    },
+    {
+      "lesson": "ES-C402-talla",
+      "extension": "ES-EXT-402-SHOPPING"
+    },
+    {
+      "lesson": "ES-C402-gorro",
+      "extension": "ES-EXT-402-SHOPPING"
+    },
+    {
+      "lesson": "ES-C402-shopping-recall-1",
+      "extension": "ES-EXT-402-SHOPPING"
+    },
+    {
+      "lesson": "ES-C402-shopping-recall-2",
+      "extension": "ES-EXT-402-SHOPPING"
+    }
   ],
   "before": [],
   "inline": [

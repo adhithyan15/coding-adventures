@@ -2,11 +2,26 @@
   "id": "ML-PATH-48-ROLE",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "ML-C48-teacher",
-    "ML-C48-student",
-    "ML-C48-doctor",
-    "ML-C48-farmer",
-    "ML-C48-guest"
+    {
+      "lesson": "ML-C48-teacher",
+      "extension": "ML-EXT-48-ROLE"
+    },
+    {
+      "lesson": "ML-C48-student",
+      "extension": "ML-EXT-48-ROLE"
+    },
+    {
+      "lesson": "ML-C48-doctor",
+      "extension": "ML-EXT-48-ROLE"
+    },
+    {
+      "lesson": "ML-C48-farmer",
+      "extension": "ML-EXT-48-ROLE"
+    },
+    {
+      "lesson": "ML-C48-guest",
+      "extension": "ML-EXT-48-ROLE"
+    }
   ],
   "before": [],
   "inline": [

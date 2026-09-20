@@ -6,10 +6,5 @@
   "canDo": "I can identify an academy, French and an exam.",
   "prerequisites": [
     "ES-EXT-030-ESTUDIANTE"
-  ],
-  "lessons": [
-    "ES-C410-academia",
-    "ES-C410-frances",
-    "ES-C410-examen"
   ]
 }

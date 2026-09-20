@@ -2,11 +2,26 @@
   "id": "ZH-PATH-024",
   "spine_node": "SPINE-TALK-ABOUT-PAST",
   "lessons": [
-    "ZH-W25-le",
-    "ZH-C25-le-dongci",
-    "ZH-C25-le-juwei",
-    "ZH-C25-ti",
-    "ZH-C25-practice"
+    {
+      "lesson": "ZH-W25-le",
+      "extension": "ZH-EXT-059-LE"
+    },
+    {
+      "lesson": "ZH-C25-le-dongci",
+      "extension": "ZH-EXT-059-LE"
+    },
+    {
+      "lesson": "ZH-C25-le-juwei",
+      "extension": "ZH-EXT-059-LE"
+    },
+    {
+      "lesson": "ZH-C25-ti",
+      "extension": "ZH-EXT-059-LE"
+    },
+    {
+      "lesson": "ZH-C25-practice",
+      "extension": "ZH-EXT-059-LE"
+    }
   ],
   "before": [],
   "inline": [],

@@ -2,7 +2,10 @@
   "id": "MR-PATH-063-TIMED",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "MR-W10-a1-con-reloj"
+    {
+      "lesson": "MR-W10-a1-con-reloj",
+      "extension": "MR-EXT-063-TIMED"
+    }
   ],
   "before": [],
   "inline": [

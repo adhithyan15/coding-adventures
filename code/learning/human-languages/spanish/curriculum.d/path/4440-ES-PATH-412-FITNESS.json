@@ -2,8 +2,14 @@
   "id": "ES-PATH-412-FITNESS",
   "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
   "lessons": [
-    "ES-C412-gimnasio",
-    "ES-C412-deporte"
+    {
+      "lesson": "ES-C412-gimnasio",
+      "extension": "ES-EXT-412-FITNESS"
+    },
+    {
+      "lesson": "ES-C412-deporte",
+      "extension": "ES-EXT-412-FITNESS"
+    }
   ],
   "before": [],
   "inline": [

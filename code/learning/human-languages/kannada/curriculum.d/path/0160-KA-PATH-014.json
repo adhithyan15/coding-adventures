@@ -2,7 +2,10 @@
   "id": "KA-PATH-014",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "KA-C11-bannagalu"
+    {
+      "lesson": "KA-C11-bannagalu",
+      "extension": "KA-EXT-014-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,13 +2,34 @@
   "id": "TE-PATH-200",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "TE-C41-this",
-    "TE-C41-that",
-    "TE-C41-here",
-    "TE-C41-there",
-    "TE-C41-who",
-    "TE-C41-where",
-    "TE-C41-deixis-system"
+    {
+      "lesson": "TE-C41-this",
+      "extension": "TE-EXT-200-DEIXIS"
+    },
+    {
+      "lesson": "TE-C41-that",
+      "extension": "TE-EXT-200-DEIXIS"
+    },
+    {
+      "lesson": "TE-C41-here",
+      "extension": "TE-EXT-200-DEIXIS"
+    },
+    {
+      "lesson": "TE-C41-there",
+      "extension": "TE-EXT-200-DEIXIS"
+    },
+    {
+      "lesson": "TE-C41-who",
+      "extension": "TE-EXT-200-DEIXIS"
+    },
+    {
+      "lesson": "TE-C41-where",
+      "extension": "TE-EXT-200-DEIXIS"
+    },
+    {
+      "lesson": "TE-C41-deixis-system",
+      "extension": "TE-EXT-200-DEIXIS"
+    }
   ],
   "before": [],
   "inline": [

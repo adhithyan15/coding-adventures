@@ -2,7 +2,10 @@
   "id": "ES-PATH-B2-SYNTH-REPORT",
   "spine_node": "SPINE-REPORT-WHAT-OTHERS-SAID",
   "lessons": [
-    "ES-C57-sintesis-reportar"
+    {
+      "lesson": "ES-C57-sintesis-reportar",
+      "extension": "ES-EXT-B2-SYNTH-REPORT"
+    }
   ],
   "before": [],
   "inline": [

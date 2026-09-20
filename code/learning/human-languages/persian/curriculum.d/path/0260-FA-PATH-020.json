@@ -2,11 +2,26 @@
   "id": "FA-PATH-020",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "FA-W19-digits-zero-one",
-    "FA-W19-digits-two-three",
-    "FA-W19-digits-four-five-six",
-    "FA-W19-digits-seven-eight-nine",
-    "FA-C19-practice"
+    {
+      "lesson": "FA-W19-digits-zero-one",
+      "extension": "FA-EXT-027-DIGITS"
+    },
+    {
+      "lesson": "FA-W19-digits-two-three",
+      "extension": "FA-EXT-027-DIGITS"
+    },
+    {
+      "lesson": "FA-W19-digits-four-five-six",
+      "extension": "FA-EXT-027-DIGITS"
+    },
+    {
+      "lesson": "FA-W19-digits-seven-eight-nine",
+      "extension": "FA-EXT-027-DIGITS"
+    },
+    {
+      "lesson": "FA-C19-practice",
+      "extension": "FA-EXT-027-DIGITS"
+    }
   ],
   "before": [],
   "inline": [],

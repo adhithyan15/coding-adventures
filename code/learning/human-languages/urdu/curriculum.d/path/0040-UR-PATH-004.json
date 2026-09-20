@@ -3,14 +3,38 @@
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
     "UR-C02-mera-naam",
-    "UR-W02-alef",
-    "UR-C03-aap-tum-tu",
-    "UR-C03-kya",
-    "UR-W03-lam",
-    "UR-C03-aap-ka-naam-kya-hai",
-    "UR-C03-khushi-hui",
-    "UR-W03-mim",
-    "UR-C03-practice"
+    {
+      "lesson": "UR-W02-alef",
+      "extension": "UR-EXT-003B-SCRIPT-ALIF-LAM-MIM"
+    },
+    {
+      "lesson": "UR-C03-aap-tum-tu",
+      "extension": "UR-EXT-002-REGISTER"
+    },
+    {
+      "lesson": "UR-C03-kya",
+      "extension": "UR-EXT-003-SCRIPT"
+    },
+    {
+      "lesson": "UR-W03-lam",
+      "extension": "UR-EXT-003B-SCRIPT-ALIF-LAM-MIM"
+    },
+    {
+      "lesson": "UR-C03-aap-ka-naam-kya-hai",
+      "extension": "UR-EXT-004-GRAMMAR"
+    },
+    {
+      "lesson": "UR-C03-khushi-hui",
+      "extension": "UR-EXT-005-CULTURE"
+    },
+    {
+      "lesson": "UR-W03-mim",
+      "extension": "UR-EXT-003B-SCRIPT-ALIF-LAM-MIM"
+    },
+    {
+      "lesson": "UR-C03-practice",
+      "extension": "UR-EXT-006-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [

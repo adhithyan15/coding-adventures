@@ -2,11 +2,26 @@
   "id": "SA-PATH-25-BODY",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "SA-C25-hand",
-    "SA-C25-foot",
-    "SA-C25-head",
-    "SA-C25-tooth",
-    "SA-C25-hair"
+    {
+      "lesson": "SA-C25-hand",
+      "extension": "SA-EXT-25-BODY"
+    },
+    {
+      "lesson": "SA-C25-foot",
+      "extension": "SA-EXT-25-BODY"
+    },
+    {
+      "lesson": "SA-C25-head",
+      "extension": "SA-EXT-25-BODY"
+    },
+    {
+      "lesson": "SA-C25-tooth",
+      "extension": "SA-EXT-25-BODY"
+    },
+    {
+      "lesson": "SA-C25-hair",
+      "extension": "SA-EXT-25-BODY"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,9 +2,18 @@
   "id": "SA-PATH-56-PAST",
   "spine_node": "SPINE-TALK-ABOUT-PAST",
   "lessons": [
-    "SA-C56-agacchat",
-    "SA-C56-apathat",
-    "SA-R56-past"
+    {
+      "lesson": "SA-C56-agacchat",
+      "extension": "SA-EXT-056-PAST"
+    },
+    {
+      "lesson": "SA-C56-apathat",
+      "extension": "SA-EXT-056-PAST"
+    },
+    {
+      "lesson": "SA-R56-past",
+      "extension": "SA-EXT-056-PAST"
+    }
   ],
   "before": [],
   "inline": [

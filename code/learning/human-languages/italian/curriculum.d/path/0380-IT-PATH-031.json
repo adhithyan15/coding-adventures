@@ -2,11 +2,26 @@
   "id": "IT-PATH-031",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "IT-C27-sesto",
-    "IT-C27-settimo",
-    "IT-C27-ottavo",
-    "IT-C27-nono",
-    "IT-C27-decimo"
+    {
+      "lesson": "IT-C27-sesto",
+      "extension": "IT-EXT-031-ORDINALI-AL-DECIMO"
+    },
+    {
+      "lesson": "IT-C27-settimo",
+      "extension": "IT-EXT-031-ORDINALI-AL-DECIMO"
+    },
+    {
+      "lesson": "IT-C27-ottavo",
+      "extension": "IT-EXT-031-ORDINALI-AL-DECIMO"
+    },
+    {
+      "lesson": "IT-C27-nono",
+      "extension": "IT-EXT-031-ORDINALI-AL-DECIMO"
+    },
+    {
+      "lesson": "IT-C27-decimo",
+      "extension": "IT-EXT-031-ORDINALI-AL-DECIMO"
+    }
   ],
   "before": [],
   "inline": [],

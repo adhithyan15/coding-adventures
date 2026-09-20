@@ -2,11 +2,26 @@
   "id": "ES-PATH-391-01",
   "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
   "lessons": [
-    "ES-C391-menu",
-    "ES-C391-camarero",
-    "ES-C391-postre",
-    "ES-C391-supermercado",
-    "ES-C391-euro"
+    {
+      "lesson": "ES-C391-menu",
+      "extension": "ES-EXT-391-THING"
+    },
+    {
+      "lesson": "ES-C391-camarero",
+      "extension": "ES-EXT-391-THING"
+    },
+    {
+      "lesson": "ES-C391-postre",
+      "extension": "ES-EXT-391-THING"
+    },
+    {
+      "lesson": "ES-C391-supermercado",
+      "extension": "ES-EXT-391-THING"
+    },
+    {
+      "lesson": "ES-C391-euro",
+      "extension": "ES-EXT-391-THING"
+    }
   ],
   "before": [],
   "inline": [

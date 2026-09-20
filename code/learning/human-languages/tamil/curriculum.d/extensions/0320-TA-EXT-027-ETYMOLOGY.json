@@ -4,10 +4,5 @@
   "kind": "supporting",
   "category": "etymology",
   "canDo": "I can use this Tamil word history as a memory hook without confusing origin and current use.",
-  "prerequisites": [],
-  "lessons": [
-    "TA-C25-goodnight-alternatives",
-    "TA-C28-afternoon-boundary",
-    "TA-C31-afternoon-greeting-root"
-  ]
+  "prerequisites": []
 }

@@ -2,11 +2,26 @@
   "id": "KA-PATH-56-HOUSE",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "KA-C56-mat",
-    "KA-C56-basket",
-    "KA-C56-knife",
-    "KA-C56-vessel",
-    "KA-C56-box"
+    {
+      "lesson": "KA-C56-mat",
+      "extension": "KA-EXT-56-HOUSE"
+    },
+    {
+      "lesson": "KA-C56-basket",
+      "extension": "KA-EXT-56-HOUSE"
+    },
+    {
+      "lesson": "KA-C56-knife",
+      "extension": "KA-EXT-56-HOUSE"
+    },
+    {
+      "lesson": "KA-C56-vessel",
+      "extension": "KA-EXT-56-HOUSE"
+    },
+    {
+      "lesson": "KA-C56-box",
+      "extension": "KA-EXT-56-HOUSE"
+    }
   ],
   "before": [],
   "inline": [

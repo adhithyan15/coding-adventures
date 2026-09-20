@@ -2,12 +2,30 @@
   "id": "ML-PATH-58-ANSWER",
   "spine_node": "SPINE-RESPOND-BASIC",
   "lessons": [
-    "ML-C58-more",
-    "ML-C58-less",
-    "ML-C58-a-little",
-    "ML-C58-venam",
-    "ML-C58-no-need",
-    "ML-C58-that-will-do"
+    {
+      "lesson": "ML-C58-more",
+      "extension": "ML-EXT-58-ANSWER"
+    },
+    {
+      "lesson": "ML-C58-less",
+      "extension": "ML-EXT-58-ANSWER"
+    },
+    {
+      "lesson": "ML-C58-a-little",
+      "extension": "ML-EXT-58-ANSWER"
+    },
+    {
+      "lesson": "ML-C58-venam",
+      "extension": "ML-EXT-58-ANSWER"
+    },
+    {
+      "lesson": "ML-C58-no-need",
+      "extension": "ML-EXT-58-ANSWER"
+    },
+    {
+      "lesson": "ML-C58-that-will-do",
+      "extension": "ML-EXT-58-ANSWER"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,17 +2,50 @@
   "id": "ZH-PATH-019",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "ZH-W20-liu",
-    "ZH-C20-liu",
-    "ZH-W20-qi",
-    "ZH-C20-qi",
-    "ZH-W20-ba",
-    "ZH-C20-ba",
-    "ZH-W20-jiu",
-    "ZH-C20-jiu",
-    "ZH-W20-shi",
-    "ZH-C20-shi",
-    "ZH-C20-practice"
+    {
+      "lesson": "ZH-W20-liu",
+      "extension": "ZH-EXT-054-COUNT-TEN"
+    },
+    {
+      "lesson": "ZH-C20-liu",
+      "extension": "ZH-EXT-054-COUNT-TEN"
+    },
+    {
+      "lesson": "ZH-W20-qi",
+      "extension": "ZH-EXT-054-COUNT-TEN"
+    },
+    {
+      "lesson": "ZH-C20-qi",
+      "extension": "ZH-EXT-054-COUNT-TEN"
+    },
+    {
+      "lesson": "ZH-W20-ba",
+      "extension": "ZH-EXT-054-COUNT-TEN"
+    },
+    {
+      "lesson": "ZH-C20-ba",
+      "extension": "ZH-EXT-054-COUNT-TEN"
+    },
+    {
+      "lesson": "ZH-W20-jiu",
+      "extension": "ZH-EXT-054-COUNT-TEN"
+    },
+    {
+      "lesson": "ZH-C20-jiu",
+      "extension": "ZH-EXT-054-COUNT-TEN"
+    },
+    {
+      "lesson": "ZH-W20-shi",
+      "extension": "ZH-EXT-054-COUNT-TEN"
+    },
+    {
+      "lesson": "ZH-C20-shi",
+      "extension": "ZH-EXT-054-COUNT-TEN"
+    },
+    {
+      "lesson": "ZH-C20-practice",
+      "extension": "ZH-EXT-054-COUNT-TEN"
+    }
   ],
   "before": [],
   "inline": [],

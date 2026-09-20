@@ -2,11 +2,26 @@
   "id": "ES-PATH-380-01",
   "spine_node": "SPINE-DESCRIBE-QUALITIES",
   "lessons": [
-    "ES-C380-simpatico",
-    "ES-C380-alegre",
-    "ES-C380-feo",
-    "ES-C380-ultimo",
-    "ES-C380-necesario"
+    {
+      "lesson": "ES-C380-simpatico",
+      "extension": "ES-EXT-380-COUNT"
+    },
+    {
+      "lesson": "ES-C380-alegre",
+      "extension": "ES-EXT-380-COUNT"
+    },
+    {
+      "lesson": "ES-C380-feo",
+      "extension": "ES-EXT-380-COUNT"
+    },
+    {
+      "lesson": "ES-C380-ultimo",
+      "extension": "ES-EXT-380-COUNT"
+    },
+    {
+      "lesson": "ES-C380-necesario",
+      "extension": "ES-EXT-380-COUNT"
+    }
   ],
   "before": [],
   "inline": [

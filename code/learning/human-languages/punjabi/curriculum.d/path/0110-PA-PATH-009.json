@@ -5,10 +5,19 @@
     "PA-C04-phir",
     "PA-C04-milaange",
     "PA-C04-phir-milaange",
-    "PA-R04-wellbeing-r2",
+    {
+      "lesson": "PA-R04-wellbeing-r2",
+      "extension": "PA-EXT-021-WELLBEING-R2"
+    },
     "PA-C04-rab-raakha",
-    "PA-S04-phappha-gagga",
-    "PA-C04-practice"
+    {
+      "lesson": "PA-S04-phappha-gagga",
+      "extension": "PA-EXT-047-PREA1-SCRIPT-RUNWAY-C4"
+    },
+    {
+      "lesson": "PA-C04-practice",
+      "extension": "PA-EXT-057-C4-FAREWELL-CHECKPOINT"
+    }
   ],
   "before": [
     "PA-EXT-009-LANGUAGE-SPECIFIC"

@@ -6,11 +6,5 @@
   "canDo": "I can join two or more nouns, and offer a choice between two, with the ending Malayalam puts on each item.",
   "prerequisites": [
     "ML-EXT-69-READING"
-  ],
-  "lessons": [
-    "ML-C70-um",
-    "ML-C70-um-more",
-    "ML-C70-o",
-    "ML-R70-cherkkuka"
   ]
 }

@@ -2,7 +2,10 @@
   "id": "BN-PATH-004A",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "BN-C01-practice"
+    {
+      "lesson": "BN-C01-practice",
+      "extension": "BN-EXT-001-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,11 +2,26 @@
   "id": "ML-PATH-63-FEEL",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "ML-C63-hunger",
-    "ML-C63-tiredness",
-    "ML-C63-pain",
-    "ML-C63-cough",
-    "ML-C63-fever"
+    {
+      "lesson": "ML-C63-hunger",
+      "extension": "ML-EXT-63-FEEL"
+    },
+    {
+      "lesson": "ML-C63-tiredness",
+      "extension": "ML-EXT-63-FEEL"
+    },
+    {
+      "lesson": "ML-C63-pain",
+      "extension": "ML-EXT-63-FEEL"
+    },
+    {
+      "lesson": "ML-C63-cough",
+      "extension": "ML-EXT-63-FEEL"
+    },
+    {
+      "lesson": "ML-C63-fever",
+      "extension": "ML-EXT-63-FEEL"
+    }
   ],
   "before": [],
   "inline": [

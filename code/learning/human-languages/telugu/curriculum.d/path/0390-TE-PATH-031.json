@@ -2,8 +2,14 @@
   "id": "TE-PATH-031",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "TE-C38-gunde",
-    "TE-C38-hrudayam"
+    {
+      "lesson": "TE-C38-gunde",
+      "extension": "TE-EXT-032-HEART"
+    },
+    {
+      "lesson": "TE-C38-hrudayam",
+      "extension": "TE-EXT-032-HEART"
+    }
   ],
   "before": [],
   "inline": [

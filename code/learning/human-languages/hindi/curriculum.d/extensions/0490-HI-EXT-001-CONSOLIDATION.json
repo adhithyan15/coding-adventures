@@ -6,8 +6,5 @@
   "canDo": "I can run the whole first exchange -- greet formally or informally, thank in two registers, and take my leave -- and read every word of it in Devanagari.",
   "prerequisites": [
     "HI-EXT-001-SCRIPT"
-  ],
-  "lessons": [
-    "HI-C01-practice"
   ]
 }

@@ -2,11 +2,26 @@
   "id": "TA-PATH-53-LAND",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "TA-C53-river",
-    "TA-C53-hill",
-    "TA-C53-field",
-    "TA-C53-path",
-    "TA-C53-village"
+    {
+      "lesson": "TA-C53-river",
+      "extension": "TA-EXT-53-LAND"
+    },
+    {
+      "lesson": "TA-C53-hill",
+      "extension": "TA-EXT-53-LAND"
+    },
+    {
+      "lesson": "TA-C53-field",
+      "extension": "TA-EXT-53-LAND"
+    },
+    {
+      "lesson": "TA-C53-path",
+      "extension": "TA-EXT-53-LAND"
+    },
+    {
+      "lesson": "TA-C53-village",
+      "extension": "TA-EXT-53-LAND"
+    }
   ],
   "before": [],
   "inline": [

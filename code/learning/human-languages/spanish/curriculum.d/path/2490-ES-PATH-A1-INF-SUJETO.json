@@ -2,8 +2,14 @@
   "id": "ES-PATH-A1-INF-SUJETO",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C67-comer-es-bueno",
-    "ES-C67-repaso-cuando-dos-palabras-se-tocan"
+    {
+      "lesson": "ES-C67-comer-es-bueno",
+      "extension": "ES-EXT-A1-INF-SUJETO"
+    },
+    {
+      "lesson": "ES-C67-repaso-cuando-dos-palabras-se-tocan",
+      "extension": "ES-EXT-A1-INF-SUJETO"
+    }
   ],
   "before": [],
   "inline": [

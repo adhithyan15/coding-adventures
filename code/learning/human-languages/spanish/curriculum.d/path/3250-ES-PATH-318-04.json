@@ -2,7 +2,10 @@
   "id": "ES-PATH-318-04",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "ES-C318-repaso-marcas"
+    {
+      "lesson": "ES-C318-repaso-marcas",
+      "extension": "ES-EXT-318-MARCAS"
+    }
   ],
   "before": [],
   "inline": [

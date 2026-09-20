@@ -2,7 +2,10 @@
   "id": "ES-PATH-042-CMD-NEG",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "ES-C50-no-hables"
+    {
+      "lesson": "ES-C50-no-hables",
+      "extension": "ES-EXT-042-CMD-NEG"
+    }
   ],
   "before": [],
   "inline": [

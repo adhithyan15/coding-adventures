@@ -2,8 +2,14 @@
   "id": "HI-PATH-77-ORDER",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "HI-C77-one-other",
-    "HI-C77-practice"
+    {
+      "lesson": "HI-C77-one-other",
+      "extension": "HI-EXT-77-ORDER"
+    },
+    {
+      "lesson": "HI-C77-practice",
+      "extension": "HI-EXT-77-ORDER"
+    }
   ],
   "before": [],
   "inline": [

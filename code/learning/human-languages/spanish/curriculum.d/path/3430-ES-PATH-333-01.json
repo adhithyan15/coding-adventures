@@ -2,11 +2,26 @@
   "id": "ES-PATH-333-01",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "ES-C333-ruido",
-    "ES-C333-silencio",
-    "ES-C333-calma",
-    "ES-C333-prisa",
-    "ES-C333-cuidado"
+    {
+      "lesson": "ES-C333-ruido",
+      "extension": "ES-EXT-333-QUIET"
+    },
+    {
+      "lesson": "ES-C333-silencio",
+      "extension": "ES-EXT-333-QUIET"
+    },
+    {
+      "lesson": "ES-C333-calma",
+      "extension": "ES-EXT-333-QUIET"
+    },
+    {
+      "lesson": "ES-C333-prisa",
+      "extension": "ES-EXT-333-QUIET"
+    },
+    {
+      "lesson": "ES-C333-cuidado",
+      "extension": "ES-EXT-333-QUIET"
+    }
   ],
   "before": [],
   "inline": [

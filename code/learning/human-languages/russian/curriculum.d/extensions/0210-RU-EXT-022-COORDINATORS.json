@@ -6,12 +6,5 @@
   "canDo": "I can join two nouns or two whole clauses with i, offer a choice with ili, refuse both halves with ni ... ni, and agree with tozhe.",
   "prerequisites": [
     "RU-EXT-021-SCRIPT-EIGHT"
-  ],
-  "lessons": [
-    "RU-C16-i",
-    "RU-C16-i-predlozheniya",
-    "RU-C16-ili",
-    "RU-C16-ni-ni",
-    "RU-C16-tozhe"
   ]
 }

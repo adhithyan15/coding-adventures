@@ -2,11 +2,26 @@
   "id": "SA-PATH-017",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "SA-C05-vadami",
-    "SA-C05-aham-samskritam-vadami",
-    "SA-C05-karomi",
-    "SA-C05-vasami",
-    "SA-C05-practice"
+    {
+      "lesson": "SA-C05-vadami",
+      "extension": "SA-EXT-017-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "SA-C05-aham-samskritam-vadami",
+      "extension": "SA-EXT-017-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "SA-C05-karomi",
+      "extension": "SA-EXT-017-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "SA-C05-vasami",
+      "extension": "SA-EXT-017-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "SA-C05-practice",
+      "extension": "SA-EXT-017-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

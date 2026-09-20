@@ -2,11 +2,26 @@
   "id": "ES-PATH-288-01",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "ES-C288-salida",
-    "ES-C288-viaje",
-    "ES-C288-vuelta",
-    "ES-C288-llegada",
-    "ES-C288-despedida"
+    {
+      "lesson": "ES-C288-salida",
+      "extension": "ES-EXT-288-PARTIDA"
+    },
+    {
+      "lesson": "ES-C288-viaje",
+      "extension": "ES-EXT-288-PARTIDA"
+    },
+    {
+      "lesson": "ES-C288-vuelta",
+      "extension": "ES-EXT-288-PARTIDA"
+    },
+    {
+      "lesson": "ES-C288-llegada",
+      "extension": "ES-EXT-288-PARTIDA"
+    },
+    {
+      "lesson": "ES-C288-despedida",
+      "extension": "ES-EXT-288-PARTIDA"
+    }
   ],
   "before": [],
   "inline": [

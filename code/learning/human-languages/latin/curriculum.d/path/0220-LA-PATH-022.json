@@ -4,11 +4,26 @@
   "lessons": [
     "LA-C24-propediem-te-videbo",
     "LA-C25-cras-te-videbo",
-    "LA-C46-lux",
-    "LA-C46-umbra",
-    "LA-C46-stella",
-    "LA-C46-luna",
-    "LA-C46-somnus"
+    {
+      "lesson": "LA-C46-lux",
+      "extension": "LA-EXT-046-NIGHT"
+    },
+    {
+      "lesson": "LA-C46-umbra",
+      "extension": "LA-EXT-046-NIGHT"
+    },
+    {
+      "lesson": "LA-C46-stella",
+      "extension": "LA-EXT-046-NIGHT"
+    },
+    {
+      "lesson": "LA-C46-luna",
+      "extension": "LA-EXT-046-NIGHT"
+    },
+    {
+      "lesson": "LA-C46-somnus",
+      "extension": "LA-EXT-046-NIGHT"
+    }
   ],
   "before": [],
   "inline": [],

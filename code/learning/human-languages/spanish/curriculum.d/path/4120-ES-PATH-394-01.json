@@ -2,11 +2,26 @@
   "id": "ES-PATH-394-01",
   "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
   "lessons": [
-    "ES-C394-universidad",
-    "ES-C394-trabajo",
-    "ES-C394-actividad",
-    "ES-C394-guitarra",
-    "ES-C394-medico"
+    {
+      "lesson": "ES-C394-universidad",
+      "extension": "ES-EXT-394-THING"
+    },
+    {
+      "lesson": "ES-C394-trabajo",
+      "extension": "ES-EXT-394-THING"
+    },
+    {
+      "lesson": "ES-C394-actividad",
+      "extension": "ES-EXT-394-THING"
+    },
+    {
+      "lesson": "ES-C394-guitarra",
+      "extension": "ES-EXT-394-THING"
+    },
+    {
+      "lesson": "ES-C394-medico",
+      "extension": "ES-EXT-394-THING"
+    }
   ],
   "before": [],
   "inline": [

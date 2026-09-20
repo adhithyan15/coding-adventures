@@ -2,10 +2,22 @@
   "id": "MR-PATH-062",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "MR-W59-ai-matra",
-    "MR-C59-paise",
-    "MR-C59-rupaya",
-    "MR-R59-what-it-costs"
+    {
+      "lesson": "MR-W59-ai-matra",
+      "extension": "MR-EXT-075-WHAT-IT-COSTS"
+    },
+    {
+      "lesson": "MR-C59-paise",
+      "extension": "MR-EXT-075-WHAT-IT-COSTS"
+    },
+    {
+      "lesson": "MR-C59-rupaya",
+      "extension": "MR-EXT-075-WHAT-IT-COSTS"
+    },
+    {
+      "lesson": "MR-R59-what-it-costs",
+      "extension": "MR-EXT-075-WHAT-IT-COSTS"
+    }
   ],
   "before": [],
   "inline": [

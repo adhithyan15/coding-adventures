@@ -2,10 +2,22 @@
   "id": "MR-PATH-015",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "MR-C10-paani",
-    "MR-C10-chaha",
-    "MR-C10-dudh",
-    "MR-C10-bhakari"
+    {
+      "lesson": "MR-C10-paani",
+      "extension": "MR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "MR-C10-chaha",
+      "extension": "MR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "MR-C10-dudh",
+      "extension": "MR-EXT-015-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "MR-C10-bhakari",
+      "extension": "MR-EXT-015-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

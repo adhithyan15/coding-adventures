@@ -2,11 +2,26 @@
   "id": "BN-PATH-017",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "BN-C05-bola",
-    "BN-C05-ami-bangla-boli",
-    "BN-C05-kaj-kora",
-    "BN-C05-thaka",
-    "BN-C05-practice"
+    {
+      "lesson": "BN-C05-bola",
+      "extension": "BN-EXT-017-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "BN-C05-ami-bangla-boli",
+      "extension": "BN-EXT-017-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "BN-C05-kaj-kora",
+      "extension": "BN-EXT-017-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "BN-C05-thaka",
+      "extension": "BN-EXT-017-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "BN-C05-practice",
+      "extension": "BN-EXT-017-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

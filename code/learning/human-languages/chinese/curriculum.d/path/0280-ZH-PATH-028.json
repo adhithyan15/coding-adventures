@@ -2,9 +2,18 @@
   "id": "ZH-PATH-028",
   "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
   "lessons": [
-    "ZH-C29-characters",
-    "ZH-C29-words",
-    "ZH-C29-diyi-ke"
+    {
+      "lesson": "ZH-C29-characters",
+      "extension": "ZH-EXT-063-READING"
+    },
+    {
+      "lesson": "ZH-C29-words",
+      "extension": "ZH-EXT-063-READING"
+    },
+    {
+      "lesson": "ZH-C29-diyi-ke",
+      "extension": "ZH-EXT-063-READING"
+    }
   ],
   "before": [],
   "inline": [

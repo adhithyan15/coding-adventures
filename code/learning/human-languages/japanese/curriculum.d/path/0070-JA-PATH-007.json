@@ -2,7 +2,10 @@
   "id": "JA-PATH-007",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "JA-C01-practice"
+    {
+      "lesson": "JA-C01-practice",
+      "extension": "JA-EXT-007-MIXED-SCRIPT-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,10 +2,22 @@
   "id": "TA-PATH-42-VERBS",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "TA-C42-come",
-    "TA-C42-sit",
-    "TA-C42-read",
-    "TA-C42-give"
+    {
+      "lesson": "TA-C42-come",
+      "extension": "TA-EXT-42-VERBS"
+    },
+    {
+      "lesson": "TA-C42-sit",
+      "extension": "TA-EXT-42-VERBS"
+    },
+    {
+      "lesson": "TA-C42-read",
+      "extension": "TA-EXT-42-VERBS"
+    },
+    {
+      "lesson": "TA-C42-give",
+      "extension": "TA-EXT-42-VERBS"
+    }
   ],
   "before": [],
   "inline": [

@@ -4,12 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can ask for soap, a towel, a glass, a spoon and a plate in Spanish, politely.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-C287-jabon",
-    "ES-C287-toalla",
-    "ES-C287-vaso",
-    "ES-C287-cuchara",
-    "ES-C287-plato"
-  ]
+  "prerequisites": []
 }

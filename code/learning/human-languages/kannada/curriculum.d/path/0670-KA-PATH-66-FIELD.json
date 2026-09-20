@@ -2,11 +2,26 @@
   "id": "KA-PATH-66-FIELD",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "KA-C66-field",
-    "KA-C66-grass",
-    "KA-C66-paddy",
-    "KA-C66-crop",
-    "KA-C66-harvest"
+    {
+      "lesson": "KA-C66-field",
+      "extension": "KA-EXT-66-FIELD"
+    },
+    {
+      "lesson": "KA-C66-grass",
+      "extension": "KA-EXT-66-FIELD"
+    },
+    {
+      "lesson": "KA-C66-paddy",
+      "extension": "KA-EXT-66-FIELD"
+    },
+    {
+      "lesson": "KA-C66-crop",
+      "extension": "KA-EXT-66-FIELD"
+    },
+    {
+      "lesson": "KA-C66-harvest",
+      "extension": "KA-EXT-66-FIELD"
+    }
   ],
   "before": [],
   "inline": [

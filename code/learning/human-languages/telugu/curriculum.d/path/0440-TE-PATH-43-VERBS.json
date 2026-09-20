@@ -2,10 +2,22 @@
   "id": "TE-PATH-43-VERBS",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "TE-C43-come",
-    "TE-C43-sit",
-    "TE-C43-stand",
-    "TE-C43-give"
+    {
+      "lesson": "TE-C43-come",
+      "extension": "TE-EXT-43-VERBS"
+    },
+    {
+      "lesson": "TE-C43-sit",
+      "extension": "TE-EXT-43-VERBS"
+    },
+    {
+      "lesson": "TE-C43-stand",
+      "extension": "TE-EXT-43-VERBS"
+    },
+    {
+      "lesson": "TE-C43-give",
+      "extension": "TE-EXT-43-VERBS"
+    }
   ],
   "before": [],
   "inline": [

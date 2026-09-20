@@ -3,10 +3,22 @@
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
     "FR-C01-salut",
-    "FR-W01-salut-observe",
-    "FR-W01-salut-guided-copy",
-    "FR-W01-salut-delayed-copy",
-    "FR-W01-salut-dictation"
+    {
+      "lesson": "FR-W01-salut-observe",
+      "extension": "FR-EXT-001-WRITING-RUNWAY"
+    },
+    {
+      "lesson": "FR-W01-salut-guided-copy",
+      "extension": "FR-EXT-001-WRITING-RUNWAY"
+    },
+    {
+      "lesson": "FR-W01-salut-delayed-copy",
+      "extension": "FR-EXT-001-WRITING-RUNWAY"
+    },
+    {
+      "lesson": "FR-W01-salut-dictation",
+      "extension": "FR-EXT-001-WRITING-RUNWAY"
+    }
   ],
   "before": [],
   "inline": [],

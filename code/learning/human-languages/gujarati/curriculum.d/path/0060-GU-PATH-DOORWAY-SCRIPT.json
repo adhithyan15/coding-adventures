@@ -2,16 +2,46 @@
   "id": "GU-PATH-DOORWAY-SCRIPT",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "GU-W03-ja",
-    "GU-W03-o-matra",
-    "GU-W03-anusvara",
-    "GU-W03-ii-matra",
-    "GU-W03-u-matra",
-    "GU-W03-chha",
-    "GU-W03-ka",
-    "GU-W03-nna",
-    "GU-W03-sha",
-    "GU-R03-doorway-three-r1"
+    {
+      "lesson": "GU-W03-ja",
+      "extension": "GU-EXT-018-DOORWAY-SCRIPT"
+    },
+    {
+      "lesson": "GU-W03-o-matra",
+      "extension": "GU-EXT-018-DOORWAY-SCRIPT"
+    },
+    {
+      "lesson": "GU-W03-anusvara",
+      "extension": "GU-EXT-018-DOORWAY-SCRIPT"
+    },
+    {
+      "lesson": "GU-W03-ii-matra",
+      "extension": "GU-EXT-018-DOORWAY-SCRIPT"
+    },
+    {
+      "lesson": "GU-W03-u-matra",
+      "extension": "GU-EXT-018-DOORWAY-SCRIPT"
+    },
+    {
+      "lesson": "GU-W03-chha",
+      "extension": "GU-EXT-018-DOORWAY-SCRIPT"
+    },
+    {
+      "lesson": "GU-W03-ka",
+      "extension": "GU-EXT-018-DOORWAY-SCRIPT"
+    },
+    {
+      "lesson": "GU-W03-nna",
+      "extension": "GU-EXT-018-DOORWAY-SCRIPT"
+    },
+    {
+      "lesson": "GU-W03-sha",
+      "extension": "GU-EXT-018-DOORWAY-SCRIPT"
+    },
+    {
+      "lesson": "GU-R03-doorway-three-r1",
+      "extension": "GU-EXT-018-DOORWAY-SCRIPT"
+    }
   ],
   "before": [],
   "inline": [],

@@ -2,7 +2,10 @@
   "id": "ES-PATH-028-DAD",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "ES-C56-dad"
+    {
+      "lesson": "ES-C56-dad",
+      "extension": "ES-EXT-028-DAD"
+    }
   ],
   "before": [],
   "inline": [

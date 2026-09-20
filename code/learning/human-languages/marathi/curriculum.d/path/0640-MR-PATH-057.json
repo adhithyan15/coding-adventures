@@ -2,11 +2,26 @@
   "id": "MR-PATH-057",
   "spine_node": "SPINE-DESCRIBE-QUALITIES",
   "lessons": [
-    "MR-C54-thoda",
-    "MR-C54-puresa",
-    "MR-C54-barach",
-    "MR-C54-kiti-excl",
-    "MR-R54-how-much"
+    {
+      "lesson": "MR-C54-thoda",
+      "extension": "MR-EXT-070-AMOUNTS"
+    },
+    {
+      "lesson": "MR-C54-puresa",
+      "extension": "MR-EXT-070-AMOUNTS"
+    },
+    {
+      "lesson": "MR-C54-barach",
+      "extension": "MR-EXT-070-AMOUNTS"
+    },
+    {
+      "lesson": "MR-C54-kiti-excl",
+      "extension": "MR-EXT-070-AMOUNTS"
+    },
+    {
+      "lesson": "MR-R54-how-much",
+      "extension": "MR-EXT-070-AMOUNTS"
+    }
   ],
   "before": [],
   "inline": [

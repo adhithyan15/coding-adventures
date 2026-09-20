@@ -2,11 +2,26 @@
   "id": "ES-PATH-356-01",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "ES-C356-desde",
-    "ES-C356-cita",
-    "ES-C356-etapa",
-    "ES-C356-ocasion",
-    "ES-C356-repente"
+    {
+      "lesson": "ES-C356-desde",
+      "extension": "ES-EXT-356-SPAN"
+    },
+    {
+      "lesson": "ES-C356-cita",
+      "extension": "ES-EXT-356-SPAN"
+    },
+    {
+      "lesson": "ES-C356-etapa",
+      "extension": "ES-EXT-356-SPAN"
+    },
+    {
+      "lesson": "ES-C356-ocasion",
+      "extension": "ES-EXT-356-SPAN"
+    },
+    {
+      "lesson": "ES-C356-repente",
+      "extension": "ES-EXT-356-SPAN"
+    }
   ],
   "before": [],
   "inline": [

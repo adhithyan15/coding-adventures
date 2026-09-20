@@ -2,11 +2,26 @@
   "id": "PA-PATH-044",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "PA-C42-oh",
-    "PA-C42-asi",
-    "PA-C42-oh-write",
-    "PA-C42-jo",
-    "PA-C42-jo-oh"
+    {
+      "lesson": "PA-C42-oh",
+      "extension": "PA-EXT-064-PRONOUNS"
+    },
+    {
+      "lesson": "PA-C42-asi",
+      "extension": "PA-EXT-064-PRONOUNS"
+    },
+    {
+      "lesson": "PA-C42-oh-write",
+      "extension": "PA-EXT-064-PRONOUNS"
+    },
+    {
+      "lesson": "PA-C42-jo",
+      "extension": "PA-EXT-064-PRONOUNS"
+    },
+    {
+      "lesson": "PA-C42-jo-oh",
+      "extension": "PA-EXT-064-PRONOUNS"
+    }
   ],
   "before": [],
   "inline": [

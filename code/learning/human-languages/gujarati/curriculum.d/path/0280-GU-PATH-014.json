@@ -2,11 +2,26 @@
   "id": "GU-PATH-014",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "GU-C11-mitra",
-    "GU-C11-kutumb",
-    "GU-C11-bhai",
-    "GU-C11-bahen",
-    "GU-R13-doorway-nine-r3"
+    {
+      "lesson": "GU-C11-mitra",
+      "extension": "GU-EXT-014-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GU-C11-kutumb",
+      "extension": "GU-EXT-014-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GU-C11-bhai",
+      "extension": "GU-EXT-014-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GU-C11-bahen",
+      "extension": "GU-EXT-014-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GU-R13-doorway-nine-r3",
+      "extension": "GU-EXT-020-DOORWAY-DURABLE-RETRIEVAL"
+    }
   ],
   "before": [],
   "inline": [

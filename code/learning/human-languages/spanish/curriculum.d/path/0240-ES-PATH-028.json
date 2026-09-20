@@ -3,10 +3,22 @@
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
     "ES-C07-comer",
-    "ES-C07-como",
-    "ES-C07-comes",
-    "ES-C07-come",
-    "ES-C07-repaso-comer"
+    {
+      "lesson": "ES-C07-como",
+      "extension": "ES-EXT-028-CONSOLIDATION-ER"
+    },
+    {
+      "lesson": "ES-C07-comes",
+      "extension": "ES-EXT-028-CONSOLIDATION-ER"
+    },
+    {
+      "lesson": "ES-C07-come",
+      "extension": "ES-EXT-028-CONSOLIDATION-ER"
+    },
+    {
+      "lesson": "ES-C07-repaso-comer",
+      "extension": "ES-EXT-028-CONSOLIDATION-ER"
+    }
   ],
   "before": [],
   "inline": [

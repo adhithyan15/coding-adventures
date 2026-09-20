@@ -2,9 +2,18 @@
   "id": "PA-PATH-027",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "PA-R26-three-repair-r2",
-    "PA-R26-work-build-r3",
-    "PA-R26-work-control-r3"
+    {
+      "lesson": "PA-R26-three-repair-r2",
+      "extension": "PA-EXT-032-A1-FORM-R2-R3"
+    },
+    {
+      "lesson": "PA-R26-work-build-r3",
+      "extension": "PA-EXT-032-A1-FORM-R2-R3"
+    },
+    {
+      "lesson": "PA-R26-work-control-r3",
+      "extension": "PA-EXT-032-A1-FORM-R2-R3"
+    }
   ],
   "before": [],
   "inline": [

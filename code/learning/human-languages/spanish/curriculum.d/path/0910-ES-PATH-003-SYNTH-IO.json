@@ -2,7 +2,10 @@
   "id": "ES-PATH-003-SYNTH-IO",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C46-sintesis-dar-y-decir"
+    {
+      "lesson": "ES-C46-sintesis-dar-y-decir",
+      "extension": "ES-EXT-003-SYNTH-IO"
+    }
   ],
   "before": [],
   "inline": [

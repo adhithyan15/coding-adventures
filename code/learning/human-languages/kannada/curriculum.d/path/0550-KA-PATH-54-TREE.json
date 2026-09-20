@@ -2,11 +2,26 @@
   "id": "KA-PATH-54-TREE",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "KA-C54-tree",
-    "KA-C54-branch",
-    "KA-C54-leaf",
-    "KA-C54-root",
-    "KA-C54-seed"
+    {
+      "lesson": "KA-C54-tree",
+      "extension": "KA-EXT-54-TREE"
+    },
+    {
+      "lesson": "KA-C54-branch",
+      "extension": "KA-EXT-54-TREE"
+    },
+    {
+      "lesson": "KA-C54-leaf",
+      "extension": "KA-EXT-54-TREE"
+    },
+    {
+      "lesson": "KA-C54-root",
+      "extension": "KA-EXT-54-TREE"
+    },
+    {
+      "lesson": "KA-C54-seed",
+      "extension": "KA-EXT-54-TREE"
+    }
   ],
   "before": [],
   "inline": [

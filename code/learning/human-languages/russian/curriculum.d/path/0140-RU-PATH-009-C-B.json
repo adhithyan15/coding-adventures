@@ -2,7 +2,10 @@
   "id": "RU-PATH-009-C-B",
   "spine_node": "SPINE-SAY-WHAT-I-LIKE",
   "lessons": [
-    "RU-C05-lyubit"
+    {
+      "lesson": "RU-C05-lyubit",
+      "extension": "RU-EXT-009-HAND-VERBS-D"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,11 +2,26 @@
   "id": "ES-PATH-397-01",
   "spine_node": "SPINE-DESCRIBE-QUALITIES",
   "lessons": [
-    "ES-C397-barato",
-    "ES-C397-caro",
-    "ES-C397-gratis",
-    "ES-C397-mayor",
-    "ES-C397-menor"
+    {
+      "lesson": "ES-C397-barato",
+      "extension": "ES-EXT-397-QUALITY"
+    },
+    {
+      "lesson": "ES-C397-caro",
+      "extension": "ES-EXT-397-QUALITY"
+    },
+    {
+      "lesson": "ES-C397-gratis",
+      "extension": "ES-EXT-397-QUALITY"
+    },
+    {
+      "lesson": "ES-C397-mayor",
+      "extension": "ES-EXT-397-QUALITY"
+    },
+    {
+      "lesson": "ES-C397-menor",
+      "extension": "ES-EXT-397-QUALITY"
+    }
   ],
   "before": [],
   "inline": [

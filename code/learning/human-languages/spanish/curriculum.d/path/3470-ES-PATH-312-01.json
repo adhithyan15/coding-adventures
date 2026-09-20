@@ -2,11 +2,26 @@
   "id": "ES-PATH-312-01",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "ES-C312-reloj",
-    "ES-C312-telefono",
-    "ES-C312-maleta",
-    "ES-C312-mapa",
-    "ES-C312-carta"
+    {
+      "lesson": "ES-C312-reloj",
+      "extension": "ES-EXT-312-ASK"
+    },
+    {
+      "lesson": "ES-C312-telefono",
+      "extension": "ES-EXT-312-ASK"
+    },
+    {
+      "lesson": "ES-C312-maleta",
+      "extension": "ES-EXT-312-ASK"
+    },
+    {
+      "lesson": "ES-C312-mapa",
+      "extension": "ES-EXT-312-ASK"
+    },
+    {
+      "lesson": "ES-C312-carta",
+      "extension": "ES-EXT-312-ASK"
+    }
   ],
   "before": [],
   "inline": [

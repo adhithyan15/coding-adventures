@@ -2,8 +2,14 @@
   "id": "AR-PATH-012",
   "spine_node": "SPINE-TIME-OF-DAY",
   "lessons": [
-    "AR-C08-al-ahad-al-khamis",
-    "AR-C08-al-jumua-as-sabt"
+    {
+      "lesson": "AR-C08-al-ahad-al-khamis",
+      "extension": "AR-EXT-012-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "AR-C08-al-jumua-as-sabt",
+      "extension": "AR-EXT-012-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

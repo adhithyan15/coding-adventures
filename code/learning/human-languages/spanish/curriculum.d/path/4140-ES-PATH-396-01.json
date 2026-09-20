@@ -2,11 +2,26 @@
   "id": "ES-PATH-396-01",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "ES-C396-aprender",
-    "ES-C396-cocinar",
-    "ES-C396-preferir",
-    "ES-C396-funcionar",
-    "ES-C396-reparar"
+    {
+      "lesson": "ES-C396-aprender",
+      "extension": "ES-EXT-396-VERB"
+    },
+    {
+      "lesson": "ES-C396-cocinar",
+      "extension": "ES-EXT-396-VERB"
+    },
+    {
+      "lesson": "ES-C396-preferir",
+      "extension": "ES-EXT-396-VERB"
+    },
+    {
+      "lesson": "ES-C396-funcionar",
+      "extension": "ES-EXT-396-VERB"
+    },
+    {
+      "lesson": "ES-C396-reparar",
+      "extension": "ES-EXT-396-VERB"
+    }
   ],
   "before": [],
   "inline": [

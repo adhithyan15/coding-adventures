@@ -2,14 +2,38 @@
   "id": "GE-PATH-021-B",
   "spine_node": "SPINE-TALK-ABOUT-PAST",
   "lessons": [
-    "GE-C16-ich-war",
-    "GE-C16-du-warst",
-    "GE-C16-er-war",
-    "GE-C16-wir-waren",
-    "GE-C16-drei-wurzeln",
-    "GE-C16-suppletion",
-    "GE-C16-haeufig-unregelmaessig",
-    "GE-C16-war-practice"
+    {
+      "lesson": "GE-C16-ich-war",
+      "extension": "GE-EXT-021-B-SEIN-PRAETERITUM"
+    },
+    {
+      "lesson": "GE-C16-du-warst",
+      "extension": "GE-EXT-021-B-SEIN-PRAETERITUM"
+    },
+    {
+      "lesson": "GE-C16-er-war",
+      "extension": "GE-EXT-021-B-SEIN-PRAETERITUM"
+    },
+    {
+      "lesson": "GE-C16-wir-waren",
+      "extension": "GE-EXT-021-B-SEIN-PRAETERITUM"
+    },
+    {
+      "lesson": "GE-C16-drei-wurzeln",
+      "extension": "GE-EXT-021-B-ETYMOLOGY"
+    },
+    {
+      "lesson": "GE-C16-suppletion",
+      "extension": "GE-EXT-021-B-ETYMOLOGY"
+    },
+    {
+      "lesson": "GE-C16-haeufig-unregelmaessig",
+      "extension": "GE-EXT-021-B-ETYMOLOGY"
+    },
+    {
+      "lesson": "GE-C16-war-practice",
+      "extension": "GE-EXT-021-B-CONSOLIDATION"
+    }
   ],
   "before": [
     "GE-EXT-021-B-SEIN-PRAETERITUM"

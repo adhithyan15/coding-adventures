@@ -6,11 +6,5 @@
   "canDo": "I can agree, disagree, turn a clause against the one before it, and give a reason for what I have said.",
   "prerequisites": [
     "BN-EXT-025-JOINING"
-  ],
-  "lessons": [
-    "BN-C18-kintu",
-    "BN-C18-ekmot",
-    "BN-C18-kenona",
-    "BN-R18-agree-and-differ"
   ]
 }

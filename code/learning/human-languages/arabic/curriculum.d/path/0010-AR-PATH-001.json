@@ -2,9 +2,18 @@
   "id": "AR-PATH-001",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "AR-C01-salam",
-    "AR-W00-sin-lam",
-    "AR-W00-alif-mim-salam"
+    {
+      "lesson": "AR-C01-salam",
+      "extension": "AR-EXT-001-INLINE-SCRIPT"
+    },
+    {
+      "lesson": "AR-W00-sin-lam",
+      "extension": "AR-EXT-001-INLINE-SCRIPT"
+    },
+    {
+      "lesson": "AR-W00-alif-mim-salam",
+      "extension": "AR-EXT-001-INLINE-SCRIPT"
+    }
   ],
   "before": [],
   "inline": [

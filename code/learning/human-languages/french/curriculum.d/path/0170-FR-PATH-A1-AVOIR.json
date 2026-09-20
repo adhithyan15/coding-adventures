@@ -2,15 +2,42 @@
   "id": "FR-PATH-A1-AVOIR",
   "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
   "lessons": [
-    "FR-C14-jai",
-    "FR-C14-as",
-    "FR-C14-a",
-    "FR-C14-ai-as-a",
-    "FR-C14-avons",
-    "FR-C14-avez",
-    "FR-C14-ont",
-    "FR-C14-habere",
-    "FR-C14-practice-avoir"
+    {
+      "lesson": "FR-C14-jai",
+      "extension": "FR-EXT-A1-AVOIR-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C14-as",
+      "extension": "FR-EXT-A1-AVOIR-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C14-a",
+      "extension": "FR-EXT-A1-AVOIR-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C14-ai-as-a",
+      "extension": "FR-EXT-A1-AVOIR-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C14-avons",
+      "extension": "FR-EXT-A1-AVOIR-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C14-avez",
+      "extension": "FR-EXT-A1-AVOIR-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C14-ont",
+      "extension": "FR-EXT-A1-AVOIR-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C14-habere",
+      "extension": "FR-EXT-A1-AVOIR-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "FR-C14-practice-avoir",
+      "extension": "FR-EXT-A1-AVOIR-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [],

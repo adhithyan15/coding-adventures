@@ -2,10 +2,22 @@
   "id": "ES-PATH-382-01",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "ES-C382-empezar",
-    "ES-C382-acabar",
-    "ES-C382-pagar",
-    "ES-C382-quedar"
+    {
+      "lesson": "ES-C382-empezar",
+      "extension": "ES-EXT-382-VERB"
+    },
+    {
+      "lesson": "ES-C382-acabar",
+      "extension": "ES-EXT-382-VERB"
+    },
+    {
+      "lesson": "ES-C382-pagar",
+      "extension": "ES-EXT-382-VERB"
+    },
+    {
+      "lesson": "ES-C382-quedar",
+      "extension": "ES-EXT-382-VERB"
+    }
   ],
   "before": [],
   "inline": [

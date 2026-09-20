@@ -2,7 +2,10 @@
   "id": "ES-PATH-003-DOUBLE",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C47-me-lo"
+    {
+      "lesson": "ES-C47-me-lo",
+      "extension": "ES-EXT-003-DOUBLE"
+    }
   ],
   "before": [],
   "inline": [

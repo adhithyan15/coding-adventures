@@ -2,9 +2,18 @@
   "id": "HI-PATH-69-KI",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "HI-C69-verb-last",
-    "HI-C69-ki",
-    "HI-R69-reported"
+    {
+      "lesson": "HI-C69-verb-last",
+      "extension": "HI-EXT-069-CLAUSE-AS-OBJECT"
+    },
+    {
+      "lesson": "HI-C69-ki",
+      "extension": "HI-EXT-069-CLAUSE-AS-OBJECT"
+    },
+    {
+      "lesson": "HI-R69-reported",
+      "extension": "HI-EXT-069-CLAUSE-AS-OBJECT"
+    }
   ],
   "before": [],
   "inline": [

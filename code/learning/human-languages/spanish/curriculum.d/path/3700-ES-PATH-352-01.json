@@ -2,11 +2,26 @@
   "id": "ES-PATH-352-01",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "ES-C352-conjunto",
-    "ES-C352-entero",
-    "ES-C352-mayoria",
-    "ES-C352-resto",
-    "ES-C352-escaso"
+    {
+      "lesson": "ES-C352-conjunto",
+      "extension": "ES-EXT-352-COUNT"
+    },
+    {
+      "lesson": "ES-C352-entero",
+      "extension": "ES-EXT-352-COUNT"
+    },
+    {
+      "lesson": "ES-C352-mayoria",
+      "extension": "ES-EXT-352-COUNT"
+    },
+    {
+      "lesson": "ES-C352-resto",
+      "extension": "ES-EXT-352-COUNT"
+    },
+    {
+      "lesson": "ES-C352-escaso",
+      "extension": "ES-EXT-352-COUNT"
+    }
   ],
   "before": [],
   "inline": [

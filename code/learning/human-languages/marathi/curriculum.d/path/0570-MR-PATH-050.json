@@ -2,9 +2,18 @@
   "id": "MR-PATH-050",
   "spine_node": "SPINE-ASK-LOCATION",
   "lessons": [
-    "MR-C47-laa-object",
-    "MR-C47-laa-recipient",
-    "MR-R47-give-it-to"
+    {
+      "lesson": "MR-C47-laa-object",
+      "extension": "MR-EXT-063-OBJECT-MARKING"
+    },
+    {
+      "lesson": "MR-C47-laa-recipient",
+      "extension": "MR-EXT-063-OBJECT-MARKING"
+    },
+    {
+      "lesson": "MR-R47-give-it-to",
+      "extension": "MR-EXT-063-OBJECT-MARKING"
+    }
   ],
   "before": [],
   "inline": [

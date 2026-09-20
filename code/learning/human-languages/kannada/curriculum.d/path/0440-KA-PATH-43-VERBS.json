@@ -2,10 +2,22 @@
   "id": "KA-PATH-43-VERBS",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "KA-C43-come",
-    "KA-C43-sit",
-    "KA-C43-stand",
-    "KA-C43-give"
+    {
+      "lesson": "KA-C43-come",
+      "extension": "KA-EXT-43-VERBS"
+    },
+    {
+      "lesson": "KA-C43-sit",
+      "extension": "KA-EXT-43-VERBS"
+    },
+    {
+      "lesson": "KA-C43-stand",
+      "extension": "KA-EXT-43-VERBS"
+    },
+    {
+      "lesson": "KA-C43-give",
+      "extension": "KA-EXT-43-VERBS"
+    }
   ],
   "before": [],
   "inline": [

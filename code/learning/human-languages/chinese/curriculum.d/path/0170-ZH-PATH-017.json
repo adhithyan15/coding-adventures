@@ -2,29 +2,98 @@
   "id": "ZH-PATH-017",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "ZH-C18-hear-kan",
-    "ZH-W18-kan-observe",
-    "ZH-W18-kan-guided",
-    "ZH-W18-kan-delayed",
-    "ZH-C18-kan",
-    "ZH-C18-hear-kanjian",
-    "ZH-C18-kanjian",
-    "ZH-C18-hear-haokan",
-    "ZH-C18-haokan",
-    "ZH-R18-looking-three-r1",
-    "ZH-C18-hear-shu",
-    "ZH-W18-shu-observe",
-    "ZH-W18-shu-guided",
-    "ZH-W18-shu-delayed",
-    "ZH-C18-shu",
-    "ZH-C18-hear-kanshu",
-    "ZH-C18-kanshu",
-    "ZH-R18-looking-three-r2",
-    "ZH-R18-book-reading-r1",
-    "ZH-R18-listening-five",
-    "ZH-R18-reading-five",
-    "ZH-R18-writing-five",
-    "ZH-C18-practice"
+    {
+      "lesson": "ZH-C18-hear-kan",
+      "extension": "ZH-EXT-048-LOOKING-READING-MEANING-FIRST"
+    },
+    {
+      "lesson": "ZH-W18-kan-observe",
+      "extension": "ZH-EXT-049-LOOKING-READING-SCRIPT"
+    },
+    {
+      "lesson": "ZH-W18-kan-guided",
+      "extension": "ZH-EXT-049-LOOKING-READING-SCRIPT"
+    },
+    {
+      "lesson": "ZH-W18-kan-delayed",
+      "extension": "ZH-EXT-049-LOOKING-READING-SCRIPT"
+    },
+    {
+      "lesson": "ZH-C18-kan",
+      "extension": "ZH-EXT-049-LOOKING-READING-SCRIPT"
+    },
+    {
+      "lesson": "ZH-C18-hear-kanjian",
+      "extension": "ZH-EXT-048-LOOKING-READING-MEANING-FIRST"
+    },
+    {
+      "lesson": "ZH-C18-kanjian",
+      "extension": "ZH-EXT-049-LOOKING-READING-SCRIPT"
+    },
+    {
+      "lesson": "ZH-C18-hear-haokan",
+      "extension": "ZH-EXT-048-LOOKING-READING-MEANING-FIRST"
+    },
+    {
+      "lesson": "ZH-C18-haokan",
+      "extension": "ZH-EXT-049-LOOKING-READING-SCRIPT"
+    },
+    {
+      "lesson": "ZH-R18-looking-three-r1",
+      "extension": "ZH-EXT-050-LOOKING-READING-FOUR-SKILL"
+    },
+    {
+      "lesson": "ZH-C18-hear-shu",
+      "extension": "ZH-EXT-048-LOOKING-READING-MEANING-FIRST"
+    },
+    {
+      "lesson": "ZH-W18-shu-observe",
+      "extension": "ZH-EXT-049-LOOKING-READING-SCRIPT"
+    },
+    {
+      "lesson": "ZH-W18-shu-guided",
+      "extension": "ZH-EXT-049-LOOKING-READING-SCRIPT"
+    },
+    {
+      "lesson": "ZH-W18-shu-delayed",
+      "extension": "ZH-EXT-049-LOOKING-READING-SCRIPT"
+    },
+    {
+      "lesson": "ZH-C18-shu",
+      "extension": "ZH-EXT-049-LOOKING-READING-SCRIPT"
+    },
+    {
+      "lesson": "ZH-C18-hear-kanshu",
+      "extension": "ZH-EXT-048-LOOKING-READING-MEANING-FIRST"
+    },
+    {
+      "lesson": "ZH-C18-kanshu",
+      "extension": "ZH-EXT-049-LOOKING-READING-SCRIPT"
+    },
+    {
+      "lesson": "ZH-R18-looking-three-r2",
+      "extension": "ZH-EXT-050-LOOKING-READING-FOUR-SKILL"
+    },
+    {
+      "lesson": "ZH-R18-book-reading-r1",
+      "extension": "ZH-EXT-050-LOOKING-READING-FOUR-SKILL"
+    },
+    {
+      "lesson": "ZH-R18-listening-five",
+      "extension": "ZH-EXT-050-LOOKING-READING-FOUR-SKILL"
+    },
+    {
+      "lesson": "ZH-R18-reading-five",
+      "extension": "ZH-EXT-050-LOOKING-READING-FOUR-SKILL"
+    },
+    {
+      "lesson": "ZH-R18-writing-five",
+      "extension": "ZH-EXT-050-LOOKING-READING-FOUR-SKILL"
+    },
+    {
+      "lesson": "ZH-C18-practice",
+      "extension": "ZH-EXT-050-LOOKING-READING-FOUR-SKILL"
+    }
   ],
   "before": [],
   "inline": [

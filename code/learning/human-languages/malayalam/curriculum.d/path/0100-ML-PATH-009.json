@@ -4,7 +4,10 @@
   "lessons": [
     "ML-C03-sukhamaano",
     "ML-C03-sukham",
-    "ML-C03-practice"
+    {
+      "lesson": "ML-C03-practice",
+      "extension": "ML-EXT-009-CHECKPOINT"
+    }
   ],
   "before": [],
   "inline": [

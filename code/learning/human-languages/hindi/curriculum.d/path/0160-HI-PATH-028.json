@@ -3,9 +3,15 @@
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
     "HI-C05-bolna",
-    "HI-C05-bolta-hun",
+    {
+      "lesson": "HI-C05-bolta-hun",
+      "extension": "HI-EXT-028-LANGUAGE-SPECIFIC"
+    },
     "HI-C05-rahna",
-    "HI-C05-main-hindi-bolta-hun"
+    {
+      "lesson": "HI-C05-main-hindi-bolta-hun",
+      "extension": "HI-EXT-028-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

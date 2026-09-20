@@ -2,7 +2,10 @@
   "id": "GU-PATH-C4P",
   "spine_node": "SPINE-TAKE-LEAVE",
   "lessons": [
-    "GU-C04-practice"
+    {
+      "lesson": "GU-C04-practice",
+      "extension": "GU-EXT-004-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [

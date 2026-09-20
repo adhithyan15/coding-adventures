@@ -2,9 +2,18 @@
   "id": "SA-PATH-54-ITI",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "SA-C54-iti",
-    "SA-C54-iti-clause",
-    "SA-R54-iti"
+    {
+      "lesson": "SA-C54-iti",
+      "extension": "SA-EXT-054-ITI"
+    },
+    {
+      "lesson": "SA-C54-iti-clause",
+      "extension": "SA-EXT-054-ITI"
+    },
+    {
+      "lesson": "SA-R54-iti",
+      "extension": "SA-EXT-054-ITI"
+    }
   ],
   "before": [],
   "inline": [

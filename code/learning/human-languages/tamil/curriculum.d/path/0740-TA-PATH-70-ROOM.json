@@ -2,12 +2,30 @@
   "id": "TA-PATH-70-ROOM",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "TA-C70-table",
-    "TA-C70-bed",
-    "TA-W26-read-mesai",
-    "TA-C70-wall",
-    "TA-C70-floor",
-    "TA-C70-roof"
+    {
+      "lesson": "TA-C70-table",
+      "extension": "TA-EXT-70-ROOM"
+    },
+    {
+      "lesson": "TA-C70-bed",
+      "extension": "TA-EXT-70-ROOM"
+    },
+    {
+      "lesson": "TA-W26-read-mesai",
+      "extension": "TA-EXT-70-ROOM"
+    },
+    {
+      "lesson": "TA-C70-wall",
+      "extension": "TA-EXT-70-ROOM"
+    },
+    {
+      "lesson": "TA-C70-floor",
+      "extension": "TA-EXT-70-ROOM"
+    },
+    {
+      "lesson": "TA-C70-roof",
+      "extension": "TA-EXT-70-ROOM"
+    }
   ],
   "before": [],
   "inline": [

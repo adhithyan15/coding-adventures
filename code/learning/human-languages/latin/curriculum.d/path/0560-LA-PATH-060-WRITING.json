@@ -2,9 +2,18 @@
   "id": "LA-PATH-060-WRITING",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "LA-W02-versus-meus",
-    "LA-W03-cum-horologio",
-    "LA-W04-quattuor-versus"
+    {
+      "lesson": "LA-W02-versus-meus",
+      "extension": "LA-EXT-060-WRITING"
+    },
+    {
+      "lesson": "LA-W03-cum-horologio",
+      "extension": "LA-EXT-060-WRITING"
+    },
+    {
+      "lesson": "LA-W04-quattuor-versus",
+      "extension": "LA-EXT-060-WRITING"
+    }
   ],
   "before": [],
   "inline": [

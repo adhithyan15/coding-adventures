@@ -2,9 +2,18 @@
   "id": "AR-PATH-029",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "AR-C32-akhadha",
-    "AR-C32-fakkara",
-    "AR-C32-saada"
+    {
+      "lesson": "AR-C32-akhadha",
+      "extension": "AR-EXT-029-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "AR-C32-fakkara",
+      "extension": "AR-EXT-029-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "AR-C32-saada",
+      "extension": "AR-EXT-029-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

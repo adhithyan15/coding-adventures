@@ -2,11 +2,26 @@
   "id": "ES-PATH-371-01",
   "spine_node": "SPINE-DESCRIBE-QUALITIES",
   "lessons": [
-    "ES-C371-pequeno",
-    "ES-C371-gordo",
-    "ES-C371-joven",
-    "ES-C371-lento",
-    "ES-C371-dulce"
+    {
+      "lesson": "ES-C371-pequeno",
+      "extension": "ES-EXT-371-COUNT"
+    },
+    {
+      "lesson": "ES-C371-gordo",
+      "extension": "ES-EXT-371-COUNT"
+    },
+    {
+      "lesson": "ES-C371-joven",
+      "extension": "ES-EXT-371-COUNT"
+    },
+    {
+      "lesson": "ES-C371-lento",
+      "extension": "ES-EXT-371-COUNT"
+    },
+    {
+      "lesson": "ES-C371-dulce",
+      "extension": "ES-EXT-371-COUNT"
+    }
   ],
   "before": [],
   "inline": [

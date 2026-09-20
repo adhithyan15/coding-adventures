@@ -2,10 +2,22 @@
   "id": "KA-PATH-029",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "KA-C37-kannu",
-    "KA-C37-kivi",
-    "KA-C37-moogu",
-    "KA-C37-baayi"
+    {
+      "lesson": "KA-C37-kannu",
+      "extension": "KA-EXT-030-FACE-WORDS"
+    },
+    {
+      "lesson": "KA-C37-kivi",
+      "extension": "KA-EXT-030-FACE-WORDS"
+    },
+    {
+      "lesson": "KA-C37-moogu",
+      "extension": "KA-EXT-030-FACE-WORDS"
+    },
+    {
+      "lesson": "KA-C37-baayi",
+      "extension": "KA-EXT-030-FACE-WORDS"
+    }
   ],
   "before": [],
   "inline": [

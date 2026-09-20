@@ -175,6 +175,122 @@ describe("spine membership has one owner", () => {
 });
 
 describe("path and extensions", () => {
+  it.each(CURRICULUM_PLANS.map((p) => p.path))(
+    "%s: unambiguous extension membership is stored only as tagged path lessons",
+    (path) => {
+      const plan = SHARD_PLANS.find((p) => p.path === path)!;
+      const rebuilt = JSON.parse(unshardContents(root, plan)) as {
+        path: { lessons: string[] }[];
+        extensions: { id: string; lessons: string[] }[];
+      };
+      const extensionById = new Map(rebuilt.extensions.map((extension) => [extension.id, extension]));
+      const dir = join(root, `${path.slice(0, -".json".length)}.d`);
+      for (const name of listShardNames(join(root, path)).filter((entry) =>
+        entry.startsWith("path/"),
+      )) {
+        const owner = JSON.parse(readFileSync(join(dir, name), "utf8")) as {
+          lessons: (string | { lesson: string; extension: string })[];
+        };
+        for (const entry of owner.lessons) {
+          if (typeof entry === "string") continue;
+          expect(extensionById.get(entry.extension)?.lessons).toContain(entry.lesson);
+        }
+      }
+    },
+  );
+
+  it("derives an extension's public lessons from tagged path order", () => {
+    const merged = mergeCurriculumShards([
+      { name: "_meta.json", path: "_meta.json", value: { version: 1, language: "test" } },
+      {
+        name: "path/0010-TEST-PATH.json",
+        path: "path/0010-TEST-PATH.json",
+        value: {
+          id: "TEST-PATH",
+          spine_node: "SPINE-TEST",
+          lessons: [
+            { lesson: "TEST-E1", extension: "TEST-EXT" },
+            "TEST-CORE",
+            { lesson: "TEST-E2", extension: "TEST-EXT" },
+          ],
+          before: [],
+          inline: ["TEST-EXT"],
+          after: [],
+        },
+      },
+      {
+        name: "spine/0010-SPINE-TEST.json",
+        path: "spine/0010-SPINE-TEST.json",
+        value: { omits: [], relocates: {} },
+      },
+      {
+        name: "extensions/0010-TEST-EXT.json",
+        path: "extensions/0010-TEST-EXT.json",
+        value: {
+          id: "TEST-EXT",
+          stage: "pre-A1",
+          kind: "required",
+          category: "script",
+          canDo: "test",
+          prerequisites: [],
+        },
+      },
+    ]) as {
+      path: { lessons: string[] }[];
+      extensions: { lessons: string[] }[];
+    };
+    expect(merged.path[0]!.lessons).toEqual(["TEST-E1", "TEST-CORE", "TEST-E2"]);
+    expect(merged.extensions[0]!.lessons).toEqual(["TEST-E1", "TEST-E2"]);
+  });
+
+  it("rejects unknown, unattached, duplicate, and dual-owned tagged lessons", () => {
+    const make = (lesson: unknown, extension: Record<string, unknown>) => [
+      { name: "_meta.json", path: "_meta.json", value: { version: 1, language: "test" } },
+      {
+        name: "path/0010-TEST-PATH.json",
+        path: "path/0010-TEST-PATH.json",
+        value: {
+          id: "TEST-PATH",
+          spine_node: "SPINE-TEST",
+          lessons: [lesson],
+          before: [],
+          inline: ["TEST-EXT"],
+          after: [],
+        },
+      },
+      {
+        name: "spine/0010-SPINE-TEST.json",
+        path: "spine/0010-SPINE-TEST.json",
+        value: { omits: [], relocates: {} },
+      },
+      {
+        name: "extensions/0010-TEST-EXT.json",
+        path: "extensions/0010-TEST-EXT.json",
+        value: extension,
+      },
+    ] as Shard[];
+    const owner = { id: "TEST-EXT", prerequisites: [] };
+    expect(() =>
+      mergeCurriculumShards(make({ lesson: "L1", extension: "MISSING" }, owner)),
+    ).toThrow(/unknown extension/);
+    expect(() =>
+      mergeCurriculumShards(
+        make({ lesson: "L1", extension: "OTHER" }, { id: "OTHER", prerequisites: [] }),
+      ),
+    ).toThrow(/not attached/);
+    expect(() =>
+      mergeCurriculumShards(
+        make({ lesson: "L1", extension: "TEST-EXT" }, { ...owner, lessons: ["L1"] }),
+      ),
+    ).toThrow(/must not store 'lessons'/);
+    const duplicate = make({ lesson: "L1", extension: "TEST-EXT" }, owner);
+    (duplicate[1]!.value as { lessons: unknown[] }).lessons.push({
+      lesson: "L1",
+      extension: "TEST-EXT",
+    });
+    expect(() => mergeCurriculumShards(duplicate)).toThrow(/duplicate derived lesson/);
+  });
+
   it.each(CURRICULUM_PLANS.map((p) => p.path))("%s: ids are unique and filename-safe", (path) => {
     const plan = SHARD_PLANS.find((p) => p.path === path)!;
     const rebuilt = JSON.parse(unshardContents(root, plan)) as {

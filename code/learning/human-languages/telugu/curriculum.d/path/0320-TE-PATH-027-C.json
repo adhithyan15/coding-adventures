@@ -2,7 +2,10 @@
   "id": "TE-PATH-027-C",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "TE-C34-tiisuko"
+    {
+      "lesson": "TE-C34-tiisuko",
+      "extension": "TE-EXT-028-SOCIAL-VERBS"
+    }
   ],
   "before": [],
   "inline": [

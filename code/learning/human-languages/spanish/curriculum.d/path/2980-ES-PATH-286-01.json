@@ -2,11 +2,26 @@
   "id": "ES-PATH-286-01",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "ES-C286-ojo",
-    "ES-C286-boca",
-    "ES-C286-garganta",
-    "ES-C286-dolor",
-    "ES-C286-fiebre"
+    {
+      "lesson": "ES-C286-ojo",
+      "extension": "ES-EXT-286-DUELE"
+    },
+    {
+      "lesson": "ES-C286-boca",
+      "extension": "ES-EXT-286-DUELE"
+    },
+    {
+      "lesson": "ES-C286-garganta",
+      "extension": "ES-EXT-286-DUELE"
+    },
+    {
+      "lesson": "ES-C286-dolor",
+      "extension": "ES-EXT-286-DUELE"
+    },
+    {
+      "lesson": "ES-C286-fiebre",
+      "extension": "ES-EXT-286-DUELE"
+    }
   ],
   "before": [],
   "inline": [

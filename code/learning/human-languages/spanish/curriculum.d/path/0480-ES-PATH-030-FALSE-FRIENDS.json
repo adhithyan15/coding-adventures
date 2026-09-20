@@ -2,7 +2,10 @@
   "id": "ES-PATH-030-FALSE-FRIENDS",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "ES-C09-falsos-amigos"
+    {
+      "lesson": "ES-C09-falsos-amigos",
+      "extension": "ES-EXT-030-FALSE-FRIENDS"
+    }
   ],
   "before": [],
   "inline": [

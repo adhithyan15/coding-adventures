@@ -2,7 +2,10 @@
   "id": "ES-PATH-404-ACTIONS",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "ES-C404-apagar"
+    {
+      "lesson": "ES-C404-apagar",
+      "extension": "ES-EXT-404-POWER"
+    }
   ],
   "before": [],
   "inline": [

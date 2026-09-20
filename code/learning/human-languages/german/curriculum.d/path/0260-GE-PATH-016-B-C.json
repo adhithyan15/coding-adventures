@@ -2,17 +2,50 @@
   "id": "GE-PATH-016-B-C",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "GE-C09-jahr",
-    "GE-C09-zeit",
-    "GE-C09-jahreszeit",
-    "GE-C09-frueh",
-    "GE-C09-fruehling",
-    "GE-C09-sommer",
-    "GE-C09-herbst",
-    "GE-C09-herbst-harvest",
-    "GE-C09-winter",
-    "GE-C09-lenz",
-    "GE-C09-jahreszeiten"
+    {
+      "lesson": "GE-C09-jahr",
+      "extension": "GE-EXT-016-B-C-JAHRESZEITEN"
+    },
+    {
+      "lesson": "GE-C09-zeit",
+      "extension": "GE-EXT-016-B-C-JAHRESZEITEN"
+    },
+    {
+      "lesson": "GE-C09-jahreszeit",
+      "extension": "GE-EXT-016-B-C-JAHRESZEITEN"
+    },
+    {
+      "lesson": "GE-C09-frueh",
+      "extension": "GE-EXT-016-B-C-JAHRESZEITEN"
+    },
+    {
+      "lesson": "GE-C09-fruehling",
+      "extension": "GE-EXT-016-B-C-JAHRESZEITEN"
+    },
+    {
+      "lesson": "GE-C09-sommer",
+      "extension": "GE-EXT-016-B-C-JAHRESZEITEN"
+    },
+    {
+      "lesson": "GE-C09-herbst",
+      "extension": "GE-EXT-016-B-C-JAHRESZEITEN"
+    },
+    {
+      "lesson": "GE-C09-herbst-harvest",
+      "extension": "GE-EXT-016-B-C-JAHRESZEITEN"
+    },
+    {
+      "lesson": "GE-C09-winter",
+      "extension": "GE-EXT-016-B-C-JAHRESZEITEN"
+    },
+    {
+      "lesson": "GE-C09-lenz",
+      "extension": "GE-EXT-016-B-C-JAHRESZEITEN"
+    },
+    {
+      "lesson": "GE-C09-jahreszeiten",
+      "extension": "GE-EXT-016-B-C-JAHRESZEITEN"
+    }
   ],
   "before": [],
   "inline": [

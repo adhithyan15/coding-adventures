@@ -4,12 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can name five more parts of the body in Malayalam.",
-  "prerequisites": [],
-  "lessons": [
-    "ML-C57-neck",
-    "ML-C57-back",
-    "ML-C57-lip",
-    "ML-C57-nail",
-    "ML-C57-bone"
-  ]
+  "prerequisites": []
 }

@@ -2,11 +2,26 @@
   "id": "ML-PATH-46-ASK",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "ML-C46-fruit",
-    "ML-C46-cloth",
-    "ML-C46-lamp",
-    "ML-C46-salt",
-    "ML-C46-book"
+    {
+      "lesson": "ML-C46-fruit",
+      "extension": "ML-EXT-46-ASK"
+    },
+    {
+      "lesson": "ML-C46-cloth",
+      "extension": "ML-EXT-46-ASK"
+    },
+    {
+      "lesson": "ML-C46-lamp",
+      "extension": "ML-EXT-46-ASK"
+    },
+    {
+      "lesson": "ML-C46-salt",
+      "extension": "ML-EXT-46-ASK"
+    },
+    {
+      "lesson": "ML-C46-book",
+      "extension": "ML-EXT-46-ASK"
+    }
   ],
   "before": [],
   "inline": [

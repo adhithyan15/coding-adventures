@@ -2,11 +2,26 @@
   "id": "MR-PATH-059",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "MR-C56-daha",
-    "MR-C56-akra",
-    "MR-C56-bara",
-    "MR-W56-au-matra",
-    "MR-R56-ten-to-twelve"
+    {
+      "lesson": "MR-C56-daha",
+      "extension": "MR-EXT-072-TEN-TO-TWELVE"
+    },
+    {
+      "lesson": "MR-C56-akra",
+      "extension": "MR-EXT-072-TEN-TO-TWELVE"
+    },
+    {
+      "lesson": "MR-C56-bara",
+      "extension": "MR-EXT-072-TEN-TO-TWELVE"
+    },
+    {
+      "lesson": "MR-W56-au-matra",
+      "extension": "MR-EXT-072-TEN-TO-TWELVE"
+    },
+    {
+      "lesson": "MR-R56-ten-to-twelve",
+      "extension": "MR-EXT-072-TEN-TO-TWELVE"
+    }
   ],
   "before": [],
   "inline": [

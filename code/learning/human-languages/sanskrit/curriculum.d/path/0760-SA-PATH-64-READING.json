@@ -2,9 +2,18 @@
   "id": "SA-PATH-64-READING",
   "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
   "lessons": [
-    "SA-C64-words",
-    "SA-C64-lines",
-    "SA-C64-prathama-pathanam"
+    {
+      "lesson": "SA-C64-words",
+      "extension": "SA-EXT-064-READING"
+    },
+    {
+      "lesson": "SA-C64-lines",
+      "extension": "SA-EXT-064-READING"
+    },
+    {
+      "lesson": "SA-C64-prathama-pathanam",
+      "extension": "SA-EXT-064-READING"
+    }
   ],
   "before": [],
   "inline": [

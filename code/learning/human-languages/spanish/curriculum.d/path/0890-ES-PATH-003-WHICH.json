@@ -2,7 +2,10 @@
   "id": "ES-PATH-003-WHICH",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C46-cual-pide"
+    {
+      "lesson": "ES-C46-cual-pide",
+      "extension": "ES-EXT-003-WHICH"
+    }
   ],
   "before": [],
   "inline": [

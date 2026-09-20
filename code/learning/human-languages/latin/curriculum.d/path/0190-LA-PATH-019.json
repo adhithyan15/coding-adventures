@@ -3,9 +3,18 @@
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
     "LA-C19-quid-agis",
-    "LA-C19-ut-vales",
-    "LA-C19-valeo-family",
-    "LA-C19-practice"
+    {
+      "lesson": "LA-C19-ut-vales",
+      "extension": "LA-EXT-019-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "LA-C19-valeo-family",
+      "extension": "LA-EXT-019-ETYMOLOGY"
+    },
+    {
+      "lesson": "LA-C19-practice",
+      "extension": "LA-EXT-019-CONSOLIDATION"
+    }
   ],
   "before": [],
   "inline": [],

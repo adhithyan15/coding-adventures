@@ -2,11 +2,26 @@
   "id": "ES-PATH-303-01",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "ES-C303-ayuda",
-    "ES-C303-momento",
-    "ES-C303-otra-vez",
-    "ES-C303-no-se",
-    "ES-C303-que-significa"
+    {
+      "lesson": "ES-C303-ayuda",
+      "extension": "ES-EXT-303-REPARAR"
+    },
+    {
+      "lesson": "ES-C303-momento",
+      "extension": "ES-EXT-303-REPARAR"
+    },
+    {
+      "lesson": "ES-C303-otra-vez",
+      "extension": "ES-EXT-303-REPARAR"
+    },
+    {
+      "lesson": "ES-C303-no-se",
+      "extension": "ES-EXT-303-REPARAR"
+    },
+    {
+      "lesson": "ES-C303-que-significa",
+      "extension": "ES-EXT-303-REPARAR"
+    }
   ],
   "before": [],
   "inline": [

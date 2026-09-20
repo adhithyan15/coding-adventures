@@ -3,7 +3,10 @@
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
     "ES-C35-ayudar",
-    "ES-C35-repaso-tres"
+    {
+      "lesson": "ES-C35-repaso-tres",
+      "extension": "ES-EXT-031-CONSOLIDATION-GUSTAR"
+    }
   ],
   "before": [],
   "inline": [

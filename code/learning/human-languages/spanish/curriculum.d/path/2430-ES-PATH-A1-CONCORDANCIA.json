@@ -2,7 +2,10 @@
   "id": "ES-PATH-A1-CONCORDANCIA",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C66-la-terminacion-dice-quien"
+    {
+      "lesson": "ES-C66-la-terminacion-dice-quien",
+      "extension": "ES-EXT-A1-CONCORDANCIA"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,8 +2,14 @@
   "id": "RU-PATH-008-B",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "RU-C04-chitat",
-    "RU-C04-pisat"
+    {
+      "lesson": "RU-C04-chitat",
+      "extension": "RU-EXT-008-MIND-VERBS-B"
+    },
+    {
+      "lesson": "RU-C04-pisat",
+      "extension": "RU-EXT-008-MIND-VERBS-B"
+    }
   ],
   "before": [],
   "inline": [

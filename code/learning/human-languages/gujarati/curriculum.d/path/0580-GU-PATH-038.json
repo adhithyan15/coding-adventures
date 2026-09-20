@@ -2,14 +2,38 @@
   "id": "GU-PATH-038",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "GU-C39-chha",
-    "GU-C39-saat",
-    "GU-W22-ttha",
-    "GU-C39-aath",
-    "GU-C39-nav",
-    "GU-C39-das",
-    "GU-C39-ordinal-reach",
-    "GU-R39-one-to-ten"
+    {
+      "lesson": "GU-C39-chha",
+      "extension": "GU-EXT-050-CARDINALS-SIX-TO-TEN"
+    },
+    {
+      "lesson": "GU-C39-saat",
+      "extension": "GU-EXT-050-CARDINALS-SIX-TO-TEN"
+    },
+    {
+      "lesson": "GU-W22-ttha",
+      "extension": "GU-EXT-050-CARDINALS-SIX-TO-TEN"
+    },
+    {
+      "lesson": "GU-C39-aath",
+      "extension": "GU-EXT-050-CARDINALS-SIX-TO-TEN"
+    },
+    {
+      "lesson": "GU-C39-nav",
+      "extension": "GU-EXT-050-CARDINALS-SIX-TO-TEN"
+    },
+    {
+      "lesson": "GU-C39-das",
+      "extension": "GU-EXT-050-CARDINALS-SIX-TO-TEN"
+    },
+    {
+      "lesson": "GU-C39-ordinal-reach",
+      "extension": "GU-EXT-050-CARDINALS-SIX-TO-TEN"
+    },
+    {
+      "lesson": "GU-R39-one-to-ten",
+      "extension": "GU-EXT-050-CARDINALS-SIX-TO-TEN"
+    }
   ],
   "before": [],
   "inline": [

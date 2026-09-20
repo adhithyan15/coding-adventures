@@ -2,10 +2,22 @@
   "id": "HI-PATH-023",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "HI-C23-kutta-billi",
-    "HI-C23-billi-history",
-    "HI-C24-hara-pila",
-    "HI-C24-pila-history"
+    {
+      "lesson": "HI-C23-kutta-billi",
+      "extension": "HI-EXT-023-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "HI-C23-billi-history",
+      "extension": "HI-EXT-023-ETYMOLOGY"
+    },
+    {
+      "lesson": "HI-C24-hara-pila",
+      "extension": "HI-EXT-023-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "HI-C24-pila-history",
+      "extension": "HI-EXT-023-ETYMOLOGY"
+    }
   ],
   "before": [],
   "inline": [

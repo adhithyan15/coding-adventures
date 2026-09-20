@@ -2,11 +2,26 @@
   "id": "TE-PATH-81-ORDINAL",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "TE-C81-first",
-    "TE-C81-second",
-    "TE-C81-third",
-    "TE-C81-fourth",
-    "TE-C81-fifth"
+    {
+      "lesson": "TE-C81-first",
+      "extension": "TE-EXT-81-ORDINAL"
+    },
+    {
+      "lesson": "TE-C81-second",
+      "extension": "TE-EXT-81-ORDINAL"
+    },
+    {
+      "lesson": "TE-C81-third",
+      "extension": "TE-EXT-81-ORDINAL"
+    },
+    {
+      "lesson": "TE-C81-fourth",
+      "extension": "TE-EXT-81-ORDINAL"
+    },
+    {
+      "lesson": "TE-C81-fifth",
+      "extension": "TE-EXT-81-ORDINAL"
+    }
   ],
   "before": [],
   "inline": [

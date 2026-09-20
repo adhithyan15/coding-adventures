@@ -2,11 +2,26 @@
   "id": "SA-PATH-204",
   "spine_node": "SPINE-NEGATE-AND-ASK",
   "lessons": [
-    "SA-C18-when",
-    "SA-C18-why",
-    "SA-C18-how-many",
-    "SA-C18-from-where",
-    "SA-C18-k-words"
+    {
+      "lesson": "SA-C18-when",
+      "extension": "SA-EXT-204-ASK"
+    },
+    {
+      "lesson": "SA-C18-why",
+      "extension": "SA-EXT-204-ASK"
+    },
+    {
+      "lesson": "SA-C18-how-many",
+      "extension": "SA-EXT-204-ASK"
+    },
+    {
+      "lesson": "SA-C18-from-where",
+      "extension": "SA-EXT-204-ASK"
+    },
+    {
+      "lesson": "SA-C18-k-words",
+      "extension": "SA-EXT-204-ASK"
+    }
   ],
   "before": [],
   "inline": [

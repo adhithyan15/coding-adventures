@@ -2,9 +2,18 @@
   "id": "GE-PATH-031",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "GE-C28-kaffee",
-    "GE-C28-tee",
-    "GE-C28-milch"
+    {
+      "lesson": "GE-C28-kaffee",
+      "extension": "GE-EXT-031-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GE-C28-tee",
+      "extension": "GE-EXT-031-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GE-C28-milch",
+      "extension": "GE-EXT-031-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

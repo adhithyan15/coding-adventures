@@ -2,9 +2,18 @@
   "id": "GE-PATH-032",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "GE-C29-freund",
-    "GE-C29-freundin",
-    "GE-C29-familie"
+    {
+      "lesson": "GE-C29-freund",
+      "extension": "GE-EXT-032-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GE-C29-freundin",
+      "extension": "GE-EXT-032-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GE-C29-familie",
+      "extension": "GE-EXT-032-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

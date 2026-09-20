@@ -2,7 +2,10 @@
   "id": "ES-PATH-B2-DIJO-QUE",
   "spine_node": "SPINE-REPORT-WHAT-OTHERS-SAID",
   "lessons": [
-    "ES-C57-dijo-que"
+    {
+      "lesson": "ES-C57-dijo-que",
+      "extension": "ES-EXT-B2-DIJO-QUE"
+    }
   ],
   "before": [],
   "inline": [

@@ -4,14 +4,20 @@
   "lessons": [
     "TE-C23-roju",
     "TE-C24-ratri",
-    "TE-C25-shubha-ratri",
+    {
+      "lesson": "TE-C25-shubha-ratri",
+      "extension": "TE-EXT-025-LANGUAGE-SPECIFIC"
+    },
     "TE-C26-udayam",
     "TE-C27-sayantram",
     "TE-C28-madhyahnam-widened",
     "TE-C29-subhodayam",
     "TE-C30-subha-sayantram",
     "TE-C31-subha-madhyahnam",
-    "TE-C31-subha-madhyahnam-register"
+    {
+      "lesson": "TE-C31-subha-madhyahnam-register",
+      "extension": "TE-EXT-025-REGISTER"
+    }
   ],
   "before": [],
   "inline": [

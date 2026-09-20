@@ -2,10 +2,22 @@
   "id": "ES-PATH-386-01",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
   "lessons": [
-    "ES-C386-vender",
-    "ES-C386-servir",
-    "ES-C386-gastar",
-    "ES-C386-crecer"
+    {
+      "lesson": "ES-C386-vender",
+      "extension": "ES-EXT-386-VERB"
+    },
+    {
+      "lesson": "ES-C386-servir",
+      "extension": "ES-EXT-386-VERB"
+    },
+    {
+      "lesson": "ES-C386-gastar",
+      "extension": "ES-EXT-386-VERB"
+    },
+    {
+      "lesson": "ES-C386-crecer",
+      "extension": "ES-EXT-386-VERB"
+    }
   ],
   "before": [],
   "inline": [

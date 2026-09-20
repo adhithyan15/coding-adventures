@@ -2,9 +2,18 @@
   "id": "GU-PATH-039",
   "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
   "lessons": [
-    "GU-C44-words",
-    "GU-C44-lines",
-    "GU-C44-pehli-vanchan"
+    {
+      "lesson": "GU-C44-words",
+      "extension": "GU-EXT-051-READING"
+    },
+    {
+      "lesson": "GU-C44-lines",
+      "extension": "GU-EXT-051-READING"
+    },
+    {
+      "lesson": "GU-C44-pehli-vanchan",
+      "extension": "GU-EXT-051-READING"
+    }
   ],
   "before": [],
   "inline": [

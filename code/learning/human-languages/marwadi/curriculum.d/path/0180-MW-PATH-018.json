@@ -2,14 +2,38 @@
   "id": "MW-PATH-018",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "MW-C19-hear-roti",
-    "MW-W19-tta",
-    "MW-C19-roti",
-    "MW-C19-hear-baati",
-    "MW-C19-baati",
-    "MW-R19-food-new-two",
-    "MW-C19-food-five",
-    "MW-R19-script-close"
+    {
+      "lesson": "MW-C19-hear-roti",
+      "extension": "MW-EXT-032-FOOD-FIVE"
+    },
+    {
+      "lesson": "MW-W19-tta",
+      "extension": "MW-EXT-032-FOOD-FIVE"
+    },
+    {
+      "lesson": "MW-C19-roti",
+      "extension": "MW-EXT-032-FOOD-FIVE"
+    },
+    {
+      "lesson": "MW-C19-hear-baati",
+      "extension": "MW-EXT-032-FOOD-FIVE"
+    },
+    {
+      "lesson": "MW-C19-baati",
+      "extension": "MW-EXT-032-FOOD-FIVE"
+    },
+    {
+      "lesson": "MW-R19-food-new-two",
+      "extension": "MW-EXT-032-FOOD-FIVE"
+    },
+    {
+      "lesson": "MW-C19-food-five",
+      "extension": "MW-EXT-032-FOOD-FIVE"
+    },
+    {
+      "lesson": "MW-R19-script-close",
+      "extension": "MW-EXT-032-FOOD-FIVE"
+    }
   ],
   "before": [],
   "inline": [

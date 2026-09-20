@@ -2,7 +2,10 @@
   "id": "ES-PATH-037-SYNTH-REL",
   "spine_node": "SPINE-GIVE-REASONS",
   "lessons": [
-    "ES-C53-sintesis-frases-largas"
+    {
+      "lesson": "ES-C53-sintesis-frases-largas",
+      "extension": "ES-EXT-037-SYNTH-REL"
+    }
   ],
   "before": [],
   "inline": [

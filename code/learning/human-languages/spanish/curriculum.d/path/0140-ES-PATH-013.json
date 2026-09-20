@@ -2,24 +2,75 @@
   "id": "ES-PATH-013",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "ES-C06-cafe",
+    {
+      "lesson": "ES-C06-cafe",
+      "extension": "ES-EXT-013-LANGUAGE-SPECIFIC"
+    },
     "ES-C06-por-favor",
-    "ES-C06-hablar",
-    "ES-C06-hablo",
-    "ES-C06-pro-drop",
-    "ES-C06-hablas",
-    "ES-C06-habla",
-    "ES-C06-ar-presente",
-    "ES-C06-trabajar",
-    "ES-C06-estudiar",
-    "ES-C06-espanol",
-    "ES-C06-hablo-espanol",
-    "ES-C06-practice",
-    "ES-C06-repaso-cafe",
-    "ES-C06-repaso-hablar",
-    "ES-R01-no-entiendo",
-    "ES-R02-mas-despacio",
-    "ES-R03-repaso-reparar"
+    {
+      "lesson": "ES-C06-hablar",
+      "extension": "ES-EXT-013-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C06-hablo",
+      "extension": "ES-EXT-013-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C06-pro-drop",
+      "extension": "ES-EXT-013-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C06-hablas",
+      "extension": "ES-EXT-013-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C06-habla",
+      "extension": "ES-EXT-013-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C06-ar-presente",
+      "extension": "ES-EXT-013-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C06-trabajar",
+      "extension": "ES-EXT-013-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C06-estudiar",
+      "extension": "ES-EXT-013-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C06-espanol",
+      "extension": "ES-EXT-013-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C06-hablo-espanol",
+      "extension": "ES-EXT-013-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "ES-C06-practice",
+      "extension": "ES-EXT-013-CONSOLIDATION"
+    },
+    {
+      "lesson": "ES-C06-repaso-cafe",
+      "extension": "ES-EXT-013-CONSOLIDATION-CAFE"
+    },
+    {
+      "lesson": "ES-C06-repaso-hablar",
+      "extension": "ES-EXT-013-CONSOLIDATION-HABLAR"
+    },
+    {
+      "lesson": "ES-R01-no-entiendo",
+      "extension": "ES-EXT-013-REPAIR"
+    },
+    {
+      "lesson": "ES-R02-mas-despacio",
+      "extension": "ES-EXT-013-REPAIR"
+    },
+    {
+      "lesson": "ES-R03-repaso-reparar",
+      "extension": "ES-EXT-013-REPAIR"
+    }
   ],
   "before": [],
   "inline": [

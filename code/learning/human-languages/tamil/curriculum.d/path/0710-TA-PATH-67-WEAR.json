@@ -2,12 +2,30 @@
   "id": "TA-PATH-67-WEAR",
   "spine_node": "SPINE-COURTESY-THANK",
   "lessons": [
-    "TA-C67-shirt",
-    "TA-C67-veshti",
-    "TA-W23-read-sattai",
-    "TA-C67-sari",
-    "TA-C67-sandal",
-    "TA-C67-cap"
+    {
+      "lesson": "TA-C67-shirt",
+      "extension": "TA-EXT-67-WEAR"
+    },
+    {
+      "lesson": "TA-C67-veshti",
+      "extension": "TA-EXT-67-WEAR"
+    },
+    {
+      "lesson": "TA-W23-read-sattai",
+      "extension": "TA-EXT-67-WEAR"
+    },
+    {
+      "lesson": "TA-C67-sari",
+      "extension": "TA-EXT-67-WEAR"
+    },
+    {
+      "lesson": "TA-C67-sandal",
+      "extension": "TA-EXT-67-WEAR"
+    },
+    {
+      "lesson": "TA-C67-cap",
+      "extension": "TA-EXT-67-WEAR"
+    }
   ],
   "before": [],
   "inline": [

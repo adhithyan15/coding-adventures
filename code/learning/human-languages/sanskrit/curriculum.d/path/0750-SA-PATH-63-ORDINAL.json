@@ -2,12 +2,30 @@
   "id": "SA-PATH-63-ORDINAL",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "SA-C63-sixth",
-    "SA-C63-fourth",
-    "SA-C63-third",
-    "SA-C63-second",
-    "SA-C63-first",
-    "SA-R63-all-ten"
+    {
+      "lesson": "SA-C63-sixth",
+      "extension": "SA-EXT-063-ORDINAL-OLDER"
+    },
+    {
+      "lesson": "SA-C63-fourth",
+      "extension": "SA-EXT-063-ORDINAL-OLDER"
+    },
+    {
+      "lesson": "SA-C63-third",
+      "extension": "SA-EXT-063-ORDINAL-OLDER"
+    },
+    {
+      "lesson": "SA-C63-second",
+      "extension": "SA-EXT-063-ORDINAL-OLDER"
+    },
+    {
+      "lesson": "SA-C63-first",
+      "extension": "SA-EXT-063-ORDINAL-OLDER"
+    },
+    {
+      "lesson": "SA-R63-all-ten",
+      "extension": "SA-EXT-063-ORDINAL-OLDER"
+    }
   ],
   "before": [],
   "inline": [

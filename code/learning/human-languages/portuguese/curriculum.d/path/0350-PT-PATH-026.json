@@ -2,10 +2,22 @@
   "id": "PT-PATH-026",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "PT-C22-responder",
-    "PT-C22-encontrar",
-    "PT-C22-encontrar-meet",
-    "PT-C22-jogar-brincar-tocar"
+    {
+      "lesson": "PT-C22-responder",
+      "extension": "PT-EXT-026-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "PT-C22-encontrar",
+      "extension": "PT-EXT-026-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "PT-C22-encontrar-meet",
+      "extension": "PT-EXT-026-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "PT-C22-jogar-brincar-tocar",
+      "extension": "PT-EXT-026-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

@@ -3,14 +3,35 @@
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
     "TA-C08-tayavuseytu",
-    "TA-C08-sollungal",
-    "TA-W08-short-o-observe",
-    "TA-W08-sollungal-guided-copy",
-    "TA-W08-sollungal-delayed-copy",
-    "TA-W08-sollungal-dictation",
-    "TA-C08-please-register",
+    {
+      "lesson": "TA-C08-sollungal",
+      "extension": "TA-EXT-015-REGISTER"
+    },
+    {
+      "lesson": "TA-W08-short-o-observe",
+      "extension": "TA-EXT-015-REGISTER"
+    },
+    {
+      "lesson": "TA-W08-sollungal-guided-copy",
+      "extension": "TA-EXT-015-REGISTER"
+    },
+    {
+      "lesson": "TA-W08-sollungal-delayed-copy",
+      "extension": "TA-EXT-015-REGISTER"
+    },
+    {
+      "lesson": "TA-W08-sollungal-dictation",
+      "extension": "TA-EXT-015-REGISTER"
+    },
+    {
+      "lesson": "TA-C08-please-register",
+      "extension": "TA-EXT-015-REGISTER"
+    },
     "TA-C09-mannikkavum",
-    "TA-C09-sorry-register"
+    {
+      "lesson": "TA-C09-sorry-register",
+      "extension": "TA-EXT-015-REGISTER"
+    }
   ],
   "before": [],
   "inline": [

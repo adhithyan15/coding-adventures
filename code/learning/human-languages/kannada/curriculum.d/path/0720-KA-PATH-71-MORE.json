@@ -2,10 +2,22 @@
   "id": "KA-PATH-71-MORE",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "KA-C71-another",
-    "KA-C71-say-again",
-    "KA-C71-when",
-    "KA-C71-which"
+    {
+      "lesson": "KA-C71-another",
+      "extension": "KA-EXT-71-MORE"
+    },
+    {
+      "lesson": "KA-C71-say-again",
+      "extension": "KA-EXT-71-MORE"
+    },
+    {
+      "lesson": "KA-C71-when",
+      "extension": "KA-EXT-71-MORE"
+    },
+    {
+      "lesson": "KA-C71-which",
+      "extension": "KA-EXT-71-MORE"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,7 +2,10 @@
   "id": "MR-PATH-014-C",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "MR-C09-madat-karne"
+    {
+      "lesson": "MR-C09-madat-karne",
+      "extension": "MR-EXT-014-DOING-VERBS-C"
+    }
   ],
   "before": [],
   "inline": [

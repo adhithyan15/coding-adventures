@@ -4,12 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can name the sky and four things in it in Malayalam.",
-  "prerequisites": [],
-  "lessons": [
-    "ML-C53-sky",
-    "ML-C53-sun",
-    "ML-C53-moon",
-    "ML-C53-star",
-    "ML-C53-sunshine"
-  ]
+  "prerequisites": []
 }

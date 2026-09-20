@@ -2,18 +2,54 @@
   "id": "JA-PATH-010",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "JA-W10-se",
-    "JA-W10-o",
-    "JA-W10-ne",
-    "JA-C10-sukoshi",
-    "JA-W10-shi",
-    "JA-C10-yukkuri",
-    "JA-W10-yu",
-    "JA-C10-itte-kudasai",
-    "JA-C10-mou-sukoshi",
-    "JA-C10-wakarimashita",
-    "JA-C10-koko",
-    "JA-C10-slower-please"
+    {
+      "lesson": "JA-W10-se",
+      "extension": "JA-EXT-017-REPAIR-SLOWER"
+    },
+    {
+      "lesson": "JA-W10-o",
+      "extension": "JA-EXT-017-REPAIR-SLOWER"
+    },
+    {
+      "lesson": "JA-W10-ne",
+      "extension": "JA-EXT-017-REPAIR-SLOWER"
+    },
+    {
+      "lesson": "JA-C10-sukoshi",
+      "extension": "JA-EXT-017-REPAIR-SLOWER"
+    },
+    {
+      "lesson": "JA-W10-shi",
+      "extension": "JA-EXT-017-REPAIR-SLOWER"
+    },
+    {
+      "lesson": "JA-C10-yukkuri",
+      "extension": "JA-EXT-017-REPAIR-SLOWER"
+    },
+    {
+      "lesson": "JA-W10-yu",
+      "extension": "JA-EXT-017-REPAIR-SLOWER"
+    },
+    {
+      "lesson": "JA-C10-itte-kudasai",
+      "extension": "JA-EXT-017-REPAIR-SLOWER"
+    },
+    {
+      "lesson": "JA-C10-mou-sukoshi",
+      "extension": "JA-EXT-017-REPAIR-SLOWER"
+    },
+    {
+      "lesson": "JA-C10-wakarimashita",
+      "extension": "JA-EXT-017-REPAIR-SLOWER"
+    },
+    {
+      "lesson": "JA-C10-koko",
+      "extension": "JA-EXT-017-REPAIR-SLOWER"
+    },
+    {
+      "lesson": "JA-C10-slower-please",
+      "extension": "JA-EXT-017-REPAIR-SLOWER"
+    }
   ],
   "before": [],
   "inline": [

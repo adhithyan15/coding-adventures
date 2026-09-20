@@ -2,10 +2,22 @@
   "id": "IT-PATH-032",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "IT-C28-undicesimo",
-    "IT-C28-prima",
-    "IT-C28-dopo",
-    "IT-C28-practice"
+    {
+      "lesson": "IT-C28-undicesimo",
+      "extension": "IT-EXT-032-ORDINE"
+    },
+    {
+      "lesson": "IT-C28-prima",
+      "extension": "IT-EXT-032-ORDINE"
+    },
+    {
+      "lesson": "IT-C28-dopo",
+      "extension": "IT-EXT-032-ORDINE"
+    },
+    {
+      "lesson": "IT-C28-practice",
+      "extension": "IT-EXT-032-ORDINE"
+    }
   ],
   "before": [],
   "inline": [],

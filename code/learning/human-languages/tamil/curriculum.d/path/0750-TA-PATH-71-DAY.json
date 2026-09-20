@@ -2,12 +2,30 @@
   "id": "TA-PATH-71-DAY",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "TA-C71-rise",
-    "TA-C71-sleep",
-    "TA-S126-letter-oo",
-    "TA-C71-run",
-    "TA-C71-wash",
-    "TA-C71-play"
+    {
+      "lesson": "TA-C71-rise",
+      "extension": "TA-EXT-71-DAY"
+    },
+    {
+      "lesson": "TA-C71-sleep",
+      "extension": "TA-EXT-71-DAY"
+    },
+    {
+      "lesson": "TA-S126-letter-oo",
+      "extension": "TA-EXT-71-DAY"
+    },
+    {
+      "lesson": "TA-C71-run",
+      "extension": "TA-EXT-71-DAY"
+    },
+    {
+      "lesson": "TA-C71-wash",
+      "extension": "TA-EXT-71-DAY"
+    },
+    {
+      "lesson": "TA-C71-play",
+      "extension": "TA-EXT-71-DAY"
+    }
   ],
   "before": [],
   "inline": [

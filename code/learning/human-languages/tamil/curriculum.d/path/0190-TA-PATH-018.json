@@ -2,7 +2,10 @@
   "id": "TA-PATH-018",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "TA-C12-kudumbam"
+    {
+      "lesson": "TA-C12-kudumbam",
+      "extension": "TA-EXT-018-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

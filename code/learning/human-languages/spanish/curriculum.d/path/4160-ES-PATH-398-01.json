@@ -2,11 +2,26 @@
   "id": "ES-PATH-398-01",
   "spine_node": "SPINE-DESCRIBE-QUALITIES",
   "lessons": [
-    "ES-C398-importante",
-    "ES-C398-interesante",
-    "ES-C398-favorito",
-    "ES-C398-facil",
-    "ES-C398-dificil"
+    {
+      "lesson": "ES-C398-importante",
+      "extension": "ES-EXT-398-QUALITY"
+    },
+    {
+      "lesson": "ES-C398-interesante",
+      "extension": "ES-EXT-398-QUALITY"
+    },
+    {
+      "lesson": "ES-C398-favorito",
+      "extension": "ES-EXT-398-QUALITY"
+    },
+    {
+      "lesson": "ES-C398-facil",
+      "extension": "ES-EXT-398-QUALITY"
+    },
+    {
+      "lesson": "ES-C398-dificil",
+      "extension": "ES-EXT-398-QUALITY"
+    }
   ],
   "before": [],
   "inline": [

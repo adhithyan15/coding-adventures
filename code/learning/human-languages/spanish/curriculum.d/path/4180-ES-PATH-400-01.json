@@ -2,11 +2,26 @@
   "id": "ES-PATH-400-01",
   "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
   "lessons": [
-    "ES-C400-tren",
-    "ES-C400-vuelo",
-    "ES-C400-aparcamiento",
-    "ES-C400-abono",
-    "ES-C400-playa"
+    {
+      "lesson": "ES-C400-tren",
+      "extension": "ES-EXT-400-TRAVEL"
+    },
+    {
+      "lesson": "ES-C400-vuelo",
+      "extension": "ES-EXT-400-TRAVEL"
+    },
+    {
+      "lesson": "ES-C400-aparcamiento",
+      "extension": "ES-EXT-400-TRAVEL"
+    },
+    {
+      "lesson": "ES-C400-abono",
+      "extension": "ES-EXT-400-TRAVEL"
+    },
+    {
+      "lesson": "ES-C400-playa",
+      "extension": "ES-EXT-400-TRAVEL"
+    }
   ],
   "before": [],
   "inline": [

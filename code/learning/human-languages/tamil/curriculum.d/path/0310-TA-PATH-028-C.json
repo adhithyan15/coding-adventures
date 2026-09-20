@@ -2,9 +2,18 @@
   "id": "TA-PATH-028-C",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "TA-C32-saappidu",
-    "TA-C32-paar",
-    "TA-C32-teri"
+    {
+      "lesson": "TA-C32-saappidu",
+      "extension": "TA-EXT-028-CORE-VERBS-C"
+    },
+    {
+      "lesson": "TA-C32-paar",
+      "extension": "TA-EXT-028-CORE-VERBS-C"
+    },
+    {
+      "lesson": "TA-C32-teri",
+      "extension": "TA-EXT-028-CORE-VERBS-C"
+    }
   ],
   "before": [],
   "inline": [

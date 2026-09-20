@@ -2,11 +2,26 @@
   "id": "ES-PATH-306-01",
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "lessons": [
-    "ES-C306-hijo",
-    "ES-C306-hija",
-    "ES-C306-abuelo",
-    "ES-C306-abuela",
-    "ES-C306-esposo"
+    {
+      "lesson": "ES-C306-hijo",
+      "extension": "ES-EXT-306-KIN"
+    },
+    {
+      "lesson": "ES-C306-hija",
+      "extension": "ES-EXT-306-KIN"
+    },
+    {
+      "lesson": "ES-C306-abuelo",
+      "extension": "ES-EXT-306-KIN"
+    },
+    {
+      "lesson": "ES-C306-abuela",
+      "extension": "ES-EXT-306-KIN"
+    },
+    {
+      "lesson": "ES-C306-esposo",
+      "extension": "ES-EXT-306-KIN"
+    }
   ],
   "before": [],
   "inline": [

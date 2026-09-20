@@ -2,10 +2,22 @@
   "id": "HI-PATH-030",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "HI-C36-ghar",
-    "HI-C36-darvaaza",
-    "HI-C36-kamra",
-    "HI-C36-kursi"
+    {
+      "lesson": "HI-C36-ghar",
+      "extension": "HI-EXT-030-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "HI-C36-darvaaza",
+      "extension": "HI-EXT-030-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "HI-C36-kamra",
+      "extension": "HI-EXT-030-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "HI-C36-kursi",
+      "extension": "HI-EXT-030-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

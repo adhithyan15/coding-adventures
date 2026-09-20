@@ -2,8 +2,14 @@
   "id": "BN-PATH-011",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "lessons": [
-    "BN-C07-howa",
-    "BN-C07-jaowa"
+    {
+      "lesson": "BN-C07-howa",
+      "extension": "BN-EXT-011-CORE-VERBS"
+    },
+    {
+      "lesson": "BN-C07-jaowa",
+      "extension": "BN-EXT-011-CORE-VERBS"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,30 +2,102 @@
   "id": "TA-PATH-003",
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
-    "TA-W01-curves-va-ka",
-    "TA-W01-abugida-va-ka",
-    "TA-W02-ma-retroflex-na",
-    "TA-W02-three-ns",
-    "TA-W03-pulli-vanakkam",
-    "TA-W03-write-vanakkam",
-    "TA-W04-vowel-signs-nandri",
-    "TA-W04-i-sign-write-nandri",
-    "TA-W05-write-aam",
-    "TA-W06-write-illai",
-    "TA-W07-write-sari",
-    "TA-W08-read-en",
-    "TA-W09-read-peyar",
-    "TA-W10-read-naan",
-    "TA-W11-read-niingal",
-    "TA-W12-read-eppadi",
-    "TA-W13-read-irukkirirgal",
-    "TA-W16-read-tamizh",
-    "TA-W14-read-pesu",
-    "TA-W15-read-po",
-    "TA-W17-read-unavu",
-    "TA-W18-read-uur",
-    "TA-W19-read-muunru",
-    "TA-W20-read-onru"
+    {
+      "lesson": "TA-W01-curves-va-ka",
+      "extension": "TA-EXT-003-SCRIPT"
+    },
+    {
+      "lesson": "TA-W01-abugida-va-ka",
+      "extension": "TA-EXT-003-SCRIPT"
+    },
+    {
+      "lesson": "TA-W02-ma-retroflex-na",
+      "extension": "TA-EXT-003-SCRIPT"
+    },
+    {
+      "lesson": "TA-W02-three-ns",
+      "extension": "TA-EXT-003-SCRIPT"
+    },
+    {
+      "lesson": "TA-W03-pulli-vanakkam",
+      "extension": "TA-EXT-003-SCRIPT"
+    },
+    {
+      "lesson": "TA-W03-write-vanakkam",
+      "extension": "TA-EXT-003-SCRIPT"
+    },
+    {
+      "lesson": "TA-W04-vowel-signs-nandri",
+      "extension": "TA-EXT-003-SCRIPT"
+    },
+    {
+      "lesson": "TA-W04-i-sign-write-nandri",
+      "extension": "TA-EXT-003-SCRIPT"
+    },
+    {
+      "lesson": "TA-W05-write-aam",
+      "extension": "TA-EXT-003-SCRIPT"
+    },
+    {
+      "lesson": "TA-W06-write-illai",
+      "extension": "TA-EXT-003-SCRIPT"
+    },
+    {
+      "lesson": "TA-W07-write-sari",
+      "extension": "TA-EXT-003-SCRIPT"
+    },
+    {
+      "lesson": "TA-W08-read-en",
+      "extension": "TA-EXT-003-SCRIPT"
+    },
+    {
+      "lesson": "TA-W09-read-peyar",
+      "extension": "TA-EXT-003-SCRIPT"
+    },
+    {
+      "lesson": "TA-W10-read-naan",
+      "extension": "TA-EXT-003-SCRIPT"
+    },
+    {
+      "lesson": "TA-W11-read-niingal",
+      "extension": "TA-EXT-003-SCRIPT"
+    },
+    {
+      "lesson": "TA-W12-read-eppadi",
+      "extension": "TA-EXT-003-SCRIPT"
+    },
+    {
+      "lesson": "TA-W13-read-irukkirirgal",
+      "extension": "TA-EXT-003-SCRIPT"
+    },
+    {
+      "lesson": "TA-W16-read-tamizh",
+      "extension": "TA-EXT-003-SCRIPT"
+    },
+    {
+      "lesson": "TA-W14-read-pesu",
+      "extension": "TA-EXT-003-SCRIPT"
+    },
+    {
+      "lesson": "TA-W15-read-po",
+      "extension": "TA-EXT-003-SCRIPT"
+    },
+    {
+      "lesson": "TA-W17-read-unavu",
+      "extension": "TA-EXT-003-SCRIPT"
+    },
+    {
+      "lesson": "TA-W18-read-uur",
+      "extension": "TA-EXT-003-SCRIPT"
+    },
+    {
+      "lesson": "TA-W19-read-muunru",
+      "extension": "TA-EXT-003-SCRIPT"
+    },
+    {
+      "lesson": "TA-W20-read-onru",
+      "extension": "TA-EXT-003-SCRIPT"
+    }
   ],
   "before": [],
   "inline": [

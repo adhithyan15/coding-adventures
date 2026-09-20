@@ -2,10 +2,22 @@
   "id": "ML-PATH-92-EATING-OUT",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "lessons": [
-    "ML-C92-bhakshanam",
-    "ML-C92-hottal",
-    "ML-C92-bill",
-    "ML-R92-eating-out-recall"
+    {
+      "lesson": "ML-C92-bhakshanam",
+      "extension": "ML-EXT-92-EATING-OUT"
+    },
+    {
+      "lesson": "ML-C92-hottal",
+      "extension": "ML-EXT-92-EATING-OUT"
+    },
+    {
+      "lesson": "ML-C92-bill",
+      "extension": "ML-EXT-92-EATING-OUT"
+    },
+    {
+      "lesson": "ML-R92-eating-out-recall",
+      "extension": "ML-EXT-92-EATING-OUT"
+    }
   ],
   "before": [],
   "inline": [

@@ -2,9 +2,18 @@
   "id": "ES-PATH-A1-REVIEW-PAREJAS",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
   "lessons": [
-    "ES-C65-repaso-parejas",
-    "ES-C65-repaso-dos-pasados",
-    "ES-C65-repaso-columna-vosotros"
+    {
+      "lesson": "ES-C65-repaso-parejas",
+      "extension": "ES-EXT-A1-REVIEW-PAREJAS"
+    },
+    {
+      "lesson": "ES-C65-repaso-dos-pasados",
+      "extension": "ES-EXT-A1-REVIEW-PAREJAS"
+    },
+    {
+      "lesson": "ES-C65-repaso-columna-vosotros",
+      "extension": "ES-EXT-A1-REVIEW-PAREJAS"
+    }
   ],
   "before": [],
   "inline": [

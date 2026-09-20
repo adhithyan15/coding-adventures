@@ -2,9 +2,18 @@
   "id": "GE-PATH-022",
   "spine_node": "SPINE-CHECK-WELLBEING",
   "lessons": [
-    "GE-C17-kopf",
-    "GE-C17-kopf-haupt",
-    "GE-C17-hand"
+    {
+      "lesson": "GE-C17-kopf",
+      "extension": "GE-EXT-022-LANGUAGE-SPECIFIC"
+    },
+    {
+      "lesson": "GE-C17-kopf-haupt",
+      "extension": "GE-EXT-022-ETYMOLOGY"
+    },
+    {
+      "lesson": "GE-C17-hand",
+      "extension": "GE-EXT-022-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [

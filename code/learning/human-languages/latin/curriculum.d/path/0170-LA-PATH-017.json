@@ -2,7 +2,10 @@
   "id": "LA-PATH-017",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "lessons": [
-    "LA-C16-undecim-viginti"
+    {
+      "lesson": "LA-C16-undecim-viginti",
+      "extension": "LA-EXT-017-LANGUAGE-SPECIFIC"
+    }
   ],
   "before": [],
   "inline": [
