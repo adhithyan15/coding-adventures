@@ -29,6 +29,10 @@
     {
       "id": "custom-service-icon-text",
       "source": "architecture-beta\nservice api \"API\"[Gateway]\nservice db(database)[Database]\napi:R --> L:db"
+    },
+    {
+      "id": "left-and-bidirectional-arrows",
+      "source": "architecture-beta\nservice api(server)[API]\nservice db(database)[Database]\napi:R <-- L:db\napi:B <-[replicates]-> T:db"
     }
   ]
 }

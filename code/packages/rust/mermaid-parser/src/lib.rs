@@ -1007,6 +1007,7 @@ pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError>
                 "JUNCTION_STATEMENT"
                     | "ALIGN_STATEMENT"
                     | "SERVICE_ICON_TEXT_STATEMENT"
+                    | "EDGE_STATEMENT"
                     | "STATEMENT_LINE"
             )
         )
@@ -1264,13 +1265,22 @@ fn parse_architecture_edge(
     if !ids.contains(from) || !ids.contains(to) {
         return Err(token_error(token, "architecture edge services must be declared first"));
     }
-    let (kind, label) = match operator {
-        "--" => (RelKind::Link, None),
-        "-->" => (RelKind::Dependency, None),
-        _ => parse_architecture_labeled_edge_operator(token, operator)?,
+    let start_arrow = operator.starts_with('<');
+    let end_arrow = operator.ends_with('>');
+    let core_operator = operator.strip_prefix('<').unwrap_or(operator);
+    let core_operator = core_operator.strip_suffix('>').unwrap_or(core_operator);
+    let label = match core_operator {
+        "--" => None,
+        _ => parse_architecture_labeled_edge_operator(token, core_operator)?,
+    };
+    let kind = if start_arrow || end_arrow {
+        RelKind::Dependency
+    } else {
+        RelKind::Link
     };
     Ok(StructuralRelationship {
         from: from.into(), to: to.into(), kind,
+        start_arrow, end_arrow,
         from_mult: None, to_mult: None, label,
     })
 }
@@ -1278,7 +1288,7 @@ fn parse_architecture_edge(
 fn parse_architecture_labeled_edge_operator(
     token: &Token,
     operator: &str,
-) -> Result<(RelKind, Option<String>), ParseError> {
+) -> Result<Option<String>, ParseError> {
     let Some(label_source) = operator.strip_prefix("-[") else {
         return Err(token_error(token, "unsupported architecture edge operator"));
     };
@@ -1289,12 +1299,10 @@ fn parse_architecture_labeled_edge_operator(
     if label.is_empty() {
         return Err(token_error(token, "architecture edge label cannot be empty"));
     }
-    let kind = match &label_source[label_end + 2..] {
-        "" => RelKind::Link,
-        ">" => RelKind::Dependency,
-        _ => return Err(token_error(token, "unsupported architecture edge operator")),
-    };
-    Ok((kind, Some(label.replace("\\\"", "\"").replace("\\'", "'"))))
+    if !label_source[label_end + 2..].is_empty() {
+        return Err(token_error(token, "unsupported architecture edge operator"));
+    }
+    Ok(Some(label.replace("\\\"", "\"").replace("\\'", "'")))
 }
 
 /// Parse a core indentation-defined Mermaid Kanban board.
@@ -3373,6 +3381,8 @@ fn parse_requirement_relationship(token: &Token) -> Result<StructuralRelationshi
         from: unquote_requirement_value(from),
         to: unquote_requirement_value(to),
         kind: relationship_kind,
+        start_arrow: false,
+        end_arrow: true,
         from_mult: None,
         to_mult: None,
         label: Some(label),
@@ -3871,6 +3881,8 @@ fn parse_class_relationship(line: &str) -> Option<StructuralRelationship> {
                     from,
                     to,
                     kind: kind.clone(),
+                    start_arrow: false,
+                    end_arrow: true,
                     from_mult: None,
                     to_mult: None,
                     label,
@@ -8928,6 +8940,8 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                 } else {
                     RelKind::Dependency
                 },
+                start_arrow: false,
+                end_arrow: true,
                 from_mult: Some(from_mult),
                 to_mult: Some(to_mult),
                 label: (!label.is_empty()).then_some(label),
@@ -9181,6 +9195,8 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                     from: args[0].clone(),
                     to: args[1].clone(),
                     kind: RelKind::Association,
+                    start_arrow: false,
+                    end_arrow: true,
                     from_mult: None,
                     to_mult: None,
                     label: Some(args[2].clone()),
@@ -10463,6 +10479,8 @@ mod tests_dg04 {
         .unwrap();
         assert_eq!(diagram.relationships.len(), 1);
         assert_eq!(diagram.relationships[0].kind, RelKind::Dependency);
+        assert!(!diagram.relationships[0].start_arrow);
+        assert!(diagram.relationships[0].end_arrow);
         assert_eq!(diagram.relationships[0].label.as_deref(), Some("reads and writes"));
     }
 
@@ -10473,6 +10491,8 @@ mod tests_dg04 {
         )
         .unwrap();
         assert_eq!(diagram.relationships[0].kind, RelKind::Link);
+        assert!(!diagram.relationships[0].start_arrow);
+        assert!(!diagram.relationships[0].end_arrow);
         assert_eq!(diagram.relationships[0].label.as_deref(), Some("shared data"));
     }
 
@@ -10570,13 +10590,26 @@ mod tests_dg04 {
     }
 
     #[test]
-    fn architecture_rejects_group_endpoints_and_left_arrows() {
+    fn architecture_preserves_left_and_bidirectional_arrows() {
+        let diagram = parse_architecture(
+            "architecture-beta\nservice api(server)[API]\nservice db(database)[DB]\napi:R <-- L:db\napi:B <--> T:db\napi:R <-[sync]- L:db\napi:B <-[replicate]-> T:db",
+        )
+        .unwrap();
+        assert_eq!(diagram.relationships.len(), 4);
+        assert!(diagram.relationships[0].start_arrow);
+        assert!(!diagram.relationships[0].end_arrow);
+        assert!(diagram.relationships[1].start_arrow);
+        assert!(diagram.relationships[1].end_arrow);
+        assert_eq!(diagram.relationships[2].label.as_deref(), Some("sync"));
+        assert_eq!(diagram.relationships[3].label.as_deref(), Some("replicate"));
+        assert!(diagram.relationships[3].start_arrow);
+        assert!(diagram.relationships[3].end_arrow);
+    }
+
+    #[test]
+    fn architecture_rejects_group_endpoints() {
         assert!(parse_architecture(
             "architecture-beta\ngroup cloud(cloud)[Cloud]\nservice api(server)[API] in cloud\ncloud:R --> L:api",
-        )
-        .is_err());
-        assert!(parse_architecture(
-            "architecture-beta\nservice api(server)[API]\nservice db(database)[DB]\napi:R <-- L:db",
         )
         .is_err());
     }

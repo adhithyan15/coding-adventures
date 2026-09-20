@@ -2684,12 +2684,18 @@ where
             "#6b7280",
             1.5,
         )));
-        // Arrowhead on the last segment
-        if rel.points.len() >= 2 {
+        if rel.end_arrow && rel.points.len() >= 2 {
             let tip = &rel.points[rel.points.len() - 1];
             let prev = &rel.points[rel.points.len() - 2];
             instructions.push(PaintInstruction::Path(structural_arrowhead(
                 prev, tip, &rel.kind,
+            )));
+        }
+        if rel.start_arrow && rel.points.len() >= 2 {
+            instructions.push(PaintInstruction::Path(structural_arrowhead(
+                &rel.points[1],
+                &rel.points[0],
+                &rel.kind,
             )));
         }
         if let Some((ref pos, ref lbl)) = rel.label {
@@ -5306,6 +5312,47 @@ mod tests {
                 .filter(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_)))
                 .count()
                 >= 2
+        );
+    }
+
+    #[test]
+    fn structural_bidirectional_relationship_lowers_both_arrowheads() {
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = LayoutedStructuralDiagram {
+            width: 200.0,
+            height: 80.0,
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            groups: vec![],
+            nodes: vec![],
+            relationships: vec![diagram_ir::LayoutedStructuralRelationship {
+                from_id: "api".into(),
+                to_id: "db".into(),
+                kind: RelKind::Dependency,
+                start_arrow: true,
+                end_arrow: true,
+                points: vec![Point { x: 20.0, y: 40.0 }, Point { x: 180.0, y: 40.0 }],
+                from_mult: None,
+                to_mult: None,
+                label: None,
+            }],
+        };
+
+        let scene = diagram_to_paint_structural(&layout, &opts);
+        assert_eq!(
+            scene
+                .instructions
+                .iter()
+                .filter(|instruction| matches!(
+                    instruction,
+                    PaintInstruction::Path(path) if path.fill.as_deref() == Some("#6b7280")
+                ))
+                .count(),
+            2
         );
     }
 

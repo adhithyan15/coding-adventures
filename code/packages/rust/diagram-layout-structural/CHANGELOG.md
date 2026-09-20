@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.13.0
+
+- Carry structural start and end arrowhead intent into resolved relationship geometry.
+
 ## 0.12.0
 
 - Reserve structural header geometry for Architecture service icon text.
