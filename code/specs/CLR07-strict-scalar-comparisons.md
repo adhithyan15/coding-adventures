@@ -62,3 +62,9 @@ Preserve all CLR06 refusal tests except bool cases intentionally newly accepted.
 Run backend/simulator/builder/Brainfuck CLR/Nib CLR suites and actual artifact
 tests, Clippy, documentation build/shard checks and lessons validation. Commit
 this detailed contract before production changes; security review before push.
+
+Execution-discovered prerequisite: i32 -1 uses builder's compact ldc.i4.m1
+(0x15), which the current simulator refuses. The strict entrypoint must emit
+full ldc.i4 with signed -1 payload for this value until compact opcode support
+has independent execution coverage. Preserve semantics and the existing literal
+gate; add an actual i32 -1 regression. No simulator opcode change in this slice.
