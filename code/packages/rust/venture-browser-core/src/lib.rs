@@ -1769,6 +1769,12 @@ pub enum BrowserChromeEvent {
     Navigate,
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum BrowserBridgeEventError {
+    MissingValue,
+    UnknownEvent,
+}
+
 impl BrowserChromeEvent {
     pub const fn mosaic_name(&self) -> &'static str {
         match self {
@@ -1795,6 +1801,47 @@ impl BrowserChromeEvent {
             Self::AddressChange(_) => "onAddressChange",
             Self::Navigate => "onNavigate",
         }
+    }
+
+    /// Decode one generated-host event without letting platform bridges own
+    /// the shared Mosaic event vocabulary or value requirements.
+    pub fn from_mosaic_event(
+        name: &str,
+        value: Option<&str>,
+    ) -> Result<Self, BrowserBridgeEventError> {
+        Ok(match name {
+            "onBack" => Self::Back,
+            "onForward" => Self::Forward,
+            "onHome" => Self::Home,
+            "onReload" => Self::Reload,
+            "onToggleBookmark" => Self::ToggleBookmark,
+            "onCopyAddress" => Self::CopyAddress,
+            "onOpenPageInNewWindow" => Self::OpenPageInNewWindow,
+            "onSavePage" => Self::SavePage,
+            "onPrintPage" => Self::PrintPage,
+            "onSharePage" => Self::SharePage,
+            "onPageInfo" => Self::PageInfo,
+            "onZoomOut" => Self::ZoomOut,
+            "onZoomReset" => Self::ZoomReset,
+            "onZoomIn" => Self::ZoomIn,
+            "onViewSource" => Self::ViewSource,
+            "onFindOpen" => Self::FindOpen,
+            "onFindChange" => Self::FindChange(
+                value
+                    .ok_or(BrowserBridgeEventError::MissingValue)?
+                    .to_string(),
+            ),
+            "onFindNext" => Self::FindNext,
+            "onFindPrevious" => Self::FindPrevious,
+            "onFindClose" => Self::FindClose,
+            "onAddressChange" => Self::AddressChange(
+                value
+                    .ok_or(BrowserBridgeEventError::MissingValue)?
+                    .to_string(),
+            ),
+            "onNavigate" => Self::Navigate,
+            _ => return Err(BrowserBridgeEventError::UnknownEvent),
+        })
     }
 }
 
@@ -1824,6 +1871,152 @@ pub struct BrowserChromeProps {
     pub find_result_label: String,
     pub find_disabled: bool,
     pub navigation_disabled: bool,
+}
+
+impl BrowserHostEffect {
+    /// Serialize the stable effect envelope consumed by every native host.
+    pub fn to_bridge_json(&self) -> String {
+        match self {
+            Self::OpenAuxiliaryDocument(document) => format!(
+                "{{\"type\":\"open-auxiliary-document\",\"document\":{{\"kind\":{},\"address\":{},\"title\":{},\"html\":{}}}}}",
+                bridge_json_string(document.kind.name()),
+                bridge_json_string(&document.address),
+                bridge_json_string(&document.title),
+                bridge_json_string(&document.html),
+            ),
+            Self::OpenBrowsingContext(context) => format!(
+                "{{\"type\":\"open-browsing-context\",\"target\":{},\"request\":{{\"url\":{},\"method\":{},\"contentType\":{},\"body\":{}}},\"noopener\":{},\"noreferrer\":{}}}",
+                bridge_json_string(context.target.name()),
+                bridge_json_string(&context.request.url),
+                bridge_json_string(match context.request.method {
+                    BrowserFetchMethod::Get => "GET",
+                    BrowserFetchMethod::Post => "POST",
+                }),
+                context
+                    .request
+                    .content_type
+                    .as_deref()
+                    .map(bridge_json_string)
+                    .unwrap_or_else(|| "null".into()),
+                bridge_json_bytes(&context.request.body),
+                context.noopener,
+                context.noreferrer,
+            ),
+            Self::Download(download) => format!(
+                "{{\"type\":\"download\",\"request\":{{\"url\":{},\"method\":\"GET\",\"contentType\":null,\"body\":[]}},\"suggestedFilename\":{}}}",
+                bridge_json_string(&download.request.url),
+                download
+                    .suggested_filename
+                    .as_deref()
+                    .map(bridge_json_string)
+                    .unwrap_or_else(|| "null".into()),
+            ),
+            Self::Print(request) => format!(
+                "{{\"type\":\"print\",\"address\":{},\"title\":{}}}",
+                bridge_json_string(&request.address),
+                bridge_json_string(&request.title),
+            ),
+            Self::Share(request) => format!(
+                "{{\"type\":\"share\",\"address\":{},\"title\":{}}}",
+                bridge_json_string(&request.address),
+                bridge_json_string(&request.title),
+            ),
+            Self::PageInfo(request) => format!(
+                "{{\"type\":\"page-info\",\"requestedAddress\":{},\"address\":{},\"title\":{},\"status\":{},\"imageResourceCount\":{},\"imageFailureCount\":{},\"stylesheetResourceCount\":{},\"stylesheetFailureCount\":{}}}",
+                bridge_json_string(&request.requested_address),
+                bridge_json_string(&request.address),
+                bridge_json_string(&request.title),
+                request.status,
+                request.image_resource_count,
+                request.image_failure_count,
+                request.stylesheet_resource_count,
+                request.stylesheet_failure_count,
+            ),
+            Self::WriteClipboard(text) => format!(
+                "{{\"type\":\"write-clipboard\",\"text\":{}}}",
+                bridge_json_string(text),
+            ),
+        }
+    }
+}
+
+impl BrowserChromeProps {
+    /// Serialize all shared chrome slots using their authored MIL names.
+    pub fn to_bridge_json(&self) -> String {
+        format!(
+            "{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"bookmark-label\":{},\"bookmark-disabled\":{},\"copy-address-disabled\":{},\"open-page-disabled\":{},\"save-page-disabled\":{},\"print-page-disabled\":{},\"share-page-disabled\":{},\"page-info-disabled\":{},\"zoom-label\":{},\"zoom-out-disabled\":{},\"zoom-reset-disabled\":{},\"zoom-in-disabled\":{},\"view-source-disabled\":{},\"find-open\":{},\"find-query\":{},\"find-result-label\":{},\"find-disabled\":{},\"navigation-disabled\":{}}}",
+            bridge_json_string(&self.address),
+            bridge_json_string(&self.page_title),
+            bridge_json_string(&self.status_text),
+            self.back_disabled,
+            self.forward_disabled,
+            bridge_json_string(&self.bookmark_label),
+            self.bookmark_disabled,
+            self.copy_address_disabled,
+            self.open_page_disabled,
+            self.save_page_disabled,
+            self.print_page_disabled,
+            self.share_page_disabled,
+            self.page_info_disabled,
+            bridge_json_string(&self.zoom_label),
+            self.zoom_out_disabled,
+            self.zoom_reset_disabled,
+            self.zoom_in_disabled,
+            self.view_source_disabled,
+            self.find_open,
+            bridge_json_string(&self.find_query),
+            bridge_json_string(&self.find_result_label),
+            self.find_disabled,
+            self.navigation_disabled,
+        )
+    }
+}
+
+/// Encode the complete response returned by every native Mosaic bridge.
+pub fn browser_bridge_response_json(
+    props: &BrowserChromeProps,
+    effect: Option<&BrowserHostEffect>,
+    error: Option<&str>,
+) -> String {
+    let effect = effect
+        .map(|effect| format!(",\"effect\":{}", effect.to_bridge_json()))
+        .unwrap_or_default();
+    let error = error
+        .map(|message| format!(",\"error\":{}", bridge_json_string(message)))
+        .unwrap_or_default();
+    format!("{{\"props\":{}{effect}{error}}}", props.to_bridge_json())
+}
+
+fn bridge_json_bytes(bytes: &[u8]) -> String {
+    format!(
+        "[{}]",
+        bytes
+            .iter()
+            .map(u8::to_string)
+            .collect::<Vec<_>>()
+            .join(",")
+    )
+}
+
+fn bridge_json_string(value: &str) -> String {
+    let mut out = String::with_capacity(value.len() + 2);
+    out.push('"');
+    for ch in value.chars() {
+        match ch {
+            '"' => out.push_str("\\\""),
+            '\\' => out.push_str("\\\\"),
+            '\n' => out.push_str("\\n"),
+            '\r' => out.push_str("\\r"),
+            '\t' => out.push_str("\\t"),
+            ch if ch.is_control() => {
+                use std::fmt::Write;
+                let _ = write!(out, "\\u{:04x}", ch as u32);
+            }
+            ch => out.push(ch),
+        }
+    }
+    out.push('"');
+    out
 }
 
 /// Host-neutral reducer for Venture's Mosaic-authored browser chrome.
@@ -7228,6 +7421,171 @@ mod tests {
         Direction, FontQuery, FontResolutionError, Glyph, ShapeOptions, ShapedRun, ShapedText,
         ShapingError,
     };
+
+    #[test]
+    fn mosaic_bridge_event_decoder_owns_the_complete_event_vocabulary() {
+        let cases = [
+            ("onBack", None, BrowserChromeEvent::Back),
+            ("onForward", None, BrowserChromeEvent::Forward),
+            ("onHome", None, BrowserChromeEvent::Home),
+            ("onReload", None, BrowserChromeEvent::Reload),
+            ("onToggleBookmark", None, BrowserChromeEvent::ToggleBookmark),
+            ("onCopyAddress", None, BrowserChromeEvent::CopyAddress),
+            (
+                "onOpenPageInNewWindow",
+                None,
+                BrowserChromeEvent::OpenPageInNewWindow,
+            ),
+            ("onSavePage", None, BrowserChromeEvent::SavePage),
+            ("onPrintPage", None, BrowserChromeEvent::PrintPage),
+            ("onSharePage", None, BrowserChromeEvent::SharePage),
+            ("onPageInfo", None, BrowserChromeEvent::PageInfo),
+            ("onZoomOut", None, BrowserChromeEvent::ZoomOut),
+            ("onZoomReset", None, BrowserChromeEvent::ZoomReset),
+            ("onZoomIn", None, BrowserChromeEvent::ZoomIn),
+            ("onViewSource", None, BrowserChromeEvent::ViewSource),
+            ("onFindOpen", None, BrowserChromeEvent::FindOpen),
+            (
+                "onFindChange",
+                Some("needle"),
+                BrowserChromeEvent::FindChange("needle".into()),
+            ),
+            ("onFindNext", None, BrowserChromeEvent::FindNext),
+            ("onFindPrevious", None, BrowserChromeEvent::FindPrevious),
+            ("onFindClose", None, BrowserChromeEvent::FindClose),
+            (
+                "onAddressChange",
+                Some("https://example.test/"),
+                BrowserChromeEvent::AddressChange("https://example.test/".into()),
+            ),
+            ("onNavigate", None, BrowserChromeEvent::Navigate),
+        ];
+
+        for (name, value, expected) in cases {
+            let decoded = BrowserChromeEvent::from_mosaic_event(name, value)
+                .unwrap_or_else(|error| panic!("decode {name}: {error:?}"));
+            assert_eq!(decoded, expected);
+            assert_eq!(decoded.mosaic_name(), name);
+        }
+        assert_eq!(
+            BrowserChromeEvent::from_mosaic_event("onFindChange", None),
+            Err(BrowserBridgeEventError::MissingValue)
+        );
+        assert_eq!(
+            BrowserChromeEvent::from_mosaic_event("onAddressChange", None),
+            Err(BrowserBridgeEventError::MissingValue)
+        );
+        assert_eq!(
+            BrowserChromeEvent::from_mosaic_event("onUnknown", Some("ignored")),
+            Err(BrowserBridgeEventError::UnknownEvent)
+        );
+    }
+
+    #[test]
+    fn native_bridge_effect_json_is_stable_for_every_effect() {
+        let cases = [
+            (
+                BrowserHostEffect::OpenAuxiliaryDocument(BrowserAuxiliaryDocument {
+                    kind: BrowserAuxiliaryDocumentKind::ViewSource,
+                    address: "view-source:https://example.test/".into(),
+                    title: "Source: Example".into(),
+                    html: "<pre>\"source\"</pre>".into(),
+                }),
+                r#"{"type":"open-auxiliary-document","document":{"kind":"view-source","address":"view-source:https://example.test/","title":"Source: Example","html":"<pre>\"source\"</pre>"}}"#,
+            ),
+            (
+                BrowserHostEffect::OpenBrowsingContext(BrowserBrowsingContextRequest {
+                    target: BrowserBrowsingContextTarget::Named("reports".into()),
+                    request: BrowserFetchRequest {
+                        method: BrowserFetchMethod::Post,
+                        url: "https://example.test/report".into(),
+                        content_type: Some("application/x-www-form-urlencoded".into()),
+                        body: vec![97, 61, 49],
+                    },
+                    noopener: true,
+                    noreferrer: false,
+                }),
+                r#"{"type":"open-browsing-context","target":"reports","request":{"url":"https://example.test/report","method":"POST","contentType":"application/x-www-form-urlencoded","body":[97,61,49]},"noopener":true,"noreferrer":false}"#,
+            ),
+            (
+                BrowserHostEffect::Download(BrowserDownloadRequest {
+                    request: BrowserFetchRequest::get("https://example.test/report.pdf"),
+                    suggested_filename: Some("report.pdf".into()),
+                }),
+                r#"{"type":"download","request":{"url":"https://example.test/report.pdf","method":"GET","contentType":null,"body":[]},"suggestedFilename":"report.pdf"}"#,
+            ),
+            (
+                BrowserHostEffect::Print(BrowserPrintRequest {
+                    address: "https://example.test/".into(),
+                    title: "Example".into(),
+                }),
+                r#"{"type":"print","address":"https://example.test/","title":"Example"}"#,
+            ),
+            (
+                BrowserHostEffect::Share(BrowserShareRequest {
+                    address: "https://example.test/".into(),
+                    title: "Example".into(),
+                }),
+                r#"{"type":"share","address":"https://example.test/","title":"Example"}"#,
+            ),
+            (
+                BrowserHostEffect::PageInfo(BrowserPageInfoRequest {
+                    requested_address: "https://example.test/start".into(),
+                    address: "https://example.test/final".into(),
+                    title: "Example".into(),
+                    status: 200,
+                    image_resource_count: 3,
+                    image_failure_count: 1,
+                    stylesheet_resource_count: 2,
+                    stylesheet_failure_count: 0,
+                }),
+                r#"{"type":"page-info","requestedAddress":"https://example.test/start","address":"https://example.test/final","title":"Example","status":200,"imageResourceCount":3,"imageFailureCount":1,"stylesheetResourceCount":2,"stylesheetFailureCount":0}"#,
+            ),
+            (
+                BrowserHostEffect::WriteClipboard("quoted \"line\"\nnext".into()),
+                r#"{"type":"write-clipboard","text":"quoted \"line\"\nnext"}"#,
+            ),
+        ];
+
+        for (effect, expected) in cases {
+            assert_eq!(effect.to_bridge_json(), expected);
+        }
+    }
+
+    #[test]
+    fn native_bridge_response_serializes_every_prop_and_optional_envelope() {
+        let props = BrowserChromeProps {
+            address: "https://example.test/\"draft\"".into(),
+            page_title: "Line\nTitle".into(),
+            status_text: "Ready\tsoon".into(),
+            back_disabled: true,
+            forward_disabled: false,
+            bookmark_label: "Remove \"bookmark\"".into(),
+            bookmark_disabled: false,
+            copy_address_disabled: true,
+            open_page_disabled: false,
+            save_page_disabled: true,
+            print_page_disabled: false,
+            share_page_disabled: true,
+            page_info_disabled: false,
+            zoom_label: "125%".into(),
+            zoom_out_disabled: true,
+            zoom_reset_disabled: false,
+            zoom_in_disabled: true,
+            view_source_disabled: false,
+            find_open: true,
+            find_query: "a\\b".into(),
+            find_result_label: "1 of 2".into(),
+            find_disabled: false,
+            navigation_disabled: true,
+        };
+        let effect = BrowserHostEffect::WriteClipboard("copy\u{1}".into());
+
+        assert_eq!(
+            browser_bridge_response_json(&props, Some(&effect), Some("bad\nrequest")),
+            r#"{"props":{"address":"https://example.test/\"draft\"","page-title":"Line\nTitle","status-text":"Ready\tsoon","back-disabled":true,"forward-disabled":false,"bookmark-label":"Remove \"bookmark\"","bookmark-disabled":false,"copy-address-disabled":true,"open-page-disabled":false,"save-page-disabled":true,"print-page-disabled":false,"share-page-disabled":true,"page-info-disabled":false,"zoom-label":"125%","zoom-out-disabled":true,"zoom-reset-disabled":false,"zoom-in-disabled":true,"view-source-disabled":false,"find-open":true,"find-query":"a\\b","find-result-label":"1 of 2","find-disabled":false,"navigation-disabled":true},"effect":{"type":"write-clipboard","text":"copy\u0001"},"error":"bad\nrequest"}"#
+        );
+    }
 
     #[test]
     fn navigation_history_matches_back_forward_home_and_reload_model() {

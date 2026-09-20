@@ -5,6 +5,12 @@ cross-platform proving application. Items are ordered by risk and dependency.
 
 ## Prioritized discoveries
 
+- [x] **P1 browser architecture - shared native bridge codec.** Move the
+  generated Mosaic event vocabulary, value validation, chrome-prop JSON, and
+  typed host-effect JSON into `venture-browser-core`. Keep macOS, Windows, and
+  Cairo as FFI translators, serialize real navigation-disabled state, and add
+  deterministic protocol and source-contract coverage that prevents host drift.
+
 - [x] **P1 browser convergence - shared page composition scale and zoom.** Move
   physical-surface to logical-layout scale policy into `BrowserSession`, then
   add bounded 50%-200% Zoom Out, Reset, and Zoom In transactions that reflow

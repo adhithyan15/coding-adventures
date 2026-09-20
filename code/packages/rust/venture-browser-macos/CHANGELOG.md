@@ -1,5 +1,8 @@
 # Changelog
 
+- Replace the local Mosaic event and response JSON codec with the shared
+  browser-core bridge protocol.
+
 - Reflow retained Metal pages from the shared browser zoom viewport policy.
 
 ## Unreleased

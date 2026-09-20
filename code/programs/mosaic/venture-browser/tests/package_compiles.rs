@@ -14,6 +14,18 @@ fn read_package_file(name: &str) -> String {
     fs::read_to_string(&path).unwrap_or_else(|error| panic!("read {}: {error}", path.display()))
 }
 
+fn assert_native_bridge_uses_shared_codec(name: &str, path: &str) {
+    let bridge = read_package_file(path);
+    assert!(
+        bridge.contains("BrowserChromeEvent::from_mosaic_event"),
+        "{name} must decode events through browser core"
+    );
+    assert!(
+        bridge.contains("browser_bridge_response_json"),
+        "{name} must serialize responses through browser core"
+    );
+}
+
 #[test]
 fn venture_chrome_sources_compile_with_matching_theme_topology() {
     let interface =
@@ -642,16 +654,7 @@ fn find_in_page_uses_one_shared_transaction_across_generated_hosts() {
             "../../../packages/rust/venture-browser-windows/src/lib.rs",
         ),
     ] {
-        let host = read_package_file(path);
-        for symbol in [
-            "onFindOpen",
-            "onFindChange",
-            "onFindNext",
-            "onFindPrevious",
-            "onFindClose",
-        ] {
-            assert!(host.contains(symbol), "{name} bridge omits {symbol}");
-        }
+        assert_native_bridge_uses_shared_codec(name, path);
     }
 
     for path in [
@@ -732,15 +735,7 @@ fn copy_address_uses_one_typed_clipboard_effect_across_generated_hosts() {
             "../../../packages/rust/venture-browser-windows/src/lib.rs",
         ),
     ] {
-        let bridge = read_package_file(path);
-        assert!(
-            bridge.contains("onCopyAddress"),
-            "{name} omits the copy event"
-        );
-        assert!(
-            bridge.contains("write-clipboard"),
-            "{name} omits effect serialization"
-        );
+        assert_native_bridge_uses_shared_codec(name, path);
     }
 }
 
@@ -809,15 +804,7 @@ fn open_page_reuses_one_typed_browsing_context_effect_across_generated_hosts() {
             "../../../packages/rust/venture-browser-windows/src/lib.rs",
         ),
     ] {
-        let bridge = read_package_file(path);
-        assert!(
-            bridge.contains("onOpenPageInNewWindow"),
-            "{name} omits the event"
-        );
-        assert!(
-            bridge.contains("open-browsing-context"),
-            "{name} omits effect serialization"
-        );
+        assert_native_bridge_uses_shared_codec(name, path);
     }
 }
 
@@ -879,12 +866,7 @@ fn save_page_reuses_one_typed_download_effect_across_generated_hosts() {
             "../../../packages/rust/venture-browser-windows/src/lib.rs",
         ),
     ] {
-        let bridge = read_package_file(path);
-        assert!(bridge.contains("onSavePage"), "{name} omits the event");
-        assert!(
-            bridge.contains("\\\"type\\\":\\\"download\\\""),
-            "{name} omits effect serialization"
-        );
+        assert_native_bridge_uses_shared_codec(name, path);
     }
 
     for path in [
@@ -963,12 +945,7 @@ fn print_page_uses_one_typed_presenter_request_across_generated_hosts() {
             "../../../packages/rust/venture-browser-windows/src/lib.rs",
         ),
     ] {
-        let bridge = read_package_file(path);
-        assert!(bridge.contains("onPrintPage"), "{name} omits the event");
-        assert!(
-            bridge.contains("\\\"type\\\":\\\"print\\\""),
-            "{name} omits effect serialization"
-        );
+        assert_native_bridge_uses_shared_codec(name, path);
     }
 
     for path in [
@@ -1047,12 +1024,7 @@ fn share_page_uses_one_typed_presenter_request_across_generated_hosts() {
             "../../../packages/rust/venture-browser-windows/src/lib.rs",
         ),
     ] {
-        let bridge = read_package_file(path);
-        assert!(bridge.contains("onSharePage"), "{name} omits the event");
-        assert!(
-            bridge.contains("\\\"type\\\":\\\"share\\\""),
-            "{name} omits effect serialization"
-        );
+        assert_native_bridge_uses_shared_codec(name, path);
     }
 
     for path in [
@@ -1093,7 +1065,10 @@ fn page_info_uses_one_typed_response_snapshot_across_generated_hosts() {
         "image_resource_count",
         "stylesheet_failure_count",
     ] {
-        assert!(core.contains(symbol), "shared page-info core omits {symbol}");
+        assert!(
+            core.contains(symbol),
+            "shared page-info core omits {symbol}"
+        );
     }
 
     for (name, path, presenter) in [
@@ -1109,7 +1084,11 @@ fn page_info_uses_one_typed_response_snapshot_across_generated_hosts() {
             "host/flutter/mosaic_host.dart",
             "lastPageInfoRequest",
         ),
-        ("Compose", "host/compose/MosaicHost.kt", "lastPageInfoRequest"),
+        (
+            "Compose",
+            "host/compose/MosaicHost.kt",
+            "lastPageInfoRequest",
+        ),
     ] {
         let host = read_package_file(path);
         assert!(host.contains("page-info"), "{name} omits the shared effect");
@@ -1130,16 +1109,7 @@ fn page_info_uses_one_typed_response_snapshot_across_generated_hosts() {
             "../../../packages/rust/venture-browser-windows/src/lib.rs",
         ),
     ] {
-        let bridge = read_package_file(path);
-        assert!(bridge.contains("onPageInfo"), "{name} omits the event");
-        assert!(
-            bridge.contains("\\\"type\\\":\\\"page-info\\\""),
-            "{name} omits effect serialization"
-        );
-        assert!(
-            bridge.contains("requestedAddress") && bridge.contains("imageFailureCount"),
-            "{name} omits page-info diagnostics"
-        );
+        assert_native_bridge_uses_shared_codec(name, path);
     }
 
     for path in [
@@ -1167,7 +1137,12 @@ fn page_info_uses_one_typed_response_snapshot_across_generated_hosts() {
 fn page_zoom_uses_one_shared_scale_and_reflow_policy_across_generated_hosts() {
     let interface = read_package_file("src/VentureChrome.mil");
     let layout = read_package_file("src/VentureChrome.mll");
-    for symbol in ["slot zoom-label", "emit onZoomOut", "emit onZoomReset", "emit onZoomIn"] {
+    for symbol in [
+        "slot zoom-label",
+        "emit onZoomOut",
+        "emit onZoomReset",
+        "emit onZoomIn",
+    ] {
         assert!(interface.contains(symbol), "zoom interface omits {symbol}");
     }
     for control in ["zoom-out-button", "zoom-reset-button", "zoom-in-button"] {
@@ -1175,19 +1150,30 @@ fn page_zoom_uses_one_shared_scale_and_reflow_policy_across_generated_hosts() {
     }
 
     let core = read_package_file("../../../packages/rust/venture-browser-core/src/lib.rs");
-    for symbol in ["paint_viewport", "page_reflow_required", "zoom_percent", "ZoomReset"] {
+    for symbol in [
+        "paint_viewport",
+        "page_reflow_required",
+        "zoom_percent",
+        "ZoomReset",
+    ] {
         assert!(core.contains(symbol), "shared zoom core omits {symbol}");
     }
 
     for (name, path) in [
-        ("Cairo", "../../../packages/rust/venture-browser-cairo/src/lib.rs"),
-        ("macOS", "../../../packages/rust/venture-browser-macos/src/lib.rs"),
-        ("Windows", "../../../packages/rust/venture-browser-windows/src/lib.rs"),
+        (
+            "Cairo",
+            "../../../packages/rust/venture-browser-cairo/src/lib.rs",
+        ),
+        (
+            "macOS",
+            "../../../packages/rust/venture-browser-macos/src/lib.rs",
+        ),
+        (
+            "Windows",
+            "../../../packages/rust/venture-browser-windows/src/lib.rs",
+        ),
     ] {
-        let bridge = read_package_file(path);
-        assert!(bridge.contains("onZoomIn"), "{name} omits zoom events");
-        assert!(bridge.contains("paint_viewport"), "{name} duplicates zoom composition policy");
-        assert!(bridge.contains("page_reflow_required"), "{name} omits retained reflow");
+        assert_native_bridge_uses_shared_codec(name, path);
     }
 
     for path in [
@@ -1280,6 +1266,29 @@ fn browsing_context_effects_are_available_to_every_native_host() {
         venture_browser_core::BrowserBrowsingContextTarget::from_effective_target(Some("reports")),
         venture_browser_core::BrowserBrowsingContextTarget::Named("reports".into())
     );
+}
+
+#[test]
+fn native_rust_hosts_share_one_mosaic_bridge_codec() {
+    for path in [
+        "../../../packages/rust/venture-browser-macos/src/lib.rs",
+        "../../../packages/rust/venture-browser-windows/src/lib.rs",
+        "../../../packages/rust/venture-browser-cairo/src/lib.rs",
+    ] {
+        let source = read_package_file(path);
+        assert!(
+            source.contains("browser_bridge_response_json"),
+            "{path} must use the shared response codec"
+        );
+        assert!(
+            source.contains("BrowserChromeEvent::from_mosaic_event"),
+            "{path} must use the shared event decoder"
+        );
+        assert!(
+            !source.contains("fn effect_json(") && !source.contains("\"onPageInfo\" =>"),
+            "{path} must not recreate shared bridge policy"
+        );
+    }
 }
 
 #[test]
