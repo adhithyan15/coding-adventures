@@ -350,6 +350,18 @@ model-card parameter, or a UI artifact is not a completion signal.
      one-token default parameter value. Keep multi-parameter model-card editing,
      vendor model libraries, and expression-valued parameters for a later
      structured capture phase rather than extending the scalar value field.
+   - **Mosaic schematic primary nonlinear model fields** (completed in this
+     structured-capture slice): discovery after transistor-polarity
+     configuration: nonlinear symbols still exposed their sole default model
+     token as a scalar editor value, so a second parameter would require an
+     unstructured text escape hatch. Diode, BJT, JFET, and Level-1 MOS symbols
+     now persist two family-specific primary model fields per reference:
+     `IS`/`N`, `IS`/`BF`, `BETA`/`VTO`, and `VTO`/`KP`. Legacy scalar cards
+     remain readable and lower unchanged until a typed override is captured;
+     overrides are deterministic, survive rename/removal/history/snapshots,
+     and lower through the Berkeley parser. Keep arbitrary parameter names,
+     vendor libraries, and expression-valued fields for a later complete model
+     library contract rather than reintroducing raw model-card text editing.
    - **Nonlinear branch-current result-map contract** (completed): export
      diode anode, BJT collector, JFET drain, and level-1 MOS drain currents as
      canonical `I(element)` values across Python, Rust, and TypeScript. Define
