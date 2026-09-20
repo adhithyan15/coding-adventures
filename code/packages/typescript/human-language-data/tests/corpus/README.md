@@ -21,12 +21,11 @@ Malayalam A1 point-specific audit history now lives with the corresponding
 direct owner under `core/exam-inventory-malayalam-a1.d/`; chapter agents must
 not recreate the retired aggregate inventory.
 
-The generated continuity and ramp ledger lives in
-`core/gentle-ramp-snapshots/<language>.d/{metrics,findings}/`, while modality lives in
-`core/lesson-modality/<language>.d/`. The shared assertion helper verifies the
-canonical direct owners for one track at a time, while the cross-language suites
-prove exact directory and identity closure. Parallel language and metric PRs therefore
-update disjoint test and data files.
+Continuity and ramp reports are derived directly from each track's canonical
+lessons and authored policy. The shared assertion helper retains stable hard
+invariants—complete ordering, dependency safety, measurement arithmetic, and the
+one-writing-system step—without copying current counts into generated owners.
+Modality remains a consumer artifact under `core/lesson-modality/<language>.d/`.
 
 Exact writing-stage evidence, root-ledger payoffs, and compiled objective
 activity IDs belong in the same language-owned test surface. Shared suites may

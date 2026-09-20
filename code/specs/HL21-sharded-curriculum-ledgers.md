@@ -53,10 +53,12 @@ since moved from language aggregates to stable direct-owner directories:
 core/generated-book-hashes/<lang>.d/         metadata + one owner per chapter
 core/generated-narration-hashes/<lang>.d/    metadata + one owner per chapter
 core/lesson-modality/<lang>.d/               metadata + one owner per lesson
-core/gentle-ramp-snapshots/<lang>.d/          metadata + metric/finding owners
+core/gentle-ramp-snapshots/<lang>.d/          metadata + metric/finding owners (retired by HL38)
 ```
 
-HL21 generalises that shape rather than adding a second one beside it.
+HL21 generalised that shape rather than adding a second one beside it. HL38
+later retired the gentle-ramp row because its owners were entirely derived; the
+other consumer artifacts remain direct-owned.
 
 ---
 

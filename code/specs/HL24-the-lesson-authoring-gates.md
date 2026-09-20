@@ -368,12 +368,17 @@ Generate before you check — the drift gates compare committed artifacts to fre
 
 ```
 npm run generate:books generate:narration generate:modality generate:progress
-npm run generate:gentle-snapshots generate:assessment-artifacts
+npm run generate:assessment-artifacts
+npm run check:gentle-snapshots
 ```
 
 Level coverage is derived and checked in memory. Do not recreate
 `core/level-snapshots/`; its 23 per-language files were deterministic rollups, not an
 independent source of truth.
+
+Gentle-ramp coverage is derived and checked in memory for the same reason. Do
+not recreate `core/gentle-ramp-snapshots/`; the compatibility check rejects the
+retired path and exercises the complete source-derived report.
 
 `dist/` is gitignored, so `npm run build` first or you are checking a stale CLI. `npx tsc` is a
 stub here; use `node node_modules/typescript/bin/tsc`.

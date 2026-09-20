@@ -1,6 +1,12 @@
 # HL33 — Sharded gentle-ramp ownership
 
-**Status:** specification, 2026-08-27
+**Status:** superseded by HL38, 2026-09-20
+
+HL33 records the intermediate migration from one language aggregate to direct
+metric/finding owners. HL38 found that every owner still duplicated a value
+deterministically available from canonical curriculum sources and retired the
+entire generated family. Keep this document as migration history; do not recreate
+its filesystem layout.
 
 **Extends:** HL17's learner-first gentle-ramp report, HL21's deterministic
 filesystem rules, and HL32's exact generated-owner closure. Tracks #13376,

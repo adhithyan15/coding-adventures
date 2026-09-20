@@ -42,9 +42,10 @@ import {
 import {
   readModalityManifestOwners,
 } from "./modality-shards.js";
-import { readGentleRampOwners } from "./gentle-ramp-shards.js";
 import type { TrackGentleRamp } from "./gentle-ramp.js";
+import { assertGentleRampSnapshotsRetired } from "./gentle-ramp-retirement.js";
 import { narrationLessonIdentityIndex } from "./generated-hash-shards.js";
+import { buildCurriculumGapReport } from "./report.js";
 import { buildDataset, parseLesson, type ParsedLesson } from "./parse.js";
 import {
   EXAM_CONTENT_DIMENSIONS,
@@ -733,30 +734,27 @@ export function loadModalityManifest(
 }
 
 /**
- * Read the generated gentle-ramp direct owners and reconstruct the historical
- * per-language TrackGentleRamp snapshots without a flat-aggregate fallback.
+ * Preserve the historical public API while deriving every track from canonical
+ * curriculum sources. No generated gentle-ramp state is read or accepted.
  */
 export function loadGentleRampSnapshotTracks(
   root = defaultCurriculumRoot(),
   registry = loadLanguageRegistry(root),
 ): TrackGentleRamp[] {
-  const languages = registry.languages.map((language) => language.id);
-  const sourceIds = new Map(languages.map((language) => [language, [] as string[]]));
-  for (const lesson of loadLessons(root)) {
-    const id = lesson.frontmatter.id;
-    if (typeof id !== "string" || id.length === 0) {
-      throw new Error(`lesson in '${lesson.language}' has no usable id`);
-    }
-    const ids = sourceIds.get(lesson.language);
-    if (ids === undefined) throw new Error(`lesson '${id}' has unregistered language '${lesson.language}'`);
-    ids.push(id);
+  assertGentleRampSnapshotsRetired(root);
+  const report = buildCurriculumGapReport({
+    registry,
+    lessons: loadLessons(root),
+    books: loadBookCorpus(root),
+    curricula: loadLanguageCurricula(root),
+    spine: loadCurriculumSpine(root),
+    chapterPolicy: loadChapterPolicy(root),
+    trackChapters: loadTrackChapters(root),
+  }).gentleRamp;
+  if (report === undefined) {
+    throw new Error("chapter policy was not loaded; cannot derive the gentle ramp");
   }
-  for (const ids of sourceIds.values()) ids.sort();
-  return readGentleRampOwners(root, {
-    expectedLanguages: languages,
-    expectedLessonIds: sourceIds,
-    expectedNarrationLessonIds: narrationLessonIdentityIndex(root, languages),
-  });
+  return report.tracks;
 }
 
 /**
