@@ -1,5 +1,16 @@
 # Changelog — iir-to-cil-bytecode
 
+## Unreleased — strict comparisons and boolean transport (CLR08)
+
+Extend the opt-in strict entrypoint with six signed/equality comparisons and
+logical bool constants, moves, parameters, calls and returns. Keep bool distinct
+from i32 during validation while using normalized int32 result metadata.
+Reject mixed widths, malformed comparisons and bool arithmetic. Emit full
+ldc.i4 for i32 -1 to avoid the simulator's unsupported compact encoding.
+Actual artifact tests cover both widths, truth cases, negative/high values,
+comparison bytes and boolean call transport. Default source routing and gates
+remain unchanged.
+
 ## Unreleased — strict typed scalar artifacts (CLR06)
 
 Add opt-in lower_typed_scalars_to_cil with full-width i64 scalar execution and

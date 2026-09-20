@@ -1,4 +1,4 @@
-# CLR07: strict scalar comparisons and boolean transport
+# CLR08: strict scalar comparisons and boolean transport
 
 ## Baseline and scope
 
@@ -68,3 +68,8 @@ Execution-discovered prerequisite: i32 -1 uses builder's compact ldc.i4.m1
 full ldc.i4 with signed -1 payload for this value until compact opcode support
 has independent execution coverage. Preserve semantics and the existing literal
 gate; add an actual i32 -1 regression. No simulator opcode change in this slice.
+
+Numbering note: renamed from CLR07 after discovering active PR #15689's
+CLR07 remainder/NOT work. The original comparison contract was committed
+before implementation. Keep this branch local until that PR finishes to
+preserve the single implementation PR policy.
