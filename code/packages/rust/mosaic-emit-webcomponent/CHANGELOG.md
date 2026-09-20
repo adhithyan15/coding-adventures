@@ -4,6 +4,10 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+- Project positive literal and numeric slot font sizes onto text and input/button
+  controls, including semantic text cells. Restore authored fallback on invalid
+  runtime values and avoid loop-local shadowing (#15692).
+
 ### Added -- `HostNavigationSplit` semantic web lowering (UI29-6, #15666)
 
 `HostNavigationSplit` now emits a named `<nav>` pane and `<section>` detail in

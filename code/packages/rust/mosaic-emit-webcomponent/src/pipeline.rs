@@ -793,6 +793,8 @@ pub fn from_pipeline(
         });
     }
 
+    validate_font_sizes(&layout.root, &interface.slots)?;
+
     let component_name = &interface.component;
     let class_name = format!("Mos{component_name}");
     let custom_tag = format!("mos-{}", to_kebab_case(component_name));
@@ -1052,6 +1054,16 @@ fn emit_render(
     // inside the template literal — keeps the output compact and avoids
     // surprising whitespace inside `<span>` and `<div>` text content).
     writeln!(out, "    this.shadowRoot.innerHTML = `{html}`;").unwrap();
+    if has_font_size_tree(layout_root) {
+        out.push_str(r#"    for (const element of this.shadowRoot.querySelectorAll('[data-mosaic-font-size-slot]')) {
+      // Component attributes stay independent of template loop locals.
+      const raw = this.getAttribute(element.getAttribute('data-mosaic-font-size-slot'));
+      const value = raw === null ? NaN : Number(raw);
+      if (Number.isFinite(value) && value > 0) element.style.fontSize = `${value}px`;
+      // A fresh render restores authored/state CSS when the value is invalid.
+    }
+"#);
+    }
     for line in ctx.post_script_lines {
         writeln!(out, "    {line}").unwrap();
     }
@@ -1505,7 +1517,8 @@ fn emit_table_row(
         match cell.tag.as_str() {
             "Text" => {
                 let body = build_text_content(cell).unwrap_or_default();
-                cells.push_str(&format!("<{cell_tag}>{body}</{cell_tag}>"));
+                let style = build_style_attr(cell, "", part_styles);
+                cells.push_str(&format!("<{cell_tag}{style}>{body}</{cell_tag}>"));
             }
             "For" => {
                 if let Some(block) = try_emit_table_for_cells(cell, cell_tag, ctx, part_styles)? {
@@ -1541,7 +1554,8 @@ fn try_emit_table_for_cells(
     let leaf = &for_node.children[0];
     let cell_result = if leaf.tag == "Text" {
         let body = build_text_content(leaf).unwrap_or_default();
-        Ok(format!("<{cell_tag}>{body}</{cell_tag}>"))
+        let style = build_style_attr(leaf, "", part_styles);
+        Ok(format!("<{cell_tag}{style}>{body}</{cell_tag}>"))
     } else {
         emit_table_cell(leaf, cell_tag, ctx, part_styles)
     };
@@ -3386,6 +3400,53 @@ fn merge_styles(builtin: &str, author: &str) -> String {
 ///
 /// Returns `""` when nothing applies, so the caller can splice it
 /// unconditionally.
+/// Numeric typography implemented by the generated custom element.
+pub fn has_native_font_size(node: &LayoutNode) -> bool {
+    matches!(
+        node.tag.as_str(),
+        "Text" | "HostButton" | "Input" | "HostInput"
+    ) && match node
+        .props
+        .iter()
+        .find(|p| p.name == "font-size")
+        .map(|p| &p.value)
+    {
+        Some(LayoutPropValue::Number(n)) => n.is_finite() && *n > 0.0,
+        Some(LayoutPropValue::SlotRef(_)) => true,
+        _ => false,
+    }
+}
+
+fn has_font_size_tree(node: &LayoutNode) -> bool {
+    has_native_font_size(node) || node.children.iter().any(has_font_size_tree)
+}
+
+fn validate_font_sizes(node: &LayoutNode, slots: &[SlotDecl]) -> Result<(), PipelineEmitError> {
+    if matches!(
+        node.tag.as_str(),
+        "Text" | "HostButton" | "Input" | "HostInput"
+    ) {
+        if let Some(prop) = node.props.iter().find(|p| p.name == "font-size") {
+            let valid = match &prop.value {
+                LayoutPropValue::Number(n) => n.is_finite() && *n > 0.0,
+                LayoutPropValue::SlotRef(name) => slots
+                    .iter()
+                    .any(|s| s.name == *name && s.r#type == SlotType::Number),
+                _ => false,
+            };
+            if !valid {
+                return Err(PipelineEmitError::InvalidPropValue(
+                    "font-size must be a positive finite number or numeric component slot".into(),
+                ));
+            }
+        }
+    }
+    for child in &node.children {
+        validate_font_sizes(child, slots)?;
+    }
+    Ok(())
+}
+
 fn build_style_attr(
     node: &LayoutNode,
     builtin: &str,
@@ -3416,10 +3477,27 @@ fn build_style_attr(
     // entry in the part-style map.
     let state_ternaries = build_state_ternaries(node, part_styles);
 
-    if base.is_empty() && state_ternaries.is_empty() {
-        return String::new();
+    let mut numeric = String::new();
+    let mut binding = String::new();
+    if has_native_font_size(node) {
+        match &node
+            .props
+            .iter()
+            .find(|p| p.name == "font-size")
+            .unwrap()
+            .value
+        {
+            LayoutPropValue::Number(value) => numeric = format!("; font-size: {value}px"),
+            LayoutPropValue::SlotRef(name) => {
+                binding = format!(" data-mosaic-font-size-slot=\"{}\"", name)
+            }
+            _ => {}
+        }
     }
-    format!(r#" style="{base}{state_ternaries}""#)
+    if base.is_empty() && state_ternaries.is_empty() && numeric.is_empty() {
+        return binding;
+    }
+    format!(r#" style="{base}{state_ternaries}{numeric}"{binding}"#)
 }
 
 /// Build the `width: ${w}px` CSS for a `Col` node from its `width:` prop.
