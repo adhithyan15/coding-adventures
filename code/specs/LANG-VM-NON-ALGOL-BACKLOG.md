@@ -10,6 +10,21 @@ roadmap is reconciled.
 
 ## Encoded CLR input prerequisites (selected 2026-09-19 after VM-058)
 
+### CLR06 landed; remainder/NOT execution selected (2026-09-20)
+
+CLR06 merged in #15675 as `4b1cb8ebcfc73315a285ab30099eb6bac342f0b9`
+after required checks passed. It adds an explicit strict typed-scalar artifact
+entrypoint without changing legacy source routing or the encoded input gate.
+
+Reprioritization confirms the highest-ranked bounded correctness gap is the
+emitter/simulator mismatch recorded by the CLR06 audit: the default lowerer
+emits raw `rem` (0x5d) and `not` (0x66), while the simulator executes neither.
+Select CLR07 to execute both for matched Int/Int64 widths, with exact signed
+remainder, same-width complement, explicit zero/overflow behavior and
+malformed-state immutability. Prove source-to-artifact execution through Nib
+before returning to wider strict-scalar and host-input ABI work. No open PR
+overlaps the CLR paths; preserve the separately owned ALGOL work.
+
 ### CLR05 landed; typed scalar lowering audit selected (2026-09-19)
 
 CLR05 merged in #15654 as `294271884bc4ebad60d49707d8a670bea2713c20`
