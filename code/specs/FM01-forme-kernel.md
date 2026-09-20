@@ -7,6 +7,17 @@
 > **Out of scope:** The plugin host runtime (FM02) and the orchestrator
 > (FM03), which consume this kernel but have their own specifications.
 
+## Implementation status
+
+| Surface | Status | Evidence / next step |
+|---|---|---|
+| Types and kind descriptors | Implemented | `forme-types` provides the shared value and kind contracts. |
+| Stage and capability contracts | Implemented | `forme-stage` and `forme-capability` are used by the live pipelines. |
+| Identity and revision primitives | Implemented | `forme-identity` covers logical IDs, UUIDv7 identities, and canonical revisions. |
+| Manifest validation | Implemented | `forme-manifest` validates first-party manifest data; FM02 owns host enforcement. |
+| Shared diagnostics | Implemented | `forme-errors` supplies the common error surface. |
+| Interactivity shape | Placeholder | The normative contract is reserved at [FM05](FM05-forme-interactivity-ir.md). |
+
 ---
 
 ## 0. Preface
@@ -330,8 +341,9 @@ export interface Document {
 }
 ```
 
-`StyleDocument` and `Interactivity` live in their own specs (FM04,
-FM05) but the type names exist in the kernel so every package that
+`StyleDocument` and `Interactivity` live in their own specs
+([FM04](FM04-forme-style-ir.md), [FM05](FM05-forme-interactivity-ir.md)) but
+the type names exist in the kernel so every package that
 holds a `Document` reference is stable. The kernel ships stub types:
 
 ```typescript
@@ -2237,8 +2249,10 @@ FM00 Appendix B.
 - **FM02** (next) — Plugin host (loader, sandbox, extension registry)
 - **FM03** — Orchestrator (DAG executor, cache, scheduling)
 - **FM04** — Style IR (replaces the stub in §2.3.5)
-- **FM05** — Interactivity IR (replaces the stub in §2.3.5)
-- **FM06** — AOT compiler (per-page dependency analysis, bundling)
+- **[FM05](FM05-forme-interactivity-ir.md)** — Interactivity IR (replaces the stub in §2.3.5)
+- **[FM06](FM06-forme-aot-compiler.md)** — AOT compiler (per-page dependency analysis, bundling)
+- **[FM07](FM07-forme-cli-dev-server.md)** — CLI and development server
+- **[FM08](FM08-forme-deploy-runner.md)** — deploy runner
 
 ## Appendix D — This is a living document
 

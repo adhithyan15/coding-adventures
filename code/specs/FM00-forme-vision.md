@@ -7,6 +7,20 @@
 > **Scope:** Full vision, covering v0 through long-term. Companion per-package
 > specs (`FM01…FMnn`) will be written as each package moves to implementation.
 
+## Implementation status
+
+| Surface | Status | Evidence / next step |
+|---|---|---|
+| Headless build/check/preview | Implemented | FM01, FM03, FM04, FM06, and FM07 have live product coverage. |
+| Headless deployment | Active | [FM08](FM08-forme-deploy-runner.md) and FM-B012 own the remaining v0 boundary. |
+| Third-party plugin runtime | Pending | [FM02](FM02-forme-plugin-host.md) is specified; FM-B014/FM-B015 own implementation. |
+| Interactivity IR | Pending | [FM05](FM05-forme-interactivity-ir.md) reserves the contract; FM-B013 owns implementation. |
+| Authoring shell and multi-backend proof | Pending | Tracked by FM-B016–FM-B018 in the [roadmap](FM00-forme-completion-roadmap.md). |
+
+This document remains the long-range vision. The implementation ledger and
+ordered delivery state live in the companion completion roadmap; numbered
+specifications are authoritative for their narrower contracts.
+
 ## 0. Preface
 
 This document describes a system for authoring structured content once and
