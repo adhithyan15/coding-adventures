@@ -162,3 +162,95 @@ fn highest_short_local_and_argument_indices_execute() {
     assert_eq!(execute(&m), Value::Int64(2147483648));
 }
 
+#[test]
+fn comparisons_preserve_integer_width_and_produce_normalized_booleans() {
+    let comparisons: [(&str, [bool; 3], &[u8]); 6] = [
+        ("cmp_eq", [false, true, false], &[0xfe, 1]),
+        ("cmp_ne", [true, false, true], &[0xfe, 1, 0x16, 0xfe, 1]),
+        ("cmp_lt", [true, false, false], &[0xfe, 4]),
+        ("cmp_le", [true, true, false], &[0xfe, 2, 0x16, 0xfe, 1]),
+        ("cmp_gt", [false, false, true], &[0xfe, 2]),
+        ("cmp_ge", [false, true, true], &[0xfe, 4, 0x16, 0xfe, 1]),
+    ];
+    for ty in ["i32", "i64"] {
+        for (op, truth, bytes) in comparisons {
+            for (index, right) in [1, 0, -1].into_iter().enumerate() {
+                let mut m = IIRModule::new("cmp", "test");
+                m.add_or_replace(IIRFunction::new(
+                    "main",
+                    vec![],
+                    "bool",
+                    vec![
+                        instr("const", "a", vec![Operand::Int(-10)], ty),
+                        instr("const", "delta", vec![Operand::Int(right)], ty),
+                        instr("add", "b", vec![var("a"), var("delta")], ty),
+                        instr(op, "answer", vec![var("a"), var("b")], "bool"),
+                        instr("ret", "", vec![var("answer")], "bool"),
+                    ],
+                ));
+                let artifact = lower_typed_scalars_to_cil(&m, &IIRClrConfig::default()).unwrap();
+                assert_eq!(artifact.methods[0].return_type, "int32");
+                assert_eq!(artifact.methods[0].local_types.last().unwrap(), "int32");
+                assert!(artifact.methods[0]
+                    .body
+                    .windows(bytes.len())
+                    .any(|w| w == bytes));
+                assert_eq!(
+                    execute(&m),
+                    Value::Int(i32::from(truth[index])),
+                    "{op} {ty} {right}"
+                );
+            }
+        }
+    }
+    // Compare an intermediate beyond i32 against the largest allowed literal.
+    let mut m = module(
+        "i64",
+        vec![
+            instr("cmp_gt", "answer", vec![var("wide"), var("a")], "bool"),
+            instr("ret", "", vec![var("answer")], "bool"),
+        ],
+    );
+    m.functions[0].return_type = "bool".into();
+    assert_eq!(execute(&m), Value::Int(1));
+}
+
+#[test]
+fn boolean_constants_moves_and_forward_calls_transport_both_truth_values() {
+    for value in [false, true] {
+        let mut m = IIRModule::new("bool", "test");
+        m.entry_point = Some("main".into());
+        m.functions.push(IIRFunction::new(
+            "unused",
+            vec![],
+            "i32",
+            vec![
+                instr("const", "x", vec![Operand::Int(42)], "i32"),
+                instr("ret", "", vec![var("x")], "i32"),
+            ],
+        ));
+        m.functions.push(IIRFunction::new(
+            "main",
+            vec![],
+            "bool",
+            vec![
+                instr("const", "x", vec![Operand::Bool(value)], "bool"),
+                instr("call", "answer", vec![var("identity"), var("x")], "bool"),
+                instr("ret", "", vec![var("answer")], "bool"),
+            ],
+        ));
+        m.functions.push(IIRFunction::new(
+            "identity",
+            vec![("x".into(), "bool".into())],
+            "bool",
+            vec![
+                instr("mov", "copy", vec![var("x")], "bool"),
+                instr("ret", "", vec![var("copy")], "bool"),
+            ],
+        ));
+        let a = lower_typed_scalars_to_cil(&m, &IIRClrConfig::default()).unwrap();
+        assert_eq!(a.methods[2].parameter_types, vec!["int32"]);
+        assert_eq!(a.methods[2].local_types, vec!["int32"]);
+        assert_eq!(execute(&m), Value::Int(i32::from(value)));
+    }
+}
