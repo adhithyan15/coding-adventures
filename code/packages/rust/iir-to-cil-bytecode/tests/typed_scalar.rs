@@ -74,6 +74,52 @@ fn encoded_input_builtins_use_exact_memberref_tokens() {
 }
 
 #[test]
+fn encoded_string_input_uses_exact_memberref_and_transports_through_calls() {
+    let mut m = IIRModule::new("strict", "test");
+    m.entry_point = Some("main".into());
+    m.add_or_replace(IIRFunction::new(
+        "main",
+        vec![],
+        "str",
+        vec![
+            IIRInstr::new(
+                "call_builtin",
+                Some("raw".into()),
+                vec![v("input_str")],
+                "str",
+            ),
+            IIRInstr::new(
+                "call",
+                Some("answer".into()),
+                vec![v("echo"), v("raw")],
+                "str",
+            ),
+            IIRInstr::new("ret", None, vec![v("answer")], "str"),
+        ],
+    ));
+    m.add_or_replace(IIRFunction::new(
+        "echo",
+        vec![("value".into(), "str".into())],
+        "str",
+        vec![IIRInstr::new("ret", None, vec![v("value")], "str")],
+    ));
+
+    let artifact = lower_typed_scalars_to_cil(&m, &IIRClrConfig::default()).unwrap();
+    assert_eq!(artifact.methods[0].local_types, vec!["string", "string"]);
+    assert_eq!(artifact.methods[0].return_type, "string");
+    assert_eq!(
+        artifact.methods[0].body,
+        vec![
+            0x28, 0x08, 0x00, 0x00, 0x0a, 0x0a, 0x06, 0x28, 0x02, 0x00, 0x00, 0x06,
+            0x0b, 0x07, 0x2a,
+        ]
+    );
+    assert_eq!(artifact.methods[1].parameter_types, vec!["string"]);
+    assert_eq!(artifact.methods[1].return_type, "string");
+    assert_eq!(artifact.methods[1].body, vec![0x02, 0x2a]);
+}
+
+#[test]
 fn encoded_input_builtins_refuse_malformed_shapes() {
     for (instruction, diagnostic) in [
         (
@@ -108,7 +154,19 @@ fn encoded_input_builtins_refuse_malformed_shapes() {
         ),
         (
             IIRInstr::new("call_builtin", Some("read".into()), vec![v("input_str")], "i64"),
-            "UnsupportedOp",
+            "string input result must be str",
+        ),
+        (
+            IIRInstr::new("call_builtin", Some("read".into()), vec![v("input_i64")], "str"),
+            "integer input result must be i64",
+        ),
+        (
+            IIRInstr::new("const", Some("read".into()), vec![Operand::Str("x".into())], "str"),
+            "string constants are unsupported",
+        ),
+        (
+            IIRInstr::new("add", Some("read".into()), vec![v("x"), v("x")], "str"),
+            "string arithmetic is unsupported",
         ),
     ] {
         let mut m = base();
@@ -145,7 +203,6 @@ fn excluded_operations_and_types_never_fall_back() {
         "polymorphic",
         "void",
         "f64",
-        "str",
         "object",
         "nativeint",
     ] {

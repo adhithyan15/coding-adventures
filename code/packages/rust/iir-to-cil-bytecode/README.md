@@ -35,11 +35,14 @@ must be reachable, targets must be forward, and each value read must be assigned
 on every incoming path. Multiple exact typed returns are supported. Backward
 edges, malformed controls, skipped definitions at joins and falloff are refused.
 
-CLR13 also accepts zero-argument `call_builtin input_i64` and `input_more`
-instructions with i64 destinations. They lower to reserved MemberRef rows 6 and
-7 for execution by `clr-simulator`; numeric reads preserve the full signed i64
-domain and peeks return normalized i64 zero/one. This remains an opt-in strict
-artifact feature. The default encoded APIs still refuse every input builtin.
+CLR13 accepts zero-argument `call_builtin input_i64` and `input_more`
+instructions with i64 destinations. CLR14 adds `input_str` with a string
+destination and permits that type only for moves, direct calls and returns.
+They lower to reserved MemberRef rows 6 through 8 for execution by
+`clr-simulator`; numeric reads preserve the full signed i64 domain, peeks return
+normalized i64 zero/one, and string reads preserve exact content bytes. These
+remain opt-in strict artifact features. The default encoded APIs still refuse
+every input builtin.
 
 ## What is CIL?
 
@@ -300,5 +303,5 @@ matrix. The encoded strict API separately supports integer reads and peeks.
 The diagnostic directs callers to `emit_il` with real CoreCLR. A regression
 checks all three refusals through both public APIs and confirms that textual
 emission still accepts the same programs. The opt-in strict scalar API is
-separate: it can lower i64 `input_i64` and `input_more` to the simulator's
-reserved host MemberRefs, but still refuses `input_str`.
+separate: it can lower typed `input_i64`, `input_more` and `input_str` to the
+simulator's reserved host MemberRefs.
