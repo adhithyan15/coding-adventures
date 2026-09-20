@@ -679,6 +679,46 @@ is what makes the `contentHash` integrity check meaningful: a cache
 read that doesn't decode to a value with the recorded hash is treated
 as corruption and re-computed.
 
+#### 5.4.1 Bounded stream checkpoints
+
+A stream checkpoint MUST NOT encode the complete stream as one array. Doing
+so would preserve cache reuse while defeating the bounded-memory guarantee in
+§4.4. Instead, the orchestrator stores a content-addressed ordered tree:
+
+- A **leaf** contains one canonical encoded stream value and has count `1`.
+- A **branch** contains the cache keys and counts of its left and right
+  children. Its count is their checked sum.
+- The writer retains only one complete subtree per binary level. Appending a
+  value merges equal-sized frontier trees like a binary carry, so retained
+  writer state is `O(log n)` and every completed leaf/branch is written
+  immediately.
+- Finalisation folds the frontier from largest to smallest. For every branch,
+  the left child count is the largest power of two strictly below the branch
+  count and the right child contains the remainder. This canonical shape
+  preserves order, admits no alternative encodings, and bounds depth to 53 for
+  JavaScript safe-integer item counts.
+
+The instance-checkpoint key stores only a small manifest containing the schema
+version, root key (or `null` for an empty stream), item count, and stream output
+revision. The manifest is published **after** every referenced tree node; an
+interrupted writer therefore leaves unreachable cache entries, never a
+partially visible checkpoint. Normal cache GC may collect those entries.
+
+Before restoring a stream, the orchestrator performs a validation traversal
+that reads every referenced entry, verifies the cache entry integrity and
+content-derived key, decodes the node, checks canonical child counts and safe
+integer arithmetic, and confirms the manifest count and expected output
+revision. Missing, corrupt, cyclic/non-decreasing, over-deep, or
+count-mismatched trees are invalidated at the manifest and treated as a cache
+miss before any consumer or replay hook runs. After validation, a second
+depth-first traversal yields leaves lazily in original order. Both traversals
+observe cancellation between cache reads.
+
+The stream output revision is the BLAKE2b revision of a domain-separated
+descriptor containing the checkpoint schema, root key, and item count. Since
+every node key is itself content-addressed, this revision commits to every
+ordered encoded value without retaining or re-encoding the full stream.
+
 ### 5.5 Cache invalidation
 
 Three triggers:
@@ -1172,6 +1212,10 @@ Unit tests:
   prevents unbounded memory.
 - Cache: hits skip execution; misses populate; integrity failures
   re-execute.
+- Stream checkpoints: a stream larger than the 64-item transport window keeps
+  only an `O(log n)` writer frontier; empty, duplicate-value, and non-power-of-
+  two streams round-trip in order; missing/corrupt/wrong-key/non-canonical
+  trees fail open before iteration; validation and replay honor cancellation.
 - Incremental: affected-set is exactly the changed-and-downstream
   set.
 - Side-effect replay: an unchanged replay-capable sink restores a deleted
