@@ -23,9 +23,12 @@ assert!(sequence.read(&mut decoder)?.is_none());
 The decoder applies one shared constructed-depth and total-element budget to a
 schema walk. Typed helpers require exact class, constructed bit, and tag, then
 reject alternate BER value encodings for BOOLEAN, INTEGER, BIT STRING, NULL,
-and OBJECT IDENTIFIER. OCTET STRING contents remain borrowed. SEQUENCE, SET,
-and explicit context wrappers can be opened without recursion or allocation.
-Errors contain only a category and local byte offset.
+and OBJECT IDENTIFIER. OCTET STRING contents remain borrowed and IA5String
+contents must be ASCII. Schema-selected implicit OCTET STRING, IA5String, and
+OBJECT IDENTIFIER values require an exact primitive context-specific tag while
+reusing the universal value checks. SEQUENCE, SET, and explicit context
+wrappers can be opened without recursion or allocation. Errors contain only a
+category and local byte offset.
 
 This crate does not parse X.509 fields, time or string semantics, PEM, paths,
 signatures, trust roots, TLS, or network traffic. Successful decoding proves

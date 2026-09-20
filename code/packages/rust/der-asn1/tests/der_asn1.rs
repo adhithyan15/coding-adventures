@@ -1,6 +1,7 @@
 use der_asn1::{
-    decode_bit_string, decode_boolean, decode_integer, decode_null, decode_object_identifier,
-    decode_octet_string, Asn1Decoder, Asn1ErrorKind, Asn1Limits,
+    decode_bit_string, decode_boolean, decode_ia5_string, decode_implicit_ia5_string,
+    decode_implicit_object_identifier, decode_implicit_octet_string, decode_integer, decode_null,
+    decode_object_identifier, decode_octet_string, Asn1Decoder, Asn1ErrorKind, Asn1Limits,
 };
 
 fn decode(input: &[u8]) -> (Asn1Decoder, der_asn1::Asn1Element<'_>) {
@@ -23,8 +24,74 @@ fn canonical_primitive_values_borrow_the_input() {
     let (_, octets) = decode(&[0x04, 0x03, 0xaa, 0xbb, 0xcc]);
     assert_eq!(decode_octet_string(octets).unwrap(), &[0xaa, 0xbb, 0xcc]);
 
+    let (_, ia5) = decode(&[0x16, 0x03, b'a', b'b', b'c']);
+    assert_eq!(decode_ia5_string(ia5).unwrap(), "abc");
+
     let (_, null) = decode(&[0x05, 0x00]);
     decode_null(null).unwrap();
+}
+
+#[test]
+fn implicit_primitive_values_require_the_exact_context_tag() {
+    let (_, octets) = decode(&[0x87, 0x04, 192, 0, 2, 1]);
+    assert_eq!(
+        decode_implicit_octet_string(octets, 7).unwrap(),
+        &[192, 0, 2, 1]
+    );
+
+    let (_, ia5) = decode(&[
+        0x82, 0x0b, b'e', b'x', b'a', b'm', b'p', b'l', b'e', b'.', b'c', b'o', b'm',
+    ]);
+    assert_eq!(decode_implicit_ia5_string(ia5, 2).unwrap(), "example.com");
+
+    let (_, oid) = decode(&[0x88, 0x03, 0x2a, 0x03, 0x04]);
+    let oid = decode_implicit_object_identifier(oid, 8, Asn1Limits::default()).unwrap();
+    assert!(oid.equals(&[1, 2, 3, 4]));
+
+    for input in [&[0x04, 0x00][..], &[0xa7, 0x00], &[0x86, 0x00]] {
+        let (_, element) = decode(input);
+        assert_eq!(
+            decode_implicit_octet_string(element, 7).unwrap_err().kind(),
+            Asn1ErrorKind::UnexpectedTag
+        );
+    }
+}
+
+#[test]
+fn ia5_string_rejects_non_ascii_at_the_exact_value_offset() {
+    let (_, universal) = decode(&[0x16, 0x03, b'a', 0x80, b'b']);
+    let error = decode_ia5_string(universal).unwrap_err();
+    assert_eq!(error.kind(), Asn1ErrorKind::NonAsciiIa5String);
+    assert_eq!(error.offset(), 3);
+
+    let (_, implicit) = decode(&[0x82, 0x02, b'a', 0xff]);
+    let error = decode_implicit_ia5_string(implicit, 2).unwrap_err();
+    assert_eq!(error.kind(), Asn1ErrorKind::NonAsciiIa5String);
+    assert_eq!(error.offset(), 3);
+    assert!(!error.to_string().contains("ff"));
+}
+
+#[test]
+fn implicit_object_identifier_reuses_canonicality_and_arc_limits() {
+    for input in [&[0x88, 0x00][..], &[0x88, 0x01, 0x80], &[0x88, 0x01, 0x81]] {
+        let (_, element) = decode(input);
+        assert!(
+            decode_implicit_object_identifier(element, 8, Asn1Limits::default()).is_err(),
+            "accepted {input:02x?}"
+        );
+    }
+
+    let limits = Asn1Limits {
+        max_oid_arcs: 3,
+        ..Asn1Limits::default()
+    };
+    let (_, element) = decode(&[0x88, 0x03, 0x2a, 0x03, 0x04]);
+    assert_eq!(
+        decode_implicit_object_identifier(element, 8, limits)
+            .unwrap_err()
+            .kind(),
+        Asn1ErrorKind::OidArcLimitExceeded
+    );
 }
 
 #[test]

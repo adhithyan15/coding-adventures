@@ -26,6 +26,8 @@ later certificate schema decoder:
 - BIT STRING begins with an unused-bit count from zero through seven, uses zero
   for an empty payload, and has zero in every declared unused trailing bit;
 - OCTET STRING is returned as a borrowed byte slice;
+- IA5String is returned as a borrowed string only after every contents octet
+  is proven to be seven-bit ASCII;
 - NULL has an empty contents encoding;
 - OBJECT IDENTIFIER has at least its combined first two arcs, uses minimal
   base-128 subidentifiers, terminates each subidentifier, and cannot overflow
@@ -33,6 +35,9 @@ later certificate schema decoder:
 - SEQUENCE and SET must carry their exact constructed universal tags;
 - an explicit context-specific wrapper must be constructed and contain exactly
   one complete DER element.
+- schema-selected implicit OCTET STRING, IA5String, and OBJECT IDENTIFIER
+  values must carry the exact primitive context-specific tag supplied by the
+  caller and reuse the same value validation as their universal forms.
 
 Other universal types remain raw tagged elements for later schema-specific
 decoders. In particular this layer does not interpret time, DirectoryString,
@@ -138,9 +143,25 @@ pub fn decode_bit_string(
 pub fn decode_octet_string(
     element: Asn1Element<'_>,
 ) -> Result<&[u8], Asn1Error>;
+pub fn decode_implicit_octet_string(
+    element: Asn1Element<'_>,
+    tag_number: u32,
+) -> Result<&[u8], Asn1Error>;
+pub fn decode_ia5_string(
+    element: Asn1Element<'_>,
+) -> Result<&str, Asn1Error>;
+pub fn decode_implicit_ia5_string(
+    element: Asn1Element<'_>,
+    tag_number: u32,
+) -> Result<&str, Asn1Error>;
 pub fn decode_null(element: Asn1Element<'_>) -> Result<(), Asn1Error>;
 pub fn decode_object_identifier(
     element: Asn1Element<'_>,
+    limits: Asn1Limits,
+) -> Result<ObjectIdentifier<'_>, Asn1Error>;
+pub fn decode_implicit_object_identifier(
+    element: Asn1Element<'_>,
+    tag_number: u32,
     limits: Asn1Limits,
 ) -> Result<ObjectIdentifier<'_>, Asn1Error>;
 ```
@@ -170,6 +191,7 @@ categories include:
   overflow;
 - missing/invalid BIT STRING unused-bit count or nonzero padding;
 - non-empty NULL;
+- non-ASCII IA5String contents;
 - empty, unterminated, non-minimal, overflowing, or over-budget OID;
 - malformed explicit contents or trailing sibling data.
 
@@ -185,8 +207,10 @@ nested cursors; non-advancement after failure; BOOLEAN canonical values and
 all alternate encodings; INTEGER sign boundaries, redundant sign octets,
 negative conversion, and `u64` overflow; BIT STRING empty and partial-byte
 boundaries plus nonzero padding; empty/non-empty NULL; OCTET STRING borrowing;
-OID first-arc folding, multi-octet arcs, minimality, truncation, overflow, and
-arc limits; exact explicit wrappers; and SEQUENCE/SET tag confusion.
+universal and implicit IA5String ASCII validation with exact offsets; OID
+first-arc folding, multi-octet arcs, minimality, truncation, overflow, and arc
+limits in universal and implicit forms; exact primitive context-specific tags
+and constructed bits; exact explicit wrappers; and SEQUENCE/SET tag confusion.
 
 ## Non-Goals
 
