@@ -6412,14 +6412,13 @@ impl Compiler {
         let Ok(target_name) = self.simple_variable_name(target) else {
             return (None, None);
         };
+        let recurrence_actions = self.for_body_recurrence_actions(body);
         let body_writes_target =
             self.for_body_writes_name(body, &target_name, &target_name, body);
-        let control_actions = body_writes_target.then(|| {
-            self.for_body_recurrence_actions(body).filter(|actions| {
-                Self::static_body_actions_write_name(actions, &target_name)
-            })
-        }).flatten();
-        if body_writes_target && control_actions.is_none() {
+        let supports_target_write = recurrence_actions.as_ref().is_some_and(|actions| {
+            Self::static_body_actions_write_name(actions, &target_name)
+        });
+        if body_writes_target && !supports_target_write {
             return (None, None);
         }
         let Some(value) = direct_nodes(elem)
@@ -6434,16 +6433,31 @@ impl Compiler {
         let mut dependencies = HashSet::new();
         collect_expression_dependency_names(value, &target_name, &mut dependencies);
         collect_expression_dependency_names(condition, &target_name, &mut dependencies);
+        let mut body_updates_simulation = body_writes_target;
         for dependency in &dependencies {
             let Ok(binding) = self.require_var(dependency) else {
                 return (None, None);
             };
+            let body_writes_dependency =
+                self.for_body_writes_name(body, dependency, &target_name, body);
             if binding.is_global
                 || binding.array.is_some()
                 || self.active_by_name_binding(dependency).is_some()
-                || self.for_body_writes_name(body, dependency, &target_name, body)
             {
                 return (None, None);
+            }
+            if body_writes_dependency {
+                let Some(actions) = recurrence_actions.as_ref() else {
+                    return (None, None);
+                };
+                if !Self::static_body_actions_have_simple_dependency_recurrence(
+                    actions,
+                    dependency,
+                    &target_name,
+                ) {
+                    return (None, None);
+                }
+                body_updates_simulation = true;
             }
         }
 
@@ -6478,7 +6492,10 @@ impl Compiler {
                 Some(true) => {}
                 None => break,
             }
-            if let Some(actions) = control_actions.as_deref() {
+            if body_updates_simulation {
+                let Some(actions) = recurrence_actions.as_deref() else {
+                    break;
+                };
                 if self
                     .evaluate_static_body_actions(actions, &mut snapshots)
                     .is_none()
@@ -6513,21 +6530,30 @@ impl Compiler {
             .into_iter()
             .find(|node| node.rule_name == "arith_expr")?;
         let condition = first_direct_node(elem, "bool_expr")?;
+        let actions = self.for_body_recurrence_actions(body)?;
         let mut dependencies = HashSet::new();
         collect_expression_dependency_names(value, &target_name, &mut dependencies);
         collect_expression_dependency_names(condition, &target_name, &mut dependencies);
         for dependency in &dependencies {
             let binding = self.require_var(dependency).ok()?;
+            let body_writes_dependency =
+                self.for_body_writes_name(body, dependency, &target_name, body);
             if binding.is_global
                 || binding.array.is_some()
                 || self.active_by_name_binding(dependency).is_some()
-                || self.for_body_writes_name(body, dependency, &target_name, body)
+            {
+                return None;
+            }
+            if body_writes_dependency
+                && !Self::static_body_actions_have_simple_dependency_recurrence(
+                    &actions,
+                    dependency,
+                    &target_name,
+                )
             {
                 return None;
             }
         }
-
-        let actions = self.for_body_recurrence_actions(body)?;
 
         let saved_reals = self.static_real_slots.clone();
         let saved_integers = self.static_integer_slots.clone();
@@ -6764,6 +6790,47 @@ impl Compiler {
                     || Self::static_body_actions_write_name(else_actions, name)
             }
         })
+    }
+
+    fn static_body_actions_have_simple_dependency_recurrence(
+        actions: &[StaticBodyAction<'_>],
+        name: &str,
+        target_name: &str,
+    ) -> bool {
+        let mut found = false;
+        for action in actions {
+            match action {
+                StaticBodyAction::Assignment(assignment) if assignment.name == name => {
+                    if found {
+                        return false;
+                    }
+                    let mut dependencies = HashSet::new();
+                    collect_expression_dependency_names(
+                        assignment.expression,
+                        name,
+                        &mut dependencies,
+                    );
+                    if dependencies
+                        .iter()
+                        .any(|dependency| dependency != target_name)
+                    {
+                        return false;
+                    }
+                    found = true;
+                }
+                StaticBodyAction::Conditional {
+                    then_actions,
+                    else_actions,
+                    ..
+                } if Self::static_body_actions_write_name(then_actions, name)
+                    || Self::static_body_actions_write_name(else_actions, name) =>
+                {
+                    return false;
+                }
+                _ => {}
+            }
+        }
+        found
     }
 
     fn static_body_actions_write_only_name(actions: &[StaticBodyAction<'_>], name: &str) -> bool {
@@ -15202,13 +15269,17 @@ mod tests {
     }
 
     #[test]
-    fn al4_while_recurrence_that_writes_control_dependency_remains_conservative() {
-        let err = compile_source(
+    fn al4_while_recurrence_tracks_changing_control_dependency() {
+        let module = compile_source(
             "begin integer i, n; real r; i := 0; n := 3; r := 0.25; for i := i + 1 while i <= n do begin r := r + i; n := n - 1 end; print(r) end",
             "test",
         )
-        .expect_err("a changing predicate dependency prevents bounded recurrence analysis");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        .expect("a bounded while loop may evolve a local predicate dependency");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "3.25")
+        }));
     }
 
     #[test]

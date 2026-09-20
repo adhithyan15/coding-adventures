@@ -211,12 +211,14 @@ A bounded control evolution may also simulate pure local scalar assignments in
 source order after every true predicate and retain their exact integer, finite
 real, or boolean results. Statically decidable statement conditions may select
 different recursively supported branches on successive passes. Predicate-
-dependency writes remain conservative, but the controlled scalar itself may be
-updated by a recursively supported body alongside other supported local scalar
-recurrences; the next `while` element expression consumes the resulting exact
-control snapshot, and terminating sibling snapshots remain available after the
-loop. Dynamic selectors, string targets, predicate-dependency writes, and loops
-that do not reach false within 4,096 evaluations fail closed.
+dependencies may remain stable. One directly assigned dependency may also
+evolve through a supported recurrence whose expression references only itself
+and the controlled scalar. The controlled scalar itself may likewise be
+updated alongside other supported local scalar recurrences; the next `while`
+element expression consumes all resulting exact dependency and control
+snapshots, and terminating sibling snapshots remain available after the loop.
+Dynamic selectors, transitive or conditional dependency writes, string
+targets, and loops that do not reach false within 4,096 evaluations fail closed.
 A conditional predicate is also evaluated when its selector is statically
 known; only the selected branch participates in the proof.
 Local string slots carry an empty verifier seed, but this is not a source-level
