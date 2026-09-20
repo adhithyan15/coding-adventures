@@ -145,6 +145,14 @@ preflight. Invalid registries and invalid globs retain precedence over both
 that bypass and the ceiling. A limit error is a hard planning failure; the
 front door MUST write neither a partial plan nor partial gate outputs.
 
+A CI adapter MAY respond to exactly `CI_GATE_MATCH_LIMIT_EXCEEDED` by starting a
+second, explicit operation with `force=true`. This is a conservative run-all
+fallback, not recovery of the failed operation: the adapter MUST discard any
+first-operation output, MUST make the fallback visible in its log, and MUST NOT
+retry any other diagnostic this way. The portable core and first operation keep
+the ceiling, zero matcher calls, empty result, and no-partial-plan contract
+unchanged.
+
 The portable core owns exact package intersection, the repository-relative glob
 grammar implemented by `internal/globmatch`, output-name mapping, and these
 fixed machinery sentinels:
