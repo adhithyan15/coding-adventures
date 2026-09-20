@@ -151,10 +151,12 @@ export function createConcurrencyPool(
 
     try {
       let value: T | undefined;
-      let taskError: unknown = null;
+      let taskFailed = false;
+      let taskError: unknown;
       try {
         value = await task(permit);
       } catch (error) {
+        taskFailed = true;
         taskError = error;
       }
 
@@ -162,15 +164,19 @@ export function createConcurrencyPool(
       if (unfinishedYield !== null) {
         try {
           await unfinishedYield;
-          if (taskError === null) {
+          if (!taskFailed) {
+            taskFailed = true;
             taskError = new Error("concurrency task must await yieldWhile before completing");
           }
         } catch (error) {
-          if (taskError === null) taskError = error;
+          if (!taskFailed) {
+            taskFailed = true;
+            taskError = error;
+          }
         }
       }
       if (poisonedError !== null) throw poisonedError;
-      if (taskError !== null) throw taskError;
+      if (taskFailed) throw taskError;
       return value as T;
     } finally {
       if (held) {

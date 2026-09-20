@@ -55,6 +55,15 @@ describe("shared concurrency pool", () => {
     expect(pool.stats()).toEqual({ active: 0, queued: 0, peakActive: 1 });
   });
 
+  it("preserves falsy thrown values while releasing capacity", async () => {
+    const pool = createConcurrencyPool(1, neverCancelledToken());
+    await pool.run(() => { throw null; }).then(
+      () => { throw new Error("expected null rejection"); },
+      error => { expect(error).toBeNull(); },
+    );
+    await expect(pool.run(async () => "released")).resolves.toBe("released");
+  });
+
   it("rejects queued and future work on cancellation while active work unwinds", async () => {
     const cancellation = createCancellationTokenSource();
     const pool = createConcurrencyPool(1, cancellation.token);

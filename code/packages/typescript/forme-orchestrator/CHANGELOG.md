@@ -18,7 +18,7 @@
 
 ### Tests
 
-- Seventeen focused cases cover input bounds, peak concurrency, FIFO starts and
+- Eighteen focused cases cover input bounds, peak concurrency, FIFO starts and
   reacquisition, sync/async failure cleanup, queued/future cancellation,
   cancellation during reacquisition, one-permit producer/consumer progress,
   failed waits, awaited and unawaited yield settlement, concurrent-yield
