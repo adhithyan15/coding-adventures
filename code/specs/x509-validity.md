@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed zero-external-dependency Rust boundary above `der-asn1` and
+Shipped zero-external-dependency Rust boundary above `der-asn1` and
 `x509-time`.
 
 ## Purpose
