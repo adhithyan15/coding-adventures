@@ -571,6 +571,45 @@ jobs:
             swift run --package-path "$harness" Conformance \
             --library "$app_v1/App_App.bundle/Runtime/libmosaic_app.dylib"
 
+          diagnose_swift_crash() {
+            local executable="$1"
+            local diagnostic_log="$2"
+            local state_path="${3:-}"
+            local entitlements="$RUNNER_TEMP/taskapp-debug-entitlements.plist"
+            cat >"$entitlements" <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>com.apple.security.get-task-allow</key>
+            <true/>
+          </dict>
+          </plist>
+          PLIST
+            codesign --force --sign - --entitlements "$entitlements" "$executable"
+            (
+              cd /
+              if [[ -n "$state_path" ]]; then
+                env -u MOSAIC_APP_LIBRARY \
+                  MOSAIC_APP_STATE_PATH="$state_path" \
+                  lldb --batch -o run -o "thread backtrace all" -- "$executable" \
+                  >"$diagnostic_log" 2>&1 &
+              else
+                env -u MOSAIC_APP_LIBRARY -u MOSAIC_APP_STATE_PATH \
+                  lldb --batch -o run -o "thread backtrace all" -- "$executable" \
+                  >"$diagnostic_log" 2>&1 &
+              fi
+              debugger_pid=$!
+              sleep 10
+              if kill -0 "$debugger_pid" 2>/dev/null; then
+                pkill -TERM -P "$debugger_pid" 2>/dev/null || true
+                kill "$debugger_pid" 2>/dev/null || true
+              fi
+              wait "$debugger_pid" || true
+            )
+            cat "$diagnostic_log"
+          }
+
           launch_app() {
             local app="$1"
             local log="$2"
@@ -588,6 +627,8 @@ jobs:
                 sleep 2
                 find "$HOME/Library/Logs/DiagnosticReports" -type f \
                   -name 'Trestle*.ips' -mmin -2 -print -exec cat {} \; || true
+                diagnose_swift_crash \
+                  "$app/Contents/MacOS/Trestle" "${log%.log}-lldb.log" "$state"
                 exit 1
               fi
               kill "$app_pid"
@@ -625,6 +666,8 @@ jobs:
                 sleep 2
                 find "$HOME/Library/Logs/DiagnosticReports" -type f \
                   -name 'Trestle*.ips' -mmin -2 -print -exec cat {} \; || true
+                diagnose_swift_crash \
+                  "$app/Contents/MacOS/Trestle" "${log%.log}-lldb.log"
                 exit 1
               fi
               kill "$app_pid"

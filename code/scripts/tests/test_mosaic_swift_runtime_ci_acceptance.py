@@ -209,6 +209,11 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn('cat "$taskapp_log"', swift_runtime_step)
         self.assertIn('"$HOME/Library/Logs/DiagnosticReports"', swift_runtime_step)
         self.assertIn("-name 'App*.ips'", swift_runtime_step)
+        self.assertIn("com.apple.security.get-task-allow", swift_runtime_step)
+        self.assertIn(
+            'lldb --batch -o run -o "thread backtrace all"', swift_runtime_step
+        )
+        self.assertIn("diagnose_taskapp_crash", swift_runtime_step)
         self.assertIn("Mosaic Rust runtime unavailable", swift_runtime_step)
         self.assertIn("missing required MIL prop", swift_runtime_step)
         self.assertIn(
