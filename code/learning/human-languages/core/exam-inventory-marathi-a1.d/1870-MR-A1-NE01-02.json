@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-NE01-02",
+  "category": "The person: the body",
+  "label": "physical characteristics",
+  "probe": [
+    "MR-LEX-UNCH",
+    "MR-LEX-MOTHA",
+    "MR-LEX-LAHAAN"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE01-02"
+  ]
+}

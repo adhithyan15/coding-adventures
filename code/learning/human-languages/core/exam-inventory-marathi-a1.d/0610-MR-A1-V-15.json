@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-V-15",
+  "category": "The verb",
+  "label": "dative-subject verbs, where the person is never the subject",
+  "probe": [
+    "MR-GRAMMAR-DATIVE-LIKING",
+    "MR-GRAMMAR-DATIVE-KNOWLEDGE",
+    "MR-GRAMMAR-DATIVE-FEELING"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-SV-01"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NE12-01",
+  "category": "Shopping",
+  "label": "shops, shopkeepers and shopping",
+  "probe": null,
+  "note": "Untaught. dukaan has no atom, and the A1 speaking paper's third part is a transactional role-play. The MONEY side of that role-play is now taught (chapter 59) and the shop is not.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [
+    "A1-NE12-01"
+  ]
+}

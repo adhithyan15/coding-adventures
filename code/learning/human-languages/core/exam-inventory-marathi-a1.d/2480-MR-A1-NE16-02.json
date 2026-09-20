@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NE16-02",
+  "category": "Science and technology",
+  "label": "computers and everyday technology",
+  "probe": null,
+  "note": "Untaught.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE16-02"
+  ]
+}

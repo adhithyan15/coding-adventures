@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-SUB-06",
+  "category": "Subordination",
+  "label": "purpose with -saathii plus the verbal noun",
+  "probe": [
+    "MR-JOIN-SAATHI"
+  ],
+  "note": "Closed by MR-C35-saathi (chapter 35). The lesson teaches the -ne -> -nyaasaathii swap as one productive rule and says in as many words that the general oblique-stem rule behind the -nyaa- (MR-A1-N-09) is still owed.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-SUB-07"
+  ]
+}

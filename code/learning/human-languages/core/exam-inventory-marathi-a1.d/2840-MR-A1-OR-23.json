@@ -1,0 +1,13 @@
+{
+  "id": "MR-A1-OR-23",
+  "category": "Devanagari letters and signs",
+  "label": "reading a whole word back from its pieces",
+  "probe": [
+    "MR-SCRIPT-NAMASKAR-READ-01"
+  ],
+  "anchorIds": [
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [],
+  "marathiSpecific": true
+}

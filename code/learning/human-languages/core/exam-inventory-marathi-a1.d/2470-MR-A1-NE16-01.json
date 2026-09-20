@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-NE16-01",
+  "category": "Science and technology",
+  "label": "number as a notion",
+  "probe": [
+    "MR-LEX-NUMBERS-ONE-TO-FIVE",
+    "MR-HISTORY-SELECTIVE-RETENTION"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE16-01"
+  ]
+}

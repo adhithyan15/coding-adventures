@@ -1,0 +1,18 @@
+{
+  "id": "MR-A1-F2-12",
+  "category": "Opinions, attitudes and knowledge",
+  "label": "express knowledge of something",
+  "probe": [
+    "MR-LEX-MAHIT-JANNE",
+    "MR-GRAMMAR-DATIVE-KNOWLEDGE",
+    "MR-A1-MESSAGE-LINE-UNDERSTAND-MARATHI"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-spine"
+  ],
+  "derivedFrom": [
+    "A1-F2-14",
+    "A1-NG7-01"
+  ]
+}

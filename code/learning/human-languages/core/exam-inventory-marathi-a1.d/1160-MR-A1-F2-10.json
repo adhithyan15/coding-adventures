@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-F2-10",
+  "category": "Opinions, attitudes and knowledge",
+  "label": "express possibility",
+  "probe": null,
+  "note": "Untaught.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-F2-12"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-NG6-03",
+  "category": "Evaluative notions",
+  "label": "attractiveness",
+  "probe": [
+    "MR-LEX-SUNDAR"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NG6-03"
+  ]
+}

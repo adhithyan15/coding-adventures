@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-NG3-05",
+  "category": "Spatial notions",
+  "label": "orientation and direction",
+  "probe": [
+    "MR-POSTP-KADE",
+    "MR-LEX-UJVA",
+    "MR-LEX-DAAVA"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NG3-05"
+  ]
+}

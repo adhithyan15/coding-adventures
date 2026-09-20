@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-VP-06",
+  "category": "The verb phrase",
+  "label": "subject-object-verb order, and where a circumstantial goes",
+  "probe": [
+    "MR-GRAMMAR-AAHE-LAST"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-SV-06"
+  ]
+}

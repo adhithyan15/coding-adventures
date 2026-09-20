@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-F5-11",
+  "category": "Social relations",
+  "label": "congratulate, and mark a festival",
+  "probe": null,
+  "note": "Untaught. Spanish separates the toast from the congratulation; Marathi's festival greetings carry both and are merged here into one point.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-F5-09",
+    "A1-F5-10",
+    "A1-NE04-03"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-F4-06",
+  "category": "Influencing the listener",
+  "label": "refuse permission",
+  "probe": [
+    "MR-LEX-NAKO"
+  ],
+  "note": "Closed by MR-C32-nako (chapter 32), exactly as this note predicted.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-F4-06"
+  ]
+}

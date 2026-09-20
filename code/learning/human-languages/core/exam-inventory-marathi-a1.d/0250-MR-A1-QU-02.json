@@ -1,0 +1,29 @@
+{
+  "id": "MR-A1-QU-02",
+  "category": "Quantifiers",
+  "label": "cardinal numerals six to twenty",
+  "probe": [
+    "MR-LEX-SAHA",
+    "MR-LEX-SAAT",
+    "MR-LEX-AATH",
+    "MR-LEX-NAU",
+    "MR-LEX-DAHA",
+    "MR-LEX-AKRA",
+    "MR-LEX-BARA",
+    "MR-LEX-TERA",
+    "MR-LEX-CHAUDA",
+    "MR-LEX-PANDHRA",
+    "MR-LEX-SOLA",
+    "MR-LEX-SATRA",
+    "MR-LEX-ATHRA",
+    "MR-LEX-EKONIS",
+    "MR-LEX-VIS"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-Q-01"
+  ]
+}

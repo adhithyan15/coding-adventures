@@ -1,0 +1,18 @@
+{
+  "id": "MR-A1-F3-01",
+  "category": "Likes, wishes and feelings",
+  "label": "express likes and interests",
+  "probe": [
+    "MR-LEX-AVADNE",
+    "MR-GRAMMAR-DATIVE-LIKING",
+    "MR-LEX-PREM-KARNE"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-spine"
+  ],
+  "derivedFrom": [
+    "A1-F3-01",
+    "A1-NG6-08"
+  ]
+}

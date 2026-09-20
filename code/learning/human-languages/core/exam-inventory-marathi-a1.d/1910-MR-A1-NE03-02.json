@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NE03-02",
+  "category": "Personal identity",
+  "label": "documents: an identity card or a passport",
+  "probe": null,
+  "note": "Untaught.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE03-02"
+  ]
+}

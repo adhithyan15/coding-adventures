@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-NE20-02",
+  "category": "Geography and nature",
+  "label": "country, state, city",
+  "probe": [
+    "MR-A1-FORM-LABEL-SHAHAR"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [
+    "A1-NE20-02"
+  ]
+}

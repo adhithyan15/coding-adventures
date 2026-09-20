@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-ADJ-06",
+  "category": "The adjective",
+  "label": "degree: khuup and the intensifying reduplication",
+  "probe": [
+    "MR-LEX-KHUP",
+    "MR-GRAMMAR-ADJ-REDUPLICATION"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-ADJ-06"
+  ]
+}

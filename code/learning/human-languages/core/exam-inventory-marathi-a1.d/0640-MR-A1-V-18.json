@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-V-18",
+  "category": "The verb",
+  "label": "ability: -uu shakne, and yene with a language",
+  "probe": null,
+  "note": "Only the frozen line 'malaa maraathii yete' exists (MR-A1-MESSAGE-LINE-KNOW-MARATHI). SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO omits both VERB-HAVE and VERB-CAN.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-spine"
+  ],
+  "derivedFrom": [
+    "A1-F2-17",
+    "A1-NG6-09"
+  ]
+}

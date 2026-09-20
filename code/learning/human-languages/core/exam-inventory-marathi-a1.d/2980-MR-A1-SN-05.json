@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-SN-05",
+  "category": "Sound system",
+  "label": "reading the formal register a public notice uses: the Sanskrit spelling of a word speech has worn down",
+  "probe": [
+    "MR-SOUND-KARNA-GEMINATION",
+    "MR-GRAMMAR-TATSAMA-TADBHAVA-SPLIT"
+  ],
+  "note": "MARATHI-SPECIFIC. Public notices -- the reading paper's second part -- are written in a heavily tatsama register, so recognising the formal twin of an everyday word is a reading demand and not a piece of philology.",
+  "anchorIds": [
+    "ca-marathi-assessment",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [],
+  "marathiSpecific": true
+}

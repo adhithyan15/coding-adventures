@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-F4-03",
+  "category": "Influencing the listener",
+  "label": "ask for help",
+  "probe": [
+    "MR-LEX-MADAT-KARNE"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-spine"
+  ],
+  "derivedFrom": [
+    "A1-F4-03"
+  ]
+}

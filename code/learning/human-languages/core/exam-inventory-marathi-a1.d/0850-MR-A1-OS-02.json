@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-OS-02",
+  "category": "The simple sentence",
+  "label": "yes-or-no questions, with kaa and with intonation",
+  "probe": [
+    "MR-GRAMMAR-QUESTION-KAA",
+    "MR-SOUND-QUESTION-RISE"
+  ],
+  "note": "Closed by MR-C33-kaa-polar (chapter 33), which realizes QUESTION-POLAR. Both atoms are required because the point names both routes, and a listening paper supplies the rise without the particle.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-OS-02"
+  ]
+}

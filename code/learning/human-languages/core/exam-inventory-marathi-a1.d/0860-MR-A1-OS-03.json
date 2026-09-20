@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-OS-03",
+  "category": "The simple sentence",
+  "label": "questions with an asking word",
+  "probe": [
+    "MR-GRAMMAR-WH-ORDER"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [
+    "A1-OS-03"
+  ]
+}

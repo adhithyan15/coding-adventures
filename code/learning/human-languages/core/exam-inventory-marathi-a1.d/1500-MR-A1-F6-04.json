@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-F6-04",
+  "category": "Structuring the exchange",
+  "label": "ask somebody to repeat, slow down or be quiet",
+  "probe": null,
+  "note": "Untaught, and assessment-spec.md gives it teeth: the A1 speaking interlocutor 'may repeat once slowly', which a candidate has to be able to ASK for.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [
+    "A1-F6-05"
+  ]
+}

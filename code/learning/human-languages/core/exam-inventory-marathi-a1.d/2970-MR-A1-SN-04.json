@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-SN-04",
+  "category": "Sound system",
+  "label": "nasalization: what the anusvara does to a following stop, and what candrabindu does to a vowel",
+  "probe": [
+    "MR-SCRIPT-ANUSVARA-01",
+    "MR-SCRIPT-CANDRABINDU-01",
+    "MR-SCRIPT-DON-FINAL-N",
+    "MR-SCRIPT-PAACH-NONNASAL"
+  ],
+  "anchorIds": [
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [],
+  "marathiSpecific": true
+}

@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-F5-10",
+  "category": "Social relations",
+  "label": "offer condolences",
+  "probe": null,
+  "note": "Untaught.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-F5-08"
+  ]
+}

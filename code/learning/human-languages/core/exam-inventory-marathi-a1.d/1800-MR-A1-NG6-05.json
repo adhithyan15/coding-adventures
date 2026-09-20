@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-NG6-05",
+  "category": "Evaluative notions",
+  "label": "acceptability",
+  "probe": [
+    "MR-SENSE-CHALEL-OKAY"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NG6-05"
+  ]
+}

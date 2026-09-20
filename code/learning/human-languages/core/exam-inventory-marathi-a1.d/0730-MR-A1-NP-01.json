@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NP-01",
+  "category": "The noun phrase",
+  "label": "noun-phrase complements: an adjective, a genitive phrase, a relative clause",
+  "probe": null,
+  "note": "Two thirds taught. The genitive is covered (MR-A1-POS-03) and the ADJECTIVE complement closed in chapter 49 (MR-A1-ADJ-01), so a noun can now carry a describing word. The relative clause is what remains, and it is blocked behind MR-A1-PRON-05: Marathi's relative is correlative, and no lesson supplies jo/tii/je.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-SN-01"
+  ]
+}

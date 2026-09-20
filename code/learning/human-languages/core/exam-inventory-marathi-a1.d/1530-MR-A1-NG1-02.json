@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-NG1-02",
+  "category": "Existential notions",
+  "label": "presence and absence",
+  "probe": [
+    "MR-POSTP-MADHYE",
+    "MR-LEX-AAHE-COPULA",
+    "MR-GRAMMAR-NEGATE-NAHI"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-NG1-02"
+  ]
+}

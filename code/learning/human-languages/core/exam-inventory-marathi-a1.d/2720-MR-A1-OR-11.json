@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-OR-11",
+  "category": "Devanagari letters and signs",
+  "label": "Marathi's retroflex lla, the letter Hindi does not have",
+  "probe": [
+    "MR-SCRIPT-LLA-01",
+    "MR-SCRIPT-RETROFLEX-LA"
+  ],
+  "note": "MARATHI-SPECIFIC, and the single glyph that most clearly marks a text as Marathi rather than Hindi.",
+  "anchorIds": [
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [],
+  "marathiSpecific": true
+}

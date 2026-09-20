@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-AP-01",
+  "category": "The adjective phrase",
+  "label": "degree modifiers: khuup, jaraa, puresaa",
+  "probe": [
+    "MR-LEX-KHUP",
+    "MR-LEX-JARA",
+    "MR-LEX-PURESA"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-SADJ-01"
+  ]
+}

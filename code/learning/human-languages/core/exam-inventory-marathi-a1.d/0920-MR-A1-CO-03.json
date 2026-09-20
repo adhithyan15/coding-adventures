@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-CO-03",
+  "category": "Coordination",
+  "label": "disjunctive coordination: kinvaa",
+  "probe": [
+    "MR-JOIN-KINVA"
+  ],
+  "note": "Closed by MR-C30-kinva (chapter 30).",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-CO-03"
+  ]
+}

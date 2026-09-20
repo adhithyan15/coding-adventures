@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-F4-09",
+  "category": "Influencing the listener",
+  "label": "decline a proposal, an offer or an invitation",
+  "probe": [
+    "MR-LEX-NAKO",
+    "MR-LEX-DHANYAVAD-01"
+  ],
+  "note": "Closed by MR-C32-nako (chapter 32). The softener this note asked for is the already-taught dhanyavaad, and the lesson teaches the whole decline as one line -- nako, dhanyavaad -- rather than leaving the learner to join them.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-F4-09"
+  ]
+}

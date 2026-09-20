@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-NE06-04",
+  "category": "Education",
+  "label": "learning and teaching",
+  "probe": [
+    "MR-LEX-SHIKNE",
+    "MR-LEX-VACHNE",
+    "MR-LEX-LIHINE"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-spine"
+  ],
+  "derivedFrom": [
+    "A1-NE06-04"
+  ]
+}

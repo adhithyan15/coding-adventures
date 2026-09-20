@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-PU-02",
+  "category": "Punctuation and written conventions",
+  "label": "the comma",
+  "probe": [
+    "MR-SCRIPT-COMMA"
+  ],
+  "note": "Closed by MR-W34-comma (chapter 34), which teaches both jobs the writing task needs: the list comma that stands in for aani, and the comma after a named reader.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-O3-02"
+  ]
+}

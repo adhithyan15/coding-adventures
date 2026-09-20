@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-F5-07",
+  "category": "Social relations",
+  "label": "apologise",
+  "probe": null,
+  "note": "The RESPONSE to an apology is taught -- 'kaahii harkat naahii', MR-C03-kaahi-harkat-nahi, schema-v1 -- and the apology itself is not, in either schema: maaf karaa and kshamaa karaa appear nowhere. A candidate who can only forgive and never apologise is the wrong half of SPINE-POLITE-REQUEST-REPAIR.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-spine"
+  ],
+  "derivedFrom": [
+    "A1-F5-06"
+  ]
+}

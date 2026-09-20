@@ -1,0 +1,13 @@
+{
+  "id": "MR-A1-SN-08",
+  "category": "Sound system",
+  "label": "word stress and the rhythm of a short phrase",
+  "probe": null,
+  "note": "MARATHI-SPECIFIC and untaught. The listening envelope specifies 90-110 wpm at A1, so rhythm is assessed whether or not it is taught.",
+  "anchorIds": [
+    "ca-marathi-assessment",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [],
+  "marathiSpecific": true
+}

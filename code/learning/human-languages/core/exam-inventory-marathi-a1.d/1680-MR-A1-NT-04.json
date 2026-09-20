@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NT-04",
+  "category": "Temporal notions",
+  "label": "the months, and writing a date",
+  "probe": null,
+  "note": "Untaught; the A1 practical form asks for one.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [
+    "A1-NG4-02"
+  ]
+}

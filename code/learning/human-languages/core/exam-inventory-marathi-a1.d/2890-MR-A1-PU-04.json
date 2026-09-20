@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-PU-04",
+  "category": "Punctuation and written conventions",
+  "label": "question and exclamation marks",
+  "probe": [
+    "MR-SCRIPT-QUESTION-MARK",
+    "MR-SCRIPT-EXCLAMATION-MARK"
+  ],
+  "note": "Closed by MR-W33-question-mark (chapter 33). Both marks are required because the point names both, and the lesson states the rule they share: one mark, at the end, with nothing opening the sentence.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-O3-04"
+  ]
+}

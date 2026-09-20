@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-NE15-01",
+  "category": "Money and the economy",
+  "label": "money",
+  "probe": [
+    "MR-LEX-PAISE",
+    "MR-LEX-RUPAYA"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [
+    "A1-NE15-01"
+  ]
+}

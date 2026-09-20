@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-F5-09",
+  "category": "Social relations",
+  "label": "thank, and respond to thanks",
+  "probe": [
+    "MR-LEX-DHANYAVAD-01",
+    "MR-A1-MESSAGE-LINE-THANKS",
+    "MR-SCRIPT-DHANYAVAD-WRITE-01"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-spine"
+  ],
+  "derivedFrom": [
+    "A1-F5-07"
+  ]
+}
