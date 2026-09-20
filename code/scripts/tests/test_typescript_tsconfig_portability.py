@@ -414,8 +414,9 @@ console.log(prose, nested);
         # +1: forme-load-assets-fs, the canonical-contained Asset IR loader.
         # +1: forme-cli, the shared-config headless project driver.
         # +1: forme-dev-server, the in-memory live-preview boundary.
-        self.assertEqual(summary.total_projects, 471)
-        self.assertEqual(summary.shared_projects, 293)
+        # +1: forme-deploy-runner-core, the capability-free deployment planner.
+        self.assertEqual(summary.total_projects, 472)
+        self.assertEqual(summary.shared_projects, 294)
         self.assertEqual(summary.inherited_root_dir, 130)
         self.assertEqual(summary.inherited_out_dir, 133)
         self.assertEqual(summary.standalone_emit_projects, 148)
@@ -452,7 +453,8 @@ console.log(prose, nested);
         # +1: forme-orchestrator resolves a null concurrency setting through
         # Node's availableParallelism API while retaining an explicit runtime
         # fallback for hosts that report no usable count.
-        self.assertEqual(summary.node_api_projects, 71)
+        # +1: forme-deploy-runner-core hashes verified publication snapshots.
+        self.assertEqual(summary.node_api_projects, 72)
         # +1: script-ductus owns `@types/node` directly, because its tests
         # read the shipped fonts off disk to verify the pen paths.
         # +1: chief-of-staff-channel-store owns the test-only Node provider.
@@ -468,7 +470,8 @@ console.log(prose, nested);
         # +1: spice-netlist-parser owns the Node types used by its CLI bundle.
         # +1: forme-orchestrator directly owns the Node types used by its
         # hardware-concurrency default.
-        self.assertEqual(summary.node_provider_projects, 71)
+        # +1: forme-deploy-runner-core owns the Node crypto type provider.
+        self.assertEqual(summary.node_provider_projects, 72)
         self.assertEqual(summary.missing_node_provider_projects, 0)
         self.assertEqual(summary.stale_node_provider_locks, 0)
         self.assertEqual(summary.node_lock_exemptions, 1)
@@ -493,7 +496,8 @@ console.log(prose, nested);
         # +3: hkdf, ed25519, and x25519 lock the TypeScript prerequisites
         # shared by the D18 conformance lanes.
         # +1: VisiCalc now commits its compiler and test dependency lockfile.
-        self.assertEqual(summary.locked_compilers, 470)
+        # +1: forme-deploy-runner-core commits its compiler and test lockfile.
+        self.assertEqual(summary.locked_compilers, 471)
 
 
 if __name__ == "__main__":

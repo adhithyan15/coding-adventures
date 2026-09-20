@@ -1,6 +1,6 @@
 # FM08 — Forme Deploy Runner
 
-> **Status:** v0 specification.  Implementation pending.
+> **Status:** v0 specification.  Implementation in progress.
 > **Layer:** FM08 (last layer of the FM00 vision — applies a
 > deploy manifest to a real target).
 > **Predecessor:** `forme-aot-deploy-manifest-emitter` produces
@@ -11,10 +11,10 @@
 | Surface | Status | Evidence / next step |
 |---|---|---|
 | Deploy manifest producer | Implemented | `forme-aot-deploy-manifest-emitter` produces the input contract. |
-| Core planning and validation | Pending | FM-B012 owns the pure deploy-plan implementation. |
-| Filesystem adapter | Pending | FM-B012 must prove atomic tree replacement, rollback, idempotency, and stale-file pruning. |
-| GitHub Pages adapter | Pending | FM-B012 owns the first hosted target integration. |
-| `forme deploy` composition | Pending | FM-B012 will add this command to the FM07 CLI surface. |
+| Core planning and validation | Implemented in FM-B044 | `forme-deploy-runner-core` validates manifests, plans complete output sets, preflights bytes, and emits deterministic dry-run reports without capabilities. |
+| Filesystem adapter | Pending | FM-B045 must prove atomic tree replacement, rollback, idempotency, and stale-file pruning. |
+| GitHub Pages adapter | Pending | FM-B046 owns the first hosted target integration. |
+| `forme deploy` composition | Pending | FM-B047 will add this command to the FM07 CLI surface and dogfood both live sites. |
 
 FM08 was originally checked in as FM05. FM-B011 moved it without changing its
 deploy contract so FM05 can retain the Interactivity IR number reserved by
@@ -113,6 +113,16 @@ backup, the complete staging tree is renamed into place, and failure restores
 the backup. No per-file write or cleanup may follow a link or mutate an
 external hard-link target.
 
+#### 3.1.2 v0 resource limits
+
+The v0 core fails closed before content access when a manifest exceeds any of
+these implementation limits: 16,777,216 JSON string characters, 100,000 files,
+100 MiB for one file, or 1 GiB total content. Decoded object inputs receive the same file
+and content limits. Output paths remain capped at 2,048 characters and 255
+bytes per segment. Entries that share one SHA-256 digest MUST declare the same
+byte length. A future large-site profile may make these limits configurable,
+but adapters MUST NOT silently raise or bypass the reviewed defaults.
+
 ### 3.2 Required: content store
 
 A keyed store from which the runner resolves each file's body.
@@ -122,12 +132,18 @@ store and gets the bytes back.
 
 Three content store shapes are supported in v0:
 
-- **`directory` store**: a local directory containing files
-  named `<sha256>.bin`.  Lookup is `fs.readFile`.  Used when
+- **`directory` store**: a local directory containing files named from the
+  digest's unpadded base64url encoding plus `.bin`. The manifest's canonical
+  base64 digest remains an opaque lookup key; the store converts its decoded
+  32 bytes to one `[A-Za-z0-9_-]{43}` filename segment, verifies containment,
+  and never concatenates raw base64 (which may contain `/`). Lookup is
+  `fs.readFile`. Used when
   the runner runs in the same process / box as the emitter
   and the caller wrote the contents to disk.
-- **`bundle` store**: a single `.tar` or `.zip` archive
-  containing the same `<sha256>.bin` files.  Lookup streams
+- **`bundle` store**: a single `.tar` or `.zip` archive containing the same
+  base64url digest filenames. Archive entries must be exact single-segment
+  names beneath the bundle root; absolute, traversal, link, or raw-base64 path
+  entries are rejected. Lookup streams
   the entry out of the archive.  Used for cross-machine
   deploys (the entire bundle ships as one file).
 - **`inline` store**: an in-memory `Map<sha256, Uint8Array>`
@@ -139,13 +155,21 @@ The store interface (TypeScript):
 ```ts
 interface ContentStore {
   /** Resolve a hash to its bytes.  Throws if missing. */
-  readonly get: (sha256: string) => Promise<Uint8Array>;
+  readonly get: (sha256: string, signal?: AbortSignal) => Promise<Uint8Array>;
   /** Quick "do you have this?" check without reading bytes. */
-  readonly has: (sha256: string) => Promise<boolean>;
+  readonly has: (sha256: string, signal?: AbortSignal) => Promise<boolean>;
   /** Iterate every hash in the store.  Used for verification. */
   readonly hashes: () => AsyncIterable<string>;
 }
 ```
+
+The core binds one validated manifest and content store into a
+`VerifiedContentReader`. The reader parses the manifest once, supports
+cancellation even when a store promise does not settle, and returns a trusted
+plain `Uint8Array` snapshot only after checking its exact length and SHA-256.
+Adapters MUST write that returned snapshot directly; they MUST NOT perform a
+second unchecked `ContentStore.get()`. Dry-run preflight resolves each unique
+digest once and retains only digest metadata, not the complete site's bytes.
 
 ### 3.3 Optional: previous deploy manifest
 
@@ -181,7 +205,10 @@ The runner produces:
       "action": "create | update | skip | delete",
       "bytesWritten": <int>,
       "elapsedMs": <int>,
-      "error": "..."           // only when action failed
+      "error": {                // only when action failed
+        "code": "WRITE_FAILED",
+        "message": "..."
+      }
     },
     ...
   },
@@ -219,7 +246,8 @@ Required (one of):
   `{ "<sha>": "<base64>" }` from this file descriptor.
 
 Required:
-- `--target <kind>` — `fs` | `s3` | `netlify` | `cloudflare` | ...
+- `--target <kind>` — `fs` | `github-pages` in headless v0. Later adapters
+  extend this enum without weakening the v0 capability boundary.
 
 Required when `--target` is non-`fs`:
 - `--target-config <path>` — JSON file with adapter-specific
@@ -320,7 +348,7 @@ interface Transaction {
 
 ### 6.1 v0 adapters
 
-The v0 spec covers three reference adapters:
+The v0 spec covers two reference adapters:
 
 - **`FsAdapter`** — publishes to a local directory rooted at
   `--target-config { "root": "<path>" }` through the complete-tree staging and
@@ -328,20 +356,15 @@ The v0 spec covers three reference adapters:
   explicitly selected root outside project storage requires the sensitive
   `filesystem:user` capability. The adapter exposes the tree swap as a
   transaction so rollback can restore the same-parent backup.
-- **`S3Adapter`** — `s3:PutObject` per file.  Per-file
-  atomicity is S3's native model (PUTs are atomic on the
-  object).  No transaction support across objects.  Auth via
-  env-named `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` (or
-  IAM instance profile). Capabilities: the exact configured S3 endpoint as
-  `network:<host>` plus only the selected credential variables, such as
-  `env:AWS_ACCESS_KEY_ID` and `env:AWS_SECRET_ACCESS_KEY`.
-- **`NetlifyAdapter`** — uses Netlify Deploy API.  Creates a
-  deploy, uploads required files, finalizes.  **Supports
-  transactions** — `begin` creates a draft deploy, `commit`
-  publishes, `rollback` discards. Capabilities:
-  `network:api.netlify.com`, `env:NETLIFY_AUTH_TOKEN`.
+- **`GitHubPagesAdapter`** — prepares and publishes the complete validated
+  output set through GitHub Pages' artifact/deployment boundary. Capabilities
+  are limited to the exact GitHub endpoint plus only the selected token
+  variable. FM-B046 defines the final transaction and retry mapping against
+  that API before implementation.
 
-Future v1+ adapters: Cloudflare Pages, Vercel, GitHub Pages.
+Future v1+ adapters: S3, Netlify, Cloudflare Pages, and Vercel. Their
+per-object versus transactional guarantees remain governed by the generic
+adapter contract below but do not block the repository's headless v0 target.
 
 ## 7. Atomicity guarantees
 
@@ -404,8 +427,8 @@ considers files that differ between previous and new manifest.
 `deleteFile` calls:
 
 - Parse + validate the manifest.
-- Resolve every file's content from the store (catches missing
-  content errors).
+- Resolve every unique content digest from the store with bounded retention
+  (catches missing, size-mismatched, and hash-mismatched content errors).
 - Compute the diff plan.
 - Produce a deploy report with `action` set as if the writes
   had happened, but `bytesWritten` set to `0` and `elapsedMs`
@@ -460,6 +483,10 @@ between runs, attachable to a CI artifact.
 Every per-file error in the report has a `code` field:
 
 - `CONTENT_MISSING` — content store didn't have the hash.
+- `CONTENT_READ_ERROR` — the store failed or returned a non-byte value.
+- `CONTENT_SIZE_MISMATCH` — stored bytes did not match the manifest length.
+- `CONTENT_HASH_MISMATCH` — stored bytes did not match the manifest SHA-256.
+- `CONTENT_ABORTED` — cancellation interrupted content lookup or verification.
 - `WRITE_FAILED` — adapter `writeFile` threw.
 - `WRITE_TIMEOUT` — per-file timeout exceeded.
 - `VERIFY_MISMATCH` — `--verify-after` read back wrong digest.
@@ -471,7 +498,9 @@ Every per-file error in the report has a `code` field:
 
 Error codes are stable for tooling: a CI job can grep `jq
 '.files[] | select(.error.code == "WRITE_FAILED")'` to find
-all write failures.
+all write failures. `CONTENT_ABORTED` maps to the deploy's cancelled failure
+path: after `begin()` it triggers rollback under §7.3; before `begin()` it
+terminates without opening a transaction.
 
 ## 12. Content addressing
 
@@ -547,7 +576,7 @@ manifest aggregates them based on which adapter is selected.
 - **Manifest-of-manifests** for multi-site deploys (deploy
   several sites in one transaction).
 
-## 17. Implementation plan (when this spec lands)
+## 17. Delivery sequence
 
 1. `forme-deploy-runner-core` package — TypeScript, all logic
    except adapter implementations.  Capabilities: `[]` (pure
@@ -556,12 +585,10 @@ manifest aggregates them based on which adapter is selected.
 2. `forme-deploy-runner-fs-adapter` package — `FsAdapter`.
    Capabilities: `storage:write` for a project root, or the explicitly approved
    `filesystem:user` boundary for a user-selected external root.
-3. `forme-deploy-runner-s3-adapter` package — `S3Adapter`.
-   Capabilities: exact `network:<host>` endpoint and scoped `env:<name>` reads.
-4. `forme-deploy-runner-netlify-adapter` package —
-   `NetlifyAdapter`.  Capabilities: `network:api.netlify.com`,
-   `env:NETLIFY_AUTH_TOKEN`.
-5. `forme-deploy` program — CLI binary composing the above.
+3. `forme-deploy-runner-github-pages-adapter` package — the first hosted
+   adapter. Capabilities: exact GitHub endpoint and one explicitly selected
+   token variable; no shell or subprocess authority.
+4. `forme-deploy` program — CLI binary composing the above.
    Capabilities: union of selected adapter + content store.
 
 Each ships as its own PR, each independently testable in
