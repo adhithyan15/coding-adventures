@@ -9,6 +9,7 @@ type HostRequest = {
 const events: HostRequest[] = [];
 let navigationDisabled = true;
 let bookmarked = false;
+let bookmarksOpen = false;
 let findOpen = false;
 let findQuery = "";
 let findResultLabel = "";
@@ -26,6 +27,15 @@ const props = (statusText: string) => ({
     forwardDisabled: navigationDisabled,
     bookmarkLabel: bookmarked ? "Remove Bookmark" : "Bookmark",
     bookmarkDisabled: navigationDisabled,
+    bookmarksLabel: `Bookmarks (${bookmarked ? 1 : 0})`,
+    bookmarksDisabled: navigationDisabled || !bookmarked,
+    bookmarksOpen,
+    bookmarksPosition: bookmarked ? "1 of 1" : "",
+    bookmarksTitle: bookmarked ? "Venture React acceptance" : "",
+    bookmarksAddress: bookmarked ? "http://venture.test/start" : "",
+    bookmarksPreviousDisabled: true,
+    bookmarksNextDisabled: true,
+    bookmarksNavigateDisabled: navigationDisabled || !bookmarked,
     copyAddressDisabled: navigationDisabled,
     openPageDisabled: navigationDisabled,
     savePageDisabled: navigationDisabled,
@@ -62,7 +72,20 @@ window.mosaicHost = {
     events.push(request);
     if (request.event.type === "toggleBookmark") {
       bookmarked = !bookmarked;
+      bookmarksOpen = bookmarksOpen && bookmarked;
       return props("Bookmark persisted through MosaicHost");
+    }
+    if (request.event.type === "bookmarksOpen") {
+      bookmarksOpen = true;
+      return props("Bookmarks opened through MosaicHost");
+    }
+    if (request.event.type === "bookmarksClose") {
+      bookmarksOpen = false;
+      return props("Bookmarks closed through MosaicHost");
+    }
+    if (request.event.type === "bookmarksNavigate") {
+      bookmarksOpen = false;
+      return props("Bookmark opened through MosaicHost");
     }
     if (request.event.type === "findChange") {
       findQuery = request.event.value ?? "";
@@ -139,7 +162,7 @@ test("React and Electron renderer controls cross the Mosaic host seam", async ()
 
   expect(document.body.textContent).toContain("Venture React acceptance");
   expect(document.body.textContent).toContain("React host surface");
-  for (const label of ["Back", "Forward", "Reload", "Bookmark", "Copy", "New Window", "Save", "Print", "Share", "Info", "Zoom Out", "100%", "Zoom In", "Source", "Find", "Go"]) {
+  for (const label of ["Back", "Forward", "Reload", "Bookmark", "Bookmarks (0)", "Copy", "New Window", "Save", "Print", "Share", "Info", "Zoom Out", "100%", "Zoom In", "Source", "Find", "Go"]) {
     const button = textButton(label);
     expect(button.disabled).toBe(true);
     button.click();
@@ -199,6 +222,19 @@ test("React and Electron renderer controls cross the Mosaic host seam", async ()
   expect(events[events.length - 1]?.event.type).toBe("toggleBookmark");
   expect(document.body.textContent).toContain("Remove Bookmark");
   expect(document.body.textContent).toContain("Bookmark persisted through MosaicHost");
+
+  await act(async () => {
+    textButton("Bookmarks (1)").click();
+  });
+  await flush();
+  expect(events[events.length - 1]?.event.type).toBe("bookmarksOpen");
+  expect(document.body.textContent).toContain("1 of 1");
+  expect(document.body.textContent).toContain("http://venture.test/start");
+  await act(async () => {
+    textButton("Close").click();
+  });
+  await flush();
+  expect(events[events.length - 1]?.event.type).toBe("bookmarksClose");
 
   await act(async () => {
     textButton("Copy").click();

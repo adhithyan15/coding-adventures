@@ -1,8 +1,10 @@
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.click
 import androidx.compose.ui.test.junit4.v2.createComposeRule
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -80,6 +82,19 @@ class VentureChromeInteractionTest {
             rule.onNodeWithText("Compose Start").assertExists()
             val surface = rule.onNodeWithTag("venture-content-surface").assertExists()
             println("compose-live-stage=shell-mounted")
+
+            rule.onNodeWithTag("bookmark-button").assertIsEnabled().performClick()
+            rule.waitUntil(10_000) {
+                runCatching { rule.onNodeWithText("Bookmarks (1)").assertExists() }.isSuccess
+            }
+            rule.onNodeWithText("Bookmarks (1)").assertExists().performClick()
+            rule.waitUntil(10_000) {
+                runCatching { rule.onNodeWithText("1 of 1").assertExists() }.isSuccess
+            }
+            rule.onAllNodesWithText("Compose Start").assertCountEquals(2)
+            rule.onNodeWithTag("bookmarks-close-button").performClick()
+            rule.onNodeWithTag("bookmarks-panel").assertDoesNotExist()
+            println("compose-live-stage=bookmark-catalog")
 
             rule.onNodeWithTag("copy-address-button").assertIsEnabled().performClick()
             rule.waitUntil(10_000) { host.lastClipboardText != null }

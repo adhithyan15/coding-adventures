@@ -153,8 +153,10 @@ storage-neutral canonical model, ordered catalog, repository boundary, and
 save-before-commit transaction; `browser-bookmarks-file` supplies bounded,
 versioned JSON with native profile paths and crash-safe atomic replacement;
 `BrowserSession` owns bookmark commands; and all generated Mosaic hosts share
-one label/disabled/event contract. Adapter, restart, rollback, DOM, and direct
-native toolbar tests cover the complete seam.
+one toggle and catalog contract. The shared controller projects count, title,
+canonical address, and selection position, owns wraparound traversal, and
+opens the selected entry through ordinary navigation. Adapter, restart,
+rollback, generated-host, and direct native tests cover the complete seam.
 
 Completed through the typed input value phase: `browser-form-controls` owns
 selection, composition, editor presentation, generated-Unicode grapheme and

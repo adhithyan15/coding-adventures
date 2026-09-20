@@ -1049,6 +1049,75 @@ fn share_page_uses_one_typed_presenter_request_across_generated_hosts() {
 }
 
 #[test]
+fn bookmark_catalog_uses_one_ordered_shared_state_machine_across_generated_hosts() {
+    let interface = read_package_file("src/VentureChrome.mil");
+    let layout = read_package_file("src/VentureChrome.mll");
+    for symbol in [
+        "slot bookmarks-label",
+        "slot bookmarks-open",
+        "slot bookmarks-position",
+        "slot bookmarks-title",
+        "slot bookmarks-address",
+        "emit onBookmarksOpen",
+        "emit onBookmarksPrevious",
+        "emit onBookmarksNext",
+        "emit onBookmarksNavigate",
+        "emit onBookmarksClose",
+    ] {
+        assert!(interface.contains(symbol), "bookmark interface omits {symbol}");
+    }
+    for control in [
+        "bookmarks-button",
+        "bookmarks-panel",
+        "bookmarks-previous-button",
+        "bookmarks-next-button",
+        "bookmarks-open-button",
+        "bookmarks-close-button",
+    ] {
+        assert!(layout.contains(control), "bookmark layout omits {control}");
+    }
+
+    let core = read_package_file("../../../packages/rust/venture-browser-core/src/lib.rs");
+    for symbol in [
+        "OpenBookmarkCatalog",
+        "BrowseBookmarkCatalog",
+        "CloseBookmarkCatalog",
+        "bookmark_selection",
+        "Bookmarks ({}",
+        "bookmark_catalog_wraps_and_opens_the_selected_entry",
+    ] {
+        assert!(core.contains(symbol), "shared bookmark core omits {symbol}");
+    }
+
+    for path in [
+        "host/compose/VentureChromeInteractionTest.kt",
+        "host/flutter/venture_chrome_interaction_test.dart",
+        "host/qt/tst_venture_chrome.qml",
+        "host/react/VentureChromeInteraction.test.tsx",
+        "host/swiftui/MosaicHost.swift",
+        "host/web/VentureChromeInteraction.test.js",
+        "host/xaml/MosaicHost.cs",
+    ] {
+        let acceptance = read_package_file(path);
+        assert!(
+            acceptance.contains("bookmarks-button")
+                || acceptance.contains("Bookmarks (1)"),
+            "{path} omits bookmark catalog acceptance"
+        );
+    }
+
+    for (path, mapping) in [
+        ("host/qt/MosaicHost.cpp", "bookmarksPosition"),
+        ("host/xaml/MosaicHost.cs", "BookmarksPosition"),
+    ] {
+        assert!(
+            read_package_file(path).contains(mapping),
+            "{path} omits bookmark catalog bridge hydration"
+        );
+    }
+}
+
+#[test]
 fn page_info_uses_one_typed_response_snapshot_across_generated_hosts() {
     let interface = read_package_file("src/VentureChrome.mil");
     let layout = read_package_file("src/VentureChrome.mll");
@@ -2023,6 +2092,17 @@ fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
     assert!(
         powershell.contains("cmd.exe /d /c \"java -version 2>&1\""),
         "Windows matrix must capture Java's stderr without turning it into a terminating error"
+    );
+    assert!(
+        shell.contains("VENTURE_BOOKMARKS_PATH=\"$flutter_bookmarks_path\"")
+            && shell.contains("VENTURE_BOOKMARKS_PATH=\"$compose_bookmarks_path\""),
+        "POSIX native acceptance gates must use isolated bookmark profiles"
+    );
+    assert!(
+        powershell.contains("$env:VENTURE_BOOKMARKS_PATH = $xamlBookmarksPath")
+            && powershell.contains("$env:VENTURE_BOOKMARKS_PATH = $flutterBookmarksPath")
+            && powershell.contains("$env:VENTURE_BOOKMARKS_PATH = $composeBookmarksPath"),
+        "PowerShell native acceptance gates must use isolated bookmark profiles"
     );
     let backends = [
         "react",

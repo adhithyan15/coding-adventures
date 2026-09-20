@@ -628,16 +628,17 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     let bookmarkLabel = props?["bookmark-label"] as? String ?? ""
     let bookmarkEvents = chromeEventCounts["onToggleBookmark", default: 0]
     if bookmarkLabel == "Remove Bookmark", bookmarkEvents == eventCount + 1 {
-      guard performNativeButtonClick(identifier: "bookmark-button") else {
+      let catalogEvents = chromeEventCounts["onBookmarksOpen", default: 0]
+      guard performNativeButtonClick(identifier: "bookmarks-button") else {
         writeInteractionResult(
-          ["backend": "swiftui", "status": "error", "error": "bookmark-button not found"],
+          ["backend": "swiftui", "status": "error", "error": "bookmarks-button not found"],
           to: markerPath)
         return
       }
       DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
-        self?.verifyBookmarkRemoved(
+        self?.verifyBookmarkCatalog(
           startURL: startURL, targetURL: targetURL, markerPath: markerPath,
-          eventCount: eventCount, remaining: 50)
+          bookmarkEventCount: eventCount, catalogEventCount: catalogEvents, remaining: 50)
       }
       return
     }
@@ -655,6 +656,76 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
       self?.verifyBookmarkAdded(
         startURL: startURL, targetURL: targetURL, markerPath: markerPath,
         eventCount: eventCount, remaining: remaining - 1)
+    }
+  }
+
+  private func verifyBookmarkCatalog(
+    startURL: String, targetURL: String, markerPath: String, bookmarkEventCount: Int,
+    catalogEventCount: Int, remaining: Int
+  ) {
+    let props = applyProps()?["props"] as? NSDictionary
+    let open = props?["bookmarks-open"] as? Bool
+    let position = props?["bookmarks-position"] as? String ?? ""
+    let address = props?["bookmarks-address"] as? String ?? ""
+    let catalogEvents = chromeEventCounts["onBookmarksOpen", default: 0]
+    if open == true, position == "1 of 1", address == targetURL,
+      catalogEvents == catalogEventCount + 1
+    {
+      let closeEvents = chromeEventCounts["onBookmarksClose", default: 0]
+      _ = handleEvent([:], name: "onBookmarksClose")
+      propsChangedHandler?()
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
+        self?.verifyBookmarkCatalogClosed(
+          startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+          bookmarkEventCount: bookmarkEventCount, closeEventCount: closeEvents,
+          remaining: 50)
+      }
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        ["backend": "swiftui", "status": "error", "error": "bookmark catalog did not open"],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifyBookmarkCatalog(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        bookmarkEventCount: bookmarkEventCount, catalogEventCount: catalogEventCount,
+        remaining: remaining - 1)
+    }
+  }
+
+  private func verifyBookmarkCatalogClosed(
+    startURL: String, targetURL: String, markerPath: String, bookmarkEventCount: Int,
+    closeEventCount: Int, remaining: Int
+  ) {
+    let open = (applyProps()?["props"] as? NSDictionary)?["bookmarks-open"] as? Bool
+    if open == false, chromeEventCounts["onBookmarksClose", default: 0] == closeEventCount + 1 {
+      guard performNativeButtonClick(identifier: "bookmark-button") else {
+        writeInteractionResult(
+          ["backend": "swiftui", "status": "error", "error": "bookmark-button not found"],
+          to: markerPath)
+        return
+      }
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
+        self?.verifyBookmarkRemoved(
+          startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+          eventCount: bookmarkEventCount, remaining: 50)
+      }
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        ["backend": "swiftui", "status": "error", "error": "bookmark catalog did not close"],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifyBookmarkCatalogClosed(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        bookmarkEventCount: bookmarkEventCount, closeEventCount: closeEventCount,
+        remaining: remaining - 1)
     }
   }
 
@@ -1660,7 +1731,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private func nativeToolbarControlPoint(identifier: String) -> (NSPoint, NSWindow)? {
     let identifiers = [
       "back-button", "forward-button", "home-button", "reload-button",
-      "bookmark-button",
+      "bookmark-button", "bookmarks-button",
     ]
     guard let controlIndex = identifiers.firstIndex(of: identifier) else { return nil }
     var visited = Set<ObjectIdentifier>()
@@ -1736,6 +1807,8 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     case "home-button": return ["Home"]
     case "reload-button": return ["Reload"]
     case "bookmark-button": return ["Bookmark", "Remove Bookmark"]
+    case "bookmarks-button": return ["Bookmarks (0)", "Bookmarks (1)"]
+    case "bookmarks-close-button": return ["Close"]
     case "copy-address-button": return ["Copy", "Copy Address"]
     case "open-page-button": return ["New Window", "Open in New Window"]
     case "save-page-button": return ["Save", "Save Page"]

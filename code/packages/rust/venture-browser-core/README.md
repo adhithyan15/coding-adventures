@@ -162,6 +162,11 @@ inject either the durable `browser-bookmarks-file` adapter or an isolated
 in-memory repository for tests. Bookmark URL identity deliberately retains
 fragments so separate document anchors can be saved independently.
 
+`BrowserChromeController` projects that ordered catalog into shared generated
+chrome. It owns the selected entry, wraparound traversal, empty-state
+disabledness, and dismissal after an entry reuses ordinary navigation, so host
+toolkits do not acquire bookmark-list policy.
+
 `ScrollState` clamps vertical offsets against content and viewport geometry,
 performs scroll-aware link hit-testing, and feeds `scrolled_viewport_scene`.
 That function preserves the document scene beneath a group translated by the

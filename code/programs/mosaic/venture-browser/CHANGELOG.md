@@ -1,5 +1,9 @@
 # Changelog
 
+- Add a shared browsable bookmark catalog with durable count, selected title
+  and canonical address, wraparound traversal, and ordinary navigation across
+  every generated host.
+
 - Add a shared Copy Source control that sends the exact retained response
   through the existing clipboard effect, keeps the source panel open, and
   reports one core-owned success status across generated hosts.
