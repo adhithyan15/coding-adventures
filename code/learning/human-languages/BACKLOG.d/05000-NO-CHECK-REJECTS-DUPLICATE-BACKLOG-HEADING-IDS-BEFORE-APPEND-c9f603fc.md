@@ -1,6 +1,6 @@
 ## HL-C411 — no check rejects duplicate backlog heading ids before append-only merge
 
-**Status: OPEN. Depends on the HL-C410 repair merged by #15593.** Two concurrent
+**Status: CLOSED (2026-09-20). Depends on the HL-C410 repair merged by #15593.** Two concurrent
 branches both selected `04980`/`HL-C409` after reading the same repository state:
 
 | immutable filename | current heading id | subject |
@@ -32,9 +32,10 @@ That attempted rename had passed `npm run validate`, all twelve package gates,
 the full suite, the strict Malayalam book compile and the LaTeX warning scan.
 The package checks shard shape; the workflow also protects committed history.
 
-**What closing this needs.** Add an author-time allocation or validation rule
-that remains safe when curriculum PRs are concurrent. A check against one
-branch's base is insufficient because neither branch can see the other. The id
-must instead be derived from an independently unique value, reserved centrally,
-or verified against active PRs before publication. Until then, re-read both main
-and active human-language PRs before assigning the next `HL-C` id.
+**Resolution.** Future fragments after rank `05000` keep the readable sequence
+but suffix it with the first eight hex characters of the exact subject's NFC
+SHA-256 fingerprint. Authors allocate that id with `npm run backlog:id --
+"<subject>"`; `npm run check:doc-shards` rejects missing, stale, or duplicate
+post-cutover fingerprints. Independent subjects can therefore choose the same
+sequence and rank on concurrent branches without claiming the same id. Existing
+history through this shard remains grandfathered and unchanged.
