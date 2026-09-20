@@ -39,7 +39,9 @@ await o.dispose();
 
 These are deferred to follow-up packages:
 
-- **No parallelism.** Stages execute sequentially in topological order. `settings.maxConcurrency` is honoured at `1`.
+- **No DAG parallelism yet.** Stages still execute sequentially in topological
+  order. The shared FIFO permit pool and wait suspension boundary are
+  implemented; FM-B042 connects ready stages and per-item work to them.
 - **No streaming pipelining yet.** A `Stream<X>` producer is still fully drained
   before downstream consumers see values. The bounded multicast transport and
   content-addressed checkpoint tree are implemented; FM-B040 owns their
@@ -76,6 +78,9 @@ These are deferred to follow-up packages:
   ordered 64-value consumer windows, slow-branch backpressure, safe consumer
   detachment, shared terminal errors, cancellation cleanup, and retained-value
   instrumentation
+- Shared FIFO concurrency control with one pipeline-wide permit budget,
+  cancellation-safe queued work, exact failure cleanup, wait-time permit
+  suspension, fair reacquisition, and active/queued/peak instrumentation
 - Deterministic tagged cache encoding for plain Forme values and bytes;
   per-invocation cache hits/misses for safe pure stages, with `useCache: false`
   bypass and fail-open behavior for unsupported/corrupt entries

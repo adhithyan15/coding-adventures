@@ -1,5 +1,29 @@
 # Changelog — @coding-adventures/forme-orchestrator
 
+## 0.10.0 — 2026-09-19
+
+### Added — shared scheduler permit pool
+
+- A FIFO concurrency pool now provides one positive safe-integer permit budget
+  for stage and per-item scheduler work, with exact release on success,
+  synchronous failure, and asynchronous failure.
+- A holder can yield its permit while awaiting upstream and reacquire at the
+  queue tail. This supplies the deadlock-free `maxConcurrency: 1` primitive
+  needed by the live-stream scheduler without bypassing older waiters.
+- Pipeline cancellation rejects queued and future work with
+  `CancellationError`, while active work retains cooperative cancellation and
+  releases capacity when it unwinds.
+- Read-only instrumentation reports active, queued, and peak-active work.
+  FM-B042 and FM-B043 own DAG and live-stream integration.
+
+### Tests
+
+- Twenty-two focused cases cover input bounds, peak concurrency, FIFO starts and
+  reacquisition, sync/async failure cleanup, queued/future cancellation,
+  cancellation during reacquisition, one-permit producer/consumer progress,
+  failed waits, awaited and unawaited yield settlement, concurrent-yield
+  rejection, and already-cancelled pools.
+
 ## 0.9.0 — 2026-09-19
 
 ### Added — bounded lazy stream fan-out

@@ -569,6 +569,35 @@ A future stage-level annotation (open question §16) may override per
 stage. Within a stage, concurrent invocations are independent — stages
 must remain pure (FM01 §3.3).
 
+#### 4.3.1 Shared permit contract
+
+All stage and per-item invocations acquire from one FIFO permit pool. The
+configured limit must be a positive safe integer; `null` resolves once per run
+to the host's available hardware concurrency, with a minimum of one. A queued
+invocation begins only after every earlier live waiter has either acquired or
+been cancelled. Completion and synchronous or asynchronous failure release
+the permit exactly once.
+
+A holder that must wait for an upstream stream value yields its permit before
+calling `next()`. If the wait succeeds, reacquisition joins the tail of the
+same FIFO queue before stage code resumes. A non-cancellation wait failure also
+reacquires before it is exposed to task code, so a caller that catches the
+error cannot continue outside the concurrency budget. Every yielded-wait
+failure remains terminal for the owning invocation and takes precedence over
+later task errors, even if task code awaits, catches, or discards its promise.
+Pipeline cancellation does not reacquire; it poisons
+the invocation so catching the local error cannot turn the cancelled task into
+success. This release/reacquire boundary
+is what allows a producer and consumer to make progress with
+`maxConcurrency: 1`; a holder may have only one yield in flight, and the pool
+settles that yield before the owning task can finish.
+
+Pipeline cancellation rejects queued acquisitions with `CancellationError`
+and refuses new work. Active holders remain cooperatively cancellable through
+their normal `StageContext` token, and their eventual unwind still releases
+capacity. Permit-pool instrumentation reports the active count, queued count,
+and peak active count without exposing mutable scheduler state.
+
 ### 4.4 Stream backpressure
 
 The naive `AsyncIterable` semantics provide pull-based backpressure
