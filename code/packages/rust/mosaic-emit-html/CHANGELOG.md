@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Reconcile HostNavigationSplit with the scoped typography context after parallel
+  changes merged; fixes the Rust build on main (#15694).
+
 - Support HTML HostTable numeric typography with scoped native-control inheritance,
   row/container overrides and nested-table boundaries (#15677).
 
