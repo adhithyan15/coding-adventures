@@ -18,11 +18,10 @@ import {
   readGeneratedBookHashManifest,
 } from "../../../packages/typescript/human-language-data/src/generated-hash-shards.ts";
 import {
-  CURRICULUM_SECTIONS,
   isSharded,
   listShardNames,
+  mergeCurriculumShards,
   mergeMetaAndList,
-  mergeSectionedShards,
   readLedgerFile,
   readShards,
   shardDirectoryFor,
@@ -244,7 +243,7 @@ export function loadHumanLanguageLedgerModule(
     watchShards(curriculumRoot, path, watch);
     const shards = readShards(path);
     if (shards === null) return null;
-    return moduleWithDefault(mergeSectionedShards(shards, CURRICULUM_SECTIONS));
+    return moduleWithDefault(mergeCurriculumShards(shards));
   }
 
   const chapterTrack = trackFromResolvedId(CHAPTER_MODULE_PREFIX, id);
