@@ -2,7 +2,7 @@
 """Validate that generated native TaskApp controls remain wired to Rust events.
 
 The live conformance programs prove the host boundary, scheduling projections,
-error atomicity, and persistence. This source contract closes the remaining
+error atomicity, persistence, and recoverable startup. This source contract closes the remaining
 gap for backends where hosted-runner accessibility APIs are not dependable: it
 requires the emitted input/button controls, event payloads, row projections,
 and host-to-view update subscription to remain connected.
@@ -116,6 +116,14 @@ CONTRACTS: dict[str, dict[str, tuple[str, ...]]] = {
             'Text(text = "Your Inbox is ready"',
         ),
         "src/main/kotlin/Main.kt": (
+            "fun MosaicStartup(",
+            'testTag("mosaic-startup-loading")',
+            'Text("Starting TaskApp…")',
+            'testTag("mosaic-startup-failure")',
+            'Text("TaskApp could not start")',
+            'Text("Your saved tasks have not been changed. Retrying is safe.")',
+            'Button(onClick = { attempt += 1 }) { Text("Try again") }',
+            "withContext(Dispatchers.IO)",
             "mosaicHost.setPropsChangedHandler",
             "hostProps = nextProps",
             "mosaicHost.handleEvent(event.mosaicEnvelope)",

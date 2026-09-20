@@ -2879,7 +2879,7 @@ jobs:
           MOSAIC_APP_STATE_PATH="$taskapp_ui_state" \
             JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_taskapp_runtime")" \
             xvfb-run -a gradle --no-daemon --stacktrace -p "$taskapp_output/compose" \
-              test --tests TaskAppUiTest.generatedControlsDriveRustSchedulingLifecycle
+              test --tests TaskAppUiTest
           MOSAIC_APP_STATE_PATH="$taskapp_ui_state" MOSAIC_EXPECT_RESTORED=1 \
             JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_taskapp_runtime")" \
             xvfb-run -a gradle --no-daemon --stacktrace --rerun-tasks -p "$taskapp_output/compose" \

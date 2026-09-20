@@ -4558,7 +4558,7 @@ fn compose_main_with_host_effects(
     // SwiftUI is the opposite case: its author text sits ~270 lines AHEAD of
     // the assignment being anchored on, so there the anchoring is the only
     // thing between a slot default and the splice point.
-    const ANCHOR: &str = "val mosaicHost = remember {";
+    const ANCHOR: &str = "val mosaicHost =";
     let Some(at) = line_anchored_find(generated, ANCHOR) else {
         // Loud, for the same reason as SwiftUI. Gradle compiles everything
         // under `src/main/kotlin/`, so an uninstalled handler still compiles,
@@ -4959,34 +4959,48 @@ fn build_compose_main_kt(
     } else {
         "MosaicRuntimeHost.load() ?: MosaicComposeHostBridge.load()"
     };
-    let host_type = if require_runtime {
-        "MosaicComposeHost"
-    } else {
-        "MosaicComposeHost?"
-    };
     let startup_import = if require_runtime {
-        "import androidx.compose.material.Text\n"
+        concat!(
+            "import androidx.compose.foundation.layout.Arrangement\n",
+            "import androidx.compose.foundation.layout.Column\n",
+            "import androidx.compose.foundation.layout.fillMaxSize\n",
+            "import androidx.compose.foundation.layout.padding\n",
+            "import androidx.compose.material.Button\n",
+            "import androidx.compose.material.Text\n",
+            "import androidx.compose.material.darkColors\n",
+            "import androidx.compose.material.lightColors\n",
+            "import androidx.compose.runtime.key\n",
+            "import androidx.compose.ui.Alignment\n",
+            "import androidx.compose.ui.Modifier\n",
+            "import androidx.compose.ui.platform.testTag\n",
+            "import androidx.compose.ui.unit.dp\n",
+            "import kotlinx.coroutines.Dispatchers\n",
+            "import kotlinx.coroutines.withContext\n",
+        )
     } else {
         ""
     };
     let (window_imports, window_state_argument) = match initial_window_size {
         Some(size) => (
-            concat!(
-                "import androidx.compose.ui.unit.DpSize\n",
-                "import androidx.compose.ui.unit.dp\n",
-                "import androidx.compose.ui.window.rememberWindowState\n",
+            format!(
+                "import androidx.compose.ui.unit.DpSize\n{}import androidx.compose.ui.window.rememberWindowState\n",
+                if require_runtime {
+                    ""
+                } else {
+                    "import androidx.compose.ui.unit.dp\n"
+                }
             ),
             format!(
                 ", state = rememberWindowState(size = DpSize({}.dp, {}.dp))",
                 size.width, size.height
             ),
         ),
-        None => ("", String::new()),
+        None => (String::new(), String::new()),
     };
-    let ready_decl = if require_runtime {
-        "    var hostReady by remember { mutableStateOf(false) }\n"
+    let initial_props_decl = if require_runtime {
+        "    var hostProps by remember(initialResponse) { mutableStateOf(mosaicMap(initialResponse[\"props\"])) }\n"
     } else {
-        ""
+        "    var hostProps by remember { mutableStateOf<Map<String, Any?>>(emptyMap()) }\n"
     };
     let props_update = if require_runtime {
         concat!(
@@ -4994,18 +5008,12 @@ fn build_compose_main_kt(
             "            \"Mosaic runtime response did not include props\"\n",
             "        }\n",
             "        hostProps = nextProps\n",
-            "        hostReady = true\n",
         )
     } else {
         "        if (nextProps.isNotEmpty()) { hostProps = nextProps }\n"
     };
     let lifecycle = if require_runtime {
         concat!(
-            "    LaunchedEffect(mosaicHost) {\n",
-            "        applyMosaicResponse(checkNotNull(mosaicHost.props()) {\n",
-            "            \"Mosaic runtime returned no startup props\"\n",
-            "        })\n",
-            "    }\n",
             "    DisposableEffect(mosaicHost) {\n",
             "        mosaicHost.setPropsChangedHandler {\n",
             "            applyMosaicResponse(checkNotNull(mosaicHost.props()) {\n",
@@ -5032,12 +5040,99 @@ fn build_compose_main_kt(
             "    }\n",
         )
     };
-    let root_body = if require_runtime {
+    let root_body = root;
+    let main_host = if require_runtime {
+        ""
+    } else {
+        "    val mosaicHost = remember { MosaicRuntimeHost.load() ?: MosaicComposeHostBridge.load() }\n"
+    };
+    let window_body = if require_runtime {
+        "        MosaicStartup()\n"
+    } else {
+        "        MosaicApp(mosaicHost)\n"
+    };
+    let strict_startup = if require_runtime {
         format!(
-            "        if (hostReady) {{\n{root}\n        }} else {{\n            Text(\"Starting {component_label}…\")\n        }}"
+            concat!(
+                "private fun loadMosaicHost(): MosaicComposeHost {{\n",
+                "    val mosaicHost = {host_loader}\n",
+                "    return mosaicHost\n",
+                "}}\n\n",
+                "private sealed interface MosaicStartupState {{\n",
+                "    data object Loading : MosaicStartupState\n",
+                "    data class Ready(\n",
+                "        val host: MosaicComposeHost,\n",
+                "        val response: Map<String, Any?>,\n",
+                "    ) : MosaicStartupState\n",
+                "    data class Failed(val detail: String) : MosaicStartupState\n",
+                "}}\n\n",
+                "@Composable\n",
+                "fun MosaicStartup(\n",
+                "    loadHost: () -> MosaicComposeHost = ::loadMosaicHost,\n",
+                "    content: @Composable (MosaicComposeHost, Map<String, Any?>) -> Unit =\n",
+                "        {{ host, response -> MosaicApp(host, response) }},\n",
+                ") {{\n",
+                "    var attempt by remember {{ mutableStateOf(0) }}\n",
+                "    var state by remember(attempt) {{ mutableStateOf<MosaicStartupState>(MosaicStartupState.Loading) }}\n",
+                "    LaunchedEffect(attempt) {{\n",
+                "        state = withContext(Dispatchers.IO) {{\n",
+                "            runCatching {{\n",
+                "                val host = loadHost()\n",
+                "                try {{\n",
+                "                    val response = checkNotNull(host.props()) {{\n",
+                "                        \"Mosaic runtime returned no startup props\"\n",
+                "                    }}\n",
+                "                    check(response.containsKey(\"props\")) {{\n",
+                "                        \"Mosaic runtime response did not include props\"\n",
+                "                    }}\n",
+                "                    MosaicStartupState.Ready(host, response)\n",
+                "                }} catch (failure: Throwable) {{\n",
+                "                    host.close()\n",
+                "                    throw failure\n",
+                "                }}\n",
+                "            }}.getOrElse {{ failure ->\n",
+                "                MosaicStartupState.Failed(\n",
+                "                    failure.message ?: failure.javaClass.simpleName.ifEmpty {{ \"Unknown startup error\" }},\n",
+                "                )\n",
+                "            }}\n",
+                "        }}\n",
+                "    }}\n",
+                "    MaterialTheme(colors = if (androidx.compose.foundation.isSystemInDarkTheme()) darkColors() else lightColors()) {{\n",
+                "        when (val current = state) {{\n",
+                "            MosaicStartupState.Loading -> Column(\n",
+                "                modifier = Modifier.fillMaxSize().padding(32.dp).testTag(\"mosaic-startup-loading\"),\n",
+                "                verticalArrangement = Arrangement.Center,\n",
+                "                horizontalAlignment = Alignment.CenterHorizontally,\n",
+                "            ) {{\n",
+                "                Text(\"Starting {component_label}…\")\n",
+                "            }}\n",
+                "            is MosaicStartupState.Failed -> Column(\n",
+                "                modifier = Modifier.fillMaxSize().padding(32.dp).testTag(\"mosaic-startup-failure\"),\n",
+                "                verticalArrangement = Arrangement.Center,\n",
+                "                horizontalAlignment = Alignment.CenterHorizontally,\n",
+                "            ) {{\n",
+                "                Text(\"{component_label} could not start\")\n",
+                "                Text(\"Your saved tasks have not been changed. Retrying is safe.\")\n",
+                "                Text(current.detail)\n",
+                "                Button(onClick = {{ attempt += 1 }}) {{ Text(\"Try again\") }}\n",
+                "            }}\n",
+                "            is MosaicStartupState.Ready -> key(current.host) {{\n",
+                "                content(current.host, current.response)\n",
+                "            }}\n",
+                "        }}\n",
+                "    }}\n",
+                "}}\n\n",
+            ),
+            host_loader = host_loader,
+            component_label = component_label,
         )
     } else {
-        root
+        String::new()
+    };
+    let app_signature = if require_runtime {
+        "fun MosaicApp(mosaicHost: MosaicComposeHost, initialResponse: Map<String, Any?>) {"
+    } else {
+        "fun MosaicApp(mosaicHost: MosaicComposeHost?) {"
     };
     let legacy_bridge = if require_runtime {
         ""
@@ -5086,11 +5181,12 @@ fn build_compose_main_kt(
             "import androidx.compose.ui.window.Window\n",
             "import androidx.compose.ui.window.application\n\n",
             "fun main() = application {{\n",
-            "    val mosaicHost = remember {{ {host_loader} }}\n",
+            "{main_host}",
             "    Window(onCloseRequest = ::exitApplication, title = \"{}\"{window_state_argument}) {{\n",
-            "        MosaicApp(mosaicHost)\n",
+            "{window_body}",
             "    }}\n",
             "}}\n\n",
+            "{strict_startup}",
             "interface MosaicComposeHost : AutoCloseable {{\n",
             "    fun props(): Map<String, Any?>?\n",
             "    fun handleEvent(event: Map<String, Any?>): Map<String, Any?>?\n",
@@ -5098,9 +5194,8 @@ fn build_compose_main_kt(
             "    override fun close() {{}}\n",
             "}}\n\n",
             "@Composable\n",
-            "fun MosaicApp(mosaicHost: {host_type}) {{\n",
-            "    var hostProps by remember {{ mutableStateOf<Map<String, Any?>>(emptyMap()) }}\n",
-            "{ready_decl}",
+            "{app_signature}\n",
+            "{initial_props_decl}",
             "    fun applyMosaicResponse(response: Map<String, Any?>?) {{\n",
             "        if (response == null) return\n",
             "        val nextProps = mosaicMap(response[\"props\"])\n",
@@ -5174,9 +5269,11 @@ fn build_compose_main_kt(
         startup_import = startup_import,
         window_imports = window_imports,
         window_state_argument = window_state_argument,
-        host_loader = host_loader,
-        host_type = host_type,
-        ready_decl = ready_decl,
+        main_host = main_host,
+        window_body = window_body,
+        strict_startup = strict_startup,
+        app_signature = app_signature,
+        initial_props_decl = initial_props_decl,
         props_update = props_update,
         lifecycle = lifecycle,
         root_body = root_body,
@@ -5454,12 +5551,12 @@ fn build_compose_readme(
 ) -> String {
     let app_id = compose_gradle_application_id(package_name);
     let runtime_policy = if require_runtime {
-        "This `native-complete` shell requires the standard Rust runtime at startup. It does not load a package-owned reflection host or mount the component with sample props. The component is mounted only after the runtime returns its first props envelope."
+        "This `native-complete` shell requires the standard Rust runtime at startup. It opens the window with a system-theme-aware loading state, shows runtime or initial-props failures with detail and an in-place retry, and mounts the component only after the runtime returns its first props envelope. It does not load a package-owned reflection host or mount the component with sample props."
     } else {
         "If no runtime library is present, this permissive shell can use a legacy package host or deterministic sample values. Use `--profile native-complete` to require the Rust runtime and remove both fallbacks."
     };
     let main_purpose = if require_runtime {
-        "Desktop app entrypoint that requires the Rust runtime and mounts the component after its first props envelope."
+        "Desktop app entrypoint that owns the loading/failure/retry surface, requires the Rust runtime, and mounts the component after its first props envelope."
     } else {
         "Desktop app entrypoint that mounts the component with Rust runtime props or permissive sample values."
     };
@@ -9483,11 +9580,19 @@ layout NativeEvents {
         assert!(main.contains(
             "requireNotNull(MosaicRuntimeHost.load()) { \"native-complete requires the Mosaic Rust application runtime\" }"
         ));
-        assert!(main.contains("fun MosaicApp(mosaicHost: MosaicComposeHost)"));
-        assert!(main.contains("var hostReady by remember"));
-        assert!(main.contains("if (hostReady)"));
+        assert!(main.contains("fun MosaicStartup("));
+        assert!(main.contains("MosaicStartupState.Loading"));
+        assert!(main.contains("Card could not start"));
+        assert!(main.contains("Your saved tasks have not been changed. Retrying is safe."));
+        assert!(main.contains("Button(onClick = { attempt += 1 })"));
+        assert!(main.contains("withContext(Dispatchers.IO)"));
+        assert!(main.contains(
+            "fun MosaicApp(mosaicHost: MosaicComposeHost, initialResponse: Map<String, Any?>)"
+        ));
+        assert!(!main.contains("var hostReady by remember"));
+        assert!(!main.contains("if (hostReady)"));
         assert!(main.contains("check(response.containsKey(\"props\"))"));
-        assert!(main.contains("checkNotNull(mosaicHost.props())"));
+        assert!(main.contains("val response = checkNotNull(host.props())"));
         assert!(main.contains("checkNotNull(mosaicHost.handleEvent(event.mosaicEnvelope))"));
         assert!(main.contains("label = mosaicRequiredString(hostProps, \"label\")"));
         assert!(!main.contains("MosaicComposeHostBridge"));
@@ -15585,7 +15690,7 @@ handlers = [
         let generated = build_compose_main_kt("AuthorComponentName", &slots, false, None);
 
         let anchor = generated
-            .find("val mosaicHost = remember {")
+            .find("val mosaicHost =")
             .expect("the anchor must be present");
         let prefix = &generated[..anchor];
 
@@ -15610,7 +15715,7 @@ handlers = [
 
     /// The anchor must match what the Compose emitter ACTUALLY emits.
     ///
-    /// `val mosaicHost = remember {` is an incidental detail of
+    /// `val mosaicHost =` is an incidental detail of
     /// `build_compose_main_kt`, free to be reworded by someone who never reads
     /// this code. A fixture-only suite would survive that while every real
     /// build broke, so this drives the real generator -- in both the
@@ -15626,7 +15731,7 @@ handlers = [
             );
             let wired = compose_main_with_host_effects(&generated, &handler())
                 .unwrap_or_else(|e| panic!("require_runtime={require_runtime}: {e:?}"));
-            let host = wired.find("val mosaicHost = remember").expect("host");
+            let host = wired.find("val mosaicHost =").expect("host");
             let install = wired.find("installProbeEffects(it)").expect("install");
             assert!(host < install, "{wired}");
         }
