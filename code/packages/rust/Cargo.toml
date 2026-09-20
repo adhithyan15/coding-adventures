@@ -762,6 +762,7 @@ members = [
     "der-tlv",
     "der-asn1",
     "x509-time",
+    "x509-validity",
     "tls-server-identity",
     "tls-platform",
     "dns-message",
