@@ -770,6 +770,7 @@ members = [
     "x509-basic-constraints",
     "x509-key-usage",
     "x509-extended-key-usage",
+    "x509-subject-alt-name",
     "tls-server-identity",
     "tls-platform",
     "dns-message",

@@ -1,0 +1,13 @@
+[package]
+name = "x509-subject-alt-name"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded RFC 5280 Subject Alternative Name decoding"
+
+[dependencies]
+der-asn1 = { path = "../der-asn1" }
+der-tlv = { path = "../der-tlv" }
+x509-extension = { path = "../x509-extension" }
+
+[dev-dependencies]
+tls-server-identity = { path = "../tls-server-identity" }
