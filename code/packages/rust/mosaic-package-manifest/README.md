@@ -15,6 +15,7 @@ It answers with core sections plus optional package resources:
 | `[components]`   | `exports = [...]` — PascalCase component names this package publishes   |
 | `[dependencies]` | map from kebab-case package name to semver string                       |
 | `[styles]`       | optional package-relative schema-v1 token palette                       |
+| `[app]`          | optional paired initial desktop-window width and height                 |
 | `[host_assets]`  | optional per-backend files copied into generated project shells          |
 | `[kernel]`       | `version = "1"` — primitive-kernel ABI this package targets             |
 
@@ -39,6 +40,10 @@ exports = ["Grid", "Cell", "Column"]
 
 [styles]
 token_palette = "tokens/grid.json"
+
+[app]
+initial-window-width = 1280
+initial-window-height = 900
 
 [host_assets]
 files = [
@@ -69,6 +74,7 @@ assert_eq!(pkg.kernel.version, "1");
 | `components.exports[]`   | `^[A-Z][a-zA-Z0-9]*$` (PascalCase)                            |
 | `dependencies.<name>`    | name = kebab-case, value = semver-like                        |
 | `styles.token_palette`    | optional portable package-relative path ending in `.json`      |
+| `app.initial-window-*`    | optional paired integers from 1 through 2,147,483,647 logical pixels |
 | `host_assets.files[]`    | optional `{ backend, source, target }` strings                 |
 | `kernel.version`         | exactly `"1"` (kernel ABI v1)                                 |
 

@@ -38,13 +38,13 @@ private const val UI_SUMMARY = "1 task(s) · 0 done · projected finish 2026-01-
 // Width, not height, was the real constraint: at 1024 the composer and list
 // wrap and the content grows to ~1012 px tall; at 1280 it reflows to ~538 px.
 //
-// So state the window instead of inheriting it. Every `assertIsDisplayed()`
-// below keeps its full strength -- this is a real desktop window, and content
-// still has to be on screen in it without scrolling.
+// So state the window instead of inheriting it. This value is the TaskApp
+// manifest's `[app]` initial window size, and the package contract test pins
+// the two declarations together. Every `assertIsDisplayed()` below keeps its
+// full strength -- this is the real desktop window the generated app opens,
+// and content still has to be on screen in it without scrolling.
 //
 // Two things this deliberately does NOT paper over, both filed separately:
-//   * the generated app's own `Window` takes Compose's 800 x 600 default,
-//     which is smaller than this and smaller than its content needs; and
 //   * `performScrollTo()` hangs against the emitted scroll container, so
 //     scrolling is not currently an option for reaching content below a fold.
 private val ACCEPTANCE_VIEWPORT = Size(1280f, 900f)

@@ -4,6 +4,13 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+### Fixed — generated desktop windows fit TaskApp on first launch (#14789)
+
+TaskApp now declares a 1280 x 900 initial desktop window in its Mosaic package
+manifest. Every generated desktop shell consumes the same author-owned size,
+matching the viewport already proven by native acceptance tests instead of
+letting Compose open at its too-small 800 x 600 framework default.
+
 ### Changed — adaptive native project pane (#15486)
 
 The app shell now uses `HostNavigationSplit` for its project rail and detail
