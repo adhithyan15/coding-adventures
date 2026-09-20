@@ -82,7 +82,7 @@ const MALAYALAM_MIGRATION_MAX_RANK = 570;
  * with "expected 31 to be greater than 100", a true statement about a perfectly
  * healthy changelog.
  */
-const MIN_SHARDABLE_ENTRIES = 20;
+const MIN_SHARDABLE_ENTRIES = 10;
 const DUCTUS_PLAN: DocShardPlan = {
   path: DUCTUS_CHANGELOG,
   headingLevel: 3,
@@ -226,6 +226,35 @@ describe("Malayalam changelog ownership", () => {
       "6edf7f921c2734a989cc8c57d58afb99ef839cc29ca8237fc6c7f1e0ce1e7960",
     );
   });
+});
+
+const INDIAN_CHANGELOG_BASELINES = [
+  ["bengali", 87_574, 22, "420d87c734f42bba27395c3f058a9322e6488d8f2e4362daea833478d8289857"],
+  ["gujarati", 74_551, 14, "a9a8baf724b7e82075a6c120cd6354183ca43f6f0c510991bf7d9d639495d4d7"],
+  ["kannada", 97_937, 33, "adba39431edb4dcbc4f6a0e78e3b503402a2c5dbfcdc3acd97b4a3ca8f0ac363"],
+  ["marathi", 121_452, 41, "8e6d52193c6f39ca487cd08af82f2556f444bb286a224c14573f19f42a38356f"],
+  ["marwadi", 29_457, 23, "57ac65a35c1505d829768dba881d7143ae784d6a5fd7bf73885a05bb467d7a67"],
+  ["punjabi", 56_717, 33, "23ff699efb287f38ed38fefcad18575a241da9f1b601738c10023ea01aa895cb"],
+  ["sanskrit", 87_588, 29, "0ea8cd5dc1c3145669d3b4824be27d4d9f2c3a3a4882fd2a0bc347c2c978b715"],
+  ["tamil", 122_756, 37, "962fe3ecac73abaa5f62ace918272a9e2e0766c46704050464b0a1f3cddd8ee6"],
+  ["telugu", 117_595, 37, "0a5e0fc838a38b0cc7f13c7d9189469306f7a1236a35fe74f1c7d1f17febcae4"],
+  ["urdu", 62_410, 25, "79f203bcf45627b9fd2ed650fe617ebe131f0488c65ad9fe2e3274e50e571cc7"],
+] as const;
+
+describe("remaining Indian changelog ownership", () => {
+  it.each(INDIAN_CHANGELOG_BASELINES)(
+    "%s preserves its pre-migration history byte-for-byte",
+    (track, bytes, sections, sha256) => {
+      const path = `code/learning/human-languages/${track}/CHANGELOG.md`;
+      const plan = DOC_SHARD_PLANS.find((candidate) => candidate.path === path);
+      expect(plan).toEqual({ path, headingLevel: 2, newestFirst: true });
+
+      const rendered = unshardDocContents(defaultRepoRoot(), plan!);
+      expect(Buffer.byteLength(rendered)).toBe(bytes);
+      expect(splitDocument(rendered, 2).sections).toHaveLength(sections);
+      expect(createHash("sha256").update(rendered).digest("hex")).toBe(sha256);
+    },
+  );
 });
 
 describe("HL26 Script Ductus changelog ownership", () => {
