@@ -185,7 +185,7 @@ TestCase {
         wait(0)
         compare(recordingHost.events.length, 2)
         compare(recordingHost.events[1].event, "onViewSourceCopy")
-        verify(nativeControl("view-source-panel").visible)
+        verify(copySourceButton.visible)
     }
 
     function test_copy_address_crosses_the_mosaic_host_seam() {
