@@ -83,11 +83,7 @@ impl NavigationHistory {
             .iter()
             .copied()
             .zip(self.back_stack.iter().map(String::as_str))
-            .chain(
-                self.current_entry_id
-                    .zip(self.current_url.as_deref())
-                    .into_iter(),
-            )
+            .chain(self.current_entry_id.zip(self.current_url.as_deref()))
             .chain(
                 self.forward_entry_ids
                     .iter()
