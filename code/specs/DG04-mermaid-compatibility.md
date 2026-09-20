@@ -438,7 +438,9 @@ backend-neutral shaped-text PaintInstructions path.
 Document titles reserve resolved layout geometry and lower through shaped-text
 PaintInstructions. Single-line accessibility titles and single-line or braced
 descriptions survive as PaintScene metadata.
-Alignment hints, group-edge modifiers, left and bidirectional
+Sibling `align row` and `align column` constraints survive semantic IR and
+resolve declared member order to deterministic shared-axis layout geometry.
+Group-edge modifiers, left and bidirectional
 arrows, custom icon text, icon artwork, port-aware routing, and configuration remain unsupported
 at the partial level.
 

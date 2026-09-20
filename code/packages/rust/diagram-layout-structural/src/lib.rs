@@ -9,11 +9,11 @@
 use diagram_ir::{
     resolve_style_with_base, DiagramDirection, LayoutedCompartment, LayoutedStructuralDiagram,
     LayoutedStructuralGroup, LayoutedStructuralNode, LayoutedStructuralRelationship, Point,
-    StructuralDiagram, StructuralNode, StructuralNodeKind,
+    StructuralAlignmentAxis, StructuralDiagram, StructuralNode, StructuralNodeKind,
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.10.0";
+pub const VERSION: &str = "0.11.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -50,6 +50,7 @@ pub fn layout_structural_diagram(diagram: &StructuralDiagram) -> LayoutedStructu
         Some(direction) => layout_directional_nodes(&diagram.nodes, &diagram.groups, direction),
         None => layout_nodes(&diagram.nodes, &diagram.groups),
     };
+    apply_alignments(&mut nodes, diagram);
     if diagram.title.is_some() {
         for node in &mut nodes {
             node.y += TITLE_H;
@@ -68,6 +69,51 @@ pub fn layout_structural_diagram(diagram: &StructuralDiagram) -> LayoutedStructu
         groups,
         nodes,
         relationships: rels,
+    }
+}
+
+fn apply_alignments(nodes: &mut [LayoutedStructuralNode], diagram: &StructuralDiagram) {
+    for alignment in &diagram.alignments {
+        let indices = alignment
+            .members
+            .iter()
+            .filter_map(|id| nodes.iter().position(|node| &node.id == id))
+            .collect::<Vec<_>>();
+        if indices.len() < 2 {
+            continue;
+        }
+        match alignment.axis {
+            StructuralAlignmentAxis::Row => {
+                let mut cursor = indices
+                    .iter()
+                    .map(|index| nodes[*index].x)
+                    .fold(f64::INFINITY, f64::min);
+                let y = indices
+                    .iter()
+                    .map(|index| nodes[*index].y)
+                    .fold(f64::INFINITY, f64::min);
+                for index in indices {
+                    nodes[index].x = cursor;
+                    nodes[index].y = y;
+                    cursor += nodes[index].width + COL_GAP;
+                }
+            }
+            StructuralAlignmentAxis::Column => {
+                let x = indices
+                    .iter()
+                    .map(|index| nodes[*index].x)
+                    .fold(f64::INFINITY, f64::min);
+                let mut cursor = indices
+                    .iter()
+                    .map(|index| nodes[*index].y)
+                    .fold(f64::INFINITY, f64::min);
+                for index in indices {
+                    nodes[index].x = x;
+                    nodes[index].y = cursor;
+                    cursor += nodes[index].height + ROW_GAP;
+                }
+            }
+        }
     }
 }
 
@@ -475,6 +521,7 @@ mod tests {
             accessibility_title: None,
             accessibility_description: None,
             direction: None,
+            alignments: vec![],
             nodes: vec![
                 StructuralNode {
                     id: "Animal".into(),
@@ -517,7 +564,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.10.0");
+        assert_eq!(crate::VERSION, "0.11.0");
     }
 
     #[test]
@@ -645,5 +692,32 @@ mod tests {
             layout.relationships[0].points[1].x,
             junction.x + junction.width
         );
+    }
+
+    #[test]
+    fn alignments_resolve_declared_rows_and_columns() {
+        let mut diagram = two_class_diagram();
+        diagram.nodes.push(StructuralNode {
+            id: "Cat".into(),
+            label: "Cat".into(),
+            stereotype: None,
+            node_kind: StructuralNodeKind::Class,
+            metadata: None,
+            style: None,
+            compartments: vec![],
+            parent_group: None,
+        });
+        diagram.alignments.push(StructuralAlignment {
+            axis: StructuralAlignmentAxis::Column,
+            members: vec!["Animal".into(), "Dog".into(), "Cat".into()],
+        });
+        let layout = layout_structural_diagram(&diagram);
+        assert!(layout.nodes.windows(2).all(|nodes| nodes[0].x == nodes[1].x));
+        assert!(layout.nodes.windows(2).all(|nodes| nodes[0].y < nodes[1].y));
+
+        diagram.alignments[0].axis = StructuralAlignmentAxis::Row;
+        let layout = layout_structural_diagram(&diagram);
+        assert!(layout.nodes.windows(2).all(|nodes| nodes[0].y == nodes[1].y));
+        assert!(layout.nodes.windows(2).all(|nodes| nodes[0].x < nodes[1].x));
     }
 }
