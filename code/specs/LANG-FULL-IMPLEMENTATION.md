@@ -1043,7 +1043,10 @@ backend immediately) come before the enabler-dependent items.
   local scalars that the body leaves unchanged, or directly updates through
   one supported recurrence referencing itself, the control, and ordinary local
   scalars that are unchanged or evolve through an acyclic graph of supported
-  recurrences. Read-only body uses, exact scalar
+  recurrences. A recurrence in that acyclic graph may use a conditional
+  expression selected by the controlled scalar or another exact local
+  snapshot; capped execution re-evaluates the selected leaf on every pass.
+  Read-only body uses, exact scalar
   self-assignments, checked numeric or boolean expressions that equal the
   tracked scalar and otherwise reference only known ordinary locals that are
   never changed by the body; an exact bare self-assignment does not count as a
