@@ -216,8 +216,9 @@ evolve through a supported recurrence whose expression references itself, the
 controlled scalar, and ordinary local scalars that are unchanged or evolve
 through a graph of supported recurrences. Capped source-order execution also
 handles unconditional cross-assigned dependency cycles when every participating
-write is a supported local scalar assignment. Conditionally selected cycles
-remain conservative. Those changing dependency
+write is a supported local scalar assignment. Such a cycle may also contain
+conditional expressions whose selectors use only the exact loop control;
+cycles selected by other values remain conservative. Those changing dependency
 recurrences may contain conditional expressions when their selectors are the
 controlled scalar or other exact local snapshots in that graph. The
 recurrence assignment itself may also appear in one or both branches of a
