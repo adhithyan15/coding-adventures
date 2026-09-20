@@ -14101,6 +14101,40 @@ suite and the Rust oracle, then delivers independently tested implementations
 in all fourteen missing established lanes. The reconciled graph has 852 owners
 and 1,579 edges: 222 merged, 629 pending, and exactly this owner in progress.
 
+### DER TLV 15-lane delivery and validation
+
+The selected tranche now has a closed language-neutral DER TLV v1 behavior
+suite with 54 cases and 17 stable error kinds, plus package-native consumers in
+all 15 established implementation lanes: Rust, Python, Go, TypeScript, Dart,
+Elixir, Ruby, Perl, Lua, Java, Kotlin, Swift, Haskell, C#, and F#. The contract
+pins exact borrowed slices and untouched remainders, transactional cursor
+advancement, host-width-independent limits, canonical identifier and length
+encoding, exact-input rejection, payload-blind errors, and empty capability
+manifests. ASN.1 value decoding, X.509 policy, cryptography, trust, TLS,
+transport, and ambient authority remain outside this owner.
+
+The closed consumer registry is itself schema-checked and the aggregate gate
+rejects missing, duplicated, escaped, cross-wired, or unexpected consumers,
+stale fixture references, and invalid capability identities. Package-native
+tests, builds, lint or vet, and coverage gates pass across all 15 lanes. The
+Rust `der-asn1` and `x509-time` downstream suites also pass. The package-parity
+report recognizes `der-tlv` in exactly 15/15 established lanes with no
+collisions or unknown languages, and a real Go build-tool dry-run evaluated 45
+Starlark files, discovered 5,211 packages, selected 15 changed and 21 affected
+packages, and passed orphan checks.
+
+Independent review verified the registry closure and found one C# construction
+path that could bypass configured-limit invariants; the implementation now uses
+constructor-only immutable limits, and fresh C# and F# suites both exceed their
+95 percent line-coverage gates. Rust tests, downstream tests, Clippy with
+warnings denied, and release builds pass. `cargo llvm-cov` can execute the Rust
+tests on Windows, but report generation exceeds the Windows command-line limit
+with OS error 206 because of its generated workspace ignore expression; this
+local reporting limitation is recorded rather than treated as implementation
+coverage evidence. The 19 implementation commits rebased conflict-free onto
+current `origin/main` before publication preparation, while the state remains
+`in-progress` until the ready-for-review PR actually exists.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
