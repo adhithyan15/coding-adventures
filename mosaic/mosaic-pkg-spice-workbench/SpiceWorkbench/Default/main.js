@@ -52,6 +52,10 @@ const fallbackProps = {
   "schematicGridLabel": "Sample SchematicGridLabel",
   "schematicGridLines": [],
   "schematicLabel": "Sample SchematicLabel",
+  "schematicModelNLabel": "Sample SchematicModelNLabel",
+  "schematicModelPLabel": "Sample SchematicModelPLabel",
+  "schematicModelPolarityDisabled": false,
+  "schematicModelPolarityLabel": "Sample SchematicModelPolarityLabel",
   "schematicNetLabel": "Sample SchematicNetLabel",
   "schematicNetLabelDisabled": false,
   "schematicNetLabelLabel": "Sample SchematicNetLabelLabel",
@@ -111,6 +115,7 @@ const fallbackProps = {
   "selectedSchematicAnalysisSourceLabel": "Sample SelectedSchematicAnalysisSourceLabel",
   "selectedSchematicKindLabel": "Sample SelectedSchematicKindLabel",
   "selectedSchematicLabel": "Sample SelectedSchematicLabel",
+  "selectedSchematicModelPolarity": "Sample SelectedSchematicModelPolarity",
   "selectedSchematicRouteTargetLabel": "Sample SelectedSchematicRouteTargetLabel",
   "selectedSchematicTerminalLabel": "Sample SelectedSchematicTerminalLabel",
   "selectedWaveformLabel": "Sample SelectedWaveformLabel",
@@ -315,6 +320,8 @@ const emitPayloads = {
       "type": "number"
     }
   ],
+  "onSetSchematicModelPolarityN": [],
+  "onSetSchematicModelPolarityP": [],
   "onSynchronizeSchematic": [],
   "onUndoSchematic": []
 };

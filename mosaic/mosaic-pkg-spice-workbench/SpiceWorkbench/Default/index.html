@@ -213,6 +213,14 @@
             <span style="font-size: 12px; color: #475569">{{schematicValueLabel}}</span>
             <!-- emit "onSchematicValueChange" dropped: HTML is static -->
             <input type="text" value="{{schematicValue}}" placeholder="{{schematicValuePlaceholder}}" data-disabled="{{schematicValueDisabled}}" data-on-change="onSchematicValueChange" style="background: #ffffff; color: #0f172a; border-width: 1px; border-color: #cbd5e1; border-radius: 3px; padding: 6px; font-family: monospace">
+            <span>{{schematicModelPolarityLabel}}</span>
+            <span>{{selectedSchematicModelPolarity}}</span>
+            <div style="display: flex; flex-direction: row">
+              <!-- emit "onSetSchematicModelPolarityN" dropped: HTML is static -->
+              <button data-disabled="{{schematicModelPolarityDisabled}}" data-on-click="onSetSchematicModelPolarityN">{{schematicModelNLabel}}</button>
+              <!-- emit "onSetSchematicModelPolarityP" dropped: HTML is static -->
+              <button data-disabled="{{schematicModelPolarityDisabled}}" data-on-click="onSetSchematicModelPolarityP">{{schematicModelPLabel}}</button>
+            </div>
             <!-- emit "onRemoveSchematicComponent" dropped: HTML is static -->
             <button data-disabled="{{removeSchematicComponentDisabled}}" data-on-click="onRemoveSchematicComponent">{{removeSchematicComponentLabel}}</button>
           </div>
