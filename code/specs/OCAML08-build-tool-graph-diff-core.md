@@ -49,7 +49,7 @@ decoded Unicode scalar values rather than host bytes, UTF-16 code units, or
 locale collation.
 
 Strict globs operate on `/`-separated scalar sequences with memoized `*`, `**`,
-`?`, and portable character classes. Classes support `[!a]`, `[a-c]`, leading
+and portable character classes. Classes support `[!a]`, `[a-c]`, leading
 `]`, and leading or trailing `-`; an unclosed `[` is literal and `^` has no
 negation meaning. Ambiguous set operators and descending ranges are invalid.
 Exact BUILD-front basenames select at zero match-work cost.
@@ -66,7 +66,11 @@ canonical JSON with the domain separator
 the JSON with its unsigned 64-bit big-endian byte length, computes SHA-256, and
 requires an exact lowercase digest match before selection. Boundary matching is
 exact and case-sensitive; it never widens to prefixes, basenames, ancestors, or
-globs.
+globs. The caller supplies the already validated inert boundary required by the
+language-neutral contract; before hashing or projecting it, the OCaml core also
+enforces independent schema-shape, string-size, 8,192-scope, and
+32,768-authorization guards so a misbehaving caller cannot create unbounded
+work.
 
 ## Dependencies and capabilities
 

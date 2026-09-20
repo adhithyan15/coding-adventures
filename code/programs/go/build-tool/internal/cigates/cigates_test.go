@@ -781,6 +781,33 @@ func TestCapabilitySchemaChangeFiresCapabilityCageGate(t *testing.T) {
 	}
 }
 
+func TestOCamlBuildToolChangeFiresBuildToolConformanceGate(t *testing.T) {
+	reg := loadRealRegistry(t)
+	tests := []struct {
+		name     string
+		affected map[string]bool
+		changed  []string
+	}{
+		{
+			name:     "package clause",
+			affected: map[string]bool{"ocaml/programs/build-tool": true},
+		},
+		{
+			name:    "path clause",
+			changed: []string{"code/programs/ocaml/build-tool/src/coding_adventures_build_tool.ml"},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			got := mustEvaluate(t, reg, test.affected, test.changed, false)
+			if !got["contracts-build-tool-conformance"] {
+				t.Fatal("OCaml build-tool change must require build-tool conformance")
+			}
+		})
+	}
+}
+
 // The package clause depends on the BUILD dependency graph being complete, and
 // this repo has documented cases of missing deps= edges leaving dependents dark.
 // A directory glob is filesystem truth and cannot be defeated that way.

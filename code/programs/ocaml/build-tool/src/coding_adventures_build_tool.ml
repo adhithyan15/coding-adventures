@@ -6,13 +6,9 @@
     command. That makes the two decisions reproducible on every host. *)
 
 type edge = { prerequisite : string; dependent : string }
-
 type graph_input = { packages : string list; edges : edge list }
-
 type graph_result = { edges : edge list; levels : string list list }
-
 type source_mode = Package_prefix | Strict_globs
-
 type unknown_path_policy = All | Error
 
 type package_spec = {
@@ -73,8 +69,6 @@ type error =
   | Graph_edge_unknown
   | Graph_edge_self
   | Graph_edge_duplicate
-  | Graph_edge_invalid
-  | Graph_invalid
   | Graph_cycle
   | Diff_edge_cycle
   | Diff_package_invalid
@@ -95,8 +89,6 @@ let error_code = function
   | Graph_edge_unknown -> "GRAPH_EDGE_UNKNOWN"
   | Graph_edge_self -> "GRAPH_EDGE_SELF"
   | Graph_edge_duplicate -> "GRAPH_EDGE_DUPLICATE"
-  | Graph_edge_invalid -> "GRAPH_EDGE_INVALID"
-  | Graph_invalid -> "GRAPH_INVALID"
   | Graph_cycle -> "GRAPH_CYCLE"
   | Diff_edge_cycle -> "DIFF_EDGE_CYCLE"
   | Diff_package_invalid -> "DIFF_PACKAGE_INVALID"
@@ -129,20 +121,54 @@ let max_match_work = 50_000_000L
 
 let build_names =
   String_set.of_list
-    [ "BUILD"; "BUILD_windows"; "BUILD_mac"; "BUILD_linux";
-      "BUILD_mac_and_linux" ]
+    [
+      "BUILD";
+      "BUILD_windows";
+      "BUILD_mac";
+      "BUILD_linux";
+      "BUILD_mac_and_linux";
+    ]
 
 let windows_reserved =
   String_set.of_list
-    [ "CON"; "PRN"; "AUX"; "NUL"; "CONIN$"; "CONOUT$"; "CLOCK$";
-      "COM1"; "COM2"; "COM3"; "COM4"; "COM5"; "COM6"; "COM7";
-      "COM8"; "COM9"; "LPT1"; "LPT2"; "LPT3"; "LPT4"; "LPT5";
-      "LPT6"; "LPT7"; "LPT8"; "LPT9"; "COM¹"; "COM²"; "COM³";
-      "LPT¹"; "LPT²"; "LPT³" ]
+    [
+      "CON";
+      "PRN";
+      "AUX";
+      "NUL";
+      "CONIN$";
+      "CONOUT$";
+      "CLOCK$";
+      "COM1";
+      "COM2";
+      "COM3";
+      "COM4";
+      "COM5";
+      "COM6";
+      "COM7";
+      "COM8";
+      "COM9";
+      "LPT1";
+      "LPT2";
+      "LPT3";
+      "LPT4";
+      "LPT5";
+      "LPT6";
+      "LPT7";
+      "LPT8";
+      "LPT9";
+      "COM¹";
+      "COM²";
+      "COM³";
+      "LPT¹";
+      "LPT²";
+      "LPT³";
+    ]
 
-let fail error = Error error
+let fail error = Result.Error error
 
-let ( let* ) value next = match value with Ok item -> next item | Error _ as e -> e
+let ( let* ) value next =
+  match value with Ok item -> next item | Result.Error _ as error -> error
 
 (** OCaml 5 exposes a strict UTF-8 decoder in the standard library. We keep
     decoding explicit so malformed bytes never reach Unicode tables. *)
@@ -188,7 +214,9 @@ let map_unicode mapper value =
       let mapped =
         List.concat_map
           (fun scalar ->
-            match mapper scalar with `Self -> [ scalar ] | `Uchars items -> items)
+            match mapper scalar with
+            | `Self -> [ scalar ]
+            | `Uchars items -> items)
           scalars
       in
       Some (encode_utf8 mapped)
@@ -197,7 +225,12 @@ let full_casefold value = map_unicode Uucp.Case.Fold.fold value
 let full_uppercase value = map_unicode Uucp.Case.Map.to_upper value
 
 let scalar_count value =
-  match decode_utf8 value with None -> None | Some scalars -> Some (List.length scalars)
+  match decode_utf8 value with
+  | None -> None
+  | Some scalars -> Some (List.length scalars)
+
+let scalar_count_bounded ~maximum value =
+  if String.length value > maximum * 4 then None else scalar_count value
 
 let compare_unicode left right =
   match (decode_utf8 left, decode_utf8 right) with
@@ -239,15 +272,15 @@ let is_package_component component =
        component
 
 let is_package_name value =
-  match scalar_count value with
+  match scalar_count_bounded ~maximum:240 value with
   | None | Some 0 -> false
   | Some count ->
-      count <= 240
-      && String.contains value '/'
+      count <= 240 && String.contains value '/'
       && List.for_all is_package_component (String.split_on_char '/' value)
 
 let contains value needle =
-  let value_length = String.length value and needle_length = String.length needle in
+  let value_length = String.length value
+  and needle_length = String.length needle in
   let rec search index =
     if index + needle_length > value_length then false
     else if String.sub value index needle_length = needle then true
@@ -261,7 +294,8 @@ let starts_with value prefix =
 
 let ends_with value suffix =
   String.length value >= String.length suffix
-  && String.sub value (String.length value - String.length suffix)
+  && String.sub value
+       (String.length value - String.length suffix)
        (String.length suffix)
      = suffix
 
@@ -296,25 +330,30 @@ let portable_segments value =
   List.for_all
     (fun segment ->
       String.length segment > 0
-      && not (String.equal segment ".")
-      && not (String.equal segment "..")
-      && not (ends_with segment " ")
+      && (not (String.equal segment "."))
+      && (not (String.equal segment ".."))
+      && (not (ends_with segment " "))
       && not (ends_with segment "."))
     (String.split_on_char '/' value)
 
 let is_portable_path value =
-  match (scalar_count value, normalize_nfc value) with
-  | Some count, Some normalized ->
-      count > 0 && count <= 512 && String.equal normalized value
-      && not (starts_with value "/")
-      && not (has_drive_prefix value)
-      && not (String.contains value '\\')
-      && not (contains value "//")
-      && not (has_forbidden ~path:true value)
-      && portable_segments value
-      && List.for_all (fun segment -> not (is_reserved segment))
-           (String.split_on_char '/' value)
-  | _ -> false
+  match scalar_count_bounded ~maximum:512 value with
+  | Some count -> (
+      match normalize_nfc value with
+      | Some normalized ->
+          count > 0 && count <= 512
+          && String.equal normalized value
+          && (not (starts_with value "/"))
+          && (not (has_drive_prefix value))
+          && (not (String.contains value '\\'))
+          && (not (contains value "//"))
+          && (not (has_forbidden ~path:true value))
+          && portable_segments value
+          && List.for_all
+               (fun segment -> not (is_reserved segment))
+               (String.split_on_char '/' value)
+      | None -> false)
+  | None -> false
 
 let class_closing pattern opening =
   let length = Array.length pattern in
@@ -325,7 +364,7 @@ let class_closing pattern opening =
   while !closing < length && pattern.(!closing) <> Char.code ']' do
     incr closing
   done;
-  if !closing = length then None else Some (!cursor, !closing)
+  if !closing = length then None else Some (opening + 1, !closing)
 
 let has_ambiguous_character_class segment =
   match decode_utf8 segment with
@@ -361,29 +400,32 @@ let has_ambiguous_character_class segment =
       scan 0
 
 let is_portable_glob value =
-  match (scalar_count value, normalize_nfc value) with
-  | Some count, Some normalized ->
-      count > 0 && count <= 512 && String.equal normalized value
-      && not (starts_with value "/")
-      && not (has_drive_prefix value)
-      && not (String.contains value '\\')
-      && not (contains value "//")
-      && not (has_forbidden ~path:false value)
-      && portable_segments value
-      && List.for_all
-           (fun segment ->
-             (String.exists
-                (fun character ->
-                  character = '*' || character = '[' || character = ']'
-                  || character = '{' || character = '}')
-                segment
-             || not (is_reserved segment))
-             && not (has_ambiguous_character_class segment))
-           (String.split_on_char '/' value)
-  | _ -> false
+  match scalar_count_bounded ~maximum:512 value with
+  | Some count -> (
+      match normalize_nfc value with
+      | Some normalized ->
+          count > 0 && count <= 512
+          && String.equal normalized value
+          && (not (starts_with value "/"))
+          && (not (has_drive_prefix value))
+          && (not (String.contains value '\\'))
+          && (not (contains value "//"))
+          && (not (has_forbidden ~path:false value))
+          && portable_segments value
+          && List.for_all
+               (fun segment ->
+                 (String.exists
+                    (fun character ->
+                      character = '*' || character = '[' || character = ']'
+                      || character = '{' || character = '}')
+                    segment
+                 || not (is_reserved segment))
+                 && not (has_ambiguous_character_class segment))
+               (String.split_on_char '/' value)
+      | None -> false)
+  | None -> false
 
 type validated_graph = {
-  names : String_set.t;
   edges : edge list;
   forward : Directed.t;
   reverse : Directed.t;
@@ -420,41 +462,39 @@ let validate_graph packages edges =
             fail Graph_edge_duplicate
           else
             let seen = Edge_set.add (edge.prerequisite, edge.dependent) seen in
-            let* () =
-              match Directed.add_edge forward edge.prerequisite edge.dependent with
-              | Ok () -> Ok ()
-              | Error _ -> fail Graph_edge_invalid
+            let () =
+              Directed.add_edge forward edge.prerequisite edge.dependent
+              |> Result.get_ok
             in
-            let* () =
-              match Directed.add_edge reverse edge.dependent edge.prerequisite with
-              | Ok () -> Ok ()
-              | Error _ -> fail Graph_edge_invalid
+            let () =
+              Directed.add_edge reverse edge.dependent edge.prerequisite
+              |> Result.get_ok
             in
             collect_edges seen rest
     in
     let* () = collect_edges Edge_set.empty edges in
-    Ok { names; edges = sort_edges edges; forward; reverse }
+    Ok { edges = sort_edges edges; forward; reverse }
 
-let evaluate_graph input =
+let evaluate_graph (input : graph_input) =
   let* graph = validate_graph input.packages input.edges in
   match Directed.independent_groups graph.forward with
-  | Error Directed.Cycle -> fail Graph_cycle
-  | Error _ -> fail Graph_invalid
-  | Ok levels -> Ok { edges = graph.edges; levels = List.map sort_strings levels }
+  | Error _ -> fail Graph_cycle
+  | Ok levels ->
+      Ok { edges = graph.edges; levels = List.map sort_strings levels }
 
-let inside path root =
-  String.equal path root || starts_with path (root ^ "/")
+let inside path root = String.equal path root || starts_with path (root ^ "/")
 
 let relative path root =
   if String.equal path root then ""
-  else String.sub path (String.length root + 1)
-         (String.length path - String.length root - 1)
+  else
+    String.sub path
+      (String.length root + 1)
+      (String.length path - String.length root - 1)
 
 let basename path =
   match String.rindex_opt path '/' with
   | None -> path
-  | Some index ->
-      String.sub path (index + 1) (String.length path - index - 1)
+  | Some index -> String.sub path (index + 1) (String.length path - index - 1)
 
 let class_matches pattern start finish value =
   let negated = start < finish && pattern.(start) = Char.code '!' in
@@ -482,10 +522,10 @@ let segment_matches pattern value =
                 value_index = Array.length value
               else if pattern.(pattern_index) = Char.code '*' then
                 matches (pattern_index + 1) value_index
-                || (value_index < Array.length value
-                   && matches pattern_index (value_index + 1))
+                || value_index < Array.length value
+                   && matches pattern_index (value_index + 1)
               else if pattern.(pattern_index) = Char.code '[' then
-                (match class_closing pattern pattern_index with
+                match class_closing pattern pattern_index with
                 | None ->
                     value_index < Array.length value
                     && pattern.(pattern_index) = value.(value_index)
@@ -493,10 +533,7 @@ let segment_matches pattern value =
                 | Some (start, closing) ->
                     value_index < Array.length value
                     && class_matches pattern start closing value.(value_index)
-                    && matches (closing + 1) (value_index + 1))
-              else if pattern.(pattern_index) = Char.code '?' then
-                value_index < Array.length value
-                && matches (pattern_index + 1) (value_index + 1)
+                    && matches (closing + 1) (value_index + 1)
               else
                 value_index < Array.length value
                 && pattern.(pattern_index) = value.(value_index)
@@ -521,8 +558,8 @@ let glob_matches pattern path =
             path_index = Array.length paths
           else if String.equal patterns.(pattern_index) "**" then
             matches (pattern_index + 1) path_index
-            || (path_index < Array.length paths
-               && matches pattern_index (path_index + 1))
+            || path_index < Array.length paths
+               && matches pattern_index (path_index + 1)
           else
             path_index < Array.length paths
             && segment_matches patterns.(pattern_index) paths.(path_index)
@@ -560,8 +597,10 @@ let json_array encode values =
 let canonical_applies value =
   "{\"descendant_roots\":"
   ^ json_array json_string value.descendant_roots
-  ^ ",\"exact_roots\":" ^ json_array json_string value.exact_roots
-  ^ ",\"excluded_roots\":" ^ json_array json_string value.excluded_roots
+  ^ ",\"exact_roots\":"
+  ^ json_array json_string value.exact_roots
+  ^ ",\"excluded_roots\":"
+  ^ json_array json_string value.excluded_roots
   ^ "}"
 
 let canonical_boundary_input value =
@@ -574,17 +613,23 @@ let canonical_boundary_input value =
   ^ json_string value.role ^ "}"
 
 let canonical_boundary_rule value =
-  "{\"applies_to\":" ^ canonical_applies value.applies_to ^ ",\"id\":"
-  ^ json_string value.id ^ ",\"input_origin\":" ^ json_string value.input_origin
-  ^ ",\"inputs\":" ^ json_array canonical_boundary_input value.inputs
+  "{\"applies_to\":"
+  ^ canonical_applies value.applies_to
+  ^ ",\"id\":" ^ json_string value.id ^ ",\"input_origin\":"
+  ^ json_string value.input_origin
+  ^ ",\"inputs\":"
+  ^ json_array canonical_boundary_input value.inputs
   ^ ",\"owner\":" ^ json_string value.owner ^ ",\"reason\":"
   ^ json_string value.reason ^ "}"
 
 let canonical_boundary value =
-  "{\"boundaries\":" ^ json_array canonical_boundary_rule value.boundaries
+  "{\"boundaries\":"
+  ^ json_array canonical_boundary_rule value.boundaries
   ^ ",\"language_source_input_registry_sha256\":"
   ^ json_string value.language_source_input_registry_sha256
-  ^ ",\"schema_version\":" ^ string_of_int value.schema_version ^ "}"
+  ^ ",\"schema_version\":"
+  ^ string_of_int value.schema_version
+  ^ "}"
 
 let u64_big_endian value =
   let value = Int64.of_int value in
@@ -593,15 +638,17 @@ let u64_big_endian value =
     let shift = (7 - index) * 8 in
     Bytes.set output index
       (Char.chr
-         (Int64.to_int (Int64.logand 0xffL (Int64.shift_right_logical value shift))))
+         (Int64.to_int
+            (Int64.logand 0xffL (Int64.shift_right_logical value shift))))
   done;
   Bytes.unsafe_to_string output
 
-let repository_boundary_digest boundary =
+let compute_repository_boundary_digest boundary =
   let encoded = canonical_boundary boundary in
   Digestif.SHA256.digest_string
     ("coding-adventures/build-tool-repository-source-input-boundary/v1\000"
-    ^ u64_big_endian (String.length encoded) ^ encoded)
+    ^ u64_big_endian (String.length encoded)
+    ^ encoded)
   |> Digestif.SHA256.to_hex
 
 let lowercase_hex_digest value =
@@ -612,11 +659,72 @@ let lowercase_hex_digest value =
          || (character >= 'a' && character <= 'f'))
        value
 
+let bounded_text ~minimum ~maximum value =
+  match scalar_count_bounded ~maximum value with
+  | Some length -> length >= minimum && length <= maximum
+  | None -> false
+
+let bounded_paths ~maximum_count values =
+  List.length values <= maximum_count
+  && List.for_all (bounded_text ~minimum:1 ~maximum:512) values
+
+let valid_boundary_input value =
+  bounded_text ~minimum:1 ~maximum:512 value.path
+  &&
+  match (value.role, value.generated_component) with
+  | "cross_package_exact", None | "shared_ancestor", None -> true
+  | "generated_pruning_exception", Some component ->
+      bounded_text ~minimum:1 ~maximum:128 component
+  | _ -> false
+
+(** Diff selection receives a boundary that the trusted adapter has already
+    validated against the full registry contract. These independent shape and
+    budget guards keep even a misbehaving caller from turning digesting or the
+    applicability projection into unbounded work. *)
+let valid_boundary_shape value =
+  value.schema_version = 1
+  && lowercase_hex_digest value.language_source_input_registry_sha256
+  && List.length value.boundaries >= 1
+  && List.length value.boundaries <= 256
+  &&
+  let rec loop scopes authorizations = function
+    | [] -> scopes <= 8_192 && authorizations <= 32_768
+    | rule :: rest ->
+        let exact = List.length rule.applies_to.exact_roots
+        and descendants = List.length rule.applies_to.descendant_roots
+        and excluded = List.length rule.applies_to.excluded_roots
+        and inputs = List.length rule.inputs in
+        let rule_scopes = exact + descendants in
+        bounded_text ~minimum:1 ~maximum:120 rule.id
+        && bounded_text ~minimum:1 ~maximum:32 rule.input_origin
+        && bounded_text ~minimum:1 ~maximum:512 rule.reason
+        && bounded_text ~minimum:1 ~maximum:120 rule.owner
+        && exact <= 4_096 && descendants <= 64 && excluded <= 4_096
+        && rule_scopes >= 1
+        && bounded_paths ~maximum_count:4_096 rule.applies_to.exact_roots
+        && bounded_paths ~maximum_count:64 rule.applies_to.descendant_roots
+        && bounded_paths ~maximum_count:4_096 rule.applies_to.excluded_roots
+        && inputs >= 1 && inputs <= 64
+        && List.for_all valid_boundary_input rule.inputs
+        && rule_scopes <= 8_192 - scopes
+        && (rule_scopes = 0 || inputs <= (32_768 - authorizations) / rule_scopes)
+        && loop (scopes + rule_scopes)
+             (authorizations + (inputs * rule_scopes))
+             rest
+  in
+  loop 0 0 value.boundaries
+
+let repository_boundary_digest boundary =
+  if valid_boundary_shape boundary then
+    Ok (compute_repository_boundary_digest boundary)
+  else fail Diff_boundary_digest_mismatch
+
 let applies_to applies root =
   List.exists (String.equal root) applies.exact_roots
-  || ((not (List.exists (String.equal root) applies.excluded_roots))
-     && List.exists (fun ancestor -> starts_with root (ancestor ^ "/"))
-          applies.descendant_roots)
+  || (not (List.exists (String.equal root) applies.excluded_roots))
+     && List.exists
+          (fun ancestor -> starts_with root (ancestor ^ "/"))
+          applies.descendant_roots
 
 let add_consumer consumers path package =
   let current =
@@ -630,8 +738,9 @@ let closure graph seeds =
       match Directed.transitive_closure graph seed with
       | Error _ -> result
       | Ok reachable ->
-          List.fold_left (fun values item -> String_set.add item values) result
-            reachable)
+          List.fold_left
+            (fun values item -> String_set.add item values)
+            result reachable)
     seeds seeds
 
 let unique values =
@@ -652,16 +761,17 @@ let validate_packages packages =
   let table = Hashtbl.create (List.length packages) in
   let rec loop identities = function
     | [] -> Ok table
-    | spec :: rest ->
+    | spec :: rest -> (
         if not (is_package_name spec.name) then fail Diff_package_invalid
         else if Hashtbl.mem table spec.name then fail Diff_package_duplicate
         else if not (is_portable_path spec.rel_path) then fail Diff_path_invalid
-        else if List.length spec.source_globs > 256 || not (unique spec.source_globs)
+        else if
+          List.length spec.source_globs > 256 || not (unique spec.source_globs)
         then fail Diff_glob_invalid
         else if not (List.for_all is_portable_glob spec.source_globs) then
           fail Diff_glob_invalid
-        else if spec.source_mode = Package_prefix && spec.source_globs <> [] then
-          fail Diff_glob_invalid
+        else if spec.source_mode = Package_prefix && spec.source_globs <> []
+        then fail Diff_glob_invalid
         else
           match portable_identity spec.rel_path with
           | None -> fail Diff_path_invalid
@@ -669,13 +779,14 @@ let validate_packages packages =
               if
                 List.exists
                   (fun root ->
-                    String.equal identity root || starts_with identity (root ^ "/")
+                    String.equal identity root
+                    || starts_with identity (root ^ "/")
                     || starts_with root (identity ^ "/"))
                   identities
               then fail Diff_path_invalid
               else (
                 Hashtbl.add table spec.name spec;
-                loop (identity :: identities) rest)
+                loop (identity :: identities) rest))
   in
   loop [] packages
 
@@ -695,7 +806,8 @@ let validate_match_work packages changed_paths =
         in
         let rec paths_loop = function
           | [] -> packages_loop rest
-          | path :: paths when not (inside path spec.rel_path) -> paths_loop paths
+          | path :: paths when not (inside path spec.rel_path) ->
+              paths_loop paths
           | path :: paths ->
               let relative_path = relative path spec.rel_path in
               if String_set.mem (basename relative_path) build_names then
@@ -708,7 +820,8 @@ let validate_match_work packages changed_paths =
                 in
                 if
                   pattern_factor <> 0L
-                  && Int64.compare path_factor (Int64.div !remaining pattern_factor)
+                  && Int64.compare path_factor
+                       (Int64.div !remaining pattern_factor)
                      > 0
                 then fail Diff_match_limit_exceeded
                 else (
@@ -720,8 +833,17 @@ let validate_match_work packages changed_paths =
   in
   packages_loop packages
 
-let evaluate_diff_selection input =
-  let* graph = validate_graph (List.map (fun spec -> spec.name) input.packages) input.edges in
+let evaluate_diff_selection (input : diff_selection_input) =
+  let* graph =
+    match
+      validate_graph
+        (List.map (fun spec -> spec.name) input.packages)
+        input.edges
+    with
+    | Error Graph_package_invalid -> fail Diff_package_invalid
+    | Error Graph_package_duplicate -> fail Diff_package_duplicate
+    | result -> result
+  in
   if Directed.has_cycle graph.forward then fail Diff_edge_cycle
   else
     let* package_table = validate_packages input.packages in
@@ -731,7 +853,7 @@ let evaluate_diff_selection input =
     then fail Diff_forced_package_invalid
     else if
       List.length input.changed_paths > max_packages
-      || not (unique input.changed_paths)
+      || (not (unique input.changed_paths))
       || not (List.for_all is_portable_path input.changed_paths)
     then fail Diff_path_invalid
     else if
@@ -745,21 +867,24 @@ let evaluate_diff_selection input =
       let* () =
         match (input.boundary_sha256, input.boundary) with
         | None, None -> Ok ()
-        | Some digest, Some boundary
-          when lowercase_hex_digest digest
-               && String.equal digest (repository_boundary_digest boundary) ->
-            List.iter
-              (fun spec ->
+        | Some digest, Some boundary -> (
+            match repository_boundary_digest boundary with
+            | Ok actual
+              when lowercase_hex_digest digest && String.equal digest actual ->
                 List.iter
-                  (fun rule ->
-                    if applies_to rule.applies_to spec.rel_path then
-                      List.iter
-                        (fun boundary_input ->
-                          add_consumer consumers boundary_input.path spec.name)
-                        rule.inputs)
-                  boundary.boundaries)
-              input.packages;
-            Ok ()
+                  (fun spec ->
+                    List.iter
+                      (fun rule ->
+                        if applies_to rule.applies_to spec.rel_path then
+                          List.iter
+                            (fun boundary_input ->
+                              add_consumer consumers boundary_input.path
+                                spec.name)
+                            rule.inputs)
+                      boundary.boundaries)
+                  input.packages;
+                Ok ()
+            | _ -> fail Diff_boundary_digest_mismatch)
         | _ -> fail Diff_boundary_digest_mismatch
       in
       let* () = validate_match_work input.packages input.changed_paths in
@@ -773,7 +898,8 @@ let evaluate_diff_selection input =
       List.iter
         (fun path ->
           let boundary_consumers =
-            Option.value ~default:String_set.empty (Hashtbl.find_opt consumers path)
+            Option.value ~default:String_set.empty
+              (Hashtbl.find_opt consumers path)
           in
           changed := String_set.union !changed boundary_consumers;
           let known = ref (not (String_set.is_empty boundary_consumers)) in
@@ -792,16 +918,21 @@ let evaluate_diff_selection input =
             input.packages;
           if not !known then unknown := true)
         input.changed_paths;
-      if !unknown && input.unknown_path_policy = Error then fail Diff_unknown_path
+      if !unknown && input.unknown_path_policy = Error then
+        fail Diff_unknown_path
       else (
         if !unknown then
           List.iter
             (fun spec -> changed := String_set.add spec.name !changed)
             input.packages;
         let affected = closure graph.forward !changed in
-        let prerequisites = String_set.diff (closure graph.reverse affected) affected in
+        let prerequisites =
+          String_set.diff (closure graph.reverse affected) affected
+        in
         Ok
-          { changed_packages = sort_strings (String_set.elements !changed);
+          {
+            changed_packages = sort_strings (String_set.elements !changed);
             affected_packages = sort_strings (String_set.elements affected);
             prerequisite_packages =
-              sort_strings (String_set.elements prerequisites) })
+              sort_strings (String_set.elements prerequisites);
+          })

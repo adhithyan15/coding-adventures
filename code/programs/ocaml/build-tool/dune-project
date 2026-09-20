@@ -1,0 +1,8 @@
+(lang dune 3.16)
+(name coding-adventures-build-tool)
+(generate_opam_files false)
+(package
+ (name coding-adventures-build-tool)
+ (synopsis "Process-free OCaml build-tool graph and diff-selection core")
+ (description
+  "Pure graph topology, changed-package selection, dependent closure, and prerequisite closure for the coding-adventures build tool"))

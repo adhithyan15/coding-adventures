@@ -4,13 +4,9 @@
     invokes Git, launches work, or inspects host state. *)
 
 type edge = { prerequisite : string; dependent : string }
-
 type graph_input = { packages : string list; edges : edge list }
-
 type graph_result = { edges : edge list; levels : string list list }
-
 type source_mode = Package_prefix | Strict_globs
-
 type unknown_path_policy = All | Error
 
 type package_spec = {
@@ -46,6 +42,10 @@ type repository_boundary = {
   language_source_input_registry_sha256 : string;
   boundaries : boundary_rule list;
 }
+(** Inert boundary data that the trusted adapter has already validated against
+    the language-neutral repository-source-input-boundary contract. The core
+    independently enforces schema-shape and work budgets before hashing or
+    projecting this value. *)
 
 type diff_selection_input = {
   packages : package_spec list;
@@ -71,8 +71,6 @@ type error =
   | Graph_edge_unknown
   | Graph_edge_self
   | Graph_edge_duplicate
-  | Graph_edge_invalid
-  | Graph_invalid
   | Graph_cycle
   | Diff_edge_cycle
   | Diff_package_invalid
@@ -83,14 +81,14 @@ type error =
   | Diff_forced_package_unknown
   | Diff_boundary_digest_mismatch
   | Diff_unknown_path
-  | Diff_match_limit_exceeded
-(** Stable, closed, payload-free failures. *)
+  | Diff_match_limit_exceeded  (** Stable, closed, payload-free failures. *)
 
 val error_code : error -> string
 (** Maps a typed failure to its language-neutral diagnostic code. *)
 
-val repository_boundary_digest : repository_boundary -> string
-(** Computes the language-neutral canonical boundary digest. *)
+val repository_boundary_digest : repository_boundary -> (string, error) result
+(** Computes the language-neutral canonical digest after enforcing independent
+    shape and work-budget guards. *)
 
 val evaluate_graph : graph_input -> (graph_result, error) result
 (** Validates and evaluates deterministic prerequisite-first graph levels. *)

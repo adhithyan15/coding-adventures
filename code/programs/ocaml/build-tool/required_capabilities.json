@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "ocaml/build-tool",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "code/specs/fixtures/build-tool-v1",
+      "justification": "Package-local conformance tests decode the checked language-neutral graph, diff-selection, and repository-boundary fixtures; production source receives typed immutable values and performs no filesystem access."
+    },
+    {
+      "category": "fs",
+      "action": "list",
+      "target": "code/specs/fixtures/build-tool-v1/cases",
+      "justification": "Package-local conformance tests enumerate the closed fixture directory so a newly added graph or diff-selection case cannot be skipped silently; production source performs no directory access."
+    }
+  ],
+  "justification": "The production graph and diff-selection core is process-free and has no host authority. Only the test adapter reads and lists the checked shared fixture corpus."
+}

@@ -1,0 +1,29 @@
+opam-version: "2.0"
+name: "coding-adventures-build-tool"
+version: "0.1.0"
+synopsis: "Process-free OCaml build-tool graph and diff-selection core"
+description: "Pure graph topology, changed-package selection, dependent closure, and prerequisite closure for the coding-adventures build tool"
+maintainer: "Adhithya Rajasekaran"
+authors: "Adhithya Rajasekaran"
+license: "MIT"
+homepage: "https://github.com/adhithyan15/coding-adventures"
+bug-reports: "https://github.com/adhithyan15/coding-adventures/issues"
+dev-repo: "git+https://github.com/adhithyan15/coding-adventures.git"
+depends: [
+  "ocaml" {= "5.2.1"}
+  "dune" {= "3.17.2"}
+  "coding-adventures-graph" {= "0.1.0"}
+  "coding-adventures-directed-graph" {= "0.1.0"}
+  "uunf" {= "17.0.0"}
+  "uucp" {= "17.0.0"}
+  "digestif" {= "1.3.1"}
+  "yojson" {with-test & = "3.0.0"}
+  "alcotest" {with-test & = "1.9.0"}
+  "bisect_ppx" {with-test & = "2.8.3"}
+  "ocamlformat" {with-dev-setup & = "0.27.0"}
+]
+build: [
+  ["dune" "subst"] {dev}
+  ["dune" "build" "-p" name "-j" jobs]
+  ["dune" "runtest" "-p" name "-j" jobs] {with-test}
+]
