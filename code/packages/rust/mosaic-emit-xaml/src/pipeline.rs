@@ -9141,7 +9141,9 @@ fn emit_host_input(
             name: handler.clone(),
             source: body,
         });
-        attrs.push_str(&format!(" KeyDown=\"{handler}\""));
+        // TextBox handles Enter internally before the bubbling KeyDown event.
+        // Observe the tunneling event so commit/cancel reach the app.
+        attrs.push_str(&format!(" PreviewKeyDown=\"{handler}\""));
     }
 
     // onFocus → GotFocus
@@ -16133,7 +16135,7 @@ mod tests {
         let r = compile(&c, &l, &empty_style("Foo"));
         // One KeyDown handler that branches on Enter / Escape.
         assert!(
-            r.xaml.contains("KeyDown=\"FormulaField_KeyDown\""),
+            r.xaml.contains("PreviewKeyDown=\"FormulaField_KeyDown\""),
             "got:\n{}",
             r.xaml
         );
