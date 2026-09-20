@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.12.0
+
+- Reserve structural header geometry for Architecture service icon text.
+
 ## 0.11.0
 
 - Resolve structural row and column alignment constraints to deterministic geometry.

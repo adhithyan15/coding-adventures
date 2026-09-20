@@ -568,7 +568,8 @@ fn token_name(token: &Token) -> &str {
 // ============================================================================
 
 use diagram_ir::{
-    Axis, AxisKind, ChartDataPoint, ChartDiagram, ChartKind, ChartOrientation, ChartSeries,
+    ArchitectureServiceMetadata, Axis, AxisKind, ChartDataPoint, ChartDiagram, ChartKind,
+    ChartOrientation, ChartSeries,
     Compartment, CompartmentKind, GanttConfig, GanttDateFormat, GanttDateFormatPart, GanttDiagram, GanttDisplayMode, GanttDuration, GanttDurationUnit, GanttSection, GanttTask, GitBranch, GitCommitType,
     EventModelDiagram, EventModelEntityKind, EventModelFrame, GitDiagram, GitEvent, JourneyConfig,
     JourneyDiagram, JourneySection, JourneyTask, PieSlice,
@@ -1002,12 +1003,20 @@ pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError>
     for token in tokens.iter().filter(|token| {
         matches!(
             token.type_name.as_deref(),
-            Some("JUNCTION_STATEMENT" | "ALIGN_STATEMENT" | "STATEMENT_LINE")
+            Some(
+                "JUNCTION_STATEMENT"
+                    | "ALIGN_STATEMENT"
+                    | "SERVICE_ICON_TEXT_STATEMENT"
+                    | "STATEMENT_LINE"
+            )
         )
     }) {
         let statement = token.value.trim();
         if let Some(value) = statement.strip_prefix("group ") {
             let declaration = parse_architecture_declaration(token, value)?;
+            if declaration.icon_text.is_some() {
+                return Err(token_error(token, "architecture groups require named icons"));
+            }
             validate_architecture_parent(token, declaration.parent.as_deref(), &diagram.groups)?;
             if !ids.insert(declaration.id.clone()) {
                 return Err(token_error(token, "duplicate architecture identifier"));
@@ -1030,7 +1039,11 @@ pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError>
                 label: declaration.label,
                 stereotype: declaration.icon,
                 node_kind: StructuralNodeKind::Element,
-                metadata: None,
+                metadata: declaration.icon_text.map(|icon_text| {
+                    StructuralNodeMetadata::ArchitectureService(ArchitectureServiceMetadata {
+                        icon_text: Some(icon_text),
+                    })
+                }),
                 style: None,
                 compartments: Vec::new(),
                 parent_group: declaration.parent,
@@ -1113,6 +1126,7 @@ fn parse_architecture_junction(
 struct ArchitectureDeclaration {
     id: String,
     icon: Option<String>,
+    icon_text: Option<String>,
     label: String,
     parent: Option<String>,
 }
@@ -1128,13 +1142,17 @@ fn parse_architecture_declaration(
         return Err(token_error(token, "architecture declaration requires an identifier"));
     }
     let mut rest = source[id_end..].trim_start();
+    let mut icon_text = None;
     let icon = if rest.starts_with('(') {
         let end = rest.find(')').ok_or_else(|| token_error(token, "unterminated architecture icon"))?;
         let icon = rest[1..end].trim().to_string();
         rest = rest[end + 1..].trim_start();
         Some(icon)
     } else if rest.starts_with('"') || rest.starts_with('\'') {
-        return Err(token_error(token, "architecture custom icon text is outside the supported subset"));
+        let (value, remainder) = parse_architecture_icon_text(token, rest)?;
+        icon_text = Some(value);
+        rest = remainder.trim_start();
+        None
     } else {
         None
     };
@@ -1157,7 +1175,46 @@ fn parse_architecture_declaration(
     } else {
         return Err(token_error(token, "unsupported architecture declaration suffix"));
     };
-    Ok(ArchitectureDeclaration { id, icon, label, parent })
+    Ok(ArchitectureDeclaration { id, icon, icon_text, label, parent })
+}
+
+fn parse_architecture_icon_text<'a>(
+    token: &Token,
+    source: &'a str,
+) -> Result<(String, &'a str), ParseError> {
+    let quote = source
+        .chars()
+        .next()
+        .expect("architecture icon text starts with a quote");
+    let mut escaped = false;
+    let mut close = None;
+    for (index, character) in source.char_indices().skip(1) {
+        if escaped {
+            escaped = false;
+        } else if character == '\\' {
+            escaped = true;
+        } else if character == quote {
+            close = Some(index);
+            break;
+        }
+    }
+    let close = close.ok_or_else(|| token_error(token, "unterminated architecture icon text"))?;
+    let mut value = String::new();
+    let mut characters = source[1..close].chars();
+    while let Some(character) = characters.next() {
+        if character != '\\' {
+            value.push(character);
+            continue;
+        }
+        match characters.next() {
+            Some('n') => value.push('\n'),
+            Some('r') => value.push('\r'),
+            Some('t') => value.push('\t'),
+            Some(character) => value.push(character),
+            None => value.push('\\'),
+        }
+    }
+    Ok((value, &source[close + quote.len_utf8()..]))
 }
 
 fn validate_architecture_parent(
@@ -10447,6 +10504,37 @@ mod tests_dg04 {
         assert_eq!(junction.node_kind, StructuralNodeKind::Junction);
         assert_eq!(junction.parent_group.as_deref(), Some("platform"));
         assert_eq!(diagram.relationships.len(), 2);
+    }
+
+    #[test]
+    fn architecture_preserves_custom_service_icon_text() {
+        let diagram = parse_architecture(
+            "architecture-beta\nservice api \"API \\\"v2\\\"\"[Gateway]",
+        )
+        .unwrap();
+        let Some(StructuralNodeMetadata::ArchitectureService(metadata)) =
+            &diagram.nodes[0].metadata
+        else {
+            panic!("architecture service metadata");
+        };
+        assert_eq!(metadata.icon_text.as_deref(), Some("API \"v2\""));
+        assert_eq!(diagram.nodes[0].label, "Gateway");
+        assert!(diagram.nodes[0].stereotype.is_none());
+
+        let diagram = parse_architecture("architecture-beta\nservice api 'API'[Gateway]")
+            .unwrap();
+        assert!(matches!(
+            &diagram.nodes[0].metadata,
+            Some(StructuralNodeMetadata::ArchitectureService(metadata))
+                if metadata.icon_text.as_deref() == Some("API")
+        ));
+    }
+
+    #[test]
+    fn architecture_rejects_custom_group_icon_text() {
+        let error = parse_architecture("architecture-beta\ngroup api \"API\"[Gateway]")
+            .unwrap_err();
+        assert!(error.message.contains("groups require named icons"));
     }
 
     #[test]
