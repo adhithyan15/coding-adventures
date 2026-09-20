@@ -10,11 +10,11 @@ use diagram_ir::{
     resolve_style_with_base, DiagramDirection, LayoutedCompartment, LayoutedStructuralDiagram,
     LayoutedStructuralGroup, LayoutedStructuralNode, LayoutedStructuralRelationship, Point,
     StructuralAlignmentAxis, StructuralDiagram, StructuralNode, StructuralNodeKind,
-    StructuralNodeMetadata,
+    StructuralNodeMetadata, StructuralPort,
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.14.0";
+pub const VERSION: &str = "0.15.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -509,6 +509,27 @@ fn closest_sides(a: StructuralBounds, b: StructuralBounds) -> (Point, Point) {
     }
 }
 
+fn point_on_port(bounds: StructuralBounds, port: StructuralPort) -> Point {
+    match port {
+        StructuralPort::Left => Point {
+            x: bounds.x,
+            y: bounds.y + bounds.height / 2.0,
+        },
+        StructuralPort::Right => Point {
+            x: bounds.x + bounds.width,
+            y: bounds.y + bounds.height / 2.0,
+        },
+        StructuralPort::Top => Point {
+            x: bounds.x + bounds.width / 2.0,
+            y: bounds.y,
+        },
+        StructuralPort::Bottom => Point {
+            x: bounds.x + bounds.width / 2.0,
+            y: bounds.y + bounds.height,
+        },
+    }
+}
+
 fn layout_relationships(
     diagram: &StructuralDiagram,
     nodes: &[LayoutedStructuralNode],
@@ -522,7 +543,9 @@ fn layout_relationships(
             let b = find_node(nodes, &rel.to)?;
             let a_bounds = relationship_endpoint_bounds(a, rel.from_group, diagram, groups);
             let b_bounds = relationship_endpoint_bounds(b, rel.to_group, diagram, groups);
-            let (p0, p1) = closest_sides(a_bounds, b_bounds);
+            let (default_p0, default_p1) = closest_sides(a_bounds, b_bounds);
+            let p0 = rel.from_port.map_or(default_p0, |port| point_on_port(a_bounds, port));
+            let p1 = rel.to_port.map_or(default_p1, |port| point_on_port(b_bounds, port));
             let label = rel.label.as_ref().map(|label| {
                 (
                     Point {
@@ -540,6 +563,8 @@ fn layout_relationships(
                 end_arrow: rel.end_arrow,
                 from_group: rel.from_group,
                 to_group: rel.to_group,
+                from_port: rel.from_port,
+                to_port: rel.to_port,
                 points: vec![p0, p1],
                 from_mult: rel.from_mult.clone(),
                 to_mult: rel.to_mult.clone(),
@@ -625,6 +650,8 @@ mod tests {
                 end_arrow: true,
                 from_group: false,
                 to_group: false,
+                from_port: None,
+                to_port: None,
                 from_mult: None,
                 to_mult: None,
                 label: None,
@@ -634,7 +661,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.14.0");
+        assert_eq!(crate::VERSION, "0.15.0");
     }
 
     #[test]
@@ -770,6 +797,34 @@ mod tests {
                 || endpoint.x == group.x + group.width
                 || endpoint.y == group.y
                 || endpoint.y == group.y + group.height
+        );
+    }
+
+    #[test]
+    fn explicit_ports_resolve_to_requested_boundary_anchors() {
+        let mut diagram = two_class_diagram();
+        diagram.relationships[0].from_port = Some(StructuralPort::Top);
+        diagram.relationships[0].to_port = Some(StructuralPort::Bottom);
+
+        let layout = layout_structural_diagram(&diagram);
+        let dog = layout.nodes.iter().find(|node| node.id == "Dog").unwrap();
+        let animal = layout.nodes.iter().find(|node| node.id == "Animal").unwrap();
+        let relationship = &layout.relationships[0];
+        assert_eq!(relationship.from_port, Some(StructuralPort::Top));
+        assert_eq!(relationship.to_port, Some(StructuralPort::Bottom));
+        assert_eq!(
+            relationship.points[0],
+            Point {
+                x: dog.x + dog.width / 2.0,
+                y: dog.y,
+            }
+        );
+        assert_eq!(
+            relationship.points[1],
+            Point {
+                x: animal.x + animal.width / 2.0,
+                y: animal.y + animal.height,
+            }
         );
     }
 

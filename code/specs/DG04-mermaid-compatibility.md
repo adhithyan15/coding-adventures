@@ -445,7 +445,9 @@ header geometry, and lowers to backend-neutral badge and shaped-text PaintInstru
 Left, right, and bidirectional relationship arrowheads survive semantic and layout
 IR and lower to backend-neutral path geometry. Group-edge modifiers on contained
 services survive semantic IR and resolve to deterministic group-boundary endpoints.
-Icon artwork, port-aware routing, and configuration remain unsupported
+Explicit `L`, `R`, `T`, and `B` edge ports survive semantic and layout IR and
+anchor backend-neutral relationship paths to the requested node or group boundary.
+Icon artwork, obstacle-aware routing, and configuration remain unsupported
 at the partial level.
 
 ### Radar Native Slice

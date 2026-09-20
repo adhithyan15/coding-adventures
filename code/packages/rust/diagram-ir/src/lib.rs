@@ -1506,6 +1506,14 @@ pub enum RelKind {
     Link,
 }
 
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum StructuralPort {
+    Left,
+    Right,
+    Top,
+    Bottom,
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct StructuralRelationship {
     pub from: String,
@@ -1515,6 +1523,8 @@ pub struct StructuralRelationship {
     pub end_arrow: bool,
     pub from_group: bool,
     pub to_group: bool,
+    pub from_port: Option<StructuralPort>,
+    pub to_port: Option<StructuralPort>,
     pub from_mult: Option<String>,
     pub to_mult: Option<String>,
     pub label: Option<String>,
@@ -1588,6 +1598,8 @@ pub struct LayoutedStructuralRelationship {
     pub end_arrow: bool,
     pub from_group: bool,
     pub to_group: bool,
+    pub from_port: Option<StructuralPort>,
+    pub to_port: Option<StructuralPort>,
     pub points: Vec<Point>,
     pub from_mult: Option<String>,
     pub to_mult: Option<String>,

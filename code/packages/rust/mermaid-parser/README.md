@@ -36,8 +36,10 @@ text rendering. Quoted service icon text is preserved as typed metadata, reserve
 layout geometry, and lowers to a backend-neutral badge plus shaped glyphs. Left,
 right, and bidirectional arrowheads survive semantic and layout IR and lower to
 backend-neutral path geometry. Group-edge modifiers on contained services resolve
-relationship endpoints to deterministic group-boundary geometry. Icon artwork,
-port-aware routing, and configuration remain
+relationship endpoints to deterministic group-boundary geometry. Explicit `L`,
+`R`, `T`, and `B` ports survive semantic and layout IR and anchor relationship
+geometry to the requested node or group boundary. Icon artwork, obstacle-aware
+routing, and configuration remain
 outside the partial compatibility claim.
 
 The initial `kanban` subset preserves indentation-defined columns and cards,
