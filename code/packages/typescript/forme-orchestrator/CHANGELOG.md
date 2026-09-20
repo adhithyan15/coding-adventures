@@ -1,5 +1,38 @@
 # Changelog — @coding-adventures/forme-orchestrator
 
+## 0.12.0 — 2026-09-19
+
+### Added — live bounded stream scheduling
+
+- A stage that returns an `AsyncIterable` now publishes bounded fan-out
+  branches before its producer completes. Downstream collectors and per-item
+  stages therefore start on live values instead of waiting for an eager array.
+- Producer iterator operations run through the pipeline's shared permit pool.
+  Consumers yield their permit while awaiting a branch and reacquire fairly,
+  which keeps collector and per-item pipelines live even at
+  `maxConcurrency: 1`.
+- Checkpointable streams feed the content-addressed checkpoint writer in the
+  same traversal as their downstream edges. The manifest is committed last,
+  while terminal outputs alone retain a caller-visible result array.
+- Validated stream checkpoints publish lazy replay branches. A restored
+  downstream stage detaches an unused branch cleanly, so exact affected-set
+  reuse cannot strand upstream completion.
+- Named fan-in keeps its existing replayable-stream contract at the join
+  boundary, and incremental runs wait for an unknown producer revision only
+  when that revision is required to make an exact downstream scheduling
+  decision.
+
+### Tests
+
+- Eleven scheduler integration cases prove pre-completion consumption,
+  one-permit progress, one-traversal slow-branch backpressure beyond the
+  64-value window, cache-failure-independent draining, fatal and recoverable
+  source-error provenance, promoted per-item restoration, hostile iterator
+  handling, and cancellation during an active pull. Named fan-in and reorder
+  tests additionally cover concurrent replay and a full 64-value window.
+- The complete orchestrator suite has 165 passing cases and exceeds the
+  package's 85% line-coverage target.
+
 ## 0.11.0 — 2026-09-19
 
 ### Added — concurrent DAG and per-item scheduling

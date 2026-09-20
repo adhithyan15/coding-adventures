@@ -282,8 +282,11 @@ describe("buildPipeline + runOnce — happy path", () => {
           for await (const asset of input.assets) ids.push(asset.identity);
           return ids;
         };
-        const routes = await readRoutes();
-        const replayedRoutes = await readRoutes();
+        // Merely constructing an iterator must not claim the live traversal.
+        // Concurrent readers both observe the same ordered stream without
+        // waiting for the first reader to reach EOS.
+        void input.default[Symbol.asyncIterator]();
+        const [routes, replayedRoutes] = await Promise.all([readRoutes(), readRoutes()]);
         const assets = await readAssets();
         const replayedAssets = await readAssets();
         expect(replayedRoutes).toEqual(routes);

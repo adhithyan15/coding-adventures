@@ -197,9 +197,9 @@ describe("scheduler cache reuse", () => {
     expect(invalidate).toHaveBeenCalledTimes(1);
     expect((await orchestrator.runOnce(pipeline)).outcome).toBe("success");
     expect(calls).toHaveBeenCalledTimes(2);
-    // Each successful run writes the per-invocation output, the materialized
-    // instance checkpoint, and the project-level revision ledger.
-    expect(put).toHaveBeenCalledTimes(6);
+    // Each successful run writes the per-invocation output, the stream node
+    // and manifest, and the project-level revision ledger.
+    expect(put).toHaveBeenCalledTimes(8);
     await orchestrator.dispose();
   });
 
