@@ -523,6 +523,13 @@ extension sequence into at most 64 allocation-free borrowed values, preserves
 wire order, and rejects duplicate extension OIDs under the same shared budgets.
 It still does not recognize OIDs, parse encapsulated values, or decide whether
 an unknown critical extension is supported.
+A bounded `x509-basic-constraints` semantic layer now recognizes only the
+RFC 5280 Basic Constraints OID and decodes its exact encapsulated sequence. It
+enforces canonical omission of the default false CA flag, non-negative path
+lengths, and the rule that a path length cannot appear unless CA is true while
+preserving arbitrarily large canonical integers as borrowed bytes. It does not
+grant CA authority, enforce certificate-wide criticality or Key Usage policy,
+build paths, verify signatures, or select trust roots.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
