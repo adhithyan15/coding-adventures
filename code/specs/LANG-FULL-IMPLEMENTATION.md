@@ -1041,8 +1041,9 @@ backend immediately) come before the enabler-dependent items.
   integer or finite binary64 control value whose predicate is false when its
   value and predicate reference only the control and statically known ordinary
   local scalars that the body leaves unchanged, or directly updates through
-  one supported recurrence referencing itself, the control, and unchanged
-  ordinary local scalars. Read-only body uses, exact scalar
+  one supported recurrence referencing itself, the control, and ordinary local
+  scalars that are unchanged or evolve through an acyclic graph of supported
+  recurrences. Read-only body uses, exact scalar
   self-assignments, checked numeric or boolean expressions that equal the
   tracked scalar and otherwise reference only known ordinary locals that are
   never changed by the body; an exact bare self-assignment does not count as a
