@@ -23,7 +23,8 @@ recreating the surrounding chrome in backend-specific UI code.
 - Emits carry Back, Forward, Home, Reload, address edits, Navigate, the
   storage-neutral bookmark toggle command, host-neutral Copy Address and Open
   in New Window transactions, a host-neutral Save Page download, and a
-  host-neutral Print Page, Share Page, Page Information, and View Source requests.
+  host-neutral Print Page, Share Page, Page Information, View Source, and Copy
+  Source requests.
 - `venture-browser-core::BrowserChromeController` is the shared reducer and
   slot projection for that exact contract.
 - `venture-browser-core` also owns the generated Mosaic event decoder and the
@@ -55,7 +56,10 @@ recreating the surrounding chrome in backend-specific UI code.
   projects it into one closable Mosaic source panel for every generated shell,
   and also escapes it into a synthetic `<pre>` HTML document carried by the
   typed `open-auxiliary-document` effect for richer platform presenters.
-  Toolkit code does not parse, escape, or reconstruct source.
+  Copy Source sends those same retained bytes through the existing typed
+  clipboard effect, leaves the panel open, and projects the shared `Page source
+  copied` status. Toolkit code does not parse, select, escape, or reconstruct
+  source.
 - Copy Address resolves the committed history URL rather than the editable
   address draft and emits one typed clipboard-write effect. Generated hosts
   only present that text through their native clipboard API; URL selection,

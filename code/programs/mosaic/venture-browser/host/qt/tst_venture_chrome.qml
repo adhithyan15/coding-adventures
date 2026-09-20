@@ -169,6 +169,23 @@ TestCase {
         wait(0)
         compare(recordingHost.events.length, 1)
         compare(recordingHost.events[0].event, "onViewSource")
+
+        chrome.applyMosaicResponse({
+            "props": {
+                "viewSourceOpen": true,
+                "viewSourceTitle": "Venture Qt acceptance",
+                "viewSourceAddress": "http://venture.test/start",
+                "viewSourceContent": "<html><title>Venture Qt acceptance</title></html>"
+            }
+        })
+        wait(0)
+        const copySourceButton = nativeControl("view-source-copy-button")
+        copySourceButton.forceActiveFocus()
+        keyClick(Qt.Key_Space)
+        wait(0)
+        compare(recordingHost.events.length, 2)
+        compare(recordingHost.events[1].event, "onViewSourceCopy")
+        compare(chrome.viewSourceOpen, true)
     }
 
     function test_copy_address_crosses_the_mosaic_host_seam() {

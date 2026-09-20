@@ -56,6 +56,7 @@ component VentureChrome {
   emit onZoomReset ;
   emit onZoomIn ;
   emit onViewSource ;
+  emit onViewSourceCopy ;
   emit onViewSourceClose ;
   emit onFindOpen ;
   emit onFindChange ( value : text ) ;

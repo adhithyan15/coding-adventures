@@ -19,6 +19,13 @@ import kotlin.test.assertTrue
 import org.junit.Rule
 import org.junit.Test
 
+private fun startPageHtml(): String = """
+    <html><head><title>Compose Start</title></head><body>
+    <a href="/link">Open the Compose link target</a>
+    ${List(80) { index -> "<p>scroll row $index</p>" }.joinToString("")}
+    </body></html>
+""".trimIndent()
+
 private class VenturePageServer : AutoCloseable {
     private val executor = Executors.newCachedThreadPool()
     private val server = HttpServer.create(InetSocketAddress("127.0.0.1", 0), 0)
@@ -30,12 +37,7 @@ private class VenturePageServer : AutoCloseable {
         server.executor = executor
         server.createContext("/") { exchange ->
             val html = when (exchange.requestURI.path) {
-                "/start" -> """
-                    <html><head><title>Compose Start</title></head><body>
-                    <a href="/link">Open the Compose link target</a>
-                    ${List(80) { index -> "<p>scroll row $index</p>" }.joinToString("")}
-                    </body></html>
-                """.trimIndent()
+                "/start" -> startPageHtml()
                 "/target" -> """
                     <html><head><title>Compose Address Target</title></head>
                     <body>address navigation reached the shared browser</body></html>
@@ -140,6 +142,10 @@ class VentureChromeInteractionTest {
             assertEquals("view-source", sourceDocument["kind"])
             assertTrue(sourceDocument["address"].toString().startsWith("view-source:"))
             assertTrue(sourceDocument["html"].toString().contains("&lt;title&gt;Compose Start&lt;/title&gt;"))
+            rule.onNodeWithTag("view-source-copy-button").assertIsEnabled().performClick()
+            rule.waitUntil(10_000) { host.lastClipboardText == startPageHtml() }
+            assertEquals(startPageHtml(), host.lastClipboardText)
+            rule.onNodeWithTag("view-source-copy-button").assertExists()
             println("compose-live-stage=view-source")
 
             rule.onNodeWithTag("back-button").assertIsNotEnabled()

@@ -249,6 +249,10 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     assert.equal(calls.at(-1)?.type, "viewSource");
     assert.match(renderScope(root).textContent, /<html><title>Initial page<\/title><\/html>/);
     assert.match(renderScope(root).textContent, /https:\/\/venture\.test\/final/);
+    buttonByLabel(root, "Copy Source").click();
+    await settle();
+    assert.equal(calls.at(-1)?.type, "viewSourceCopy");
+    assert.match(renderScope(root).textContent, /<html><title>Initial page<\/title><\/html>/);
     buttonByLabel(root, "Close Source").click();
     await settle();
     assert.equal(calls.at(-1)?.type, "viewSourceClose");
@@ -300,7 +304,7 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     assert.equal(calls.at(-1)?.type, "navigate");
     assert.deepEqual(
       calls.map(event => event.type),
-      ["toggleBookmark", "copyAddress", "openPageInNewWindow", "savePage", "printPage", "sharePage", "pageInfo", "pageInfoClose", "zoomIn", "zoomReset", "viewSource", "viewSourceClose", "findOpen", "findChange", "findNext", "findClose", "addressChange", "navigate", "navigate"],
+      ["toggleBookmark", "copyAddress", "openPageInNewWindow", "savePage", "printPage", "sharePage", "pageInfo", "pageInfoClose", "zoomIn", "zoomReset", "viewSource", "viewSourceCopy", "viewSourceClose", "findOpen", "findChange", "findNext", "findClose", "addressChange", "navigate", "navigate"],
     );
     assert.match(renderScope(root).textContent, /Handled navigate through MosaicHost/);
   } finally {

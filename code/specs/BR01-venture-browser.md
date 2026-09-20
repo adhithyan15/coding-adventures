@@ -201,11 +201,13 @@ host ABI. The
 tracked acceptance backlog is complete; each next phase starts from a fresh
 cross-host audit.
 
-The latest audit closes the visible View Source gap. Browser core retains the
-exact response text while Mosaic renders its title, committed address, and raw
-source in a shared closable panel. The existing typed auxiliary-document effect
-remains available for richer platform presentation, but a generated shell can
-no longer silently discard the action or reconstruct source in toolkit code.
+The latest audit closes the remaining source-copy gap. Browser core retains the
+exact response text while Mosaic renders its title, committed address, raw
+source, and Copy Source control in a shared closable panel. Copying reuses the
+typed clipboard effect, keeps the panel open, and reports `Page source copied`;
+the existing typed auxiliary-document effect remains available for richer
+platform presentation. A generated shell therefore cannot silently discard,
+refetch, or reconstruct source in toolkit code.
 
 These are browser-wiring and acceptance items. They do not relax the exact
 zero-missing WPT tree-construction or tokenizer coverage ratchets, and they do
@@ -608,6 +610,9 @@ system window color and felt "native."
   performs auxiliary-document escaping once, and emits a typed
   `open-auxiliary-document` effect. Hosts may own richer window presentation
   but must not refetch, reinterpret, or toolkit-parse the source payload.
+- **Copy Source** writes the exact retained response through the shared typed
+  clipboard effect, leaves the panel open, and updates shared status. Hosts
+  perform only the final clipboard API call.
 
 ### Dependencies (Cargo.toml)
 

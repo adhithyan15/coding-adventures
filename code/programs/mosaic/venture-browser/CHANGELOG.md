@@ -1,5 +1,8 @@
 # Changelog
 
+- Add a shared Copy Source control that sends the exact retained response
+  through the existing clipboard effect, keeps the source panel open, and
+  reports one core-owned success status across generated hosts.
 - Render the core-owned View Source snapshot in one shared closable Mosaic
   panel across every generated host while preserving typed auxiliary effects.
 

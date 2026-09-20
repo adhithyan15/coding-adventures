@@ -1177,6 +1177,7 @@ fn view_source_uses_one_retained_snapshot_and_visible_lifecycle_across_generated
         "slot view-source-address",
         "slot view-source-content",
         "emit onViewSource",
+        "emit onViewSourceCopy",
         "emit onViewSourceClose",
     ] {
         assert!(
@@ -1187,6 +1188,7 @@ fn view_source_uses_one_retained_snapshot_and_visible_lifecycle_across_generated
     for control in [
         "view-source-button",
         "view-source-panel",
+        "view-source-copy-button",
         "view-source-close-button",
         "view-source-content",
     ] {
@@ -1200,9 +1202,11 @@ fn view_source_uses_one_retained_snapshot_and_visible_lifecycle_across_generated
     for symbol in [
         "BrowserSourceSnapshot",
         "BrowserChromeAction::ViewSource",
+        "BrowserChromeAction::CopyViewSource",
         "BrowserChromeAction::CloseViewSource",
         "pub fn view_source(page: &BrowserPage)",
         "Page source shown",
+        "Page source copied",
         "show_source_view",
         "view_source_content",
     ] {
@@ -1230,11 +1234,20 @@ fn view_source_uses_one_retained_snapshot_and_visible_lifecycle_across_generated
                 || acceptance.contains("lastAuxiliaryDocument"),
             "{path} omits View Source acceptance"
         );
+        assert!(
+            acceptance.contains("view-source-copy-button")
+                || acceptance.contains("Copy Source")
+                || acceptance.contains("onViewSourceCopy")
+                || acceptance.contains("viewSourceCopy"),
+            "{path} omits Copy Source acceptance"
+        );
     }
 
     let swiftui_acceptance = read_package_file("host/swiftui/MosaicHost.swift");
     for symbol in [
         "view-source-close-button",
+        "view-source-copy-button",
+        "onViewSourceCopy",
         "onViewSourceClose",
         "sourceContent.contains",
         "viewSourcePanel",
