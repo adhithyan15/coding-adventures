@@ -54,7 +54,7 @@ public sealed class PortableConformanceTests
         DerTlv.Limits wide = new(long.MaxValue, long.MaxValue, 1, uint.MaxValue);
         DerTlv.Error error = Assert.Throws<DerTlv.Error>(() => DerTlv.DecodeOne(new byte[] { 4, 136, 127, 255, 255, 255, 255, 255, 255, 255 }, wide));
         Assert.Equal("length-host-overflow", error.Kind);
-        Assert.Throws<DerTlv.Error>(() => new DerTlv.Cursor(new byte[] { 5, 0 }, DerTlv.Limits.Default with { MaxInputLength = 1 }));
+        Assert.Throws<DerTlv.Error>(() => new DerTlv.Cursor(new byte[] { 5, 0 }, new DerTlv.Limits(1, 1, 1, 1)));
     }
 
     private static JsonNode RunDecode(byte[] input, DerTlv.Limits limits, bool exact)

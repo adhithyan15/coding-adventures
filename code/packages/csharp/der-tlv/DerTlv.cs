@@ -5,7 +5,7 @@ public static class DerTlv
 {
     private static readonly string[] TagClasses = ["universal", "application", "context-specific", "private"];
 
-    public sealed record Limits
+    public sealed class Limits
     {
         public Limits(long maxInputLength, long maxValueLength, long maxElements, uint maxTagNumber)
         {
@@ -18,10 +18,10 @@ public static class DerTlv
             MaxTagNumber = maxTagNumber;
         }
 
-        public long MaxInputLength { get; init; }
-        public long MaxValueLength { get; init; }
-        public long MaxElements { get; init; }
-        public uint MaxTagNumber { get; init; }
+        public long MaxInputLength { get; }
+        public long MaxValueLength { get; }
+        public long MaxElements { get; }
+        public uint MaxTagNumber { get; }
         public static Limits Default { get; } = new(1_048_576, 1_048_576, 4_096, uint.MaxValue);
     }
 
