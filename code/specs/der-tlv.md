@@ -57,6 +57,14 @@ The default certificate-oriented limits are:
 - 4096 sibling elements per cursor;
 - tag number `u32::MAX`.
 
+Configured limits are immutable values for one public decode operation or
+cursor lifetime. Implementations must reject, or make unrepresentable,
+negative, fractional, non-finite, or out-of-domain limits before examining
+input. Runtimes whose configuration objects can be mutated by a caller must
+snapshot the validated values at the public API boundary. Configuration
+validation may use a language-native argument or range error because malformed
+configuration is not a wire-decoding failure.
+
 The input-length limit is checked before its first byte is read. Declared
 length is accumulated into `u64`, checked for arithmetic overflow, converted to
 `usize` only after a host-capacity check, compared with the configured value
@@ -122,10 +130,11 @@ is not part of the portable contract.
 `decode_one` returns the first element and untouched remainder.
 `decode_exact` additionally requires that the element consume all input, so a
 canonical zero-length value cannot hide trailing bytes. `DerCursor` performs
-bounded, iterative sibling decoding without recursion. A later typed decoder
-may open an element's value with another cursor, but it must own and enforce one
-shared tree-depth and total-work budget; this package does not claim that
-independent cursor limits compose into a whole-document bound.
+bounded, iterative sibling decoding without recursion and fixes the input
+extent at construction even on runtimes with resizable backing buffers. A later
+typed decoder may open an element's value with another cursor, but it must own
+and enforce one shared tree-depth and total-work budget; this package does not
+claim that independent cursor limits compose into a whole-document bound.
 
 ## Error Contract
 

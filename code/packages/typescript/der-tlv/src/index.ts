@@ -6,6 +6,17 @@ export const DEFAULT_MAX_VALUE_LEN = 1024n * 1024n;
 export const DEFAULT_MAX_ELEMENTS = 4096;
 const U32_MAX = 0xffff_ffffn;
 const HOST_MAX = BigInt(Number.MAX_SAFE_INTEGER);
+const TYPED_ARRAY_PROTOTYPE = Object.getPrototypeOf(Uint8Array.prototype) as object;
+
+function typedArrayGetter(name: "buffer" | "byteLength" | "byteOffset"): (this: Uint8Array) => unknown {
+  const getter = Object.getOwnPropertyDescriptor(TYPED_ARRAY_PROTOTYPE, name)?.get;
+  if (getter === undefined) throw new Error(`missing typed-array ${name} intrinsic`);
+  return getter as (this: Uint8Array) => unknown;
+}
+
+const GET_TYPED_ARRAY_BUFFER = typedArrayGetter("buffer");
+const GET_TYPED_ARRAY_BYTE_LENGTH = typedArrayGetter("byteLength");
+const GET_TYPED_ARRAY_BYTE_OFFSET = typedArrayGetter("byteOffset");
 
 export type TagClass = "universal" | "application" | "context-specific" | "private";
 
@@ -51,12 +62,42 @@ export interface DerLimits {
 }
 
 export function defaultLimits(): DerLimits {
-  return {
+  return Object.freeze({
     maxInputLen: DEFAULT_MAX_INPUT_LEN,
     maxValueLen: DEFAULT_MAX_VALUE_LEN,
     maxElements: DEFAULT_MAX_ELEMENTS,
     maxTagNumber: 0xffff_ffff,
-  };
+  });
+}
+
+function normalizeLimits(limits: DerLimits): DerLimits {
+  const { maxInputLen, maxValueLen, maxElements, maxTagNumber } = limits;
+  const numericLimits: readonly [keyof DerLimits, number, number][] = [
+    ["maxInputLen", maxInputLen, Number.MAX_SAFE_INTEGER],
+    ["maxElements", maxElements, Number.MAX_SAFE_INTEGER],
+    ["maxTagNumber", maxTagNumber, Number(U32_MAX)],
+  ];
+  for (const [name, value, maximum] of numericLimits) {
+    if (!Number.isSafeInteger(value) || value < 0 || value > maximum) {
+      throw new RangeError(`${name} must be a non-negative safe integer no greater than ${maximum}`);
+    }
+  }
+  if (typeof maxValueLen !== "bigint" || maxValueLen < 0n) {
+    throw new RangeError("maxValueLen must be a non-negative bigint");
+  }
+  return Object.freeze({
+    maxInputLen,
+    maxValueLen,
+    maxElements,
+    maxTagNumber,
+  });
+}
+
+function fixedInputView(input: Uint8Array): Uint8Array {
+  const buffer = Reflect.apply(GET_TYPED_ARRAY_BUFFER, input, []) as ArrayBufferLike;
+  const byteLength = Reflect.apply(GET_TYPED_ARRAY_BYTE_LENGTH, input, []) as number;
+  const byteOffset = Reflect.apply(GET_TYPED_ARRAY_BYTE_OFFSET, input, []) as number;
+  return new Uint8Array(buffer, byteOffset, byteLength);
 }
 
 export interface DerTag {
@@ -173,41 +214,48 @@ function decodeAt(input: Uint8Array, start: number, available: number, limits: D
 }
 
 export function decodeOne(input: Uint8Array, limits: DerLimits = defaultLimits()): [DerElement, Uint8Array] {
-  const decoded = decodeAt(input, 0, input.length, limits);
-  return [decoded.element, input.subarray(decoded.nextOffset)];
+  const fixedInput = fixedInputView(input);
+  const decoded = decodeAt(fixedInput, 0, fixedInput.length, normalizeLimits(limits));
+  return [decoded.element, fixedInput.subarray(decoded.nextOffset)];
 }
 
 export function decodeExact(input: Uint8Array, limits: DerLimits = defaultLimits()): DerElement {
-  const decoded = decodeAt(input, 0, input.length, limits);
-  if (decoded.nextOffset !== input.length) throw new DerError(DerErrorKind.TrailingData, decoded.nextOffset);
+  const fixedInput = fixedInputView(input);
+  const decoded = decodeAt(fixedInput, 0, fixedInput.length, normalizeLimits(limits));
+  if (decoded.nextOffset !== fixedInput.length) throw new DerError(DerErrorKind.TrailingData, decoded.nextOffset);
   return decoded.element;
 }
 
 export class DerCursor {
   readonly #input: Uint8Array;
+  readonly #inputLen: number;
   readonly #limits: DerLimits;
   #offset = 0;
   #elementsRead = 0;
 
   constructor(input: Uint8Array, limits: DerLimits = defaultLimits()) {
-    if (input.length > limits.maxInputLen) throw new DerError(DerErrorKind.InputLimitExceeded, 0);
-    this.#input = input;
-    this.#limits = limits;
+    const normalizedLimits = normalizeLimits(limits);
+    const fixedInput = fixedInputView(input);
+    const inputLen = fixedInput.length;
+    if (inputLen > normalizedLimits.maxInputLen) throw new DerError(DerErrorKind.InputLimitExceeded, 0);
+    this.#input = fixedInput;
+    this.#inputLen = inputLen;
+    this.#limits = normalizedLimits;
   }
 
   get elementsRead(): number { return this.#elementsRead; }
-  get remaining(): Uint8Array { return this.#input.subarray(this.#offset); }
+  get remaining(): Uint8Array { return this.#input.subarray(this.#offset, this.#inputLen); }
 
   read(): DerElement | undefined {
-    if (this.#offset === this.#input.length) return undefined;
+    if (this.#offset === this.#inputLen) return undefined;
     if (this.#elementsRead >= this.#limits.maxElements) throw new DerError(DerErrorKind.ElementLimitExceeded, this.#offset);
-    const decoded = decodeAt(this.#input, this.#offset, this.#input.length - this.#offset, this.#limits);
+    const decoded = decodeAt(this.#input, this.#offset, this.#inputLen - this.#offset, this.#limits);
     this.#offset = decoded.nextOffset;
     this.#elementsRead += 1;
     return decoded.element;
   }
 
   finish(): void {
-    if (this.#offset !== this.#input.length) throw new DerError(DerErrorKind.TrailingData, this.#offset);
+    if (this.#offset !== this.#inputLen) throw new DerError(DerErrorKind.TrailingData, this.#offset);
   }
 }

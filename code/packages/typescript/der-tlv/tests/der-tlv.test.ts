@@ -1,7 +1,17 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { DerCursor, DerElement, DerError, DerLimits, decodeExact, decodeOne, defaultLimits } from "../src/index.js";
+import {
+  DEFAULT_MAX_ELEMENTS,
+  DEFAULT_MAX_VALUE_LEN,
+  DerCursor,
+  DerElement,
+  DerError,
+  DerLimits,
+  decodeExact,
+  decodeOne,
+  defaultLimits,
+} from "../src/index.js";
 
 interface Segment { hex?: string; repeat_hex?: string; count?: number }
 interface FixtureCase { id: string; operation: "decode-exact" | "decode-one" | "cursor"; input: Segment[]; limits?: Record<string, number | string>; actions?: ("read" | "finish")[]; redacted_input_hex?: string; expected: unknown }
@@ -89,5 +99,80 @@ describe("DER TLV v1 portable conformance", () => {
     const element = decodeExact(input, defaultLimits());
     input[2] = 0x7f;
     expect([...element.value]).toEqual([0x7f]);
+  });
+  it.each([
+    ["non-finite input limit", { ...defaultLimits(), maxInputLen: Number.NaN }],
+    ["infinite element limit", { ...defaultLimits(), maxElements: Number.POSITIVE_INFINITY }],
+    ["fractional element limit", { ...defaultLimits(), maxElements: 1.5 }],
+    ["negative tag limit", { ...defaultLimits(), maxTagNumber: -1 }],
+    ["oversized tag limit", { ...defaultLimits(), maxTagNumber: 0x1_0000_0000 }],
+    ["negative value limit", { ...defaultLimits(), maxValueLen: -1n }],
+  ])("rejects %s", (_name, limits) => {
+    const input = Uint8Array.of(0x05, 0x00);
+    expect(() => decodeExact(input, limits)).toThrow(RangeError);
+    expect(() => new DerCursor(input, limits)).toThrow(RangeError);
+  });
+  it("snapshots cursor limits against caller mutation", () => {
+    const limits = { ...defaultLimits(), maxElements: 1 };
+    const cursor = new DerCursor(Uint8Array.of(0x05, 0x00, 0x05, 0x00), limits);
+    expect(cursor.read()).toBeInstanceOf(DerElement);
+    limits.maxElements = 2;
+    expect(() => cursor.read()).toThrowError(expect.objectContaining({
+      kind: "element-limit-exceeded",
+      offset: 2,
+    }));
+    expect(cursor.elementsRead).toBe(1);
+    expect(cursor.remaining).toEqual(Uint8Array.of(0x05, 0x00));
+  });
+  it("reads each limit property once before validation and snapshotting", () => {
+    let inputLimitReads = 0;
+    const limits: DerLimits = {
+      get maxInputLen() {
+        inputLimitReads += 1;
+        return inputLimitReads === 1 ? 2 : Number.POSITIVE_INFINITY;
+      },
+      maxValueLen: DEFAULT_MAX_VALUE_LEN,
+      maxElements: DEFAULT_MAX_ELEMENTS,
+      maxTagNumber: 0xffff_ffff,
+    };
+    expect(() => new DerCursor(Uint8Array.of(0x05, 0x00, 0x05, 0x00), limits))
+      .toThrowError(expect.objectContaining({ kind: "input-limit-exceeded", offset: 0 }));
+    expect(inputLimitReads).toBe(1);
+  });
+  it("keeps a cursor within the input extent captured at construction", () => {
+    const ResizableArrayBuffer = ArrayBuffer as unknown as new (
+      byteLength: number,
+      options: { maxByteLength: number },
+    ) => ArrayBuffer;
+    const buffer = new ResizableArrayBuffer(2, { maxByteLength: 4 });
+    const bytes = new Uint8Array(buffer);
+    bytes.set([0x05, 0x00]);
+    const cursor = new DerCursor(bytes, { ...defaultLimits(), maxInputLen: 2 });
+    expect(cursor.read()).toBeInstanceOf(DerElement);
+    (buffer as ArrayBuffer & { resize(byteLength: number): void }).resize(4);
+    new Uint8Array(buffer).set([0x05, 0x00], 2);
+    expect(cursor.read()).toBeUndefined();
+    expect(cursor.elementsRead).toBe(1);
+    expect(cursor.remaining).toEqual(new Uint8Array());
+  });
+  it("uses typed-array intrinsics instead of shadowable extent and slice properties", () => {
+    const oversized = new Uint8Array(20);
+    for (let index = 0; index < oversized.byteLength; index += 2) oversized.set([0x05, 0x00], index);
+    Object.defineProperties(oversized, {
+      length: { get: () => Number.NaN },
+      subarray: { value: () => oversized },
+    });
+    expect(() => new DerCursor(oversized, { ...defaultLimits(), maxInputLen: 2 }))
+      .toThrowError(expect.objectContaining({ kind: "input-limit-exceeded", offset: 0 }));
+
+    const encoded = Uint8Array.of(0x04, 0x01, 0x2a);
+    Object.defineProperties(encoded, {
+      length: { get: () => Number.NaN },
+      subarray: { value: () => encoded },
+    });
+    const element = decodeExact(encoded);
+    expect(element.header).toEqual(Uint8Array.of(0x04, 0x01));
+    expect(element.value).toEqual(Uint8Array.of(0x2a));
+    expect(element.encoded).toEqual(Uint8Array.of(0x04, 0x01, 0x2a));
   });
 });
