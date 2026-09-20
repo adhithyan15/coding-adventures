@@ -10,6 +10,20 @@ roadmap is reconciled.
 
 ## Encoded CLR input prerequisites (selected 2026-09-19 after VM-058)
 
+### CLR08 landed; CLR09 compact minus-one execution selected (2026-09-20)
+
+CLR08 strict scalar comparisons merged in #15698 as
+`13e17dec1c05c48570c0c7b3e12dc6b9a599ae8e` after all required checks passed.
+Fresh main and open-PR audits show no non-ALGOL CLR overlap; ALGOL remains
+separately owned.
+
+CLR08 recorded a bounded builder/simulator mismatch: the standard builder
+selects compact `ldc.i4.m1` (`0x15`) for integer -1, while the simulator only
+executes the neighboring compact constants zero through eight. Select CLR09 to
+add independently verified raw-byte execution and canonical helper encoding.
+Keep CLR08's full-form emitter workaround until this prerequisite lands; branch
+lowering, source migration and encoded host input remain later contracts.
+
 ### CLR07 landed; CLR08 strict comparisons selected (2026-09-20)
 
 CLR07 remainder/NOT execution merged in #15689 as
