@@ -1,0 +1,39 @@
+cabal-version: 3.0
+name:          der-tlv
+version:       0.1.0
+synopsis:      Bounded DER identifier and definite-length framing
+description:   Bounded, authority-free DER identifier and definite-length framing with portable stable diagnostics.
+category:      Development
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+extra-doc-files:
+    README.md
+    CHANGELOG.md
+
+library
+    exposed-modules:  CodingAdventures.DerTlv
+    build-depends:    base >=4.14 && <5
+                    , bytestring >=0.11 && <0.13
+    hs-source-dirs:   src
+    ghc-options:      -Wall
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    DerTlvSpec
+                    , PortableConformanceSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14 && <5
+                    , der-tlv
+                    , aeson >=2 && <2.3
+                    , bytestring >=0.11 && <0.13
+                    , directory >=1.3 && <1.4
+                    , filepath >=1.4 && <1.6
+                    , hspec ==2.*
+                    , scientific >=0.3 && <0.4
+                    , text >=1.2 && <2.2
+    ghc-options:      -Wall
+    default-language: Haskell2010

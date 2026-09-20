@@ -1,0 +1,4 @@
+packages: .
+
+package der-tlv
+  coverage: True
