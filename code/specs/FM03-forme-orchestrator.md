@@ -542,6 +542,16 @@ When an instance completes, the orchestrator:
    the ready queue.
 4. Schedules from the ready queue up to `maxConcurrency`.
 
+The ready queue is stable: instances with no unmet dependencies enter in
+pipeline declaration order, and consumers that become ready together use that
+same order. Readiness bookkeeping may run ahead of execution, but every
+`Stage.run` invocation acquires from the one shared permit pool (§4.3.1).
+Summaries and named outputs remain in topological/declaration order regardless
+of completion order. After cancellation or the first fatal failure, queued
+invocations are rejected and no newly ready instance is submitted. Already
+active invocations observe the shared cancellation token and unwind
+cooperatively before disposal begins.
+
 ### 4.2 Streaming and fan-out
 
 For stages that produce a `Stream<K>`, the orchestrator does not wait
@@ -561,6 +571,12 @@ Fan-in: a stage with `inputPorts` is invoked once with a stable object whose
 `default` property carries its `consumes` input and whose other properties are
 the declared named inputs in lexical order. Stream shape must match at every
 port; per-item stream promotion applies only to legacy single-input stages.
+
+Per-item invocations join the same FIFO permit queue in source order. Their
+results are written into source-order slots, so downstream materialized values,
+revision hashes, cache checkpoints, and item counts do not depend on completion
+order. A fatal item failure cancels queued sibling invocations; active siblings
+must unwind before the owning stage is considered complete.
 
 ### 4.3 Parallelism control
 
