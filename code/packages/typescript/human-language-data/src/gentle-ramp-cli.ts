@@ -9,6 +9,7 @@ import {
 import { policyTableWidth } from "./narration-cli.js";
 import { buildCurriculumGapReport } from "./report.js";
 import { renderGentleRamp } from "./gentle-ramp.js";
+import { assertGentleRampSnapshotsRetired } from "./gentle-ramp-retirement.js";
 
 interface GentleRampOptions {
   root?: string;
@@ -39,6 +40,8 @@ export function runGentleRampReport(args = process.argv.slice(2)): number {
     process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
     return 2;
   }
+
+  assertGentleRampSnapshotsRetired(options.root ?? defaultRoot());
 
   const { registry, lessons, books, curricula, spine } = loadEverything(options.root);
   const report = buildCurriculumGapReport({

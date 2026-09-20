@@ -60,7 +60,6 @@ core/reading-reach-floor.d/<language>--<level>.json reading-reach ratchet, one o
 core/exam-inventory-malayalam-a1.d/*.json Malayalam A1 metadata + one owner per exam point
 core/latex-warning-baseline.json  per-track LaTeX warning debt the book gate holds the line on
 core/lesson-modality/<language>.d/*.json generated voice/sight/pen, one owner per lesson
-core/gentle-ramp-snapshots/<language>.d/ generated metric/finding owners; no flat aggregate
 core/generated-book-hashes/<language>.d/ generated book hashes, one JSON owner per chapter
 core/generated-narration-hashes/<language>.d/ generated narration hashes, one JSON owner per chapter
 core/figure-generation.json     configured canonical-data SVG figures and safe book targets
@@ -69,11 +68,11 @@ concepts/taxonomy.json          cross-language semantic join keys
 data/scripts/*.json             writing-system inventories and teaching metadata
 ```
 
-Gentle-ramp snapshots reconstruct the unchanged per-language report in memory from
-one stable metadata owner, 26 metric owners, and ten finding-kind owners. Exact
-registry/source/narration identity checks and `check:gentle-snapshots` reject missing,
-extra, unsafe, noncanonical, or flat aggregate state. See
-[`HL33`](../../specs/HL33-sharded-gentle-ramp-ownership.md).
+Gentle-ramp metrics and findings are derived on demand from canonical lessons,
+curricula, chapter policy, and chapter ledgers. There is no tracked generated
+snapshot to refresh. `check:gentle-snapshots` now proves the retired path remains
+absent and exercises the complete derivation; a resurrected aggregate or owner
+tree fails. See [`HL38`](../../specs/HL38-retired-gentle-ramp-snapshots.md).
 
 Exam-inventory regression evidence is language-owned too. Generic parser and
 security behavior stays in the data package's `tests/exam-inventory.test.ts`;
