@@ -210,6 +210,7 @@ impl VisiCalcMosaicApp {
             .unwrap_or((-1, -1, ""));
         AppUpdate::new(json!({
             "workbook-empty": !self.workbook.has_cell_content(),
+            "editor-label": format!("Cell {address}"),
             "cell-address": address, "formula": formula, "read-only": self.pending_file.is_some(),
             "file-status": self.file_status,
             "selection-summary": self.describe_cell(cursor.row, cursor.col),

@@ -48,6 +48,7 @@ layout VisiCalc {
       viewport-rows: slot: viewport-rows,
       column-headers: slot: column-headers,
       column-widths: slot: column-widths,
+      editor-label: slot: editor-label,
       selected-row: slot: grid-selected-row,
       selected-col: slot: selected-col,
       edit-row: slot: grid-edit-row,
