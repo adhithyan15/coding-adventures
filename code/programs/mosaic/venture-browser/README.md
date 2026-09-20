@@ -51,11 +51,11 @@ recreating the surrounding chrome in backend-specific UI code.
   backend-neutral paint highlights are shared. The same retained state owns
   whether the conditionally rendered Mosaic bar is open; generated hosts only
   forward open, query, next, previous, and close events.
-- View Source never refetches the page. The core escapes the exact retained
-  response text into a synthetic `<pre>` HTML document and emits one typed
-  `open-auxiliary-document` effect. SwiftUI, WinUI, Qt, Flutter, and Compose
-  adapters forward or retain that effect for their platform window presenter;
-  toolkit code does not parse, escape, or reconstruct source.
+- View Source never refetches the page. Core retains the exact response text,
+  projects it into one closable Mosaic source panel for every generated shell,
+  and also escapes it into a synthetic `<pre>` HTML document carried by the
+  typed `open-auxiliary-document` effect for richer platform presenters.
+  Toolkit code does not parse, escape, or reconstruct source.
 - Copy Address resolves the committed history URL rather than the editable
   address draft and emits one typed clipboard-write effect. Generated hosts
   only present that text through their native clipboard API; URL selection,

@@ -45,6 +45,10 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
       zoomResetDisabled: true,
       zoomInDisabled: true,
       viewSourceDisabled: true,
+      viewSourceOpen: false,
+      viewSourceTitle: "Initial page",
+      viewSourceAddress: "https://venture.test/final",
+      viewSourceContent: "<html><title>Initial page</title></html>",
       findOpen: false,
       findQuery: "",
       findResultLabel: "",
@@ -88,6 +92,12 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
         }
         if (request.event.type === "pageInfoClose") {
           props = { ...props, pageInfoOpen: false };
+        }
+        if (request.event.type === "viewSource") {
+          props = { ...props, viewSourceOpen: true };
+        }
+        if (request.event.type === "viewSourceClose") {
+          props = { ...props, viewSourceOpen: false };
         }
         props = {
           ...props,
@@ -237,6 +247,12 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     controls.viewSource.click();
     await settle();
     assert.equal(calls.at(-1)?.type, "viewSource");
+    assert.match(renderScope(root).textContent, /<html><title>Initial page<\/title><\/html>/);
+    assert.match(renderScope(root).textContent, /https:\/\/venture\.test\/final/);
+    buttonByLabel(root, "Close Source").click();
+    await settle();
+    assert.equal(calls.at(-1)?.type, "viewSourceClose");
+    assert.doesNotMatch(renderScope(root).textContent, /<html><title>Initial page<\/title><\/html>/);
 
     controls = readControls(root);
     controls.findOpen.click();
@@ -284,7 +300,7 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     assert.equal(calls.at(-1)?.type, "navigate");
     assert.deepEqual(
       calls.map(event => event.type),
-      ["toggleBookmark", "copyAddress", "openPageInNewWindow", "savePage", "printPage", "sharePage", "pageInfo", "pageInfoClose", "zoomIn", "zoomReset", "viewSource", "findOpen", "findChange", "findNext", "findClose", "addressChange", "navigate", "navigate"],
+      ["toggleBookmark", "copyAddress", "openPageInNewWindow", "savePage", "printPage", "sharePage", "pageInfo", "pageInfoClose", "zoomIn", "zoomReset", "viewSource", "viewSourceClose", "findOpen", "findChange", "findNext", "findClose", "addressChange", "navigate", "navigate"],
     );
     assert.match(renderScope(root).textContent, /Handled navigate through MosaicHost/);
   } finally {

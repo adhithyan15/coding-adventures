@@ -214,8 +214,10 @@ navigation, bookmark, Copy Address, Save Page, and View Source events to host-ne
 only after a successful load, and projects one coherent `BrowserChromeProps`
 snapshot for the declared MIL slots. `BrowserAuxiliaryDocument::view_source`
 escapes the already-retained response text into synthetic preformatted HTML,
-and `BrowserHostEventOutcome` carries the resulting platform-owned window
-effect without navigation, history mutation, or a network fetch. Generated Mosaic shells expose the native
+while `BrowserSourceSnapshot` retains the same title, committed address, and
+exact raw text for a shared closable Mosaic panel. `BrowserHostEventOutcome`
+still carries the resulting platform-owned window effect without navigation,
+history mutation, or a network fetch. Generated Mosaic shells expose the native
 node seam on all registered backends. The SwiftUI adapter connects this reducer
 to the live Metal renderer, WinUI mounts Direct2D pixels, and Qt, Flutter, and
 Compose share the Cairo bridge. Platform-native integration gates exercise the
