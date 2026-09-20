@@ -2299,6 +2299,16 @@ fn translate_xaml_value(key: &str, raw: &str) -> Option<String> {
     // Length setters: strip CSS `px` units (and reject percentages,
     // which WinUI's `Double`-typed length properties can't express).
     if is_length_setter(key) {
+        // CSS intrinsic sizing and cascade keywords are not WinUI Double
+        // literals. The markup compiler accepts them but LoadComponent throws
+        // at launch. Report the unsupported style instead of emitting it.
+        if matches!(trimmed.to_ascii_lowercase().as_str(),
+            "max-content" | "min-content" | "fit-content" | "stretch"
+                | "inherit" | "initial" | "unset" | "revert" | "revert-layer")
+            || trimmed.to_ascii_lowercase().starts_with("fit-content(")
+        {
+            return None;
+        }
         // `100%` (or any percentage) — WinUI lengths are absolute
         // Doubles. Drop the whole property; the layout container
         // (StackPanel / Grid `*`) sizes the element instead.
@@ -19776,6 +19786,38 @@ mod tests {
         assert_eq!(dropped.len(), 1, "got: {dropped:?}");
         assert_eq!(dropped[0].name, "width");
         assert_eq!(dropped[0].value, "50%");
+    }
+
+    #[test]
+    fn intrinsic_dimensions_are_reported_instead_of_crashing_at_launch() {
+        for value in [
+            "max-content",
+            "min-content",
+            "fit-content",
+            "fit-content(100px)",
+            "stretch",
+            "inherit",
+            "unset",
+            "initial",
+            "revert",
+            "revert-layer",
+        ] {
+            for property in ["width", "height", "min-width", "max-height"] {
+                let style = style_for_box("sheet", vec![(property, value)]);
+                let dropped = dropped_style_properties(&style);
+                assert_eq!(dropped.len(), 1, "{property}: {value}");
+                assert_eq!(dropped[0].value, value);
+                let c = component("Foo", vec![], vec![]);
+                let l = layout_with_root("Foo", styled_box_with_text_child("sheet"));
+                assert!(!compile(&c, &l, &style).xaml.contains(value));
+            }
+        }
+        assert_eq!(translate_xaml_value("Width", "Auto"), Some("Auto".into()));
+        assert_eq!(translate_xaml_value("Width", "120px"), Some("120".into()));
+        assert_eq!(
+            translate_xaml_value("Width", "{Binding Size}"),
+            Some("{Binding Size}".into())
+        );
     }
 
     /// An unrecognised/typo'd property name falls through to the generic
