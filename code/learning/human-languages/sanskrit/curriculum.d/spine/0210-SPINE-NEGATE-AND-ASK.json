@@ -1,7 +1,4 @@
 {
-  "segments": [
-    "SA-PATH-204"
-  ],
   "omits": [
     "VERB-NEGATE",
     "QUESTION-POLAR"

@@ -1,7 +1,4 @@
 {
-  "segments": [
-    "IT-PATH-034"
-  ],
   "omits": [
     "QUESTION-POLAR"
   ],

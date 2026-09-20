@@ -520,6 +520,13 @@ shard mode for `spine`. That is a real but contained generalisation of
 >    one authored id away from joining the other twenty-one, and nothing would
 >    announce it.
 >
+> 3. **The reverse `segments` arrays are retired by HL39.** Sharding reduced the
+>    collision from one curriculum monolith to one spine-node owner, but every
+>    new path segment under a popular node still edited that existing owner.
+>    `path[*].spine_node` is now the single authored membership edge. Spine
+>    owners retain only `omits` and `relocates`; readers derive the public
+>    `segments` arrays in exact path order and reject a stored copy.
+>
 > 3. **The arrays are not last, and §2.5's refusal had to go.** Every track is
 >    `{version, language, path, spine, extensions}`, Spanish adding
 >    `conceptAliases`. `_meta.json` now records the top-level key order in

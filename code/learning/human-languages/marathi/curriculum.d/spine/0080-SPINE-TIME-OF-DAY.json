@@ -1,9 +1,4 @@
 {
-  "segments": [
-    "MR-PATH-068",
-    "MR-PATH-069",
-    "MR-PATH-070"
-  ],
   "omits": [
     "GREETING-DAY"
   ],

@@ -1,8 +1,4 @@
 {
-  "segments": [
-    "AR-PATH-008",
-    "AR-PATH-015"
-  ],
   "omits": [
     "WORD-GOOD",
     "WORD-SOSO"

@@ -1,11 +1,4 @@
 {
-  "segments": [
-    "MR-PATH-012-B",
-    "MR-PATH-013-B",
-    "MR-PATH-014-B",
-    "MR-PATH-022",
-    "MR-PATH-063-TIMED"
-  ],
   "omits": [
     "VERB-DO-MAKE",
     "VERB-BUY",

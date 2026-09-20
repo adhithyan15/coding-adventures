@@ -1,12 +1,4 @@
 {
-  "segments": [
-    "AR-PATH-004",
-    "AR-PATH-012",
-    "AR-PATH-016",
-    "AR-PATH-018",
-    "AR-PATH-020",
-    "AR-PATH-025"
-  ],
   "omits": [
     "TIME-MORNING",
     "TIME-AFTERNOON",

@@ -55,11 +55,10 @@ import {
 import { readExamInventoryOwnersIfPresent } from "./exam-inventory-shards.js";
 import { parseTaskShapeInventory, type TaskShapeInventory } from "./task-shapes.js";
 import {
-  CURRICULUM_SECTIONS,
   LedgerParseError,
   isSharded,
+  mergeCurriculumShards,
   mergeMetaAndList,
-  mergeSectionedShards,
   readLedgerFile,
   readMaybeSharded,
 } from "./shard.js";
@@ -414,8 +413,7 @@ export function loadLanguageCurricula(root = defaultCurriculumRoot()): LanguageC
     out.push(
       readMaybeSharded<LanguageCurriculum>(
         path,
-        (shards) =>
-          mergeSectionedShards(shards, CURRICULUM_SECTIONS) as unknown as LanguageCurriculum,
+        (shards) => mergeCurriculumShards(shards) as unknown as LanguageCurriculum,
       ),
     );
   }

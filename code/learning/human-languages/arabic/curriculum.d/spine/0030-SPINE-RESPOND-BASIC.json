@@ -1,8 +1,4 @@
 {
-  "segments": [
-    "AR-PATH-010",
-    "AR-PATH-035"
-  ],
   "omits": [
     "RESPONSE-YESNO"
   ],

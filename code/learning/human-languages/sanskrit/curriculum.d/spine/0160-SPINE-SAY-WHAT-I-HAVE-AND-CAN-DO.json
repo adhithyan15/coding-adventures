@@ -1,7 +1,4 @@
 {
-  "segments": [
-    "SA-PATH-57-CAN"
-  ],
   "omits": [
     "VERB-HAVE"
   ],

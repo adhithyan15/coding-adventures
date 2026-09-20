@@ -94,7 +94,6 @@ describe("independent missing-owner detection", () => {
 
   it.each([
     ["spine", "spine/0010-SPINE-MEET-GREET.json", "SPINE-MEET-GREET"],
-    ["path", "path/0010-ES-PATH-001.json", "ES-PATH-001"],
     [
       "extensions",
       "extensions/0010-ES-EXT-001-WRITING-RUNWAY.json",
@@ -113,6 +112,13 @@ describe("independent missing-owner detection", () => {
       });
     },
   );
+
+  it("detects a deleted curriculum path owner from the remaining graph references", () => {
+    withFixture(["core/spine.d", "spanish/curriculum.d"], (root) => {
+      rmSync(join(root, "spanish/curriculum.d/path/0010-ES-PATH-001.json"));
+      checkThrows(root, "spanish/curriculum.json", /identity set differs/);
+    });
+  });
 });
 
 describe("logical identity and filename enforcement", () => {

@@ -1,8 +1,4 @@
 {
-  "segments": [
-    "UR-PATH-004",
-    "UR-PATH-010"
-  ],
   "omits": [
     "PRONOUN-I",
     "PRONOUN-ME",

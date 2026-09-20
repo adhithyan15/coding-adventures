@@ -1,9 +1,4 @@
 {
-  "segments": [
-    "TE-PATH-026-B",
-    "TE-PATH-027-B",
-    "TE-PATH-027-D"
-  ],
   "omits": [
     "VERB-DRINK",
     "VERB-GIVE",

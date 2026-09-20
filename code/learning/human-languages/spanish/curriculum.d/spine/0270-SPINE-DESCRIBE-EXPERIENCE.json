@@ -1,10 +1,4 @@
 {
-  "segments": [
-    "ES-PATH-269-FEELING",
-    "ES-PATH-269-AMBITION",
-    "ES-PATH-269-COMPARISON",
-    "ES-PATH-269-DURATION"
-  ],
   "omits": [],
   "relocates": {}
 }

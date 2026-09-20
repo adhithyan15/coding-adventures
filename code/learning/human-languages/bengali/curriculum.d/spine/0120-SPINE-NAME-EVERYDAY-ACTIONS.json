@@ -1,9 +1,4 @@
 {
-  "segments": [
-    "BN-PATH-011-B",
-    "BN-PATH-012-B",
-    "BN-PATH-013-B"
-  ],
   "omits": [
     "VERB-DRINK",
     "VERB-GIVE",

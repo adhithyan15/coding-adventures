@@ -1,7 +1,4 @@
 {
-  "segments": [
-    "ZH-PATH-006"
-  ],
   "omits": [
     "TIME-DAY",
     "TIME-AFTERNOON",

@@ -1,5 +1,4 @@
 {
-  "segments": [],
   "omits": [
     "CONDITIONAL-REAL",
     "CONNECTIVE-IF",

@@ -1,10 +1,4 @@
 {
-  "segments": [
-    "ML-PATH-81-DISTANCE",
-    "ML-PATH-83-ABLATIVE",
-    "ML-PATH-84-PLACE-WORDS",
-    "ML-PATH-86-WITH"
-  ],
   "omits": [
     "QUESTION-WHERE"
   ],

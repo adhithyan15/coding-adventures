@@ -1,8 +1,4 @@
 {
-  "segments": [
-    "GE-PATH-A1-NEGATION",
-    "GE-PATH-A1-FRAGE"
-  ],
   "omits": [],
   "relocates": {}
 }

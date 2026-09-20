@@ -1,20 +1,4 @@
 {
-  "segments": [
-    "HI-PATH-004",
-    "HI-PATH-004A",
-    "HI-PATH-007",
-    "HI-PATH-015",
-    "HI-PATH-020",
-    "HI-PATH-033",
-    "HI-PATH-47-ROLE",
-    "HI-PATH-54-ANIMAL",
-    "HI-PATH-62-HANDS",
-    "HI-PATH-67-A1-NAME-FIELD",
-    "HI-PATH-70-LEISURE",
-    "HI-PATH-89-SCHOOL",
-    "HI-PATH-94-PRONOUNS",
-    "HI-PATH-105-SAMBODHAN"
-  ],
   "omits": [
     "PRONOUN-ME"
   ],

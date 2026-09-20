@@ -1,15 +1,4 @@
 {
-  "segments": [
-    "HI-PATH-006",
-    "HI-PATH-027",
-    "HI-PATH-006A",
-    "HI-PATH-016",
-    "HI-PATH-032",
-    "HI-PATH-46-BODY",
-    "HI-PATH-53-BODY",
-    "HI-PATH-63-STATE",
-    "HI-PATH-71-TODAY"
-  ],
   "omits": [
     "WORD-GOOD",
     "WORD-SOSO"

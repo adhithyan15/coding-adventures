@@ -1,13 +1,4 @@
 {
-  "segments": [
-    "TA-PATH-028",
-    "TA-PATH-028-C",
-    "TA-PATH-029",
-    "TA-PATH-030",
-    "TA-PATH-030-C",
-    "TA-PATH-42-VERBS",
-    "TA-PATH-77-SAY"
-  ],
   "omits": [
     "VERB-INFINITIVE",
     "VERB-PRESENT-HABITUAL",

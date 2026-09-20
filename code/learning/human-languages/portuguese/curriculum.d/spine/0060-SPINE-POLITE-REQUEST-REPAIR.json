@@ -1,10 +1,4 @@
 {
-  "segments": [
-    "PT-PATH-012",
-    "PT-PATH-016",
-    "PT-PATH-027",
-    "PT-PATH-028"
-  ],
   "omits": [
     "COURTESY-PLEASE",
     "COURTESY-SORRY"

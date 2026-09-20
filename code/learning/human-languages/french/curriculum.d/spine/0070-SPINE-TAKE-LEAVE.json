@@ -1,8 +1,4 @@
 {
-  "segments": [
-    "FR-PATH-005",
-    "FR-PATH-013"
-  ],
   "omits": [
     "FAREWELL-CASUAL"
   ],

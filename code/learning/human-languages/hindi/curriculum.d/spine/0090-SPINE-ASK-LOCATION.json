@@ -1,7 +1,4 @@
 {
-  "segments": [
-    "HI-PATH-101-RELATION"
-  ],
   "omits": [
     "QUESTION-WHERE"
   ],
