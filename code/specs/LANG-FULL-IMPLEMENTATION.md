@@ -1047,7 +1047,9 @@ backend immediately) come before the enabler-dependent items.
   because capped abstract execution evaluates each recognized local scalar
   write in source order. A cycle may contain conditional expressions selected
   by the exact loop control or exact ordinary local snapshots unchanged by the
-  body; cycles selected by changing values remain conservative. A recurrence
+  body. Those stable snapshots may also select conditional statement branches
+  containing cycle writes; cycles selected by changing values remain
+  conservative. A recurrence
   in the graph may use a conditional
   expression selected by the controlled scalar or another exact local
   snapshot; capped execution re-evaluates the selected leaf on every pass.
