@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/x509-name",
+  "capabilities": [],
+  "justification": "Pure allocation-free decoding of one already framed RFC 5280 Name. It performs no filesystem, network, process, environment, clock, trust-root, certificate-path, signing, normalization, comparison, or verification access."
+}
