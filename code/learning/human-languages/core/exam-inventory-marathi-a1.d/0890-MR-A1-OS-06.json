@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-OS-06",
+  "category": "The simple sentence",
+  "label": "transitive and intransitive sentences",
+  "probe": null,
+  "note": "Both types are demonstrated in taught lines; the distinction is never stated, and in Marathi it is not a grammarian's nicety -- it decides whether the past tense takes the ergative (MR-A1-V-07).",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-OS-06"
+  ]
+}

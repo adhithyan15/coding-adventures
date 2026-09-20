@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-F1-04",
+  "category": "Giving and asking for information",
+  "label": "ask for confirmation with a tag",
+  "probe": [
+    "MR-JOIN-TAG-NAA"
+  ],
+  "note": "Closed by MR-C31-naa-tag (chapter 31), exactly as this note predicted: one syllable.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-F1-04"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-N-02",
+  "category": "The noun",
+  "label": "common nouns naming periods of time",
+  "probe": null,
+  "note": "No atom names a period of time. SPINE-TIME-OF-DAY is an A1 core node and the track omits all nine of its concepts.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-N-02"
+  ]
+}

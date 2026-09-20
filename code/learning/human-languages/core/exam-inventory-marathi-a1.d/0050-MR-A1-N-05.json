@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-N-05",
+  "category": "The noun",
+  "label": "number: masculine plural formation",
+  "probe": null,
+  "note": "No atom introduces any plural at all. Spanish closes its whole plural system in one point; Marathi needs three, because the classes do not derive from one another.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-N-05"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-NE18-04",
+  "category": "The arts",
+  "label": "literature and reading",
+  "probe": null,
+  "note": "Untaught as a domain. vaachne is taught as an ACTION (MR-A1-NE06-04) and no noun names a book, a poem or a film. Spanish's photography and cinema points are merged in here rather than split, since at A1 they are one thin field.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE18-04",
+    "A1-NE18-05",
+    "A1-NE18-06"
+  ]
+}

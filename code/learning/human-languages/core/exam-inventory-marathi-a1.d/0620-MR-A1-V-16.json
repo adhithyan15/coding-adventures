@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-V-16",
+  "category": "The verb",
+  "label": "compound verbs formed with karne",
+  "probe": [
+    "MR-LEX-MADAT-KARNE",
+    "MR-LEX-VICHAR-KARNE",
+    "MR-LEX-PREM-KARNE"
+  ],
+  "note": "MARATHI-SPECIFIC: a large share of the everyday verb stock is noun-plus-karne, a pattern Spanish has no productive equivalent of at A1.",
+  "anchorIds": [
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [],
+  "marathiSpecific": true
+}

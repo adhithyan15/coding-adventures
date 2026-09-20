@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-V-04",
+  "category": "The verb",
+  "label": "the present continuous in -t aahe",
+  "probe": null,
+  "note": "Untaught. 'What are you doing?' is an A1 interview question.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-V-03"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-V-17",
+  "category": "The verb",
+  "label": "the future",
+  "probe": null,
+  "note": "EMPTY-INTRODUCES MEASUREMENT GAP, and now the only one left in this file. bhetuu is taught three times over -- MR-C04-bhetu, -punha-bhetu, -udya-bhetu -- and those lessons are schema-v2 today, so the schema-v1 half of this note is retired; what they declare is a fixed FORM (MR-LEX-BHETU) and not a tense. chaalel, a third-person future, is still drilled by MR-R23-wellbeing-verbs (schema-v2, `introduces: []`, practising the SENSE atom rather than the form). Always a fixed phrase, never a tense a learner could build.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-V-01"
+  ]
+}

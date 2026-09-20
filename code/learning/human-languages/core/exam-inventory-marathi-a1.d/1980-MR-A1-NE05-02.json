@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-NE05-02",
+  "category": "Food and drink",
+  "label": "drink",
+  "probe": [
+    "MR-LEX-CHAHA",
+    "MR-LEX-DUDH",
+    "MR-LEX-PAANI"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE05-02"
+  ]
+}

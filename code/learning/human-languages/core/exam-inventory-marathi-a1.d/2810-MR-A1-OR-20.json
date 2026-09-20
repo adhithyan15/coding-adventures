@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-OR-20",
+  "category": "Devanagari letters and signs",
+  "label": "the frequent conjuncts themselves: kssa, jnya, tra, shra",
+  "probe": null,
+  "note": "The PRINCIPLE is taught (MR-SCRIPT-VIRAMA-01) and no individual conjunct is. Spanish's digraph point is the nearest analogue and is far cheaper: Spanish has five digraphs, Marathi has a productive system.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [
+    "A1-O1-03"
+  ]
+}

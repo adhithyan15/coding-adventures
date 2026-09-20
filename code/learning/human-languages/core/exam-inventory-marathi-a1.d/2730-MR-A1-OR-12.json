@@ -1,0 +1,19 @@
+{
+  "id": "MR-A1-OR-12",
+  "category": "Devanagari letters and signs",
+  "label": "the independent vowel letters, used word-initially",
+  "probe": [
+    "MR-SCRIPT-II-INDEPENDENT-01",
+    "MR-SCRIPT-O-INDEPENDENT-01",
+    "MR-SCRIPT-AI-INDEPENDENT-01",
+    "MR-SCRIPT-AU-INDEPENDENT-01"
+  ],
+  "note": "A, AA, U, UU, E and I were taught as independents and II, O, AI and AU were not, so a candidate could not begin a word with any of the four. Chapter 65 closes it, one short lesson per letter. THE POINT IS STILL SEPARATE FROM MR-A1-OR-14, which is the ai and au SIGNS and closed at chapters 56 and 59: a sign hangs on a consonant, a letter starts a word, and the two shapes look nothing alike. All four of these letters had a sign the reader already drew -- ii and o since chapter one -- so the gap was never in the sound but in the POSITION, which is what made it easy to miss. It was also blocking a number in the middle of an ordinary counting sequence: ऐंशी, eighty, opens with the independent AI.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [
+    "A1-O1-02"
+  ]
+}

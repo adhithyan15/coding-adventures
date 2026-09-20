@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-SUB-05",
+  "category": "Subordination",
+  "label": "causal clauses with kaaran",
+  "probe": [
+    "MR-JOIN-KAARAN"
+  ],
+  "note": "Closed by MR-C34-kaaran (chapter 34), which also realizes CONNECTIVE-BECAUSE on SPINE-SAY-WHY; that node's omission ledger is now empty.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-spine"
+  ],
+  "derivedFrom": [
+    "A1-SUB-06"
+  ]
+}

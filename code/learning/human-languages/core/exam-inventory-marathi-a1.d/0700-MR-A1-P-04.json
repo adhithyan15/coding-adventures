@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-P-04",
+  "category": "Case and postpositions",
+  "label": "source and starting point: -huun, paasuun",
+  "probe": [
+    "MR-POSTP-HUUN",
+    "MR-POSTP-PAASUN"
+  ],
+  "anchorIds": [
+    "editorial-marathi-structure",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [],
+  "marathiSpecific": true
+}

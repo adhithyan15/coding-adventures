@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-PRON-01",
+  "category": "Pronouns",
+  "label": "subject pronouns: the full paradigm",
+  "probe": null,
+  "note": "Half real, and the half that was a measurement artefact is gone. mii and tuu/tumhii ARE taught and NOW MEASURABLE -- chapters 9 to 12 migrated to schema v2, so MR-LEX-MI and MR-LEX-TU-TUMHI exist and this note no longer needs a measurement caveat. What remains is content: the third person and the plural, to, tii, te and aamhii, occur nowhere, which is what the reading paper's person-to-detail part asks for. A paradigm missing its third person is not a paradigm.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-PRON-01"
+  ]
+}

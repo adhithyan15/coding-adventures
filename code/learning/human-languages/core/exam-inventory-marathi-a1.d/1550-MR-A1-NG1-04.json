@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NG1-04",
+  "category": "Existential notions",
+  "label": "locating an event in time",
+  "probe": null,
+  "note": "Untaught; needs the clock and the calendar, neither of which exists.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NG1-04"
+  ]
+}

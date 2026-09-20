@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NE18-03",
+  "category": "The arts",
+  "label": "building, sculpture and painting",
+  "probe": null,
+  "note": "Untaught.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE18-03"
+  ]
+}

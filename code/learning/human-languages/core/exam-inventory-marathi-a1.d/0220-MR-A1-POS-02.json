@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-POS-02",
+  "category": "Possessives",
+  "label": "possessives with several possessors: aamchaa, tumchaa",
+  "probe": null,
+  "note": "tumchaM occurs inside the schema-v1 phrase MR-C02-tumche-naav-kaay-aahe and is introduced nowhere.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-POS-02"
+  ]
+}

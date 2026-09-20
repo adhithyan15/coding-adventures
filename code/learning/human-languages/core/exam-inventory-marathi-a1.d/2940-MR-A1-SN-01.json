@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-SN-01",
+  "category": "Sound system",
+  "label": "the two pronunciations of ca and ja: palatal, and the dental ts/dz Marathi keeps",
+  "probe": [
+    "MR-SOUND-CHA-TSAA",
+    "MR-SCRIPT-CA-01",
+    "MR-SCRIPT-JA-01"
+  ],
+  "note": "MARATHI-SPECIFIC. The Spanish inventory deliberately enumerates no pronunciation points at all -- its source publishes no A1/A2 split for them -- so this whole category is derived from the assessed variety in assessment-spec.md and from the listening envelope, not from the proxy.",
+  "anchorIds": [
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [],
+  "marathiSpecific": true
+}

@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NE06-06",
+  "category": "Education",
+  "label": "classroom language",
+  "probe": null,
+  "note": "Untaught. assessment-spec.md allows A1 directions in a declared support language, so this is a real but softened demand at this rung; from A2 the directions are in Marathi.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [
+    "A1-NE06-06"
+  ]
+}

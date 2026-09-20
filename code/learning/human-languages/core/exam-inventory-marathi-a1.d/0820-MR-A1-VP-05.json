@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-VP-05",
+  "category": "The verb phrase",
+  "label": "the indirect object",
+  "probe": [
+    "MR-GRAMMAR-INDIRECT-OBJECT"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-SV-05"
+  ]
+}

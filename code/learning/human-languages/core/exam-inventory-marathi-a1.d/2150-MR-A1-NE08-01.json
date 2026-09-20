@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-NE08-01",
+  "category": "Leisure",
+  "label": "free time and what one likes doing in it",
+  "probe": [
+    "MR-A1-FORM-LABEL-AVADTI-KRUTI",
+    "MR-LEX-VACHNE"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [
+    "A1-NE08-01"
+  ]
+}

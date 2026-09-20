@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-F5-08",
+  "category": "Social relations",
+  "label": "ask how somebody is, and answer",
+  "probe": [
+    "MR-PHRASE-TUMHI-KASE-AAHAT",
+    "MR-PHRASE-MI-BARA-AAHE"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-spine"
+  ],
+  "derivedFrom": [
+    "A1-F5-02"
+  ]
+}

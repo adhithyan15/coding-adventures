@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-OR-22",
+  "category": "Devanagari letters and signs",
+  "label": "spelling a word from its sound: syllable division and the doubled consonant",
+  "probe": [
+    "MR-SCRIPT-DHANYAVAD-WRITE-01",
+    "MR-SOUND-KARNA-GEMINATION"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [
+    "A1-O1-07"
+  ]
+}

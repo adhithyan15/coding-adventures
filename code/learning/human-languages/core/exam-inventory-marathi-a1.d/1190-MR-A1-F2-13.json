@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-F2-13",
+  "category": "Opinions, attitudes and knowledge",
+  "label": "ask about ability to do something",
+  "probe": null,
+  "note": "Still blocked. MR-A1-OS-02 is now closed, so the question half exists; the ability half does not, because MR-A1-V-18 (-uu shakne) remains untaught. Half a pair buys nothing and this is not scored as covered.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-F2-16"
+  ]
+}

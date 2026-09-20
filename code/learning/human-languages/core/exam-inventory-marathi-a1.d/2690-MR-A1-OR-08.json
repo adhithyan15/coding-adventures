@@ -1,0 +1,18 @@
+{
+  "id": "MR-A1-OR-08",
+  "category": "Devanagari letters and signs",
+  "label": "the semivowels ya ra la va",
+  "probe": [
+    "MR-SCRIPT-YA-01",
+    "MR-SCRIPT-RA-01",
+    "MR-SCRIPT-LA-01",
+    "MR-SCRIPT-VA-01"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [
+    "A1-O1-03"
+  ]
+}

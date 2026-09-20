@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NG5-05",
+  "category": "Qualitative notions",
+  "label": "accessibility: open and closed, the way in and the way out",
+  "probe": null,
+  "note": "Untaught. SPINE-NAME-EVERYDAY-ACTIONS omits VERB-OPEN and VERB-CLOSE, and these four words are most of what a sign set says.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [
+    "A1-NG5-05"
+  ]
+}

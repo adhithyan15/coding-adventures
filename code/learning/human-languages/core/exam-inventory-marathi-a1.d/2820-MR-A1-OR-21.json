@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-OR-21",
+  "category": "Devanagari letters and signs",
+  "label": "the r-forms: reph above the line and rakaar below it",
+  "probe": null,
+  "note": "Untaught, and it now blocks a named word rather than only a class of them. The reph and the rakaar do not look like a virama join at all, so the conjunct principle does not transfer to them by itself. The rakaar has been SHOWN since chapter 18 -- mitra is spelled with one -- and never named; the reph appears in paryant, which MR-A1-P-05 is waiting for. Two script lessons close this point and that point together.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [
+    "A1-O1-03"
+  ]
+}

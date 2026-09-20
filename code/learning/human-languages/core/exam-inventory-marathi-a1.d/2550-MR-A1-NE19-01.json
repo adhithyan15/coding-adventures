@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NE19-01",
+  "category": "Religion and belief",
+  "label": "religion and belief",
+  "probe": null,
+  "note": "Untaught.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE19-01"
+  ]
+}

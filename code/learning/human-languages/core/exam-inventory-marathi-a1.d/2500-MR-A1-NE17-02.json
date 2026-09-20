@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NE17-02",
+  "category": "Government and society",
+  "label": "law and rules",
+  "probe": null,
+  "note": "Untaught.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE17-02"
+  ]
+}

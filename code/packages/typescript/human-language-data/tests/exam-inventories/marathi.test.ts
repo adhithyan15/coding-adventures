@@ -1,5 +1,8 @@
+import { createHash } from "node:crypto";
+import { existsSync, readdirSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { loadTrackLessons, loadExamInventory } from "../../src/loader.js";
+import { defaultCurriculumRoot, loadTrackLessons, loadExamInventory } from "../../src/loader.js";
 import {
   EXAM_CONTENT_DIMENSIONS,
   measureExamCoverage,
@@ -11,6 +14,21 @@ import {
 describe("the committed Marathi A1 inventory", () => {
   const inventory = loadExamInventory("marathi", "A1");
   const spanish = loadExamInventory("spanish", "A1");
+
+  it("reconstructs the exact pre-migration inventory from 301 direct point owners", () => {
+    const core = join(defaultCurriculumRoot(), "core");
+    const aggregate = join(core, "exam-inventory-marathi-a1.json");
+    const owners = join(core, "exam-inventory-marathi-a1.d");
+    const rendered = `${JSON.stringify(inventory, null, 2)}\n`;
+
+    expect(existsSync(aggregate)).toBe(false);
+    expect(readdirSync(owners)).toHaveLength(302);
+    expect(inventory.points).toHaveLength(301);
+    expect(Buffer.byteLength(rendered)).toBe(151_077);
+    expect(createHash("sha256").update(rendered).digest("hex")).toBe(
+      "1f20cac7b2c45ae26ec5a68d628d8117e19b44a31d2a1478ab2d5a3b94a29fc0",
+    );
+  });
 
   it("keeps every point's probe key", () => {
     for (const point of inventory.points) {

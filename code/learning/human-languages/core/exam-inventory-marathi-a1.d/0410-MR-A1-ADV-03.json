@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-ADV-03",
+  "category": "Adverbs",
+  "label": "quantity adverbs: khuup, jaraa",
+  "probe": [
+    "MR-LEX-KHUP",
+    "MR-LEX-JARA"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-ADV-03",
+    "A1-NG2-03"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NE05-03",
+  "category": "Food and drink",
+  "label": "foodstuffs",
+  "probe": null,
+  "note": "One foodstuff is taught, bhaakarii, and one word is not a domain: no item asking a candidate to pick a food from three options can be built out of it.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE05-03"
+  ]
+}

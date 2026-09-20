@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-F2-06",
+  "category": "Opinions, attitudes and knowledge",
+  "label": "express agreement",
+  "probe": [
+    "MR-LEX-HO-01",
+    "MR-SENSE-CHALEL-OKAY"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-F2-06",
+    "A1-NG6-06"
+  ]
+}

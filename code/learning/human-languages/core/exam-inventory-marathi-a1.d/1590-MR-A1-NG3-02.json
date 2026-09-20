@@ -1,0 +1,18 @@
+{
+  "id": "MR-A1-NG3-02",
+  "category": "Spatial notions",
+  "label": "relative position: javal, laamb, ujvii, daavii",
+  "probe": [
+    "MR-POSTP-JAVAL",
+    "MR-LEX-LAAMB",
+    "MR-LEX-UJVA",
+    "MR-LEX-DAAVA"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NG3-02"
+  ]
+}

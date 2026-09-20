@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-F3-03",
+  "category": "Likes, wishes and feelings",
+  "label": "state a preference",
+  "probe": [
+    "MR-A1-FORM-LABEL-AVDATE-PEY",
+    "MR-A1-FORM-LABEL-AVADTI-KRUTI"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [
+    "A1-F3-03"
+  ]
+}

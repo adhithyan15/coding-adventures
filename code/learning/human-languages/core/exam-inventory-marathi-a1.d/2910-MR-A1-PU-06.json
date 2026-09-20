@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-PU-06",
+  "category": "Punctuation and written conventions",
+  "label": "abbreviations a form or a notice uses, and how they are written",
+  "probe": null,
+  "note": "Untaught. Spanish's superscript abbreviation letters are merged in here: the demand behind both is reading a shortened word on a form, and Marathi shortens with a full stop rather than a raised letter.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [
+    "A1-O4-01",
+    "A1-O1-06"
+  ]
+}

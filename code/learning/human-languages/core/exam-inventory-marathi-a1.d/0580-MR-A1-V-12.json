@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-V-12",
+  "category": "The verb",
+  "label": "the conjunctive participle in -uun, which links two actions",
+  "probe": null,
+  "note": "bhetuun occurs inside the fixed line MR-A1-MESSAGE-LINE-MEETING and the form is never stated. Spanish's gerund is the nearest thing it has; the Marathi form does more work and is taught less.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-V-13"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-NG5-01",
+  "category": "Qualitative notions",
+  "label": "seeing",
+  "probe": [
+    "MR-LEX-PAHNE",
+    "MR-LEX-DOLA"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NG5-01"
+  ]
+}

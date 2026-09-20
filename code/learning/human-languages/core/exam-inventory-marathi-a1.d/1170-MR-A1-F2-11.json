@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-F2-11",
+  "category": "Opinions, attitudes and knowledge",
+  "label": "ask whether somebody knows something",
+  "probe": [
+    "MR-GRAMMAR-QUESTION-KAA",
+    "MR-LEX-MAHIT-JANNE"
+  ],
+  "note": "Closed by MR-C33-kaa-polar (chapter 33), whose worked example IS this move: maahiit aahe kaa?",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-F2-13"
+  ]
+}

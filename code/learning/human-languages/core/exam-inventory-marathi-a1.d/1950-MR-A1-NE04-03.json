@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-NE04-03",
+  "category": "Personal relationships",
+  "label": "social relationships: friend, neighbour, colleague",
+  "probe": [
+    "MR-LEX-MITRA"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE04-02"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-NE02-01",
+  "category": "The person: character",
+  "label": "character and personality",
+  "probe": [
+    "MR-LEX-HUSHAAR"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE02-01"
+  ]
+}

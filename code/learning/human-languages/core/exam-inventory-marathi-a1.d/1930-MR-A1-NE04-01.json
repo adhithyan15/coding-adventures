@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-NE04-01",
+  "category": "Personal relationships",
+  "label": "family relationships",
+  "probe": [
+    "MR-LEX-BHAU",
+    "MR-LEX-BAHIN",
+    "MR-LEX-KUTUMB"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE04-01"
+  ]
+}

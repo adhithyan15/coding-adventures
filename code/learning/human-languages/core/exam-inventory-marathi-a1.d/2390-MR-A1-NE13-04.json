@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NE13-04",
+  "category": "Health and hygiene",
+  "label": "hygiene and daily routine",
+  "probe": null,
+  "note": "Untaught.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE13-04"
+  ]
+}

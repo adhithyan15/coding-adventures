@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-SUB-01",
+  "category": "Subordination",
+  "label": "the verbal noun as subject",
+  "probe": [
+    "MR-GRAMMAR-NE-NEUTER-NOUN",
+    "MR-A1-FORM-LABEL-AVADTI-KRUTI"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-SUB-01"
+  ]
+}

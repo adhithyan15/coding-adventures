@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-SN-02",
+  "category": "Sound system",
+  "label": "the four-way stop contrast: voicing crossed with aspiration, in every row",
+  "probe": [
+    "MR-SCRIPT-KHA-01",
+    "MR-SCRIPT-GHA-01",
+    "MR-SCRIPT-TTHA-01",
+    "MR-SCRIPT-DHA-01",
+    "MR-SCRIPT-BHA-01"
+  ],
+  "anchorIds": [
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [],
+  "marathiSpecific": true
+}

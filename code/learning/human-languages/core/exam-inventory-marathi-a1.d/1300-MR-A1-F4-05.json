@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-F4-05",
+  "category": "Influencing the listener",
+  "label": "grant permission",
+  "probe": [
+    "MR-GRAMMAR-QUESTION-KAA",
+    "MR-SENSE-CHALEL-OKAY"
+  ],
+  "note": "Closed by MR-C33-kaa-polar (chapter 33): chaalel kaa? asks, and the already-taught chaalel grants.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-F4-05"
+  ]
+}

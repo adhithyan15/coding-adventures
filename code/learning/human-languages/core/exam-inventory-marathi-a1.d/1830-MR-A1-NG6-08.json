@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-NG6-08",
+  "category": "Evaluative notions",
+  "label": "ease and difficulty",
+  "probe": [
+    "MR-LEX-SOPA",
+    "MR-LEX-KATHIN"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NG6-10"
+  ]
+}

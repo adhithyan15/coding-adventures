@@ -1,0 +1,13 @@
+{
+  "id": "MR-A1-V-07",
+  "category": "The verb",
+  "label": "the ergative -ne on the subject of a past transitive verb",
+  "probe": null,
+  "note": "MARATHI-SPECIFIC, with no Spanish counterpart because Spanish has no ergative alignment. It is not a refinement of the past tense but the GATE on it: a Marathi past transitive clause without it is ungrammatical, so MR-A1-V-06 cannot be closed independently of this point.",
+  "anchorIds": [
+    "editorial-marathi-structure",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [],
+  "marathiSpecific": true
+}

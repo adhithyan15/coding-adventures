@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-V-03",
+  "category": "The verb",
+  "label": "the high-frequency motion verbs yene and jaane",
+  "probe": [
+    "MR-LEX-YENE",
+    "MR-LEX-JANE"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-spine"
+  ],
+  "derivedFrom": [
+    "A1-V-02"
+  ]
+}

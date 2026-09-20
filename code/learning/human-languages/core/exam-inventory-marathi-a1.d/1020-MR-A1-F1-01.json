@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-F1-01",
+  "category": "Giving and asking for information",
+  "label": "identify oneself or another by name",
+  "probe": [
+    "MR-A1-MESSAGE-LINE-NAME",
+    "MR-A1-FORM-LABEL-NAAV",
+    "MR-A1-FORM-LABEL-MITRACHE-NAAV"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-spine"
+  ],
+  "derivedFrom": [
+    "A1-F1-01"
+  ]
+}

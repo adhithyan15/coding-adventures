@@ -1,0 +1,20 @@
+{
+  "id": "MR-A1-SN-03",
+  "category": "Sound system",
+  "label": "the dental/retroflex place contrast: ta-tta, da-dda, na-nna, la-lla",
+  "probe": [
+    "MR-SCRIPT-TA-01",
+    "MR-SCRIPT-TTA-01",
+    "MR-SCRIPT-DA-01",
+    "MR-SCRIPT-DDA-01",
+    "MR-SCRIPT-NA-01",
+    "MR-SCRIPT-NNA-01",
+    "MR-SCRIPT-LA-01",
+    "MR-SCRIPT-LLA-01"
+  ],
+  "anchorIds": [
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [],
+  "marathiSpecific": true
+}

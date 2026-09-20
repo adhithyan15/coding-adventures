@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-F3-05",
+  "category": "Likes, wishes and feelings",
+  "label": "ask about plans and intentions",
+  "probe": null,
+  "note": "Blocked behind the future (MR-A1-V-17) and the polar question.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-F3-05"
+  ]
+}

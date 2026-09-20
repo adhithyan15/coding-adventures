@@ -1,0 +1,13 @@
+{
+  "id": "MR-A1-OR-18",
+  "category": "Devanagari letters and signs",
+  "label": "visarga, in the tatsama words a printed text keeps it in",
+  "probe": [
+    "MR-SCRIPT-VISARGA-01"
+  ],
+  "anchorIds": [
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [],
+  "marathiSpecific": true
+}

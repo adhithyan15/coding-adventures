@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NE18-02",
+  "category": "The arts",
+  "label": "music and dance",
+  "probe": null,
+  "note": "Untaught.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE18-02"
+  ]
+}

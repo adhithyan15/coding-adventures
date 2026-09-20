@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-QU-03",
+  "category": "Quantifiers",
+  "label": "cardinal numerals to one hundred: a price, an age, a house number",
+  "probe": null,
+  "note": "Half taught, and the missing half is named. Six to twenty is covered (MR-A1-QU-02, chapters 55-58) and one hundred is not: viis is the ceiling, so the TENS -- tiis, chaaLiis, pannaas, saaTH, sattar, aiMshii, navvad -- and shambhar are the whole of what is left, plus the rule that a unit fuses onto the front of a ten. It is still demanded four times over by the A1 envelope, and it still blocks MR-A1-NG5-04, MR-A1-NG6-02, MR-A1-NE03-01 and MR-A1-F1-03. One of those tens, aiMshii, additionally needs the INDEPENDENT ai of MR-A1-OR-12, which is a different debt from the ai SIGN this tranche paid.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [
+    "A1-Q-01"
+  ]
+}

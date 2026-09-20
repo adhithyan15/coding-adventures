@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-NG3-03",
+  "category": "Spatial notions",
+  "label": "distance",
+  "probe": [
+    "MR-POSTP-JAVAL",
+    "MR-LEX-LAAMB"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NG3-03"
+  ]
+}

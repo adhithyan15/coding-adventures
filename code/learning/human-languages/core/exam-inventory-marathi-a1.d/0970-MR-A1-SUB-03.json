@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-SUB-03",
+  "category": "Subordination",
+  "label": "a finite clause as object, with the thinking verb",
+  "probe": [
+    "MR-JOIN-KII",
+    "MR-LEX-VATNE"
+  ],
+  "note": "Closed by MR-C35-kii (chapter 35). Both atoms are required because the point is the thinking verb WITH a clause attached, not the complementizer in the abstract.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-SUB-03"
+  ]
+}

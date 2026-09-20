@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-VP-03",
+  "category": "The verb phrase",
+  "label": "the attribute and its agreement",
+  "probe": null,
+  "note": "Blocked behind MR-A1-ADJ-01.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-SV-03"
+  ]
+}

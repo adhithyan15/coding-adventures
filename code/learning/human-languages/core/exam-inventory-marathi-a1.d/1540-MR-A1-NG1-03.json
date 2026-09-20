@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-NG1-03",
+  "category": "Existential notions",
+  "label": "stating a general quality",
+  "probe": [
+    "MR-GRAMMAR-ADJ-PRENOMINAL",
+    "MR-LEX-CHANGLA",
+    "MR-LEX-AAHE-COPULA"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-NG1-03"
+  ]
+}

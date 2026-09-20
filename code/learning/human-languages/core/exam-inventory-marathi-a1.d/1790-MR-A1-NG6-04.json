@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-NG6-04",
+  "category": "Evaluative notions",
+  "label": "quality: calling a thing good or bad",
+  "probe": [
+    "MR-LEX-CHANGLA",
+    "MR-LEX-KHARAAB"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-NG6-04"
+  ]
+}

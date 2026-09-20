@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-N-04",
+  "category": "The noun",
+  "label": "gender by heteronymy in kinship terms",
+  "probe": [
+    "MR-LEX-BHAU",
+    "MR-LEX-BAHIN"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-N-04"
+  ]
+}

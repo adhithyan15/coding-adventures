@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-OR-07",
+  "category": "Devanagari letters and signs",
+  "label": "the labial row pa pha ba bha ma",
+  "probe": [
+    "MR-SCRIPT-PHA-01"
+  ],
+  "note": "PA, BA, BHA and MA were taught and PHA had no atom. MR-W64-pha closes it at chapter 64 and completes the FIFTH and last plain-and-aspirated pair, so every stop in the script now has its partner. It also records the drift the row does not predict: in borrowed words such as फोन many speakers give फ the sound of an English f rather than the puffed p, so one shape covers two sounds.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [
+    "A1-O1-03"
+  ]
+}

@@ -252,7 +252,7 @@ its language-owned test. The owned suites use `loadTrackLessons` rather than
 loading all 23 tracks, so parallel ownership does not multiply the full-corpus
 cost tracked by #12732.
 
-Hindi and Malayalam A1 inventories are also shard-native. Stable document fields
+Hindi, Malayalam, and Marathi A1 inventories are also shard-native. Stable document fields
 and the ordered identity manifest live in each
 `core/exam-inventory-<language>-a1.d/_meta.json`; every complete exam point lives
 in one canonical `NNNN-<point-id>.json` owner. `loadExamInventory` preserves the

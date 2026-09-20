@@ -1,0 +1,18 @@
+{
+  "id": "MR-A1-NE12-03",
+  "category": "Shopping",
+  "label": "paying",
+  "probe": [
+    "MR-LEX-PAISE",
+    "MR-LEX-RUPAYA",
+    "MR-LEX-VIS",
+    "MR-QUESTION-KITI"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [
+    "A1-NE12-03"
+  ]
+}

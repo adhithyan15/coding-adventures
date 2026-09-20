@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-ADV-06",
+  "category": "Adverbs",
+  "label": "connective adverbs: sudhaa and its negative counterpart",
+  "probe": [
+    "MR-JOIN-SUDHAA",
+    "MR-JOIN-SUDHAA-NEG"
+  ],
+  "note": "Closed by MR-C36-sudhaa (chapter 36). The negative counterpart is not a second word: sudhaa in a negated sentence reads 'not even', and the lesson teaches both readings of the one word.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-ADV-06"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-V-11",
+  "category": "The verb",
+  "label": "the -ne infinitive as a non-finite form",
+  "probe": [
+    "MR-GRAMMAR-NE-NEUTER-NOUN",
+    "MR-LEX-KHANE"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-V-12"
+  ]
+}

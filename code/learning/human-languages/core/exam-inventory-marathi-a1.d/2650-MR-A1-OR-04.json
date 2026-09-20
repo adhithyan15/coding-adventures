@@ -1,0 +1,18 @@
+{
+  "id": "MR-A1-OR-04",
+  "category": "Devanagari letters and signs",
+  "label": "the palatal row ca cha ja jha",
+  "probe": [
+    "MR-SCRIPT-CA-01",
+    "MR-SCRIPT-CHA-01",
+    "MR-SCRIPT-JA-01",
+    "MR-SCRIPT-JHA-01"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [
+    "A1-O1-03"
+  ]
+}

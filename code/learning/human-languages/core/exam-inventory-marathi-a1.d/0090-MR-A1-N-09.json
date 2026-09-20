@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-N-09",
+  "category": "The noun",
+  "label": "the oblique stem a noun takes before any postposition",
+  "probe": [
+    "MR-GRAMMAR-OBLIQUE"
+  ],
+  "anchorIds": [
+    "editorial-marathi-structure",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [],
+  "marathiSpecific": true
+}

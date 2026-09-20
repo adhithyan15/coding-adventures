@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-F1-02",
+  "category": "Giving and asking for information",
+  "label": "ask for information about a person, a thing or a place",
+  "probe": [
+    "MR-PHRASE-TUMCHE-NAAV-KAAY-AAHE",
+    "MR-QUESTION-KON",
+    "MR-QUESTION-KUTHE"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [
+    "A1-F1-02"
+  ]
+}

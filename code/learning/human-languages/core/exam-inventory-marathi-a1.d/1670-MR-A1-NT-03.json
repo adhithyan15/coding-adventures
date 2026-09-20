@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NT-03",
+  "category": "Temporal notions",
+  "label": "the days of the week",
+  "probe": null,
+  "note": "Untaught.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NG4-02"
+  ]
+}

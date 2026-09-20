@@ -1,0 +1,18 @@
+{
+  "id": "MR-A1-NG3-01",
+  "category": "Spatial notions",
+  "label": "location: being somewhere",
+  "probe": [
+    "MR-GRAMMAR-POSTPOSITION-ON-NOUN",
+    "MR-POSTP-MADHYE",
+    "MR-LEX-ITHE",
+    "MR-LEX-TITHE"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-NG3-01"
+  ]
+}
