@@ -11762,7 +11762,7 @@ fn emit_native_host_table(
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let pad2 = " ".repeat(indent + 4);
-    let style = part_style_attr(node, part_styles);
+    let (style, text_setters) = partition_box_style(node.part_name.as_deref(), part_styles);
     let component = ctx.component_name;
     let table_type = format!("{component}MosaicTable");
     let header_path = ctx.slot_property_name(shape.header_slot);
@@ -11845,6 +11845,7 @@ fn emit_native_host_table(
         escape_xaml_attr(&table_name)
     )
     .unwrap();
+    emit_text_style_resources(&mut out, "Grid", indent + 4, &text_setters);
     writeln!(out, "{pad2}<Grid.RowDefinitions>").unwrap();
     writeln!(out, "{pad2}    <RowDefinition Height=\"Auto\"/>").unwrap();
     writeln!(out, "{pad2}    <RowDefinition Height=\"*\"/>").unwrap();
@@ -11916,7 +11917,7 @@ fn emit_host_table_contents(
 
     let pad = " ".repeat(indent);
     let pad2 = " ".repeat(indent + 4);
-    let style = part_style_attr(node, part_styles);
+    let (style, text_setters) = partition_box_style(node.part_name.as_deref(), part_styles);
 
     // UI31 §3.2 RTL contract. WinUI's `FrameworkElement.FlowDirection`
     // is the canonical RTL knob: setting it to `RightToLeft` on the
@@ -12061,6 +12062,7 @@ fn emit_host_table_contents(
     // -- 4. Assemble the XAML. --
     let mut out = String::new();
     writeln!(out, "{pad}<Grid{flow_direction_attr}{style}>").unwrap();
+    emit_text_style_resources(&mut out, "Grid", indent + 4, &text_setters);
     writeln!(out, "{pad2}<Grid.RowDefinitions>").unwrap();
     for r in &row_defs {
         writeln!(out, "{pad2}    <RowDefinition Height=\"{r}\"/>").unwrap();
@@ -14783,6 +14785,53 @@ mod tests {
                     children: Vec::new(),
                 })
                 .collect(),
+        }
+    }
+
+    #[test]
+    fn host_table_scopes_typography_instead_of_setting_grid_properties() {
+        for table in [
+            host_table_node(
+                Some("sheet"),
+                vec![section_node(
+                    "HostTableBody",
+                    vec![row_with_text_cells(&["value"])],
+                )],
+            ),
+            canonical_native_table_node(),
+        ] {
+            let c = component("Foo", vec![], vec![]);
+            let l = layout_with_root("Foo", table);
+            let s = style_for_box(
+                "sheet",
+                vec![
+                    ("font-family", "Consolas"),
+                    ("font-size", "16"),
+                    ("color", "#123456"),
+                    ("background", "#ffffff"),
+                ],
+            );
+            let r = compile(&c, &l, &s);
+            assert!(r.xaml.contains("<Grid.Resources>"), "{}", r.xaml);
+            for (property, value) in [
+                ("FontFamily", "Consolas"),
+                ("FontSize", "16"),
+                ("Foreground", "#123456"),
+            ] {
+                assert!(
+                    r.xaml.contains(&format!(
+                        "<Setter Property=\"{property}\" Value=\"{value}\""
+                    )),
+                    "{}",
+                    r.xaml
+                );
+                assert!(
+                    !r.xaml.contains(&format!(" {property}=\"{value}\"")),
+                    "{}",
+                    r.xaml
+                );
+            }
+            assert!(r.xaml.contains("Background=\"#ffffff\""));
         }
     }
 
