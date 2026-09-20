@@ -9,17 +9,21 @@ refuses wider values before artifact creation; it never silently truncates them.
 The separate textual `emit_il` path supports `int64` literals on CoreCLR.
 The opt-in `lower_typed_scalars_to_cil(&module, &config)` API preserves i32/i64
 scalar widths in encoded literals, locals, parameters, returns and direct calls.
-It accepts single-assignment straight-line functions using const, mov, arithmetic,
-bitwise operations, negation, comparisons and a final return. All hints and call signatures
-must agree; unsupported operations and mixed widths return errors. Parameters
-and locals are each limited to 256, matching executable short-slot opcodes.
+It accepts single-assignment functions using const, mov, arithmetic, bitwise
+operations, negation, comparisons, returns, and bounded acyclic control flow.
+Labels and forward `jmp`/`jmp_if_true`/`jmp_if_false` branches use `void` hints;
+conditions must be logical bools. The strict validator rejects back edges,
+unreachable instructions, and uses of values not assigned on every incoming
+path. All hints and call signatures must agree; unsupported operations and
+mixed widths return errors. Parameters and locals are each limited to 256,
+matching executable short-slot opcodes.
 For example, typed i64 `2147483647 + 1` returns `Int64(2147483648)` in the
 simulator; the i32 version still wraps. Resolve the artifact's `entry_label`
 when selecting the entry method, since `entry_method()` returns the first method.
 
 This API is separate from default `lower_iir_to_cil` and source compilation.
 Default source routing still narrows scalar hints; its full-width migration,
-branches, heap/closure ABI and host input remain future work.
+general cyclic control flow, heap/closure ABI and host input remain future work.
 The CLR01 immediate range restriction also remains in the strict API.
 
 The strict API also accepts `cmp_eq/ne/lt/le/gt/ge` on matched i32 or i64

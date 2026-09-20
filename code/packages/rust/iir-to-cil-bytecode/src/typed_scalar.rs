@@ -2,9 +2,9 @@
 //! dynamically typed programs must never silently select this ABI.
 use crate::{IIRClrConfig, IIRClrError};
 use interpreter_ir::{IIRModule, Operand};
-use ir_to_cil_bytecode::builder::CILBytecodeBuilder;
+use ir_to_cil_bytecode::builder::{CILBranchKind, CILBytecodeBuilder};
 use ir_to_cil_bytecode::{CILMethodArtifact, CILProgramArtifact, SequentialCILTokenProvider};
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 fn invalid(function: &str, detail: &str) -> IIRClrError {
     IIRClrError::InvalidOperand {
@@ -54,7 +54,15 @@ fn load(b: &mut CILBytecodeBuilder, s: Slot) {
     }
 }
 
-/// Lower only explicitly typed straight-line i32/i64/bool scalar functions.
+fn merge_path<'a>(incoming: &mut Option<HashSet<&'a str>>, assigned: &HashSet<&'a str>) {
+    if let Some(existing) = incoming {
+        existing.retain(|name| assigned.contains(name));
+    } else {
+        *incoming = Some(assigned.clone());
+    }
+}
+
+/// Lower only explicitly typed acyclic i32/i64/bool scalar functions.
 ///
 /// Unsupported operations or inconsistent signatures return an error, never a
 /// legacy fallback. Integer immediates retain the CLR01 i32 range restriction;
@@ -103,11 +111,108 @@ pub fn lower_typed_scalars_to_cil(
         if f.instructions.last().map(|i| i.op.as_str()) != Some("ret") {
             return Err(invalid(&f.name, "function must end with ret"));
         }
+        let mut labels = HashMap::new();
+        for (position, ins) in f.instructions.iter().enumerate() {
+            if ins.op == "label" {
+                let Some(Operand::Var(name)) = ins.srcs.first() else {
+                    return Err(invalid(&f.name, "label requires a Var target"));
+                };
+                if ins.type_hint != "void"
+                    || ins.dest.is_some()
+                    || ins.srcs.len() != 1
+                    || name.is_empty()
+                {
+                    return Err(invalid(&f.name, "invalid label shape"));
+                }
+                if labels.insert(name.as_str(), position).is_some() {
+                    return Err(invalid(&f.name, "duplicate label"));
+                }
+            }
+        }
+        for (position, ins) in f.instructions.iter().enumerate() {
+            let target_operand = match ins.op.as_str() {
+                "jmp" => {
+                    if ins.type_hint != "void" || ins.dest.is_some() || ins.srcs.len() != 1 {
+                        return Err(invalid(&f.name, "invalid unconditional branch shape"));
+                    }
+                    ins.srcs.first()
+                }
+                "jmp_if_true" | "jmp_if_false" => {
+                    if ins.type_hint != "void" || ins.dest.is_some() || ins.srcs.len() != 2 {
+                        return Err(invalid(&f.name, "invalid conditional branch shape"));
+                    }
+                    ins.srcs.get(1)
+                }
+                _ => continue,
+            };
+            let Some(Operand::Var(target)) = target_operand else {
+                return Err(invalid(&f.name, "branch requires a Var label target"));
+            };
+            let Some(&target_position) = labels.get(target.as_str()) else {
+                return Err(invalid(&f.name, "undefined branch label"));
+            };
+            if target_position <= position {
+                return Err(invalid(&f.name, "backward branches are unsupported"));
+            }
+        }
         let mut b = CILBytecodeBuilder::new();
         let mut locals = Vec::new();
+        let mut incoming = vec![None; f.instructions.len()];
+        incoming[0] = Some(f.params.iter().map(|(name, _)| name.as_str()).collect());
         for (position, ins) in f.instructions.iter().enumerate() {
-            let ty = width(&f.name, &ins.type_hint)?;
+            let mut assigned = incoming[position]
+                .take()
+                .ok_or_else(|| invalid(&f.name, "unreachable instruction"))?;
             let op = ins.op.as_str();
+            if op == "label" {
+                let Operand::Var(name) = &ins.srcs[0] else {
+                    unreachable!("validated label")
+                };
+                b.mark(name.as_str());
+                if position + 1 < f.instructions.len() {
+                    merge_path(&mut incoming[position + 1], &assigned);
+                }
+                continue;
+            }
+            if matches!(op, "jmp" | "jmp_if_true" | "jmp_if_false") {
+                let target_index = if op == "jmp" { 0 } else { 1 };
+                let Operand::Var(target) = &ins.srcs[target_index] else {
+                    unreachable!("validated branch target")
+                };
+                if op != "jmp" {
+                    let Operand::Var(condition) = &ins.srcs[0] else {
+                        return Err(invalid(&f.name, "branch condition must be a Var"));
+                    };
+                    let slot = slots
+                        .get(condition.as_str())
+                        .copied()
+                        .ok_or_else(|| invalid(&f.name, "undefined or forward variable"))?;
+                    if !assigned.contains(condition.as_str()) {
+                        return Err(invalid(&f.name, "variable is not definitely assigned"));
+                    }
+                    if slot.ty != ScalarType::Bool {
+                        return Err(invalid(&f.name, "branch condition must be bool"));
+                    }
+                    load(&mut b, slot);
+                }
+                b.emit_branch(
+                    match op {
+                        "jmp" => CILBranchKind::Always,
+                        "jmp_if_true" => CILBranchKind::True,
+                        "jmp_if_false" => CILBranchKind::False,
+                        _ => unreachable!("validated branch"),
+                    },
+                    target.as_str(),
+                    false,
+                );
+                let target_position = labels[target.as_str()];
+                merge_path(&mut incoming[target_position], &assigned);
+                if op != "jmp" && position + 1 < f.instructions.len() {
+                    merge_path(&mut incoming[position + 1], &assigned);
+                }
+                continue;
+            }
+            let ty = width(&f.name, &ins.type_hint)?;
             let arity = match op {
                 "const" | "mov" | "neg" | "ret" => 1,
                 "add" | "sub" | "mul" | "div" | "and" | "or" | "xor" | "cmp_eq" | "cmp_ne"
@@ -125,7 +230,6 @@ pub fn lower_typed_scalars_to_cil(
             }
             if op == "ret" {
                 if ins.dest.is_some()
-                    || position + 1 != f.instructions.len()
                     || ty != width(&f.name, &f.return_type)?
                 {
                     return Err(invalid(&f.name, "invalid return shape or width"));
@@ -150,6 +254,9 @@ pub fn lower_typed_scalars_to_cil(
                     .get(name.as_str())
                     .copied()
                     .ok_or_else(|| invalid(&f.name, "undefined or forward variable"))?;
+                if !assigned.contains(name.as_str()) {
+                    return Err(invalid(&f.name, "variable is not definitely assigned"));
+                }
                 if slot.ty != expected {
                     return Err(invalid(&f.name, "operand width mismatch"));
                 }
@@ -185,6 +292,9 @@ pub fn lower_typed_scalars_to_cil(
                         .get(name.as_str())
                         .copied()
                         .ok_or_else(|| invalid(&f.name, "undefined or forward variable"))?;
+                    if !assigned.contains(name.as_str()) {
+                        return Err(invalid(&f.name, "variable is not definitely assigned"));
+                    }
                     if input.ty == ScalarType::Bool {
                         return Err(invalid(&f.name, "comparison requires integer operands"));
                     }
@@ -259,6 +369,10 @@ pub fn lower_typed_scalars_to_cil(
                         argument: false,
                     },
                 );
+                assigned.insert(ins.dest.as_deref().expect("validated destination"));
+            }
+            if op != "ret" && position + 1 < f.instructions.len() {
+                merge_path(&mut incoming[position + 1], &assigned);
             }
         }
         methods.push(CILMethodArtifact {
