@@ -1146,6 +1146,18 @@ fn page_info_uses_one_typed_response_snapshot_across_generated_hosts() {
             "{path} omits Page Information acceptance"
         );
     }
+
+    let swiftui_acceptance = read_package_file("host/swiftui/MosaicHost.swift");
+    for symbol in [
+        "page-info-close-button",
+        "onPageInfoClose",
+        "shared-open-close",
+    ] {
+        assert!(
+            swiftui_acceptance.contains(symbol),
+            "SwiftUI acceptance omits the shared Page Information panel lifecycle: {symbol}"
+        );
+    }
 }
 
 #[test]
