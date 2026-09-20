@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-orchestrator",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "Forme orchestrator runtime: typed DAG execution, shared concurrency control, bounded stream transport and checkpoints, exact affected scheduling, safe side-effect replay, cache reuse, watch, cancellation, and reproducible builds (FM03).",
   "type": "module",
   "main": "src/index.ts",

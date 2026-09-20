@@ -39,13 +39,10 @@ await o.dispose();
 
 These are deferred to follow-up packages:
 
-- **No DAG parallelism yet.** Stages still execute sequentially in topological
-  order. The shared FIFO permit pool and wait suspension boundary are
-  implemented; FM-B042 connects ready stages and per-item work to them.
 - **No streaming pipelining yet.** A `Stream<X>` producer is still fully drained
   before downstream consumers see values. The bounded multicast transport and
-  content-addressed checkpoint tree are implemented; FM-B040 owns their
-  integration with pipeline-wide concurrent scheduling.
+  content-addressed checkpoint tree are implemented; FM-B043 connects them to
+  the concurrent DAG without reintroducing eager retention.
 - **Replay is explicit.** Exact affected scheduling restores untouched pure
   stages directly and invokes `Stage.replay` before skipping an effectful
   collector. Capability-bearing stages without that hook still execute
@@ -81,6 +78,9 @@ These are deferred to follow-up packages:
 - Shared FIFO concurrency control with one pipeline-wide permit budget,
   cancellation-safe queued work, exact failure cleanup, wait-time permit
   suspension, fair reacquisition, and active/queued/peak instrumentation
+- Stable DAG-ready scheduling and source-ordered per-item parallelism using
+  that shared budget; `null` concurrency resolves to host hardware capacity,
+  while fatal failure and cancellation reject queued work before it starts
 - Deterministic tagged cache encoding for plain Forme values and bytes;
   per-invocation cache hits/misses for safe pure stages, with `useCache: false`
   bypass and fail-open behavior for unsupported/corrupt entries
