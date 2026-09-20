@@ -1,0 +1,197 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/der-asn1-v1.json",
+  "title": "X.690 typed DER value v1 conformance corpus",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "profile", "upstream_fixture", "defaults", "error_ids", "cases"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "profile": { "const": "x690-der-asn1-values-v1" },
+    "upstream_fixture": { "const": "code/specs/fixtures/der-tlv-v1/cases.json" },
+    "defaults": { "$ref": "#/$defs/limits" },
+    "error_ids": {
+      "type": "array",
+      "minItems": 22,
+      "maxItems": 22,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/error_id" }
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 90,
+      "items": { "$ref": "#/$defs/case" }
+    }
+  },
+  "$defs": {
+    "case_id": {
+      "type": "string",
+      "pattern": "^der-asn1-v1-[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "error_id": {
+      "enum": [
+        "framing",
+        "unexpected-tag",
+        "decoder-limit-mismatch",
+        "depth-limit-exceeded",
+        "element-limit-exceeded",
+        "invalid-boolean-length",
+        "invalid-boolean-value",
+        "empty-integer",
+        "non-minimal-integer",
+        "negative-integer",
+        "integer-overflow",
+        "missing-unused-bit-count",
+        "invalid-unused-bit-count",
+        "non-zero-bit-padding",
+        "bit-length-overflow",
+        "non-empty-null",
+        "non-ascii-ia5-string",
+        "empty-object-identifier",
+        "unterminated-object-identifier",
+        "non-minimal-object-identifier",
+        "object-identifier-overflow",
+        "oid-arc-limit-exceeded"
+      ]
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["der", "max_depth", "max_total_elements", "max_oid_arcs"],
+      "properties": {
+        "der": { "$ref": "../der-tlv-v1/schema.json#/$defs/limits" },
+        "max_depth": { "type": "integer", "minimum": 0, "maximum": 1024 },
+        "max_total_elements": { "type": "integer", "minimum": 0, "maximum": 1048576 },
+        "max_oid_arcs": { "type": "integer", "minimum": 0, "maximum": 1048576 }
+      }
+    },
+    "limits_override": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "der": { "$ref": "../der-tlv-v1/schema.json#/$defs/limits_override" },
+        "max_depth": { "type": "integer", "minimum": 0, "maximum": 1024 },
+        "max_total_elements": { "type": "integer", "minimum": 0, "maximum": 1048576 },
+        "max_oid_arcs": { "type": "integer", "minimum": 0, "maximum": 1048576 }
+      }
+    },
+    "input": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "../der-tlv-v1/schema.json#/$defs/input_segment" }
+    },
+    "operation": {
+      "enum": [
+        "decode-exact",
+        "decode-boolean",
+        "decode-integer",
+        "integer-to-u64",
+        "decode-bit-string",
+        "decode-octet-string",
+        "decode-ia5-string",
+        "decode-null",
+        "decode-object-identifier",
+        "decode-implicit-octet-string",
+        "decode-implicit-ia5-string",
+        "decode-implicit-object-identifier",
+        "sequence",
+        "set",
+        "explicit",
+        "cursor-script"
+      ]
+    },
+    "offset_scope": {
+      "enum": ["operation-input", "container-value"]
+    },
+    "upstream_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome"],
+      "properties": { "outcome": { "const": "upstream" } }
+    },
+    "value_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome"],
+      "properties": {
+        "outcome": { "const": "value" },
+        "tag": { "$ref": "../der-tlv-v1/schema.json#/$defs/tag" },
+        "header_hex": { "type": "string", "pattern": "^(?:[0-9a-f]{2})*$" },
+        "value_hex": { "type": "string", "pattern": "^(?:[0-9a-f]{2})*$" },
+        "encoded_hex": { "type": "string", "pattern": "^(?:[0-9a-f]{2})*$" },
+        "depth": { "type": "integer", "minimum": 0 },
+        "elements_read": { "type": "integer", "minimum": 0 },
+        "boolean": { "type": "boolean" },
+        "signed_hex": { "type": "string", "pattern": "^(?:[0-9a-f]{2})+$" },
+        "negative": { "type": "boolean" },
+        "u64_decimal": { "type": "string", "pattern": "^(?:0|[1-9][0-9]*)$" },
+        "bytes_hex": { "type": "string", "pattern": "^(?:[0-9a-f]{2})*$" },
+        "unused_bits": { "type": "integer", "minimum": 0, "maximum": 7 },
+        "bit_length": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        "text": { "type": "string" },
+        "arcs_decimal": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "type": "string", "pattern": "^(?:0|[1-9][0-9]*)$" }
+        },
+        "arc_count": { "type": "integer", "minimum": 2 },
+        "remaining_offset": { "type": "integer", "minimum": 0 },
+        "events": { "type": "array", "items": { "$ref": "#/$defs/event" } }
+      }
+    },
+    "error_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "error_id", "offset", "offset_scope"],
+      "properties": {
+        "outcome": { "const": "error" },
+        "error_id": { "$ref": "#/$defs/error_id" },
+        "framing_error_id": { "$ref": "../der-tlv-v1/schema.json#/$defs/error_id" },
+        "offset": { "type": "integer", "minimum": 0 },
+        "offset_scope": { "$ref": "#/$defs/offset_scope" }
+      }
+    },
+    "event": {
+      "oneOf": [
+        { "$ref": "#/$defs/value_result" },
+        { "$ref": "#/$defs/error_result" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["outcome"],
+          "properties": { "outcome": { "enum": ["end", "finished"] } }
+        }
+      ]
+    },
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "operation", "expected"],
+      "properties": {
+        "id": { "$ref": "#/$defs/case_id" },
+        "operation": { "$ref": "#/$defs/operation" },
+        "input": { "$ref": "#/$defs/input" },
+        "der_tlv_case_id": { "type": "string", "pattern": "^der-tlv-v1-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "limits": { "$ref": "#/$defs/limits_override" },
+        "tag_number": { "type": "integer", "minimum": 0, "maximum": 4294967295 },
+        "actions": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "enum": ["read", "read-nested-sequence", "read-with-different-limits", "finish"] }
+        },
+        "redacted_input_hex": { "type": "string", "pattern": "^(?:[0-9a-f]{2})+$" },
+        "expected": {
+          "oneOf": [
+            { "$ref": "#/$defs/upstream_result" },
+            { "$ref": "#/$defs/value_result" },
+            { "$ref": "#/$defs/error_result" }
+          ]
+        }
+      },
+      "oneOf": [
+        { "required": ["input"], "not": { "required": ["der_tlv_case_id"] } },
+        { "required": ["der_tlv_case_id"], "not": { "required": ["input"] } }
+      ]
+    }
+  }
+}

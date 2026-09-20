@@ -212,6 +212,30 @@ first-arc folding, multi-octet arcs, minimality, truncation, overflow, and arc
 limits in universal and implicit forms; exact primitive context-specific tags
 and constructed bits; exact explicit wrappers; and SEQUENCE/SET tag confusion.
 
+## Language-Neutral Conformance
+
+The normative portable behavior corpus is
+`code/specs/fixtures/der-asn1-v1/cases.json`, validated by its closed schema.
+It composes with the DER TLV v1 corpus through stable case references instead
+of duplicating identifier and length bytes. Every DER TLV reference must name
+an exact-decode row, and every consumer must preserve its raw-element or
+framing-error projection before applying typed semantics.
+
+Portable success values use byte-exact lowercase-hex projections, decimal
+strings for `u64` values and OID arcs, and explicit depth and shared-work
+counters. This avoids host numeric precision becoming an accidental protocol
+rule. Portable errors use the stable typed category, a numeric byte offset, and
+an explicit `operation-input` or `container-value` domain. A lower-level
+failure additionally carries the exact DER TLV framing identifier.
+
+All 15 established implementation lanes consume the same corpus through
+package-native tests and retain empty capability manifests. The aggregate
+registry gate closes the consumer set and requires each package's real BUILD
+fronts, metadata, README, changelog, production source, and fixture test. C,
+C++, and OCaml remain emerging lanes; explicit OCaml DER TLV and DER ASN.1
+consumer owners are registered behind the current-contract OCaml build tool
+without changing the established denominator.
+
 ## Non-Goals
 
 This slice adds no external dependency and no ambient authority. It does not
