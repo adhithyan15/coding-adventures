@@ -30,7 +30,12 @@ fn task_app_sources_compile() {
     assert_eq!(dark.def.component_name, "TaskApp");
 
     // The interface exposes exactly the slots the web host fills.
-    let slots: Vec<&str> = mil.component.slots.iter().map(|s| s.name.as_str()).collect();
+    let slots: Vec<&str> = mil
+        .component
+        .slots
+        .iter()
+        .map(|s| s.name.as_str())
+        .collect();
     for expected in [
         "app-title",
         "new-task-name",
@@ -48,10 +53,9 @@ fn task_app_sources_compile() {
 
 #[test]
 fn manifest_declares_task_app() {
-    let manifest_src = fs::read_to_string(
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("mosaic-package.toml"),
-    )
-    .expect("mosaic-package.toml must exist");
+    let manifest_src =
+        fs::read_to_string(PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("mosaic-package.toml"))
+            .expect("mosaic-package.toml must exist");
     let package = mosaic_package_manifest::parse(&manifest_src).expect("manifest must parse");
     assert_eq!(package.package.name, "task-app");
     assert_eq!(package.components.exports, ["TaskApp"]);
@@ -70,6 +74,30 @@ fn manifest_declares_task_app() {
         acceptance.contains(&format!("Size({}f, {}f)", window.width, window.height)),
         "Compose acceptance viewport must match [app] initial window size"
     );
+}
+
+/// #15263: the persistence status and long local-data path must not compete
+/// for one horizontal line. Compose deliberately preserves intrinsic Row-child
+/// widths, so the old Row painted the two strings over each other at 1280px.
+#[test]
+fn storage_summary_stacks_status_and_location() {
+    let layout = read("TaskApp.mll");
+    assert!(layout.contains("Column [ storage-summary ]"));
+    assert!(!layout.contains("Row [ storage-summary ]"));
+
+    for theme in ["light", "dark"] {
+        let style = read(&format!("TaskApp.{theme}.msl"));
+        let summary = style
+            .split("part storage-summary {")
+            .nth(1)
+            .and_then(|rest| rest.split('}').next())
+            .expect("storage-summary style must exist");
+        assert!(summary.contains("gap : 4 ;"));
+        assert!(
+            !summary.contains("align"),
+            "a vertical Row alignment has no meaning on the stacked summary"
+        );
+    }
 }
 
 /// #15486: TaskApp delegates narrow-window adaptation and the project-pane
@@ -93,7 +121,12 @@ fn shell_is_the_adaptive_navigation_split() {
 #[test]
 fn view_switcher_is_the_toolkit_segmented_control() {
     let mil = mosmodel_compiler::compile(&read("TaskApp.mil")).expect("TaskApp.mil should compile");
-    let slots: Vec<&str> = mil.component.slots.iter().map(|s| s.name.as_str()).collect();
+    let slots: Vec<&str> = mil
+        .component
+        .slots
+        .iter()
+        .map(|s| s.name.as_str())
+        .collect();
     assert!(slots.contains(&"nav-options"));
     assert!(slots.contains(&"nav-selected-index"));
     let show_view = mil
@@ -102,7 +135,11 @@ fn view_switcher_is_the_toolkit_segmented_control() {
         .iter()
         .find(|e| e.name == "onShowView")
         .expect("onShowView must be declared");
-    assert_eq!(show_view.params.len(), 1, "onShowView carries the option index");
+    assert_eq!(
+        show_view.params.len(),
+        1,
+        "onShowView carries the option index"
+    );
 
     let layout = read("TaskApp.mll");
     assert!(layout.contains("pkg::mosaic-pkg-toolkit::SegmentedControl"));
@@ -114,7 +151,10 @@ fn view_switcher_is_the_toolkit_segmented_control() {
         .map(|p| p.name.as_str())
         .filter(|name| *name == "seg" || name.starts_with("seg-"))
         .collect();
-    assert!(stale.is_empty(), "inline switcher parts are back: {stale:?}");
+    assert!(
+        stale.is_empty(),
+        "inline switcher parts are back: {stale:?}"
+    );
     for theme in ["light", "dark"] {
         let style = read(&format!("TaskApp.{theme}.msl"));
         assert!(
@@ -123,10 +163,9 @@ fn view_switcher_is_the_toolkit_segmented_control() {
         );
     }
 
-    let manifest = fs::read_to_string(
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("mosaic-package.toml"),
-    )
-    .unwrap();
+    let manifest =
+        fs::read_to_string(PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("mosaic-package.toml"))
+            .unwrap();
     let package = mosaic_package_manifest::parse(&manifest).unwrap();
     assert!(
         package.dependencies.contains_key("mosaic-pkg-toolkit"),

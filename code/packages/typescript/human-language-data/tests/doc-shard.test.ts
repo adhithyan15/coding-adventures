@@ -38,6 +38,8 @@ import {
   splitDocument,
 } from "../src/doc-shard.js";
 import {
+  backlogIdForSubject,
+  backlogIdentityErrors,
   DOC_SHARD_PLANS,
   defaultRepoRoot,
   runDocShardCli,
@@ -89,6 +91,62 @@ const DUCTUS_PLAN: DocShardPlan = {
 const DUCTUS_FORWARD_FRAGMENT =
   "01625-CHANGED-SHARD-NATIVE-SCRIPT-INVENTORIES-9fa3a043.md";
 const DUCTUS_MIGRATION_MAX_RANK = 1_630;
+
+describe("concurrency-safe backlog ids", () => {
+  it("keeps the sequence readable while deriving identity from the NFC subject", () => {
+    expect(backlogIdForSubject(412, "A new finding")).toMatch(/^HL-C412-[0-9a-f]{8}$/);
+    expect(backlogIdForSubject(412, "A new finding")).toBe(
+      backlogIdForSubject(412, "  A new finding  "),
+    );
+    expect(backlogIdForSubject(412, "Cafe\u0301")).toBe(
+      backlogIdForSubject(412, "Café"),
+    );
+    expect(backlogIdForSubject(412, "A new finding")).not.toBe(
+      backlogIdForSubject(412, "A different finding"),
+    );
+  });
+
+  it("accepts parallel same-rank entries because their subjects own distinct ids", () => {
+    const first = "First concurrent finding";
+    const second = "Second concurrent finding";
+    const firstId = backlogIdForSubject(412, first);
+    const secondId = backlogIdForSubject(412, second);
+    const shards = new Map([
+      [DOC_META_SHARD, "# Backlog\n"],
+      ["05010-FIRST-11111111.md", `## ${firstId} — ${first}\n`],
+      ["05010-SECOND-22222222.md", `## ${secondId} — ${second}\n`],
+    ]);
+
+    expect(firstId).not.toBe(secondId);
+    expect(backlogIdentityErrors(shards)).toEqual([]);
+  });
+
+  it("rejects hand-written, stale, and duplicate post-cutover ids", () => {
+    const subject = "One owned finding";
+    const id = backlogIdForSubject(412, subject);
+    const shards = new Map([
+      [DOC_META_SHARD, "# Backlog\n"],
+      ["05010-BARE-11111111.md", `## HL-C412 — ${subject}\n`],
+      ["05020-WRONG-22222222.md", `## HL-C413-deadbeef — ${subject}\n`],
+      ["05030-OWNED-33333333.md", `## ${id} — ${subject}\n`],
+      ["05040-DUPLICATE-44444444.md", `## ${id} — ${subject}\n`],
+    ]);
+
+    expect(backlogIdentityErrors(shards)).toEqual([
+      expect.stringMatching(/05010.*must use/),
+      expect.stringMatching(/05020.*must be 'HL-C413-/),
+      expect.stringMatching(/05040.*already owned by 05030/),
+    ]);
+  });
+
+  it("grandfathers the append-only history through rank 05000", () => {
+    const shards = new Map([
+      [DOC_META_SHARD, "# Backlog\n"],
+      ["05000-LEGACY-11111111.md", "## HL-C411 — historical heading\n"],
+    ]);
+    expect(backlogIdentityErrors(shards)).toEqual([]);
+  });
+});
 
 describe("Hindi changelog ownership", () => {
   it("registers the changelog as a fixed newest-first level-2 shard plan", () => {

@@ -102,6 +102,8 @@ window without one.
 ## What it does
 
 - Add a task (name + optional `YYYY-MM-DD` due date).
+- See the local-save status and data location on separate lines, so the full
+  recovery path stays readable in a normal desktop window.
 - A new empty Inbox points to the task-name field, focuses it initially, and lets
   Enter add tasks without leaving the keyboard capture flow.
 - Blank names and invalid or impossible due dates are rejected before any task
