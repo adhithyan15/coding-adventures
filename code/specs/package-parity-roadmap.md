@@ -14202,6 +14202,22 @@ trust, TLS, transport, and ambient authority remain outside that owner. The
 graph therefore has 860 owners and 1,595 dependency edges: 223 merged, 636
 pending, and exactly DER ASN.1 in progress.
 
+### Live-main refresh and serial-number ownership
+
+`origin/main` subsequently advanced to
+`dad5c0c955b4a855033091beecad3236d765231f` through a Spice-only test commit.
+That commit changes no package root, language slot, collision, or inventory
+count, so the stored collision-checked metrics remain exact. Live PR #15806
+proposes a new Rust `x509-serial-number` identity. The backlog now reserves one
+pending portable owner before that package can become an unowned singleton. It
+depends on typed DER ASN.1 and covers canonical positive nonzero certificate
+serial-number INTEGERs, the twenty-content-octet ceiling, exact and normalized
+magnitude views, bounded work, stable local offsets, and redacted diagnostics.
+Serial generation, issuer uniqueness, certificate parsing, path validation,
+signatures, trust, TLS, transport, clocks, entropy, credentials, and ambient
+authority remain outside it. The graph now has 861 owners and 1,596 dependency
+edges: 223 merged, 637 pending, and exactly DER ASN.1 in progress.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

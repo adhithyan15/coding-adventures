@@ -19,7 +19,7 @@
     "notes": "PR #15761 reached terminal acceptable conclusions on every required and advisory check, including both protected CI gates, CodeQL, and all three OCaml fresh-solve and locked-fixture platforms. GitHub reported the reviewed head CLEAN and MERGEABLE. Guarded squash auto-merge was enabled only after that evidence was complete, and GitHub merged the reviewed head automatically at 2026-09-20T14:33:51Z as f280bdbd4df120379afe96a17dfba49251c161b5; no plain manual merge command was used."
   },
   "last_inventory": {
-    "revision": "346be10b6e86467693e064eb9eba433d61fe3e60",
+    "revision": "dad5c0c955b4a855033091beecad3236d765231f",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1455,
@@ -9566,6 +9566,15 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the collision-checked exact-main refresh after merged PR #15798 added the Rust-only x509-subject-alt-name identity. Own OID 2.5.29.17, a non-empty bounded GeneralNames sequence, typed IA5String, IP-address, and registered-ID choices, counted opaque constructed choices, shared budgets, exact local offsets, transactional failure, and redacted diagnostics over one generic extension. Keep DNS syntax, server-identity matching, certificate policy, path validation, signatures, trust, TLS, transport, and ambient authority outside this owner."
+    },
+    {
+      "id": "x509-serial-number-portable-conformance",
+      "title": "Define portable X.509 certificate serial-number conformance and established-lane parity",
+      "status": "pending",
+      "depends_on": ["der-asn1-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered while live PR #15806 proposes the Rust-only x509-serial-number identity. Own canonical positive nonzero certificate serial-number INTEGER decoding, the RFC 5280 twenty-content-octet ceiling, exact and normalized magnitude views, stable local offsets, bounded work, and redacted diagnostics. Keep serial generation, issuer uniqueness, certificate parsing, path validation, signatures, trust, TLS, transport, clocks, entropy, credentials, and ambient authority outside this owner."
     },
     {
       "id": "ocaml-der-tlv-emerging-lane-consumer",
