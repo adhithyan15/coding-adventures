@@ -40,7 +40,7 @@ relationship endpoints to deterministic group-boundary geometry. Explicit `L`,
 `R`, `T`, and `B` ports survive semantic and layout IR and anchor relationship
 geometry to the requested node or group boundary. Architecture edges resolve to
 deterministic orthogonal polylines before backend-neutral PaintScene lowering.
-Named service and group icons lower to canonical backend-neutral badge labels.
+Named service and group icons lower to canonical backend-neutral glyph geometry.
 Full vendor icon artwork, obstacle avoidance, and configuration remain outside
 the partial compatibility claim.
 

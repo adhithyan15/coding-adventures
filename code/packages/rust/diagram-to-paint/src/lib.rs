@@ -2603,14 +2603,60 @@ fn pie_slice_commands(cx: f64, cy: f64, r: f64, start: f64, end: f64) -> Vec<Pat
 // ============================================================================
 
 /// Lower a [`LayoutedStructuralDiagram`] into a [`PaintScene`].
-fn architecture_icon_badge(name: &str) -> &str {
+fn push_architecture_icon(instructions: &mut Vec<PaintInstruction>, name: &str, x: f64, y: f64, size: f64) {
+    let white_rect = |x, y, width, height| PaintInstruction::Rect(PaintRect {
+        base: PaintBase::default(), x, y, width, height, fill: Some("#ffffff".into()),
+        stroke: None, stroke_width: None, corner_radius: Some(1.0), stroke_dash: None,
+        stroke_dash_offset: None,
+    });
     match name {
-        "database" => "DB",
-        "server" => "SV",
-        "disk" => "DS",
-        "cloud" => "CL",
-        "internet" => "IN",
-        _ => "IC",
+        "database" => {
+            instructions.push(white_rect(x + size * 0.24, y + size * 0.3, size * 0.52, size * 0.42));
+            for cy in [0.3, 0.51, 0.72] {
+                instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+                    base: PaintBase::default(), cx: x + size * 0.5, cy: y + size * cy,
+                    rx: size * 0.26, ry: size * 0.1, fill: Some("#ffffff".into()),
+                    stroke: Some("#087ebf".into()), stroke_width: Some(1.0), stroke_dash: None,
+                    stroke_dash_offset: None,
+                }));
+            }
+        }
+        "server" => {
+            for offset in [0.25, 0.46, 0.67] {
+                instructions.push(white_rect(x + size * 0.2, y + size * offset, size * 0.6, size * 0.13));
+            }
+        }
+        "disk" => {
+            instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+                base: PaintBase::default(), cx: x + size * 0.5, cy: y + size * 0.5,
+                rx: size * 0.29, ry: size * 0.29, fill: Some("#ffffff".into()),
+                stroke: None, stroke_width: None, stroke_dash: None, stroke_dash_offset: None,
+            }));
+            instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+                base: PaintBase::default(), cx: x + size * 0.5, cy: y + size * 0.5,
+                rx: size * 0.08, ry: size * 0.08, fill: Some("#087ebf".into()),
+                stroke: None, stroke_width: None, stroke_dash: None, stroke_dash_offset: None,
+            }));
+        }
+        "cloud" => {
+            for (cx, cy, rx, ry) in [(0.36, 0.56, 0.2, 0.16), (0.53, 0.43, 0.23, 0.23), (0.68, 0.57, 0.2, 0.16)] {
+                instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+                    base: PaintBase::default(), cx: x + size * cx, cy: y + size * cy,
+                    rx: size * rx, ry: size * ry, fill: Some("#ffffff".into()), stroke: None,
+                    stroke_width: None, stroke_dash: None, stroke_dash_offset: None,
+                }));
+            }
+        }
+        "internet" => {
+            instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+                base: PaintBase::default(), cx: x + size * 0.5, cy: y + size * 0.5,
+                rx: size * 0.28, ry: size * 0.28, fill: None, stroke: Some("#ffffff".into()),
+                stroke_width: Some(2.0), stroke_dash: None, stroke_dash_offset: None,
+            }));
+            instructions.push(white_rect(x + size * 0.47, y + size * 0.24, size * 0.06, size * 0.52));
+            instructions.push(white_rect(x + size * 0.24, y + size * 0.47, size * 0.52, size * 0.06));
+        }
+        _ => {}
     }
 }
 
@@ -2673,7 +2719,6 @@ where
             None => group.label.clone(),
         };
         let (label_x, label_width) = if let Some(icon_name) = &group.icon_name {
-            let badge = architecture_icon_badge(icon_name);
             instructions.push(PaintInstruction::Rect(PaintRect {
                 base: PaintBase::default(),
                 x: group.x + 10.0,
@@ -2687,15 +2732,7 @@ where
                 stroke_dash: None,
                 stroke_dash_offset: None,
             }));
-            text_children.push(text_node(
-                badge,
-                group.x + 10.0,
-                group.y + 8.0,
-                28.0,
-                ls,
-                lf.clone(),
-                Color { r: 255, g: 255, b: 255, a: 255 },
-            ));
+            push_architecture_icon(&mut instructions, icon_name, group.x + 10.0, group.y + 2.0, 28.0);
             (group.x + 46.0, group.width - 56.0)
         } else {
             (group.x + 10.0, group.width - 20.0)
@@ -2868,7 +2905,7 @@ where
         let badge_text = node
             .icon_text
             .as_deref()
-            .or_else(|| node.icon_name.as_deref().map(architecture_icon_badge));
+            .or(node.icon_name.as_deref());
         let (header_x, header_width) = if let Some(icon_text) = badge_text {
             let icon_size = (header_height - 16.0).min(48.0);
             instructions.push(PaintInstruction::Rect(PaintRect {
@@ -2884,20 +2921,25 @@ where
                 stroke_dash: None,
                 stroke_dash_offset: None,
             }));
-            text_children.push(text_node(
-                icon_text,
-                node.x + 10.0,
-                node.y + (header_height - icon_size) / 2.0 + 4.0,
-                icon_size - 4.0,
-                icon_size - 8.0,
-                node_font.clone(),
-                Color {
-                    r: 255,
-                    g: 255,
-                    b: 255,
-                    a: 255,
-                },
-            ));
+            if node.icon_text.is_some() {
+                text_children.push(text_node(
+                    icon_text,
+                    node.x + 10.0,
+                    node.y + (header_height - icon_size) / 2.0 + 4.0,
+                    icon_size - 4.0,
+                    icon_size - 8.0,
+                    node_font.clone(),
+                    Color { r: 255, g: 255, b: 255, a: 255 },
+                ));
+            } else if let Some(icon_name) = &node.icon_name {
+                push_architecture_icon(
+                    &mut instructions,
+                    icon_name,
+                    node.x + 8.0,
+                    node.y + (header_height - icon_size) / 2.0,
+                    icon_size,
+                );
+            }
             (node.x + icon_size + 16.0, node.width - icon_size - 24.0)
         } else {
             (node.x, node.width)
@@ -5360,10 +5402,11 @@ mod tests {
     }
 
     #[test]
-    fn architecture_named_icon_lowers_to_canonical_badge() {
-        assert_eq!(architecture_icon_badge("database"), "DB");
-        assert_eq!(architecture_icon_badge("server"), "SV");
-        assert_eq!(architecture_icon_badge("unknown"), "IC");
+    fn architecture_named_icons_lower_to_backend_neutral_geometry() {
+        let mut instructions = Vec::new();
+        push_architecture_icon(&mut instructions, "database", 0.0, 0.0, 48.0);
+        assert!(instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))));
+        assert!(instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
     }
 
     #[test]
