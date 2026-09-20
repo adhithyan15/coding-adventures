@@ -104,6 +104,47 @@ fn compact_i32_minus_one_executes_without_narrowing_i64() {
         assert_eq!(execute(&m), expected);
     }
 }
+
+#[test]
+fn strict_encoded_integer_input_and_peek_execute() {
+    let mut m = IIRModule::new("input", "test");
+    m.entry_point = Some("main".into());
+    m.add_or_replace(IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            instr("call_builtin", "before", vec![var("input_more")], "i64"),
+            instr("call_builtin", "first", vec![var("input_i64")], "i64"),
+            instr("call_builtin", "middle", vec![var("input_more")], "i64"),
+            instr("call_builtin", "second", vec![var("input_i64")], "i64"),
+            instr("call_builtin", "after", vec![var("input_more")], "i64"),
+            instr("add", "sum", vec![var("first"), var("second")], "i64"),
+            instr("add", "with_before", vec![var("sum"), var("before")], "i64"),
+            instr("add", "with_middle", vec![var("with_before"), var("middle")], "i64"),
+            instr("add", "answer", vec![var("with_middle"), var("after")], "i64"),
+            instr("ret", "", vec![var("answer")], "i64"),
+        ],
+    ));
+    let artifact = lower_typed_scalars_to_cil(&m, &IIRClrConfig::default()).unwrap();
+    let mut sim = CLRSimulator::new();
+    sim.load_program(
+        artifact
+            .methods
+            .iter()
+            .map(|method| MethodCode {
+                body: method.body.clone(),
+                num_locals: method.local_types.len(),
+                num_args: method.parameter_types.len(),
+            })
+            .collect(),
+        0,
+    );
+    sim.set_input(b"9223372036854775800\n-7");
+    sim.run(10_000);
+    assert!(sim.halted);
+    assert_eq!(sim.stack, vec![Some(Value::Int64(9223372036854775795))]);
+}
 #[test]
 fn typed_calls_transport_wide_values_and_entry_label_is_resolved() {
     let mut m = module(

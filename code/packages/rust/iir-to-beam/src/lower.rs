@@ -1369,6 +1369,15 @@ pub fn lower_iir_to_beam(
             }
         }
 
+        // GC live operands describe a contiguous prefix, not just variables
+        // used so far. Future locals must already contain valid immediate terms.
+        // Allocate first: only incoming parameters are roots during allocation.
+        for reg in meta.arity as u8..meta.next_reg {
+            instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                BEAMOperand::a(0), BEAMOperand::x(reg),
+            ]));
+        }
+
         // ── Translate each IIR instruction ──────────────────────────────────
 
         // `live` = number of live x-registers at gc_bif call sites.
@@ -1488,6 +1497,28 @@ pub fn lower_iir_to_beam(
             }};
         }
 
+        // Call results have already been captured and live values restored.
+        // All other normal X registers may be invalid after a call or compact
+        // GC. Reinitialize them before a later GC scans the normal prefix.
+        // Scratch registers belong to individual expansions and are excluded.
+        macro_rules! sanitize_normal_x_after_call {
+            ($idx:expr) => {{
+                let dest = func.instructions[$idx].dest.as_ref();
+                let live_vars = live_across.get(&$idx);
+                for reg in 0..meta.next_reg {
+                    let is_result = dest.and_then(|name| reg_map.get(name.as_str()))
+                        .is_some_and(|&r| r == reg);
+                    let is_restored = live_vars.is_some_and(|vars| vars.iter()
+                        .any(|name| reg_map.get(name.as_str()) == Some(&reg)));
+                    if !is_result && !is_restored {
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::a(0), BEAMOperand::x(reg),
+                        ]));
+                    }
+                }
+            }};
+        }
+
         macro_rules! restore_live_across_imported_call {
             ($idx:expr) => {{
                 if let Some(live_vars) = live_across.get(&$idx) {
@@ -1506,6 +1537,7 @@ pub fn lower_iir_to_beam(
                         ]));
                     }
                 }
+                sanitize_normal_x_after_call!($idx);
             }};
         }
 
@@ -2646,13 +2678,18 @@ pub fn lower_iir_to_beam(
                     let source = operand_reg!(get_src!(instr, 1));
                     let cur_idx = instr_idx - 1;
                     save_live_across_imported_call!(cur_idx);
-                    // A character list has one two-word cons cell. test_heap
-                    // may collect, so keep the source registers live first.
+                    // Saved Y slots preserve values needed after the call.
+                    // Only the character is an X root here: the remaining
+                    // preallocated registers may be uninitialized or clobbered
+                    // by an earlier imported call. Compact before any GC.
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(source), BEAMOperand::x(0),
+                    ]));
                     instrs.push(BEAMInstruction::new(OP_TEST_HEAP, vec![
-                        BEAMOperand::u(2), BEAMOperand::u(live),
+                        BEAMOperand::u(2), BEAMOperand::u(1),
                     ]));
                     instrs.push(BEAMInstruction::new(OP_PUT_LIST, vec![
-                        BEAMOperand::x(source), BEAMOperand::a(0), BEAMOperand::x(0),
+                        BEAMOperand::x(0), BEAMOperand::a(0), BEAMOperand::x(0),
                     ]));
                     instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
                         BEAMOperand::u(1), BEAMOperand::u(import_put_chars as u64),
@@ -3378,6 +3415,7 @@ pub fn lower_iir_to_beam(
                             }
                         }
                     }
+                    sanitize_normal_x_after_call!(cur_idx);
                 }
 
                 // ── load_reg ─────────────────────────────────────────────────

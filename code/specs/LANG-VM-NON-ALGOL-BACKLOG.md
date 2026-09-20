@@ -10,6 +10,17 @@ roadmap is reconciled.
 
 ## Encoded CLR input prerequisites (selected 2026-09-19 after VM-058)
 
+### CLR13 strict encoded integer input selected (2026-09-20)
+
+CLR12 production and complementary conformance proofs landed in #15762 and
+#15763. A fresh main/open-PR audit found no overlapping non-ALGOL CLR work.
+Select the first bounded host-input slice: exact MemberRef dispatch plus a
+simulator-owned line buffer for strict `input_i64` and non-consuming
+`input_more`. Preserve i64 values and the existing default encoded lowerer's
+input refusal; that legacy path still allocates int32 locals. String input,
+default source migration, real PE host metadata and byte input remain separate
+follow-ups. See `CLR13-strict-encoded-integer-input.md`.
+
 ### CLR12 landed; independent coverage reconciled (2026-09-20)
 
 PR #15762 merged as `77326b211e106e1dc7d6466df8cedad4b93d5707` after all four

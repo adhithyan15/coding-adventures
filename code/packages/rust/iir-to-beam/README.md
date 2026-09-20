@@ -4,6 +4,10 @@
 `interpreter-ir` crate) directly to a `BEAMModule` (from the `ir-to-beam`
 encoder) **without going through the deprecated `compiler-ir` layer**.
 
+Character output saves live values in Y slots and reserves its list cell with
+only the character in x0 visible to garbage collection. Future or clobbered
+X registers are excluded from that root set.
+
 ## Overview
 
 ```
@@ -371,3 +375,15 @@ COBOL features still require individual execution proofs.
 ## 0.18.0 — BEAM09 byte input (2026-09-19)
 
 Lower `getchar` with `io:get_chars/2`, EOF zero and imported-call liveness. Byte-oriented hosts must launch Erlang with `-kernel standard_io_encoding latin1`; text-language hosts retain their encoding.
+
+
+### GC roots across byte operations
+
+Normal X registers beyond parameters start as nil. After a call, the backend
+captures its result, restores live values from Y slots, and resets other normal
+X registers to nil before subsequent arithmetic can scan that prefix. Tape
+operations initialize their additional scratch roots before index adjustment
+and masking. The compact putchar reservation alone was insufficient for the
+Linux byte-sweep crash; this follow-up has deterministic root-tracking tests
+and requires fresh Linux CI validation. See the normal-X-prefix repair contract
+in `code/specs/BEAM-normal-x-prefix-gc-safety.md`.

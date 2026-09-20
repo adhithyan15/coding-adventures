@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased — strict encoded integer input (CLR13)
+
+Reserve MemberRef rows 6 and 7 for line-oriented `input_i64` and non-consuming
+`input_more` host calls. Add an explicit replace-and-rewind input buffer while
+keeping program loads input-neutral. Reads preserve the full signed i64 domain
+and return zero for EOF, empty, malformed or overflowing lines. Exact-token and
+stream-lifecycle tests keep unknown MemberRefs fail-closed without state change.
+
 ## Unreleased — checked long branches (CLR10)
 
 Execute br, brfalse and brtrue with signed four-byte offsets. Validate operand

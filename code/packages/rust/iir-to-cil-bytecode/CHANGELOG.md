@@ -1,5 +1,13 @@
 # Changelog — iir-to-cil-bytecode
 
+## Unreleased — strict encoded integer input (CLR13)
+
+Extend only `lower_typed_scalars_to_cil` with i64 `input_i64` and `input_more`
+builtins, emitting the simulator's exact reserved MemberRef tokens. Preserve
+strict flow validation and i64 local metadata, reject malformed names, shapes
+and result types, and keep all legacy encoded input gates unchanged. Artifact
+and execution tests cover exact bytes, wide values, sequential reads and peeks.
+
 ## Unreleased — strict control-flow conformance coverage
 
 Preserve the independent #15763 short-branch exact-byte proof, parameter-driven
