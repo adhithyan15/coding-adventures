@@ -58,3 +58,16 @@ handle enters the snapshot.
 cargo test -p spice-mosaic-app
 cargo clippy -p spice-mosaic-app --all-targets -- -D warnings
 ```
+
+## WebAssembly lifecycle gate
+
+The package also exports the standard `mosaic_wasm_*` lifecycle ABI. Its owned
+build gate compiles the actual workbench artifact for `wasm32-unknown-unknown`
+and runs the Node host contract in `js/wasm.test.mjs`. That contract covers
+initialization, canonical schematic synchronization, protocol-2 file-effect
+completion, snapshot restore, and disposal through the same public boundary a
+browser host uses.
+
+```sh
+bash BUILD
+```
