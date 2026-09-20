@@ -498,7 +498,10 @@ itself. The typed `der-asn1` layer is now shipped above that framing primitive:
 it provides allocation-free canonical BOOLEAN, INTEGER, BIT STRING, OCTET
 STRING, NULL, and OBJECT IDENTIFIER decoding plus exact SEQUENCE, SET, and
 explicit context-wrapper traversal under one shared depth and total-element
-budget. It still provides no certificate schema, time or name semantics,
+budget. A separate `x509-time` profile layer now validates exact RFC 5280
+UTCTime and GeneralizedTime tags, fixed Zulu forms, the 1950/2050 century
+split, and Gregorian fields without a clock or platform calendar. These layers
+still provide no certificate schema, validity-window policy, name semantics,
 signature verification, path construction, revocation, or trust-root source,
 so concrete HTTPS remains blocked.
 
