@@ -2,7 +2,7 @@
 <div data-mosaic-component="RowHeaderGrid">
   <!-- emit "onViewportRows" dropped: HTML is static -->
   <!-- emit "onViewportShift" dropped: HTML is static -->
-  <table style="border-width: 1px; border-style: solid; border-color: #3f3f46; background: #1e1e1e">
+  <table style="border-width: 1px; border-style: solid; border-color: #3f3f46; background: #1e1e1e" data-mosaic-font-size-slot="fontSize">
     <colgroup>
       <col style="width: 48px">
       <!-- mosaic-for each="columnWidths" as="w" index="cw" -->
@@ -30,7 +30,7 @@
         <tr style="background: #1e1e1e">
           <td>
             <div>
-              <span>{{rowHeaders [ r ]}}</span>
+              <span data-mosaic-font-size-slot="rowFontSize">{{rowHeaders [ r ]}}</span>
             </div>
           </td>
           <!-- mosaic-for each="row" as="v" index="c" -->
@@ -42,7 +42,7 @@
                     <!-- emit "onFormulaChange" dropped: HTML is static -->
                     <!-- emit "onEditCommit" dropped: HTML is static -->
                     <!-- emit "onEditCancel" dropped: HTML is static -->
-                    <input type="text" value="{{editContent}}" autofocus data-on-change="onFormulaChange" data-on-commit="onEditCommit" data-on-cancel="onEditCancel" style="padding: 0px; border: 0px; background: transparent; font: inherit; width: 100%; box-sizing: border-box">
+                    <input type="text" value="{{editContent}}" autofocus data-on-change="onFormulaChange" data-on-commit="onEditCommit" data-on-cancel="onEditCancel" style="font-size: inherit; padding: 0px; border: 0px; background: transparent; font: inherit; width: 100%; box-sizing: border-box">
                   <!-- mosaic-else -->
                     <span>{{v}}</span>
                   <!-- /mosaic-if -->
