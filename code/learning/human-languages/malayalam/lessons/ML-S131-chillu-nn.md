@@ -53,17 +53,17 @@ The same name ends with one, and it is the second chillu you have met.
 **ൺ** is **ണ** — the *ṇa* you read two pages ago — with its *a* handed back
 and an end-of-word shape of its own. Hold **ണ** and **ൺ** side by side.
 
-## Writing: ൺ — copy what you see
+## Writing: ൺ — one unbroken line
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-131] -->
 
-Put your pen on ൺ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+Put your pen at the inner-left tip. Sweep clockwise around the small inner loop,
+then keep going around the broad bowl on the left. Climb to the upper junction,
+drop down the first middle stem, retrace upward, cross the middle arch, and drop
+the second stem. Carry the shoulder right, circle the right loop clockwise, then
+rise into the hook above the line and curl left.
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+**Do not lift the pen.** The whole character is one connected journey: inner
+loop, outer bowl, two middle stems, right loop, finishing hook.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-131] -->
@@ -73,7 +73,7 @@ and larger than it is printed.
 
 > അരുൺ  ·  നിങ്ങൾ  ·  ണ
 
-- [YOU TRACE: ൺ three times, saying *ṇ* as you finish each one]
+- [YOU TRACE: ൺ three times in one unbroken line, saying *ṇ* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ൺ once more]
 
 ## Wrap-up Recall

@@ -5,22 +5,22 @@ spine_node: SPINE-DEFINITE-REFERENCE
 sequence: 4050
 chapter: 110
 type: word
-headword: "phōṇ"
+headword: "ഫോൺ"
 romanization: "phōṇ"
-gloss: a telephone — heard and said before its written shape, because one of its letters is not yet verified
+gloss: a telephone — an English borrowing whose first and last letters are now familiar
 concept_tag: ML-NOUN-PHONE
-prerequisites: [ML-R109-neither-recall]
+prerequisites: [ML-S148-letter-pha]
 sounds: []
 roots: [english-phone]
 duration:
   max_seconds: 200
 requires:
-  knowledge: []
+  knowledge: [ML-SCRIPT-RECOG-148, ML-SCRIPT-RECOG-131]
 introduces:
   knowledge: [ML-LEX-C110-PHONE-01]
 practises:
-  knowledge: [ML-LEX-C110-PHONE-01]
-skills: [listening, speaking]
+  knowledge: [ML-LEX-C110-PHONE-01, ML-SCRIPT-RECOG-148, ML-SCRIPT-RECOG-131]
+skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
 register: neutral
@@ -28,7 +28,7 @@ variety: standard-colloquial
 reviews_of: []
 ---
 
-# phōṇ — a telephone, by ear
+# ഫോൺ (phōṇ) — a telephone
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -40,38 +40,37 @@ reviews_of: []
 ## You'll want to know
 <!-- hl-knowledge: introduces=[ML-LEX-C110-PHONE-01]; assesses=[] -->
 
-**phōṇ** — **a telephone**.
+**ഫോൺ** (*phōṇ*) — **a telephone**.
 
 **Say it out loud and you will hear English.** It is *phone*, borrowed whole,
 with the ending settled into Malayalam sounds: the *n* at the close is made with
 the tongue curled back, not at the teeth.
 
-## You'll want to know: why this one is not printed
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C110-PHONE-01] -->
+## Script Lens: three pieces
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C110-PHONE-01, ML-SCRIPT-RECOG-148, ML-SCRIPT-RECOG-131] -->
 
-**This word is given by ear, and the book owes you a reason.**
+Read it from left to right:
 
-Its last sound is written with a letter that this book's script inventory has
-not yet verified to the standard it holds itself to — the stroke order for it
-has not been sourced, and an unsourced one is not written down here. The letter
-is taught elsewhere in the book; what is missing is the evidence the inventory
-requires before a word can be printed with it.
+| | |
+|---|---|
+| **ഫ** | *pha*, the breathed partner of **പ** |
+| **ോ** | *ō* |
+| **ൺ** | final retroflex *ṇ*, with no following vowel |
 
-**So you get the word now and its written shape later**, which is how this book
-has handled a number you learned to say before you could write it. Hearing and
-saying come first; the spelling follows when it can be given honestly.
+The first letter arrived on the page before this one. The last is the chillu you
+met inside **അരുൺ** near the beginning of the book. Together they let the
+borrowed English word settle into Malayalam spelling: **ഫ + ോ + ൺ = ഫോൺ**.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C110-PHONE-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: *phōṇ*, with the tongue curled back at the end]
+- [YOU SAY: **ഫോൺ**, with the tongue curled back at the end]
 - [YOU SAY: which language the word came from]
-- [YOU SAY: why this book has not printed it for you]
+- [YOU READ: **ഫ**, **ോ**, **ൺ**, then the whole word]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C110-PHONE-01] -->
 
-[PAUSE 3s] A telephone? (***phōṇ***.) Where does the word come from?
-(**English**.) Why is it given by ear? (**Its last letter is not yet verified
-for printing.**)
+[PAUSE 3s] A telephone? (**ഫോൺ**, *phōṇ*.) Where does the word come from?
+(**English**.) Which character closes it? (**ൺ**, final retroflex *ṇ*.)

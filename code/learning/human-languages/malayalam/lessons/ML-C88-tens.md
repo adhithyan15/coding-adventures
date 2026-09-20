@@ -5,9 +5,9 @@ spine_node: SPINE-DEFINITE-REFERENCE
 sequence: 3080
 chapter: 88
 type: word
-headword: "മുപ്പത് — എഴുപത്"
+headword: "മുപ്പത് — എൺപത്"
 gloss: thirty to eighty — six words that are all the same word, and the one that has worn down
-romanization: "muppatŭ — eḻupatŭ"
+romanization: "muppatŭ — eṇpathŭ"
 concept_tag: ML-TENS
 prerequisites: [ML-R87-object-recall, ML-C20-pathinonnu-irupathu, ML-C07-numbers-6-10]
 sounds: []
@@ -28,7 +28,7 @@ variety: standard-colloquial
 reviews_of: [ML-C20-pathinonnu-irupathu, ML-C07-numbers-6-10]
 ---
 
-# മുപ്പത് — എഴുപത് (muppatŭ — eḻupatŭ) — the tens
+# മുപ്പത് — എൺപത് (muppatŭ — eṇpathŭ) — the tens
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C20-PATHINONNU-IRUPATHU-02, ML-CONCEPT-C07-NUMBERS-6-10-01] -->
@@ -52,14 +52,13 @@ in front, **പത്ത്** behind.
 | **അമ്പത്** *ampatŭ* | 50 | five |
 | **അറുപത്** *aṟupatŭ* | 60 | six |
 | **എഴുപത്** *eḻupatŭ* | 70 | seven |
-| *eṇpathŭ* | 80 | eight |
+| **എൺപത്** *eṇpathŭ* | 80 | eight |
 
 Read the middle of each word. **-പത്-** is in all of them, and it is the word
 for ten you have had since you learned to count.
 
-**Eighty is given here by ear only**, without its written form. That is how this
-book handed you six to ten in the first place — **heard and said before they
-were read** — and the written shape comes when its letter does.
+Eighty begins with **എൺ-**. Its final **ൺ** is the vowel-free retroflex nasal
+you met near the beginning of the book, so the whole word is now yours to read.
 
 ## Why it's said this way: the digits are worn, some more than others
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C88-TENS-02]; assesses=[] -->

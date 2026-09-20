@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d125a3119239ee41",
+  "sourceHash": "fnv1a64:f0d14f25627b747f",
   "lessons": [
     {
       "id": "ML-C02-peru",
@@ -2464,7 +2464,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e5d745e95fae5f81",
+      "sourceHash": "fnv1a64:a2ec246abd7f9a53",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -2539,15 +2539,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ൺ — copy what you see",
+          "title": "Writing: ൺ — one unbroken line",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ൺ (ṇ) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Put your pen at the inner-left tip. Sweep clockwise around the small inner loop, then keep going around the broad bowl on the left. Climb to the upper junction, drop down the first middle stem, retrace upward, cross the middle arch, and drop the second stem. Carry the shoulder right, circle the right loop clockwise, then rise into the hook above the line and curl left."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "Do not lift the pen. The whole character is one connected journey: inner loop, outer bowl, two middle stems, right loop, finishing hook."
             }
           ]
         },
@@ -2578,11 +2578,11 @@
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "ൺ three times, saying ṇ as you finish each one",
+              "instruction": "ൺ three times in one unbroken line, saying ṇ as you finish each one",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU TRACE: ൺ three times, saying *ṇ* as you finish each one]"
+              "source": "[YOU TRACE: ൺ three times in one unbroken line, saying *ṇ* as you finish each one]"
             },
             {
               "kind": "prompt",

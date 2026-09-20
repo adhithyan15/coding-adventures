@@ -178,12 +178,16 @@ describe("stroke ownership migration baseline", () => {
       // Measured for HL-C366: the Chinese particles and joining lessons add
       // ten source-verified glyphs. Keys move 367 -> 377 and Chinese 50 -> 60;
       // Tamil and both shared-identity values remain unchanged.
+      //
+      // Measured for the Malayalam chillu NN repair: the newly source-verified
+      // ൺ adds its font-checked ductus. Keys move 377 -> 378 and Malayalam
+      // 13 -> 14; Tamil and both shared-identity values remain unchanged.
     }).toEqual({
-      keys: 377,
+      keys: 378,
       keyHash:
-        "0d104030d4004205af40424784ccb0dd995ce006da5fce551ddda546292d117e",
+        "5ac95f460ce222b4783441588af2a1c77012585dbd74f827c1ad012e5b2a7faf",
       nonTamilDataHash:
-        "8842454d6b247a6941927ba010b781a422d129b17c128da8747ebaf74f39e133",
+        "029f32ba62935742791fa1d45fe0df7096b39c861131503778bf3b79f5e2e2a8",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -196,7 +200,7 @@ describe("stroke ownership migration baseline", () => {
         hebrew: 22,
         japanese: 23,
         kannada: 13,
-        malayalam: 13,
+        malayalam: 14,
         "perso-arabic": 24,
         tamil: 29,
         telugu: 9,

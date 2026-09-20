@@ -70,9 +70,12 @@ describe("the committed Malayalam A1 inventory", () => {
     // What does hold is the part that matters: `shown` stays 68 and the
     // directly-owned overlap stays 59, so no NEW glyph is opened -- two already
     // open ones merely deepen by one field and one token each.
-    expect(lessons).toHaveLength(479);
-    expect(shown.size).toBe(68);
-    expect([...shown].filter((glyph) => directlyOwned.has(glyph))).toHaveLength(59);
+    // 479 -> 480: ML-S148-letter-pha adds the first headword containing ഫ and
+    // gives that same glyph a direct script owner. Both census totals rise by one,
+    // while the nine-glyph open set below is unchanged.
+    expect(lessons).toHaveLength(480);
+    expect(shown.size).toBe(69);
+    expect([...shown].filter((glyph) => directlyOwned.has(glyph))).toHaveLength(60);
     expect(open).toEqual([
       { glyph: "ള", fields: 24, tokens: 19 },
       { glyph: "ശ", fields: 17, tokens: 13 },
@@ -87,8 +90,8 @@ describe("the committed Malayalam A1 inventory", () => {
 
     const point = inventory.points.find((candidate) => candidate.id === "ML-A1-SCR-12");
     expect(point?.label).toBe("the nine headword characters without a direct script-lesson owner");
-    expect(point?.note).toContain("68 distinct Malayalam characters");
-    expect(point?.note).toContain("59 occur in the headword of a writing/script lesson");
+    expect(point?.note).toContain("69 distinct Malayalam characters");
+    expect(point?.note).toContain("60 occur in the headword of a writing/script lesson");
     expect(point?.note).toContain("U+0D36 is open, while U+0D37 ഷ is directly owned");
   }, 60_000);
 

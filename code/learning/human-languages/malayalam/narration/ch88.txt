@@ -3,7 +3,7 @@ Malayalam, chapter 88: Counting Past Twenty.
 
 
 Lesson 1 of 4.
-മുപ്പത് — എഴുപത് (muppatŭ — eḻupatŭ) — the tens.
+മുപ്പത് — എൺപത് (muppatŭ — eṇpathŭ) — the tens.
 
 Warm-up.
 [pause 2 seconds]
@@ -18,9 +18,9 @@ Every ten from here up is that same word with a different digit on it.
 അമ്പത് ampatŭ, 50. built on: five.
 അറുപത് aṟupatŭ, 60. built on: six.
 എഴുപത് eḻupatŭ, 70. built on: seven.
-eṇpathŭ, 80. built on: eight.
+എൺപത് eṇpathŭ, 80. built on: eight.
 Read the middle of each word. -പത്- is in all of them, and it is the word for ten you have had since you learned to count.
-Eighty is given here by ear only, without its written form. That is how this book handed you six to ten in the first place — heard and said before they were read — and the written shape comes when its letter does.
+Eighty begins with എൺ-. Its final ൺ is the vowel-free retroflex nasal you met near the beginning of the book, so the whole word is now yours to read.
 
 Why it's said this way: the digits are worn, some more than others.
 The front of each word is the digit, but not in the shape you learned it in. These are older, shorter forms that survive only in compounds:
@@ -62,7 +62,7 @@ Now the one that breaks the run:
 There is no -പത്- in it. Every other ten was digit plus ten, and this one is not built that way at all.
 Look at how it ends. The word for a hundred, a line above, is sitting inside it — toṇ- ṇūṟŭ. Ninety is named from above, as a hundred short of something, where the other tens are named from below as so many tens.
 [a table of 3 rows, read aloud]
-eṇpathŭ 80. built from: eight tens.
+എൺപത് eṇpathŭ 80. built from: eight tens.
 തൊണ്ണൂറ് 90. built from: a hundred, reduced.
 നൂറ് 100. built from: itself.
 That is why the lesson gives you a hundred first. Learn toṇṇūṟŭ after nūṟŭ and it is one irregular word with a visible reason; learn it before, and it is noise.
@@ -133,7 +133,7 @@ Grammar Lens: six of one word, then two that are not.
 അമ്പത്, 50, digit + പത്ത്, worn.
 അറുപത്, 60, digit + പത്ത്.
 എഴുപത്, 70, digit + പത്ത്.
-eṇpathŭ, 80, digit + പത്ത്, by ear only so far.
+എൺപത്, 80, digit + പത്ത്.
 തൊണ്ണൂറ്, 90, നൂറ്, reduced.
 നൂറ്, 100, itself.
 Read the table downward and the break is visible. Six tens are one word with different digits on the front. Ninety is not a ten at all — it carries the word for a hundred, and is named from above where the others are named from below.

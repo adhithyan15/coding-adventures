@@ -7,7 +7,7 @@ chapter: 110
 type: review
 headword: "(phone, letter, post, e-mail, internet)"
 romanization: "sandesham enna oormma"
-gloss: cold retrieval of the five, and of the one the book could not print
+gloss: cold retrieval of five ways to reach somebody and the new letter that opens the first
 concept_tag: ML-MESSAGE-RECALL
 prerequisites: [ML-C110-imeyil, ML-C110-thapaal, ML-C110-kattu, ML-C110-phon]
 sounds: []
@@ -52,10 +52,9 @@ written, and a service that carries it.
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C110-PHONE-01, ML-PUNCT-FULL-STOP-01] -->
 
-**Four of these five you can write, and one you can only say.** The telephone
-waits on a letter whose stroke order this book has not sourced, so it was given
-by ear rather than printed on a guess — the same bargain you were offered once
-before, with a number you could say before you could write it.
+**All five are words you can now read.** The telephone added **ഫ**, the breathed
+partner of **പ**, and reused the final **ൺ** from the opening chapters. The
+other four were already inside your script range.
 
 You can now name the telephone, write and send a letter, and say an address
 aloud as far as the stop.
@@ -65,12 +64,11 @@ aloud as far as the stop.
 
 [PAUSE 1s]
 - [YOU SAY: all five words, in the order you met them]
-- [YOU SAY: which of the five you cannot yet write, and why]
+- [YOU READ: **ഫോൺ**, and name its first and last consonants]
 - [YOU SAY: which pair is borrowed and which is not]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C110-PHONE-01, ML-LEX-C110-LETTER-01, ML-LEX-C110-POST-01, ML-LEX-C110-EMAIL-01, ML-LEX-C110-INTERNET-01] -->
 
-[PAUSE 3s] Telephone, letter, post? (***phōṇ***, **കത്ത്**, **തപാൽ**.) E-mail and the
-internet? (**ഇമെയിൽ, ഇന്റർനെറ്റ്**.) Which of the five can you say but not
-yet write? (***phōṇ***.)
+[PAUSE 3s] Telephone, letter, post? (**ഫോൺ**, **കത്ത്**, **തപാൽ**.) E-mail and the
+internet? (**ഇമെയിൽ, ഇന്റർനെറ്റ്**.) Which new letter opens **ഫോൺ**? (**ഫ**.)

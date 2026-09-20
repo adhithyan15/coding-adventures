@@ -1,9 +1,45 @@
 Malayalam, chapter 110: Reaching Somebody.
-5 lessons. All 5 can be done entirely by ear.
+6 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 5.
-phōṇ — a telephone, by ear.
+Lesson 1 of 6.
+ഫ (pha) — one character, met with the word that needs it.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ഫ and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one: പ — say its sound.
+[pause 2 seconds]
+One character this time. One only. It arrives with the word on the next page.
+
+Script you'll notice: ഫ.
+ഫ — pha.
+It is the breathed partner of പ. Begin with the same lip closure, then let a puff of air follow the release: പ pa, ഫ pha.
+Malayalam pairs stops this way — a plain one and a breathed one beside it. This one has not appeared in a headword yet; it arrives for the borrowed word on the next page.
+
+Writing: ഫ — copy what you see.
+Put your pen on ഫ (pha) and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
+This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at these two, and say which one carries the breath]
+[pause 8 seconds for the answer]
+പ, ഫ (pha).
+[once you have stopped driving — trace: ഫ three times, saying pha as you finish each one]
+[your turn — say: pa, then pha — the same lips, one with a puff of air]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — ഫ? What sound does it carry? (pha.) Which letter is it the breathed partner of? (പ.)
+
+
+Lesson 2 of 6.
+ഫോൺ (phōṇ) — a telephone.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script Lens: three pieces until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
@@ -12,34 +48,37 @@ Think of the thing you would pick up to reach somebody far away.
 You are about to find you can nearly say it already.
 
 You'll want to know.
-phōṇ — a telephone.
+ഫോൺ (phōṇ) — a telephone.
 Say it out loud and you will hear English. It is phone, borrowed whole, with the ending settled into Malayalam sounds: the n at the close is made with the tongue curled back, not at the teeth.
 
-You'll want to know: why this one is not printed.
-This word is given by ear, and the book owes you a reason.
-Its last sound is written with a letter that this book's script inventory has not yet verified to the standard it holds itself to — the stroke order for it has not been sourced, and an unsourced one is not written down here. The letter is taught elsewhere in the book; what is missing is the evidence the inventory requires before a word can be printed with it.
-So you get the word now and its written shape later, which is how this book has handled a number you learned to say before you could write it. Hearing and saying come first; the spelling follows when it can be given honestly.
+Script Lens: three pieces.
+Read it from left to right:
+[a table of 3 rows, read aloud]
+ഫ, pha, the breathed partner of പ.
+ോ, ō.
+ൺ, final retroflex ṇ, with no following vowel.
+The first letter arrived on the page before this one. The last is the chillu you met inside അരുൺ near the beginning of the book. Together they let the borrowed English word settle into Malayalam spelling: ഫ (pha) + ോ + ൺ = ഫോൺ (phōṇ).
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: phōṇ, with the tongue curled back at the end]
+[your turn — say: ഫോൺ (phōṇ), with the tongue curled back at the end]
 [pause 8 seconds for the answer]
 [your turn — say: which language the word came from]
 [pause 8 seconds for the answer]
-[your turn — say: why this book has not printed it for you]
+[your turn — read: ഫ (pha), ോ, ൺ, then the whole word]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-A telephone? (phōṇ.) Where does the word come from? (English.) Why is it given by ear? (Its last letter is not yet verified for printing.)
+A telephone? (ഫോൺ, phōṇ.) Where does the word come from? (English.) Which character closes it? (ൺ, final retroflex ṇ.)
 
 
-Lesson 2 of 5.
+Lesson 3 of 6.
 കത്ത് (kattŭ) — a letter.
 
 Warm-up.
 [pause 2 seconds]
-Say the word for a telephone — the one given by ear.
+Read and say the word for a telephone: ഫോൺ (phōṇ).
 [pause 2 seconds]
 Now think of the older way of reaching somebody who is far off.
 
@@ -66,10 +105,10 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-A letter? (കത്ത് (kattŭ).) Does it have anything to do with അകത്ത്? (No — the shapes overlap and the words do not.) A telephone? (phōṇ.)
+A letter? (കത്ത് (kattŭ).) Does it have anything to do with അകത്ത്? (No — the shapes overlap and the words do not.) A telephone? (ഫോൺ (phōṇ).)
 
 
-Lesson 3 of 5.
+Lesson 4 of 6.
 തപാൽ (tapāl) — the post.
 
 Warm-up.
@@ -99,7 +138,7 @@ Wrap-up Recall.
 The post? (തപാൽ (tapāl).) The thing you put in it? (കത്ത് (kattŭ).) What closes തപാൽ (tapāl)? (The chillu ൽ.)
 
 
-Lesson 4 of 5.
+Lesson 5 of 6.
 ഇമെയിൽ — ഇന്റർനെറ്റ് (imeyil — inṟarneṟṟŭ).
 
 Warm-up.
@@ -134,7 +173,7 @@ Wrap-up Recall.
 E-mail? (ഇമെയിൽ.) The internet? (ഇന്റർനെറ്റ്.) Which older pair do those two mirror? (തപാൽ (tapāl) carrying കത്ത് (kattŭ).)
 
 
-Lesson 5 of 5.
+Lesson 6 of 6.
 (phone, letter, post, e-mail, internet) (sandesham enna oormma) — from cold.
 
 Warm-up.
@@ -148,18 +187,18 @@ Grammar Lens: two ways of reaching somebody, a century apart.
 The newer pair is borrowed and the older one is not, which is the ordinary way a language takes in a new thing: the object arrives with its name attached. What is worth noticing is that the shape of the pair did not change — a thing written, and a service that carries it.
 
 What you've built.
-Four of these five you can write, and one you can only say. The telephone waits on a letter whose stroke order this book has not sourced, so it was given by ear rather than printed on a guess — the same bargain you were offered once before, with a number you could say before you could write it.
+All five are words you can now read. The telephone added ഫ (pha), the breathed partner of പ, and reused the final ൺ from the opening chapters. The other four were already inside your script range.
 You can now name the telephone, write and send a letter, and say an address aloud as far as the stop.
 
 Guided Practice.
 [pause 1 second]
 [your turn — say: all five words, in the order you met them]
 [pause 8 seconds for the answer]
-[your turn — say: which of the five you cannot yet write, and why]
+[your turn — read: ഫോൺ (phōṇ), and name its first and last consonants]
 [pause 8 seconds for the answer]
 [your turn — say: which pair is borrowed and which is not]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Telephone, letter, post? (phōṇ, കത്ത് (kattŭ), തപാൽ (tapāl).) E-mail and the internet? (ഇമെയിൽ, ഇന്റർനെറ്റ്.) Which of the five can you say but not yet write? (phōṇ.)
+Telephone, letter, post? (ഫോൺ (phōṇ), കത്ത് (kattŭ), തപാൽ (tapāl).) E-mail and the internet? (ഇമെയിൽ, ഇന്റർനെറ്റ്.) Which new letter opens ഫോൺ (phōṇ)? (ഫ (pha).)
