@@ -14255,8 +14255,8 @@ ASN.1 branch is rebased onto that exact revision.
 ### DER ASN.1 portable implementation progress
 
 The closed 109-case, 22-error language-neutral contract now has complete
-package-native consumers in seven of fifteen established lanes: Rust, Python,
-Go, Dart, Java, TypeScript, and Kotlin. Every consumer executes all 46 referenced DER TLV framing
+package-native consumers in eight of fifteen established lanes: Rust, Python,
+Go, Dart, Java, TypeScript, Kotlin, and C#. Every consumer executes all 46 referenced DER TLV framing
 cases rather than treating delegated rows as automatic success. Python passes
 110 tests at 97.45 percent line coverage; Rust passes its full suite, Clippy,
 and formatting; Go passes race, vet, trimpath build, and 90.7 percent coverage;
@@ -14267,13 +14267,15 @@ passes its production build, 120 Vitest tests, a zero-high-vulnerability npm
 audit, and coverage at 97.27 percent statements, 93.75 percent branches, 98.33
 percent functions, and 98.29 percent lines. Kotlin passes Java 21
 warnings-as-errors, 116 JUnit tests, and its JaCoCo gate at 95.26 percent line
-coverage. All seven use
+coverage. C# passes 113 xUnit tests with 95.66 percent line, 95.93 percent
+branch, and 98.57 percent method coverage, plus warning-clean Release build and
+pack, format verification, and a zero-vulnerability NuGet audit. All eight use
 empty capability manifests, structural limits, shared work budgets,
 transactional cursors, unsigned-width-safe integer and OID handling, and
-payload-free diagnostics. C#, F#, Haskell, Elixir, Lua, Perl, Ruby, and Swift
+payload-free diagnostics. F#, Haskell, Elixir, Lua, Perl, Ruby, and Swift
 remain in this same serial work item; no parity PR is
 open yet. Independent security review made validated element and primitive
-wrappers unforgeable in Python, Go, Dart, TypeScript, and Kotlin, hid raw DER
+wrappers unforgeable in Python, Go, Dart, TypeScript, Kotlin, and C#, hid raw DER
 framing helpers from typed package surfaces, and added adversarial zero-value,
 runtime-token, immutable-snapshot, and redaction tests.
 
