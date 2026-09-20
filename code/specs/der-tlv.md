@@ -156,6 +156,14 @@ offset. Cursor cases additionally compare every ordered event, final sibling
 count, and remaining offset, including a repeated failed read that proves
 non-advancement.
 
+`code/specs/fixtures/der-tlv-v1/consumers.json`, validated by the adjacent
+closed schema, is the authoritative established-lane denominator and closure
+registry. Each entry binds one canonical language to its production API,
+fixture test, build fronts, truthful empty capability profile, and the five
+required surface roles. The aggregate portable-coverage test rejects an
+unregistered lane, a sixteenth consumer, path traversal, cross-wiring, or any
+consumer that stops loading the shared 54-case corpus.
+
 The portable error identifiers are the kebab-case forms of the public error
 categories: `empty-input`, `truncated-high-tag`, `truncated-length`,
 `truncated-value`, `end-of-contents`, `non-minimal-tag`, `tag-overflow`,

@@ -10,6 +10,11 @@ X.690 DER identifier and definite-length framing package.
 - `cases.json` covers identifier classes, constructed bits, tag and length
   canonicality, truncation, configured limits, exact/remainder behavior,
   cursor state, and payload-blind errors.
+- `consumers.schema.json` closes the established-lane registry shape and fixes
+  the 15-language denominator.
+- `consumers.json` binds every established lane to its production source,
+  package-native fixture test, build fronts, empty capability manifest, and
+  required public surface.
 - `CHANGELOG.md` records fixture-contract changes.
 
 Input is an ordered array of bounded segments. A segment is either lowercase,
@@ -37,3 +42,8 @@ not cause `deadbeef` or a byte dump to appear in a public error.
 This corpus is structural and behavioral evidence, not a substitute for
 running each package's real tests, coverage, lint, BUILD, and BUILD_windows
 front doors.
+
+`code/scripts/tests/test_der_tlv_portable_coverage.py` is the aggregate closure
+gate. It rejects missing, extra, duplicate, traversing, or cross-wired
+consumers and proves that every registered package loads this exact fixture and
+declares no runtime authority.

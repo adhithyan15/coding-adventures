@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/der-tlv-v1-consumers.json",
+  "title": "Established-lane consumers of the DER TLV v1 corpus",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "profile", "fixture", "case_count", "error_id_count", "established_lane_count", "consumers"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "profile": { "const": "x690-der-tlv-framing-v1-portable-consumers" },
+    "fixture": { "const": "code/specs/fixtures/der-tlv-v1/cases.json" },
+    "case_count": { "const": 54 },
+    "error_id_count": { "const": 17 },
+    "established_lane_count": { "const": 15 },
+    "consumers": { "type": "array", "minItems": 15, "maxItems": 15, "items": { "$ref": "#/$defs/consumer" } }
+  },
+  "$defs": {
+    "repo_path": { "type": "string", "pattern": "^code/packages/[a-z]+/der[-_]tlv/[A-Za-z0-9_.@+\\/-]+$" },
+    "surface_name": { "type": "string", "minLength": 3, "maxLength": 80, "pattern": "^[A-Za-z_][A-Za-z0-9_.:]*$" },
+    "consumer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["language", "package_root", "api_source", "fixture_test", "build_files", "capability_manifest", "surface"],
+      "properties": {
+        "language": { "enum": ["csharp", "dart", "elixir", "fsharp", "go", "haskell", "java", "kotlin", "lua", "perl", "python", "ruby", "rust", "swift", "typescript"] },
+        "package_root": { "type": "string", "pattern": "^code/packages/[a-z]+/der[-_]tlv$" },
+        "api_source": { "$ref": "#/$defs/repo_path" },
+        "fixture_test": { "$ref": "#/$defs/repo_path" },
+        "build_files": { "type": "array", "minItems": 1, "maxItems": 2, "uniqueItems": true, "items": { "$ref": "#/$defs/repo_path" } },
+        "capability_manifest": { "$ref": "#/$defs/repo_path" },
+        "surface": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["decode_one", "decode_exact", "cursor", "limits", "error_taxonomy"],
+          "properties": {
+            "decode_one": { "$ref": "#/$defs/surface_name" },
+            "decode_exact": { "$ref": "#/$defs/surface_name" },
+            "cursor": { "$ref": "#/$defs/surface_name" },
+            "limits": { "$ref": "#/$defs/surface_name" },
+            "error_taxonomy": { "$ref": "#/$defs/surface_name" }
+          }
+        }
+      }
+    }
+  }
+}
