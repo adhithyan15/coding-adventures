@@ -418,6 +418,57 @@ describe("concurrent scheduler", () => {
     await orchestrator.dispose();
   });
 
+  it("removes the caller-token listener after success and init failure", async () => {
+    const cancellation = createCancellationTokenSource();
+    const added = vi.spyOn(cancellation.token.signal, "addEventListener");
+    const removed = vi.spyOn(cancellation.token.signal, "removeEventListener");
+    const success = defineStage({
+      name: "@test/listener-success",
+      version: "0.1.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "successful reusable-token run",
+      consumes: Kinds.Void,
+      produces: Kinds.ContentSource,
+      capabilities: [],
+      configSchema: null,
+      async run() { return content("success"); },
+    });
+    const initFailure = defineStage({
+      name: "@test/listener-init-failure",
+      version: "0.1.0",
+      apiVersion: KERNEL_API_VERSION,
+      description: "fails during init",
+      consumes: Kinds.Void,
+      produces: Kinds.ContentSource,
+      capabilities: [],
+      configSchema: null,
+      async init() { throw new Error("init failed"); },
+      async run() { return content("unreachable"); },
+    });
+    const orchestrator = createOrchestrator({ logger: silentLogger() });
+    const successfulPipeline = await orchestrator.buildPipeline(config([
+      { id: "success", stage: success },
+    ], 1));
+    const failingPipeline = await orchestrator.buildPipeline(config([
+      { id: "failure", stage: initFailure },
+    ], 1));
+
+    expect((await orchestrator.runOnce(successfulPipeline, {
+      cancellation: cancellation.token,
+    })).outcome).toBe("success");
+    expect((await orchestrator.runOnce(failingPipeline, {
+      cancellation: cancellation.token,
+    })).outcome).toBe("failed");
+
+    const abortAdds = added.mock.calls.filter(([type]) => type === "abort");
+    const abortRemovals = removed.mock.calls.filter(([type]) => type === "abort");
+    expect(abortAdds).toHaveLength(2);
+    expect(abortRemovals).toHaveLength(2);
+    expect(abortRemovals.map(([, listener]) => listener))
+      .toEqual(abortAdds.map(([, listener]) => listener));
+    await orchestrator.dispose();
+  });
+
   it("cancels queued stages deterministically", async () => {
     const cancellation = createCancellationTokenSource();
     const started = deferred<void>();

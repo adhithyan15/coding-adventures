@@ -194,10 +194,13 @@ export async function executeDag(
   const outputs = new Map<string, unknown>();
   const lifecycle = createCancellationTokenSource();
   let cancelled = options.cancellation.cancelled;
-  options.cancellation.onCancel(() => {
+  const cancelLifecycle = (): void => {
     cancelled = true;
     lifecycle.cancel(options.cancellation.reason ?? undefined);
-  });
+  };
+  if (options.cancellation.cancelled) cancelLifecycle();
+  else options.cancellation.signal.addEventListener("abort", cancelLifecycle, { once: true });
+  try {
   const runOptions: SchedulerOptions = {
     ...options,
     cancellation: lifecycle.token,
@@ -570,6 +573,11 @@ export async function executeDag(
     errors: errors.sort((left, right) =>
       topoIndex.get(left.instanceId)! - topoIndex.get(right.instanceId)!),
   };
+  } finally {
+    // The caller may reuse a long-lived token across many runs. Do not retain
+    // completed scheduler state through its AbortSignal listener.
+    options.cancellation.signal.removeEventListener("abort", cancelLifecycle);
+  }
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────
