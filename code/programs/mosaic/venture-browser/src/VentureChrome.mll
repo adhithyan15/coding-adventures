@@ -30,6 +30,12 @@ layout VentureChrome {
         state-when-disabled : slot: navigation-disabled ,
         onClick : emit: onReload
       )
+      HostButton [ stop-button ] (
+        label : "Stop" ,
+        disabled : slot: stop-disabled ,
+        state-when-disabled : slot: stop-disabled ,
+        onClick : emit: onStop
+      )
       HostButton [ bookmark-button ] (
         label : slot: bookmark-label ,
         disabled : slot: bookmark-disabled ,

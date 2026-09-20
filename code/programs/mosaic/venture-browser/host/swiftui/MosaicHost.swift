@@ -190,6 +190,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private(set) var lastPrintRequest: NSDictionary?
   private(set) var lastShareRequest: NSDictionary?
   private(set) var lastPageInfoRequest: NSDictionary?
+  private(set) var lastCancelledSubresources: [NSDictionary]?
 
   required override init() {
     let native = VentureNativeLibrary()
@@ -259,6 +260,11 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
       NotificationCenter.default.post(
         name: Notification.Name("VenturePageInfoRequested"), object: self,
         userInfo: ["request": effect])
+    } else if type == "cancel-subresources", let requests = effect["requests"] as? [NSDictionary] {
+      lastCancelledSubresources = requests
+      NotificationCenter.default.post(
+        name: Notification.Name("VentureSubresourcesCancelled"), object: self,
+        userInfo: ["requests": requests])
     } else if type == "write-clipboard", let text = effect["text"] as? String {
       NSPasteboard.general.clearContents()
       NSPasteboard.general.setString(text, forType: .string)
@@ -314,7 +320,9 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     let currentAddress = props?["address"] as? String ?? ""
     let backDisabled = props?["back-disabled"] as? Bool
     let forwardDisabled = props?["forward-disabled"] as? Bool
-    guard currentAddress == startURL, backDisabled == true, forwardDisabled == true else {
+    let stopDisabled = props?["stop-disabled"] as? Bool
+    guard currentAddress == startURL, backDisabled == true, forwardDisabled == true,
+      stopDisabled == true else {
       writeInteractionResult(
         [
           "backend": "swiftui", "status": "error", "address": currentAddress,
@@ -325,8 +333,10 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     }
     let backEventCount = chromeEventCounts["onBack", default: 0]
     let forwardEventCount = chromeEventCounts["onForward", default: 0]
+    let stopEventCount = chromeEventCounts["onStop", default: 0]
     guard performNativeButtonClick(identifier: "back-button"),
-      performNativeButtonClick(identifier: "forward-button")
+      performNativeButtonClick(identifier: "forward-button"),
+      performNativeButtonClick(identifier: "stop-button")
     else {
       writeInteractionResult(
         [
@@ -339,16 +349,18 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self, weak address] in
       self?.verifyInitialDisabledControls(
         address: address, startURL: startURL, targetURL: targetURL, markerPath: markerPath,
-        backEventCount: backEventCount, forwardEventCount: forwardEventCount)
+        backEventCount: backEventCount, forwardEventCount: forwardEventCount,
+        stopEventCount: stopEventCount)
     }
   }
 
   private func verifyInitialDisabledControls(
     address: NSTextField?, startURL: String, targetURL: String, markerPath: String,
-    backEventCount: Int, forwardEventCount: Int
+    backEventCount: Int, forwardEventCount: Int, stopEventCount: Int
   ) {
     guard chromeEventCounts["onBack", default: 0] == backEventCount,
-      chromeEventCounts["onForward", default: 0] == forwardEventCount
+      chromeEventCounts["onForward", default: 0] == forwardEventCount,
+      chromeEventCounts["onStop", default: 0] == stopEventCount
     else {
       writeInteractionResult(
         [
@@ -1730,7 +1742,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
 
   private func nativeToolbarControlPoint(identifier: String) -> (NSPoint, NSWindow)? {
     let identifiers = [
-      "back-button", "forward-button", "home-button", "reload-button",
+      "back-button", "forward-button", "home-button", "reload-button", "stop-button",
       "bookmark-button", "bookmarks-button",
     ]
     guard let controlIndex = identifiers.firstIndex(of: identifier) else { return nil }
@@ -1806,6 +1818,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     case "forward-button": return ["Forward"]
     case "home-button": return ["Home"]
     case "reload-button": return ["Reload"]
+    case "stop-button": return ["Stop"]
     case "bookmark-button": return ["Bookmark", "Remove Bookmark"]
     case "bookmarks-button": return ["Bookmarks (0)", "Bookmarks (1)"]
     case "bookmarks-close-button": return ["Close"]

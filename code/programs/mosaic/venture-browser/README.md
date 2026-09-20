@@ -1,7 +1,7 @@
 # Venture browser chrome
 
 This package is the shared Mosaic source of truth for Venture's native browser
-chrome. It authors the title, Back, Forward, Home, Reload, address input, Go
+chrome. It authors the title, Back, Forward, Home, Reload, Stop, address input, Go
 action, bookmark toggle and catalog, Copy Address, Open in New Window, Save Page, Print Page,
 Share Page, Page Information, bounded page zoom, View Source, and find-in-page controls, status
 line, disabled states, and dispatch contract once
@@ -20,7 +20,7 @@ recreating the surrounding chrome in backend-specific UI code.
 - Slots carry the current address, page title, status text, bookmark label,
   ordered-catalog selection, and host-derived disabled flags; the host supplies
   the native page renderer as a node slot.
-- Emits carry Back, Forward, Home, Reload, address edits, Navigate, the
+- Emits carry Back, Forward, Home, Reload, Stop, address edits, Navigate, the
   storage-neutral bookmark toggle and catalog commands, host-neutral Copy Address and Open
   in New Window transactions, a host-neutral Save Page download, and a
   host-neutral Print Page, Share Page, Page Information, View Source, and Copy
@@ -40,6 +40,12 @@ recreating the surrounding chrome in backend-specific UI code.
 - `BrowserSession` owns the 50%-200% page scale and maps physical host surfaces
   to logical layout width, height, and paint scale. Zoom reflows the retained
   page without refetching or changing history; native bridges only repaint.
+- Stop remains disabled until the committed page has outstanding stylesheet or
+  image work. Core advances the navigation generation, settles every retained
+  pending resource for fallback reflow, and emits the exact ordered
+  cancellation requests through one typed host effect. Late completions,
+  history, the address draft, and the committed document follow the same
+  policy on every backend.
 - Access keys retain an independent document order through layout and paint so
   targets with negative `tabindex` remain available without entering Tab
   traversal. Core resolves normalized duplicates, disabledness, modal scope,

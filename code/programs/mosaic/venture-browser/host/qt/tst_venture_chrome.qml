@@ -56,6 +56,7 @@ TestCase {
                 "statusText": "Ready",
                 "backDisabled": disabled,
                 "forwardDisabled": disabled,
+                "stopDisabled": true,
                 "bookmarkLabel": "Bookmark",
                 "bookmarkDisabled": disabled,
                 "bookmarksLabel": "Bookmarks (1)",
@@ -100,6 +101,7 @@ TestCase {
         verify(!nativeControl("back-button").enabled)
         verify(!nativeControl("forward-button").enabled)
         verify(!nativeControl("reload-button").enabled)
+        verify(!nativeControl("stop-button").enabled)
         verify(!nativeControl("bookmarks-button").enabled)
         verify(!nativeControl("copy-address-button").enabled)
         verify(!nativeControl("open-page-button").enabled)
@@ -121,6 +123,7 @@ TestCase {
         mouseClick(nativeControl("back-button"))
         mouseClick(nativeControl("forward-button"))
         mouseClick(nativeControl("reload-button"))
+        mouseClick(nativeControl("stop-button"))
         mouseClick(nativeControl("bookmarks-button"))
         mouseClick(nativeControl("copy-address-button"))
         mouseClick(nativeControl("open-page-button"))
@@ -168,6 +171,19 @@ TestCase {
         compare(recordingHost.events.length, 1)
         compare(recordingHost.events[0].event, "onNavigate")
         compare(chrome.statusText, "Navigated through MosaicHost")
+    }
+
+    function test_stop_crosses_the_mosaic_host_seam_only_while_enabled() {
+        hydrate(false)
+        chrome.applyMosaicResponse({ "props": { "stopDisabled": false } })
+        recordingHost.reset()
+        const stopButton = nativeControl("stop-button")
+        verify(stopButton.enabled)
+        stopButton.forceActiveFocus()
+        keyClick(Qt.Key_Space)
+        wait(0)
+        compare(recordingHost.events.length, 1)
+        compare(recordingHost.events[0].event, "onStop")
     }
 
     function test_view_source_crosses_the_mosaic_host_seam() {

@@ -294,6 +294,7 @@ class MosaicHost {
   Map<String, Object?>? lastPrintRequest;
   Map<String, Object?>? lastShareRequest;
   Map<String, Object?>? lastPageInfoRequest;
+  List<Object?>? lastCancelledSubresources;
   String? lastClipboardText;
   Stream<Map<String, Object?>> get filePickerRequests => _filePickerRequests.stream;
 
@@ -534,6 +535,8 @@ class MosaicHost {
       lastShareRequest = Map<String, Object?>.from(effect);
     } else if (effect['type'] == 'page-info') {
       lastPageInfoRequest = Map<String, Object?>.from(effect);
+    } else if (effect['type'] == 'cancel-subresources' && effect['requests'] is List) {
+      lastCancelledSubresources = List<Object?>.from(effect['requests'] as List);
     } else if (effect['type'] == 'write-clipboard' && effect['text'] is String) {
       lastClipboardText = effect['text'] as String;
       unawaited(Clipboard.setData(ClipboardData(text: lastClipboardText!)));

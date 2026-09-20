@@ -668,6 +668,66 @@ fn find_in_page_uses_one_shared_transaction_across_generated_hosts() {
 }
 
 #[test]
+fn stop_loading_uses_one_shared_cancellation_transaction_across_generated_hosts() {
+    let interface = read_package_file("src/VentureChrome.mil");
+    let layout = read_package_file("src/VentureChrome.mll");
+    assert!(interface.contains("slot stop-disabled"));
+    assert!(interface.contains("emit onStop"));
+    assert!(layout.contains("HostButton [ stop-button ]"));
+    assert!(layout.contains("disabled : slot: stop-disabled"));
+
+    let core = read_package_file("../../../packages/rust/venture-browser-core/src/lib.rs");
+    for symbol in [
+        "StopLoading",
+        "pub fn stop_loading",
+        "CancelSubresources(Vec<BrowserSubresourceRequest>)",
+        "IgnoredStaleNavigation",
+        "Loading stopped",
+    ] {
+        assert!(core.contains(symbol), "shared Stop core omits {symbol}");
+    }
+
+    for (name, path, seam) in [
+        (
+            "SwiftUI",
+            "host/swiftui/MosaicHost.swift",
+            "VentureSubresourcesCancelled",
+        ),
+        ("XAML", "host/xaml/MosaicHost.cs", "SubresourcesCancelled"),
+        ("Qt", "host/qt/MosaicHost.cpp", "subresourcesCancelled"),
+        (
+            "Flutter",
+            "host/flutter/mosaic_host.dart",
+            "lastCancelledSubresources",
+        ),
+        (
+            "Compose",
+            "host/compose/MosaicHost.kt",
+            "lastCancelledSubresources",
+        ),
+    ] {
+        let host = read_package_file(path);
+        assert!(
+            host.contains("cancel-subresources"),
+            "{name} omits the typed cancellation effect"
+        );
+        assert!(host.contains(seam), "{name} omits its scheduler seam");
+    }
+
+    for path in [
+        "host/qt/tst_venture_chrome.qml",
+        "host/react/VentureChromeInteraction.test.tsx",
+        "host/web/VentureChromeInteraction.test.js",
+    ] {
+        let acceptance = read_package_file(path);
+        assert!(
+            acceptance.contains("stop-button") || acceptance.contains("Stop"),
+            "generated-host acceptance omits Stop in {path}"
+        );
+    }
+}
+
+#[test]
 fn copy_address_uses_one_typed_clipboard_effect_across_generated_hosts() {
     let interface = read_package_file("src/VentureChrome.mil");
     let layout = read_package_file("src/VentureChrome.mll");
