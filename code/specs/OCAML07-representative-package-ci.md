@@ -62,6 +62,10 @@ The independently built analyzer must use a native Windows path for its
 `BISECT_FILE` prefix under setup-ocaml's Cygwin shell.  Linux and macOS use the
 POSIX working-directory path.  Coverage files must remain in the copied
 analyzer root so the existing closed coverage gate can discover them.
+Source-archive creation and validation continue to use native runner-temporary
+paths, but archive extraction under the Cygwin shell must translate both the
+archive and destination paths to POSIX form before invoking `tar`.  Linux and
+macOS extract with their unchanged POSIX paths.
 
 The matrix is exactly Linux x64 on `ubuntu-24.04`, macOS arm64 on `macos-14`,
 and Windows x64 using mingw on `windows-2022`.  The workflow checks the runtime

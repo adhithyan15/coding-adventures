@@ -204,7 +204,13 @@ jobs:
             cp "$archive" "$evidence/source-archives/"
             python -c 'import hashlib,sys; p=sys.argv[1]; print(hashlib.sha256(open(p,"rb").read()).hexdigest(), p)' \
               "$archive" >> "$evidence/source-archives/SHA256SUMS"
-            tar -xzf "$archive" -C "$work"
+            archive_for_tar="$archive"
+            work_for_tar="$work"
+            if test "$RUNNER_OS" = "Windows"; then
+              archive_for_tar="$(cygpath -u "$archive")"
+              work_for_tar="$(cygpath -u "$work")"
+            fi
+            tar -xzf "$archive_for_tar" -C "$work_for_tar"
           done
           for package in $packages; do
             package_root="$work/$package"

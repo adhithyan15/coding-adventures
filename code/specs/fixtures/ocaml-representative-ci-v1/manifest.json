@@ -127,5 +127,5 @@
     "code/packages/ocaml/ca-capability-analyzer": "8f05989174e59c95d1b61eecaae0d97d2071a189c127e5039ce988d76af1b55f",
     "code/specs/fixtures/ocaml-representative-downstream-v1": "9fca51a47cacd9dc92f41e117eb1282b182b707472d9ef8f4fe58b188b550a40"
   },
-  "workflow_sha256": "918b8d931c5b7640c781e2a3094c929f5ef8d074f54819267d3a86ee64520677"
+  "workflow_sha256": "f00dbbcb1f1b4fa4504b4770f0e6899aae31ee0429905f6e2db54df94c515ed4"
 }

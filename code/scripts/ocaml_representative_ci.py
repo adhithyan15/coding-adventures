@@ -23,7 +23,7 @@ MANIFEST_RELATIVE_PATH = Path(
 )
 WORKFLOW_RELATIVE_PATH = Path(".github/workflows/build-ocaml-representative.yml")
 EXPECTED_WORKFLOW_SHA256 = (
-    "918b8d931c5b7640c781e2a3094c929f5ef8d074f54819267d3a86ee64520677"
+    "f00dbbcb1f1b4fa4504b4770f0e6899aae31ee0429905f6e2db54df94c515ed4"
 )
 WINDOWS_COVERAGE_PREFIX_BLOCK = (
     '          coverage_prefix="$PWD/bisect"\n'
@@ -31,6 +31,15 @@ WINDOWS_COVERAGE_PREFIX_BLOCK = (
     '            coverage_prefix="$(cygpath -w "$PWD/bisect")"\n'
     "          fi\n"
     '          BISECT_FILE="$coverage_prefix" opam exec -- dune runtest --force \\\n'
+)
+WINDOWS_ARCHIVE_EXTRACTION_BLOCK = (
+    '            archive_for_tar="$archive"\n'
+    '            work_for_tar="$work"\n'
+    '            if test "$RUNNER_OS" = "Windows"; then\n'
+    '              archive_for_tar="$(cygpath -u "$archive")"\n'
+    '              work_for_tar="$(cygpath -u "$work")"\n'
+    "            fi\n"
+    '            tar -xzf "$archive_for_tar" -C "$work_for_tar"\n'
 )
 
 VERSIONS = {
@@ -395,6 +404,8 @@ def validate_workflow_policy_text(workflow_text: str) -> None:
             raise ContractError(f"workflow omits required OCAML07 command: {required}")
     if workflow_text.count(WINDOWS_COVERAGE_PREFIX_BLOCK) != 1:
         raise ContractError("workflow Windows analyzer coverage path guard drifted")
+    if workflow_text.count(WINDOWS_ARCHIVE_EXTRACTION_BLOCK) != 1:
+        raise ContractError("workflow Windows archive extraction path guard drifted")
     if workflow_text.count('switch="$(opam switch show --safe)"') != 3:
         raise ContractError("workflow must capture the local switch in all temporary steps")
     if workflow_text.count('export OPAMSWITCH="$switch"') != 3:

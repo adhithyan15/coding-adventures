@@ -121,6 +121,15 @@ class ManifestAndRepositoryTests(unittest.TestCase):
         with self.assertRaisesRegex(representative.ContractError, "coverage path"):
             representative.validate_workflow_policy_text(workflow)
 
+    def test_workflow_rejects_windows_archive_path_guard_drift(self) -> None:
+        workflow = self.workflow.replace(
+            representative.WINDOWS_ARCHIVE_EXTRACTION_BLOCK,
+            '            tar -xzf "$archive" -C "$work"\n',
+            1,
+        )
+        with self.assertRaisesRegex(representative.ContractError, "archive extraction path"):
+            representative.validate_workflow_policy_text(workflow)
+
 
 class CoverageTests(unittest.TestCase):
     def test_numeric_coverage_requires_every_source_and_minimum(self) -> None:
