@@ -514,6 +514,10 @@ A bounded `x509-subject-public-key-info` composition is now shipped above that
 syntax: it decodes the exact two-field algorithm-and-key-bit-string container
 under the same shared budgets. It deliberately does not recognize algorithms,
 interpret public keys, or grant key, signing, or verification authority.
+A bounded `x509-extension` prerequisite now decodes one exact generic extension
+OID, canonical omitted-default critical flag, and opaque OCTET STRING under the
+same shared budgets. It does not recognize extension OIDs, parse encapsulated
+values, process unknown critical extensions, or decode an extension list.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
