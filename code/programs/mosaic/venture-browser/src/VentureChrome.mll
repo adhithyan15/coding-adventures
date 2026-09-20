@@ -94,6 +94,24 @@ layout VentureChrome {
         state-when-disabled : slot: page-info-disabled ,
         onClick : emit: onPageInfo
       )
+      HostButton [ zoom-out-button ] (
+        label : "Zoom Out" ,
+        disabled : slot: zoom-out-disabled ,
+        state-when-disabled : slot: zoom-out-disabled ,
+        onClick : emit: onZoomOut
+      )
+      HostButton [ zoom-reset-button ] (
+        label : slot: zoom-label ,
+        disabled : slot: zoom-reset-disabled ,
+        state-when-disabled : slot: zoom-reset-disabled ,
+        onClick : emit: onZoomReset
+      )
+      HostButton [ zoom-in-button ] (
+        label : "Zoom In" ,
+        disabled : slot: zoom-in-disabled ,
+        state-when-disabled : slot: zoom-in-disabled ,
+        onClick : emit: onZoomIn
+      )
       HostButton [ view-source-button ] (
         label : "Source" ,
         disabled : slot: view-source-disabled ,

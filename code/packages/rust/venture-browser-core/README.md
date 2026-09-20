@@ -186,6 +186,11 @@ effects, and `complete_subresource`. Reflow,
 reload, Back, and Forward all project the retained state into blue/purple link
 styling without coupling browser history to HTML layout.
 
+Page composition scale is session-owned. `paint_viewport` converts a physical
+host surface into the logical layout viewport and paint scale for the retained
+50%-200% zoom level. Semantic zoom commands request one retained-page reflow
+without navigation, document fetch, or host-specific scaling policy.
+
 `BrowserControlModel` owns focus, values, checked/radio state, select indexes,
 character-indexed selection/caret state, composition text, validation feedback,
 and disabled/read-only policy. Pointer, keyboard, text, and IME input

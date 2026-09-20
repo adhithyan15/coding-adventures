@@ -1164,6 +1164,52 @@ fn page_info_uses_one_typed_response_snapshot_across_generated_hosts() {
 }
 
 #[test]
+fn page_zoom_uses_one_shared_scale_and_reflow_policy_across_generated_hosts() {
+    let interface = read_package_file("src/VentureChrome.mil");
+    let layout = read_package_file("src/VentureChrome.mll");
+    for symbol in ["slot zoom-label", "emit onZoomOut", "emit onZoomReset", "emit onZoomIn"] {
+        assert!(interface.contains(symbol), "zoom interface omits {symbol}");
+    }
+    for control in ["zoom-out-button", "zoom-reset-button", "zoom-in-button"] {
+        assert!(layout.contains(control), "zoom layout omits {control}");
+    }
+
+    let core = read_package_file("../../../packages/rust/venture-browser-core/src/lib.rs");
+    for symbol in ["paint_viewport", "page_reflow_required", "zoom_percent", "ZoomReset"] {
+        assert!(core.contains(symbol), "shared zoom core omits {symbol}");
+    }
+
+    for (name, path) in [
+        ("Cairo", "../../../packages/rust/venture-browser-cairo/src/lib.rs"),
+        ("macOS", "../../../packages/rust/venture-browser-macos/src/lib.rs"),
+        ("Windows", "../../../packages/rust/venture-browser-windows/src/lib.rs"),
+    ] {
+        let bridge = read_package_file(path);
+        assert!(bridge.contains("onZoomIn"), "{name} omits zoom events");
+        assert!(bridge.contains("paint_viewport"), "{name} duplicates zoom composition policy");
+        assert!(bridge.contains("page_reflow_required"), "{name} omits retained reflow");
+    }
+
+    for path in [
+        "host/compose/VentureChromeInteractionTest.kt",
+        "host/flutter/venture_chrome_interaction_test.dart",
+        "host/qt/tst_venture_chrome.qml",
+        "host/react/VentureChromeInteraction.test.tsx",
+        "host/swiftui/MosaicHost.swift",
+        "host/web/VentureChromeInteraction.test.js",
+        "host/xaml/MosaicHost.cs",
+    ] {
+        let acceptance = read_package_file(path);
+        assert!(
+            acceptance.contains("zoom-in-button")
+                || acceptance.contains("Zoom In")
+                || acceptance.contains("zoomIn"),
+            "{path} omits page zoom acceptance"
+        );
+    }
+}
+
+#[test]
 fn real_page_visual_fixture_remains_a_package_acceptance_dependency() {
     let capture = venture_browser_visual_fixtures::capture("http://venture.test")
         .expect("capture Venture's deterministic real-page fixture");

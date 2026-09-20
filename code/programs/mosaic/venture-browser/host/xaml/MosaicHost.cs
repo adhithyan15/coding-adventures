@@ -218,6 +218,10 @@ public static class MosaicHost
                     component, "share-page-button");
                 var pageInfoButton = await FindAutomationElementAsync<Button>(
                     component, "page-info-button");
+                var zoomResetButton = await FindAutomationElementAsync<Button>(
+                    component, "zoom-reset-button");
+                var zoomInButton = await FindAutomationElementAsync<Button>(
+                    component, "zoom-in-button");
                 var viewSourceButton = await FindAutomationElementAsync<Button>(
                     component, "view-source-button");
                 var goButton = await FindAutomationElementAsync<Button>(component, "go-button");
@@ -232,6 +236,8 @@ public static class MosaicHost
                     || printPageButton is null
                     || sharePageButton is null
                     || pageInfoButton is null
+                    || zoomResetButton is null
+                    || zoomInButton is null
                     || viewSourceButton is null
                     || goButton is null)
                 {
@@ -437,6 +443,20 @@ public static class MosaicHost
                         backend = "xaml",
                         status = "error",
                         error = "native Page Information effect did not preserve response identity",
+                    });
+                    return;
+                }
+                var zoomInProvider = new ButtonAutomationPeer(zoomInButton) as IInvokeProvider;
+                zoomInProvider?.Invoke();
+                if (zoomInProvider is null
+                    || !await WaitForControlStateAsync(
+                        () => zoomResetButton.Content?.ToString() == "125%"))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native page zoom did not reflow through shared state",
                     });
                     return;
                 }

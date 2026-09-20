@@ -34,6 +34,10 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
       printPageDisabled: true,
       sharePageDisabled: true,
       pageInfoDisabled: true,
+      zoomLabel: "100%",
+      zoomOutDisabled: true,
+      zoomResetDisabled: true,
+      zoomInDisabled: true,
       viewSourceDisabled: true,
       findOpen: false,
       findQuery: "",
@@ -67,6 +71,12 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
         if (request.event.type === "findClose") {
           props = { ...props, findOpen: false, findQuery: "", findResultLabel: "" };
         }
+        if (request.event.type === "zoomIn") {
+          props = { ...props, zoomLabel: "125%", zoomResetDisabled: false };
+        }
+        if (request.event.type === "zoomReset") {
+          props = { ...props, zoomLabel: "100%", zoomResetDisabled: true };
+        }
         props = {
           ...props,
           statusText: `Handled ${request.event.type} through MosaicHost`,
@@ -93,6 +103,9 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     assert.equal(controls.printPage.disabled, true);
     assert.equal(controls.sharePage.disabled, true);
     assert.equal(controls.pageInfo.disabled, true);
+    assert.equal(controls.zoomOut.disabled, true);
+    assert.equal(controls.zoomReset.disabled, true);
+    assert.equal(controls.zoomIn.disabled, true);
     assert.equal(controls.viewSource.disabled, true);
     assert.equal(controls.go.disabled, true);
     assert.equal(controls.address.readOnly, true);
@@ -108,6 +121,9 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     controls.printPage.click();
     controls.sharePage.click();
     controls.pageInfo.click();
+    controls.zoomOut.click();
+    controls.zoomReset.click();
+    controls.zoomIn.click();
     controls.viewSource.click();
     controls.findOpen.click();
     controls.go.click();
@@ -124,6 +140,9 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
       printPageDisabled: false,
       sharePageDisabled: false,
       pageInfoDisabled: false,
+      zoomOutDisabled: false,
+      zoomResetDisabled: true,
+      zoomInDisabled: false,
       viewSourceDisabled: false,
       findDisabled: false,
       navigationDisabled: false,
@@ -142,6 +161,9 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     assert.equal(controls.printPage.disabled, false);
     assert.equal(controls.sharePage.disabled, false);
     assert.equal(controls.pageInfo.disabled, false);
+    assert.equal(controls.zoomOut.disabled, false);
+    assert.equal(controls.zoomReset.disabled, true);
+    assert.equal(controls.zoomIn.disabled, false);
     assert.equal(controls.viewSource.disabled, false);
     assert.equal(controls.go.disabled, false);
     assert.equal(controls.address.readOnly, false);
@@ -182,6 +204,16 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     controls.pageInfo.click();
     await settle();
     assert.equal(calls.at(-1)?.type, "pageInfo");
+
+    controls = readControls(root);
+    controls.zoomIn.click();
+    await settle();
+    assert.equal(calls.at(-1)?.type, "zoomIn");
+    controls = readControls(root);
+    assert.equal(controls.zoomReset.textContent.trim(), "125%");
+    controls.zoomReset.click();
+    await settle();
+    assert.equal(calls.at(-1)?.type, "zoomReset");
 
     controls = readControls(root);
     controls.viewSource.click();
@@ -234,7 +266,7 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     assert.equal(calls.at(-1)?.type, "navigate");
     assert.deepEqual(
       calls.map(event => event.type),
-      ["toggleBookmark", "copyAddress", "openPageInNewWindow", "savePage", "printPage", "sharePage", "pageInfo", "viewSource", "findOpen", "findChange", "findNext", "findClose", "addressChange", "navigate", "navigate"],
+      ["toggleBookmark", "copyAddress", "openPageInNewWindow", "savePage", "printPage", "sharePage", "pageInfo", "zoomIn", "zoomReset", "viewSource", "findOpen", "findChange", "findNext", "findClose", "addressChange", "navigate", "navigate"],
     );
     assert.match(renderScope(root).textContent, /Handled navigate through MosaicHost/);
   } finally {
@@ -280,7 +312,7 @@ function readControls(root) {
   );
   const [address, find] = scope.querySelectorAll("input");
   assert.ok(address, "address input must exist");
-  for (const label of ["Back", "Forward", "Reload", "Bookmark", "Remove Bookmark", "Copy", "New Window", "Save", "Print", "Share", "Info", "Source", "Find", "Go"]) {
+  for (const label of ["Back", "Forward", "Reload", "Bookmark", "Remove Bookmark", "Copy", "New Window", "Save", "Print", "Share", "Info", "Zoom Out", "Zoom In", "Source", "Find", "Go"]) {
     if (label === "Bookmark" || label === "Remove Bookmark") continue;
     assert.ok(buttons.has(label), `${label} button must exist`);
   }
@@ -297,6 +329,9 @@ function readControls(root) {
     printPage: buttons.get("Print"),
     sharePage: buttons.get("Share"),
     pageInfo: buttons.get("Info"),
+    zoomOut: buttons.get("Zoom Out"),
+    zoomReset: [...buttons.entries()].find(([label]) => /^\d+%$/.test(label))?.[1],
+    zoomIn: buttons.get("Zoom In"),
     viewSource: buttons.get("Source"),
     findOpen: buttons.get("Find"),
     go: buttons.get("Go"),

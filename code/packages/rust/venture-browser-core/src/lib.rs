@@ -548,7 +548,7 @@ fn positioned_node_breaks_find_text(node: &PositionedNode) -> bool {
 }
 
 /// Mosaic `VentureChrome` slot names, in interface declaration order.
-pub const VENTURE_CHROME_SLOT_NAMES: [&str; 19] = [
+pub const VENTURE_CHROME_SLOT_NAMES: [&str; 23] = [
     "address",
     "page-title",
     "status-text",
@@ -562,6 +562,10 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 19] = [
     "print-page-disabled",
     "share-page-disabled",
     "page-info-disabled",
+    "zoom-label",
+    "zoom-out-disabled",
+    "zoom-reset-disabled",
+    "zoom-in-disabled",
     "view-source-disabled",
     "find-open",
     "find-query",
@@ -574,7 +578,7 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 19] = [
 pub const VENTURE_CHROME_HOST_SURFACE_SLOT_NAME: &str = "content-surface";
 
 /// Mosaic `VentureChrome` event names, in interface declaration order.
-pub const VENTURE_CHROME_EVENT_NAMES: [&str; 19] = [
+pub const VENTURE_CHROME_EVENT_NAMES: [&str; 22] = [
     "onBack",
     "onForward",
     "onHome",
@@ -586,6 +590,9 @@ pub const VENTURE_CHROME_EVENT_NAMES: [&str; 19] = [
     "onPrintPage",
     "onSharePage",
     "onPageInfo",
+    "onZoomOut",
+    "onZoomReset",
+    "onZoomIn",
     "onViewSource",
     "onFindOpen",
     "onFindChange",
@@ -1509,6 +1516,7 @@ fn plan_link_activation(link: LinkRegion) -> BrowserLinkActivation {
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct BrowserHostEventOutcome {
     pub changed: bool,
+    pub page_reflow_required: bool,
     pub effect: Option<BrowserHostEffect>,
 }
 
@@ -1516,6 +1524,15 @@ impl BrowserHostEventOutcome {
     pub const fn changed(changed: bool) -> Self {
         Self {
             changed,
+            page_reflow_required: false,
+            effect: None,
+        }
+    }
+
+    pub const fn page_reflow(changed: bool) -> Self {
+        Self {
+            changed,
+            page_reflow_required: changed,
             effect: None,
         }
     }
@@ -1523,6 +1540,7 @@ impl BrowserHostEventOutcome {
     pub fn effect(effect: BrowserHostEffect) -> Self {
         Self {
             changed: false,
+            page_reflow_required: false,
             effect: Some(effect),
         }
     }
@@ -1713,6 +1731,9 @@ pub enum BrowserChromeAction {
     PrintPage,
     SharePage,
     PageInfo,
+    ZoomOut,
+    ZoomReset,
+    ZoomIn,
     ViewSource,
     OpenFind,
     FindQuery(String),
@@ -1735,6 +1756,9 @@ pub enum BrowserChromeEvent {
     PrintPage,
     SharePage,
     PageInfo,
+    ZoomOut,
+    ZoomReset,
+    ZoomIn,
     ViewSource,
     FindOpen,
     FindChange(String),
@@ -1759,6 +1783,9 @@ impl BrowserChromeEvent {
             Self::PrintPage => "onPrintPage",
             Self::SharePage => "onSharePage",
             Self::PageInfo => "onPageInfo",
+            Self::ZoomOut => "onZoomOut",
+            Self::ZoomReset => "onZoomReset",
+            Self::ZoomIn => "onZoomIn",
             Self::ViewSource => "onViewSource",
             Self::FindOpen => "onFindOpen",
             Self::FindChange(_) => "onFindChange",
@@ -1787,6 +1814,10 @@ pub struct BrowserChromeProps {
     pub print_page_disabled: bool,
     pub share_page_disabled: bool,
     pub page_info_disabled: bool,
+    pub zoom_label: String,
+    pub zoom_out_disabled: bool,
+    pub zoom_reset_disabled: bool,
+    pub zoom_in_disabled: bool,
     pub view_source_disabled: bool,
     pub find_open: bool,
     pub find_query: String,
@@ -1884,6 +1915,19 @@ impl BrowserChromeController {
             BrowserChromeEvent::PageInfo if session.viewport().is_some() => {
                 Some(BrowserChromeAction::PageInfo)
             }
+            BrowserChromeEvent::ZoomOut
+                if session.viewport().is_some() && session.can_zoom_out() =>
+            {
+                Some(BrowserChromeAction::ZoomOut)
+            }
+            BrowserChromeEvent::ZoomReset
+                if session.viewport().is_some() && session.zoom_percent() != 100 =>
+            {
+                Some(BrowserChromeAction::ZoomReset)
+            }
+            BrowserChromeEvent::ZoomIn if session.viewport().is_some() && session.can_zoom_in() => {
+                Some(BrowserChromeAction::ZoomIn)
+            }
             BrowserChromeEvent::ViewSource if session.viewport().is_some() => {
                 Some(BrowserChromeAction::ViewSource)
             }
@@ -1910,6 +1954,9 @@ impl BrowserChromeController {
             | BrowserChromeEvent::PrintPage
             | BrowserChromeEvent::SharePage
             | BrowserChromeEvent::PageInfo
+            | BrowserChromeEvent::ZoomOut
+            | BrowserChromeEvent::ZoomReset
+            | BrowserChromeEvent::ZoomIn
             | BrowserChromeEvent::ViewSource
             | BrowserChromeEvent::FindOpen
             | BrowserChromeEvent::FindChange(_)
@@ -1952,6 +1999,16 @@ impl BrowserChromeController {
             print_page_disabled: navigation_disabled || session.viewport().is_none(),
             share_page_disabled: navigation_disabled || session.viewport().is_none(),
             page_info_disabled: navigation_disabled || session.viewport().is_none(),
+            zoom_label: format!("{}%", session.zoom_percent()),
+            zoom_out_disabled: navigation_disabled
+                || session.viewport().is_none()
+                || !session.can_zoom_out(),
+            zoom_reset_disabled: navigation_disabled
+                || session.viewport().is_none()
+                || session.zoom_percent() == 100,
+            zoom_in_disabled: navigation_disabled
+                || session.viewport().is_none()
+                || !session.can_zoom_in(),
             view_source_disabled: navigation_disabled || session.viewport().is_none(),
             find_open: session.find_state().open,
             find_query: session.find_state().query.clone(),
@@ -2185,6 +2242,21 @@ impl BrowserHostController {
                     }),
                 ))
             }
+            BrowserChromeAction::ZoomOut => {
+                let changed = self.session.zoom_out();
+                self.status_text = format!("Zoom: {}%", self.session.zoom_percent());
+                Ok(BrowserHostEventOutcome::page_reflow(changed))
+            }
+            BrowserChromeAction::ZoomReset => {
+                let changed = self.session.reset_zoom();
+                self.status_text = format!("Zoom: {}%", self.session.zoom_percent());
+                Ok(BrowserHostEventOutcome::page_reflow(changed))
+            }
+            BrowserChromeAction::ZoomIn => {
+                let changed = self.session.zoom_in();
+                self.status_text = format!("Zoom: {}%", self.session.zoom_percent());
+                Ok(BrowserHostEventOutcome::page_reflow(changed))
+            }
             BrowserChromeAction::ViewSource => {
                 let page = self
                     .session
@@ -2390,6 +2462,7 @@ pub struct BrowserSession {
     find_matches: Vec<BrowserFindMatch>,
     find_diagnostics: Vec<BrowserFindDiagnostic>,
     viewport_height: f64,
+    zoom_percent: u16,
     navigation_id: u64,
     pending_host_effect: Option<BrowserHostEffect>,
 }
@@ -2419,6 +2492,7 @@ impl BrowserSession {
             find_matches: Vec::new(),
             find_diagnostics: Vec::new(),
             viewport_height: finite_non_negative(viewport_height),
+            zoom_percent: 100,
             navigation_id: 0,
             pending_host_effect: None,
         }
@@ -2426,6 +2500,44 @@ impl BrowserSession {
 
     pub fn take_host_effect(&mut self) -> Option<BrowserHostEffect> {
         self.pending_host_effect.take()
+    }
+
+    pub const fn zoom_percent(&self) -> u16 {
+        self.zoom_percent
+    }
+
+    pub const fn can_zoom_out(&self) -> bool {
+        self.zoom_percent > 50
+    }
+
+    pub const fn can_zoom_in(&self) -> bool {
+        self.zoom_percent < 200
+    }
+
+    pub fn zoom_out(&mut self) -> bool {
+        let next = self.zoom_percent.saturating_sub(25).max(50);
+        let changed = next != self.zoom_percent;
+        self.zoom_percent = next;
+        changed
+    }
+
+    pub fn reset_zoom(&mut self) -> bool {
+        let changed = self.zoom_percent != 100;
+        self.zoom_percent = 100;
+        changed
+    }
+
+    pub fn zoom_in(&mut self) -> bool {
+        let next = self.zoom_percent.saturating_add(25).min(200);
+        let changed = next != self.zoom_percent;
+        self.zoom_percent = next;
+        changed
+    }
+
+    /// Map one physical host surface to shared CSS layout and paint scale.
+    pub fn paint_viewport(&self, width: f64, height: f64) -> HtmlPaintViewport {
+        let scale = f64::from(self.zoom_percent) / 100.0;
+        HtmlPaintViewport::new(width / scale, height / scale, scale)
     }
 
     pub fn history(&self) -> &NavigationHistory {
@@ -7180,6 +7292,10 @@ mod tests {
                 print_page_disabled: true,
                 share_page_disabled: true,
                 page_info_disabled: true,
+                zoom_label: "100%".into(),
+                zoom_out_disabled: true,
+                zoom_reset_disabled: true,
+                zoom_in_disabled: true,
                 view_source_disabled: true,
                 find_open: false,
                 find_query: String::new(),
@@ -7243,6 +7359,10 @@ mod tests {
                 print_page_disabled: false,
                 share_page_disabled: false,
                 page_info_disabled: false,
+                zoom_label: "100%".into(),
+                zoom_out_disabled: false,
+                zoom_reset_disabled: true,
+                zoom_in_disabled: false,
                 view_source_disabled: false,
                 find_open: false,
                 find_query: String::new(),
@@ -7413,6 +7533,9 @@ mod tests {
             BrowserChromeEvent::PrintPage,
             BrowserChromeEvent::SharePage,
             BrowserChromeEvent::PageInfo,
+            BrowserChromeEvent::ZoomOut,
+            BrowserChromeEvent::ZoomReset,
+            BrowserChromeEvent::ZoomIn,
             BrowserChromeEvent::ViewSource,
             BrowserChromeEvent::FindOpen,
             BrowserChromeEvent::FindChange(String::new()),
@@ -7426,6 +7549,35 @@ mod tests {
             events.map(|event| event.mosaic_name()),
             VENTURE_CHROME_EVENT_NAMES
         );
+    }
+
+    #[test]
+    fn page_zoom_is_bounded_and_maps_physical_surfaces_to_logical_layout() {
+        let mut session = BrowserSession::new("http://example.test/", 180.0);
+        assert_eq!(
+            session.paint_viewport(320.0, 180.0),
+            HtmlPaintViewport::new(320.0, 180.0, 1.0)
+        );
+        for _ in 0..8 {
+            session.zoom_out();
+        }
+        assert_eq!(session.zoom_percent(), 50);
+        assert!(!session.can_zoom_out());
+        assert_eq!(
+            session.paint_viewport(320.0, 180.0),
+            HtmlPaintViewport::new(640.0, 360.0, 0.5)
+        );
+        for _ in 0..8 {
+            session.zoom_in();
+        }
+        assert_eq!(session.zoom_percent(), 200);
+        assert!(!session.can_zoom_in());
+        assert_eq!(
+            session.paint_viewport(320.0, 180.0),
+            HtmlPaintViewport::new(160.0, 90.0, 2.0)
+        );
+        assert!(session.reset_zoom());
+        assert!(!session.reset_zoom());
     }
 
     #[test]
@@ -7641,6 +7793,29 @@ mod tests {
             }))
         );
         assert_eq!(host.props().status_text, "Page information requested");
+
+        let zoomed = host
+            .handle_event_with_effect(BrowserChromeEvent::ZoomIn, &mut bookmarks, |_, _| {
+                unreachable!("zoom must reflow retained content without navigation")
+            })
+            .unwrap();
+        assert!(zoomed.changed);
+        assert!(zoomed.page_reflow_required);
+        assert_eq!(host.session().zoom_percent(), 125);
+        assert_eq!(host.props().zoom_label, "125%");
+        assert!(!host.props().zoom_reset_disabled);
+        assert_eq!(
+            host.session().paint_viewport(320.0, 180.0),
+            HtmlPaintViewport::new(256.0, 144.0, 1.25)
+        );
+
+        let reset = host
+            .handle_event_with_effect(BrowserChromeEvent::ZoomReset, &mut bookmarks, |_, _| {
+                unreachable!("zoom reset must not navigate")
+            })
+            .unwrap();
+        assert!(reset.page_reflow_required);
+        assert_eq!(host.session().zoom_percent(), 100);
 
         let outcome = host
             .handle_event_with_effect(BrowserChromeEvent::ViewSource, &mut bookmarks, |_, _| {
