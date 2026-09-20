@@ -448,7 +448,8 @@ services survive semantic IR and resolve to deterministic group-boundary endpoin
 Explicit `L`, `R`, `T`, and `B` edge ports survive semantic and layout IR and
 anchor deterministic orthogonal relationship paths to the requested node or group
 boundary before backend-neutral PaintScene lowering. Named service and group icons
-lower to canonical backend-neutral glyph geometry. Full vendor icon artwork,
+lower to canonical backend-neutral glyph geometry. Preserved namespaced identifiers
+use a generic fallback when vendor artwork is unavailable. Full vendor icon artwork,
 obstacle avoidance, and configuration remain unsupported at the partial level.
 
 ### Radar Native Slice
