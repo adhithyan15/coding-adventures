@@ -2676,6 +2676,19 @@ where
             )));
         }
         if let Some((ref pos, ref lbl)) = rel.label {
+            instructions.push(PaintInstruction::Rect(PaintRect {
+                base: PaintBase::default(),
+                x: pos.x - 44.0,
+                y: pos.y - ls * 0.7,
+                width: 88.0,
+                height: ls * 1.4,
+                fill: Some("#ffffff".into()),
+                stroke: None,
+                stroke_width: None,
+                corner_radius: Some(3.0),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }));
             text_children.push(text_node(
                 lbl,
                 pos.x - 40.0,

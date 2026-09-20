@@ -208,6 +208,9 @@ properties, and details references through PaintScene metadata without IR inject
 Timeline parsing covers the pinned core header directions, titles,
 accessibility metadata, sections, periods, and ordered events. It lowers to
 timeline-specific temporal IR rather than reusing Gantt task semantics.
+Architecture parsing preserves native `-[label]-` and `-[label]->` edge labels
+in structural semantic IR for deterministic layout and backend-neutral Paint
+text lowering.
 Actor identifiers may contain multiple whitespace-separated words; the full ID
 is retained consistently across declarations, messages, notes, lifecycle events,
 and metadata commands.

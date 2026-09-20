@@ -430,8 +430,11 @@ grammars and maps groups, services, containment, icon identifiers, titles, and
 undirected and right-directed edges into structural semantic IR. Existing deterministic
 structural layout lowers groups, nodes, relationships, and shaped text through
 backend-neutral PaintScene instructions, with a native Metal-to-PNG fixture.
+Native `-[label]-` and `-[label]->` edge labels survive structural semantic IR,
+resolve to deterministic relationship geometry, and lower through the shared
+backend-neutral shaped-text PaintInstructions path.
 Junctions, alignment hints, group-edge modifiers, left and bidirectional
-arrows, custom icon text, icon artwork, edge labels, port-aware routing, and configuration remain unsupported
+arrows, custom icon text, icon artwork, port-aware routing, and configuration remain unsupported
 at the partial level.
 
 ### Radar Native Slice

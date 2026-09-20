@@ -528,6 +528,20 @@ mod tests {
     }
 
     #[test]
+    fn relationship_labels_resolve_to_backend_neutral_geometry() {
+        let mut diagram = two_class_diagram();
+        diagram.relationships[0].label = Some("inherits from".into());
+        let layout = layout_structural_diagram(&diagram);
+        let (position, label) = layout.relationships[0]
+            .label
+            .as_ref()
+            .expect("relationship label geometry");
+        assert_eq!(label, "inherits from");
+        assert!(position.x.is_finite());
+        assert!(position.y.is_finite());
+    }
+
+    #[test]
     fn canvas_size_positive() {
         let r = layout_structural_diagram(&two_class_diagram());
         assert!(r.width > 0.0);
