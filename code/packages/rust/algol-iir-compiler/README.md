@@ -219,9 +219,10 @@ handles unconditional cross-assigned dependency cycles when every participating
 write is a supported local scalar assignment. Such a cycle may also contain
 conditional expressions whose selectors use the exact loop control or exact
 ordinary local snapshots unchanged by the body; cycles selected by changing
-values remain conservative. Those changing dependency
-recurrences may contain conditional expressions when their selectors are the
-controlled scalar or other exact local snapshots in that graph. The
+values remain conservative. The same stable snapshots may select conditional
+statement branches containing recurrence-cycle writes. Those changing
+dependency recurrences may contain conditional expressions when their selectors
+are the controlled scalar or other exact local snapshots in that graph. The
 recurrence assignment itself may also appear in one or both branches of a
 conditional statement selected by those snapshots; a branch without the
 assignment leaves the dependency unchanged for that pass. The controlled

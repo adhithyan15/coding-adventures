@@ -3390,30 +3390,11 @@ impl Compiler {
         target_name: &str,
     ) -> bool {
         if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
-            let mut dependencies = HashSet::new();
-            collect_expression_dependency_names(condition, target_name, &mut dependencies);
-            return dependencies
-                .iter()
-                .all(|name| {
-                    !Self::static_body_actions_write_name(actions, name)
-                        && self.require_var(name).is_ok_and(|binding| {
-                            !binding.is_global
-                                && binding.array.is_none()
-                                && self.active_by_name_binding(name).is_none()
-                                && match binding.ty {
-                                    ScalarType::Integer => {
-                                        self.static_integer_slots.contains_key(&binding.slot)
-                                    }
-                                    ScalarType::Real => {
-                                        self.static_real_slots.contains_key(&binding.slot)
-                                    }
-                                    ScalarType::Boolean => {
-                                        self.static_boolean_slots.contains_key(&binding.slot)
-                                    }
-                                    ScalarType::String => false,
-                                }
-                        })
-                })
+            return self.recurrence_selector_is_cycle_stable(
+                condition,
+                actions,
+                target_name,
+            )
                 && self.conditional_expression_selectors_are_cycle_stable(
                     then_node,
                     actions,
@@ -3427,6 +3408,34 @@ impl Compiler {
         }
         direct_nodes(node).into_iter().all(|child| {
             self.conditional_expression_selectors_are_cycle_stable(child, actions, target_name)
+        })
+    }
+
+    fn recurrence_selector_is_cycle_stable(
+        &self,
+        selector: &GrammarASTNode,
+        actions: &[StaticBodyAction<'_>],
+        target_name: &str,
+    ) -> bool {
+        let mut dependencies = HashSet::new();
+        collect_expression_dependency_names(selector, target_name, &mut dependencies);
+        dependencies.iter().all(|name| {
+            !Self::static_body_actions_write_name(actions, name)
+                && self.require_var(name).is_ok_and(|binding| {
+                    !binding.is_global
+                        && binding.array.is_none()
+                        && self.active_by_name_binding(name).is_none()
+                        && match binding.ty {
+                            ScalarType::Integer => {
+                                self.static_integer_slots.contains_key(&binding.slot)
+                            }
+                            ScalarType::Real => self.static_real_slots.contains_key(&binding.slot),
+                            ScalarType::Boolean => {
+                                self.static_boolean_slots.contains_key(&binding.slot)
+                            }
+                            ScalarType::String => false,
+                        }
+                })
         })
     }
 
@@ -6866,7 +6875,7 @@ impl Compiler {
             // Cross-assigned scalars are safe here: capped abstract execution
             // evaluates every recognized assignment in source order. Keep
             // conditionally selected cycles conservative unless every selector
-            // is controlled solely by the exact loop-control snapshot.
+            // uses the exact loop control or an unchanged exact local snapshot.
             return !conditional_path;
         }
         let found = self
@@ -6937,10 +6946,16 @@ impl Compiler {
                     found = true;
                 }
                 StaticBodyAction::Conditional {
+                    condition,
                     then_actions,
                     else_actions,
-                    ..
                 } => {
+                    let conditional_path = conditional_path
+                        || !self.recurrence_selector_is_cycle_stable(
+                            condition,
+                            all_actions,
+                            target_name,
+                        );
                     let then_found = self
                         .static_body_actions_have_supported_dependency_recurrence_in_actions(
                             then_actions,
@@ -6948,7 +6963,7 @@ impl Compiler {
                             name,
                             target_name,
                             visiting,
-                            true,
+                            conditional_path,
                         )?;
                     let else_found = self
                         .static_body_actions_have_supported_dependency_recurrence_in_actions(
@@ -6957,7 +6972,7 @@ impl Compiler {
                             name,
                             target_name,
                             visiting,
-                            true,
+                            conditional_path,
                         )?;
                     if then_found || else_found {
                         found = true;
@@ -14713,6 +14728,48 @@ mod tests {
                     && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
             }));
         }
+    }
+
+    #[test]
+    fn al4_stable_statement_selected_assignment_dependency_cycle_tracks_source_order() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; choose := false; for i := i + 1 while i <= n do begin n := n - delta; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an unchanged exact local may select statements in a cross-assigned cycle");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_control_statement_selected_assignment_dependency_cycle_tracks_source_order() {
+        let module = compile_source(
+            "begin integer i, n, delta; i := 0; n := 4; delta := 2; for i := i + 1 while i <= n do begin n := n - delta; if i < 2 then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("the exact loop control may select statements in a cross-assigned cycle");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "0.5", "-0.75"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_dynamic_statement_selected_assignment_dependency_cycle_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; for i := i + 1 while i <= n do begin n := n - delta; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("an unknown statement selector must not admit a recurrence cycle");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
