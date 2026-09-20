@@ -84,14 +84,16 @@ func asDERError(err error, target **dertlv.Error) bool {
 }
 
 type ASN1Element struct {
-	Element dertlv.Element
-	Depth   int
+	element dertlv.Element
+	depth   int
+	valid   bool
 }
 
-func (e ASN1Element) Tag() dertlv.Tag  { return e.Element.Tag }
-func (e ASN1Element) Header() []byte   { return e.Element.Header() }
-func (e ASN1Element) Value() []byte    { return e.Element.Value() }
-func (e ASN1Element) Encoded() []byte  { return e.Element.Encoded() }
+func (e ASN1Element) Tag() dertlv.Tag  { return e.element.Tag }
+func (e ASN1Element) Header() []byte   { return e.element.Header() }
+func (e ASN1Element) Value() []byte    { return e.element.Value() }
+func (e ASN1Element) Encoded() []byte  { return e.element.Encoded() }
+func (e ASN1Element) Depth() int       { return e.depth }
 func (e ASN1Element) valueOffset() int { return len(e.Header()) }
 
 type ASN1Decoder struct {
@@ -115,7 +117,7 @@ func (d *ASN1Decoder) DecodeExact(input []byte) (ASN1Element, error) {
 		return ASN1Element{}, framing(err)
 	}
 	d.elementsRead++
-	return ASN1Element{Element: element}, nil
+	return ASN1Element{element: element, valid: true}, nil
 }
 
 func (d *ASN1Decoder) Sequence(element ASN1Element) (*ASN1Cursor, error) {
@@ -142,7 +144,7 @@ func (d *ASN1Decoder) Explicit(element ASN1Element, tagNumber uint32) (ASN1Eleme
 		return ASN1Element{}, framing(err)
 	}
 	d.elementsRead++
-	return ASN1Element{Element: child, Depth: depth}, nil
+	return ASN1Element{element: child, depth: depth, valid: true}, nil
 }
 
 func (d *ASN1Decoder) constructed(element ASN1Element, class dertlv.TagClass, number uint32) (*ASN1Cursor, error) {
@@ -161,11 +163,10 @@ func (d *ASN1Decoder) constructed(element ASN1Element, class dertlv.TagClass, nu
 }
 
 func (d *ASN1Decoder) childDepth(element ASN1Element) (int, error) {
-	depth := element.Depth + 1
-	if depth >= d.limits.MaxDepth {
+	if !element.valid || element.depth < 0 || element.depth >= d.limits.MaxDepth-1 {
 		return 0, fail(DepthLimitExceeded, 0)
 	}
-	return depth, nil
+	return element.depth + 1, nil
 }
 
 func (d *ASN1Decoder) requireCapacity(offset int) error {
@@ -201,7 +202,7 @@ func (c *ASN1Cursor) Read(decoder *ASN1Decoder) (*ASN1Element, error) {
 		return nil, nil
 	}
 	decoder.elementsRead++
-	return &ASN1Element{Element: *element, Depth: c.childDepth}, nil
+	return &ASN1Element{element: *element, depth: c.childDepth, valid: true}, nil
 }
 
 func (c *ASN1Cursor) Finish() error {
@@ -212,17 +213,24 @@ func (c *ASN1Cursor) Finish() error {
 }
 
 type DERInteger struct {
-	SignedBytes []byte
+	signedBytes []byte
 	valueOffset int
+	valid       bool
 }
 
-func (i DERInteger) IsNegative() bool { return i.SignedBytes[0]&0x80 != 0 }
+func (i DERInteger) SignedBytes() []byte { return i.signedBytes }
+func (i DERInteger) IsNegative() bool {
+	return i.valid && len(i.signedBytes) != 0 && i.signedBytes[0]&0x80 != 0
+}
 
 func (i DERInteger) ToUint64() (uint64, error) {
+	if !i.valid || len(i.signedBytes) == 0 {
+		return 0, fail(EmptyInteger, i.valueOffset)
+	}
 	if i.IsNegative() {
 		return 0, fail(NegativeInteger, i.valueOffset)
 	}
-	magnitude := i.SignedBytes
+	magnitude := i.signedBytes
 	if magnitude[0] == 0 {
 		magnitude = magnitude[1:]
 	}
@@ -237,22 +245,30 @@ func (i DERInteger) ToUint64() (uint64, error) {
 }
 
 type DERBitString struct {
-	Bytes      []byte
-	UnusedBits uint8
-	BitLength  int
+	bytes      []byte
+	unusedBits uint8
+	bitLength  int
 }
+
+func (b DERBitString) Bytes() []byte     { return b.bytes }
+func (b DERBitString) UnusedBits() uint8 { return b.unusedBits }
+func (b DERBitString) BitLength() int    { return b.bitLength }
 
 type ObjectIdentifier struct {
-	Encoded []byte
-	Arcs    []uint64
+	encoded []byte
+	arcs    []uint64
 }
 
+func (o ObjectIdentifier) Encoded() []byte { return o.encoded }
+func (o ObjectIdentifier) Arcs() []uint64  { return append([]uint64(nil), o.arcs...) }
+func (o ObjectIdentifier) ArcCount() int   { return len(o.arcs) }
+
 func (o ObjectIdentifier) Equals(expected []uint64) bool {
-	if len(o.Arcs) != len(expected) {
+	if len(o.arcs) != len(expected) {
 		return false
 	}
 	for index := range expected {
-		if o.Arcs[index] != expected[index] {
+		if o.arcs[index] != expected[index] {
 			return false
 		}
 	}
@@ -287,7 +303,7 @@ func DecodeInteger(element ASN1Element) (DERInteger, error) {
 	if len(value) > 1 && ((value[0] == 0 && value[1]&0x80 == 0) || (value[0] == 0xff && value[1]&0x80 != 0)) {
 		return DERInteger{}, fail(NonMinimalInteger, element.valueOffset())
 	}
-	return DERInteger{SignedBytes: value, valueOffset: element.valueOffset()}, nil
+	return DERInteger{signedBytes: value, valueOffset: element.valueOffset(), valid: true}, nil
 }
 
 func DecodeBitString(element ASN1Element) (DERBitString, error) {
@@ -306,7 +322,7 @@ func DecodeBitString(element ASN1Element) (DERBitString, error) {
 	if unused != 0 && payload[len(payload)-1]&byte((1<<unused)-1) != 0 {
 		return DERBitString{}, fail(NonZeroBitPadding, element.valueOffset()+len(value)-1)
 	}
-	return DERBitString{Bytes: payload, UnusedBits: unused, BitLength: len(payload)*8 - int(unused)}, nil
+	return DERBitString{bytes: payload, unusedBits: unused, bitLength: len(payload)*8 - int(unused)}, nil
 }
 
 func DecodeOctetString(element ASN1Element) ([]byte, error) {
@@ -402,7 +418,7 @@ func decodeOIDContents(element ASN1Element, limits ASN1Limits) (ObjectIdentifier
 		}
 		offset = next
 	}
-	return ObjectIdentifier{Encoded: encoded, Arcs: arcs}, nil
+	return ObjectIdentifier{encoded: encoded, arcs: arcs}, nil
 }
 
 func parseBase128(encoded []byte, start, valueOffset int) (uint64, int, error) {
@@ -434,6 +450,9 @@ func expectContextPrimitive(element ASN1Element, number uint32) error {
 }
 
 func expectTag(element ASN1Element, class dertlv.TagClass, constructed bool, number uint32) error {
+	if !element.valid {
+		return fail(UnexpectedTag, 0)
+	}
 	tag := element.Tag()
 	if tag.Class != class || tag.Constructed != constructed || tag.Number != number {
 		return fail(UnexpectedTag, 0)

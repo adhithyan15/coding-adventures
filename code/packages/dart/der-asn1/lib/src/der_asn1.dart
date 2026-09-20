@@ -110,7 +110,7 @@ Never _fail(Asn1ErrorKind kind, int offset) =>
     throw Asn1Exception(kind, offset);
 
 final class Asn1Element {
-  const Asn1Element(this.element, this.depth);
+  const Asn1Element._(this.element, this.depth);
 
   final DerElement element;
   final int depth;
@@ -137,9 +137,9 @@ final class Asn1Decoder {
     }
     _requireElementCapacity(0);
     try {
-      final element = codingAdventuresDerDecodeExact(input, _limits.der);
+      final element = _derDecodeExact(input, _limits.der);
       _elementsRead += 1;
-      return Asn1Element(element, 0);
+      return Asn1Element._(element, 0);
     } on DerException catch (error) {
       throw Asn1Exception.framing(error);
     }
@@ -156,9 +156,9 @@ final class Asn1Decoder {
     final childDepth = _childDepth(element);
     _requireElementCapacity(element.valueOffset);
     try {
-      final child = codingAdventuresDerDecodeExact(element.value, _limits.der);
+      final child = _derDecodeExact(element.value, _limits.der);
       _elementsRead += 1;
-      return Asn1Element(child, childDepth);
+      return Asn1Element._(child, childDepth);
     } on DerException catch (error) {
       throw Asn1Exception.framing(error);
     }
@@ -216,7 +216,7 @@ final class Asn1Cursor {
       final element = _cursor.read();
       if (element == null) return null;
       decoder._elementsRead += 1;
-      return Asn1Element(element, _childDepth);
+      return Asn1Element._(element, _childDepth);
     } on DerException catch (error) {
       throw Asn1Exception.framing(error);
     }
@@ -232,7 +232,7 @@ final class Asn1Cursor {
 }
 
 final class DerInteger {
-  const DerInteger(this.signedBytes, this._valueOffset);
+  const DerInteger._(this.signedBytes, this._valueOffset);
 
   final Uint8List signedBytes;
   final int _valueOffset;
@@ -258,7 +258,7 @@ final class DerInteger {
 }
 
 final class DerBitString {
-  const DerBitString(this.bytes, this.unusedBits, this.bitLength);
+  const DerBitString._(this.bytes, this.unusedBits, this.bitLength);
 
   final Uint8List bytes;
   final int unusedBits;
@@ -266,7 +266,7 @@ final class DerBitString {
 }
 
 final class ObjectIdentifier {
-  ObjectIdentifier(this.encoded, List<BigInt> arcs)
+  ObjectIdentifier._(this.encoded, List<BigInt> arcs)
       : arcs = List.unmodifiable(arcs);
 
   final Uint8List encoded;
@@ -305,7 +305,7 @@ DerInteger decodeInteger(Asn1Element element) {
           (value[0] == 0xff && value[1] & 0x80 != 0))) {
     _fail(Asn1ErrorKind.nonMinimalInteger, element.valueOffset);
   }
-  return DerInteger(value, element.valueOffset);
+  return DerInteger._(value, element.valueOffset);
 }
 
 DerBitString decodeBitString(Asn1Element element) {
@@ -325,7 +325,7 @@ DerBitString decodeBitString(Asn1Element element) {
       element.valueOffset + value.length - 1,
     );
   }
-  return DerBitString(
+  return DerBitString._(
     payload,
     unusedBits,
     payload.length * 8 - unusedBits,
@@ -421,7 +421,7 @@ ObjectIdentifier _decodeOidContents(
     }
     offset = parsed.nextOffset;
   }
-  return ObjectIdentifier(encoded, arcs);
+  return ObjectIdentifier._(encoded, arcs);
 }
 
 final class _ParsedBase128 {
@@ -481,7 +481,7 @@ void _expectTag(
 
 // Keep the imported framing function visually distinct from this package's
 // decoder method without hiding the dependency behind a wrapper class.
-DerElement codingAdventuresDerDecodeExact(
+DerElement _derDecodeExact(
   Uint8List input,
   DerLimits limits,
 ) =>

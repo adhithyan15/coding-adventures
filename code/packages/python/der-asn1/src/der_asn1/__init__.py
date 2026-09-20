@@ -13,9 +13,7 @@ from der_tlv import (
     DerLimits,
     TagClass,
 )
-from der_tlv import (
-    decode_exact as decode_der_exact,
-)
+from der_tlv import decode_exact as _decode_der_exact
 
 __version__ = "0.1.0"
 
@@ -89,12 +87,22 @@ class Asn1Error(ValueError):
         return cls(Asn1ErrorKind.FRAMING, error.offset, error.kind)
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass(frozen=True, slots=True, init=False)
 class Asn1Element:
     """One immutable framed element plus its document depth."""
 
     element: DerElement
     depth: int
+
+    def __new__(cls) -> Asn1Element:
+        raise TypeError("Asn1Element values are created by Asn1Decoder")
+
+    @classmethod
+    def _from_der(cls, element: DerElement, depth: int) -> Asn1Element:
+        instance = object.__new__(cls)
+        object.__setattr__(instance, "element", element)
+        object.__setattr__(instance, "depth", depth)
+        return instance
 
     @property
     def tag(self):  # noqa: ANN201 - public type comes from der-tlv
@@ -137,11 +145,11 @@ class Asn1Decoder:
             raise Asn1Error(Asn1ErrorKind.DEPTH_LIMIT_EXCEEDED, 0)
         self._require_element_capacity(0)
         try:
-            element = decode_der_exact(data, self._limits.der)
+            element = _decode_der_exact(data, self._limits.der)
         except DerError as error:
             raise Asn1Error.framing(error) from error
         self._elements_read += 1
-        return Asn1Element(element, 0)
+        return Asn1Element._from_der(element, 0)
 
     def sequence(self, element: Asn1Element) -> Asn1Cursor:
         return self._constructed(element, TagClass.UNIVERSAL, 16)
@@ -154,11 +162,11 @@ class Asn1Decoder:
         child_depth = self._child_depth(element)
         self._require_element_capacity(element.value_offset)
         try:
-            child = decode_der_exact(element.value, self._limits.der)
+            child = _decode_der_exact(element.value, self._limits.der)
         except DerError as error:
             raise Asn1Error.framing(error) from error
         self._elements_read += 1
-        return Asn1Element(child, child_depth)
+        return Asn1Element._from_der(child, child_depth)
 
     def _constructed(
         self, element: Asn1Element, class_: TagClass, number: int
@@ -207,7 +215,7 @@ class Asn1Cursor:
         if element is None:
             return None
         decoder._elements_read += 1
-        return Asn1Element(element, self._child_depth)
+        return Asn1Element._from_der(element, self._child_depth)
 
     def finish(self) -> None:
         try:

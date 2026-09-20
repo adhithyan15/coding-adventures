@@ -14205,11 +14205,16 @@ pending, and exactly DER ASN.1 in progress.
 ### Live-main refresh and serial-number ownership
 
 `origin/main` subsequently advanced to
-`dad5c0c955b4a855033091beecad3236d765231f` through a Spice-only test commit.
-That commit changes no package root, language slot, collision, or inventory
-count, so the stored collision-checked metrics remain exact. Live PR #15806
-proposes a new Rust `x509-serial-number` identity. The backlog now reserves one
-pending portable owner before that package can become an unowned singleton. It
+`2e2a32c06d5bd5be071ae1e6b7d265b860a815ad`. PR #15806 reached 21 successful
+checks, 27 path-gated skips, and no failure, cancellation, or pending result,
+then merged through guarded auto-merge as
+`f24c2e8c6a17ed4dd08f5c26a2e34291fe87fbf7`. The collision-checked exact-main
+inventory now contains 1,457 implementation identities, 4,696 implementation
+slots, and 1,497 all-reported identities. Completion bands are 176/265,
+123/934, 181/2,282, and 977/13,678; Rust has 795 singleton identities, OCaml
+remains an emerging five-package lane, and collisions and unknown language
+buckets remain zero. The merged Rust `x509-serial-number` identity already has
+a pending portable owner, so no eligible unowned gap was introduced. It
 depends on typed DER ASN.1 and covers canonical positive nonzero certificate
 serial-number INTEGERs, the twenty-content-octet ceiling, exact and normalized
 magnitude views, bounded work, stable local offsets, and redacted diagnostics.
@@ -14217,6 +14222,25 @@ Serial generation, issuer uniqueness, certificate parsing, path validation,
 signatures, trust, TLS, transport, clocks, entropy, credentials, and ambient
 authority remain outside it. The graph now has 861 owners and 1,596 dependency
 edges: 223 merged, 637 pending, and exactly DER ASN.1 in progress.
+
+### DER ASN.1 portable implementation progress
+
+The closed 109-case, 22-error language-neutral contract now has complete
+package-native consumers in five of fifteen established lanes: Rust, Python,
+Go, Dart, and Java. Every consumer executes all 46 referenced DER TLV framing
+cases rather than treating delegated rows as automatic success. Python passes
+110 tests at 97.45 percent line coverage; Rust passes its full suite, Clippy,
+and formatting; Go passes race, vet, trimpath build, and 90.7 percent coverage;
+Dart passes fatal analysis and its coverage gate with 96.97 percent line and
+98.18 percent function coverage; Java passes Java 21 warnings-as-errors and
+JaCoCo with 96.25 percent line and 94.44 percent branch coverage. All five use
+empty capability manifests, structural limits, shared work budgets,
+transactional cursors, unsigned-width-safe integer and OID handling, and
+payload-free diagnostics. C#, F#, Haskell, Elixir, Lua, Perl, Ruby, Swift,
+TypeScript, and Kotlin remain in this same serial work item; no parity PR is
+open yet. Independent security review made validated element and primitive
+wrappers unforgeable in Python, Go, and Dart, hid raw DER framing helpers from
+typed package surfaces, and added adversarial Go zero-value tests.
 
 ## Autonomous Loop Protocol
 

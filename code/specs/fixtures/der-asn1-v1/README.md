@@ -46,4 +46,3 @@ runtime. Implementations retain the stable `bit-length-overflow` category and
 package-native tests may exercise it where practical. SET ordering, BER/CER,
 allocation identity, certificate schemas, cryptography, trust, TLS, transport,
 credentials, and ambient authority remain outside this contract.
-

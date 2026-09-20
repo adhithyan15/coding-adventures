@@ -175,7 +175,7 @@ func primitiveResult(operation string, element ASN1Element, limits ASN1Limits, t
 		if err != nil {
 			return nil, err
 		}
-		result := map[string]any{"outcome": "value", "signed_hex": hex.EncodeToString(value.SignedBytes), "negative": value.IsNegative()}
+		result := map[string]any{"outcome": "value", "signed_hex": hex.EncodeToString(value.SignedBytes()), "negative": value.IsNegative()}
 		if operation == "integer-to-u64" {
 			unsigned, conversionErr := value.ToUint64()
 			if conversionErr != nil {
@@ -186,7 +186,7 @@ func primitiveResult(operation string, element ASN1Element, limits ASN1Limits, t
 		return result, nil
 	case "decode-bit-string":
 		value, err := DecodeBitString(element)
-		return map[string]any{"outcome": "value", "bytes_hex": hex.EncodeToString(value.Bytes), "unused_bits": value.UnusedBits, "bit_length": value.BitLength}, err
+		return map[string]any{"outcome": "value", "bytes_hex": hex.EncodeToString(value.Bytes()), "unused_bits": value.UnusedBits(), "bit_length": value.BitLength()}, err
 	case "decode-octet-string":
 		value, err := DecodeOctetString(element)
 		return map[string]any{"outcome": "value", "bytes_hex": hex.EncodeToString(value)}, err
@@ -212,11 +212,11 @@ func primitiveResult(operation string, element ASN1Element, limits ASN1Limits, t
 		if err != nil {
 			return nil, err
 		}
-		arcs := make([]string, len(value.Arcs))
-		for index, arc := range value.Arcs {
+		arcs := make([]string, value.ArcCount())
+		for index, arc := range value.Arcs() {
 			arcs[index] = strconv.FormatUint(arc, 10)
 		}
-		return map[string]any{"outcome": "value", "bytes_hex": hex.EncodeToString(value.Encoded), "arcs_decimal": arcs, "arc_count": len(arcs)}, nil
+		return map[string]any{"outcome": "value", "bytes_hex": hex.EncodeToString(value.Encoded()), "arcs_decimal": arcs, "arc_count": len(arcs)}, nil
 	default:
 		panic("unsupported primitive " + operation)
 	}
@@ -251,7 +251,7 @@ func cursorResult(testCase map[string]any, decoder *ASN1Decoder, root ASN1Elemen
 			} else if child == nil {
 				events = append(events, map[string]any{"outcome": "end"})
 			} else {
-				events = append(events, map[string]any{"outcome": "value", "tag": tagProjection(*child), "depth": child.Depth})
+				events = append(events, map[string]any{"outcome": "value", "tag": tagProjection(*child), "depth": child.Depth()})
 			}
 		}
 	}
@@ -269,7 +269,7 @@ func runCase(document, upstream, testCase map[string]any) map[string]any {
 	if err == nil {
 		switch operation {
 		case "decode-exact":
-			return map[string]any{"outcome": "value", "tag": tagProjection(root), "header_hex": hex.EncodeToString(root.Header()), "value_hex": hex.EncodeToString(root.Value()), "encoded_hex": hex.EncodeToString(root.Encoded()), "depth": root.Depth, "elements_read": decoder.ElementsRead()}
+			return map[string]any{"outcome": "value", "tag": tagProjection(root), "header_hex": hex.EncodeToString(root.Header()), "value_hex": hex.EncodeToString(root.Value()), "encoded_hex": hex.EncodeToString(root.Encoded()), "depth": root.Depth(), "elements_read": decoder.ElementsRead()}
 		case "cursor-script":
 			var result map[string]any
 			result, err = cursorResult(testCase, decoder, root)
@@ -290,7 +290,7 @@ func runCase(document, upstream, testCase map[string]any) map[string]any {
 			var child ASN1Element
 			child, err = decoder.Explicit(root, uint32(integer(testCase["tag_number"])))
 			if err == nil {
-				return map[string]any{"outcome": "value", "tag": tagProjection(child), "value_hex": hex.EncodeToString(child.Value()), "depth": child.Depth, "elements_read": decoder.ElementsRead()}
+				return map[string]any{"outcome": "value", "tag": tagProjection(child), "value_hex": hex.EncodeToString(child.Value()), "depth": child.Depth(), "elements_read": decoder.ElementsRead()}
 			}
 		default:
 			tagNumber := uint32(0)
@@ -346,5 +346,20 @@ func TestLimitsAndOIDEquality(t *testing.T) {
 	oid, err := DecodeObjectIdentifier(element, DefaultLimits())
 	if err != nil || !oid.Equals([]uint64{1, 2, 3, 4}) || oid.Equals([]uint64{1, 2, 3}) {
 		t.Fatal("OID equality failed")
+	}
+}
+
+func TestZeroValuesCannotForgeValidatedState(t *testing.T) {
+	decoder := NewDecoder(ASN1Limits{MaxDepth: 1, MaxTotalElements: 1, MaxOIDArcs: 1})
+	if _, err := decoder.Sequence(ASN1Element{}); err == nil {
+		t.Fatal("zero-value ASN1Element bypassed validation")
+	} else if typed, ok := err.(*Error); !ok || typed.Kind != UnexpectedTag {
+		t.Fatalf("unexpected forged-element error: %#v", err)
+	}
+
+	if _, err := (DERInteger{}).ToUint64(); err == nil {
+		t.Fatal("zero-value DERInteger bypassed validation")
+	} else if typed, ok := err.(*Error); !ok || typed.Kind != EmptyInteger {
+		t.Fatalf("unexpected zero-value integer error: %#v", err)
 	}
 }

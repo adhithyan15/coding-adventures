@@ -6,4 +6,3 @@
 - Reused all 46 exact DER TLV framing cases by stable reference.
 - Added closed semantic results, decimal-string integer and OID projections,
   shared-budget cursor scripts, explicit offset domains, and redacted errors.
-
