@@ -1049,7 +1049,9 @@ backend immediately) come before the enabler-dependent items.
   The recurrence assignment may instead occur in one or both branches of a
   conditional statement selected by those exact snapshots. A branch without
   the assignment preserves the dependency for that pass; unknown selectors
-  and unsupported branch effects still fail closed.
+  and unsupported branch effects still fail closed. One dependency may also
+  receive several supported assignments in the same body pass; capped
+  execution applies those writes in source order before the next predicate.
   Read-only body uses, exact scalar
   self-assignments, checked numeric or boolean expressions that equal the
   tracked scalar and otherwise reference only known ordinary locals that are

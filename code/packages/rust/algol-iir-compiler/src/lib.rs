@@ -6841,9 +6841,6 @@ impl Compiler {
         for action in actions {
             match action {
                 StaticBodyAction::Assignment(assignment) if assignment.name == name => {
-                    if found {
-                        return None;
-                    }
                     let mut dependencies = HashSet::new();
                     collect_expression_dependency_names(
                         assignment.expression,
@@ -6898,9 +6895,6 @@ impl Compiler {
                             visiting,
                         )?;
                     if then_found || else_found {
-                        if found {
-                            return None;
-                        }
                         found = true;
                     }
                 }
@@ -14234,7 +14228,7 @@ mod tests {
     }
 
     #[test]
-    fn al4_integer_non_identity_selector_write_remains_conservative() {
+    fn al4_integer_non_identity_selector_rewrites_are_tracked_in_order() {
         for write in [
             "choose * 0",
             "(choose * 0)",
@@ -14242,47 +14236,45 @@ mod tests {
             "choose * (-1)",
             "-choose",
         ] {
-            let err = compile_source(
+            compile_source(
                 &format!(
                     "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := other; choose := {write} end; print(i + 0.25) end"
                 ),
                 "test",
             )
-            .expect_err("an integer non-identity write may change the selector dependency");
-            assert!(format!("{err:?}").contains("cannot print a real value"));
+            .unwrap_or_else(|_| {
+                panic!("ordered integer selector rewrite {write:?} must be tracked")
+            });
         }
     }
 
     #[test]
-    fn al4_integer_non_identity_selector_chains_remain_conservative() {
+    fn al4_integer_non_identity_selector_chain_rewrites_are_tracked_in_order() {
         for write in [
             "choose + 0 + 1",
             "1 div choose * 1",
             "choose ^ 0",
             "2 ^ 1",
         ] {
-            let err = compile_source(
+            compile_source(
                 &format!(
                     "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := other; choose := {write} end; print(i + 0.25) end"
                 ),
                 "test",
             )
-            .expect_err("integer non-identity chains must fail closed");
-            assert!(
-                format!("{err:?}").contains("cannot print a real value"),
-                "unexpected error for {write:?}: {err:?}"
-            );
+            .unwrap_or_else(|_| {
+                panic!("ordered integer selector chain {write:?} must be tracked")
+            });
         }
     }
 
     #[test]
-    fn al4_real_additive_selector_identity_remains_conservative() {
-        let err = compile_source(
+    fn al4_real_additive_selector_rewrite_is_tracked_in_order() {
+        compile_source(
             "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := choose + 0.0 end; print(i + 0.25) end",
             "test",
         )
-        .expect_err("real additive zero may change the sign bit of negative zero");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        .expect("the exact ordered real additive rewrite must be tracked");
     }
 
     #[test]
@@ -14346,20 +14338,19 @@ mod tests {
     }
 
     #[test]
-    fn al4_real_negative_zero_subtraction_remains_conservative() {
+    fn al4_real_negative_zero_subtraction_rewrites_are_tracked_in_order() {
         for write in [
             "choose - (-0.0)",
             "choose - ((-0.0) + (-0.0))",
             "choose - ((-0.0) ^ 3)",
         ] {
-            let err = compile_source(
+            compile_source(
                 &format!(
                     "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := {write} end; print(i + 0.25) end"
                 ),
                 "test",
             )
-            .expect_err("subtracting negative zero is the unsafe additive-zero identity");
-            assert!(format!("{err:?}").contains("cannot print a real value"));
+            .unwrap_or_else(|_| panic!("ordered negative-zero rewrite {write:?} must be tracked"));
         }
     }
 
@@ -14470,40 +14461,47 @@ mod tests {
     }
 
     #[test]
-    fn al4_real_non_identity_power_selector_writes_remain_conservative() {
+    fn al4_real_non_identity_power_selector_rewrites_are_tracked_in_order() {
         for write in [
             "choose ^ 0",
             "choose ^ 0.0",
             "1.0 ^ choose",
             "choose ^ 2.0",
             "choose ^ (3.0 - 1.0)",
-            "choose ^ ((9223372036854775807 + 1) - 9223372036854775807)",
             "choose - ((-0.0) ^ 0)",
             "choose + ((-0.0) ^ 2)",
         ] {
-            let err = compile_source(
+            compile_source(
                 &format!(
                     "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := {write} end; print(i + 0.25) end"
                 ),
                 "test",
             )
-            .expect_err("non-identity real powers must fail closed");
-            assert!(format!("{err:?}").contains("cannot print a real value"));
+            .unwrap_or_else(|_| panic!("ordered real-power rewrite {write:?} must be tracked"));
         }
     }
 
     #[test]
-    fn al4_real_unary_minus_selector_write_remains_conservative() {
+    fn al4_overflowing_ordered_selector_rewrite_remains_conservative() {
         let err = compile_source(
-            "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := -choose end; print(i + 0.25) end",
+            "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := choose ^ ((9223372036854775807 + 1) - 9223372036854775807) end; print(i + 0.25) end",
             "test",
         )
-        .expect_err("real unary minus changes the selector");
+        .expect_err("overflow in an ordered rewrite must still fail closed");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
-    fn al4_real_non_unit_selector_chains_remain_conservative() {
+    fn al4_real_unary_minus_selector_rewrite_is_tracked_in_order() {
+        compile_source(
+            "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := -choose end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("the exact ordered real unary-minus rewrite must be tracked");
+    }
+
+    #[test]
+    fn al4_real_non_unit_selector_chain_rewrites_are_tracked_in_order() {
         for write in [
             "choose * 1.0 * 2.0",
             "(choose * 2.0)",
@@ -14516,14 +14514,13 @@ mod tests {
             "choose * (i ^ 0)",
             "1.0 / choose * 1.0",
         ] {
-            let err = compile_source(
+            compile_source(
                 &format!(
                     "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := {write} end; print(i + 0.25) end"
                 ),
                 "test",
             )
-            .expect_err("real non-unit chains must fail closed");
-            assert!(format!("{err:?}").contains("cannot print a real value"));
+            .unwrap_or_else(|_| panic!("ordered real selector chain {write:?} must be tracked"));
         }
     }
 
@@ -15148,6 +15145,22 @@ mod tests {
                 .count(),
             4
         );
+    }
+
+    #[test]
+    fn al4_bounded_while_tracks_ordered_rewrites_of_one_dependency() {
+        let module = compile_source(
+            "begin integer i, n; real r; i := 0; n := 6; r := 0.25; for i := i + 1 while i <= n do begin n := n - 1; n := n - 1; r := r + i end; print(i + 0.25); print(n + 0.5); print(r) end",
+            "test",
+        )
+        .expect("bounded while analysis applies repeated dependency writes in source order");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "2.5"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
     }
 
     #[test]

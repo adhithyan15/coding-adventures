@@ -221,8 +221,9 @@ recurrence assignment itself may also appear in one or both branches of a
 conditional statement selected by those snapshots; a branch without the
 assignment leaves the dependency unchanged for that pass. The controlled
 scalar itself may likewise be updated alongside other supported local scalar
-recurrences; the next `while` element expression consumes all resulting exact
-dependency and control
+recurrences. A dependency may be assigned repeatedly in one body pass; bounded
+execution applies every supported write in source order. The next `while`
+element expression consumes all resulting exact dependency and control
 snapshots, and terminating sibling snapshots remain available after the loop.
 Unknown selectors, cyclic dependency writes, string targets,
 and loops that do not reach false within 4,096 evaluations fail closed.
