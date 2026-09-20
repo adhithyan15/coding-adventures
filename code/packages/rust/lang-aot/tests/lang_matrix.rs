@@ -2858,6 +2858,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — bounded while-control simulation applies a statically
+    // selected control update in the body before evaluating the next element.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; real x; i := 0; for i := i + 1 while i <= 10 do if i < 4 then i := i * 2 else i := i + 3; print(i + 0.25); x := 0.5; for x := x + 0.5 while x <= 10.0 do if x < 4.0 then x := x * 2.0 else x := x + 3.0; print(x) end",
+        expect: Expect::Stdout("11.2512.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — an exact scalar self-assignment is an idempotent body write,
     // so the stable local while dependency remains available to the proof.
     Prog {
@@ -13780,6 +13789,31 @@ fn algol_static_real_while_control_exit_runs_on_every_available_standard_backend
 }
 
 #[test]
+fn algol_while_control_body_recurrences_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("for i := i + 1 while i <= 10 do if i < 4")
+        })
+        .expect("the while-control body recurrences must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the while-control body recurrences did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
 fn algol_idempotent_while_dependency_runs_on_every_available_standard_backend() {
     let program = PROGRAMS
         .iter()
@@ -16035,7 +16069,11 @@ fn portable_text_stdout_brainfuck_beam_raw_bytes() {
         let dir = tempfile::tempdir().unwrap();
         std::fs::write(dir.path().join("bfbytes.beam"), bytes).unwrap();
         let mut cmd = Command::new("erl");
-        cmd.current_dir(dir.path()).args(["-noshell", "-kernel", "standard_io_encoding", "latin1"])
+        // This byte sweep runs beside many other real-BEAM probes in the test
+        // binary. Keep this VM to one scheduler and one async thread so macOS CI
+        // does not intermittently terminate it while all 256 bytes are emitted.
+        cmd.current_dir(dir.path()).args(["+S", "1:1", "+A", "1"])
+            .args(["-noshell", "-kernel", "standard_io_encoding", "latin1"])
             .arg("-pa").arg(dir.path())
             .args(["-eval", "bfbytes:main(),halt(0)."]);
         let out = output_with_stdin(cmd, &input).expect("detected erl must spawn");

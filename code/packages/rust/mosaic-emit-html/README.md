@@ -136,6 +136,7 @@ static snapshot.
 | HostSlider (UI29)    | `<input type="range" value="{{value}}">`            |
 | HostScroll (UI29)    | `<div style="overflow-y:auto; overflow-x:hidden">` — the axis (UI61) |
 | HostTable (UI29)     | `<table>` with `<colgroup>`/`<thead>`/`<tbody>`/`<tfoot>` |
+| HostNavigationSplit (UI29-6) | flex wrapper with named `<nav>` pane and `<section>` detail region |
 | If / Else (UI29)     | `<!-- mosaic-if when="..." -->` comment markers       |
 | For (UI29)           | `<!-- mosaic-for each="..." as="..." -->` comment markers |
 

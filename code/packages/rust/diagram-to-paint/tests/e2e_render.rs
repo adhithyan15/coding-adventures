@@ -1764,11 +1764,15 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_architecture_to_png() {
         let diagram = parse_architecture(
-            "architecture-beta\ngroup platform(cloud)[Platform]\nservice api(server)[API] in platform\nservice db(database)[Database] in platform\napi:R --> L:db",
+            "architecture-beta\ngroup platform(cloud)[Platform]\nservice api(server)[API] in platform\nservice db(database)[Database] in platform\napi:R -[reads and writes]-> L:db",
         )
         .expect("Mermaid architecture parse failed");
         let layout = layout_structural_diagram(&diagram);
         assert_eq!(layout.groups.len(), 1);
+        assert_eq!(
+            layout.relationships[0].label.as_ref().map(|(_, label)| label.as_str()),
+            Some("reads and writes")
+        );
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;
         let resolver = CoreTextResolver::new();
@@ -1786,6 +1790,11 @@ line "Target" [35, 50, 68, 82]"##,
         );
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Rect(rect)
+                if rect.fill.as_deref() == Some("#ffffff") && rect.stroke.is_none()
+        )));
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_architecture_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);

@@ -71,5 +71,5 @@ gate; add an actual i32 -1 regression. No simulator opcode change in this slice.
 
 Numbering note: renamed from CLR07 after discovering active PR #15689's
 CLR07 remainder/NOT work. The original comparison contract was committed
-before implementation. Keep this branch local until that PR finishes to
-preserve the single implementation PR policy.
+before implementation. PR #15689 has now merged; this comparison extension
+can proceed under the single implementation PR policy.

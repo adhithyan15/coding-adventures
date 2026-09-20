@@ -8,7 +8,9 @@ This crate simulates a subset of .NET CLR bytecode. Unlike the JVM (which encode
 
 ## Supported Instructions
 
-Includes ldc.i4 (compact and extended forms), ldc.i8, ldloc/stloc, add, sub, mul, div, xor, neg, nop, ldnull, br.s, brfalse.s, brtrue.s, ret, and two-byte comparison opcodes (ceq, cgt, clt).
+Includes ldc.i4 (compact and extended forms), ldc.i8, ldloc/stloc, add, sub, mul,
+div, rem, and/or/xor/not, shifts, neg, nop, ldnull, br.s, brfalse.s, brtrue.s,
+ret, and two-byte comparison opcodes (ceq, cgt, clt).
 
 `Int64(i64)` preserves a separate 64-bit stack type. Integer arithmetic and
 comparisons require matching widths; array sizes and indices remain int32.
@@ -74,3 +76,7 @@ and counts refuse before changing stack or pc. This does not widen IIR lowering.
 Bitwise and/or execute on matching Int or Int64 operands and preserve all bits.
 They do not coerce values to booleans. Mixed widths, references and missing
 operands refuse before changing stack or pc.
+
+Signed remainder and bitwise NOT also preserve matched Int/Int64 widths.
+Remainder follows truncation-toward-zero division, rejects zero and MIN/-1,
+and keeps the dividend's sign. Invalid operands refuse without state mutation.

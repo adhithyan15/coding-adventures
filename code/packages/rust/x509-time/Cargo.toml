@@ -1,0 +1,9 @@
+[package]
+name = "x509-time"
+version = "0.1.0"
+edition = "2021"
+description = "Allocation-free RFC 5280 certificate time decoding"
+
+[dependencies]
+der-asn1 = { path = "../der-asn1" }
+der-tlv = { path = "../der-tlv" }
