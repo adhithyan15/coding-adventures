@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Added — package-owned desktop window size (#14789)
+
+Generated Compose, Qt, SwiftUI, XAML, and Electron project shells now honor
+the manifest's optional `[app]` initial window dimensions. A missing declaration
+keeps the existing emitter defaults, while a declared size reaches each
+platform's native window API.
+
 - Implement WebComponent table numeric typography and scoped editor inheritance;
   retain direct table input/button nodes and nested tables (#15713).
 

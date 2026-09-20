@@ -282,3 +282,59 @@ fn boolean_constants_moves_and_forward_calls_transport_both_truth_values() {
         assert_eq!(execute(&m), Value::Int(i32::from(value)));
     }
 }
+
+#[test]
+fn acyclic_branches_execute_both_paths_and_early_returns() {
+    for (op, condition, expected) in [
+        ("jmp_if_true", true, 22),
+        ("jmp_if_true", false, 11),
+        ("jmp_if_false", true, 11),
+        ("jmp_if_false", false, 22),
+    ] {
+        let mut m = IIRModule::new("branch", "test");
+        m.entry_point = Some("main".into());
+        m.add_or_replace(IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                instr("const", "condition", vec![Operand::Bool(condition)], "bool"),
+                instr(op, "", vec![var("condition"), var("taken")], "void"),
+                instr("const", "fallthrough", vec![Operand::Int(11)], "i64"),
+                instr("ret", "", vec![var("fallthrough")], "i64"),
+                instr("label", "", vec![var("taken")], "void"),
+                instr("const", "branched", vec![Operand::Int(22)], "i64"),
+                instr("ret", "", vec![var("branched")], "i64"),
+            ],
+        ));
+        assert_eq!(execute(&m), Value::Int64(expected));
+    }
+}
+
+#[test]
+fn unconditional_branch_and_join_preserve_common_values() {
+    let mut m = IIRModule::new("branch", "test");
+    m.entry_point = Some("main".into());
+    m.add_or_replace(IIRFunction::new(
+        "main",
+        vec![],
+        "i32",
+        vec![
+            instr("const", "answer", vec![Operand::Int(42)], "i32"),
+            instr("const", "condition", vec![Operand::Bool(false)], "bool"),
+            instr(
+                "jmp_if_true",
+                "",
+                vec![var("condition"), var("alternate")],
+                "void",
+            ),
+            instr("const", "fallthrough", vec![Operand::Int(1)], "i32"),
+            instr("jmp", "", vec![var("join")], "void"),
+            instr("label", "", vec![var("alternate")], "void"),
+            instr("const", "branched", vec![Operand::Int(2)], "i32"),
+            instr("label", "", vec![var("join")], "void"),
+            instr("ret", "", vec![var("answer")], "i32"),
+        ],
+    ));
+    assert_eq!(execute(&m), Value::Int(42));
+}

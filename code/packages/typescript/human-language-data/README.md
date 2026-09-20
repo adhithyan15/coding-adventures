@@ -432,23 +432,19 @@ opening defect cannot be averaged away. Writing exposure does not count as writi
 practice, and the report names how many opening lessons precede the first real
 writing/script lesson or block.
 
-The exact corpus regression lives in stable generated owners rather than full-track
-language aggregates or hand-edited totals in the test body:
+The exact report is derived on demand from canonical curriculum sources:
 
 ```bash
-npm run generate:gentle-snapshots  # write direct owners under core/gentle-ramp-snapshots/*.d/
-npm run check:gentle-snapshots     # fail on owner drift, deletion, or aggregate resurrection
+npm run report:gentle-ramp         # render the current learner-first queue
+npm run check:gentle-snapshots     # derive every track and reject snapshot resurrection
 ```
 
-Each `<language>.d/` has immutable `_meta.json`, 26 fixed metric owners (the R1-R4
-reinforcement windows have separate identities), and ten always-present finding-kind
-owners. `lessonCount` is derived from exact parsed and narration lesson identities;
-`next`, the global queue, and summaries are reconstructed in memory. Thus two agents
-can change different dimensions of Tamil without sharing a generated file. The checker
-requires the exact registered-language tree, exact fixed filenames, canonical bytes,
-and exact public `TrackGentleRamp` reconstruction. It rejects a resurrected flat
-aggregate, and generation validates a complete staged replacement before removing the
-old tree. See [`HL33`](../../../specs/HL33-sharded-gentle-ramp-ownership.md).
+The former 851 metric/finding owners were exact generated copies of those same
+sources, not independent policy. They are retired: the compatibility checker is
+read-only, derives all registered tracks, and rejects any case-fold variant of
+`core/gentle-ramp-snapshots`. Hard invariants and authored budgets remain in their
+source gates; reporting-only counts can now change without a generated-file edit.
+See [`HL38`](../../../specs/HL38-retired-gentle-ramp-snapshots.md).
 
 Level coverage is computed on demand from the canonical lessons, curricula, and shared
 spine by `summarizeLevels()`. The level tests prove exact registered-track closure,
@@ -1024,7 +1020,7 @@ until the existing corpus has been split.
 | `narration.ts` | typed lesson AST → narration segments and the continuous voice script | ✅ |
 | `modality-manifest.ts` | derived modality rows, rollups, and unchanged filterable public manifest | ✅ |
 | `modality-shards.ts` | strict direct-owner fold and filesystem boundary | ⛔ (fs) |
-| `gentle-ramp-shards.ts` | strict metric/finding owner fold and filesystem boundary | ⛔ (fs) |
+| `gentle-ramp-retirement.ts` | rejects resurrection of retired generated snapshots | ⛔ (fs) |
 | `report.ts` | deterministic duration, prerequisite, book, schema, and modality gap report | ✅ |
 | `lesson-budgets.ts` | explicit idiom, sense, and culture-claim budget measurement | ✅ |
 | `loader.ts` | reads the curriculum off disk | ⛔ (fs) |
@@ -1032,7 +1028,7 @@ until the existing corpus has been split.
 | `report-cli.ts` | prints JSON or text for CI artifact capture | ⛔ (fs) |
 | `book-cli.ts` | writes or checks generated chapters and their hash manifest | ⛔ (fs) |
 | `modality-cli.ts` | writes or checks `core/lesson-modality/<language>.d/*.json` | ⛔ (fs) |
-| `gentle-ramp-snapshot-cli.ts` | stages, writes, or checks `core/gentle-ramp-snapshots/<language>.d/` | ⛔ (fs) |
+| `gentle-ramp-snapshot-cli.ts` | compatibility check: rejects retired snapshots and derives every track | ⛔ (fs) |
 | `narration-cli.ts` | writes or checks the narration export and its hash manifest | ⛔ (fs) |
 | `track-progress.ts` | registry/curriculum/book facts → progress rows and cards | ✅ |
 | `track-progress-cli.ts` | prints the progress table or rejects tracked rollups | ⛔ (fs) |

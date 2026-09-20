@@ -347,3 +347,144 @@ fn bool_is_not_an_alias_for_integer_arithmetic_or_transport() {
     m.functions[0].instructions[0].srcs = vec![Operand::Bool(true)];
     refuses(m, "integer literal");
 }
+
+#[test]
+fn acyclic_control_flow_uses_void_shapes_and_short_branches() {
+    let mut m = IIRModule::new("strict", "test");
+    m.entry_point = Some("main".into());
+    m.add_or_replace(IIRFunction::new(
+        "main",
+        vec![],
+        "i32",
+        vec![
+            IIRInstr::new(
+                "const",
+                Some("condition".into()),
+                vec![Operand::Bool(true)],
+                "bool",
+            ),
+            IIRInstr::new(
+                "jmp_if_false",
+                None,
+                vec![v("condition"), v("otherwise")],
+                "void",
+            ),
+            IIRInstr::new("const", Some("yes".into()), vec![Operand::Int(7)], "i32"),
+            IIRInstr::new("ret", None, vec![v("yes")], "i32"),
+            IIRInstr::new("label", None, vec![v("otherwise")], "void"),
+            IIRInstr::new("const", Some("no".into()), vec![Operand::Int(9)], "i32"),
+            IIRInstr::new("ret", None, vec![v("no")], "i32"),
+        ],
+    ));
+
+    let artifact = lower_typed_scalars_to_cil(&m, &IIRClrConfig::default()).unwrap();
+    assert_eq!(
+        artifact.methods[0].body,
+        vec![0x17, 0x0a, 0x06, 0x2c, 0x04, 0x1d, 0x0b, 0x07, 0x2a, 0x1f, 0x09, 0x0c, 0x08, 0x2a,]
+    );
+}
+
+#[test]
+fn control_flow_refuses_invalid_cfgs_and_path_dependent_values() {
+    let conditional =
+        |target: &str| IIRInstr::new("jmp_if_true", None, vec![v("condition"), v(target)], "void");
+    let mut m = IIRModule::new("strict", "test");
+    m.add_or_replace(IIRFunction::new(
+        "main",
+        vec![("condition".into(), "bool".into())],
+        "i32",
+        vec![
+            conditional("join"),
+            IIRInstr::new(
+                "const",
+                Some("one_path".into()),
+                vec![Operand::Int(1)],
+                "i32",
+            ),
+            IIRInstr::new("label", None, vec![v("join")], "void"),
+            IIRInstr::new("ret", None, vec![v("one_path")], "i32"),
+        ],
+    ));
+    refuses(m, "not definitely assigned");
+
+    let mut m = base();
+    m.functions[0].instructions = vec![
+        IIRInstr::new("jmp", None, vec![v("done")], "void"),
+        IIRInstr::new("const", Some("dead".into()), vec![Operand::Int(1)], "i64"),
+        IIRInstr::new("label", None, vec![v("done")], "void"),
+        IIRInstr::new("ret", None, vec![v("x")], "i64"),
+    ];
+    m.functions[0].params = vec![("x".into(), "i64".into())];
+    refuses(m, "unreachable instruction");
+
+    let mut m = base();
+    m.functions[0]
+        .instructions
+        .insert(1, IIRInstr::new("label", None, vec![v("top")], "void"));
+    m.functions[0]
+        .instructions
+        .insert(2, IIRInstr::new("jmp", None, vec![v("top")], "void"));
+    refuses(m, "must be forward");
+
+    for (instruction, diagnostic) in [
+        (
+            IIRInstr::new("jmp", None, vec![v("missing")], "void"),
+            "undefined label",
+        ),
+        (
+            IIRInstr::new("label", Some("bad".into()), vec![v("target")], "void"),
+            "invalid control shape",
+        ),
+        (
+            IIRInstr::new("jmp", Some("bad".into()), vec![v("target")], "void"),
+            "invalid control shape",
+        ),
+        (
+            IIRInstr::new("jmp_if_true", None, vec![v("x"), v("target")], "void"),
+            "branch condition must be bool",
+        ),
+    ] {
+        let mut m = base();
+        if diagnostic != "undefined label" {
+            m.functions[0]
+                .instructions
+                .insert(1, IIRInstr::new("label", None, vec![v("target")], "void"));
+        }
+        m.functions[0].instructions.insert(1, instruction);
+        refuses(m, diagnostic);
+    }
+}
+
+#[test]
+fn conditional_branches_promote_to_long_form() {
+    let mut body = vec![IIRInstr::new(
+        "jmp_if_true",
+        None,
+        vec![v("condition"), v("done")],
+        "void",
+    )];
+    body.extend((0..70).map(|i| {
+        IIRInstr::new(
+            "const",
+            Some(format!("padding{i}")),
+            vec![Operand::Int(i)],
+            "i32",
+        )
+    }));
+    body.push(IIRInstr::new("label", None, vec![v("done")], "void"));
+    body.push(IIRInstr::new("ret", None, vec![v("answer")], "i32"));
+    let mut m = IIRModule::new("strict", "test");
+    m.add_or_replace(IIRFunction::new(
+        "main",
+        vec![
+            ("condition".into(), "bool".into()),
+            ("answer".into(), "i32".into()),
+        ],
+        "i32",
+        body,
+    ));
+
+    let artifact = lower_typed_scalars_to_cil(&m, &IIRClrConfig::default()).unwrap();
+    assert_eq!(artifact.methods[0].body[0], 0x02);
+    assert_eq!(artifact.methods[0].body[1], 0x3a);
+}

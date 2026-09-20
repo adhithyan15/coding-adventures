@@ -121,6 +121,30 @@ mosaic-compile single-component path:
 - SwiftUI: `Sources/App/App.swift` with a TabView over components.
 - XAML: `MainWindow.xaml` with the existing pattern.
 
+### 2.4 Author-declared desktop window size
+
+A package may declare the initial logical-pixel size of its generated desktop
+window in `mosaic-package.toml`:
+
+```toml
+[app]
+initial-window-width = 1280
+initial-window-height = 900
+```
+
+The two integers are one contract, MUST be supplied together, and MUST each be
+in the portable range 1 through 2,147,483,647.
+When present, `mosaic-compile pkg --emit-project` maps them to Compose
+`rememberWindowState`, Qt `QQuickView::resize`, SwiftUI `.defaultSize`, WinUI
+`AppWindow.Resize`, and Electron `BrowserWindow` dimensions. Browser shells and
+mobile-only launches ignore the desktop-window hint. When `[app]` is absent,
+each emitter's existing default remains byte-for-byte unchanged.
+
+This is application metadata rather than a layout primitive: it chooses the
+first window's starting size, while users and operating systems remain free to
+resize it afterward. Component artifacts emitted without `--emit-project` are
+therefore unaffected.
+
 ---
 
 ## 3. Non-negotiable contracts
@@ -347,9 +371,10 @@ Sequential order (mirrors UI31 K1–K7 cadence):
 3. **`--emit-project` + `--output` interaction.** If
    `-o out/Hello.tsx` is given, does `--emit-project` emit alongside
    in `out/`? Recommend: yes, alongside (matches XAML behaviour).
-4. **`mosaic-package.toml` extension for project metadata.**
-   Authors may want to set the app title, window size, default
-   theme. v1 punts; defaults come from the component name.
+4. **Additional `mosaic-package.toml` project metadata.**
+   Initial desktop window size is now specified by §2.4. App title and default
+   theme remain deferred; their defaults still come from the component name
+   and selected style respectively.
 5. **WebComponent without a bundler.** v1 ships the `.js` directly
    via `<script type="module">`, no build step. Some hosts may want
    a Rollup/Vite bundle. Punt to a v2 `--emit-project=bundled` mode.

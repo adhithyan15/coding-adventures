@@ -443,8 +443,9 @@ resolve declared member order to deterministic shared-axis layout geometry.
 Quoted service icon text survives as typed semantic metadata, reserves dedicated
 header geometry, and lowers to backend-neutral badge and shaped-text PaintInstructions.
 Left, right, and bidirectional relationship arrowheads survive semantic and layout
-IR and lower to backend-neutral path geometry. Group-edge modifiers, icon artwork,
-port-aware routing, and configuration remain unsupported
+IR and lower to backend-neutral path geometry. Group-edge modifiers on contained
+services survive semantic IR and resolve to deterministic group-boundary endpoints.
+Icon artwork, port-aware routing, and configuration remain unsupported
 at the partial level.
 
 ### Radar Native Slice

@@ -324,6 +324,21 @@ layout SpiceWorkbench {
             onClick : emit: onSetSchematicModelPolarityP
           )
         }
+        Text [ schematic-model-parameters-label ] ( content : slot: schematic-model-parameters-label )
+        Text [ schematic-model-parameter-one-label ] ( content : slot: schematic-model-parameter-one-label )
+        HostInput [ schematic-model-parameter-one-input ] (
+          value : slot: schematic-model-parameter-one-value ,
+          placeholder : slot: schematic-model-parameter-one-label ,
+          disabled : slot: schematic-model-parameter-one-disabled ,
+          onChange : emit: onSchematicModelParameterOneChange
+        )
+        Text [ schematic-model-parameter-two-label ] ( content : slot: schematic-model-parameter-two-label )
+        HostInput [ schematic-model-parameter-two-input ] (
+          value : slot: schematic-model-parameter-two-value ,
+          placeholder : slot: schematic-model-parameter-two-label ,
+          disabled : slot: schematic-model-parameter-two-disabled ,
+          onChange : emit: onSchematicModelParameterTwoChange
+        )
         HostButton [ remove-schematic-component ] (
           label : slot: remove-schematic-component-label ,
           disabled : slot: remove-schematic-component-disabled ,

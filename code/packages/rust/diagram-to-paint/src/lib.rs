@@ -5335,6 +5335,8 @@ mod tests {
                 kind: RelKind::Dependency,
                 start_arrow: true,
                 end_arrow: true,
+                from_group: false,
+                to_group: false,
                 points: vec![Point { x: 20.0, y: 40.0 }, Point { x: 180.0, y: 40.0 }],
                 from_mult: None,
                 to_mult: None,
