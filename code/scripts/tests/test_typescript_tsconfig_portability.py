@@ -416,8 +416,9 @@ console.log(prose, nested);
         # +1: forme-dev-server, the in-memory live-preview boundary.
         # +1: forme-deploy-runner-core, the capability-free deployment planner.
         # +1: der-tlv, the standalone portable DER framing lane.
-        self.assertEqual(summary.total_projects, 473)
-        self.assertEqual(summary.shared_projects, 294)
+        # +1: forme-deploy-runner-fs-adapter, the atomic publication boundary.
+        self.assertEqual(summary.total_projects, 474)
+        self.assertEqual(summary.shared_projects, 295)
         self.assertEqual(summary.inherited_root_dir, 130)
         self.assertEqual(summary.inherited_out_dir, 133)
         self.assertEqual(summary.standalone_emit_projects, 149)
@@ -455,7 +456,8 @@ console.log(prose, nested);
         # Node's availableParallelism API while retaining an explicit runtime
         # fallback for hosts that report no usable count.
         # +1: forme-deploy-runner-core hashes verified publication snapshots.
-        self.assertEqual(summary.node_api_projects, 72)
+        # +1: forme-deploy-runner-fs-adapter owns its filesystem transaction.
+        self.assertEqual(summary.node_api_projects, 73)
         # +1: script-ductus owns `@types/node` directly, because its tests
         # read the shipped fonts off disk to verify the pen paths.
         # +1: chief-of-staff-channel-store owns the test-only Node provider.
@@ -472,7 +474,8 @@ console.log(prose, nested);
         # +1: forme-orchestrator directly owns the Node types used by its
         # hardware-concurrency default.
         # +1: forme-deploy-runner-core owns the Node crypto type provider.
-        self.assertEqual(summary.node_provider_projects, 72)
+        # +1: forme-deploy-runner-fs-adapter owns its Node filesystem provider.
+        self.assertEqual(summary.node_provider_projects, 73)
         self.assertEqual(summary.missing_node_provider_projects, 0)
         self.assertEqual(summary.stale_node_provider_locks, 0)
         self.assertEqual(summary.node_lock_exemptions, 1)
@@ -499,7 +502,8 @@ console.log(prose, nested);
         # +1: VisiCalc now commits its compiler and test dependency lockfile.
         # +1: forme-deploy-runner-core commits its compiler and test lockfile.
         # +1: der-tlv commits its compiler and test dependency lockfile.
-        self.assertEqual(summary.locked_compilers, 472)
+        # +1: forme-deploy-runner-fs-adapter locks its compiler and test graph.
+        self.assertEqual(summary.locked_compilers, 473)
 
 
 if __name__ == "__main__":

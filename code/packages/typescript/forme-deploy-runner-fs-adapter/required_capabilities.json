@@ -1,0 +1,38 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "typescript/forme-deploy-runner-fs-adapter",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "the explicitly selected publication root and its sibling transaction trees",
+      "justification": "Verifies existing and staged regular-file bytes, metadata, containment, and digests before reporting an unchanged tree or swapping a prepared tree."
+    },
+    {
+      "category": "fs",
+      "action": "list",
+      "target": "the explicitly selected publication root and its sibling transaction trees",
+      "justification": "Enumerates complete trees without following links so stale, linked, hard-linked, or unexpected entries cannot escape validation."
+    },
+    {
+      "category": "fs",
+      "action": "create",
+      "target": "exclusive staging, lock, backup, and rollback paths beside the explicitly selected publication root",
+      "justification": "Creates private same-filesystem transaction trees and exclusive files before the complete publication root is swapped."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "exclusive files beneath the private staging tree beside the explicitly selected publication root",
+      "justification": "Writes only core-verified byte snapshots into newly created staging files and fsyncs each file before commit."
+    },
+    {
+      "category": "fs",
+      "action": "delete",
+      "target": "owned staging, lock, backup, and rollback paths beside the explicitly selected publication root",
+      "justification": "Cleans transaction-owned trees after finalize or rollback without deleting siblings outside the configured publication boundary."
+    }
+  ],
+  "justification": "Stages and swaps a complete validated Forme output tree beneath one explicitly selected filesystem root. It performs no network, environment, shell, or subprocess access. External roots require the caller to obtain the separate filesystem:user grant described by FM08."
+}
