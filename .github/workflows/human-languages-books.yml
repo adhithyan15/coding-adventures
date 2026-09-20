@@ -86,6 +86,7 @@ jobs:
             doc_shard_globs=(
               'code/learning/human-languages/BACKLOG.d/*.md'
               'code/learning/human-languages/hindi/CHANGELOG.d/*.md'
+              'code/learning/human-languages/malayalam/CHANGELOG.d/*.md'
               'code/packages/typescript/human-language-data/CHANGELOG.d/*.md'
               'code/programs/typescript/language-ladder/CHANGELOG.d/*.md'
               'code/packages/rust/lang-aot/CHANGELOG.d/*.md'
@@ -130,6 +131,7 @@ jobs:
           tracked_doc_monoliths=$(git ls-files -- \
             code/learning/human-languages/BACKLOG.md \
             code/learning/human-languages/hindi/CHANGELOG.md \
+            code/learning/human-languages/malayalam/CHANGELOG.md \
             code/packages/typescript/human-language-data/CHANGELOG.md \
             code/packages/typescript/script-ductus/CHANGELOG.md \
             code/programs/typescript/language-ladder/CHANGELOG.md \

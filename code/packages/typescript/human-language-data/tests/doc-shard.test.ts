@@ -52,6 +52,7 @@ const PLAN: DocShardPlan = { path: "x/DOC.md", headingLevel: 2, newestFirst: tru
 const OLDEST_FIRST: DocShardPlan = { ...PLAN, newestFirst: false };
 const DUCTUS_CHANGELOG = "code/packages/typescript/script-ductus/CHANGELOG.md";
 const HINDI_CHANGELOG = "code/learning/human-languages/hindi/CHANGELOG.md";
+const MALAYALAM_CHANGELOG = "code/learning/human-languages/malayalam/CHANGELOG.md";
 const HINDI_PLAN: DocShardPlan = {
   path: HINDI_CHANGELOG,
   headingLevel: 2,
@@ -60,6 +61,14 @@ const HINDI_PLAN: DocShardPlan = {
 const HINDI_FORWARD_FRAGMENT =
   "00250-UNRELEASED-HINDI-CHANGELOG-AUTHORING-IS-SHARDED-6788c56d.md";
 const HINDI_MIGRATION_MAX_RANK = 240;
+const MALAYALAM_PLAN: DocShardPlan = {
+  path: MALAYALAM_CHANGELOG,
+  headingLevel: 2,
+  newestFirst: true,
+};
+const MALAYALAM_FORWARD_FRAGMENT =
+  "00580-CHANGELOG-ENTRIES-NOW-HAVE-STABLE-OWNERS-15670-6061dc1b.md";
+const MALAYALAM_MIGRATION_MAX_RANK = 570;
 
 /**
  * The fewest entries for which sharding a document buys anything.
@@ -117,6 +126,46 @@ describe("Hindi changelog ownership", () => {
     expect(splitDocument(rendered, 2).sections).toHaveLength(24);
     expect(createHash("sha256").update(rendered).digest("hex")).toBe(
       "ffb767831fd61e6e6d5ca7f79f61a06516b128e1169a08b8a7e95989b91b6590",
+    );
+  });
+});
+
+describe("Malayalam changelog ownership", () => {
+  it("registers the changelog as a fixed newest-first level-2 shard plan", () => {
+    expect(DOC_SHARD_PLANS.find((plan) => plan.path === MALAYALAM_CHANGELOG)).toEqual(
+      MALAYALAM_PLAN,
+    );
+  });
+
+  it("keeps the generated monolith absent from a clean checkout", () => {
+    const monolith = safeDocumentPath(defaultRepoRoot(), MALAYALAM_CHANGELOG);
+    let cause: unknown;
+    try {
+      lstatSync(monolith);
+    } catch (error) {
+      cause = error;
+    }
+    expect(isAbsentErrno((cause as NodeJS.ErrnoException | undefined)?.code)).toBe(true);
+  });
+
+  it("preserves the pre-migration Malayalam history byte-for-byte", () => {
+    const monolith = safeDocumentPath(defaultRepoRoot(), MALAYALAM_CHANGELOG);
+    const shards = readDocShards(monolith, MALAYALAM_PLAN);
+    expect(shards).not.toBeNull();
+
+    const historical = new Map(
+      [...shards!].filter(
+        ([name]) =>
+          name !== MALAYALAM_FORWARD_FRAGMENT &&
+          (name === DOC_META_SHARD || Number(name.slice(0, 5)) <= MALAYALAM_MIGRATION_MAX_RANK),
+      ),
+    );
+    const rendered = joinDocShards(historical, MALAYALAM_PLAN);
+
+    expect(Buffer.byteLength(rendered)).toBe(150_974);
+    expect(splitDocument(rendered, 2).sections).toHaveLength(57);
+    expect(createHash("sha256").update(rendered).digest("hex")).toBe(
+      "6edf7f921c2734a989cc8c57d58afb99ef839cc29ca8237fc6c7f1e0ce1e7960",
     );
   });
 });
