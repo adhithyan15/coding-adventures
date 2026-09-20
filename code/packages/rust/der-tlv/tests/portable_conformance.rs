@@ -14,7 +14,9 @@ fn fixture() -> Value {
 fn hex_bytes(text: &str) -> Vec<u8> {
     assert_eq!(text.len() % 2, 0, "fixture hex must contain whole bytes");
     text.as_bytes()
-        .chunks_exact(2)
+        .as_chunks::<2>()
+        .0
+        .iter()
         .map(|pair| {
             let pair = std::str::from_utf8(pair).expect("ASCII fixture hex");
             u8::from_str_radix(pair, 16).expect("valid fixture hex")
