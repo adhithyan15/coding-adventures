@@ -12,9 +12,12 @@ cross-platform proving application. Items are ordered by risk and dependency.
   host acceptance now prevent refetching, reconstruction, or toolkit-owned
   source-selection policy.
 
-- [ ] **P1 browser usability - browsable bookmark catalog.** Durable bookmarks
-  can be toggled and restored, but shared chrome still has no catalog surface
-  from which users can inspect and open saved entries.
+- [x] **P1 browser usability - browsable bookmark catalog.** Project the
+  durable ordered catalog into one core-owned Mosaic panel with count,
+  canonical address, title, wraparound Previous/Next traversal, and an Open
+  command that reuses the shared navigation transaction. Generated-host and
+  core acceptance cover empty, open, browse, close, and navigation dismissal
+  without toolkit-owned catalog policy.
 
 - [ ] **P2 browser usability - cancel pending page loads.** The shared
   subresource scheduler supports cancellation during navigation, but generated
@@ -196,6 +199,10 @@ cross-platform proving application. Items are ordered by risk and dependency.
   bounded versioned native-profile file adapter with atomic replacement, route
   one shared Mosaic bookmark command through every host, and cover rollback,
   restart, generated DOM, and direct SwiftUI toolbar behavior.
+- [x] **P1 browser usability — browsable bookmark catalog.** Expose the
+  ordered durable catalog through shared Mosaic slots and events, retain the
+  selection and wraparound policy in browser core, and reuse ordinary shared
+  navigation to open entries across every generated host.
 - [x] **P1 browser convergence — host-neutral View Source.** Project the
   already-retained response source into a synthetic preformatted browser page
   through a reusable core command before adding toolkit-specific windows or

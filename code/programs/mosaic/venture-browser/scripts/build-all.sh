@@ -284,11 +284,14 @@ if [[ -n "$flutter_platform" ]] && has_command flutter; then
   esac
   cp "$rust_workspace/target/$flutter_bridge_profile/$flutter_bridge_source" \
     "$output_root/flutter/$flutter_bridge_name"
+  flutter_bookmarks_path="$output_root/flutter/test-bookmarks.json"
+  rm -f "$flutter_bookmarks_path"
   echo "==> Building flutter ($flutter_platform)"
   (
     cd "$output_root/flutter"
     flutter pub get
     flutter analyze lib
+    VENTURE_BOOKMARKS_PATH="$flutter_bookmarks_path" \
     VENTURE_BROWSER_FLUTTER_LIBRARY="$output_root/flutter/$flutter_bridge_name" \
       flutter test test/venture_chrome_interaction_test.dart
     if [[ ! -d "$flutter_platform" ]]; then
@@ -336,9 +339,12 @@ else
   esac
   cp "$rust_workspace/target/$compose_bridge_profile/$compose_bridge_source" \
     "$output_root/compose/$compose_bridge_name"
+  compose_bookmarks_path="$output_root/compose/test-bookmarks.json"
+  rm -f "$compose_bookmarks_path"
   echo "==> Testing and building compose"
   (
     cd "$output_root/compose"
+    VENTURE_BOOKMARKS_PATH="$compose_bookmarks_path" \
     VENTURE_BROWSER_COMPOSE_LIBRARY="$output_root/compose/$compose_bridge_name" \
       gradle --no-daemon test build
   )

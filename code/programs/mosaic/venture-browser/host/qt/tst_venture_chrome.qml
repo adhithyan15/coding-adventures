@@ -58,6 +58,15 @@ TestCase {
                 "forwardDisabled": disabled,
                 "bookmarkLabel": "Bookmark",
                 "bookmarkDisabled": disabled,
+                "bookmarksLabel": "Bookmarks (1)",
+                "bookmarksDisabled": disabled,
+                "bookmarksOpen": false,
+                "bookmarksPosition": "1 of 1",
+                "bookmarksTitle": "Venture Qt acceptance",
+                "bookmarksAddress": "http://venture.test/start",
+                "bookmarksPreviousDisabled": true,
+                "bookmarksNextDisabled": true,
+                "bookmarksNavigateDisabled": disabled,
                 "copyAddressDisabled": disabled,
                 "openPageDisabled": disabled,
                 "savePageDisabled": disabled,
@@ -91,6 +100,7 @@ TestCase {
         verify(!nativeControl("back-button").enabled)
         verify(!nativeControl("forward-button").enabled)
         verify(!nativeControl("reload-button").enabled)
+        verify(!nativeControl("bookmarks-button").enabled)
         verify(!nativeControl("copy-address-button").enabled)
         verify(!nativeControl("open-page-button").enabled)
         verify(!nativeControl("save-page-button").enabled)
@@ -111,6 +121,7 @@ TestCase {
         mouseClick(nativeControl("back-button"))
         mouseClick(nativeControl("forward-button"))
         mouseClick(nativeControl("reload-button"))
+        mouseClick(nativeControl("bookmarks-button"))
         mouseClick(nativeControl("copy-address-button"))
         mouseClick(nativeControl("open-page-button"))
         mouseClick(nativeControl("save-page-button"))
@@ -186,6 +197,40 @@ TestCase {
         compare(recordingHost.events.length, 2)
         compare(recordingHost.events[1].event, "onViewSourceCopy")
         compare(chrome.viewSourceOpen, true)
+    }
+
+    function test_bookmark_catalog_crosses_the_mosaic_host_seam() {
+        hydrate(false)
+        recordingHost.reset()
+        const bookmarksButton = nativeControl("bookmarks-button")
+        verify(bookmarksButton.enabled)
+        bookmarksButton.forceActiveFocus()
+        keyClick(Qt.Key_Space)
+        wait(0)
+        compare(recordingHost.events.length, 1)
+        compare(recordingHost.events[0].event, "onBookmarksOpen")
+
+        chrome.applyMosaicResponse({
+            "props": {
+                "bookmarksOpen": true,
+                "bookmarksPosition": "1 of 1",
+                "bookmarksTitle": "Venture Qt acceptance",
+                "bookmarksAddress": "http://venture.test/start",
+                "bookmarksPreviousDisabled": true,
+                "bookmarksNextDisabled": true,
+                "bookmarksNavigateDisabled": false
+            }
+        })
+        wait(0)
+        compare(chrome.bookmarksOpen, true)
+        verify(!nativeControl("bookmarks-previous-button").enabled)
+        verify(!nativeControl("bookmarks-next-button").enabled)
+        const closeButton = nativeControl("bookmarks-close-button")
+        closeButton.forceActiveFocus()
+        keyClick(Qt.Key_Space)
+        wait(0)
+        compare(recordingHost.events.length, 2)
+        compare(recordingHost.events[1].event, "onBookmarksClose")
     }
 
     function test_copy_address_crosses_the_mosaic_host_seam() {

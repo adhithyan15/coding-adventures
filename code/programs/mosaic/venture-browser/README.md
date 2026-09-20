@@ -2,7 +2,7 @@
 
 This package is the shared Mosaic source of truth for Venture's native browser
 chrome. It authors the title, Back, Forward, Home, Reload, address input, Go
-action, bookmark, Copy Address, Open in New Window, Save Page, Print Page,
+action, bookmark toggle and catalog, Copy Address, Open in New Window, Save Page, Print Page,
 Share Page, Page Information, bounded page zoom, View Source, and find-in-page controls, status
 line, disabled states, and dispatch contract once
 in MIL, MLL, and MSL.
@@ -17,11 +17,11 @@ recreating the surrounding chrome in backend-specific UI code.
 
 ## Contract
 
-- Slots carry the current address, page title, status text, bookmark label, and
-  host-derived disabled flags; the host supplies the native page renderer as a
-  node slot.
+- Slots carry the current address, page title, status text, bookmark label,
+  ordered-catalog selection, and host-derived disabled flags; the host supplies
+  the native page renderer as a node slot.
 - Emits carry Back, Forward, Home, Reload, address edits, Navigate, the
-  storage-neutral bookmark toggle command, host-neutral Copy Address and Open
+  storage-neutral bookmark toggle and catalog commands, host-neutral Copy Address and Open
   in New Window transactions, a host-neutral Save Page download, and a
   host-neutral Print Page, Share Page, Page Information, View Source, and Copy
   Source requests.
