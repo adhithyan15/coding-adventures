@@ -10,6 +10,29 @@ roadmap is reconciled.
 
 ## Encoded CLR input prerequisites (selected 2026-09-19 after VM-058)
 
+### CLR08 landed; strict scalar control-flow audit selected (2026-09-20)
+
+CLR08 merged in #15698 as `13e17dec1c05c48570c0c7b3e12dc6b9a599ae8e`
+after all 48 checks completed (15 success, 33 skipped), with all four
+exact-head workflows successful. Main is refreshed; no open CLR overlap found.
+CLR07's remaining push workflow also completed successfully.
+
+Next audit bounded control flow for the strict scalar API. Actual IIR operation
+names are `label`, `jmp`, `jmp_if_true`, and `jmp_if_false`; branch targets are
+Var operands, and conditional sources are [condition, target]. Current strict
+validation reads every instruction's scalar hint before dispatch and permits
+only one final return. A safe extension needs explicit control-instruction
+shapes/hints, label uniqueness and resolution, logical boolean branch conditions,
+and path-sensitive definite assignment at joins. Textual prior definition alone
+cannot justify a load when a branch skips its assignment.
+
+Establish actual-artifact refusal and branch execution baselines, decide a
+bounded acyclic or general CFG contract with explicit return/reachability rules,
+and commit the detailed CLR09 specification before production edits. Preserve
+single assignment, exact scalar types, structural i32 indices, slot bounds,
+CLR01 literal/input gates and default source routing. No control-flow contract
+or implementation is selected merely from builder availability.
+
 ### CLR07 landed; CLR08 strict comparisons selected (2026-09-20)
 
 CLR07 remainder/NOT execution merged in #15689 as
