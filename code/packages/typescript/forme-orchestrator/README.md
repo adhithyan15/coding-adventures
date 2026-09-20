@@ -35,9 +35,9 @@ await o.dispose();
 | `buildDag`                | Direct DAG construction (used by `buildPipeline`; exported for tests).  |
 | `areKindsCompatible`      | Type-compatibility predicate (FM01 §2.6).                               |
 
-## v0 simplifications
+## v0 boundaries
 
-These are deferred to follow-up packages:
+These limits remain after the concurrent scheduler milestone:
 
 - **Replay is explicit.** Exact affected scheduling restores untouched pure
   stages directly and invokes `Stage.replay` before skipping an effectful

@@ -14,8 +14,8 @@
  *   - **Reproducible-build mode is wired through.**  When
  *     `settings.reproducibleBuild = true`, every StageContext receives
  *     a frozenClock pinned at `REPRO_BUILD_FROZEN_TIMESTAMP_MS` (0
- *     in v0; FM03 §8 max-input-mtime derivation pending source-stage
- *     revision tracking).  Iteration-order sorting and the
+ *     in v0; FM03 §8 max-input-mtime derivation remains a separate clock
+ *     policy even though source revisions are now tracked). Iteration-order sorting and the
  *     deterministic-random `ctx.random` API remain deferred to v1.
  *
  * What v0 *does* implement:
@@ -103,7 +103,7 @@ import type { StreamCheckpointManifest } from "./stream-checkpoint.js";
 
 /** Per-instance run state held during execution. */
 interface RunState {
-  /** Output value from the stage's run().  For streams, the fully-drained array. */
+  /** Stage output; only a caller-visible terminal stream retains a drained array. */
   output: unknown;
   /** Whether output is from a Stream<X> producer (consumers iterate). */
   isStreamOutput: boolean;
