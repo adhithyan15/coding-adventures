@@ -793,6 +793,9 @@ struct EmitContext<'a> {
     /// Whether this component emitted a HostButton with `selected:` (UI86)
     /// and therefore needs the component-scoped selectable Button subclass.
     needs_selectable_button_support: bool,
+    /// Whether this component emitted HostNavigationSplit and therefore needs
+    /// a NavigationView peer that exposes the authored pane as UIA Pane.
+    needs_navigation_split_support: bool,
     needs_font_size_support: bool,
     table_font_size: Option<LayoutPropValue>,
 }
@@ -842,6 +845,7 @@ impl<'a> EmitContext<'a> {
             needs_native_drag_support: false,
             needs_native_slider_support: false,
             needs_selectable_button_support: false,
+            needs_navigation_split_support: false,
             needs_font_size_support: false,
             table_font_size: None,
         }
@@ -4582,6 +4586,7 @@ fn emit_code_behind(
         || ctx.needs_native_drag_support
         || ctx.needs_native_slider_support
         || ctx.needs_selectable_button_support
+        || ctx.needs_navigation_split_support
     {
         writeln!(out, "using Microsoft.UI.Xaml.Automation;").unwrap();
         writeln!(out, "using Microsoft.UI.Xaml.Automation.Peers;").unwrap();
@@ -4730,7 +4735,40 @@ fn emit_code_behind(
     if ctx.needs_selectable_button_support {
         out.push_str(&emit_selectable_button_support_source(name));
     }
+    if ctx.needs_navigation_split_support {
+        out.push_str(&emit_navigation_split_support_source(name));
+    }
     Ok(out)
+}
+
+/// WinUI's stock NavigationView peer reports ControlType.Custom. The kernel
+/// primitive promises a named navigation-pane landmark, so use the native
+/// control unchanged while narrowing only its UI Automation control type.
+fn emit_navigation_split_support_source(component: &str) -> String {
+    r#"
+
+/// <summary>
+/// NavigationView whose UI Automation peer exposes the kernel navigation
+/// landmark as a Pane while retaining NavigationView's native adaptation.
+/// </summary>
+public sealed class __COMPONENT__MosaicNavigationView : Microsoft.UI.Xaml.Controls.NavigationView
+{
+    protected override Microsoft.UI.Xaml.Automation.Peers.AutomationPeer OnCreateAutomationPeer() =>
+        new __COMPONENT__MosaicNavigationViewAutomationPeer(this);
+}
+
+public sealed class __COMPONENT__MosaicNavigationViewAutomationPeer : Microsoft.UI.Xaml.Automation.Peers.NavigationViewAutomationPeer
+{
+    public __COMPONENT__MosaicNavigationViewAutomationPeer(Microsoft.UI.Xaml.Controls.NavigationView owner)
+        : base(owner)
+    {
+    }
+
+    protected override Microsoft.UI.Xaml.Automation.Peers.AutomationControlType GetAutomationControlTypeCore() =>
+        Microsoft.UI.Xaml.Automation.Peers.AutomationControlType.Pane;
+}
+"#
+    .replace("__COMPONENT__", component)
 }
 
 /// The component-scoped `Button` subclass that carries UI86's selected state.
@@ -11231,6 +11269,7 @@ fn emit_host_navigation_split(
     part_styles: &PartStyleMap,
     ctx: &mut EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
+    ctx.needs_navigation_split_support = true;
     // moslayout already refuses any other count (UI29-6 Section 4.1).
     // This is the second line of defence, for a caller that assembled a
     // tree without going through validation.
@@ -11261,6 +11300,16 @@ fn emit_host_navigation_split(
         "PaneTitle",
         ctx,
     )?);
+    // PaneTitle draws WinUI's pane header, but NavigationView does not expose
+    // that string as the control's UI Automation name. Carry the authored
+    // landmark name explicitly so runtime accessibility checks see the same
+    // name a sighted user sees.
+    attrs.push_str(&navigation_split_text_attr(
+        node,
+        "pane-title",
+        "AutomationProperties.Name",
+        ctx,
+    )?);
 
     // `collapse` picks the display mode. Absent means `auto`, the
     // adaptive one, so a layout that says nothing gets the behaviour the
@@ -11276,9 +11325,14 @@ fn emit_host_navigation_split(
         }
     };
     if pinned {
-        attrs.push_str(" PaneDisplayMode=\"Left\" IsPaneToggleButtonVisible=\"False\"");
+        attrs.push_str(
+            " PaneDisplayMode=\"Left\" IsPaneOpen=\"True\" IsPaneToggleButtonVisible=\"False\"",
+        );
     } else {
-        attrs.push_str(" PaneDisplayMode=\"Auto\"");
+        // NavigationView defaults IsPaneOpen to false even at its expanded
+        // width. Start open so a wide split actually presents both children;
+        // Auto still closes it when WinUI crosses into compact/minimal mode.
+        attrs.push_str(" PaneDisplayMode=\"Auto\" IsPaneOpen=\"True\"");
     }
 
     // `pane-width` is the *preferred* width, and `OpenPaneLength` is
@@ -11294,7 +11348,8 @@ fn emit_host_navigation_split(
     // lowered to several siblings (a bare `For`, say) goes through the
     // same neutral StackPanel wrapper every other single-content host
     // here uses.
-    let mut out = format!("{pad}<NavigationView x:Name=\"{x_name}\"{attrs}{style}>\n");
+    let tag = format!("local:{}MosaicNavigationView", ctx.component_name);
+    let mut out = format!("{pad}<{tag} x:Name=\"{x_name}\"{attrs}{style}>\n");
     writeln!(out, "{pad}    <NavigationView.PaneCustomContent>").unwrap();
     out.push_str(&emit_xaml_single_content_children(
         std::slice::from_ref(pane),
@@ -11309,7 +11364,7 @@ fn emit_host_navigation_split(
         part_styles,
         ctx,
     )?);
-    writeln!(out, "{pad}</NavigationView>").unwrap();
+    writeln!(out, "{pad}</{tag}>").unwrap();
     Ok(out)
 }
 
@@ -13958,15 +14013,26 @@ mod tests {
         );
         let r = compile(&c, &l, &empty_style("Shell"));
 
-        assert!(r.xaml.contains("<NavigationView "), "got:\n{}", r.xaml);
+        assert!(
+            r.xaml.contains("<local:ShellMosaicNavigationView "),
+            "got:\n{}",
+            r.xaml
+        );
         // The pane's name, which is the whole point of the prop.
         assert!(r.xaml.contains("PaneTitle=\"Projects\""), "got:\n{}", r.xaml);
+        assert!(
+            r.xaml
+                .contains("AutomationProperties.Name=\"Projects\""),
+            "got:\n{}",
+            r.xaml
+        );
         // The adaptive mode is the default, not an opt-in.
         assert!(
             r.xaml.contains("PaneDisplayMode=\"Auto\""),
             "got:\n{}",
             r.xaml
         );
+        assert!(r.xaml.contains("IsPaneOpen=\"True\""), "got:\n{}", r.xaml);
         assert!(
             r.xaml.contains("OpenPaneLength=\"236\""),
             "got:\n{}",
@@ -13988,6 +14054,12 @@ mod tests {
                 .contains("AutomationProperties.AutomationId=\"app-shell\""),
             "got:\n{}",
             r.xaml
+        );
+        assert!(
+            r.code_behind
+                .contains("AutomationControlType.Pane"),
+            "got:\n{}",
+            r.code_behind
         );
     }
 

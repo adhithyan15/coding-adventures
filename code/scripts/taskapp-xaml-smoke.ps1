@@ -49,6 +49,22 @@ $ErrorActionPreference = 'Stop'
 
 Add-Type -AssemblyName UIAutomationClient
 Add-Type -AssemblyName UIAutomationTypes
+Add-Type @'
+using System;
+using System.Runtime.InteropServices;
+
+public static class TaskAppWindow {
+    [DllImport("user32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool MoveWindow(
+        IntPtr hWnd,
+        int x,
+        int y,
+        int width,
+        int height,
+        bool repaint);
+}
+'@
 
 if (-not (Test-Path $ExePath)) {
     Write-Error "TaskApp executable not found at $ExePath"
@@ -114,6 +130,45 @@ function Find-ByAutomationId($root, $automationId, $controlType) {
     return $root.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $cond)
 }
 
+function Set-TaskAppWindowSize($proc, $width, $height) {
+    $proc.Refresh()
+    if (-not [TaskAppWindow]::MoveWindow(
+            $proc.MainWindowHandle, 100, 100, $width, $height, $true)) {
+        $errorCode = [Runtime.InteropServices.Marshal]::GetLastWin32Error()
+        throw "MoveWindow failed for ${width}x${height} with Win32 error $errorCode."
+    }
+    Start-Sleep -Milliseconds 750
+    return [System.Windows.Automation.AutomationElement]::FromHandle($proc.MainWindowHandle)
+}
+
+function Wait-ForNamedOffscreenState($root, $name, $controlType, $expected, $timeoutSeconds) {
+    $deadline = (Get-Date).AddSeconds($timeoutSeconds)
+    while ((Get-Date) -lt $deadline) {
+        $element = Find-ByName $root $name $controlType
+        if ($element) {
+            if ($element.Current.IsOffscreen -eq $expected) { return $true }
+        } elseif ($expected) {
+            # WinUI may remove closed PaneCustomContent from the control view
+            # instead of retaining it as an off-screen element. Both states
+            # mean the pane content is unavailable at the compact width.
+            return $true
+        }
+        Start-Sleep -Milliseconds 250
+    }
+    return $false
+}
+
+function Wait-ForAutomationIdOffscreenState(
+    $root, $automationId, $controlType, $expected, $timeoutSeconds) {
+    $deadline = (Get-Date).AddSeconds($timeoutSeconds)
+    while ((Get-Date) -lt $deadline) {
+        $element = Find-ByAutomationId $root $automationId $controlType
+        if ($element -and $element.Current.IsOffscreen -eq $expected) { return $true }
+        Start-Sleep -Milliseconds 250
+    }
+    return $false
+}
+
 try {
     # ── 1. It launches at all ────────────────────────────────────────────
     #
@@ -146,6 +201,36 @@ try {
         $failures += "No summary text rendered. Visible text: $($before -join ' | ')"
     } else {
         Write-Host "  initial summary: $summaryBefore"
+    }
+
+    # HostNavigationSplit must provide a real, named pane landmark and delegate
+    # adaptation to NavigationView's own layout pass. Exercise that behavior on
+    # the running app: wide -> narrow -> wide, while the detail stays usable.
+    $root = Set-TaskAppWindowSize $proc 1280 900
+    $navigationPane = Find-ByNameAndAutomationId $root 'Projects' 'app-shell' ([System.Windows.Automation.ControlType]::Pane)
+    if (-not $navigationPane) {
+        throw "Could not find the Projects pane landmark with AutomationId app-shell."
+    }
+    if (-not (Wait-ForNamedOffscreenState $root 'Projects' ([System.Windows.Automation.ControlType]::Text) $false $TimeoutSeconds)) {
+        $failures += 'The project pane content was not visible at the wide window size.'
+    }
+    if (-not (Wait-ForAutomationIdOffscreenState $root 'segmented-option-selected' ([System.Windows.Automation.ControlType]::Button) $false $TimeoutSeconds)) {
+        $failures += 'The detail content was not visible at the wide window size.'
+    }
+
+    $root = Set-TaskAppWindowSize $proc 520 900
+    if (-not (Wait-ForNamedOffscreenState $root 'Projects' ([System.Windows.Automation.ControlType]::Text) $true $TimeoutSeconds)) {
+        $failures += 'The project pane content did not collapse at the narrow window size.'
+    }
+    if (-not (Wait-ForAutomationIdOffscreenState $root 'segmented-option-selected' ([System.Windows.Automation.ControlType]::Button) $false $TimeoutSeconds)) {
+        $failures += 'The detail content became unavailable when the project pane collapsed.'
+    }
+
+    $root = Set-TaskAppWindowSize $proc 1280 900
+    if (-not (Wait-ForNamedOffscreenState $root 'Projects' ([System.Windows.Automation.ControlType]::Text) $false $TimeoutSeconds)) {
+        $failures += 'The project pane content did not return after widening the window.'
+    } else {
+        Write-Host '  adaptive Projects pane collapsed and restored; detail stayed visible'
     }
 
     # TaskApp once crashed inside Microsoft.UI.Xaml.dll as soon as the Board

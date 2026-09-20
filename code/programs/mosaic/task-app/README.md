@@ -89,7 +89,10 @@ XAML/WinUI also bundles the concrete adapter and verifies it byte-for-byte besid
 event lifecycle plus restart restoration through the generated .NET binding,
 while hosted-runner UI Automation launches the real packaged app and drives its
 native controls through creation, scheduling, completion, deletion, and
-replacement-executable restoration. Its strict
+replacement-executable restoration. The same runtime gate resizes the window,
+proving that the named Projects pane is visible beside the detail at wide
+widths, collapses while the detail remains usable at a narrow width, and
+returns when widened. Its strict
 `native-complete` build has zero degradations: the canonical Sheet exposes native
 UI Automation table semantics, while board and calendar interactions use native
 WinUI pointer/touch drag/drop plus an accessible keyboard path. The gate does not
