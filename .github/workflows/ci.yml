@@ -2224,13 +2224,51 @@ jobs:
           installed_taskapp="$taskapp_bin/App"
           test -x "$installed_taskapp"
           taskapp_log="$RUNNER_TEMP/mosaic-swift-taskapp-launch.log"
+          diagnose_taskapp_crash() {
+            local diagnostic_log="$RUNNER_TEMP/mosaic-swift-taskapp-lldb.log"
+            local entitlements="$RUNNER_TEMP/taskapp-debug-entitlements.plist"
+            cat >"$entitlements" <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>com.apple.security.get-task-allow</key>
+            <true/>
+          </dict>
+          </plist>
+          PLIST
+            codesign --force --sign - --entitlements "$entitlements" "$installed_taskapp"
+            (
+              cd /
+              env -u MOSAIC_APP_LIBRARY \
+                lldb --batch -o run -o "thread backtrace all" -- "$installed_taskapp" \
+                >"$diagnostic_log" 2>&1 &
+              debugger_pid=$!
+              sleep 10
+              if kill -0 "$debugger_pid" 2>/dev/null; then
+                pkill -TERM -P "$debugger_pid" 2>/dev/null || true
+                kill "$debugger_pid" 2>/dev/null || true
+              fi
+              wait "$debugger_pid" || true
+            )
+            cat "$diagnostic_log"
+          }
           (
             cd /
-            env -u MOSAIC_APP_LIBRARY "$installed_taskapp" >"$taskapp_log" 2>&1 &
+            env -u MOSAIC_APP_LIBRARY \
+              SWIFT_BACKTRACE="enable=yes,interactive=no,output-to=stderr" \
+              "$installed_taskapp" >"$taskapp_log" 2>&1 &
             taskapp_pid=$!
             trap 'kill "$taskapp_pid" 2>/dev/null || true' EXIT
             sleep 5
-            kill -0 "$taskapp_pid"
+            if ! kill -0 "$taskapp_pid" 2>/dev/null; then
+              cat "$taskapp_log"
+              sleep 2
+              find "$HOME/Library/Logs/DiagnosticReports" -type f \
+                -name 'App*.ips' -mmin -2 -print -exec cat {} \; || true
+              diagnose_taskapp_crash
+              exit 1
+            fi
             kill "$taskapp_pid"
             wait "$taskapp_pid" || true
             trap - EXIT
