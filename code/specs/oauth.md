@@ -536,6 +536,12 @@ one asserted usage, exposes only the nine defined flags, and rejects undefined
 or non-minimal named-bit encodings. It does not authorize a key operation,
 assign a certificate role, enforce outer criticality, or combine the result
 with Basic Constraints or Extended Key Usage policy.
+A bounded `x509-extended-key-usage` semantic layer now recognizes only the RFC
+5280 Extended Key Usage OID and decodes its exact non-empty sequence under a
+fixed 64-purpose bound. It preserves arbitrary canonical purpose OIDs in wire
+order without embedding a purpose registry. It does not authorize a purpose,
+assign a certificate role, enforce outer criticality, or intersect the result
+with Key Usage or Basic Constraints policy.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
