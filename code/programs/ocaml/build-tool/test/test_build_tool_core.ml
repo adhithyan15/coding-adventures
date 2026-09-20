@@ -108,7 +108,8 @@ let check_graph fixture =
   match expected |> member "outcome" |> to_string with
   | "error" ->
       let error = Result.get_error actual in
-      Alcotest.(check string) "graph error" (diagnostic_code expected) error.code
+      Alcotest.(check string) "graph error" (diagnostic_code expected)
+        (error_code error)
   | "success" ->
       let actual = Result.get_ok actual in
       let result = expected |> member "result" in
@@ -141,7 +142,8 @@ let check_diff fixture boundary =
   match expected |> member "outcome" |> to_string with
   | "error" ->
       let error = Result.get_error actual in
-      Alcotest.(check string) "diff error" (diagnostic_code expected) error.code
+      Alcotest.(check string) "diff error" (diagnostic_code expected)
+        (error_code error)
   | "success" ->
       let actual = Result.get_ok actual in
       let result = expected |> member "result" in
@@ -189,7 +191,7 @@ let consumes_every_shared_fixture () =
     (String_set.elements !seen)
 
 let error_code = function
-  | Error error -> error.code
+  | Error error -> Coding_adventures_build_tool.error_code error
   | Ok _ -> Alcotest.fail "expected an error"
 
 let malformed_inputs_fail_closed () =
@@ -259,7 +261,8 @@ let edge_cases () =
   let spec =
     { name = "fixture/p"; rel_path = "p"; source_mode = Strict_globs;
       source_globs =
-        [ "src/**/[a-c]*.txt"; "literal["; "emoji/[😀].txt" ] }
+        [ "src/**/[a-c]*.txt"; "literal["; "emoji/[😀].txt";
+          "question/?.txt" ] }
   in
   let run paths =
     evaluate_diff_selection
@@ -276,7 +279,12 @@ let edge_cases () =
   Alcotest.(check (list string)) "unclosed class is literal" [ "fixture/p" ]
     (run [ "p/literal[" ]).changed_packages;
   Alcotest.(check (list string)) "Unicode class" [ "fixture/p" ]
-    (run [ "p/emoji/😀.txt" ]).changed_packages
+    (run [ "p/emoji/😀.txt" ]).changed_packages;
+  Alcotest.(check (list string)) "question matches one Unicode scalar"
+    [ "fixture/p" ]
+    (run [ "p/question/😀.txt" ]).changed_packages;
+  Alcotest.(check (list string)) "question does not match two scalars" []
+    (run [ "p/question/ab.txt" ]).changed_packages
 
 let () =
   Alcotest.run "OCaml build-tool graph and diff core"

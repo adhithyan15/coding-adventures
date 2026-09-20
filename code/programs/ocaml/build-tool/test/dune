@@ -1,3 +1,5 @@
 (test
  (name test_build_tool_core)
- (libraries alcotest coding_adventures_build_tool yojson))
+ (libraries alcotest coding_adventures_build_tool yojson)
+ (action
+  (chdir %{workspace_root} (run %{test}))))
