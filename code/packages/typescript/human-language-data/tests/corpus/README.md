@@ -7,13 +7,16 @@ regression in its own `*.test.ts` owner. Keep the top-level test files for
 algorithm fixtures and genuine cross-language invariants; do not add another
 language's expected totals there.
 
-Malayalam is the reference same-language layout. Its track, opening, exam,
-romanization, and chapter regressions have independent owners under
-`corpus/malayalam/`. A new chapter regression gets a new chapter-named test file;
-it must not recreate `corpus/malayalam.test.ts` or append to an unrelated concern.
-The A1 test derives totals from the inventory and proves every mapped probe is
-actually taught. Point-specific audit history stays with the inventory point's
-`note`, not in an ever-growing executable comment followed by hand-edited totals.
+Malayalam and Hindi are the reference same-language layouts. Their track,
+opening/writing, exam, romanization/script-order, and chapter regressions have
+independent owners under `corpus/<language>/`. A new chapter regression gets a
+new chapter-named test file; it must not recreate the retired flat aggregate or
+append to an unrelated concern. Their A1 tests derive totals from the inventory
+and prove every mapped probe is actually taught. Hindi's content-budget suite
+derives the canonical schema-v2 lesson count while retaining complete
+measurement and zero-excess gates. Point-specific audit history stays with the
+inventory point's `note`, not in an ever-growing executable comment followed by
+hand-edited totals.
 
 The generated continuity and ramp ledger lives in
 `core/gentle-ramp-snapshots/<language>.d/{metrics,findings}/`, while modality lives in

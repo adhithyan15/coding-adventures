@@ -136,11 +136,16 @@ export function expectLanguageModality(language: string): void {
 }
 
 export interface LanguageLessonBudgetExpectation {
-  /** The schema-v2 lessons owned by this track and therefore reviewable. */
-  readonly lessons: number;
-  readonly idioms: number;
-  readonly senses: number;
-  readonly cultureClaims: number;
+  /**
+   * Optional historical pins. Omit generated totals when the invariant is
+   * complete measurement and zero excess: the helper derives the lesson count
+   * from canonical owners, so adding an independent chapter does not require a
+   * shared counter edit.
+   */
+  readonly lessons?: number;
+  readonly idioms?: number;
+  readonly senses?: number;
+  readonly cultureClaims?: number;
   /** Stable prefix for every declared unit id, for example `GE`. */
   readonly unitPrefix: string;
 }
@@ -150,8 +155,10 @@ export interface LanguageLessonBudgetExpectation {
  *
  * The filter is load-bearing: schema-v1 lessons have no declaration contract,
  * so counting them as reviewed zeroes would certify debt that was never read.
- * Keeping the expectation in `<track>.test.ts` lets six independent backfill
- * lanes advance without editing one corpus-wide counter.
+ * Keeping the expectation in a language-owned suite lets independent backfill
+ * lanes advance without editing one corpus-wide counter. High-churn tracks may
+ * omit generated totals and retain the stronger complete-measurement/zero-excess
+ * invariant, so independent chapters do not share a per-language counter either.
  */
 export function expectLanguageLessonBudgets(
   language: string,
@@ -171,17 +178,20 @@ export function expectLanguageLessonBudgets(
     cultureClaims: policy.maxNewCultureClaimsPerLesson ?? 2,
   });
 
-  expect(report.summary, `${language} lesson-content budget coverage`).toEqual({
-    lessons: expected.lessons,
-    measuredLessons: expected.lessons,
-    idiomMeasuredLessons: expected.lessons,
-    senseMeasuredLessons: expected.lessons,
-    cultureClaimMeasuredLessons: expected.lessons,
-    idioms: expected.idioms,
-    senses: expected.senses,
-    cultureClaims: expected.cultureClaims,
+  const lessonCount = expected.lessons ?? lessons.length;
+  expect(report.summary, `${language} lesson-content budget coverage`).toMatchObject({
+    lessons: lessonCount,
+    measuredLessons: lessonCount,
+    idiomMeasuredLessons: lessonCount,
+    senseMeasuredLessons: lessonCount,
+    cultureClaimMeasuredLessons: lessonCount,
     overBudgetLessons: 0,
   });
+  if (expected.idioms !== undefined) expect(report.summary.idioms).toBe(expected.idioms);
+  if (expected.senses !== undefined) expect(report.summary.senses).toBe(expected.senses);
+  if (expected.cultureClaims !== undefined) {
+    expect(report.summary.cultureClaims).toBe(expected.cultureClaims);
+  }
   expect(report.excesses, `${language} lesson-content budget excesses`).toEqual([]);
   expect(
     report.findings.every((finding) => finding.unitId.startsWith(`${expected.unitPrefix}-`)),
