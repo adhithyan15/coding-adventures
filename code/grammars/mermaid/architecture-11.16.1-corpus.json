@@ -25,6 +25,10 @@
     {
       "id": "sibling-alignment",
       "source": "architecture-beta\nservice a(server)[A]\nservice b(server)[B]\nservice c(server)[C]\nservice d(server)[D]\nalign row a b c d"
+    },
+    {
+      "id": "custom-service-icon-text",
+      "source": "architecture-beta\nservice api \"API\"[Gateway]\nservice db(database)[Database]\napi:R --> L:db"
     }
   ]
 }

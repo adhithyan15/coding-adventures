@@ -10,10 +10,11 @@ use diagram_ir::{
     resolve_style_with_base, DiagramDirection, LayoutedCompartment, LayoutedStructuralDiagram,
     LayoutedStructuralGroup, LayoutedStructuralNode, LayoutedStructuralRelationship, Point,
     StructuralAlignmentAxis, StructuralDiagram, StructuralNode, StructuralNodeKind,
+    StructuralNodeMetadata,
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.11.0";
+pub const VERSION: &str = "0.12.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -140,13 +141,26 @@ fn node_height(node: &StructuralNode) -> f64 {
         return 18.0;
     }
     let font_size = structural_style(node).font_size;
-    let header_height = HEADER_H.max(font_size * 2.4);
+    let header_height = if architecture_icon_text(node).is_some() {
+        72.0_f64.max(font_size * 2.4)
+    } else {
+        HEADER_H.max(font_size * 2.4)
+    };
     let row_height = ROW_H.max(font_size * 1.4);
     let mut h = header_height;
     for comp in &node.compartments {
         h += COMP_PAD + comp.entries.len() as f64 * row_height + COMP_PAD;
     }
     h
+}
+
+fn architecture_icon_text(node: &StructuralNode) -> Option<&str> {
+    match node.metadata.as_ref() {
+        Some(StructuralNodeMetadata::ArchitectureService(metadata)) => {
+            metadata.icon_text.as_deref()
+        }
+        _ => None,
+    }
 }
 
 fn layout_nodes(
@@ -183,7 +197,11 @@ fn layout_nodes(
         // Build layouted compartments.
         let style = structural_style(node);
         let row_height = ROW_H.max(style.font_size * 1.4);
-        let mut y_off = HEADER_H.max(style.font_size * 2.4);
+        let mut y_off = if architecture_icon_text(node).is_some() {
+            72.0_f64.max(style.font_size * 2.4)
+        } else {
+            HEADER_H.max(style.font_size * 2.4)
+        };
         let mut comps: Vec<LayoutedCompartment> = Vec::new();
         for comp in &node.compartments {
             let ch = COMP_PAD + comp.entries.len() as f64 * row_height + COMP_PAD;
@@ -204,6 +222,7 @@ fn layout_nodes(
             height: nh,
             header: node.label.clone(),
             stereotype: node.stereotype.clone(),
+            icon_text: architecture_icon_text(node).map(str::to_string),
             style: structural_style(node),
             compartments: comps,
         });
@@ -243,7 +262,11 @@ fn layout_directional_nodes(
 
         let style = structural_style(node);
         let row_height = ROW_H.max(style.font_size * 1.4);
-        let mut y_offset = HEADER_H.max(style.font_size * 2.4);
+        let mut y_offset = if architecture_icon_text(node).is_some() {
+            72.0_f64.max(style.font_size * 2.4)
+        } else {
+            HEADER_H.max(style.font_size * 2.4)
+        };
         let compartments = node
             .compartments
             .iter()
@@ -270,6 +293,7 @@ fn layout_directional_nodes(
                 height,
                 header: node.label.clone(),
                 stereotype: node.stereotype.clone(),
+                icon_text: architecture_icon_text(node).map(str::to_string),
                 style: structural_style(node),
                 compartments,
             },
@@ -564,7 +588,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.11.0");
+        assert_eq!(crate::VERSION, "0.12.0");
     }
 
     #[test]
@@ -692,6 +716,21 @@ mod tests {
             layout.relationships[0].points[1].x,
             junction.x + junction.width
         );
+    }
+
+    #[test]
+    fn architecture_icon_text_reserves_header_geometry() {
+        let mut diagram = two_class_diagram();
+        diagram.kind = StructuralKind::Architecture;
+        diagram.nodes[0].metadata = Some(StructuralNodeMetadata::ArchitectureService(
+            ArchitectureServiceMetadata {
+                icon_text: Some("API".into()),
+            },
+        ));
+        let layout = layout_structural_diagram(&diagram);
+        assert_eq!(layout.nodes[0].icon_text.as_deref(), Some("API"));
+        assert!(layout.nodes[0].height >= 72.0);
+        assert!(layout.nodes[0].height > layout.nodes[1].height);
     }
 
     #[test]
