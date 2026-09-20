@@ -11,7 +11,17 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 15708,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/15708",
+    "title": "feat(ocaml): add process-free build-tool graph diff core",
+    "branch": "codex/parity-ocaml-build-tool-graph-diff-20260919",
+    "item_id": "ocaml-build-tool-process-free-graph-diff-core",
+    "opened_at": "2026-09-20T02:53:12Z",
+    "head_revision": "a1fb21b5d1fb5ee14358ece6181519dad5dbb352",
+    "checks_status": "pending",
+    "auto_merge_enabled": false
+  },
   "last_ci_action": {
     "observed_at": "2026-09-20T01:50:46Z",
     "pr_number": 15668,
@@ -1096,10 +1106,13 @@
     {
       "id": "ocaml-build-tool-process-free-graph-diff-core",
       "title": "Implement the OCaml process-free graph and diff-selection core",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["ocaml-representative-core", "ocaml-capability-analyzer", "build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
       "branch": "codex/parity-ocaml-build-tool-graph-diff-20260919",
-      "pr_number": null,
+      "pr_number": 15708,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/15708",
+      "opened_at": "2026-09-20T02:53:12Z",
+      "opened_revision": "a1fb21b5d1fb5ee14358ece6181519dad5dbb352",
       "selected_at": "2026-09-20T01:52:00Z",
       "selection_revision": "0fdac8165b42c629a74ffba7b47f7afe18c8fca0",
       "selection_notes": "Selected after PR #15668 auto-merged, the collision-checked exact-main schema-3 inventory was regenerated, the newly discovered der-asn1 and x509-time portable owners were registered, and dependency/leverage was recomputed. All seven formal dependencies are merged, the owner is the next dependency-shaped step on the OCaml promotion path, and it unlocks 19 unfinished descendants. No open PR touches the prospective OCaml build-tool program, shared graph/diff fixtures, or conformance contract; open Dependabot PR #15548 overlaps .github/workflows/ci.yml, so this tranche must avoid that file or reassess the collision immediately before publication.",
@@ -1109,6 +1122,7 @@
       "validation_notes": "Rebased on origin/main 1996de0bbe82aabe64051d94a2a74b2571e110cb. OCaml 5.2.1 and Dune 3.17.2 passed @fmt, @all, @install, all seven Alcotest groups dynamically consuming the exact nineteen shared fixtures, and 95.14% production coverage (724/761 points) in the reviewed opam Cygwin environment. Opam lint, the capability analyzer, the 162-case/285-file conformance corpus, schema and runner suites, Go tests and vet including the CI-gate regression, zero-collision parity inventory, OCaml lock validation, lessons validation, Ruff, Bandit, compileall, git diff checks, and dependency-license review all passed. A real build-tool dry run selected the exact graph, directed-graph, and build-tool chain. Plain local Windows execution remains blocked by the pre-existing OCaml switch linkage failure reproduced on unchanged ocaml/graph; the hosted workflow's reviewed Cygwin boundary matches the passing local Cygwin execution. Independent final and security reviews found no blocker, and the live open-PR scan found zero exact path overlap.",
       "security_review_revision": "68d2460ec9be025d3bb13aa7a0d0206977d202d9",
       "security_review_notes": "The production core is process-free and consumes only caller-supplied inert data. Byte, string, boundary, shape, scope, authorization, and operation-work ceilings are enforced; fixture reads are bounded regular files; coverage attribution is path-component exact. Only test-time fs.read and fs.list capabilities are declared. No production filesystem, process, environment, network, credential, or execution authority and no secret or dependency-vulnerability concern were found.",
+      "publication_notes": "Opened ready-for-review PR #15708 after a normal first push from the fresh dedicated branch rebased conflict-free onto origin/main 1996de0bbe82aabe64051d94a2a74b2571e110cb. No other parity PR was open, the live scan of thirteen open PRs found zero exact path overlap, and all focused local validation and independent reviews were acceptable. GitHub reports the opened head mergeable; required and advisory checks are queued, so auto-merge remains disabled.",
       "notes": "Implement the exact eight graph and eleven diff-selection cases as a pure OCaml core with stable cycle, unknown-path, and limit errors; deterministic closures; strict bounded glob matching; and no filesystem, Git, process, environment, network, credential, or execution authority."
     },
     {
