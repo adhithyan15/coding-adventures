@@ -213,6 +213,13 @@ describe("validateConfig — settings", () => {
     })).toThrow(ConfigError);
   });
 
+  it("rejects maxConcurrency above the safe integer range", () => {
+    expect(() => validateConfig({
+      ...config([{ stage: makeStage("s", Kinds.Void, Kinds.ContentSource) }]),
+      settings: settings({ maxConcurrency: Number.MAX_SAFE_INTEGER + 1 }),
+    })).toThrow(ConfigError);
+  });
+
   it("rejects non-positive deadlineMs", () => {
     expect(() => validateConfig({
       ...config([{ stage: makeStage("s", Kinds.Void, Kinds.ContentSource) }]),

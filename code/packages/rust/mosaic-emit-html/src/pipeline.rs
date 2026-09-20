@@ -2683,7 +2683,7 @@ fn emit_host_tooltip(
 fn emit_host_navigation_split(
     node: &LayoutNode,
     indent: usize,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> Result<String, PipelineEmitError> {
     let [pane, detail] = node.children.as_slice() else {
         return Err(PipelineEmitError::InvalidPropValue(

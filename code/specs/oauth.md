@@ -506,7 +506,10 @@ split, and Gregorian fields without a clock or platform calendar. A bounded
 supplied validated time against inclusive endpoints. These layers still
 provide no certificate-wide schema, clock authority, name semantics, signature
 verification, path construction, revocation, or trust-root source, so concrete
-HTTPS remains blocked.
+HTTPS remains blocked. A bounded `x509-algorithm-identifier` prerequisite is
+now shipped: it decodes a generic validated algorithm OID plus one optional
+opaque canonical DER parameter element. It intentionally adds no algorithm
+registry, parameter policy, key access, signing, or verification.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

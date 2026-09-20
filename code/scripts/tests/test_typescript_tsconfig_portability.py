@@ -449,7 +449,10 @@ console.log(prose, nested);
         # esbuild; the entrypoint reads a deck from stdin and writes canonical
         # JSON to stdout, so its direct Node types are part of the package's
         # portable compiler contract.
-        self.assertEqual(summary.node_api_projects, 70)
+        # +1: forme-orchestrator resolves a null concurrency setting through
+        # Node's availableParallelism API while retaining an explicit runtime
+        # fallback for hosts that report no usable count.
+        self.assertEqual(summary.node_api_projects, 71)
         # +1: script-ductus owns `@types/node` directly, because its tests
         # read the shipped fonts off disk to verify the pen paths.
         # +1: chief-of-staff-channel-store owns the test-only Node provider.
@@ -463,7 +466,9 @@ console.log(prose, nested);
         # -1: see node_api_projects -- parser no longer needs a Node provider.
         # +1: VisiCalc owns the Node types used by its interaction tests.
         # +1: spice-netlist-parser owns the Node types used by its CLI bundle.
-        self.assertEqual(summary.node_provider_projects, 70)
+        # +1: forme-orchestrator directly owns the Node types used by its
+        # hardware-concurrency default.
+        self.assertEqual(summary.node_provider_projects, 71)
         self.assertEqual(summary.missing_node_provider_projects, 0)
         self.assertEqual(summary.stale_node_provider_locks, 0)
         self.assertEqual(summary.node_lock_exemptions, 1)

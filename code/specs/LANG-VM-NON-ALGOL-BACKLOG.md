@@ -10,10 +10,11 @@ roadmap is reconciled.
 
 ## Encoded CLR input prerequisites (selected 2026-09-19 after VM-058)
 
-### CLR09 owned; CLR10 long branches held locally (2026-09-20)
+### CLR09 landed; CLR10 long branches selected (2026-09-20)
 
-Ready PR #15711 owns CLR09 compact ldc.i4.m1 execution. Keep the independently
-specified long branch implementation local until it merges. The CLR10 contract
+PR #15711 merged CLR09 compact ldc.i4.m1 execution as
+`3a67aec819c35f59a0a9d52f6c73ee6b0c6c31f4`. PR workflows passed; the
+push workflow was still queued when the merge was observed. Proceed with CLR10. The CLR10 contract
 was committed under its original CLR09 name before implementation; see
 `CLR10-encoded-long-branches.md`. Baseline probes proved br/brfalse/brtrue
 unknown; literal and automatic builder-promotion execution tests now pass.
@@ -41,6 +42,20 @@ and commit the detailed CLR09 specification before production edits. Preserve
 single assignment, exact scalar types, structural i32 indices, slot bounds,
 CLR01 literal/input gates and default source routing. No control-flow contract
 or implementation is selected merely from builder availability.
+
+### CLR08 landed; CLR09 compact minus-one execution selected (2026-09-20)
+
+CLR08 strict scalar comparisons merged in #15698 as
+`13e17dec1c05c48570c0c7b3e12dc6b9a599ae8e` after all required checks passed.
+Fresh main and open-PR audits show no non-ALGOL CLR overlap; ALGOL remains
+separately owned.
+
+CLR08 recorded a bounded builder/simulator mismatch: the standard builder
+selects compact `ldc.i4.m1` (`0x15`) for integer -1, while the simulator only
+executes the neighboring compact constants zero through eight. Select CLR09 to
+add independently verified raw-byte execution and canonical helper encoding.
+Keep CLR08's full-form emitter workaround until this prerequisite lands; branch
+lowering, source migration and encoded host input remain later contracts.
 
 ### CLR07 landed; CLR08 strict comparisons selected (2026-09-20)
 

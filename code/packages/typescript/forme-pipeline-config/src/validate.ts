@@ -125,8 +125,8 @@ function validateSettings(s: PipelineSettings, errors: ConfigErrorEntry[]): void
     errors.push({ path: "settings.reproducibleBuild", code: CONFIG_ERROR_CODES.MALFORMED, message: "must be a boolean" });
   }
   if (s.maxConcurrency !== null
-      && (typeof s.maxConcurrency !== "number" || !Number.isInteger(s.maxConcurrency) || s.maxConcurrency < 1)) {
-    errors.push({ path: "settings.maxConcurrency", code: CONFIG_ERROR_CODES.MALFORMED, message: "must be a positive integer or null" });
+      && (typeof s.maxConcurrency !== "number" || !Number.isSafeInteger(s.maxConcurrency) || s.maxConcurrency < 1)) {
+    errors.push({ path: "settings.maxConcurrency", code: CONFIG_ERROR_CODES.MALFORMED, message: "must be a positive safe integer or null" });
   }
   if (typeof s.logLevel !== "string" || !VALID_LOG_LEVELS.has(s.logLevel)) {
     errors.push({ path: "settings.logLevel", code: CONFIG_ERROR_CODES.MALFORMED, message: "must be one of trace|debug|info|warn|error" });

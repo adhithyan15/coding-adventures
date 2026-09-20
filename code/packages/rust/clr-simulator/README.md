@@ -8,7 +8,7 @@ This crate simulates a subset of .NET CLR bytecode. Unlike the JVM (which encode
 
 ## Supported Instructions
 
-Includes ldc.i4 (compact and extended forms), ldc.i8, ldloc/stloc, add, sub, mul,
+Includes ldc.i4 (compact -1 through 8, short and full forms), ldc.i8, ldloc/stloc, add, sub, mul,
 div, rem, and/or/xor/not, shifts, neg, nop, ldnull, br.s, brfalse.s, brtrue.s,
 ret, and two-byte comparison opcodes (ceq, cgt, clt).
 

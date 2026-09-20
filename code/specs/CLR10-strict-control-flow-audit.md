@@ -41,4 +41,4 @@ Default source routing and source i64 narrowing remain separate work.
 
 Numbering note: originally specified as CLR09 before implementation; renamed
 to CLR10 after discovering active PR #15711 owns compact constant CLR09.
-Keep long-branch publication local until that implementation PR merges.
+That prerequisite merged in #15711; long-branch publication can now proceed.
