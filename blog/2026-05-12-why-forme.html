@@ -149,7 +149,7 @@ pipelines.</p>
 <li>A blog post is <code>Markdown → ContentSource → ContentNode → RenderedPage → DeployArtifact</code>. Five stages, each tiny enough to fit
 on a page.</li>
 <li>An RSS feed is a different terminal <code>Stage&lt;Stream&lt;ContentNode&gt;, Feed&gt;</code> reading the same parsed nodes — no parser fork required.</li>
-<li>A printed PDF (when FM07 lands) is yet another terminal stage
+<li>A printed PDF (tracked by the FM-B017 backend-boundary milestone) is another terminal stage
 consuming the same <code>ContentNode</code>s and emitting a <code>PrintForme</code>.</li>
 <li>A search index is a sibling collector that the orchestrator runs in
 parallel with the renderer.</li>
