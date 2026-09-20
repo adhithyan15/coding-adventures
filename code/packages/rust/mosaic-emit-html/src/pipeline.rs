@@ -1423,7 +1423,10 @@ pub fn from_pipeline_with_slot_values(
     }
 
     let name = &interface.component;
-    let part_styles = build_part_style_map(interface, style, slot_values);
+    let part_styles = HtmlStyles {
+        parts: build_part_style_map(interface, style, slot_values),
+        table_font: false,
+    };
 
     // 2. Emit the banner + component-tagged root wrapper. The wrapper
     //    carries `data-mosaic-component="<Name>"` so a hydrator (or a
@@ -1470,11 +1473,13 @@ pub fn from_pipeline_with_sample_slot_values(
 // Tree walker
 // =====================================================================
 
-/// The pieces needed to format a single HTML element of a given primitive.
-///
-/// Split out so that author-declared part styles (from mosstyle) can be
-/// merged with the primitive's built-in inline style before the opening
-/// tag is formed.
+/// Author styles and the nearest table's typography scope.
+struct HtmlStyles {
+    parts: HashMap<String, String>,
+    table_font: bool,
+}
+
+/// The pieces needed to format a single HTML element of a primitive.
 struct HtmlTag {
     /// The element name without `<>`, e.g. `div`, `span`, `img`.
     tag_name: &'static str,
@@ -1621,7 +1626,7 @@ fn primitive_to_html_tag(node: &LayoutNode) -> Result<HtmlTag, PipelineEmitError
 fn emit_html_tree(
     node: &LayoutNode,
     indent: usize,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let mut out = String::new();
@@ -1955,7 +1960,7 @@ fn emit_html_tree(
 fn emit_children(
     children: &[LayoutNode],
     indent: usize,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
     let mut i = 0;
@@ -2018,7 +2023,7 @@ fn append_emit_marker(attrs: &mut String, node: &LayoutNode, prop_name: &str, at
 fn emit_host_input(
     node: &LayoutNode,
     indent: usize,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> String {
     let pad = " ".repeat(indent);
     let mut attrs = String::new();
@@ -2116,7 +2121,7 @@ fn emit_host_input(
 /// `HostInput` is intentionally single-line; `Input(multiline: true)` is the
 /// current portable editor contract. Static HTML records callbacks as neutral
 /// hydration markers, matching `HostInput`.
-fn emit_input(node: &LayoutNode, indent: usize, part_styles: &HashMap<String, String>) -> String {
+fn emit_input(node: &LayoutNode, indent: usize, part_styles: &HtmlStyles) -> String {
     let pad = " ".repeat(indent);
     let multiline =
         matches!(find_prop(node, "multiline"), Some(LayoutPropValue::Keyword(k)) if k == "true");
@@ -2186,7 +2191,7 @@ fn emit_input(node: &LayoutNode, indent: usize, part_styles: &HashMap<String, St
 fn emit_host_button(
     node: &LayoutNode,
     indent: usize,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let mut attrs = String::new();
@@ -2320,7 +2325,7 @@ fn emit_host_button(
 fn emit_host_checkbox(
     node: &LayoutNode,
     indent: usize,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> String {
     let pad = " ".repeat(indent);
     let mut attrs = String::from(" type=\"checkbox\"");
@@ -2406,7 +2411,7 @@ fn emit_host_checkbox(
 fn emit_host_radio(
     node: &LayoutNode,
     indent: usize,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> String {
     let pad = " ".repeat(indent);
     let mut attrs = String::from(" type=\"radio\"");
@@ -2477,7 +2482,7 @@ fn emit_host_radio(
 fn emit_host_slider(
     node: &LayoutNode,
     indent: usize,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> String {
     let pad = " ".repeat(indent);
     let mut attrs = String::from(" type=\"range\"");
@@ -2550,7 +2555,7 @@ fn emit_host_slider(
 fn emit_host_link(
     node: &LayoutNode,
     indent: usize,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let mut attrs = String::new();
@@ -2645,7 +2650,7 @@ fn emit_host_link(
 fn emit_host_tooltip(
     node: &LayoutNode,
     indent: usize,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let mut attrs = String::new();
@@ -2744,7 +2749,7 @@ fn emit_host_navigation_split(
 fn emit_host_number_input(
     node: &LayoutNode,
     indent: usize,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> String {
     let pad = " ".repeat(indent);
     let mut attrs = String::from(" type=\"number\" inputmode=\"numeric\"");
@@ -2839,7 +2844,7 @@ fn emit_host_number_input(
 fn emit_host_dialog(
     node: &LayoutNode,
     indent: usize,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let mut out = String::new();
@@ -3006,7 +3011,7 @@ fn emit_host_dialog(
 fn emit_table_node(
     node: &LayoutNode,
     indent: usize,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let mut out = String::new();
@@ -3020,7 +3025,24 @@ fn emit_table_node(
         _ => unreachable!("emit_table_node called with non-table tag {}", node.tag),
     };
 
-    let style_attr = build_style_attr(node, "", part_styles);
+    // A nested table starts a new typography scope. An unbound nested table
+    // restores native sizing; an authored part size still overrides that default.
+    let nested_default = if tag_name == "table" && part_styles.table_font {
+        "font-size: initial"
+    } else {
+        ""
+    };
+    let scoped_styles;
+    let part_styles = if tag_name == "table" {
+        scoped_styles = HtmlStyles {
+            parts: part_styles.parts.clone(),
+            table_font: has_native_font_size(node),
+        };
+        &scoped_styles
+    } else {
+        part_styles
+    };
+    let style_attr = build_style_attr(node, nested_default, part_styles);
 
     // UI31 — `dir` slot for right-to-left layout. Only meaningful on
     // the root `HostTable`; sub-tags inherit direction from the
@@ -3140,12 +3162,13 @@ fn emit_table_row(
     row: &LayoutNode,
     indent: usize,
     cell_tag: &str,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let cell_pad = " ".repeat(indent + 2);
     let mut out = String::new();
-    writeln!(out, "{pad}<tr>").unwrap();
+    let row_style = build_style_attr(row, "", part_styles);
+    writeln!(out, "{pad}<tr{row_style}>").unwrap();
     for cell in &row.children {
         if cell.tag == "Text" {
             // Unwrap Text so the cell text is content-only.
@@ -3210,7 +3233,7 @@ fn try_emit_table_for_row_html(
     for_node: &LayoutNode,
     cell_tag: &str,
     indent: usize,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> Result<Option<String>, PipelineEmitError> {
     if for_node.children.len() != 1 || for_node.children[0].tag != "Row" {
         return Ok(None);
@@ -3276,7 +3299,7 @@ fn try_emit_table_for_cell_html(
     for_node: &LayoutNode,
     cell_tag: &str,
     indent: usize,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> Result<Option<String>, PipelineEmitError> {
     if for_node.children.len() != 1 || for_node.children[0].tag == "Row" {
         return Ok(None);
@@ -3413,7 +3436,7 @@ fn emit_if_node(
     node: &LayoutNode,
     else_node: Option<&LayoutNode>,
     indent: usize,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let mut out = String::new();
@@ -3499,7 +3522,7 @@ fn emit_if_node(
 fn emit_for_node(
     node: &LayoutNode,
     indent: usize,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let mut out = String::new();
@@ -3558,7 +3581,7 @@ fn emit_for_node(
 fn emit_host_draggable(
     node: &LayoutNode,
     indent: usize,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let mut attrs = String::new();
@@ -3615,7 +3638,7 @@ fn emit_host_draggable(
 fn emit_host_drop_target(
     node: &LayoutNode,
     indent: usize,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let mut attrs = String::new();
@@ -3781,13 +3804,13 @@ fn css_declarations(style: &str) -> impl Iterator<Item = &str> {
 fn emit_path_html(
     node: &LayoutNode,
     indent: usize,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let style = node
         .part_name
         .as_deref()
-        .and_then(|part| part_styles.get(part))
+        .and_then(|part| part_styles.parts.get(part))
         .map(String::as_str)
         .unwrap_or("");
     let fill = css_value(style, "background").unwrap_or("none");
@@ -3883,7 +3906,7 @@ fn static_col_width_style(col: &LayoutNode) -> String {
 pub fn has_native_font_size(node: &LayoutNode) -> bool {
     matches!(
         node.tag.as_str(),
-        "Text" | "HostButton" | "Input" | "HostInput"
+        "Text" | "HostButton" | "Input" | "HostInput" | "HostTable"
     ) && match find_prop(node, "font-size") {
         Some(LayoutPropValue::Number(n)) => n.is_finite() && *n > 0.0,
         Some(LayoutPropValue::SlotRef(_)) => true,
@@ -3893,7 +3916,7 @@ pub fn has_native_font_size(node: &LayoutNode) -> bool {
 fn validate_font_sizes(node: &LayoutNode, slots: &[SlotDecl]) -> Result<(), PipelineEmitError> {
     if matches!(
         node.tag.as_str(),
-        "Text" | "HostButton" | "Input" | "HostInput"
+        "Text" | "HostButton" | "Input" | "HostInput" | "HostTable"
     ) {
         if let Some(value) = find_prop(node, "font-size") {
             let valid = match value {
@@ -3919,14 +3942,20 @@ fn validate_font_sizes(node: &LayoutNode, slots: &[SlotDecl]) -> Result<(), Pipe
 fn build_style_attr(
     node: &LayoutNode,
     builtin: &str,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> String {
     let part_style = node
         .part_name
         .as_deref()
-        .and_then(|n| part_styles.get(n).map(String::as_str))
+        .and_then(|n| part_styles.parts.get(n).map(String::as_str))
         .unwrap_or("");
-    let mut merged = merge_styles(builtin, part_style);
+    let inherited = if part_styles.table_font
+        && matches!(node.tag.as_str(), "HostButton" | "Input" | "HostInput") {
+        merge_styles(builtin, "font-size: inherit")
+    } else {
+        builtin.to_owned()
+    };
+    let mut merged = merge_styles(&inherited, part_style);
     let mut binding = String::new();
     if has_native_font_size(node) {
         match find_prop(node, "font-size") {
@@ -3956,7 +3985,7 @@ fn build_style_attr(
 fn emit_host_surface_html(
     node: &LayoutNode,
     indent: usize,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> String {
     let pad = " ".repeat(indent);
     let slot = match find_prop(node, "content") {

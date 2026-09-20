@@ -74,7 +74,10 @@ HTML supports positive literals and numeric component slots on `Text`,
 finite positive values after rendering, overriding static font size without
 replacing other typography. Invalid runtime values restore the authored
 fallback on the next render. Component slots remain distinct from loop locals.
-HTML `HostTable` inheritance and WebComponent typography remain pending.
+HTML `HostTable` literals and numeric slots propagate through native CSS inheritance
+to headers, text and editors (#15677). Authored cell, row and container styles
+override inheritance; nested tables start a new scope. Controls outside bound
+tables retain native defaults. WebComponent typography remains pending.
 
 Unsupported backends and placements report `typography.font-size-binding-unimplemented` in package
 degradation analysis. This foundation does not claim cross-backend typography acceptance,
