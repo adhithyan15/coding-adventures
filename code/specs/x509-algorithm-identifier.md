@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed zero-external-dependency Rust boundary above `der-asn1`.
+Shipped zero-external-dependency Rust boundary above `der-asn1`.
 
 ## Purpose
 
@@ -78,7 +78,7 @@ Tests must cover:
 - malformed optional-parameter framing;
 - a third child;
 - shared decoder depth and total-element exhaustion;
-- offsets for failures in both child positions;
+- offsets for failures in every possible child position;
 - redacted diagnostics and exact borrowed parameter bytes.
 
 ## Deliberate exclusions
