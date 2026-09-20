@@ -11,39 +11,29 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 15761,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/15761",
-    "title": "feat(der-tlv): complete portable conformance across 15 lanes",
-    "branch": "codex/parity-der-tlv-portable-conformance-20260919",
-    "item_id": "der-tlv-portable-conformance",
-    "opened_at": "2026-09-20T08:35:49Z",
-    "head_revision": "e8ef4bcbf87543f2b505863362e8cfa5ff7e14f2",
-    "checks_status": "pending",
-    "auto_merge_enabled": false
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-09-20T06:46:10Z",
-    "pr_number": 15708,
+    "observed_at": "2026-09-20T14:33:51Z",
+    "pr_number": 15761,
     "status": "merged",
-    "notes": "PR #15708 reached terminal acceptable conclusions on every required and advisory check, including both protected CI gates and all three OCaml fresh-solve and locked-fixture platforms. GitHub reported the reviewed head CLEAN and MERGEABLE. Guarded squash auto-merge was enabled only after that evidence was complete, and GitHub merged the reviewed head automatically at 2026-09-20T06:46:10Z as a6149a44b8a3184e84ffa076d05c04340d6d7825; no plain manual merge command was used."
+    "notes": "PR #15761 reached terminal acceptable conclusions on every required and advisory check, including both protected CI gates, CodeQL, and all three OCaml fresh-solve and locked-fixture platforms. GitHub reported the reviewed head CLEAN and MERGEABLE. Guarded squash auto-merge was enabled only after that evidence was complete, and GitHub merged the reviewed head automatically at 2026-09-20T14:33:51Z as f280bdbd4df120379afe96a17dfba49251c161b5; no plain manual merge command was used."
   },
   "last_inventory": {
-    "revision": "a6149a44b8a3184e84ffa076d05c04340d6d7825",
+    "revision": "82f851dc277b5f1931a3e64276466cd1d742e3d0",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1448,
-    "implementation_package_slots": 4673,
-    "all_reported_identities": 1488,
-    "high_consensus_packages": 175,
+    "implementation_identities": 1454,
+    "implementation_package_slots": 4693,
+    "all_reported_identities": 1494,
+    "high_consensus_packages": 176,
     "high_consensus_missing_slots": 265,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 181,
     "two_to_four_missing_slots": 2282,
-    "singleton_packages": 969,
-    "singleton_missing_slots": 13566,
-    "rust_singletons": 789,
+    "singleton_packages": 974,
+    "singleton_missing_slots": 13636,
+    "rust_singletons": 793,
     "ocaml_packages": 5,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -3603,7 +3593,7 @@
       "branch": null,
       "pr_number": null,
       "selection_blocked": false,
-      "notes": "The roadmap already records the TypeScript-led forme-* static-site family, and merged fan-out/routed-blog expansions make its pure graph, routing, content-model, rendering, and provenance kernels concrete enough for a dedicated owner rather than indefinite retention under the singleton umbrella. Inventory the family, separate deterministic graph, routing, rendering, content-model, provenance, immutable classless-theme behavior, and asset/MIME derivation from browser, Vite, filesystem, and UI authority, define fixtures and dependency order, and record narrow applicability exceptions before any port. PRs #13244, #13251, #13268, #13368, #13395, #13401, #13409, #13420, #13455, and #13765 are merged. The collision-clean inventory includes TypeScript-only `forme-load-assets-fs`, `forme-theme-classless`, `forme-resolve-asset-refs-fs`, `forme-emit-site-fs`, `forme-cli`, and `forme-dev-server`; all remain covered by this family rather than creating duplicate singleton owners. Dedicated PR #13768 merged the missing shared TypeScript base-config boundary registration, and #13765 registered forme-dev-server under that boundary, so this family owner remains unblocked for future dependency/leverage selection."
+      "notes": "The roadmap already records the TypeScript-led forme-* static-site family, and merged fan-out/routed-blog expansions make its pure graph, routing, content-model, rendering, provenance, and deploy-planning kernels concrete enough for a dedicated family owner rather than indefinite retention under the singleton umbrella. Inventory the family, separate deterministic graph, routing, rendering, content-model, provenance, immutable classless-theme behavior, asset/MIME derivation, and the merged `forme-deploy-runner-core` manifest-validation, complete-set planning, injected-content preflight, verified-snapshot, and dry-run/report behavior from browser, Vite, filesystem, network, credential, CLI, and UI authority; define fixtures and dependency order; and record narrow applicability exceptions before any port. PRs #13244, #13251, #13268, #13368, #13395, #13401, #13409, #13420, #13455, #13765, and #15785 are merged. The collision-clean inventory includes TypeScript-only `forme-load-assets-fs`, `forme-theme-classless`, `forme-resolve-asset-refs-fs`, `forme-emit-site-fs`, `forme-cli`, `forme-dev-server`, and `forme-deploy-runner-core`; all remain covered by this family rather than creating duplicate singleton owners. Effectful filesystem, GitHub Pages, and CLI deploy adapters remain native/external classification work outside parity-loop selection."
     },
     {
       "id": "rust-singletons-20260730-classification",
@@ -9486,7 +9476,7 @@
     {
       "id": "der-tlv-portable-conformance",
       "title": "Define portable DER TLV framing conformance and established-lane parity",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/parity-der-tlv-portable-conformance-20260919",
       "pr_number": 15761,
@@ -9506,16 +9496,85 @@
       "final_review_notes": "Independent closure review verified the neutral registry, capability identity checks, direct aggregate execution, and package-native runtime ownership. Independent .NET review found and closed a C# init-only Limits invariant bypass; fresh C# and F# suites exceed their 95 percent coverage gates. The 19-commit implementation rebased conflict-free onto current origin/main 095c928528ee27fe5b2f9a34ad8c094243c9a523 before publication preparation.",
       "publication_notes": "Opened ready-for-review PR #15761 from clean validated head e8ef4bcbf87543f2b505863362e8cfa5ff7e14f2 after a normal first push from exact origin/main 095c928528ee27fe5b2f9a34ad8c094243c9a523. Immediately before publication, the branch was 20 commits ahead and zero behind, no other parity PR was active, no PR already targeted this branch, and a paginated scan of 14 live pull requests and 481 file entries found zero exact overlap with the 153 changed paths. GitHub reports the PR non-draft with initial CI, CodeQL, and documentation checks queued or running; auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no conflict.",
       "post_open_review_notes": "A read-only final-diff audit found that the portable prose overstated allocation and architecture guarantees: Lua and other value-oriented runtimes may copy byte projections, and the current corpus validates each consumer's supported index domain without proving every 32-bit architecture. The documentation now makes allocation strategy non-normative, requires byte-exact projections, and limits overflow claims to supported index domains. The 54-case fixture, 15-lane closure, and package-parity suites pass unchanged after this claim-precision repair.",
-      "notes": "Delivered the zero-runtime-dependency, empty-capability, in-memory DER TLV framing decoder as a closed portable contract in all 15 established lanes. The neutral suite and implementations cover identifier classes, constructed bits, tag and length canonicality, truncation, exact trailing rejection, configured limits, byte-exact projections, untouched remainders, sibling cursor offsets, non-advancement after failure, and payload-redacted kind/offset errors while keeping allocation strategy, ASN.1 schema decoding, X.509, cryptography, trust, TLS, transport, and ambient authority outside this owner. Ready-for-review PR #15761 is the sole active parity PR; the item remains pr-open until GitHub merges it through guarded auto-merge after terminal acceptable checks and a conflict-free mergeability result."
+      "merge_revision": "f280bdbd4df120379afe96a17dfba49251c161b5",
+      "merged_at": "2026-09-20T14:33:51Z",
+      "merge_notes": "Every required and advisory final-head check was terminal and acceptable, GitHub reported CLEAN and MERGEABLE, guarded squash auto-merge was enabled, and GitHub merged PR #15761 automatically without a plain manual merge command.",
+      "notes": "Delivered the zero-runtime-dependency, empty-capability, in-memory DER TLV framing decoder as a closed portable contract in all 15 established lanes. The neutral suite and implementations cover identifier classes, constructed bits, tag and length canonicality, truncation, exact trailing rejection, configured limits, byte-exact projections, untouched remainders, sibling cursor offsets, non-advancement after failure, and payload-redacted kind/offset errors while keeping allocation strategy, ASN.1 schema decoding, X.509, cryptography, trust, TLS, transport, and ambient authority outside this owner. PR #15761 merged automatically after all checks passed."
     },
     {
       "id": "der-asn1-portable-conformance",
       "title": "Define portable typed ASN.1 DER value conformance and established-lane parity",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["der-tlv-portable-conformance"],
+      "branch": "codex/parity-der-asn1-portable-conformance-20260920",
+      "pr_number": null,
+      "selected_at": "2026-09-20T14:36:10Z",
+      "selection_revision": "82f851dc277b5f1931a3e64276466cd1d742e3d0",
+      "selection_notes": "Selected after PR #15761 merged through guarded auto-merge, followed by a collision-checked exact-main inventory refresh and bounded package, owner, fixture, and validation audits. DER ASN.1 is the sole dependency-shaped root immediately unlocked by DER TLV and directly gates nine confirmed Rust X.509 consumers plus the five newly registered extension-family owners. The fresh worktree is clean and rebased to exact current origin/main; PR #15798 remains open and does not yet add a Subject Alternative Name owner.",
+      "notes": "Own the portable empty-capability typed ASN.1 DER layer above the merged DER TLV contract. Freeze a language-neutral semantic suite that references rather than copies the DER TLV framing corpus, then deliver all 15 established lanes for canonical BOOLEAN, INTEGER, BIT STRING, OCTET STRING, IA5String, NULL, OID, implicit primitive values, exact SEQUENCE, SET, and context-specific wrappers, shared budgets, transactional failures, and payload-redacted local offsets. Keep X.509 schema, path validation, trust, signatures, TLS, network, credentials, and ambient authority outside this owner."
+    },
+    {
+      "id": "x509-extension-portable-conformance",
+      "title": "Define portable generic X.509 Extension conformance and established-lane parity",
+      "status": "pending",
+      "depends_on": ["der-asn1-portable-conformance"],
       "branch": null,
       "pr_number": null,
-      "notes": "Exact post-PR #15668 inventory reconciliation found the Rust-only der-asn1 package without a parity owner. Classify its zero-external-dependency, allocation-free, empty-capability typed ASN.1 DER layer as portable. Freeze neutral fixtures and the Rust oracle for canonical BOOLEAN, INTEGER, BIT STRING, OCTET STRING, NULL, and OID values; exact SEQUENCE, SET, and context-specific wrappers; shared depth, element, and OID budgets; non-advancement after failure; and payload-redacted kind/offset errors. Keep X.509 schema, path validation, trust, signatures, TLS, network, credentials, and ambient authority outside this owner. It depends on the existing DER TLV framing contract."
+      "notes": "Discovered by the collision-checked post-PR #15761 inventory after merged PR #15748 added the Rust-only x509-extension identity. Own the exact generic Extension sequence: validated extension OID, DEFAULT FALSE critical flag, opaque OCTET STRING value, shared budgets, transactional failure, local offsets, and redacted diagnostics. Keep extension-specific semantics, certificate policy, signatures, validation, trust, revocation, TLS, transport, and ambient authority outside this owner."
+    },
+    {
+      "id": "x509-extensions-portable-conformance",
+      "title": "Define portable bounded X.509 Extensions conformance and established-lane parity",
+      "status": "pending",
+      "depends_on": ["der-asn1-portable-conformance", "x509-extension-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked post-PR #15761 inventory after merged PR #15755 added the Rust-only x509-extensions identity. Own a non-empty ordered sequence of at most 64 generic extensions, duplicate extension-OID rejection, shared nested budgets, exact offset rebasing, transactional failure, and redacted diagnostics. Keep extension-specific interpretation and certificate policy outside this owner."
+    },
+    {
+      "id": "x509-basic-constraints-portable-conformance",
+      "title": "Define portable X.509 Basic Constraints conformance and established-lane parity",
+      "status": "pending",
+      "depends_on": ["der-asn1-portable-conformance", "x509-extension-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked post-PR #15761 inventory after merged PR #15765 added the Rust-only x509-basic-constraints identity. Own OID 2.5.29.19, the CA DEFAULT FALSE form, canonical TRUE, and a nonnegative arbitrary-width pathLen value over one generic extension. Keep trust-path decisions and cross-extension Key Usage policy outside this owner; the singular generic Extension owner, not the plural Extensions owner, is its structural prerequisite."
+    },
+    {
+      "id": "x509-key-usage-portable-conformance",
+      "title": "Define portable X.509 Key Usage conformance and established-lane parity",
+      "status": "pending",
+      "depends_on": ["der-asn1-portable-conformance", "x509-extension-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked post-PR #15761 inventory after merged PR #15772 added the Rust-only x509-key-usage identity. Own OID 2.5.29.15 and canonical named-bit decoding over one generic extension. Resolve the RFC 5280 profile treatment of unnamed bits explicitly before freezing the Rust oracle's current rejection behavior. Keep Basic Constraints, Extended Key Usage, authorization, path validation, trust, and certificate policy outside this owner."
+    },
+    {
+      "id": "x509-extended-key-usage-portable-conformance",
+      "title": "Define portable X.509 Extended Key Usage conformance and established-lane parity",
+      "status": "pending",
+      "depends_on": ["der-asn1-portable-conformance", "x509-extension-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked post-PR #15761 inventory after merged PR #15784 added the Rust-only x509-extended-key-usage identity. Own a non-empty bounded OID sequence, original wire order, and duplicate-purpose preservation over one generic extension. Treat anyExtendedKeyUsage as an uninterpreted OID and keep authorization, path validation, trust, and certificate policy outside this owner."
+    },
+    {
+      "id": "ocaml-der-tlv-emerging-lane-consumer",
+      "title": "Add the OCaml consumer for portable DER TLV conformance",
+      "status": "pending",
+      "depends_on": ["der-tlv-portable-conformance", "ocaml-build-tool-current-contract-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Register the emerging OCaml lane's DER TLV consumer against the merged neutral contract after the native OCaml build tool reaches current-contract conformance. This is an explicit emerging-lane closure item and does not add OCaml to the 15-language denominator or implicitly promote the lane."
+    },
+    {
+      "id": "ocaml-der-asn1-emerging-lane-consumer",
+      "title": "Add the OCaml consumer for portable typed ASN.1 DER conformance",
+      "status": "pending",
+      "depends_on": ["der-asn1-portable-conformance", "ocaml-der-tlv-emerging-lane-consumer", "ocaml-build-tool-current-contract-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Register the emerging OCaml lane's typed ASN.1 DER consumer after both the neutral established-lane contract and OCaml DER TLV consumer exist. This closes a future portable-core gap without changing the current 15-language denominator or implicitly promoting OCaml."
     },
     {
       "id": "x509-time-portable-conformance",

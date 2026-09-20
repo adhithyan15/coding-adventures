@@ -14135,6 +14135,51 @@ coverage evidence. The 19 implementation commits rebased conflict-free onto
 current `origin/main` before publication preparation, while the state remains
 `in-progress` until the ready-for-review PR actually exists.
 
+### PR #15761 merge, exact-main inventory, and DER ASN.1 selection
+
+Every required and advisory check on PR #15761 reached a terminal acceptable
+conclusion, including both protected CI gates, CodeQL, and all three OCaml
+fresh-solve and locked-fixture platforms. GitHub reported the reviewed head
+clean and mergeable. Guarded squash auto-merge was enabled only after that
+evidence was complete, and GitHub merged it automatically at
+`2026-09-20T14:33:51Z` as
+`f280bdbd4df120379afe96a17dfba49251c161b5`; no plain manual merge command was
+used.
+
+The fresh parity worktree was then rebased cleanly to exact current
+`origin/main` `82f851dc277b5f1931a3e64276466cd1d742e3d0`. The collision-checked schema-3
+inventory at that revision contains 15 established lanes, 1,454 implementation
+identities, 4,693 implementation slots, and 1,494 all-reported identities.
+Completion bands are 176/265, 123/934, 181/2,282, and 974/13,636; Rust has 793
+singleton identities, OCaml remains an emerging five-package lane, and
+canonical collisions and unknown language buckets remain zero.
+
+Five newly merged Rust X.509 identities now have explicit portable pending
+owners. Singular `x509-extension` depends on typed DER ASN.1; plural
+`x509-extensions`, Basic Constraints, Key Usage, and Extended Key Usage each
+depend on DER ASN.1 plus the singular generic Extension contract. Basic
+Constraints, Key Usage, and Extended Key Usage are sibling semantic decoders,
+not dependencies of plural Extensions. The newly merged TypeScript
+`forme-deploy-runner-core` stays under the existing Forme family-classification
+owner, which separates deterministic manifest, planning, injected-content, and
+reporting behavior from filesystem, network, credential, and CLI adapters.
+Emerging OCaml receives explicit DER TLV then DER ASN.1 consumer owners behind
+its current-contract build tool without changing the established denominator.
+Open PR #15798 remains prospective, so no Subject Alternative Name owner is
+added yet.
+
+The dependency/leverage pass selects `der-asn1-portable-conformance` on branch
+`codex/parity-der-asn1-portable-conformance-20260920`. It is the direct payoff
+from merged DER TLV and gates nine confirmed Rust X.509 consumers plus the five
+new extension-family owners. The selected tranche reuses the neutral DER TLV
+framing corpus by reference, freezes semantic BOOLEAN, INTEGER, BIT STRING,
+OCTET STRING, IA5String, NULL, OID, implicit primitive, container, budget,
+transactional-failure, local-offset, and redaction behavior, then delivers the
+typed layer independently in all 15 established lanes. X.509 schema and policy,
+cryptography, trust, TLS, transport, credentials, and ambient authority remain
+outside it. The reconciled graph has 859 owners and 1,593 dependency edges: 223
+merged, 635 pending, and exactly this owner in progress.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
