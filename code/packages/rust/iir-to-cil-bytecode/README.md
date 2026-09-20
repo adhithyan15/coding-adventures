@@ -36,7 +36,7 @@ on every incoming path. Multiple exact typed returns are supported. Backward
 edges, malformed controls, skipped definitions at joins and falloff are refused.
 
 CLR13 accepts zero-argument `call_builtin input_i64` and `input_more`
-instructions with i64 destinations. CLR14 adds `input_str` with a string
+instructions with i64 destinations. CLR15 adds `input_str` with a string
 destination and permits that type only for moves, direct calls and returns.
 They lower to reserved MemberRef rows 6 through 8 for execution by
 `clr-simulator`; numeric reads preserve the full signed i64 domain, peeks return

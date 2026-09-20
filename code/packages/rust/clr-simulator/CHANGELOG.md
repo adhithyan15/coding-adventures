@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased — strict encoded string input (CLR14)
+## Unreleased — strict encoded string input (CLR15)
 
 Reserve MemberRef row 8 for `input_str` and add immutable byte-string arena
 handles to the simulator value model. Line reads preserve content bytes exactly,

@@ -1,6 +1,6 @@
 # Changelog — iir-to-cil-bytecode
 
-## Unreleased — strict encoded string input (CLR14)
+## Unreleased — strict encoded string input (CLR15)
 
 Extend only `lower_typed_scalars_to_cil` with `str` transport through locals,
 parameters, moves, direct calls and returns, plus `input_str` at exact MemberRef
