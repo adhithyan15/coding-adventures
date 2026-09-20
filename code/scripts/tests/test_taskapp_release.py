@@ -523,6 +523,8 @@ def test_workflow_validates_before_building_and_has_one_publisher() -> None:
     assert "*.tar.gz" in workflow
     assert "archive-macos-app" in workflow
     assert "Trestle.app/Contents/Info.plist" in workflow
+    assert 'if ! kill -0 "$app_pid" 2>/dev/null; then' in workflow
+    assert 'cat "$log"' in workflow
     assert "archive-windows-app" in workflow
     assert "write-windows-icon" in workflow
     assert "-p:SelfContained=true" in workflow

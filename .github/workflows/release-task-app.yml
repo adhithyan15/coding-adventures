@@ -581,7 +581,10 @@ jobs:
               app_pid=$!
               trap 'kill "$app_pid" 2>/dev/null || true' EXIT
               sleep 5
-              kill -0 "$app_pid"
+              if ! kill -0 "$app_pid" 2>/dev/null; then
+                cat "$log"
+                exit 1
+              fi
               kill "$app_pid"
               wait "$app_pid" || true
               trap - EXIT
