@@ -46,7 +46,10 @@ describe("live product scheduling", () => {
         ["emit-surface", "skipped"],
       ]);
       expect(warm.stages.every(stage => stage.inputChanged === false)).toBe(true);
+      expect(warm.stages.filter(stage => stage.outcome === "skipped")
+        .every(stage => stage.cacheHits === 1 && stage.cacheMisses === 0)).toBe(true);
       expect(warm.buildId).toBe(clean.buildId);
+      expect(Object.keys(clean.outputs)).toEqual(["articles", "surface"]);
       expect(JSON.stringify(warm.outputs)).toBe(JSON.stringify(clean.outputs));
       await expectFilesMatchReport(warm);
     } finally {
@@ -83,6 +86,8 @@ interface BuildReport {
     readonly instanceId: string;
     readonly outcome: string;
     readonly inputChanged: boolean | null;
+    readonly cacheHits: number;
+    readonly cacheMisses: number;
   }[];
   readonly outputs: Readonly<Record<string, {
     readonly manifest: { readonly buildTime: string };

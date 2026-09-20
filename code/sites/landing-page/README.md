@@ -30,6 +30,10 @@ project prefix, and writes `dist/index.html` plus `dist/assets/`.
 
 Run `npm test` for the content-schema and renderer contracts, or `npm run check`
 to validate the imported config and typed DAG without invoking any stage.
+The test suite also runs a clean and an unchanged second-process build in
+reproducible mode. It requires identical build IDs, canonical output reports,
+and file hashes; verifies safe source, pure-transform, and emitter reuse; and
+confirms that the stylesheet and asset readers rerun conservatively.
 
 For live preview, run `npm run bootstrap` once and then `npm run dev`. Forme
 serves the successful in-memory artifact at `http://127.0.0.1:3000`, rebuilds
