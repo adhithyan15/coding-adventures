@@ -74,6 +74,10 @@ pub const OP_RET: u8 = 0x2A;
 pub const OP_BR_S: u8 = 0x2B;
 pub const OP_BRFALSE_S: u8 = 0x2C;
 pub const OP_BRTRUE_S: u8 = 0x2D;
+/// Long branches carry a signed four-byte displacement from the next instruction.
+pub const OP_BR: u8 = 0x38;
+pub const OP_BRFALSE: u8 = 0x39;
+pub const OP_BRTRUE: u8 = 0x3A;
 pub const OP_ADD: u8 = 0x58;
 pub const OP_SUB: u8 = 0x59;
 pub const OP_MUL: u8 = 0x5A;
@@ -712,6 +716,9 @@ impl CLRSimulator {
             return self.trace(pc, "ret", stack_before, "return (halt)".to_string());
         }
 
+        if matches!(opcode_byte, OP_BR | OP_BRFALSE | OP_BRTRUE) {
+            return self.execute_branch_long(stack_before, opcode_byte);
+        }
         if opcode_byte == OP_BR_S {
             return self.execute_branch_s(stack_before, "br.s", true, false);
         }
@@ -818,6 +825,45 @@ impl CLRSimulator {
         let pc = self.pc;
         self.pc += 1;
         self.trace(pc, mnemonic, stack_before, format!("pop {b} and {a}, push {result}"))
+    }
+
+    /// Decode and validate before consuming a condition. A failed branch must
+    /// leave the machine available for inspecting the original instruction.
+    /// Range checking is deliberately not a full CIL instruction verifier.
+    fn execute_branch_long(
+        &mut self,
+        stack_before: Vec<Option<Value>>,
+        opcode: u8,
+    ) -> CLRTrace {
+        let pc = self.pc;
+        let mnemonic = match opcode {
+            OP_BR => "br",
+            OP_BRFALSE => "brfalse",
+            _ => "brtrue",
+        };
+        let next_pc = pc.checked_add(5)
+            .filter(|&end| end <= self.bytecode.len())
+            .unwrap_or_else(|| panic!("Truncated operand on {mnemonic} at PC={pc}"));
+        let raw = i32::from_le_bytes(self.bytecode[pc + 1..next_pc].try_into().unwrap());
+        // i128 holds every usize plus every i32 displacement without wrapping,
+        // including negative destinations which must not become large indices.
+        let target = next_pc as i128 + i128::from(raw);
+        assert!(target >= 0 && target < self.bytecode.len() as i128,
+            "Invalid target on {mnemonic} at PC={pc}");
+        let take = if opcode == OP_BR {
+            true
+        } else {
+            let value = self.stack.last().copied().flatten()
+                .unwrap_or_else(|| panic!("Missing stack operand on {mnemonic} at PC={pc}"));
+            let truthy = value.is_truthy();
+            if opcode == OP_BRFALSE { !truthy } else { truthy }
+        };
+        if opcode != OP_BR {
+            self.stack.pop();
+        }
+        self.pc = if take { target as usize } else { next_pc };
+        self.trace(pc, mnemonic, stack_before,
+            format!("branch taken={take}, next PC={} (offset {raw})", self.pc))
     }
 
     fn execute_branch_s(
