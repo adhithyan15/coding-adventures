@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "versions": {
+    "ocaml": "5.2.1",
+    "opam": "2.5.2",
+    "dune": "3.17.2",
+    "alcotest": "1.9.0",
+    "bisect_ppx": "2.8.3",
+    "ocamlformat": "0.27.0",
+    "odoc": "3.0.0",
+    "yojson": "3.0.0"
+  },
+  "actions": {
+    "checkout": "3d3c42e5aac5ba805825da76410c181273ba90b1",
+    "setup_ocaml": "15d660006c1d3110d77c34b7faa3bddefe8b82f0",
+    "upload_artifact": "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a"
+  },
+  "opam_repository_commit": "ba8cc66eb9e5baae7ebc88cf77f4c488d63d87ff",
+  "coverage_minimum_basis_points": 9500,
+  "packages": [
+    {
+      "id": "logic-gates",
+      "root": "code/packages/ocaml/logic-gates",
+      "opam_name": "coding-adventures-logic-gates",
+      "version": "0.1.0",
+      "local_dependencies": [],
+      "coverage_sources": [
+        "src/coding_adventures_logic_gates.ml"
+      ]
+    },
+    {
+      "id": "graph",
+      "root": "code/packages/ocaml/graph",
+      "opam_name": "coding-adventures-graph",
+      "version": "0.1.0",
+      "local_dependencies": [],
+      "coverage_sources": [
+        "src/coding_adventures_graph.ml"
+      ]
+    },
+    {
+      "id": "directed-graph",
+      "root": "code/packages/ocaml/directed-graph",
+      "opam_name": "coding-adventures-directed-graph",
+      "version": "0.1.0",
+      "local_dependencies": [
+        "graph"
+      ],
+      "coverage_sources": [
+        "src/coding_adventures_directed_graph.ml"
+      ]
+    },
+    {
+      "id": "state-machine",
+      "root": "code/packages/ocaml/state-machine",
+      "opam_name": "coding-adventures-state-machine",
+      "version": "0.1.0",
+      "local_dependencies": [
+        "graph",
+        "directed-graph"
+      ],
+      "coverage_sources": [
+        "src/coding_adventures_state_machine.ml"
+      ]
+    }
+  ],
+  "analyzer": {
+    "root": "code/packages/ocaml/ca-capability-analyzer",
+    "opam_name": "coding-adventures-capability-analyzer",
+    "version": "0.1.0",
+    "executable": "_build/default/bin/main.exe"
+  },
+  "downstream": {
+    "root": "code/specs/fixtures/ocaml-representative-downstream-v1",
+    "cases": {
+      "representative": {
+        "expected_file": "expected/representative.json",
+        "expected_sha256": "2b46e0461c8fef5c04bd8b79b80f4a58d20a1f27061116f5adf507e7f8776e88"
+      },
+      "transitive-leaf": {
+        "expected_file": "expected/transitive-leaf.json",
+        "expected_sha256": "9d0ebe9f139c6282467c2849384c2bb0227b93e21e59ebab3973c7ea1b7f045c"
+      }
+    }
+  },
+  "targets": {
+    "linux-x64": {
+      "runner": "ubuntu-24.04",
+      "runner_os": "Linux",
+      "runner_arch": "X64",
+      "windows_compiler": null,
+      "build_file": "BUILD"
+    },
+    "macos-arm64": {
+      "runner": "macos-14",
+      "runner_os": "macOS",
+      "runner_arch": "ARM64",
+      "windows_compiler": null,
+      "build_file": "BUILD"
+    },
+    "windows-x64": {
+      "runner": "windows-2022",
+      "runner_os": "Windows",
+      "runner_arch": "X64",
+      "windows_compiler": "mingw",
+      "build_file": "BUILD_windows"
+    }
+  },
+  "artifact": {
+    "name_prefix": "ocaml07-representative",
+    "retention_days": 7,
+    "required_entries": [
+      "coverage",
+      "documentation",
+      "source-archives",
+      "analyzer",
+      "installed-packages.txt",
+      "downstream",
+      "toolchain.txt"
+    ]
+  },
+  "governed_trees": {
+    "code/packages/ocaml/logic-gates": "392d0adedec81494b683ce3b2b57a450e624405c5e2528c7831099a08a9ce81d",
+    "code/packages/ocaml/graph": "83e2b6f93e2aeb03cc6ad513dfdbb2cde02be5637a776a93c6423cc5bbee8eb1",
+    "code/packages/ocaml/directed-graph": "7112a53a488e8b58797c2a8618ae255cc6279f46e768132e6493912ea6793c06",
+    "code/packages/ocaml/state-machine": "a0cbeb9713a9cd497306ddcb61de5dec646acbf2314c1ac9319cb898bafa6a3c",
+    "code/packages/ocaml/ca-capability-analyzer": "8f05989174e59c95d1b61eecaae0d97d2071a189c127e5039ce988d76af1b55f",
+    "code/specs/fixtures/ocaml-representative-downstream-v1": "9fca51a47cacd9dc92f41e117eb1282b182b707472d9ef8f4fe58b188b550a40"
+  },
+  "workflow_sha256": "f00dbbcb1f1b4fa4504b4770f0e6899aae31ee0429905f6e2db54df94c515ed4"
+}

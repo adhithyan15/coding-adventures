@@ -13941,6 +13941,78 @@ two Malayalam, CLR, TLS, SPICE, and Mermaid commits have no implementation-path
 overlap with this tranche. Focused native, generator, CI-registry, corpus, Go,
 state-graph, parity, and diff checks all pass again after the rebase.
 
+### Post-PR #15646 refresh and OCaml representative-chain CI selection
+
+PR #15646 completed both protected final gates successfully with no failed
+check and a conflict-free mergeable head. Guarded squash auto-merge was enabled
+only after those required contexts were terminal, and GitHub merged the Dart
+core automatically at `2026-09-19T21:42:09Z` as
+`f4e7d4c3cdb6e69f777c809388f64db2307151f6` without a plain manual merge
+command.
+
+The collision-checked schema-3 inventory at that exact merged main now contains
+15 established lanes, 1,443 implementation identities, 4,668 implementation
+slots, and 1,483 all-reported identities. Completion bands are 175/265,
+123/934, 181/2,282, and 964/13,496; Rust has 784 singleton identities, OCaml
+remains an emerging five-package lane, and canonical collisions and unknown
+language buckets remain zero. The Dart build-tool program does not create a
+package identity. The two new identities since the preceding merged inventory
+are Rust-only `tls-server-identity` and `der-tlv`.
+
+Both new identities are portable, zero-runtime-dependency, empty-capability
+cores and now have explicit pending owners. The TLS identity owner first freezes
+typed-SAN neutral fixtures, including the malformed IPv4-looking dotted-decimal
+boundary, before established-lane ports; it excludes certificate parsing,
+trust, IDNA, transport, sockets, clocks, randomness, and credentials. The DER
+TLV owner first freezes canonical borrowed-byte framing fixtures and the Rust
+oracle before established-lane ports; it excludes ASN.1 schema decoding, X.509,
+cryptography, trust, TLS, and transport. They are independent P4 singleton
+waves: future X.509 work depends on DER framing, while a later TLS closure may
+compose both.
+
+The dependency/leverage pass selects
+`ocaml-representative-package-ci-execution` as the explicit roadmap successor.
+Its representative-core, exact toolchain, and capability-analyzer dependencies
+are merged, and it supplies the real Ubuntu, macOS, and Windows evidence needed
+before native OCaml build-tool qualification and lane promotion. The selected
+slice uses a separate OCAML07 contract, closed manifest, validator, and
+commit-pinned representative workflow so the exact OCAML03 job set remains
+unchanged and open Dependabot PR #15548's `build-ocaml.yml`/`ci.yml` overlap is
+avoided. It must prove real leaf-first format, test, per-production-file numeric
+coverage, install, archive, installed downstream, warning-clean odoc 3.0.0,
+retained evidence, analyzer enforcement, and no skip-success path on all three
+targets without promoting OCaml. The reconciled graph has 847 owners and 1,571
+edges: 220 merged, 626 pending, and exactly this owner in progress.
+
+### PR #15668 OCaml representative-chain CI publication
+
+The selected owner is implemented and published as ready-for-review PR #15668
+from exact head `279eeabc97a6b9417b6e93bfa98280a8c8a0618f`. The standalone
+workflow leaves OCAML03 and `ci.yml` unchanged while binding its own exact
+commit-pinned actions, OCaml 5.2.1/opam 2.5.2/Dune 3.17.2 toolchain, odoc 3.0.0,
+three reviewed targets, four-package dependency order, independent analyzer,
+source archives, installed consumers, and retained evidence to a closed
+OCAML07 manifest and validator.
+
+Tests-first local execution ran every real Windows BUILD front for logic-gates,
+graph, directed-graph, and state-machine. Their production coverage is 97.35%,
+97.07%, 98.72%, and 96.64%; release install and warning-clean documentation
+builds pass. The analyzer passes its 29 native test surfaces with 95.19% library
+and 100% CLI coverage and accepts each representative package independently.
+Both consumers pass from a clean copied downstream fixture against installed
+packages, including the leaf-only state-machine link, and exact Windows output
+ends in LF rather than CRLF. Offline contract suites, archive validation,
+neutral build-tool corpus, package-parity collision checks, the 847-owner and
+1,571-edge state graph, Ruff, Bandit, YAML, lessons, and diff hygiene pass.
+
+Parallel reviews and the real local Windows run caught and closed incorrect
+opam 2.5.2 flags, incomplete evidence assertions, warning-scan error masking,
+stale coverage assertions, Windows path conversion for coverage, analyzer, and
+pins, missing native analyzer construction, unformatted downstream sources,
+and CRLF receipt rewriting. No P0/P1 review finding remains. GitHub reports the
+opened head mergeable; checks are pending, so guarded auto-merge is not yet
+enabled and no second parity implementation may begin.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

@@ -1,0 +1,320 @@
+name: OCaml representative packages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/build-ocaml-representative.yml'
+      - 'code/packages/ocaml/logic-gates/**'
+      - 'code/packages/ocaml/graph/**'
+      - 'code/packages/ocaml/directed-graph/**'
+      - 'code/packages/ocaml/state-machine/**'
+      - 'code/packages/ocaml/ca-capability-analyzer/**'
+      - 'code/scripts/ocaml_representative_ci.py'
+      - 'code/scripts/ocaml_toolchain_lock.py'
+      - 'code/scripts/tests/test_ocaml_representative_ci.py'
+      - 'code/specs/OCAML0[13567]-*.md'
+      - 'code/specs/fixtures/ocaml-representative-ci-v1/**'
+      - 'code/specs/fixtures/ocaml-representative-downstream-v1/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/build-ocaml-representative.yml'
+      - 'code/packages/ocaml/logic-gates/**'
+      - 'code/packages/ocaml/graph/**'
+      - 'code/packages/ocaml/directed-graph/**'
+      - 'code/packages/ocaml/state-machine/**'
+      - 'code/packages/ocaml/ca-capability-analyzer/**'
+      - 'code/scripts/ocaml_representative_ci.py'
+      - 'code/scripts/ocaml_toolchain_lock.py'
+      - 'code/scripts/tests/test_ocaml_representative_ci.py'
+      - 'code/specs/OCAML0[13567]-*.md'
+      - 'code/specs/fixtures/ocaml-representative-ci-v1/**'
+      - 'code/specs/fixtures/ocaml-representative-downstream-v1/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  OPAM_VERSION: '2.5.2'
+  OCAML_VERSION: '5.2.1'
+  DUNE_VERSION: '3.17.2'
+  ALCOTEST_VERSION: '1.9.0'
+  BISECT_PPX_VERSION: '2.8.3'
+  OCAMLFORMAT_VERSION: '0.27.0'
+  ODOC_VERSION: '3.0.0'
+  YOJSON_VERSION: '3.0.0'
+
+jobs:
+  contract:
+    name: Validate OCAML07 representative CI contract
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout reviewed source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Validate the closed repository contract
+        run: |
+          set -euo pipefail
+          python code/scripts/ocaml_representative_ci.py validate-repository
+          python -m unittest discover -s code/scripts/tests -p 'test_ocaml_representative_ci.py'
+
+  representative:
+    name: OCaml representative chain (${{ matrix.target }})
+    needs: contract
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: linux-x64
+            runner: ubuntu-24.04
+            runner-os: Linux
+            runner-arch: X64
+            build-file: BUILD
+          - target: macos-arm64
+            runner: macos-14
+            runner-os: macOS
+            runner-arch: ARM64
+            build-file: BUILD
+          - target: windows-x64
+            runner: windows-2022
+            runner-os: Windows
+            runner-arch: X64
+            build-file: BUILD_windows
+    steps:
+      - name: Checkout reviewed source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Set up the reviewed OCaml compiler and repository
+        uses: ocaml/setup-ocaml@15d660006c1d3110d77c34b7faa3bddefe8b82f0
+        env:
+          GIT_CONFIG_COUNT: '1'
+          GIT_CONFIG_KEY_0: maintenance.auto
+          GIT_CONFIG_VALUE_0: 'false'
+        with:
+          ocaml-compiler: ocaml-base-compiler.5.2.1
+          opam-repositories: |
+            default: git+https://github.com/ocaml/opam-repository.git#ba8cc66eb9e5baae7ebc88cf77f4c488d63d87ff
+          opam-pin: false
+          dune-cache: false
+          cache-prefix: ocaml07-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.target }}
+          windows-compiler: mingw
+          windows-environment: cygwin
+          github-token: ${{ github.token }}
+
+      - name: Bootstrap exact tools and validate the runner
+        shell: bash
+        env:
+          EXPECTED_OS: ${{ matrix.runner-os }}
+          EXPECTED_ARCH: ${{ matrix.runner-arch }}
+          TARGET: ${{ matrix.target }}
+        run: |
+          set -euo pipefail
+          test "$RUNNER_OS" = "$EXPECTED_OS"
+          test "$RUNNER_ARCH" = "$EXPECTED_ARCH"
+          test "$(opam --version)" = "$OPAM_VERSION"
+          repository_names="$(opam repository list --all --short --color=never)"
+          repository_listing="$(opam repository list --all --color=never)"
+          test "$repository_names" = "default"
+          python code/scripts/ocaml_toolchain_lock.py validate-repository-report \
+            --names "$repository_names" --listing "$repository_listing"
+          opam install --yes --require-checksums \
+            "dune.$DUNE_VERSION" "alcotest.$ALCOTEST_VERSION" \
+            "bisect_ppx.$BISECT_PPX_VERSION" "ocamlformat.$OCAMLFORMAT_VERSION" \
+            "odoc.$ODOC_VERSION" "yojson.$YOJSON_VERSION"
+          python code/scripts/ocaml_toolchain_lock.py validate-runtime
+          odoc_version="$(env -u CLICOLOR_FORCE opam exec -- odoc --version)"
+          yojson_version="$(opam show --color=never --field=installed-version yojson)"
+          test "$odoc_version" = "$ODOC_VERSION"
+          test "$yojson_version" = "$YOJSON_VERSION"
+          evidence="$RUNNER_TEMP/ocaml07-evidence/$TARGET"
+          mkdir -p "$evidence"
+          printf 'target=%s\nrunner_os=%s\nrunner_arch=%s\nopam=%s\nocaml=%s\ndune=%s\nodoc=%s\nyojson=%s\n' \
+            "$TARGET" "$RUNNER_OS" "$RUNNER_ARCH" "$(opam --version)" \
+            "$(opam exec -- ocamlc -version)" "$(opam exec -- dune --version)" \
+            "$odoc_version" "$yojson_version" \
+            > "$evidence/toolchain.txt"
+
+      - name: Build the analyzer independently
+        shell: bash
+        env:
+          TARGET: ${{ matrix.target }}
+        run: |
+          set -euo pipefail
+          switch="$(opam switch show --safe)"
+          test -n "$switch"
+          export OPAMSWITCH="$switch"
+          analyzer="$RUNNER_TEMP/ocaml07-analyzer"
+          rm -rf "$analyzer"
+          mkdir -p "$analyzer"
+          cp -R code/packages/ocaml/ca-capability-analyzer/. "$analyzer/"
+          cd "$analyzer"
+          opam install . --deps-only --with-test --with-dev-setup \
+            --yes --require-checksums
+          opam exec -- dune build @fmt
+          coverage_prefix="$PWD/bisect"
+          if test "$RUNNER_OS" = "Windows"; then
+            coverage_prefix="$(cygpath -w "$PWD/bisect")"
+          fi
+          BISECT_FILE="$coverage_prefix" opam exec -- dune runtest --force \
+            --instrument-with bisect_ppx
+          python test/check_coverage.py --coverage-glob 'bisect*.coverage' \
+            --summary _build/coverage-summary.txt \
+            --source src/coding_adventures_capability_analyzer.ml \
+            --source bin/main.ml --minimum 95
+          opam exec -- dune build bin/main.exe @install --profile release
+
+      - name: Archive, build, test, document, install, and analyze the chain
+        shell: bash
+        env:
+          TARGET: ${{ matrix.target }}
+          BUILD_FILE: ${{ matrix.build-file }}
+        run: |
+          set -euo pipefail
+          switch="$(opam switch show --safe)"
+          test -n "$switch"
+          export OPAMSWITCH="$switch"
+          root="$GITHUB_WORKSPACE"
+          work="$RUNNER_TEMP/ocaml07-packages"
+          archives="$RUNNER_TEMP/ocaml07-archives"
+          evidence="$RUNNER_TEMP/ocaml07-evidence/$TARGET"
+          rm -rf "$work" "$archives"
+          mkdir -p "$work" "$archives" \
+            "$evidence/coverage" "$evidence/documentation" \
+            "$evidence/source-archives" "$evidence/analyzer"
+          packages='logic-gates graph directed-graph state-machine'
+          for package in $packages; do
+            archive="$archives/coding-adventures-$package-0.1.0.tar.gz"
+            python "$root/code/scripts/ocaml_representative_ci.py" \
+              create-source-archive --repo-root "$root" \
+              --package "$package" --output "$archive"
+            python "$root/code/scripts/ocaml_representative_ci.py" \
+              validate-source-archive --repo-root "$root" \
+              --package "$package" --archive "$archive"
+            cp "$archive" "$evidence/source-archives/"
+            python -c 'import hashlib,sys; p=sys.argv[1]; print(hashlib.sha256(open(p,"rb").read()).hexdigest(), p)' \
+              "$archive" >> "$evidence/source-archives/SHA256SUMS"
+            archive_for_tar="$archive"
+            work_for_tar="$work"
+            if test "$RUNNER_OS" = "Windows"; then
+              archive_for_tar="$(cygpath -u "$archive")"
+              work_for_tar="$(cygpath -u "$work")"
+            fi
+            tar -xzf "$archive_for_tar" -C "$work_for_tar"
+          done
+          for package in $packages; do
+            package_root="$work/$package"
+            cd "$package_root"
+            rm -rf _build
+            find . -name 'bisect*.coverage' -type f -delete
+            test -z "$(find . \( -name 'bisect*.coverage' -o -name _build \) -print -quit)"
+            opam_file="$(find . -maxdepth 1 -name '*.opam' -type f -print -quit)"
+            test -n "$opam_file"
+            opam lint --strict "$opam_file" \
+              > "$evidence/$package-opam-lint.txt"
+            while IFS= read -r command || test -n "$command"; do
+              test -z "$command" && continue
+              if test "$RUNNER_OS" = "Windows"; then
+                cmd.exe /D /S /C "$command"
+              else
+                sh -c "$command"
+              fi
+            done < "$BUILD_FILE"
+            opam exec -- bisect-ppx-report summary --per-file bisect*.coverage \
+              > _build/coverage-summary.txt
+            python "$root/code/scripts/ocaml_representative_ci.py" \
+              validate-coverage --repo-root "$root" --package "$package" \
+              --summary _build/coverage-summary.txt
+            mkdir -p "$evidence/coverage/$package"
+            cp _build/coverage-summary.txt "$evidence/coverage/$package/"
+            cp bisect*.coverage "$evidence/coverage/$package/"
+            OCAMLPARAM='_,warn-error=+a' opam exec -- \
+              dune build @install @doc --profile release \
+              > "$evidence/documentation/$package.log" 2>&1
+            if grep -E '(^|[^A-Za-z])Warning[[:space:]]+[0-9]+' \
+                "$evidence/documentation/$package.log"; then
+              printf 'documentation warnings are forbidden for %s\n' "$package" >&2
+              exit 1
+            else
+              grep_status=$?
+              test "$grep_status" -eq 1 || exit "$grep_status"
+            fi
+            printf 'documentation passed without warnings\n' \
+              >> "$evidence/documentation/$package.log"
+            test -n "$(find _build/default/_doc/_html -name '*.html' -type f -print -quit)"
+            mkdir -p "$evidence/documentation/$package"
+            cp -R _build/default/_doc/_html/. "$evidence/documentation/$package/"
+            analyzer_root="$package_root"
+            if test "$RUNNER_OS" = "Windows"; then
+              analyzer_root="$(cygpath -w "$package_root")"
+            fi
+            "$RUNNER_TEMP/ocaml07-analyzer/_build/default/bin/main.exe" \
+              --dir "$analyzer_root" --verbose \
+              > "$evidence/analyzer/$package.txt" 2>&1
+            opam_name="coding-adventures-$package"
+            pin_root="$package_root"
+            if test "$RUNNER_OS" = "Windows"; then
+              pin_root="$(cygpath -w "$package_root")"
+            fi
+            opam pin add --no-action --working-dir --no-checksums --yes \
+              "$opam_name" "$pin_root"
+            opam install --yes --require-checksums "$opam_name.0.1.0"
+            test "$(opam show --color=never --field=installed-version "$opam_name")" = '0.1.0'
+          done
+          opam list --installed --columns=name,version --normalise --color=never \
+            | sed -e '/^#/d' -e '/^[[:space:]]*$/d' \
+                  -e 's/[[:space:]][[:space:]]*/ /g' -e 's/[[:space:]]*$//' \
+            | LC_ALL=C sort > "$evidence/installed-packages.txt"
+          for package in $packages; do
+            grep -Fx "coding-adventures-$package 0.1.0" \
+              "$evidence/installed-packages.txt"
+          done
+
+      - name: Run both installed downstream consumers
+        shell: bash
+        env:
+          TARGET: ${{ matrix.target }}
+        run: |
+          set -euo pipefail
+          switch="$(opam switch show --safe)"
+          test -n "$switch"
+          export OPAMSWITCH="$switch"
+          root="$GITHUB_WORKSPACE"
+          work="$RUNNER_TEMP/ocaml07-downstream"
+          evidence="$RUNNER_TEMP/ocaml07-evidence/$TARGET/downstream"
+          rm -rf "$RUNNER_TEMP/ocaml07-packages" "$work"
+          mkdir -p "$work" "$evidence"
+          cp -R code/specs/fixtures/ocaml-representative-downstream-v1/. "$work/"
+          cd "$work"
+          grep -Fxq '(implicit_transitive_deps false)' dune-project
+          opam exec -- dune build @fmt
+          opam exec -- dune runtest --profile release
+          cp _build/default/representative.actual.json "$evidence/representative.json"
+          cp _build/default/transitive-leaf.actual.json "$evidence/transitive-leaf.json"
+          python "$root/code/scripts/ocaml_representative_ci.py" \
+            validate-downstream-output --repo-root "$root" \
+            --case representative --actual "$evidence/representative.json"
+          python "$root/code/scripts/ocaml_representative_ci.py" \
+            validate-downstream-output --repo-root "$root" \
+            --case transitive-leaf --actual "$evidence/transitive-leaf.json"
+          python "$root/code/scripts/ocaml_representative_ci.py" \
+            validate-evidence --repo-root "$root" \
+            --root "$RUNNER_TEMP/ocaml07-evidence/$TARGET"
+
+      - name: Upload closed target evidence
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ocaml07-representative-${{ matrix.target }}
+          path: ${{ runner.temp }}/ocaml07-evidence/${{ matrix.target }}
+          if-no-files-found: error
+          retention-days: 7
