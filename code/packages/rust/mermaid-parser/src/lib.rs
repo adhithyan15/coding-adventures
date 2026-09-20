@@ -1069,13 +1069,20 @@ fn parse_architecture_edge(
     source: &str,
     ids: &HashSet<String>,
 ) -> Result<StructuralRelationship, ParseError> {
-    let parts = source.split_whitespace().collect::<Vec<_>>();
-    if parts.len() != 3 {
-        return Err(token_error(token, "architecture edge labels are outside the supported subset"));
-    }
-    let (from, from_direction) = parts[0].rsplit_once(':')
+    let source_end = source
+        .find(char::is_whitespace)
+        .ok_or_else(|| token_error(token, "invalid architecture edge"))?;
+    let source_endpoint = &source[..source_end];
+    let remainder = source[source_end..].trim();
+    let target_start = remainder
+        .rfind(char::is_whitespace)
+        .ok_or_else(|| token_error(token, "invalid architecture edge"))?;
+    let operator = remainder[..target_start].trim();
+    let target_endpoint = remainder[target_start..].trim();
+
+    let (from, from_direction) = source_endpoint.rsplit_once(':')
         .ok_or_else(|| token_error(token, "invalid architecture edge source"))?;
-    let (to_direction, to) = parts[2].split_once(':')
+    let (to_direction, to) = target_endpoint.split_once(':')
         .ok_or_else(|| token_error(token, "invalid architecture edge target"))?;
     if from.contains("{group}") || to.contains("{group}") {
         return Err(token_error(token, "architecture group-edge modifiers are outside the supported subset"));
@@ -1091,15 +1098,37 @@ fn parse_architecture_edge(
     if !ids.contains(from) || !ids.contains(to) {
         return Err(token_error(token, "architecture edge services must be declared first"));
     }
-    let kind = match parts[1] {
-        "--" => RelKind::Link,
-        "-->" => RelKind::Dependency,
-        _ => return Err(token_error(token, "unsupported architecture edge operator")),
+    let (kind, label) = match operator {
+        "--" => (RelKind::Link, None),
+        "-->" => (RelKind::Dependency, None),
+        _ => parse_architecture_labeled_edge_operator(token, operator)?,
     };
     Ok(StructuralRelationship {
         from: from.into(), to: to.into(), kind,
-        from_mult: None, to_mult: None, label: None,
+        from_mult: None, to_mult: None, label,
     })
+}
+
+fn parse_architecture_labeled_edge_operator(
+    token: &Token,
+    operator: &str,
+) -> Result<(RelKind, Option<String>), ParseError> {
+    let Some(label_source) = operator.strip_prefix("-[") else {
+        return Err(token_error(token, "unsupported architecture edge operator"));
+    };
+    let Some(label_end) = label_source.rfind("]-") else {
+        return Err(token_error(token, "unterminated architecture edge label"));
+    };
+    let label = label_source[..label_end].trim().trim_matches(['"', '\'']);
+    if label.is_empty() {
+        return Err(token_error(token, "architecture edge label cannot be empty"));
+    }
+    let kind = match &label_source[label_end + 2..] {
+        "" => RelKind::Link,
+        ">" => RelKind::Dependency,
+        _ => return Err(token_error(token, "unsupported architecture edge operator")),
+    };
+    Ok((kind, Some(label.replace("\\\"", "\"").replace("\\'", "'"))))
 }
 
 /// Parse a core indentation-defined Mermaid Kanban board.
@@ -10254,6 +10283,27 @@ mod tests_dg04 {
         assert_eq!(diagram.nodes.len(), 2);
         assert_eq!(diagram.nodes[0].parent_group.as_deref(), Some("cloud"));
         assert_eq!(diagram.relationships.len(), 1);
+    }
+
+    #[test]
+    fn architecture_preserves_labeled_edges_in_structural_ir() {
+        let diagram = parse_architecture(
+            "architecture-beta\nservice api(server)[API]\nservice db(database)[Database]\napi:R -[reads and writes]-> L:db",
+        )
+        .unwrap();
+        assert_eq!(diagram.relationships.len(), 1);
+        assert_eq!(diagram.relationships[0].kind, RelKind::Dependency);
+        assert_eq!(diagram.relationships[0].label.as_deref(), Some("reads and writes"));
+    }
+
+    #[test]
+    fn architecture_preserves_quoted_undirected_edge_labels() {
+        let diagram = parse_architecture(
+            "architecture-beta\nservice api(server)[API]\nservice db(database)[Database]\napi:R -[\"shared data\"]- L:db",
+        )
+        .unwrap();
+        assert_eq!(diagram.relationships[0].kind, RelKind::Link);
+        assert_eq!(diagram.relationships[0].label.as_deref(), Some("shared data"));
     }
 
     #[test]
