@@ -802,6 +802,10 @@ impl SpiceMosaicApp {
                 SchematicComponentKind::Resistor.palette_label(),
                 SchematicComponentKind::Capacitor.palette_label(),
                 SchematicComponentKind::Inductor.palette_label(),
+                SchematicComponentKind::Diode.palette_label(),
+                SchematicComponentKind::Bjt.palette_label(),
+                SchematicComponentKind::Jfet.palette_label(),
+                SchematicComponentKind::Mosfet.palette_label(),
                 SchematicComponentKind::DcVoltage.palette_label(),
                 SchematicComponentKind::DcCurrent.palette_label(),
                 SchematicComponentKind::AcVoltage.palette_label(),
@@ -2580,6 +2584,80 @@ mod tests {
             .as_str()
             .unwrap()
             .contains(".probe"));
+    }
+
+    #[test]
+    fn schematic_nonlinear_current_options_persist_and_synchronize() {
+        let mut app = SpiceMosaicApp::default();
+        app.start(StartContext::new("en-US", Platform::Web))
+            .unwrap();
+        let document = json!({
+            "title": "Nonlinear outputs",
+            "components": [
+                {"reference":"V1","kind":"DcVoltage","value":"1","terminals":[{"x":0,"y":20},{"x":0,"y":0}]},
+                {"reference":"D1","kind":"Diode","value":"IS=1e-14","terminals":[{"x":0,"y":20},{"x":0,"y":0}]},
+                {"reference":"Q1","kind":"Bjt","value":"BF=100","terminals":[{"x":0,"y":20},{"x":0,"y":20},{"x":0,"y":0}]},
+                {"reference":"J1","kind":"Jfet","value":"BETA=1m","terminals":[{"x":0,"y":20},{"x":0,"y":0},{"x":0,"y":0}]},
+                {"reference":"M1","kind":"Mosfet","value":"VTO=0.7","terminals":[{"x":0,"y":20},{"x":0,"y":20},{"x":0,"y":0},{"x":0,"y":0}]},
+                {"reference":"G1","kind":"Ground","value":"","terminals":[{"x":0,"y":0}]}
+            ],
+            "wires": []
+        });
+        let loaded = dispatch(&mut app, "schematicLoad", json!({"document": document}));
+        assert!(loaded.props["schematic-palette"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|label| label == "Diode"));
+        assert_eq!(
+            loaded.props["schematic-saved-output-current-options"],
+            json!(["V1", "D1", "Q1", "J1", "M1"])
+        );
+        for source in ["D1", "Q1", "J1", "M1"] {
+            dispatch(
+                &mut app,
+                "onAddSchematicSavedOutputCurrent",
+                json!({"source": source}),
+            );
+        }
+        dispatch(
+            &mut app,
+            "onAddSchematicAnalysis",
+            json!({"analysis":"AC sweep"}),
+        );
+        dispatch(
+            &mut app,
+            "onSelectSchematicAnalysisCard",
+            json!({"index":1}),
+        );
+        for source in ["D1", "Q1", "J1", "M1"] {
+            dispatch(
+                &mut app,
+                "onAddSchematicScopedOutputCurrent",
+                json!({"source": source}),
+            );
+        }
+        let scoped = app.update();
+        assert_eq!(
+            scoped.props["schematic-scoped-output-rows"],
+            json!(["I(D1)", "I(Q1)", "I(J1)", "I(M1)"])
+        );
+
+        let snapshot = app.snapshot().unwrap().unwrap();
+        let mut restored = SpiceMosaicApp::default();
+        let mut context = StartContext::new("en-US", Platform::Web);
+        context.restored_snapshot = Some(snapshot);
+        let restored_update = restored.start(context).unwrap();
+        assert_eq!(
+            restored_update.props["schematic-saved-output-rows"],
+            json!(["I(D1)", "I(Q1)", "I(J1)", "I(M1)"])
+        );
+
+        let synchronized = dispatch(&mut app, "onSynchronizeSchematic", json!({}));
+        let deck = synchronized.props["netlist-text"].as_str().unwrap();
+        assert!(deck.contains(".model SchematicD1Model D(IS=1e-14)"));
+        assert!(deck.contains(".save I(D1) I(Q1) I(J1) I(M1)"));
+        assert!(deck.contains(".probe ac I(D1) I(Q1) I(J1) I(M1)"));
     }
 
     #[test]

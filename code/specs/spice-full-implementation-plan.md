@@ -325,14 +325,18 @@ model-card parameter, or a UI artifact is not a completion signal.
      Rust, and TypeScript. The follow-on schematic document and Mosaic controls
      now select R/C/L and voltage-source branch currents through the same ordered
      global and card-scoped output contract.
-   - **Mosaic schematic nonlinear-current selection** (audit completed): discovery after
-     PR #15599: the canonical document can now author every linear passive
-     branch current, but nonlinear device currents remain outside the shared
-     result-map contract. The executable audit confirms the same corpus blocker
-     in Python, Rust, and TypeScript: `.save I(D1)`, `.save I(Q1)`, `.save
-     I(J1)`, and `.save I(M1)` all parse but fail because no nonlinear branch
-     current is exported. Keep schematic controls out of scope until the shared
-     result map has those values.
+   - **Mosaic schematic nonlinear-current selection** (completed): discovery after
+     PR #15599: the canonical document could author every linear passive branch
+     current, but nonlinear device currents remained outside the shared result-map
+     contract. The cross-language D/Q/J/M result-map phase cleared that blocker,
+     so the workbench now captures diode, BJT, JFET, and Level-1 MOS symbols with
+     their correct terminal arity and deterministic per-instance default model
+     cards. Their external-terminal `I(element)` values are selectable through the
+     existing ordered global `.save` and card-scoped `.probe` controls, survive
+     rename/history/snapshots, and lower to parser-validated decks. Keep arbitrary
+     model-card editing, vendor models, and expression outputs for later product
+     phases; they need a separate coherent capture contract rather than an
+     unstructured value field.
    - **Nonlinear branch-current result-map contract** (completed): export
      diode anode, BJT collector, JFET drain, and level-1 MOS drain currents as
      canonical `I(element)` values across Python, Rust, and TypeScript. Define
