@@ -22,8 +22,9 @@ mod schematic;
 
 pub use schematic::{
     SchematicAnalysis, SchematicAnalysisCard, SchematicAnalysisSettings, SchematicComponent,
-    SchematicComponentKind, SchematicDocument, SchematicError, SchematicModelPolarity,
-    SchematicNetLabel, SchematicPoint, SchematicScopedOutputProbes, SchematicWire,
+    SchematicComponentKind, SchematicDocument, SchematicError, SchematicModelParameter,
+    SchematicModelPolarity, SchematicNetLabel, SchematicPoint, SchematicScopedOutputProbes,
+    SchematicWire,
 };
 
 const SNAPSHOT_SCHEMA: &str = "spice-mosaic-app/state";
@@ -634,8 +635,9 @@ impl SpiceMosaicApp {
                     .collect::<Vec<_>>()
             })
             .unwrap_or_default();
-        let schematic_value_disabled = selected_schematic_component
-            .is_none_or(|component| component.kind == SchematicComponentKind::Ground);
+        let schematic_value_disabled = selected_schematic_component.is_none_or(|component| {
+            component.kind == SchematicComponentKind::Ground || component.kind.is_nonlinear()
+        });
         let (
             schematic_model_polarity,
             schematic_model_n_label,
@@ -657,6 +659,16 @@ impl SpiceMosaicApp {
                 ))
             })
             .unwrap_or(("Not a transistor", "N", "P", true));
+        let schematic_model_parameters = selected_schematic_component
+            .and_then(|component| {
+                self.schematic
+                    .as_ref()?
+                    .component_model_parameters(&component.reference)
+                    .ok()
+            })
+            .unwrap_or_default();
+        let schematic_model_parameter_one = schematic_model_parameters.first();
+        let schematic_model_parameter_two = schematic_model_parameters.get(1);
         let selected_schematic_analysis_card = self
             .schematic
             .as_ref()
@@ -930,6 +942,13 @@ impl SpiceMosaicApp {
             "schematic-model-n-label": schematic_model_n_label,
             "schematic-model-p-label": schematic_model_p_label,
             "schematic-model-polarity-disabled": schematic_model_polarity_disabled,
+            "schematic-model-parameters-label": "Model parameters",
+            "schematic-model-parameter-one-label": schematic_model_parameter_one.map(|(parameter, _)| parameter.label()).unwrap_or(""),
+            "schematic-model-parameter-one-value": schematic_model_parameter_one.map(|(_, value)| value.as_str()).unwrap_or(""),
+            "schematic-model-parameter-one-disabled": schematic_model_parameter_one.is_none(),
+            "schematic-model-parameter-two-label": schematic_model_parameter_two.map(|(parameter, _)| parameter.label()).unwrap_or(""),
+            "schematic-model-parameter-two-value": schematic_model_parameter_two.map(|(_, value)| value.as_str()).unwrap_or(""),
+            "schematic-model-parameter-two-disabled": schematic_model_parameter_two.is_none(),
             "remove-schematic-component-label": "Remove selected component",
             "remove-schematic-component-disabled": selected_schematic_component.is_none(),
             "route-schematic-label": "Route selected terminal to",
@@ -1271,6 +1290,7 @@ impl MosaicApp for SpiceMosaicApp {
                     output_probes: Vec::new(),
                     scoped_output_probes: Vec::new(),
                     model_polarities: Default::default(),
+                    model_parameters: Default::default(),
                     analysis: SchematicAnalysis::default(),
                     analysis_settings: SchematicAnalysisSettings::default(),
                     analysis_cards: Vec::new(),
@@ -1303,6 +1323,7 @@ impl MosaicApp for SpiceMosaicApp {
                     output_probes: Vec::new(),
                     scoped_output_probes: Vec::new(),
                     model_polarities: Default::default(),
+                    model_parameters: Default::default(),
                     analysis: SchematicAnalysis::default(),
                     analysis_settings: SchematicAnalysisSettings::default(),
                     analysis_cards: Vec::new(),
@@ -1812,6 +1833,37 @@ impl MosaicApp for SpiceMosaicApp {
                 self.record_schematic_edit(history);
                 self.diagnostics = format!(
                     "Updated {reference} transistor polarity. Sync the netlist when ready."
+                );
+                Ok(self.announced(self.diagnostics.clone()))
+            }
+            "schematicModelParameterOneChange" | "schematicModelParameterTwoChange" => {
+                let value = event.payload["value"].as_str().ok_or_else(|| {
+                    invalid("schematic model parameter change requires a text value")
+                })?;
+                let index =
+                    usize::from(normalized_event_name == "schematicModelParameterTwoChange");
+                let reference = self.selected_schematic_component.clone().ok_or_else(|| {
+                    invalid("schematic model parameter change requires a selected component")
+                })?;
+                let history = self.schematic_history_entry();
+                let document = self.schematic.as_mut().ok_or_else(|| {
+                    invalid("schematic model parameter change requires a loaded schematic")
+                })?;
+                let parameter = document
+                    .component_model_parameters(&reference)
+                    .map_err(|error| invalid(error.to_string()))?
+                    .get(index)
+                    .map(|(parameter, _)| *parameter)
+                    .ok_or_else(|| {
+                        invalid("selected component has no model parameter at that index")
+                    })?;
+                document
+                    .set_component_model_parameter(&reference, parameter, value)
+                    .map_err(|error| invalid(error.to_string()))?;
+                self.record_schematic_edit(history);
+                self.diagnostics = format!(
+                    "Updated {reference} {}. Sync the netlist when ready.",
+                    parameter.label()
                 );
                 Ok(self.announced(self.diagnostics.clone()))
             }
@@ -3103,6 +3155,60 @@ mod tests {
             .as_str()
             .unwrap()
             .contains(".model SchematicQ1Model PNP(BF=80)"));
+    }
+
+    #[test]
+    fn schematic_nonlinear_model_fields_are_editable_without_a_raw_model_string() {
+        let mut app = SpiceMosaicApp::default();
+        app.start(StartContext::new("en-US", Platform::Web))
+            .unwrap();
+        dispatch(
+            &mut app,
+            "schematicLoad",
+            json!({
+                "document": {
+                    "title": "BJT model capture",
+                    "components": [
+                        {"reference":"Q1","kind":"Bjt","value":"BF=80","terminals":[{"x":0,"y":20},{"x":0,"y":20},{"x":0,"y":0}]},
+                        {"reference":"G1","kind":"Ground","value":"","terminals":[{"x":0,"y":0}]}
+                    ],
+                    "wires": []
+                }
+            }),
+        );
+        dispatch(
+            &mut app,
+            "onSelectSchematicComponent",
+            json!({"reference":"Q1"}),
+        );
+        let selected = app.update();
+        assert_eq!(selected.props["schematic-value-disabled"], true);
+        assert_eq!(
+            selected.props["schematic-model-parameter-one-label"],
+            "Saturation current (IS)"
+        );
+        assert_eq!(selected.props["schematic-model-parameter-one-value"], "");
+        assert_eq!(selected.props["schematic-model-parameter-two-value"], "80");
+
+        let edited = dispatch(
+            &mut app,
+            "onSchematicModelParameterOneChange",
+            json!({"value":"2e-14"}),
+        );
+        assert_eq!(edited.props["schematic-model-parameter-one-value"], "2e-14");
+        let snapshot = app.snapshot().unwrap().unwrap();
+        let mut restored = SpiceMosaicApp::default();
+        let mut context = StartContext::new("en-US", Platform::Web);
+        context.restored_snapshot = Some(snapshot);
+        assert_eq!(
+            restored.start(context).unwrap().props["schematic-model-parameter-one-value"],
+            "2e-14"
+        );
+        let synchronized = dispatch(&mut restored, "onSynchronizeSchematic", json!({}));
+        assert!(synchronized.props["netlist-text"]
+            .as_str()
+            .unwrap()
+            .contains(".model SchematicQ1Model NPN(BF=80 IS=2e-14)"));
     }
 
     #[test]

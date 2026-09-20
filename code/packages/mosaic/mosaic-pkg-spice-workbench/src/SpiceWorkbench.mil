@@ -103,6 +103,13 @@ component SpiceWorkbench {
   slot schematic-model-n-label : text ;
   slot schematic-model-p-label : text ;
   slot schematic-model-polarity-disabled : bool ;
+  slot schematic-model-parameters-label : text ;
+  slot schematic-model-parameter-one-label : text ;
+  slot schematic-model-parameter-one-value : text ;
+  slot schematic-model-parameter-one-disabled : bool ;
+  slot schematic-model-parameter-two-label : text ;
+  slot schematic-model-parameter-two-value : text ;
+  slot schematic-model-parameter-two-disabled : bool ;
   slot remove-schematic-component-label : text ;
   slot remove-schematic-component-disabled : bool ;
   slot route-schematic-label : text ;
@@ -161,6 +168,8 @@ component SpiceWorkbench {
   emit onSchematicNetLabelChange ( value : text ) ;
   emit onSchematicReferenceChange ( value : text ) ;
   emit onSchematicValueChange ( value : text ) ;
+  emit onSchematicModelParameterOneChange ( value : text ) ;
+  emit onSchematicModelParameterTwoChange ( value : text ) ;
   emit onSetSchematicModelPolarityN ;
   emit onSetSchematicModelPolarityP ;
   emit onRemoveSchematicComponent ;
