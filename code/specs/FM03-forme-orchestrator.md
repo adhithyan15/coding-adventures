@@ -500,9 +500,9 @@ DAG is built as follows:
 
 Multiple consumers of one producer's output are allowed and treated as
 fan-out. Multiple producers feeding distinct ports of one consumer are fan-in.
-The v0 scheduler materializes each producer once and creates an independently
-replayable iterator for every stream port. FM-B010 replaces eager
-materialization with bounded multiplexing and backpressure.
+The scheduler opens each stream producer once and publishes one bounded branch
+per edge. Named fan-in preserves independently replayable iterators at the join
+boundary; ordinary stream edges remain single-pass and backpressured.
 
 ### 3.4 Type compatibility checking
 
