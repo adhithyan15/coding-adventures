@@ -4,11 +4,5 @@
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can count one, two, three in German and name the sound law that turns an old t into th or d and an old p into f.",
-  "prerequisites": [],
-  "lessons": [
-    "GE-C06-eins",
-    "GE-C06-zwei",
-    "GE-C06-drei",
-    "GE-C06-grimm"
-  ]
+  "prerequisites": []
 }

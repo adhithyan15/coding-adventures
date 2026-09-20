@@ -1,0 +1,11 @@
+{
+  "id": "PT-C21-esperar-hope",
+  "pathSegment": "PT-PATH-025-C",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-025-LANGUAGE-SPECIFIC-C",
+      "order": 1
+    }
+  ]
+}

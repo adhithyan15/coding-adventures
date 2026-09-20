@@ -1,0 +1,11 @@
+{
+  "id": "HI-C84-hamara",
+  "pathSegment": "HI-PATH-92-POSSESSIVE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-92-POSSESSIVE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-R01-ya-again",
+  "pathSegment": "BN-PATH-022",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-023-DISTANT-BAND",
+      "order": 2
+    }
+  ]
+}

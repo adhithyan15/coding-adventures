@@ -1,0 +1,11 @@
+{
+  "id": "TA-C74-also",
+  "pathSegment": "TA-PATH-74-JOIN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-74-JOIN",
+      "order": 1
+    }
+  ]
+}

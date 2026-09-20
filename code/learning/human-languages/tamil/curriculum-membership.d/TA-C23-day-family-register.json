@@ -1,0 +1,11 @@
+{
+  "id": "TA-C23-day-family-register",
+  "pathSegment": "TA-PATH-027",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-027-REGISTER",
+      "order": 0
+    }
+  ]
+}

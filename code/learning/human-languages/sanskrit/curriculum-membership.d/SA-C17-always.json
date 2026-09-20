@@ -1,0 +1,11 @@
+{
+  "id": "SA-C17-always",
+  "pathSegment": "SA-PATH-203",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-203-TIME",
+      "order": 4
+    }
+  ]
+}

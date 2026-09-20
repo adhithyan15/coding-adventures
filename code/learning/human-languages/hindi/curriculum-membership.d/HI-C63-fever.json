@@ -1,0 +1,11 @@
+{
+  "id": "HI-C63-fever",
+  "pathSegment": "HI-PATH-63-STATE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-63-STATE",
+      "order": 3
+    }
+  ]
+}

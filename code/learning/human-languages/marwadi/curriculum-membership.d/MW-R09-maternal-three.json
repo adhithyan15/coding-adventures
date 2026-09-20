@@ -1,0 +1,11 @@
+{
+  "id": "MW-R09-maternal-three",
+  "pathSegment": "MW-PATH-009",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "MW-EXT-023-FAMILY-TWELVE",
+      "order": 7
+    }
+  ]
+}

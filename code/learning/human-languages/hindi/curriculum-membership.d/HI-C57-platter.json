@@ -1,0 +1,11 @@
+{
+  "id": "HI-C57-platter",
+  "pathSegment": "HI-PATH-57-GIFT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-57-GIFT",
+      "order": 2
+    }
+  ]
+}

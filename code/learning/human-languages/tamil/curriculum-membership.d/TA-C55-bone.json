@@ -1,0 +1,11 @@
+{
+  "id": "TA-C55-bone",
+  "pathSegment": "TA-PATH-55-BODY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-55-BODY",
+      "order": 4
+    }
+  ]
+}

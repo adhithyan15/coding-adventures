@@ -1,0 +1,11 @@
+{
+  "id": "ES-C386-servir",
+  "pathSegment": "ES-PATH-386-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-386-VERB",
+      "order": 1
+    }
+  ]
+}

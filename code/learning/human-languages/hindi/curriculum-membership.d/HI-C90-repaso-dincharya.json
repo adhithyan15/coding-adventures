@@ -1,0 +1,11 @@
+{
+  "id": "HI-C90-repaso-dincharya",
+  "pathSegment": "HI-PATH-98-ROUTINE",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "HI-EXT-98-ROUTINE",
+      "order": 6
+    }
+  ]
+}

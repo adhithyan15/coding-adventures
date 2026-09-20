@@ -1,0 +1,11 @@
+{
+  "id": "MW-C02-aabhaar",
+  "pathSegment": "MW-PATH-002",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-004-FORMAL-THANKS",
+      "order": 2
+    }
+  ]
+}

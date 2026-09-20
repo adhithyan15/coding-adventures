@@ -1,0 +1,11 @@
+{
+  "id": "PT-C29-linhas",
+  "pathSegment": "PT-PATH-033",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-033-READING",
+      "order": 1
+    }
+  ]
+}

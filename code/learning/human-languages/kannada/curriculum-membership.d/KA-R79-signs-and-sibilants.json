@@ -1,0 +1,11 @@
+{
+  "id": "KA-R79-signs-and-sibilants",
+  "pathSegment": "KA-PATH-79-SIGNS",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "KA-EXT-79-SIGNS",
+      "order": 6
+    }
+  ]
+}

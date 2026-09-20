@@ -1,0 +1,11 @@
+{
+  "id": "ES-C405-images-recall-2",
+  "pathSegment": "ES-PATH-405-IMAGE-REVIEWS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-405-IMAGE-REVIEWS",
+      "order": 1
+    }
+  ]
+}

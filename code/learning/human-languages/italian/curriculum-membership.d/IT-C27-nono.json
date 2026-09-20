@@ -1,0 +1,11 @@
+{
+  "id": "IT-C27-nono",
+  "pathSegment": "IT-PATH-031",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-031-ORDINALI-AL-DECIMO",
+      "order": 3
+    }
+  ]
+}

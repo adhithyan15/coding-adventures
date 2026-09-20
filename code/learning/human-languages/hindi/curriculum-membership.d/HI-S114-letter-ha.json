@@ -1,0 +1,11 @@
+{
+  "id": "HI-S114-letter-ha",
+  "pathSegment": "HI-PATH-100",
+  "pathOrder": 12,
+  "extensions": [
+    {
+      "id": "HI-EXT-100-SCRIPT-RECOGNITION",
+      "order": 12
+    }
+  ]
+}

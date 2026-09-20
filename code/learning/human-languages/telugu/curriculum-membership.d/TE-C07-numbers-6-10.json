@@ -1,0 +1,11 @@
+{
+  "id": "TE-C07-numbers-6-10",
+  "pathSegment": "TE-PATH-012",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-012-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C21-ershi",
+  "pathSegment": "ZH-PATH-020",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-055-DECIMAL",
+      "order": 1
+    }
+  ]
+}

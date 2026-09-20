@@ -1,12 +1,6 @@
 {
   "id": "SA-PATH-014",
   "spine_node": "SPINE-EXCHANGE-NAMES",
-  "lessons": [
-    "SA-C11-mitram",
-    "SA-C11-kutumbam",
-    "SA-C11-bhrata",
-    "SA-C11-bhagini"
-  ],
   "before": [],
   "inline": [
     "SA-EXT-014-LANGUAGE-SPECIFIC"

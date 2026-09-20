@@ -1,0 +1,11 @@
+{
+  "id": "PA-S04-phappha-gagga",
+  "pathSegment": "PA-PATH-009",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PA-EXT-047-PREA1-SCRIPT-RUNWAY-C4",
+      "order": 0
+    }
+  ]
+}

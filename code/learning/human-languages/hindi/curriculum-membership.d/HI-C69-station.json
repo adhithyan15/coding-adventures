@@ -1,0 +1,11 @@
+{
+  "id": "HI-C69-station",
+  "pathSegment": "HI-PATH-69-GOING",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-69-GOING",
+      "order": 2
+    }
+  ]
+}

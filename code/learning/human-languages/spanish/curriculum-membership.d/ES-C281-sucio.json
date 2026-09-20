@@ -1,0 +1,11 @@
+{
+  "id": "ES-C281-sucio",
+  "pathSegment": "ES-PATH-281-01",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-281-ADJETIVOS",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C328-asi",
+  "pathSegment": "ES-PATH-328-01",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-328-DEGREE",
+      "order": 0
+    }
+  ]
+}

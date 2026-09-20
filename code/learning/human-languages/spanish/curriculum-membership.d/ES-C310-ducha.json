@@ -1,0 +1,11 @@
+{
+  "id": "ES-C310-ducha",
+  "pathSegment": "ES-PATH-310-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-310-ASK",
+      "order": 1
+    }
+  ]
+}

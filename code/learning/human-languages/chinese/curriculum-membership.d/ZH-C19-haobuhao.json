@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C19-haobuhao",
+  "pathSegment": "ZH-PATH-018",
+  "pathOrder": 11,
+  "extensions": [
+    {
+      "id": "ZH-EXT-052-ASKING-SCRIPT",
+      "order": 6
+    }
+  ]
+}

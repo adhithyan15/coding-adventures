@@ -1,0 +1,11 @@
+{
+  "id": "GU-C22-hear-rasto",
+  "pathSegment": "GU-PATH-022",
+  "pathOrder": 19,
+  "extensions": [
+    {
+      "id": "GU-EXT-033-ROUTE-THREE",
+      "order": 4
+    }
+  ]
+}

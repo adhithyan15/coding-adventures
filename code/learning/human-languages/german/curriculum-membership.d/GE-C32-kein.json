@@ -1,0 +1,11 @@
+{
+  "id": "GE-C32-kein",
+  "pathSegment": "GE-PATH-A1-NEGATION",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-A1-NEGATION",
+      "order": 0
+    }
+  ]
+}

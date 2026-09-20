@@ -1,0 +1,11 @@
+{
+  "id": "PA-S05-babba-lalla-hora",
+  "pathSegment": "PA-PATH-010",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "PA-EXT-048-PREA1-SCRIPT-RUNWAY-C5C6",
+      "order": 0
+    }
+  ]
+}

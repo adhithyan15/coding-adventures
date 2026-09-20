@@ -1,0 +1,11 @@
+{
+  "id": "JA-C13-family-reception",
+  "pathSegment": "JA-PATH-013",
+  "pathOrder": 15,
+  "extensions": [
+    {
+      "id": "JA-EXT-020-FAMILY-NINE",
+      "order": 15
+    }
+  ]
+}

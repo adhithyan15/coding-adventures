@@ -1,0 +1,11 @@
+{
+  "id": "RU-C19-potomu-chto",
+  "pathSegment": "RU-PATH-020",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-025-REASON-AND-TIME",
+      "order": 1
+    }
+  ]
+}

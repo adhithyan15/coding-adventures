@@ -1,0 +1,11 @@
+{
+  "id": "UR-R20-joined-and-turned",
+  "pathSegment": "UR-PATH-021",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-031-JOINING",
+      "order": 4
+    }
+  ]
+}

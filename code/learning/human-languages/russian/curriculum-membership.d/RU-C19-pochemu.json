@@ -1,0 +1,11 @@
+{
+  "id": "RU-C19-pochemu",
+  "pathSegment": "RU-PATH-020",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-025-REASON-AND-TIME",
+      "order": 0
+    }
+  ]
+}

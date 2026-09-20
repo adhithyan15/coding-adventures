@@ -1,0 +1,11 @@
+{
+  "id": "RU-C19-kogda-soyuz",
+  "pathSegment": "RU-PATH-020",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-025-REASON-AND-TIME",
+      "order": 3
+    }
+  ]
+}

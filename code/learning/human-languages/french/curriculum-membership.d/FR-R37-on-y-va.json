@@ -1,0 +1,11 @@
+{
+  "id": "FR-R37-on-y-va",
+  "pathSegment": "FR-PATH-A1-VERB-WAYS",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-A1-VERB-WAYS",
+      "order": 5
+    }
+  ]
+}

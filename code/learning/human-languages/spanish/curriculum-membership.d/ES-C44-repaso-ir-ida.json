@@ -1,0 +1,11 @@
+{
+  "id": "ES-C44-repaso-ir-ida",
+  "pathSegment": "ES-PATH-003-REVIEW-ART",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-003-REVIEW-ART",
+      "order": 1
+    }
+  ]
+}

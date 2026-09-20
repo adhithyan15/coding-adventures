@@ -1,0 +1,11 @@
+{
+  "id": "HI-C81-repaso-skool",
+  "pathSegment": "HI-PATH-89-SCHOOL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-89-SCHOOL",
+      "order": 2
+    }
+  ]
+}

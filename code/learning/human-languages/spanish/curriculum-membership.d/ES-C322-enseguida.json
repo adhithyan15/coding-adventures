@@ -1,0 +1,11 @@
+{
+  "id": "ES-C322-enseguida",
+  "pathSegment": "ES-PATH-322-01",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-322-WHEN",
+      "order": 3
+    }
+  ]
+}

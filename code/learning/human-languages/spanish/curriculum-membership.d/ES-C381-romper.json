@@ -1,0 +1,11 @@
+{
+  "id": "ES-C381-romper",
+  "pathSegment": "ES-PATH-381-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-381-VERB",
+      "order": 1
+    }
+  ]
+}

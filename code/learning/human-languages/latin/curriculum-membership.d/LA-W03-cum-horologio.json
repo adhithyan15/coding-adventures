@@ -1,0 +1,11 @@
+{
+  "id": "LA-W03-cum-horologio",
+  "pathSegment": "LA-PATH-060-WRITING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-060-WRITING",
+      "order": 1
+    }
+  ]
+}

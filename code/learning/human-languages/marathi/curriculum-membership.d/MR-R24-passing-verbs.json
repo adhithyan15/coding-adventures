@@ -1,0 +1,11 @@
+{
+  "id": "MR-R24-passing-verbs",
+  "pathSegment": "MR-PATH-026",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-029-PASSING-VERBS",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C36-mais",
+  "pathSegment": "FR-PATH-A1-JOINERS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-A1-JOINERS",
+      "order": 3
+    }
+  ]
+}

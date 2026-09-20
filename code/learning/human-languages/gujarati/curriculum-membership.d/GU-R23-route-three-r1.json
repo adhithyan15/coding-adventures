@@ -1,0 +1,11 @@
+{
+  "id": "GU-R23-route-three-r1",
+  "pathSegment": "GU-PATH-022",
+  "pathOrder": 23,
+  "extensions": [
+    {
+      "id": "GU-EXT-034-MAP-TEN",
+      "order": 1
+    }
+  ]
+}

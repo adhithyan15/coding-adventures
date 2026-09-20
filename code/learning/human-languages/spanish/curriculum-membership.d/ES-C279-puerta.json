@@ -1,0 +1,11 @@
+{
+  "id": "ES-C279-puerta",
+  "pathSegment": "ES-PATH-279-01",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-279-HABITACION",
+      "order": 0
+    }
+  ]
+}

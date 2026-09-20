@@ -1,0 +1,11 @@
+{
+  "id": "HI-C82-motaa",
+  "pathSegment": "HI-PATH-90-BODY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-90-BODY",
+      "order": 2
+    }
+  ]
+}

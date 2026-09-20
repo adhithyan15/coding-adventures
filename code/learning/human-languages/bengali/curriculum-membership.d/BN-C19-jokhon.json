@@ -1,0 +1,11 @@
+{
+  "id": "BN-C19-jokhon",
+  "pathSegment": "BN-PATH-026",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-027-REPORT-AND-TIME",
+      "order": 1
+    }
+  ]
+}

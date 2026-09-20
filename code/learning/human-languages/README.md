@@ -41,6 +41,7 @@ Every track shares the same shape:
   README.md                  what this track is, how to use it, current progress
   CHANGELOG.md                per-chapter content additions (rendered from CHANGELOG.d in sharded tracks)
   curriculum.d/              ordered shared-spine path + extensions, sharded by entry
+  curriculum-membership.d/   one direct path/extension membership owner per lesson
   chapters.d/                authored chapter can-dos and payoffs, one file per chapter
   roadmap.md                  themed-chapter skeleton
   session-map.md              how lessons compose into commute sessions + review schedule
@@ -177,6 +178,15 @@ that the track omits or deliberately teaches elsewhere. The data-package gate
 proves that every registered map covers its schema-v2 and canonical lessons without
 jumping over a prerequisite. Books and the app still read the lesson Markdown;
 the map is the shared scheduling contract, not a second copy of the content.
+
+The path and extension shards define those nodes but do not repeat lesson ids.
+`curriculum-membership.d/<lesson-id>.json` owns one lesson's path, stable order,
+and zero or more attached extension edges. Its exact owner set is derived from
+the track's lesson filenames, so deleting or adding either side alone fails.
+Loaders reconstruct the historical `path[*].lessons` and
+`extensions[*].lessons` arrays byte-for-byte in memory. Ordinary lesson work
+therefore never appends to a shared curriculum array. See
+[`HL40`](../../specs/HL40-direct-curriculum-lesson-membership.md).
 
 The unified publication job also emits `curriculum-gaps.json` and
 `curriculum-gaps.txt` beside the books. They record the effective duration budget

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C08-une-heure",
+  "pathSegment": "FR-PATH-029",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-029-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

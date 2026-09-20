@@ -1,0 +1,11 @@
+{
+  "id": "SA-C63-second",
+  "pathSegment": "SA-PATH-63-ORDINAL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-063-ORDINAL-OLDER",
+      "order": 3
+    }
+  ]
+}

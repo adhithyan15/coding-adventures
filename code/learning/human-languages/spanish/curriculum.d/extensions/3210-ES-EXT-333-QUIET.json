@@ -4,12 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can ask for quiet, ask somebody to take their time, and warn them to be careful.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-C333-ruido",
-    "ES-C333-silencio",
-    "ES-C333-calma",
-    "ES-C333-prisa",
-    "ES-C333-cuidado"
-  ]
+  "prerequisites": []
 }

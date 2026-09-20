@@ -1,0 +1,11 @@
+{
+  "id": "LA-W04-quattuor-versus",
+  "pathSegment": "LA-PATH-060-WRITING",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-060-WRITING",
+      "order": 2
+    }
+  ]
+}

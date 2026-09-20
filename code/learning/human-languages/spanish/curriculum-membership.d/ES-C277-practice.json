@@ -1,0 +1,11 @@
+{
+  "id": "ES-C277-practice",
+  "pathSegment": "ES-PATH-277-04",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-277-SOURCES",
+      "order": 0
+    }
+  ]
+}

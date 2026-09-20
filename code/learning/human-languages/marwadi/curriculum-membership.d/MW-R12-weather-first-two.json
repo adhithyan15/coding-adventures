@@ -1,0 +1,11 @@
+{
+  "id": "MW-R12-weather-first-two",
+  "pathSegment": "MW-PATH-012",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "MW-EXT-026-WEATHER-SIX",
+      "order": 6
+    }
+  ]
+}

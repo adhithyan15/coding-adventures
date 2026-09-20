@@ -1,0 +1,11 @@
+{
+  "id": "ES-C412-deporte",
+  "pathSegment": "ES-PATH-412-FITNESS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-412-FITNESS",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C03-repaso-tu-usted",
+  "pathSegment": "ES-PATH-007",
+  "pathOrder": 9,
+  "extensions": [
+    {
+      "id": "ES-EXT-007-CONSOLIDATION-USTED",
+      "order": 0
+    }
+  ]
+}

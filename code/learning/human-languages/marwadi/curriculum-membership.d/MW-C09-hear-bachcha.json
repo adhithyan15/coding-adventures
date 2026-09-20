@@ -1,0 +1,11 @@
+{
+  "id": "MW-C09-hear-bachcha",
+  "pathSegment": "MW-PATH-009",
+  "pathOrder": 10,
+  "extensions": [
+    {
+      "id": "MW-EXT-023-FAMILY-TWELVE",
+      "order": 10
+    }
+  ]
+}

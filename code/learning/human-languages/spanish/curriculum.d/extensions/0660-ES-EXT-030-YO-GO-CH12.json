@@ -4,8 +4,5 @@
   "kind": "required",
   "category": "grammar",
   "canDo": "I can compare the learned tengo, hago, and digo forms without predicting unseen verbs.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-C12-yo-go"
-  ]
+  "prerequisites": []
 }

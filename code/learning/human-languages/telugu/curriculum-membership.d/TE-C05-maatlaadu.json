@@ -1,0 +1,11 @@
+{
+  "id": "TE-C05-maatlaadu",
+  "pathSegment": "TE-PATH-011",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-011-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

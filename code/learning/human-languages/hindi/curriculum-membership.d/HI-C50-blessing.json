@@ -1,0 +1,11 @@
+{
+  "id": "HI-C50-blessing",
+  "pathSegment": "HI-PATH-50-COURTESY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-50-COURTESY",
+      "order": 3
+    }
+  ]
+}

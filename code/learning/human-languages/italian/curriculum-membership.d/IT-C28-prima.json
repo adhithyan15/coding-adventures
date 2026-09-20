@@ -1,0 +1,11 @@
+{
+  "id": "IT-C28-prima",
+  "pathSegment": "IT-PATH-032",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-032-ORDINE",
+      "order": 1
+    }
+  ]
+}

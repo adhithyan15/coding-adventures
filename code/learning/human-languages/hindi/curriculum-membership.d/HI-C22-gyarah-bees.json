@@ -1,0 +1,11 @@
+{
+  "id": "HI-C22-gyarah-bees",
+  "pathSegment": "HI-PATH-022",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-022-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

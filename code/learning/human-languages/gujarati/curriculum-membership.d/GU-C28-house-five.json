@@ -1,0 +1,11 @@
+{
+  "id": "GU-C28-house-five",
+  "pathSegment": "GU-PATH-027",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GU-EXT-039-HOUSE-FIVE",
+      "order": 5
+    }
+  ]
+}

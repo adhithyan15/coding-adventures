@@ -1,0 +1,11 @@
+{
+  "id": "ES-C424-repaso-signos",
+  "pathSegment": "ES-PATH-424-SIGNOS",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "ES-EXT-424-SIGNOS",
+      "order": 8
+    }
+  ]
+}

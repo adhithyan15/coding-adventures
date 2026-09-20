@@ -1,0 +1,11 @@
+{
+  "id": "RU-C18-dumayu-chto",
+  "pathSegment": "RU-PATH-019",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-024-CHTO",
+      "order": 2
+    }
+  ]
+}

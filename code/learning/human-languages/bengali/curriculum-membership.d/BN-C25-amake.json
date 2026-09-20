@@ -1,0 +1,11 @@
+{
+  "id": "BN-C25-amake",
+  "pathSegment": "BN-PATH-033",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-034-OBJECT-CASE",
+      "order": 1
+    }
+  ]
+}

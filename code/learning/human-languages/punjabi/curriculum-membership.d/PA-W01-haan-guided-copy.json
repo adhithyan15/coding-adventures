@@ -1,0 +1,11 @@
+{
+  "id": "PA-W01-haan-guided-copy",
+  "pathSegment": "PA-PATH-003",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PA-EXT-003-HAAN-WRITING",
+      "order": 4
+    }
+  ]
+}

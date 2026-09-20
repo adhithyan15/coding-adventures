@@ -1,0 +1,11 @@
+{
+  "id": "PT-C10-irmaos",
+  "pathSegment": "PT-PATH-015",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-015-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

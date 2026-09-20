@@ -1,0 +1,11 @@
+{
+  "id": "FR-C06-neuf",
+  "pathSegment": "FR-PATH-015",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "FR-EXT-015-LANGUAGE-SPECIFIC",
+      "order": 8
+    }
+  ]
+}

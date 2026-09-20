@@ -1,0 +1,11 @@
+{
+  "id": "MW-C11-baadal",
+  "pathSegment": "MW-PATH-011",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-025-WEATHER-THREE",
+      "order": 3
+    }
+  ]
+}

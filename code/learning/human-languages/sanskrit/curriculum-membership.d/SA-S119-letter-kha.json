@@ -1,0 +1,11 @@
+{
+  "id": "SA-S119-letter-kha",
+  "pathSegment": "SA-PATH-100",
+  "pathOrder": 21,
+  "extensions": [
+    {
+      "id": "SA-EXT-100-SCRIPT-RECOGNITION",
+      "order": 21
+    }
+  ]
+}

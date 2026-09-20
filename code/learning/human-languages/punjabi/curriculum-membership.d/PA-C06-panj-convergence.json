@@ -1,0 +1,11 @@
+{
+  "id": "PA-C06-panj-convergence",
+  "pathSegment": "PA-PATH-010",
+  "pathOrder": 10,
+  "extensions": [
+    {
+      "id": "PA-EXT-010-ETYMOLOGY",
+      "order": 0
+    }
+  ]
+}

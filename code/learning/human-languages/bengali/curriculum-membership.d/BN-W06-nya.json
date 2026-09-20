@@ -1,0 +1,11 @@
+{
+  "id": "BN-W06-nya",
+  "pathSegment": "BN-PATH-035",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-036-ORDINALS-ONE-TO-FIVE",
+      "order": 4
+    }
+  ]
+}

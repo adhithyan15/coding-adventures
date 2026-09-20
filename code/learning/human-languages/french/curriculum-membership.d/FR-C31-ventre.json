@@ -1,0 +1,11 @@
+{
+  "id": "FR-C31-ventre",
+  "pathSegment": "FR-PATH-028",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-028-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

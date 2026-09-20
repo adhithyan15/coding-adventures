@@ -1,0 +1,11 @@
+{
+  "id": "ES-C55-comieron",
+  "pathSegment": "ES-PATH-B1-COMIERON",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-B1-COMIERON",
+      "order": 0
+    }
+  ]
+}

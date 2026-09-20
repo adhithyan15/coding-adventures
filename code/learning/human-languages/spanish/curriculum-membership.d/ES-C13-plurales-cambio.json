@@ -1,0 +1,11 @@
+{
+  "id": "ES-C13-plurales-cambio",
+  "pathSegment": "ES-PATH-030-VENIR-CH13-B",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-030-DERIVE-PLURALS",
+      "order": 0
+    }
+  ]
+}

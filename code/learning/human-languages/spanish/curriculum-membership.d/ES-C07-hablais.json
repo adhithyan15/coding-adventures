@@ -1,0 +1,11 @@
+{
+  "id": "ES-C07-hablais",
+  "pathSegment": "ES-PATH-015",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-015-PRESENT-PLURAL",
+      "order": 2
+    }
+  ]
+}

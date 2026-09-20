@@ -1,0 +1,11 @@
+{
+  "id": "ML-C73-kaaranam",
+  "pathSegment": "ML-PATH-73-CAUSE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-73-CAUSE",
+      "order": 1
+    }
+  ]
+}

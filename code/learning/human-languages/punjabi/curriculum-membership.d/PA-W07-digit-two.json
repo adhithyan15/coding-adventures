@@ -1,0 +1,11 @@
+{
+  "id": "PA-W07-digit-two",
+  "pathSegment": "PA-PATH-031",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-036-A1-AGE-FIELD",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C14-idade",
+  "pathSegment": "PT-PATH-019",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-019-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

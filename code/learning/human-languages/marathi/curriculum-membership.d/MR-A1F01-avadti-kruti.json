@@ -1,0 +1,11 @@
+{
+  "id": "MR-A1F01-avadti-kruti",
+  "pathSegment": "MR-PATH-021",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-024-A1-FORM-LABELS",
+      "order": 4
+    }
+  ]
+}

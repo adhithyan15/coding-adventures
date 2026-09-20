@@ -4,12 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can name five more parts of the body in Hindi.",
-  "prerequisites": [],
-  "lessons": [
-    "HI-C46-hair",
-    "HI-C46-finger",
-    "HI-C46-ear",
-    "HI-C46-nose",
-    "HI-C46-throat"
-  ]
+  "prerequisites": []
 }

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C301-aguja",
+  "pathSegment": "ES-PATH-301-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-301-PEDIR",
+      "order": 1
+    }
+  ]
+}

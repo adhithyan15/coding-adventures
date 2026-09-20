@@ -1,0 +1,11 @@
+{
+  "id": "MR-R33-ask-and-answer",
+  "pathSegment": "MR-PATH-035",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-048-POLAR-QUESTION",
+      "order": 2
+    }
+  ]
+}

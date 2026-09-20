@@ -1,0 +1,11 @@
+{
+  "id": "ES-C13-plurales-yo-go",
+  "pathSegment": "ES-PATH-030-VENIR-CH13-B",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-030-DERIVE-PLURALS",
+      "order": 1
+    }
+  ]
+}

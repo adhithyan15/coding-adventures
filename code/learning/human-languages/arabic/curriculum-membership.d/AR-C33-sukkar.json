@@ -1,0 +1,11 @@
+{
+  "id": "AR-C33-sukkar",
+  "pathSegment": "AR-PATH-030",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-030-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

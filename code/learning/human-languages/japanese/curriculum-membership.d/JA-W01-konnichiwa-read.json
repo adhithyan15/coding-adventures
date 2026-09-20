@@ -1,0 +1,11 @@
+{
+  "id": "JA-W01-konnichiwa-read",
+  "pathSegment": "JA-PATH-002",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "JA-EXT-009-HIRAGANA-GREETING",
+      "order": 5
+    }
+  ]
+}

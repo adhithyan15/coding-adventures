@@ -1,0 +1,11 @@
+{
+  "id": "HI-W05-namaste-delayed-copy",
+  "pathSegment": "HI-PATH-004",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "HI-EXT-004-SCRIPT",
+      "order": 7
+    }
+  ]
+}

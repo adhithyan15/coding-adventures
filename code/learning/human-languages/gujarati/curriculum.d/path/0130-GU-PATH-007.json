@@ -1,9 +1,6 @@
 {
   "id": "GU-PATH-007",
   "spine_node": "SPINE-COURTESY-THANK",
-  "lessons": [
-    "GU-C03-vandho-nahi"
-  ],
   "before": [],
   "inline": [],
   "after": []

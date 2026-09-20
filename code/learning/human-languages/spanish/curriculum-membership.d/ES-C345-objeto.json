@@ -1,0 +1,11 @@
+{
+  "id": "ES-C345-objeto",
+  "pathSegment": "ES-PATH-345-01",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ES-EXT-345-REF",
+      "order": 4
+    }
+  ]
+}

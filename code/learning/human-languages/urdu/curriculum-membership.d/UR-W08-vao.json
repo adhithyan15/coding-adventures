@@ -1,0 +1,11 @@
+{
+  "id": "UR-W08-vao",
+  "pathSegment": "UR-PATH-008-B",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-018D-SCRIPT-VAO",
+      "order": 0
+    }
+  ]
+}

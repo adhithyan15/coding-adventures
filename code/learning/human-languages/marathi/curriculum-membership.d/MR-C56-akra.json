@@ -1,0 +1,11 @@
+{
+  "id": "MR-C56-akra",
+  "pathSegment": "MR-PATH-059",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-072-TEN-TO-TWELVE",
+      "order": 1
+    }
+  ]
+}

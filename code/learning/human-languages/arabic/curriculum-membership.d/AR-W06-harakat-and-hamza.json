@@ -1,0 +1,11 @@
+{
+  "id": "AR-W06-harakat-and-hamza",
+  "pathSegment": "AR-PATH-008",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-008-SCRIPT",
+      "order": 2
+    }
+  ]
+}

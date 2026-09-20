@@ -1,0 +1,11 @@
+{
+  "id": "SA-C16-road",
+  "pathSegment": "SA-PATH-202",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-202-PLACE",
+      "order": 2
+    }
+  ]
+}

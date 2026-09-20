@@ -1,0 +1,11 @@
+{
+  "id": "GE-C29-familie",
+  "pathSegment": "GE-PATH-032",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-032-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

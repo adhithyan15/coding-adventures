@@ -1,0 +1,11 @@
+{
+  "id": "TE-C05-nenu-telugu-maatlaadataanu",
+  "pathSegment": "TE-PATH-011",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-011-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

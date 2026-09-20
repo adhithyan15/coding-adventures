@@ -1,0 +1,11 @@
+{
+  "id": "GE-R35-zwei-gedanken",
+  "pathSegment": "GE-PATH-A1-VERBINDUNGEN",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-A1-VERBINDUNGEN",
+      "order": 5
+    }
+  ]
+}

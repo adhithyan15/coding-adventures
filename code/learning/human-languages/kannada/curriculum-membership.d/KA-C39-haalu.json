@@ -1,0 +1,11 @@
+{
+  "id": "KA-C39-haalu",
+  "pathSegment": "KA-PATH-031",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-032-TEA-COFFEE-MILK",
+      "order": 2
+    }
+  ]
+}

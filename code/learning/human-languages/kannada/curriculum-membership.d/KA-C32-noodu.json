@@ -1,0 +1,11 @@
+{
+  "id": "KA-C32-noodu",
+  "pathSegment": "KA-PATH-025-C",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-025-CORE-VERBS-C",
+      "order": 1
+    }
+  ]
+}

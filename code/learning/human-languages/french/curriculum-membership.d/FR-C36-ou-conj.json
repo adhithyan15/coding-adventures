@@ -1,0 +1,11 @@
+{
+  "id": "FR-C36-ou-conj",
+  "pathSegment": "FR-PATH-A1-JOINERS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-A1-JOINERS",
+      "order": 2
+    }
+  ]
+}

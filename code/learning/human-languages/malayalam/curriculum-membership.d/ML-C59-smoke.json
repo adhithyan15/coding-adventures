@@ -1,0 +1,11 @@
+{
+  "id": "ML-C59-smoke",
+  "pathSegment": "ML-PATH-59-AIR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-59-AIR",
+      "order": 3
+    }
+  ]
+}

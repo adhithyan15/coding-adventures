@@ -1,0 +1,11 @@
+{
+  "id": "FR-W03-avec-la-montre",
+  "pathSegment": "FR-PATH-046-WRITING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-046-WRITING",
+      "order": 1
+    }
+  ]
+}

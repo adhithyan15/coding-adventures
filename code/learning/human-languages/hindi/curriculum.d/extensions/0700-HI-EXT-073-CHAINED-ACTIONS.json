@@ -6,9 +6,5 @@
   "canDo": "I can chain two actions inside one clause with -kar, conjugating only the last verb.",
   "prerequisites": [
     "HI-EXT-072-WHEN"
-  ],
-  "lessons": [
-    "HI-C73-kar",
-    "HI-R73-chain"
   ]
 }

@@ -1,0 +1,11 @@
+{
+  "id": "GU-W03-anusvara",
+  "pathSegment": "GU-PATH-DOORWAY-SCRIPT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-018-DOORWAY-SCRIPT",
+      "order": 2
+    }
+  ]
+}

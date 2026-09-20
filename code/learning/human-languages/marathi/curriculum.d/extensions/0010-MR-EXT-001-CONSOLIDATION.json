@@ -4,8 +4,5 @@
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can retrieve the complete first greeting, response, thanks, and leave-taking exchange without receiving new material.",
-  "prerequisites": [],
-  "lessons": [
-    "MR-C01-practice"
-  ]
+  "prerequisites": []
 }

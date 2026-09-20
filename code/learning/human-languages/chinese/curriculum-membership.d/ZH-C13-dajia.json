@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C13-dajia",
+  "pathSegment": "ZH-PATH-012",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-034-SCHOOL-SCRIPT",
+      "order": 2
+    }
+  ]
+}

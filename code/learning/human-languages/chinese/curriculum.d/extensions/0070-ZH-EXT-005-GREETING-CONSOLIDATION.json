@@ -6,8 +6,5 @@
   "canDo": "I can greet and answer a greeting in Mandarin, reading both characters unaided and applying the sandhi tone.",
   "prerequisites": [
     "ZH-EXT-004-TONE-MINIMAL-PAIR"
-  ],
-  "lessons": [
-    "ZH-C01-practice"
   ]
 }

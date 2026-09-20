@@ -1,0 +1,11 @@
+{
+  "id": "PA-S08-pappa",
+  "pathSegment": "PA-PATH-012",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-050-PREA1-SCRIPT-RUNWAY-C8",
+      "order": 1
+    }
+  ]
+}

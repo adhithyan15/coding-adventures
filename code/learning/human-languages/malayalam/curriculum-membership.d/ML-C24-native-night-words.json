@@ -1,0 +1,11 @@
+{
+  "id": "ML-C24-native-night-words",
+  "pathSegment": "ML-PATH-025",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-025-ETYMOLOGY",
+      "order": 1
+    }
+  ]
+}

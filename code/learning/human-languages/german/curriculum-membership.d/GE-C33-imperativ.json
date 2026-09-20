@@ -1,0 +1,11 @@
+{
+  "id": "GE-C33-imperativ",
+  "pathSegment": "GE-PATH-A1-FRAGE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-A1-FRAGE",
+      "order": 1
+    }
+  ]
+}

@@ -35,6 +35,7 @@ import { describe, expect, it } from "vitest";
 import { SHARD_PLANS, runShardCli, shardContents, unshardContents } from "../src/shard-cli.js";
 import {
   defaultCurriculumRoot,
+  loadAuthoredLanguageCurricula,
   loadCurriculumSpine,
   loadLanguageCurricula,
   loadLanguageRegistry,
@@ -166,7 +167,7 @@ describe("spine membership has one owner", () => {
     expect(() =>
       mergeCurriculumShards(
         shards(
-          { id: "TEST-PATH", spine_node: "SPINE-MISSING", lessons: ["TEST-L1"] },
+          { id: "TEST-PATH", spine_node: "SPINE-MISSING" },
           { omits: [], relocates: {} },
         ),
       ),
@@ -437,6 +438,7 @@ describe("_keys must be a permutation, not an arbitrary subset", () => {
 
 describe("the loader sees the sharded curricula", () => {
   const loaded = loadLanguageCurricula(root);
+  const authored = loadAuthoredLanguageCurricula(root);
 
   it("still returns all twenty-three tracks", () => {
     // The `existsSync` canary again: `loadLanguageCurricula` skips a track with
@@ -445,13 +447,13 @@ describe("the loader sees the sharded curricula", () => {
     expect(loaded).toHaveLength(23);
   });
 
-  it("reads the same document the canonical shards rebuild", () => {
-    // The loader and `--unshard` must not have two ideas of what these files
-    // mean; `--check` only compares the monolith against `unshardContents`, so a
-    // divergent loader would go unreported.
+  it("reads the same authored projection the canonical shards rebuild", () => {
+    // Direct lesson owners are attached after the curriculum shards rebuild.
+    // The authored half must still have exactly one meaning shared by the
+    // loader and `--unshard`.
     for (const plan of CURRICULUM_PLANS) {
       const language = plan.path.slice(0, plan.path.indexOf("/"));
-      const fromLoader = loaded.find((c) => c.language === language);
+      const fromLoader = authored.find((c) => c.language === language);
       expect(fromLoader, `${language} missing`).toBeDefined();
       expect(`${JSON.stringify(fromLoader, null, 2)}\n`).toBe(unshardContents(root, plan));
     }

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C53-magister",
+  "pathSegment": "LA-PATH-037",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-053-SCHOOL",
+      "order": 1
+    }
+  ]
+}

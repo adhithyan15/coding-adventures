@@ -1,0 +1,11 @@
+{
+  "id": "SA-C20-old-person",
+  "pathSegment": "SA-PATH-206",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-206-PEOPLE",
+      "order": 3
+    }
+  ]
+}

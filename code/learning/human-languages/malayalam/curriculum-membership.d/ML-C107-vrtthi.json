@@ -1,0 +1,11 @@
+{
+  "id": "ML-C107-vrtthi",
+  "pathSegment": "ML-PATH-107-MEDICINE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-107-MEDICINE",
+      "order": 2
+    }
+  ]
+}

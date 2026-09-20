@@ -1,0 +1,11 @@
+{
+  "id": "GE-C07-wochentage-2",
+  "pathSegment": "GE-PATH-035-B",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-035-B-WOCHENENDE",
+      "order": 5
+    }
+  ]
+}

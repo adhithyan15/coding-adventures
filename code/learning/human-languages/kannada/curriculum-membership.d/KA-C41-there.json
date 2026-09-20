@@ -1,0 +1,11 @@
+{
+  "id": "KA-C41-there",
+  "pathSegment": "KA-PATH-200",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-200-DEIXIS",
+      "order": 3
+    }
+  ]
+}

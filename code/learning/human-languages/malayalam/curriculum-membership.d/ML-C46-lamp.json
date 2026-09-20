@@ -1,0 +1,11 @@
+{
+  "id": "ML-C46-lamp",
+  "pathSegment": "ML-PATH-46-ASK",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-46-ASK",
+      "order": 2
+    }
+  ]
+}

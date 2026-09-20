@@ -1,0 +1,11 @@
+{
+  "id": "IT-C23-famiglia",
+  "pathSegment": "IT-PATH-027",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-027-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

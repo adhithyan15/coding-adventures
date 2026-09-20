@@ -1,0 +1,11 @@
+{
+  "id": "TA-C69-train",
+  "pathSegment": "TA-PATH-69-GOING",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-69-GOING",
+      "order": 3
+    }
+  ]
+}

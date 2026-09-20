@@ -1,0 +1,11 @@
+{
+  "id": "GE-C16-war-practice",
+  "pathSegment": "GE-PATH-021-B",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "GE-EXT-021-B-CONSOLIDATION",
+      "order": 0
+    }
+  ]
+}

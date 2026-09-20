@@ -1,0 +1,11 @@
+{
+  "id": "MR-C05-kaam-karne",
+  "pathSegment": "MR-PATH-019",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-019-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-R25-recognition-words",
+  "pathSegment": "MR-PATH-027",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-030-VERB-CONSOLIDATION",
+      "order": 3
+    }
+  ]
+}

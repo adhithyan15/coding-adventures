@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C18-hear-kanshu",
+  "pathSegment": "ZH-PATH-017",
+  "pathOrder": 15,
+  "extensions": [
+    {
+      "id": "ZH-EXT-048-LOOKING-READING-MEANING-FIRST",
+      "order": 4
+    }
+  ]
+}

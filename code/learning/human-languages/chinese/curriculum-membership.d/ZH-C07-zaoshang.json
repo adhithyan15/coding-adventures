@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C07-zaoshang",
+  "pathSegment": "ZH-PATH-006",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-018-NEUTRAL-TONE",
+      "order": 0
+    }
+  ]
+}

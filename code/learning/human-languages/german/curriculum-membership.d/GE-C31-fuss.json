@@ -1,0 +1,11 @@
+{
+  "id": "GE-C31-fuss",
+  "pathSegment": "GE-PATH-034",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-034-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

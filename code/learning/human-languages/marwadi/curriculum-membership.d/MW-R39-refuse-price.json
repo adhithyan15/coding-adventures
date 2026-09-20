@@ -1,0 +1,11 @@
+{
+  "id": "MW-R39-refuse-price",
+  "pathSegment": "MW-PATH-032",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-046-REFUSAL",
+      "order": 2
+    }
+  ]
+}

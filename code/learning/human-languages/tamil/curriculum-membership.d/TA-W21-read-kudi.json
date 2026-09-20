@@ -1,0 +1,11 @@
+{
+  "id": "TA-W21-read-kudi",
+  "pathSegment": "TA-PATH-65-DOING",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-65-DOING",
+      "order": 2
+    }
+  ]
+}

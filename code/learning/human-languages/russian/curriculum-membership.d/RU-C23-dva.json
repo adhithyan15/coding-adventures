@@ -1,0 +1,11 @@
+{
+  "id": "RU-C23-dva",
+  "pathSegment": "RU-PATH-025",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-030-COUNT-FIVE",
+      "order": 0
+    }
+  ]
+}

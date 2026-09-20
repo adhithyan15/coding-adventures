@@ -1,0 +1,11 @@
+{
+  "id": "MR-W03-ya",
+  "pathSegment": "MR-PATH-002",
+  "pathOrder": 10,
+  "extensions": [
+    {
+      "id": "MR-EXT-021-SCRIPT-DOORWAY",
+      "order": 9
+    }
+  ]
+}

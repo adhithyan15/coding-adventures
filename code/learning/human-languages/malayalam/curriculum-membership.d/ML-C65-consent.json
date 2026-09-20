@@ -1,0 +1,11 @@
+{
+  "id": "ML-C65-consent",
+  "pathSegment": "ML-PATH-65-ASK",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-65-ASK",
+      "order": 2
+    }
+  ]
+}

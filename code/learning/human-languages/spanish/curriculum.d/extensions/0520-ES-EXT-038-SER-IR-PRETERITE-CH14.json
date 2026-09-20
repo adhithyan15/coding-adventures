@@ -4,8 +4,5 @@
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can use fui, fuiste, and fue for the completed past of ser or ir and let context decide the verb.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-C14-ser-ir-preterite"
-  ]
+  "prerequisites": []
 }

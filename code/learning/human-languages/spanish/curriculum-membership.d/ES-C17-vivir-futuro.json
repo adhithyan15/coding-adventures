@@ -1,0 +1,11 @@
+{
+  "id": "ES-C17-vivir-futuro",
+  "pathSegment": "ES-PATH-041",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-041-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

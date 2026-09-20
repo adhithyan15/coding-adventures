@@ -1,0 +1,11 @@
+{
+  "id": "TE-C63-disease",
+  "pathSegment": "TE-PATH-63-HEALTH",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-63-HEALTH",
+      "order": 3
+    }
+  ]
+}

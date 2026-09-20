@@ -1,9 +1,6 @@
 {
   "id": "SA-PATH-002",
   "spine_node": "SPINE-COURTESY-THANK",
-  "lessons": [
-    "SA-C01-dhanyavada"
-  ],
   "before": [],
   "inline": [],
   "after": []

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C37-nahin-checkpoint",
+  "pathSegment": "PA-PATH-039",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-059-NEGATED-CLAUSE",
+      "order": 4
+    }
+  ]
+}

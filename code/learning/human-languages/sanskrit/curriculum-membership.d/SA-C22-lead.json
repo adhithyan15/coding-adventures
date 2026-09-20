@@ -1,0 +1,11 @@
+{
+  "id": "SA-C22-lead",
+  "pathSegment": "SA-PATH-22-VERBS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-22-VERBS",
+      "order": 1
+    }
+  ]
+}

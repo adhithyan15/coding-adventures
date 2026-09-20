@@ -1,12 +1,6 @@
 {
   "id": "ML-PATH-90-PARTICIPLE",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
-  "lessons": [
-    "ML-C90-participle",
-    "ML-C90-clause-in-front",
-    "ML-C90-past-participle",
-    "ML-R90-participle-recall"
-  ],
   "before": [],
   "inline": [
     "ML-EXT-90-PARTICIPLE"

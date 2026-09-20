@@ -1,0 +1,11 @@
+{
+  "id": "KA-C36-magalu",
+  "pathSegment": "KA-PATH-028",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-029-CHILD-SON-DAUGHTER",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-R34-welchen",
+  "pathSegment": "GE-PATH-A1-AKKUSATIV",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-A1-AKKUSATIV",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C60-rope",
+  "pathSegment": "TA-PATH-60-MADE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-60-MADE",
+      "order": 1
+    }
+  ]
+}

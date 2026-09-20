@@ -1,0 +1,11 @@
+{
+  "id": "LA-C38-lego",
+  "pathSegment": "LA-PATH-026-B",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-026-LANGUAGE-SPECIFIC-B",
+      "order": 0
+    }
+  ]
+}

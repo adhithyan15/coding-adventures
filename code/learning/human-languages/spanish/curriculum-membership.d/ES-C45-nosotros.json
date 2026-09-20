@@ -1,0 +1,11 @@
+{
+  "id": "ES-C45-nosotros",
+  "pathSegment": "ES-PATH-003-NOS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-003-NOS",
+      "order": 1
+    }
+  ]
+}

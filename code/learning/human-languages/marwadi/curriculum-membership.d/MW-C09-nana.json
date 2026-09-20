@@ -1,0 +1,11 @@
+{
+  "id": "MW-C09-nana",
+  "pathSegment": "MW-PATH-009",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-023-FAMILY-TWELVE",
+      "order": 1
+    }
+  ]
+}

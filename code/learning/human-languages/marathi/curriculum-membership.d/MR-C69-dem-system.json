@@ -1,0 +1,11 @@
+{
+  "id": "MR-C69-dem-system",
+  "pathSegment": "MR-PATH-071",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-084-POINTING-WORDS",
+      "order": 2
+    }
+  ]
+}

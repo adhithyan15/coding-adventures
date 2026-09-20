@@ -1,0 +1,11 @@
+{
+  "id": "SA-C15-good",
+  "pathSegment": "SA-PATH-201",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-201-ADJ",
+      "order": 2
+    }
+  ]
+}

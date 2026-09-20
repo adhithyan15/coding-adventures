@@ -1,0 +1,11 @@
+{
+  "id": "ML-C50-parayuka",
+  "pathSegment": "ML-PATH-50-LEAVE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-50-LEAVE",
+      "order": 2
+    }
+  ]
+}

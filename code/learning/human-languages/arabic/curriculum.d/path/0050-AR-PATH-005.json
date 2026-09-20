@@ -1,10 +1,6 @@
 {
   "id": "AR-PATH-005",
   "spine_node": "SPINE-COURTESY-THANK",
-  "lessons": [
-    "AR-C01-shukran",
-    "AR-C01-practice"
-  ],
   "before": [],
   "inline": [],
   "after": [

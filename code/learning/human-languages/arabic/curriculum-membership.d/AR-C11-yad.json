@@ -1,0 +1,11 @@
+{
+  "id": "AR-C11-yad",
+  "pathSegment": "AR-PATH-015",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-015-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

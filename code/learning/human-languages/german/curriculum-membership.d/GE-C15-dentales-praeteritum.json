@@ -1,0 +1,11 @@
+{
+  "id": "GE-C15-dentales-praeteritum",
+  "pathSegment": "GE-PATH-020-C",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-020-C-ETYMOLOGY",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-W12-ii",
+  "pathSegment": "HI-PATH-100",
+  "pathOrder": 38,
+  "extensions": [
+    {
+      "id": "HI-EXT-060-SCRIPT-SECOND-WAVE",
+      "order": 5
+    }
+  ]
+}

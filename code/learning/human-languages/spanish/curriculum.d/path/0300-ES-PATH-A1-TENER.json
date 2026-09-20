@@ -1,9 +1,6 @@
 {
   "id": "ES-PATH-A1-TENER",
   "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
-  "lessons": [
-    "ES-C08-tener"
-  ],
   "before": [],
   "inline": [],
   "after": []

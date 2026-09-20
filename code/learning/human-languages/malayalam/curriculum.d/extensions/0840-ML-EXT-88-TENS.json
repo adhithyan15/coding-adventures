@@ -6,11 +6,5 @@
   "canDo": "I can count past the twenty my counting has stopped at.",
   "prerequisites": [
     "ML-EXT-87-ACCUSATIVE"
-  ],
-  "lessons": [
-    "ML-C88-tens",
-    "ML-C88-ninety-hundred",
-    "ML-C88-compound-numbers",
-    "ML-R88-numbers-recall"
   ]
 }

@@ -1,0 +1,11 @@
+{
+  "id": "TA-S126-letter-oo",
+  "pathSegment": "TA-PATH-71-DAY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-71-DAY",
+      "order": 2
+    }
+  ]
+}

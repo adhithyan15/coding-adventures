@@ -745,6 +745,8 @@ export interface MergeSection {
  * `spine` keeps one stable policy owner per canonical node. Reverse segment
  * membership is deliberately absent from those owners and derived from the
  * independently owned `path[*].spine_node` edges by `mergeCurriculumShards`.
+ * Path and extension lesson arrays are also absent; HL40 attaches them from the
+ * separate direct per-lesson membership ledger after this projection is read.
  */
 export const CURRICULUM_SECTIONS: readonly MergeSection[] = [
   { key: "path", dir: "path" },
@@ -804,6 +806,12 @@ export function mergeCurriculumShards(shards: Shard[]): Record<string, unknown> 
     if (seen.has(id)) {
       throw new Error(`curriculum path: duplicate segment id '${id}'`);
     }
+    if (Object.hasOwn(segment, "lessons")) {
+      throw new Error(
+        `curriculum path segment '${id}': must not store derived 'lessons'; ` +
+          "membership is owned by direct lesson owners",
+      );
+    }
     seen.add(id);
     if (typeof node !== "string" || !memberships.has(node)) {
       throw new Error(
@@ -821,6 +829,22 @@ export function mergeCurriculumShards(shards: Shard[]): Record<string, unknown> 
       defineKey(value, key, entry);
     }
     defineKey(derived, node, value);
+  }
+  const extensions = document.extensions;
+  if (!Array.isArray(extensions)) {
+    throw new Error("curriculum shards: reconstructed extensions must be an array");
+  }
+  for (const [index, raw] of extensions.entries()) {
+    if (typeof raw !== "object" || raw === null || Array.isArray(raw)) {
+      throw new Error(`curriculum extensions[${index}]: owner must be an object`);
+    }
+    const extension = raw as Record<string, unknown>;
+    if (Object.hasOwn(extension, "lessons")) {
+      throw new Error(
+        `curriculum extension '${String(extension.id)}': must not store derived 'lessons'; ` +
+          "membership is owned by direct lesson owners",
+      );
+    }
   }
   defineKey(document, "spine", derived);
   return document;

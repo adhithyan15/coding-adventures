@@ -6,12 +6,5 @@
   "canDo": "I can count to sixteen and take each teen apart into its unit and its ten.",
   "prerequisites": [
     "MR-EXT-072-TEN-TO-TWELVE"
-  ],
-  "lessons": [
-    "MR-C57-tera",
-    "MR-C57-chauda",
-    "MR-C57-pandhra",
-    "MR-C57-sola",
-    "MR-R57-thirteen-to-sixteen"
   ]
 }

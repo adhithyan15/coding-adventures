@@ -1,0 +1,11 @@
+{
+  "id": "PA-W11-jodi-hoiyan-lineaan",
+  "pathSegment": "PA-PATH-047-CONNECTED",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PA-EXT-047-CONNECTED",
+      "order": 0
+    }
+  ]
+}

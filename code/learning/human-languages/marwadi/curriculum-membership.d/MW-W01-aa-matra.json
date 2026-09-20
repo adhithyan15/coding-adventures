@@ -1,0 +1,11 @@
+{
+  "id": "MW-W01-aa-matra",
+  "pathSegment": "MW-PATH-001",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-001-WRITE-RAAM",
+      "order": 1
+    }
+  ]
+}

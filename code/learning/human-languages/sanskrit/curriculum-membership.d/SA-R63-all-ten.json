@@ -1,0 +1,11 @@
+{
+  "id": "SA-R63-all-ten",
+  "pathSegment": "SA-PATH-63-ORDINAL",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "SA-EXT-063-ORDINAL-OLDER",
+      "order": 5
+    }
+  ]
+}

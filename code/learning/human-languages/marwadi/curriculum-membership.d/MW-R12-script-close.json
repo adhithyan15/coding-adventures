@@ -1,0 +1,11 @@
+{
+  "id": "MW-R12-script-close",
+  "pathSegment": "MW-PATH-012",
+  "pathOrder": 12,
+  "extensions": [
+    {
+      "id": "MW-EXT-026-WEATHER-SIX",
+      "order": 12
+    }
+  ]
+}

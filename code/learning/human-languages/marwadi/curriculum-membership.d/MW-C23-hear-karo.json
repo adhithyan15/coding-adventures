@@ -1,0 +1,11 @@
+{
+  "id": "MW-C23-hear-karo",
+  "pathSegment": "MW-PATH-022",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "MW-EXT-036-BARGAIN",
+      "order": 7
+    }
+  ]
+}

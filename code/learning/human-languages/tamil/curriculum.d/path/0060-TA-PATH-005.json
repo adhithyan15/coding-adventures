@@ -1,10 +1,6 @@
 {
   "id": "TA-PATH-005",
   "spine_node": "SPINE-COURTESY-THANK",
-  "lessons": [
-    "TA-C01-nandri",
-    "TA-C01-nandri-family-register"
-  ],
   "before": [],
   "inline": [],
   "after": [

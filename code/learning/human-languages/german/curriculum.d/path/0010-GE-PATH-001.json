@@ -1,12 +1,6 @@
 {
   "id": "GE-PATH-001",
   "spine_node": "SPINE-MEET-GREET",
-  "lessons": [
-    "GE-C01-hallo",
-    "GE-W01-hallo-guided-copy",
-    "GE-W01-hallo-delayed-copy",
-    "GE-W01-hallo-dictation"
-  ],
   "before": [],
   "inline": [],
   "after": [

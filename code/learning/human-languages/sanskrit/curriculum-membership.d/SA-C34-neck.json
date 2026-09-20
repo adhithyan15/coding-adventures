@@ -1,0 +1,11 @@
+{
+  "id": "SA-C34-neck",
+  "pathSegment": "SA-PATH-34-LIMB",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-34-LIMB",
+      "order": 1
+    }
+  ]
+}

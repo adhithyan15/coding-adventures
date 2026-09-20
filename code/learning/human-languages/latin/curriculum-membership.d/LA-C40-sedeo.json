@@ -1,0 +1,11 @@
+{
+  "id": "LA-C40-sedeo",
+  "pathSegment": "LA-PATH-028",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-028-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

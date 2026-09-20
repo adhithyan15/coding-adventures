@@ -1,0 +1,11 @@
+{
+  "id": "IT-C34-nostro-vostro",
+  "pathSegment": "IT-PATH-038",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-038-POSSESSIVI",
+      "order": 1
+    }
+  ]
+}

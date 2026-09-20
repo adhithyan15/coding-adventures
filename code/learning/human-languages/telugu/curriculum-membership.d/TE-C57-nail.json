@@ -1,0 +1,11 @@
+{
+  "id": "TE-C57-nail",
+  "pathSegment": "TE-PATH-57-BODY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-57-BODY",
+      "order": 3
+    }
+  ]
+}

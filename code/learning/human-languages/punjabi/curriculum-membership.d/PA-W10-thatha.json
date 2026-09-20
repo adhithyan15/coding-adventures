@@ -1,0 +1,11 @@
+{
+  "id": "PA-W10-thatha",
+  "pathSegment": "PA-PATH-045",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-065-QUESTIONS",
+      "order": 2
+    }
+  ]
+}

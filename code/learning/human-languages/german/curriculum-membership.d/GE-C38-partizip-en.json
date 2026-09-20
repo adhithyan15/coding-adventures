@@ -1,0 +1,11 @@
+{
+  "id": "GE-C38-partizip-en",
+  "pathSegment": "GE-PATH-A1-KLAMMER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-A1-KLAMMER",
+      "order": 4
+    }
+  ]
+}

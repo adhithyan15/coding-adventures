@@ -1,0 +1,11 @@
+{
+  "id": "HI-C64-quickly",
+  "pathSegment": "HI-PATH-64-MEASURE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-64-MEASURE",
+      "order": 1
+    }
+  ]
+}

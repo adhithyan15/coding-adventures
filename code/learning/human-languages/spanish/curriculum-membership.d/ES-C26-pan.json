@@ -1,0 +1,11 @@
+{
+  "id": "ES-C26-pan",
+  "pathSegment": "ES-PATH-024",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-024-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

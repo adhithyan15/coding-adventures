@@ -1,0 +1,11 @@
+{
+  "id": "PA-C39-doublet",
+  "pathSegment": "PA-PATH-041",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-061-BUT-AND-DOUBLET",
+      "order": 3
+    }
+  ]
+}

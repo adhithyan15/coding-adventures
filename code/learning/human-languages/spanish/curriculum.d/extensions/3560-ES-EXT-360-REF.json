@@ -4,12 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can name la ropa, el vestido, el zapato, el pantalón and el botón.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-C360-ropa",
-    "ES-C360-vestido",
-    "ES-C360-zapato",
-    "ES-C360-pantalon",
-    "ES-C360-boton"
-  ]
+  "prerequisites": []
 }

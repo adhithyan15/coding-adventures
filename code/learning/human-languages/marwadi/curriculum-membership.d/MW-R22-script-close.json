@@ -1,0 +1,11 @@
+{
+  "id": "MW-R22-script-close",
+  "pathSegment": "MW-PATH-021",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "MW-EXT-035-PRICE-QUESTION",
+      "order": 8
+    }
+  ]
+}

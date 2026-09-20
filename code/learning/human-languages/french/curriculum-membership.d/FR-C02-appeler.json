@@ -1,0 +1,11 @@
+{
+  "id": "FR-C02-appeler",
+  "pathSegment": "FR-PATH-007",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-007-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

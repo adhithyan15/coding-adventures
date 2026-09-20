@@ -1,0 +1,11 @@
+{
+  "id": "AR-C33-halib",
+  "pathSegment": "AR-PATH-030",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-030-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

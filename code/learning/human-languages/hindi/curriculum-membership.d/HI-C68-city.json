@@ -1,0 +1,11 @@
+{
+  "id": "HI-C68-city",
+  "pathSegment": "HI-PATH-68-ORIGIN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-68-ORIGIN",
+      "order": 2
+    }
+  ]
+}

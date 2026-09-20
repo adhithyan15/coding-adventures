@@ -1,0 +1,11 @@
+{
+  "id": "ML-W03-santosham-delayed-copy",
+  "pathSegment": "ML-PATH-005",
+  "pathOrder": 9,
+  "extensions": [
+    {
+      "id": "ML-EXT-005-SANTOSHAM-WRITING",
+      "order": 1
+    }
+  ]
+}

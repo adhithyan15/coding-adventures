@@ -1,0 +1,11 @@
+{
+  "id": "GE-R38-was-kann-ich",
+  "pathSegment": "GE-PATH-A1-KLAMMER",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-A1-KLAMMER",
+      "order": 5
+    }
+  ]
+}

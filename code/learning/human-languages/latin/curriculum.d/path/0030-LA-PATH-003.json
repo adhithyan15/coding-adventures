@@ -1,9 +1,6 @@
 {
   "id": "LA-PATH-003",
   "spine_node": "SPINE-COURTESY-THANK",
-  "lessons": [
-    "LA-C01-gratias"
-  ],
   "before": [],
   "inline": [],
   "after": []

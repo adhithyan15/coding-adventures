@@ -1,0 +1,11 @@
+{
+  "id": "HI-C60-buffalo",
+  "pathSegment": "HI-PATH-60-YARD",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-60-YARD",
+      "order": 3
+    }
+  ]
+}

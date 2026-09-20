@@ -1,0 +1,11 @@
+{
+  "id": "LA-C47-piscis",
+  "pathSegment": "LA-PATH-021",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "LA-EXT-047-TABLE",
+      "order": 4
+    }
+  ]
+}

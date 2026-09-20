@@ -1,0 +1,11 @@
+{
+  "id": "KA-S160-letter-vocalic-r",
+  "pathSegment": "KA-PATH-78-VOWELS",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "KA-EXT-78-VOWELS",
+      "order": 5
+    }
+  ]
+}

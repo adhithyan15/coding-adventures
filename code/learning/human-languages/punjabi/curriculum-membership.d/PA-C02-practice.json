@@ -1,0 +1,11 @@
+{
+  "id": "PA-C02-practice",
+  "pathSegment": "PA-PATH-004",
+  "pathOrder": 10,
+  "extensions": [
+    {
+      "id": "PA-EXT-018-INTRODUCTION-CHECKPOINT",
+      "order": 0
+    }
+  ]
+}

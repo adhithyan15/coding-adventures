@@ -1,0 +1,11 @@
+{
+  "id": "TA-C62-at-once",
+  "pathSegment": "TA-PATH-62-JOIN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-62-JOIN",
+      "order": 3
+    }
+  ]
+}

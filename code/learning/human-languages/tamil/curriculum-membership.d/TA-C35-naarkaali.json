@@ -1,0 +1,11 @@
+{
+  "id": "TA-C35-naarkaali",
+  "pathSegment": "TA-PATH-031",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-031-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

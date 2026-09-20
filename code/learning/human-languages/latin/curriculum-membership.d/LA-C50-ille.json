@@ -1,0 +1,11 @@
+{
+  "id": "LA-C50-ille",
+  "pathSegment": "LA-PATH-034",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-050-POINT",
+      "order": 2
+    }
+  ]
+}

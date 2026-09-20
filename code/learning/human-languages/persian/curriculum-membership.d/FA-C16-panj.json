@@ -1,0 +1,11 @@
+{
+  "id": "FA-C16-panj",
+  "pathSegment": "FA-PATH-017",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-024-COUNT-FIVE",
+      "order": 4
+    }
+  ]
+}

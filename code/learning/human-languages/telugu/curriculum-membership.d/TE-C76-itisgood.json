@@ -1,0 +1,11 @@
+{
+  "id": "TE-C76-itisgood",
+  "pathSegment": "TE-PATH-76-JUDGE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-76-JUDGE",
+      "order": 2
+    }
+  ]
+}

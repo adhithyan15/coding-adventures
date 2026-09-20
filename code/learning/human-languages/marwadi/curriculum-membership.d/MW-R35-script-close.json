@@ -1,0 +1,11 @@
+{
+  "id": "MW-R35-script-close",
+  "pathSegment": "MW-PATH-029",
+  "pathOrder": 9,
+  "extensions": [
+    {
+      "id": "MW-EXT-043-DIGITS",
+      "order": 9
+    }
+  ]
+}

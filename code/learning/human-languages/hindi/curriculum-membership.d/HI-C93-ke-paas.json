@@ -1,0 +1,11 @@
+{
+  "id": "HI-C93-ke-paas",
+  "pathSegment": "HI-PATH-101-RELATION",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-101-RELATION",
+      "order": 2
+    }
+  ]
+}

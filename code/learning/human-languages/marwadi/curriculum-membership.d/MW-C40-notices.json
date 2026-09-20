@@ -1,0 +1,11 @@
+{
+  "id": "MW-C40-notices",
+  "pathSegment": "MW-PATH-033",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-047-READING",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C03-practice",
+  "pathSegment": "MW-PATH-003",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-005-POLITE-AFFIRMATIVE",
+      "order": 4
+    }
+  ]
+}

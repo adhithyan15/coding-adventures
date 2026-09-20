@@ -1,0 +1,11 @@
+{
+  "id": "ML-S134-vowel-sign-ee",
+  "pathSegment": "ML-PATH-100",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-100-SCRIPT-RECOGNITION",
+      "order": 2
+    }
+  ]
+}

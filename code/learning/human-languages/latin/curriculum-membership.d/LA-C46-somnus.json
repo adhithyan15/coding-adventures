@@ -1,0 +1,11 @@
+{
+  "id": "LA-C46-somnus",
+  "pathSegment": "LA-PATH-022",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "LA-EXT-046-NIGHT",
+      "order": 4
+    }
+  ]
+}

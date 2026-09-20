@@ -1,0 +1,11 @@
+{
+  "id": "ES-C423-trabajador",
+  "pathSegment": "ES-PATH-423-CHARACTER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-423-CHARACTER",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C05-main-hindi-bolta-hun",
+  "pathSegment": "HI-PATH-028",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-028-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

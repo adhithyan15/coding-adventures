@@ -1,0 +1,11 @@
+{
+  "id": "MW-C14-samaan",
+  "pathSegment": "MW-PATH-013",
+  "pathOrder": 13,
+  "extensions": [
+    {
+      "id": "MW-EXT-027-SHOPPING-FIVE",
+      "order": 13
+    }
+  ]
+}

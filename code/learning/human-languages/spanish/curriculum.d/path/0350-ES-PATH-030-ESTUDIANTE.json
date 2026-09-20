@@ -1,9 +1,6 @@
 {
   "id": "ES-PATH-030-ESTUDIANTE",
   "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
-  "lessons": [
-    "ES-C09-estudiante"
-  ],
   "before": [],
   "inline": [
     "ES-EXT-030-ESTUDIANTE"

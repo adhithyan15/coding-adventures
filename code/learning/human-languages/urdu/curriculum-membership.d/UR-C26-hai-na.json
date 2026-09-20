@@ -1,0 +1,11 @@
+{
+  "id": "UR-C26-hai-na",
+  "pathSegment": "UR-PATH-027",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-037-POSSESSION-AND-ADDRESS",
+      "order": 2
+    }
+  ]
+}

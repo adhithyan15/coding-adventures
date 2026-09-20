@@ -6,9 +6,5 @@
   "canDo": "I can read a two-character word literally, piece by piece, in the case where the pieces genuinely add up to the meaning -- and I can tell that case apart from a memory hook.",
   "prerequisites": [
     "ZH-EXT-014-BU-SANDHI"
-  ],
-  "lessons": [
-    "ZH-W06-zai",
-    "ZH-C06-zaijian"
   ]
 }

@@ -4,9 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can distinguish a photo from photography.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-C405-fotografia",
-    "ES-C405-foto"
-  ]
+  "prerequisites": []
 }

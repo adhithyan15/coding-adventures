@@ -4,11 +4,5 @@
   "kind": "required",
   "category": "grammar",
   "canDo": "I can say what somebody said, and say what I think.",
-  "prerequisites": [],
-  "lessons": [
-    "TA-C77-say",
-    "TA-C77-quotative",
-    "TA-W32-read-sol",
-    "TA-C77-opinion"
-  ]
+  "prerequisites": []
 }

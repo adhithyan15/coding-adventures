@@ -1,0 +1,11 @@
+{
+  "id": "ML-C94-three-days",
+  "pathSegment": "ML-PATH-94-DAYS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-94-DAYS",
+      "order": 2
+    }
+  ]
+}

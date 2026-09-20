@@ -1,0 +1,11 @@
+{
+  "id": "FR-C11-vin",
+  "pathSegment": "FR-PATH-015",
+  "pathOrder": 50,
+  "extensions": [
+    {
+      "id": "FR-EXT-015-LANGUAGE-SPECIFIC",
+      "order": 50
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C40-tres",
+  "pathSegment": "FR-PATH-A1-QUANTITY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-A1-QUANTITY",
+      "order": 2
+    }
+  ]
+}

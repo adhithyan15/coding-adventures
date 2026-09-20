@@ -1,0 +1,11 @@
+{
+  "id": "ML-C98-kalikkuka",
+  "pathSegment": "ML-PATH-98-LEISURE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-98-LEISURE",
+      "order": 1
+    }
+  ]
+}

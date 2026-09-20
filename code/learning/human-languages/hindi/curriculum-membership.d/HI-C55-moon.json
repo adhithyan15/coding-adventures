@@ -1,0 +1,11 @@
+{
+  "id": "HI-C55-moon",
+  "pathSegment": "HI-PATH-55-SKY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-55-SKY",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-R01-hyan-again",
+  "pathSegment": "BN-PATH-022",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-023-DISTANT-BAND",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C01-practice",
+  "pathSegment": "FA-PATH-003",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-001-GREETING-PAYOFF",
+      "order": 0
+    }
+  ]
+}

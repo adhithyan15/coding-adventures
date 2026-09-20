@@ -1,0 +1,11 @@
+{
+  "id": "SA-C41-boat",
+  "pathSegment": "SA-PATH-41-CRAFT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-41-CRAFT",
+      "order": 2
+    }
+  ]
+}

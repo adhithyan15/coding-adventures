@@ -1,0 +1,11 @@
+{
+  "id": "HI-C73-breakfast",
+  "pathSegment": "HI-PATH-73-EATING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-73-EATING",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C267-no-nada",
+  "pathSegment": "ES-PATH-267",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-267-NEGATE-ASK",
+      "order": 1
+    }
+  ]
+}

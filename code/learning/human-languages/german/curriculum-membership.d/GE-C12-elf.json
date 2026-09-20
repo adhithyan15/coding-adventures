@@ -1,0 +1,11 @@
+{
+  "id": "GE-C12-elf",
+  "pathSegment": "GE-PATH-017",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-017-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

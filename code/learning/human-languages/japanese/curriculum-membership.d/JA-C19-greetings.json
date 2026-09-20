@@ -1,0 +1,11 @@
+{
+  "id": "JA-C19-greetings",
+  "pathSegment": "JA-PATH-018",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-026-READING",
+      "order": 1
+    }
+  ]
+}

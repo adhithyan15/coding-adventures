@@ -1,0 +1,11 @@
+{
+  "id": "SA-C30-anjali",
+  "pathSegment": "SA-PATH-30-WELCOME",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-30-WELCOME",
+      "order": 4
+    }
+  ]
+}

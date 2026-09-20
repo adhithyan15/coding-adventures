@@ -1,0 +1,11 @@
+{
+  "id": "HI-C93-sintesis-sambandh",
+  "pathSegment": "HI-PATH-101-RELATION",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "HI-EXT-101-RELATION",
+      "order": 8
+    }
+  ]
+}

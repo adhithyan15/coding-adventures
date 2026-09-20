@@ -1,9 +1,6 @@
 {
   "id": "BN-PATH-013",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
-  "lessons": [
-    "BN-C09-neowa"
-  ],
   "before": [],
   "inline": [
     "BN-EXT-013-CONJUNCT-VERBS"

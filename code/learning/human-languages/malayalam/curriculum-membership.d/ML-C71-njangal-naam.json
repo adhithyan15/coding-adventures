@@ -1,0 +1,11 @@
+{
+  "id": "ML-C71-njangal-naam",
+  "pathSegment": "ML-PATH-71-PRONOUNS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-71-PRONOUNS",
+      "order": 2
+    }
+  ]
+}

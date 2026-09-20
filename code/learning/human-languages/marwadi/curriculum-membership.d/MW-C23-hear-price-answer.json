@@ -1,0 +1,11 @@
+{
+  "id": "MW-C23-hear-price-answer",
+  "pathSegment": "MW-PATH-022",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-036-BARGAIN",
+      "order": 2
+    }
+  ]
+}

@@ -4,8 +4,5 @@
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can run the whole how-are-you exchange, formally and informally.",
-  "prerequisites": [],
-  "lessons": [
-    "FR-C03-practice"
-  ]
+  "prerequisites": []
 }

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C04-hoogu",
+  "pathSegment": "KA-PATH-009",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-009-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

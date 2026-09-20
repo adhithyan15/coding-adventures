@@ -1,0 +1,11 @@
+{
+  "id": "ML-C84-munnil-pinnil",
+  "pathSegment": "ML-PATH-84-PLACE-WORDS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-84-PLACE-WORDS",
+      "order": 2
+    }
+  ]
+}

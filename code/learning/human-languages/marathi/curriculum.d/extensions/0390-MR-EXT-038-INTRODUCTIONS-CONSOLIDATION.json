@@ -4,8 +4,5 @@
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can run the whole introduction exchange -- give my name, ask for another, and close it warmly -- without receiving new material.",
-  "prerequisites": [],
-  "lessons": [
-    "MR-C02-practice"
-  ]
+  "prerequisites": []
 }

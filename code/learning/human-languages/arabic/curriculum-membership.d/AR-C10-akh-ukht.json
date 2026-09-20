@@ -1,0 +1,11 @@
+{
+  "id": "AR-C10-akh-ukht",
+  "pathSegment": "AR-PATH-014",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-014-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

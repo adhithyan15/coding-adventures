@@ -1,0 +1,11 @@
+{
+  "id": "ES-C07-comes",
+  "pathSegment": "ES-PATH-028",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-028-CONSOLIDATION-ER",
+      "order": 1
+    }
+  ]
+}

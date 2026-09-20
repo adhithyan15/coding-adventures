@@ -1,0 +1,11 @@
+{
+  "id": "MW-C18-sabji",
+  "pathSegment": "MW-PATH-017",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "MW-EXT-031-FOOD-THREE",
+      "order": 5
+    }
+  ]
+}

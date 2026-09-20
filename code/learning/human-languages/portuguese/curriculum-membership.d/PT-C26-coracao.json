@@ -1,0 +1,11 @@
+{
+  "id": "PT-C26-coracao",
+  "pathSegment": "PT-PATH-030",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-030-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C10-vaara",
+  "pathSegment": "KA-PATH-013",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-013-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

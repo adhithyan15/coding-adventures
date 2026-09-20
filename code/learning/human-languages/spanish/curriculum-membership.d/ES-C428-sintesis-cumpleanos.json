@@ -1,0 +1,11 @@
+{
+  "id": "ES-C428-sintesis-cumpleanos",
+  "pathSegment": "ES-PATH-428-PIEZAS",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ES-EXT-428-PIEZAS",
+      "order": 6
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C12-hear-thandi",
+  "pathSegment": "MW-PATH-012",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "MW-EXT-026-WEATHER-SIX",
+      "order": 7
+    }
+  ]
+}

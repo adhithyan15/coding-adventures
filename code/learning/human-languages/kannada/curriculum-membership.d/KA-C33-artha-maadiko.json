@@ -1,0 +1,11 @@
+{
+  "id": "KA-C33-artha-maadiko",
+  "pathSegment": "KA-PATH-026",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-026-MIND-VERBS",
+      "order": 1
+    }
+  ]
+}

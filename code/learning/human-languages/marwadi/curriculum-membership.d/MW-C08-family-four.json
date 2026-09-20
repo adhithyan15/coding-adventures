@@ -1,0 +1,11 @@
+{
+  "id": "MW-C08-family-four",
+  "pathSegment": "MW-PATH-008",
+  "pathOrder": 9,
+  "extensions": [
+    {
+      "id": "MW-EXT-022-FAMILY-SEVEN",
+      "order": 9
+    }
+  ]
+}

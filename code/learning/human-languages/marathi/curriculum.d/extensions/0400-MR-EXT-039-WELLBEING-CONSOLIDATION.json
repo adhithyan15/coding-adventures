@@ -4,8 +4,5 @@
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can run the whole wellbeing exchange -- ask how someone is, answer for my own gender, and wave away the thanks -- without receiving new material.",
-  "prerequisites": [],
-  "lessons": [
-    "MR-C03-practice"
-  ]
+  "prerequisites": []
 }

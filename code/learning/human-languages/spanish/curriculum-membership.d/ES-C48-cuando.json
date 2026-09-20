@@ -1,0 +1,11 @@
+{
+  "id": "ES-C48-cuando",
+  "pathSegment": "ES-PATH-040-CUANDO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-040-CUANDO",
+      "order": 0
+    }
+  ]
+}

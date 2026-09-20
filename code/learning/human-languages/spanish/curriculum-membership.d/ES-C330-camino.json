@@ -1,0 +1,11 @@
+{
+  "id": "ES-C330-camino",
+  "pathSegment": "ES-PATH-330-01",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-330-WAY",
+      "order": 0
+    }
+  ]
+}

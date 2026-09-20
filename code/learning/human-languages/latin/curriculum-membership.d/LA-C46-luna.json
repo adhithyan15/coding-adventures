@@ -1,0 +1,11 @@
+{
+  "id": "LA-C46-luna",
+  "pathSegment": "LA-PATH-022",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "LA-EXT-046-NIGHT",
+      "order": 3
+    }
+  ]
+}

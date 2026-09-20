@@ -1,0 +1,11 @@
+{
+  "id": "HI-C38-pair",
+  "pathSegment": "HI-PATH-032",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-032-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

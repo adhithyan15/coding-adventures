@@ -1,0 +1,11 @@
+{
+  "id": "FR-C38-feminin-e",
+  "pathSegment": "FR-PATH-A1-SILENT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-A1-SILENT",
+      "order": 2
+    }
+  ]
+}

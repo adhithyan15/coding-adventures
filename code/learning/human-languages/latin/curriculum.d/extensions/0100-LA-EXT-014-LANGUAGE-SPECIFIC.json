@@ -4,10 +4,5 @@
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can use the additional Latin material required at this point in the path.",
-  "prerequisites": [],
-  "lessons": [
-    "LA-C11-menses",
-    "LA-C12-medius-dies-nox",
-    "LA-C13-hora"
-  ]
+  "prerequisites": []
 }

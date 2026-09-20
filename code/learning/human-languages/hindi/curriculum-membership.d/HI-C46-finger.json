@@ -1,0 +1,11 @@
+{
+  "id": "HI-C46-finger",
+  "pathSegment": "HI-PATH-46-BODY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-46-BODY",
+      "order": 1
+    }
+  ]
+}

@@ -1,9 +1,6 @@
 {
   "id": "SA-PATH-012-B",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
-  "lessons": [
-    "SA-C09-prcchati"
-  ],
   "before": [],
   "inline": [],
   "after": []

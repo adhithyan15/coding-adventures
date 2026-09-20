@@ -1,0 +1,11 @@
+{
+  "id": "KA-C53-star",
+  "pathSegment": "KA-PATH-53-SKY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-53-SKY",
+      "order": 3
+    }
+  ]
+}

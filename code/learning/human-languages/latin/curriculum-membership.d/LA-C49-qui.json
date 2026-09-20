@@ -1,0 +1,11 @@
+{
+  "id": "LA-C49-qui",
+  "pathSegment": "LA-PATH-033",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-049-FRAME",
+      "order": 2
+    }
+  ]
+}

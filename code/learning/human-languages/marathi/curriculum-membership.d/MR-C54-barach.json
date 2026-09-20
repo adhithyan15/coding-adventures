@@ -1,0 +1,11 @@
+{
+  "id": "MR-C54-barach",
+  "pathSegment": "MR-PATH-057",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-070-AMOUNTS",
+      "order": 2
+    }
+  ]
+}

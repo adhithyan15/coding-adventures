@@ -6,9 +6,5 @@
   "canDo": "I can write 什 and 么, and I know that 么 carries no tone even standing alone, not merely inside a word.",
   "prerequisites": [
     "ZH-EXT-022-MINGZI"
-  ],
-  "lessons": [
-    "ZH-W09-shen",
-    "ZH-W09-me"
   ]
 }

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C01-arigatou",
+  "pathSegment": "JA-PATH-003",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "JA-EXT-005-DAKUTEN",
+      "order": 0
+    }
+  ]
+}

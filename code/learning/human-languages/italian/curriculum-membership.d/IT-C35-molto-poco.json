@@ -1,0 +1,11 @@
+{
+  "id": "IT-C35-molto-poco",
+  "pathSegment": "IT-PATH-039",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-039-SAPERE",
+      "order": 3
+    }
+  ]
+}

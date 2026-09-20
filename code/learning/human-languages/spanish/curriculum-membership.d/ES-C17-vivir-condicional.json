@@ -1,0 +1,11 @@
+{
+  "id": "ES-C17-vivir-condicional",
+  "pathSegment": "ES-PATH-041",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-041-LANGUAGE-SPECIFIC",
+      "order": 5
+    }
+  ]
+}

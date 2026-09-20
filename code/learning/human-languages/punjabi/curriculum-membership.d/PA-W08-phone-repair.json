@@ -1,0 +1,11 @@
+{
+  "id": "PA-W08-phone-repair",
+  "pathSegment": "PA-PATH-032",
+  "pathOrder": 13,
+  "extensions": [
+    {
+      "id": "PA-EXT-037-A1-PHONE-FIELD",
+      "order": 13
+    }
+  ]
+}

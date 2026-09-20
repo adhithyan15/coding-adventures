@@ -1,0 +1,11 @@
+{
+  "id": "IT-C30-anche",
+  "pathSegment": "IT-PATH-034",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-034-NON",
+      "order": 3
+    }
+  ]
+}

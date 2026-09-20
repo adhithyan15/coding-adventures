@@ -1,0 +1,11 @@
+{
+  "id": "FR-C09-printemps",
+  "pathSegment": "FR-PATH-015",
+  "pathOrder": 35,
+  "extensions": [
+    {
+      "id": "FR-EXT-015-LANGUAGE-SPECIFIC",
+      "order": 35
+    }
+  ]
+}

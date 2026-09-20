@@ -1,0 +1,11 @@
+{
+  "id": "TA-R85-avarkal-recall",
+  "pathSegment": "TA-PATH-85-THIRD-PERSON",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-85-THIRD-PERSON",
+      "order": 3
+    }
+  ]
+}

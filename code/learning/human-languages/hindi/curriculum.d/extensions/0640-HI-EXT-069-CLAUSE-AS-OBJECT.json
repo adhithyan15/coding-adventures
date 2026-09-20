@@ -6,10 +6,5 @@
   "canDo": "I can say where a Hindi clause ends, and hang a whole second clause on a thinking verb with ki.",
   "prerequisites": [
     "HI-EXT-068-FLAT-JOINS"
-  ],
-  "lessons": [
-    "HI-C69-verb-last",
-    "HI-C69-ki",
-    "HI-R69-reported"
   ]
 }

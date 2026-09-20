@@ -1,9 +1,6 @@
 {
   "id": "MR-PATH-004",
   "spine_node": "SPINE-TAKE-LEAVE",
-  "lessons": [
-    "MR-C01-yeto"
-  ],
   "before": [],
   "inline": [],
   "after": []

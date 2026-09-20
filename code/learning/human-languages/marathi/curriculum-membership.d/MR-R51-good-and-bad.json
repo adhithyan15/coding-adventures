@@ -1,0 +1,11 @@
+{
+  "id": "MR-R51-good-and-bad",
+  "pathSegment": "MR-PATH-054",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-067-GOOD-AND-BAD",
+      "order": 3
+    }
+  ]
+}

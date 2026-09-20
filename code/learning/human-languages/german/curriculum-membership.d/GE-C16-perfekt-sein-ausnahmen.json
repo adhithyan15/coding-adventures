@@ -1,0 +1,11 @@
+{
+  "id": "GE-C16-perfekt-sein-ausnahmen",
+  "pathSegment": "GE-PATH-021-C",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-021-C-PERFEKT-SEIN",
+      "order": 5
+    }
+  ]
+}

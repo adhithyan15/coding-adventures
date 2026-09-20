@@ -1,0 +1,11 @@
+{
+  "id": "TE-C22-pacha-pasupu",
+  "pathSegment": "TE-PATH-024",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-024-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

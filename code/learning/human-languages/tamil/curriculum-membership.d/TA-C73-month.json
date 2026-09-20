@@ -1,0 +1,11 @@
+{
+  "id": "TA-C73-month",
+  "pathSegment": "TA-PATH-73-WHEN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-73-WHEN",
+      "order": 4
+    }
+  ]
+}

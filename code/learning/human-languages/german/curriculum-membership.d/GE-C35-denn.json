@@ -1,0 +1,11 @@
+{
+  "id": "GE-C35-denn",
+  "pathSegment": "GE-PATH-A1-VERBINDUNGEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-A1-VERBINDUNGEN",
+      "order": 3
+    }
+  ]
+}

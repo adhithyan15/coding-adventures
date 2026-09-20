@@ -1,0 +1,11 @@
+{
+  "id": "FR-C15-participe-latin",
+  "pathSegment": "FR-PATH-017",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-017-LANGUAGE-SPECIFIC",
+      "order": 4
+    }
+  ]
+}

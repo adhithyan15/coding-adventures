@@ -1,0 +1,11 @@
+{
+  "id": "PT-C22-encontrar",
+  "pathSegment": "PT-PATH-026",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-026-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

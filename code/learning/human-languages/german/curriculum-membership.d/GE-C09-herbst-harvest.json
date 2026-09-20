@@ -1,0 +1,11 @@
+{
+  "id": "GE-C09-herbst-harvest",
+  "pathSegment": "GE-PATH-016-B-C",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "GE-EXT-016-B-C-JAHRESZEITEN",
+      "order": 7
+    }
+  ]
+}

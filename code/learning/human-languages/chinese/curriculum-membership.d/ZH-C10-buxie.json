@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C10-buxie",
+  "pathSegment": "ZH-PATH-009",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-027-PREDICT-SANDHI",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C30-beurre",
+  "pathSegment": "FR-PATH-027",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-027-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

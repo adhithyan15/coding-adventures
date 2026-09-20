@@ -1,0 +1,11 @@
+{
+  "id": "HI-S149-vowel-sign-uu",
+  "pathSegment": "HI-PATH-100",
+  "pathOrder": 57,
+  "extensions": [
+    {
+      "id": "HI-EXT-100-SCRIPT-RECOGNITION",
+      "order": 46
+    }
+  ]
+}

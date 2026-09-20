@@ -1,0 +1,11 @@
+{
+  "id": "PT-C01-practice",
+  "pathSegment": "PT-PATH-007",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-007-CONSOLIDATION",
+      "order": 0
+    }
+  ]
+}

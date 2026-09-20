@@ -1,0 +1,11 @@
+{
+  "id": "KA-S137-letter-la",
+  "pathSegment": "KA-PATH-100",
+  "pathOrder": 38,
+  "extensions": [
+    {
+      "id": "KA-EXT-100-SCRIPT-RECOGNITION",
+      "order": 38
+    }
+  ]
+}

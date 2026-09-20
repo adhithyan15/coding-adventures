@@ -1,0 +1,11 @@
+{
+  "id": "ES-C397-caro",
+  "pathSegment": "ES-PATH-397-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-397-QUALITY",
+      "order": 1
+    }
+  ]
+}

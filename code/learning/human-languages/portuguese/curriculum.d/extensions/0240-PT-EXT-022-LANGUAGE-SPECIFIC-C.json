@@ -4,10 +4,5 @@
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can produce the present-tense forms of the nine verbs Portuguese leans on hardest, choose between its two verbs for being and its two for knowing, and trace each one into the English words it left behind.",
-  "prerequisites": [],
-  "lessons": [
-    "PT-C18-dizer",
-    "PT-C18-ver",
-    "PT-C18-saber-conhecer"
-  ]
+  "prerequisites": []
 }

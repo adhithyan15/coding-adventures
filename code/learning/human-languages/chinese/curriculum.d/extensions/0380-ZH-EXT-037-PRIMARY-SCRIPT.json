@@ -6,11 +6,5 @@
   "canDo": "I can write 小 from ordered strokes, then read and write 小学 and 小学生 without pinyin.",
   "prerequisites": [
     "ZH-EXT-036-PRIMARY-MEANING-FIRST"
-  ],
-  "lessons": [
-    "ZH-W14-xiao",
-    "ZH-C14-xiao",
-    "ZH-C14-xiaoxue",
-    "ZH-C14-xiaoxuesheng"
   ]
 }

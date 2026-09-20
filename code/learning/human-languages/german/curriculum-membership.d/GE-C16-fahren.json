@@ -1,0 +1,11 @@
+{
+  "id": "GE-C16-fahren",
+  "pathSegment": "GE-PATH-021-C",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-021-C-PERFEKT-SEIN",
+      "order": 2
+    }
+  ]
+}

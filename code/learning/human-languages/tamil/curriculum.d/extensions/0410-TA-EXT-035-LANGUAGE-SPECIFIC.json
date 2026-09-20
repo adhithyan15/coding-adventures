@@ -4,8 +4,5 @@
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can take my leave in Tamil in the formal register, and place the word on its root.",
-  "prerequisites": [],
-  "lessons": [
-    "TA-C38-vidai"
-  ]
+  "prerequisites": []
 }

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C56-let-it-be",
+  "pathSegment": "TA-PATH-56-AMOUNT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-56-AMOUNT",
+      "order": 4
+    }
+  ]
+}

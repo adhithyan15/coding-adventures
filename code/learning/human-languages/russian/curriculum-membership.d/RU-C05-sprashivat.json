@@ -1,0 +1,11 @@
+{
+  "id": "RU-C05-sprashivat",
+  "pathSegment": "RU-PATH-009-B",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-009-HAND-VERBS-B",
+      "order": 0
+    }
+  ]
+}

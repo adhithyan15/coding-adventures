@@ -1,0 +1,11 @@
+{
+  "id": "LA-C10-panis",
+  "pathSegment": "LA-PATH-013",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-013-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

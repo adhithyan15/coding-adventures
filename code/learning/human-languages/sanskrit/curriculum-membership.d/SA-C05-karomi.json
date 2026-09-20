@@ -1,0 +1,11 @@
+{
+  "id": "SA-C05-karomi",
+  "pathSegment": "SA-PATH-017",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-017-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

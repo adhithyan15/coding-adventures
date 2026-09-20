@@ -1,0 +1,11 @@
+{
+  "id": "ES-C292-valle",
+  "pathSegment": "ES-PATH-292-01",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-292-TIERRA",
+      "order": 2
+    }
+  ]
+}

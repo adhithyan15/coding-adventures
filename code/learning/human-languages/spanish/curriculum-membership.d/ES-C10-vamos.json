@@ -1,0 +1,11 @@
+{
+  "id": "ES-C10-vamos",
+  "pathSegment": "ES-PATH-015-IR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-015-IR-PLURAL",
+      "order": 0
+    }
+  ]
+}

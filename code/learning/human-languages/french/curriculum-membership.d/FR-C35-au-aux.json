@@ -1,0 +1,11 @@
+{
+  "id": "FR-C35-au-aux",
+  "pathSegment": "FR-PATH-A1-CONTRACTIONS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-A1-CONTRACTIONS",
+      "order": 2
+    }
+  ]
+}

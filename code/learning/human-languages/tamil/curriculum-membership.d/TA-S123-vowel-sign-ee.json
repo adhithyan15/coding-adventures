@@ -1,0 +1,11 @@
+{
+  "id": "TA-S123-vowel-sign-ee",
+  "pathSegment": "TA-PATH-100",
+  "pathOrder": 23,
+  "extensions": [
+    {
+      "id": "TA-EXT-100-SCRIPT-RECOGNITION",
+      "order": 14
+    }
+  ]
+}

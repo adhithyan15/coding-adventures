@@ -1,0 +1,11 @@
+{
+  "id": "IT-C26-quarto",
+  "pathSegment": "IT-PATH-030",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-030-ORDINALI",
+      "order": 3
+    }
+  ]
+}

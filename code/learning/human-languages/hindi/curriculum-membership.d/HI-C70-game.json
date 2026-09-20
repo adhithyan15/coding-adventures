@@ -1,0 +1,11 @@
+{
+  "id": "HI-C70-game",
+  "pathSegment": "HI-PATH-70-LEISURE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-70-LEISURE",
+      "order": 0
+    }
+  ]
+}

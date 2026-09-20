@@ -1,0 +1,11 @@
+{
+  "id": "FA-C03-practice",
+  "pathSegment": "FA-PATH-004",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FA-EXT-006-CONSOLIDATION",
+      "order": 0
+    }
+  ]
+}

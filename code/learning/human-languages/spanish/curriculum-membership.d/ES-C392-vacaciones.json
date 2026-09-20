@@ -1,0 +1,11 @@
+{
+  "id": "ES-C392-vacaciones",
+  "pathSegment": "ES-PATH-392-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-392-THING",
+      "order": 1
+    }
+  ]
+}

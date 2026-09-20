@@ -1,0 +1,11 @@
+{
+  "id": "ES-C09-esta-en",
+  "pathSegment": "ES-PATH-015-LOCATION",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-015-LOCATION",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C20-perdon",
+  "pathSegment": "ES-PATH-018",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-018-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

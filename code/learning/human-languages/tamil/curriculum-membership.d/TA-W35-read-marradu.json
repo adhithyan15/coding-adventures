@@ -1,0 +1,11 @@
+{
+  "id": "TA-W35-read-marradu",
+  "pathSegment": "TA-PATH-80-OTHER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-80-OTHER",
+      "order": 2
+    }
+  ]
+}

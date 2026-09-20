@@ -1,0 +1,11 @@
+{
+  "id": "BN-C19-dhire",
+  "pathSegment": "BN-PATH-027",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-028-REPAIR-KIT",
+      "order": 1
+    }
+  ]
+}

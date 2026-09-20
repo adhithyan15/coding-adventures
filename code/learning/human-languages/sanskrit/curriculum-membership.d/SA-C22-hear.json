@@ -1,0 +1,11 @@
+{
+  "id": "SA-C22-hear",
+  "pathSegment": "SA-PATH-22-VERBS",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-22-VERBS",
+      "order": 0
+    }
+  ]
+}

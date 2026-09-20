@@ -1,0 +1,11 @@
+{
+  "id": "ES-C425-repaso-letras",
+  "pathSegment": "ES-PATH-425-ABECEDARIO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-425-ABECEDARIO",
+      "order": 5
+    }
+  ]
+}

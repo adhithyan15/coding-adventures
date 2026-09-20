@@ -1,0 +1,11 @@
+{
+  "id": "ML-C81-akale",
+  "pathSegment": "ML-PATH-81-DISTANCE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-81-DISTANCE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C05-aham-samskritam-vadami",
+  "pathSegment": "SA-PATH-017",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-017-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

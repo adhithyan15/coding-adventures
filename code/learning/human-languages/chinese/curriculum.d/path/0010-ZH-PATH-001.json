@@ -1,22 +1,6 @@
 {
   "id": "ZH-PATH-001",
   "spine_node": "SPINE-MEET-GREET",
-  "lessons": [
-    "ZH-C01-tones",
-    "ZH-W01-ren",
-    "ZH-W01-ren-radical",
-    "ZH-W01-er",
-    "ZH-W01-ni-build",
-    "ZH-C01-ni",
-    "ZH-W01-nu",
-    "ZH-W01-zi",
-    "ZH-W01-hao-build",
-    "ZH-C01-hao",
-    "ZH-C01-nihao",
-    "ZH-C01-tone-sandhi",
-    "ZH-C01-hao-fond",
-    "ZH-C01-practice"
-  ],
   "before": [
     "ZH-EXT-000-TONE-INVENTORY"
   ],

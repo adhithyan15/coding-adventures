@@ -1,0 +1,11 @@
+{
+  "id": "PA-C01-sat-sri-akal",
+  "pathSegment": "PA-PATH-001",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PA-EXT-001-INLINE-SCRIPT",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C40-here",
+  "pathSegment": "TA-PATH-200",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-200-DEIXIS",
+      "order": 2
+    }
+  ]
+}

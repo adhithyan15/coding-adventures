@@ -1,0 +1,11 @@
+{
+  "id": "BN-W07-digit-zero",
+  "pathSegment": "BN-PATH-036",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "BN-EXT-037-DIGITS",
+      "order": 0
+    }
+  ]
+}

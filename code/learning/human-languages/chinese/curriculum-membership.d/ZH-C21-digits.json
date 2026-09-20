@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C21-digits",
+  "pathSegment": "ZH-PATH-020",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-055-DECIMAL",
+      "order": 4
+    }
+  ]
+}

@@ -1,9 +1,6 @@
 {
   "id": "ES-PATH-277-01",
   "spine_node": "SPINE-SUMMARIZE-FROM-SOURCES",
-  "lessons": [
-    "ES-C277-segun"
-  ],
   "before": [],
   "inline": [],
   "after": []

@@ -6,8 +6,5 @@
   "canDo": "I can ask how someone is, answer that I am well, and welcome someone -- holding the verb to the end each time.",
   "prerequisites": [
     "HI-EXT-100-SCRIPT-RECOGNITION"
-  ],
-  "lessons": [
-    "HI-C03-practice"
   ]
 }

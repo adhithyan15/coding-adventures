@@ -1,0 +1,11 @@
+{
+  "id": "ES-C16-ver-imperfecto",
+  "pathSegment": "ES-PATH-040",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ES-EXT-040-LANGUAGE-SPECIFIC",
+      "order": 6
+    }
+  ]
+}

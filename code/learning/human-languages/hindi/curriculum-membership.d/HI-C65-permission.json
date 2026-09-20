@@ -1,0 +1,11 @@
+{
+  "id": "HI-C65-permission",
+  "pathSegment": "HI-PATH-65-GRACE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-65-GRACE",
+      "order": 2
+    }
+  ]
+}

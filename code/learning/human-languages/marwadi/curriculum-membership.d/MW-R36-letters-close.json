@@ -1,0 +1,11 @@
+{
+  "id": "MW-R36-letters-close",
+  "pathSegment": "MW-PATH-030",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-044-NUMBERED-EXCHANGE",
+      "order": 4
+    }
+  ]
+}

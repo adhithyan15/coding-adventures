@@ -1,0 +1,11 @@
+{
+  "id": "ML-C84-mukalil",
+  "pathSegment": "ML-PATH-84-PLACE-WORDS",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ML-EXT-84-PLACE-WORDS",
+      "order": 0
+    }
+  ]
+}

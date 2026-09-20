@@ -1,0 +1,11 @@
+{
+  "id": "HI-C52-lentils",
+  "pathSegment": "HI-PATH-52-KITCHEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-52-KITCHEN",
+      "order": 1
+    }
+  ]
+}

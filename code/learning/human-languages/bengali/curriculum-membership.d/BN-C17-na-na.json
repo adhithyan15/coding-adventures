@@ -1,0 +1,11 @@
+{
+  "id": "BN-C17-na-na",
+  "pathSegment": "BN-PATH-024",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-025-JOINING",
+      "order": 3
+    }
+  ]
+}

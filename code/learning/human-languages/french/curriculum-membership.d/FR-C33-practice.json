@@ -1,0 +1,11 @@
+{
+  "id": "FR-C33-practice",
+  "pathSegment": "FR-PATH-031",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-030-MODAL-CHAIN",
+      "order": 2
+    }
+  ]
+}

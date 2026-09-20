@@ -1,0 +1,11 @@
+{
+  "id": "RU-C16-ni-ni",
+  "pathSegment": "RU-PATH-017",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-022-COORDINATORS",
+      "order": 3
+    }
+  ]
+}

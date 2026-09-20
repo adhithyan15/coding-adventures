@@ -1,0 +1,11 @@
+{
+  "id": "SA-C33-bridge",
+  "pathSegment": "SA-PATH-33-LAND",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-33-LAND",
+      "order": 1
+    }
+  ]
+}

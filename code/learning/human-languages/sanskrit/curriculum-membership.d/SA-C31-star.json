@@ -1,0 +1,11 @@
+{
+  "id": "SA-C31-star",
+  "pathSegment": "SA-PATH-31-SKY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-31-SKY",
+      "order": 2
+    }
+  ]
+}

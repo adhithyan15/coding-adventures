@@ -1,0 +1,11 @@
+{
+  "id": "ES-C33-verde",
+  "pathSegment": "ES-PATH-027",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-027-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C38-lakin",
+  "pathSegment": "AR-PATH-035",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-035-JOINING",
+      "order": 2
+    }
+  ]
+}

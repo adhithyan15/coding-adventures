@@ -1,0 +1,11 @@
+{
+  "id": "ES-C55-sintesis-preterito-completo",
+  "pathSegment": "ES-PATH-B1-SYNTH-PRET",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-B1-SYNTH-PRET",
+      "order": 0
+    }
+  ]
+}

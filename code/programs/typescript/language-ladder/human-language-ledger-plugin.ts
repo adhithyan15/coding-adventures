@@ -26,6 +26,11 @@ import {
   readShards,
   shardDirectoryFor,
 } from "@coding-adventures/human-language-data/src/shard.ts";
+import {
+  attachCurriculumLessonMemberships,
+  type AuthoredLanguageCurriculum,
+} from "../../../packages/typescript/human-language-data/src/curriculum-membership.ts";
+import { readCurriculumMembershipOwners } from "../../../packages/typescript/human-language-data/src/curriculum-membership-shards.ts";
 
 export const LEDGER_INDEX_ID = "virtual:human-language-ledgers";
 export const RESOLVED_LEDGER_INDEX_ID = `\0${LEDGER_INDEX_ID}`;
@@ -243,7 +248,17 @@ export function loadHumanLanguageLedgerModule(
     watchShards(curriculumRoot, path, watch);
     const shards = readShards(path);
     if (shards === null) return null;
-    return moduleWithDefault(mergeCurriculumShards(shards));
+    const memberships = readCurriculumMembershipOwners(
+      curriculumRoot,
+      curriculumTrack,
+    );
+    for (const sourcePath of memberships.sourcePaths) watch(sourcePath);
+    return moduleWithDefault(
+      attachCurriculumLessonMemberships(
+        mergeCurriculumShards(shards) as unknown as AuthoredLanguageCurriculum,
+        memberships.owners,
+      ),
+    );
   }
 
   const chapterTrack = trackFromResolvedId(CHAPTER_MODULE_PREFIX, id);

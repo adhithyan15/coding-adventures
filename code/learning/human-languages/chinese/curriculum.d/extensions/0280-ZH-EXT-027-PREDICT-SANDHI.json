@@ -6,9 +6,5 @@
   "canDo": "I can predict a tone change before hearing a word said, applying the 不 rule to 不谢 from knowing only that 谢 is fourth tone.",
   "prerequisites": [
     "ZH-EXT-026-REDUPLICATION"
-  ],
-  "lessons": [
-    "ZH-C10-buxie",
-    "ZH-C10-practice"
   ]
 }

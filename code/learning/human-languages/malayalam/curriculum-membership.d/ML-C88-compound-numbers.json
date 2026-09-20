@@ -1,0 +1,11 @@
+{
+  "id": "ML-C88-compound-numbers",
+  "pathSegment": "ML-PATH-88-TENS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-88-TENS",
+      "order": 2
+    }
+  ]
+}

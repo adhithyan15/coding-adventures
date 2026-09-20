@@ -1,0 +1,11 @@
+{
+  "id": "BN-C23-o-pron",
+  "pathSegment": "BN-PATH-031",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-032-THIRD-PERSON",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C38-pluriel-s",
+  "pathSegment": "FR-PATH-A1-SILENT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-A1-SILENT",
+      "order": 1
+    }
+  ]
+}

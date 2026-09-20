@@ -4,12 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can name el lápiz, el cepillo, el guante, la vela and el nudo.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-C374-lapiz",
-    "ES-C374-cepillo",
-    "ES-C374-guante",
-    "ES-C374-vela",
-    "ES-C374-nudo"
-  ]
+  "prerequisites": []
 }

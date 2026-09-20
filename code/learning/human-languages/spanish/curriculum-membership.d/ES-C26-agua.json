@@ -1,0 +1,11 @@
+{
+  "id": "ES-C26-agua",
+  "pathSegment": "ES-PATH-024",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-024-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

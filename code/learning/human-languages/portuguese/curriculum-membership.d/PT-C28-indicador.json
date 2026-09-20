@@ -1,0 +1,11 @@
+{
+  "id": "PT-C28-indicador",
+  "pathSegment": "PT-PATH-032",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-032-ORDINAIS-ATE-DECIMO",
+      "order": 5
+    }
+  ]
+}

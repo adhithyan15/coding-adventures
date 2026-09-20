@@ -1,0 +1,11 @@
+{
+  "id": "UR-C09-bahan",
+  "pathSegment": "UR-PATH-010",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-020-FAMILY-FRIENDS",
+      "order": 1
+    }
+  ]
+}

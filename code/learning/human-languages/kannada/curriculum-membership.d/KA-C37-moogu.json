@@ -1,0 +1,11 @@
+{
+  "id": "KA-C37-moogu",
+  "pathSegment": "KA-PATH-029",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-030-FACE-WORDS",
+      "order": 2
+    }
+  ]
+}

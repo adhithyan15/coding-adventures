@@ -1,0 +1,11 @@
+{
+  "id": "TA-C52-shoot",
+  "pathSegment": "TA-PATH-52-TREE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-52-TREE",
+      "order": 2
+    }
+  ]
+}

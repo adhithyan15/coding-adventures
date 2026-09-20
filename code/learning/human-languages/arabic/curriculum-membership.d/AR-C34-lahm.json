@@ -1,0 +1,11 @@
+{
+  "id": "AR-C34-lahm",
+  "pathSegment": "AR-PATH-031",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-031-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

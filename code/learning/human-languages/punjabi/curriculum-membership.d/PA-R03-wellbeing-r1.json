@@ -1,0 +1,11 @@
+{
+  "id": "PA-R03-wellbeing-r1",
+  "pathSegment": "PA-PATH-005",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-020-WELLBEING-R1",
+      "order": 0
+    }
+  ]
+}

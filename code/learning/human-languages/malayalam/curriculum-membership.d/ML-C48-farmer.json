@@ -1,0 +1,11 @@
+{
+  "id": "ML-C48-farmer",
+  "pathSegment": "ML-PATH-48-ROLE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-48-ROLE",
+      "order": 3
+    }
+  ]
+}

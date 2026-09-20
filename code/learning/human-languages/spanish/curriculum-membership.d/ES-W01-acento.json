@@ -1,0 +1,11 @@
+{
+  "id": "ES-W01-acento",
+  "pathSegment": "ES-PATH-011",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "ES-EXT-011-SCRIPT",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C31-teens-latinos",
+  "pathSegment": "ES-PATH-026",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-026-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

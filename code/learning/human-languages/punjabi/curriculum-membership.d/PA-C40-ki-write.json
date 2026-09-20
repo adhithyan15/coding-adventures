@@ -1,0 +1,11 @@
+{
+  "id": "PA-C40-ki-write",
+  "pathSegment": "PA-PATH-042",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-062-THAT-AND-WHY",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C26-vtoroy-tretiy",
+  "pathSegment": "RU-PATH-028",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-033-ORDINALS",
+      "order": 1
+    }
+  ]
+}

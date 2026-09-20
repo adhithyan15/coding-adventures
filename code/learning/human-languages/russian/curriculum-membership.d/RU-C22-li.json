@@ -1,0 +1,11 @@
+{
+  "id": "RU-C22-li",
+  "pathSegment": "RU-PATH-024",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-029-QUESTION-FAMILY",
+      "order": 4
+    }
+  ]
+}

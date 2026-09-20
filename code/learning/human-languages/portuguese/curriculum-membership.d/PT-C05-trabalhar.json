@@ -1,0 +1,11 @@
+{
+  "id": "PT-C05-trabalhar",
+  "pathSegment": "PT-PATH-012",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-012-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-W03-trema",
+  "pathSegment": "FR-PATH-013",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "FR-EXT-013-ACCENT-MARKS",
+      "order": 2
+    }
+  ]
+}

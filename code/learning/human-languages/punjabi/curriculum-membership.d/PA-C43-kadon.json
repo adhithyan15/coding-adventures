@@ -1,0 +1,11 @@
+{
+  "id": "PA-C43-kadon",
+  "pathSegment": "PA-PATH-045",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-065-QUESTIONS",
+      "order": 1
+    }
+  ]
+}

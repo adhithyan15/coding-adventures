@@ -1,0 +1,11 @@
+{
+  "id": "RU-C12-papa",
+  "pathSegment": "RU-PATH-014",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-014-PARENTS",
+      "order": 1
+    }
+  ]
+}

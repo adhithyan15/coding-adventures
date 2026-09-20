@@ -4,12 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can ask leave, give notice, apologise, and name a word and a voice.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-C332-permiso",
-    "ES-C332-aviso",
-    "ES-C332-disculpa",
-    "ES-C332-palabra",
-    "ES-C332-voz"
-  ]
+  "prerequisites": []
 }

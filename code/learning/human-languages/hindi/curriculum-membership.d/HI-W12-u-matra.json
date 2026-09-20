@@ -1,0 +1,11 @@
+{
+  "id": "HI-W12-u-matra",
+  "pathSegment": "HI-PATH-100",
+  "pathOrder": 35,
+  "extensions": [
+    {
+      "id": "HI-EXT-060-SCRIPT-SECOND-WAVE",
+      "order": 2
+    }
+  ]
+}

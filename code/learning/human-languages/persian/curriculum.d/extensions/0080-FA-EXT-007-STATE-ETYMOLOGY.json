@@ -6,8 +6,5 @@
   "canDo": "I can recognize hâl as the state in a Persian wellbeing question and place its Arabic history inside Persian ezafe grammar.",
   "prerequisites": [
     "FA-EXT-006-CONSOLIDATION"
-  ],
-  "lessons": [
-    "FA-C04-hal"
   ]
 }

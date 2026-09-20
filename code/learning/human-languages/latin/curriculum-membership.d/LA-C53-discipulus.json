@@ -1,0 +1,11 @@
+{
+  "id": "LA-C53-discipulus",
+  "pathSegment": "LA-PATH-037",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-053-SCHOOL",
+      "order": 2
+    }
+  ]
+}

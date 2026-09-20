@@ -1,0 +1,11 @@
+{
+  "id": "GE-C08-mitternacht",
+  "pathSegment": "GE-PATH-016",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "GE-EXT-016-LANGUAGE-SPECIFIC",
+      "order": 8
+    }
+  ]
+}

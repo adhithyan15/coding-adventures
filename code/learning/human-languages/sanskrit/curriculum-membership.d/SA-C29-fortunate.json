@@ -1,0 +1,11 @@
+{
+  "id": "SA-C29-fortunate",
+  "pathSegment": "SA-PATH-29-COURTESY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-29-COURTESY",
+      "order": 4
+    }
+  ]
+}

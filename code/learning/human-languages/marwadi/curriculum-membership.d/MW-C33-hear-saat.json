@@ -1,0 +1,11 @@
+{
+  "id": "MW-C33-hear-saat",
+  "pathSegment": "MW-PATH-027",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-041-COUNT-TEN",
+      "order": 2
+    }
+  ]
+}

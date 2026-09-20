@@ -1,0 +1,11 @@
+{
+  "id": "HI-C70-song",
+  "pathSegment": "HI-PATH-70-LEISURE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-70-LEISURE",
+      "order": 3
+    }
+  ]
+}

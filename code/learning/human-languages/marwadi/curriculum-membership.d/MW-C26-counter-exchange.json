@@ -1,0 +1,11 @@
+{
+  "id": "MW-C26-counter-exchange",
+  "pathSegment": "MW-PATH-025",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-039-COUNTER-EXCHANGE",
+      "order": 4
+    }
+  ]
+}

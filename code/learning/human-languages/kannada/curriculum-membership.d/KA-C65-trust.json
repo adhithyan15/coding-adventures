@@ -1,0 +1,11 @@
+{
+  "id": "KA-C65-trust",
+  "pathSegment": "KA-PATH-65-MANNERS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-65-MANNERS",
+      "order": 3
+    }
+  ]
+}

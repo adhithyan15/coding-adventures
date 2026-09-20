@@ -1,12 +1,6 @@
 {
   "id": "FA-PATH-006",
   "spine_node": "SPINE-TAKE-LEAVE",
-  "lessons": [
-    "FA-C05-khoda",
-    "FA-C05-hafez",
-    "FA-C05-khodahafez",
-    "FA-C05-practice"
-  ],
   "before": [],
   "inline": [
     "FA-EXT-013-KHODA-HISTORY",

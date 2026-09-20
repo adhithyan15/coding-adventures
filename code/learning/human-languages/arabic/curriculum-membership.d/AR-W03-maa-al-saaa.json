@@ -1,0 +1,11 @@
+{
+  "id": "AR-W03-maa-al-saaa",
+  "pathSegment": "AR-PATH-043-WRITING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-043-WRITING",
+      "order": 1
+    }
+  ]
+}

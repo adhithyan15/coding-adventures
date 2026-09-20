@@ -1,0 +1,11 @@
+{
+  "id": "ES-C408-pastilla",
+  "pathSegment": "ES-PATH-408-HEALTH",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-408-HEALTH",
+      "order": 1
+    }
+  ]
+}

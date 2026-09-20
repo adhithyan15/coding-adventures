@@ -1,0 +1,11 @@
+{
+  "id": "GE-C16-perfekt-sein-agreement",
+  "pathSegment": "GE-PATH-021-C",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "GE-EXT-021-C-AGREEMENT",
+      "order": 0
+    }
+  ]
+}

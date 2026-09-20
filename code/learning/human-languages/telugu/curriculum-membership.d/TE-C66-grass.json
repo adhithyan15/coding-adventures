@@ -1,0 +1,11 @@
+{
+  "id": "TE-C66-grass",
+  "pathSegment": "TE-PATH-66-FIELD",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-66-FIELD",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C13-vastu",
+  "pathSegment": "MW-PATH-013",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-027-SHOPPING-FIVE",
+      "order": 4
+    }
+  ]
+}

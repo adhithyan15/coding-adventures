@@ -1,0 +1,11 @@
+{
+  "id": "ES-C298-puede-ser",
+  "pathSegment": "ES-PATH-298-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-298-RESPUESTAS",
+      "order": 1
+    }
+  ]
+}

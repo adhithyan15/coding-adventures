@@ -1,0 +1,11 @@
+{
+  "id": "SA-C35-bed",
+  "pathSegment": "SA-PATH-35-HOUSE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-35-HOUSE",
+      "order": 4
+    }
+  ]
+}

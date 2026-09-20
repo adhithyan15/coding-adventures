@@ -1,12 +1,6 @@
 {
   "id": "TA-PATH-77-SAY",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
-  "lessons": [
-    "TA-C77-say",
-    "TA-C77-quotative",
-    "TA-W32-read-sol",
-    "TA-C77-opinion"
-  ],
   "before": [],
   "inline": [
     "TA-EXT-77-SAY"

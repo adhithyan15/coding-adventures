@@ -1,0 +1,11 @@
+{
+  "id": "ML-C57-bone",
+  "pathSegment": "ML-PATH-57-FRAME",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-57-FRAME",
+      "order": 4
+    }
+  ]
+}

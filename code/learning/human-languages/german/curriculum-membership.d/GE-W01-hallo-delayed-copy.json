@@ -1,0 +1,11 @@
+{
+  "id": "GE-W01-hallo-delayed-copy",
+  "pathSegment": "GE-PATH-001",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-001-WRITING-START",
+      "order": 1
+    }
+  ]
+}

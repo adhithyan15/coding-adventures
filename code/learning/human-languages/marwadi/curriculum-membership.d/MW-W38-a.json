@@ -1,0 +1,11 @@
+{
+  "id": "MW-W38-a",
+  "pathSegment": "MW-PATH-031",
+  "pathOrder": 15,
+  "extensions": [
+    {
+      "id": "MW-EXT-045-TEENS",
+      "order": 15
+    }
+  ]
+}

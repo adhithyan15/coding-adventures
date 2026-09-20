@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C18-hear-kanjian",
+  "pathSegment": "ZH-PATH-017",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-048-LOOKING-READING-MEANING-FIRST",
+      "order": 1
+    }
+  ]
+}

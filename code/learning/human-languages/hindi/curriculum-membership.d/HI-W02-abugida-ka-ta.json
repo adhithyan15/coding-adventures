@@ -1,0 +1,11 @@
+{
+  "id": "HI-W02-abugida-ka-ta",
+  "pathSegment": "HI-PATH-001",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-001-SCRIPT",
+      "order": 2
+    }
+  ]
+}

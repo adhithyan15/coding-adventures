@@ -1,0 +1,11 @@
+{
+  "id": "SA-C42-mostly",
+  "pathSegment": "SA-PATH-42-REPLY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-42-REPLY",
+      "order": 2
+    }
+  ]
+}

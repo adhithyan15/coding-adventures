@@ -1,0 +1,11 @@
+{
+  "id": "AR-C04-maa-with",
+  "pathSegment": "AR-PATH-009",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-009-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

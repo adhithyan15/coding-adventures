@@ -1,0 +1,11 @@
+{
+  "id": "SA-C64-prathama-pathanam",
+  "pathSegment": "SA-PATH-64-READING",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-064-READING",
+      "order": 2
+    }
+  ]
+}

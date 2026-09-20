@@ -1,0 +1,11 @@
+{
+  "id": "ES-C429-calificacion",
+  "pathSegment": "ES-PATH-429-EDUCACION",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-429-EDUCACION",
+      "order": 2
+    }
+  ]
+}

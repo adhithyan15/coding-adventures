@@ -6,12 +6,5 @@
   "canDo": "I can name a song, singing, dance and a story.",
   "prerequisites": [
     "ML-EXT-98-LEISURE"
-  ],
-  "lessons": [
-    "ML-C99-paattu",
-    "ML-C99-paaduka",
-    "ML-C99-nrttham",
-    "ML-C99-katha",
-    "ML-R99-arts-recall"
   ]
 }

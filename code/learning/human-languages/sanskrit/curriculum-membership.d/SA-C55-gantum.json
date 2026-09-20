@@ -1,0 +1,11 @@
+{
+  "id": "SA-C55-gantum",
+  "pathSegment": "SA-PATH-55-NON-FINITE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-055-NON-FINITE",
+      "order": 1
+    }
+  ]
+}

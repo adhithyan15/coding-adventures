@@ -1,0 +1,11 @@
+{
+  "id": "HI-C43-write",
+  "pathSegment": "HI-PATH-43-SEESAY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-43-SEESAY",
+      "order": 3
+    }
+  ]
+}

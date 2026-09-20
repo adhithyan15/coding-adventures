@@ -1,0 +1,11 @@
+{
+  "id": "HI-C73-bill",
+  "pathSegment": "HI-PATH-73-EATING",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-73-EATING",
+      "order": 2
+    }
+  ]
+}

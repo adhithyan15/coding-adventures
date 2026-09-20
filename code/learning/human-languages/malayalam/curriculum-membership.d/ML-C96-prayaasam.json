@@ -1,0 +1,11 @@
+{
+  "id": "ML-C96-prayaasam",
+  "pathSegment": "ML-PATH-96-EASE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-96-EASE",
+      "order": 1
+    }
+  ]
+}

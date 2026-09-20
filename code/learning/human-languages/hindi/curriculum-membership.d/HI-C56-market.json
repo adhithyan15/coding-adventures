@@ -1,0 +1,11 @@
+{
+  "id": "HI-C56-market",
+  "pathSegment": "HI-PATH-56-ROAD",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-56-ROAD",
+      "order": 2
+    }
+  ]
+}

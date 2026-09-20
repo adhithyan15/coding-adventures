@@ -1,12 +1,6 @@
 {
   "id": "FA-PATH-021",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
-  "lessons": [
-    "FA-C20-avval",
-    "FA-C20-dovvom-sevvom",
-    "FA-C20-chaharom",
-    "FA-C20-practice"
-  ],
   "before": [],
   "inline": [],
   "after": [

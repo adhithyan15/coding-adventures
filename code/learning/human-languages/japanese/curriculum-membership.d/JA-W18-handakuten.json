@@ -1,0 +1,11 @@
+{
+  "id": "JA-W18-handakuten",
+  "pathSegment": "JA-PATH-017",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "JA-EXT-025-COUNTERS",
+      "order": 6
+    }
+  ]
+}

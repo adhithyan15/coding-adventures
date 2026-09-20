@@ -1,0 +1,11 @@
+{
+  "id": "ML-S121-letter-ssa",
+  "pathSegment": "ML-PATH-100",
+  "pathOrder": 38,
+  "extensions": [
+    {
+      "id": "ML-EXT-100-SCRIPT-RECOGNITION",
+      "order": 38
+    }
+  ]
+}

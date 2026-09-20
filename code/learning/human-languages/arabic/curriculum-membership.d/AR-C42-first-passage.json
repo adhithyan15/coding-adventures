@@ -1,0 +1,11 @@
+{
+  "id": "AR-C42-first-passage",
+  "pathSegment": "AR-PATH-039",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-039-READING",
+      "order": 2
+    }
+  ]
+}

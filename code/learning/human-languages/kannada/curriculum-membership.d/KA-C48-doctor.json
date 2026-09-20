@@ -1,0 +1,11 @@
+{
+  "id": "KA-C48-doctor",
+  "pathSegment": "KA-PATH-48-ROLE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-48-ROLE",
+      "order": 2
+    }
+  ]
+}

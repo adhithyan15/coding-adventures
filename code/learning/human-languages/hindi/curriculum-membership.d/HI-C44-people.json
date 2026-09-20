@@ -1,0 +1,11 @@
+{
+  "id": "HI-C44-people",
+  "pathSegment": "HI-PATH-44-FAMILY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-44-FAMILY",
+      "order": 3
+    }
+  ]
+}

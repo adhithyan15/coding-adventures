@@ -1,0 +1,11 @@
+{
+  "id": "BN-R24-all-of-us",
+  "pathSegment": "BN-PATH-032",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-033-PLURAL-PRONOUNS",
+      "order": 4
+    }
+  ]
+}

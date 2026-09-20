@@ -1,0 +1,11 @@
+{
+  "id": "MW-R20-script-close",
+  "pathSegment": "MW-PATH-019",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "MW-EXT-033-FOOD-SEVEN",
+      "order": 7
+    }
+  ]
+}

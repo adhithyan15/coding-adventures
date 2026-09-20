@@ -1,0 +1,11 @@
+{
+  "id": "MW-C08-hear-dada",
+  "pathSegment": "MW-PATH-008",
+  "pathOrder": 10,
+  "extensions": [
+    {
+      "id": "MW-EXT-022-FAMILY-SEVEN",
+      "order": 10
+    }
+  ]
+}

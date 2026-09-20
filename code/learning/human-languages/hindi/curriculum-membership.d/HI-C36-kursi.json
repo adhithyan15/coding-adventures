@@ -1,0 +1,11 @@
+{
+  "id": "HI-C36-kursi",
+  "pathSegment": "HI-PATH-030",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-030-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

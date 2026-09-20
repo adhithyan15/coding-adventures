@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W01-hao-build",
+  "pathSegment": "ZH-PATH-001",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "ZH-EXT-006-COMPONENT-INVENTORY",
+      "order": 6
+    }
+  ]
+}

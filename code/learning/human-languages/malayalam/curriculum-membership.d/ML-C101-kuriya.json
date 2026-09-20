@@ -1,0 +1,11 @@
+{
+  "id": "ML-C101-kuriya",
+  "pathSegment": "ML-PATH-101-BUILD",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ML-EXT-101-BUILD",
+      "order": 0
+    }
+  ]
+}

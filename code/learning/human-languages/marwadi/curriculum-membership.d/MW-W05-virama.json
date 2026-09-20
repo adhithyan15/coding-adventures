@@ -1,0 +1,11 @@
+{
+  "id": "MW-W05-virama",
+  "pathSegment": "MW-PATH-005",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-010-WRITE-MHARO",
+      "order": 0
+    }
+  ]
+}

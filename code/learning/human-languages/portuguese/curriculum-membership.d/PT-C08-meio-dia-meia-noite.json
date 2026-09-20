@@ -1,0 +1,11 @@
+{
+  "id": "PT-C08-meio-dia-meia-noite",
+  "pathSegment": "PT-PATH-014",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-014-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

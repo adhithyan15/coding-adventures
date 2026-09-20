@@ -4,11 +4,5 @@
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can name a friend, my family, my brother and my sister in Bengali, with no grammatical gender to mark on any of them.",
-  "prerequisites": [],
-  "lessons": [
-    "BN-C11-bondhu",
-    "BN-C11-poribar",
-    "BN-C11-bhai",
-    "BN-C11-bon"
-  ]
+  "prerequisites": []
 }

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C33-raayu",
+  "pathSegment": "TE-PATH-027-B",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-027-MIND-VERBS-B",
+      "order": 1
+    }
+  ]
+}

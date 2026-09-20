@@ -1,0 +1,11 @@
+{
+  "id": "TE-S148-digit-9",
+  "pathSegment": "TE-PATH-100",
+  "pathOrder": 26,
+  "extensions": [
+    {
+      "id": "TE-EXT-100-SCRIPT-RECOGNITION",
+      "order": 26
+    }
+  ]
+}

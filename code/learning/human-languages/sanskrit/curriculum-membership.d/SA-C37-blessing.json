@@ -1,0 +1,11 @@
+{
+  "id": "SA-C37-blessing",
+  "pathSegment": "SA-PATH-37-COURTESY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-37-COURTESY",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-R36-count-at-distance",
+  "pathSegment": "MW-PATH-030",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MW-EXT-044-NUMBERED-EXCHANGE",
+      "order": 0
+    }
+  ]
+}

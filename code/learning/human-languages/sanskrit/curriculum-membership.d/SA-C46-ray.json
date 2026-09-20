@@ -1,0 +1,11 @@
+{
+  "id": "SA-C46-ray",
+  "pathSegment": "SA-PATH-46-LIGHT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-46-LIGHT",
+      "order": 1
+    }
+  ]
+}

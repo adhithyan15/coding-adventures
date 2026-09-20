@@ -1,0 +1,11 @@
+{
+  "id": "PA-C13-dil",
+  "pathSegment": "PA-PATH-017",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-017-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

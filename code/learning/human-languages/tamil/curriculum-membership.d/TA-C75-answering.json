@@ -1,0 +1,11 @@
+{
+  "id": "TA-C75-answering",
+  "pathSegment": "TA-PATH-75-YESNO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-75-YESNO",
+      "order": 1
+    }
+  ]
+}

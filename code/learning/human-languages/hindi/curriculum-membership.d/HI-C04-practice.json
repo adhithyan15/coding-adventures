@@ -1,0 +1,11 @@
+{
+  "id": "HI-C04-practice",
+  "pathSegment": "HI-PATH-009A",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-004-CONSOLIDATION",
+      "order": 0
+    }
+  ]
+}

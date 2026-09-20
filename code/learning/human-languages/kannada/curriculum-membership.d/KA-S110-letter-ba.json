@@ -1,0 +1,11 @@
+{
+  "id": "KA-S110-letter-ba",
+  "pathSegment": "KA-PATH-100",
+  "pathOrder": 14,
+  "extensions": [
+    {
+      "id": "KA-EXT-100-SCRIPT-RECOGNITION",
+      "order": 11
+    }
+  ]
+}

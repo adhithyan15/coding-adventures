@@ -1,0 +1,11 @@
+{
+  "id": "UR-C17-kahan",
+  "pathSegment": "UR-PATH-018",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-028-SCRIPT-COPULA",
+      "order": 2
+    }
+  ]
+}

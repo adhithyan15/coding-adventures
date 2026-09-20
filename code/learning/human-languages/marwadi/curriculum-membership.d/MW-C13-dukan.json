@@ -1,0 +1,11 @@
+{
+  "id": "MW-C13-dukan",
+  "pathSegment": "MW-PATH-013",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-027-SHOPPING-FIVE",
+      "order": 2
+    }
+  ]
+}

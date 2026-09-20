@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C19-nihaoma",
+  "pathSegment": "ZH-PATH-018",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ZH-EXT-052-ASKING-SCRIPT",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-W01-e-matra",
+  "pathSegment": "GU-PATH-001",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "GU-EXT-016-SCRIPT-FIRST-PIECES",
+      "order": 7
+    }
+  ]
+}

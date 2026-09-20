@@ -1,0 +1,11 @@
+{
+  "id": "SA-C16-city",
+  "pathSegment": "SA-PATH-202",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-202-PLACE",
+      "order": 4
+    }
+  ]
+}

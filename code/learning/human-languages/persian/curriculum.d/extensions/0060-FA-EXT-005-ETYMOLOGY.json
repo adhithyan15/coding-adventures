@@ -6,8 +6,5 @@
   "canDo": "I can use khoshvaghtam and recognize its Persian, Arabic-loan, and personal-ending layers.",
   "prerequisites": [
     "FA-EXT-004-GRAMMAR"
-  ],
-  "lessons": [
-    "FA-C03-khoshvaghtam"
   ]
 }

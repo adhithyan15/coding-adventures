@@ -7,8 +7,5 @@
   "prerequisites": [
     "JA-EXT-006-TEINEIGO-REGISTER",
     "JA-EXT-004-KATAKANA-LOANWORDS"
-  ],
-  "lessons": [
-    "JA-C01-practice"
   ]
 }

@@ -1,0 +1,11 @@
+{
+  "id": "RU-W06-soft-sign",
+  "pathSegment": "RU-PATH-005",
+  "pathOrder": 11,
+  "extensions": [
+    {
+      "id": "RU-EXT-020-SCRIPT-ELEVEN",
+      "order": 9
+    }
+  ]
+}

@@ -1,9 +1,6 @@
 {
   "id": "ES-PATH-276-01",
   "spine_node": "SPINE-READ-LITERARY-AND-CLASSICAL",
-  "lessons": [
-    "ES-C276-mas"
-  ],
   "before": [],
   "inline": [],
   "after": []

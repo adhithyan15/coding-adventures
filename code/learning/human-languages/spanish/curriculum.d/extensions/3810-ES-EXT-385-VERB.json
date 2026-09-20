@@ -4,11 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can name usar, tocar, mezclar and colgar.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-C385-usar",
-    "ES-C385-tocar",
-    "ES-C385-mezclar",
-    "ES-C385-colgar"
-  ]
+  "prerequisites": []
 }

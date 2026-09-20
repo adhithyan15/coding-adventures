@@ -1,11 +1,6 @@
 {
   "id": "KA-PATH-031",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
-  "lessons": [
-    "KA-C39-chaha",
-    "KA-C39-kaapi",
-    "KA-C39-haalu"
-  ],
   "before": [],
   "inline": [
     "KA-EXT-032-TEA-COFFEE-MILK"

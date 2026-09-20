@@ -1,0 +1,11 @@
+{
+  "id": "GU-C35-condition-checkpoint",
+  "pathSegment": "GU-PATH-034",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-046-CONDITION",
+      "order": 4
+    }
+  ]
+}

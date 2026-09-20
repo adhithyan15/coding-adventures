@@ -1,0 +1,11 @@
+{
+  "id": "FR-C14-habere",
+  "pathSegment": "FR-PATH-A1-AVOIR",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "FR-EXT-A1-AVOIR-LANGUAGE-SPECIFIC",
+      "order": 7
+    }
+  ]
+}

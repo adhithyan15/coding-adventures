@@ -1,0 +1,11 @@
+{
+  "id": "GU-C35-jo-write",
+  "pathSegment": "GU-PATH-034",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-046-CONDITION",
+      "order": 2
+    }
+  ]
+}

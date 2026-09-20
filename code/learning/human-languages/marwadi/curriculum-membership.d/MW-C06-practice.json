@@ -1,0 +1,11 @@
+{
+  "id": "MW-C06-practice",
+  "pathSegment": "MW-PATH-006",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "MW-EXT-018-WELLBEING-EXCHANGE",
+      "order": 0
+    }
+  ]
+}

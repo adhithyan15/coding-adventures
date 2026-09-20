@@ -1,0 +1,11 @@
+{
+  "id": "KA-C33-bare",
+  "pathSegment": "KA-PATH-026-B",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-026-MIND-VERBS-B",
+      "order": 1
+    }
+  ]
+}

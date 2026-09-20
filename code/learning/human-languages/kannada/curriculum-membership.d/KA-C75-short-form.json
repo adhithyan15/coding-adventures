@@ -1,0 +1,11 @@
+{
+  "id": "KA-C75-short-form",
+  "pathSegment": "KA-PATH-75-ORDINAL",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "KA-EXT-75-ORDINAL",
+      "order": 6
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C16-sintesis-imperfecto",
+  "pathSegment": "ES-PATH-040",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "ES-EXT-040-CONSOLIDATION-IMPERFECT",
+      "order": 0
+    }
+  ]
+}

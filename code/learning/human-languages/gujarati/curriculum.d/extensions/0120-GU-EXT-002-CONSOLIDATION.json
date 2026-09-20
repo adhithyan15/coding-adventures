@@ -6,8 +6,5 @@
   "canDo": "I can ask someone's name in Gujarati and give my own.",
   "prerequisites": [
     "GU-EXT-008-LANGUAGE-SPECIFIC"
-  ],
-  "lessons": [
-    "GU-C02-practice"
   ]
 }

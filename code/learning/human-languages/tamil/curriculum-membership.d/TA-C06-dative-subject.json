@@ -1,0 +1,11 @@
+{
+  "id": "TA-C06-dative-subject",
+  "pathSegment": "TA-PATH-013",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "TA-EXT-013-LANGUAGE-SPECIFIC",
+      "order": 5
+    }
+  ]
+}

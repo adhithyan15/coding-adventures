@@ -1,0 +1,11 @@
+{
+  "id": "MW-C15-kapda",
+  "pathSegment": "MW-PATH-014",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-028-SHOPPING-SEVEN",
+      "order": 2
+    }
+  ]
+}

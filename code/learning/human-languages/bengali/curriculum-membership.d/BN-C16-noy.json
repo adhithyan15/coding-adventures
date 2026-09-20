@@ -1,0 +1,11 @@
+{
+  "id": "BN-C16-noy",
+  "pathSegment": "BN-PATH-023",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-024-THREE-NEGATORS",
+      "order": 1
+    }
+  ]
+}

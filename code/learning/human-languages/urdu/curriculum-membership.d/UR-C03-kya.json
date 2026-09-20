@@ -1,0 +1,11 @@
+{
+  "id": "UR-C03-kya",
+  "pathSegment": "UR-PATH-004",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-003-SCRIPT",
+      "order": 0
+    }
+  ]
+}

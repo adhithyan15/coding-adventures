@@ -1,0 +1,11 @@
+{
+  "id": "KA-C55-hill",
+  "pathSegment": "KA-PATH-55-ROAD",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-55-ROAD",
+      "order": 2
+    }
+  ]
+}

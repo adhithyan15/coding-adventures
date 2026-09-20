@@ -1,0 +1,11 @@
+{
+  "id": "TE-C64-only",
+  "pathSegment": "TE-PATH-64-JOIN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-64-JOIN",
+      "order": 1
+    }
+  ]
+}

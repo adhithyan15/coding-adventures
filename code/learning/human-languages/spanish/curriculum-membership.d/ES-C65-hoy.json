@@ -1,0 +1,11 @@
+{
+  "id": "ES-C65-hoy",
+  "pathSegment": "ES-PATH-A1-DEIXIS-TIEMPO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-A1-DEIXIS-TIEMPO",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C12-medius-dies-nox",
+  "pathSegment": "LA-PATH-014",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-014-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

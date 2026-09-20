@@ -1,0 +1,11 @@
+{
+  "id": "TA-C75-permission",
+  "pathSegment": "TA-PATH-75-YESNO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-75-YESNO",
+      "order": 3
+    }
+  ]
+}

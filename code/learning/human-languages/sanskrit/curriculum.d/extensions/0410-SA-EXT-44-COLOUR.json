@@ -4,12 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can name five colours in Sanskrit.",
-  "prerequisites": [],
-  "lessons": [
-    "SA-C44-white",
-    "SA-C44-dark",
-    "SA-C44-yellow",
-    "SA-C44-green",
-    "SA-C44-blue"
-  ]
+  "prerequisites": []
 }

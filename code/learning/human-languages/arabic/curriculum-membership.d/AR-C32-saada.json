@@ -1,0 +1,11 @@
+{
+  "id": "AR-C32-saada",
+  "pathSegment": "AR-PATH-029",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-029-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

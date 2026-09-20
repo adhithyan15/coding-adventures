@@ -1,13 +1,6 @@
 {
   "id": "LA-PATH-039",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
-  "lessons": [
-    "LA-C55-primus",
-    "LA-C55-secundus",
-    "LA-C55-tertius",
-    "LA-C55-quartus",
-    "LA-C55-quintus"
-  ],
   "before": [],
   "inline": [],
   "after": [

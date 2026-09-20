@@ -1,0 +1,11 @@
+{
+  "id": "MW-R15-shopping-close",
+  "pathSegment": "MW-PATH-014",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "MW-EXT-028-SHOPPING-SEVEN",
+      "order": 7
+    }
+  ]
+}

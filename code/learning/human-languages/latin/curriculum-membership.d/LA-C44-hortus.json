@@ -1,0 +1,11 @@
+{
+  "id": "LA-C44-hortus",
+  "pathSegment": "LA-PATH-013",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "LA-EXT-044-HOUSE",
+      "order": 3
+    }
+  ]
+}

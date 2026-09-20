@@ -1,0 +1,11 @@
+{
+  "id": "ES-C280-huevo",
+  "pathSegment": "ES-PATH-280-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-280-COMPRA",
+      "order": 1
+    }
+  ]
+}

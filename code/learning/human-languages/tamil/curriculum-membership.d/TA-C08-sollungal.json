@@ -1,0 +1,11 @@
+{
+  "id": "TA-C08-sollungal",
+  "pathSegment": "TA-PATH-015",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-015-REGISTER",
+      "order": 0
+    }
+  ]
+}

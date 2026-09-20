@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W17-guo-guided",
+  "pathSegment": "ZH-PATH-016",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "ZH-EXT-046-LANGUAGE-COUNTRY-SCRIPT",
+      "order": 5
+    }
+  ]
+}

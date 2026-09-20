@@ -1,0 +1,11 @@
+{
+  "id": "ES-C283-amable",
+  "pathSegment": "ES-PATH-283-01",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-283-CORTESIA",
+      "order": 2
+    }
+  ]
+}

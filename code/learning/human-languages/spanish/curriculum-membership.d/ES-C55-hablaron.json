@@ -1,0 +1,11 @@
+{
+  "id": "ES-C55-hablaron",
+  "pathSegment": "ES-PATH-B1-HABLARON",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-B1-HABLARON",
+      "order": 0
+    }
+  ]
+}

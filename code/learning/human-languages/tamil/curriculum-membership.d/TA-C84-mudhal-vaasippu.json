@@ -1,0 +1,11 @@
+{
+  "id": "TA-C84-mudhal-vaasippu",
+  "pathSegment": "TA-PATH-84-READING",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-84-READING",
+      "order": 2
+    }
+  ]
+}

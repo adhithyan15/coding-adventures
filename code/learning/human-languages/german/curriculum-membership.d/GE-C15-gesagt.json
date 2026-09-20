@@ -1,0 +1,11 @@
+{
+  "id": "GE-C15-gesagt",
+  "pathSegment": "GE-PATH-020",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-020-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-S135-letter-au",
+  "pathSegment": "HI-PATH-100",
+  "pathOrder": 32,
+  "extensions": [
+    {
+      "id": "HI-EXT-100-SCRIPT-RECOGNITION",
+      "order": 32
+    }
+  ]
+}

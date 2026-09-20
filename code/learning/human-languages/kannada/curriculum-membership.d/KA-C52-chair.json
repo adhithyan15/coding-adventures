@@ -1,0 +1,11 @@
+{
+  "id": "KA-C52-chair",
+  "pathSegment": "KA-PATH-52-WELCOME",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-52-WELCOME",
+      "order": 1
+    }
+  ]
+}

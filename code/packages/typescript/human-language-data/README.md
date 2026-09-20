@@ -23,7 +23,8 @@ rollups cannot return.
 
 ```
 lessons/*.md frontmatter    ─┐
-<track>/curriculum.d/**/*   ─┼─►  Dataset + local realization paths
+<track>/curriculum.d/**/*   ─┤
+<track>/curriculum-membership.d/* ─┼─►  Dataset + local realization paths
 concepts/taxonomy.json      ─┤         + validate() / validateCurriculum()
 data/scripts/*.{json,d/}    ─┘         + independent frontier planning
 ```
@@ -57,6 +58,13 @@ Curriculum path-to-spine membership is owned only by the new path shard's
 `spine_node`. Do not edit an existing `curriculum.d/spine/*.json` owner when
 adding a path segment: those files contain only stable `omits`/`relocates`
 policy, and the public `segments` lists are derived in path order at load time.
+Lesson membership is single-owned under
+`<track>/curriculum-membership.d/<lesson-id>.json`. Each direct owner names one
+path segment, its exact order there, and any attached extensions with their
+exact order. Path and extension shards must not store `lessons` arrays. Adding
+one lesson adds one membership owner rather than editing either shared array;
+the loader and Language Ladder reconstruct the unchanged public arrays. See
+[`HL40`](../../../specs/HL40-direct-curriculum-lesson-membership.md).
 Browser consumers fold only their respective canonical shards behind bounded
 build-time modules. Language Ladder does not import the modality owner corpus.
 
@@ -1012,6 +1020,8 @@ until the existing corpus has been split.
 | `parse.ts` | frontmatter + Markdown → typed lesson AST; realizations → `Dataset` | ✅ |
 | `activity.ts` | typed block activities → normalized runtime answer contracts | ✅ |
 | `hash.ts` | stable canonical lesson serialization and deterministic fingerprints | ✅ |
+| `curriculum-membership.ts` | direct lesson owners → exact public path/extension arrays | ✅ |
+| `curriculum-membership-shards.ts` | strict per-lesson curriculum owner fold and filesystem boundary | ⛔ (fs) |
 | `sound-tags.ts` | pure closed-vocabulary shape and tag validation | ✅ |
 | `sound-tag-shards.ts` | strict per-language owner fold and filesystem boundary | ⛔ (fs) |
 | `book.ts` | typed lesson AST → LaTeX chapter | ✅ |

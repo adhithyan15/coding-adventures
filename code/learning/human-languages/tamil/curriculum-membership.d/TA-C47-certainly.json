@@ -1,0 +1,11 @@
+{
+  "id": "TA-C47-certainly",
+  "pathSegment": "TA-PATH-47-REPLY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-47-REPLY",
+      "order": 2
+    }
+  ]
+}

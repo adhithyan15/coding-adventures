@@ -1,0 +1,11 @@
+{
+  "id": "MR-C06-number-differences",
+  "pathSegment": "MR-PATH-011",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "MR-EXT-011-ETYMOLOGY",
+      "order": 0
+    }
+  ]
+}

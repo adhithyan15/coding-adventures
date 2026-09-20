@@ -1,0 +1,11 @@
+{
+  "id": "TA-C76-choice",
+  "pathSegment": "TA-PATH-76-CHOICE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-76-CHOICE",
+      "order": 3
+    }
+  ]
+}

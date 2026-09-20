@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W16-han-guided",
+  "pathSegment": "ZH-PATH-015",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-043-LANGUAGE-IDENTITY-SCRIPT",
+      "order": 2
+    }
+  ]
+}

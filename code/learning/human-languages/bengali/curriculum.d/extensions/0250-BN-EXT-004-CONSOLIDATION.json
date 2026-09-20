@@ -6,8 +6,5 @@
   "canDo": "I can take my leave in Bengali and say when I expect to meet again.",
   "prerequisites": [
     "BN-EXT-009-LANGUAGE-SPECIFIC"
-  ],
-  "lessons": [
-    "BN-C04-practice"
   ]
 }

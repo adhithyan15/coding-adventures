@@ -1,0 +1,11 @@
+{
+  "id": "UR-C13-safed",
+  "pathSegment": "UR-PATH-014",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-024-COLORS",
+      "order": 1
+    }
+  ]
+}

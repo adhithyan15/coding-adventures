@@ -1,0 +1,11 @@
+{
+  "id": "PA-R23-three-no-model-r1",
+  "pathSegment": "PA-PATH-022",
+  "pathOrder": 10,
+  "extensions": [
+    {
+      "id": "PA-EXT-027-A1-THREE-FIELD-INTEGRATION",
+      "order": 10
+    }
+  ]
+}

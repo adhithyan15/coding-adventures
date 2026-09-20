@@ -1,0 +1,11 @@
+{
+  "id": "BN-W02-naam-read",
+  "pathSegment": "BN-PATH-001",
+  "pathOrder": 15,
+  "extensions": [
+    {
+      "id": "BN-EXT-019-SCRIPT-PIECES-INTO-WORDS",
+      "order": 0
+    }
+  ]
+}

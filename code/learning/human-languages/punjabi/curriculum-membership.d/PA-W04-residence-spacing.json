@@ -1,0 +1,11 @@
+{
+  "id": "PA-W04-residence-spacing",
+  "pathSegment": "PA-PATH-020",
+  "pathOrder": 9,
+  "extensions": [
+    {
+      "id": "PA-EXT-025-A1-RESIDENCE-FIELD",
+      "order": 9
+    }
+  ]
+}

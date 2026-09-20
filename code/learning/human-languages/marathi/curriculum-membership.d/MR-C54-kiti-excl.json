@@ -1,0 +1,11 @@
+{
+  "id": "MR-C54-kiti-excl",
+  "pathSegment": "MR-PATH-057",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-070-AMOUNTS",
+      "order": 3
+    }
+  ]
+}

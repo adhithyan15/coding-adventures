@@ -1,0 +1,11 @@
+{
+  "id": "TE-S07-vowel-sign-aa",
+  "pathSegment": "TE-PATH-100",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-100-SCRIPT-RECOGNITION",
+      "order": 1
+    }
+  ]
+}

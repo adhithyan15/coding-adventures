@@ -1,0 +1,11 @@
+{
+  "id": "HI-C61-vessel",
+  "pathSegment": "HI-PATH-61-FIRE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-61-FIRE",
+      "order": 0
+    }
+  ]
+}

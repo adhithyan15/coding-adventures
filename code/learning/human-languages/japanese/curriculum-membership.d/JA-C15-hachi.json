@@ -1,0 +1,11 @@
+{
+  "id": "JA-C15-hachi",
+  "pathSegment": "JA-PATH-014",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "JA-EXT-022-NUMBERS-SIX-TO-TEN",
+      "order": 1
+    }
+  ]
+}

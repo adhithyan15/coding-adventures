@@ -1,0 +1,11 @@
+{
+  "id": "UR-C19-kya-polar",
+  "pathSegment": "UR-PATH-020",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-030-THREE-REFUSALS",
+      "order": 1
+    }
+  ]
+}

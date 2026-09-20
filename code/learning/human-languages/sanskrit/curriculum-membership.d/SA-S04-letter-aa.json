@@ -1,0 +1,11 @@
+{
+  "id": "SA-S04-letter-aa",
+  "pathSegment": "SA-PATH-100",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "SA-EXT-100-SCRIPT-RECOGNITION",
+      "order": 7
+    }
+  ]
+}

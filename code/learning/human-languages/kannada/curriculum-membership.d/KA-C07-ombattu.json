@@ -1,0 +1,11 @@
+{
+  "id": "KA-C07-ombattu",
+  "pathSegment": "KA-PATH-011",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "KA-EXT-011-LANGUAGE-SPECIFIC",
+      "order": 8
+    }
+  ]
+}

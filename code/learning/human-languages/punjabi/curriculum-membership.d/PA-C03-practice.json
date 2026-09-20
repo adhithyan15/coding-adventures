@@ -1,0 +1,11 @@
+{
+  "id": "PA-C03-practice",
+  "pathSegment": "PA-PATH-C3P",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PA-EXT-019-WELLBEING-CHECKPOINT",
+      "order": 0
+    }
+  ]
+}

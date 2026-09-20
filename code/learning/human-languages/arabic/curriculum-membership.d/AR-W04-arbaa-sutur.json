@@ -1,0 +1,11 @@
+{
+  "id": "AR-W04-arbaa-sutur",
+  "pathSegment": "AR-PATH-043-WRITING",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-043-WRITING",
+      "order": 2
+    }
+  ]
+}

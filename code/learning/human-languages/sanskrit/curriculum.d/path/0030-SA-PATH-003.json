@@ -1,9 +1,6 @@
 {
   "id": "SA-PATH-003",
   "spine_node": "SPINE-MEET-GREET",
-  "lessons": [
-    "SA-C01-svagatam"
-  ],
   "before": [],
   "inline": [],
   "after": []

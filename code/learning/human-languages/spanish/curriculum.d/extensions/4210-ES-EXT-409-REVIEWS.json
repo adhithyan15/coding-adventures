@@ -6,9 +6,5 @@
   "canDo": "I can retrieve five planning words in short work, food and hotel messages.",
   "prerequisites": [
     "ES-EXT-409-PLANNING"
-  ],
-  "lessons": [
-    "ES-C409-planning-recall-1",
-    "ES-C409-planning-recall-2"
   ]
 }

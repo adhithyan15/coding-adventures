@@ -1,0 +1,11 @@
+{
+  "id": "HI-C49-meeting",
+  "pathSegment": "HI-PATH-49-LEAVE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-49-LEAVE",
+      "order": 4
+    }
+  ]
+}

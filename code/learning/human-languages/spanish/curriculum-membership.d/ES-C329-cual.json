@@ -1,0 +1,11 @@
+{
+  "id": "ES-C329-cual",
+  "pathSegment": "ES-PATH-329-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-329-LINK",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-R12-mixed-scripts",
+  "pathSegment": "JA-PATH-012",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "JA-EXT-019-BODY-SEVEN-MORE",
+      "order": 6
+    }
+  ]
+}

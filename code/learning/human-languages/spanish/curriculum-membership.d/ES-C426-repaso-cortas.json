@@ -1,0 +1,11 @@
+{
+  "id": "ES-C426-repaso-cortas",
+  "pathSegment": "ES-PATH-426-MAYUSCULAS",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ES-EXT-426-MAYUSCULAS",
+      "order": 6
+    }
+  ]
+}

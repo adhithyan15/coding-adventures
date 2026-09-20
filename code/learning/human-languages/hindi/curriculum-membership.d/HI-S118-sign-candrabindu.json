@@ -1,0 +1,11 @@
+{
+  "id": "HI-S118-sign-candrabindu",
+  "pathSegment": "HI-PATH-100",
+  "pathOrder": 16,
+  "extensions": [
+    {
+      "id": "HI-EXT-100-SCRIPT-RECOGNITION",
+      "order": 16
+    }
+  ]
+}

@@ -1,10 +1,6 @@
 {
   "id": "TE-PATH-008",
   "spine_node": "SPINE-CHECK-WELLBEING",
-  "lessons": [
-    "TE-C03-baagaa",
-    "TE-C03-practice"
-  ],
   "before": [],
   "inline": [
     "TE-EXT-008-CONSOLIDATION"

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C08-baap",
+  "pathSegment": "MW-PATH-008",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-022-FAMILY-SEVEN",
+      "order": 4
+    }
+  ]
+}

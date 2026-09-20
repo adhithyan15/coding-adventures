@@ -1,0 +1,11 @@
+{
+  "id": "MR-A1F02-first-three-copy",
+  "pathSegment": "MR-PATH-021",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "MR-EXT-024-A1-FORM-LABELS",
+      "order": 6
+    }
+  ]
+}

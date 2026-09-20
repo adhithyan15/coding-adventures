@@ -1,0 +1,11 @@
+{
+  "id": "AR-C20-ahada-ashar-ishrun",
+  "pathSegment": "AR-PATH-021",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-021-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

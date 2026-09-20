@@ -1,0 +1,11 @@
+{
+  "id": "TE-C55-village",
+  "pathSegment": "TE-PATH-55-ROAD",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-55-ROAD",
+      "order": 3
+    }
+  ]
+}

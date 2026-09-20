@@ -1,0 +1,11 @@
+{
+  "id": "SA-S203-vowel-sign-u",
+  "pathSegment": "SA-PATH-100",
+  "pathOrder": 12,
+  "extensions": [
+    {
+      "id": "SA-EXT-100-SCRIPT-RECOGNITION",
+      "order": 12
+    }
+  ]
+}

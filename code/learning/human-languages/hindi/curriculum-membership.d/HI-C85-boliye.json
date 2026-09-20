@@ -1,0 +1,11 @@
+{
+  "id": "HI-C85-boliye",
+  "pathSegment": "HI-PATH-93-IMPERATIVE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-93-IMPERATIVE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C08-lekha",
+  "pathSegment": "BN-PATH-012-B",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-012-MIND-AND-PAGE-B",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C66-paddy",
+  "pathSegment": "TE-PATH-66-FIELD",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-66-FIELD",
+      "order": 1
+    }
+  ]
+}

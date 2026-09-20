@@ -6,12 +6,5 @@
   "canDo": "I can name a city and a country, name the place I am in, and say which place I am from.",
   "prerequisites": [
     "UR-EXT-037-POSSESSION-AND-ADDRESS"
-  ],
-  "lessons": [
-    "UR-C27-shahr",
-    "UR-C27-mulk",
-    "UR-C27-lahore",
-    "UR-C27-lahori",
-    "UR-R27-where-you-are-from"
   ]
 }

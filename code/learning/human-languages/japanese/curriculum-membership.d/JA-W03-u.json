@@ -1,0 +1,11 @@
+{
+  "id": "JA-W03-u",
+  "pathSegment": "JA-PATH-003",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "JA-EXT-010-HIRAGANA-THANKS",
+      "order": 5
+    }
+  ]
+}

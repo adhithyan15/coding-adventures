@@ -1,16 +1,6 @@
 {
   "id": "TE-PATH-005",
   "spine_node": "SPINE-EXCHANGE-NAMES",
-  "lessons": [
-    "TE-C02-peru",
-    "TE-C02-naa",
-    "TE-C02-naa-peru",
-    "TE-C02-nuvvu-miiru",
-    "TE-C02-emiti",
-    "TE-C02-mii-peru-emiti",
-    "TE-C02-santosham",
-    "TE-C02-practice"
-  ],
   "before": [],
   "inline": [
     "TE-EXT-005-CONSOLIDATION"

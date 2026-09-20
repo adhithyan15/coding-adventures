@@ -1,0 +1,11 @@
+{
+  "id": "IT-C28-dopo",
+  "pathSegment": "IT-PATH-032",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-032-ORDINE",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-S08-khakkha-jhajja-pairin",
+  "pathSegment": "PA-PATH-012",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-050-PREA1-SCRIPT-RUNWAY-C8",
+      "order": 0
+    }
+  ]
+}

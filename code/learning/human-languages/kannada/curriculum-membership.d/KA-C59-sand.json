@@ -1,0 +1,11 @@
+{
+  "id": "KA-C59-sand",
+  "pathSegment": "KA-PATH-59-GROUND",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-59-GROUND",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-W05-work-no-model",
+  "pathSegment": "PA-PATH-021",
+  "pathOrder": 13,
+  "extensions": [
+    {
+      "id": "PA-EXT-026-A1-WORK-FIELD",
+      "order": 13
+    }
+  ]
+}

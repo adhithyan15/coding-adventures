@@ -1,0 +1,11 @@
+{
+  "id": "HI-S02-letter-na",
+  "pathSegment": "HI-PATH-100",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-100-SCRIPT-RECOGNITION",
+      "order": 1
+    }
+  ]
+}

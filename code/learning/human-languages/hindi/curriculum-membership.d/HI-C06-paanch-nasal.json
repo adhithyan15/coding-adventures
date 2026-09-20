@@ -1,0 +1,11 @@
+{
+  "id": "HI-C06-paanch-nasal",
+  "pathSegment": "HI-PATH-010",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-010-ETYMOLOGY",
+      "order": 1
+    }
+  ]
+}

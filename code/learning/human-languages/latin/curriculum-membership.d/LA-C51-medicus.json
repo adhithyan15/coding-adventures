@@ -1,0 +1,11 @@
+{
+  "id": "LA-C51-medicus",
+  "pathSegment": "LA-PATH-035",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-051-CITY",
+      "order": 2
+    }
+  ]
+}

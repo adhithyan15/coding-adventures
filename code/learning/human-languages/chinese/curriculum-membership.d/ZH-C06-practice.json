@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C06-practice",
+  "pathSegment": "ZH-PATH-005",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-016-CONVERSATION-CLOSE",
+      "order": 1
+    }
+  ]
+}

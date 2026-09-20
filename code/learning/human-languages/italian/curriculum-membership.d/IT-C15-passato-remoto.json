@@ -1,0 +1,11 @@
+{
+  "id": "IT-C15-passato-remoto",
+  "pathSegment": "IT-PATH-019",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-019-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

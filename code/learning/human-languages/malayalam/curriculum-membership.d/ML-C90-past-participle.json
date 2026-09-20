@@ -1,0 +1,11 @@
+{
+  "id": "ML-C90-past-participle",
+  "pathSegment": "ML-PATH-90-PARTICIPLE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-90-PARTICIPLE",
+      "order": 2
+    }
+  ]
+}

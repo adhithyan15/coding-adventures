@@ -1,10 +1,6 @@
 {
   "id": "MR-PATH-009",
   "spine_node": "SPINE-COURTESY-THANK",
-  "lessons": [
-    "MR-C03-kaahi-harkat-nahi",
-    "MR-C03-practice"
-  ],
   "before": [],
   "inline": [
     "MR-EXT-039-WELLBEING-CONSOLIDATION"

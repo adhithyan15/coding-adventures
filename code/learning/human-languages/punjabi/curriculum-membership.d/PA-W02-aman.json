@@ -1,0 +1,11 @@
+{
+  "id": "PA-W02-aman",
+  "pathSegment": "PA-PATH-018",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-023-A1-NAME-FIELD",
+      "order": 1
+    }
+  ]
+}

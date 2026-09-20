@@ -78,8 +78,8 @@ import {
 import { pathToFileURL } from "node:url";
 import {
   defaultCurriculumRoot,
+  loadAuthoredLanguageCurricula,
   loadCurriculumSpine,
-  loadLanguageCurricula,
   loadLanguageRegistry,
   loadTrackChapters,
 } from "./loader.js";
@@ -1878,7 +1878,7 @@ function assertIndependentOwnerCompleteness(
       "nodes",
       cachedIdentities(cache, "curriculum-spine-union", () => {
         const identities: string[] = [];
-        for (const curriculum of loadLanguageCurricula(root)) {
+        for (const curriculum of loadAuthoredLanguageCurricula(root)) {
           identities.push(
             ...Object.keys(
               ownerRecord(curriculum.spine, `${curriculum.language}: curriculum spine`),

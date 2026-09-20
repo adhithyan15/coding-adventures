@@ -1,10 +1,6 @@
 {
   "id": "IT-PATH-006",
   "spine_node": "SPINE-TAKE-LEAVE",
-  "lessons": [
-    "IT-C01-notte",
-    "IT-C01-practice"
-  ],
   "before": [],
   "inline": [],
   "after": [

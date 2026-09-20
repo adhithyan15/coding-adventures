@@ -1,0 +1,11 @@
+{
+  "id": "ML-C20-kalavastha",
+  "pathSegment": "ML-PATH-023",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ML-EXT-023-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C427-empresa",
+  "pathSegment": "ES-PATH-427-OFICIOS",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-427-OFICIOS",
+      "order": 5
+    }
+  ]
+}

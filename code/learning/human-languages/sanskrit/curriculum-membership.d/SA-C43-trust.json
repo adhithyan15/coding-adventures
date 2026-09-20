@@ -1,0 +1,11 @@
+{
+  "id": "SA-C43-trust",
+  "pathSegment": "SA-PATH-43-COURTESY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-43-COURTESY",
+      "order": 3
+    }
+  ]
+}

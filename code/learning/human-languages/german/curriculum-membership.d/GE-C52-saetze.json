@@ -1,0 +1,11 @@
+{
+  "id": "GE-C52-saetze",
+  "pathSegment": "GE-PATH-A1-LESUNG",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-A1-LESUNG",
+      "order": 1
+    }
+  ]
+}

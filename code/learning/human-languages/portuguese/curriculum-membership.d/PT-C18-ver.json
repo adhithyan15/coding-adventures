@@ -1,0 +1,11 @@
+{
+  "id": "PT-C18-ver",
+  "pathSegment": "PT-PATH-022-C",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-022-LANGUAGE-SPECIFIC-C",
+      "order": 1
+    }
+  ]
+}

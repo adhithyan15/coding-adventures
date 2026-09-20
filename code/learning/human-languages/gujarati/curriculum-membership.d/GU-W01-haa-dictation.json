@@ -1,0 +1,11 @@
+{
+  "id": "GU-W01-haa-dictation",
+  "pathSegment": "GU-PATH-004",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-001-WRITING-RUNWAY",
+      "order": 2
+    }
+  ]
+}

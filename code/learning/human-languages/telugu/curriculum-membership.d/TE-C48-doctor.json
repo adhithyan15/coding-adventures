@@ -1,0 +1,11 @@
+{
+  "id": "TE-C48-doctor",
+  "pathSegment": "TE-PATH-48-ROLE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-48-ROLE",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-W01-tilde-diacritica",
+  "pathSegment": "ES-PATH-011",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "ES-EXT-011-SCRIPT",
+      "order": 1
+    }
+  ]
+}

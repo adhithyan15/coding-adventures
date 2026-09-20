@@ -1,0 +1,11 @@
+{
+  "id": "RU-C06-kofe",
+  "pathSegment": "RU-PATH-010",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-010-FOOD-DRINK",
+      "order": 1
+    }
+  ]
+}

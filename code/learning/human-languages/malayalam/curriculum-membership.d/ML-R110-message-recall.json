@@ -1,0 +1,11 @@
+{
+  "id": "ML-R110-message-recall",
+  "pathSegment": "ML-PATH-110-MESSAGE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ML-EXT-110-MESSAGE",
+      "order": 5
+    }
+  ]
+}

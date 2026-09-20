@@ -1,0 +1,11 @@
+{
+  "id": "UR-C24-vahan",
+  "pathSegment": "UR-PATH-025",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-035-OBLIQUE-DEIXIS",
+      "order": 3
+    }
+  ]
+}

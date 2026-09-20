@@ -1,0 +1,11 @@
+{
+  "id": "TE-S08-vowel-sign-i",
+  "pathSegment": "TE-PATH-100",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "TE-EXT-100-SCRIPT-RECOGNITION",
+      "order": 8
+    }
+  ]
+}

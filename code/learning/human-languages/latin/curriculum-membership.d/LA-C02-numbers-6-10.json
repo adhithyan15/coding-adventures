@@ -1,0 +1,11 @@
+{
+  "id": "LA-C02-numbers-6-10",
+  "pathSegment": "LA-PATH-006",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-006-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

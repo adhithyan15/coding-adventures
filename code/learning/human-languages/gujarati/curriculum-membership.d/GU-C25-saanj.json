@@ -1,0 +1,11 @@
+{
+  "id": "GU-C25-saanj",
+  "pathSegment": "GU-PATH-024",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-036-TIME-WORDS-WRITTEN",
+      "order": 2
+    }
+  ]
+}

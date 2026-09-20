@@ -1,0 +1,11 @@
+{
+  "id": "FA-C21-adad",
+  "pathSegment": "FA-PATH-022",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-029-READING",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C39-evvalavu",
+  "pathSegment": "TA-PATH-036",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-036-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

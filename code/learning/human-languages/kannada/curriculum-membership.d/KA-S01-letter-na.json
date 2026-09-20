@@ -1,0 +1,11 @@
+{
+  "id": "KA-S01-letter-na",
+  "pathSegment": "KA-PATH-100",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-100-SCRIPT-RECOGNITION",
+      "order": 0
+    }
+  ]
+}

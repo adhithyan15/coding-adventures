@@ -1,0 +1,11 @@
+{
+  "id": "KA-C64-in-that-case",
+  "pathSegment": "KA-PATH-64-JOIN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-64-JOIN",
+      "order": 4
+    }
+  ]
+}

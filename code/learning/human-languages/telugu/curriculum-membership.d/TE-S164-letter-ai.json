@@ -1,0 +1,11 @@
+{
+  "id": "TE-S164-letter-ai",
+  "pathSegment": "TE-PATH-100",
+  "pathOrder": 66,
+  "extensions": [
+    {
+      "id": "TE-EXT-100-SCRIPT-RECOGNITION",
+      "order": 66
+    }
+  ]
+}

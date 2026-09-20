@@ -1,0 +1,11 @@
+{
+  "id": "LA-C55-secundus",
+  "pathSegment": "LA-PATH-039",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-055-ORDINAL",
+      "order": 1
+    }
+  ]
+}

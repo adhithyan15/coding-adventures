@@ -1,0 +1,11 @@
+{
+  "id": "ES-C373-falda",
+  "pathSegment": "ES-PATH-373-01",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-373-REF",
+      "order": 3
+    }
+  ]
+}

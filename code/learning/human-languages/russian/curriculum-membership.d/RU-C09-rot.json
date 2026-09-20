@@ -1,0 +1,11 @@
+{
+  "id": "RU-C09-rot",
+  "pathSegment": "RU-PATH-012",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-012-BODY-PARTS",
+      "order": 2
+    }
+  ]
+}

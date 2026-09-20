@@ -1,0 +1,11 @@
+{
+  "id": "GE-R33-frag-mich",
+  "pathSegment": "GE-PATH-A1-FRAGE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-A1-FRAGE",
+      "order": 5
+    }
+  ]
+}

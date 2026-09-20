@@ -1,0 +1,11 @@
+{
+  "id": "KA-C63-pain",
+  "pathSegment": "KA-PATH-63-HEALTH",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-63-HEALTH",
+      "order": 3
+    }
+  ]
+}

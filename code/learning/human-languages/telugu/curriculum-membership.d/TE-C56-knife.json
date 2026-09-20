@@ -1,0 +1,11 @@
+{
+  "id": "TE-C56-knife",
+  "pathSegment": "TE-PATH-56-HOUSE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-56-HOUSE",
+      "order": 2
+    }
+  ]
+}

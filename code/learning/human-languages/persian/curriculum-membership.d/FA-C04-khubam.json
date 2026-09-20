@@ -1,0 +1,11 @@
+{
+  "id": "FA-C04-khubam",
+  "pathSegment": "FA-PATH-005",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-011-PERSONAL-COPULA",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C289-cielo",
+  "pathSegment": "ES-PATH-289-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-289-CIELO",
+      "order": 1
+    }
+  ]
+}

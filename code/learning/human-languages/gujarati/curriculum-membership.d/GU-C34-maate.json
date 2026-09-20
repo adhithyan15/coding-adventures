@@ -1,0 +1,11 @@
+{
+  "id": "GU-C34-maate",
+  "pathSegment": "GU-PATH-033",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-045-REASONS",
+      "order": 3
+    }
+  ]
+}

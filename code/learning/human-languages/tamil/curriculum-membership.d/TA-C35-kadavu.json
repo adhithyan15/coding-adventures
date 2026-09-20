@@ -1,0 +1,11 @@
+{
+  "id": "TA-C35-kadavu",
+  "pathSegment": "TA-PATH-031",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-031-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

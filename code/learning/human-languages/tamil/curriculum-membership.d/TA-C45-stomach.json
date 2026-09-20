@@ -1,0 +1,11 @@
+{
+  "id": "TA-C45-stomach",
+  "pathSegment": "TA-PATH-45-BODY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-45-BODY",
+      "order": 4
+    }
+  ]
+}

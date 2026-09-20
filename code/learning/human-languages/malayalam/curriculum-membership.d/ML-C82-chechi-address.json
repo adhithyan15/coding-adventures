@@ -1,0 +1,11 @@
+{
+  "id": "ML-C82-chechi-address",
+  "pathSegment": "ML-PATH-82-ADDRESS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-82-ADDRESS",
+      "order": 1
+    }
+  ]
+}

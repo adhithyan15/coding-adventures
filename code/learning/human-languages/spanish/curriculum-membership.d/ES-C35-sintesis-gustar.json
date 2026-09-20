@@ -1,0 +1,11 @@
+{
+  "id": "ES-C35-sintesis-gustar",
+  "pathSegment": "ES-PATH-031-E-C",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-031-CONSOLIDATION-GUSTAR-B",
+      "order": 0
+    }
+  ]
+}

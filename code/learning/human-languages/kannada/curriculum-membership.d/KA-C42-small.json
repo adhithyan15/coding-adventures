@@ -1,0 +1,11 @@
+{
+  "id": "KA-C42-small",
+  "pathSegment": "KA-PATH-201",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-201-ADJ",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C41-adjective-system",
+  "pathSegment": "TA-PATH-201",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "TA-EXT-201-ADJ",
+      "order": 5
+    }
+  ]
+}

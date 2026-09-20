@@ -6,10 +6,5 @@
   "canDo": "I can identify an adult swimming course.",
   "prerequisites": [
     "ES-EXT-416-REVIEWS"
-  ],
-  "lessons": [
-    "ES-C417-curso",
-    "ES-C417-nadar",
-    "ES-C417-adulto"
   ]
 }

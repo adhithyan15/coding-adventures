@@ -1,0 +1,11 @@
+{
+  "id": "TE-C70-mosquito",
+  "pathSegment": "TE-PATH-70-CREATURE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-70-CREATURE",
+      "order": 2
+    }
+  ]
+}

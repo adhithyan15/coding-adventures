@@ -1,15 +1,6 @@
 {
   "id": "JA-PATH-005",
   "spine_node": "SPINE-MEET-GREET",
-  "lessons": [
-    "JA-W05-nichi-kanji",
-    "JA-W05-hon-kanji",
-    "JA-W05-gen-component",
-    "JA-W05-five-component",
-    "JA-W05-mouth-component",
-    "JA-W05-go-kanji",
-    "JA-C01-nihongo"
-  ],
   "before": [],
   "inline": [
     "JA-EXT-013-NIHONGO-KANJI",

@@ -1,0 +1,11 @@
+{
+  "id": "PA-W08-phone-label",
+  "pathSegment": "PA-PATH-032",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-037-A1-PHONE-FIELD",
+      "order": 3
+    }
+  ]
+}

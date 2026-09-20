@@ -1,0 +1,11 @@
+{
+  "id": "FR-C15-areal",
+  "pathSegment": "FR-PATH-017",
+  "pathOrder": 10,
+  "extensions": [
+    {
+      "id": "FR-EXT-017-LANGUAGE-SPECIFIC",
+      "order": 10
+    }
+  ]
+}

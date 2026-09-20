@@ -1,0 +1,11 @@
+{
+  "id": "MR-A1M14-skills-block-one",
+  "pathSegment": "MR-PATH-022",
+  "pathOrder": 13,
+  "extensions": [
+    {
+      "id": "MR-EXT-025-A1-NAMED-READER-MESSAGE",
+      "order": 13
+    }
+  ]
+}

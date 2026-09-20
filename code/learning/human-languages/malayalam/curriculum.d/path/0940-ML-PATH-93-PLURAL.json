@@ -1,12 +1,6 @@
 {
   "id": "ML-PATH-93-PLURAL",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
-  "lessons": [
-    "ML-C93-kal",
-    "ML-C93-angal",
-    "ML-C93-counted",
-    "ML-R93-plural-recall"
-  ],
   "before": [],
   "inline": [
     "ML-EXT-93-PLURAL"

@@ -1,0 +1,11 @@
+{
+  "id": "MW-W09-ta",
+  "pathSegment": "MW-PATH-009",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "MW-EXT-023-FAMILY-TWELVE",
+      "order": 5
+    }
+  ]
+}

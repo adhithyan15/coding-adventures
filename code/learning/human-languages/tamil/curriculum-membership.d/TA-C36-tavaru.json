@@ -1,0 +1,11 @@
+{
+  "id": "TA-C36-tavaru",
+  "pathSegment": "TA-PATH-032",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-032-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

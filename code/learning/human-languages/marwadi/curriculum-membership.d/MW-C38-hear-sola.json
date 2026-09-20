@@ -1,0 +1,11 @@
+{
+  "id": "MW-C38-hear-sola",
+  "pathSegment": "MW-PATH-031",
+  "pathOrder": 13,
+  "extensions": [
+    {
+      "id": "MW-EXT-045-TEENS",
+      "order": 13
+    }
+  ]
+}

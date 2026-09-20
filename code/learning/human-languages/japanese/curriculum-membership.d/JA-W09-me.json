@@ -1,0 +1,11 @@
+{
+  "id": "JA-W09-me",
+  "pathSegment": "JA-PATH-009",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-016-REPAIR-REPEAT",
+      "order": 1
+    }
+  ]
+}

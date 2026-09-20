@@ -1,0 +1,11 @@
+{
+  "id": "MW-C35-read-eight-ticket",
+  "pathSegment": "MW-PATH-029",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "MW-EXT-043-DIGITS",
+      "order": 5
+    }
+  ]
+}

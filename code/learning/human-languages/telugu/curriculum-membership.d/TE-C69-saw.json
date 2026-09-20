@@ -1,0 +1,11 @@
+{
+  "id": "TE-C69-saw",
+  "pathSegment": "TE-PATH-69-TOOL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-69-TOOL",
+      "order": 1
+    }
+  ]
+}

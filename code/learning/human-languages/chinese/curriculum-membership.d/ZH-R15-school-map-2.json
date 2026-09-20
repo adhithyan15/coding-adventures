@@ -1,0 +1,11 @@
+{
+  "id": "ZH-R15-school-map-2",
+  "pathSegment": "ZH-PATH-014",
+  "pathOrder": 11,
+  "extensions": [
+    {
+      "id": "ZH-EXT-041-SCHOOL-COMPOUNDS-FOUR-SKILL",
+      "order": 1
+    }
+  ]
+}

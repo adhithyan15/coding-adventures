@@ -1,0 +1,11 @@
+{
+  "id": "FR-C39-moi-toi",
+  "pathSegment": "FR-PATH-A1-PRONOUNS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-A1-PRONOUNS",
+      "order": 3
+    }
+  ]
+}

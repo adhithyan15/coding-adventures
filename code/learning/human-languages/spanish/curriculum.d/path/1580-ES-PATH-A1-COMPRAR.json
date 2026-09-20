@@ -1,9 +1,6 @@
 {
   "id": "ES-PATH-A1-COMPRAR",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
-  "lessons": [
-    "ES-C40-comprar"
-  ],
   "before": [],
   "inline": [],
   "after": []

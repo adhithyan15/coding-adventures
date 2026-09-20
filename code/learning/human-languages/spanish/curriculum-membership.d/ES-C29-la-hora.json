@@ -1,0 +1,11 @@
+{
+  "id": "ES-C29-la-hora",
+  "pathSegment": "ES-PATH-025",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-025-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

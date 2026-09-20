@@ -1,0 +1,11 @@
+{
+  "id": "ML-C80-keralam",
+  "pathSegment": "ML-PATH-80-ORIGIN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-80-ORIGIN",
+      "order": 1
+    }
+  ]
+}

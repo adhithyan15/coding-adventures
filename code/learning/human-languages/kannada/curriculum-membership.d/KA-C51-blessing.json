@@ -1,0 +1,11 @@
+{
+  "id": "KA-C51-blessing",
+  "pathSegment": "KA-PATH-51-COURTESY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-51-COURTESY",
+      "order": 3
+    }
+  ]
+}

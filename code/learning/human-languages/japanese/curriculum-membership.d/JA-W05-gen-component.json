@@ -1,0 +1,11 @@
+{
+  "id": "JA-W05-gen-component",
+  "pathSegment": "JA-PATH-005",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-013-NIHONGO-KANJI",
+      "order": 2
+    }
+  ]
+}

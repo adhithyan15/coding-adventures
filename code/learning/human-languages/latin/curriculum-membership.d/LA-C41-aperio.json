@@ -1,0 +1,11 @@
+{
+  "id": "LA-C41-aperio",
+  "pathSegment": "LA-PATH-029-B",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-029-LANGUAGE-SPECIFIC-B",
+      "order": 1
+    }
+  ]
+}

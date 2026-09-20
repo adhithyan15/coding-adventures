@@ -1,0 +1,11 @@
+{
+  "id": "LA-C59-place",
+  "pathSegment": "LA-PATH-043",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-059-READING",
+      "order": 2
+    }
+  ]
+}

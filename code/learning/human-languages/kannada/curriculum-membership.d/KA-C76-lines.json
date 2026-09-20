@@ -1,0 +1,11 @@
+{
+  "id": "KA-C76-lines",
+  "pathSegment": "KA-PATH-76-READING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-76-READING",
+      "order": 1
+    }
+  ]
+}

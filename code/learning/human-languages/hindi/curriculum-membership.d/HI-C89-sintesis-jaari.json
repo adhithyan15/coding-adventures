@@ -1,0 +1,11 @@
+{
+  "id": "HI-C89-sintesis-jaari",
+  "pathSegment": "HI-PATH-97-CONTINUOUS",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "HI-EXT-97-CONTINUOUS",
+      "order": 6
+    }
+  ]
+}

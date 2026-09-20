@@ -1,0 +1,11 @@
+{
+  "id": "HI-C94-tak",
+  "pathSegment": "HI-PATH-102-SPAN",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-102-SPAN",
+      "order": 0
+    }
+  ]
+}

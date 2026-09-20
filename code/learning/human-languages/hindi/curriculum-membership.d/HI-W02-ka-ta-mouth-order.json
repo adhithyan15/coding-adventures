@@ -1,0 +1,11 @@
+{
+  "id": "HI-W02-ka-ta-mouth-order",
+  "pathSegment": "HI-PATH-001",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-001-SCRIPT",
+      "order": 3
+    }
+  ]
+}

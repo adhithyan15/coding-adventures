@@ -1,0 +1,11 @@
+{
+  "id": "ML-C91-ethra-rupa",
+  "pathSegment": "ML-PATH-91-SHOPPING",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-91-SHOPPING",
+      "order": 2
+    }
+  ]
+}

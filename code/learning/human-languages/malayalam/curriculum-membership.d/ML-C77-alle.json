@@ -1,0 +1,11 @@
+{
+  "id": "ML-C77-alle",
+  "pathSegment": "ML-PATH-77-NOT-SO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-77-NOT-SO",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C42-read",
+  "pathSegment": "TA-PATH-42-VERBS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-42-VERBS",
+      "order": 2
+    }
+  ]
+}

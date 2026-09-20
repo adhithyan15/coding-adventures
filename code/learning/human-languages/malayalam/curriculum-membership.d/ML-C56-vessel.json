@@ -1,0 +1,11 @@
+{
+  "id": "ML-C56-vessel",
+  "pathSegment": "ML-PATH-56-HOUSE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-56-HOUSE",
+      "order": 3
+    }
+  ]
+}

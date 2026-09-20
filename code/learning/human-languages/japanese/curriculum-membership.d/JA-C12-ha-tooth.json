@@ -1,0 +1,11 @@
+{
+  "id": "JA-C12-ha-tooth",
+  "pathSegment": "JA-PATH-012",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-019-BODY-SEVEN-MORE",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C44-daava",
+  "pathSegment": "MR-PATH-047",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-060-RIGHT-AND-LEFT",
+      "order": 1
+    }
+  ]
+}

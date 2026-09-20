@@ -1,0 +1,11 @@
+{
+  "id": "TA-C67-shirt",
+  "pathSegment": "TA-PATH-67-WEAR",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-67-WEAR",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C21-medlenno",
+  "pathSegment": "RU-PATH-023",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-028-REPAIR",
+      "order": 3
+    }
+  ]
+}

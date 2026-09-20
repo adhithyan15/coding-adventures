@@ -1,0 +1,11 @@
+{
+  "id": "AR-W12-maa-salama",
+  "pathSegment": "AR-PATH-009",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-009-SCRIPT",
+      "order": 2
+    }
+  ]
+}

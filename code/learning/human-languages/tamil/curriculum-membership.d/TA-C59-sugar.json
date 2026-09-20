@@ -1,0 +1,11 @@
+{
+  "id": "TA-C59-sugar",
+  "pathSegment": "TA-PATH-59-KITCHEN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-59-KITCHEN",
+      "order": 4
+    }
+  ]
+}

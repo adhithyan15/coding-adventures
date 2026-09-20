@@ -1,0 +1,11 @@
+{
+  "id": "RU-C03-zhit",
+  "pathSegment": "RU-PATH-007",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-007-CORE-VERBS",
+      "order": 1
+    }
+  ]
+}

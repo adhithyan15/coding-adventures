@@ -1,0 +1,11 @@
+{
+  "id": "ES-C304-contento",
+  "pathSegment": "ES-PATH-304-01",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-304-ESTADO",
+      "order": 2
+    }
+  ]
+}

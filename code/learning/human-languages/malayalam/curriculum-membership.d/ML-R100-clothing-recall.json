@@ -1,0 +1,11 @@
+{
+  "id": "ML-R100-clothing-recall",
+  "pathSegment": "ML-PATH-100-CLOTHING",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-100-CLOTHING",
+      "order": 4
+    }
+  ]
+}

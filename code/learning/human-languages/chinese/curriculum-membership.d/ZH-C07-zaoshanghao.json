@@ -1,0 +1,15 @@
+{
+  "id": "ZH-C07-zaoshanghao",
+  "pathSegment": "ZH-PATH-006",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-018-NEUTRAL-TONE",
+      "order": 1
+    },
+    {
+      "id": "ZH-EXT-019-GREETING-FRAME",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-W03-ghadi-saathe",
+  "pathSegment": "MW-PATH-041-WRITING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-041-WRITING",
+      "order": 1
+    }
+  ]
+}

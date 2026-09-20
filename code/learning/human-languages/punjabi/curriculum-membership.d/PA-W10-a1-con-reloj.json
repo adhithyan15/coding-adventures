@@ -1,0 +1,11 @@
+{
+  "id": "PA-W10-a1-con-reloj",
+  "pathSegment": "PA-PATH-046-TIMED",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PA-EXT-046-TIMED",
+      "order": 0
+    }
+  ]
+}

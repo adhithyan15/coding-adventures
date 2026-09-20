@@ -1,0 +1,11 @@
+{
+  "id": "ES-C334-calor",
+  "pathSegment": "ES-PATH-334-01",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-334-BODY",
+      "order": 3
+    }
+  ]
+}

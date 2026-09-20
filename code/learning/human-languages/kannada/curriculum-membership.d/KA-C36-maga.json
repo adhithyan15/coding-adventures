@@ -1,0 +1,11 @@
+{
+  "id": "KA-C36-maga",
+  "pathSegment": "KA-PATH-028",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-029-CHILD-SON-DAUGHTER",
+      "order": 1
+    }
+  ]
+}

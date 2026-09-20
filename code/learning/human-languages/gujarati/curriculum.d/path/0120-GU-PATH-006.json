@@ -1,11 +1,6 @@
 {
   "id": "GU-PATH-006",
   "spine_node": "SPINE-CHECK-WELLBEING",
-  "lessons": [
-    "GU-C03-kem",
-    "GU-C03-tame-kem-chho",
-    "GU-C03-majaa"
-  ],
   "before": [],
   "inline": [],
   "after": []

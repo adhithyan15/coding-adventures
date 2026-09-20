@@ -4,12 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can thank and salute in the formal Malayalam register.",
-  "prerequisites": [],
-  "lessons": [
-    "ML-C51-gratitude",
-    "ML-C51-favour",
-    "ML-C51-respect",
-    "ML-C51-blessing",
-    "ML-C51-salutation"
-  ]
+  "prerequisites": []
 }

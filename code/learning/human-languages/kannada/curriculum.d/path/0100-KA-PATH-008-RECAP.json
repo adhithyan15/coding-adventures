@@ -1,9 +1,6 @@
 {
   "id": "KA-PATH-008-RECAP",
   "spine_node": "SPINE-CHECK-WELLBEING",
-  "lessons": [
-    "KA-C03-practice"
-  ],
   "before": [],
   "inline": [],
   "after": [

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C02-tudo",
+  "pathSegment": "PT-PATH-009",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-009-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

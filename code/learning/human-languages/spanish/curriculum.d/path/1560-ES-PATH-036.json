@@ -1,9 +1,6 @@
 {
   "id": "ES-PATH-036",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
-  "lessons": [
-    "ES-C40-esperar"
-  ],
   "before": [],
   "inline": [],
   "after": []

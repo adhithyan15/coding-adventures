@@ -1,0 +1,11 @@
+{
+  "id": "TE-C80-may",
+  "pathSegment": "TE-PATH-80-WISH",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-80-WISH",
+      "order": 2
+    }
+  ]
+}

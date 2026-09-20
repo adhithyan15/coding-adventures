@@ -1,10 +1,6 @@
 {
   "id": "PA-PATH-012-B",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
-  "lessons": [
-    "PA-C08-parhna",
-    "PA-C08-likhna"
-  ],
   "before": [],
   "inline": [
     "PA-EXT-012-MIND-VERBS-B"

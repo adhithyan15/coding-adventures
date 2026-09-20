@@ -1,0 +1,11 @@
+{
+  "id": "FR-C30-oeuf",
+  "pathSegment": "FR-PATH-027",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-027-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

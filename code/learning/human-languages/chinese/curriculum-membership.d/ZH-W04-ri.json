@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W04-ri",
+  "pathSegment": "ZH-PATH-003",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-010-BOX-REUSE",
+      "order": 2
+    }
+  ]
+}

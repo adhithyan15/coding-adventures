@@ -1,0 +1,11 @@
+{
+  "id": "GU-C11-bahen",
+  "pathSegment": "GU-PATH-014",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-014-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

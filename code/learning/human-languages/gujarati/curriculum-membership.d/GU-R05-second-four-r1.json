@@ -1,0 +1,11 @@
+{
+  "id": "GU-R05-second-four-r1",
+  "pathSegment": "GU-PATH-FIRST-USE-SCRIPT-B",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-032-FIRST-USE-SCRIPT-B",
+      "order": 4
+    }
+  ]
+}

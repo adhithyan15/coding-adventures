@@ -1,0 +1,11 @@
+{
+  "id": "HI-R68-three-joins",
+  "pathSegment": "HI-PATH-68-JOINERS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-068-FLAT-JOINS",
+      "order": 3
+    }
+  ]
+}

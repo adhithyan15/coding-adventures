@@ -1,0 +1,11 @@
+{
+  "id": "SA-C45-month",
+  "pathSegment": "SA-PATH-45-DAYTIME",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-45-DAYTIME",
+      "order": 3
+    }
+  ]
+}

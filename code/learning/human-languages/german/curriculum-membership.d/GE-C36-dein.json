@@ -1,0 +1,11 @@
+{
+  "id": "GE-C36-dein",
+  "pathSegment": "GE-PATH-A1-POSSESSIV",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-A1-POSSESSIV",
+      "order": 1
+    }
+  ]
+}

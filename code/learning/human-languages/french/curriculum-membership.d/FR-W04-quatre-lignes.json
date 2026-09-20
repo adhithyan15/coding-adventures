@@ -1,0 +1,11 @@
+{
+  "id": "FR-W04-quatre-lignes",
+  "pathSegment": "FR-PATH-046-WRITING",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-046-WRITING",
+      "order": 2
+    }
+  ]
+}

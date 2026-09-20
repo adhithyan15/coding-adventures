@@ -1,9 +1,6 @@
 {
   "id": "ES-PATH-037-COMO-SE-DICE",
   "spine_node": "SPINE-GIVE-REASONS",
-  "lessons": [
-    "ES-C52-como-se-dice"
-  ],
   "before": [],
   "inline": [
     "ES-EXT-037-COMO-SE-DICE"

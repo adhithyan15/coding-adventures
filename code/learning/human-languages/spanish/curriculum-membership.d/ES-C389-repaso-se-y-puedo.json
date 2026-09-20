@@ -1,0 +1,11 @@
+{
+  "id": "ES-C389-repaso-se-y-puedo",
+  "pathSegment": "ES-PATH-389-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-389-ABILITY",
+      "order": 1
+    }
+  ]
+}

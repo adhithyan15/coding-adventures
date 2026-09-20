@@ -1,0 +1,11 @@
+{
+  "id": "KA-C56-vessel",
+  "pathSegment": "KA-PATH-56-HOUSE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-56-HOUSE",
+      "order": 3
+    }
+  ]
+}

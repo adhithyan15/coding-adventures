@@ -1,0 +1,11 @@
+{
+  "id": "GE-C16-du-bist",
+  "pathSegment": "GE-PATH-021",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-021-SEIN-PRAESENS",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-W01-haan-assemble",
+  "pathSegment": "PA-PATH-003",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-003-HAAN-WRITING",
+      "order": 3
+    }
+  ]
+}

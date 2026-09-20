@@ -1,0 +1,11 @@
+{
+  "id": "LA-C45-ignis",
+  "pathSegment": "LA-PATH-023",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-045-WORLD",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C04-estar-estado",
+  "pathSegment": "ES-PATH-011",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-011-GRAMMAR",
+      "order": 0
+    }
+  ]
+}

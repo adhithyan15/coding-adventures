@@ -1,11 +1,6 @@
 {
   "id": "UR-PATH-007",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
-  "lessons": [
-    "UR-C06-hona",
-    "UR-W06-nun-ghunna",
-    "UR-C06-jana"
-  ],
   "before": [],
   "inline": [
     "UR-EXT-017-CORE-VERBS"

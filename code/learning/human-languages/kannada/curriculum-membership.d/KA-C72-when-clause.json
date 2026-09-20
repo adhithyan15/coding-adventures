@@ -1,0 +1,11 @@
+{
+  "id": "KA-C72-when-clause",
+  "pathSegment": "KA-PATH-72-WANT",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-72-WANT",
+      "order": 0
+    }
+  ]
+}

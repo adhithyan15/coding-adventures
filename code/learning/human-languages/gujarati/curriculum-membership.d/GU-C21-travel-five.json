@@ -1,0 +1,11 @@
+{
+  "id": "GU-C21-travel-five",
+  "pathSegment": "GU-PATH-022",
+  "pathOrder": 14,
+  "extensions": [
+    {
+      "id": "GU-EXT-032-TRAVEL-FIVE",
+      "order": 6
+    }
+  ]
+}

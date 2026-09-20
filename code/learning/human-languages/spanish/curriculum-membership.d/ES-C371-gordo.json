@@ -1,0 +1,11 @@
+{
+  "id": "ES-C371-gordo",
+  "pathSegment": "ES-PATH-371-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-371-COUNT",
+      "order": 1
+    }
+  ]
+}

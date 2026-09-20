@@ -1,0 +1,11 @@
+{
+  "id": "TA-C66-outside",
+  "pathSegment": "TA-PATH-66-WHICHWAY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-66-WHICHWAY",
+      "order": 4
+    }
+  ]
+}

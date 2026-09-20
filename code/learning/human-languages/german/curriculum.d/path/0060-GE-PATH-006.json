@@ -1,10 +1,6 @@
 {
   "id": "GE-PATH-006",
   "spine_node": "SPINE-TIME-OF-DAY",
-  "lessons": [
-    "GE-C01-die-plural",
-    "GE-C01-practice"
-  ],
   "before": [
     "GE-EXT-006-LANGUAGE-SPECIFIC"
   ],

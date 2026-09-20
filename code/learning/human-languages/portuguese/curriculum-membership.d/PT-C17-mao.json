@@ -1,0 +1,11 @@
+{
+  "id": "PT-C17-mao",
+  "pathSegment": "PT-PATH-021",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-021-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

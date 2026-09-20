@@ -1,0 +1,11 @@
+{
+  "id": "HI-W05-namaste-dictation",
+  "pathSegment": "HI-PATH-004",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "HI-EXT-004-SCRIPT",
+      "order": 8
+    }
+  ]
+}

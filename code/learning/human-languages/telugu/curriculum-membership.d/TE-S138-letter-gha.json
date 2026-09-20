@@ -1,0 +1,11 @@
+{
+  "id": "TE-S138-letter-gha",
+  "pathSegment": "TE-PATH-100",
+  "pathOrder": 40,
+  "extensions": [
+    {
+      "id": "TE-EXT-100-SCRIPT-RECOGNITION",
+      "order": 40
+    }
+  ]
+}

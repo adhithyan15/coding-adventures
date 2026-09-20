@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C08-mingzi",
+  "pathSegment": "ZH-PATH-007",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-022-MINGZI",
+      "order": 2
+    }
+  ]
+}

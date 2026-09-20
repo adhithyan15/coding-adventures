@@ -1,0 +1,11 @@
+{
+  "id": "KA-C46-cloth",
+  "pathSegment": "KA-PATH-46-ASK",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-46-ASK",
+      "order": 1
+    }
+  ]
+}

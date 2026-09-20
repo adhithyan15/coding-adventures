@@ -1,0 +1,11 @@
+{
+  "id": "HI-C53-lip",
+  "pathSegment": "HI-PATH-53-BODY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-53-BODY",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C04-practice",
+  "pathSegment": "GE-PATH-013",
+  "pathOrder": 15,
+  "extensions": [
+    {
+      "id": "GE-EXT-013-CONSOLIDATION",
+      "order": 0
+    }
+  ]
+}

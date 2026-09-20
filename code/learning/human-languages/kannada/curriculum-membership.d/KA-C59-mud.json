@@ -1,0 +1,11 @@
+{
+  "id": "KA-C59-mud",
+  "pathSegment": "KA-PATH-59-GROUND",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-59-GROUND",
+      "order": 3
+    }
+  ]
+}

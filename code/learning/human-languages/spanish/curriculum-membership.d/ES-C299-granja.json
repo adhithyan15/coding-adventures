@@ -1,0 +1,11 @@
+{
+  "id": "ES-C299-granja",
+  "pathSegment": "ES-PATH-299-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-299-GRANJA",
+      "order": 1
+    }
+  ]
+}

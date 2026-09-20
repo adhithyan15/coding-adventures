@@ -4,8 +4,5 @@
   "kind": "required",
   "category": "script",
   "canDo": "I can write vao, name the second non-joining letter on sight, and give the sounds vao can carry.",
-  "prerequisites": [],
-  "lessons": [
-    "UR-W08-vao"
-  ]
+  "prerequisites": []
 }

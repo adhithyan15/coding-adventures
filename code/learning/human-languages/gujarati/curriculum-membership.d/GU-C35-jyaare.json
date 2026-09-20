@@ -1,0 +1,11 @@
+{
+  "id": "GU-C35-jyaare",
+  "pathSegment": "GU-PATH-034",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-046-CONDITION",
+      "order": 3
+    }
+  ]
+}

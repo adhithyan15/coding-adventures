@@ -1,0 +1,11 @@
+{
+  "id": "ML-R107-medicine-recall",
+  "pathSegment": "ML-PATH-107-MEDICINE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-107-MEDICINE",
+      "order": 4
+    }
+  ]
+}

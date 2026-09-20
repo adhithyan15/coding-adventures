@@ -1,0 +1,11 @@
+{
+  "id": "ES-C34-sintesis-mente",
+  "pathSegment": "ES-PATH-031-C",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-031-CONSOLIDATION",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C23-hermano-hermana",
+  "pathSegment": "ES-PATH-021",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-021-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

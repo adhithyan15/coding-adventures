@@ -4,11 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can name four family and people words.",
-  "prerequisites": [],
-  "lessons": [
-    "KA-C45-grandfather",
-    "KA-C45-grandmother",
-    "KA-C45-husband",
-    "KA-C45-wife"
-  ]
+  "prerequisites": []
 }

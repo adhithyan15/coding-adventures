@@ -1,0 +1,11 @@
+{
+  "id": "PT-C27-terceiro",
+  "pathSegment": "PT-PATH-031",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-031-ORDINAIS",
+      "order": 2
+    }
+  ]
+}

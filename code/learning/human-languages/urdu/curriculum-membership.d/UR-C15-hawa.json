@@ -1,0 +1,11 @@
+{
+  "id": "UR-C15-hawa",
+  "pathSegment": "UR-PATH-016",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-026-WEATHER",
+      "order": 2
+    }
+  ]
+}

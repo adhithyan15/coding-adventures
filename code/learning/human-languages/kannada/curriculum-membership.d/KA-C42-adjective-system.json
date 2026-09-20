@@ -1,0 +1,11 @@
+{
+  "id": "KA-C42-adjective-system",
+  "pathSegment": "KA-PATH-201",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "KA-EXT-201-ADJ",
+      "order": 5
+    }
+  ]
+}

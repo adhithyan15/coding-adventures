@@ -1,0 +1,11 @@
+{
+  "id": "PA-W06-selection-repair",
+  "pathSegment": "PA-PATH-022",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-027-A1-THREE-FIELD-INTEGRATION",
+      "order": 4
+    }
+  ]
+}

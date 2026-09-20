@@ -1,0 +1,11 @@
+{
+  "id": "PA-C04-milaange",
+  "pathSegment": "PA-PATH-009",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-009-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

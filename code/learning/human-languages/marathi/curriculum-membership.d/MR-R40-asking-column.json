@@ -1,0 +1,11 @@
+{
+  "id": "MR-R40-asking-column",
+  "pathSegment": "MR-PATH-042",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-055-HERE",
+      "order": 2
+    }
+  ]
+}

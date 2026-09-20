@@ -4,12 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can name el río, la arena, el polvo, el humo and la ceniza.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-C369-rio",
-    "ES-C369-arena",
-    "ES-C369-polvo",
-    "ES-C369-humo",
-    "ES-C369-ceniza"
-  ]
+  "prerequisites": []
 }

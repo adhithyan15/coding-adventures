@@ -1,0 +1,11 @@
+{
+  "id": "UR-W06-bari-ye",
+  "pathSegment": "UR-PATH-007-B",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-017C-SCRIPT-BARI-YE",
+      "order": 0
+    }
+  ]
+}

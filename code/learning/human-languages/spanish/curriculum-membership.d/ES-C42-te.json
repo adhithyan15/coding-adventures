@@ -1,0 +1,11 @@
+{
+  "id": "ES-C42-te",
+  "pathSegment": "ES-PATH-003-ME-TE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-003-ME-TE",
+      "order": 1
+    }
+  ]
+}

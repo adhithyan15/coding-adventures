@@ -1,0 +1,11 @@
+{
+  "id": "HI-C85-sintesis-suchna",
+  "pathSegment": "HI-PATH-93-IMPERATIVE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "HI-EXT-93-IMPERATIVE",
+      "order": 5
+    }
+  ]
+}

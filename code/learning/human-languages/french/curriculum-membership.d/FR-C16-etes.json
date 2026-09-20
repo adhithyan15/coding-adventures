@@ -1,0 +1,11 @@
+{
+  "id": "FR-C16-etes",
+  "pathSegment": "FR-PATH-017",
+  "pathOrder": 16,
+  "extensions": [
+    {
+      "id": "FR-EXT-017-LANGUAGE-SPECIFIC",
+      "order": 16
+    }
+  ]
+}

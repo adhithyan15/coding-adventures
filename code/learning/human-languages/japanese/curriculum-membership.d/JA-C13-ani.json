@@ -1,0 +1,11 @@
+{
+  "id": "JA-C13-ani",
+  "pathSegment": "JA-PATH-013",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-020-FAMILY-NINE",
+      "order": 4
+    }
+  ]
+}

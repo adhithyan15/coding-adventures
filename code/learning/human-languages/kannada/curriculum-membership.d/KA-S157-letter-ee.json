@@ -1,0 +1,11 @@
+{
+  "id": "KA-S157-letter-ee",
+  "pathSegment": "KA-PATH-78-VOWELS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-78-VOWELS",
+      "order": 2
+    }
+  ]
+}
