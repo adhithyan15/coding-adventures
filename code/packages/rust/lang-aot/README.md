@@ -1,5 +1,11 @@
 # lang-aot
 
+The opt-in CLR integration suite `tests/clr_strict_flow.rs` executes forward-only
+conditional control, nested Bool branches and wide values through joins,
+including promoted long branches. It refuses skipped definitions. This does not
+enable default source input or general loops.
+
+
 Dartmouth BASIC's 18 purely string-valued matrix rows (literals/variables,
 concatenation, comparison, control flow — no numeric `PRINT`/`LET`/`FOR`/
 `INPUT`) now declare real BEAM alongside the seven standard backends (VM-040;
