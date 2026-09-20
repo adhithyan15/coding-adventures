@@ -554,6 +554,11 @@ choice, and keeps constructed choices bounded and opaque for later schema
 packages. It does not validate DNS syntax, establish identity, interpret
 constructed names, parse a certificate, build paths, verify signatures, or
 select trust roots.
+A bounded `x509-serial-number` semantic layer now decodes one canonical RFC
+5280 certificate serial-number INTEGER. It requires a positive nonzero value,
+enforces the 20-content-octet ceiling, and retains only borrowed canonical and
+normalized magnitude views. It does not generate values, prove per-issuer
+uniqueness, parse a complete certificate, validate paths, or verify signatures.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

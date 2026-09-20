@@ -771,6 +771,7 @@ members = [
     "x509-key-usage",
     "x509-extended-key-usage",
     "x509-subject-alt-name",
+    "x509-serial-number",
     "tls-server-identity",
     "tls-platform",
     "dns-message",
