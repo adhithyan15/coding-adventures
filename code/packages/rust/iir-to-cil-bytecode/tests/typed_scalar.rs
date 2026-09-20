@@ -23,6 +23,29 @@ fn refuses(m: IIRModule, diagnostic: &str) {
         .expect("must refuse");
     assert!(format!("{error:?}").contains(diagnostic), "{error:?}");
 }
+
+#[test]
+fn i32_minus_one_uses_the_canonical_compact_encoding() {
+    let mut m = IIRModule::new("strict", "test");
+    m.entry_point = Some("main".into());
+    m.add_or_replace(IIRFunction::new(
+        "main",
+        vec![],
+        "i32",
+        vec![
+            IIRInstr::new(
+                "const",
+                Some("minus_one".into()),
+                vec![Operand::Int(-1)],
+                "i32",
+            ),
+            IIRInstr::new("ret", None, vec![v("minus_one")], "i32"),
+        ],
+    ));
+
+    let artifact = lower_typed_scalars_to_cil(&m, &IIRClrConfig::default()).unwrap();
+    assert_eq!(artifact.methods[0].body, vec![0x15, 0x0a, 0x06, 0x2a]);
+}
 #[test]
 fn excluded_operations_and_types_never_fall_back() {
     for op in [

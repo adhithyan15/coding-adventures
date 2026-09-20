@@ -76,6 +76,34 @@ fn typed_artifacts_preserve_width_and_literal_encoding() {
         assert_eq!(execute(&m), expected);
     }
 }
+
+#[test]
+fn compact_i32_minus_one_executes_without_narrowing_i64() {
+    for (ty, expected, prefix) in [
+        ("i32", Value::Int(-1), vec![0x15]),
+        (
+            "i64",
+            Value::Int64(-1),
+            vec![0x21, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff],
+        ),
+    ] {
+        let mut m = IIRModule::new("typed", "test");
+        m.entry_point = Some("main".into());
+        m.add_or_replace(IIRFunction::new(
+            "main",
+            vec![],
+            ty,
+            vec![
+                instr("const", "minus_one", vec![Operand::Int(-1)], ty),
+                instr("ret", "", vec![var("minus_one")], ty),
+            ],
+        ));
+
+        let artifact = lower_typed_scalars_to_cil(&m, &IIRClrConfig::default()).unwrap();
+        assert!(artifact.methods[0].body.starts_with(&prefix));
+        assert_eq!(execute(&m), expected);
+    }
+}
 #[test]
 fn typed_calls_transport_wide_values_and_entry_label_is_resolved() {
     let mut m = module(
