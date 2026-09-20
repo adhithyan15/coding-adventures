@@ -24,6 +24,7 @@ const MALAYALAM_O = DUCTUS[ductusKey("malayalam", "ഒ")];
 const MALAYALAM_OO = DUCTUS[ductusKey("malayalam", "ഓ")];
 const MALAYALAM_CHILLU_L = DUCTUS[ductusKey("malayalam", "ൽ")];
 const MALAYALAM_CHILLU_N = DUCTUS[ductusKey("malayalam", "ൻ")];
+const MALAYALAM_CHILLU_NN = DUCTUS[ductusKey("malayalam", "ൺ")];
 const MALAYALAM_CHILLU_LL = DUCTUS[ductusKey("malayalam", "ൾ")];
 const MALAYALAM_CHILLU_RR = DUCTUS[ductusKey("malayalam", "ർ")];
 const MALAYALAM_ZHA = DUCTUS[ductusKey("malayalam", "ഴ")];
@@ -62,6 +63,9 @@ describe("handwriting ductus", () => {
       "_fonts/NotoSansMalayalam-Static.ttf",
     );
     expect(verifiedLetterFont("ൻ", MALAYALAM_CHILLU_N.source.url)).toBe(
+      "_fonts/NotoSansMalayalam-Static.ttf",
+    );
+    expect(verifiedLetterFont("ൺ", MALAYALAM_CHILLU_NN.source.url)).toBe(
       "_fonts/NotoSansMalayalam-Static.ttf",
     );
     expect(verifiedLetterFont("ൾ", MALAYALAM_CHILLU_LL.source.url)).toBe(
@@ -238,6 +242,22 @@ describe("handwriting ductus", () => {
         "carry the upper shoulder right, sweep clockwise around the outer loop, and return through its inner curve",
         "rise into the chillu hook and curl left above the line",
       ],
+    ]);
+  });
+
+  it("Malayalam chillu ൺ keeps all five animated movements in one run", () => {
+    expect(penLifts(MALAYALAM_CHILLU_NN)).toBe(0);
+    expect(MALAYALAM_CHILLU_NN.strokes).toHaveLength(1);
+    expect(
+      MALAYALAM_CHILLU_NN.strokes[0].segments.map(
+        (segment) => segment.label,
+      ),
+    ).toEqual([
+      "start at the inner-left tip and sweep clockwise around the compact inner loop",
+      "without lifting, continue clockwise around the broad outer-left bowl and climb to the upper junction",
+      "without lifting, descend the first central stem, retrace upward, carry the middle arch, and descend the second stem",
+      "without lifting, carry the upper shoulder right and sweep clockwise around the right loop",
+      "without lifting, rise into the chillu hook and curl left above the line",
     ]);
   });
 
