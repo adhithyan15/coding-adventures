@@ -1,0 +1,17 @@
+{
+  "id": "ML-A1-S-03",
+  "category": "Vaakyam (the sentence)",
+  "label": "the existential sentence: undu with no subject at all",
+  "probe": [
+    "ML-CONCEPT-C32-UNDU-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-OS-04"
+  ],
+  "malayalamSpecific": false
+}

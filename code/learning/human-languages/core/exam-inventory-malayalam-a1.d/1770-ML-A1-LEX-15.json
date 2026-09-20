@@ -1,0 +1,21 @@
+{
+  "id": "ML-A1-LEX-15",
+  "category": "Padakosham (lexicon by domain)",
+  "label": "the kitchen shelf: coconut, oil, curd, jaggery, chilli",
+  "probe": [
+    "ML-LEX-C61-SHELF-01",
+    "ML-LEX-C61-SHELF-02",
+    "ML-LEX-C61-SHELF-03",
+    "ML-LEX-C61-SHELF-04",
+    "ML-LEX-C61-SHELF-05"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NE05-03"
+  ],
+  "malayalamSpecific": false
+}

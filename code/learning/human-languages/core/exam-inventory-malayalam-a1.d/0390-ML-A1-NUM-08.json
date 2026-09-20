@@ -1,0 +1,16 @@
+{
+  "id": "ML-A1-NUM-08",
+  "category": "Sankhya (numerals and quantity)",
+  "label": "measures: size, distance and weight",
+  "probe": null,
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NG2-04"
+  ],
+  "malayalamSpecific": false,
+  "note": "valiya and cheriya give size as a quality. No unit of measure, no word for distance or weight, is taught. UPDATE, chapter 81: the DISTANCE half is now partly paid -- dooram (distance) and the question ethra dooram? are taught, so distance is nameable and askable. This point stays OPEN because it asks for UNITS: no measure of length, no measure of weight, and no number past twenty to put in front of one (see ML-A1-NUM-04, which blocks this). Closing it needs the numbers first, then a unit lesson; it is not a vocabulary add on its own. UPDATE, chapter 88: ML-A1-NUM-04 is now closed, so the numbers half of this point's blocker is gone -- a learner can count to a hundred and can say any number between twenty and a hundred. What remains is genuinely the UNITS: no measure of length, no measure of weight. That is now a vocabulary chapter on its own rather than something waiting on the numerals."
+}

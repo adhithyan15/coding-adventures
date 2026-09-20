@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-S-02",
+  "category": "Vaakyam (the sentence)",
+  "label": "the copular sentence: X aanu Y",
+  "probe": [
+    "ML-LEX-AANU-01",
+    "ML-PHRASE-C02-MY-NAME-IS-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-OS-05",
+    "A1-SV-02"
+  ],
+  "malayalamSpecific": false
+}

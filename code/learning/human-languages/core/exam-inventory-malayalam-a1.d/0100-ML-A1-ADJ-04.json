@@ -1,0 +1,22 @@
+{
+  "id": "ML-A1-ADJ-04",
+  "category": "Visheshanam (the adjective)",
+  "label": "relational adjectives: naming where a person or thing is from",
+  "probe": [
+    "ML-LEX-C80-ORIGIN-01",
+    "ML-LEX-C80-ORIGIN-02",
+    "ML-LEX-C80-ORIGIN-03",
+    "ML-LEX-C80-ORIGIN-04",
+    "ML-CONCEPT-C80-GENTILIC-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-ADJ-02"
+  ],
+  "malayalamSpecific": false,
+  "note": "Chapter 80, the same tranche as ML-A1-N-02, because the old note was exact that this is the same hole seen from the adjective's side. The gentilic is Malayali, and it needed NO NEW GRAMMAR, which is the chapter's own finding rather than a shortcut: English keeps two shapes for this job (India / Indian, Kerala / Keralite) and Malayalam keeps one, placing somebody by standing the person-word in front of the noun UNCHANGED -- Malayali adhyaapakan. That is the same position the quality word and the degree word already occupy, so the point closes on a rule the learner has held since the adjective chapter. The word is also derivable on sight: Malayalam and Malayali are identical up to the last piece, and the learner has owned the language word since the fifth chapter's sentence."
+}

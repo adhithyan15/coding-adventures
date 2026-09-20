@@ -51,6 +51,7 @@ import {
   type ExamContentDimension,
   type ExamInventory,
 } from "./exam-inventory.js";
+import { readExamInventoryOwnersIfPresent } from "./exam-inventory-shards.js";
 import { parseTaskShapeInventory, type TaskShapeInventory } from "./task-shapes.js";
 import {
   CURRICULUM_SECTIONS,
@@ -1006,7 +1007,13 @@ export function loadExamInventory(
     throw new Error("exam inventory: resolved path escapes the curriculum root");
   }
 
-  const parsed = readLedgerFile<unknown>(file);
+  const expectedLevel = CEFR_LEVELS.find(
+    (candidate) => candidate.toLowerCase() === level.toLowerCase(),
+  ) ?? level;
+  const parsed = readExamInventoryOwnersIfPresent(file, {
+    expectedLanguage: normalized,
+    expectedLevel,
+  }) ?? readLedgerFile<unknown>(file);
   if (
     typeof parsed !== "object" ||
     parsed === null ||
@@ -1080,7 +1087,8 @@ export function loadExamInventory(
  * `spanish` to the code `es`, so the file is `exam-inventory-es-a1.json` while
  * the track is `spanish` — and a queue keyed on the filename would therefore
  * report Spanish's A1 inventory as missing and queue somebody to write it again.
- * The file states `language` and `level` itself; that is the answer.
+ * The file, or a shard-native directory's `_meta.json`, states `language` and
+ * `level` itself; that is the answer.
  *
  * A malformed file is SKIPPED rather than thrown on. This function answers
  * "which targets are written down", and one unparseable file should not stop the
@@ -1093,10 +1101,20 @@ export function listExamInventories(
   const directory = resolve(root, "core");
   if (!existsSync(directory)) return [];
   const found: { language: string; level: string; complete: boolean }[] = [];
-  for (const file of readdirSync(directory).sort()) {
-    if (!file.startsWith("exam-inventory-") || !file.endsWith(".json")) continue;
+  const entries = readdirSync(directory, { withFileTypes: true }).sort((a, b) =>
+    a.name < b.name ? -1 : a.name > b.name ? 1 : 0,
+  );
+  for (const entry of entries) {
+    const file = entry.name;
+    if (!file.startsWith("exam-inventory-")) continue;
+    const source = file.endsWith(".json")
+      ? resolve(directory, file)
+      : file.endsWith(".d")
+        ? resolve(directory, file, "_meta.json")
+        : undefined;
+    if (source === undefined) continue;
     try {
-      const parsed = readLedgerFile<Partial<ExamInventory>>(resolve(directory, file));
+      const parsed = readLedgerFile<Partial<ExamInventory>>(source);
       if (typeof parsed.language === "string" && typeof parsed.level === "string") {
         found.push({
           language: parsed.language,

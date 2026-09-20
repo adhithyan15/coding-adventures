@@ -1,0 +1,26 @@
+{
+  "id": "ML-A1-LEX-38",
+  "category": "Padakosham (lexicon by domain)",
+  "label": "the telephone, the post, the internet, an e-mail address",
+  "probe": [
+    "ML-LEX-C110-PHONE-01",
+    "ML-LEX-C110-LETTER-01",
+    "ML-LEX-C110-POST-01",
+    "ML-LEX-C110-EMAIL-01",
+    "ML-LEX-C110-INTERNET-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NE09-01",
+    "A1-NE09-02",
+    "A1-NE09-03",
+    "A1-NE09-06",
+    "A1-NE11-01"
+  ],
+  "malayalamSpecific": false,
+  "note": "CLOSED BY CHAPTER 110, AND IT CARRIED FIVE SPANISH POINTS -- the largest single payoff in this file. The old note's 'Nothing' held, but confirming it needed a WORD-BOUNDED census: kattu (a letter) appears taught because the string matches inside akattu ('inside', ML-C95), and bounded against the Malayalam block it returns zero. kattu, thapaal, imeyil and inrarneRRu reuse already owned script. HL-C398 supplied source-verified chillu NN evidence, so the telephone now prints as ഫോൺ; ML-S148 teaches the newly opened ഫ immediately before the word."
+}

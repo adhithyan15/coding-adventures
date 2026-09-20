@@ -1,0 +1,20 @@
+{
+  "id": "ML-A1-F-21",
+  "category": "Vyavahaaram (communicative functions)",
+  "label": "welcome a guest",
+  "probe": [
+    "ML-LEX-C52-WELCOME-01",
+    "ML-LEX-C52-WELCOME-02",
+    "ML-LEX-C48-ROLE-05"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F4-07"
+  ],
+  "malayalamSpecific": false,
+  "note": "vaathil, kasera and athithi. The objects and the role are taught; the invitation frame is not."
+}

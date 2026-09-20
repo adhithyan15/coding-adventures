@@ -1,0 +1,20 @@
+{
+  "id": "ML-A1-F-04",
+  "category": "Vyavahaaram (communicative functions)",
+  "label": "introduce oneself by name",
+  "probe": [
+    "ML-PHRASE-C02-MY-NAME-IS-01",
+    "ML-LEX-PERU-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F5-04",
+    "A1-F1-01",
+    "A1-F1-03"
+  ],
+  "malayalamSpecific": false
+}

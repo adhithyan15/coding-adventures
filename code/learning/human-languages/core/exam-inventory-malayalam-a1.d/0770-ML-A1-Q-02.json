@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-Q-02",
+  "category": "Chodyam (asking questions)",
+  "label": "entu: what",
+  "probe": [
+    "ML-LEX-ENTU-01",
+    "ML-PHRASE-C02-WHATS-YOUR-NAME-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-OS-03",
+    "A1-F1-02"
+  ],
+  "malayalamSpecific": false
+}

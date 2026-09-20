@@ -1,0 +1,18 @@
+{
+  "id": "ML-A1-PRON-04",
+  "category": "Sarvanaamam (pronouns)",
+  "label": "first and second person plural: njangal, naam, ningal",
+  "probe": [
+    "ML-LEX-C71-NJANGAL-NAAM-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-PRON-01"
+  ],
+  "malayalamSpecific": false,
+  "note": "Only ningal was taught, as a respectful singular, and NO WORD FOR 'WE' EXISTED. The check that proved it is worth recording: njangal appeared in zero files, and naam appeared as a headword in three -- ML-C67-first, ML-C67-third and ML-C68-eleventh -- where it is a SUBSTRING of the ordinals onnaam, moonnaam and pathinonnaam and not the pronoun at all. Every ordinal ending in -nnaam is a false positive for naam, the same trap the Hindi campaign recorded when every ordinal matched its own cardinal. Chapter 71 teaches the pair as the question Malayalam asks and English does not: is the person listening inside this 'we'? njangal leaves them out and is built on njaan with a plural; naam takes them in."
+}

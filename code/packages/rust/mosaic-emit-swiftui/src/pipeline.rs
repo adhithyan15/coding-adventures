@@ -676,7 +676,7 @@ fn build_runtime_required_mosaic_host_state(component_name: &str) -> String {
     );
     writeln!(out, "  func dispatch(_ event: {component_name}Event) {{").unwrap();
     out.push_str(
-        r#"    applyHostResponse(bridge.handleEvent(event.mosaicEnvelope as NSDictionary, name: event.mosaicName as NSString) as? [String: Any])
+        r#"    applyHostResponse(bridge.handleEvent(["payload": event.mosaicPayload] as NSDictionary, name: event.mosaicName as NSString) as? [String: Any])
   }
 
   func runInteractionAcceptanceIfRequested() {
@@ -12824,6 +12824,9 @@ mod tests {
         assert!(proj
             .app_swift
             .contains("preconditionFailure(\"Mosaic runtime update omitted props\")"));
+        assert!(proj
+            .app_swift
+            .contains("applyHostResponse(bridge.handleEvent([\"payload\": event.mosaicPayload] as NSDictionary"));
         assert!(!proj.app_swift.contains("MosaicHostBridge.load()"));
         assert!(!proj.app_swift.contains("NSClassFromString"));
         assert!(!proj.app_swift.contains("MosaicHostBridgeObject?"));

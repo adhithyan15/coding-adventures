@@ -2894,6 +2894,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("3.251.53.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a changing while dependency may consume another changing
+    // local recurrence when their dependency graph is acyclic.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; real r; i := 0; n := 5; delta := 1; r := 0.25; for i := i + 1 while i <= n do begin r := r + i; n := n - delta; delta := delta + 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25); print(r) end",
+        expect: Expect::Stdout("3.252.53.253.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — an exact scalar self-assignment is an idempotent body write,
     // so the stable local while dependency remains available to the proof.
     Prog {
@@ -13902,6 +13911,29 @@ fn algol_stable_while_recurrence_inputs_run_on_every_available_standard_backend(
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the stable while-recurrence input did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_acyclic_while_recurrence_inputs_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("delta := delta + 1")
+        })
+        .expect("the acyclic while-recurrence input program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the acyclic while-recurrence input did not run"
             );
             continue;
         };

@@ -4,6 +4,14 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+### Changed — adaptive native project pane (#15486)
+
+The app shell now uses `HostNavigationSplit` for its project rail and detail
+area. Native hosts receive a named Projects pane, keep the existing 236-pixel
+preferred width and separator, and let the platform collapse and restore the
+pane as the window narrows and widens. The WinUI runtime smoke resizes the real
+app and proves both the adaptive behavior and the pane's UI Automation name.
+
 ### Fixed — WinUI Board view startup (#15473)
 
 The native app adapter now emits all four cells required by each Board column:

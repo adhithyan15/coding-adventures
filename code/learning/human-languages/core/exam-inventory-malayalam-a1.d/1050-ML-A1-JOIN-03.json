@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-JOIN-03",
+  "category": "Samuchayam (joining and subordination)",
+  "label": "but: setting one thing against another",
+  "probe": [
+    "ML-LEX-C64-SMALL-05"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-CO-04",
+    "A1-F2-09"
+  ],
+  "malayalamSpecific": false,
+  "note": "ennaal, chapter 64 -- the ONE point in this column that is covered, and the only clause connective the track teaches. It also carries the Spanish function 'offer a counter-argument with pero'."
+}

@@ -1,0 +1,23 @@
+{
+  "id": "ML-A1-V-06",
+  "category": "Kriya (the verb)",
+  "label": "the copula aanu: X is Y",
+  "probe": [
+    "ML-LEX-AANU-01",
+    "ML-CONCEPT-C02-COPULA-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-V-02",
+    "A1-SV-02",
+    "A1-SV-03",
+    "A1-OS-05",
+    "A1-NG1-03"
+  ],
+  "malayalamSpecific": false,
+  "note": "Spanish spends five points on ser/estar and their attributes; Malayalam has one copula, it never agrees, and there is no second one to choose between. Five Spanish points, one Malayalam point."
+}

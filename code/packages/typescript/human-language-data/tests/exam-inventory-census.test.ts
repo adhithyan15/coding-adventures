@@ -23,9 +23,10 @@
 // hand-authored, because both sides were empty. A declared list cannot notice
 // the thing it forgot to declare.
 //
-// So the enumeration is `readdirSync` over `core/`. It does not shrink when an
-// inventory is forgotten, because a forgotten inventory is exactly a file that
-// is present and unnamed. Add `exam-inventory-swahili-a1.json` and this file
+// So the enumeration is `readdirSync` over `core/`. It sees both legacy JSON
+// files and shard-native `.d/` directories and does not shrink when an
+// inventory is forgotten, because a forgotten inventory is exactly an owner
+// that is present and unnamed. Add `exam-inventory-swahili-a1.json` and this file
 // starts demanding a coverage pin for Swahili on the next run, with no edit
 // here at all.
 //
@@ -46,6 +47,7 @@ import { fileURLToPath } from "node:url";
 import { defaultCurriculumRoot, listExamInventories, loadEverything, loadExamInventory } from "../src/loader.js";
 import { readLedgerFile } from "../src/shard.js";
 import { trackIntroducedAtoms } from "../src/exam-inventory.js";
+import { EXAM_INVENTORY_META_OWNER } from "../src/exam-inventory-shards.js";
 
 /** Where the tests themselves live, so the census can read its own suite. */
 const TESTS_ROOT = fileURLToPath(new URL(".", import.meta.url));
@@ -89,10 +91,15 @@ const SAFE_INVENTORY_SEGMENT = /^[A-Za-z0-9]+$/;
  */
 function committedInventories(root = defaultCurriculumRoot()): CommittedInventory[] {
   const directory = resolve(root, "core");
-  return readdirSync(directory)
-    .filter((file) => file.startsWith("exam-inventory-") && file.endsWith(".json"))
-    .sort()
-    .map((file) => {
+  return readdirSync(directory, { withFileTypes: true })
+    .filter((entry) =>
+      entry.name.startsWith("exam-inventory-") &&
+      (entry.name.endsWith(".json") || entry.name.endsWith(".d")))
+    .sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0)
+    .map((entry) => {
+      const file = entry.name.endsWith(".d")
+        ? `${entry.name}/${EXAM_INVENTORY_META_OWNER}`
+        : entry.name;
       const parsed = readLedgerFile<Record<string, unknown>>(join(directory, file));
       const language = Object.hasOwn(parsed, "language") ? parsed["language"] : undefined;
       const level = Object.hasOwn(parsed, "level") ? parsed["level"] : undefined;

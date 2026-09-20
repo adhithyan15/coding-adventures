@@ -66,6 +66,10 @@ it("keeps Z100 edits and absolute labels independent of the row-header column", 
     expect(rows[2].querySelectorAll("td")).toHaveLength(26);
     await act(async () => { (rows[2].querySelectorAll("td")[25].firstElementChild as HTMLElement).click(); });
     expect(host.update.props["cell-address"]).toBe("Z100");
+    await act(async () => container.querySelector("table")!.dispatchEvent(new KeyboardEvent("keydown", { key: "F2", bubbles: true })));
+    const editor = container.querySelector<HTMLInputElement>('input[aria-label="Cell Z100"]')!;
+    expect(editor).not.toBeNull();
+    await act(async () => editor.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true })));
     const input = container.querySelector<HTMLInputElement>('input[placeholder="Enter a value or formula"]')!;
     await act(async () => {
       Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")!.set!.call(input, "123");
@@ -201,5 +205,32 @@ it.each([1, 1.5, 2])("scales the real workbook and retains an edit during text-s
     expect(field.value).toBe("=2+3");
     await act(async () => field.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true })));
     expect(table.querySelector("tbody:not([data-mosaic-spacer]) td")?.textContent).toBe("5");
+  } finally { await act(async () => root.unmount()); container.remove(); }
+});
+
+it.each(["light", "dark"])("names inline editors from displayed coordinates (%s)", async colorScheme => {
+  const module = await loadMosaicModule(readFileSync("public/visicalc_mosaic_app.wasm"));
+  const host = module.create({ colorScheme });
+  const container = document.createElement("div"); document.body.append(container);
+  const root = createRoot(container);
+  try {
+    await act(async () => root.render(<App load={async () => host} />));
+    const table = container.querySelector("table")!;
+    const key = async (target: Element, key: string) => act(async () => {
+      target.dispatchEvent(new KeyboardEvent("keydown", { key, bubbles: true }));
+    });
+    await key(table, "F2");
+    const first = table.querySelector<HTMLInputElement>('input[aria-label="Cell A1"]')!;
+    expect(first).not.toBeNull();
+    expect(document.activeElement).toBe(first);
+    await key(first, "Escape");
+    expect(table.querySelector("input")).toBeNull();
+    await key(table, "ArrowDown");
+    await key(table, "F2");
+    const second = table.querySelector<HTMLInputElement>('input[aria-label="Cell A2"]')!;
+    expect(second).not.toBeNull();
+    expect(second.value).toBe("8");
+    await key(second, "Enter");
+    expect(table.querySelector("input")).toBeNull();
   } finally { await act(async () => root.unmount()); container.remove(); }
 });

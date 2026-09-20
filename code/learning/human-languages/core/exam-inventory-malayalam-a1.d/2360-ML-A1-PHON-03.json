@@ -1,0 +1,16 @@
+{
+  "id": "ML-A1-PHON-03",
+  "category": "Uccharanam (pronunciation)",
+  "label": "long and short vowels as a meaning difference",
+  "probe": null,
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-O1-02"
+  ],
+  "malayalamSpecific": false,
+  "note": "MEASURED, NOT ESTIMATED, and the estimate was wrong. This point was scoped as costing zero new words, on the assumption that the corpus could demonstrate vowel length from its own vocabulary. It cannot. All 292 taught Malayalam tokens were normalised by mapping every long vowel sign to its short counterpart and grouped: the number of vowel-length minimal pairs among taught words is ZERO. So a lesson that shows length CHANGING a word must introduce at least one contrast partner as a taught word of its own -- which is fine, but it is not free, and it must be a pair verified against a dictionary rather than constructed. Do not write this on a guessed pair. Candidate work for a future pass: find a taught word whose lengthened or shortened counterpart is independently attested, and teach that counterpart properly rather than mentioning it."
+}

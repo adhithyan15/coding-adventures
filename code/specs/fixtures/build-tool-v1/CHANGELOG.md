@@ -2,6 +2,10 @@
 
 ## 2026-09-19
 
+- Made the CI-gate match-work boundary fixtures wildcard-bounded so they still
+  exercise the exact 50,000,000-unit candidate grid after the new literal
+  segment prefilter. Large unrelated path-shard sets can now be rejected by
+  their sound prefix/suffix bounds without weakening the adversarial ceiling.
 - Added five adversarial graph and diff-selection cases for the empty graph,
   partial-cycle no-output behavior, portable character classes, known but
   unmatched near-BUILD paths, and the five exact recursive BUILD fronts.

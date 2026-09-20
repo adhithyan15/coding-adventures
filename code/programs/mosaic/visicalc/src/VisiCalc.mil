@@ -1,4 +1,5 @@
 component VisiCalc {
+  slot editor-label : text ;
   slot row-height : number = 32 ;
   slot font-eyebrow : number = 10 ;
   slot font-row : number = 11 ;

@@ -1,0 +1,23 @@
+{
+  "id": "ML-A1-N-02",
+  "category": "Naamam (the noun)",
+  "label": "place names: the town you live in, and the country you are from",
+  "probe": [
+    "ML-LEX-C80-ORIGIN-01",
+    "ML-LEX-C80-ORIGIN-02",
+    "ML-LEX-C80-ORIGIN-03",
+    "ML-LEX-C80-ORIGIN-04",
+    "ML-CONCEPT-C80-GENTILIC-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-N-01",
+    "A1-NE20-02"
+  ],
+  "malayalamSpecific": false,
+  "note": "Chapter 80. The chapter teaches uuru (a town, the small end of the scale naadu floats over) and then two fixed points on that scale, Keralam and India. All three can answer 'where are you from', and the lesson says the choice among them is the same one English makes: you pick the one your listener will recognise. Before this, naadu named a KIND of place rather than one, so the question could only be answered with a category. CORRECTION TO THIS NOTE'S OWN EARLIER TEXT: it claimed no settlement name appeared anywhere in the corpus, and that was WRONG. Kochi appears in FIVE lesson files -- ML-C05-taamasikkuka and ML-C05-practice use kocciyil ('in Kochi') inside the 'I live in' sentence, and three script lessons use it as a reading example. It is never a headword, so no lesson OWNS it, which is why a headword-based count missed it. The claim should have been that no settlement name is TAUGHT, which is a different and weaker statement. Consequence to carry forward: Kochi is untaught material already in use, so if any future lesson takes it as a headword those five uses become forward references at once -- the same trap that ML-C82-chechi-address hit with chechi. Verified before writing chapter 80: uuru, Keralam, India and Malayali all returned ZERO files."
+}

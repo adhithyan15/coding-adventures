@@ -138,6 +138,7 @@ layout Grid {
             // Dropping the label lets Cell.mll's root `Box [cell]`
             // flow through after resolution.
             pkg::mosaic-pkg-grid::Cell (
+              editor-label: slot: editor-label,
               value:        ( v ) ,
               // row/col (v0.2.3, UI37): ride along on onClick so the host
               // can tell which cell was clicked. Same expression-in-slot-

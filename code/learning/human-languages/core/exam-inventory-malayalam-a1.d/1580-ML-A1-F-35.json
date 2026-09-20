@@ -1,0 +1,20 @@
+{
+  "id": "ML-A1-F-35",
+  "category": "Vyavahaaram (communicative functions)",
+  "label": "address somebody by name or title",
+  "probe": [
+    "ML-LEX-C82-ADDRESS-01",
+    "ML-LEX-C82-ADDRESS-02",
+    "ML-CONCEPT-C82-VOCATIVE-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F5-03"
+  ],
+  "malayalamSpecific": false,
+  "note": "Chapter 82, closed by the same atoms as ML-A1-S-07, which its own note pointed at. Addressing somebody by name or title is done in Malayalam with the kinship terms used outward, plus the calling ending -aa on words that end in -an. See ML-A1-S-07 for the full account."
+}

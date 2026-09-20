@@ -1,0 +1,22 @@
+{
+  "id": "ML-A1-ADJ-05",
+  "category": "Visheshanam (the adjective)",
+  "label": "degree: intensifying an adjective",
+  "probe": [
+    "ML-LEX-C79-DEGREE-01",
+    "ML-LEX-C79-DEGREE-02",
+    "ML-GRAMMAR-C79-DEGREE-SLOT-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-ADJ-06",
+    "A1-SADJ-01",
+    "A1-NG2-03"
+  ],
+  "malayalamSpecific": false,
+  "note": "Chapter 79. The note was right that the track taught five qualities and no way to grade any of them, so 'good' could not become 'very good'. valare closes it, and it costs the learner nothing new structurally: the degree word stands in front of the quality word and the quality word does not change, which is the rule chapter 42 already established one position further in. orupadu ships beside it because the pair is a REGISTER split rather than a meaning split -- valare is what a notice or a teacher writes, orupadu is what a person says across a table -- and a learner who owns only one of them is understood but sounds like they have read and not listened. Verified before writing: valare and orupadu both returned ZERO files, so neither created a forward reference."
+}

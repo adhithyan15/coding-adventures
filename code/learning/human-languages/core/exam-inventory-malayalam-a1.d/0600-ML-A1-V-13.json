@@ -1,0 +1,18 @@
+{
+  "id": "ML-A1-V-13",
+  "category": "Kriya (the verb)",
+  "label": "verbs of motion: to go and to come",
+  "probe": [
+    "ML-CONCEPT-C32-POKUKA-01",
+    "ML-CONCEPT-C32-VARUKA-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NG3-04"
+  ],
+  "malayalamSpecific": false
+}

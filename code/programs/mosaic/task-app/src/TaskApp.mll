@@ -8,7 +8,11 @@
 // status verdict all arrive already decided by the engine; the layout only places them.
 
 layout TaskApp {
-  Row [ app-shell ] {
+  HostNavigationSplit [ app-shell ] (
+    pane-title : "Projects" ,
+    pane-width : 236 ,
+    collapse : auto
+  ) {
 
     // ── RAIL ────────────────────────────────────────────────────────────────
     Column [ rail ] {

@@ -1,0 +1,18 @@
+{
+  "id": "ML-A1-F-23",
+  "category": "Vyavahaaram (communicative functions)",
+  "label": "express disagreement",
+  "probe": [
+    "ML-LEX-ILLA-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F2-07"
+  ],
+  "malayalamSpecific": false,
+  "note": "Covered only by the bare negative. Without alla (ML-A1-NEG-02) a learner can deny that something exists and cannot deny that something is so, which is what disagreement usually needs."
+}

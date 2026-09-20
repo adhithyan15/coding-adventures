@@ -1,0 +1,16 @@
+{
+  "id": "ML-A1-F-32",
+  "category": "Vyavahaaram (communicative functions)",
+  "label": "ask somebody to be quiet",
+  "probe": null,
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F6-05"
+  ],
+  "malayalamSpecific": false,
+  "note": "Not taught. The imperative set of chapters 43 and 44 does not include a quieting verb."
+}

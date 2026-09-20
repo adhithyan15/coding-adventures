@@ -1,0 +1,17 @@
+{
+  "id": "ML-A1-LEX-01",
+  "category": "Padakosham (lexicon by domain)",
+  "label": "the body: head and hand",
+  "probe": [
+    "ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NE01-01"
+  ],
+  "malayalamSpecific": false
+}

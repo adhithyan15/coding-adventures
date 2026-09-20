@@ -1,0 +1,20 @@
+{
+  "id": "ML-A1-F-36",
+  "category": "Vyavahaaram (communicative functions)",
+  "label": "accept or decline an offer",
+  "probe": [
+    "ML-LEX-SARI-01",
+    "ML-LEX-C58-ANSWER-04"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F4-08",
+    "A1-F4-09"
+  ],
+  "malayalamSpecific": false,
+  "note": "sari accepts, venda declines. Both are single words, which is how Malayalam actually does it."
+}

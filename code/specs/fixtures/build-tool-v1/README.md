@@ -44,9 +44,10 @@ The 162-case bootstrap corpus covers every process-free v1 domain:
 - validated CI gate selection with exact package intersection, path and
   globstar matching, explicit false verdicts, deterministic output names,
   force, unavailable-snapshot, and machinery-change fail-open behavior, plus
-  exact-at-limit and fail-closed operation-wide match-work accounting over the
-  full declared pattern/file product with Unicode-scalar lengths and stable
-  `CI_GATE_MATCH_LIMIT_EXCEEDED` failure before the first matcher call;
+  exact-at-limit and fail-closed operation-wide path-selection accounting over
+  literal-segment filters plus the complete candidate pattern/file product,
+  with Unicode-scalar lengths and stable `CI_GATE_MATCH_LIMIT_EXCEEDED` failure
+  before the first matcher call;
 - canonical package and program membership, language-registry classification
   with paired C#, F#, Haskell, Java, Kotlin, and OCaml package/program
   identities, a Dart program identity, plus Cabal `dist-newstyle`, Dune

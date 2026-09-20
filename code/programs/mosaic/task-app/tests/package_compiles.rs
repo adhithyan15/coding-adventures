@@ -57,6 +57,21 @@ fn manifest_declares_task_app() {
     assert_eq!(package.components.exports, ["TaskApp"]);
 }
 
+/// #15486: TaskApp delegates narrow-window adaptation and the project-pane
+/// landmark to the kernel primitive instead of freezing a two-column Row.
+#[test]
+fn shell_is_the_adaptive_navigation_split() {
+    let layout = read("TaskApp.mll");
+    assert!(layout.contains("HostNavigationSplit [ app-shell ]"));
+    assert!(layout.contains("pane-title : \"Projects\""));
+    assert!(layout.contains("pane-width : 236"));
+    assert!(layout.contains("collapse : auto"));
+
+    let mil = mosmodel_compiler::compile(&read("TaskApp.mil")).expect("TaskApp.mil should compile");
+    moslayout_compiler::compile(&layout, Some(&mil.descriptor_json))
+        .expect("the adaptive TaskApp shell should compile");
+}
+
 /// #14016: the view switcher is one toolkit SegmentedControl, not a six-way
 /// If/Else around 36 hand-styled `seg-*` parts. Pinned so the inline copy
 /// cannot come back piecemeal.

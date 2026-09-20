@@ -29,12 +29,13 @@ The current native pipeline supports documented subsets of:
 - `architecture` / `architecture-beta`
 
 The Architecture subset parses groups, services, junctions, declared containment,
-standard icon identifiers, titles, sibling row/column alignment hints, and undirected or right-directed edge syntax into the
+standard icon identifiers, titles, sibling row/column alignment hints, and undirected or directed edge syntax into the
 shared structural semantic IR. Existing structural layout and PaintScene
 lowering provide deterministic backend-neutral group, node, junction, edge, and shaped
 text rendering. Quoted service icon text is preserved as typed metadata, reserves
-layout geometry, and lowers to a backend-neutral badge plus shaped glyphs. Group-edge modifiers, left and
-bidirectional arrows, icon artwork, port-aware routing, and configuration remain
+layout geometry, and lowers to a backend-neutral badge plus shaped glyphs. Left,
+right, and bidirectional arrowheads survive semantic and layout IR and lower to
+backend-neutral path geometry. Group-edge modifiers, icon artwork, port-aware routing, and configuration remain
 outside the partial compatibility claim.
 
 The initial `kanban` subset preserves indentation-defined columns and cards,

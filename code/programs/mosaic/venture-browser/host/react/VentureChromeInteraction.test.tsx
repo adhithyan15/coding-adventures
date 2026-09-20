@@ -14,6 +14,7 @@ let findQuery = "";
 let findResultLabel = "";
 let zoomPercent = 100;
 let pageInfoOpen = false;
+let viewSourceOpen = false;
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 const props = (statusText: string) => ({
@@ -42,6 +43,10 @@ const props = (statusText: string) => ({
     zoomResetDisabled: navigationDisabled || zoomPercent === 100,
     zoomInDisabled: navigationDisabled || zoomPercent === 200,
     viewSourceDisabled: navigationDisabled,
+    viewSourceOpen,
+    viewSourceTitle: "Venture React acceptance",
+    viewSourceAddress: "http://venture.test/final",
+    viewSourceContent: "<html><title>Venture React acceptance</title></html>",
     findOpen,
     findQuery,
     findResultLabel,
@@ -93,6 +98,14 @@ window.mosaicHost = {
     if (request.event.type === "pageInfoClose") {
       pageInfoOpen = false;
       return props("Page information closed through MosaicHost");
+    }
+    if (request.event.type === "viewSource") {
+      viewSourceOpen = true;
+      return props("Page source shown through MosaicHost");
+    }
+    if (request.event.type === "viewSourceClose") {
+      viewSourceOpen = false;
+      return props("Page source closed through MosaicHost");
     }
     return request.event.type === "navigate"
       ? props("Navigated through MosaicHost")
@@ -236,6 +249,14 @@ test("React and Electron renderer controls cross the Mosaic host seam", async ()
   });
   await flush();
   expect(events[events.length - 1]?.event.type).toBe("viewSource");
+  expect(document.body.textContent).toContain("<html><title>Venture React acceptance</title></html>");
+  expect(document.body.textContent).toContain("http://venture.test/final");
+  await act(async () => {
+    textButton("Close Source").click();
+  });
+  await flush();
+  expect(events[events.length - 1]?.event.type).toBe("viewSourceClose");
+  expect(document.body.textContent).not.toContain("<html><title>Venture React acceptance</title></html>");
 
   expect(document.querySelector('input[placeholder="Find in page"]')).toBeNull();
   await act(async () => {

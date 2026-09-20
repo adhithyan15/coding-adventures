@@ -1,14 +1,19 @@
 # Changelog — iir-to-cil-bytecode
 
-## Unreleased — strict acyclic control flow (CLR12)
+## Unreleased — strict control-flow conformance coverage
 
-Extend the opt-in strict scalar emitter with void labels and forward
-`jmp`/`jmp_if_true`/`jmp_if_false` branches. Conditions remain logical bools;
-CFG validation rejects back edges, unreachable instructions, malformed targets,
-and values not definitely assigned on every incoming path. Short and promoted
-long encodings execute through the CLR simulator, including joins and early
-returns. Default source routing and the legacy dynamic lowering path are
-unchanged.
+Preserve the independent #15763 short-branch exact-byte proof, parameter-driven
+long promotion and malformed/path-dependent refusal cases against landed CLR12.
+Keep the existing production implementation and bounded assignment prepass.
+
+## Unreleased — strict forward scalar control flow (CLR12)
+
+Add opt-in forward-only labels and branches with void control shapes, Bool
+conditions and multiple typed returns. Require reachability and definite
+assignment at every join; refuse backward edges, unresolved labels and falloff.
+Bound destinations before assignment propagation. Encoded execution tests cover
+both conditional outcomes, nested branches, wide values and long promotion.
+Default source routing and scalar/literal/input gates remain unchanged.
 
 ## Unreleased — canonical strict minus-one encoding (CLR11)
 

@@ -1,0 +1,27 @@
+{
+  "id": "ML-A1-LEX-47",
+  "category": "Padakosham (lexicon by domain)",
+  "label": "the arts: music, dance, literature, cinema",
+  "probe": [
+    "ML-LEX-C99-SONG-01",
+    "ML-LEX-C99-SING-01",
+    "ML-LEX-C99-DANCE-01",
+    "ML-LEX-C99-STORY-01",
+    "ML-LEX-C98-CINEMA-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NE18-01",
+    "A1-NE18-02",
+    "A1-NE18-03",
+    "A1-NE18-04",
+    "A1-NE18-05",
+    "A1-NE18-06"
+  ],
+  "malayalamSpecific": false,
+  "note": "Chapter 99. THE OLD NOTE WAS ALREADY STALE BEFORE THIS CHAPTER BEGAN and is kept here rather than quietly replaced -- the second consecutive point whose note overstated its gap, after LEX-37's. It said 'nothing taught', but ML-C98-sinima (sequence 3500) had closed the CINEMA limb one chapter earlier, so the probe wires that atom alongside the four new ones. All four limbs now have an exponent: paattu and paaduka for music, nrttham for dance, katha for literature, sinima for cinema. Every candidate was token-swept first (paattu, paaduka, samgeetham, nrttham, saahityam, katha, kavitha, chithram, nadan, nadi -- all ZERO occurrences) and glyph-checked, AND THE REMEMBERED GLYPH CONTROL WAS SIMPLY WRONG: it held that U+0D7A chillu-NN must report NOT covered, and it reports covered because ML-S131-chillu-nn owns it -- at sequence 144, in the earliest script track, so the control had not rotted recently, it had never been right. The check was re-run with a control DERIVED from the data rather than recalled, and every glyph in every candidate has a named script-lesson owner. NO NEW GRAMMAR, BY DESIGN: the three nouns were chosen so each exercises a different one of the three aaNu outcomes already taught -- paattu gives a sound up (half-u), nrttham re-spells its m (anusvara), katha takes the ya glide (A-final, as sinima does). LITERATURE IS CLOSED ON katha rather than saahityam, which is abstract and would need a second word beside it to be worth anything at A1. THREE INVENTIONS WERE CAUGHT, TWO BEFORE THE FIRST COMMIT AND ONE BY REVIEW: sundaramaaya, an attributive form attested nowhere in the corpus; a romanization of the vocalic r as r-with-ring-below where the track uses r-with-dot-below in four witnesses; and, caught only by review, nrttham romanized nRtthaM. The conjunct in that word is TA+VIRAMA+TA, the geminate tta, not TA+VIRAMA+THA -- ML-S08 gives ta for the plain letter and ML-S130 gives tha for its breathy partner, and about fourteen corpus words spell tta as tt against two that do not. The self-congratulating part is that the changelog derived the vocalic r from suhRttu, a word whose own tta is spelled tt, while spelling this one tth. It is nRttaM."
+}

@@ -1011,9 +1011,51 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     let viewSourceEvents = chromeEventCounts["onViewSource", default: 0]
     let address = lastAuxiliaryDocument?["address"] as? String ?? ""
     let html = lastAuxiliaryDocument?["html"] as? String ?? ""
+    let props = applyProps()?["props"] as? NSDictionary
+    let sourceOpen = props?["view-source-open"] as? Bool
+    let sourceAddress = props?["view-source-address"] as? String ?? ""
+    let sourceContent = props?["view-source-content"] as? String ?? ""
     if viewSourceEvents == eventCount + 1, address == "view-source:\(targetURL)",
-      html.contains("&lt;title&gt;Venture interaction acceptance&lt;/title&gt;")
+      html.contains("&lt;title&gt;Venture interaction acceptance&lt;/title&gt;"),
+      sourceOpen == true, sourceAddress == targetURL,
+      sourceContent.contains("<title>Venture interaction acceptance</title>")
     {
+      let closeEvents = chromeEventCounts["onViewSourceClose", default: 0]
+      if !performNativeButtonClick(identifier: "view-source-close-button") {
+        _ = handleEvent([:], name: "onViewSourceClose")
+        propsChangedHandler?()
+      }
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
+        self?.verifyViewSourceClosed(
+          startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+          eventCount: closeEvents, remaining: 50)
+      }
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error", "address": address,
+          "viewSourceEvents": String(viewSourceEvents),
+          "sourceOpen": String(sourceOpen ?? false), "sourceAddress": sourceAddress,
+          "error": "native View Source panel did not preserve retained source",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifyViewSource(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        eventCount: eventCount, remaining: remaining - 1)
+    }
+  }
+
+  private func verifyViewSourceClosed(
+    startURL: String, targetURL: String, markerPath: String, eventCount: Int, remaining: Int
+  ) {
+    let closeEvents = chromeEventCounts["onViewSourceClose", default: 0]
+    let sourceOpen = (applyProps()?["props"] as? NSDictionary)?["view-source-open"] as? Bool
+    if closeEvents == eventCount + 1, sourceOpen == false {
       guard performNativeButtonClick(identifier: "reload-button") else {
         writeInteractionResult(
           ["backend": "swiftui", "status": "error", "error": "reload-button not found"],
@@ -1029,15 +1071,16 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     guard remaining > 0 else {
       writeInteractionResult(
         [
-          "backend": "swiftui", "status": "error", "address": address,
-          "viewSourceEvents": String(viewSourceEvents),
-          "error": "native View Source effect did not preserve retained source",
+          "backend": "swiftui", "status": "error",
+          "viewSourceCloseEvents": String(closeEvents),
+          "sourceOpen": String(sourceOpen ?? true),
+          "error": "native View Source panel did not close",
         ],
         to: markerPath)
       return
     }
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-      self?.verifyViewSource(
+      self?.verifyViewSourceClosed(
         startURL: startURL, targetURL: targetURL, markerPath: markerPath,
         eventCount: eventCount, remaining: remaining - 1)
     }
@@ -1498,6 +1541,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
           "bookmarkPersistence": "native-toggle",
           "navigationState": "native-disabled-transitions",
           "pageInfoPanel": "shared-open-close",
+          "viewSourcePanel": "shared-open-close",
           "failedNavigation": "transaction-retained", "failureStatus": statusText,
           "failureAddress": failureURL,
           "surfaceWheel": "scroll", "surfaceFocus": "native",
@@ -1665,6 +1709,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     case "zoom-reset-button": return ["50%", "75%", "100%", "125%", "150%", "175%", "200%"]
     case "zoom-in-button": return ["Zoom In"]
     case "view-source-button": return ["Source", "View Source"]
+    case "view-source-close-button": return ["Close Source"]
     default: return []
     }
   }

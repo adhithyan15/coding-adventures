@@ -1,0 +1,22 @@
+{
+  "id": "ML-A1-LEX-11",
+  "category": "Padakosham (lexicon by domain)",
+  "label": "social roles: teacher, student, doctor, farmer, guest",
+  "probe": [
+    "ML-LEX-C48-ROLE-01",
+    "ML-LEX-C48-ROLE-02",
+    "ML-LEX-C48-ROLE-03",
+    "ML-LEX-C48-ROLE-04",
+    "ML-LEX-C48-ROLE-05"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NE07-01",
+    "A1-NE06-02"
+  ],
+  "malayalamSpecific": false
+}

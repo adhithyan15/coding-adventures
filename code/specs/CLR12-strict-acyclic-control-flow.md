@@ -1,6 +1,11 @@
 # CLR12: strict scalar acyclic control flow
 
-Status: implementation contract, committed before production changes.
+Status: historical companion contract, committed before the original PR #15763
+implementation. PR #15762 landed equivalent forward-only behavior first.
+`CLR12-strict-forward-scalar-control-flow.md` is authoritative. This document
+preserves the independent original contract; reconciled #15763 adds validation
+coverage only and retains the landed production implementation, including its
+preflight destination bound. No second control-flow implementation is introduced.
 
 ## Baseline and scope
 

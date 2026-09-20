@@ -1,0 +1,18 @@
+{
+  "id": "ML-A1-V-19",
+  "category": "Kriya (the verb)",
+  "label": "the present perfect: I have done it",
+  "probe": null,
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-V-09",
+    "A1-V-10",
+    "A1-V-14"
+  ],
+  "malayalamSpecific": false,
+  "note": "Not taught. Malayalam builds it with the past participle plus undu, and neither the participle nor the construction appears -- so three Spanish points about participles and the perfect are open together."
+}

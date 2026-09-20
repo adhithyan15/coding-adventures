@@ -518,6 +518,11 @@ A bounded `x509-extension` prerequisite now decodes one exact generic extension
 OID, canonical omitted-default critical flag, and opaque OCTET STRING under the
 same shared budgets. It does not recognize extension OIDs, parse encapsulated
 values, process unknown critical extensions, or decode an extension list.
+A bounded `x509-extensions` composition now decodes the non-empty certificate
+extension sequence into at most 64 allocation-free borrowed values, preserves
+wire order, and rejects duplicate extension OIDs under the same shared budgets.
+It still does not recognize OIDs, parse encapsulated values, or decide whether
+an unknown critical extension is supported.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

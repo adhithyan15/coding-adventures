@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-20
+
+- Name inline cell editors through the shared grid editor-label slot and the Rust-selected absolute cell address (#15752).
+
 All notable changes to `mosaic-pkg-grid` are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/) and
 the package follows semantic versioning.

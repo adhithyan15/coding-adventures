@@ -1,0 +1,20 @@
+{
+  "id": "ML-A1-LEX-28",
+  "category": "Padakosham (lexicon by domain)",
+  "label": "the doorway and its welcome: kolam, flower, garland",
+  "probe": [
+    "ML-LEX-C52-WELCOME-03",
+    "ML-LEX-C52-WELCOME-04",
+    "ML-LEX-C52-WELCOME-05"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NE04-03"
+  ],
+  "malayalamSpecific": false,
+  "note": "The nearest the track comes to the Spanish point about celebrations and occasions, and a genuinely Kerala answer to it."
+}

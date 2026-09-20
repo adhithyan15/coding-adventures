@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-NEG-02",
+  "category": "Nishedham (negation)",
+  "label": "alla: negating an identity rather than an existence",
+  "probe": [
+    "ML-LEX-C77-ALLA-01",
+    "ML-CONCEPT-C77-NEGATION-SPLIT-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-OS-01"
+  ],
+  "malayalamSpecific": false,
+  "note": "Chapter 77. alla was ZERO across the corpus while illa had 27 occurrences, so the track could deny that something was THERE and not that something was SO -- 'I am not a teacher' was unsayable. alla is taught as the negative of aanu, closing a sentence where aanu closes it, and the split is taught as a DECISION English never makes you make: ask which question you are answering, is there any (illa) or is it that (alla)."
+}

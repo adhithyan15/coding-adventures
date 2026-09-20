@@ -6798,11 +6798,38 @@ impl Compiler {
         name: &str,
         target_name: &str,
     ) -> bool {
+        self.static_body_actions_have_acyclic_dependency_recurrence(
+            actions,
+            name,
+            target_name,
+            &mut HashSet::new(),
+            true,
+        )
+    }
+
+    fn static_body_actions_have_acyclic_dependency_recurrence(
+        &self,
+        actions: &[StaticBodyAction<'_>],
+        name: &str,
+        target_name: &str,
+        visiting: &mut HashSet<String>,
+        is_root: bool,
+    ) -> bool {
+        if !visiting.insert(name.to_string()) {
+            return false;
+        }
         let mut found = false;
         for action in actions {
             match action {
                 StaticBodyAction::Assignment(assignment) if assignment.name == name => {
                     if found {
+                        return false;
+                    }
+                    if !is_root
+                        && recursive_tokens(assignment.expression)
+                            .iter()
+                            .any(|token| token.value == "if")
+                    {
                         return false;
                     }
                     let mut dependencies = HashSet::new();
@@ -6821,7 +6848,17 @@ impl Compiler {
                         if binding.is_global
                             || binding.array.is_some()
                             || self.active_by_name_binding(&dependency).is_some()
-                            || Self::static_body_actions_write_name(actions, &dependency)
+                        {
+                            return false;
+                        }
+                        if Self::static_body_actions_write_name(actions, &dependency)
+                            && !self.static_body_actions_have_acyclic_dependency_recurrence(
+                                actions,
+                                &dependency,
+                                target_name,
+                                visiting,
+                                false,
+                            )
                         {
                             return false;
                         }
@@ -6840,6 +6877,7 @@ impl Compiler {
                 _ => {}
             }
         }
+        visiting.remove(name);
         found
     }
 
@@ -15304,6 +15342,22 @@ mod tests {
             instr.op == "str_const"
                 && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "3.25")
         }));
+    }
+
+    #[test]
+    fn al4_while_dependency_recurrence_reads_acyclic_changing_local_input() {
+        let module = compile_source(
+            "begin integer i, n, delta; real r; i := 0; n := 5; delta := 1; r := 0.25; for i := i + 1 while i <= n do begin r := r + i; n := n - delta; delta := delta + 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25); print(r) end",
+            "test",
+        )
+        .expect("a bounded while dependency recurrence may read an acyclic changing local input");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "2.5", "3.25", "3.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
     }
 
     #[test]

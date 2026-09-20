@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-V-18",
+  "category": "Kriya (the verb)",
+  "label": "verbs of everyday living: to eat, to live somewhere, to speak",
+  "probe": [
+    "ML-CONCEPT-C32-TINNUKA-01",
+    "ML-LEX-TAAMASIKKUKA-01",
+    "ML-LEX-SAMSAARIKKUKA-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-V-03"
+  ],
+  "malayalamSpecific": false
+}

@@ -1063,9 +1063,16 @@ fn page_info_uses_one_typed_response_snapshot_across_generated_hosts() {
         "emit onPageInfo",
         "emit onPageInfoClose",
     ] {
-        assert!(interface.contains(symbol), "page-info interface omits {symbol}");
+        assert!(
+            interface.contains(symbol),
+            "page-info interface omits {symbol}"
+        );
     }
-    for control in ["page-info-button", "page-info-panel", "page-info-close-button"] {
+    for control in [
+        "page-info-button",
+        "page-info-panel",
+        "page-info-close-button",
+    ] {
         assert!(layout.contains(control), "page-info layout omits {control}");
     }
 
@@ -1156,6 +1163,85 @@ fn page_info_uses_one_typed_response_snapshot_across_generated_hosts() {
         assert!(
             swiftui_acceptance.contains(symbol),
             "SwiftUI acceptance omits the shared Page Information panel lifecycle: {symbol}"
+        );
+    }
+}
+
+#[test]
+fn view_source_uses_one_retained_snapshot_and_visible_lifecycle_across_generated_hosts() {
+    let interface = read_package_file("src/VentureChrome.mil");
+    let layout = read_package_file("src/VentureChrome.mll");
+    for symbol in [
+        "slot view-source-open",
+        "slot view-source-title",
+        "slot view-source-address",
+        "slot view-source-content",
+        "emit onViewSource",
+        "emit onViewSourceClose",
+    ] {
+        assert!(
+            interface.contains(symbol),
+            "view-source interface omits {symbol}"
+        );
+    }
+    for control in [
+        "view-source-button",
+        "view-source-panel",
+        "view-source-close-button",
+        "view-source-content",
+    ] {
+        assert!(
+            layout.contains(control),
+            "view-source layout omits {control}"
+        );
+    }
+
+    let core = read_package_file("../../../packages/rust/venture-browser-core/src/lib.rs");
+    for symbol in [
+        "BrowserSourceSnapshot",
+        "BrowserChromeAction::ViewSource",
+        "BrowserChromeAction::CloseViewSource",
+        "pub fn view_source(page: &BrowserPage)",
+        "Page source shown",
+        "show_source_view",
+        "view_source_content",
+    ] {
+        assert!(
+            core.contains(symbol),
+            "shared view-source core omits {symbol}"
+        );
+    }
+
+    for path in [
+        "host/compose/VentureChromeInteractionTest.kt",
+        "host/flutter/venture_chrome_interaction_test.dart",
+        "host/qt/tst_venture_chrome.qml",
+        "host/react/VentureChromeInteraction.test.tsx",
+        "host/swiftui/MosaicHost.swift",
+        "host/web/VentureChromeInteraction.test.js",
+        "host/xaml/MosaicHost.cs",
+    ] {
+        let acceptance = read_package_file(path);
+        assert!(
+            acceptance.contains("view-source-button")
+                || acceptance.contains("View Source")
+                || acceptance.contains("onViewSource")
+                || acceptance.contains("viewSource")
+                || acceptance.contains("lastAuxiliaryDocument"),
+            "{path} omits View Source acceptance"
+        );
+    }
+
+    let swiftui_acceptance = read_package_file("host/swiftui/MosaicHost.swift");
+    for symbol in [
+        "view-source-close-button",
+        "onViewSourceClose",
+        "sourceContent.contains",
+        "viewSourcePanel",
+    ] {
+        assert!(
+            swiftui_acceptance.contains(symbol),
+            "SwiftUI acceptance omits the shared View Source panel lifecycle: {symbol}"
         );
     }
 }

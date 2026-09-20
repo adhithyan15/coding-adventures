@@ -1,0 +1,18 @@
+{
+  "id": "ML-A1-ADJ-03",
+  "category": "Visheshanam (the adjective)",
+  "label": "position: the adjective stands before its noun, always",
+  "probe": [
+    "ML-GRAMMAR-C42-ADJ-SYSTEM"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-ADJ-05"
+  ],
+  "malayalamSpecific": false,
+  "note": "The mirror image of the Spanish point, and the reason it is worth stating: Spanish puts it after, Malayalam before, and neither language allows the other order."
+}

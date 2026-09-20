@@ -1,0 +1,16 @@
+{
+  "id": "ML-A1-ART-03",
+  "category": "Nirdeshakam (definiteness, and the article Malayalam does not have)",
+  "label": "no article contractions exist, because there is no article to contract",
+  "probe": null,
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-ART-02"
+  ],
+  "malayalamSpecific": false,
+  "note": "Recorded so the walk is total. Nothing in Malayalam corresponds and nothing needs teaching; the point is enumerated rather than dropped because a reader comparing the two inventories should see it answered."
+}

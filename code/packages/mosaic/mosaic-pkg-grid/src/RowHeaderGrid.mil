@@ -1,4 +1,6 @@
 component RowHeaderGrid {
+  // Accessible name for the active cell editor, supplied by the presentation model.
+  slot editor-label : text = "Cell value" ;
   slot row-height : number = 32 ;
   slot font-size : number = 13 ;
   slot row-font-size : number = 11 ;

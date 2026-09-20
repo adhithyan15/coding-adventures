@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-V-17",
+  "category": "Kriya (the verb)",
+  "label": "verbs of exchange: to ask, to take, to help",
+  "probe": [
+    "ML-CONCEPT-C34-CODIKKUKA-01",
+    "ML-CONCEPT-C34-EDUKKUKA-01",
+    "ML-CONCEPT-C34-SAHAAYIKKUKA-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F4-03"
+  ],
+  "malayalamSpecific": false
+}
