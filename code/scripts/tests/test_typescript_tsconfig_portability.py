@@ -415,12 +415,13 @@ console.log(prose, nested);
         # +1: forme-cli, the shared-config headless project driver.
         # +1: forme-dev-server, the in-memory live-preview boundary.
         # +1: forme-deploy-runner-core, the capability-free deployment planner.
-        self.assertEqual(summary.total_projects, 472)
+        # +1: der-tlv, the standalone portable DER framing lane.
+        self.assertEqual(summary.total_projects, 473)
         self.assertEqual(summary.shared_projects, 294)
         self.assertEqual(summary.inherited_root_dir, 130)
         self.assertEqual(summary.inherited_out_dir, 133)
-        self.assertEqual(summary.standalone_emit_projects, 148)
-        self.assertEqual(summary.isolated_standalone_projects, 148)
+        self.assertEqual(summary.standalone_emit_projects, 149)
+        self.assertEqual(summary.isolated_standalone_projects, 149)
         self.assertEqual(summary.unbounded_root_projects, 0)
         self.assertEqual(summary.outside_root_inputs, 0)
         # 94: +1 for script-ductus. Nothing the package SHIPS touches a Node
@@ -497,7 +498,8 @@ console.log(prose, nested);
         # shared by the D18 conformance lanes.
         # +1: VisiCalc now commits its compiler and test dependency lockfile.
         # +1: forme-deploy-runner-core commits its compiler and test lockfile.
-        self.assertEqual(summary.locked_compilers, 471)
+        # +1: der-tlv commits its compiler and test dependency lockfile.
+        self.assertEqual(summary.locked_compilers, 472)
 
 
 if __name__ == "__main__":
