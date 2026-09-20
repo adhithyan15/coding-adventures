@@ -503,7 +503,10 @@ UTCTime and GeneralizedTime tags, fixed Zulu forms, the 1950/2050 century
 split, and Gregorian fields without a clock or platform calendar. These layers
 still provide no certificate schema, validity-window policy, name semantics,
 signature verification, path construction, revocation, or trust-root source,
-so concrete HTTPS remains blocked.
+so concrete HTTPS remains blocked. The next bounded prerequisite is specified
+as `x509-validity`: exact two-field `Validity` sequence decoding, ordered
+endpoints, and inclusive classification of an explicitly supplied validated
+time. It intentionally adds no certificate-wide schema or clock authority.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
