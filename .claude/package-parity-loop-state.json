@@ -19,21 +19,21 @@
     "notes": "PR #15761 reached terminal acceptable conclusions on every required and advisory check, including both protected CI gates, CodeQL, and all three OCaml fresh-solve and locked-fixture platforms. GitHub reported the reviewed head CLEAN and MERGEABLE. Guarded squash auto-merge was enabled only after that evidence was complete, and GitHub merged the reviewed head automatically at 2026-09-20T14:33:51Z as f280bdbd4df120379afe96a17dfba49251c161b5; no plain manual merge command was used."
   },
   "last_inventory": {
-    "revision": "82f851dc277b5f1931a3e64276466cd1d742e3d0",
+    "revision": "346be10b6e86467693e064eb9eba433d61fe3e60",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1454,
-    "implementation_package_slots": 4693,
-    "all_reported_identities": 1494,
+    "implementation_identities": 1455,
+    "implementation_package_slots": 4694,
+    "all_reported_identities": 1495,
     "high_consensus_packages": 176,
     "high_consensus_missing_slots": 265,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 181,
     "two_to_four_missing_slots": 2282,
-    "singleton_packages": 974,
-    "singleton_missing_slots": 13636,
-    "rust_singletons": 793,
+    "singleton_packages": 975,
+    "singleton_missing_slots": 13650,
+    "rust_singletons": 794,
     "ocaml_packages": 5,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -9510,7 +9510,7 @@
       "pr_number": null,
       "selected_at": "2026-09-20T14:36:10Z",
       "selection_revision": "82f851dc277b5f1931a3e64276466cd1d742e3d0",
-      "selection_notes": "Selected after PR #15761 merged through guarded auto-merge, followed by a collision-checked exact-main inventory refresh and bounded package, owner, fixture, and validation audits. DER ASN.1 is the sole dependency-shaped root immediately unlocked by DER TLV and directly gates nine confirmed Rust X.509 consumers plus the five newly registered extension-family owners. The fresh worktree is clean and rebased to exact current origin/main; PR #15798 remains open and does not yet add a Subject Alternative Name owner.",
+      "selection_notes": "Selected after PR #15761 merged through guarded auto-merge, followed by a collision-checked exact-main inventory refresh and bounded package, owner, fixture, and validation audits. DER ASN.1 is the sole dependency-shaped root immediately unlocked by DER TLV and now directly gates ten confirmed Rust X.509 consumers plus six registered extension-family owners. The dedicated worktree was rebased to origin/main 346be10b6e86467693e064eb9eba433d61fe3e60 after PR #15798 merged; that refresh added the Subject Alternative Name owner without changing the selected in-progress item.",
       "notes": "Own the portable empty-capability typed ASN.1 DER layer above the merged DER TLV contract. Freeze a language-neutral semantic suite that references rather than copies the DER TLV framing corpus, then deliver all 15 established lanes for canonical BOOLEAN, INTEGER, BIT STRING, OCTET STRING, IA5String, NULL, OID, implicit primitive values, exact SEQUENCE, SET, and context-specific wrappers, shared budgets, transactional failures, and payload-redacted local offsets. Keep X.509 schema, path validation, trust, signatures, TLS, network, credentials, and ambient authority outside this owner."
     },
     {
@@ -9557,6 +9557,15 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the collision-checked post-PR #15761 inventory after merged PR #15784 added the Rust-only x509-extended-key-usage identity. Own a non-empty bounded OID sequence, original wire order, and duplicate-purpose preservation over one generic extension. Treat anyExtendedKeyUsage as an uninterpreted OID and keep authorization, path validation, trust, and certificate policy outside this owner."
+    },
+    {
+      "id": "x509-subject-alt-name-portable-conformance",
+      "title": "Define portable X.509 Subject Alternative Name conformance and established-lane parity",
+      "status": "pending",
+      "depends_on": ["der-asn1-portable-conformance", "x509-extension-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked exact-main refresh after merged PR #15798 added the Rust-only x509-subject-alt-name identity. Own OID 2.5.29.17, a non-empty bounded GeneralNames sequence, typed IA5String, IP-address, and registered-ID choices, counted opaque constructed choices, shared budgets, exact local offsets, transactional failure, and redacted diagnostics over one generic extension. Keep DNS syntax, server-identity matching, certificate policy, path validation, signatures, trust, TLS, transport, and ambient authority outside this owner."
     },
     {
       "id": "ocaml-der-tlv-emerging-lane-consumer",

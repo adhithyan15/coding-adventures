@@ -14180,6 +14180,28 @@ cryptography, trust, TLS, transport, credentials, and ambient authority remain
 outside it. The reconciled graph has 859 owners and 1,593 dependency edges: 223
 merged, 635 pending, and exactly this owner in progress.
 
+### Post-selection exact-main refresh through PR #15798
+
+While DER ASN.1 remained the sole in-progress parity item, `origin/main`
+advanced to `346be10b6e86467693e064eb9eba433d61fe3e60`. The dedicated worktree
+rebased cleanly onto that revision. A collision-checked exact-main inventory
+now contains 1,455 implementation identities, 4,694 implementation slots, and
+1,495 all-reported identities across the same 15 established lanes. Completion
+bands are 176/265, 123/934, 181/2,282, and 975/13,650; Rust has 794 singleton
+identities, OCaml remains an emerging five-package lane, and canonical
+collisions and unknown language buckets remain zero.
+
+Merged PR #15798 adds the Rust-only `x509-subject-alt-name` identity, so the
+backlog now explicitly owns its portable contract. It depends on typed DER
+ASN.1 plus the singular generic X.509 Extension owner and covers a non-empty
+bounded GeneralNames sequence, typed IA5String, IP-address, and registered-ID
+choices, counted opaque constructed alternatives, shared work budgets, local
+offsets, transactional failures, and redacted errors. DNS syntax,
+server-identity matching, certificate policy, path validation, signatures,
+trust, TLS, transport, and ambient authority remain outside that owner. The
+graph therefore has 860 owners and 1,595 dependency edges: 223 merged, 636
+pending, and exactly DER ASN.1 in progress.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
