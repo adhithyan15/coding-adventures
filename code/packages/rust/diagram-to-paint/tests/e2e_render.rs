@@ -1764,11 +1764,12 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_architecture_to_png() {
         let diagram = parse_architecture(
-            "architecture-beta\ngroup platform(cloud)[Platform]\nservice api(server)[API] in platform\nservice db(database)[Database] in platform\napi:R -[reads and writes]-> L:db",
+            "architecture-beta\ntitle Native platform\naccTitle: Platform topology\naccDescr: API and database services\ngroup platform(cloud)[Platform]\nservice api(server)[API] in platform\nservice db(database)[Database] in platform\napi:R -[reads and writes]-> L:db",
         )
         .expect("Mermaid architecture parse failed");
         let layout = layout_structural_diagram(&diagram);
         assert_eq!(layout.groups.len(), 1);
+        assert_eq!(layout.title.as_deref(), Some("Native platform"));
         assert_eq!(
             layout.relationships[0].label.as_ref().map(|(_, label)| label.as_str()),
             Some("reads and writes")
@@ -1795,6 +1796,12 @@ line "Target" [35, 50, 68, 82]"##,
             PaintInstruction::Rect(rect)
                 if rect.fill.as_deref() == Some("#ffffff") && rect.stroke.is_none()
         )));
+        let metadata = scene.metadata.as_ref().expect("accessibility metadata");
+        assert_eq!(metadata["accessibility.title"], "Platform topology");
+        assert_eq!(
+            metadata["accessibility.description"],
+            "API and database services"
+        );
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_architecture_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);

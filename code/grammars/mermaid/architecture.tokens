@@ -6,6 +6,10 @@ case_sensitive: false
 skip:
   COMMENT = /[ \t]*%%[^\r\n]*/
 
-NEWLINE        = /\r?\n/
-HEADER         = /architecture(?:-beta)?[ \t]*/
-STATEMENT_LINE = /[ \t]*[^ \t\r\n][^\r\n]*/
+ACC_DESCR_BLOCK     = /accDescr[ \t]*\{[^}]*\}/
+NEWLINE             = /\r?\n/
+HEADER              = /architecture(?:-beta)?[ \t]*/
+TITLE_STATEMENT     = /title[ \t]+[^\r\n]+/
+ACC_TITLE_STATEMENT = /accTitle[ \t]*:[^\r\n]+/
+ACC_DESCR_STATEMENT = /accDescr[ \t]*:[^\r\n]+/
+STATEMENT_LINE      = /[ \t]*[^ \t\r\n][^\r\n]*/

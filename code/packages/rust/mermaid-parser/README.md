@@ -210,7 +210,8 @@ accessibility metadata, sections, periods, and ordered events. It lowers to
 timeline-specific temporal IR rather than reusing Gantt task semantics.
 Architecture parsing preserves native `-[label]-` and `-[label]->` edge labels
 in structural semantic IR for deterministic layout and backend-neutral Paint
-text lowering.
+text lowering. Titles plus single-line or braced accessibility metadata use
+dedicated grammar tokens and survive through the native pipeline.
 Actor identifiers may contain multiple whitespace-separated words; the full ID
 is retained consistently across declarations, messages, notes, lifecycle events,
 and metadata commands.

@@ -26,6 +26,7 @@ let layout  = layout_structural_diagram(&diagram);
 ## Algorithm
 
 Nodes are placed in a 3-column grid with:
+- A reserved title band when the semantic diagram has a title
 - Node width from longest label/entry text (approx 8 px/char)
 - Node height from compartment entry count (20 px/row)
 - Relationships routed to closest-side midpoints
