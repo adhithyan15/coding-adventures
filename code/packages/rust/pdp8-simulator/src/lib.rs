@@ -226,6 +226,7 @@ impl Pdp8Simulator {
                 bytes: program.len(),
             });
         }
+        validate_program_extent(program.len() / 2, origin)?;
         let words = program
             .as_chunks::<2>()
             .0
@@ -237,16 +238,7 @@ impl Pdp8Simulator {
 
     /// Replace the machine with a clean state and install 12-bit words.
     pub fn load_words(&mut self, program: &[u16], origin: usize) -> Result<usize, Pdp8Error> {
-        if origin >= MEMORY_WORDS {
-            return Err(Pdp8Error::InvalidOrigin { origin });
-        }
-        let capacity = MEMORY_WORDS - origin;
-        if program.len() > capacity {
-            return Err(Pdp8Error::ProgramTooLarge {
-                words: program.len(),
-                capacity,
-            });
-        }
+        validate_program_extent(program.len(), origin)?;
         if let Some((index, word)) = program
             .iter()
             .copied()
@@ -676,6 +668,17 @@ impl Pdp8Simulator {
         self.state.link = combined & 0x1000 != 0;
         self.state.ac = combined & WORD_MASK;
     }
+}
+
+fn validate_program_extent(words: usize, origin: usize) -> Result<(), Pdp8Error> {
+    if origin >= MEMORY_WORDS {
+        return Err(Pdp8Error::InvalidOrigin { origin });
+    }
+    let capacity = MEMORY_WORDS - origin;
+    if words > capacity {
+        return Err(Pdp8Error::ProgramTooLarge { words, capacity });
+    }
+    Ok(())
 }
 
 fn join_operations(operations: &[&str]) -> String {
