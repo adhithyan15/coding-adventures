@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-LEX-34",
+  "category": "Padakosham (lexicon by domain)",
+  "label": "learning and teaching as activities",
+  "probe": [
+    "ML-CONCEPT-C33-VAAYIKKUKA-01",
+    "ML-CONCEPT-C33-EZHUTUKA-01",
+    "ML-CONCEPT-C32-ARIYUKA-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NE06-04"
+  ],
+  "malayalamSpecific": false
+}

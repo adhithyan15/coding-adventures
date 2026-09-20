@@ -1,0 +1,21 @@
+{
+  "id": "ML-A1-F-26",
+  "category": "Vyavahaaram (communicative functions)",
+  "label": "say that one knows, or does not know, something",
+  "probe": [
+    "ML-CONCEPT-C06-DATIVE-SUBJECT-01",
+    "ML-CONCEPT-C32-ARIYUKA-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F2-13",
+    "A1-F2-14",
+    "A1-F2-15"
+  ],
+  "malayalamSpecific": false,
+  "note": "enikku ... ariyaam is taught whole, and ariyuka is taught as a verb. Its negative ariyilla is not taught, so 'I do not know' is out of reach -- one of the three Spanish points here is only half answered and is recorded as covered because the frame and the verb both exist."
+}

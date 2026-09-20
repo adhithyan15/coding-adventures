@@ -1,0 +1,18 @@
+{
+  "id": "ML-A1-V-16",
+  "category": "Kriya (the verb)",
+  "label": "verbs of the page: to read, to write",
+  "probe": [
+    "ML-CONCEPT-C33-VAAYIKKUKA-01",
+    "ML-CONCEPT-C33-EZHUTUKA-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NG7-02"
+  ],
+  "malayalamSpecific": false
+}

@@ -1,0 +1,21 @@
+{
+  "id": "ML-A1-NUM-09",
+  "category": "Sankhya (numerals and quantity)",
+  "label": "the Malayalam numerals as written signs",
+  "probe": [
+    "ML-SCRIPT-DIGITS-1-3-07",
+    "ML-SCRIPT-DIGITS-4-5-07",
+    "ML-SCRIPT-DIGITS-6-8-07",
+    "ML-SCRIPT-DIGITS-9-10-07"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NE16-01"
+  ],
+  "malayalamSpecific": false,
+  "note": "Chapter 7's writing lessons teach the indigenous digit shapes, which the printed language now mostly replaces with the international ones -- but the track teaches them and they are enumerated here as taught."
+}

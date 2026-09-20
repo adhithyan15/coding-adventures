@@ -126,12 +126,16 @@ MUST evaluate every gate and MUST NOT omit false verdicts.
 
 When neither snapshot is `null`, `force` is false, and no changed path is one
 of the fixed gating-machinery sentinels below, evaluation applies one fixed
-operation-wide ceiling of 50,000,000 path-match work units. After registry,
+operation-wide ceiling of 50,000,000 path-selection work units. After registry,
 identifier, output-name, and glob validation, but before package intersection
-or any matcher call, implementations MUST preflight the complete Cartesian
-product of every declared gate path pattern and every changed file. Each pair
-costs `(pattern Unicode-scalar count + 1) * (changed-file Unicode-scalar count
-+ 1)`. The full product is charged even when a package intersection or an
+or any matcher call, implementations MUST deduplicate identical path patterns
+and preflight every distinct pattern/changed-file pair. A pair first costs the
+Unicode-scalar lengths plus one separator unit for every literal leading and
+trailing path segment outside the pattern's first-to-last wildcard segment. If
+those literal segment bounds cannot match the path, the pair is rejected
+without a glob call. Every remaining candidate additionally costs
+`(pattern Unicode-scalar count + 1) * (changed-file Unicode-scalar count + 1)`.
+The full candidate product is charged even when a package intersection or an
 earlier path match could determine the verdict. Checked arithmetic is required:
 exactly 50,000,000 units proceeds, while overflow or any larger total returns
 an empty result with exactly one error diagnostic

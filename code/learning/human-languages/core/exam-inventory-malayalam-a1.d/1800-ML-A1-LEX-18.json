@@ -1,0 +1,23 @@
+{
+  "id": "ML-A1-LEX-18",
+  "category": "Padakosham (lexicon by domain)",
+  "label": "household tools: knife, vessel, rope, thread, needle, broom",
+  "probe": [
+    "ML-LEX-C56-HOUSE-03",
+    "ML-LEX-C56-HOUSE-04",
+    "ML-LEX-C62-HAND-01",
+    "ML-LEX-C62-HAND-02",
+    "ML-LEX-C62-HAND-03",
+    "ML-LEX-C62-HAND-04"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NE10-03",
+    "A1-NE07-02"
+  ],
+  "malayalamSpecific": false
+}

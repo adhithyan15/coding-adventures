@@ -1,0 +1,21 @@
+{
+  "id": "ML-A1-LEX-03",
+  "category": "Padakosham (lexicon by domain)",
+  "label": "the limbs: leg, tooth, hair, finger, stomach",
+  "probe": [
+    "ML-LEX-C47-BODY-01",
+    "ML-LEX-C47-BODY-02",
+    "ML-LEX-C47-BODY-03",
+    "ML-LEX-C47-BODY-04",
+    "ML-LEX-C47-BODY-05"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NE01-01"
+  ],
+  "malayalamSpecific": false
+}

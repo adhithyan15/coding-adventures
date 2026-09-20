@@ -1,0 +1,21 @@
+{
+  "id": "ML-A1-CASE-06",
+  "category": "Vibhakti (case endings and postpositions)",
+  "label": "the ablative -il ninnu: from a place",
+  "probe": [
+    "ML-GRAMMAR-C83-ABLATIVE-01",
+    "ML-CONCEPT-C83-WHERE-FROM-01",
+    "ML-GRAMMAR-C83-OBLIQUE-AM-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NG3-05",
+    "A1-NG3-07"
+  ],
+  "malayalamSpecific": false,
+  "note": "Chapter 83, and its blocker is gone: the old note said 'combined with the missing place names at ML-A1-N-02, where are you from cannot be answered at all', and chapter 80 supplied the place names. The chapter adds NO VOCABULARY. ninnu follows a word that already carries the locative -il, so 'from' is a second step ON TOP of 'in' rather than a competing ending -- and unlike every ending taught so far it is a WORD standing apart, not a suffix glued on, which the lesson explains from its origin as a form of a verb meaning 'to stand'. The question costs nothing at all: evide already asks about a place you are at, so evide ninnu is two owned words in the order just taught. The third lesson is the one with reach beyond this point: a noun ending in -am REPLACES that -am with -att- before any ending, so Keralam becomes Keralattil and pustakam becomes pustakattil. That is a CLASS, not an exception, and it puts every -am noun in the book into the locative from one rule. The -am is a citation dress: what the word wears standing alone, dropped the moment A CASE ENDING is added. (Narrowed under HL-C400: the first version said 'anything', which the and-ending, the plural and aaNu all break.) Verified before writing: ninnu, Keralattil, uuril and Indyayil all returned ZERO files, and no oblique -tt- form existed anywhere in the corpus."
+}

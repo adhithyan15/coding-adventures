@@ -1,0 +1,16 @@
+{
+  "id": "ML-A1-LEX-46",
+  "category": "Padakosham (lexicon by domain)",
+  "label": "computing and technology",
+  "probe": null,
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NE16-02"
+  ],
+  "malayalamSpecific": false,
+  "note": "Nothing taught."
+}

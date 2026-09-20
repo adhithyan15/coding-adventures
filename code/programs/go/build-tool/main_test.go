@@ -20,7 +20,7 @@ func TestEmitBuildPlanCeilingFailureWritesNoPlanOrGateOutputs(t *testing.T) {
 	patterns := make([]string, 20)
 	files := make([]string, 10)
 	for index := range patterns {
-		patterns[index] = strings.Repeat(string(rune('a'+index)), 499)
+		patterns[index] = "*" + strings.Repeat(string(rune('a'+index)), 497) + "*"
 	}
 	for index := range files {
 		files[index] = strings.Repeat(string(rune('0'+index)), 499)

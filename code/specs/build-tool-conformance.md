@@ -1309,18 +1309,21 @@ structured command fields use the shared definitions in the corpus schema.
 | `cli` | a portable action, decision condition, and whether the action would require later execution | exit code only |
 
 `ci_gate_selection` applies one fixed operation-wide ceiling of 50,000,000
-match-work units whenever `force` is false, both snapshots are non-null, and no
-changed path is a fixed gating-machinery sentinel. After structural registry
-and glob validation, but before package intersection or any matcher call, the
-implementation MUST charge the complete Cartesian product of every gate path
-pattern and changed file. Each pair costs `(pattern Unicode-scalar count + 1)
-* (changed-file Unicode-scalar count + 1)`. Exactly 50,000,000 units proceeds;
-checked-arithmetic overflow or a larger total returns an empty result and
-exactly one `CI_GATE_MATCH_LIMIT_EXCEEDED` error diagnostic without calling the
-matcher. Preflight includes work hidden by package intersection and early
-matches. Force, either null snapshot, and fixed machinery sentinels return all
-gates as true without enforcing the ceiling. Successful expectations MUST
-reject arbitrary adapter errors.
+path-selection work units whenever `force` is false, both snapshots are
+non-null, and no changed path is a fixed gating-machinery sentinel. After
+structural registry and glob validation, but before package intersection or any
+matcher call, the implementation MUST deduplicate identical globs and charge a
+literal-segment filter for every distinct pattern/file pair. The filter compares
+the literal leading and trailing path segments outside the first-to-last
+wildcard segment and costs each literal segment's Unicode-scalar count plus one.
+Only a pair whose bounds can match additionally costs
+`(pattern Unicode-scalar count + 1) * (changed-file Unicode-scalar count + 1)`.
+Exactly 50,000,000 units proceeds; checked-arithmetic overflow or a larger total
+returns an empty result and exactly one `CI_GATE_MATCH_LIMIT_EXCEEDED` error
+diagnostic without calling the matcher. Preflight includes candidate work hidden
+by package intersection and early matches. Force, either null snapshot, and
+fixed machinery sentinels return all gates as true without enforcing the
+ceiling. Successful expectations MUST reject arbitrary adapter errors.
 
 These records intentionally model decisions, not host operations:
 

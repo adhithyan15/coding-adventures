@@ -1,0 +1,16 @@
+{
+  "id": "ML-A1-LEX-40",
+  "category": "Padakosham (lexicon by domain)",
+  "label": "housing as a transaction: buying, selling, renting",
+  "probe": null,
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NE10-01"
+  ],
+  "malayalamSpecific": false,
+  "note": "Nothing taught."
+}

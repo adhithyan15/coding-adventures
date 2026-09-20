@@ -1,0 +1,22 @@
+{
+  "id": "ML-A1-V-09",
+  "category": "Kriya (the verb)",
+  "label": "more imperatives: give, run, stand, sleep",
+  "probe": [
+    "ML-LEX-GIVE",
+    "ML-LEX-RUN",
+    "ML-LEX-STAND",
+    "ML-LEX-SLEEP"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-V-11",
+    "A1-NE01-03"
+  ],
+  "malayalamSpecific": false,
+  "note": "The other four, and the ones that also carry the Spanish point about actions and positions of the body."
+}

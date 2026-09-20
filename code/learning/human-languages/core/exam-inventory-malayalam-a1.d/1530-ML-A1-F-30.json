@@ -1,0 +1,20 @@
+{
+  "id": "ML-A1-F-30",
+  "category": "Vyavahaaram (communicative functions)",
+  "label": "state a plan or intention",
+  "probe": [
+    "ML-CONCEPT-C32-POKUKA-02",
+    "ML-CONCEPT-C04-AAM-VOLITIONAL-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F3-05",
+    "A1-F3-06"
+  ],
+  "malayalamSpecific": false,
+  "note": "The future ending and the -aam volitional between them carry intention, though no lesson frames them as such."
+}

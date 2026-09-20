@@ -3512,6 +3512,13 @@ class PureDomainValidationTests(unittest.TestCase):
         self.assertTrue(
             any("😀" in pattern for gate in gates for pattern in gate["paths"])
         )
+        self.assertTrue(
+            all(
+                runner._ci_gate_literal_segment_bounds(pattern)[3] == 0
+                for gate in gates
+                for pattern in gate["paths"]
+            )
+        )
         self.assertTrue(any("😀" in path for path in changed_files))
         self.assertEqual(
             pattern_factor * path_factor,
@@ -3599,6 +3606,57 @@ class PureDomainValidationTests(unittest.TestCase):
         with self.assertRaises(runner.ConformanceError) as raised:
             runner.validate_case_document(output_collision, **self._schema_args())
         self.assertEqual(raised.exception.code, "CASE_CI_GATE_OUTPUT_COLLISION")
+
+    def test_ci_gate_selection_literal_bounds_keep_sharded_diffs_selective(
+        self,
+    ) -> None:
+        for pattern, path in (
+            ("**/dune-workspace", "dune-workspace"),
+            ("**/dune-workspace", "nested/dune-workspace"),
+            ("code/packages/*/tool/**", "code/packages/rust/tool/src/lib.rs"),
+        ):
+            bounds = runner._ci_gate_literal_segment_bounds(pattern)
+            self.assertTrue(runner._portable_glob_matches(pattern, path))
+            self.assertTrue(runner._ci_gate_literal_bounds_allow(bounds, path))
+
+        changed = [
+            "code/learning/human-languages/"
+            f"track-{index % 23}/curriculum-membership.d/{index:05d}-owner.json"
+            for index in range(10_751)
+        ]
+        options = {
+            "registry": {
+                "schema_version": 1,
+                "gates": [
+                    {
+                        "id": "fixtures",
+                        "scope": "job",
+                        "description": "Fixture consumer.",
+                        "packages": [],
+                        "paths": ["code/fixtures/**", "**/dune-workspace"],
+                    }
+                ],
+            },
+            "affected_packages": [],
+            "changed_files": changed,
+            "force": False,
+        }
+        with mock.patch(
+            "build_tool_conformance._portable_glob_matches",
+            wraps=runner._portable_glob_matches,
+        ) as matcher:
+            verdicts = runner._expected_ci_gate_selection(options)
+        self.assertEqual(
+            verdicts,
+            [
+                {
+                    "id": "fixtures",
+                    "required": False,
+                    "output_name": "run_fixtures",
+                }
+            ],
+        )
+        matcher.assert_not_called()
 
     def test_ci_gate_selection_oracle_rejects_wrong_limit_outcomes(self) -> None:
         success = load_case("ci-gate-selection-unrelated.json")

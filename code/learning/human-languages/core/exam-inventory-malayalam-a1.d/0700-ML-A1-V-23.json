@@ -1,0 +1,20 @@
+{
+  "id": "ML-A1-V-23",
+  "category": "Kriya (the verb)",
+  "label": "wanting: I want",
+  "probe": [
+    "ML-LEX-C58-WANT-01",
+    "ML-LEX-C76-VENO-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F3-03",
+    "A1-F3-04"
+  ],
+  "malayalamSpecific": false,
+  "note": "Chapter 76. The old note called this 'the single cheapest fix in this file' and was right: venda was already taught and venam appeared EXACTLY ONCE in the corpus -- inside ML-C58-no-need, which names it as 'the negative partner of venam' and then goes on without handing it over. The learner could refuse an offer they had no way of making. The chapter adds ONE genuinely new word: the question form veno is venam plus the -o particle ML-C70-o already taught, so the reader builds it in the warm-up. The result is a three-way exchange on one root -- veno? / venam / venda. It also re-states the dative-subject shape ML-A1-V-15 covers: enikku vellam venam is 'to me, water is wanted', so the WATER is the subject and the wanter is not."
+}

@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-F-12",
+  "category": "Vyavahaaram (communicative functions)",
+  "label": "say please, and soften a request",
+  "probe": [
+    "ML-CONCEPT-C08-DAYAVAYI-01",
+    "ML-CONCEPT-C08-DAYAVAYI-02",
+    "ML-CONCEPT-C08-DAYAVAYI-03"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F4-02"
+  ],
+  "malayalamSpecific": false
+}

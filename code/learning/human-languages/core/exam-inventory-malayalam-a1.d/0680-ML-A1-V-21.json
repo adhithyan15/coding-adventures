@@ -1,0 +1,16 @@
+{
+  "id": "ML-A1-V-21",
+  "category": "Kriya (the verb)",
+  "label": "the habitual past: I used to do it",
+  "probe": null,
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-V-05"
+  ],
+  "malayalamSpecific": false,
+  "note": "Not taught, and correctly low priority: Malayalam has no separate imperfect, so the Spanish distinction has no Malayalam form to land on. Recorded because the SENSE still has to be sayable at A1."
+}

@@ -1,0 +1,20 @@
+{
+  "id": "ML-A1-NEG-01",
+  "category": "Nishedham (negation)",
+  "label": "illa: the existential negative, and the everyday 'no'",
+  "probe": [
+    "ML-LEX-ILLA-01",
+    "ML-CONCEPT-C01-NEGATIVE-EXISTENCE-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-ADV-05",
+    "A1-OS-01"
+  ],
+  "malayalamSpecific": false,
+  "note": "Malayalam's first negative and the one a beginner needs most."
+}

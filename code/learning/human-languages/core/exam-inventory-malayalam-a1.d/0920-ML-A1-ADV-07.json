@@ -1,0 +1,21 @@
+{
+  "id": "ML-A1-ADV-07",
+  "category": "Kriyaavisheshanam (adverbs)",
+  "label": "certainty and doubt as adverbs: certainly, perhaps",
+  "probe": [
+    "ML-LEX-C49-REPLY-03",
+    "ML-LEX-C49-REPLY-04"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NG1-05",
+    "A1-F2-10",
+    "A1-F2-12"
+  ],
+  "malayalamSpecific": false,
+  "note": "theerchayaayum and orupakshe. Chapter 49 gives Malayalam a modal vocabulary before it has any modal verbs, which is an unusual shape and worth recording."
+}

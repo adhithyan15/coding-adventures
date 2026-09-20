@@ -1,0 +1,22 @@
+{
+  "id": "ML-A1-Q-10",
+  "category": "Chodyam (asking questions)",
+  "label": "confirming or denying what was just said",
+  "probe": [
+    "ML-LEX-ATHE-01",
+    "ML-LEX-ILLA-01",
+    "ML-LEX-SARI-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F1-05",
+    "A1-F2-06",
+    "A1-NG6-06"
+  ],
+  "malayalamSpecific": false,
+  "note": "athe, illa and sari. The corpus teaches all three in chapter 1, which is why agreement and conformity are covered this early."
+}

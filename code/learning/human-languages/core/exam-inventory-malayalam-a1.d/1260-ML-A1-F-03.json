@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-F-03",
+  "category": "Vyavahaaram (communicative functions)",
+  "label": "respond to a greeting",
+  "probe": [
+    "ML-LEX-SUKHAM-01",
+    "ML-PHRASE-C03-ARE-YOU-WELL-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F5-02",
+    "A1-F6-02"
+  ],
+  "malayalamSpecific": false
+}

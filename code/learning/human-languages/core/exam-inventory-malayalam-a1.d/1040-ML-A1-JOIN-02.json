@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-JOIN-02",
+  "category": "Samuchayam (joining and subordination)",
+  "label": "or: offering two alternatives",
+  "probe": [
+    "ML-CONCEPT-C70-O-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-CO-03",
+    "A1-F3-02"
+  ],
+  "malayalamSpecific": false,
+  "note": "athava and allengil were both absent, so the Spanish function 'ask about a preference by offering alternatives' had no form to be asked in. ML-C70-o closes it, and the form it leads on is not a standing word at all: Malayalam offers a choice with the CLITIC -o on each item, chaayayoo kaappiyoo, built exactly like the joining -um taught two lessons earlier and differing from it only in the vowel. allengil is taught alongside it as the standing word an English reader expects to find in the gap, because it is the easier thing to reach for while the ending is new."
+}

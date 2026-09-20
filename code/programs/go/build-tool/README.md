@@ -60,14 +60,17 @@ sentinel digest or printing an uncontrolled stack trace.
 ## Bounded CI gate selection
 
 CI-gate evaluation remains process-free after the registry and change
-snapshots are loaded. For ordinary pull-request snapshots, the evaluator
-preflights the complete declared gate-pattern/file Cartesian product with a
-fixed 50,000,000 Unicode-scalar work-unit ceiling before package intersection
-or the first glob call. Exactly the ceiling is accepted. A larger or
-overflowing operation returns `CI_GATE_MATCH_LIMIT_EXCEEDED`; the front door
-exits before writing a build plan or any partial gate outputs. Force, missing
-snapshots, and recognized gating-machinery changes retain their all-gates-true
-bypass.
+snapshots are loaded. For ordinary pull-request snapshots, the evaluator first
+extracts the literal leading and trailing path segments around each distinct
+glob's wildcard region. Every distinct pattern/file pair pays for that bounded
+segment filter; only pairs whose literal bounds can match pay the full
+`(pattern scalars + 1) * (path scalars + 1)` matcher-grid cost. The combined
+operation has a fixed 50,000,000 Unicode-scalar work-unit ceiling and completes
+before package intersection or the first glob call. Exactly the ceiling is
+accepted. A larger or overflowing operation returns
+`CI_GATE_MATCH_LIMIT_EXCEEDED`; the front door exits before writing a build
+plan or any partial gate outputs. Force, missing snapshots, and recognized
+gating-machinery changes retain their all-gates-true bypass.
 
 The native loader applies the neutral registry bounds first: at most 128 gates,
 4,096 unique package names and path globs per gate, 512 Unicode scalars per

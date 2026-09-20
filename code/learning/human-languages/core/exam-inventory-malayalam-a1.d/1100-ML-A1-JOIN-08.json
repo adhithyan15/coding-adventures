@@ -1,0 +1,18 @@
+{
+  "id": "ML-A1-JOIN-08",
+  "category": "Samuchayam (joining and subordination)",
+  "label": "if: the conditional clause",
+  "probe": [
+    "ML-GRAMMAR-C75-AAL-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-SUB-08"
+  ],
+  "malayalamSpecific": false,
+  "note": "Chapter 75. -aal on the PAST form, which is the part worth slowing down for: the sentence is not about the past, and the time is carried by the verb at the end. Taught alongside -umbol as a minimal pair, since one ending is the entire difference between 'when he comes' and 'if he comes'. Chapter 73's refusal to decompose ennaal and enthukondennaal is left standing and said so on the page."
+}

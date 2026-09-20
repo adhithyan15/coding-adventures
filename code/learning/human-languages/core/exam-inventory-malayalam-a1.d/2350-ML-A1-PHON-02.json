@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-PHON-02",
+  "category": "Uccharanam (pronunciation)",
+  "label": "zha, the sound Malayalam shares only with Tamil",
+  "probe": [
+    "ML-SCRIPT-RECOG-118",
+    "ML-CONCEPT-C33-EZHUTUKA-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-O1-03"
+  ],
+  "malayalamSpecific": false,
+  "note": "ML-C33-ezhutuka names it explicitly as the letter Tamil also carries, which is the one place the corpus teaches a sound as a sound."
+}

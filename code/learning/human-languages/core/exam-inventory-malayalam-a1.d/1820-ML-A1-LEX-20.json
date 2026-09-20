@@ -1,0 +1,22 @@
+{
+  "id": "ML-A1-LEX-20",
+  "category": "Padakosham (lexicon by domain)",
+  "label": "animals of the house and the yard",
+  "probe": [
+    "ML-CONCEPT-C21-NAAYA-POOCHA-01",
+    "ML-LEX-C60-ANIMAL-01",
+    "ML-LEX-C60-ANIMAL-02",
+    "ML-LEX-C60-ANIMAL-03",
+    "ML-LEX-C60-ANIMAL-04",
+    "ML-LEX-C60-ANIMAL-05"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NE20-05"
+  ],
+  "malayalamSpecific": false
+}

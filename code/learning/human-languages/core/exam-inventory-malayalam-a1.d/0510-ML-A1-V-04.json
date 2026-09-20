@@ -1,0 +1,22 @@
+{
+  "id": "ML-A1-V-04",
+  "category": "Kriya (the verb)",
+  "label": "the past tense, and the one place a Malayalam verb can still surprise you",
+  "probe": [
+    "ML-CONCEPT-C32-VARUKA-01",
+    "ML-CONCEPT-C32-VARUKA-02"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-V-04",
+    "A1-V-06",
+    "A1-V-07",
+    "A1-V-08"
+  ],
+  "malayalamSpecific": false,
+  "note": "Four Spanish past-tense points collapse into one, because Malayalam has one past and it is regular except in the stem. varuka is where the corpus teaches the irregularity."
+}

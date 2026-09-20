@@ -1,0 +1,20 @@
+{
+  "id": "ML-A1-LEX-53",
+  "category": "Padakosham (lexicon by domain)",
+  "label": "good and bad as evaluations",
+  "probe": [
+    "ML-LEX-C42-ADJ-03"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NG6-01",
+    "A1-NG6-04",
+    "A1-NG6-07"
+  ],
+  "malayalamSpecific": false,
+  "note": "nalla is taught and there is no word for bad, so evaluation runs one way only. Three Spanish points depend on the pair and are half answered by half of it."
+}

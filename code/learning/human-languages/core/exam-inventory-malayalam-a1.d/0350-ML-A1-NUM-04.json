@@ -1,0 +1,23 @@
+{
+  "id": "ML-A1-NUM-04",
+  "category": "Sankhya (numerals and quantity)",
+  "label": "counting past twenty, and the hundreds",
+  "probe": [
+    "ML-CONCEPT-C88-TENS-01",
+    "ML-CONCEPT-C88-TENS-02",
+    "ML-CONCEPT-C88-NINETY-01",
+    "ML-CONCEPT-C88-HUNDRED-01",
+    "ML-GRAMMAR-C88-COMPOUND-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-Q-01",
+    "A1-NG2-01"
+  ],
+  "malayalamSpecific": false,
+  "note": "Chapter 88. The old note was right that the count stopped at twenty and that prices, ages over twenty and years were all out of reach. The chapter extends the pattern chapter 20 already made visible: irupathu is iru plus pathu, and every ten from thirty up is that same word with a different digit on the front. The digits appear in OLDER SHORT FORMS that survive only in compounds -- aaru shows as aru-, eezhu as ezhu- -- so the lesson says plainly that this is a pattern to READ WITH, NOT TO BUILD WITH, and that ampathu has worn furthest of all. NINETY BREAKS THE RUN and the chapter teaches a hundred FIRST so that it does not have to be memorised as noise: thonnooru carries nooru, not pathu, so ninety is named from ABOVE where the other tens are named from below. The compound rule then reuses a stem change the learner has already met -- a ten takes -tthi- before a digit, the same kind of change Keralam makes before its ending. HL-C398 supplied source-verified chillu NN evidence, so eighty now appears in full as എൺപത് instead of remaining a romanization-only exception."
+}

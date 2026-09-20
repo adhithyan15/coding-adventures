@@ -1,0 +1,20 @@
+{
+  "id": "ML-A1-LEX-09",
+  "category": "Padakosham (lexicon by domain)",
+  "label": "grandparents and the married pair",
+  "probe": [
+    "ML-LEX-GRANDFATHER",
+    "ML-LEX-GRANDMOTHER",
+    "ML-LEX-HUSBAND",
+    "ML-LEX-WIFE"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NE04-01"
+  ],
+  "malayalamSpecific": false
+}
