@@ -217,11 +217,14 @@ controlled scalar, and ordinary local scalars that are unchanged or evolve
 through an acyclic graph of supported recurrences. Those changing dependency
 recurrences may contain conditional expressions when their selectors are the
 controlled scalar or other exact local snapshots in that acyclic graph. The
-controlled scalar itself may likewise be updated alongside other supported local scalar
-recurrences; the next `while`
-element expression consumes all resulting exact dependency and control
+recurrence assignment itself may also appear in one or both branches of a
+conditional statement selected by those snapshots; a branch without the
+assignment leaves the dependency unchanged for that pass. The controlled
+scalar itself may likewise be updated alongside other supported local scalar
+recurrences; the next `while` element expression consumes all resulting exact
+dependency and control
 snapshots, and terminating sibling snapshots remain available after the loop.
-Dynamic selectors, cyclic dependency writes, string targets,
+Unknown selectors, cyclic dependency writes, string targets,
 and loops that do not reach false within 4,096 evaluations fail closed.
 A conditional predicate is also evaluated when its selector is statically
 known; only the selected branch participates in the proof.

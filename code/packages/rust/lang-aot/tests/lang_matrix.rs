@@ -2912,6 +2912,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("3.253.53.250.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a changing exact selector may choose a supported recurrence
+    // statement on some bounded passes and leave the dependency unchanged on others.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n; boolean guard; real r; i := 0; n := 4; guard := true; r := 0.25; for i := i + 1 while i <= n do begin r := r + i; if guard then n := n - 1; guard := not guard end; print(i + 0.25); print(n + 0.5); print(r) end",
+        expect: Expect::Stdout("4.252.56.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — an exact scalar self-assignment is an idempotent body write,
     // so the stable local while dependency remains available to the proof.
     Prog {
@@ -13966,6 +13975,29 @@ fn algol_conditional_while_recurrence_inputs_run_on_every_available_standard_bac
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the conditional while-recurrence input did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_conditional_statement_recurrences_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("if guard then n := n - 1")
+        })
+        .expect("the conditional statement-recurrence program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the conditional statement recurrence did not run"
             );
             continue;
         };
