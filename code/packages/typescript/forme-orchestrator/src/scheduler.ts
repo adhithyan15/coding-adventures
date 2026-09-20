@@ -1,11 +1,8 @@
 /**
- * Pipeline scheduler — executes a DAG sequentially in topological order.
+ * Pipeline scheduler — executes a stable DAG-ready queue with one shared
+ * stage/per-item concurrency budget.
  *
  * v0 simplifications (deferred to follow-up):
- *
- *   - **Sequential execution.**  Each stage runs to completion before
- *     the next starts.  `settings.maxConcurrency` is honoured at "1".
- *     Real parallelism for fan-out / fan-in lands in v1.
  *
  *   - **No streaming pipelining.**  When a stage produces a Stream<X>,
  *     we drain it fully into memory before passing per-value to the
@@ -31,6 +28,7 @@
  * What v0 *does* implement:
  *
  *   - Topological execution
+ *   - Stable concurrent DAG readiness and ordered per-item parallelism
  *   - Per-stage StageContext construction with denied-by-default
  *     capability APIs
  *   - init/dispose lifecycle hooks
@@ -90,6 +88,7 @@ import {
   loadInstanceCheckpoint,
   persistInstanceCheckpoint,
 } from "./instance-checkpoint.js";
+import { createConcurrencyPool } from "./concurrency.js";
 
 /** Per-instance run state held during execution. */
 interface RunState {
@@ -127,6 +126,8 @@ export interface SchedulerOptions {
   readonly bestEffort: boolean;
   readonly cache: CacheBackend;
   readonly useCache: boolean;
+  /** One pipeline-wide bound shared by stage and per-item invocations. */
+  readonly maxConcurrency: number;
   /** Prior successful revisions for affected-set scheduling. */
   readonly previousLedger?: PipelineRevisionLedger | null;
   /** Topology-specific namespace used for materialized output checkpoints. */
@@ -191,6 +192,17 @@ export async function executeDag(
   const states = new Map<string, RunState>();
   const errors: RunError[] = [];
   const outputs = new Map<string, unknown>();
+  const lifecycle = createCancellationTokenSource();
+  let cancelled = options.cancellation.cancelled;
+  options.cancellation.onCancel(() => {
+    cancelled = true;
+    lifecycle.cancel(options.cancellation.reason ?? undefined);
+  });
+  const runOptions: SchedulerOptions = {
+    ...options,
+    cancellation: lifecycle.token,
+  };
+  const pool = createConcurrencyPool(options.maxConcurrency, lifecycle.token);
 
   // Choose a clock factory once for the whole run.  Reproducible-build
   // mode hands every stage a frozenClock; otherwise systemClock.
@@ -202,7 +214,7 @@ export async function executeDag(
     const inst = dag.instances.get(id)!;
     states.set(id, makeState(inst));
     if (typeof inst.stage.init !== "function") continue;
-    const initCtx: StageInitContext = makeInitContext(inst, options, newClock);
+    const initCtx: StageInitContext = makeInitContext(inst, runOptions, newClock);
     try {
       await inst.stage.init(inst.config, initCtx);
       states.get(id)!.initialized = true;
@@ -210,7 +222,7 @@ export async function executeDag(
       // Init failure → fail the whole run (no per-input concept yet).
       const re = toRunError(err, inst);
       errors.push(re);
-      await disposeAll(dag, states, options);
+      await disposeAll(dag, states, runOptions);
       const summaries = Array.from(states.values()).map(s => ({
         ...s.summary,
         outcome: "failed" as const,
@@ -219,25 +231,40 @@ export async function executeDag(
     }
   }
 
-  // Execute pass.
-  let cancelled = false;
+  // Execute pass. Readiness orchestration itself does not consume a permit;
+  // every Stage.run/replay/externalState invocation does. This lets a
+  // materialized per-item stage submit all of its ordered invocations without
+  // holding a parent permit and deadlocking the shared budget.
   let anyRecoverableErrors = false;
   let anyFatal = false;
+  const topoIndex = new Map(dag.topoOrder.map((id, index) => [id, index]));
+  const runInvocation = async <T>(
+    inst: ResolvedInstance,
+    invoke: () => Promise<T> | T,
+  ): Promise<T> => pool.run(async () => {
+    try {
+      return await invoke();
+    } catch (error) {
+      if (!(error instanceof CancellationError)) {
+        const invocationError = toRunError(error, inst);
+        if (!(invocationError.recoverable && runOptions.bestEffort)) {
+          // Close the pool before this permit is released, so FIFO dispatch
+          // cannot start the next queued invocation after a fatal failure.
+          lifecycle.cancel(`fatal stage failure in ${inst.id}`);
+        }
+      }
+      throw error;
+    }
+  });
 
-  for (const id of dag.topoOrder) {
-    if (options.cancellation.cancelled) {
-      cancelled = true;
-      states.get(id)!.summary.outcome = "skipped";
-      continue;
-    }
-    if (anyFatal) {
-      // Skip downstream stages after a fatal error.
-      states.get(id)!.summary.outcome = "skipped";
-      continue;
-    }
+  const executeInstance = async (id: string): Promise<void> => {
     const state = states.get(id)!;
     const inst = dag.instances.get(id)!;
-    const startMonotonic = options.cancellation.cancelled ? 0 : Date.now();
+    if (lifecycle.token.cancelled) {
+      state.summary.outcome = "skipped";
+      return;
+    }
+    const startMonotonic = Date.now();
 
     try {
       // Sources have no input; non-sources read from their producer's
@@ -245,14 +272,17 @@ export async function executeDag(
       const inputs = hasNamedInputs(inst)
         ? collectPortInputs(inst, states)
         : collectInputs(inst, states);
-      const ctx: StageContext = makeRunContext(inst, options, newClock);
+      const ctx: StageContext = makeRunContext(inst, runOptions, newClock);
       if (typeof inst.stage.externalState === "function") {
         if (inst.producer !== null || inst.inputProducers.size !== 0) {
           throw new Error(
             `scheduler: externalState is only valid on source instances; ${JSON.stringify(inst.id)} has producers`,
           );
         }
-        const manifest = await inst.stage.externalState(inst.config, ctx);
+        const manifest = await runInvocation(
+          inst,
+          () => inst.stage.externalState!(inst.config, ctx),
+        );
         validateExternalStateManifest(manifest, inst.id);
         state.summary.externalStateRevision = manifest.revision;
       }
@@ -270,30 +300,33 @@ export async function executeDag(
         && !upstreamAffected;
 
       if (
-        options.useCache
+        runOptions.useCache
         && knownUnchanged
         && prior.outputRevision !== null
-        && options.checkpointNamespace !== undefined
+        && runOptions.checkpointNamespace !== undefined
         && canCheckpointInstance(inst)
       ) {
         const restored = await loadInstanceCheckpoint(
-          options.cache,
-          options.checkpointNamespace,
+          runOptions.cache,
+          runOptions.checkpointNamespace,
           inst,
           state.summary.inputRevision!,
           prior.outputRevision,
-          options.logger,
+          runOptions.logger,
         );
         if (restored !== null) {
           let replaySucceeded = true;
           if (typeof inst.stage.replay === "function") {
             try {
-              options.cancellation.throwIfCancelled();
-              await inst.stage.replay(restored.value as never, inst.config, ctx);
+              lifecycle.token.throwIfCancelled();
+              // Replay failure is deliberately fail-open: release the permit
+              // and fall through to a normal guarded Stage.run invocation.
+              await pool.run(() =>
+                inst.stage.replay!(restored.value as never, inst.config, ctx));
             } catch (error) {
               if (error instanceof CancellationError) throw error;
               replaySucceeded = false;
-              options.logger.warn(
+              runOptions.logger.warn(
                 `instance checkpoint replay failed open for ${inst.stage.name} (${inst.id})`,
                 { error: String(error) },
               );
@@ -310,7 +343,7 @@ export async function executeDag(
             state.summary.cacheHits = 1;
             state.summary.outputRevision = prior.outputRevision;
             state.summary.outcome = "skipped";
-            continue;
+            return;
           }
         }
       }
@@ -324,11 +357,11 @@ export async function executeDag(
         // Named fan-in is a join boundary: every producer has already been
         // materialized, every stream gets a fresh replayable AsyncIterable,
         // and the stage is invoked exactly once with the stable port object.
-        const stored = await runCached(inst, cacheInputValue(inst, states), options, async () =>
-          materialize(
+        const stored = await runCached(inst, cacheInputValue(inst, states), runOptions, () =>
+          runInvocation(inst, async () => materialize(
             await inst.stage.run(inputs.value as never, inst.config, ctx),
             inst.stage.produces.name === "Stream",
-          ));
+          )));
         state.output = stored.value;
         state.isStreamOutput = stored.isStream;
         state.summary.cacheHits += stored.cacheHit ? 1 : 0;
@@ -340,11 +373,11 @@ export async function executeDag(
       } else if (inst.stage.consumes.name === "Stream" || inst.stage.consumes.name === "Void"
           || isSingleProducer(inst, dag, states)) {
         // One invocation: source / collector-style / single-input.
-        const stored = await runCached(inst, cacheInputValue(inst, states), options, async () =>
-          materialize(
+        const stored = await runCached(inst, cacheInputValue(inst, states), runOptions, () =>
+          runInvocation(inst, async () => materialize(
             await inst.stage.run(inputs.value as never, inst.config, ctx),
             inst.stage.produces.name === "Stream",
-          ));
+          )));
         state.output = stored.value;
         state.isStreamOutput = stored.isStream;
         state.summary.cacheHits += stored.cacheHit ? 1 : 0;
@@ -359,15 +392,37 @@ export async function executeDag(
         // Mark the result stream-shaped so downstream consumers
         // iterate again — semantically this stage produced N values.
         const list = inputs.value as unknown[];
-        const collected: unknown[] = [];
-        for (const item of list) {
-          options.cancellation.throwIfCancelled();
-          const sub = await runCached(inst, item, options, async () =>
-            materialize(await inst.stage.run(item as never, inst.config, ctx), false));
-          state.summary.cacheHits += sub.cacheHit ? 1 : 0;
-          state.summary.cacheMisses += sub.cacheMiss ? 1 : 0;
-          collected.push(sub.value);
+        const collected = new Array<unknown>(list.length);
+        const itemResults = await Promise.allSettled(list.map(async (item, index) => {
+          lifecycle.token.throwIfCancelled();
+          try {
+            const sub = await runCached(inst, item, runOptions, () =>
+              runInvocation(inst, async () => materialize(
+                await inst.stage.run(item as never, inst.config, ctx),
+                false,
+              )));
+            collected[index] = sub.value;
+            return sub;
+          } catch (error) {
+            if (!(error instanceof CancellationError)) {
+              const itemError = toRunError(error, inst);
+              if (!(itemError.recoverable && runOptions.bestEffort)) {
+                lifecycle.cancel(`fatal stage failure in ${inst.id}`);
+              }
+            }
+            throw error;
+          }
+        }));
+        let firstItemError: unknown = null;
+        for (const result of itemResults) {
+          if (result.status === "fulfilled") {
+            state.summary.cacheHits += result.value.cacheHit ? 1 : 0;
+            state.summary.cacheMisses += result.value.cacheMiss ? 1 : 0;
+          } else if (firstItemError === null || firstItemError instanceof CancellationError) {
+            firstItemError = result.reason;
+          }
         }
+        if (firstItemError !== null) throw firstItemError;
         state.output = collected;
         state.isStreamOutput = true;
         state.summary.itemsConsumed = list.length;
@@ -378,26 +433,29 @@ export async function executeDag(
       state.affected = scheduledAffected
         || prior?.outputRevision !== state.summary.outputRevision;
       if (
-        options.useCache
-        && options.checkpointNamespace !== undefined
+        runOptions.useCache
+        && runOptions.checkpointNamespace !== undefined
         && state.summary.inputRevision !== null
         && state.summary.outputRevision !== null
         && canCheckpointInstance(inst)
       ) {
         await persistInstanceCheckpoint(
-          options.cache,
-          options.checkpointNamespace,
+          runOptions.cache,
+          runOptions.checkpointNamespace,
           inst,
           state.summary.inputRevision,
           { value: state.output, isStream: state.isStreamOutput },
-          options.logger,
+          runOptions.logger,
         );
       }
     } catch (err) {
       if (err instanceof CancellationError) {
-        cancelled = true;
         state.summary.outcome = "skipped";
-        continue;
+        if (!anyFatal && !lifecycle.token.cancelled) {
+          cancelled = true;
+          lifecycle.cancel(err.message);
+        }
+        return;
       }
       const runError = toRunError(err, inst);
       errors.push(runError);
@@ -409,12 +467,54 @@ export async function executeDag(
         // output will see undefined and will likely fail too — but
         // best-effort is best-effort.
       } else {
-        // Fail-fast OR non-recoverable best-effort: stop scheduling more.
         anyFatal = true;
+        lifecycle.cancel(`fatal stage failure in ${inst.id}`);
       }
     } finally {
       state.summary.elapsedMs = Date.now() - startMonotonic;
     }
+  };
+
+  const remainingDependencies = new Map<string, number>();
+  const consumers = new Map<string, string[]>();
+  for (const id of dag.topoOrder) {
+    const inst = dag.instances.get(id)!;
+    const dependencies = new Set<string>();
+    if (inst.producer !== null) dependencies.add(inst.producer);
+    for (const producerId of inst.inputProducers.values()) dependencies.add(producerId);
+    remainingDependencies.set(id, dependencies.size);
+    for (const producerId of dependencies) {
+      const downstream = consumers.get(producerId) ?? [];
+      downstream.push(id);
+      downstream.sort((left, right) => topoIndex.get(left)! - topoIndex.get(right)!);
+      consumers.set(producerId, downstream);
+    }
+  }
+
+  const ready = dag.topoOrder.filter(id => remainingDependencies.get(id) === 0);
+  const inFlight = new Map<string, Promise<string>>();
+  const launched = new Set<string>();
+  while (ready.length > 0 || inFlight.size > 0) {
+    while (ready.length > 0 && !lifecycle.token.cancelled && !anyFatal) {
+      const id = ready.shift()!;
+      launched.add(id);
+      inFlight.set(id, executeInstance(id).then(() => id));
+    }
+    if (inFlight.size === 0) break;
+    const completedId = await Promise.race(inFlight.values());
+    inFlight.delete(completedId);
+    if (lifecycle.token.cancelled || anyFatal) continue;
+    for (const consumerId of consumers.get(completedId) ?? []) {
+      const remaining = remainingDependencies.get(consumerId)! - 1;
+      remainingDependencies.set(consumerId, remaining);
+      if (remaining === 0) {
+        ready.push(consumerId);
+        ready.sort((left, right) => topoIndex.get(left)! - topoIndex.get(right)!);
+      }
+    }
+  }
+  for (const id of dag.topoOrder) {
+    if (!launched.has(id)) states.get(id)!.summary.outcome = "skipped";
   }
 
   // Sinks → outputs map (keyed by instance id; OutputSpec naming
@@ -427,7 +527,7 @@ export async function executeDag(
   }
 
   // Always dispose, regardless of outcome.
-  await disposeAll(dag, states, options);
+  await disposeAll(dag, states, runOptions);
 
   const outcome: RunOutcome = cancelled
     ? "cancelled"
@@ -441,7 +541,8 @@ export async function executeDag(
     outcome,
     outputs,
     summaries: dag.topoOrder.map(id => ({ ...states.get(id)!.summary })),
-    errors,
+    errors: errors.sort((left, right) =>
+      topoIndex.get(left.instanceId)! - topoIndex.get(right.instanceId)!),
   };
 }
 

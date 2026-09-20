@@ -15,6 +15,7 @@
  *   - Times the wall-clock end-to-end.
  */
 
+import { availableParallelism } from "node:os";
 import { computeRevisionId } from "@coding-adventures/forme-identity";
 import { memoryCache, type CacheBackend } from "@coding-adventures/forme-cache";
 import {
@@ -71,6 +72,8 @@ export async function runOnce(
       logger,
       cache,
       useCache: options.useCache ?? true,
+      maxConcurrency: pipeline.config.settings.maxConcurrency
+        ?? Math.max(1, availableParallelism()),
       previousLedger,
       checkpointNamespace: revisionLedgerKey(pipeline),
       // Honour the pipeline's reproducible-build setting (FM03 §8).
