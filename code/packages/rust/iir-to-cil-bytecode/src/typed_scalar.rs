@@ -1,10 +1,11 @@
 //! Strict scalar lowering has its own validation boundary. Legacy heap and
 //! dynamically typed programs must never silently select this ABI.
 use crate::{IIRClrConfig, IIRClrError};
-use interpreter_ir::{IIRModule, Operand};
+use interpreter_ir::{IIRFunction, IIRModule, Operand};
 use ir_to_cil_bytecode::builder::CILBytecodeBuilder;
+use ir_to_cil_bytecode::CILBranchKind;
 use ir_to_cil_bytecode::{CILMethodArtifact, CILProgramArtifact, SequentialCILTokenProvider};
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 fn invalid(function: &str, detail: &str) -> IIRClrError {
     IIRClrError::InvalidOperand {
@@ -54,7 +55,114 @@ fn load(b: &mut CILBytecodeBuilder, s: Slot) {
     }
 }
 
-/// Lower only explicitly typed straight-line i32/i64/bool scalar functions.
+// Forward edges let us prove assignment with one pass: a join receives only
+// names present on every predecessor, never the union of names seen in text.
+fn validate_flow(f: &IIRFunction) -> Result<(), IIRClrError> {
+    let n = f.instructions.len();
+    if n == 0 {
+        return Err(invalid(&f.name, "empty function"));
+    }
+    // Bound assignment sets before propagation. Otherwise malformed functions
+    // with thousands of destinations cause quadratic copying before refusal.
+    if f.instructions
+        .iter()
+        .filter(|ins| ins.dest.is_some())
+        .take(257)
+        .count()
+        > 256
+    {
+        return Err(invalid(&f.name, "too many locals"));
+    }
+    let mut labels = HashMap::new();
+    for (i, ins) in f.instructions.iter().enumerate() {
+        if matches!(
+            ins.op.as_str(),
+            "label" | "jmp" | "jmp_if_true" | "jmp_if_false"
+        ) {
+            let count = if matches!(ins.op.as_str(), "jmp_if_true" | "jmp_if_false") {
+                2
+            } else {
+                1
+            };
+            if ins.dest.is_some()
+                || ins.type_hint != "void"
+                || ins.srcs.len() != count
+                || ins
+                    .srcs
+                    .iter()
+                    .any(|s| !matches!(s, Operand::Var(v) if !v.is_empty()))
+            {
+                return Err(invalid(&f.name, "invalid control shape or hint"));
+            }
+            if ins.op == "label" {
+                let Operand::Var(name) = &ins.srcs[0] else {
+                    unreachable!()
+                };
+                if labels.insert(name.as_str(), i).is_some() {
+                    return Err(invalid(&f.name, "duplicate label"));
+                }
+            }
+        }
+    }
+    let mut incoming: Vec<Option<HashSet<&str>>> = vec![None; n];
+    incoming[0] = Some(f.params.iter().map(|(name, _)| name.as_str()).collect());
+    for (i, ins) in f.instructions.iter().enumerate() {
+        let mut assigned = incoming[i]
+            .take()
+            .ok_or_else(|| invalid(&f.name, "unreachable instruction"))?;
+        let op = ins.op.as_str();
+        let reads: &[Operand] = match op {
+            "const" | "label" | "jmp" => &[],
+            "jmp_if_true" | "jmp_if_false" => &ins.srcs[..1],
+            "call" => ins.srcs.get(1..).unwrap_or(&[]),
+            _ => &ins.srcs,
+        };
+        for src in reads {
+            if let Operand::Var(name) = src {
+                if !assigned.contains(name.as_str()) {
+                    return Err(invalid(
+                        &f.name,
+                        "undefined or forward variable: not definitely assigned",
+                    ));
+                }
+            }
+        }
+        if let Some(dest) = &ins.dest {
+            assigned.insert(dest.as_str());
+        }
+        let mut successors = Vec::new();
+        if matches!(op, "jmp" | "jmp_if_true" | "jmp_if_false") {
+            let Operand::Var(target) = ins.srcs.last().expect("validated control shape") else {
+                unreachable!()
+            };
+            let target = *labels
+                .get(target.as_str())
+                .ok_or_else(|| invalid(&f.name, "undefined label"))?;
+            if target <= i {
+                return Err(invalid(&f.name, "branch target must be forward"));
+            }
+            successors.push(target);
+        }
+        if !matches!(op, "jmp" | "ret") {
+            if i + 1 == n {
+                return Err(invalid(
+                    &f.name,
+                    "function must end with ret: control falls off",
+                ));
+            }
+            successors.push(i + 1);
+        }
+        for next in successors {
+            match &mut incoming[next] {
+                Some(previous) => previous.retain(|name| assigned.contains(name)),
+                slot @ None => *slot = Some(assigned.clone()),
+            }
+        }
+    }
+    Ok(())
+}
+
+/// Lower explicitly typed i32/i64/bool functions with forward-only control flow.
 ///
 /// Unsupported operations or inconsistent signatures return an error, never a
 /// legacy fallback. Integer immediates retain the CLR01 i32 range restriction;
@@ -100,14 +208,43 @@ pub fn lower_typed_scalars_to_cil(
                 return Err(invalid(&f.name, "empty or duplicate parameter"));
             }
         }
-        if f.instructions.last().map(|i| i.op.as_str()) != Some("ret") {
-            return Err(invalid(&f.name, "function must end with ret"));
-        }
+        validate_flow(f)?;
         let mut b = CILBytecodeBuilder::new();
         let mut locals = Vec::new();
-        for (position, ins) in f.instructions.iter().enumerate() {
-            let ty = width(&f.name, &ins.type_hint)?;
+        for ins in &f.instructions {
             let op = ins.op.as_str();
+            // Control instructions have void hints and do not produce locals.
+            // Shape, target and assignment checks have already completed.
+            if matches!(op, "label" | "jmp" | "jmp_if_true" | "jmp_if_false") {
+                let Operand::Var(target) = ins.srcs.last().expect("validated control shape") else {
+                    unreachable!()
+                };
+                if op == "label" {
+                    b.mark(target);
+                } else {
+                    let kind = match op {
+                        "jmp" => CILBranchKind::Always,
+                        "jmp_if_true" => CILBranchKind::True,
+                        _ => CILBranchKind::False,
+                    };
+                    if op != "jmp" {
+                        let Operand::Var(condition) = &ins.srcs[0] else {
+                            unreachable!()
+                        };
+                        let slot = slots
+                            .get(condition.as_str())
+                            .copied()
+                            .ok_or_else(|| invalid(&f.name, "undefined condition"))?;
+                        if slot.ty != ScalarType::Bool {
+                            return Err(invalid(&f.name, "branch condition must be bool"));
+                        }
+                        load(&mut b, slot);
+                    }
+                    b.emit_branch(kind, target, false);
+                }
+                continue;
+            }
+            let ty = width(&f.name, &ins.type_hint)?;
             let arity = match op {
                 "const" | "mov" | "neg" | "ret" => 1,
                 "add" | "sub" | "mul" | "div" | "and" | "or" | "xor" | "cmp_eq" | "cmp_ne"
@@ -124,10 +261,7 @@ pub fn lower_typed_scalars_to_cil(
                 return Err(invalid(&f.name, "incorrect operand count"));
             }
             if op == "ret" {
-                if ins.dest.is_some()
-                    || position + 1 != f.instructions.len()
-                    || ty != width(&f.name, &f.return_type)?
-                {
+                if ins.dest.is_some() || ty != width(&f.name, &f.return_type)? {
                     return Err(invalid(&f.name, "invalid return shape or width"));
                 }
             } else {

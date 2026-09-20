@@ -10,6 +10,16 @@ roadmap is reconciled.
 
 ## Encoded CLR input prerequisites (selected 2026-09-19 after VM-058)
 
+### CLR12 forward-only scalar control flow implemented locally (2026-09-20)
+
+Contract `CLR12-strict-forward-scalar-control-flow.md` was committed as
+`2159a5d79ed64d458014a4f40981aa933a430bb0` before implementation. The opt-in
+backend validates forward control, reachability and intersection definite
+assignment, then emits builder branches and multiple returns. Backend and
+encoded execution tests pass; publication validation is in progress. General
+cycles, default source routing and input ABI remain deferred. CLR11's remaining
+push CI passed: all five exact-head workflows succeeded; monitoring is complete.
+
 ### CLR11 landed; strict CFG contract next (2026-09-20)
 
 PR #15730 was merged externally as

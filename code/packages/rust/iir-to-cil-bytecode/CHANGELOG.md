@@ -1,5 +1,14 @@
 # Changelog — iir-to-cil-bytecode
 
+## Unreleased — strict forward scalar control flow (CLR12)
+
+Add opt-in forward-only labels and branches with void control shapes, Bool
+conditions and multiple typed returns. Require reachability and definite
+assignment at every join; refuse backward edges, unresolved labels and falloff.
+Bound destinations before assignment propagation. Encoded execution tests cover
+both conditional outcomes, nested branches, wide values and long promotion.
+Default source routing and scalar/literal/input gates remain unchanged.
+
 ## Unreleased — canonical strict minus-one encoding (CLR11)
 
 Remove the strict scalar emitter's obsolete full-width i32 -1 workaround now

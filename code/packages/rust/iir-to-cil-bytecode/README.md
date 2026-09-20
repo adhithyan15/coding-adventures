@@ -9,8 +9,8 @@ refuses wider values before artifact creation; it never silently truncates them.
 The separate textual `emit_il` path supports `int64` literals on CoreCLR.
 The opt-in `lower_typed_scalars_to_cil(&module, &config)` API preserves i32/i64
 scalar widths in encoded literals, locals, parameters, returns and direct calls.
-It accepts single-assignment straight-line functions using const, mov, arithmetic,
-bitwise operations, negation, comparisons and a final return. All hints and call signatures
+It accepts single-assignment forward-only functions using const, mov, arithmetic,
+bitwise operations, negation, comparisons and typed returns. All hints and call signatures
 must agree; unsupported operations and mixed widths return errors. Parameters
 and locals are each limited to 256, matching executable short-slot opcodes.
 For example, typed i64 `2147483647 + 1` returns `Int64(2147483648)` in the
@@ -19,7 +19,7 @@ when selecting the entry method, since `entry_method()` returns the first method
 
 This API is separate from default `lower_iir_to_cil` and source compilation.
 Default source routing still narrows scalar hints; its full-width migration,
-branches, heap/closure ABI and host input remain future work.
+general loops, heap/closure ABI and host input remain future work.
 The CLR01 immediate range restriction also remains in the strict API.
 
 The strict API also accepts `cmp_eq/ne/lt/le/gt/ge` on matched i32 or i64
@@ -28,6 +28,12 @@ representation. Bool constants use `Operand::Bool`; moves, parameters, calls
 and returns retain the logical type even though metadata uses int32. Bool
 arithmetic and implicit bool/integer conversions are refused. Signed i32 -1
 uses the canonical compact `ldc.i4.m1` encoding supported by the simulator.
+
+CLR12 accepts `label`, `jmp`, `jmp_if_true` and `jmp_if_false` with void hints
+and no destination. Conditional values must be logical Bool. Every instruction
+must be reachable, targets must be forward, and each value read must be assigned
+on every incoming path. Multiple exact typed returns are supported. Backward
+edges, malformed controls, skipped definitions at joins and falloff are refused.
 
 ## What is CIL?
 

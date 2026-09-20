@@ -50,7 +50,6 @@ fn i32_minus_one_uses_the_canonical_compact_encoding() {
 fn excluded_operations_and_types_never_fall_back() {
     for op in [
         "br",
-        "label",
         "eq",
         "lt",
         "shl",
@@ -115,11 +114,11 @@ fn malformed_definitions_returns_and_literals_are_refused() {
         ),
         (
             |m| m.functions[0].instructions[0].dest = None,
-            "destination",
+            "not definitely assigned",
         ),
         (
             |m| m.functions[0].instructions[0].dest = Some("".into()),
-            "destination",
+            "not definitely assigned",
         ),
         (
             |m| {
@@ -165,7 +164,7 @@ fn malformed_definitions_returns_and_literals_are_refused() {
                 let i = m.functions[0].instructions[1].clone();
                 m.functions[0].instructions.push(i);
             },
-            "return shape",
+            "unreachable",
         ),
         (
             |m| {
