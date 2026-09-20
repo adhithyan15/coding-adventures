@@ -75,6 +75,10 @@ import {
   type SoundTagRegistry,
 } from "./sound-tags.js";
 import { readSoundTagRegistryOwners } from "./sound-tag-shards.js";
+import {
+  readReadingReachFloorOwners,
+  type ReadingReachFloorRegistry,
+} from "./reading-reach-floor-shards.js";
 import type {
   BookChapter,
   BookCorpus,
@@ -338,6 +342,15 @@ export function listTaskShapeInventories(root = defaultCurriculumRoot()): Array<
     }
   }
   return found;
+}
+
+/** Load the sharded reading-reach ratchet against independent task-shape identities. */
+export function loadReadingReachFloors(
+  root = defaultCurriculumRoot(),
+): ReadingReachFloorRegistry {
+  return readReadingReachFloorOwners(root, {
+    expectedInventories: listTaskShapeInventories(root),
+  });
 }
 
 /**

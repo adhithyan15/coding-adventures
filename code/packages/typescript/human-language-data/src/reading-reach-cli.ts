@@ -6,7 +6,7 @@
 // parallel author must rebuild and can conflict on. A fourth would cost every
 // future authoring branch a regeneration step to tell a reader something they
 // can print on demand. The invariants that actually need enforcing live in
-// `reading-reach.test.ts` and in `core/reading-reach-floor.json`, which is
+// `reading-reach.test.ts` and in `core/reading-reach-floor.d/`, which is
 // touched only when a track's reading genuinely grows.
 
 import { resolve } from "node:path";

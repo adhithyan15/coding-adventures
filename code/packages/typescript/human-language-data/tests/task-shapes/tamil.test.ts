@@ -60,7 +60,7 @@ it("declares a published stimulus length, so reading reach can measure it rather
   // This target is project-defined, so there is no external body to be silent:
   // the number is ours to state, and stating it is what makes the reading rung
   // checkable. Chapter 84's passage landed while this branch was open, so the
-  // value is guarded too: core/reading-reach-floor.json pins tamil/pre-A1 at 3,
+  // value is guarded too: the tamil--pre-a1 reading-reach owner pins it at 3,
   // re-derived from the merged tree rather than composed from two branches.
   const inventories = listTaskShapeInventories().map(({ language, level }) =>
     loadTaskShapeInventory(language, level));

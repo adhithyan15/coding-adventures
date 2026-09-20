@@ -44,6 +44,11 @@ backmatter and script sets live in independently owned section directories.
 The authored lesson-sound vocabulary uses `core/sound-tags.d/<language>.json`,
 one self-binding `{ language, tags }` owner per registered track plus a stable
 `_meta.json`; the former cross-language aggregate is not tracked.
+The reading-reach ratchet uses
+`core/reading-reach-floor.d/<language>--<level>.json`, one self-binding
+`{ language, level, floor }` owner for every task-shape inventory. Zero owners
+preserve the historical absent-entry-zero behavior; the reconstructed public
+map contains only positive floors, and the former aggregate is forbidden.
 Generated lesson modality uses the finer
 `core/lesson-modality/<language>.d/{_meta.json,<lesson-id>.json}` boundary. The
 metadata owner holds only stable derivation policy and each lesson file holds its
