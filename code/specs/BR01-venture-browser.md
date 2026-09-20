@@ -411,6 +411,11 @@ The browser itself has a thin platform layer. The first runnable host targets
 macOS so it can be exercised on current development hardware; Windows remains
 the intended v0.1 parity target after the interaction model is proven.
 
+Generated native shells MUST share one bridge protocol owned by browser core.
+Core decodes Mosaic event names and required values and serializes all chrome
+props, typed effects, and errors. macOS, Windows, and Cairo adapters MUST remain
+FFI translators and MUST NOT recreate event or JSON policy for their toolkit.
+
 | Platform | Window              | Rendering                                     | Text Measurement           |
 |----------|---------------------|-----------------------------------------------|----------------------------|
 | Windows  | Win32 CreateWindowExW (next host) | paint-vm-direct2d (P2D06) or paint-vm-gdi (P2D07) | text-native DirectWrite |

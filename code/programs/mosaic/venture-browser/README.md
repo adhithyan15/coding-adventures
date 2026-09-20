@@ -26,6 +26,11 @@ recreating the surrounding chrome in backend-specific UI code.
   host-neutral Print Page, Share Page, Page Information, and View Source requests.
 - `venture-browser-core::BrowserChromeController` is the shared reducer and
   slot projection for that exact contract.
+- `venture-browser-core` also owns the generated Mosaic event decoder and the
+  complete native bridge response codec. macOS, Windows, and Cairo only
+  translate C strings and return the shared JSON envelope, so slot names,
+  value requirements, effects, and disabled-state projection cannot drift by
+  toolkit.
 - `venture-browser-core::BrowserHostController` owns the native-host state
   machine around that reducer: load status, transactional synchronization,
   scrolling, native scrollbar offsets, link activation, and hover projection

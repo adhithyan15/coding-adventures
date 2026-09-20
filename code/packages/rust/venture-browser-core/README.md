@@ -87,6 +87,13 @@ Page Information extends that boundary with the retained requested and final
 URLs, response status, normalized title, and image/stylesheet resource and
 failure counts. Native hosts only present the typed effects.
 
+The native Mosaic bridge protocol follows the same ownership rule.
+`BrowserChromeEvent::from_mosaic_event` owns event names and required values;
+`browser_bridge_response_json` owns every chrome slot, typed host-effect
+envelope, error envelope, and JSON escape. Platform FFI crates only decode C
+strings and return that shared response, including the live
+`navigation-disabled` projection.
+
 Typed inputs retain that single-owner design. The session exposes
 `ControlValueState` for live validity and accessibility projection, routes
 Arrow Up/Down and SetValue/Increment/Decrement through shared numeric

@@ -22,10 +22,10 @@ use window_core::{ElementState, Key, NamedKey, PointerButton, WindowError, Windo
 
 #[cfg(target_vendor = "apple")]
 use venture_browser_core::{
-    BookmarkRepository, BrowserChromeEvent, BrowserChromeProps, BrowserCommandError,
-    BrowserFetchRequest, BrowserHostController, BrowserHostEffect, BrowserHostEventOutcome,
-    BrowserScrollMetrics, ControlSuggestionPickerAction, HostFileSelection, HttpBrowserFetcher,
-    MemoryBookmarkRepository,
+    browser_bridge_response_json, BookmarkRepository, BrowserChromeEvent, BrowserChromeProps,
+    BrowserCommandError, BrowserFetchRequest, BrowserHostController, BrowserHostEffect,
+    BrowserHostEventOutcome, BrowserScrollMetrics, ControlSuggestionPickerAction,
+    HostFileSelection, HttpBrowserFetcher, MemoryBookmarkRepository,
 };
 
 pub const VERSION: &str = "0.1.0";
@@ -1058,130 +1058,12 @@ mod mosaic_ffi {
             .map(str::to_string)
     }
 
-    fn json_string(value: &str) -> String {
-        let mut out = String::with_capacity(value.len() + 2);
-        out.push('"');
-        for ch in value.chars() {
-            match ch {
-                '"' => out.push_str("\\\""),
-                '\\' => out.push_str("\\\\"),
-                '\n' => out.push_str("\\n"),
-                '\r' => out.push_str("\\r"),
-                '\t' => out.push_str("\\t"),
-                ch if ch.is_control() => {
-                    use std::fmt::Write;
-                    let _ = write!(out, "\\u{:04x}", ch as u32);
-                }
-                ch => out.push(ch),
-            }
-        }
-        out.push('"');
-        out
-    }
-
-    fn json_bytes(bytes: &[u8]) -> String {
-        format!(
-            "[{}]",
-            bytes
-                .iter()
-                .map(u8::to_string)
-                .collect::<Vec<_>>()
-                .join(",")
-        )
-    }
-
-    fn effect_json(effect: &BrowserHostEffect) -> String {
-        match effect {
-            BrowserHostEffect::OpenAuxiliaryDocument(document) => format!(
-                "{{\"type\":\"open-auxiliary-document\",\"document\":{{\"kind\":{},\"address\":{},\"title\":{},\"html\":{}}}}}",
-                json_string(document.kind.name()),
-                json_string(&document.address),
-                json_string(&document.title),
-                json_string(&document.html),
-            ),
-            BrowserHostEffect::OpenBrowsingContext(context) => format!(
-                "{{\"type\":\"open-browsing-context\",\"target\":{},\"request\":{{\"url\":{},\"method\":{},\"contentType\":{},\"body\":{}}},\"noopener\":{},\"noreferrer\":{}}}",
-                json_string(context.target.name()),
-                json_string(&context.request.url),
-                json_string(match context.request.method {
-                    venture_browser_core::BrowserFetchMethod::Get => "GET",
-                    venture_browser_core::BrowserFetchMethod::Post => "POST",
-                }),
-                context.request.content_type.as_deref().map(json_string).unwrap_or_else(|| "null".into()),
-                json_bytes(&context.request.body),
-                context.noopener,
-                context.noreferrer,
-            ),
-            BrowserHostEffect::Download(download) => format!(
-                "{{\"type\":\"download\",\"request\":{{\"url\":{},\"method\":\"GET\",\"contentType\":null,\"body\":[]}},\"suggestedFilename\":{}}}",
-                json_string(&download.request.url),
-                download.suggested_filename.as_deref().map(json_string).unwrap_or_else(|| "null".into()),
-            ),
-            BrowserHostEffect::Print(request) => format!(
-                "{{\"type\":\"print\",\"address\":{},\"title\":{}}}",
-                json_string(&request.address),
-                json_string(&request.title),
-            ),
-            BrowserHostEffect::Share(request) => format!(
-                "{{\"type\":\"share\",\"address\":{},\"title\":{}}}",
-                json_string(&request.address),
-                json_string(&request.title),
-            ),
-            BrowserHostEffect::PageInfo(request) => format!(
-                "{{\"type\":\"page-info\",\"requestedAddress\":{},\"address\":{},\"title\":{},\"status\":{},\"imageResourceCount\":{},\"imageFailureCount\":{},\"stylesheetResourceCount\":{},\"stylesheetFailureCount\":{}}}",
-                json_string(&request.requested_address),
-                json_string(&request.address),
-                json_string(&request.title),
-                request.status,
-                request.image_resource_count,
-                request.image_failure_count,
-                request.stylesheet_resource_count,
-                request.stylesheet_failure_count,
-            ),
-            BrowserHostEffect::WriteClipboard(text) => format!(
-                "{{\"type\":\"write-clipboard\",\"text\":{}}}",
-                json_string(text),
-            ),
-        }
-    }
-
     fn response(
         host: &MacBrowserHost,
         effect: Option<&BrowserHostEffect>,
         error: Option<&str>,
     ) -> *mut c_char {
-        let props = host.props();
-        let effect = effect
-            .map(|effect| format!(",\"effect\":{}", effect_json(effect)))
-            .unwrap_or_default();
-        let error = error
-            .map(|message| format!(",\"error\":{}", json_string(message)))
-            .unwrap_or_default();
-        let value = format!(
-            "{{\"props\":{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"bookmark-label\":{},\"bookmark-disabled\":{},\"copy-address-disabled\":{},\"open-page-disabled\":{},\"save-page-disabled\":{},\"print-page-disabled\":{},\"share-page-disabled\":{},\"page-info-disabled\":{},\"zoom-label\":{},\"zoom-out-disabled\":{},\"zoom-reset-disabled\":{},\"zoom-in-disabled\":{},\"view-source-disabled\":{},\"find-open\":{},\"find-query\":{},\"find-result-label\":{},\"find-disabled\":{},\"navigation-disabled\":false}}{effect}{error}}}",
-            json_string(&props.address),
-            json_string(&props.page_title),
-            json_string(&props.status_text),
-            props.back_disabled,
-            props.forward_disabled,
-            json_string(&props.bookmark_label),
-            props.bookmark_disabled,
-            props.copy_address_disabled,
-            props.open_page_disabled,
-            props.save_page_disabled,
-            props.print_page_disabled,
-            props.share_page_disabled,
-            props.page_info_disabled,
-            json_string(&props.zoom_label),
-            props.zoom_out_disabled,
-            props.zoom_reset_disabled,
-            props.zoom_in_disabled,
-            props.view_source_disabled,
-            props.find_open,
-            json_string(&props.find_query),
-            json_string(&props.find_result_label),
-            props.find_disabled,
-        );
+        let value = browser_bridge_response_json(&host.props(), effect, error);
         CString::new(value)
             .expect("JSON response contains no NUL")
             .into_raw()
@@ -1232,32 +1114,9 @@ mod mosaic_ffi {
         let Some(name) = string_arg(name) else {
             return response(host, None, Some("missing Mosaic event name"));
         };
-        let event = match name.as_str() {
-            "onBack" => Some(BrowserChromeEvent::Back),
-            "onForward" => Some(BrowserChromeEvent::Forward),
-            "onHome" => Some(BrowserChromeEvent::Home),
-            "onReload" => Some(BrowserChromeEvent::Reload),
-            "onToggleBookmark" => Some(BrowserChromeEvent::ToggleBookmark),
-            "onCopyAddress" => Some(BrowserChromeEvent::CopyAddress),
-            "onOpenPageInNewWindow" => Some(BrowserChromeEvent::OpenPageInNewWindow),
-            "onSavePage" => Some(BrowserChromeEvent::SavePage),
-            "onPrintPage" => Some(BrowserChromeEvent::PrintPage),
-            "onSharePage" => Some(BrowserChromeEvent::SharePage),
-            "onPageInfo" => Some(BrowserChromeEvent::PageInfo),
-            "onZoomOut" => Some(BrowserChromeEvent::ZoomOut),
-            "onZoomReset" => Some(BrowserChromeEvent::ZoomReset),
-            "onZoomIn" => Some(BrowserChromeEvent::ZoomIn),
-            "onViewSource" => Some(BrowserChromeEvent::ViewSource),
-            "onFindOpen" => Some(BrowserChromeEvent::FindOpen),
-            "onFindChange" => string_arg(value).map(BrowserChromeEvent::FindChange),
-            "onFindNext" => Some(BrowserChromeEvent::FindNext),
-            "onFindPrevious" => Some(BrowserChromeEvent::FindPrevious),
-            "onFindClose" => Some(BrowserChromeEvent::FindClose),
-            "onNavigate" => Some(BrowserChromeEvent::Navigate),
-            "onAddressChange" => string_arg(value).map(BrowserChromeEvent::AddressChange),
-            _ => None,
-        };
-        let Some(event) = event else {
+        let value = string_arg(value);
+        let event = BrowserChromeEvent::from_mosaic_event(&name, value.as_deref());
+        let Ok(event) = event else {
             return response(host, None, Some("unknown or malformed Mosaic event"));
         };
         let result = catch_unwind(AssertUnwindSafe(|| host.handle_event_with_effect(event)));
