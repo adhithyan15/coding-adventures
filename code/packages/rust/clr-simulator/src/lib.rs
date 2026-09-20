@@ -314,7 +314,7 @@ impl CLRSimulator {
         self.input_pos = 0;
     }
 
-    fn read_input_line(&mut self) -> Option<&[u8]> {
+    fn read_input_line(&mut self) -> Option<(&[u8], bool)> {
         if self.input_pos >= self.input.len() {
             return None;
         }
@@ -323,14 +323,15 @@ impl CLRSimulator {
             self.input_pos += 1;
         }
         let end = self.input_pos;
-        if self.input_pos < self.input.len() {
+        let consumed_lf = self.input_pos < self.input.len();
+        if consumed_lf {
             self.input_pos += 1;
         }
-        Some(&self.input[start..end])
+        Some((&self.input[start..end], consumed_lf))
     }
 
     fn read_input_i64(&mut self) -> i64 {
-        let Some(line) = self.read_input_line() else {
+        let Some((line, _)) = self.read_input_line() else {
             return 0;
         };
         std::str::from_utf8(line)
@@ -343,7 +344,15 @@ impl CLRSimulator {
     fn read_input_string(&mut self) -> Value {
         let bytes = self
             .read_input_line()
-            .map(|line| line.strip_suffix(b"\r").unwrap_or(line).to_vec())
+            .map(|(line, consumed_lf)| {
+                // CR belongs to a delimiter only immediately before LF.
+                // At EOF it is content, even when it is the last byte.
+                if consumed_lf {
+                    line.strip_suffix(b"\r").unwrap_or(line).to_vec()
+                } else {
+                    line.to_vec()
+                }
+            })
             .unwrap_or_default();
         let index = self.strings.len();
         self.strings.push(bytes);

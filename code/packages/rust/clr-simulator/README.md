@@ -72,7 +72,8 @@ program does not clear or rewind input.
 
 `input_str` consumes the same line boundary without trimming content and returns
 a distinct string-arena handle. LF and a preceding CR are excluded; all other
-bytes are preserved exactly, including invalid UTF-8. `string_bytes` provides a
+bytes are preserved exactly, including invalid UTF-8 and a trailing CR on an
+unterminated final line. `string_bytes` provides a
 checked read-only view. EOF produces an empty string, and program loads clear
 the value arena without rewinding input.
 
