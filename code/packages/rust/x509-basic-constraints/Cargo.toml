@@ -1,0 +1,9 @@
+[package]
+name = "x509-basic-constraints"
+version = "0.1.0"
+edition = "2021"
+description = "Allocation-free RFC 5280 Basic Constraints decoding"
+
+[dependencies]
+der-asn1 = { path = "../der-asn1" }
+x509-extension = { path = "../x509-extension" }
