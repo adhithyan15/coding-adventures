@@ -4156,7 +4156,7 @@ fn swift_app_with_initial_window_size(
     out.insert_str(
         insertion,
         &format!(
-            "\n    .defaultSize(width: {}, height: {})",
+            "\n    #if os(macOS)\n    .defaultSize(width: {}, height: {})\n    #endif",
             size.width, size.height
         ),
     );
@@ -12874,7 +12874,7 @@ version = "1"
             (
                 Backend::SwiftUI,
                 "Sources/App/App.swift",
-                ".defaultSize(width: 1280, height: 900)",
+                "#if os(macOS)\n    .defaultSize(width: 1280, height: 900)\n    #endif",
             ),
             (
                 Backend::Xaml,
