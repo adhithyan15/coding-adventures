@@ -1764,7 +1764,7 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_architecture_to_png() {
         let diagram = parse_architecture(
-            "architecture-beta\ntitle Native platform\naccTitle: Platform topology\naccDescr: API and database services\ngroup platform(cloud)[Platform]\nservice api(server)[API] in platform\nservice db(database)[Database] in platform\napi:R -[reads and writes]-> L:db",
+            "architecture-beta\ntitle Native platform\naccTitle: Platform topology\naccDescr: API and database services\ngroup platform(cloud)[Platform]\nservice api(server)[API] in platform\njunction split in platform\nservice db(database)[Database] in platform\napi:R -[reads and writes]-> L:split\nsplit:R --> L:db",
         )
         .expect("Mermaid architecture parse failed");
         let layout = layout_structural_diagram(&diagram);
@@ -1791,6 +1791,11 @@ line "Target" [35, 50, 68, 82]"##,
         );
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Ellipse(ellipse)
+                if ellipse.rx == 9.0 && ellipse.ry == 9.0
+        )));
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,
             PaintInstruction::Rect(rect)

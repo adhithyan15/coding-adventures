@@ -28,11 +28,11 @@ The current native pipeline supports documented subsets of:
 - `kanban`
 - `architecture` / `architecture-beta`
 
-The initial Architecture subset parses groups, services, declared containment,
+The Architecture subset parses groups, services, junctions, declared containment,
 standard icon identifiers, titles, and undirected or right-directed edge syntax into the
 shared structural semantic IR. Existing structural layout and PaintScene
-lowering provide deterministic backend-neutral group, node, edge, and shaped
-text rendering. Junctions, alignment hints, group-edge modifiers, left and
+lowering provide deterministic backend-neutral group, node, junction, edge, and shaped
+text rendering. Alignment hints, group-edge modifiers, left and
 bidirectional arrows, custom icon text, icon artwork, edge labels, port-aware routing, and configuration remain
 outside the partial compatibility claim.
 

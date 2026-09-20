@@ -426,17 +426,19 @@ priorities, and configurable fields remain unsupported at the partial level.
 ### Architecture Native Slice
 
 The initial Mermaid 11.16.1 Architecture slice uses dedicated portable
-grammars and maps groups, services, containment, icon identifiers, titles, and
+grammars and maps groups, services, junctions, containment, icon identifiers, titles, and
 undirected and right-directed edges into structural semantic IR. Existing deterministic
 structural layout lowers groups, nodes, relationships, and shaped text through
 backend-neutral PaintScene instructions, with a native Metal-to-PNG fixture.
+Junction declarations, including group containment, lower to compact typed
+structural geometry and backend-neutral ellipse PaintInstructions.
 Native `-[label]-` and `-[label]->` edge labels survive structural semantic IR,
 resolve to deterministic relationship geometry, and lower through the shared
 backend-neutral shaped-text PaintInstructions path.
 Document titles reserve resolved layout geometry and lower through shaped-text
 PaintInstructions. Single-line accessibility titles and single-line or braced
 descriptions survive as PaintScene metadata.
-Junctions, alignment hints, group-edge modifiers, left and bidirectional
+Alignment hints, group-edge modifiers, left and bidirectional
 arrows, custom icon text, icon artwork, port-aware routing, and configuration remain unsupported
 at the partial level.
 

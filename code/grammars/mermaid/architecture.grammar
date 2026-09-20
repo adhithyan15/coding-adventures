@@ -1,5 +1,5 @@
 # @version 1
 # Mermaid 11.16.1 architecture core parser grammar.
 
-document = { NEWLINE } HEADER { NEWLINE | metadata | STATEMENT_LINE } EOF ;
+document = { NEWLINE } HEADER { NEWLINE | metadata | JUNCTION_STATEMENT | STATEMENT_LINE } EOF ;
 metadata = TITLE_STATEMENT | ACC_TITLE_STATEMENT | ACC_DESCR_STATEMENT | ACC_DESCR_BLOCK ;
