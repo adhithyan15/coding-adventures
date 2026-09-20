@@ -1,5 +1,29 @@
 # Changelog — @coding-adventures/forme-orchestrator
 
+## 0.9.0 — 2026-09-19
+
+### Added — bounded lazy stream fan-out
+
+- One lazily opened upstream iterator can now feed a statically known set of
+  single-use consumer branches without recomputing source values.
+- Every attached branch has an ordered 64-value window. A full slow branch
+  backpressures upstream pulls, while `return()` detaches that consumer and
+  immediately releases its queued values and pressure.
+- Completion and source failures reach every branch after its delivered
+  prefix. Pipeline cancellation rejects pending reads, clears every window,
+  and closes the upstream iterator exactly once.
+- Read-only instrumentation exposes upstream pulls, active consumers, current
+  retained values, and peak retained values for boundedness tests. FM-B040
+  owns integration with the pipeline-wide concurrent scheduler.
+
+### Tests
+
+- Nineteen focused cases cover lazy source opening, order, one-pull multicast,
+  slow-branch backpressure, detachment, source failure and hostile iterator
+  results, cancellation before/during/after delivery, invalid bounds,
+  single-use branches, concurrent-read rejection, zero consumers, and streams
+  larger than the default 64-value window.
+
 ## 0.8.0 — 2026-09-19
 
 ### Added — bounded stream checkpoint foundation

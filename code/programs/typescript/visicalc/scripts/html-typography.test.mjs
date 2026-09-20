@@ -42,3 +42,31 @@ test('generated HTML hydrates typed font sizes and restores static fallback', as
   assert.equal(events.length, 1);
   window.close();
 });
+
+test('generated HTML scopes table fonts and preserves authored overrides', async () => {
+  const path = process.env.MOSAIC_HTML_TYPOGRAPHY_OUTPUT;
+  const dom = new JSDOM(readFileSync(join(path, 'table/index.html'), 'utf8'), { runScripts: 'outside-only' });
+  const { window } = dom;
+  let size = 18;
+  let rows = ['First'];
+  window.mosaicHost = { getProps: () => ({size, rows}) };
+  window.eval(readFileSync(join(path, 'table/main.js'), 'utf8'));
+  const flush = () => new Promise(resolve => setTimeout(resolve, 0));
+  await flush();
+  for (size of [18, 27, 36, 0, -1, NaN, Infinity, '24', 24]) {
+    rows = ['First', 'New row'];
+    window.dispatchEvent(new window.Event('mosaic-host-ready'));
+    await flush();
+    const tables = [...window.document.querySelectorAll('table')];
+    const valid = typeof size === 'number' && Number.isFinite(size) && size > 0;
+    assert.equal(tables[0].style.fontSize, valid ? `${size}px` : '17px');
+    assert.equal(tables[0].style.fontFamily, 'monospace');
+    assert.equal(tables[1].style.fontSize, 'initial');
+    const controls = [...window.document.querySelectorAll('input, textarea, button')];
+    assert.deepEqual(controls.map(e => e.style.fontSize), ['', ...Array(6).fill('inherit'), 'inherit', 'inherit', '25px', '']);
+    const fixedRow = [...window.document.querySelectorAll('tr')].find(e => e.textContent.includes('Fixed row'));
+    assert.equal(fixedRow.style.fontSize, '21px');
+    assert.ok([...window.document.querySelectorAll('td')].some(e => e.textContent === 'New row'));
+  }
+  window.close();
+});

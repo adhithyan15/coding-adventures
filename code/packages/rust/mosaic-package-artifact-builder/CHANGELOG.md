@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Support HTML HostTable numeric typography with scoped native-control inheritance,
+  row/container overrides and nested-table boundaries (#15677).
+
 - Recognize HTML numeric typography on text, buttons and inputs; retain
   diagnostics for HTML tables and WebComponent bindings (#15647).
 
@@ -169,6 +172,9 @@ build script and that file has a migration in flight.
 - Recognize validated Compose typography projections while continuing to report unsupported backends, primitives and binding forms explicitly.
 
 ## Unreleased
+
+- Support HTML HostTable numeric typography with scoped native-control inheritance,
+  row/container overrides and nested-table boundaries (#15677).
 
 - Recognize HTML numeric typography on text, buttons and inputs; retain
   diagnostics for HTML tables and WebComponent bindings (#15647).
