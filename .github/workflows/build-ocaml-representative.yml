@@ -162,7 +162,11 @@ jobs:
           opam install . --deps-only --with-test --with-dev-setup \
             --yes --require-checksums
           opam exec -- dune build @fmt
-          BISECT_FILE="$PWD/bisect" opam exec -- dune runtest --force \
+          coverage_prefix="$PWD/bisect"
+          if test "$RUNNER_OS" = "Windows"; then
+            coverage_prefix="$(cygpath -w "$PWD/bisect")"
+          fi
+          BISECT_FILE="$coverage_prefix" opam exec -- dune runtest --force \
             --instrument-with bisect_ppx
           python test/check_coverage.py --coverage-glob 'bisect*.coverage' \
             --summary _build/coverage-summary.txt \

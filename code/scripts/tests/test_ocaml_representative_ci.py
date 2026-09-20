@@ -110,6 +110,17 @@ class ManifestAndRepositoryTests(unittest.TestCase):
             ):
                     representative.validate_workflow_policy_text(workflow)
 
+    def test_workflow_rejects_windows_coverage_path_guard_drift(self) -> None:
+        workflow = self.workflow.replace(
+            representative.WINDOWS_COVERAGE_PREFIX_BLOCK,
+            '          coverage_prefix="$(cygpath -w "$PWD/bisect")"\n'
+            '          BISECT_FILE="$coverage_prefix" '
+            "opam exec -- dune runtest --force \\\n",
+            1,
+        )
+        with self.assertRaisesRegex(representative.ContractError, "coverage path"):
+            representative.validate_workflow_policy_text(workflow)
+
 
 class CoverageTests(unittest.TestCase):
     def test_numeric_coverage_requires_every_source_and_minimum(self) -> None:

@@ -23,7 +23,14 @@ MANIFEST_RELATIVE_PATH = Path(
 )
 WORKFLOW_RELATIVE_PATH = Path(".github/workflows/build-ocaml-representative.yml")
 EXPECTED_WORKFLOW_SHA256 = (
-    "0aaed0978df01d80157be9ae7e52dfb63603b34d6178acd80c5e1baa1d5655f2"
+    "918b8d931c5b7640c781e2a3094c929f5ef8d074f54819267d3a86ee64520677"
+)
+WINDOWS_COVERAGE_PREFIX_BLOCK = (
+    '          coverage_prefix="$PWD/bisect"\n'
+    '          if test "$RUNNER_OS" = "Windows"; then\n'
+    '            coverage_prefix="$(cygpath -w "$PWD/bisect")"\n'
+    "          fi\n"
+    '          BISECT_FILE="$coverage_prefix" opam exec -- dune runtest --force \\\n'
 )
 
 VERSIONS = {
@@ -386,6 +393,8 @@ def validate_workflow_policy_text(workflow_text: str) -> None:
     ):
         if required not in workflow_text:
             raise ContractError(f"workflow omits required OCAML07 command: {required}")
+    if workflow_text.count(WINDOWS_COVERAGE_PREFIX_BLOCK) != 1:
+        raise ContractError("workflow Windows analyzer coverage path guard drifted")
     if workflow_text.count('switch="$(opam switch show --safe)"') != 3:
         raise ContractError("workflow must capture the local switch in all temporary steps")
     if workflow_text.count('export OPAMSWITCH="$switch"') != 3:
