@@ -10,6 +10,24 @@ roadmap is reconciled.
 
 ## Encoded CLR input prerequisites (selected 2026-09-19 after VM-058)
 
+### CLR11 landed; strict CFG contract next (2026-09-20)
+
+PR #15730 was merged externally as
+`a4597c2e8c907382ac3311b8176e72a1a8e89e8f`. Its three PR workflows and
+OCaml push workflow succeeded at exact head
+`1545e36d2431eeb4c16fd7140676edd672a8f584`; push CI run 35494497713
+remains queued and must still be monitored. This is not an all-CI-green claim.
+Canonical strict i32 minus-one now uses builder opcode 0x15; i64 encoding and
+input/type gates remain unchanged.
+
+The next bounded task is a strict CFG audit and preimplementation contract,
+provisionally CLR12 after a fresh ownership check. Specify control instruction
+shapes and hints, unique/resolved labels, logical Bool conditions, path-sensitive
+definite assignment at joins, returns and reachability, and the supported cycle
+policy before changing lowering. Preserve exact types, single assignment,
+256-slot bounds, structural i32 indices, and CLR01/input gates. Default source
+i64 narrowing remains unresolved. No strict CFG implementation is claimed here.
+
 ### CLR10 landed; CLR11 canonical strict minus-one follow-up active (2026-09-20)
 
 CLR10 checked long branches merged in #15728 as
