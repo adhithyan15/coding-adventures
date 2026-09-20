@@ -156,7 +156,7 @@ CONTRACTS: dict[str, dict[str, tuple[str, ...]]] = {
         "Sources/App/App.swift": (
             "bridge.setPropsChangedHandler?",
             "self?.refreshProps()",
-            "applyHostResponse(bridge.handleEvent(event.mosaicEnvelope as NSDictionary, name: event.mosaicName as NSString)",
+            'applyHostResponse(bridge.handleEvent(["payload": event.mosaicPayload] as NSDictionary, name: event.mosaicName as NSString)',
             "applyHostResponse(bridge.applyProps()",
         ),
     },

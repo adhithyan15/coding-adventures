@@ -621,6 +621,10 @@ fn build_mosaic_host_state(component_name: &str) -> String {
     );
     state
         .replace(
+            "bridge.handleEvent(event.mosaicEnvelope as NSDictionary",
+            "bridge.handleEvent([\"payload\": event.mosaicPayload] as NSDictionary",
+        )
+        .replace(
             "  private func refreshProps() {",
             "  func runInteractionAcceptanceIfRequested() {\n    bridge?.runInteractionAcceptance?()\n  }\n\n  private func refreshProps() {",
         )
@@ -676,7 +680,7 @@ fn build_runtime_required_mosaic_host_state(component_name: &str) -> String {
     );
     writeln!(out, "  func dispatch(_ event: {component_name}Event) {{").unwrap();
     out.push_str(
-        r#"    applyHostResponse(bridge.handleEvent(event.mosaicEnvelope as NSDictionary, name: event.mosaicName as NSString) as? [String: Any])
+        r#"    applyHostResponse(bridge.handleEvent(["payload": event.mosaicPayload] as NSDictionary, name: event.mosaicName as NSString) as? [String: Any])
   }
 
   func runInteractionAcceptanceIfRequested() {
@@ -12764,7 +12768,7 @@ mod tests {
         assert!(proj.app_swift.contains("host.dispatch(event)"));
         assert!(proj
             .app_swift
-            .contains("applyHostResponse(bridge.handleEvent(event.mosaicEnvelope as NSDictionary"));
+            .contains("applyHostResponse(bridge.handleEvent([\"payload\": event.mosaicPayload] as NSDictionary"));
         assert!(proj
             .app_swift
             .contains("bridge?.setPropsChangedHandler? { [weak self] in"));
