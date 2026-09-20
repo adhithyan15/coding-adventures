@@ -175,6 +175,10 @@ fn manifest_and_component_contract_are_complete() {
     assert!(component
         .emits
         .iter()
+        .any(|emit| emit.name == "onAddSchematicSavedOutputCurrent"));
+    assert!(component
+        .emits
+        .iter()
         .any(|emit| emit.name == "onAddSchematicSavedOutputDifferential"));
     assert!(component
         .emits
@@ -184,6 +188,10 @@ fn manifest_and_component_contract_are_complete() {
         .emits
         .iter()
         .any(|emit| emit.name == "onAddSchematicScopedOutputVoltage"));
+    assert!(component
+        .emits
+        .iter()
+        .any(|emit| emit.name == "onAddSchematicScopedOutputCurrent"));
     assert!(component
         .emits
         .iter()

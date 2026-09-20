@@ -24,6 +24,10 @@ pub enum SchematicComponentKind {
     Resistor,
     Capacitor,
     Inductor,
+    Diode,
+    Bjt,
+    Jfet,
+    Mosfet,
     DcVoltage,
     DcCurrent,
     AcVoltage,
@@ -37,6 +41,10 @@ impl SchematicComponentKind {
             "Resistor" => Ok(Self::Resistor),
             "Capacitor" => Ok(Self::Capacitor),
             "Inductor" => Ok(Self::Inductor),
+            "Diode" => Ok(Self::Diode),
+            "BJT" => Ok(Self::Bjt),
+            "JFET" => Ok(Self::Jfet),
+            "MOSFET" => Ok(Self::Mosfet),
             "DC source" => Ok(Self::DcVoltage),
             "DC current" => Ok(Self::DcCurrent),
             "AC source" => Ok(Self::AcVoltage),
@@ -51,6 +59,10 @@ impl SchematicComponentKind {
             Self::Resistor => "Resistor",
             Self::Capacitor => "Capacitor",
             Self::Inductor => "Inductor",
+            Self::Diode => "Diode",
+            Self::Bjt => "BJT",
+            Self::Jfet => "JFET",
+            Self::Mosfet => "MOSFET",
             Self::DcVoltage => "DC source",
             Self::DcCurrent => "DC current",
             Self::AcVoltage => "AC source",
@@ -63,6 +75,10 @@ impl SchematicComponentKind {
             Self::Resistor => 'R',
             Self::Capacitor => 'C',
             Self::Inductor => 'L',
+            Self::Diode => 'D',
+            Self::Bjt => 'Q',
+            Self::Jfet => 'J',
+            Self::Mosfet => 'M',
             Self::DcVoltage | Self::AcVoltage => 'V',
             Self::DcCurrent => 'I',
             Self::Ground => 'G',
@@ -75,9 +91,12 @@ impl SchematicComponentKind {
             Self::Resistor
             | Self::Capacitor
             | Self::Inductor
+            | Self::Diode
             | Self::DcVoltage
             | Self::DcCurrent
             | Self::AcVoltage => 2,
+            Self::Bjt | Self::Jfet => 3,
+            Self::Mosfet => 4,
         }
     }
 }
@@ -493,7 +512,8 @@ impl SchematicDocument {
         let terminals = match kind {
             SchematicComponentKind::Resistor
             | SchematicComponentKind::Capacitor
-            | SchematicComponentKind::Inductor => vec![
+            | SchematicComponentKind::Inductor
+            | SchematicComponentKind::Diode => vec![
                 SchematicPoint {
                     x: center.x - 20,
                     y: center.y,
@@ -515,12 +535,48 @@ impl SchematicDocument {
                     y: center.y + 20,
                 },
             ],
+            SchematicComponentKind::Bjt | SchematicComponentKind::Jfet => vec![
+                SchematicPoint {
+                    x: center.x - 20,
+                    y: center.y,
+                },
+                SchematicPoint {
+                    x: center.x + 20,
+                    y: center.y - 20,
+                },
+                SchematicPoint {
+                    x: center.x + 20,
+                    y: center.y + 20,
+                },
+            ],
+            SchematicComponentKind::Mosfet => vec![
+                SchematicPoint {
+                    x: center.x - 20,
+                    y: center.y,
+                },
+                SchematicPoint {
+                    x: center.x + 20,
+                    y: center.y - 20,
+                },
+                SchematicPoint {
+                    x: center.x + 20,
+                    y: center.y + 20,
+                },
+                SchematicPoint {
+                    x: center.x,
+                    y: center.y + 40,
+                },
+            ],
             SchematicComponentKind::Ground => vec![center],
         };
         let value = match kind {
             SchematicComponentKind::Resistor => "1k",
             SchematicComponentKind::Capacitor => "1u",
             SchematicComponentKind::Inductor => "1m",
+            SchematicComponentKind::Diode => "IS=1e-14",
+            SchematicComponentKind::Bjt => "BF=100",
+            SchematicComponentKind::Jfet => "BETA=1m",
+            SchematicComponentKind::Mosfet => "VTO=0.7",
             SchematicComponentKind::DcVoltage => "5",
             SchematicComponentKind::DcCurrent => "1m",
             SchematicComponentKind::AcVoltage => "1",
@@ -871,6 +927,10 @@ impl SchematicDocument {
                     SchematicComponentKind::Resistor
                         | SchematicComponentKind::Capacitor
                         | SchematicComponentKind::Inductor
+                        | SchematicComponentKind::Diode
+                        | SchematicComponentKind::Bjt
+                        | SchematicComponentKind::Jfet
+                        | SchematicComponentKind::Mosfet
                         | SchematicComponentKind::DcVoltage
                         | SchematicComponentKind::AcVoltage
                 )
@@ -1679,6 +1739,38 @@ impl SchematicDocument {
                     "{} {} {} AC {}",
                     component.reference, terminals[0], terminals[1], component.value
                 ),
+                SchematicComponentKind::Diode => {
+                    let model = format!("Schematic{}Model", component.reference);
+                    lines.push(format!(".model {model} D({})", component.value));
+                    format!(
+                        "{} {} {} {model}",
+                        component.reference, terminals[0], terminals[1]
+                    )
+                }
+                SchematicComponentKind::Bjt => {
+                    let model = format!("Schematic{}Model", component.reference);
+                    lines.push(format!(".model {model} NPN({})", component.value));
+                    format!(
+                        "{} {} {} {} {model}",
+                        component.reference, terminals[0], terminals[1], terminals[2]
+                    )
+                }
+                SchematicComponentKind::Jfet => {
+                    let model = format!("Schematic{}Model", component.reference);
+                    lines.push(format!(".model {model} NJF({})", component.value));
+                    format!(
+                        "{} {} {} {} {model}",
+                        component.reference, terminals[0], terminals[1], terminals[2]
+                    )
+                }
+                SchematicComponentKind::Mosfet => {
+                    let model = format!("Schematic{}Model", component.reference);
+                    lines.push(format!(".model {model} NMOS(LEVEL=1 {})", component.value));
+                    format!(
+                        "{} {} {} {} {} {model}",
+                        component.reference, terminals[0], terminals[1], terminals[2], terminals[3]
+                    )
+                }
                 SchematicComponentKind::Ground => unreachable!("ground symbols are skipped"),
             };
             lines.push(line);
@@ -2393,6 +2485,86 @@ mod tests {
         );
         assert!(document.add_saved_output_current_probe("L1").unwrap());
         assert_eq!(document.saved_output_probe_tokens(), ["I(L1)"]);
+    }
+
+    #[test]
+    fn nonlinear_palette_symbols_use_stable_defaults_and_terminal_arities() {
+        let mut document = rc_document();
+        for (label, reference, value, terminal_count) in [
+            ("Diode", "D1", "IS=1e-14", 2),
+            ("BJT", "Q1", "BF=100", 3),
+            ("JFET", "J1", "BETA=1m", 3),
+            ("MOSFET", "M1", "VTO=0.7", 4),
+        ] {
+            let kind = SchematicComponentKind::from_palette_label(label).unwrap();
+            assert_eq!(document.place_palette_component(kind).unwrap(), reference);
+            let component = document.components.last().unwrap();
+            assert_eq!(component.value, value);
+            assert_eq!(component.terminals.len(), terminal_count);
+        }
+
+        assert_eq!(
+            document.branch_current_element_references(),
+            ["C1", "V1", "R1", "D1", "Q1", "J1", "M1"]
+        );
+    }
+
+    #[test]
+    fn nonlinear_branch_currents_lower_through_global_and_scoped_output_selection() {
+        let mut document = rc_document();
+        document.components.extend([
+            SchematicComponent {
+                reference: "D1".to_owned(),
+                kind: SchematicComponentKind::Diode,
+                value: "IS=1e-14".to_owned(),
+                terminals: vec![point(0, 20), point(0, 0)],
+            },
+            SchematicComponent {
+                reference: "Q1".to_owned(),
+                kind: SchematicComponentKind::Bjt,
+                value: "BF=100".to_owned(),
+                terminals: vec![point(0, 20), point(0, 20), point(0, 0)],
+            },
+            SchematicComponent {
+                reference: "J1".to_owned(),
+                kind: SchematicComponentKind::Jfet,
+                value: "BETA=1m".to_owned(),
+                terminals: vec![point(0, 20), point(0, 0), point(0, 0)],
+            },
+            SchematicComponent {
+                reference: "M1".to_owned(),
+                kind: SchematicComponentKind::Mosfet,
+                value: "VTO=0.7".to_owned(),
+                terminals: vec![point(0, 20), point(0, 20), point(0, 0), point(0, 0)],
+            },
+        ]);
+
+        assert_eq!(
+            document.branch_current_element_references(),
+            ["C1", "V1", "R1", "D1", "Q1", "J1", "M1"]
+        );
+        for reference in ["D1", "Q1", "J1", "M1"] {
+            assert!(document.add_saved_output_current_probe(reference).unwrap());
+        }
+        let ac = document.add_analysis_card(SchematicAnalysis::AcSweep);
+        for reference in ["D1", "Q1", "J1", "M1"] {
+            assert!(document
+                .add_scoped_output_current_probe(ac, reference)
+                .unwrap());
+        }
+
+        let deck = document.to_berkeley_netlist().unwrap();
+        for model in [
+            ".model SchematicD1Model D(IS=1e-14)",
+            ".model SchematicQ1Model NPN(BF=100)",
+            ".model SchematicJ1Model NJF(BETA=1m)",
+            ".model SchematicM1Model NMOS(LEVEL=1 VTO=0.7)",
+        ] {
+            assert!(deck.contains(model), "missing {model} in {deck}");
+        }
+        assert!(deck.contains(".save I(D1) I(Q1) I(J1) I(M1)"));
+        assert!(deck.contains(".probe ac I(D1) I(Q1) I(J1) I(M1)"));
+        parse_netlist(&deck).unwrap();
     }
 
     #[test]
