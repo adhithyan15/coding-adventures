@@ -45,5 +45,6 @@ front doors.
 
 `code/scripts/tests/test_der_tlv_portable_coverage.py` is the aggregate closure
 gate. It rejects missing, extra, duplicate, traversing, or cross-wired
-consumers and proves that every registered package loads this exact fixture and
-declares no runtime authority.
+consumers, requires every registered fixture test to name this exact corpus,
+and validates each empty capability manifest. Package-native BUILD execution
+provides the runtime proof that every lane consumes all cases.

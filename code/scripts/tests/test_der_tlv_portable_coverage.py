@@ -205,17 +205,30 @@ def check_paths_builds_and_surface() -> None:
 def check_fixture_and_capabilities() -> None:
     document = consumers_document()
     fixture = load_json(REPO_ROOT / document["fixture"])
+    capability_schema = load_json(
+        REPO_ROOT / "code/specs/schemas/required_capabilities.schema.json"
+    )
+    Draft202012Validator.check_schema(capability_schema)
+    capability_validator = Draft202012Validator(capability_schema)
     assert len(fixture["cases"]) == document["case_count"] == 54
     assert len(fixture["error_ids"]) == document["error_id_count"] == 17
     for consumer in document["consumers"]:
+        language = consumer["language"]
         package_root = consumer["package_root"]
         test_text = safe_repo_file(consumer["fixture_test"], package_root).read_text(
             "utf-8"
         )
         assert "der-tlv-v1" in test_text, consumer["language"]
+        assert "cases.json" in test_text, consumer["language"]
         capabilities = load_json(
             safe_repo_file(consumer["capability_manifest"], package_root)
         )
+        capability_validator.validate(capabilities)
+        assert capabilities["version"] == 1
+        expected_package = package_root.removeprefix("code/packages/")
+        if language == "elixir":
+            expected_package = "elixir/der-tlv"
+        assert capabilities["package"] == expected_package
         assert capabilities["capabilities"] == [], consumer["language"]
 
 
@@ -245,3 +258,7 @@ class PortableCoverageTests(unittest.TestCase):
 
     def test_closed_and_not_cross_wired(self) -> None:
         check_closed_and_not_cross_wired()
+
+
+if __name__ == "__main__":
+    unittest.main()
