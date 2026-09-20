@@ -207,6 +207,8 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
             swift_runtime_step,
         )
         self.assertIn('cat "$taskapp_log"', swift_runtime_step)
+        self.assertIn('"$HOME/Library/Logs/DiagnosticReports"', swift_runtime_step)
+        self.assertIn("-name 'App*.ips'", swift_runtime_step)
         self.assertIn("Mosaic Rust runtime unavailable", swift_runtime_step)
         self.assertIn("missing required MIL prop", swift_runtime_step)
         self.assertIn(

@@ -2220,6 +2220,9 @@ jobs:
             sleep 5
             if ! kill -0 "$taskapp_pid" 2>/dev/null; then
               cat "$taskapp_log"
+              sleep 2
+              find "$HOME/Library/Logs/DiagnosticReports" -type f \
+                -name 'App*.ips' -mmin -2 -print -exec cat {} \; || true
               exit 1
             fi
             kill "$taskapp_pid"

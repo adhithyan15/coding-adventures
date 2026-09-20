@@ -585,6 +585,9 @@ jobs:
               sleep 5
               if ! kill -0 "$app_pid" 2>/dev/null; then
                 cat "$log"
+                sleep 2
+                find "$HOME/Library/Logs/DiagnosticReports" -type f \
+                  -name 'Trestle*.ips' -mmin -2 -print -exec cat {} \; || true
                 exit 1
               fi
               kill "$app_pid"
@@ -619,6 +622,9 @@ jobs:
               sleep 5
               if ! kill -0 "$app_pid" 2>/dev/null; then
                 cat "$log"
+                sleep 2
+                find "$HOME/Library/Logs/DiagnosticReports" -type f \
+                  -name 'Trestle*.ips' -mmin -2 -print -exec cat {} \; || true
                 exit 1
               fi
               kill "$app_pid"

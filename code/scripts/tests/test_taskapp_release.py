@@ -527,6 +527,8 @@ def test_workflow_validates_before_building_and_has_one_publisher() -> None:
     assert 'SWIFT_BACKTRACE="enable=yes,interactive=no,output-to=stderr"' in workflow
     assert workflow.count('if ! kill -0 "$app_pid" 2>/dev/null; then') == 2
     assert 'cat "$log"' in workflow
+    assert workflow.count('"$HOME/Library/Logs/DiagnosticReports"') == 2
+    assert "-name 'Trestle*.ips'" in workflow
     assert "archive-windows-app" in workflow
     assert "write-windows-icon" in workflow
     assert "-p:SelfContained=true" in workflow
