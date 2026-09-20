@@ -7,6 +7,7 @@ const fallbackProps = {
   "editCol": 0,
   "editContent": "Sample EditContent",
   "editRow": 0,
+  "editorLabel": "Cell value",
   "fontSize": 13.0,
   "rowFontSize": 11.0,
   "rowHeaders": [],

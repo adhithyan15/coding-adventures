@@ -7,6 +7,7 @@ const fallbackProps = {
   "editCol": 0,
   "editContent": "Sample EditContent",
   "editRow": 0,
+  "editorLabel": "Cell value",
   "selectedCol": 0,
   "selectedRow": 0,
   "viewportRows": []

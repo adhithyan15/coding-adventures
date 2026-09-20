@@ -7,6 +7,7 @@ const fallbackProps = {
   "col": 0,
   "editContent": "Sample EditContent",
   "editable": false,
+  "editorLabel": "Cell value",
   "height": 32.0,
   "isEditing": false,
   "isSelected": false,
