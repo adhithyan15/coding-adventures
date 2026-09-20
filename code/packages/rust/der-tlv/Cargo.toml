@@ -5,3 +5,6 @@ edition = "2021"
 description = "Bounded allocation-free DER identifier and definite-length framing"
 
 [dependencies]
+
+[dev-dependencies]
+serde_json = "1"

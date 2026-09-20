@@ -14059,6 +14059,82 @@ publication; the already-governed OCaml graph and directed-graph package trees
 also remain outside this tranche. The reconciled graph has 849 owners and 1,574
 edges: 221 merged, 627 pending, and exactly this owner in progress.
 
+### PR #15708 merge, exact-main inventory, and DER TLV selection
+
+Every required and advisory check on PR #15708 reached a terminal acceptable
+conclusion, including both protected CI gates and the Linux, macOS, and Windows
+OCaml fresh-solve and locked-fixture jobs. GitHub reported the reviewed head
+clean and mergeable. Guarded squash auto-merge was enabled only after that
+evidence was complete, and GitHub merged it automatically at
+`2026-09-20T06:46:10Z` as
+`a6149a44b8a3184e84ffa076d05c04340d6d7825`; no plain manual merge command was
+used.
+
+The collision-checked schema-3 inventory at that exact merged main contains 15
+established lanes, 1,448 implementation identities, 4,673 implementation
+slots, and 1,488 all-reported identities. Completion bands are 175/265,
+123/934, 181/2,282, and 969/13,566; Rust has 789 singleton identities, OCaml
+remains an emerging five-package lane, and canonical collisions and unknown
+language buckets remain zero.
+
+Three newly unowned Rust singletons are now registered as portable pending
+owners. `x509-validity-portable-conformance` owns the exact two-time RFC 5280
+Validity sequence and explicit caller-time classification above the DER ASN.1
+and X.509 time contracts. `x509-algorithm-identifier-portable-conformance` owns
+the generic algorithm OID plus absent-or-one opaque canonical DER parameters,
+without an algorithm registry or parameter policy. The dependent
+`x509-subject-public-key-info-portable-conformance` owns the exact
+AlgorithmIdentifier-plus-BIT-STRING sequence without key parsing, crypto,
+trust, TLS, clocks, transport, or ambient authority. All three are
+allocation-free, empty-capability portable cores. Open PR #15748's proposed
+`x509-extension` package remains prospective and will receive an owner only if
+it lands on main.
+
+The dependency/leverage pass selects `der-tlv-portable-conformance` from exact
+main on branch `codex/parity-der-tlv-portable-conformance-20260919`. It is the
+only unblocked root of the six-owner confirmed DER/X.509 graph and directly
+unlocks DER ASN.1 and X.509 time, transitively unlocking X.509 validity,
+AlgorithmIdentifier, and SubjectPublicKeyInfo. The selected root has no runtime
+dependencies, declares no capabilities, and exposes only allocation-free
+borrowed-byte framing. The tranche first freezes a language-neutral behavior
+suite and the Rust oracle, then delivers independently tested implementations
+in all fourteen missing established lanes. The reconciled graph has 852 owners
+and 1,579 edges: 222 merged, 629 pending, and exactly this owner in progress.
+
+### DER TLV 15-lane delivery and validation
+
+The selected tranche now has a closed language-neutral DER TLV v1 behavior
+suite with 54 cases and 17 stable error kinds, plus package-native consumers in
+all 15 established implementation lanes: Rust, Python, Go, TypeScript, Dart,
+Elixir, Ruby, Perl, Lua, Java, Kotlin, Swift, Haskell, C#, and F#. The contract
+pins byte-exact projections and untouched remainders, transactional cursor
+advancement, explicit supported-index overflow handling, canonical identifier
+and length encoding, exact-input rejection, payload-blind errors, and empty
+capability manifests. ASN.1 value decoding, X.509 policy, cryptography, trust,
+TLS, transport, and ambient authority remain outside this owner.
+
+The closed consumer registry is itself schema-checked and the aggregate gate
+rejects missing, duplicated, escaped, cross-wired, or unexpected consumers,
+stale fixture references, and invalid capability identities. Package-native
+tests, builds, lint or vet, and coverage gates pass across all 15 lanes. The
+Rust `der-asn1` and `x509-time` downstream suites also pass. The package-parity
+report recognizes `der-tlv` in exactly 15/15 established lanes with no
+collisions or unknown languages, and a real Go build-tool dry-run evaluated 45
+Starlark files, discovered 5,211 packages, selected 15 changed and 21 affected
+packages, and passed orphan checks.
+
+Independent review verified the registry closure and found one C# construction
+path that could bypass configured-limit invariants; the implementation now uses
+constructor-only immutable limits, and fresh C# and F# suites both exceed their
+95 percent line-coverage gates. Rust tests, downstream tests, Clippy with
+warnings denied, and release builds pass. `cargo llvm-cov` can execute the Rust
+tests on Windows, but report generation exceeds the Windows command-line limit
+with OS error 206 because of its generated workspace ignore expression; this
+local reporting limitation is recorded rather than treated as implementation
+coverage evidence. The 19 implementation commits rebased conflict-free onto
+current `origin/main` before publication preparation, while the state remains
+`in-progress` until the ready-for-review PR actually exists.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

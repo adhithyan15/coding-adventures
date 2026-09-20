@@ -2,7 +2,7 @@
 
 ## Status
 
-Specification for a zero-external-dependency, allocation-free decoder of the
+Specification for a zero-external-dependency, in-memory decoder of the
 identifier and definite-length framing shared by ASN.1 Distinguished Encoding
 Rules (DER) values. This is the next repository-owned primitive required before
 X.509 certificate parsing and therefore before OAuth can gain concrete HTTPS.
@@ -57,12 +57,26 @@ The default certificate-oriented limits are:
 - 4096 sibling elements per cursor;
 - tag number `u32::MAX`.
 
+Configured limits are immutable values for one public decode operation or
+cursor lifetime. Implementations must reject, or make unrepresentable,
+negative, fractional, non-finite, or out-of-domain limits before examining
+input. Runtimes whose configuration objects can be mutated by a caller must
+snapshot the validated values at the public API boundary. Configuration
+validation may use a language-native argument or range error because malformed
+configuration is not a wire-decoding failure.
+
 The input-length limit is checked before its first byte is read. Declared
 length is accumulated into `u64`, checked for arithmetic overflow, converted to
 `usize` only after a host-capacity check, compared with the configured value
 limit, and then checked against the remaining input. A cursor consumes at most
 `max_elements`; depth is deliberately absent because this layer does not walk
 constructed children recursively.
+
+The wire-length domain is the unsigned 64-bit domain. A declared length that
+cannot be represented by a consumer's supported index domain, or that cannot
+be added to the already-decoded header without overflowing that domain,
+reports `LengthHostOverflow` at the length-prefix byte. The contract fixes the
+error kind and offset; it does not claim validation on every architecture.
 
 ## Public Contract
 
@@ -108,10 +122,16 @@ impl<'a> DerCursor<'a> {
 }
 ```
 
-`decode_one` returns the first borrowed element and untouched remainder.
+The Rust-shaped API above is the zero-copy reference surface. Other language
+implementations return byte-exact header, value, encoding, and remainder
+projections using their native byte-container semantics; allocation strategy
+is not part of the portable contract.
+
+`decode_one` returns the first element and untouched remainder.
 `decode_exact` additionally requires that the element consume all input, so a
 canonical zero-length value cannot hide trailing bytes. `DerCursor` performs
-bounded, iterative sibling decoding without allocation or recursion. A later
+bounded, iterative sibling decoding without recursion and fixes the input
+extent at construction even on runtimes with resizable backing buffers. A later
 typed decoder may open an element's value with another cursor, but it must own
 and enforce one shared tree-depth and total-work budget; this package does not
 claim that independent cursor limits compose into a whole-document bound.
@@ -130,6 +150,41 @@ format hostile input. Required categories include:
 
 No error path may panic, allocate from a declared wire length, or advance a
 cursor after failure.
+
+## Portable Conformance Profile
+
+`code/specs/fixtures/der-tlv-v1/` is the closed, language-neutral expression of
+this contract. Its JSON Schema fixes the default limits, the 17 stable error
+identifiers, the input-segment representation, the operation set, and the
+normalized success/error projections. Consumers materialize only bounded
+literal or repeated-byte segments; no fixture case names a file, command, or
+host resource.
+
+All established implementation lanes must consume the same `cases.json`
+document from package-native tests. Successful projections compare the tag,
+header length, encoded length, input-relative element offset, and untouched
+remainder offset. The test harness derives header, value, encoded, and
+remainder bytes from those ranges so large payloads are not duplicated in the
+corpus. Failure projections compare only the stable error identifier and byte
+offset. Cursor cases additionally compare every ordered event, final sibling
+count, and remaining offset, including a repeated failed read that proves
+non-advancement.
+
+`code/specs/fixtures/der-tlv-v1/consumers.json`, validated by the adjacent
+closed schema, is the authoritative established-lane denominator and closure
+registry. Each entry binds one canonical language to its production API,
+fixture test, build fronts, truthful empty capability profile, and the five
+required surface roles. The aggregate portable-coverage test rejects an
+unregistered lane, a sixteenth consumer, path traversal, cross-wiring, or any
+consumer that stops loading the shared 54-case corpus.
+
+The portable error identifiers are the kebab-case forms of the public error
+categories: `empty-input`, `truncated-high-tag`, `truncated-length`,
+`truncated-value`, `end-of-contents`, `non-minimal-tag`, `tag-overflow`,
+`indefinite-length`, `reserved-length`, `non-minimal-length`,
+`length-too-wide`, `length-host-overflow`, `input-limit-exceeded`,
+`value-limit-exceeded`, `element-limit-exceeded`, `tag-limit-exceeded`, and
+`trailing-data`.
 
 ## Adversarial Matrix
 

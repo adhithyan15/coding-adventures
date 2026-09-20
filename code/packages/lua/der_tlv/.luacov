@@ -1,0 +1,11 @@
+return {
+    include = {
+        "src/coding_adventures/der_tlv/init$",
+    },
+    modules = {
+        ["coding_adventures.der_tlv"] = "../src/coding_adventures/der_tlv/init.lua",
+    },
+    includeuntestedfiles = {
+        "../src/coding_adventures/der_tlv/init.lua",
+    },
+}
