@@ -559,6 +559,11 @@ A bounded `x509-serial-number` semantic layer now decodes one canonical RFC
 enforces the 20-content-octet ceiling, and retains only borrowed canonical and
 normalized magnitude views. It does not generate values, prove per-issuer
 uniqueness, parse a complete certificate, validate paths, or verify signatures.
+A bounded `x509-certificate-version` semantic layer now decodes the optional
+constructed `[0] EXPLICIT Version` field under shared depth and element limits.
+It exposes omitted `v1` as the caller's default, rejects an explicitly encoded
+DER default, and accepts only explicit `v2` or `v3`. It does not parse the
+surrounding certificate or enforce version-dependent field policy.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
