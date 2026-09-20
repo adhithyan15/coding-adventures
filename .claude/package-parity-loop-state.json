@@ -11,39 +11,29 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 15708,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/15708",
-    "title": "feat(ocaml): add process-free build-tool graph diff core",
-    "branch": "codex/parity-ocaml-build-tool-graph-diff-20260919",
-    "item_id": "ocaml-build-tool-process-free-graph-diff-core",
-    "opened_at": "2026-09-20T02:53:12Z",
-    "head_revision": "a1fb21b5d1fb5ee14358ece6181519dad5dbb352",
-    "checks_status": "pending",
-    "auto_merge_enabled": false
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-09-20T01:50:46Z",
-    "pr_number": 15668,
+    "observed_at": "2026-09-20T06:46:10Z",
+    "pr_number": 15708,
     "status": "merged",
-    "notes": "PR #15668 reached terminal acceptable conclusions on every required and advisory check, including all three representative-package platforms, and GitHub reported the reviewed head CLEAN and MERGEABLE. Guarded squash auto-merge was enabled only after that evidence was complete, and GitHub merged the reviewed head automatically at 2026-09-20T01:50:46Z as 0fdac8165b42c629a74ffba7b47f7afe18c8fca0; no plain manual merge command was used."
+    "notes": "PR #15708 reached terminal acceptable conclusions on every required and advisory check, including both protected CI gates and all three OCaml fresh-solve and locked-fixture platforms. GitHub reported the reviewed head CLEAN and MERGEABLE. Guarded squash auto-merge was enabled only after that evidence was complete, and GitHub merged the reviewed head automatically at 2026-09-20T06:46:10Z as a6149a44b8a3184e84ffa076d05c04340d6d7825; no plain manual merge command was used."
   },
   "last_inventory": {
-    "revision": "0fdac8165b42c629a74ffba7b47f7afe18c8fca0",
+    "revision": "a6149a44b8a3184e84ffa076d05c04340d6d7825",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1445,
-    "implementation_package_slots": 4670,
-    "all_reported_identities": 1485,
+    "implementation_identities": 1448,
+    "implementation_package_slots": 4673,
+    "all_reported_identities": 1488,
     "high_consensus_packages": 175,
     "high_consensus_missing_slots": 265,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 181,
     "two_to_four_missing_slots": 2282,
-    "singleton_packages": 966,
-    "singleton_missing_slots": 13524,
-    "rust_singletons": 786,
+    "singleton_packages": 969,
+    "singleton_missing_slots": 13566,
+    "rust_singletons": 789,
     "ocaml_packages": 5,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -1106,11 +1096,13 @@
     {
       "id": "ocaml-build-tool-process-free-graph-diff-core",
       "title": "Implement the OCaml process-free graph and diff-selection core",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["ocaml-representative-core", "ocaml-capability-analyzer", "build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
       "branch": "codex/parity-ocaml-build-tool-graph-diff-20260919",
       "pr_number": 15708,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/15708",
+      "merge_revision": "a6149a44b8a3184e84ffa076d05c04340d6d7825",
+      "merged_at": "2026-09-20T06:46:10Z",
       "opened_at": "2026-09-20T02:53:12Z",
       "opened_revision": "a1fb21b5d1fb5ee14358ece6181519dad5dbb352",
       "selected_at": "2026-09-20T01:52:00Z",
@@ -1122,7 +1114,7 @@
       "validation_notes": "Rebased on origin/main 1996de0bbe82aabe64051d94a2a74b2571e110cb. OCaml 5.2.1 and Dune 3.17.2 passed @fmt, @all, @install, all seven Alcotest groups dynamically consuming the exact nineteen shared fixtures, and 95.14% production coverage (724/761 points) in the reviewed opam Cygwin environment. Opam lint, the capability analyzer, the 162-case/285-file conformance corpus, schema and runner suites, Go tests and vet including the CI-gate regression, zero-collision parity inventory, OCaml lock validation, lessons validation, Ruff, Bandit, compileall, git diff checks, and dependency-license review all passed. A real build-tool dry run selected the exact graph, directed-graph, and build-tool chain. Plain local Windows execution remains blocked by the pre-existing OCaml switch linkage failure reproduced on unchanged ocaml/graph; the hosted workflow's reviewed Cygwin boundary matches the passing local Cygwin execution. Independent final and security reviews found no blocker, and the live open-PR scan found zero exact path overlap.",
       "security_review_revision": "68d2460ec9be025d3bb13aa7a0d0206977d202d9",
       "security_review_notes": "The production core is process-free and consumes only caller-supplied inert data. Byte, string, boundary, shape, scope, authorization, and operation-work ceilings are enforced; fixture reads are bounded regular files; coverage attribution is path-component exact. Only test-time fs.read and fs.list capabilities are declared. No production filesystem, process, environment, network, credential, or execution authority and no secret or dependency-vulnerability concern were found.",
-      "publication_notes": "Opened ready-for-review PR #15708 after a normal first push from the fresh dedicated branch rebased conflict-free onto origin/main 1996de0bbe82aabe64051d94a2a74b2571e110cb. No other parity PR was open, the live scan of thirteen open PRs found zero exact path overlap, and all focused local validation and independent reviews were acceptable. GitHub reports the opened head mergeable; required and advisory checks are queued, so auto-merge remains disabled.",
+      "publication_notes": "Opened ready-for-review PR #15708 after a normal first push from the fresh dedicated branch rebased conflict-free onto origin/main 1996de0bbe82aabe64051d94a2a74b2571e110cb. No other parity PR was open, the live scan found zero exact path overlap, and all focused local validation and independent reviews were acceptable. After every required and advisory check reached a terminal acceptable conclusion, including both protected CI gates and all OCaml platform jobs, GitHub reported the reviewed head CLEAN and MERGEABLE. Guarded squash auto-merge was enabled and GitHub merged it automatically as a6149a44b8a3184e84ffa076d05c04340d6d7825; no plain manual merge command was used.",
       "notes": "Implement the exact eight graph and eleven diff-selection cases as a pure OCaml core with stable cycle, unknown-path, and limit errors; deterministic closures; strict bounded glob matching; and no filesystem, Git, process, environment, network, credential, or execution authority."
     },
     {
@@ -9484,10 +9476,13 @@
     {
       "id": "der-tlv-portable-conformance",
       "title": "Define portable DER TLV framing conformance and established-lane parity",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [],
-      "branch": null,
+      "branch": "codex/parity-der-tlv-portable-conformance-20260919",
       "pr_number": null,
+      "selected_at": "2026-09-20T06:46:05Z",
+      "selection_revision": "a6149a44b8a3184e84ffa076d05c04340d6d7825",
+      "selection_notes": "Selected after PR #15708 reached terminal acceptable checks and merged through guarded auto-merge, followed by an exact-main collision-checked schema-3 inventory and complete open-PR overlap scan. Newly merged Rust-only x509-validity, x509-algorithm-identifier, and x509-subject-public-key-info identities are registered as portable pending owners. DER TLV is the only unblocked root of the six-owner confirmed DER/X.509 graph: it directly unlocks der-asn1 and x509-time and transitively unlocks x509-validity, x509-algorithm-identifier, and x509-subject-public-key-info. Its Rust reference has zero runtime dependencies and empty capabilities, no reviewed exception applies, and no open PR touches the selected owner, state, roadmap, neutral fixture path, or intended established-lane package paths. Open PR #15748 proposes x509-extension and remains prospective until merge.",
       "notes": "Exact post-PR #15646 inventory reconciliation found the new Rust-only der-tlv package with no existing parity owner. Classify the allocation-free, zero-runtime-dependency, empty-capability borrowed-byte framing decoder as portable. Freeze closed neutral fixtures and the Rust oracle for identifier classes, constructed bits, tag and length canonicality, truncation, exact trailing rejection, configured limits, untouched remainders, sibling cursor offsets, non-advancement after failure, and payload-redacted kind/offset errors before applicable established-lane ports. Keep ASN.1 schema decoding, X.509, cryptography, trust, TLS, transport, and ambient authority outside this owner. Priority 4-high singleton portable-core wave because later repository-owned X.509 parsing will depend on this framing contract; it remains independent of the TLS server-identity owner."
     },
     {
@@ -9507,6 +9502,33 @@
       "branch": null,
       "pr_number": null,
       "notes": "Exact post-PR #15668 inventory reconciliation found the new Rust-only x509-time package without a parity owner. Classify its zero-external-dependency, empty-capability RFC 5280 profile decoder over already-framed ASN.1 elements as portable. Freeze neutral fixtures and the Rust oracle for universal primitive tags 23 and 24, exact Zulu forms and lengths, the 1950/2000/2049/2050 boundaries, Gregorian leap-year and field bounds, first-invalid-field byte-offset errors, redaction, and cross-encoding ordering; reject constructed or wrong-class tags, omitted seconds, local or numeric offsets, lowercase z, fractional seconds, invalid lengths, non-digits, and invalid calendar fields. Keep generic BER time, PEM, certificate and CRL schemas, validity-interval or current-time policy, platform calendars, time zones, epoch conversion, signatures, path validation, revocation, trust roots, TLS, transport, and ambient authority outside this owner. It depends on the DER TLV and typed ASN.1 contracts; open downstream x509-validity work does not supersede it."
+    },
+    {
+      "id": "x509-validity-portable-conformance",
+      "title": "Define portable X.509 validity conformance and established-lane parity",
+      "status": "pending",
+      "depends_on": ["der-asn1-portable-conformance", "x509-time-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Exact post-PR #15696 inventory reconciliation found the new Rust-only x509-validity package without a parity owner. Classify its zero-external-dependency, allocation-free, empty-capability RFC 5280 Validity decoder over typed ASN.1 DER elements and x509-time values as portable. Freeze neutral fixtures and the Rust oracle for an exact constructed universal SEQUENCE containing exactly notBefore and notAfter; UTCTime, GeneralizedTime, and mixed encodings; inclusive endpoints and equal intervals; explicit caller-supplied-time classification; inverted, missing, malformed, and trailing-element rejection; shared decoder budgets; field-specific local offsets; and redacted diagnostics. Keep clocks, complete certificate and CRL schemas, signatures, path validation, revocation, trust roots, server identity, TLS, transport, and ambient authority outside this owner."
+    },
+    {
+      "id": "x509-algorithm-identifier-portable-conformance",
+      "title": "Define portable X.509 AlgorithmIdentifier conformance and established-lane parity",
+      "status": "pending",
+      "depends_on": ["der-asn1-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Exact post-PR #15707 inventory reconciliation found the new Rust-only x509-algorithm-identifier package without a parity owner. Classify its allocation-free, empty-capability generic RFC 5280 AlgorithmIdentifier decoder over the repository-owned der-asn1 layer as portable. Freeze neutral fixtures and the Rust oracle for an exact constructed universal SEQUENCE, one required validated algorithm OID, absent versus exactly one opaque canonical DER parameter element, parameter tag and encoding preservation, missing or malformed algorithms, a rejected third element, inherited depth, total-element, and OID-arc limits, whole-element child framing offsets, transactional failures, and payload-redacted diagnostics. Keep algorithm registries, OID recognition, algorithm-specific parameter policy, key parsing or custody, signing, verification, complete certificate and CRL schemas, path validation, revocation, trust roots, TLS, clocks, transport, and ambient authority outside this owner."
+    },
+    {
+      "id": "x509-subject-public-key-info-portable-conformance",
+      "title": "Define portable X.509 SubjectPublicKeyInfo conformance and established-lane parity",
+      "status": "pending",
+      "depends_on": ["der-asn1-portable-conformance", "x509-algorithm-identifier-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Exact post-PR #15727 inventory reconciliation found the new Rust-only x509-subject-public-key-info package without a parity owner. Classify its allocation-free, empty-capability generic RFC 5280 SubjectPublicKeyInfo decoder over der-asn1 and x509-algorithm-identifier as portable. Freeze neutral fixtures and the Rust oracle for an exact constructed universal SEQUENCE, one fully validated AlgorithmIdentifier, one required canonical BIT STRING, absent and opaque algorithm parameters, unused-bit and zero-padding boundaries, missing, malformed, wrong-tag, and trailing-element rejection, inherited depth, total-element, and OID-arc limits, whole-element nested offsets, transactional failures, and payload-redacted diagnostics. Keep algorithm registries and parameter policy, key-format parsing or validation, key custody, signing, verification, complete certificate schemas, path validation, revocation, trust roots, TLS, clocks, transport, and ambient authority outside this owner."
     },
     {
       "id": "alpha-axp-simulator-two-lane-classification",

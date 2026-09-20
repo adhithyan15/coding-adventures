@@ -64,6 +64,12 @@ limit, and then checked against the remaining input. A cursor consumes at most
 `max_elements`; depth is deliberately absent because this layer does not walk
 constructed children recursively.
 
+The wire-length domain is always the unsigned 64-bit domain, independent of
+the host index width. A declared length that cannot be represented by the host,
+or that cannot be added to the already-decoded header without overflowing the
+host index type, reports `LengthHostOverflow` at the length-prefix byte. This
+keeps both the error kind and offset stable on 32-bit and 64-bit consumers.
+
 ## Public Contract
 
 ```rust
@@ -130,6 +136,33 @@ format hostile input. Required categories include:
 
 No error path may panic, allocate from a declared wire length, or advance a
 cursor after failure.
+
+## Portable Conformance Profile
+
+`code/specs/fixtures/der-tlv-v1/` is the closed, language-neutral expression of
+this contract. Its JSON Schema fixes the default limits, the 17 stable error
+identifiers, the input-segment representation, the operation set, and the
+normalized success/error projections. Consumers materialize only bounded
+literal or repeated-byte segments; no fixture case names a file, command, or
+host resource.
+
+All established implementation lanes must consume the same `cases.json`
+document from package-native tests. Successful projections compare the tag,
+header length, encoded length, input-relative element offset, and untouched
+remainder offset. The test harness derives header, value, encoded, and
+remainder bytes from those ranges so large payloads are not duplicated in the
+corpus. Failure projections compare only the stable error identifier and byte
+offset. Cursor cases additionally compare every ordered event, final sibling
+count, and remaining offset, including a repeated failed read that proves
+non-advancement.
+
+The portable error identifiers are the kebab-case forms of the public error
+categories: `empty-input`, `truncated-high-tag`, `truncated-length`,
+`truncated-value`, `end-of-contents`, `non-minimal-tag`, `tag-overflow`,
+`indefinite-length`, `reserved-length`, `non-minimal-length`,
+`length-too-wide`, `length-host-overflow`, `input-limit-exceeded`,
+`value-limit-exceeded`, `element-limit-exceeded`, `tag-limit-exceeded`, and
+`trailing-data`.
 
 ## Adversarial Matrix
 

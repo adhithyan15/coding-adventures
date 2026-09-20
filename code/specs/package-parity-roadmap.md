@@ -14059,6 +14059,48 @@ publication; the already-governed OCaml graph and directed-graph package trees
 also remain outside this tranche. The reconciled graph has 849 owners and 1,574
 edges: 221 merged, 627 pending, and exactly this owner in progress.
 
+### PR #15708 merge, exact-main inventory, and DER TLV selection
+
+Every required and advisory check on PR #15708 reached a terminal acceptable
+conclusion, including both protected CI gates and the Linux, macOS, and Windows
+OCaml fresh-solve and locked-fixture jobs. GitHub reported the reviewed head
+clean and mergeable. Guarded squash auto-merge was enabled only after that
+evidence was complete, and GitHub merged it automatically at
+`2026-09-20T06:46:10Z` as
+`a6149a44b8a3184e84ffa076d05c04340d6d7825`; no plain manual merge command was
+used.
+
+The collision-checked schema-3 inventory at that exact merged main contains 15
+established lanes, 1,448 implementation identities, 4,673 implementation
+slots, and 1,488 all-reported identities. Completion bands are 175/265,
+123/934, 181/2,282, and 969/13,566; Rust has 789 singleton identities, OCaml
+remains an emerging five-package lane, and canonical collisions and unknown
+language buckets remain zero.
+
+Three newly unowned Rust singletons are now registered as portable pending
+owners. `x509-validity-portable-conformance` owns the exact two-time RFC 5280
+Validity sequence and explicit caller-time classification above the DER ASN.1
+and X.509 time contracts. `x509-algorithm-identifier-portable-conformance` owns
+the generic algorithm OID plus absent-or-one opaque canonical DER parameters,
+without an algorithm registry or parameter policy. The dependent
+`x509-subject-public-key-info-portable-conformance` owns the exact
+AlgorithmIdentifier-plus-BIT-STRING sequence without key parsing, crypto,
+trust, TLS, clocks, transport, or ambient authority. All three are
+allocation-free, empty-capability portable cores. Open PR #15748's proposed
+`x509-extension` package remains prospective and will receive an owner only if
+it lands on main.
+
+The dependency/leverage pass selects `der-tlv-portable-conformance` from exact
+main on branch `codex/parity-der-tlv-portable-conformance-20260919`. It is the
+only unblocked root of the six-owner confirmed DER/X.509 graph and directly
+unlocks DER ASN.1 and X.509 time, transitively unlocking X.509 validity,
+AlgorithmIdentifier, and SubjectPublicKeyInfo. The selected root has no runtime
+dependencies, declares no capabilities, and exposes only allocation-free
+borrowed-byte framing. The tranche first freezes a language-neutral behavior
+suite and the Rust oracle, then delivers independently tested implementations
+in all fourteen missing established lanes. The reconciled graph has 852 owners
+and 1,579 edges: 222 merged, 629 pending, and exactly this owner in progress.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
