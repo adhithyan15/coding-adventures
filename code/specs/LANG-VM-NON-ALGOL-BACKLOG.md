@@ -10,6 +10,15 @@ roadmap is reconciled.
 
 ## Encoded CLR input prerequisites (selected 2026-09-19 after VM-058)
 
+### CLR12 landed; independent coverage reconciled (2026-09-20)
+
+PR #15762 merged as `77326b211e106e1dc7d6466df8cedad4b93d5707` after all four
+workflows succeeded (48 checks: 15 success, 33 skipped). Existing #15763 was
+subsequently found to duplicate its forward-only contract. Reconciliation keeps
+the landed production implementation and its resource bound, preserving the
+independent contract as historical context and its additional byte/refusal/runtime
+proofs. No second implementation or broader source/input support is claimed.
+
 ### CLR12 forward-only scalar control flow implemented locally (2026-09-20)
 
 Contract `CLR12-strict-forward-scalar-control-flow.md` was committed as

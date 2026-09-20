@@ -1,5 +1,11 @@
 # Changelog — iir-to-cil-bytecode
 
+## Unreleased — strict control-flow conformance coverage
+
+Preserve the independent #15763 short-branch exact-byte proof, parameter-driven
+long promotion and malformed/path-dependent refusal cases against landed CLR12.
+Keep the existing production implementation and bounded assignment prepass.
+
 ## Unreleased — strict forward scalar control flow (CLR12)
 
 Add opt-in forward-only labels and branches with void control shapes, Bool
