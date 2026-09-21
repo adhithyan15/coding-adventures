@@ -1,0 +1,12 @@
+{
+  "language": "malayalam",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:859157e5a3f27e1d",
+  "lessonIds": [
+    "ML-C111-vannittu",
+    "ML-C111-vannittundu",
+    "ML-C111-past-or-perfect",
+    "ML-R111-perfect-recall"
+  ],
+  "tex": "malayalam/book/chapters/ch111-perfect.tex"
+}
