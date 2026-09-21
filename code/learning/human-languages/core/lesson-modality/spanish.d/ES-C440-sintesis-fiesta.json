@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C440-sintesis-fiesta",
+    "language": "spanish",
+    "chapter": 440,
+    "sequence": 11130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c420a4500d9f1674"
+  },
+  "findings": []
+}

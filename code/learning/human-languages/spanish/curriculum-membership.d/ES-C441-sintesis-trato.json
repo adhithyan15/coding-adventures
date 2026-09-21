@@ -1,0 +1,11 @@
+{
+  "id": "ES-C441-sintesis-trato",
+  "pathSegment": "ES-PATH-441-TRATO",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ES-EXT-441-TRATO",
+      "order": 6
+    }
+  ]
+}

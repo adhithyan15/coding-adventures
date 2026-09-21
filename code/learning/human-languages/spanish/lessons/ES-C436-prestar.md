@@ -10,7 +10,7 @@ gloss: to lend — the other half of devolver, and the verb that decides which w
 concept_tag: ES-ACT-PRESTAR
 prerequisites: [ES-C436-ofrecer, ES-C431-devolver]
 sounds: []
-roots: []
+roots: [praestare-latin]
 duration:
   max_seconds: 250
 requires:

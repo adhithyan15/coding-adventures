@@ -1,0 +1,11 @@
+{
+  "id": "ES-C442-administracion",
+  "pathSegment": "ES-PATH-442-GESTION",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-442-GESTION",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "chapter": 441,
+  "title": "El Contrato",
+  "label": "ch:es-trato",
+  "canDo": "I can read the four pieces of paper that decide where my money goes: what I agreed to, that I agreed to it, what I owe, and what I owe it on.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "ES-C441-sintesis-trato",
+    "kind": "task",
+    "summary": "Read the message or notice this chapter's words exist for, then say the same thing back.",
+    "assesses": [
+      "ES-LEX-C441-TRATO-01",
+      "ES-LEX-C441-TRATO-02",
+      "ES-LEX-C441-TRATO-03",
+      "ES-LEX-C441-TRATO-04",
+      "ES-LEX-C441-TRATO-05"
+    ],
+    "note": "Wordlist derived from the A2 mock audit by the solo-blocker rule described on chapter 440. PAPERWORK IS A SET OF PHYSICAL ACTS, and the chapter makes that its spine: contrato is con- + trahere, pull the two sides together; firmar is firmus, make the result solid; fijo is figere, drive it in so it cannot move. Draw, harden, fasten -- the law took its vocabulary from carpentry and rope, and a Spanish contract stops looking like jargon once a learner sees it. fijo ANSWERS 439's cerrado: cerrado is a participle you can still feel as one, fijo is a participle that finished becoming a plain adjective centuries ago, and fijar was built backwards from it (RAE: 'fijar: de fijo'). factura teaches -ura, the ending naming what an action produces (factura/escritura/lectura), then pairs factura with hacer as a doublet of facere -- the same shape as nadar/natacion in 438. prestamo closes the lending cycle 431-436 opened (prestar hands over, recoger fetches, devolver returns) and adds the metalinguistic sense: un prestamo del frances is a loanword."
+  }
+}

@@ -102,36 +102,39 @@ describe("Spanish A2 book-bounded mock audit", () => {
   it("pins the CURRENT DEBT: the exam names the vocabulary that is still missing", () => {
     const audit = buildSpanishA1MockAudit(defaultCurriculumRoot(), "A2");
     expect(audit.level).toBe("A2");
-    expect(audit.objectiveFailed).toBe(79);
+    expect(audit.objectiveFailed).toBe(59);
     expect(audit.mocks.map(({ reading, listening, objectiveFailed }) => ({
       reading,
       listening,
       objectiveFailed,
     }))).toEqual([
-      { reading: 10, listening: 2, objectiveFailed: 38 },
-      { reading: 1, listening: 8, objectiveFailed: 41 },
+      { reading: 12, listening: 7, objectiveFailed: 31 },
+      { reading: 11, listening: 11, objectiveFailed: 28 },
     ]);
     // THIS NUMBER MUST ONLY EVER FALL. A rise means a mock gained an item the
     // corpus cannot support.
     //
-    // 191 -> 161 is the first vocabulary tranche (chapters 431-436) and
-    // 161 -> 146 is the second (437-439). BOTH drops are exact: 30 headwords
-    // removed 30 lexemes, then 15 removed 15. That arithmetic is the evidence a
-    // word was genuinely absent -- one already taught under another name would
-    // have made the drop smaller. The second drop was PREDICTED from the audit
-    // before the chapters were wired, and the generator reproduced 79 and 146
-    // exactly, so the selection rule is mechanical rather than a judgement call.
+    // 191 -> 161 -> 146 -> 126 are the three vocabulary tranches: 431-436,
+    // 437-439 and 440-443. EVERY drop is exact -- 30 headwords removed 30
+    // lexemes, 15 removed 15, 20 removed 20. That arithmetic is the evidence a
+    // word was genuinely absent; one already taught under another name would
+    // have made the drop smaller. Each was PREDICTED from the audit before the
+    // chapters were wired and reproduced exactly by the generator, so the
+    // selection rule is mechanical rather than a judgement call.
     //
-    // objectiveFailed fell 93 -> 88 -> 79, more slowly than the lexeme count, and
-    // that is expected rather than disappointing: an item passes only when EVERY
-    // lexeme in its `requires` row is taught, so the last missing word in a row
-    // holds the whole item red. The lexeme count is the leading indicator; the
-    // item count moves in steps as rows complete.
+    // THE ITEM COUNT IS WHERE THE THIRD TRANCHE DIFFERS, and the difference is
+    // the whole point of it. objectiveFailed went 93 -> 88 -> 79 -> 59: the
+    // first 30 words bought 5 items, the next 15 bought 9, and the next 20
+    // bought 20. An item passes only when EVERY lexeme in its `requires` row is
+    // taught, so a word helps in proportion to how close its rows already are.
+    // Tranches 1-2 ranked by how OFTEN a lexeme appeared; tranche 3 ranks by
+    // how close each item is to being unblocked, and teaches only words that
+    // are the sole survivor in their row. One word, one item, every time.
     //
-    // The per-mock split moved unevenly (mock 1's reading 6 -> 10, mock 2's
-    // listening 4 -> 8) because a tranche clears whole rows, not a fixed share
-    // of each paper. A uniform movement would be the surprising result.
-    expect(audit.missingObjectiveLexemes).toHaveLength(146);
+    // The per-mock split moves unevenly because a tranche clears whole rows,
+    // not a fixed share of each paper. A uniform movement would be the
+    // surprising result.
+    expect(audit.missingObjectiveLexemes).toHaveLength(126);
   });
 
   it("measures a LARGER taught set than A1, which is what makes it a different gate", () => {

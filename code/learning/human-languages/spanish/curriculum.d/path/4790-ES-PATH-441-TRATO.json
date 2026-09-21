@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-441-TRATO",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "before": [],
+  "inline": [
+    "ES-EXT-441-TRATO"
+  ],
+  "after": []
+}
