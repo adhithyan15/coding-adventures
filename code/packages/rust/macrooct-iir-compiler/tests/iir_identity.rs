@@ -384,3 +384,73 @@ fn the_module_identifies_its_language_as_oct() {
     assert_eq!(module.language, "oct");
     assert_eq!(module.entry_point.as_deref(), Some("main"));
 }
+
+// ===========================================================================
+// Diagnostic hygiene, as a CLASS rather than a site
+// ===========================================================================
+
+/// No diagnostic reachable from the public entry point may carry a raw control
+/// character, nor run unbounded in length.
+///
+/// This test exists because the same defect was found three times before it
+/// was fixed properly. `PpError::quote` escapes and truncates, and its own doc
+/// comment claimed that centralising it meant "a new interpolation cannot
+/// forget" — which is only true of call sites that actually call it. Review
+/// round after review round turned up one more that did not: first `RootedFs`,
+/// then the engine's include-cycle message, then `MemoryFs` — which is not
+/// test-only, it is what `lang-aot` builds for every MacroOct compile, so a
+/// raw `ESC [ 2 J` reached a build log from source alone.
+///
+/// Centralising a helper does not centralise the decision to use it. So the
+/// invariant is asserted over OUTPUTS, where a missed call site shows up,
+/// rather than over call sites, where by definition it does not.
+#[test]
+fn no_diagnostic_leaks_a_raw_control_character_or_runs_unbounded() {
+    let esc = "\u{1b}[2J";
+    let long = "A".repeat(5000);
+
+    // Each entry must fail, and each routes through a different message.
+    let cases: Vec<String> = vec![
+        // missing include — via MemoryFs, the production path for MacroOct
+        format!("@include \"{esc}pwned\"\nfn main() {{ out(1, 0); }}\n"),
+        format!("@include \"{long}\"\nfn main() {{ out(1, 0); }}\n"),
+        // unknown directive — via the dialect's glued-suffix hint
+        format!("@end{esc}\nfn main() {{ out(1, 0); }}\n"),
+        format!("@end{long}\nfn main() {{ out(1, 0); }}\n"),
+        // condition operands and an unterminated group
+        format!("@if {esc}\nfn main() {{ out(1, 0); }}\n"),
+        "@if 1\nfn main() { out(1, 0); }\n".to_string(),
+        // a macro definition, which slice 1 refuses
+        format!("@define {esc} 1\nfn main() {{ out(1, 0); }}\n"),
+    ];
+
+    let mut checked = 0;
+    for src in &cases {
+        let Err(e) = compile_source(src, "hygiene") else { continue };
+        checked += 1;
+        let msg = format!("{e:?}");
+
+        if let Some(bad) = msg.chars().find(|c| c.is_control()) {
+            panic!(
+                "diagnostic carries a raw control character {bad:?} — a terminal \
+                 escape reaches the build log from source alone: {msg:?}"
+            );
+        }
+
+        // Generous ceiling: 1 KiB of quoted text plus whatever fixed prose the
+        // message wraps it in. The point is that it is bounded at all.
+        assert!(
+            msg.len() < 4096,
+            "diagnostic ran to {} bytes; attacker-derived text must be truncated: {}",
+            msg.len(),
+            &msg[..200.min(msg.len())]
+        );
+    }
+
+    assert!(
+        checked >= 5,
+        "only {checked} of these inputs failed to compile — if MacroOct started \
+         accepting them, this test is no longer exercising the diagnostic paths \
+         it was written to guard"
+    );
+}

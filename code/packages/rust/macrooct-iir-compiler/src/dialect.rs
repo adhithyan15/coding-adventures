@@ -202,8 +202,14 @@ impl Dialect for MacroOctDialect {
                 } else {
                     " — MacroOct's directives are `@include`, `@define`, `@if`, `@else` and `@end`"
                 };
+                // Quoted for the length cap. There is no injection channel
+                // here — `glued_suffix` only admits alphanumeric token starts —
+                // but a 4000-character identifier still produced a 4 KB
+                // diagnostic, and the cap is the point.
+                let shown =
+                    PpError::quote(&spelling, Bounds::default().diagnostic_quote_bytes);
                 return Some(Err(PpError::new(format!(
-                    "unknown directive `{spelling}` at line {}, column {}{hint}",
+                    "unknown directive `{shown}` at line {}, column {}{hint}",
                     head.line, head.column
                 ))));
             }

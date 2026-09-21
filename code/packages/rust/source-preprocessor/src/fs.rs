@@ -129,7 +129,24 @@ impl MemoryFs {
 impl SourceFs for MemoryFs {
     fn resolve(&mut self, request: &IncludeRequest) -> Result<FileId, PpError> {
         self.by_name.get(&request.spelling).copied().ok_or_else(|| {
-            PpError::new(format!("no such included file: {}", request.spelling))
+            // Quoted, even though this is the in-memory implementation.
+            //
+            // `MemoryFs` is NOT test-only: `macrooct-iir-compiler` builds one
+            // for every `compile_source`, which is what `lang-aot`'s
+            // `compile_source_to_iir` calls. A security review reproduced a raw
+            // terminal escape reaching a build log straight through here, from
+            // `@include "<ESC>[2Jpwned"`, because the spelling was interpolated
+            // untouched — and untruncated, so a 5 KB spelling produced a 5 KB
+            // diagnostic.
+            //
+            // The lesson is the interesting part: `quote`'s own doc claimed
+            // that centralising the escape meant "a new interpolation cannot
+            // forget", which is only true of call sites that actually call it.
+            // Centralising a helper does not centralise the decision to use it.
+            PpError::new(format!(
+                "no such included file: {}",
+                PpError::quote(&request.spelling, Bounds::default().diagnostic_quote_bytes)
+            ))
         })
     }
 

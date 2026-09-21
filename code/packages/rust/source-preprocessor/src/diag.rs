@@ -57,8 +57,18 @@ impl PpError {
     /// whoever reads the build log, and richer sequences can rewrite earlier
     /// lines: terminal-escape injection into a shared builder's CI output. A
     /// security review found this reachable end-to-end through
-    /// `compile_source`. Escaping here rather than at each call site means a
-    /// new interpolation cannot forget.
+    /// `compile_source`.
+    ///
+    /// An earlier version of this comment said "escaping here rather than at
+    /// each call site means a new interpolation cannot forget." That is false,
+    /// and three review rounds found it false in a different place each time —
+    /// most importantly `MemoryFs`, which is not test-only. Centralising a
+    /// helper centralises the *implementation*, not the *decision to call it*.
+    /// The invariant is therefore asserted over OUTPUTS, by
+    /// `no_diagnostic_leaks_a_raw_control_character_or_runs_unbounded` in
+    /// `macrooct-iir-compiler`, which drives hostile input through the public
+    /// entry point — a missed call site shows up there whether or not anyone
+    /// remembered the site exists.
     ///
     /// **Truncation.** On a char boundary, because slicing a `String`
     /// mid-UTF-8 panics, and a diagnostic path that panics on hostile input
