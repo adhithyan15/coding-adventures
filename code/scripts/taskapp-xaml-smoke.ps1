@@ -141,6 +141,32 @@ function Set-TaskAppWindowSize($proc, $width, $height) {
     return [System.Windows.Automation.AutomationElement]::FromHandle($proc.MainWindowHandle)
 }
 
+function Set-InputFocus($element, $timeoutSeconds) {
+    # WinUI's generated onChange handler dispatches TextChanged only from a
+    # focused TextBox (mosaic-emit-xaml's emit_host_input), which real typing
+    # always satisfies but ValuePattern.SetValue does not by itself -- it
+    # writes the Text property directly without focusing the control.
+    # SetFocus() requests focus, but it is a request, not a guarantee: the
+    # app's own auto-focus Loaded handler races it during startup, and a
+    # packaged app's window can take longer to become the one WinUI's
+    # focus manager will actually hand focus to. Retry until the element
+    # itself reports HasKeyboardFocus rather than assuming one SetFocus()
+    # call landed.
+    $deadline = (Get-Date).AddSeconds($timeoutSeconds)
+    $automationId = '<unknown>'
+    while ((Get-Date) -lt $deadline) {
+        try {
+            $automationId = $element.Current.AutomationId
+            if ($element.Current.HasKeyboardFocus) { return }
+            $element.SetFocus()
+        } catch [System.Windows.Automation.ElementNotAvailableException] {
+            throw "'$automationId' left the tree while waiting for it to gain focus (TaskApp swaps this input behind a conditional branch, e.g. name-input/name-input-corrected/name-input-error)."
+        }
+        Start-Sleep -Milliseconds 200
+    }
+    throw "Could not focus '$automationId' within $timeoutSeconds seconds."
+}
+
 function Wait-ForNamedOffscreenState($root, $name, $controlType, $expected, $timeoutSeconds) {
     $deadline = (Get-Date).AddSeconds($timeoutSeconds)
     while ((Get-Date) -lt $deadline) {
@@ -294,14 +320,14 @@ try {
         throw "Could not find the task composer input. Buttons present: $((Get-ButtonNames $root) -join ', ')"
     }
     $taskName = 'CI smoke task'
-    $composer.SetFocus()
+    Set-InputFocus $composer $TimeoutSeconds
     $composer.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue($taskName)
     $due = '2026-01-09'
     $dueInput = Find-ByAutomationId $root 'due-input' ([System.Windows.Automation.ControlType]::Edit)
     if (-not $dueInput) {
         throw "Could not find the due-date input."
     }
-    $dueInput.SetFocus()
+    Set-InputFocus $dueInput $TimeoutSeconds
     $dueInput.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue($due)
     Start-Sleep -Seconds 2
 
@@ -401,19 +427,12 @@ try {
     # ── 7. Persist a second task, restart, and prove it is restored ─────
     #
     # The composer and due-date inputs lost focus to the toggle/delete
-    # controls exercised above. WinUI's generated onChange handler only
-    # dispatches TextChanged from a focused TextBox (see
-    # mosaic-emit-xaml's emit_host_input), which real typing always
-    # satisfies but ValuePattern.SetValue does not by itself — it writes
-    # the Text property directly without focusing the control. Explicitly
-    # focusing first (as SetFocus() below does) mirrors how a real user
-    # would tab or click into the field before typing, and is what drives
-    # WinUI's FocusState to Programmatic so the change is not mistaken for
-    # an inactive/teardown notification.
+    # controls exercised above (see Set-InputFocus for why re-focusing
+    # before SetValue matters here).
     $persistedTask = 'Persisted native task'
-    $composer.SetFocus()
+    Set-InputFocus $composer $TimeoutSeconds
     $composer.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue($persistedTask)
-    $dueInput.SetFocus()
+    Set-InputFocus $dueInput $TimeoutSeconds
     $dueInput.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue($due)
     Start-Sleep -Seconds 1
     $addButton.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
