@@ -60,6 +60,146 @@
    "rung": "unused_local",
    "tier": 3,
    "upstream_stdout": "function f(){return 2}console.log(f());\n"
+  },
+  "ladder_t4_for_loop_advanced": {
+   "closurec_exit": 0,
+   "closurec_stdout": "for(var i=0;i<3;i++)console.log(i);\n",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15856",
+   "level": "ADVANCED",
+   "reason": "closurec does not rename loop-header locals. Upstream renames `i` to `a`. This is the CCR-022 renaming-breadth gap.",
+   "rung": "for_loop",
+   "tier": 4,
+   "upstream_stdout": "for(var a=0;a<3;a++)console.log(a);\n"
+  },
+  "ladder_t4_if_else_advanced": {
+   "closurec_exit": 0,
+   "closurec_stdout": "var x=1;x?console.log(1):console.log(2);\n",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
+   "level": "ADVANCED",
+   "reason": "closurec does not propagate a known binding into the condition, so the branch survives as a ternary instead of collapsing. Upstream folds it away entirely. This is the CCR-068 value-propagation gap.",
+   "rung": "if_else",
+   "tier": 4,
+   "upstream_stdout": "console.log(1);\n"
+  },
+  "ladder_t4_if_else_simple": {
+   "closurec_exit": 0,
+   "closurec_stdout": "var x=1;x?console.log(1):console.log(2);\n",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
+   "level": "SIMPLE",
+   "reason": "closurec does not propagate a known binding into the condition, so the branch survives as a ternary instead of collapsing. Upstream folds it away entirely. This is the CCR-068 value-propagation gap.",
+   "rung": "if_else",
+   "tier": 4,
+   "upstream_stdout": "var x=1;console.log(1);\n"
+  },
+  "ladder_t4_switch_advanced": {
+   "closurec_exit": 0,
+   "closurec_stdout": "var x=1;switch(x){case 1:console.log(1);break;default:console.log(2);}\n",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
+   "level": "ADVANCED",
+   "reason": "Upstream propagates the scrutinee `x = 1`, selects the live case and discards the rest of the switch, leaving only its effect. closurec emits the input. This is the CCR-068 value-propagation gap.",
+   "rung": "switch",
+   "tier": 4,
+   "upstream_stdout": "console.log(1);\n"
+  },
+  "ladder_t4_switch_simple": {
+   "closurec_exit": 0,
+   "closurec_stdout": "var x=1;switch(x){case 1:console.log(1);break;default:console.log(2);}\n",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15854",
+   "level": "SIMPLE",
+   "reason": "Upstream terminates the switch statement after its closing brace; closurec places a semicolon inside the block instead. Emitter punctuation only \u2014 both forms parse identically. This is CCR-073.",
+   "rung": "switch",
+   "tier": 4,
+   "upstream_stdout": "var x=1;switch(x){case 1:console.log(1);break;default:console.log(2)};\n"
+  },
+  "ladder_t4_try_catch_advanced": {
+   "closurec_exit": 0,
+   "closurec_stdout": "try{console.log(1)}catch(e){console.log(e)}\n",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15856",
+   "level": "ADVANCED",
+   "reason": "Two causes, the same as the SIMPLE rung: the catch parameter is not renamed (CCR-022) and the try statement is not terminated after its closing brace (CCR-073). ADVANCED adds no further difference here.",
+   "rung": "try_catch",
+   "tier": 4,
+   "upstream_stdout": "try{console.log(1)}catch(a){console.log(a)};\n"
+  },
+  "ladder_t4_try_catch_simple": {
+   "closurec_exit": 0,
+   "closurec_stdout": "try{console.log(1)}catch(e){console.log(e)}\n",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15856",
+   "level": "SIMPLE",
+   "reason": "Two causes. Upstream renames the catch parameter `e` to `a`, which closurec skips (CCR-022), and terminates the try statement after its closing brace, which closurec omits (CCR-073). Both must be fixed before this rung matches.",
+   "rung": "try_catch",
+   "tier": 4,
+   "upstream_stdout": "try{console.log(1)}catch(a){console.log(a)};\n"
+  },
+  "ladder_t4_while_advanced": {
+   "closurec_exit": 0,
+   "closurec_stdout": "var i=0;for(;i<3;)i++;console.log(i);\n",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15855",
+   "level": "ADVANCED",
+   "reason": "closurec rewrites the while into a for but leaves the initializer as a separate statement rather than hoisting it into the for header (CCR-074). The ADVANCED rung additionally needs the loop-local rename of CCR-022.",
+   "rung": "while",
+   "tier": 4,
+   "upstream_stdout": "for(var a=0;a<3;)a++;console.log(a);\n"
+  },
+  "ladder_t4_while_simple": {
+   "closurec_exit": 0,
+   "closurec_stdout": "var i=0;for(;i<3;)i++;console.log(i);\n",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15855",
+   "level": "SIMPLE",
+   "reason": "closurec rewrites the while into a for but leaves the initializer as a separate statement rather than hoisting it into the for header (CCR-074). The ADVANCED rung additionally needs the loop-local rename of CCR-022.",
+   "rung": "while",
+   "tier": 4,
+   "upstream_stdout": "for(var i=0;i<3;)i++;console.log(i);\n"
+  },
+  "ladder_t5_array_advanced": {
+   "closurec_exit": 0,
+   "closurec_stdout": "var a=[1,2,3];console.log(a[0]);\n",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
+   "level": "ADVANCED",
+   "reason": "closurec does not propagate a single-use array literal into its use site and eliminate the binding (CCR-068).",
+   "rung": "array",
+   "tier": 5,
+   "upstream_stdout": "console.log(1);\n"
+  },
+  "ladder_t5_nested_obj_advanced": {
+   "closurec_exit": 0,
+   "closurec_stdout": "var o={a:{b:{c:1}}};console.log(o.a.b.c);\n",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
+   "level": "ADVANCED",
+   "reason": "closurec does not propagate a single-use nested object literal through a property chain to its use site (CCR-068).",
+   "rung": "nested_obj",
+   "tier": 5,
+   "upstream_stdout": "console.log(1);\n"
+  },
+  "ladder_t5_object_advanced": {
+   "closurec_exit": 0,
+   "closurec_stdout": "var o={a:1,b:2};console.log(o.a);\n",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
+   "level": "ADVANCED",
+   "reason": "closurec does not propagate a single-use object literal into its use site and eliminate the binding. This is the CCR-068 value-propagation gap \u2014 the single largest contributor to the ADVANCED ladder result.",
+   "rung": "object",
+   "tier": 5,
+   "upstream_stdout": "console.log(1);\n"
+  },
+  "ladder_t5_quoted_key_advanced": {
+   "closurec_exit": 0,
+   "closurec_stdout": "var o={\"a-b\":1};console.log(o[\"a-b\"]);\n",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
+   "level": "ADVANCED",
+   "reason": "closurec does not propagate a single-use object literal read through a quoted key (CCR-068).",
+   "rung": "quoted_key",
+   "tier": 5,
+   "upstream_stdout": "console.log(1);\n"
+  },
+  "ladder_t5_regex_advanced": {
+   "closurec_exit": 0,
+   "closurec_stdout": "var r=/ab+c/g;console.log(r.test(\"abc\"));\n",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
+   "level": "ADVANCED",
+   "reason": "closurec does not propagate a single-use regular-expression literal into its use site (CCR-068).",
+   "rung": "regex",
+   "tier": 5,
+   "upstream_stdout": "console.log(/ab+c/g.test(\"abc\"));\n"
   }
  },
  "schema_version": 1,

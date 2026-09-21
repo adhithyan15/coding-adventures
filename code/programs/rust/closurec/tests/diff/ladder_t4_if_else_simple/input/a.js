@@ -1,0 +1,2 @@
+var x = 1;
+if (x) { console.log(1); } else { console.log(2); }

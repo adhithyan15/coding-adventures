@@ -64,6 +64,29 @@ rewired to another rung's input, and keeps argv closed against write-capable
 flags. Output is compared as **bytes**, not via `from_utf8_lossy`, matching
 `tests/diff_minify.rs` — lossy decoding would let an encoding regression pass.
 
+### Added - ladder tiers 4 and 5 (CCR-066)
+
+36 more rungs — 12 rungs across tiers 4 (control flow) and 5 (data literals), each
+at all three levels. The ladder is now 81 fixtures; the ledger holds 20 recorded
+divergences.
+
+22 of the 36 agree. The 14 that do not have five distinct causes, three of which
+had no tracking issue before:
+
+| Cause | Rungs | Tracked |
+|---|---|---|
+| Single-use value propagation | `object`, `array`, `nested_obj`, `quoted_key`, `regex`, `if_else`, `switch` (ADVANCED) | CCR-068 |
+| Statement terminator placed inside a block-terminated `switch`/`try` rather than after it | `switch` (SIMPLE), `try_catch` (both) | **CCR-073**, new |
+| `while`→`for` rewrite does not hoist the initializer | `while` (both) | **CCR-074**, new |
+| Renaming skips loop-header locals, catch parameters and labels | `for_loop` (ADVANCED), `try_catch` (both) | **CCR-022**, long-standing, now has an issue |
+
+Two observations worth recording. Seven of the fourteen are single-use value
+propagation, which confirms it as the largest single contributor to the ADVANCED
+result rather than one gap among many. And the `while` rung shows a transform
+that runs, costs time, and produces output *longer* than the shape it replaced —
+we do the structurally harder half (recognising the loop and reshaping it) and
+stop before the byte-saving half.
+
 Registered in `tests/oracle/manifest.json` as fixture set `ladder-v20260915`
 (`documented_release`, command `closure-flags-file-v1`). The reviewed fixture
 inventory tripwire in `tests/oracle_manifest.rs` moves from 626 to 671; the
