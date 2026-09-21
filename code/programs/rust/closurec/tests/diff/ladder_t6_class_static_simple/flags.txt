@@ -1,0 +1,4 @@
+--compilation_level
+SIMPLE_OPTIMIZATIONS
+--js
+tests/diff/ladder_t6_class_static_simple/input/a.js

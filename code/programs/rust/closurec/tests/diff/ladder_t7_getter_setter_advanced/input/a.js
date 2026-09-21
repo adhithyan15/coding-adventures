@@ -1,0 +1,2 @@
+var o = { get a(){ return 1; }, set a(v){} };
+console.log(o.a);

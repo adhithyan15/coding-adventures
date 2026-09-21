@@ -186,7 +186,7 @@ there is no second list that could disagree with the pipeline.
 | `SIMPLE` | 31 / 52 | 60% |
 | `ADVANCED` | 13 / 52 | 25% |
 
-Agreement falls as the amount of claimed optimization rises. The `ADVANCED`
+All 52 rungs are committed as fixtures under `tests/diff/ladder_*`. Agreement falls as the amount of claimed optimization rises. The `ADVANCED`
 figure flatters it: most of its agreements are rungs with nothing to optimize.
 Upstream `ADVANCED` reduces whole programs to their observable effect —
 `var o={a:1,b:2};console.log(o.a)` becomes `console.log(1)` — where `closurec`
