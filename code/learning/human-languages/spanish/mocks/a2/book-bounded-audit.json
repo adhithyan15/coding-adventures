@@ -59,15 +59,15 @@
     ],
     "numericCredits": "0-100"
   },
-  "lessonCount": 1212,
-  "taughtForms": 1980,
-  "objectiveFailed": 79,
+  "lessonCount": 1240,
+  "taughtForms": 2028,
+  "objectiveFailed": 59,
   "mocks": [
     {
       "mock": 1,
-      "reading": 10,
-      "listening": 2,
-      "objectiveFailed": 38,
+      "reading": 12,
+      "listening": 7,
+      "objectiveFailed": 31,
       "failed": [
         {
           "paper": 1,
@@ -101,23 +101,9 @@
         },
         {
           "paper": 1,
-          "item": 8,
-          "missing": [
-            "préstamo"
-          ]
-        },
-        {
-          "paper": 1,
           "item": 11,
           "missing": [
             "análisis"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 12,
-          "missing": [
-            "celebrar"
           ]
         },
         {
@@ -233,24 +219,10 @@
         },
         {
           "paper": 2,
-          "item": 32,
-          "missing": [
-            "factura"
-          ]
-        },
-        {
-          "paper": 2,
           "item": 33,
           "missing": [
             "obra",
             "vía"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 34,
-          "missing": [
-            "concentrarse"
           ]
         },
         {
@@ -269,13 +241,6 @@
             "sección",
             "inventario",
             "habitual"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 38,
-          "missing": [
-            "administración"
           ]
         },
         {
@@ -316,24 +281,10 @@
         },
         {
           "paper": 2,
-          "item": 44,
-          "missing": [
-            "cumpleaños"
-          ]
-        },
-        {
-          "paper": 2,
           "item": 45,
           "missing": [
             "ensalada",
             "cargo"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 46,
-          "missing": [
-            "reunión"
           ]
         },
         {
@@ -373,9 +324,9 @@
     },
     {
       "mock": 2,
-      "reading": 1,
-      "listening": 8,
-      "objectiveFailed": 41,
+      "reading": 11,
+      "listening": 11,
+      "objectiveFailed": 28,
       "failed": [
         {
           "paper": 1,
@@ -403,23 +354,9 @@
         },
         {
           "paper": 1,
-          "item": 5,
-          "missing": [
-            "humor"
-          ]
-        },
-        {
-          "paper": 1,
           "item": 6,
           "missing": [
             "calefacción"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 7,
-          "missing": [
-            "acercarse"
           ]
         },
         {
@@ -432,39 +369,11 @@
         },
         {
           "paper": 1,
-          "item": 9,
-          "missing": [
-            "contrato"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 10,
-          "missing": [
-            "envío"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 11,
-          "missing": [
-            "concertar"
-          ]
-        },
-        {
-          "paper": 1,
           "item": 12,
           "missing": [
             "arreglar",
             "freno",
             "rueda"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 13,
-          "missing": [
-            "doler"
           ]
         },
         {
@@ -486,37 +395,9 @@
         },
         {
           "paper": 1,
-          "item": 16,
-          "missing": [
-            "arrepentirse"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 17,
-          "missing": [
-            "interesar"
-          ]
-        },
-        {
-          "paper": 1,
           "item": 18,
           "missing": [
             "responsabilidad"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 19,
-          "missing": [
-            "fijo"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 20,
-          "missing": [
-            "firmar"
           ]
         },
         {
@@ -623,13 +504,6 @@
         },
         {
           "paper": 2,
-          "item": 36,
-          "missing": [
-            "pantalla"
-          ]
-        },
-        {
-          "paper": 2,
           "item": 39,
           "missing": [
             "organizar",
@@ -639,24 +513,10 @@
         },
         {
           "paper": 2,
-          "item": 40,
-          "missing": [
-            "boda"
-          ]
-        },
-        {
-          "paper": 2,
           "item": 41,
           "missing": [
             "cómodo",
             "ruta"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 42,
-          "missing": [
-            "disfrutar"
           ]
         },
         {
@@ -707,9 +567,7 @@
     "accidente",
     "aceptar",
     "acercar",
-    "acercarse",
     "acompañar",
-    "administración",
     "admitir",
     "agencia",
     "alimentar",
@@ -718,31 +576,24 @@
     "análisis",
     "apuntar",
     "arreglar",
-    "arrepentirse",
     "avanzado",
     "avisar",
-    "boda",
     "bufanda",
     "calefacción",
     "cargo",
     "carné",
     "carrito",
-    "celebrar",
     "chaqueta",
     "claro",
     "cola",
     "comentar",
     "comportamiento",
-    "concentrarse",
-    "concertar",
     "conectar",
     "consultar",
-    "contrato",
     "coste",
     "creer",
     "cuaderno",
     "cubrir",
-    "cumpleaños",
     "césped",
     "cómodo",
     "decidirse",
@@ -751,8 +602,6 @@
     "directo",
     "director",
     "discutir",
-    "disfrutar",
-    "doler",
     "donar",
     "dormitorio",
     "duro",
@@ -763,17 +612,13 @@
     "enseñar",
     "entregar",
     "entrenamiento",
-    "envío",
     "espera",
     "estado",
     "estropeado",
     "estropear",
     "exigente",
     "explicar",
-    "factura",
     "fallar",
-    "fijo",
-    "firmar",
     "freno",
     "grado",
     "guardia",
@@ -781,12 +626,10 @@
     "habitual",
     "herramienta",
     "hierba",
-    "humor",
     "importar",
     "impresora",
     "imprimir",
     "instalación",
-    "interesar",
     "inventario",
     "invitar",
     "jefe",
@@ -807,7 +650,6 @@
     "objetivo",
     "obra",
     "organizar",
-    "pantalla",
     "paraguas",
     "partido",
     "patio",
@@ -820,7 +662,6 @@
     "principiante",
     "problema",
     "producir",
-    "préstamo",
     "rechazar",
     "recomendar",
     "recordar",
@@ -828,7 +669,6 @@
     "repetir",
     "responder",
     "responsabilidad",
-    "reunión",
     "revisar",
     "rotativo",
     "roto",
@@ -872,15 +712,7 @@
       "count": 1
     },
     {
-      "lexeme": "acercarse",
-      "count": 1
-    },
-    {
       "lexeme": "acompañar",
-      "count": 1
-    },
-    {
-      "lexeme": "administración",
       "count": 1
     },
     {
@@ -916,19 +748,11 @@
       "count": 1
     },
     {
-      "lexeme": "arrepentirse",
-      "count": 1
-    },
-    {
       "lexeme": "avanzado",
       "count": 1
     },
     {
       "lexeme": "avisar",
-      "count": 1
-    },
-    {
-      "lexeme": "boda",
       "count": 1
     },
     {
@@ -949,10 +773,6 @@
     },
     {
       "lexeme": "carrito",
-      "count": 1
-    },
-    {
-      "lexeme": "celebrar",
       "count": 1
     },
     {
@@ -984,23 +804,11 @@
       "count": 1
     },
     {
-      "lexeme": "concentrarse",
-      "count": 1
-    },
-    {
-      "lexeme": "concertar",
-      "count": 1
-    },
-    {
       "lexeme": "conectar",
       "count": 1
     },
     {
       "lexeme": "consultar",
-      "count": 1
-    },
-    {
-      "lexeme": "contrato",
       "count": 1
     },
     {
@@ -1017,10 +825,6 @@
     },
     {
       "lexeme": "cubrir",
-      "count": 1
-    },
-    {
-      "lexeme": "cumpleaños",
       "count": 1
     },
     {
@@ -1045,14 +849,6 @@
     },
     {
       "lexeme": "discutir",
-      "count": 1
-    },
-    {
-      "lexeme": "disfrutar",
-      "count": 1
-    },
-    {
-      "lexeme": "doler",
       "count": 1
     },
     {
@@ -1096,10 +892,6 @@
       "count": 1
     },
     {
-      "lexeme": "envío",
-      "count": 1
-    },
-    {
       "lexeme": "espera",
       "count": 1
     },
@@ -1120,19 +912,7 @@
       "count": 1
     },
     {
-      "lexeme": "factura",
-      "count": 1
-    },
-    {
       "lexeme": "fallar",
-      "count": 1
-    },
-    {
-      "lexeme": "fijo",
-      "count": 1
-    },
-    {
-      "lexeme": "firmar",
       "count": 1
     },
     {
@@ -1164,10 +944,6 @@
       "count": 1
     },
     {
-      "lexeme": "humor",
-      "count": 1
-    },
-    {
       "lexeme": "importar",
       "count": 1
     },
@@ -1181,10 +957,6 @@
     },
     {
       "lexeme": "instalación",
-      "count": 1
-    },
-    {
-      "lexeme": "interesar",
       "count": 1
     },
     {
@@ -1268,10 +1040,6 @@
       "count": 1
     },
     {
-      "lexeme": "pantalla",
-      "count": 1
-    },
-    {
       "lexeme": "paraguas",
       "count": 1
     },
@@ -1305,10 +1073,6 @@
     },
     {
       "lexeme": "plazo",
-      "count": 1
-    },
-    {
-      "lexeme": "préstamo",
       "count": 1
     },
     {
@@ -1349,10 +1113,6 @@
     },
     {
       "lexeme": "responsabilidad",
-      "count": 1
-    },
-    {
-      "lexeme": "reunión",
       "count": 1
     },
     {

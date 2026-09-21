@@ -1,0 +1,21 @@
+{
+  "language": "spanish",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:e602891e72bb4a23",
+  "lessonIds": [
+    "ES-C440-boda",
+    "ES-C440-cumpleanos",
+    "ES-C440-celebrar",
+    "ES-C440-disfrutar",
+    "ES-C440-humor",
+    "ES-R440-repaso-fiesta",
+    "ES-C440-sintesis-fiesta"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "spanish/narration/ch440.txt",
+  "json": "spanish/narration/ch440.json",
+  "textHash": "fnv1a64:d0c543cff2d01456",
+  "jsonHash": "fnv1a64:2edba724edadc724",
+  "findings": []
+}

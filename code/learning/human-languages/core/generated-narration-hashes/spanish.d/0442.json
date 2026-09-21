@@ -1,0 +1,21 @@
+{
+  "language": "spanish",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:30b318954437e3e7",
+  "lessonIds": [
+    "ES-C442-administracion",
+    "ES-C442-envio",
+    "ES-C442-concertar",
+    "ES-C442-reunion",
+    "ES-C442-pantalla",
+    "ES-R442-repaso-gestion",
+    "ES-C442-sintesis-gestion"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch442.txt",
+  "json": "spanish/narration/ch442.json",
+  "textHash": "fnv1a64:1e7aa1e870731538",
+  "jsonHash": "fnv1a64:e08de6c6a83658ea",
+  "findings": []
+}

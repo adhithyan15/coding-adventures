@@ -1,0 +1,1121 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 443,
+  "title": "El Animo",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:f3c0ca6281fdf841",
+  "lessons": [
+    {
+      "id": "ES-C443-doler",
+      "sequence": 11280,
+      "title": "doler — the pain does the acting",
+      "headword": "doler",
+      "romanization": "doler",
+      "gloss": "to hurt — the verb that makes the pain the subject and you the one it happens to",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:d1914688d36b907d",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el dolor and la cabeza. You have the noun for pain and the part of you that has it. Name the verb."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: doler",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "doler — to hurt, to ache."
+            },
+            {
+              "kind": "speech",
+              "text": "Me duele la cabeza — I have a headache. Me duelen los pies — my feet hurt. ¿Le duele aquí? — does it hurt here? That last one is what a doctor says, and it is worth having ready before you need it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: it is built like gustar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at me duele la cabeza and find the subject. It is not me. La cabeza is the subject; the head is what does the hurting, and me is the person it happens to."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the same machine as gustar, which you have had since early on."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Spanish",
+                "what is the subject"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "Spanish: me gusta el pan. what is the subject: el pan.",
+                "Spanish: me duele la cabeza. what is the subject: la cabeza."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So the verb agrees with the body part, not with you: me duele la cabeza but me duelen los pies. Two feet, plural verb. This is the single most common mistake English speakers make with the word, because English puts the person in charge — I have a headache — and Spanish does not."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new is being learned here. You already owned the pattern; this is a second verb that runs on it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin dolēre, to hurt. el dolor is its noun and you have had it for a long time; doler is the verb it was cut from."
+            },
+            {
+              "kind": "speech",
+              "text": "The stem breaks under stress, exactly as dormir and torcer do: doler, dolemos, but duele and duelen. Same condition, same result — when the stress lands on the o, the o opens into ue."
+            },
+            {
+              "kind": "speech",
+              "text": "English keeps dolēre in condolence, hurting with somebody, and in doleful."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doler",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *doler*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I have a headache",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I have a headache]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "my feet hurt — and check which word the verb agreed with",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: my feet hurt — and check which word the verb agreed with]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To hurt? (Doler.) My feet hurt? (Me duelen los pies.) Which verb is it built like? (Gustar.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C443-interesar",
+      "sequence": 11290,
+      "title": "interesar — what lies between you and a thing",
+      "headword": "interesar",
+      "romanization": "interesar",
+      "gloss": "to interest — the verb behind an adjective you own, running on the same machine as doler",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7e961e29e38a657f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say interesante and estudiar. Say doler. You can call a class interesting. Now say that it interests you."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: interesar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "interesar — to interest, to be of interest to somebody."
+            },
+            {
+              "kind": "speech",
+              "text": "Me interesa la clase — the class interests me, I am interested in it. No me interesa — I am not interested, which is the ordinary way to decline an offer. interesarse por is to take an interest in: se interesó por mi salud."
+            },
+            {
+              "kind": "speech",
+              "text": "You already had interesante. This is the verb the adjective was made from, so the only new thing is what it does in a sentence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the same machine again",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Me interesa el curso has the same shape as me duele la cabeza."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Spanish",
+                "the subject",
+                "the person"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "Spanish: me duele la cabeza. the subject: la cabeza. the person: me.",
+                "Spanish: me interesa la clase. the subject: la clase. the person: me."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The verb agrees with the thing, not with you — me interesan las clases, plural. Once you have seen the pattern three times (gustar, doler, interesar) it stops being a special case and becomes what this whole family of verbs does."
+            },
+            {
+              "kind": "speech",
+              "text": "English turns them the other way round and needs an adjective to do it: I am interested. Spanish keeps the thing in charge."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin inter esse — inter, between, plus esse, to be. To interest somebody was for a thing to be between them and something else: to be involved, to be at stake."
+            },
+            {
+              "kind": "speech",
+              "text": "That older sense is still in el interés on a loan, which is what is at stake in the deal, and in English interested party — not a party that is curious, but one with something at stake."
+            },
+            {
+              "kind": "speech",
+              "text": "So interesante does not mean \"makes me curious\" at root. It means standing between, involved, concerned. The curiosity sense came later and took over."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "interesar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *interesar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the class interests me and I want to study it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the class interests me and I want to study it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "no me interesa, and why it is a polite refusal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *no me interesa*, and why it is a polite refusal]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To interest? (Interesar.) What do the two Latin pieces mean? (Between and to be.) Which verbs is it built like? (Gustar and doler.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C443-acercarse",
+      "sequence": 11300,
+      "title": "acercarse — making it near",
+      "headword": "acercarse",
+      "romanization": "acercarse",
+      "gloss": "to approach — a preposition turned into a verb, and the date that comes closer on its own",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:08a137eda3b5d9c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say cerca and lejos. Say interesar. You can say where something is. Name the act of closing the gap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: acercarse",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "acercar — to bring something nearer. acercarse — to come closer yourself."
+            },
+            {
+              "kind": "speech",
+              "text": "Acércate — come here, come closer. Me acerqué a la ventana — I went over to the window. Se acerca la fecha — the date is getting close, which a Spanish speaker says about an exam or a deadline the way English says it's coming up."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes a: acercarse a algo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a- plus cerca plus the -ar ending, and every piece is one you own."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "piece",
+                "what it does"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "piece: a-. what it does: towards.",
+                "piece: cerc-. what it does: cerca, near.",
+                "piece: -ar. what it does: makes it a verb."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "That is Spanish building a verb out of a preposition, and it does it constantly: acercar from cerca, alejar from lejos, aclarar from claro. The pattern is a- plus a word plus -ar, meaning to make it that."
+            },
+            {
+              "kind": "speech",
+              "text": "Underneath, cerca is Latin circā, around — the same root English has in circa on a date and in circle. Something near you was something round about you."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The reflexive is doing real work. Acercar something is an act with an object; acercarse turns it back on the subject."
+            },
+            {
+              "kind": "speech",
+              "text": "But notice the third example above. Se acerca la fecha — the date does not move, and nobody moves it. Spanish still uses the reflexive, because what it marks is not doing it to yourself so much as nobody else did it: the change happened, and the sentence declines to name an agent."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the same reflexive you met on equivocarse, where the mistake befalls the person. One form, one job: take the doer out."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "acercarse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *acercarse*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "come closer, you are too far away",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: come closer, you are too far away]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the date is getting close",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the date is getting close]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To come closer? (Acercarse.) Which word is inside it? (Cerca.) Which preposition follows? (A.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C443-concentrarse",
+      "sequence": 11310,
+      "title": "concentrarse — gathered to a point",
+      "headword": "concentrarse",
+      "romanization": "concentrarse",
+      "gloss": "to concentrate — to gather yourself to a centre, with the Greek word for a goad inside it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0e3c15f296f98a4f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el centro and el examen. Say acercarse. The exam is getting close. Name what you have to do with your attention."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: concentrarse",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "concentrarse — to concentrate."
+            },
+            {
+              "kind": "speech",
+              "text": "No me puedo concentrar — I cannot concentrate. Concéntrate en el examen — concentrate on the exam. la concentración is both the mental state and, in a notice, a gathering of people in a square."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes en: concentrarse en algo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "con- together, plus centr- from el centro, plus the verb ending. To concentrate is to bring together to a centre, and the reflexive says you are doing it to yourself."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "piece",
+                "what it does"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "piece: con-. what it does: together.",
+                "piece: centr-. what it does: el centro.",
+                "piece: -arse. what it does: to yourself."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "That is the third verb in this chapter built by putting a prefix and an ending on a word you already owned — acercarse on cerca, concentrarse on centro. Look for the bare word inside before you look anything up."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "El centro is not originally about the middle of a town."
+            },
+            {
+              "kind": "speech",
+              "text": "Greek kéntron was a goad — the spike used to drive cattle — and then the fixed point of a pair of compasses, the spike you press into the paper so the other leg can swing round it. Latin took it as centrum, and the geometry sense is what survived."
+            },
+            {
+              "kind": "speech",
+              "text": "So a centre is, at bottom, the point that does not move while everything else turns around it. That is a better picture than \"the middle\", and it explains concentrarse: you are pulling a scattered mind in towards the one fixed point."
+            },
+            {
+              "kind": "speech",
+              "text": "English has the same spike in eccentric — ek-, out of, plus the centre. An eccentric wheel is one whose axle is off the fixed point, and an eccentric person is one whose life turns around a different one."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "concentrarse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *concentrarse*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the exam is getting close and I cannot concentrate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the exam is getting close and I cannot concentrate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what kéntron meant before it meant a centre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *kéntron* meant before it meant a centre]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To concentrate? (Concentrarse.) Which preposition follows it? (En.) What was a kéntron? (A goad, then the fixed point of a pair of compasses.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C443-arrepentirse",
+      "sequence": 11320,
+      "title": "arrepentirse — the verb that is not made of sentir",
+      "headword": "arrepentirse",
+      "romanization": "arrepentirse",
+      "gloss": "to regret — a verb that looks like it contains sentir, behaves like sentir, and is not related to it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dc9558f69ba9719d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say perdón. Say equivocarse. You can admit a mistake and you can ask to be excused for it. Name the feeling that comes in between."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: arrepentirse",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "arrepentirse — to regret, to be sorry for having done something."
+            },
+            {
+              "kind": "speech",
+              "text": "Me arrepiento de haberlo dicho — I regret having said it. No te vas a arrepentir — you will not regret it, which is what somebody says to talk you into something."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes de, and it is always reflexive. There is no plain arrepentir."
+            },
+            {
+              "kind": "speech",
+              "text": "Equivocarse is the error; arrepentirse is what you feel about it afterwards."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here is the trap, and this chapter has earned it."
+            },
+            {
+              "kind": "speech",
+              "text": "arrepentirse looks like a- plus re- plus sentir, with the s worn away. It is not. There is no sentir in it at all."
+            },
+            {
+              "kind": "speech",
+              "text": "The middle is Latin paenitēre, to cause regret — the verb behind English penitent, penance and repent. Spanish took repentirse and put its familiar a- on the front."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what it looks like",
+                "what it is"
+              ],
+              "columns": 2,
+              "rowCount": 1,
+              "utterances": [
+                "what it looks like: a- + re- + sentir. what it is: a- + re- + paenitēre."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "And the trap is doubled, because it conjugates like sentir too: me arrepiento, te arrepientes, se arrepiente, nos arrepentimos. That is the e becomes ie break, exactly as siento, sientes, siente, sentimos."
+            },
+            {
+              "kind": "speech",
+              "text": "So the form misleads and the behaviour agrees with the form. Both are accidents of shape: any verb with a stressed e in its stem breaks that way, related or not."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is the strongest case yet for the test you have been building."
+            },
+            {
+              "kind": "speech",
+              "text": "reír wore a prefix it never had, and the test caught it: take re- off and nothing stands. arrepentirse is harder, because if you take a- and re- off you get pentir, which stands on nothing — and the fact that it looks like sentir is the only reason you would have thought otherwise."
+            },
+            {
+              "kind": "speech",
+              "text": "What that means in practice: a resemblance is not evidence. Concentrarse really does contain centro, and you can check it because centro is a word. Sentir is a word too, and arrepentirse still does not contain it."
+            },
+            {
+              "kind": "speech",
+              "text": "The honest position is the one worth keeping — take the word apart where the pieces are real, and when they are not, learn the word and let the history be what it is."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arrepentirse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arrepentirse*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I regret having said it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I regret having said it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why the -pentir- is not sentir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why the *-pentir-* is not *sentir*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To regret? (Arrepentirse.) Which preposition follows it? (De.) Is sentir inside it? (No — paenitēre is.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R443-repaso-animo",
+      "sequence": 11330,
+      "title": "(doler, interesar, acercarse, concentrarse, arrepentirse) — from cold",
+      "headword": "(doler, interesar, acercarse, concentrarse, arrepentirse)",
+      "romanization": "(doler, interesar, acercarse, concentrarse, arrepentirse)",
+      "gloss": "cold retrieval of the five, and of the two machines they run on",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f7f56120c3517495",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say all five: to hurt, to interest, to come closer, to concentrate, to regret."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: five new words, no new grammar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This chapter taught nothing you did not already have. It handed five words to two machines you owned."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the machine",
+                "where you got it",
+                "the new words"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "the machine: the thing is the subject. where you got it: gustar. the new words: doler, interesar.",
+                "the machine: the reflexive. where you got it: equivocarse. the new words: acercarse, concentrarse, arrepentirse."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Me duele la cabeza — the head hurts, and the verb agrees with the head. Me interesan las clases — plural thing, plural verb. If you can catch yourself about to say yo duelo, the machine is working."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole point of building on what came before, and it is worth noticing when it happens: the fifth verb on a pattern costs almost nothing, where the first one cost a lesson."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "my head hurts and I cannot concentrate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: my head hurts and I cannot concentrate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I regret having said it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I regret having said it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "me duele and me duelen, and what decides between them",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *me duele* and *me duelen*, and what decides between them]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now say what is going on inside you — what hurts, what you care about, what you are struggling to do and what you wish you had not done. A reading paper asks that constantly, because most short texts about people are about exactly this."
+            },
+            {
+              "kind": "speech",
+              "text": "You also have the sharpest case yet of a word that misleads. Arrepentirse looks like it is made of sentir and behaves like it, and is not related to it at all. A resemblance is not evidence, and the check is whether the piece you think you see is a word in its own right that leaves something standing behind it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "My feet hurt? (Me duelen los pies.) To come closer? (Acercarse.) To concentrate on something? (Concentrarse en algo.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C443-sintesis-animo",
+      "sequence": 11340,
+      "title": "(un mensaje antes del examen) — read it, then do it yourself",
+      "headword": "(un mensaje antes del examen)",
+      "romanization": "(un mensaje antes del examen)",
+      "gloss": "the payoff — read two messages about the same week, then write one of your own",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2eedb9ae01ca31f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say concentrarse and acercarse. Both are in the message you are about to read, and one of them is about a date rather than a person."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read both, then answer."
+            },
+            {
+              "kind": "speech",
+              "text": "1 — de Marta."
+            },
+            {
+              "kind": "speech",
+              "text": "Se acerca el examen y no me puedo concentrar en nada. Llevo dos días con dolor de cabeza: me duele por la mañana y se me pasa por la tarde. ¿Tú cómo lo llevas?"
+            },
+            {
+              "kind": "speech",
+              "text": "2 — la respuesta."
+            },
+            {
+              "kind": "speech",
+              "text": "Yo igual. Me arrepiento de no haber empezado en septiembre. Pero me interesa de verdad la asignatura, así que algo se me quedará. Nos vemos el jueves y lo repasamos juntos."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what is making Marta anxious",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what is making Marta anxious]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "when her headache comes and when it goes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: when her headache comes and when it goes]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the second writer regrets, and what she says in spite of it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the second writer regrets, and what she says in spite of it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four of the five verbs in those messages put the writer in the object, not the subject. Se acerca el examen, me duele la cabeza, me interesa la asignatura, me arrepiento — in every one, something else is doing the acting and the writer is on the receiving end."
+            },
+            {
+              "kind": "speech",
+              "text": "That is not a coincidence of these two messages. It is how Spanish talks about inner states by default: the feeling arrives, the date approaches, the subject interests. English reaches for I am plus an adjective — I am worried, I am interested — and puts the person in charge of a state they did not choose."
+            },
+            {
+              "kind": "speech",
+              "text": "Neither is more accurate. But if you translate your English shape word for word you will produce estoy interesado en where a Spanish speaker says me interesa, and the sentence will be understood and will not sound like theirs."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now your turn, out loud and then in writing. Five sentences about a week before something difficult: say the date is getting close, say what hurts, say you cannot concentrate, say what you regret, and say what still interests you."
+            },
+            {
+              "kind": "speech",
+              "text": "Then check yourself: did you write me interesa, or did you reach for estoy interesado?"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

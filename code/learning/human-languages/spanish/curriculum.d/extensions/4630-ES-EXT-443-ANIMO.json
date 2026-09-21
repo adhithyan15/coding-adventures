@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-443-ANIMO",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what is going on inside me: what hurts, what I care about, what I am struggling to do, and what I wish I had not done.",
+  "prerequisites": [
+    "ES-EXT-442-GESTION"
+  ]
+}

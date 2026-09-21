@@ -1,0 +1,11 @@
+{
+  "id": "ES-C440-sintesis-fiesta",
+  "pathSegment": "ES-PATH-440-FIESTA",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ES-EXT-440-FIESTA",
+      "order": 6
+    }
+  ]
+}

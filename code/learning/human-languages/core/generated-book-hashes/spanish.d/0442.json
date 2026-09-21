@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:d3c928cdc1cc1f78",
+  "lessonIds": [
+    "ES-C442-administracion",
+    "ES-C442-envio",
+    "ES-C442-concertar",
+    "ES-C442-reunion",
+    "ES-C442-pantalla",
+    "ES-R442-repaso-gestion",
+    "ES-C442-sintesis-gestion"
+  ],
+  "tex": "spanish/book/chapters/ch442-gestion.tex"
+}

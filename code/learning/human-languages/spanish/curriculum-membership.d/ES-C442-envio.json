@@ -1,0 +1,11 @@
+{
+  "id": "ES-C442-envio",
+  "pathSegment": "ES-PATH-442-GESTION",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-442-GESTION",
+      "order": 1
+    }
+  ]
+}

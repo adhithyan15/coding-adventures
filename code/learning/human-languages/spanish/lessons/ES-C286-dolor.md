@@ -10,7 +10,7 @@ gloss: the pain — Latin dolor; condolence hurts with you, and indolent once fe
 concept_tag: ES-BODY-PAIN
 prerequisites: [ES-C286-garganta]
 sounds: [r-tap, vowel-o]
-roots: []
+roots: [dolere-latin]
 etymology_hook: "dolor is Latin dolor, from dolere, to hurt; indolent meant feeling no pain long before it meant lazy"
 duration:
   max_seconds: 240

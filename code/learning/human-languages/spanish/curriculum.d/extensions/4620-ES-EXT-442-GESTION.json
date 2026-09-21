@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-442-GESTION",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can deal with an institution rather than a person: book the appointment, read what the office wants, track what it sent me, and do it on a screen.",
+  "prerequisites": [
+    "ES-EXT-441-TRATO"
+  ]
+}
