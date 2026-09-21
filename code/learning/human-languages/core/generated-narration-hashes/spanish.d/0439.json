@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 439,
-  "sourceHash": "fnv1a64:eef58adcbc730034",
+  "sourceHash": "fnv1a64:2fad30a984be5ff5",
   "lessonIds": [
     "ES-C439-anden",
     "ES-C439-trasladar",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "spanish/narration/ch439.txt",
   "json": "spanish/narration/ch439.json",
-  "textHash": "fnv1a64:42fdd7220d0beace",
-  "jsonHash": "fnv1a64:9d5bd56083215a86",
+  "textHash": "fnv1a64:448c5899e85a108e",
+  "jsonHash": "fnv1a64:436f13c4a42cb84e",
   "findings": []
 }

@@ -40,22 +40,26 @@ row, and every one of them is going to send you somewhere else.
 
 Read all four, then answer.
 
-> 1. **ANDÉN 2 — SALIDA A LA CALLE**
-> 2. **CALLE MAYOR CORTADA AL TRÁFICO. PASO DE PEATONES POR LA ACERA DERECHA.**
-> 3. **CERRADO DE 14:00 A 16:00**
-> 4. **OFICINA TRASLADADA AL NÚMERO 40. MISMA CALLE.**
+> **1 — ANDÉN 2. SALIDA A LA CALLE.**
+
+> **2 — CALLE MAYOR CORTADA AL TRÁFICO.**
+
+> **3 — CERRADO DE 14:00 A 16:00.**
+
+> **4 — OFICINA TRASLADADA AL NÚMERO 40.**
 
 [PAUSE 3s]
 - [YOU SAY: which sign means the place still exists]
 - [YOU SAY: which sign is about a time and not a place]
-- [YOU SAY: whether sign 2 stops you walking, or only driving]
+- [YOU SAY: what sign 2 tells you to do about your route]
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C439-VIA-04, ES-LEX-C439-VIA-05, ES-LEX-C439-VIA-02] -->
 
 Sign 2 repays a second look. **Cortada al tráfico** names *what* the cut applies
-to, and then the sign tells pedestrians where to go. A street can be cut to cars
-and open to feet, and Spanish says so in one phrase rather than two sentences.
+to, and that qualifier is doing real work: a street can be cut to cars and still
+open to feet. Spanish puts the limit of the cut inside the same phrase, where
+English would need a second sentence to say who is still allowed through.
 
 Sign 4 is the one that saves your afternoon: **trasladada**, agreeing with
 *oficina*, followed by an address. Compare it with a card that said only
