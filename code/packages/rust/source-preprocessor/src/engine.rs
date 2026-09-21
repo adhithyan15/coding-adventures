@@ -331,7 +331,10 @@ fn apply_directive(
             if open_files.contains(&id) {
                 return Err(PpError::new(format!(
                     "include cycle: {} is already open",
-                    fs.name_of(id)
+                    // Quoted: `name_of` returns whatever the SourceFs was
+                    // given, which for a non-RootedFs implementation is
+                    // unbounded and unescaped attacker text.
+                    PpError::quote(&fs.name_of(id), bounds.diagnostic_quote_bytes)
                 ))
                 .at(here));
             }

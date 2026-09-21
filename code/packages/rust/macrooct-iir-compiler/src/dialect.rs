@@ -49,7 +49,7 @@
 
 use coding_adventures_macrooct_lexer::try_tokenize_macrooct;
 use coding_adventures_source_preprocessor::{
-    Dialect, Directive, FileId, IncludeRequest, PpError,
+    Bounds, Dialect, Directive, FileId, IncludeRequest, PpError,
 };
 use lexer::token::{Token, TokenType};
 
@@ -102,7 +102,19 @@ fn without_eof(line: &[Token]) -> &[Token] {
 /// return without one, so this is only about pointing at the *operand*.
 fn describe(token: Option<&Token>) -> String {
     match token {
-        Some(t) => format!("{:?} at line {}, column {}", t.value, t.line, t.column),
+        // Quoted, not `{:?}`. Debug-escaping handles control characters, but
+        // it does not TRUNCATE -- and it can expand a hostile spelling roughly
+        // sixfold on the way. A token's value is bounded by the source, which
+        // is bounded by the engine, but a diagnostic that renders a whole
+        // 64 KiB token is still a denial-of-service and a disclosure channel
+        // on a shared builder. `PpError::quote` does both jobs, and using it
+        // here keeps this path consistent with every other one.
+        Some(t) => format!(
+            "{} at line {}, column {}",
+            PpError::quote(&t.value, Bounds::default().diagnostic_quote_bytes),
+            t.line,
+            t.column
+        ),
         None => "end of line".to_string(),
     }
 }

@@ -164,9 +164,17 @@ struct Entry {
 ///
 /// # Resolve opens; read never touches a path
 ///
-/// `resolve` opens the file and performs every check **against the open
-/// handle**, then retains it. `read` reads that handle and never re-resolves
-/// or re-opens anything.
+/// `resolve` canonicalises, checks containment against that canonical
+/// **path**, then opens the file once and checks its kind and size against the
+/// open **handle**, which it retains. `read` reads that handle and never
+/// re-resolves or re-opens anything.
+///
+/// The containment check is the one that remains path-based, and saying so
+/// matters: a swap between the canonicalise and the open still yields a handle
+/// that passes the kind and size checks while pointing outside the root. The
+/// window is far narrower than re-opening in `read`, but it is not zero.
+/// Closing it needs handle-identity verification (device+inode /
+/// `FILE_ID_INFO`), recorded as future work rather than claimed here.
 ///
 /// An earlier version stored only the `PathBuf` and had `read` call
 /// `std::fs::read(&path)`. That was canonicalise-then-open — TOCTOU by
@@ -220,6 +228,16 @@ impl RootedFs {
         if canon.is_empty() {
             return Err(PpError::new("at least one search root is required"));
         }
+        // Clamp here too, and not only in `preprocess`.
+        //
+        // `bytes_per_file` and `diagnostic_quote_bytes` are read ONLY from this
+        // stored copy — the engine never looks at them — so clamping at the
+        // engine's entry point did nothing for the two bounds that actually
+        // gate attacker-controlled file reads. A security review drove 40 MiB
+        // through the documented 16 MiB per-file cap by handing `u64::MAX`
+        // straight to this constructor. Fixing one of the two places a bound
+        // lives is not fixing it.
+        let bounds = bounds.tighten(Bounds::default());
         Ok(RootedFs { roots: canon, entries: Vec::new(), by_canon: HashMap::new(), bounds })
     }
 
@@ -344,8 +362,11 @@ impl SourceFs for RootedFs {
                 Err(_) => continue,
             };
 
+            // Try the next root rather than ending the search: a spelling
+            // that escapes root A may resolve legitimately inside root B, and
+            // the first root must not be able to veto the others.
             if !self.contained(&canon) {
-                return Err(self.refuse(&request.spelling));
+                continue;
             }
 
             // Identity: the same file resolved twice is the same FileId, which
@@ -357,11 +378,11 @@ impl SourceFs for RootedFs {
             // Open ONCE, then verify the handle — never the path.
             let handle = match File::open(&canon) {
                 Ok(h) => h,
-                Err(_) => return Err(self.refuse(&request.spelling)),
+                Err(_) => continue,
             };
             let meta = match handle.metadata() {
                 Ok(m) => m,
-                Err(_) => return Err(self.refuse(&request.spelling)),
+                Err(_) => continue,
             };
 
             // Regular files only, checked on the opened handle. A FIFO or
@@ -402,9 +423,17 @@ impl SourceFs for RootedFs {
             .get_mut(file.index())
             .ok_or_else(|| PpError::new("read of an unresolved file"))?;
 
-        // Served from cache on a repeat include of the same file. Bounded: the
-        // engine charges `total_source_bytes` on every first read, so the cache
-        // can never hold more than that budget allows.
+        // Served from cache on a repeat include of the same file, so a
+        // legitimate second include does not fail on a consumed handle.
+        //
+        // Scope, stated precisely because an earlier comment overclaimed: the
+        // cache is bounded by `total_source_bytes` only WITHIN one
+        // `preprocess` run, and only because the engine charges every first
+        // read. `RootedFs` is public and entries are never evicted, so a single
+        // instance reused across N compilations accumulates up to N times that
+        // budget. Nothing ties this cache to the engine's `Spend`. If a host
+        // ever reuses one `RootedFs` across translation units, it must drop and
+        // rebuild it per unit, or this needs real eviction.
         if let Some(text) = &entry.text {
             return Ok(text.clone());
         }
@@ -713,6 +742,51 @@ mod tests {
         for p in ["NUL ", "CON ", "CON.", "sub/COM1 ", "nul .h", "LPT9."] {
             assert!(RootedFs::screen_spelling(p).is_err(), "{p} should be refused");
         }
+    }
+
+    #[test]
+    fn a_caller_cannot_widen_the_filesystem_bounds() {
+        // The same class of bug as the engine's clamp, and it lived in TWO
+        // places — `bytes_per_file` and `diagnostic_quote_bytes` are read only
+        // from RootedFs's own copy, so clamping in `preprocess` alone left
+        // them wide open. A security review drove 40 MiB through the
+        // documented 16 MiB cap by handing u64::MAX straight to this
+        // constructor.
+        let dir = std::env::temp_dir().join("prep01_rootedfs_widen_test");
+        let root = dir.join("root");
+        std::fs::create_dir_all(&root).unwrap();
+        let big = Bounds::default().bytes_per_file as usize + 1024;
+        std::fs::write(root.join("huge.h"), "x".repeat(big)).unwrap();
+
+        let mut fs = RootedFs::new(
+            [root],
+            Bounds { bytes_per_file: u64::MAX, diagnostic_quote_bytes: u32::MAX, ..Bounds::default() },
+        )
+        .unwrap();
+
+        // Refused at the default cap despite the caller asking for no cap.
+        assert!(fs.resolve(&req("huge.h")).is_err(), "a widened per-file bound must not be honoured");
+
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn an_earlier_root_cannot_veto_a_later_one() {
+        // Containment and open failures `continue` to the next root rather
+        // than ending the search, so a spelling that escapes root A but
+        // resolves legitimately inside root B still works.
+        let dir = std::env::temp_dir().join("prep01_rootedfs_multiroot_test");
+        let a = dir.join("a");
+        let b = dir.join("b");
+        std::fs::create_dir_all(&a).unwrap();
+        std::fs::create_dir_all(&b).unwrap();
+        std::fs::write(b.join("only_in_b.h"), "from_b").unwrap();
+
+        let mut fs = RootedFs::new([a, b], Bounds::default()).unwrap();
+        let id = fs.resolve(&req("only_in_b.h")).unwrap();
+        assert_eq!(fs.read(id).unwrap(), "from_b");
+
+        let _ = std::fs::remove_dir_all(&dir);
     }
 
     #[test]

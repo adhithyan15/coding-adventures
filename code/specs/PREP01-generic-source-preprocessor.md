@@ -271,13 +271,24 @@ it means the guarantee is only as good as `RootedFs`, which must:
   rather than only on the pre-read metadata, which holds regardless of what
   happened to the file in between. Handle-identity verification remains
   worthwhile future work; it is recorded here rather than claimed.
-- **Reject, each with a located diagnostic:** absolute paths (`/etc/passwd`,
-  `C:\…`); any symlink or reparse-point component; and — this repo is
-  Windows-primary — UNC paths (`\\host\share\x.h`, which triggers an outbound
+- **Reject, each with a diagnostic:** absolute *and root-anchored* paths
+  (`/etc/passwd`, `C:\…` — note `Path::is_absolute()` is false on Windows for
+  a root-relative path, so `has_root()` must be checked too); and — this repo
+  is Windows-primary — UNC paths (`\\host\share\x.h`, which triggers an outbound
   SMB authentication and leaks an NTLM hash, a credential-disclosure primitive
   from nothing but a source file), NTFS alternate data streams (`x.h::$DATA`),
-  reserved device names (`CON`, `NUL`, `COM1`…), 8.3 short names, and directory
-  junctions.
+  reserved device names (`CON`, `NUL`, `COM1`… including the trailing-space
+  and trailing-dot spellings Win32 normalisation strips), and embedded NUL
+  bytes.
+
+  *Amended after implementation.* This bullet previously also required
+  rejecting symlink/reparse-point components, 8.3 short names and directory
+  junctions outright. Slice 1 does not: it canonicalises through them and
+  relies on the containment check on the result, which is equivalent for
+  escape purposes and simpler to get right. The residual difference is the
+  narrow window between canonicalising and opening, recorded above. Component
+  rejection remains worthwhile defence-in-depth; it is future work rather than
+  a claim.
 - **Read only regular files.** A FIFO or character device is the most durable
   DoS available: `#include "/dev/stdin"` or an included FIFO blocks forever and
   no §6 bound fires, because the engine is stuck inside `read`. `/dev/zero`
@@ -324,7 +335,7 @@ grow the token count, and fan-out that is never a cycle.
 | **Controlling-expression nesting depth** | 200 | The same, inside `#if`. |
 | Conditional nesting depth | 200 | Pathological `#if` nesting. |
 | **Total expansion steps ("fuel")** | 2³⁰ | The catch-all. One monotonically decreasing budget decremented by every token copied, hide-set union, rescan and file read, checked in the engine's main loop. This is the most valuable row in the table, because preprocessor DoS historically arrives through whichever dimension nobody enumerated — and no list, including this one, is complete. |
-| **Maximum diagnostic count / quoted-text length** | 100 / 1 KiB | A stringized megabyte-long token renders a megabyte-long message, and a cascade emits one per token. Truncating *diagnostic text* is distinct from the no-silent-truncation rule on token streams below. |
+| **Quoted-text length in a diagnostic** | 1 KiB | A stringized megabyte-long token would otherwise render a megabyte-long message. Quoted text is also **escaped**, because an include spelling can carry terminal control sequences straight into a shared builder's CI log. Truncating *diagnostic text* is distinct from the no-silent-truncation rule on token streams below. (An earlier draft also specified a maximum diagnostic *count*. Slice 1 returns on the first error rather than recovering, so at most one diagnostic exists per run and the bound could never fire; it was removed rather than left as dead configuration, and must return if a later slice introduces error recovery.) |
 
 Three further requirements, normative because they constrain the engine's core
 loop rather than adding a check to it:

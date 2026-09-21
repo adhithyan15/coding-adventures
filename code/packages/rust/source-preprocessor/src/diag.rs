@@ -46,23 +46,50 @@ impl PpError {
         &self.message
     }
 
-    /// Quote source text into a message, truncating to `limit` bytes.
+    /// Quote source text into a message: escaped, then truncated to `limit`
+    /// bytes.
     ///
-    /// Truncation is on a char boundary, because slicing a `String` mid-UTF-8
-    /// would panic — and a diagnostic path that panics on hostile input defeats
-    /// the entire no-panic contract this module exists to uphold. That is not
-    /// hypothetical: the text being quoted is attacker-supplied by definition.
+    /// Two separate hazards, both reachable from hostile input by definition.
+    ///
+    /// **Escaping.** The text is an include spelling or a token, so it can
+    /// contain anything the program's author typed — including control
+    /// characters. A raw `ESC [ 2 J` in a diagnostic clears the screen of
+    /// whoever reads the build log, and richer sequences can rewrite earlier
+    /// lines: terminal-escape injection into a shared builder's CI output. A
+    /// security review found this reachable end-to-end through
+    /// `compile_source`. Escaping here rather than at each call site means a
+    /// new interpolation cannot forget.
+    ///
+    /// **Truncation.** On a char boundary, because slicing a `String`
+    /// mid-UTF-8 panics, and a diagnostic path that panics on hostile input
+    /// defeats the whole no-panic contract. Note the order: escape first, then
+    /// truncate, so the byte cap applies to what is actually printed rather
+    /// than to a pre-expansion length.
     #[must_use]
     pub fn quote(text: &str, limit: u32) -> String {
+        let escaped: String = text
+            .chars()
+            .flat_map(|c| {
+                // Keep ordinary printable text and plain spaces as-is; escape
+                // every control character, including newline and tab, since a
+                // quoted fragment belongs on one line of a diagnostic.
+                if c.is_control() {
+                    c.escape_default().collect::<Vec<_>>()
+                } else {
+                    vec![c]
+                }
+            })
+            .collect();
+
         let limit = limit as usize;
-        if text.len() <= limit {
-            return text.to_string();
+        if escaped.len() <= limit {
+            return escaped;
         }
         let mut end = limit;
-        while end > 0 && !text.is_char_boundary(end) {
+        while end > 0 && !escaped.is_char_boundary(end) {
             end -= 1;
         }
-        format!("{}… ({} bytes total)", &text[..end], text.len())
+        format!("{}… ({} bytes total)", &escaped[..end], escaped.len())
     }
 }
 

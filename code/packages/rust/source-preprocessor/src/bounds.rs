@@ -115,10 +115,16 @@ pub struct Bounds {
     /// every file read. The catch-all for dimensions not enumerated above.
     pub fuel: u64,
 
-    /// Maximum number of diagnostics before the engine stops and reports a
-    /// summary. A cascade that emits one diagnostic per token is itself a
-    /// denial-of-service vector.
-    pub max_diagnostics: u32,
+    // There is deliberately no `max_diagnostics`. An earlier draft had one,
+    // reasoning that a cascade emitting one diagnostic per token is itself a
+    // denial-of-service vector — which is true of a compiler that RECOVERS
+    // from errors. This engine does not: `preprocess` returns `Err` on the
+    // first problem, so at most one diagnostic exists per run and the bound
+    // could never fire. A security review found it dead, and dead configuration
+    // is worse than none: it reads as a guarantee nobody is providing.
+    //
+    // If a later slice introduces error recovery so that preprocessing can
+    // continue past a bad directive, this bound must come back with it.
 
     /// Maximum source text quoted into any one diagnostic.
     ///
@@ -142,7 +148,6 @@ impl Default for Bounds {
             condition_depth: 200,
             conditional_depth: 200,
             fuel: 1 << 30,
-            max_diagnostics: 100,
             diagnostic_quote_bytes: 1024,
         }
     }
@@ -170,7 +175,6 @@ impl Bounds {
             condition_depth: self.condition_depth.min(other.condition_depth),
             conditional_depth: self.conditional_depth.min(other.conditional_depth),
             fuel: self.fuel.min(other.fuel),
-            max_diagnostics: self.max_diagnostics.min(other.max_diagnostics),
             diagnostic_quote_bytes: self.diagnostic_quote_bytes.min(other.diagnostic_quote_bytes),
         }
     }
@@ -187,7 +191,6 @@ pub struct Spend {
     pub tokens_produced: u64,
     pub synthesised_text_bytes: u64,
     pub fuel_used: u64,
-    pub diagnostics: u32,
 }
 
 #[cfg(test)]
@@ -208,7 +211,6 @@ mod tests {
         assert!(b.token_spelling_bytes > 0 && b.token_spelling_bytes < u64::MAX);
         assert!(b.synthesised_text_bytes > 0 && b.synthesised_text_bytes < u64::MAX);
         assert!(b.fuel > 0 && b.fuel < u64::MAX);
-        assert!(b.max_diagnostics > 0);
         assert!(b.diagnostic_quote_bytes > 0);
     }
 
