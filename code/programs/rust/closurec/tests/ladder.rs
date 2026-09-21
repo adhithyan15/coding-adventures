@@ -135,12 +135,20 @@ fn load_ledger() -> BTreeMap<String, Divergence> {
 fn ladder_fixtures() -> Vec<PathBuf> {
     let mut found: Vec<PathBuf> = std::fs::read_dir("tests/diff")
         .expect("read tests/diff")
-        .filter_map(|e| e.ok().map(|e| e.path()))
+        .filter_map(|e| e.ok())
+        // `file_type` is lstat-based and does not follow symlinks, which is what
+        // `discover_fixture_directories` in `oracle_manifest.rs` uses. `Path::is_dir`
+        // DOES follow them, and that asymmetry is exploitable: a committed symlink
+        // `tests/diff/ladder_x_simple -> elsewhere` would be run by this gate as a
+        // real rung while staying invisible to the reviewed fixture inventory, so
+        // neither the manifest nor the 782 tripwire would move — and the rung's
+        // input bytes would live outside the repository, unreviewable in a diff.
+        .filter(|e| e.file_type().is_ok_and(|t| t.is_dir()))
+        .map(|e| e.path())
         .filter(|p| {
-            p.is_dir()
-                && p.file_name()
-                    .and_then(|n| n.to_str())
-                    .is_some_and(|n| n.starts_with("ladder_"))
+            p.file_name()
+                .and_then(|n| n.to_str())
+                .is_some_and(|n| n.starts_with("ladder_"))
         })
         .collect();
     found.sort();
@@ -347,51 +355,246 @@ fn every_ledger_entry_names_a_real_fixture() {
     );
 }
 
+/// The rules an entry must satisfy to be written down at all, as a pure
+/// predicate returning `Some(complaint)` for a rejection and `None` for an
+/// acceptable entry.
+///
+/// This is deliberately separate from [`verdict`]. `verdict` decides what a
+/// recorded entry *means* for one run; these rules decide what may be recorded.
+/// A weakness here is the more dangerous of the two, because it does not make a
+/// rung report the wrong answer — it makes a rung quietly stop asking the
+/// question. Keeping it pure is what lets the rejections be tested; asserting
+/// inline would leave every rule exercised only in its passing direction,
+/// against a ledger that satisfies it by construction.
+fn well_formedness_error(fixture: &str, d: &Divergence) -> Option<String> {
+    let tail = d
+        .issue
+        .strip_prefix("https://github.com/")
+        .and_then(|r| r.split("/issues/").nth(1));
+    if !tail.is_some_and(|n| !n.is_empty() && n.chars().all(|c| c.is_ascii_digit())) {
+        return Some(format!(
+            "{fixture}: issue must be a .../issues/<number> URL, got {:?}",
+            d.issue
+        ));
+    }
+    if d.reason.trim().is_empty() {
+        return Some(format!("{fixture}: divergence must say why it diverges"));
+    }
+
+    // `upstream_exit` is the only ledger field nothing else corroborates.
+    // `upstream_stdout` is cross-checked against the committed `expected.stdout`
+    // bytes on every run, but upstream's exit status is recorded in no fixture,
+    // so this number is believed on the ledger's own word. And it is
+    // load-bearing: `verdict` requires `upstream_exit == 0` before it will
+    // report that a rung NOW MATCHES UPSTREAM, so any non-zero value
+    // permanently disables staleness detection for that rung — it stops being a
+    // parity check against the oracle and becomes a golden of our own output,
+    // passing forever so long as we keep producing what we once produced.
+    //
+    // Pin it to the only state that can justify it, which is the state its own
+    // doc comment describes: upstream refused the input, so it emitted nothing.
+    if d.upstream_exit != 0 && !d.upstream_stdout.is_empty() {
+        return Some(format!(
+            "{fixture}: upstream_exit {} says upstream refused this input, but the ledger \
+             also records upstream output {:?}. A non-zero upstream_exit stops this rung \
+             ever reporting that the gap has closed, so it is legitimate only where \
+             upstream emitted nothing.",
+            d.upstream_exit, d.upstream_stdout
+        ));
+    }
+
+    // Our own two fields must agree about what happened. Across all 63 entries
+    // there are exactly two shapes: we compiled and emitted something (exit 0,
+    // non-empty stdout), or we refused and emitted nothing (non-zero exit,
+    // empty stdout). The mixed shapes are the dangerous ones.
+    //
+    // "exit 0 and no output" in particular is precisely what a maintainer would
+    // write down after accepting a regression to "emit nothing, successfully"
+    // on a rung upstream refuses — where `expected.stdout` is empty too, so the
+    // entry sits one `upstream_exit` edit away from comparing empty against
+    // empty forever. `verdict` already refuses to call that a match; rejecting
+    // it here means it cannot be recorded in the first place.
+    if d.closurec_stdout.is_empty() != (d.closurec_exit != 0) {
+        return Some(format!(
+            "{fixture}: closurec_exit {} and closurec_stdout {:?} disagree about what \
+             happened. Either we compiled it (exit 0, some output) or we refused it \
+             (non-zero exit, no output) — a mixed shape is either a mis-recorded entry \
+             or a regression being written down as if it were normal.",
+            d.closurec_exit, d.closurec_stdout
+        ));
+    }
+
+    // A rung we refuse otherwise asserts only "it fails somehow". Nothing else
+    // requires the stage pin, so deleting the key, nulling it, or setting it to
+    // "" would each silently restore that weakness — and `starts_with("")` is
+    // vacuously true, so emptiness must be rejected explicitly rather than
+    // merely presence checked.
+    //
+    // Non-emptiness alone is still not enough. The pin exists to say WHICH
+    // stage a rung dies at, and every real pin has the shape
+    // `"<LEVEL> compilation failed at <stage> stage:"`. A pin truncated before
+    // the stage name — `"SIMPLE compilation failed at"`, or just `"S"` — is
+    // non-empty, looks plausible in review, and matches every stage's message
+    // equally, which is the same vacuous guard one notch along. Requiring the
+    // pin to reach `stage:` forces it past the discriminating word.
+    if d.closurec_exit != 0 {
+        let pin = d.closurec_stderr_starts_with.as_deref();
+        if !pin.is_some_and(|p| !p.trim().is_empty()) {
+            return Some(format!(
+                "{fixture}: an entry that records a failure must pin the stage it fails \
+                 at via a non-empty `closurec_stderr_starts_with`, or the gate only \
+                 asserts that it failed somehow"
+            ));
+        }
+        if !pin.is_some_and(|p| p.trim_end().ends_with("stage:")) {
+            return Some(format!(
+                "{fixture}: the stage pin must run through the stage name and end at \
+                 `stage:`, or it matches every stage alike and the gate is back to \
+                 asserting only that it failed somehow, got {pin:?}"
+            ));
+        }
+    }
+
+    let suffix = match d.level.as_str() {
+        "WHITESPACE_ONLY" => "_ws",
+        "SIMPLE" => "_simple",
+        "ADVANCED" => "_advanced",
+        other => return Some(format!("{fixture}: unknown level {other:?}")),
+    };
+    if !fixture.ends_with(suffix) {
+        return Some(format!(
+            "{fixture}: ledger says level {} but the fixture name says otherwise",
+            d.level
+        ));
+    }
+    None
+}
+
 /// Every divergence must say where it is tracked, and describe itself
 /// consistently. A gap with no issue is a gap nobody is going to close.
 #[test]
 fn every_divergence_is_well_formed() {
     for (fixture, d) in load_ledger() {
-        let tail = d
-            .issue
-            .strip_prefix("https://github.com/")
-            .and_then(|r| r.split("/issues/").nth(1));
-        assert!(
-            tail.is_some_and(|n| !n.is_empty() && n.chars().all(|c| c.is_ascii_digit())),
-            "{fixture}: issue must be a .../issues/<number> URL, got {:?}",
-            d.issue
-        );
-        assert!(
-            !d.reason.trim().is_empty(),
-            "{fixture}: divergence must say why it diverges"
-        );
-        // An entry with no stdout otherwise asserts only "it fails somehow".
-        // Nothing else requires the stage pin, so deleting the key, nulling it,
-        // or setting it to "" would each silently restore that weakness — and
-        // `starts_with("")` is vacuously true, so emptiness must be rejected
-        // explicitly rather than merely presence checked.
-        if d.closurec_stdout.is_empty() {
-            assert!(
-                d.closurec_stderr_starts_with
-                    .as_deref()
-                    .is_some_and(|p| !p.trim().is_empty()),
-                "{fixture}: an entry with no stdout must pin the stage it fails at via a \
-                 non-empty `closurec_stderr_starts_with`, or the gate only asserts that it \
-                 failed somehow"
-            );
+        if let Some(complaint) = well_formedness_error(&fixture, &d) {
+            panic!("{complaint}");
         }
-        let suffix = match d.level.as_str() {
-            "WHITESPACE_ONLY" => "_ws",
-            "SIMPLE" => "_simple",
-            "ADVANCED" => "_advanced",
-            other => panic!("{fixture}: unknown level {other:?}"),
-        };
+    }
+}
+
+/// (g) The well-formedness rules are only ever run against a ledger that
+/// satisfies them, so on their own they are exercised in the passing direction
+/// and nowhere else. These drive each rule into its rejecting direction.
+///
+/// The `upstream_exit` case is the important one. That field is the only thing
+/// in the ledger nothing else corroborates, and setting it non-zero switches a
+/// rung's staleness detection off permanently — a one-token edit to a data file
+/// that no other test in this suite can see.
+#[test]
+fn well_formedness_rejects_every_way_of_switching_a_rung_off() {
+    let accepted = |d: &Divergence| well_formedness_error("rung_simple", d).is_none();
+    let rejected_for = |d: &Divergence, want: &str| {
+        let got = well_formedness_error("rung_simple", d);
         assert!(
-            fixture.ends_with(suffix),
-            "{fixture}: ledger says level {} but the fixture name says otherwise",
-            d.level
+            got.as_deref().is_some_and(|m| m.contains(want)),
+            "expected a rejection mentioning {want:?}, got {got:?}"
+        );
+    };
+
+    // The baselines must be accepted, or every assertion below is vacuous.
+    assert!(accepted(&fake_divergence()), "the plain fake must be legal");
+    assert!(
+        accepted(&fake_hard_failure()),
+        "the hard-failure fake must be legal"
+    );
+
+    // upstream_exit: non-zero is legitimate only where upstream emitted nothing,
+    // because that is the only story it can tell. Anything else is a rung being
+    // exempted from ever reporting that its gap has closed.
+    rejected_for(
+        &Divergence {
+            upstream_exit: 2,
+            ..fake_divergence()
+        },
+        "upstream refused this input",
+    );
+
+    // ... and the same value WITH no upstream output is the legitimate shape,
+    // so the rule discriminates rather than banning the field outright.
+    assert!(
+        accepted(&Divergence {
+            upstream_exit: 2,
+            upstream_stdout: String::new(),
+            ..fake_divergence()
+        }),
+        "a rung upstream genuinely refused must still be recordable"
+    );
+
+    // The outcome shape: exit 0 with no output is what accepting an
+    // "emit nothing, successfully" regression looks like written down.
+    rejected_for(&fake_upstream_declined(), "disagree about what happened");
+    rejected_for(
+        &Divergence {
+            closurec_stdout: "OURS".into(),
+            ..fake_hard_failure()
+        },
+        "disagree about what happened",
+    );
+
+    // The stage pin: every way of disarming it must be rejected. `""` matters
+    // most — `starts_with("")` is vacuously true, so an empty pin is
+    // indistinguishable from no pin at the comparison site.
+    for pin in [None, Some(String::new()), Some("   ".to_string())] {
+        rejected_for(
+            &Divergence {
+                closurec_stderr_starts_with: pin.clone(),
+                ..fake_hard_failure()
+            },
+            "must pin the stage it fails at",
         );
     }
+
+    // ... and a pin truncated before the stage name is non-empty, survives the
+    // rule above, looks plausible in review, and matches every stage alike.
+    for pin in ["S", "SIMPLE compilation failed at", "SIMPLE compilation "] {
+        rejected_for(
+            &Divergence {
+                closurec_stderr_starts_with: Some(pin.to_string()),
+                ..fake_hard_failure()
+            },
+            "must run through the stage name",
+        );
+    }
+
+    // The pre-existing rules, so the refactor into a pure predicate did not
+    // drop one on the way.
+    rejected_for(
+        &Divergence {
+            issue: "https://example.com/nope".into(),
+            ..fake_divergence()
+        },
+        "issues/<number>",
+    );
+    rejected_for(
+        &Divergence {
+            reason: "   ".into(),
+            ..fake_divergence()
+        },
+        "must say why it diverges",
+    );
+    rejected_for(
+        &Divergence {
+            level: "ADVANCED".into(),
+            ..fake_divergence()
+        },
+        "the fixture name says otherwise",
+    );
+    rejected_for(
+        &Divergence {
+            level: "SUPER".into(),
+            ..fake_divergence()
+        },
+        "unknown level",
+    );
 }
 
 /// The ledger is the escape hatch from the gate, so its size is pinned in the
@@ -408,6 +611,25 @@ fn reviewed_divergence_count_is_pinned() {
         load_ledger().len(),
         63,
         "reviewed divergence ledger changed — see the note on this test"
+    );
+}
+
+/// Rungs claiming upstream refused the input do not participate in staleness
+/// detection — `verdict` can never tell you their gap has closed, because there
+/// is no upstream behaviour to converge on. That is correct for the three
+/// `private_field` rungs, where Closure v20260915 rejects private class elements
+/// outright. It is also the single cheapest way to switch a rung off, so the
+/// size of that cohort is pinned alongside the ledger's own size: growing it
+/// should cost a deliberate edit here and be visible in review.
+#[test]
+fn reviewed_upstream_refusal_count_is_pinned() {
+    let refusals = load_ledger()
+        .values()
+        .filter(|d| d.upstream_exit != 0)
+        .count();
+    assert_eq!(
+        refusals, 3,
+        "the set of rungs recorded as refused by upstream changed — these rungs are          exempt from staleness detection, so see the note on this test"
     );
 }
 

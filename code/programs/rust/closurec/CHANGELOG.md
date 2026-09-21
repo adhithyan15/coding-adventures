@@ -133,17 +133,67 @@ parse stage, `async_fn` at the typed-AST bridge. A regression moving the
 failure between stages would have stayed green. Entries with empty stdout now
 pin `closurec_stderr_starts_with`, and a changed stage fails the gate.
 
-Both guards have negative tests, bringing the ladder's own test count to 11.
+Both guards have negative tests driving `verdict()` into the branch each one
+added.
 
-**And the stage pin is itself pinned.** A second review round found the fix
-above was silently reversible: nothing required an entry to carry
-`closurec_stderr_starts_with`, so deleting the key, setting it to `null`, or
-setting it to `""` each left every test green while restoring exactly the "it
-fails somehow" weakness — `starts_with("")` is vacuously true. Two changes
-close that: an entry with empty `closurec_stdout` must now carry a non-empty
-stage pin, and a present-but-not-a-string value panics instead of degrading to
-`None`. All three evasions were tried against the real ledger and all three now
-fail the harness.
+**Then the guards themselves needed guarding.** Two further review rounds found
+the same defect twice more, one level up each time: the guard existed, but
+nothing required it to be *armed*. The ledger is input to the gate, not part of
+it, and a field the gate trusts is a field an edit to a data file can switch
+off — with every test still green.
+
+*Round two — the stage pin.* Nothing required an entry to carry
+`closurec_stderr_starts_with`. Deleting the key, setting it to `null`, or
+setting it to `""` each restored the "it fails somehow" weakness exactly, and
+`starts_with("")` is vacuously true, so an empty pin is indistinguishable from
+no pin at the comparison site.
+
+*Round three — `upstream_exit`, and the pin again.* `upstream_exit` is the one
+ledger field nothing else corroborates: `upstream_stdout` is cross-checked
+against the committed `expected.stdout` bytes on every run, but upstream's exit
+status is recorded in no fixture. It is also load-bearing, because parity now
+requires `upstream_exit == 0`. So setting it non-zero on any entry permanently
+disables that rung's staleness detection — the rung stops being a parity check
+against the oracle and becomes a golden of our own output, passing forever so
+long as we keep producing what we once produced. One token, in a data file, no
+test moves. Separately, requiring the stage pin to be *non-empty* was not
+enough: every real pin reads `"<LEVEL> compilation failed at <stage> stage:"`,
+and a pin truncated to `"SIMPLE compilation failed at"` — or to `"S"` — is
+non-empty, looks plausible in review, and matches every stage alike.
+
+The rules an entry must satisfy are now a pure `well_formedness_error()`
+predicate rather than inline assertions, for the same reason `verdict()` was
+extracted: rules checked only against a ledger that satisfies them are never
+exercised in the direction that matters. Test (g) drives each into its
+rejecting direction, and asserts the baselines are accepted so the rejections
+cannot be satisfied by a predicate that rejects everything. The rules:
+
+- `upstream_exit` may be non-zero only where `upstream_stdout` is empty — the
+  one story a non-zero exit can tell — and the size of that exempt cohort is
+  pinned at 3 in the same style as the ledger's own size.
+- `closurec_exit` and `closurec_stdout` must agree about what happened. All 63
+  entries are one of two shapes: compiled (exit 0, output) or refused (non-zero
+  exit, no output). The mixed shape `exit 0, no output` is exactly what
+  accepting an "emit nothing, successfully" regression looks like written down,
+  one `upstream_exit` edit from comparing empty against empty forever. `verdict`
+  already refuses to call it a match; it can now not be recorded at all.
+- A recorded failure must pin a stage, and the pin must run through the stage
+  name to `stage:`.
+- A `closurec_stderr_starts_with` that is present but not a string now panics
+  instead of degrading to `None`.
+
+Each attack was run against the real ledger, and the ledger restored
+byte-identical afterwards. Flipping `upstream_exit` fails two tests
+independently; making it *consistent* by also blanking `upstream_stdout` still
+fails two, because the gate cross-checks that field against the fixture bytes.
+
+`ladder_fixtures()` also now selects directories with `file_type()` rather than
+`Path::is_dir()`. `is_dir` follows symlinks and the manifest's
+`discover_fixture_directories()` does not, so a committed symlinked rung would
+have been run by the gate while staying invisible to the reviewed inventory —
+neither the manifest nor the 782 tripwire would move, and its input bytes would
+live outside the repository, unreviewable in a diff. There are no symlinks under
+`tests/diff` today; this closes it latently.
 
 The verdict's arm order was also wrong for one shape: a rung recorded as a hard
 failure that *starts succeeding* with output unlike upstream's matched the
@@ -151,6 +201,8 @@ changed-stage arm before the changed-output arm, reporting a stale-stderr
 message for what is really a changed result. That arm now also requires the
 observed output to be empty, so a rung that produces output is judged on its
 output.
+
+The ladder's own test count is 13.
 
 Registered in `tests/oracle/manifest.json`; the reviewed fixture inventory
 tripwire moves from 707 to 782 and the ledger tripwire from 20 to 63.
