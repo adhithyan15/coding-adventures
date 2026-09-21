@@ -47,11 +47,34 @@ the build. The superseding push already triggered the authoritative run;
 re-running a superseded one burns a runner for a result nobody reads. Check
 the current head's checks instead and let them finish.
 
+**The cost is per gated workflow, not per push.** This is the part that is
+easy to underestimate. Every workflow with both `cancel-in-progress` and a
+roll-up gate job contributes its own red check, so one extra push to
+PR #15839 produced reds from `CI push gate`, `CI gate` and
+`Human Languages Books gate` together. Two extra pushes produced four reds
+across two superseded commits. Budget one red *per gated workflow* per
+push.
+
+A cancelled gate can also fail for a second reason. When the cancellation
+lands early enough, the detection job it depends on is cancelled too, so
+the gate trips its "detection did not succeed" branch rather than its
+"unexpected state" branch:
+
+    DETECT_RESULT: cancelled
+    BOOKS_RELEVANT:
+    BUILD_RESULT: cancelled
+    ##[error]Human-language book change detection did not succeed.
+
+Same cause, different error text, and the empty `BOOKS_RELEVANT` is the
+giveaway that nothing ever ran.
+
 **Avoiding it:** batch commits into a single push when the branch is already
-building, or accept one spurious red per extra push. On a long CI run — this
-repo's is broad, since a lockfile-wide change marks nearly every TypeScript
-package affected — the window for tripping this is large, so it is worth
-deciding *before* pushing whether the next commit can wait.
+building. On a long CI run — this repo's is broad, since a lockfile-wide
+change marks nearly every TypeScript package affected — the window for
+tripping this is large, so it is worth deciding *before* pushing whether the
+next commit can wait. There is no free moment to push into an active run:
+any push restarts the whole run, so the only real choice is how many restarts
+to spend. Prefer waiting for a real signal and then pushing once.
 
 **Generalisation:** `cancel-in-progress: true` converts "pushed again" into
 a `cancelled` job result, and any gate that enumerates acceptable results
