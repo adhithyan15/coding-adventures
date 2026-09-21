@@ -6076,8 +6076,31 @@ fn emit_host_navigation_split_qml(
     let mut out = String::new();
     writeln!(out, "{pad}SplitView {{").unwrap();
     writeln!(out, "{inner}orientation: Qt.Horizontal").unwrap();
-    writeln!(out, "{inner}Layout.fillWidth: true").unwrap();
-    writeln!(out, "{inner}Layout.fillHeight: true").unwrap();
+    // #15833 -- how this thing gets a size, which it previously did not.
+    //
+    // `Layout.fillWidth` / `Layout.fillHeight` are attached properties of
+    // `QtQuick.Layouts`. They do something only inside a `RowLayout`,
+    // `ColumnLayout` or `GridLayout`; anywhere else QML accepts them in
+    // silence and ignores them. The component root this emitter generates
+    // is a plain `Item` (see the module note on the wrapper), so at depth 1
+    // both lines were inert -- and `SplitView`, unlike `RowLayout`, derives
+    // NO implicit size from its panes. No anchors, no layout, no implicit
+    // size: the whole split measured 0 x 0 and drew nothing, at every
+    // window size. Measured, not inferred: root item 1200, SplitView 0.
+    //
+    // So anchor to the parent when the parent is the component root, which
+    // is the shape every consumer has (the shell IS the split). Deeper in
+    // the tree the parent may be a real layout, where anchors are an error
+    // ("cannot specify anchors for items inside Layout") and the attached
+    // properties are the correct mechanism -- and a split nested as another
+    // split's pane or detail already has `anchors.fill: parent` injected by
+    // `inject_anchors_fill_parent` above.
+    if depth == 1 {
+        writeln!(out, "{inner}anchors.fill: parent").unwrap();
+    } else {
+        writeln!(out, "{inner}Layout.fillWidth: true").unwrap();
+        writeln!(out, "{inner}Layout.fillHeight: true").unwrap();
+    }
     if let Some(part) = node.part_name.as_deref() {
         writeln!(out, "{inner}objectName: \"{}\"", escape_qml_string(part)).unwrap();
     }
@@ -13235,8 +13258,79 @@ mod tests {
         assert!(out.contains("Accessible.role: Accessible.Pane"));
         assert!(out.contains("Accessible.name: \"Projects\""));
         assert!(out.contains("SplitView.fillWidth: true"));
-        assert_eq!(out.matches("anchors.fill: parent").count(), 2);
+        // Three now, not two: the pane and the detail subtrees, plus the
+        // `SplitView` itself (#15833 -- without its own anchor the split
+        // measured 0 x 0 and drew nothing).
+        assert_eq!(out.matches("anchors.fill: parent").count(), 3);
         assert!(out.find("text: \"Pane\"").unwrap() < out.find("text: \"Detail\"").unwrap());
+    }
+
+    /// #15833 -- a root `SplitView` must be anchored to the component
+    /// wrapper, and must NOT rely on `Layout.fillWidth`.
+    ///
+    /// `Layout.fillWidth` / `Layout.fillHeight` are `QtQuick.Layouts`
+    /// attached properties: inside a plain `Item` -- which is exactly what
+    /// this emitter generates as the component root -- QML accepts them and
+    /// ignores them, with no warning. `SplitView` derives no implicit size
+    /// from its panes either, so the split had no size from any source and
+    /// laid out to 0 x 0 at every window size, drawing nothing at all.
+    ///
+    /// The rendered-size check in `code/scripts/qt-navigation-split-render-check.qml`
+    /// is what actually measures this; the CI Qt lane runs it. This test is
+    /// the cheap guard that fails in seconds without a Qt toolchain.
+    #[test]
+    fn root_navigation_split_is_anchored_not_layout_filled() {
+        let m = component("Shell", vec![], vec![]);
+        let pane = |part: &str, text: &str| LayoutNode {
+            tag: "Column".to_string(),
+            part_name: Some(part.to_string()),
+            props: vec![],
+            children: vec![LayoutNode {
+                tag: "Text".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::String(text.to_string()),
+                }],
+                children: vec![],
+            }],
+        };
+        let l = LayoutDef {
+            component_name: "Shell".to_string(),
+            root: LayoutNode {
+                tag: "HostNavigationSplit".to_string(),
+                part_name: Some("app-shell".to_string()),
+                props: vec![LayoutProp {
+                    name: "pane-title".to_string(),
+                    value: LayoutPropValue::String("Projects".to_string()),
+                }],
+                children: vec![pane("pane", "Pane"), pane("detail", "Detail")],
+            },
+        };
+
+        let out = from_pipeline(&m, &l, &empty_style("Shell")).unwrap().output;
+
+        // Isolate the SplitView's own property block: from its opening
+        // brace to the first nested `Item {`.
+        let split_at = out.find("SplitView {").expect("a SplitView");
+        let body_end = out[split_at..]
+            .find("Item {")
+            .map(|offset| split_at + offset)
+            .expect("the pane Item");
+        let split_body = &out[split_at..body_end];
+
+        assert!(
+            split_body.contains("anchors.fill: parent"),
+            "the root split must take its size from the component wrapper:\n{split_body}"
+        );
+        assert!(
+            !split_body.contains("Layout.fillWidth"),
+            "Layout.fillWidth is inert outside a Layout and disguised the zero size:\n{split_body}"
+        );
+        assert!(
+            !split_body.contains("Layout.fillHeight"),
+            "Layout.fillHeight is inert outside a Layout and disguised the zero size:\n{split_body}"
+        );
     }
 
     #[test]
