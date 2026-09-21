@@ -184,6 +184,19 @@ fn expand_at(
         };
 
         let name_id = hides.name(&name);
+
+        // Bound the paint chain. Membership walks it once per token, so an
+        // unbounded chain is an unbounded per-token cost that neither the
+        // token counter nor fuel can see -- a security review measured the
+        // resulting quadratic at 838 KB of source taking 1.59 s and
+        // quadrupling per doubling.
+        if hides.depth_of(cur.hide) >= bounds.hide_set_depth {
+            return Err(PpError::new(format!(
+                "more than {} distinct macros painted onto one token",
+                bounds.hide_set_depth
+            )));
+        }
+
         if hides.contains(cur.hide, name_id) {
             // Painted blue: this exact token came out of an expansion of this
             // macro, so it stays literal however many times it is rescanned.
@@ -451,6 +464,18 @@ fn substitute_function_like(
         })
         .collect();
 
+    // Parameter name -> index, built once.
+    //
+    // Both loops below used `params.iter().position(..)` per body token, which
+    // is O(|body| x |params|) with nothing bounding |params| -- `Bounds` has no
+    // such field and the dialect imposes no limit. A security review drove
+    // 1.08 MB of source to 36.8 s with output EMPTY, memory flat and
+    // `tokens_produced` at zero: every counter saw O(k) while the CPU did
+    // O(k^2). The projection loop charged fuel per body token, but the scan
+    // inside it -- the part doing the actual work -- was charged nothing.
+    let param_index: HashMap<&str, usize> =
+        params.iter().enumerate().map(|(i, p)| (p.as_str(), i)).collect();
+
     let mut projected_tokens: u64 = 0;
     let mut projected_bytes: u64 = 0;
     for token in &def.body {
@@ -463,7 +488,7 @@ fn substitute_function_like(
                 "exhausted the preprocessing budget projecting a substitution",
             ));
         }
-        match params.iter().position(|p| *p == token.value) {
+        match param_index.get(token.value.as_str()).copied() {
             Some(i) => {
                 if let Some((n, bytes)) = arg_metrics.get(i) {
                     projected_tokens = projected_tokens.saturating_add(*n);
@@ -482,7 +507,7 @@ fn substitute_function_like(
     let mut out = Vec::new();
 
     for token in &def.body {
-        match params.iter().position(|p| *p == token.value) {
+        match param_index.get(token.value.as_str()).copied() {
             Some(i) => {
                 // Substituted argument tokens keep THEIR OWN hide sets. They
                 // were expanded in the caller's context, so repainting them
@@ -787,6 +812,71 @@ mod tests {
         let e = expand(toks("WIDE"), &t, &mut hides, &bounds, &mut spend)
             .expect_err("a byte budget of 32 must refuse ~250 bytes of token text");
         assert!(e.to_string().contains("bytes of token text"), "{e}");
+    }
+
+    #[test]
+    fn a_long_parameter_list_does_not_make_substitution_quadratic() {
+        // `params.iter().position(..)` per body token is O(|body| x |params|),
+        // and nothing bounds |params|. A security review drove 1.08 MB of
+        // source to 36.8 s with output EMPTY, memory flat and tokens_produced
+        // at zero -- every counter saw O(k) while the CPU did O(k^2).
+        //
+        // Timing is not asserted (too flaky for CI). What is asserted is that
+        // the work COMPLETES at a size the quadratic could not have finished,
+        // which is the observable consequence.
+        let k = 4_000;
+        let names: Vec<String> = (0..k).map(|i| format!("p{i}")).collect();
+        let refs: Vec<&str> = names.iter().map(String::as_str).collect();
+        let last = names[k - 1].clone();
+        let body: String = std::iter::repeat_n(last.as_str(), k).collect::<Vec<_>>().join(" ");
+
+        let mut t = MacroTable::new();
+        func(&mut t, "F", &refs, &body);
+
+        let mut hides = HideSets::new();
+        let mut spend = Spend::default();
+        let out = expand(toks("F ( 1 )"), &t, &mut hides, &Bounds::default(), &mut spend)
+            .expect("a wide parameter list is legal, just unusual");
+        // Every body token names the last parameter, and there is one argument
+        // (index 0), so nothing substitutes.
+        assert!(out.is_empty(), "produced {} tokens", out.len());
+    }
+
+    #[test]
+    fn a_long_paint_chain_is_refused_rather_than_walked_forever() {
+        // A token's hide set is a chain and membership walks it, so an
+        // unbounded chain is an unbounded per-token cost -- quadratic overall,
+        // with fuel and rounds both linear and blind to it. Measured before
+        // the bound: 838 KB of source at 1.59 s, quadrupling per doubling.
+        //
+        // The 64-bit Bloom summary on each node makes short chains free but
+        // saturates after ~64 distinct names, so it cannot bound this; the
+        // depth limit is what does.
+        let n = 1_000;
+        let mut t = MacroTable::new();
+        for i in 1..n {
+            t.define(format!("M{i}"), MacroDef { params: None, body: body(&format!("M{}", i + 1)) });
+        }
+        t.define(format!("M{n}"), MacroDef { params: None, body: body("1") });
+
+        let mut hides = HideSets::new();
+        let mut spend = Spend::default();
+        let bounds = Bounds { hide_set_depth: 64, ..Bounds::default() };
+        let e = expand(toks("M1"), &t, &mut hides, &bounds, &mut spend)
+            .expect_err("a 1000-deep paint chain must be refused at a depth of 64");
+        assert!(e.to_string().contains("distinct macros painted"), "{e}");
+    }
+
+    #[test]
+    fn ordinary_nesting_is_well_inside_the_paint_bound() {
+        // The bound must not reject real code. Ten nested distinct macros is
+        // already unusual; the default allows 256.
+        let mut t = MacroTable::new();
+        for i in 1..10 {
+            t.define(format!("M{i}"), MacroDef { params: None, body: body(&format!("M{}", i + 1)) });
+        }
+        t.define("M10", MacroDef { params: None, body: body("42") });
+        assert_eq!(run(&t, "M1").unwrap(), "42");
     }
 
     #[test]

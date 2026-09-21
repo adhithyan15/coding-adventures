@@ -217,7 +217,7 @@ fn generate(rng: &mut Rng, max_lines: usize) -> Vec<Token> {
         // expander recurses, and it is where the stack-overflow finding and
         // the quadratic-substitution finding both lived. A fuzz alphabet that
         // cannot reach a code path is not fuzzing it.
-        match rng.below(7) {
+        match rng.below(8) {
             0 => emit_line(&mut out, line, &["@define", "M", "(", "x", ")", "x", "N"]),
             1 => emit_line(&mut out, line, &["@define", "N", "(", "y", ")", "M", "(", "y", ")"]),
             2 => emit_line(&mut out, line, &["M", "(", "1", ")"]),
@@ -227,6 +227,15 @@ fn generate(rng: &mut Rng, max_lines: usize) -> Vec<Token> {
             // finding: output is |occurrences| x |argument tokens| while the
             // source costs their sum.
             4 => emit_line(&mut out, line, &["@define", "M", "(", "x", ")", "x", "x", "x"]),
+            // A body that puts an invocation INSIDE AN ARGUMENT, which is the
+            // only thing that drives argument pre-expansion deeper than one
+            // level -- and pre-expansion is where the stack-overflow finding
+            // lived. Without this the sweep's deepest recursion was 2.
+            5 => emit_line(
+                &mut out,
+                line,
+                &["@define", "M", "(", "x", ")", "N", "(", "N", "(", "x", ")", ")"],
+            ),
             _ => {
                 let words = rng.below(5);
                 for i in 0..words {
@@ -467,49 +476,110 @@ fn a_doubling_chain_inside_a_skipped_group_costs_nothing() {
 
 /// The sweep must actually REACH function-like macro expansion.
 ///
-/// Two earlier attempts at this looked right and reached nothing, which is why
-/// the assertion is what it is.
+/// Three earlier attempts at this looked right and reached nothing, so the
+/// assertion is shaped by how each one failed.
 ///
-/// The first taught `FuzzDialect` to parse parameter lists while the generator
-/// still emitted at most four tokens per line -- and the shortest usable
-/// `@define M ( x ) body` is six. The second fixed the generator but computed
-/// the body offset as `2k+2`, the index *of* the `)`, so every function-like
-/// define lost its first body token: across 3,000 seeds the deepest argument
-/// pre-expansion reached was 2, and bodies repeating a parameter numbered
-/// **0 of 10,655**.
+/// 1. `FuzzDialect` learned to parse parameter lists while the generator still
+///    emitted at most four tokens per line, and the shortest usable
+///    `@define M ( x ) body` is six.
+/// 2. The generator was fixed but computed the body offset as `2k+2` -- the
+///    index *of* the `)` -- so every function-like define silently lost its
+///    first body token.
+/// 3. The assertion added to catch (2) counted *aggregate* properties
+///    (">100 bodies use a parameter"), and a later generator arm made those
+///    thresholds clear even with the off-by-one still present. Reverting the
+///    bug left all nine tests green.
 ///
-/// Both times the coverage test passed green, because it counted raw token
-/// TEXT and never asked the dialect what it had actually parsed. So this one
-/// classifies through `FuzzDialect` and asserts on the resulting `MacroDef`:
-/// a stripped body shows up immediately, where a token count cannot see it.
+/// So this asserts the EXACT parse of each known arm. An off-by-one shifts a
+/// body by one token and fails immediately; an aggregate count cannot.
 #[test]
 fn the_sweep_actually_generates_function_like_macro_invocations() {
     use coding_adventures_source_preprocessor::dialect::Directive;
 
     let d = FuzzDialect;
+
+    // Every function-like arm the generator can emit, with the body the
+    // dialect must produce for it.
+    /// One generator arm: its tokens, and the name, parameters and body the
+    /// dialect must produce for it.
+    type Arm = (&'static [&'static str], &'static str, &'static [&'static str], &'static [&'static str]);
+
+    let expected: &[Arm] = &[
+        (&["@define", "M", "(", "x", ")", "x", "N"], "M", &["x"], &["x", "N"]),
+        (
+            &["@define", "N", "(", "y", ")", "M", "(", "y", ")"],
+            "N",
+            &["y"],
+            &["M", "(", "y", ")"],
+        ),
+        (&["@define", "M", "(", "x", ")", "x", "x", "x"], "M", &["x"], &["x", "x", "x"]),
+        (
+            &["@define", "M", "(", "x", ")", "N", "(", "N", "(", "x", ")", ")"],
+            "M",
+            &["x"],
+            &["N", "(", "N", "(", "x", ")", ")"],
+        ),
+    ];
+
+    for (line, want_name, want_params, want_body) in expected {
+        let toks: Vec<Token> = line
+            .iter()
+            .enumerate()
+            .map(|(i, w)| Token {
+                type_: TokenType::Name,
+                value: (*w).to_string(),
+                line: 1,
+                column: i + 1,
+                type_name: None,
+                flags: None,
+                cv: None,
+            })
+            .collect();
+
+        match d.classify(&toks) {
+            Some(Ok(Directive::Define { name, params: Some(ps), body })) => {
+                assert_eq!(&name, want_name);
+                assert_eq!(ps, *want_params, "parameters for {line:?}");
+                let got: Vec<&str> = body.iter().map(|t| t.value.as_str()).collect();
+                assert_eq!(
+                    got, *want_body,
+                    "BODY MISMATCH for {line:?} — an off-by-one in the body offset \
+                     silently strips a token here, and every aggregate count still passes"
+                );
+            }
+            other => panic!("{line:?} did not classify as a function-like define: {other:?}"),
+        }
+    }
+
+    // And the generator must actually emit them, or the parse test above is
+    // checking arms nothing produces.
     let mut with_param_in_body = 0usize;
     let mut repeating_a_param = 0usize;
+    let mut nested_invocation = 0usize;
     let mut invocations = 0usize;
 
     for seed in 1..=3_000u64 {
         let mut rng = Rng(seed.wrapping_mul(0x9E37_79B9_7F4A_7C15) | 1);
         let toks = generate(&mut rng, 20);
-
         let mut by_line: std::collections::BTreeMap<usize, Vec<Token>> = Default::default();
         for t in &toks {
             by_line.entry(t.line).or_default().push(t.clone());
         }
-
         for words in by_line.values() {
-            // Ask the dialect, not the text.
             if let Some(Ok(Directive::Define { params: Some(ps), body, .. })) = d.classify(words) {
-                let uses: usize =
-                    body.iter().filter(|t| ps.contains(&t.value)).count();
+                let uses = body.iter().filter(|t| ps.contains(&t.value)).count();
                 if uses >= 1 {
                     with_param_in_body += 1;
                 }
                 if uses >= 2 {
                     repeating_a_param += 1;
+                }
+                // An invocation inside the body is what drives pre-expansion
+                // past one level.
+                if body.windows(2).any(|w| {
+                    matches!(w[0].value.as_str(), "M" | "N") && w[1].value == "("
+                }) {
+                    nested_invocation += 1;
                 }
             }
             if matches!(words.first().map(|t| t.value.as_str()), Some("M") | Some("N"))
@@ -520,20 +590,13 @@ fn the_sweep_actually_generates_function_like_macro_invocations() {
         }
     }
 
+    assert!(with_param_in_body > 100, "only {with_param_in_body} bodies use a parameter");
+    assert!(repeating_a_param > 50, "only {repeating_a_param} bodies repeat a parameter");
     assert!(
-        with_param_in_body > 100,
-        "only {with_param_in_body} function-like defines whose body USES a parameter — \
-         argument pre-expansion is the only place the expander recurses, and it is \
-         where the stack-overflow finding lived"
+        nested_invocation > 50,
+        "only {nested_invocation} bodies contain a nested invocation — argument \
+         pre-expansion is the only place the expander recurses, and it is where \
+         the stack-overflow finding lived"
     );
-    assert!(
-        repeating_a_param > 50,
-        "only {repeating_a_param} bodies REPEAT a parameter — that is the shape behind \
-         the quadratic-substitution finding (output is occurrences x argument tokens)"
-    );
-    assert!(
-        invocations > 100,
-        "only {invocations} function-like invocations — a define nothing calls \
-         exercises no expansion"
-    );
+    assert!(invocations > 100, "only {invocations} invocations");
 }

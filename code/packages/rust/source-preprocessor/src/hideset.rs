@@ -42,8 +42,15 @@
 //!             many tokens share this id
 //! ```
 //!
-//! Adding a name is O(1) amortised and allocates one node at most once per
-//! distinct set, not once per token.
+//! Adding a name allocates one node at most once per distinct set, not once
+//! per token. Membership is O(1) for a name that is absent — the common case,
+//! via a 64-bit Bloom summary carried on each node — and O(chain) only when
+//! the summary says the name may be present.
+//!
+//! The summary matters as much as the interning. Interning removed the
+//! quadratic in memory; without the filter, `contains` walking the chain on
+//! every token left expansion quadratic in *time*, with fuel and round
+//! counters both linear and therefore blind to it.
 
 use std::collections::HashMap;
 
@@ -74,9 +81,25 @@ impl HideId {
 /// The arena of interned hide sets and macro names.
 #[derive(Debug, Default)]
 pub struct HideSets {
-    /// `nodes[i] = (name, parent)` for `HideId(i + 1)`; `HideId(0)` is empty
-    /// and has no node.
-    nodes: Vec<(NameId, HideId)>,
+    /// `nodes[i] = (name, parent, filter)` for `HideId(i + 1)`; `HideId(0)` is
+    /// empty and has no node.
+    ///
+    /// `filter` is a 64-bit Bloom summary of every name on the chain from this
+    /// node to the root: `parent.filter | bit(name)`. It makes the common case
+    /// -- "this name is NOT hidden" -- a single AND rather than a walk.
+    ///
+    /// Without it `contains` walked the whole chain on every token, so
+    /// expansion stayed quadratic in *time* even though interning had removed
+    /// the quadratic in *memory*. A security review measured 838 KB of source
+    /// at 1.59 s, quadrupling per doubling, with fuel and rounds both linear --
+    /// "invisible to every counter", which is the exact phrase the spec uses
+    /// to justify requiring shared hide sets in the first place. The spec's
+    /// claim was about memory; the time cost survived it.
+    ///
+    /// A Bloom filter and not an exact set because exactness is what interning
+    /// buys us: a false positive costs one chain walk (correct, just slower),
+    /// and a false negative is impossible, so `contains` stays exact.
+    nodes: Vec<(NameId, HideId, u64, u32)>,
     /// Interning table, so the same (name, parent) pair is one node.
     interned: HashMap<(NameId, HideId), HideId>,
     /// Macro-name interning.
@@ -120,17 +143,55 @@ impl HideSets {
             return *id;
         }
         let id = HideId(self.nodes.len() as u32 + 1);
-        self.nodes.push((name, set));
+        let filter = self.filter_of(set) | Self::bit(name);
+        let depth = self.depth_of(set).saturating_add(1);
+        self.nodes.push((name, set, filter, depth));
         self.interned.insert((name, set), id);
         id
     }
 
+    /// One bit per name, folded into the 64-bit summary.
+    fn bit(name: NameId) -> u64 {
+        // Multiplicative hash then take six bits. Cheap and well spread enough
+        // for a summary whose only job is to answer "definitely not present".
+        1u64 << ((name.0.wrapping_mul(0x9E37_79B9) >> 26) & 63)
+    }
+
+    /// How many distinct names are painted on `set`.
+    ///
+    /// Exposed because it is a *bounded* quantity the engine has to check:
+    /// membership walks this chain, so an unbounded chain is an unbounded
+    /// per-token cost that no token or fuel counter can see.
+    #[must_use]
+    pub fn depth_of(&self, set: HideId) -> u32 {
+        if set.is_empty() {
+            0
+        } else {
+            self.nodes.get(set.0 as usize - 1).map_or(0, |n| n.3)
+        }
+    }
+
+    fn filter_of(&self, set: HideId) -> u64 {
+        if set.is_empty() {
+            0
+        } else {
+            self.nodes.get(set.0 as usize - 1).map_or(0, |n| n.2)
+        }
+    }
+
     /// Is `name` hidden in `set`?
+    ///
+    /// Exact. The Bloom summary only short-circuits the negative answer; a
+    /// positive summary still walks the chain to confirm, so a false positive
+    /// costs time and never correctness.
     #[must_use]
     pub fn contains(&self, set: HideId, name: NameId) -> bool {
+        if self.filter_of(set) & Self::bit(name) == 0 {
+            return false;
+        }
         let mut cur = set;
         while !cur.is_empty() {
-            let Some(&(n, parent)) = self.nodes.get(cur.0 as usize - 1) else {
+            let Some(&(n, parent, _, _)) = self.nodes.get(cur.0 as usize - 1) else {
                 // Unreachable for ids this arena minted; treated as "not
                 // hidden" rather than panicking, because the no-panic contract
                 // covers every path reachable from hostile input.
@@ -149,7 +210,7 @@ impl HideSets {
         let mut out = Vec::new();
         let mut cur = set;
         while !cur.is_empty() {
-            let Some(&(n, parent)) = self.nodes.get(cur.0 as usize - 1) else { break };
+            let Some(&(n, parent, _, _)) = self.nodes.get(cur.0 as usize - 1) else { break };
             out.push(n);
             cur = parent;
         }

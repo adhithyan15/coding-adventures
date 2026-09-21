@@ -36,7 +36,7 @@ grew ~180 lines; the backends grew none.
   sixth `@include` pair covering a "header" of definitions used by its
   includer. Every right-hand side is the **textual** expansion — `21 + 21`,
   never `42` — so a constant-folding frontend cannot satisfy the oracle.
-- Five new `lang-aot` matrix rows (14 total, 112 declared cells), each with a
+- Six new `lang-aot` matrix rows (15 total, 120 declared cells), each with a
   hand-expanded twin: object-like, an argument used twice, argument
   pre-expansion, the self-referential / bare-function-like-name termination
   pair over Oct's u8 wrap, and a definition inside a conditional.

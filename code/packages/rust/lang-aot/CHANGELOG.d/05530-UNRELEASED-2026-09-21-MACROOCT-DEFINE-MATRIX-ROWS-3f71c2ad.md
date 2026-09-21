@@ -1,7 +1,7 @@
 ## Unreleased — MacroOct `@define` matrix rows (PREP01 slice 2)
 
-Five new `Language::MacroOct` corpus rows exercising macro expansion on all
-eight backends, taking MacroOct from 9 rows / 72 declared cells to 14 / 112.
+Six new `Language::MacroOct` corpus rows exercising macro expansion on all
+eight backends, taking MacroOct from 9 rows / 72 declared cells to 15 / 120.
 Oct's own pinned tuple is deliberately unchanged: PREP01 holds Oct fixed as the
 reference MacroOct is checked against, so a slice that moved it would have
 invalidated its own oracle.

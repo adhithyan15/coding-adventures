@@ -129,6 +129,22 @@ pub struct Bounds {
     /// with a rounds diagnostic. Two unrelated limits should not be one number.
     pub expansion_rounds: u64,
 
+    /// Maximum number of DISTINCT macro names painted onto one token.
+    ///
+    /// A token's hide set is a chain, and membership walks it. Interning makes
+    /// that chain cheap in memory; it does nothing for the time cost, so a
+    /// chain of length n costs O(n) per token and O(n^2) over an expansion —
+    /// with fuel and rounds both linear and therefore blind to it. A security
+    /// review measured 838 KB of source at 1.59 s, quadrupling per doubling.
+    ///
+    /// A 64-bit Bloom summary on each node makes the common case free, but it
+    /// saturates after ~64 distinct names and then every query is a false
+    /// positive, so it cannot bound the pathological case. This does.
+    ///
+    /// 256 is far above anything real: it means 256 *distinct* macros nested
+    /// in a single expansion. C's own translation limits require nothing close.
+    pub hide_set_depth: u32,
+
     /// Maximum grouping nesting inside a macro argument list.
     pub arg_group_depth: u32,
 
@@ -175,6 +191,7 @@ impl Default for Bounds {
             tokens_produced: 2_000_000,
             token_spelling_bytes: 64 * 1024,
             synthesised_text_bytes: 64 * 1024 * 1024,
+            hide_set_depth: 256,
             expansion_rounds: 1_000_000,
             arg_group_depth: 200,
             condition_depth: 200,
@@ -203,6 +220,7 @@ impl Bounds {
             tokens_produced: self.tokens_produced.min(other.tokens_produced),
             token_spelling_bytes: self.token_spelling_bytes.min(other.token_spelling_bytes),
             synthesised_text_bytes: self.synthesised_text_bytes.min(other.synthesised_text_bytes),
+            hide_set_depth: self.hide_set_depth.min(other.hide_set_depth),
             expansion_rounds: self.expansion_rounds.min(other.expansion_rounds),
             arg_group_depth: self.arg_group_depth.min(other.arg_group_depth),
             condition_depth: self.condition_depth.min(other.condition_depth),
