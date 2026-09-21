@@ -25,6 +25,20 @@ Window {
     Shell {
         id: shell
         anchors.fill: parent
+
+        // `--emit-project --profile native-complete` generates
+        // `required property var mosaicHost`, so the component refuses to
+        // instantiate without one: "Required property mosaicHost was not
+        // initialized / Did not load any objects". A stub is enough — this
+        // check measures geometry and never dispatches an event. (Generating
+        // without `--emit-project` leaves the property optional, which is why
+        // an earlier version of this file worked locally and failed in CI.)
+        mosaicHost: QtObject {
+            function handleEvent(event) {
+                return null
+            }
+        }
+
         workspaceName: "Workspace"
         inboxLabel: "Inbox"
     }
