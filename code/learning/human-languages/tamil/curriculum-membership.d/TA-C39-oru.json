@@ -1,0 +1,11 @@
+{
+  "id": "TA-C39-oru",
+  "pathSegment": "TA-PATH-036",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-036-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

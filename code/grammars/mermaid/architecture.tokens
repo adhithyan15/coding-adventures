@@ -6,6 +6,14 @@ case_sensitive: false
 skip:
   COMMENT = /[ \t]*%%[^\r\n]*/
 
-NEWLINE        = /\r?\n/
-HEADER         = /architecture(?:-beta)?[ \t]*/
-STATEMENT_LINE = /[ \t]*[^ \t\r\n][^\r\n]*/
+ACC_DESCR_BLOCK     = /accDescr[ \t]*\{[^}]*\}/
+NEWLINE             = /\r?\n/
+HEADER              = /architecture(?:-beta)?[ \t]*/
+TITLE_STATEMENT     = /title[ \t]+[^\r\n]+/
+ACC_TITLE_STATEMENT = /accTitle[ \t]*:[^\r\n]+/
+ACC_DESCR_STATEMENT = /accDescr[ \t]*:[^\r\n]+/
+JUNCTION_STATEMENT  = /[ \t]*junction[ \t]+[^\r\n]+/
+ALIGN_STATEMENT     = /[ \t]*align[ \t]+(?:row|column)[ \t]+[^\r\n]+/
+SERVICE_ICON_TEXT_STATEMENT = /[ \t]*service[ \t]+[^ \t\r\n]+[ \t]+(?:"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')[^\r\n]*/
+EDGE_STATEMENT      = /[ \t]*[^ \t\r\n]+:(?:L|R|T|B)[ \t]+<?(?:--|-\[[^\]\r\n]+\]-)>?[ \t]+(?:L|R|T|B):[^ \t\r\n]+/
+STATEMENT_LINE      = /[ \t]*[^ \t\r\n][^\r\n]*/

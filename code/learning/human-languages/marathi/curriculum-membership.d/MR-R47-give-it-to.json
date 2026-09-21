@@ -1,0 +1,11 @@
+{
+  "id": "MR-R47-give-it-to",
+  "pathSegment": "MR-PATH-050",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-063-OBJECT-MARKING",
+      "order": 2
+    }
+  ]
+}

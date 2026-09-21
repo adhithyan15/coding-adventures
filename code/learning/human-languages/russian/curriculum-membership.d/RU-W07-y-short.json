@@ -1,0 +1,11 @@
+{
+  "id": "RU-W07-y-short",
+  "pathSegment": "RU-PATH-016",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "RU-EXT-021-SCRIPT-EIGHT",
+      "order": 6
+    }
+  ]
+}

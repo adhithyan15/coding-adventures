@@ -1,0 +1,11 @@
+{
+  "id": "MW-C39-refusal-four",
+  "pathSegment": "MW-PATH-032",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-046-REFUSAL",
+      "order": 3
+    }
+  ]
+}

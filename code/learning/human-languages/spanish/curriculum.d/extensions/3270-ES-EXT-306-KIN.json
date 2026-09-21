@@ -4,12 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can name the immediate family in Spanish and change the ending to change who I mean.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-C306-hijo",
-    "ES-C306-hija",
-    "ES-C306-abuelo",
-    "ES-C306-abuela",
-    "ES-C306-esposo"
-  ]
+  "prerequisites": []
 }

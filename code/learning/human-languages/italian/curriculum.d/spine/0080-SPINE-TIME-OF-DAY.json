@@ -1,8 +1,4 @@
 {
-  "segments": [
-    "IT-PATH-005",
-    "IT-PATH-014"
-  ],
   "omits": [
     "TIME-MORNING",
     "TIME-AFTERNOON",

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C11-qing",
+  "pathSegment": "ZH-PATH-010",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-029-QING-INVITES",
+      "order": 0
+    }
+  ]
+}

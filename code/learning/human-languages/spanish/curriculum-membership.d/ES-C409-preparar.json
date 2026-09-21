@@ -1,0 +1,11 @@
+{
+  "id": "ES-C409-preparar",
+  "pathSegment": "ES-PATH-409-PLANNING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-409-PLANNING",
+      "order": 1
+    }
+  ]
+}

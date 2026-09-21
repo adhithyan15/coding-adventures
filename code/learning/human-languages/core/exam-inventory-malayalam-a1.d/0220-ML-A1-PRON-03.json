@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-PRON-03",
+  "category": "Sarvanaamam (pronouns)",
+  "label": "third person: avan, aval, athu -- he, she, it",
+  "probe": [
+    "ML-LEX-C71-AVAN-AVAL-01",
+    "ML-LEX-C71-AVAR-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-PRON-01"
+  ],
+  "malayalamSpecific": false,
+  "note": "Not taught, and VERIFIED WORSE THAN THE NOTE SAID: avan, aval and avar appeared in ZERO lesson files -- not as headwords and not anywhere in a body. A learner could say I and you and could not say he. Chapter 71 closes it, and the gap turns out to sit inside a system already taught: ML-C41-that teaches the i-/a- pointing pair and says in as many words that a- means far, and the corpus only ever used it on THINGS. avan, aval and avar carry the same a-, so the column for people was predicted and never filled. avar also reuses ML-C02's own rule that a plural raises the register -- nii to ningal, avan to avar -- so two of the three words run on machinery the reader already had."
+}

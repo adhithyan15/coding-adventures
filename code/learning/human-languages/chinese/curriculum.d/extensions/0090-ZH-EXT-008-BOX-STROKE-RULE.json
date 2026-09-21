@@ -6,9 +6,5 @@
   "canDo": "I can write a character built on a box, closing the bottom stroke last, and I can count a turning corner as one stroke rather than two.",
   "prerequisites": [
     "ZH-EXT-007-NUMERAL-TRANSPARENCY"
-  ],
-  "lessons": [
-    "ZH-W03-si",
-    "ZH-C03-si"
   ]
 }

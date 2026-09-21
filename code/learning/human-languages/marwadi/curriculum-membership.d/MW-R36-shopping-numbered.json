@@ -1,0 +1,11 @@
+{
+  "id": "MW-R36-shopping-numbered",
+  "pathSegment": "MW-PATH-030",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-044-NUMBERED-EXCHANGE",
+      "order": 1
+    }
+  ]
+}

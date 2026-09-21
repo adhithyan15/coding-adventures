@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-ADJ-09",
+  "category": "Visheshan (the adjective)",
+  "label": "comparison: X is bigger than Y",
+  "probe": [
+    "HI-LEX-C92-DEG-03",
+    "HI-LEX-C90-ROUT-01"
+  ],
+  "derivedFrom": "ES:A1-NG2-02",
+  "note": "STALE NOTE, corrected. It said Hindi compares with the postposition se, which is untaught, and pointed at HI-A1-POST-04 -- and se was introduced by HI-C90-se in chapter 98, so this point was waiting on work already done. HI-C92-se-comparison supplies the construction. The teachable part is that Hindi has NO comparative form: English carries two machines for this, -er on short adjectives and more in front of long ones, and Hindi carries neither -- the adjective does not change and the thing measured against takes se, which is the same idea as the postposition's other uses, the comparison PROCEEDING FROM the thing measured against. The one thing to drill is word order, because English puts than X after the adjective and Hindi puts it before, which follows from the verb-final rule the track has taught since its first sentence."
+}

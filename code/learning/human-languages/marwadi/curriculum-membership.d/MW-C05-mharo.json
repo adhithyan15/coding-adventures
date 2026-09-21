@@ -1,0 +1,11 @@
+{
+  "id": "MW-C05-mharo",
+  "pathSegment": "MW-PATH-005",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-010-WRITE-MHARO",
+      "order": 2
+    }
+  ]
+}

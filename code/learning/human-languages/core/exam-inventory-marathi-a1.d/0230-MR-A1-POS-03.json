@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-POS-03",
+  "category": "Possessives",
+  "label": "distribution: the genitive agrees with the thing possessed, not the possessor",
+  "probe": [
+    "MR-A1-FORM-POSSESSIVE-NEUTER",
+    "MR-A1-FORM-LABEL-MITRACHE-NAAV"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-POS-03"
+  ]
+}

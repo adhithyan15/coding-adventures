@@ -3383,6 +3383,62 @@ impl Compiler {
                 .any(|child| self.contains_conditional_expression(child))
     }
 
+    fn conditional_expression_selectors_are_cycle_stable(
+        &self,
+        node: &GrammarASTNode,
+        actions: &[StaticBodyAction<'_>],
+        target_name: &str,
+    ) -> bool {
+        if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
+            return self.recurrence_selector_is_cycle_stable(
+                condition,
+                actions,
+                target_name,
+            )
+                && self.conditional_expression_selectors_are_cycle_stable(
+                    then_node,
+                    actions,
+                    target_name,
+                )
+                && self.conditional_expression_selectors_are_cycle_stable(
+                    else_node,
+                    actions,
+                    target_name,
+                );
+        }
+        direct_nodes(node).into_iter().all(|child| {
+            self.conditional_expression_selectors_are_cycle_stable(child, actions, target_name)
+        })
+    }
+
+    fn recurrence_selector_is_cycle_stable(
+        &self,
+        selector: &GrammarASTNode,
+        actions: &[StaticBodyAction<'_>],
+        target_name: &str,
+    ) -> bool {
+        let mut dependencies = HashSet::new();
+        collect_expression_dependency_names(selector, target_name, &mut dependencies);
+        dependencies.iter().all(|name| {
+            !Self::static_body_actions_write_name(actions, name)
+                && self.require_var(name).is_ok_and(|binding| {
+                    !binding.is_global
+                        && binding.array.is_none()
+                        && self.active_by_name_binding(name).is_none()
+                        && match binding.ty {
+                            ScalarType::Integer => {
+                                self.static_integer_slots.contains_key(&binding.slot)
+                            }
+                            ScalarType::Real => self.static_real_slots.contains_key(&binding.slot),
+                            ScalarType::Boolean => {
+                                self.static_boolean_slots.contains_key(&binding.slot)
+                            }
+                            ScalarType::String => false,
+                        }
+                })
+        })
+    }
+
     /// Recognize one pure integer-valued standard function over exact tracked
     /// integer arithmetic. User declarations shadow these built-ins and must
     /// retain their runtime call.
@@ -6412,7 +6468,13 @@ impl Compiler {
         let Ok(target_name) = self.simple_variable_name(target) else {
             return (None, None);
         };
-        if self.for_body_writes_name(body, &target_name, &target_name, body) {
+        let recurrence_actions = self.for_body_recurrence_actions(body);
+        let body_writes_target =
+            self.for_body_writes_name(body, &target_name, &target_name, body);
+        let supports_target_write = recurrence_actions.as_ref().is_some_and(|actions| {
+            Self::static_body_actions_write_name(actions, &target_name)
+        });
+        if body_writes_target && !supports_target_write {
             return (None, None);
         }
         let Some(value) = direct_nodes(elem)
@@ -6427,16 +6489,31 @@ impl Compiler {
         let mut dependencies = HashSet::new();
         collect_expression_dependency_names(value, &target_name, &mut dependencies);
         collect_expression_dependency_names(condition, &target_name, &mut dependencies);
+        let mut body_updates_simulation = body_writes_target;
         for dependency in &dependencies {
             let Ok(binding) = self.require_var(dependency) else {
                 return (None, None);
             };
+            let body_writes_dependency =
+                self.for_body_writes_name(body, dependency, &target_name, body);
             if binding.is_global
                 || binding.array.is_some()
                 || self.active_by_name_binding(dependency).is_some()
-                || self.for_body_writes_name(body, dependency, &target_name, body)
             {
                 return (None, None);
+            }
+            if body_writes_dependency {
+                let Some(actions) = recurrence_actions.as_ref() else {
+                    return (None, None);
+                };
+                if !self.static_body_actions_have_supported_dependency_recurrence(
+                    actions,
+                    dependency,
+                    &target_name,
+                ) {
+                    return (None, None);
+                }
+                body_updates_simulation = true;
             }
         }
 
@@ -6444,6 +6521,7 @@ impl Compiler {
         let saved_integers = self.static_integer_slots.clone();
         let saved_booleans = self.static_boolean_slots.clone();
         let mut exit = (None, None);
+        let mut snapshots = Vec::new();
         for _ in 0..MAX_STATIC_WHILE_ITERATIONS {
             let static_real = (target_ty == ScalarType::Real)
                 .then(|| self.static_assigned_real_value(value))
@@ -6470,6 +6548,17 @@ impl Compiler {
                 Some(true) => {}
                 None => break,
             }
+            if body_updates_simulation {
+                let Some(actions) = recurrence_actions.as_deref() else {
+                    break;
+                };
+                if self
+                    .evaluate_static_body_actions(actions, &mut snapshots)
+                    .is_none()
+                {
+                    break;
+                }
+            }
         }
         self.static_real_slots = saved_reals;
         self.static_integer_slots = saved_integers;
@@ -6492,27 +6581,34 @@ impl Compiler {
         if target_binding.is_global || self.active_by_name_binding(&target_name).is_some() {
             return None;
         }
+        let target_slot = target_binding.slot.clone();
         let value = direct_nodes(elem)
             .into_iter()
             .find(|node| node.rule_name == "arith_expr")?;
         let condition = first_direct_node(elem, "bool_expr")?;
+        let actions = self.for_body_recurrence_actions(body)?;
         let mut dependencies = HashSet::new();
         collect_expression_dependency_names(value, &target_name, &mut dependencies);
         collect_expression_dependency_names(condition, &target_name, &mut dependencies);
         for dependency in &dependencies {
             let binding = self.require_var(dependency).ok()?;
+            let body_writes_dependency =
+                self.for_body_writes_name(body, dependency, &target_name, body);
             if binding.is_global
                 || binding.array.is_some()
                 || self.active_by_name_binding(dependency).is_some()
-                || self.for_body_writes_name(body, dependency, &target_name, body)
             {
                 return None;
             }
-        }
-
-        let actions = self.for_body_recurrence_actions(body)?;
-        if Self::static_body_actions_write_name(&actions, &target_name) {
-            return None;
+            if body_writes_dependency
+                && !self.static_body_actions_have_supported_dependency_recurrence(
+                    &actions,
+                    dependency,
+                    &target_name,
+                )
+            {
+                return None;
+            }
         }
 
         let saved_reals = self.static_real_slots.clone();
@@ -6558,7 +6654,12 @@ impl Compiler {
         self.static_real_slots = saved_reals;
         self.static_integer_slots = saved_integers;
         self.static_boolean_slots = saved_booleans;
-        (exited && succeeded).then_some(snapshots)
+        if exited && succeeded {
+            snapshots.retain(|(slot, _)| slot != &target_slot);
+            Some(snapshots)
+        } else {
+            None
+        }
     }
 
     fn for_body_recurrence_actions<'a>(
@@ -6745,6 +6846,142 @@ impl Compiler {
                     || Self::static_body_actions_write_name(else_actions, name)
             }
         })
+    }
+
+    fn static_body_actions_have_supported_dependency_recurrence(
+        &self,
+        actions: &[StaticBodyAction<'_>],
+        name: &str,
+        target_name: &str,
+    ) -> bool {
+        self.static_body_actions_have_supported_dependency_recurrence_inner(
+            actions,
+            name,
+            target_name,
+            &mut HashSet::new(),
+            false,
+        )
+    }
+
+    fn static_body_actions_have_supported_dependency_recurrence_inner(
+        &self,
+        actions: &[StaticBodyAction<'_>],
+        name: &str,
+        target_name: &str,
+        visiting: &mut HashSet<String>,
+        conditional_path: bool,
+    ) -> bool {
+        if !visiting.insert(name.to_string()) {
+            // Cross-assigned scalars are safe here: capped abstract execution
+            // evaluates every recognized assignment in source order. Keep
+            // conditionally selected cycles conservative unless every selector
+            // uses the exact loop control or an unchanged exact local snapshot.
+            return !conditional_path;
+        }
+        let found = self
+            .static_body_actions_have_supported_dependency_recurrence_in_actions(
+                actions,
+                actions,
+                name,
+                target_name,
+                visiting,
+                conditional_path,
+            )
+            .unwrap_or(false);
+        visiting.remove(name);
+        found
+    }
+
+    fn static_body_actions_have_supported_dependency_recurrence_in_actions(
+        &self,
+        actions: &[StaticBodyAction<'_>],
+        all_actions: &[StaticBodyAction<'_>],
+        name: &str,
+        target_name: &str,
+        visiting: &mut HashSet<String>,
+        conditional_path: bool,
+    ) -> Option<bool> {
+        let mut found = false;
+        for action in actions {
+            match action {
+                StaticBodyAction::Assignment(assignment) if assignment.name == name => {
+                    let mut dependencies = HashSet::new();
+                    collect_expression_dependency_names(
+                        assignment.expression,
+                        name,
+                        &mut dependencies,
+                    );
+                    for dependency in dependencies {
+                        if dependency == target_name {
+                            continue;
+                        }
+                        let Ok(binding) = self.require_var(&dependency) else {
+                            return None;
+                        };
+                        if binding.is_global
+                            || binding.array.is_some()
+                            || self.active_by_name_binding(&dependency).is_some()
+                        {
+                            return None;
+                        }
+                        if Self::static_body_actions_write_name(all_actions, &dependency)
+                            && !self.static_body_actions_have_supported_dependency_recurrence_inner(
+                                all_actions,
+                                &dependency,
+                                target_name,
+                                visiting,
+                                conditional_path
+                                    || (self.contains_conditional_expression(
+                                        assignment.expression,
+                                    ) && !self.conditional_expression_selectors_are_cycle_stable(
+                                        assignment.expression,
+                                        all_actions,
+                                        target_name,
+                                    )),
+                            )
+                        {
+                            return None;
+                        }
+                    }
+                    found = true;
+                }
+                StaticBodyAction::Conditional {
+                    condition,
+                    then_actions,
+                    else_actions,
+                } => {
+                    let conditional_path = conditional_path
+                        || !self.recurrence_selector_is_cycle_stable(
+                            condition,
+                            all_actions,
+                            target_name,
+                        );
+                    let then_found = self
+                        .static_body_actions_have_supported_dependency_recurrence_in_actions(
+                            then_actions,
+                            all_actions,
+                            name,
+                            target_name,
+                            visiting,
+                            conditional_path,
+                        )?;
+                    let else_found = self
+                        .static_body_actions_have_supported_dependency_recurrence_in_actions(
+                            else_actions,
+                            all_actions,
+                            name,
+                            target_name,
+                            visiting,
+                            conditional_path,
+                        )?;
+                    if then_found || else_found {
+                        found = true;
+                    }
+                }
+                _ => {}
+            }
+        }
+        Some(found)
     }
 
     fn static_body_actions_write_only_name(actions: &[StaticBodyAction<'_>], name: &str) -> bool {
@@ -13448,6 +13685,52 @@ mod tests {
     }
 
     #[test]
+    fn al4_static_while_tracks_conditional_control_body_recurrences() {
+        let module = compile_source(
+            "begin integer i; real x; i := 0; for i := i + 1 while i <= 10 do if i < 4 then i := i * 2 else i := i + 3; print(i + 0.25); x := 0.5; for x := x + 0.5 while x <= 10.0 do if x < 4.0 then x := x * 2.0 else x := x + 3.0; print(x) end",
+            "test",
+        )
+        .expect("bounded while controls may consume statically selected body updates");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "11.25")
+        }));
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "12.5")
+        }));
+    }
+
+    #[test]
+    fn al4_static_while_tracks_control_and_sibling_body_recurrences() {
+        let module = compile_source(
+            "begin integer i, total; i := 0; total := 0; for i := i + 1 while i <= 10 do begin total := total + i * 2; if i < 4 then i := i * 2 else i := i + 3 end; print(i + 0.25); print(total + 0.5) end",
+            "test",
+        )
+        .expect("bounded while controls may evolve beside supported scalar recurrences");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "11.25")
+        }));
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "22.5")
+        }));
+    }
+
+    #[test]
+    fn al4_static_while_rejects_dynamic_control_body_selector() {
+        let err = compile_source(
+            "begin integer i; boolean take; i := 0; for i := i + 1 while i <= 10 do if take then i := i * 2 else i := i + 3; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a dynamic body selector keeps while-control evolution conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
     fn al4_static_while_preserves_stable_local_dependency() {
         compile_source(
             "begin integer i, n; n := 3; i := 0; for i := i + 1 while i < n do print(''); print(i + 0.25) end",
@@ -13752,13 +14035,12 @@ mod tests {
     }
 
     #[test]
-    fn al4_written_conditional_selector_dependency_remains_conservative() {
-        let err = compile_source(
+    fn al4_written_conditional_selector_dependency_tracks_selected_recurrence() {
+        compile_source(
             "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := false end; print(i + 0.25) end",
             "test",
         )
-        .expect_err("a written conditional selector dependency may change the selected leaf");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        .expect("a bounded changing selector recurrence retains exact selected leaves");
     }
 
     #[test]
@@ -13771,13 +14053,12 @@ mod tests {
     }
 
     #[test]
-    fn al4_computed_conditional_selector_dependency_remains_conservative() {
-        let err = compile_source(
+    fn al4_computed_conditional_selector_dependency_tracks_selected_recurrence() {
+        compile_source(
             "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := not other end; print(i + 0.25) end",
             "test",
         )
-        .expect_err("a computed dependency assignment may change the selected leaf later");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        .expect("a bounded computed selector recurrence retains exact selected leaves");
     }
 
     #[test]
@@ -14027,7 +14308,7 @@ mod tests {
     }
 
     #[test]
-    fn al4_integer_non_identity_selector_write_remains_conservative() {
+    fn al4_integer_non_identity_selector_rewrites_are_tracked_in_order() {
         for write in [
             "choose * 0",
             "(choose * 0)",
@@ -14035,47 +14316,45 @@ mod tests {
             "choose * (-1)",
             "-choose",
         ] {
-            let err = compile_source(
+            compile_source(
                 &format!(
                     "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := other; choose := {write} end; print(i + 0.25) end"
                 ),
                 "test",
             )
-            .expect_err("an integer non-identity write may change the selector dependency");
-            assert!(format!("{err:?}").contains("cannot print a real value"));
+            .unwrap_or_else(|_| {
+                panic!("ordered integer selector rewrite {write:?} must be tracked")
+            });
         }
     }
 
     #[test]
-    fn al4_integer_non_identity_selector_chains_remain_conservative() {
+    fn al4_integer_non_identity_selector_chain_rewrites_are_tracked_in_order() {
         for write in [
             "choose + 0 + 1",
             "1 div choose * 1",
             "choose ^ 0",
             "2 ^ 1",
         ] {
-            let err = compile_source(
+            compile_source(
                 &format!(
                     "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := other; choose := {write} end; print(i + 0.25) end"
                 ),
                 "test",
             )
-            .expect_err("integer non-identity chains must fail closed");
-            assert!(
-                format!("{err:?}").contains("cannot print a real value"),
-                "unexpected error for {write:?}: {err:?}"
-            );
+            .unwrap_or_else(|_| {
+                panic!("ordered integer selector chain {write:?} must be tracked")
+            });
         }
     }
 
     #[test]
-    fn al4_real_additive_selector_identity_remains_conservative() {
-        let err = compile_source(
+    fn al4_real_additive_selector_rewrite_is_tracked_in_order() {
+        compile_source(
             "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := choose + 0.0 end; print(i + 0.25) end",
             "test",
         )
-        .expect_err("real additive zero may change the sign bit of negative zero");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        .expect("the exact ordered real additive rewrite must be tracked");
     }
 
     #[test]
@@ -14139,20 +14418,19 @@ mod tests {
     }
 
     #[test]
-    fn al4_real_negative_zero_subtraction_remains_conservative() {
+    fn al4_real_negative_zero_subtraction_rewrites_are_tracked_in_order() {
         for write in [
             "choose - (-0.0)",
             "choose - ((-0.0) + (-0.0))",
             "choose - ((-0.0) ^ 3)",
         ] {
-            let err = compile_source(
+            compile_source(
                 &format!(
                     "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := {write} end; print(i + 0.25) end"
                 ),
                 "test",
             )
-            .expect_err("subtracting negative zero is the unsafe additive-zero identity");
-            assert!(format!("{err:?}").contains("cannot print a real value"));
+            .unwrap_or_else(|_| panic!("ordered negative-zero rewrite {write:?} must be tracked"));
         }
     }
 
@@ -14263,40 +14541,47 @@ mod tests {
     }
 
     #[test]
-    fn al4_real_non_identity_power_selector_writes_remain_conservative() {
+    fn al4_real_non_identity_power_selector_rewrites_are_tracked_in_order() {
         for write in [
             "choose ^ 0",
             "choose ^ 0.0",
             "1.0 ^ choose",
             "choose ^ 2.0",
             "choose ^ (3.0 - 1.0)",
-            "choose ^ ((9223372036854775807 + 1) - 9223372036854775807)",
             "choose - ((-0.0) ^ 0)",
             "choose + ((-0.0) ^ 2)",
         ] {
-            let err = compile_source(
+            compile_source(
                 &format!(
                     "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := {write} end; print(i + 0.25) end"
                 ),
                 "test",
             )
-            .expect_err("non-identity real powers must fail closed");
-            assert!(format!("{err:?}").contains("cannot print a real value"));
+            .unwrap_or_else(|_| panic!("ordered real-power rewrite {write:?} must be tracked"));
         }
     }
 
     #[test]
-    fn al4_real_unary_minus_selector_write_remains_conservative() {
+    fn al4_overflowing_ordered_selector_rewrite_remains_conservative() {
         let err = compile_source(
-            "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := -choose end; print(i + 0.25) end",
+            "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := choose ^ ((9223372036854775807 + 1) - 9223372036854775807) end; print(i + 0.25) end",
             "test",
         )
-        .expect_err("real unary minus changes the selector");
+        .expect_err("overflow in an ordered rewrite must still fail closed");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
-    fn al4_real_non_unit_selector_chains_remain_conservative() {
+    fn al4_real_unary_minus_selector_rewrite_is_tracked_in_order() {
+        compile_source(
+            "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := -choose end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("the exact ordered real unary-minus rewrite must be tracked");
+    }
+
+    #[test]
+    fn al4_real_non_unit_selector_chain_rewrites_are_tracked_in_order() {
         for write in [
             "choose * 1.0 * 2.0",
             "(choose * 2.0)",
@@ -14309,14 +14594,13 @@ mod tests {
             "choose * (i ^ 0)",
             "1.0 / choose * 1.0",
         ] {
-            let err = compile_source(
+            compile_source(
                 &format!(
                     "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := {write} end; print(i + 0.25) end"
                 ),
                 "test",
             )
-            .expect_err("real non-unit chains must fail closed");
-            assert!(format!("{err:?}").contains("cannot print a real value"));
+            .unwrap_or_else(|_| panic!("ordered real selector chain {write:?} must be tracked"));
         }
     }
 
@@ -14371,23 +14655,21 @@ mod tests {
     }
 
     #[test]
-    fn al4_written_assignment_selector_remains_conservative_for_transitive_dependency() {
-        let err = compile_source(
+    fn al4_written_assignment_selector_tracks_transitive_dependency() {
+        compile_source(
             "begin integer i, n, limit; boolean choose; n := 3; limit := 3; choose := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose then limit else limit + 1; choose := false end; print(i + 0.25) end",
             "test",
         )
-        .expect_err("a selector written by the body may choose a changing leaf later");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        .expect("a bounded written selector recurrence retains its transitive dependency");
     }
 
     #[test]
-    fn al4_controlled_assignment_selector_remains_conservative_for_transitive_dependency() {
-        let err = compile_source(
+    fn al4_controlled_assignment_selector_tracks_transitive_dependency() {
+        compile_source(
             "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if i < 2 then limit else limit + 1 end; print(i + 0.25) end",
             "test",
         )
-        .expect_err("the changing loop control may select a different dependency leaf later");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        .expect("the exact loop control may select changing dependency leaves");
     }
 
     #[test]
@@ -14401,12 +14683,102 @@ mod tests {
     }
 
     #[test]
-    fn al4_static_assignment_dependency_cycle_remains_conservative() {
-        let err = compile_source(
-            "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := n end; print(i + 0.25) end",
+    fn al4_static_assignment_dependency_cycle_tracks_source_order() {
+        let module = compile_source(
+            "begin integer i, n, delta; i := 0; n := 4; delta := 2; for i := i + 1 while i <= n do begin n := n - delta; delta := n end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
             "test",
         )
-        .expect_err("cross-assignment dependencies require iterative effect analysis");
+        .expect("capped execution can evaluate cross-assigned dependencies in source order");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "0.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_control_selected_assignment_dependency_cycle_tracks_source_order() {
+        let module = compile_source(
+            "begin integer i, n, delta; i := 0; n := 4; delta := 2; for i := i + 1 while i <= n do begin n := n - delta; delta := if i < 2 then n else n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("the exact loop control may select leaves in a cross-assigned cycle");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "0.5", "-0.75"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_stable_local_selected_assignment_dependency_cycle_tracks_source_order() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; choose := false; for i := i + 1 while i <= n do begin n := n - delta; delta := if choose then n else n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an unchanged exact local may select leaves in a cross-assigned cycle");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_stable_statement_selected_assignment_dependency_cycle_tracks_source_order() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; choose := false; for i := i + 1 while i <= n do begin n := n - delta; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an unchanged exact local may select statements in a cross-assigned cycle");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_control_statement_selected_assignment_dependency_cycle_tracks_source_order() {
+        let module = compile_source(
+            "begin integer i, n, delta; i := 0; n := 4; delta := 2; for i := i + 1 while i <= n do begin n := n - delta; if i < 2 then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("the exact loop control may select statements in a cross-assigned cycle");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "0.5", "-0.75"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_dynamic_statement_selected_assignment_dependency_cycle_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; for i := i + 1 while i <= n do begin n := n - delta; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("an unknown statement selector must not admit a recurrence cycle");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_overflowing_cross_assignment_dependency_cycle_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; i := 0; n := 9223372036854775807; delta := 1; for i := i + 1 while i <= 1 do begin n := n + delta; delta := n end; print(n + 0.25) end",
+            "test",
+        )
+        .expect_err("checked overflow keeps cyclic dependency evaluation conservative");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
@@ -14500,13 +14872,12 @@ mod tests {
     }
 
     #[test]
-    fn al4_written_conditional_assignment_selector_remains_conservative() {
-        let err = compile_source(
+    fn al4_written_conditional_assignment_selector_tracks_selected_statement() {
+        compile_source(
             "begin integer i, n, guard; boolean choose; n := 3; guard := 1; choose := true; i := 0; for i := i + 1 while i < n do begin if guard = 0 then n := n + 1; guard := if choose then guard else 0; choose := false end; print(i + 0.25) end",
             "test",
         )
-        .expect_err("an assignment selector written by the body may choose another leaf later");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        .expect("an exact changing selector may choose bounded statement recurrence leaves");
     }
 
     #[test]
@@ -14947,6 +15318,22 @@ mod tests {
     }
 
     #[test]
+    fn al4_bounded_while_tracks_ordered_rewrites_of_one_dependency() {
+        let module = compile_source(
+            "begin integer i, n; real r; i := 0; n := 6; r := 0.25; for i := i + 1 while i <= n do begin n := n - 1; n := n - 1; r := r + i end; print(i + 0.25); print(n + 0.5); print(r) end",
+            "test",
+        )
+        .expect("bounded while analysis applies repeated dependency writes in source order");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "2.5"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
     fn al4_bounded_loops_track_statically_selected_recurrence_branches() {
         let module = compile_source(
             "begin integer i; real x, y; boolean take; x := 0.0; y := 0.0; take := false; for i := 1 step 1 until 4 do begin take := not take; if take then x := x + i else y := y + i end; print(x); print(y); i := 0; x := 0.0; y := 0.0; take := false; for i := i + 1 while i <= 4 do begin take := not take; if take then x := x + i else y := y + i end; print(x); print(y) end",
@@ -15137,13 +15524,47 @@ mod tests {
     }
 
     #[test]
-    fn al4_while_recurrence_that_writes_control_dependency_remains_conservative() {
-        let err = compile_source(
+    fn al4_while_recurrence_tracks_changing_control_dependency() {
+        let module = compile_source(
             "begin integer i, n; real r; i := 0; n := 3; r := 0.25; for i := i + 1 while i <= n do begin r := r + i; n := n - 1 end; print(r) end",
             "test",
         )
-        .expect_err("a changing predicate dependency prevents bounded recurrence analysis");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        .expect("a bounded while loop may evolve a local predicate dependency");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "3.25")
+        }));
+    }
+
+    #[test]
+    fn al4_while_dependency_recurrence_reads_stable_local_input() {
+        let module = compile_source(
+            "begin integer i, n, delta; real r; i := 0; n := 5; delta := 2; r := 0.25; for i := i + 1 while i <= n do begin r := r + i; n := n - delta end; print(r) end",
+            "test",
+        )
+        .expect("a bounded while dependency recurrence may read a stable local scalar");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "3.25")
+        }));
+    }
+
+    #[test]
+    fn al4_while_dependency_recurrence_reads_acyclic_changing_local_input() {
+        let module = compile_source(
+            "begin integer i, n, delta; real r; i := 0; n := 5; delta := 1; r := 0.25; for i := i + 1 while i <= n do begin r := r + i; n := n - delta; delta := delta + 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25); print(r) end",
+            "test",
+        )
+        .expect("a bounded while dependency recurrence may read an acyclic changing local input");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "2.5", "3.25", "3.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
     }
 
     #[test]

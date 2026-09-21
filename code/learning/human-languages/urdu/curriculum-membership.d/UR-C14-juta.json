@@ -1,0 +1,11 @@
+{
+  "id": "UR-C14-juta",
+  "pathSegment": "UR-PATH-015",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-025-CLOTHING",
+      "order": 1
+    }
+  ]
+}

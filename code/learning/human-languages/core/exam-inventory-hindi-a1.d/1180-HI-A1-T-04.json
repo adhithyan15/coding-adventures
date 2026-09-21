@@ -1,0 +1,12 @@
+{
+  "id": "HI-A1-T-04",
+  "category": "Samay aur tarikh (time and date)",
+  "label": "the parts of the day: subah, dopahar, sham, rat",
+  "probe": [
+    "HI-CONCEPT-C28-SUBAH-01",
+    "HI-CONCEPT-C30-DOPAHAR-WIDENED-01",
+    "HI-CONCEPT-C29-SHAAM-01",
+    "HI-CONCEPT-C26-RAAT-01"
+  ],
+  "derivedFrom": "ES:A1-NG4-01"
+}

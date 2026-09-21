@@ -1,0 +1,11 @@
+{
+  "id": "JA-W06-long-mark",
+  "pathSegment": "JA-PATH-006",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-014-KOOHII-KATAKANA",
+      "order": 1
+    }
+  ]
+}

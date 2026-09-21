@@ -1,0 +1,11 @@
+{
+  "id": "SA-C04-punah",
+  "pathSegment": "SA-PATH-008",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-008-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

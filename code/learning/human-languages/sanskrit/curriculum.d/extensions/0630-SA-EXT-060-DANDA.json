@@ -4,8 +4,5 @@
   "kind": "required",
   "category": "script",
   "canDo": "I can read and write the danda, and say what classical Sanskrit punctuates with instead of English marks.",
-  "prerequisites": [],
-  "lessons": [
-    "SA-C60-danda"
-  ]
+  "prerequisites": []
 }

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C34-cest",
+  "pathSegment": "FR-PATH-A1-POINTING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-A1-POINTING",
+      "order": 1
+    }
+  ]
+}

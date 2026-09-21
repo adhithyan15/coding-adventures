@@ -7,13 +7,5 @@
   "prerequisites": [
     "JA-EXT-008-HIRAGANA-YES-NO",
     "JA-EXT-002-TOPIC-PARTICLE-SPELLING"
-  ],
-  "lessons": [
-    "JA-W01-ko",
-    "JA-W01-n",
-    "JA-W01-ni",
-    "JA-W01-chi",
-    "JA-W01-wa",
-    "JA-W01-konnichiwa-read"
   ]
 }

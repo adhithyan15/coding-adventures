@@ -1,0 +1,11 @@
+{
+  "id": "PT-C24-ovo",
+  "pathSegment": "PT-PATH-028",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-028-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

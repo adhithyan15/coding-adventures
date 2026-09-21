@@ -1,0 +1,11 @@
+{
+  "id": "LA-W01-salve-guided-copy",
+  "pathSegment": "LA-PATH-001",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-001-WRITING-START",
+      "order": 0
+    }
+  ]
+}

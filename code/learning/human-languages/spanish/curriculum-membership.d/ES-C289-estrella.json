@@ -1,0 +1,11 @@
+{
+  "id": "ES-C289-estrella",
+  "pathSegment": "ES-PATH-289-01",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-289-CIELO",
+      "order": 3
+    }
+  ]
+}

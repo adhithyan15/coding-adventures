@@ -1,0 +1,11 @@
+{
+  "id": "TA-C49-respect",
+  "pathSegment": "TA-PATH-49-COURTESY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-49-COURTESY",
+      "order": 1
+    }
+  ]
+}

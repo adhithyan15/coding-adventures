@@ -1,0 +1,11 @@
+{
+  "id": "ES-C293-rodilla",
+  "pathSegment": "ES-PATH-293-01",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-293-CUERPO",
+      "order": 3
+    }
+  ]
+}

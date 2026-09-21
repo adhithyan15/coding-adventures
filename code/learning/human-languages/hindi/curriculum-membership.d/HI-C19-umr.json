@@ -1,0 +1,11 @@
+{
+  "id": "HI-C19-umr",
+  "pathSegment": "HI-PATH-020",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-020-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

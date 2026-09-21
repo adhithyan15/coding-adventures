@@ -1,0 +1,11 @@
+{
+  "id": "SA-C16-village",
+  "pathSegment": "SA-PATH-202",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-202-PLACE",
+      "order": 1
+    }
+  ]
+}

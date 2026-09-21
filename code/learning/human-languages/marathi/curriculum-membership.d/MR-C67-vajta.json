@@ -1,0 +1,11 @@
+{
+  "id": "MR-C67-vajta",
+  "pathSegment": "MR-PATH-069",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-082-THE-CLOCK",
+      "order": 1
+    }
+  ]
+}

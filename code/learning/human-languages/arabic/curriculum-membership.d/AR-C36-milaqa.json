@@ -1,0 +1,11 @@
+{
+  "id": "AR-C36-milaqa",
+  "pathSegment": "AR-PATH-033",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-033-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

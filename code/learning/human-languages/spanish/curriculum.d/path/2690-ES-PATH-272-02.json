@@ -1,9 +1,6 @@
 {
   "id": "ES-PATH-272-02",
   "spine_node": "SPINE-INFER-IMPLICIT-MEANING",
-  "lessons": [
-    "ES-C272-si-claro"
-  ],
   "before": [],
   "inline": [],
   "after": []

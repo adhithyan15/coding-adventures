@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C06-zaijian",
+  "pathSegment": "ZH-PATH-005",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-015-ZAIJIAN-LITERAL",
+      "order": 1
+    }
+  ]
+}

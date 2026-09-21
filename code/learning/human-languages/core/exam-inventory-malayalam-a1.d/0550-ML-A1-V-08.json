@@ -1,0 +1,22 @@
+{
+  "id": "ML-A1-V-08",
+  "category": "Kriya (the verb)",
+  "label": "the imperative in -oo, for a direct instruction",
+  "probe": [
+    "ML-LEX-LOOK",
+    "ML-LEX-LISTEN",
+    "ML-LEX-SPEAK",
+    "ML-LEX-WRITE"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-V-11",
+    "A1-F4-01"
+  ],
+  "malayalamSpecific": false,
+  "note": "Chapters 43 and 44 teach eight imperatives as headwords -- nokku, kelkku, samsaarikku, ezhuthu -- which is the form itself taught eight times."
+}

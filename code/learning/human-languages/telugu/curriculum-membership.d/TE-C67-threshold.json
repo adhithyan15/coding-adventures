@@ -1,0 +1,11 @@
+{
+  "id": "TE-C67-threshold",
+  "pathSegment": "TE-PATH-67-WALL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-67-WALL",
+      "order": 2
+    }
+  ]
+}

@@ -26,15 +26,47 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
       statusText: "Ready from MosaicHost",
       backDisabled: true,
       forwardDisabled: false,
+      stopDisabled: true,
       bookmarkLabel: "Bookmark",
       bookmarkDisabled: true,
+      bookmarksLabel: "Bookmarks (0)",
+      bookmarksDisabled: true,
+      bookmarksOpen: false,
+      bookmarksPosition: "",
+      bookmarksTitle: "",
+      bookmarksAddress: "",
+      bookmarksPreviousDisabled: true,
+      bookmarksNextDisabled: true,
+      bookmarksNavigateDisabled: true,
+      historyLabel: "History (2)",
+      historyDisabled: true,
+      historyOpen: false,
+      historyPosition: "2 of 2",
+      historyAddress: "https://venture.test/initial",
+      historyPreviousDisabled: true,
+      historyNextDisabled: true,
+      historyNavigateDisabled: true,
       copyAddressDisabled: true,
       openPageDisabled: true,
       savePageDisabled: true,
       printPageDisabled: true,
       sharePageDisabled: true,
       pageInfoDisabled: true,
+      pageInfoOpen: false,
+      pageInfoTitle: "Initial page",
+      pageInfoAddress: "https://venture.test/final",
+      pageInfoRequestedAddress: "https://venture.test/initial",
+      pageInfoStatus: "HTTP 200",
+      pageInfoResources: "Images: 2 (0 failed)  Stylesheets: 1 (0 failed)",
+      zoomLabel: "100%",
+      zoomOutDisabled: true,
+      zoomResetDisabled: true,
+      zoomInDisabled: true,
       viewSourceDisabled: true,
+      viewSourceOpen: false,
+      viewSourceTitle: "Initial page",
+      viewSourceAddress: "https://venture.test/final",
+      viewSourceContent: "<html><title>Initial page</title></html>",
       findOpen: false,
       findQuery: "",
       findResultLabel: "",
@@ -53,7 +85,36 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
           props = { ...props, address: request.event.value };
         }
         if (request.event.type === "toggleBookmark") {
-          props = { ...props, bookmarkLabel: "Remove Bookmark" };
+          props = {
+            ...props,
+            bookmarkLabel: "Remove Bookmark",
+            bookmarksLabel: "Bookmarks (1)",
+            bookmarksDisabled: false,
+            bookmarksPosition: "1 of 1",
+            bookmarksTitle: "Venture web acceptance",
+            bookmarksAddress: props.address,
+            bookmarksNavigateDisabled: false,
+          };
+        }
+        if (request.event.type === "bookmarksOpen") {
+          props = { ...props, bookmarksOpen: true };
+        }
+        if (request.event.type === "bookmarksClose" || request.event.type === "bookmarksNavigate") {
+          props = { ...props, bookmarksOpen: false };
+        }
+        if (request.event.type === "historyOpen") {
+          props = { ...props, bookmarksOpen: false, historyOpen: true };
+        }
+        if (request.event.type === "historyPrevious") {
+          props = {
+            ...props,
+            historyPosition: "1 of 2",
+            historyAddress: "https://venture.test/previous",
+            historyNavigateDisabled: false,
+          };
+        }
+        if (request.event.type === "historyClose" || request.event.type === "historyNavigate") {
+          props = { ...props, historyOpen: false };
         }
         if (request.event.type === "findChange") {
           props = { ...props, findQuery: request.event.value, findResultLabel: "1 of 2" };
@@ -66,6 +127,24 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
         }
         if (request.event.type === "findClose") {
           props = { ...props, findOpen: false, findQuery: "", findResultLabel: "" };
+        }
+        if (request.event.type === "zoomIn") {
+          props = { ...props, zoomLabel: "125%", zoomResetDisabled: false };
+        }
+        if (request.event.type === "zoomReset") {
+          props = { ...props, zoomLabel: "100%", zoomResetDisabled: true };
+        }
+        if (request.event.type === "pageInfo") {
+          props = { ...props, pageInfoOpen: true };
+        }
+        if (request.event.type === "pageInfoClose") {
+          props = { ...props, pageInfoOpen: false };
+        }
+        if (request.event.type === "viewSource") {
+          props = { ...props, viewSourceOpen: true };
+        }
+        if (request.event.type === "viewSourceClose") {
+          props = { ...props, viewSourceOpen: false };
         }
         props = {
           ...props,
@@ -86,13 +165,18 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     assert.equal(controls.back.disabled, true);
     assert.equal(controls.forward.disabled, false);
     assert.equal(controls.reload.disabled, true);
+    assert.equal(controls.stop.disabled, true);
     assert.equal(controls.bookmark.disabled, true);
+    assert.equal(controls.bookmarks.disabled, true);
     assert.equal(controls.copyAddress.disabled, true);
     assert.equal(controls.openPage.disabled, true);
     assert.equal(controls.savePage.disabled, true);
     assert.equal(controls.printPage.disabled, true);
     assert.equal(controls.sharePage.disabled, true);
     assert.equal(controls.pageInfo.disabled, true);
+    assert.equal(controls.zoomOut.disabled, true);
+    assert.equal(controls.zoomReset.disabled, true);
+    assert.equal(controls.zoomIn.disabled, true);
     assert.equal(controls.viewSource.disabled, true);
     assert.equal(controls.go.disabled, true);
     assert.equal(controls.address.readOnly, true);
@@ -101,13 +185,18 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     assert.ok(root.querySelector(`[data-venture-host-surface="${backend}"]`));
 
     controls.back.click();
+    controls.stop.click();
     controls.bookmark.click();
+    controls.bookmarks.click();
     controls.copyAddress.click();
     controls.openPage.click();
     controls.savePage.click();
     controls.printPage.click();
     controls.sharePage.click();
     controls.pageInfo.click();
+    controls.zoomOut.click();
+    controls.zoomReset.click();
+    controls.zoomIn.click();
     controls.viewSource.click();
     controls.findOpen.click();
     controls.go.click();
@@ -124,8 +213,14 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
       printPageDisabled: false,
       sharePageDisabled: false,
       pageInfoDisabled: false,
+      zoomOutDisabled: false,
+      zoomResetDisabled: true,
+      zoomInDisabled: false,
       viewSourceDisabled: false,
       findDisabled: false,
+      historyDisabled: false,
+      historyPreviousDisabled: false,
+      historyNextDisabled: false,
       navigationDisabled: false,
       statusText: "Enabled by mosaic-host-ready",
     };
@@ -135,6 +230,7 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     controls = readControls(root);
     assert.equal(controls.back.disabled, false);
     assert.equal(controls.reload.disabled, false);
+    assert.equal(controls.stop.disabled, true);
     assert.equal(controls.bookmark.disabled, false);
     assert.equal(controls.copyAddress.disabled, false);
     assert.equal(controls.openPage.disabled, false);
@@ -142,17 +238,56 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     assert.equal(controls.printPage.disabled, false);
     assert.equal(controls.sharePage.disabled, false);
     assert.equal(controls.pageInfo.disabled, false);
+    assert.equal(controls.zoomOut.disabled, false);
+    assert.equal(controls.zoomReset.disabled, true);
+    assert.equal(controls.zoomIn.disabled, false);
     assert.equal(controls.viewSource.disabled, false);
     assert.equal(controls.go.disabled, false);
     assert.equal(controls.address.readOnly, false);
     assert.equal(controls.find, undefined);
     assert.match(renderScope(root).textContent, /Enabled by mosaic-host-ready/);
 
+    props = { ...props, stopDisabled: false };
+    window.dispatchEvent(new Event("mosaic-host-ready"));
+    await settle();
+    controls = readControls(root);
+    assert.equal(controls.stop.disabled, false);
+    controls.stop.click();
+    await settle();
+    assert.equal(calls.at(-1)?.type, "stop");
+    props = { ...props, stopDisabled: true };
+    window.dispatchEvent(new Event("mosaic-host-ready"));
+    await settle();
+    controls = readControls(root);
+    assert.equal(controls.stop.disabled, true);
+
     controls.bookmark.click();
     await settle();
     assert.equal(calls.at(-1)?.type, "toggleBookmark");
     controls = readControls(root);
     assert.equal(controls.bookmark.textContent.trim(), "Remove Bookmark");
+    assert.equal(controls.bookmarks.disabled, false);
+
+    controls.bookmarks.click();
+    await settle();
+    assert.equal(calls.at(-1)?.type, "bookmarksOpen");
+    assert.match(renderScope(root).textContent, /1 of 1/);
+    assert.match(renderScope(root).textContent, /Venture web acceptance/);
+    buttonByLabel(root, "Close").click();
+    await settle();
+    assert.equal(calls.at(-1)?.type, "bookmarksClose");
+    controls = readControls(root);
+    controls.history.click();
+    await settle();
+    assert.equal(calls.at(-1)?.type, "historyOpen");
+    buttonByLabel(root, "Previous").click();
+    await settle();
+    assert.equal(calls.at(-1)?.type, "historyPrevious");
+    assert.match(renderScope(root).textContent, /https:\/\/venture\.test\/previous/);
+    buttonByLabel(root, "Open").click();
+    await settle();
+    assert.equal(calls.at(-1)?.type, "historyNavigate");
+    controls = readControls(root);
 
     controls.copyAddress.click();
     await settle();
@@ -182,11 +317,37 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     controls.pageInfo.click();
     await settle();
     assert.equal(calls.at(-1)?.type, "pageInfo");
+    assert.match(renderScope(root).textContent, /Initial page/);
+    assert.match(renderScope(root).textContent, /HTTP 200/);
+    buttonByLabel(root, "Close").click();
+    await settle();
+    assert.equal(calls.at(-1)?.type, "pageInfoClose");
+    assert.doesNotMatch(renderScope(root).textContent, /Images: 2 \(0 failed\)/);
+
+    controls = readControls(root);
+    controls.zoomIn.click();
+    await settle();
+    assert.equal(calls.at(-1)?.type, "zoomIn");
+    controls = readControls(root);
+    assert.equal(controls.zoomReset.textContent.trim(), "125%");
+    controls.zoomReset.click();
+    await settle();
+    assert.equal(calls.at(-1)?.type, "zoomReset");
 
     controls = readControls(root);
     controls.viewSource.click();
     await settle();
     assert.equal(calls.at(-1)?.type, "viewSource");
+    assert.match(renderScope(root).textContent, /<html><title>Initial page<\/title><\/html>/);
+    assert.match(renderScope(root).textContent, /https:\/\/venture\.test\/final/);
+    buttonByLabel(root, "Copy Source").click();
+    await settle();
+    assert.equal(calls.at(-1)?.type, "viewSourceCopy");
+    assert.match(renderScope(root).textContent, /<html><title>Initial page<\/title><\/html>/);
+    buttonByLabel(root, "Close Source").click();
+    await settle();
+    assert.equal(calls.at(-1)?.type, "viewSourceClose");
+    assert.doesNotMatch(renderScope(root).textContent, /<html><title>Initial page<\/title><\/html>/);
 
     controls = readControls(root);
     controls.findOpen.click();
@@ -234,7 +395,7 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     assert.equal(calls.at(-1)?.type, "navigate");
     assert.deepEqual(
       calls.map(event => event.type),
-      ["toggleBookmark", "copyAddress", "openPageInNewWindow", "savePage", "printPage", "sharePage", "pageInfo", "viewSource", "findOpen", "findChange", "findNext", "findClose", "addressChange", "navigate", "navigate"],
+      ["stop", "toggleBookmark", "bookmarksOpen", "bookmarksClose", "historyOpen", "historyPrevious", "historyNavigate", "copyAddress", "openPageInNewWindow", "savePage", "printPage", "sharePage", "pageInfo", "pageInfoClose", "zoomIn", "zoomReset", "viewSource", "viewSourceCopy", "viewSourceClose", "findOpen", "findChange", "findNext", "findClose", "addressChange", "navigate", "navigate"],
     );
     assert.match(renderScope(root).textContent, /Handled navigate through MosaicHost/);
   } finally {
@@ -272,6 +433,13 @@ function renderScope(root) {
   return backend === "html" ? root : root.shadowRoot;
 }
 
+function buttonByLabel(root, label) {
+  const button = [...renderScope(root).querySelectorAll("button")]
+    .find(candidate => candidate.textContent.trim() === label);
+  assert.ok(button, `${label} button must exist`);
+  return button;
+}
+
 function readControls(root) {
   const scope = renderScope(root);
   assert.ok(scope, `${backend} render scope must exist`);
@@ -280,23 +448,33 @@ function readControls(root) {
   );
   const [address, find] = scope.querySelectorAll("input");
   assert.ok(address, "address input must exist");
-  for (const label of ["Back", "Forward", "Reload", "Bookmark", "Remove Bookmark", "Copy", "New Window", "Save", "Print", "Share", "Info", "Source", "Find", "Go"]) {
+  for (const label of ["Back", "Forward", "Reload", "Stop", "Bookmark", "Remove Bookmark", "Copy", "New Window", "Save", "Print", "Share", "Info", "Zoom Out", "Zoom In", "Source", "Find", "Go"]) {
     if (label === "Bookmark" || label === "Remove Bookmark") continue;
     assert.ok(buttons.has(label), `${label} button must exist`);
   }
   const bookmark = buttons.get("Bookmark") ?? buttons.get("Remove Bookmark");
   assert.ok(bookmark, "bookmark button must exist");
+  const bookmarks = [...buttons.entries()].find(([label]) => /^Bookmarks \(\d+\)$/.test(label))?.[1];
+  assert.ok(bookmarks, "bookmarks button must exist");
+  const history = [...buttons.entries()].find(([label]) => /^History \(\d+\)$/.test(label))?.[1];
+  assert.ok(history, "history button must exist");
   return {
     back: buttons.get("Back"),
     forward: buttons.get("Forward"),
     reload: buttons.get("Reload"),
+    stop: buttons.get("Stop"),
     bookmark,
+    bookmarks,
+    history,
     copyAddress: buttons.get("Copy"),
     openPage: buttons.get("New Window"),
     savePage: buttons.get("Save"),
     printPage: buttons.get("Print"),
     sharePage: buttons.get("Share"),
     pageInfo: buttons.get("Info"),
+    zoomOut: buttons.get("Zoom Out"),
+    zoomReset: [...buttons.entries()].find(([label]) => /^\d+%$/.test(label))?.[1],
+    zoomIn: buttons.get("Zoom In"),
     viewSource: buttons.get("Source"),
     findOpen: buttons.get("Find"),
     go: buttons.get("Go"),

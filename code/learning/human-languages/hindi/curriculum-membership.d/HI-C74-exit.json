@@ -1,0 +1,11 @@
+{
+  "id": "HI-C74-exit",
+  "pathSegment": "HI-PATH-74-SIGNS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-74-SIGNS",
+      "order": 3
+    }
+  ]
+}

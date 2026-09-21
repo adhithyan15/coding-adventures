@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-PRON-02",
+  "category": "Sarvanaamam (pronouns)",
+  "label": "second person: nii and ningal, and the respect the plural carries",
+  "probe": [
+    "ML-LEX-NII-NINGAL-01",
+    "ML-CONCEPT-C02-RESPECT-BY-PLURAL-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-PRON-01"
+  ],
+  "malayalamSpecific": false,
+  "note": "The tu/usted question, answered with Malayalam's own machinery: respect is the plural, not a separate word."
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C02-practice",
+  "pathSegment": "FR-PATH-009",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-009-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

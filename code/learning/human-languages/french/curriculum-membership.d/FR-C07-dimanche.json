@@ -1,0 +1,11 @@
+{
+  "id": "FR-C07-dimanche",
+  "pathSegment": "FR-PATH-015",
+  "pathOrder": 19,
+  "extensions": [
+    {
+      "id": "FR-EXT-015-LANGUAGE-SPECIFIC",
+      "order": 19
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C11-ashi",
+  "pathSegment": "JA-PATH-011",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "JA-EXT-018-BODY-SEVEN",
+      "order": 7
+    }
+  ]
+}

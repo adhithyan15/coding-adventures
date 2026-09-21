@@ -1,12 +1,6 @@
 {
   "id": "SA-PATH-006",
   "spine_node": "SPINE-CHECK-WELLBEING",
-  "lessons": [
-    "SA-C03-katham",
-    "SA-C03-bhavan-katham-asti",
-    "SA-C03-kushalam",
-    "SA-C03-kushali-asmi"
-  ],
   "before": [],
   "inline": [
     "SA-EXT-53-WELLREPLY"

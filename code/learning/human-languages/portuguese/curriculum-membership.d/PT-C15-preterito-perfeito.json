@@ -1,0 +1,11 @@
+{
+  "id": "PT-C15-preterito-perfeito",
+  "pathSegment": "PT-PATH-019",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-019-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

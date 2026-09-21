@@ -1,0 +1,11 @@
+{
+  "id": "MW-C06-question",
+  "pathSegment": "MW-PATH-006",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-016-WRITE-WELLBEING-QUESTION",
+      "order": 0
+    }
+  ]
+}

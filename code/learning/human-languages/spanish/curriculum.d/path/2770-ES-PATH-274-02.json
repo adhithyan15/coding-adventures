@@ -1,9 +1,6 @@
 {
   "id": "ES-PATH-274-02",
   "spine_node": "SPINE-READ-CULTURAL-WEIGHT",
-  "lessons": [
-    "ES-C274-ser-un-quijote"
-  ],
   "before": [],
   "inline": [],
   "after": []

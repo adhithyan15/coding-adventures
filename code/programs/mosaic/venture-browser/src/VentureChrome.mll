@@ -30,11 +30,29 @@ layout VentureChrome {
         state-when-disabled : slot: navigation-disabled ,
         onClick : emit: onReload
       )
+      HostButton [ stop-button ] (
+        label : "Stop" ,
+        disabled : slot: stop-disabled ,
+        state-when-disabled : slot: stop-disabled ,
+        onClick : emit: onStop
+      )
       HostButton [ bookmark-button ] (
         label : slot: bookmark-label ,
         disabled : slot: bookmark-disabled ,
         state-when-disabled : slot: bookmark-disabled ,
         onClick : emit: onToggleBookmark
+      )
+      HostButton [ bookmarks-button ] (
+        label : slot: bookmarks-label ,
+        disabled : slot: bookmarks-disabled ,
+        state-when-disabled : slot: bookmarks-disabled ,
+        onClick : emit: onBookmarksOpen
+      )
+      HostButton [ history-button ] (
+        label : slot: history-label ,
+        disabled : slot: history-disabled ,
+        state-when-disabled : slot: history-disabled ,
+        onClick : emit: onHistoryOpen
       )
       HostInput [ address-input ] (
         value : slot: address ,
@@ -94,12 +112,150 @@ layout VentureChrome {
         state-when-disabled : slot: page-info-disabled ,
         onClick : emit: onPageInfo
       )
+      HostButton [ zoom-out-button ] (
+        label : "Zoom Out" ,
+        disabled : slot: zoom-out-disabled ,
+        state-when-disabled : slot: zoom-out-disabled ,
+        onClick : emit: onZoomOut
+      )
+      HostButton [ zoom-reset-button ] (
+        label : slot: zoom-label ,
+        disabled : slot: zoom-reset-disabled ,
+        state-when-disabled : slot: zoom-reset-disabled ,
+        onClick : emit: onZoomReset
+      )
+      HostButton [ zoom-in-button ] (
+        label : "Zoom In" ,
+        disabled : slot: zoom-in-disabled ,
+        state-when-disabled : slot: zoom-in-disabled ,
+        onClick : emit: onZoomIn
+      )
       HostButton [ view-source-button ] (
         label : "Source" ,
         disabled : slot: view-source-disabled ,
         state-when-disabled : slot: view-source-disabled ,
         onClick : emit: onViewSource
       )
+    }
+
+    If ( when: slot: bookmarks-open ) {
+      Column [ bookmarks-panel ] {
+        Row [ bookmarks-header ] {
+          Text [ bookmarks-heading ] ( content : "Bookmarks" , a11y-role : heading )
+          Text [ bookmarks-position ] ( content : slot: bookmarks-position )
+          HostButton [ bookmarks-close-button ] (
+            label : "Close" ,
+            onClick : emit: onBookmarksClose
+          )
+        }
+        Text [ bookmarks-title ] ( content : slot: bookmarks-title )
+        Text [ bookmarks-address ] ( content : slot: bookmarks-address )
+        Row [ bookmarks-actions ] {
+          HostButton [ bookmarks-previous-button ] (
+            label : "Previous" ,
+            disabled : slot: bookmarks-previous-disabled ,
+            state-when-disabled : slot: bookmarks-previous-disabled ,
+            onClick : emit: onBookmarksPrevious
+          )
+          HostButton [ bookmarks-next-button ] (
+            label : "Next" ,
+            disabled : slot: bookmarks-next-disabled ,
+            state-when-disabled : slot: bookmarks-next-disabled ,
+            onClick : emit: onBookmarksNext
+          )
+          HostButton [ bookmarks-open-button ] (
+            label : "Open" ,
+            disabled : slot: bookmarks-navigate-disabled ,
+            state-when-disabled : slot: bookmarks-navigate-disabled ,
+            onClick : emit: onBookmarksNavigate
+          )
+        }
+      }
+    }
+
+    If ( when: slot: history-open ) {
+      Column [ history-panel ] {
+        Row [ history-header ] {
+          Text [ history-heading ] ( content : "Session History" , a11y-role : heading )
+          Text [ history-position ] ( content : slot: history-position )
+          HostButton [ history-close-button ] (
+            label : "Close" ,
+            onClick : emit: onHistoryClose
+          )
+        }
+        Text [ history-address ] ( content : slot: history-address )
+        Row [ history-actions ] {
+          HostButton [ history-previous-button ] (
+            label : "Previous" ,
+            disabled : slot: history-previous-disabled ,
+            state-when-disabled : slot: history-previous-disabled ,
+            onClick : emit: onHistoryPrevious
+          )
+          HostButton [ history-next-button ] (
+            label : "Next" ,
+            disabled : slot: history-next-disabled ,
+            state-when-disabled : slot: history-next-disabled ,
+            onClick : emit: onHistoryNext
+          )
+          HostButton [ history-open-button ] (
+            label : "Open" ,
+            disabled : slot: history-navigate-disabled ,
+            state-when-disabled : slot: history-navigate-disabled ,
+            onClick : emit: onHistoryNavigate
+          )
+        }
+      }
+    }
+
+    If ( when: slot: page-info-open ) {
+      Column [ page-info-panel ] {
+        Row [ page-info-header ] {
+          Text [ page-info-heading ] ( content : "Page Information" , a11y-role : heading )
+          HostButton [ page-info-close-button ] (
+            label : "Close" ,
+            onClick : emit: onPageInfoClose
+          )
+        }
+        Row [ page-info-title-row ] {
+          Text [ page-info-title-label ] ( content : "Title" )
+          Text [ page-info-title-value ] ( content : slot: page-info-title )
+        }
+        Row [ page-info-address-row ] {
+          Text [ page-info-address-label ] ( content : "Address" )
+          Text [ page-info-address-value ] ( content : slot: page-info-address )
+        }
+        Row [ page-info-requested-row ] {
+          Text [ page-info-requested-label ] ( content : "Requested" )
+          Text [ page-info-requested-value ] ( content : slot: page-info-requested-address )
+        }
+        Row [ page-info-status-row ] {
+          Text [ page-info-status-label ] ( content : "Status" )
+          Text [ page-info-status-value ] ( content : slot: page-info-status )
+        }
+        Row [ page-info-resources-row ] {
+          Text [ page-info-resources-label ] ( content : "Resources" )
+          Text [ page-info-resources-value ] ( content : slot: page-info-resources )
+        }
+      }
+    }
+
+    If ( when: slot: view-source-open ) {
+      Column [ view-source-panel ] {
+        Row [ view-source-header ] {
+          Text [ view-source-heading ] ( content : "Page Source" , a11y-role : heading )
+          HostButton [ view-source-copy-button ] (
+            label : "Copy Source" ,
+            onClick : emit: onViewSourceCopy
+          )
+          HostButton [ view-source-close-button ] (
+            label : "Close Source" ,
+            onClick : emit: onViewSourceClose
+          )
+        }
+        Text [ view-source-title ] ( content : slot: view-source-title )
+        Text [ view-source-address ] ( content : slot: view-source-address )
+        Text [ view-source-content ] ( content : slot: view-source-content )
+      }
     }
 
     If ( when: slot: find-open ) {

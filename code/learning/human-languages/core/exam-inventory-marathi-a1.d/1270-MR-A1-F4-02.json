@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-F4-02",
+  "category": "Influencing the listener",
+  "label": "ask for an object, softened",
+  "probe": [
+    "MR-PHRASE-KRUPAYA"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-spine"
+  ],
+  "derivedFrom": [
+    "A1-F4-02"
+  ]
+}

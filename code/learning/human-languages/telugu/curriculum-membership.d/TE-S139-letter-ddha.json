@@ -1,0 +1,11 @@
+{
+  "id": "TE-S139-letter-ddha",
+  "pathSegment": "TE-PATH-100",
+  "pathOrder": 42,
+  "extensions": [
+    {
+      "id": "TE-EXT-100-SCRIPT-RECOGNITION",
+      "order": 42
+    }
+  ]
+}

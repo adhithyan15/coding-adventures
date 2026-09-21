@@ -1,0 +1,11 @@
+{
+  "id": "GU-W04-independent-a",
+  "pathSegment": "GU-PATH-FIRST-USE-SCRIPT-A",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-031-FIRST-USE-SCRIPT-A",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C04-chitat",
+  "pathSegment": "RU-PATH-008-B",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-008-MIND-VERBS-B",
+      "order": 0
+    }
+  ]
+}

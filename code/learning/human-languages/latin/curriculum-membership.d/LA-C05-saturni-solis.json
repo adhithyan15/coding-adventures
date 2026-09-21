@@ -1,0 +1,11 @@
+{
+  "id": "LA-C05-saturni-solis",
+  "pathSegment": "LA-PATH-008",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-008-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

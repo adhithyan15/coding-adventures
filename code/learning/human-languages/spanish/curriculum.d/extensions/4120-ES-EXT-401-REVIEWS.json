@@ -4,9 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can retrieve the chapter's route language in order.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-C401-route-recall-1",
-    "ES-C401-route-recall-2"
-  ]
+  "prerequisites": []
 }

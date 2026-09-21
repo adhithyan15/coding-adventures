@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-CO-04",
+  "category": "Coordination",
+  "label": "adversative coordination: pan",
+  "probe": [
+    "MR-JOIN-PAN"
+  ],
+  "note": "Closed by MR-C30-pan (chapter 30). Its example contradicts with the already-taught existential naahii, so the lesson needs no forward reference to sentence negation, which arrives two chapters later.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-CO-04",
+    "A1-F2-09"
+  ]
+}

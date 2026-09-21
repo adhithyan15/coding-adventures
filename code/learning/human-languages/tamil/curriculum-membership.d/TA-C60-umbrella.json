@@ -1,0 +1,11 @@
+{
+  "id": "TA-C60-umbrella",
+  "pathSegment": "TA-PATH-60-MADE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-60-MADE",
+      "order": 2
+    }
+  ]
+}

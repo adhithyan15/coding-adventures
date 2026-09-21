@@ -1,0 +1,11 @@
+{
+  "id": "MW-C22-price-three",
+  "pathSegment": "MW-PATH-021",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "MW-EXT-035-PRICE-QUESTION",
+      "order": 7
+    }
+  ]
+}

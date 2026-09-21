@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-ADJ-05",
+  "category": "The adjective",
+  "label": "position: prenominal, which is the opposite of the Spanish default",
+  "probe": [
+    "MR-GRAMMAR-ADJ-PRENOMINAL"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-ADJ-05"
+  ]
+}

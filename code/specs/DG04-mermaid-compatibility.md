@@ -426,13 +426,31 @@ priorities, and configurable fields remain unsupported at the partial level.
 ### Architecture Native Slice
 
 The initial Mermaid 11.16.1 Architecture slice uses dedicated portable
-grammars and maps groups, services, containment, icon identifiers, titles, and
+grammars and maps groups, services, junctions, containment, icon identifiers, titles, and
 undirected and right-directed edges into structural semantic IR. Existing deterministic
 structural layout lowers groups, nodes, relationships, and shaped text through
 backend-neutral PaintScene instructions, with a native Metal-to-PNG fixture.
-Junctions, alignment hints, group-edge modifiers, left and bidirectional
-arrows, custom icon text, icon artwork, edge labels, port-aware routing, and configuration remain unsupported
-at the partial level.
+Junction declarations, including group containment, lower to compact typed
+structural geometry and backend-neutral ellipse PaintInstructions.
+Native `-[label]-` and `-[label]->` edge labels survive structural semantic IR,
+resolve to deterministic relationship geometry, and lower through the shared
+backend-neutral shaped-text PaintInstructions path.
+Document titles reserve resolved layout geometry and lower through shaped-text
+PaintInstructions. Single-line accessibility titles and single-line or braced
+descriptions survive as PaintScene metadata.
+Sibling `align row` and `align column` constraints survive semantic IR and
+resolve declared member order to deterministic shared-axis layout geometry.
+Quoted service icon text survives as typed semantic metadata, reserves dedicated
+header geometry, and lowers to backend-neutral badge and shaped-text PaintInstructions.
+Left, right, and bidirectional relationship arrowheads survive semantic and layout
+IR and lower to backend-neutral path geometry. Group-edge modifiers on contained
+services survive semantic IR and resolve to deterministic group-boundary endpoints.
+Explicit `L`, `R`, `T`, and `B` edge ports survive semantic and layout IR and
+anchor deterministic orthogonal relationship paths to the requested node or group
+boundary before backend-neutral PaintScene lowering. Named service and group icons
+lower to canonical backend-neutral glyph geometry. Preserved namespaced identifiers
+use a generic fallback when vendor artwork is unavailable. Full vendor icon artwork,
+obstacle avoidance, and configuration remain unsupported at the partial level.
 
 ### Radar Native Slice
 

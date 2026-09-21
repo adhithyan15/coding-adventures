@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-PU-07",
+  "category": "Punctuation and written conventions",
+  "label": "initialisms and acronyms",
+  "probe": null,
+  "note": "Untaught.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-O4-02"
+  ]
+}

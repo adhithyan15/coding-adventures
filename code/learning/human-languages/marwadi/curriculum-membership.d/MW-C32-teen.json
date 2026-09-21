@@ -1,0 +1,11 @@
+{
+  "id": "MW-C32-teen",
+  "pathSegment": "MW-PATH-026",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "MW-EXT-040-COUNT-FIVE",
+      "order": 6
+    }
+  ]
+}

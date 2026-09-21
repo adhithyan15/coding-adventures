@@ -568,7 +568,8 @@ fn token_name(token: &Token) -> &str {
 // ============================================================================
 
 use diagram_ir::{
-    Axis, AxisKind, ChartDataPoint, ChartDiagram, ChartKind, ChartOrientation, ChartSeries,
+    ArchitectureServiceMetadata, Axis, AxisKind, ChartDataPoint, ChartDiagram, ChartKind,
+    ChartOrientation, ChartSeries,
     Compartment, CompartmentKind, GanttConfig, GanttDateFormat, GanttDateFormatPart, GanttDiagram, GanttDisplayMode, GanttDuration, GanttDurationUnit, GanttSection, GanttTask, GitBranch, GitCommitType,
     EventModelDiagram, EventModelEntityKind, EventModelFrame, GitDiagram, GitEvent, JourneyConfig,
     JourneyDiagram, JourneySection, JourneyTask, PieSlice,
@@ -577,9 +578,11 @@ use diagram_ir::{
     SequenceArrowhead, SequenceBlockKind, SequenceCentralConnection, SequenceDiagram,
     SequenceEvent, SequenceLineStyle, SequenceLink, SequenceNotePlacement, SequenceParticipant,
     SequenceParticipantGroup, SequenceParticipantKind, SequenceProperty, SequenceTextWrap,
-    SeriesKind, StructuralDiagram, StructuralGroup, StructuralKind, StructuralNode,
-    GanttTaskTags, StructuralNodeKind, StructuralNodeMetadata, StructuralRelationship, TaskEnd,
-    TaskStart, TemporalBody, TemporalDiagram, TemporalKind, TimelineDiagram, TimelineDirection,
+    SeriesKind, StructuralAlignment, StructuralAlignmentAxis, StructuralDiagram, StructuralGroup,
+    StructuralGroupMetadata, StructuralKind, StructuralNode,
+    GanttTaskTags, StructuralNodeKind, StructuralNodeMetadata, StructuralPort,
+    StructuralRelationship, StructuralRouting, TaskEnd, TaskStart, TemporalBody, TemporalDiagram,
+    TemporalKind, TimelineDiagram, TimelineDirection,
     TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, VennDiagram, VennRegion,
     VennStyle, VennText, XyAxisConfig, XyChartConfig,
     CynefinDiagram, CynefinDomain, CynefinTransition, IshikawaCause, IshikawaDiagram,
@@ -952,16 +955,71 @@ pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError>
         accessibility_title: None,
         accessibility_description: None,
         direction: None,
+        alignments: Vec::new(),
         nodes: Vec::new(),
         groups: Vec::new(),
         relationships: Vec::new(),
     };
     let mut ids = HashSet::new();
-    let mut service_ids = HashSet::new();
-    for token in tokens.iter().filter(|token| token.type_name.as_deref() == Some("STATEMENT_LINE")) {
+    let mut endpoint_ids = HashSet::new();
+    for token in &tokens {
+        match token.type_name.as_deref() {
+            Some("TITLE_STATEMENT") => {
+                diagram.title = Some(normalize_mermaid_line_breaks(
+                    token.value["title".len()..].trim(),
+                ));
+            }
+            Some("ACC_TITLE_STATEMENT") => {
+                diagram.accessibility_title = token
+                    .value
+                    .split_once(':')
+                    .map(|(_, value)| value.trim().to_string());
+            }
+            Some("ACC_DESCR_STATEMENT") => {
+                diagram.accessibility_description = token
+                    .value
+                    .split_once(':')
+                    .map(|(_, value)| value.trim().to_string());
+            }
+            Some("ACC_DESCR_BLOCK") => {
+                let open = token
+                    .value
+                    .find('{')
+                    .expect("architecture accessibility token requires '{'");
+                let close = token
+                    .value
+                    .rfind('}')
+                    .expect("architecture accessibility token requires '}'");
+                diagram.accessibility_description = Some(
+                    token.value[open + 1..close]
+                        .lines()
+                        .map(str::trim)
+                        .filter(|line| !line.is_empty())
+                        .collect::<Vec<_>>()
+                        .join("\n"),
+                );
+            }
+            _ => {}
+        }
+    }
+    for token in tokens.iter().filter(|token| {
+        matches!(
+            token.type_name.as_deref(),
+            Some(
+                "JUNCTION_STATEMENT"
+                    | "ALIGN_STATEMENT"
+                    | "SERVICE_ICON_TEXT_STATEMENT"
+                    | "EDGE_STATEMENT"
+                    | "STATEMENT_LINE"
+            )
+        )
+    }) {
         let statement = token.value.trim();
         if let Some(value) = statement.strip_prefix("group ") {
             let declaration = parse_architecture_declaration(token, value)?;
+            if declaration.icon_text.is_some() {
+                return Err(token_error(token, "architecture groups require named icons"));
+            }
             validate_architecture_parent(token, declaration.parent.as_deref(), &diagram.groups)?;
             if !ids.insert(declaration.id.clone()) {
                 return Err(token_error(token, "duplicate architecture identifier"));
@@ -969,7 +1027,10 @@ pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError>
             diagram.groups.push(StructuralGroup {
                 id: declaration.id,
                 label: declaration.label,
-                stereotype: declaration.icon,
+                stereotype: None,
+                metadata: declaration.icon.map(|icon_name| {
+                    StructuralGroupMetadata::Architecture { icon_name }
+                }),
                 parent_group: declaration.parent,
             });
         } else if let Some(value) = statement.strip_prefix("service ") {
@@ -978,21 +1039,51 @@ pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError>
             if !ids.insert(declaration.id.clone()) {
                 return Err(token_error(token, "duplicate architecture identifier"));
             }
-            service_ids.insert(declaration.id.clone());
+            endpoint_ids.insert(declaration.id.clone());
+            let metadata = (declaration.icon.is_some() || declaration.icon_text.is_some()).then(|| {
+                StructuralNodeMetadata::ArchitectureService(ArchitectureServiceMetadata {
+                    icon_name: declaration.icon.clone(),
+                    icon_text: declaration.icon_text.clone(),
+                })
+            });
             diagram.nodes.push(StructuralNode {
                 id: declaration.id,
                 label: declaration.label,
-                stereotype: declaration.icon,
+                stereotype: None,
                 node_kind: StructuralNodeKind::Element,
-                metadata: None,
+                metadata,
                 style: None,
                 compartments: Vec::new(),
                 parent_group: declaration.parent,
             });
-        } else if statement.starts_with("junction ") || statement.starts_with("align ") {
-            return Err(token_error(token, "architecture junctions and alignments are outside the supported subset"));
+        } else if let Some(value) = statement.strip_prefix("junction ") {
+            let (id, parent) = parse_architecture_junction(token, value)?;
+            validate_architecture_parent(token, parent.as_deref(), &diagram.groups)?;
+            if !ids.insert(id.clone()) {
+                return Err(token_error(token, "duplicate architecture identifier"));
+            }
+            endpoint_ids.insert(id.clone());
+            diagram.nodes.push(StructuralNode {
+                id,
+                label: String::new(),
+                stereotype: None,
+                node_kind: StructuralNodeKind::Junction,
+                metadata: None,
+                style: None,
+                compartments: Vec::new(),
+                parent_group: parent,
+            });
+        } else if let Some(value) = statement.strip_prefix("align ") {
+            diagram
+                .alignments
+                .push(parse_architecture_alignment(token, value, &endpoint_ids)?);
         } else {
-            diagram.relationships.push(parse_architecture_edge(token, statement, &service_ids)?);
+            diagram.relationships.push(parse_architecture_edge(
+                token,
+                statement,
+                &endpoint_ids,
+                &diagram.nodes,
+            )?);
         }
     }
     if diagram.nodes.is_empty() {
@@ -1001,9 +1092,54 @@ pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError>
     Ok(diagram)
 }
 
+fn parse_architecture_alignment(
+    token: &Token,
+    source: &str,
+    endpoint_ids: &HashSet<String>,
+) -> Result<StructuralAlignment, ParseError> {
+    let mut words = source.split_whitespace();
+    let axis = match words.next() {
+        Some("row") => StructuralAlignmentAxis::Row,
+        Some("column") => StructuralAlignmentAxis::Column,
+        _ => return Err(token_error(token, "invalid architecture alignment axis")),
+    };
+    let members = words.map(str::to_string).collect::<Vec<_>>();
+    if members.len() < 2 {
+        return Err(token_error(token, "architecture alignment requires at least two members"));
+    }
+    let mut unique = HashSet::new();
+    for member in &members {
+        if !endpoint_ids.contains(member) {
+            return Err(token_error(token, "architecture alignment members must be declared first"));
+        }
+        if !unique.insert(member) {
+            return Err(token_error(token, "duplicate architecture alignment member"));
+        }
+    }
+    Ok(StructuralAlignment { axis, members })
+}
+
+fn parse_architecture_junction(
+    token: &Token,
+    source: &str,
+) -> Result<(String, Option<String>), ParseError> {
+    let (id, parent) = match source.trim().split_once(" in ") {
+        Some((id, parent)) => (id.trim(), Some(parent.trim())),
+        None => (source.trim(), None),
+    };
+    if id.is_empty() || id.contains(char::is_whitespace) {
+        return Err(token_error(token, "invalid architecture junction identifier"));
+    }
+    if parent.is_some_and(|parent| parent.is_empty() || parent.contains(char::is_whitespace)) {
+        return Err(token_error(token, "invalid architecture parent group"));
+    }
+    Ok((id.to_string(), parent.map(str::to_string)))
+}
+
 struct ArchitectureDeclaration {
     id: String,
     icon: Option<String>,
+    icon_text: Option<String>,
     label: String,
     parent: Option<String>,
 }
@@ -1019,13 +1155,17 @@ fn parse_architecture_declaration(
         return Err(token_error(token, "architecture declaration requires an identifier"));
     }
     let mut rest = source[id_end..].trim_start();
+    let mut icon_text = None;
     let icon = if rest.starts_with('(') {
         let end = rest.find(')').ok_or_else(|| token_error(token, "unterminated architecture icon"))?;
         let icon = rest[1..end].trim().to_string();
         rest = rest[end + 1..].trim_start();
         Some(icon)
     } else if rest.starts_with('"') || rest.starts_with('\'') {
-        return Err(token_error(token, "architecture custom icon text is outside the supported subset"));
+        let (value, remainder) = parse_architecture_icon_text(token, rest)?;
+        icon_text = Some(value);
+        rest = remainder.trim_start();
+        None
     } else {
         None
     };
@@ -1048,7 +1188,46 @@ fn parse_architecture_declaration(
     } else {
         return Err(token_error(token, "unsupported architecture declaration suffix"));
     };
-    Ok(ArchitectureDeclaration { id, icon, label, parent })
+    Ok(ArchitectureDeclaration { id, icon, icon_text, label, parent })
+}
+
+fn parse_architecture_icon_text<'a>(
+    token: &Token,
+    source: &'a str,
+) -> Result<(String, &'a str), ParseError> {
+    let quote = source
+        .chars()
+        .next()
+        .expect("architecture icon text starts with a quote");
+    let mut escaped = false;
+    let mut close = None;
+    for (index, character) in source.char_indices().skip(1) {
+        if escaped {
+            escaped = false;
+        } else if character == '\\' {
+            escaped = true;
+        } else if character == quote {
+            close = Some(index);
+            break;
+        }
+    }
+    let close = close.ok_or_else(|| token_error(token, "unterminated architecture icon text"))?;
+    let mut value = String::new();
+    let mut characters = source[1..close].chars();
+    while let Some(character) = characters.next() {
+        if character != '\\' {
+            value.push(character);
+            continue;
+        }
+        match characters.next() {
+            Some('n') => value.push('\n'),
+            Some('r') => value.push('\r'),
+            Some('t') => value.push('\t'),
+            Some(character) => value.push(character),
+            None => value.push('\\'),
+        }
+    }
+    Ok((value, &source[close + quote.len_utf8()..]))
 }
 
 fn validate_architecture_parent(
@@ -1068,18 +1247,25 @@ fn parse_architecture_edge(
     token: &Token,
     source: &str,
     ids: &HashSet<String>,
+    nodes: &[StructuralNode],
 ) -> Result<StructuralRelationship, ParseError> {
-    let parts = source.split_whitespace().collect::<Vec<_>>();
-    if parts.len() != 3 {
-        return Err(token_error(token, "architecture edge labels are outside the supported subset"));
-    }
-    let (from, from_direction) = parts[0].rsplit_once(':')
+    let source_end = source
+        .find(char::is_whitespace)
+        .ok_or_else(|| token_error(token, "invalid architecture edge"))?;
+    let source_endpoint = &source[..source_end];
+    let remainder = source[source_end..].trim();
+    let target_start = remainder
+        .rfind(char::is_whitespace)
+        .ok_or_else(|| token_error(token, "invalid architecture edge"))?;
+    let operator = remainder[..target_start].trim();
+    let target_endpoint = remainder[target_start..].trim();
+
+    let (from_endpoint, from_direction) = source_endpoint.rsplit_once(':')
         .ok_or_else(|| token_error(token, "invalid architecture edge source"))?;
-    let (to_direction, to) = parts[2].split_once(':')
+    let (to_direction, to_endpoint) = target_endpoint.split_once(':')
         .ok_or_else(|| token_error(token, "invalid architecture edge target"))?;
-    if from.contains("{group}") || to.contains("{group}") {
-        return Err(token_error(token, "architecture group-edge modifiers are outside the supported subset"));
-    }
+    let (from, from_group) = parse_architecture_edge_endpoint(from_endpoint);
+    let (to, to_group) = parse_architecture_edge_endpoint(to_endpoint);
     for direction in [from_direction, to_direction] {
         if !matches!(direction, "L" | "R" | "T" | "B") {
             return Err(token_error(token, "invalid architecture edge direction"));
@@ -1091,15 +1277,78 @@ fn parse_architecture_edge(
     if !ids.contains(from) || !ids.contains(to) {
         return Err(token_error(token, "architecture edge services must be declared first"));
     }
-    let kind = match parts[1] {
-        "--" => RelKind::Link,
-        "-->" => RelKind::Dependency,
-        _ => return Err(token_error(token, "unsupported architecture edge operator")),
+    for (id, uses_group) in [(from, from_group), (to, to_group)] {
+        if uses_group
+            && !nodes.iter().any(|node| {
+                node.id == id
+                    && node.node_kind == StructuralNodeKind::Element
+                    && node.parent_group.is_some()
+            })
+        {
+            return Err(token_error(
+                token,
+                "architecture group-edge endpoints require a grouped service",
+            ));
+        }
+    }
+    let start_arrow = operator.starts_with('<');
+    let end_arrow = operator.ends_with('>');
+    let core_operator = operator.strip_prefix('<').unwrap_or(operator);
+    let core_operator = core_operator.strip_suffix('>').unwrap_or(core_operator);
+    let label = match core_operator {
+        "--" => None,
+        _ => parse_architecture_labeled_edge_operator(token, core_operator)?,
+    };
+    let kind = if start_arrow || end_arrow {
+        RelKind::Dependency
+    } else {
+        RelKind::Link
     };
     Ok(StructuralRelationship {
         from: from.into(), to: to.into(), kind,
-        from_mult: None, to_mult: None, label: None,
+        start_arrow, end_arrow,
+        from_group, to_group,
+        from_port: Some(parse_architecture_port(from_direction)),
+        to_port: Some(parse_architecture_port(to_direction)),
+        routing: StructuralRouting::Orthogonal,
+        from_mult: None, to_mult: None, label,
     })
+}
+
+fn parse_architecture_port(direction: &str) -> StructuralPort {
+    match direction {
+        "L" => StructuralPort::Left,
+        "R" => StructuralPort::Right,
+        "T" => StructuralPort::Top,
+        "B" => StructuralPort::Bottom,
+        _ => unreachable!("architecture port was validated before lowering"),
+    }
+}
+
+fn parse_architecture_edge_endpoint(source: &str) -> (&str, bool) {
+    source
+        .strip_suffix("{group}")
+        .map_or((source, false), |id| (id, true))
+}
+
+fn parse_architecture_labeled_edge_operator(
+    token: &Token,
+    operator: &str,
+) -> Result<Option<String>, ParseError> {
+    let Some(label_source) = operator.strip_prefix("-[") else {
+        return Err(token_error(token, "unsupported architecture edge operator"));
+    };
+    let Some(label_end) = label_source.rfind("]-") else {
+        return Err(token_error(token, "unterminated architecture edge label"));
+    };
+    let label = label_source[..label_end].trim().trim_matches(['"', '\'']);
+    if label.is_empty() {
+        return Err(token_error(token, "architecture edge label cannot be empty"));
+    }
+    if !label_source[label_end + 2..].is_empty() {
+        return Err(token_error(token, "unsupported architecture edge operator"));
+    }
+    Ok(Some(label.replace("\\\"", "\"").replace("\\'", "'")))
 }
 
 /// Parse a core indentation-defined Mermaid Kanban board.
@@ -2819,6 +3068,7 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
         accessibility_title,
         accessibility_description,
         direction,
+        alignments: Vec::new(),
         nodes,
         groups: Vec::new(),
         relationships,
@@ -3177,6 +3427,13 @@ fn parse_requirement_relationship(token: &Token) -> Result<StructuralRelationshi
         from: unquote_requirement_value(from),
         to: unquote_requirement_value(to),
         kind: relationship_kind,
+        start_arrow: false,
+        end_arrow: true,
+        from_group: false,
+        to_group: false,
+        from_port: None,
+        to_port: None,
+        routing: StructuralRouting::Direct,
         from_mult: None,
         to_mult: None,
         label: Some(label),
@@ -3624,6 +3881,7 @@ pub fn parse_class_diagram(source: &str) -> Result<StructuralDiagram, ParseError
         accessibility_title: None,
         accessibility_description: None,
         direction: None,
+        alignments: Vec::new(),
         nodes,
         groups: vec![],
         relationships,
@@ -3674,6 +3932,13 @@ fn parse_class_relationship(line: &str) -> Option<StructuralRelationship> {
                     from,
                     to,
                     kind: kind.clone(),
+                    start_arrow: false,
+                    end_arrow: true,
+                    from_group: false,
+                    to_group: false,
+                    from_port: None,
+                    to_port: None,
+                    routing: StructuralRouting::Direct,
                     from_mult: None,
                     to_mult: None,
                     label,
@@ -8731,6 +8996,13 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                 } else {
                     RelKind::Dependency
                 },
+                start_arrow: false,
+                end_arrow: true,
+                from_group: false,
+                to_group: false,
+                from_port: None,
+                to_port: None,
+                routing: StructuralRouting::Direct,
                 from_mult: Some(from_mult),
                 to_mult: Some(to_mult),
                 label: (!label.is_empty()).then_some(label),
@@ -8793,6 +9065,7 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
         accessibility_title: None,
         accessibility_description: None,
         direction: None,
+        alignments: Vec::new(),
         nodes,
         groups: vec![],
         relationships,
@@ -8929,6 +9202,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                     id: id.clone(),
                     label,
                     stereotype: Some(macro_token.value),
+                    metadata: None,
                     parent_group: group_stack.last().cloned(),
                 });
                 cursor.skip_terminators();
@@ -8983,6 +9257,13 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                     from: args[0].clone(),
                     to: args[1].clone(),
                     kind: RelKind::Association,
+                    start_arrow: false,
+                    end_arrow: true,
+                    from_group: false,
+                    to_group: false,
+                    from_port: None,
+                    to_port: None,
+                    routing: StructuralRouting::Direct,
                     from_mult: None,
                     to_mult: None,
                     label: Some(args[2].clone()),
@@ -8999,6 +9280,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
         accessibility_title: None,
         accessibility_description: None,
         direction: None,
+        alignments: Vec::new(),
         nodes,
         groups,
         relationships,
@@ -10251,9 +10533,115 @@ mod tests_dg04 {
         .unwrap();
         assert_eq!(diagram.kind, StructuralKind::Architecture);
         assert_eq!(diagram.groups.len(), 1);
+        assert!(matches!(
+            &diagram.groups[0].metadata,
+            Some(StructuralGroupMetadata::Architecture { icon_name }) if icon_name == "cloud"
+        ));
         assert_eq!(diagram.nodes.len(), 2);
         assert_eq!(diagram.nodes[0].parent_group.as_deref(), Some("cloud"));
+        assert!(matches!(
+            &diagram.nodes[0].metadata,
+            Some(StructuralNodeMetadata::ArchitectureService(metadata))
+                if metadata.icon_name.as_deref() == Some("server")
+        ));
         assert_eq!(diagram.relationships.len(), 1);
+    }
+
+    #[test]
+    fn architecture_preserves_labeled_edges_in_structural_ir() {
+        let diagram = parse_architecture(
+            "architecture-beta\nservice api(server)[API]\nservice db(database)[Database]\napi:R -[reads and writes]-> L:db",
+        )
+        .unwrap();
+        assert_eq!(diagram.relationships.len(), 1);
+        assert_eq!(diagram.relationships[0].kind, RelKind::Dependency);
+        assert!(!diagram.relationships[0].start_arrow);
+        assert!(diagram.relationships[0].end_arrow);
+        assert_eq!(diagram.relationships[0].label.as_deref(), Some("reads and writes"));
+    }
+
+    #[test]
+    fn architecture_preserves_quoted_undirected_edge_labels() {
+        let diagram = parse_architecture(
+            "architecture-beta\nservice api(server)[API]\nservice db(database)[Database]\napi:R -[\"shared data\"]- L:db",
+        )
+        .unwrap();
+        assert_eq!(diagram.relationships[0].kind, RelKind::Link);
+        assert!(!diagram.relationships[0].start_arrow);
+        assert!(!diagram.relationships[0].end_arrow);
+        assert_eq!(diagram.relationships[0].label.as_deref(), Some("shared data"));
+    }
+
+    #[test]
+    fn architecture_preserves_title_and_accessibility_metadata() {
+        let diagram = parse_architecture(
+            "architecture-beta title Native platform\naccTitle: Platform topology\naccDescr {\n  API and database services\n  grouped by platform\n}\nservice api(server)[API]",
+        )
+        .unwrap();
+        assert_eq!(diagram.title.as_deref(), Some("Native platform"));
+        assert_eq!(diagram.accessibility_title.as_deref(), Some("Platform topology"));
+        assert_eq!(
+            diagram.accessibility_description.as_deref(),
+            Some("API and database services\ngrouped by platform")
+        );
+    }
+
+    #[test]
+    fn architecture_parses_junctions_as_typed_endpoints() {
+        let diagram = parse_architecture(
+            "architecture-beta\ngroup platform(cloud)[Platform]\nservice api(server)[API] in platform\njunction split in platform\nservice db(database)[Database] in platform\napi:R --> L:split\nsplit:R --> L:db",
+        )
+        .unwrap();
+        let junction = diagram
+            .nodes
+            .iter()
+            .find(|node| node.id == "split")
+            .expect("junction node");
+        assert_eq!(junction.node_kind, StructuralNodeKind::Junction);
+        assert_eq!(junction.parent_group.as_deref(), Some("platform"));
+        assert_eq!(diagram.relationships.len(), 2);
+    }
+
+    #[test]
+    fn architecture_preserves_custom_service_icon_text() {
+        let diagram = parse_architecture(
+            "architecture-beta\nservice api \"API \\\"v2\\\"\"[Gateway]",
+        )
+        .unwrap();
+        let Some(StructuralNodeMetadata::ArchitectureService(metadata)) =
+            &diagram.nodes[0].metadata
+        else {
+            panic!("architecture service metadata");
+        };
+        assert_eq!(metadata.icon_text.as_deref(), Some("API \"v2\""));
+        assert_eq!(diagram.nodes[0].label, "Gateway");
+        assert!(diagram.nodes[0].stereotype.is_none());
+
+        let diagram = parse_architecture("architecture-beta\nservice api 'API'[Gateway]")
+            .unwrap();
+        assert!(matches!(
+            &diagram.nodes[0].metadata,
+            Some(StructuralNodeMetadata::ArchitectureService(metadata))
+                if metadata.icon_text.as_deref() == Some("API")
+        ));
+    }
+
+    #[test]
+    fn architecture_preserves_namespaced_service_icons() {
+        let diagram = parse_architecture("architecture-beta\nservice worker(aws:lambda)[Worker]")
+            .unwrap();
+        assert!(matches!(
+            &diagram.nodes[0].metadata,
+            Some(StructuralNodeMetadata::ArchitectureService(metadata))
+                if metadata.icon_name.as_deref() == Some("aws:lambda")
+        ));
+    }
+
+    #[test]
+    fn architecture_rejects_custom_group_icon_text() {
+        let error = parse_architecture("architecture-beta\ngroup api \"API\"[Gateway]")
+            .unwrap_err();
+        assert!(error.message.contains("groups require named icons"));
     }
 
     #[test]
@@ -10267,22 +10655,69 @@ mod tests_dg04 {
     }
 
     #[test]
-    fn architecture_rejects_unsupported_alignment() {
-        let error = parse_architecture(
-            "architecture-beta\nservice api(server)[API]\nservice db(database)[DB]\nalign row api db",
+    fn architecture_preserves_row_and_column_alignments() {
+        let diagram = parse_architecture(
+            "architecture-beta\nservice a(server)[A]\nservice b(server)[B]\nservice c(server)[C]\nalign row a b\nalign column b c",
         )
-        .unwrap_err();
-        assert!(error.message.contains("outside the supported subset"));
+        .unwrap();
+        assert_eq!(diagram.alignments.len(), 2);
+        assert_eq!(diagram.alignments[0].axis, StructuralAlignmentAxis::Row);
+        assert_eq!(diagram.alignments[0].members, ["a", "b"]);
+        assert_eq!(diagram.alignments[1].axis, StructuralAlignmentAxis::Column);
+        assert_eq!(diagram.alignments[1].members, ["b", "c"]);
     }
 
     #[test]
-    fn architecture_rejects_group_endpoints_and_left_arrows() {
+    fn architecture_rejects_invalid_alignment_members() {
+        let error = parse_architecture(
+            "architecture-beta\nservice api(server)[API]\nalign row api missing",
+        )
+        .unwrap_err();
+        assert!(error.message.contains("declared first"));
+    }
+
+    #[test]
+    fn architecture_preserves_left_and_bidirectional_arrows() {
+        let diagram = parse_architecture(
+            "architecture-beta\nservice api(server)[API]\nservice db(database)[DB]\napi:R <-- L:db\napi:B <--> T:db\napi:R <-[sync]- L:db\napi:B <-[replicate]-> T:db",
+        )
+        .unwrap();
+        assert_eq!(diagram.relationships.len(), 4);
+        assert!(diagram.relationships[0].start_arrow);
+        assert!(!diagram.relationships[0].end_arrow);
+        assert!(diagram.relationships[1].start_arrow);
+        assert!(diagram.relationships[1].end_arrow);
+        assert_eq!(diagram.relationships[0].from_port, Some(StructuralPort::Right));
+        assert_eq!(diagram.relationships[0].to_port, Some(StructuralPort::Left));
+        assert_eq!(diagram.relationships[0].routing, StructuralRouting::Orthogonal);
+        assert_eq!(diagram.relationships[1].from_port, Some(StructuralPort::Bottom));
+        assert_eq!(diagram.relationships[1].to_port, Some(StructuralPort::Top));
+        assert_eq!(diagram.relationships[2].label.as_deref(), Some("sync"));
+        assert_eq!(diagram.relationships[3].label.as_deref(), Some("replicate"));
+        assert!(diagram.relationships[3].start_arrow);
+        assert!(diagram.relationships[3].end_arrow);
+    }
+
+    #[test]
+    fn architecture_preserves_group_edge_endpoints() {
+        let diagram = parse_architecture(
+            "architecture-beta\ngroup public(cloud)[Public]\ngroup private(cloud)[Private]\nservice gateway(server)[Gateway] in public\nservice api(server)[API] in private\ngateway{group}:R --> L:api{group}",
+        )
+        .unwrap();
+        assert!(diagram.relationships[0].from_group);
+        assert!(diagram.relationships[0].to_group);
+
+        let error = parse_architecture(
+            "architecture-beta\nservice api(server)[API]\nservice db(database)[DB]\napi{group}:R --> L:db",
+        )
+        .unwrap_err();
+        assert!(error.message.contains("grouped service"));
+    }
+
+    #[test]
+    fn architecture_rejects_group_endpoints() {
         assert!(parse_architecture(
             "architecture-beta\ngroup cloud(cloud)[Cloud]\nservice api(server)[API] in cloud\ncloud:R --> L:api",
-        )
-        .is_err());
-        assert!(parse_architecture(
-            "architecture-beta\nservice api(server)[API]\nservice db(database)[DB]\napi:R <-- L:db",
         )
         .is_err());
     }

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C55-rock",
+  "pathSegment": "ML-PATH-55-GROUND",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-55-GROUND",
+      "order": 1
+    }
+  ]
+}

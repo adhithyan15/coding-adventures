@@ -1,0 +1,11 @@
+{
+  "id": "TE-C62-umbrella",
+  "pathSegment": "TE-PATH-62-MADE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-62-MADE",
+      "order": 3
+    }
+  ]
+}

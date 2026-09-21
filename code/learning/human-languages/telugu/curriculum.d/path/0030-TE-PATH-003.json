@@ -1,9 +1,6 @@
 {
   "id": "TE-PATH-003",
   "spine_node": "SPINE-COURTESY-THANK",
-  "lessons": [
-    "TE-C01-dhanyavadamulu"
-  ],
   "before": [],
   "inline": [],
   "after": []

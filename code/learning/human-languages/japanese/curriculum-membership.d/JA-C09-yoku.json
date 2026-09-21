@@ -1,0 +1,11 @@
+{
+  "id": "JA-C09-yoku",
+  "pathSegment": "JA-PATH-009",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-016-REPAIR-REPEAT",
+      "order": 2
+    }
+  ]
+}

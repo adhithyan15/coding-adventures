@@ -1,0 +1,11 @@
+{
+  "id": "ES-C22-blanco-germanico",
+  "pathSegment": "ES-PATH-020",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-020-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

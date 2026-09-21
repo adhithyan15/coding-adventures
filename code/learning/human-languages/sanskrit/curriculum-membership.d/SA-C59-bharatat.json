@@ -1,0 +1,11 @@
+{
+  "id": "SA-C59-bharatat",
+  "pathSegment": "SA-PATH-59-ORIGIN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-059-ORIGIN",
+      "order": 3
+    }
+  ]
+}

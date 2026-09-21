@@ -1,0 +1,11 @@
+{
+  "id": "ES-C425-sintesis-deletreo",
+  "pathSegment": "ES-PATH-425-ABECEDARIO",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ES-EXT-425-ABECEDARIO",
+      "order": 6
+    }
+  ]
+}

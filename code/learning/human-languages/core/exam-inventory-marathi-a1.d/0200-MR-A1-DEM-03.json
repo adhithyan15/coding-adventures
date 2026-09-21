@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-DEM-03",
+  "category": "Demonstratives",
+  "label": "position: prenominal, and compatible with a following noun",
+  "probe": [
+    "MR-GRAMMAR-DEM-PRENOMINAL"
+  ],
+  "note": "Chapter 69. All six sit in front of the noun, in the slot maajhaa and daavaa already occupy, and the ending is chosen by the noun -- so the pointing word announces the gender of anything that follows it.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-DEM-03"
+  ]
+}

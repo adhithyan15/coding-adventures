@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W09-me",
+  "pathSegment": "ZH-PATH-008",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-023-SHENME-SCRIPT",
+      "order": 1
+    }
+  ]
+}

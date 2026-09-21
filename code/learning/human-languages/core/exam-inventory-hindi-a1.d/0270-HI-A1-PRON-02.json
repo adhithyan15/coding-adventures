@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-PRON-02",
+  "category": "Sarvanam (pronouns)",
+  "label": "second person: choosing between respectful ap and familiar tum",
+  "probe": [
+    "HI-CONCEPT-C02-AAPTUM-01"
+  ],
+  "derivedFrom": "ES:A1-PRON-01"
+}

@@ -22,6 +22,7 @@ const NULL_TAG: u32 = 5;
 const OBJECT_IDENTIFIER_TAG: u32 = 6;
 const SEQUENCE_TAG: u32 = 16;
 const SET_TAG: u32 = 17;
+const IA5_STRING_TAG: u32 = 22;
 
 /// Default number of levels in one document, including its root.
 pub const DEFAULT_MAX_DEPTH: usize = 32;
@@ -69,6 +70,7 @@ pub enum Asn1ErrorKind {
     NonZeroBitPadding,
     BitLengthOverflow,
     NonEmptyNull,
+    NonAsciiIa5String,
     EmptyObjectIdentifier,
     UnterminatedObjectIdentifier,
     NonMinimalObjectIdentifier,
@@ -439,6 +441,34 @@ pub fn decode_octet_string(element: Asn1Element<'_>) -> Result<&[u8], Asn1Error>
     Ok(element.value())
 }
 
+/// Borrow one implicitly tagged primitive OCTET STRING.
+///
+/// The caller supplies the context-specific tag number from its ASN.1 schema.
+pub fn decode_implicit_octet_string(
+    element: Asn1Element<'_>,
+    tag_number: u32,
+) -> Result<&[u8], Asn1Error> {
+    expect_context_specific_primitive(element, tag_number)?;
+    Ok(element.value())
+}
+
+/// Validate and borrow one exact primitive IA5String.
+pub fn decode_ia5_string(element: Asn1Element<'_>) -> Result<&str, Asn1Error> {
+    expect_universal_primitive(element, IA5_STRING_TAG)?;
+    decode_ia5_contents(element)
+}
+
+/// Validate and borrow one implicitly tagged primitive IA5String.
+///
+/// The caller supplies the context-specific tag number from its ASN.1 schema.
+pub fn decode_implicit_ia5_string(
+    element: Asn1Element<'_>,
+    tag_number: u32,
+) -> Result<&str, Asn1Error> {
+    expect_context_specific_primitive(element, tag_number)?;
+    decode_ia5_contents(element)
+}
+
 /// Validate one exact, empty NULL value.
 pub fn decode_null(element: Asn1Element<'_>) -> Result<(), Asn1Error> {
     expect_universal_primitive(element, NULL_TAG)?;
@@ -541,6 +571,36 @@ pub fn decode_object_identifier(
     limits: Asn1Limits,
 ) -> Result<ObjectIdentifier<'_>, Asn1Error> {
     expect_universal_primitive(element, OBJECT_IDENTIFIER_TAG)?;
+    decode_object_identifier_contents(element, limits)
+}
+
+/// Validate and borrow one implicitly tagged canonical OBJECT IDENTIFIER.
+///
+/// The caller supplies the context-specific tag number from its ASN.1 schema.
+pub fn decode_implicit_object_identifier(
+    element: Asn1Element<'_>,
+    tag_number: u32,
+    limits: Asn1Limits,
+) -> Result<ObjectIdentifier<'_>, Asn1Error> {
+    expect_context_specific_primitive(element, tag_number)?;
+    decode_object_identifier_contents(element, limits)
+}
+
+fn decode_ia5_contents(element: Asn1Element<'_>) -> Result<&str, Asn1Error> {
+    let encoded = element.value();
+    if let Some(offset) = encoded.iter().position(|octet| !octet.is_ascii()) {
+        return Err(Asn1Error::new(
+            Asn1ErrorKind::NonAsciiIa5String,
+            element.value_offset() + offset,
+        ));
+    }
+    Ok(std::str::from_utf8(encoded).expect("ASCII is valid UTF-8"))
+}
+
+fn decode_object_identifier_contents(
+    element: Asn1Element<'_>,
+    limits: Asn1Limits,
+) -> Result<ObjectIdentifier<'_>, Asn1Error> {
     let encoded = element.value();
     if encoded.is_empty() {
         return Err(Asn1Error::new(
@@ -594,6 +654,13 @@ pub fn decode_object_identifier(
 
 fn expect_universal_primitive(element: Asn1Element<'_>, number: u32) -> Result<(), Asn1Error> {
     expect_tag(element, TagClass::Universal, false, number)
+}
+
+fn expect_context_specific_primitive(
+    element: Asn1Element<'_>,
+    number: u32,
+) -> Result<(), Asn1Error> {
+    expect_tag(element, TagClass::ContextSpecific, false, number)
 }
 
 fn expect_tag(

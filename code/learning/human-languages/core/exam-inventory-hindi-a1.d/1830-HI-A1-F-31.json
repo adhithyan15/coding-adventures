@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-F-31",
+  "category": "Sanvad-karya (communicative functions)",
+  "label": "express certainty, and express doubt",
+  "probe": [
+    "HI-LEX-C48-REPLY-03",
+    "HI-LEX-C48-REPLY-04",
+    "HI-LEX-C48-REPLY-05"
+  ],
+  "derivedFrom": "ES:A1-F2-08, ES:A1-F2-10, ES:A1-F2-11, ES:A1-NG1-05"
+}

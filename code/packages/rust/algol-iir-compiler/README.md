@@ -211,8 +211,29 @@ A bounded control evolution may also simulate pure local scalar assignments in
 source order after every true predicate and retain their exact integer, finite
 real, or boolean results. Statically decidable statement conditions may select
 different recursively supported branches on successive passes. Predicate-
-dependency writes, dynamic selectors, string targets, and loops that do not
-reach false within 4,096 evaluations fail closed.
+dependencies may remain stable. One directly assigned dependency may also
+evolve through a supported recurrence whose expression references itself, the
+controlled scalar, and ordinary local scalars that are unchanged or evolve
+through a graph of supported recurrences. Capped source-order execution also
+handles unconditional cross-assigned dependency cycles when every participating
+write is a supported local scalar assignment. Such a cycle may also contain
+conditional expressions whose selectors use the exact loop control or exact
+ordinary local snapshots unchanged by the body; cycles selected by changing
+values remain conservative. The same stable snapshots may select conditional
+statement branches containing recurrence-cycle writes. Those changing
+dependency recurrences may contain conditional expressions when their selectors
+are the controlled scalar or other exact local snapshots in that graph. The
+recurrence assignment itself may also appear in one or both branches of a
+conditional statement selected by those snapshots; a branch without the
+assignment leaves the dependency unchanged for that pass. The controlled
+scalar itself may likewise be updated alongside other supported local scalar
+recurrences. A dependency may be assigned repeatedly in one body pass; bounded
+execution applies every supported write in source order. The next `while`
+element expression consumes all resulting exact dependency and control
+snapshots, and terminating sibling snapshots remain available after the loop.
+Unknown selectors, unsupported dependency writes, string targets, overflow,
+non-finite values, and loops that do not reach false within 4,096 evaluations
+fail closed.
 A conditional predicate is also evaluated when its selector is statically
 known; only the selected branch participates in the proof.
 Local string slots carry an empty verifier seed, but this is not a source-level

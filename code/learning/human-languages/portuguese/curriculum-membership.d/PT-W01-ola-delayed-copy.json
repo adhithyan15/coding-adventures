@@ -1,0 +1,11 @@
+{
+  "id": "PT-W01-ola-delayed-copy",
+  "pathSegment": "PT-PATH-001",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-001-WRITING-START",
+      "order": 1
+    }
+  ]
+}

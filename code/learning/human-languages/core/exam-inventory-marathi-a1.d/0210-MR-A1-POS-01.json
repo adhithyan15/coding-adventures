@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-POS-01",
+  "category": "Possessives",
+  "label": "possessives with one possessor: maazaa, tuzaa, tyaachaa",
+  "probe": null,
+  "note": "Real, and no longer a measurement artefact. maazhaM has an atom of its own (MR-LEX-MAJHE, chapter 9, now schema-v2) and MR-GRAMMAR-POSSESSIVE-THREE-GENDERS states its gender agreement. What no lesson supplies is the PARADIGM: the learner can change the thing possessed and cannot change the POSSESSOR, because tuzaa and tyaachaa have no exponent anywhere.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-POS-01"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C76-eighth",
+  "pathSegment": "HI-PATH-76-ORDINAL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-76-ORDINAL",
+      "order": 2
+    }
+  ]
+}

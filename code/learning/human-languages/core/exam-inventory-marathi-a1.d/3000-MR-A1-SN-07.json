@@ -1,0 +1,12 @@
+{
+  "id": "MR-A1-SN-07",
+  "category": "Sound system",
+  "label": "word-final inherent-vowel deletion: when the written a is not said",
+  "probe": null,
+  "note": "MARATHI-SPECIFIC and untaught. Nothing states the rule, and it governs how nearly every taught word is pronounced -- naav, not naava. A learner who reads the akshara principle literally mispronounces the whole vocabulary, which the listening and speaking papers both score.",
+  "anchorIds": [
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [],
+  "marathiSpecific": true
+}

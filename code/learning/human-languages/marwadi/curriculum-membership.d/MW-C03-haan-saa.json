@@ -1,0 +1,11 @@
+{
+  "id": "MW-C03-haan-saa",
+  "pathSegment": "MW-PATH-003",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-005-POLITE-AFFIRMATIVE",
+      "order": 2
+    }
+  ]
+}

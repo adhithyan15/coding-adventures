@@ -1,0 +1,11 @@
+{
+  "id": "GE-R37-mich-dich-sich",
+  "pathSegment": "GE-PATH-A1-OBJEKTPRONOMEN",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-A1-OBJEKTPRONOMEN",
+      "order": 5
+    }
+  ]
+}

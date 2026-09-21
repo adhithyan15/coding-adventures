@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-NEG-03",
+  "category": "Nishedham (negation)",
+  "label": "negative coordination: neither this nor that",
+  "probe": [
+    "ML-GRAMMAR-C109-NEITHER-01",
+    "ML-GRAMMAR-C109-NEITHER-02"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-CO-02"
+  ],
+  "malayalamSpecific": false,
+  "note": "CLOSED BY CHAPTER 109, AND THE OLD NOTE'S BLOCKER WAS ALREADY GONE. 'Untaught, and it depends on the missing coordinator at ML-A1-JOIN-01' predates chapter 70, which teaches -um across four lessons (2390-2420); the note was never re-read against it. The construction itself was censused BY SHAPE rather than by the English word -- a regex for two -um-marked words followed by a negative returns ZERO across the corpus, while grepping 'neither' finds only ordinary English prose. NO NEW VOCABULARY: Malayalam builds it from -um on every item plus a negative at the end, and both halves are long taught (illa at sequence 40, alla at chapter 77). TWO LESSONS RATHER THAN ONE, because ML-C77-alla teaches that Malayalam makes you choose a negative where English spends one word on both, and 'neither ... nor' hides that choice: caayayum kaappiyum ILLA against adhyaapakanum vaidyanum ALLA, identical on the left and different only in the last word. ML-A1-JOIN-04 (distributive) and ML-A1-JOIN-01's clause half remain open and are NOT claimed here; this point is negative coordination only."
+}

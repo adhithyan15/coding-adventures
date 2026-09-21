@@ -1,0 +1,11 @@
+{
+  "id": "HI-C36-kamra",
+  "pathSegment": "HI-PATH-030",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-030-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

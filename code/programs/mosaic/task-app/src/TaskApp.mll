@@ -8,7 +8,11 @@
 // status verdict all arrive already decided by the engine; the layout only places them.
 
 layout TaskApp {
-  Row [ app-shell ] {
+  HostNavigationSplit [ app-shell ] (
+    pane-title : "Projects" ,
+    pane-width : 236 ,
+    collapse : auto
+  ) {
 
     // ── RAIL ────────────────────────────────────────────────────────────────
     Column [ rail ] {
@@ -148,7 +152,11 @@ layout TaskApp {
       // content column: warnings remain visible without stealing task capture
       // focus, and the normal local-only/data-location contract is discoverable.
       Column [ storage-panel ] {
-        Row [ storage-summary ] {
+        // Status and the (potentially long) local path are separate lines.
+        // Keeping them in one Row over-subscribes a 1280px desktop window;
+        // Compose then preserves both intrinsic widths and paints the strings
+        // over each other (#15263).
+        Column [ storage-summary ] {
           Text [ storage-status ] ( content : slot: storage-status )
           Text [ storage-location ] ( content : slot: storage-location )
         }

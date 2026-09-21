@@ -1,0 +1,11 @@
+{
+  "id": "MW-R23-answer-two",
+  "pathSegment": "MW-PATH-022",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-036-BARGAIN",
+      "order": 4
+    }
+  ]
+}

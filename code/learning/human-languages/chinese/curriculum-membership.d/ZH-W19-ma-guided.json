@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W19-ma-guided",
+  "pathSegment": "ZH-PATH-018",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-052-ASKING-SCRIPT",
+      "order": 1
+    }
+  ]
+}

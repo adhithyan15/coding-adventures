@@ -1,0 +1,11 @@
+{
+  "id": "FR-C15-participe-ir-re",
+  "pathSegment": "FR-PATH-017",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-017-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

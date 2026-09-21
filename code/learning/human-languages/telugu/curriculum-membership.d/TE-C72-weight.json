@@ -1,0 +1,11 @@
+{
+  "id": "TE-C72-weight",
+  "pathSegment": "TE-PATH-72-MARKET",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-72-MARKET",
+      "order": 3
+    }
+  ]
+}

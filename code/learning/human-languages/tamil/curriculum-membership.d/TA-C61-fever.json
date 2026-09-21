@@ -1,0 +1,11 @@
+{
+  "id": "TA-C61-fever",
+  "pathSegment": "TA-PATH-61-FEEL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-61-FEEL",
+      "order": 3
+    }
+  ]
+}

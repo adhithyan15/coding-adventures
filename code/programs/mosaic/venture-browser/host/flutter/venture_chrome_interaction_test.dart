@@ -9,6 +9,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mosaic_venture_chrome/main.dart';
 import 'package:mosaic_venture_chrome/mosaic_host.dart';
 
+String _startPageBody() => '''
+          <html><head><title>Flutter Start</title></head><body>
+          <a href="/link">Open the Flutter link target</a>
+          ${List<String>.generate(80, (index) => '<p>scroll row $index</p>').join()}
+          </body></html>
+        ''';
+
 Future<void> _servePages(SendPort port) async {
   final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
   port.send(server.port);
@@ -19,13 +26,7 @@ Future<void> _servePages(SendPort port) async {
     late final String body;
     switch (request.uri.path) {
       case '/start':
-        body =
-            '''
-          <html><head><title>Flutter Start</title></head><body>
-          <a href="/link">Open the Flutter link target</a>
-          ${List<String>.generate(80, (index) => '<p>scroll row $index</p>').join()}
-          </body></html>
-        ''';
+        body = _startPageBody();
         break;
       case '/target':
         body =
@@ -102,6 +103,22 @@ void main() {
       debugPrint('flutter-live-stage=host-open');
       await _pumpLiveVentureShell(tester, host);
       debugPrint('flutter-live-stage=shell-pumped');
+      expect(find.text('Stop'), findsOneWidget);
+      final stopButton = tester.widget<ButtonStyleButton>(
+        find.widgetWithText(ButtonStyleButton, 'Stop'),
+      );
+      expect(stopButton.onPressed, isNull);
+
+      await tester.tap(find.text('Bookmark'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Bookmarks (1)'));
+      await tester.pumpAndSettle();
+      expect(find.text('1 of 1'), findsOneWidget);
+      expect(find.text('Flutter Start'), findsWidgets);
+      await tester.tap(find.text('Close'));
+      await tester.pumpAndSettle();
+      expect(find.text('1 of 1'), findsNothing);
+      debugPrint('flutter-live-stage=bookmark-catalog');
 
       await tester.tap(find.text('Copy'));
       await tester.pumpAndSettle();
@@ -149,6 +166,14 @@ void main() {
       expect(host.lastPageInfoRequest?['status'], 200);
       debugPrint('flutter-live-stage=page-info');
 
+      await tester.tap(find.text('Zoom In'));
+      await tester.pumpAndSettle();
+      expect(find.text('125%'), findsOneWidget);
+      await tester.tap(find.text('125%'));
+      await tester.pumpAndSettle();
+      expect(find.text('100%'), findsOneWidget);
+      debugPrint('flutter-live-stage=page-zoom');
+
       await tester.tap(find.text('Source'));
       await tester.pumpAndSettle();
       expect(host.lastAuxiliaryDocument?['kind'], 'view-source');
@@ -156,6 +181,10 @@ void main() {
         host.lastAuxiliaryDocument?['html'],
         contains('&lt;title&gt;Flutter Start&lt;/title&gt;'),
       );
+      await tester.tap(find.text('Copy Source'));
+      await tester.pumpAndSettle();
+      expect(host.lastClipboardText, _startPageBody());
+      expect(find.text('Copy Source'), findsOneWidget);
       debugPrint('flutter-live-stage=view-source');
 
       final input = find.byType(TextField);
@@ -171,6 +200,15 @@ void main() {
         isNotNull,
       );
 
+      await tester.tap(find.text('Back'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('History (2)'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(ButtonStyleButton, 'Next'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Open'));
+      await tester.pumpAndSettle();
+      expect(find.text('Flutter Address Target'), findsOneWidget);
       await tester.tap(find.text('Back'));
       await tester.pumpAndSettle();
       debugPrint('flutter-live-stage=history');

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C06-dative-subject",
+  "pathSegment": "ML-PATH-011",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ML-EXT-011-LANGUAGE-SPECIFIC",
+      "order": 5
+    }
+  ]
+}

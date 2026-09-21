@@ -1,0 +1,11 @@
+{
+  "id": "HI-C54-goat",
+  "pathSegment": "HI-PATH-54-ANIMAL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-54-ANIMAL",
+      "order": 4
+    }
+  ]
+}

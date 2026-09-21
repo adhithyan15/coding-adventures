@@ -7,6 +7,7 @@ on:
       - 'code/programs/mosaic/visicalc/**'
       - 'code/packages/rust/visicalc-mosaic-app/**'
       - 'code/packages/rust/spreadsheet-core/**'
+      - 'code/packages/rust/mosaic-emit-react/**'
       - 'code/programs/typescript/visicalc/**'
   push:
     tags: ['visicalc-v*']
@@ -50,12 +51,33 @@ jobs:
           path: release/*
           if-no-files-found: error
 
+      - uses: actions/upload-artifact@v4
+        with:
+          name: visicalc-release-tests
+          path: |
+            code/programs/mosaic/visicalc/release-tests/package.json
+            code/programs/mosaic/visicalc/release-tests/package-lock.json
+            code/programs/mosaic/visicalc/release-tests/*.mjs
+          if-no-files-found: error
+
   verify:
     needs: web
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
-      # Deliberately no checkout: verify the downloaded distribution alone.
+      # Deliberately no checkout: the app runs exclusively from the downloaded ZIP.
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@v4
+        with:
+          name: visicalc-release-tests
+          path: release-tests
+      - name: Install pinned browser acceptance tools
+        working-directory: release-tests
+        run: |
+          npm ci --no-audit --no-fund
+          npx playwright install --with-deps chromium
       - uses: actions/download-artifact@v4
         with:
           name: visicalc-web
@@ -81,6 +103,13 @@ jobs:
           cmp index.html /tmp/index.html
           cmp visicalc_mosaic_app.wasm /tmp/engine.wasm
           node -e 'const fs = require("node:fs"); const bytes = fs.readFileSync("/tmp/engine.wasm"); if (!WebAssembly.validate(bytes)) throw Error("Invalid WASM");'
+          npm --prefix ../../release-tests test
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: visicalc-browser-evidence
+          path: release-tests/test-results
+          if-no-files-found: warn
 
   draft:
     needs: verify
@@ -102,7 +131,7 @@ jobs:
           cat > notes.md <<'EOF'
           VisiCalc Mosaic web preview. Extract the ZIP and follow README.txt to launch locally. The compiled Rust engine is included; Python 3 and a modern browser are required.
 
-          This draft has passed production build, shared-app tests, archive checksum verification and HTTP/WASM loading checks. Known formula-range correctness bug #15519 blocks promotion. Actual downloaded-release browser persistence, full design/accessibility review and native bundles remain acceptance requirements under #14282 and #14267. Do not promote this draft until those checks pass.
+          This web-only draft has passed production build, shared-app tests, archive and internal checksums, HTTP/WASM loading, and Chromium UI editing/save/reopen tests of the downloaded CI archive in a job without a checkout. Picker handles are simulated in CI; OS file-dialog acceptance is separate. Before publishing a web prerelease, download these GitHub Release assets, verify SHA-256 and launch the extracted app. Native bundles, full design/accessibility, touch and screen-reader acceptance remain open under #14282 and #14267. This is not a signed native app.
           EOF
           gh release create "$RELEASE_TAG" release/* --verify-tag --draft --prerelease \
             --title "VisiCalc ${RELEASE_TAG#visicalc-v} preview" --notes-file notes.md

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C43-javal",
+  "pathSegment": "MR-PATH-046",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MR-EXT-059-NEAR-OPPOSITE-FAR",
+      "order": 0
+    }
+  ]
+}

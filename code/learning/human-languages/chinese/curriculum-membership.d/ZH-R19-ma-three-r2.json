@@ -1,0 +1,11 @@
+{
+  "id": "ZH-R19-ma-three-r2",
+  "pathSegment": "ZH-PATH-018",
+  "pathOrder": 12,
+  "extensions": [
+    {
+      "id": "ZH-EXT-053-ASKING-FOUR-SKILL",
+      "order": 1
+    }
+  ]
+}

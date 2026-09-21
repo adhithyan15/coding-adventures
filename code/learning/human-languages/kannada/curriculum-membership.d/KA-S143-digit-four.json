@@ -1,0 +1,11 @@
+{
+  "id": "KA-S143-digit-four",
+  "pathSegment": "KA-PATH-011",
+  "pathOrder": 13,
+  "extensions": [
+    {
+      "id": "KA-EXT-011-LANGUAGE-SPECIFIC",
+      "order": 13
+    }
+  ]
+}

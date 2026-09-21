@@ -15,13 +15,15 @@
 (rule
  (target representative.actual.json)
  (action
-  (with-stdout-to representative.actual.json
+  (with-stdout-to
+   representative.actual.json
    (run %{exe:representative_smoke.exe}))))
 
 (rule
  (target transitive-leaf.actual.json)
  (action
-  (with-stdout-to transitive-leaf.actual.json
+  (with-stdout-to
+   transitive-leaf.actual.json
    (run %{exe:transitive_leaf_smoke.exe}))))
 
 (rule

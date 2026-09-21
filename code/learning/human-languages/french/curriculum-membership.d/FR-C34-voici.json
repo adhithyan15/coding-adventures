@@ -1,0 +1,11 @@
+{
+  "id": "FR-C34-voici",
+  "pathSegment": "FR-PATH-A1-POINTING",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-A1-POINTING",
+      "order": 3
+    }
+  ]
+}

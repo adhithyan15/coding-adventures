@@ -1,0 +1,11 @@
+{
+  "id": "SA-C50-voice",
+  "pathSegment": "SA-PATH-50-SOUND",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-50-SOUND",
+      "order": 2
+    }
+  ]
+}

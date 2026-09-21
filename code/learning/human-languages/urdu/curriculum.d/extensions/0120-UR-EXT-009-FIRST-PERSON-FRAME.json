@@ -6,8 +6,5 @@
   "canDo": "I can open an Urdu answer with maiṅ and close it with hūṅ without learning the full copula table.",
   "prerequisites": [
     "UR-EXT-008-HONORIFIC-COPULA"
-  ],
-  "lessons": [
-    "UR-C04-main-hun"
   ]
 }

@@ -1,0 +1,18 @@
+{
+  "id": "ML-A1-Q-09",
+  "category": "Chodyam (asking questions)",
+  "label": "asking for confirmation: a tag question",
+  "probe": [
+    "ML-LEX-C77-ALLE-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F1-04"
+  ],
+  "malayalamSpecific": false,
+  "note": "Chapter 77, and it costs almost nothing because alle visibly carries alla at its front. The old note framed it exactly right -- the -o particle of ML-C70-o asks a genuine question, alle invites agreement -- so the lesson contrasts what the two endings WANT BACK rather than what they mean. Both alle and alla returned zero files before this chapter, so neither created a forward reference."
+}

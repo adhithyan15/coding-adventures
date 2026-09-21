@@ -1,0 +1,13 @@
+{
+  "id": "HI-A1-V-12",
+  "category": "Kriya (the verb)",
+  "label": "the past copula tha/thi, and the past habitual",
+  "probe": [
+    "HI-LEX-C87-PAST-01",
+    "HI-LEX-C87-PAST-02",
+    "HI-LEX-C87-PAST-03",
+    "HI-LEX-C87-PAST-05"
+  ],
+  "derivedFrom": "ES:A1-V-04, ES:A1-V-05",
+  "note": "Chapter 95 supplies the whole of what the note asked for. tha, thi and the are each introduced by their own lesson, the negative nahin tha by another, and the past habitual by HI-C87-bolta-thaa, which is the present habitual the track has taught since chapter 5 with its final word swapped -- so the past costs one substitution rather than a new conjugation. The note's claim that NOTHING in the corpus was past-tense had a mechanical cause worth recording: the letter tha was never taught anywhere in the track, so every past-tense form was a glyph the reader had not been given. HI-S126-letter-tha teaches it, which is what unblocked this point."
+}

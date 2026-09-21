@@ -1,13 +1,6 @@
 {
   "id": "PT-PATH-022",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
-  "lessons": [
-    "PT-C18-ser-estar",
-    "PT-C18-ter-haver",
-    "PT-C18-ha-time-ago",
-    "PT-C18-ter-que",
-    "PT-C18-ir"
-  ],
   "before": [],
   "inline": [
     "PT-EXT-022-LANGUAGE-SPECIFIC"

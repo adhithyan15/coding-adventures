@@ -1,0 +1,11 @@
+{
+  "id": "FR-C38-consonne-finale",
+  "pathSegment": "FR-PATH-A1-SILENT",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-A1-SILENT",
+      "order": 0
+    }
+  ]
+}

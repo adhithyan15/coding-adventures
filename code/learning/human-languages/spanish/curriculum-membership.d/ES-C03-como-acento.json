@@ -1,0 +1,11 @@
+{
+  "id": "ES-C03-como-acento",
+  "pathSegment": "ES-PATH-008",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-008-SCRIPT",
+      "order": 0
+    }
+  ]
+}

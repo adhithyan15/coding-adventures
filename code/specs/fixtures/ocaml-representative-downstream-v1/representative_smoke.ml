@@ -19,8 +19,7 @@ let () =
   let graph =
     Undirected.create ~representation:Undirected.Adjacency_matrix ()
   in
-  unwrap "graph add_edge failed"
-    (Undirected.add_edge ~weight:0.0 graph "a" "b");
+  unwrap "graph add_edge failed" (Undirected.add_edge ~weight:0.0 graph "a" "b");
   let bfs = unwrap "graph bfs failed" (Undirected.bfs graph "a") in
   require (bfs = [ "a"; "b" ]) "unexpected graph traversal";
   let directed = Directed.create () in
@@ -36,14 +35,15 @@ let () =
   in
   let machine =
     unwrap "state-machine creation failed"
-      (Coding_adventures_state_machine.Dfa.create
-         ~states:[ "locked"; "open" ] ~alphabet:[ "coin" ]
-         ~transitions:[ transition ] ~initial:"locked" ~accepting:[ "open" ] ())
+      (Coding_adventures_state_machine.Dfa.create ~states:[ "locked"; "open" ]
+         ~alphabet:[ "coin" ] ~transitions:[ transition ] ~initial:"locked"
+         ~accepting:[ "open" ] ())
   in
   let current =
     unwrap "state-machine process failed"
       (Coding_adventures_state_machine.Dfa.process machine "coin")
   in
   require (current = "open") "unexpected DFA state";
+  set_binary_mode_out stdout true;
   print_endline
     {|{"schema_version":1,"fixture":"ocaml-representative-downstream-v1","logic_gate":1,"graph_bfs":["a","b"],"directed_order":["parse","emit"],"dfa_state":"open","passes":true}|}

@@ -1,0 +1,22 @@
+{
+  "id": "ML-A1-PRON-05",
+  "category": "Sarvanaamam (pronouns)",
+  "label": "the dative subject: enikku, where the experiencer is not the subject",
+  "probe": [
+    "ML-CONCEPT-C06-DATIVE-SUBJECT-01",
+    "ML-CONCEPT-C06-DATIVE-SUBJECT-02",
+    "ML-CONCEPT-C06-DATIVE-SUBJECT-03"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-PRON-03",
+    "A1-SV-01",
+    "A1-SV-05"
+  ],
+  "malayalamSpecific": false,
+  "note": "Malayalam's answer to gustar, and a deeper one: knowing, liking and being hungry all happen TO you, so the person takes -ikku and the thing is the subject. Three Spanish points about indirect objects and gustar land here because this one construction is how Malayalam carries all of them."
+}

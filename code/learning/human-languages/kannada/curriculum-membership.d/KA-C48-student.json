@@ -1,0 +1,11 @@
+{
+  "id": "KA-C48-student",
+  "pathSegment": "KA-PATH-48-ROLE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-48-ROLE",
+      "order": 1
+    }
+  ]
+}

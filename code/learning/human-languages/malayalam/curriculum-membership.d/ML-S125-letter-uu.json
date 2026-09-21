@@ -1,0 +1,11 @@
+{
+  "id": "ML-S125-letter-uu",
+  "pathSegment": "ML-PATH-100",
+  "pathOrder": 42,
+  "extensions": [
+    {
+      "id": "ML-EXT-100-SCRIPT-RECOGNITION",
+      "order": 42
+    }
+  ]
+}

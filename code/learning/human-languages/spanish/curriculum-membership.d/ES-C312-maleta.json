@@ -1,0 +1,11 @@
+{
+  "id": "ES-C312-maleta",
+  "pathSegment": "ES-PATH-312-01",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-312-ASK",
+      "order": 2
+    }
+  ]
+}

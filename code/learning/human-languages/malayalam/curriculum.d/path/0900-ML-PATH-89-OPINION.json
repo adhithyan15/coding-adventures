@@ -1,12 +1,6 @@
 {
   "id": "ML-PATH-89-OPINION",
   "spine_node": "SPINE-RESPOND-BASIC",
-  "lessons": [
-    "ML-C89-nallathu",
-    "ML-C89-mosham",
-    "ML-C89-opinion",
-    "ML-R89-opinion-recall"
-  ],
   "before": [],
   "inline": [
     "ML-EXT-89-OPINION"

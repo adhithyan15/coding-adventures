@@ -1,0 +1,11 @@
+{
+  "id": "HI-C32-evening-register",
+  "pathSegment": "HI-PATH-026",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "HI-EXT-026-REGISTER",
+      "order": 0
+    }
+  ]
+}

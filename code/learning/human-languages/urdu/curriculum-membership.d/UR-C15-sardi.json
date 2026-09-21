@@ -1,0 +1,11 @@
+{
+  "id": "UR-C15-sardi",
+  "pathSegment": "UR-PATH-016",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-026-WEATHER",
+      "order": 4
+    }
+  ]
+}

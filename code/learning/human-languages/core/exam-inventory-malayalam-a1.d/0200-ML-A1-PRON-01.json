@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-PRON-01",
+  "category": "Sarvanaamam (pronouns)",
+  "label": "first person: njaan, and the fact that Malayalam cannot drop it",
+  "probe": [
+    "ML-LEX-NJAAN-01",
+    "ML-CONCEPT-C03-PRONOUN-CANNOT-DROP-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-PRON-01"
+  ],
+  "malayalamSpecific": false,
+  "note": "The point where Malayalam and Spanish are exact opposites, and the corpus says so: Spanish drops yo because the verb carries the person, Malayalam must keep njaan because the verb carries nothing."
+}

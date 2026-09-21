@@ -1,0 +1,11 @@
+{
+  "id": "KA-C05-naanu-kannada-maatanaaduttene",
+  "pathSegment": "KA-PATH-010",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-010-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

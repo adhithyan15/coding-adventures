@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-DET-01",
+  "category": "Nirdeshak (determiners and definiteness)",
+  "label": "Hindi has no article: definiteness is carried by bareness, by ek, and by a demonstrative",
+  "probe": [
+    "HI-LEX-C86-PRON-05"
+  ],
+  "derivedFrom": "ES:A1-ART-01, ES:A1-ART-02, ES:A1-ART-03, ES:A1-ART-04",
+  "note": "HI-C86-koi-article states what the note said the corpus never stated: Hindi has no article, and a bare noun covers both a book and the book. It names the three things that carry specificity when it matters -- ek, vah, or nothing at all -- and makes the point the note asked for about ek chay dijiye, that ek is the numeral one doing indefiniteness work rather than a fixed cafe formula. The lesson ends on the habit rather than the fact: the commonest correct translation of English the is nothing."
+}

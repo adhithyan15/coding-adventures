@@ -1,0 +1,11 @@
+{
+  "id": "ES-C05-repaso-adios",
+  "pathSegment": "ES-PATH-012",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "ES-EXT-012-CONSOLIDATION-ADIOS",
+      "order": 0
+    }
+  ]
+}

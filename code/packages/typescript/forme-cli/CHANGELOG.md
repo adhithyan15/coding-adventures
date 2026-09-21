@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Canonicalized nested output summaries in `--report` so fresh stage values and
+  values restored from canonical checkpoints produce byte-identical output
+  sections when their artifacts are equal.
 - Made repository bootstrap installs compatible with npm 10 by bypassing its
   crashing peer-dependency resolver for the local development package graph.
 - Made the CLI test harness use platform-native fixture paths so the complete

@@ -1,0 +1,11 @@
+{
+  "id": "SA-R55-non-finite",
+  "pathSegment": "SA-PATH-55-NON-FINITE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-055-NON-FINITE",
+      "order": 2
+    }
+  ]
+}

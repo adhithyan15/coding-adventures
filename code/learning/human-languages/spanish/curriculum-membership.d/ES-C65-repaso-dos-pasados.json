@@ -1,0 +1,11 @@
+{
+  "id": "ES-C65-repaso-dos-pasados",
+  "pathSegment": "ES-PATH-A1-REVIEW-PAREJAS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-A1-REVIEW-PAREJAS",
+      "order": 1
+    }
+  ]
+}

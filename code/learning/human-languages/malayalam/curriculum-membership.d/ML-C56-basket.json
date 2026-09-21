@@ -1,0 +1,11 @@
+{
+  "id": "ML-C56-basket",
+  "pathSegment": "ML-PATH-56-HOUSE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-56-HOUSE",
+      "order": 1
+    }
+  ]
+}

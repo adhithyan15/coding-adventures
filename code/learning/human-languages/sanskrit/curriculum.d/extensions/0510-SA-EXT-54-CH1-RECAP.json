@@ -4,8 +4,5 @@
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can recombine the chapter's five Sanskrit greetings and replies, and name the roots that reach both east and west.",
-  "prerequisites": [],
-  "lessons": [
-    "SA-C01-practice"
-  ]
+  "prerequisites": []
 }

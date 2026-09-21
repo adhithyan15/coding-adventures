@@ -1,0 +1,11 @@
+{
+  "id": "GE-C38-klammer",
+  "pathSegment": "GE-PATH-A1-KLAMMER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-A1-KLAMMER",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C288-llegada",
+  "pathSegment": "ES-PATH-288-01",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-288-PARTIDA",
+      "order": 3
+    }
+  ]
+}

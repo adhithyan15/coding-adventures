@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-SCR-04",
+  "category": "Devanagari lipi (script and orthography)",
+  "label": "the i-matra is written before the consonant it is pronounced after",
+  "probe": [
+    "HI-CONCEPT-W03-PREPOSED-I-01"
+  ],
+  "derivedFrom": "hindi-specific"
+}

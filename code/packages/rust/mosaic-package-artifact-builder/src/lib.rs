@@ -89,7 +89,9 @@ use std::fmt::Write as _;
 use std::fs;
 use std::path::{Component, Path, PathBuf};
 
-use mosaic_package_manifest::{parse_path as parse_manifest, ManifestError, MosaicPackage};
+use mosaic_package_manifest::{
+    parse_path as parse_manifest, ManifestError, MosaicPackage, WindowSize,
+};
 use moslayout_compiler::{LayoutNode, LayoutProp, LayoutPropValue};
 use mosmodel_compiler::{ListInnerType, SlotDecl, SlotDefault, SlotType};
 use serde::Serialize;
@@ -2239,7 +2241,8 @@ fn ignored_native_property(
             && !(backend == Backend::SwiftUI && mosaic_emit_swiftui::pipeline::has_native_font_size(node))
             && !(backend == Backend::Xaml && mosaic_emit_xaml::pipeline::has_native_font_size(node))
             && !(backend == Backend::Flutter && mosaic_emit_flutter::pipeline::has_native_font_size(node))
-            && !(backend == Backend::Html && mosaic_emit_html::pipeline::has_native_font_size(node)) => Some((
+            && !(backend == Backend::Html && mosaic_emit_html::pipeline::has_native_font_size(node))
+            && !(backend == Backend::WebComponent && mosaic_emit_webcomponent::pipeline::has_native_font_size(node)) => Some((
             "typography.font-size-binding-unimplemented",
             "layout font-size binding has no projection for this backend or primitive; static mosstyle typography is unaffected",
         )),
@@ -2657,6 +2660,7 @@ fn build_package_inner(
                 runtime_library,
                 host_asset_dependencies: &manifest.host_assets.dependencies,
                 host_effects: &manifest.host_effects,
+                initial_window_size: manifest.app.initial_window_size.as_ref(),
             })?;
             artifacts.extend(shell_artifacts);
         }
@@ -3393,6 +3397,9 @@ struct ProjectShellOptions<'a> {
     /// `host_asset_dependencies` is: `emit_project_shell` never sees the
     /// manifest, and giving it one would widen what shell emission may reach.
     host_effects: &'a mosaic_package_manifest::HostEffectsSection,
+    /// Optional application-owned initial desktop window dimensions. Browser
+    /// and mobile shells deliberately ignore this project-shell metadata.
+    initial_window_size: Option<&'a WindowSize>,
 }
 
 fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, BuildError> {
@@ -3410,6 +3417,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         runtime_library,
         host_asset_dependencies,
         host_effects,
+        initial_window_size,
     } = options;
     // Re-read the triple. This duplicates `compile_one_component`'s
     // file-loading logic; we accept the redundancy because the shell
@@ -3531,7 +3539,10 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 }
 
                 let nested: [(&str, String); 2] = [
-                    ("electron/main.ts", build_electron_main_ts(component)),
+                    (
+                        "electron/main.ts",
+                        build_electron_main_ts(component, initial_window_size),
+                    ),
                     ("electron/preload.ts", build_electron_preload_ts()),
                 ];
                 for (rel, body) in nested {
@@ -3721,7 +3732,12 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
 
             let main_nested = backend_dir.join("src/main/kotlin/Main.kt");
             let main_kt = compose_main_with_host_effects(
-                &build_compose_main_kt(component, &mosmodel_out.component.slots, require_runtime),
+                &build_compose_main_kt(
+                    component,
+                    &mosmodel_out.component.slots,
+                    require_runtime,
+                    initial_window_size,
+                ),
                 host_effects,
             )?;
             write_file(&main_nested, main_kt.as_bytes())?;
@@ -3779,7 +3795,11 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     component,
                     host_effects,
                 );
-                let main_cpp = qt_main_with_host_effects(&proj.main_cpp, host_effects)?;
+                let main_cpp = qt_main_with_initial_window_size(
+                    &qt_main_with_host_effects(&proj.main_cpp, host_effects)?,
+                    initial_window_size,
+                    component,
+                )?;
                 let runtime_binding =
                     mosaic_app_bindings::qt_runtime_binding_for_application(package_name);
                 let contract = if require_runtime {
@@ -3840,12 +3860,16 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     &proj.package_swift,
                     bundle_runtime,
                 );
-                let app_swift = swift_app_with_host_effects(
-                    &mosaic_app_bindings::swift_app_with_runtime_binding(
-                        &proj.app_swift,
-                        bundle_runtime,
-                    ),
-                    host_effects,
+                let app_swift = swift_app_with_initial_window_size(
+                    &swift_app_with_host_effects(
+                        &mosaic_app_bindings::swift_app_with_runtime_binding(
+                            &proj.app_swift,
+                            bundle_runtime,
+                        ),
+                        host_effects,
+                    )?,
+                    initial_window_size,
+                    component,
                 )?;
                 let runtime_binding =
                     mosaic_app_bindings::swift_runtime_binding_for_application(package_name);
@@ -3928,8 +3952,11 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                      event sequence, snapshots, returned buffers, and teardown. {}\n",
                     proj.readme, runtime_distribution
                 );
-                let main_window_cs =
-                    xaml_main_with_host_effects(&proj.main_window_cs, host_effects)?;
+                let main_window_cs = xaml_main_with_initial_window_size(
+                    &xaml_main_with_host_effects(&proj.main_window_cs, host_effects)?,
+                    initial_window_size,
+                    component,
+                )?;
                 let flat: Vec<(String, &str)> = vec![
                     ("global.json".to_string(), &proj.global_json),
                     (format!("{component}.csproj"), &proj.csproj),
@@ -3994,6 +4021,146 @@ fn qt_cmake_with_package_exports(
         .expect("write Qt runtime packaging CMake");
     }
     cmake
+}
+
+fn initial_window_anchor_error(
+    component: &str,
+    backend: Backend,
+    detail: impl Into<String>,
+) -> BuildError {
+    BuildError::PipelineError {
+        component: component.to_string(),
+        error: format!(
+            "{backend:?} project-shell initial-window contract: {}",
+            detail.into()
+        ),
+    }
+}
+
+/// Replace one generated, line-leading statement and refuse both drift and
+/// ambiguity. Window metadata is package-authored, but these anchors are
+/// emitter-owned scaffolding; silently missing one would produce a successful
+/// build whose application ignores its manifest.
+fn replace_unique_generated_statement(
+    generated: &str,
+    needle: &str,
+    replacement: &str,
+    component: &str,
+    backend: Backend,
+) -> Result<String, BuildError> {
+    let matches = find_all_anchored(generated, needle, |prefix| {
+        prefix
+            .chars()
+            .all(|character| character.is_ascii_whitespace())
+    });
+    if matches.len() != 1 {
+        return Err(initial_window_anchor_error(
+            component,
+            backend,
+            format!(
+                "expected one line-leading {needle:?} anchor, found {}",
+                matches.len()
+            ),
+        ));
+    }
+    let at = matches[0];
+    let mut out = generated.to_string();
+    out.replace_range(at..at + needle.len(), replacement);
+    Ok(out)
+}
+
+fn qt_main_with_initial_window_size(
+    generated: &str,
+    initial_window_size: Option<&WindowSize>,
+    component: &str,
+) -> Result<String, BuildError> {
+    let Some(size) = initial_window_size else {
+        return Ok(generated.to_string());
+    };
+    replace_unique_generated_statement(
+        generated,
+        "view.resize(1100, 800);",
+        &format!("view.resize({}, {});", size.width, size.height),
+        component,
+        Backend::Qt,
+    )
+}
+
+fn xaml_main_with_initial_window_size(
+    generated: &str,
+    initial_window_size: Option<&WindowSize>,
+    component: &str,
+) -> Result<String, BuildError> {
+    let Some(size) = initial_window_size else {
+        return Ok(generated.to_string());
+    };
+    let initialize = "this.InitializeComponent();";
+    let resized = format!(
+        "{initialize}\n        AppWindow.Resize(new Windows.Graphics.SizeInt32({}, {}));",
+        size.width, size.height
+    );
+    replace_unique_generated_statement(generated, initialize, &resized, component, Backend::Xaml)
+}
+
+fn swift_app_with_initial_window_size(
+    generated: &str,
+    initial_window_size: Option<&WindowSize>,
+    component: &str,
+) -> Result<String, BuildError> {
+    let Some(size) = initial_window_size else {
+        return Ok(generated.to_string());
+    };
+    let window_group = format!("WindowGroup(\"{component}\") {{");
+    let openings = find_all_anchored(generated, &window_group, |prefix| {
+        prefix
+            .chars()
+            .all(|character| character.is_ascii_whitespace())
+    });
+    if openings.len() != 1 {
+        return Err(initial_window_anchor_error(
+            component,
+            Backend::SwiftUI,
+            format!(
+                "expected one line-leading {window_group:?} anchor, found {}",
+                openings.len()
+            ),
+        ));
+    }
+
+    // The first exact four-space close followed by the Scene close is the
+    // generated WindowGroup terminator. Search only before the generated host
+    // type, and require uniqueness, so a multiline author string can fail its
+    // own build but can never redirect this insertion silently.
+    let start = openings[0];
+    let end = generated[start..]
+        .find("class MosaicHostState")
+        .map(|relative| start + relative)
+        .unwrap_or(generated.len());
+    const TERMINATOR: &str = "\n    }\n  }\n";
+    let closes: Vec<usize> = generated[start..end]
+        .match_indices(TERMINATOR)
+        .map(|(relative, _)| start + relative)
+        .collect();
+    if closes.len() != 1 {
+        return Err(initial_window_anchor_error(
+            component,
+            Backend::SwiftUI,
+            format!(
+                "expected one WindowGroup terminator before MosaicHostState, found {}",
+                closes.len()
+            ),
+        ));
+    }
+    let insertion = closes[0] + "\n    }".len();
+    let mut out = generated.to_string();
+    out.insert_str(
+        insertion,
+        &format!(
+            "\n    #if os(macOS)\n    .defaultSize(width: {}, height: {})\n    #endif",
+            size.width, size.height
+        ),
+    );
+    Ok(out)
 }
 
 /// Compile a package's `[host_effects]` files into the Qt target.
@@ -4391,7 +4558,7 @@ fn compose_main_with_host_effects(
     // SwiftUI is the opposite case: its author text sits ~270 lines AHEAD of
     // the assignment being anchored on, so there the anchoring is the only
     // thing between a slot default and the splice point.
-    const ANCHOR: &str = "val mosaicHost = remember {";
+    const ANCHOR: &str = "val mosaicHost =";
     let Some(at) = line_anchored_find(generated, ANCHOR) else {
         // Loud, for the same reason as SwiftUI. Gradle compiles everything
         // under `src/main/kotlin/`, so an uninstalled handler still compiles,
@@ -4783,6 +4950,7 @@ fn build_compose_main_kt(
     component_name: &str,
     slots: &[SlotDecl],
     require_runtime: bool,
+    initial_window_size: Option<&WindowSize>,
 ) -> String {
     let root = build_compose_root_invocation(component_name, slots, require_runtime);
     let component_label = escape_kotlin_string(component_name);
@@ -4791,20 +4959,48 @@ fn build_compose_main_kt(
     } else {
         "MosaicRuntimeHost.load() ?: MosaicComposeHostBridge.load()"
     };
-    let host_type = if require_runtime {
-        "MosaicComposeHost"
-    } else {
-        "MosaicComposeHost?"
-    };
     let startup_import = if require_runtime {
-        "import androidx.compose.material.Text\n"
+        concat!(
+            "import androidx.compose.foundation.layout.Arrangement\n",
+            "import androidx.compose.foundation.layout.Column\n",
+            "import androidx.compose.foundation.layout.fillMaxSize\n",
+            "import androidx.compose.foundation.layout.padding\n",
+            "import androidx.compose.material.Button\n",
+            "import androidx.compose.material.Text\n",
+            "import androidx.compose.material.darkColors\n",
+            "import androidx.compose.material.lightColors\n",
+            "import androidx.compose.runtime.key\n",
+            "import androidx.compose.ui.Alignment\n",
+            "import androidx.compose.ui.Modifier\n",
+            "import androidx.compose.ui.platform.testTag\n",
+            "import androidx.compose.ui.unit.dp\n",
+            "import kotlinx.coroutines.Dispatchers\n",
+            "import kotlinx.coroutines.withContext\n",
+        )
     } else {
         ""
     };
-    let ready_decl = if require_runtime {
-        "    var hostReady by remember { mutableStateOf(false) }\n"
+    let (window_imports, window_state_argument) = match initial_window_size {
+        Some(size) => (
+            format!(
+                "import androidx.compose.ui.unit.DpSize\n{}import androidx.compose.ui.window.rememberWindowState\n",
+                if require_runtime {
+                    ""
+                } else {
+                    "import androidx.compose.ui.unit.dp\n"
+                }
+            ),
+            format!(
+                ", state = rememberWindowState(size = DpSize({}.dp, {}.dp))",
+                size.width, size.height
+            ),
+        ),
+        None => (String::new(), String::new()),
+    };
+    let initial_props_decl = if require_runtime {
+        "    var hostProps by remember(initialResponse) { mutableStateOf(mosaicMap(initialResponse[\"props\"])) }\n"
     } else {
-        ""
+        "    var hostProps by remember { mutableStateOf<Map<String, Any?>>(emptyMap()) }\n"
     };
     let props_update = if require_runtime {
         concat!(
@@ -4812,18 +5008,12 @@ fn build_compose_main_kt(
             "            \"Mosaic runtime response did not include props\"\n",
             "        }\n",
             "        hostProps = nextProps\n",
-            "        hostReady = true\n",
         )
     } else {
         "        if (nextProps.isNotEmpty()) { hostProps = nextProps }\n"
     };
     let lifecycle = if require_runtime {
         concat!(
-            "    LaunchedEffect(mosaicHost) {\n",
-            "        applyMosaicResponse(checkNotNull(mosaicHost.props()) {\n",
-            "            \"Mosaic runtime returned no startup props\"\n",
-            "        })\n",
-            "    }\n",
             "    DisposableEffect(mosaicHost) {\n",
             "        mosaicHost.setPropsChangedHandler {\n",
             "            applyMosaicResponse(checkNotNull(mosaicHost.props()) {\n",
@@ -4850,12 +5040,99 @@ fn build_compose_main_kt(
             "    }\n",
         )
     };
-    let root_body = if require_runtime {
+    let root_body = root;
+    let main_host = if require_runtime {
+        ""
+    } else {
+        "    val mosaicHost = remember { MosaicRuntimeHost.load() ?: MosaicComposeHostBridge.load() }\n"
+    };
+    let window_body = if require_runtime {
+        "        MosaicStartup()\n"
+    } else {
+        "        MosaicApp(mosaicHost)\n"
+    };
+    let strict_startup = if require_runtime {
         format!(
-            "        if (hostReady) {{\n{root}\n        }} else {{\n            Text(\"Starting {component_label}…\")\n        }}"
+            concat!(
+                "private fun loadMosaicHost(): MosaicComposeHost {{\n",
+                "    val mosaicHost = {host_loader}\n",
+                "    return mosaicHost\n",
+                "}}\n\n",
+                "private sealed interface MosaicStartupState {{\n",
+                "    data object Loading : MosaicStartupState\n",
+                "    data class Ready(\n",
+                "        val host: MosaicComposeHost,\n",
+                "        val response: Map<String, Any?>,\n",
+                "    ) : MosaicStartupState\n",
+                "    data class Failed(val detail: String) : MosaicStartupState\n",
+                "}}\n\n",
+                "@Composable\n",
+                "fun MosaicStartup(\n",
+                "    loadHost: () -> MosaicComposeHost = ::loadMosaicHost,\n",
+                "    content: @Composable (MosaicComposeHost, Map<String, Any?>) -> Unit =\n",
+                "        {{ host, response -> MosaicApp(host, response) }},\n",
+                ") {{\n",
+                "    var attempt by remember {{ mutableStateOf(0) }}\n",
+                "    var state by remember(attempt) {{ mutableStateOf<MosaicStartupState>(MosaicStartupState.Loading) }}\n",
+                "    LaunchedEffect(attempt) {{\n",
+                "        state = withContext(Dispatchers.IO) {{\n",
+                "            runCatching {{\n",
+                "                val host = loadHost()\n",
+                "                try {{\n",
+                "                    val response = checkNotNull(host.props()) {{\n",
+                "                        \"Mosaic runtime returned no startup props\"\n",
+                "                    }}\n",
+                "                    check(response.containsKey(\"props\")) {{\n",
+                "                        \"Mosaic runtime response did not include props\"\n",
+                "                    }}\n",
+                "                    MosaicStartupState.Ready(host, response)\n",
+                "                }} catch (failure: Throwable) {{\n",
+                "                    host.close()\n",
+                "                    throw failure\n",
+                "                }}\n",
+                "            }}.getOrElse {{ failure ->\n",
+                "                MosaicStartupState.Failed(\n",
+                "                    failure.message ?: failure.javaClass.simpleName.ifEmpty {{ \"Unknown startup error\" }},\n",
+                "                )\n",
+                "            }}\n",
+                "        }}\n",
+                "    }}\n",
+                "    MaterialTheme(colors = if (androidx.compose.foundation.isSystemInDarkTheme()) darkColors() else lightColors()) {{\n",
+                "        when (val current = state) {{\n",
+                "            MosaicStartupState.Loading -> Column(\n",
+                "                modifier = Modifier.fillMaxSize().padding(32.dp).testTag(\"mosaic-startup-loading\"),\n",
+                "                verticalArrangement = Arrangement.Center,\n",
+                "                horizontalAlignment = Alignment.CenterHorizontally,\n",
+                "            ) {{\n",
+                "                Text(\"Starting {component_label}…\")\n",
+                "            }}\n",
+                "            is MosaicStartupState.Failed -> Column(\n",
+                "                modifier = Modifier.fillMaxSize().padding(32.dp).testTag(\"mosaic-startup-failure\"),\n",
+                "                verticalArrangement = Arrangement.Center,\n",
+                "                horizontalAlignment = Alignment.CenterHorizontally,\n",
+                "            ) {{\n",
+                "                Text(\"{component_label} could not start\")\n",
+                "                Text(\"Your saved tasks have not been changed. Retrying is safe.\")\n",
+                "                Text(current.detail)\n",
+                "                Button(onClick = {{ attempt += 1 }}) {{ Text(\"Try again\") }}\n",
+                "            }}\n",
+                "            is MosaicStartupState.Ready -> key(current.host) {{\n",
+                "                content(current.host, current.response)\n",
+                "            }}\n",
+                "        }}\n",
+                "    }}\n",
+                "}}\n\n",
+            ),
+            host_loader = host_loader,
+            component_label = component_label,
         )
     } else {
-        root
+        String::new()
+    };
+    let app_signature = if require_runtime {
+        "fun MosaicApp(mosaicHost: MosaicComposeHost, initialResponse: Map<String, Any?>) {"
+    } else {
+        "fun MosaicApp(mosaicHost: MosaicComposeHost?) {"
     };
     let legacy_bridge = if require_runtime {
         ""
@@ -4900,14 +5177,16 @@ fn build_compose_main_kt(
             "import androidx.compose.runtime.mutableStateOf\n",
             "import androidx.compose.runtime.remember\n",
             "import androidx.compose.runtime.setValue\n",
+            "{window_imports}",
             "import androidx.compose.ui.window.Window\n",
             "import androidx.compose.ui.window.application\n\n",
             "fun main() = application {{\n",
-            "    val mosaicHost = remember {{ {host_loader} }}\n",
-            "    Window(onCloseRequest = ::exitApplication, title = \"{}\") {{\n",
-            "        MosaicApp(mosaicHost)\n",
+            "{main_host}",
+            "    Window(onCloseRequest = ::exitApplication, title = \"{}\"{window_state_argument}) {{\n",
+            "{window_body}",
             "    }}\n",
             "}}\n\n",
+            "{strict_startup}",
             "interface MosaicComposeHost : AutoCloseable {{\n",
             "    fun props(): Map<String, Any?>?\n",
             "    fun handleEvent(event: Map<String, Any?>): Map<String, Any?>?\n",
@@ -4915,9 +5194,8 @@ fn build_compose_main_kt(
             "    override fun close() {{}}\n",
             "}}\n\n",
             "@Composable\n",
-            "fun MosaicApp(mosaicHost: {host_type}) {{\n",
-            "    var hostProps by remember {{ mutableStateOf<Map<String, Any?>>(emptyMap()) }}\n",
-            "{ready_decl}",
+            "{app_signature}\n",
+            "{initial_props_decl}",
             "    fun applyMosaicResponse(response: Map<String, Any?>?) {{\n",
             "        if (response == null) return\n",
             "        val nextProps = mosaicMap(response[\"props\"])\n",
@@ -4989,9 +5267,13 @@ fn build_compose_main_kt(
         ),
         component_label,
         startup_import = startup_import,
-        host_loader = host_loader,
-        host_type = host_type,
-        ready_decl = ready_decl,
+        window_imports = window_imports,
+        window_state_argument = window_state_argument,
+        main_host = main_host,
+        window_body = window_body,
+        strict_startup = strict_startup,
+        app_signature = app_signature,
+        initial_props_decl = initial_props_decl,
         props_update = props_update,
         lifecycle = lifecycle,
         root_body = root_body,
@@ -5269,12 +5551,12 @@ fn build_compose_readme(
 ) -> String {
     let app_id = compose_gradle_application_id(package_name);
     let runtime_policy = if require_runtime {
-        "This `native-complete` shell requires the standard Rust runtime at startup. It does not load a package-owned reflection host or mount the component with sample props. The component is mounted only after the runtime returns its first props envelope."
+        "This `native-complete` shell requires the standard Rust runtime at startup. It opens the window with a system-theme-aware loading state, shows runtime or initial-props failures with detail and an in-place retry, and mounts the component only after the runtime returns its first props envelope. It does not load a package-owned reflection host or mount the component with sample props."
     } else {
         "If no runtime library is present, this permissive shell can use a legacy package host or deterministic sample values. Use `--profile native-complete` to require the Rust runtime and remove both fallbacks."
     };
     let main_purpose = if require_runtime {
-        "Desktop app entrypoint that requires the Rust runtime and mounts the component after its first props envelope."
+        "Desktop app entrypoint that owns the loading/failure/retry surface, requires the Rust runtime, and mounts the component after its first props envelope."
     } else {
         "Desktop app entrypoint that mounts the component with Rust runtime props or permissive sample values."
     };
@@ -5320,10 +5602,27 @@ fn build_electron_main_tsconfig() -> String {
         .to_string()
 }
 
-fn build_electron_main_ts(component_name: &str) -> String {
-    format!(
+fn build_electron_main_ts(
+    component_name: &str,
+    initial_window_size: Option<&WindowSize>,
+) -> String {
+    let generated = format!(
         "// AUTO-GENERATED by mosaic-compile pkg --backend electron --emit-project. Edits will be overwritten on next emit.\n// Fork the file (remove this banner) to customise.\nimport {{ app, BrowserWindow, ipcMain }} from \"electron\";\nimport {{ existsSync }} from \"node:fs\";\nimport {{ fileURLToPath, pathToFileURL }} from \"node:url\";\nimport path from \"node:path\";\n\ntype MosaicHostRequest = {{\n  component: string;\n  event?: unknown;\n}};\n\ntype MosaicHostResponse = {{ props?: Record<string, unknown> }} | Record<string, unknown> | undefined;\ntype MosaicHost = {{\n  getProps?: (request: MosaicHostRequest) => MosaicHostResponse | Promise<MosaicHostResponse>;\n  handleEvent?: (request: MosaicHostRequest) => MosaicHostResponse | Promise<MosaicHostResponse>;\n}};\n\ntype MosaicHostModule = {{\n  default?: MosaicHost;\n  createMosaicHost?: (request: {{ component: string }}) => MosaicHost | Promise<MosaicHost>;\n}};\n\nconst MOSAIC_GET_PROPS_CHANNEL = \"mosaic:get-props\";\nconst MOSAIC_HANDLE_EVENT_CHANNEL = \"mosaic:handle-event\";\nconst __filename = fileURLToPath(import.meta.url);\nconst __dirname = path.dirname(__filename);\nconst devServerUrl = process.env.MOSAIC_ELECTRON_DEV_SERVER_URL ??\n  (process.env.npm_lifecycle_event === \"dev\" ? \"http://127.0.0.1:5173\" : undefined);\nlet mosaicHost: MosaicHost = {{}};\n\nfunction mosaicHostModuleCandidates(): string[] {{\n  const envModule = process.env.MOSAIC_ELECTRON_HOST_MODULE;\n  if (envModule) {{\n    return [path.resolve(envModule)];\n  }}\n  return [\n    path.join(__dirname, \"host.js\"),\n    path.join(__dirname, \"host.mjs\"),\n    path.join(__dirname, \"..\", \"electron\", \"host.js\"),\n    path.join(__dirname, \"..\", \"electron\", \"host.mjs\"),\n  ];\n}}\n\nasync function loadMosaicHost(): Promise<MosaicHost> {{\n  const hostModulePath = mosaicHostModuleCandidates().find(candidate => existsSync(candidate));\n  if (!hostModulePath) {{\n    return {{}};\n  }}\n  const module = (await import(pathToFileURL(hostModulePath).href)) as MosaicHostModule;\n  const created =\n    typeof module.createMosaicHost === \"function\"\n      ? await module.createMosaicHost({{ component: \"{component_name}\" }})\n      : module.default;\n  return created ?? {{}};\n}}\n\nipcMain.handle(\n  MOSAIC_GET_PROPS_CHANNEL,\n  async (_event, request: MosaicHostRequest): Promise<MosaicHostResponse> =>\n    mosaicHost.getProps?.(request),\n);\nipcMain.handle(\n  MOSAIC_HANDLE_EVENT_CHANNEL,\n  async (_event, request: MosaicHostRequest): Promise<MosaicHostResponse> =>\n    mosaicHost.handleEvent?.(request),\n);\n\nasync function createWindow(): Promise<void> {{\n  const mainWindow = new BrowserWindow({{\n    title: \"{component_name}\",\n    width: 1180,\n    height: 820,\n    minWidth: 760,\n    minHeight: 560,\n    webPreferences: {{\n      contextIsolation: true,\n      nodeIntegration: false,\n      preload: path.join(__dirname, \"preload.js\"),\n    }},\n  }});\n\n  if (devServerUrl) {{\n    await mainWindow.loadURL(devServerUrl);\n  }} else {{\n    await mainWindow.loadFile(path.join(__dirname, \"..\", \"dist\", \"index.html\"));\n  }}\n}}\n\nasync function boot(): Promise<void> {{\n  mosaicHost = await loadMosaicHost();\n  await createWindow();\n}}\n\napp.whenReady().then(() => {{\n  void boot();\n}});\n\napp.on(\"activate\", () => {{\n  if (BrowserWindow.getAllWindows().length === 0) {{\n    void createWindow();\n  }}\n}});\n\napp.on(\"window-all-closed\", () => {{\n  if (process.platform !== \"darwin\") {{\n    app.quit();\n  }}\n}});\n"
-    )
+    );
+    let Some(size) = initial_window_size else {
+        return generated;
+    };
+    generated
+        .replacen(
+            "    width: 1180,",
+            &format!("    width: {},", size.width),
+            1,
+        )
+        .replacen(
+            "    height: 820,",
+            &format!("    height: {},", size.height),
+            1,
+        )
 }
 
 fn build_electron_preload_ts() -> String {
@@ -6753,6 +7052,18 @@ version = "1"
         let manifest = fs::read_to_string(&manifest_path).unwrap();
         let manifest = manifest.replace("[kernel]", &format!("{toml}\n[kernel]"));
         fs::write(manifest_path, manifest).unwrap();
+    }
+
+    fn declare_initial_window_size(root: &Path, width: u32, height: u32) {
+        let manifest_path = root.join("mosaic-package.toml");
+        let manifest = fs::read_to_string(&manifest_path).unwrap();
+        let app =
+            format!("[app]\ninitial-window-width = {width}\ninitial-window-height = {height}\n");
+        fs::write(
+            &manifest_path,
+            manifest.replace("[kernel]", &format!("{app}[kernel]")),
+        )
+        .unwrap();
     }
 
     fn declare_token_palette(root: &Path, relative_path: &str, source: &str) {
@@ -8974,10 +9285,10 @@ layout AccessibleText {
                         | Backend::SwiftUI
                         | Backend::Xaml
                         | Backend::Flutter
+                        | Backend::Html
+                        | Backend::WebComponent
                 ) {
                     0
-                } else if backend == Backend::Html {
-                    1 // Table inheritance remains unsupported.
                 } else {
                     4
                 },
@@ -9269,11 +9580,19 @@ layout NativeEvents {
         assert!(main.contains(
             "requireNotNull(MosaicRuntimeHost.load()) { \"native-complete requires the Mosaic Rust application runtime\" }"
         ));
-        assert!(main.contains("fun MosaicApp(mosaicHost: MosaicComposeHost)"));
-        assert!(main.contains("var hostReady by remember"));
-        assert!(main.contains("if (hostReady)"));
+        assert!(main.contains("fun MosaicStartup("));
+        assert!(main.contains("MosaicStartupState.Loading"));
+        assert!(main.contains("Card could not start"));
+        assert!(main.contains("Your saved tasks have not been changed. Retrying is safe."));
+        assert!(main.contains("Button(onClick = { attempt += 1 })"));
+        assert!(main.contains("withContext(Dispatchers.IO)"));
+        assert!(main.contains(
+            "fun MosaicApp(mosaicHost: MosaicComposeHost, initialResponse: Map<String, Any?>)"
+        ));
+        assert!(!main.contains("var hostReady by remember"));
+        assert!(!main.contains("if (hostReady)"));
         assert!(main.contains("check(response.containsKey(\"props\"))"));
-        assert!(main.contains("checkNotNull(mosaicHost.props())"));
+        assert!(main.contains("val response = checkNotNull(host.props())"));
         assert!(main.contains("checkNotNull(mosaicHost.handleEvent(event.mosaicEnvelope))"));
         assert!(main.contains("label = mosaicRequiredString(hostProps, \"label\")"));
         assert!(!main.contains("MosaicComposeHostBridge"));
@@ -12649,6 +12968,51 @@ version = "1"
     }
 
     #[test]
+    fn declared_initial_window_size_reaches_every_desktop_shell() {
+        for (backend, shell_path, expected) in [
+            (
+                Backend::Compose,
+                "src/main/kotlin/Main.kt",
+                "rememberWindowState(size = DpSize(1280.dp, 900.dp))",
+            ),
+            (Backend::Qt, "main.cpp", "view.resize(1280, 900);"),
+            (
+                Backend::SwiftUI,
+                "Sources/App/App.swift",
+                "#if os(macOS)\n    .defaultSize(width: 1280, height: 900)\n    #endif",
+            ),
+            (
+                Backend::Xaml,
+                "MainWindow.xaml.cs",
+                "AppWindow.Resize(new Windows.Graphics.SizeInt32(1280, 900));",
+            ),
+            (
+                Backend::Electron,
+                "electron/main.ts",
+                "width: 1280,\n    height: 900,",
+            ),
+        ] {
+            let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+            declare_initial_window_size(pkg.path(), 1280, 900);
+            let out = TempDir::new().unwrap();
+            build_package(&BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend,
+                emit_project: true,
+                theme: None,
+            })
+            .unwrap_or_else(|error| panic!("{backend:?} build failed: {error:?}"));
+            let shell = fs::read_to_string(out.path().join(backend.dir_name()).join(shell_path))
+                .unwrap_or_else(|error| panic!("read {backend:?} shell: {error}"));
+            assert!(
+                shell.contains(expected),
+                "{backend:?} shell did not honor [app] initial window size:\n{shell}"
+            );
+        }
+    }
+
+    #[test]
     fn venture_browser_builds_and_mounts_host_surface_on_every_backend() {
         let package_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
             .parent()
@@ -14425,7 +14789,20 @@ version = "1"
         let root = scratch();
         let out = root.join("out");
         fs::create_dir_all(&out).expect("create the output directory");
-        fs::write(out.join("leftover.h"), b"// from a previous run\n").expect("write it");
+        let leftover = out.join("leftover.h");
+        fs::write(&leftover, b"// from a previous run\n").expect("write it");
+
+        // Give the pre-emission file a deliberately old, explicit timestamp.
+        // Two immediate writes are allowed to share the same reported mtime on
+        // Windows, which made this stamp-path test depend on ambient filesystem
+        // granularity instead of the comparison it is meant to exercise.
+        let before_modified = std::time::UNIX_EPOCH + std::time::Duration::from_secs(1_600_000_000);
+        fs::OpenOptions::new()
+            .write(true)
+            .open(&leftover)
+            .expect("open the pre-emission file")
+            .set_times(fs::FileTimes::new().set_modified(before_modified))
+            .expect("set the pre-emission mtime");
 
         let pre_emission = pre_emission_stamps(&out);
         let generated = generated_files_on_disk(&out, &pre_emission, &HashSet::new())
@@ -14441,10 +14818,20 @@ version = "1"
         // content and the length half of the stamp can never differ -- mtime is
         // the only half doing work. A fixture that changes the length passes on
         // the inert half and leaves the real discriminator unpinned, which is
-        // what the first version of this test did.
-        let before = fs::metadata(out.join("leftover.h")).expect("stat").len();
-        fs::write(out.join("leftover.h"), b"// rewritten by build!\n").expect("rewrite it");
-        let after = fs::metadata(out.join("leftover.h")).expect("stat").len();
+        // what the first version of this test did. Set the post-write mtime too
+        // so the test remains deterministic even on a same-tick filesystem.
+        let before = fs::metadata(&leftover).expect("stat").len();
+        fs::write(&leftover, b"// rewritten by build!\n").expect("rewrite it");
+        fs::OpenOptions::new()
+            .write(true)
+            .open(&leftover)
+            .expect("open the rewritten file")
+            .set_times(
+                fs::FileTimes::new()
+                    .set_modified(before_modified + std::time::Duration::from_secs(2)),
+            )
+            .expect("set the rewritten mtime");
+        let after = fs::metadata(&leftover).expect("stat").len();
         assert_eq!(before, after, "the rewrite must not change the length");
         let generated = generated_files_on_disk(&out, &pre_emission, &HashSet::new())
             .expect("walk the output directory");
@@ -15323,10 +15710,10 @@ handlers = [
             required: false,
             default: Some(SlotDefault::Text("AUTHORDEFAULTVALUE".to_string())),
         }];
-        let generated = build_compose_main_kt("AuthorComponentName", &slots, false);
+        let generated = build_compose_main_kt("AuthorComponentName", &slots, false, None);
 
         let anchor = generated
-            .find("val mosaicHost = remember {")
+            .find("val mosaicHost =")
             .expect("the anchor must be present");
         let prefix = &generated[..anchor];
 
@@ -15351,7 +15738,7 @@ handlers = [
 
     /// The anchor must match what the Compose emitter ACTUALLY emits.
     ///
-    /// `val mosaicHost = remember {` is an incidental detail of
+    /// `val mosaicHost =` is an incidental detail of
     /// `build_compose_main_kt`, free to be reworded by someone who never reads
     /// this code. A fixture-only suite would survive that while every real
     /// build broke, so this drives the real generator -- in both the
@@ -15359,7 +15746,7 @@ handlers = [
     #[test]
     fn the_anchor_matches_a_genuinely_emitted_compose_main() {
         for require_runtime in [false, true] {
-            let generated = build_compose_main_kt("Probe", &[], require_runtime);
+            let generated = build_compose_main_kt("Probe", &[], require_runtime, None);
             assert_eq!(
                 generated.contains("requireNotNull(MosaicRuntimeHost.load())"),
                 require_runtime,
@@ -15367,7 +15754,7 @@ handlers = [
             );
             let wired = compose_main_with_host_effects(&generated, &handler())
                 .unwrap_or_else(|e| panic!("require_runtime={require_runtime}: {e:?}"));
-            let host = wired.find("val mosaicHost = remember").expect("host");
+            let host = wired.find("val mosaicHost =").expect("host");
             let install = wired.find("installProbeEffects(it)").expect("install");
             assert!(host < install, "{wired}");
         }

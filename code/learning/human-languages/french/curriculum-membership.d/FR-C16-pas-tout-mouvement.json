@@ -1,0 +1,11 @@
+{
+  "id": "FR-C16-pas-tout-mouvement",
+  "pathSegment": "FR-PATH-017",
+  "pathOrder": 26,
+  "extensions": [
+    {
+      "id": "FR-EXT-017-LANGUAGE-SPECIFIC",
+      "order": 26
+    }
+  ]
+}

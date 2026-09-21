@@ -1,0 +1,11 @@
+{
+  "id": "BN-R20-one-and-another",
+  "pathSegment": "BN-PATH-028",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-029-CLASSIFIER",
+      "order": 4
+    }
+  ]
+}

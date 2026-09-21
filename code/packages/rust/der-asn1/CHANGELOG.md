@@ -9,3 +9,6 @@
   shared depth and total-element budget.
 - Added redacted error categories, transactional cursor accounting, checked
   integer conversion, infallible validated OID iteration, and adversarial tests.
+- Added universal IA5String validation and exact schema-selected implicit
+  OCTET STRING, IA5String, and OBJECT IDENTIFIER decoding for later X.509
+  context-specific values.

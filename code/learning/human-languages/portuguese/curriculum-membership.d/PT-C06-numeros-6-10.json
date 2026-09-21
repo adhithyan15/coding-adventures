@@ -1,0 +1,11 @@
+{
+  "id": "PT-C06-numeros-6-10",
+  "pathSegment": "PT-PATH-013",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-013-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

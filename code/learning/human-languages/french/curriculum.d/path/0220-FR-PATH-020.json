@@ -1,10 +1,6 @@
 {
   "id": "FR-PATH-020",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
-  "lessons": [
-    "FR-C19-sil-vous-plait",
-    "FR-C20-je-suis-desole"
-  ],
   "before": [],
   "inline": [],
   "after": []

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C82-patlaa",
+  "pathSegment": "HI-PATH-90-BODY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-90-BODY",
+      "order": 1
+    }
+  ]
+}

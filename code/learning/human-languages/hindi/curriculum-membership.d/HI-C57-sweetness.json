@@ -1,0 +1,11 @@
+{
+  "id": "HI-C57-sweetness",
+  "pathSegment": "HI-PATH-57-GIFT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-57-GIFT",
+      "order": 4
+    }
+  ]
+}

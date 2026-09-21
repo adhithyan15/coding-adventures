@@ -1,0 +1,11 @@
+{
+  "id": "MR-C23-chalne",
+  "pathSegment": "MR-PATH-025",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-028-WELLBEING-VERBS",
+      "order": 3
+    }
+  ]
+}

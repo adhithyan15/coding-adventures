@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-POST-07",
+  "category": "Parsarg (postpositions and case)",
+  "label": "ke sath for accompaniment, and ke bina for its absence",
+  "probe": [
+    "HI-LEX-C93-REL-01",
+    "HI-LEX-C93-REL-02"
+  ],
+  "derivedFrom": "ES:A1-NG1-02",
+  "note": "ke saath is introduced by HI-C93-ke-saath and ke binaa by HI-C93-ke-binaa, and the note's own examples are constructible as printed: apnaa, dost and parivaar were all already taught, so mock 1's `apne dost ke saath` and mock 2's `apne parivaar ke saath` need nothing beyond the one new word. The teachable part is that these are not prepositions. dost ke saath is, piece by piece, THE FRIEND'S COMPANY -- a possessive phrase whose head noun happens to name a relation -- which is why the middle word is ke and never kaa, and why a pronoun needs no middle word at all. binaa is the one relation word in the family that may also stand in FRONT of its noun (binaa chaay ke), and the lesson teaches the ordinary order and flags the other so a reader is not surprised by it."
+}

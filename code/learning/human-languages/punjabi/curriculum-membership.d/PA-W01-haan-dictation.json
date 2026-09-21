@@ -1,0 +1,11 @@
+{
+  "id": "PA-W01-haan-dictation",
+  "pathSegment": "PA-PATH-003",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "PA-EXT-003-HAAN-WRITING",
+      "order": 6
+    }
+  ]
+}

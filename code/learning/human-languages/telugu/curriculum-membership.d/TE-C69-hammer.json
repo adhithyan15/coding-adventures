@@ -1,0 +1,11 @@
+{
+  "id": "TE-C69-hammer",
+  "pathSegment": "TE-PATH-69-TOOL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-69-TOOL",
+      "order": 3
+    }
+  ]
+}

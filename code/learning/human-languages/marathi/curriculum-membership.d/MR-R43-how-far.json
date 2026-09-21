@@ -1,0 +1,11 @@
+{
+  "id": "MR-R43-how-far",
+  "pathSegment": "MR-PATH-046",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-059-NEAR-OPPOSITE-FAR",
+      "order": 3
+    }
+  ]
+}

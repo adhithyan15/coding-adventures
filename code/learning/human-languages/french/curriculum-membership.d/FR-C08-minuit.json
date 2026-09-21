@@ -1,0 +1,11 @@
+{
+  "id": "FR-C08-minuit",
+  "pathSegment": "FR-PATH-029",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-029-LANGUAGE-SPECIFIC",
+      "order": 4
+    }
+  ]
+}

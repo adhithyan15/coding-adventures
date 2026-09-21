@@ -1,0 +1,11 @@
+{
+  "id": "ES-C405-foto",
+  "pathSegment": "ES-PATH-405-IMAGES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-405-IMAGES",
+      "order": 1
+    }
+  ]
+}

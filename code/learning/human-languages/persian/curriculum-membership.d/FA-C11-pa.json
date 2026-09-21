@@ -1,0 +1,11 @@
+{
+  "id": "FA-C11-pa",
+  "pathSegment": "FA-PATH-012",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-019-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

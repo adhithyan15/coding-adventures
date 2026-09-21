@@ -1,0 +1,11 @@
+{
+  "id": "SA-C27-true",
+  "pathSegment": "SA-PATH-27-REPLY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-27-REPLY",
+      "order": 3
+    }
+  ]
+}

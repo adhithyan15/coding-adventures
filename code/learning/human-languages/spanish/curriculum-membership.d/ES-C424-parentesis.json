@@ -1,0 +1,11 @@
+{
+  "id": "ES-C424-parentesis",
+  "pathSegment": "ES-PATH-424-SIGNOS",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-424-SIGNOS",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C37-kiti",
+  "pathSegment": "MR-PATH-039",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-052-WHO-AND-HOW-MANY",
+      "order": 1
+    }
+  ]
+}

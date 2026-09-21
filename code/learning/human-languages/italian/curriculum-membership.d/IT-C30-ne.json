@@ -1,0 +1,11 @@
+{
+  "id": "IT-C30-ne",
+  "pathSegment": "IT-PATH-034",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-034-NON",
+      "order": 2
+    }
+  ]
+}

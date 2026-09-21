@@ -1,9 +1,6 @@
 {
   "id": "ES-PATH-274-01",
   "spine_node": "SPINE-READ-CULTURAL-WEIGHT",
-  "lessons": [
-    "ES-C274-mas-vale-pajaro"
-  ],
   "before": [],
   "inline": [],
   "after": []

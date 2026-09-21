@@ -1,0 +1,11 @@
+{
+  "id": "MW-C11-hear-barsaat",
+  "pathSegment": "MW-PATH-011",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-025-WEATHER-THREE",
+      "order": 4
+    }
+  ]
+}

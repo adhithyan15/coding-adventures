@@ -1,0 +1,11 @@
+{
+  "id": "HI-C93-karne-ke-liye",
+  "pathSegment": "HI-PATH-101-RELATION",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "HI-EXT-101-RELATION",
+      "order": 6
+    }
+  ]
+}

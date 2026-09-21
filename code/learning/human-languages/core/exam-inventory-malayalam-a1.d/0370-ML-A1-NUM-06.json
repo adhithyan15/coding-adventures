@@ -1,0 +1,22 @@
+{
+  "id": "ML-A1-NUM-06",
+  "category": "Sankhya (numerals and quantity)",
+  "label": "relative quantity: more, less, a little",
+  "probe": [
+    "ML-LEX-C58-ANSWER-01",
+    "ML-LEX-C58-ANSWER-02",
+    "ML-LEX-C58-ANSWER-03"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-Q-03",
+    "A1-ADV-03",
+    "A1-NG2-02"
+  ],
+  "malayalamSpecific": false,
+  "note": "koodutal, kuravu and kurachu are chapter 58, and they answer the quantity question as short replies rather than as modifiers."
+}

@@ -1,7 +1,4 @@
 {
-  "segments": [
-    "HI-PATH-74-ASK"
-  ],
   "omits": [
     "VERB-NEGATE"
   ],

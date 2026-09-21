@@ -1,0 +1,11 @@
+{
+  "id": "GE-C15-sagte",
+  "pathSegment": "GE-PATH-020-C",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-020-C-PRAETERITUM",
+      "order": 1
+    }
+  ]
+}

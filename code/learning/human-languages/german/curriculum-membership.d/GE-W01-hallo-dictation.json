@@ -1,0 +1,11 @@
+{
+  "id": "GE-W01-hallo-dictation",
+  "pathSegment": "GE-PATH-001",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-001-WRITING-START",
+      "order": 2
+    }
+  ]
+}

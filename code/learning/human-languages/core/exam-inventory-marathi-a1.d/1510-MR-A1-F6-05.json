@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-F6-05",
+  "category": "Structuring the exchange",
+  "label": "propose closing the conversation",
+  "probe": [
+    "MR-A1-MESSAGE-LINE-SEE-AGAIN",
+    "MR-PHRASE-YETO-YETE-01"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-spine"
+  ],
+  "derivedFrom": [
+    "A1-F6-06"
+  ]
+}

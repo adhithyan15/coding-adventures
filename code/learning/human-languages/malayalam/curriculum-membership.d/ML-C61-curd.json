@@ -1,0 +1,11 @@
+{
+  "id": "ML-C61-curd",
+  "pathSegment": "ML-PATH-61-SHELF",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-61-SHELF",
+      "order": 2
+    }
+  ]
+}

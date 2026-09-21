@@ -1,0 +1,11 @@
+{
+  "id": "SA-R53-correlative",
+  "pathSegment": "SA-PATH-53-CORRELATIVE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-053-CORRELATIVE",
+      "order": 4
+    }
+  ]
+}

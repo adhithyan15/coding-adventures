@@ -1,0 +1,11 @@
+{
+  "id": "MW-R17-script-close",
+  "pathSegment": "MW-PATH-016",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "MW-EXT-030-TRANSPORT-FIVE",
+      "order": 7
+    }
+  ]
+}

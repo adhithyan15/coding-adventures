@@ -1,0 +1,11 @@
+{
+  "id": "PT-C25-familia",
+  "pathSegment": "PT-PATH-029",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-029-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

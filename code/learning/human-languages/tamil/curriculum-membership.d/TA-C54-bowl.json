@@ -1,0 +1,11 @@
+{
+  "id": "TA-C54-bowl",
+  "pathSegment": "TA-PATH-54-HOUSE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-54-HOUSE",
+      "order": 3
+    }
+  ]
+}

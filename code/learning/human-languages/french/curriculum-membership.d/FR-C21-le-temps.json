@@ -1,0 +1,11 @@
+{
+  "id": "FR-C21-le-temps",
+  "pathSegment": "FR-PATH-021",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-021-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

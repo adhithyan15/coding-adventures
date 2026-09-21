@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-OR-24",
+  "category": "Devanagari letters and signs",
+  "label": "the Devanagari digits zero to nine",
+  "probe": null,
+  "note": "No atom introduces a single digit. The A1 writing paper is 'complete a practical form', and a form asks for a phone number, a house number and a date. This is the cheapest large gap in the file: ten glyphs, and they unlock an entire paper part.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [
+    "A1-O4-03"
+  ]
+}

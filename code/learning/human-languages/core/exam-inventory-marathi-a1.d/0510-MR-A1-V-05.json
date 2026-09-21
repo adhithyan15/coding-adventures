@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-V-05",
+  "category": "The verb",
+  "label": "the past habitual",
+  "probe": null,
+  "note": "Untaught.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-V-04",
+    "A1-V-05"
+  ]
+}

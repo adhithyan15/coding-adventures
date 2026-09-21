@@ -174,7 +174,7 @@ export interface CurriculumExtensionNode {
   canDo: string;
   /** Extension ids and/or shared spine-node ids. */
   prerequisites: string[];
-  /** Existing micro-lessons that realize this extension. */
+  /** Existing micro-lessons, derived from direct per-lesson membership owners. */
   lessons: string[];
 }
 
@@ -188,7 +188,7 @@ export interface CurriculumExtensionNode {
 export interface CurriculumPathSegment {
   id: string;
   spine_node: string;
-  /** Exact prerequisite-safe lesson order inside this segment. */
+  /** Exact prerequisite-safe order, derived from direct per-lesson membership owners. */
   lessons: string[];
   /** Extension ids classified by their relationship to the shared material. */
   before: string[];
@@ -198,7 +198,7 @@ export interface CurriculumPathSegment {
 
 /** Coverage ledger for one shared node in one language. */
 export interface SpineRealizationMap {
-  /** Segment ids in their authored local order. */
+  /** Segment ids derived from `path[*].spine_node` in authored local order. */
   segments: string[];
   /** Canonical concepts deliberately absent from the current track corpus. */
   omits: string[];

@@ -1764,11 +1764,37 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_architecture_to_png() {
         let diagram = parse_architecture(
-            "architecture-beta\ngroup platform(cloud)[Platform]\nservice api(server)[API] in platform\nservice db(database)[Database] in platform\napi:R --> L:db",
+            "architecture-beta\naccTitle: Platform topology\naccDescr: API and database services\ngroup platform(cloud)[Platform]\nservice api \"API\"[Gateway]\njunction split\nservice db(database)[Database] in platform\nservice worker(aws:lambda)[Worker] in platform\nalign row api split db worker\napi:R -[reads and writes]-> T:split\nsplit:R <--> L:db{group}",
         )
         .expect("Mermaid architecture parse failed");
         let layout = layout_structural_diagram(&diagram);
         assert_eq!(layout.groups.len(), 1);
+        assert_eq!(layout.groups[0].icon_name.as_deref(), Some("cloud"));
+        assert_eq!(
+            layout.relationships[0].label.as_ref().map(|(_, label)| label.as_str()),
+            Some("reads and writes")
+        );
+        assert!(layout.nodes.windows(2).all(|nodes| nodes[0].y == nodes[1].y));
+        assert_eq!(layout.nodes[0].icon_text.as_deref(), Some("API"));
+        assert_eq!(layout.nodes[2].icon_name.as_deref(), Some("database"));
+        assert_eq!(layout.nodes[3].icon_name.as_deref(), Some("aws:lambda"));
+        assert_eq!(layout.relationships[0].from_port, Some(diagram_ir::StructuralPort::Right));
+        assert_eq!(layout.relationships[0].to_port, Some(diagram_ir::StructuralPort::Top));
+        assert_eq!(
+            layout.relationships[0].points[0].x,
+            layout.nodes[0].x + layout.nodes[0].width
+        );
+        assert_eq!(
+            layout.relationships[0].points.last().unwrap().y,
+            layout.nodes[1].y
+        );
+        assert_eq!(layout.relationships[0].routing, diagram_ir::StructuralRouting::Orthogonal);
+        assert!(layout.relationships[0].points.windows(2).all(|segment| {
+            segment[0].x == segment[1].x || segment[0].y == segment[1].y
+        }));
+        assert!(layout.relationships[1].start_arrow);
+        assert!(layout.relationships[1].end_arrow);
+        assert!(layout.relationships[1].to_group);
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;
         let resolver = CoreTextResolver::new();
@@ -1786,6 +1812,22 @@ line "Target" [35, 50, 68, 82]"##,
         );
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Ellipse(ellipse)
+                if ellipse.rx == 9.0 && ellipse.ry == 9.0
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Rect(rect)
+                if rect.fill.as_deref() == Some("#ffffff") && rect.stroke.is_none()
+        )));
+        let metadata = scene.metadata.as_ref().expect("accessibility metadata");
+        assert_eq!(metadata["accessibility.title"], "Platform topology");
+        assert_eq!(
+            metadata["accessibility.description"],
+            "API and database services"
+        );
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_architecture_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);

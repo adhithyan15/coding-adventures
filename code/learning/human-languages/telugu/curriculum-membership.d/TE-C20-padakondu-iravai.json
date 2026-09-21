@@ -1,0 +1,11 @@
+{
+  "id": "TE-C20-padakondu-iravai",
+  "pathSegment": "TE-PATH-022",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-022-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

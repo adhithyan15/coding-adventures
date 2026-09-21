@@ -1,0 +1,11 @@
+{
+  "id": "MR-C68-shubh-sandhyakal",
+  "pathSegment": "MR-PATH-070",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-083-SHUBH-GREETINGS",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C17-dopahar-aadhi-raat",
+  "pathSegment": "HI-PATH-019",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-019-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

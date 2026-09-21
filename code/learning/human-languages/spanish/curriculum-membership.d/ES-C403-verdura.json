@@ -1,0 +1,11 @@
+{
+  "id": "ES-C403-verdura",
+  "pathSegment": "ES-PATH-403-FOOD",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-403-FOOD",
+      "order": 1
+    }
+  ]
+}

@@ -153,8 +153,10 @@ storage-neutral canonical model, ordered catalog, repository boundary, and
 save-before-commit transaction; `browser-bookmarks-file` supplies bounded,
 versioned JSON with native profile paths and crash-safe atomic replacement;
 `BrowserSession` owns bookmark commands; and all generated Mosaic hosts share
-one label/disabled/event contract. Adapter, restart, rollback, DOM, and direct
-native toolbar tests cover the complete seam.
+one toggle and catalog contract. The shared controller projects count, title,
+canonical address, and selection position, owns wraparound traversal, and
+opens the selected entry through ordinary navigation. Adapter, restart,
+rollback, generated-host, and direct native tests cover the complete seam.
 
 Completed through the typed input value phase: `browser-form-controls` owns
 selection, composition, editor presentation, generated-Unicode grapheme and
@@ -200,6 +202,14 @@ containment, scrolling, accessibility state, and focus rings without a new
 host ABI. The
 tracked acceptance backlog is complete; each next phase starts from a fresh
 cross-host audit.
+
+The latest audit closes the remaining source-copy gap. Browser core retains the
+exact response text while Mosaic renders its title, committed address, raw
+source, and Copy Source control in a shared closable panel. Copying reuses the
+typed clipboard effect, keeps the panel open, and reports `Page source copied`;
+the existing typed auxiliary-document effect remains available for richer
+platform presentation. A generated shell therefore cannot silently discard,
+refetch, or reconstruct source in toolkit code.
 
 These are browser-wiring and acceptance items. They do not relax the exact
 zero-missing WPT tree-construction or tokenizer coverage ratchets, and they do
@@ -406,6 +416,11 @@ The browser itself has a thin platform layer. The first runnable host targets
 macOS so it can be exercised on current development hardware; Windows remains
 the intended v0.1 parity target after the interaction model is proven.
 
+Generated native shells MUST share one bridge protocol owned by browser core.
+Core decodes Mosaic event names and required values and serializes all chrome
+props, typed effects, and errors. macOS, Windows, and Cairo adapters MUST remain
+FFI translators and MUST NOT recreate event or JSON policy for their toolkit.
+
 | Platform | Window              | Rendering                                     | Text Measurement           |
 |----------|---------------------|-----------------------------------------------|----------------------------|
 | Windows  | Win32 CreateWindowExW (next host) | paint-vm-direct2d (P2D06) or paint-vm-gdi (P2D07) | text-native DirectWrite |
@@ -588,13 +603,18 @@ system window color and felt "native."
 ### View Source
 
 - **Trigger**: Ctrl+U or menu View → Source.
-- Opens a **new window** showing the raw HTML text of the current page.
+- Shows the raw HTML text of the current page in shared generated chrome and
+  may also open a richer platform-owned auxiliary window.
 - Implementation: wrap the raw HTML in a synthetic `<pre>` document and run it
   through the same rendering pipeline. The "source" window is just another
   Venture window with a fabricated document.
-- The shared core performs escaping from the retained response text and emits
-  a typed `open-auxiliary-document` effect. Hosts own window presentation but
-  must not refetch, reinterpret, or toolkit-parse the source payload.
+- The shared core retains the exact response text for a closable Mosaic panel,
+  performs auxiliary-document escaping once, and emits a typed
+  `open-auxiliary-document` effect. Hosts may own richer window presentation
+  but must not refetch, reinterpret, or toolkit-parse the source payload.
+- **Copy Source** writes the exact retained response through the shared typed
+  clipboard effect, leaves the panel open, and updates shared status. Hosts
+  perform only the final clipboard API call.
 
 ### Dependencies (Cargo.toml)
 

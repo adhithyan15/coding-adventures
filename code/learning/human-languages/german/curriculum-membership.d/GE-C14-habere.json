@@ -1,0 +1,11 @@
+{
+  "id": "GE-C14-habere",
+  "pathSegment": "GE-PATH-018",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "GE-EXT-018-HABEN",
+      "order": 5
+    }
+  ]
+}

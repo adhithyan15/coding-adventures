@@ -1,0 +1,11 @@
+{
+  "id": "GE-C07-montag",
+  "pathSegment": "GE-PATH-035",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-035-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

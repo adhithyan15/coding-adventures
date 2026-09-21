@@ -2858,6 +2858,114 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — bounded while-control simulation applies a statically
+    // selected control update in the body before evaluating the next element.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; real x; i := 0; for i := i + 1 while i <= 10 do if i < 4 then i := i * 2 else i := i + 3; print(i + 0.25); x := 0.5; for x := x + 0.5 while x <= 10.0 do if x < 4.0 then x := x * 2.0 else x := x + 3.0; print(x) end",
+        expect: Expect::Stdout("11.2512.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a bounded while-control recurrence and another local scalar
+    // recurrence advance together while retaining both terminating snapshots.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, total; i := 0; total := 0; for i := i + 1 while i <= 10 do begin total := total + i * 2; if i < 4 then i := i * 2 else i := i + 3 end; print(i + 0.25); print(total + 0.5) end",
+        expect: Expect::Stdout("11.2522.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a bounded while loop may evolve a supported local scalar
+    // used by its next control predicate while retaining every exact snapshot.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n; real r; i := 0; n := 3; r := 0.25; for i := i + 1 while i <= n do begin r := r + i; n := n - 1 end; print(i + 0.25); print(n + 0.5); print(r) end",
+        expect: Expect::Stdout("3.251.53.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — the changing while dependency may consume an unchanged
+    // ordinary local scalar while capped execution retains exact snapshots.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; real r; i := 0; n := 5; delta := 2; r := 0.25; for i := i + 1 while i <= n do begin r := r + i; n := n - delta end; print(i + 0.25); print(n + 0.5); print(r) end",
+        expect: Expect::Stdout("3.251.53.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a changing while dependency may consume another changing
+    // local recurrence when their dependency graph is acyclic.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; real r; i := 0; n := 5; delta := 1; r := 0.25; for i := i + 1 while i <= n do begin r := r + i; n := n - delta; delta := delta + 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25); print(r) end",
+        expect: Expect::Stdout("3.252.53.253.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — changing acyclic dependency recurrences may use conditional
+    // expressions whose selectors also evolve through exact local snapshots.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, limit, choose; boolean other; i := 0; n := 3; limit := 3; choose := 1; other := true; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := not other end; print(i + 0.25); print(n + 0.5); print(limit + 0.25); print(choose + 0.25) end",
+        expect: Expect::Stdout("3.253.53.250.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a changing exact selector may choose a supported recurrence
+    // statement on some bounded passes and leave the dependency unchanged on others.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n; boolean guard; real r; i := 0; n := 4; guard := true; r := 0.25; for i := i + 1 while i <= n do begin r := r + i; if guard then n := n - 1; guard := not guard end; print(i + 0.25); print(n + 0.5); print(r) end",
+        expect: Expect::Stdout("4.252.56.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — capped while analysis applies repeated writes to one changing
+    // dependency in source order before evaluating the next control predicate.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n; real r; i := 0; n := 6; r := 0.25; for i := i + 1 while i <= n do begin n := n - 1; n := n - 1; r := r + i end; print(i + 0.25); print(n + 0.5); print(r) end",
+        expect: Expect::Stdout("3.252.53.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — capped while analysis evaluates a cycle of cross-assigned
+    // local dependencies in source order and retains every exact snapshot.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; i := 0; n := 4; delta := 2; for i := i + 1 while i <= n do begin n := n - delta; delta := n end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.250.50.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a cross-assigned cycle may contain a conditional expression
+    // when its selector depends solely on the exact loop-control snapshot.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; i := 0; n := 4; delta := 2; for i := i + 1 while i <= n do begin n := n - delta; delta := if i < 2 then n else n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.250.5-0.75"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — an unchanged exact ordinary local may select a conditional
+    // expression inside a cross-assigned recurrence cycle.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; choose := false; for i := i + 1 while i <= n do begin n := n - delta; delta := if choose then n else n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.251.50.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — an unchanged exact ordinary local may select statement
+    // branches containing the writes in a cross-assigned recurrence cycle.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; choose := false; for i := i + 1 while i <= n do begin n := n - delta; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.251.50.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — an exact scalar self-assignment is an idempotent body write,
     // so the stable local while dependency remains available to the proof.
     Prog {
@@ -13780,6 +13888,290 @@ fn algol_static_real_while_control_exit_runs_on_every_available_standard_backend
 }
 
 #[test]
+fn algol_while_control_body_recurrences_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("for i := i + 1 while i <= 10 do if i < 4")
+        })
+        .expect("the while-control body recurrences must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the while-control body recurrences did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_while_control_sibling_recurrences_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("total := total + i * 2")
+        })
+        .expect("the while-control sibling recurrences must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the while-control sibling recurrences did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_mutable_while_dependencies_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("while i <= n do begin r := r + i")
+        })
+        .expect("the mutable while-dependency program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the mutable while dependency did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_stable_while_recurrence_inputs_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("n := n - delta")
+        })
+        .expect("the stable while-recurrence input program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the stable while-recurrence input did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_acyclic_while_recurrence_inputs_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("delta := delta + 1")
+        })
+        .expect("the acyclic while-recurrence input program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the acyclic while-recurrence input did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_conditional_while_recurrence_inputs_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("other := not other")
+        })
+        .expect("the conditional while-recurrence input program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the conditional while-recurrence input did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_conditional_statement_recurrences_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("if guard then n := n - 1")
+        })
+        .expect("the conditional statement-recurrence program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the conditional statement recurrence did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_ordered_recurrence_rewrites_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("n := n - 1; n := n - 1")
+        })
+        .expect("the ordered recurrence-rewrite program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the ordered recurrence rewrites did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_cross_assigned_recurrences_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("n := n - delta; delta := n")
+        })
+        .expect("the cross-assigned recurrence program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the cross-assigned recurrences did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_control_selected_recurrence_cycles_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("delta := if i < 2 then n else n - 1")
+        })
+        .expect("the control-selected recurrence-cycle program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the control-selected recurrence cycle did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_stable_selected_recurrence_cycles_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("choose := false; for i := i + 1 while i <= n")
+        })
+        .expect("the stable-selected recurrence-cycle program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the stable-selected recurrence cycle did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_stable_statement_recurrence_cycles_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("if choose then delta := n else delta := n - 1")
+        })
+        .expect("the stable statement recurrence-cycle program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the stable statement recurrence cycle did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
 fn algol_idempotent_while_dependency_runs_on_every_available_standard_backend() {
     let program = PROGRAMS
         .iter()
@@ -16035,7 +16427,11 @@ fn portable_text_stdout_brainfuck_beam_raw_bytes() {
         let dir = tempfile::tempdir().unwrap();
         std::fs::write(dir.path().join("bfbytes.beam"), bytes).unwrap();
         let mut cmd = Command::new("erl");
-        cmd.current_dir(dir.path()).args(["-noshell", "-kernel", "standard_io_encoding", "latin1"])
+        // This byte sweep runs beside many other real-BEAM probes in the test
+        // binary. Keep this VM to one scheduler and one async thread so macOS CI
+        // does not intermittently terminate it while all 256 bytes are emitted.
+        cmd.current_dir(dir.path()).args(["+S", "1:1", "+A", "1"])
+            .args(["-noshell", "-kernel", "standard_io_encoding", "latin1"])
             .arg("-pa").arg(dir.path())
             .args(["-eval", "bfbytes:main(),halt(0)."]);
         let out = output_with_stdin(cmd, &input).expect("detected erl must spawn");

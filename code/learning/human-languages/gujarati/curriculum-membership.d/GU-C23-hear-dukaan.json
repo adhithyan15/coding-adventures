@@ -1,0 +1,11 @@
+{
+  "id": "GU-C23-hear-dukaan",
+  "pathSegment": "GU-PATH-022",
+  "pathOrder": 25,
+  "extensions": [
+    {
+      "id": "GU-EXT-034-MAP-TEN",
+      "order": 3
+    }
+  ]
+}

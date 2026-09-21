@@ -69,8 +69,22 @@ export default [
     name: "keeps Malayalam chillus sourced and outside the all-syllable grid",
     verify: ({ SCRIPTS, isSyllabary, buildSyllableMatrix }) => {
       const malayalam = SCRIPTS.find((s) => s.script === "malayalam")!;
-      expect(malayalam.finalConsonants?.map((entry) => entry.glyph)).toEqual(["ൽ", "ൻ", "ൾ", "ർ"]);
-      const chilluL = malayalam.finalConsonants![0]!;
+      expect(malayalam.finalConsonants?.map((entry) => entry.glyph)).toEqual([
+        "ൺ",
+        "ൽ",
+        "ൻ",
+        "ൾ",
+        "ർ",
+      ]);
+      const chilluNN = malayalam.finalConsonants!.find((entry) => entry.glyph === "ൺ")!;
+      expect(chilluNN.role).toBe("consonant");
+      expect(chilluNN.penLifts).toBe(0);
+      expect(chilluNN.strokeOrder).toHaveLength(5);
+      expect(chilluNN.strokeOrderSource?.url).toBe(
+        "https://commons.wikimedia.org/wiki/File:Ml_%E0%B5%BA_order.gif",
+      );
+      expect(malayalam.letters.some((entry) => entry.glyph === "ൺ")).toBe(false);
+      const chilluL = malayalam.finalConsonants!.find((entry) => entry.glyph === "ൽ")!;
       expect(chilluL.role).toBe("consonant");
       expect(chilluL.penLifts).toBe(0);
       expect(chilluL.strokeOrder).toHaveLength(5);
@@ -78,7 +92,7 @@ export default [
         "https://commons.wikimedia.org/wiki/File:Ml_%E0%B5%BD_order.gif",
       );
       expect(malayalam.letters.some((entry) => entry.glyph === "ൽ")).toBe(false);
-      const chilluN = malayalam.finalConsonants![1]!;
+      const chilluN = malayalam.finalConsonants!.find((entry) => entry.glyph === "ൻ")!;
       expect(chilluN.role).toBe("consonant");
       expect(chilluN.penLifts).toBe(1);
       expect(chilluN.strokeOrder).toHaveLength(4);
@@ -86,7 +100,7 @@ export default [
         "https://commons.wikimedia.org/wiki/File:Ml_%E0%B5%BB_order.gif",
       );
       expect(malayalam.letters.some((entry) => entry.glyph === "ൻ")).toBe(false);
-      const chilluLL = malayalam.finalConsonants![2]!;
+      const chilluLL = malayalam.finalConsonants!.find((entry) => entry.glyph === "ൾ")!;
       expect(chilluLL.role).toBe("consonant");
       expect(chilluLL.penLifts).toBe(0);
       expect(chilluLL.strokeOrder).toHaveLength(4);
@@ -94,7 +108,7 @@ export default [
         "https://commons.wikimedia.org/wiki/File:Ml_%E0%B5%BE_order.gif",
       );
       expect(malayalam.letters.some((entry) => entry.glyph === "ൾ")).toBe(false);
-      const chilluRR = malayalam.finalConsonants![3]!;
+      const chilluRR = malayalam.finalConsonants!.find((entry) => entry.glyph === "ർ")!;
       expect(chilluRR.role).toBe("consonant");
       expect(chilluRR.penLifts).toBe(0);
       expect(chilluRR.strokeOrder).toHaveLength(3);

@@ -1,0 +1,11 @@
+{
+  "id": "ML-R70-cherkkuka",
+  "pathSegment": "ML-PATH-70-JOINING",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-70-JOINING",
+      "order": 3
+    }
+  ]
+}

@@ -1,12 +1,6 @@
 {
   "id": "ML-PATH-92-EATING-OUT",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
-  "lessons": [
-    "ML-C92-bhakshanam",
-    "ML-C92-hottal",
-    "ML-C92-bill",
-    "ML-R92-eating-out-recall"
-  ],
   "before": [],
   "inline": [
     "ML-EXT-92-EATING-OUT"

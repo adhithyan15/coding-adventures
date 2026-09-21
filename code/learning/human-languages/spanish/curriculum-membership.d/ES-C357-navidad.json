@@ -1,0 +1,11 @@
+{
+  "id": "ES-C357-navidad",
+  "pathSegment": "ES-PATH-357-01",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-357-SPAN",
+      "order": 0
+    }
+  ]
+}

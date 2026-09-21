@@ -1,0 +1,11 @@
+{
+  "id": "PA-W01-aa-matra",
+  "pathSegment": "PA-PATH-003",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-003-HAAN-WRITING",
+      "order": 1
+    }
+  ]
+}

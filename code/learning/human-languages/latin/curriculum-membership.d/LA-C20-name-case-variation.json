@@ -1,0 +1,11 @@
+{
+  "id": "LA-C20-name-case-variation",
+  "pathSegment": "LA-PATH-020",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-020-GRAMMAR",
+      "order": 0
+    }
+  ]
+}

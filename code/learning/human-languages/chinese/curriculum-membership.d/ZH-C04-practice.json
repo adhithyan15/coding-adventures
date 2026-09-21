@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C04-practice",
+  "pathSegment": "ZH-PATH-003",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ZH-EXT-012-NEGATE-CONSOLIDATION",
+      "order": 0
+    }
+  ]
+}

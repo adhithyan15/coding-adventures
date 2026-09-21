@@ -1,0 +1,11 @@
+{
+  "id": "BN-W02-kemon-read",
+  "pathSegment": "BN-PATH-001",
+  "pathOrder": 29,
+  "extensions": [
+    {
+      "id": "BN-EXT-019-SCRIPT-PIECES-INTO-WORDS",
+      "order": 10
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C25-lavo",
+  "pathSegment": "MW-PATH-024",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-038-BRING-REQUEST",
+      "order": 1
+    }
+  ]
+}

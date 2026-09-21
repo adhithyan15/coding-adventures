@@ -6,11 +6,5 @@
   "canDo": "I can say there is more than one of something.",
   "prerequisites": [
     "ML-EXT-92-EATING-OUT"
-  ],
-  "lessons": [
-    "ML-C93-kal",
-    "ML-C93-angal",
-    "ML-C93-counted",
-    "ML-R93-plural-recall"
   ]
 }

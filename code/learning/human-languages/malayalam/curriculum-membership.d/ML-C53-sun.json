@@ -1,0 +1,11 @@
+{
+  "id": "ML-C53-sun",
+  "pathSegment": "ML-PATH-53-SKY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-53-SKY",
+      "order": 1
+    }
+  ]
+}

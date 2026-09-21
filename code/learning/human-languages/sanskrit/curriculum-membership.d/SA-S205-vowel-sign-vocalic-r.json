@@ -1,0 +1,11 @@
+{
+  "id": "SA-S205-vowel-sign-vocalic-r",
+  "pathSegment": "SA-PATH-100",
+  "pathOrder": 16,
+  "extensions": [
+    {
+      "id": "SA-EXT-100-SCRIPT-RECOGNITION",
+      "order": 16
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C06-pancha-travels",
+  "pathSegment": "SA-PATH-009",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-009-ETYMOLOGY",
+      "order": 1
+    }
+  ]
+}

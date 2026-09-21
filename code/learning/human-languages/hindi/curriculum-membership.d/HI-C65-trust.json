@@ -1,0 +1,11 @@
+{
+  "id": "HI-C65-trust",
+  "pathSegment": "HI-PATH-65-GRACE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-65-GRACE",
+      "order": 3
+    }
+  ]
+}

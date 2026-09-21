@@ -1,0 +1,8 @@
+[package]
+name = "x509-extension"
+version = "0.1.0"
+edition = "2021"
+description = "Allocation-free generic RFC 5280 Extension decoding"
+
+[dependencies]
+der-asn1 = { path = "../der-asn1" }

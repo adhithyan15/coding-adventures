@@ -1405,6 +1405,7 @@ pub enum StructuralNodeKind {
     Entity,
     Requirement,
     Element,
+    Junction,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -1462,8 +1463,15 @@ pub struct RequirementElementMetadata {
     pub document_reference: Option<String>,
 }
 
+#[derive(Clone, Debug, PartialEq, Default)]
+pub struct ArchitectureServiceMetadata {
+    pub icon_name: Option<String>,
+    pub icon_text: Option<String>,
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub enum StructuralNodeMetadata {
+    ArchitectureService(ArchitectureServiceMetadata),
     Requirement(RequirementMetadata),
     RequirementElement(RequirementElementMetadata),
 }
@@ -1481,10 +1489,16 @@ pub struct StructuralNode {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+pub enum StructuralGroupMetadata {
+    Architecture { icon_name: String },
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub struct StructuralGroup {
     pub id: String,
     pub label: String,
     pub stereotype: Option<String>,
+    pub metadata: Option<StructuralGroupMetadata>,
     pub parent_group: Option<String>,
 }
 
@@ -1499,14 +1513,47 @@ pub enum RelKind {
     Link,
 }
 
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum StructuralPort {
+    Left,
+    Right,
+    Top,
+    Bottom,
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum StructuralRouting {
+    Direct,
+    Orthogonal,
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct StructuralRelationship {
     pub from: String,
     pub to: String,
     pub kind: RelKind,
+    pub start_arrow: bool,
+    pub end_arrow: bool,
+    pub from_group: bool,
+    pub to_group: bool,
+    pub from_port: Option<StructuralPort>,
+    pub to_port: Option<StructuralPort>,
+    pub routing: StructuralRouting,
     pub from_mult: Option<String>,
     pub to_mult: Option<String>,
     pub label: Option<String>,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum StructuralAlignmentAxis {
+    Row,
+    Column,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct StructuralAlignment {
+    pub axis: StructuralAlignmentAxis,
+    pub members: Vec<String>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -1516,6 +1563,7 @@ pub struct StructuralDiagram {
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
     pub direction: Option<DiagramDirection>,
+    pub alignments: Vec<StructuralAlignment>,
     pub nodes: Vec<StructuralNode>,
     pub groups: Vec<StructuralGroup>,
     pub relationships: Vec<StructuralRelationship>,
@@ -1531,12 +1579,15 @@ pub struct LayoutedCompartment {
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedStructuralNode {
     pub id: String,
+    pub node_kind: StructuralNodeKind,
     pub x: f64,
     pub y: f64,
     pub width: f64,
     pub height: f64,
     pub header: String,
     pub stereotype: Option<String>,
+    pub icon_name: Option<String>,
+    pub icon_text: Option<String>,
     pub style: ResolvedDiagramStyle,
     pub compartments: Vec<LayoutedCompartment>,
 }
@@ -1550,6 +1601,7 @@ pub struct LayoutedStructuralGroup {
     pub height: f64,
     pub label: String,
     pub stereotype: Option<String>,
+    pub icon_name: Option<String>,
     pub parent_group: Option<String>,
 }
 
@@ -1558,6 +1610,13 @@ pub struct LayoutedStructuralRelationship {
     pub from_id: String,
     pub to_id: String,
     pub kind: RelKind,
+    pub start_arrow: bool,
+    pub end_arrow: bool,
+    pub from_group: bool,
+    pub to_group: bool,
+    pub from_port: Option<StructuralPort>,
+    pub to_port: Option<StructuralPort>,
+    pub routing: StructuralRouting,
     pub points: Vec<Point>,
     pub from_mult: Option<String>,
     pub to_mult: Option<String>,
@@ -1568,6 +1627,7 @@ pub struct LayoutedStructuralRelationship {
 pub struct LayoutedStructuralDiagram {
     pub width: f64,
     pub height: f64,
+    pub title: Option<String>,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
     pub groups: Vec<LayoutedStructuralGroup>,
@@ -2290,6 +2350,7 @@ mod tests {
             accessibility_title: None,
             accessibility_description: None,
             direction: None,
+            alignments: vec![],
             nodes: vec![node],
             groups: vec![],
             relationships: vec![],

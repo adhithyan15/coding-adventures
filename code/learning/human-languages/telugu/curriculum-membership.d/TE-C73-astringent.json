@@ -1,0 +1,11 @@
+{
+  "id": "TE-C73-astringent",
+  "pathSegment": "TE-PATH-73-TASTE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-73-TASTE",
+      "order": 4
+    }
+  ]
+}

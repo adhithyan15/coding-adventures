@@ -8,13 +8,12 @@
 // third of what the paper puts in front of the candidate, and every gate in the
 // repository would stay green. These tests close that.
 
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   defaultCurriculumRoot,
   listTaskShapeInventories,
   loadTaskShapeInventory,
+  loadReadingReachFloors,
   loadEverything,
 } from "../src/loader.js";
 import { measureReadingReach, passageLength } from "../src/reading-reach.js";
@@ -24,9 +23,7 @@ const inventoryIds = listTaskShapeInventories();
 const inventories = inventoryIds.map(({ language, level }) => loadTaskShapeInventory(language, level));
 const report = measureReadingReach(loadEverything().lessons, inventories);
 
-const floors = JSON.parse(
-  readFileSync(join(root, "core/reading-reach-floor.json"), "utf8"),
-) as { floors: Record<string, number> };
+const floors = loadReadingReachFloors(root);
 
 describe("reading reach is measured for every task shape, not a chosen few", () => {
   // The bug this guards against is not a wrong number, it is a MISSING ROW. Four

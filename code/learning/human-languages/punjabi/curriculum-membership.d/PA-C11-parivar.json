@@ -1,0 +1,11 @@
+{
+  "id": "PA-C11-parivar",
+  "pathSegment": "PA-PATH-015",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-015-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C19-vayasu",
+  "pathSegment": "TE-PATH-021",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-021-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

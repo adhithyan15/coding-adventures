@@ -1,0 +1,11 @@
+{
+  "id": "MR-R48-have-and-toward",
+  "pathSegment": "MR-PATH-051",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-064-TOWARD-AND-HAVE",
+      "order": 2
+    }
+  ]
+}

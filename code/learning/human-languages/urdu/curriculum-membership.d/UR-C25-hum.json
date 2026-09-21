@@ -1,0 +1,11 @@
+{
+  "id": "UR-C25-hum",
+  "pathSegment": "UR-PATH-026",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-036-PLURAL",
+      "order": 2
+    }
+  ]
+}

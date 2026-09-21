@@ -1,0 +1,11 @@
+{
+  "id": "HI-C86-hamen-tumhen",
+  "pathSegment": "HI-PATH-94-PRONOUNS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-94-PRONOUNS",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C05-vasami",
+  "pathSegment": "SA-PATH-017",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-017-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

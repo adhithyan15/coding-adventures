@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W01-ren-radical",
+  "pathSegment": "ZH-PATH-001",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-006-COMPONENT-INVENTORY",
+      "order": 1
+    }
+  ]
+}

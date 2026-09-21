@@ -1,0 +1,11 @@
+{
+  "id": "GU-R24-map-ten-r3",
+  "pathSegment": "GU-PATH-023",
+  "pathOrder": 13,
+  "extensions": [
+    {
+      "id": "GU-EXT-035-TIME-EIGHT",
+      "order": 13
+    }
+  ]
+}

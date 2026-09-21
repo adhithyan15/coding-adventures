@@ -1,0 +1,11 @@
+{
+  "id": "FR-C16-accord-unifie",
+  "pathSegment": "FR-PATH-017",
+  "pathOrder": 29,
+  "extensions": [
+    {
+      "id": "FR-EXT-017-LANGUAGE-SPECIFIC",
+      "order": 29
+    }
+  ]
+}

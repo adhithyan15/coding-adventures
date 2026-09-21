@@ -1030,13 +1030,36 @@ backend immediately) come before the enabler-dependent items.
   on every bounded pass, retaining all exact terminating snapshots. A
   statically decidable statement conditional may select one recursively
   supported branch on each pass, including when earlier recurrence writes make
-  successive selections differ. Labels, declarations, dynamic selectors or
-  effectful siblings, dependency writes, string targets, overflow, non-finite
-  values, and loops exceeding 4,096 evaluations remain conservative. Capped
-  abstract execution also retains the first integer or finite binary64 control
-  value whose predicate is false when its value and predicate reference only
-  the control and statically known ordinary local scalars that
-  the body does not change. Read-only body uses, exact scalar
+  successive selections differ. The controlled scalar itself may also be
+  updated by such a recursively supported body alongside other supported local
+  scalar recurrences; the next `while` element expression consumes the
+  resulting exact control snapshot while the terminating sibling snapshots
+  remain available after the loop. Labels, declarations, dynamic selectors or
+  effectful siblings, unsupported transitive dependency writes, string
+  targets, overflow, non-finite values, and loops exceeding 4,096 evaluations
+  remain conservative. Capped abstract execution also retains the first
+  integer or finite binary64 control value whose predicate is false when its
+  value and predicate reference only the control and statically known ordinary
+  local scalars that the body leaves unchanged, or directly updates through
+  one supported recurrence referencing itself, the control, and ordinary local
+  scalars that are unchanged or evolve through a graph of supported
+  recurrences. That graph may contain unconditional cross-assignment cycles
+  because capped abstract execution evaluates each recognized local scalar
+  write in source order. A cycle may contain conditional expressions selected
+  by the exact loop control or exact ordinary local snapshots unchanged by the
+  body. Those stable snapshots may also select conditional statement branches
+  containing cycle writes; cycles selected by changing values remain
+  conservative. A recurrence
+  in the graph may use a conditional
+  expression selected by the controlled scalar or another exact local
+  snapshot; capped execution re-evaluates the selected leaf on every pass.
+  The recurrence assignment may instead occur in one or both branches of a
+  conditional statement selected by those exact snapshots. A branch without
+  the assignment preserves the dependency for that pass; unknown selectors
+  and unsupported branch effects still fail closed. One dependency may also
+  receive several supported assignments in the same body pass; capped
+  execution applies those writes in source order before the next predicate.
+  Read-only body uses, exact scalar
   self-assignments, checked numeric or boolean expressions that equal the
   tracked scalar and otherwise reference only known ordinary locals that are
   never changed by the body; an exact bare self-assignment does not count as a
@@ -1165,8 +1188,8 @@ backend immediately) come before the enabler-dependent items.
   computed, or otherwise
   unsupported selector-dependency writes, dynamically selected differing selector leaves,
   dynamically selected differing dependency leaves, loop controls, and
-  cross-assigned dependency writes remain conservative without recursive
-  effect inference. Conditional
+  cross-assigned dependency writes remain conservative in selector-preservation
+  proofs that do not enter capped recurrence execution. Conditional
   assignments whose leaves are all that same bare scalar are permitted. A
   variable-free statically known
   conditional assignment scans only its selected leaf, as may a statically

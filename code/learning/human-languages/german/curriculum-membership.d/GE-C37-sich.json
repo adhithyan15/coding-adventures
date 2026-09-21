@@ -1,0 +1,11 @@
+{
+  "id": "GE-C37-sich",
+  "pathSegment": "GE-PATH-A1-OBJEKTPRONOMEN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-A1-OBJEKTPRONOMEN",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C38-ash",
+  "pathSegment": "SA-PATH-38-EARTH",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-38-EARTH",
+      "order": 1
+    }
+  ]
+}

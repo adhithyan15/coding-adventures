@@ -1,0 +1,11 @@
+{
+  "id": "GE-C16-bleiben",
+  "pathSegment": "GE-PATH-021-C",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-021-C-PERFEKT-SEIN",
+      "order": 4
+    }
+  ]
+}

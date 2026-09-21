@@ -1,0 +1,11 @@
+{
+  "id": "GU-C32-ane-clauses",
+  "pathSegment": "GU-PATH-031",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-043-JOIN-THREE",
+      "order": 1
+    }
+  ]
+}

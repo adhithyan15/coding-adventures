@@ -6,12 +6,5 @@
   "canDo": "I can decide whether a noun is living or not and give it the plural ending its group demands, with an adjective in front.",
   "prerequisites": [
     "BN-EXT-030-POINTING"
-  ],
-  "lessons": [
-    "BN-C22-animacy",
-    "BN-C22-ra",
-    "BN-C22-gulo",
-    "BN-C22-adj-order",
-    "BN-R22-more-than-one"
   ]
 }

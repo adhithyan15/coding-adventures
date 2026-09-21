@@ -1,0 +1,11 @@
+{
+  "id": "HI-C68-english",
+  "pathSegment": "HI-PATH-68-ORIGIN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-68-ORIGIN",
+      "order": 4
+    }
+  ]
+}

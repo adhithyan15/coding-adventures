@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-LEX-45",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "places, people and activities of shopping",
+  "probe": [
+    "HI-LEX-C56-ROAD-04",
+    "HI-LEX-C56-ROAD-03"
+  ],
+  "derivedFrom": "ES:A1-NE12-01"
+}

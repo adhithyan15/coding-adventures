@@ -1,0 +1,11 @@
+{
+  "id": "ES-C300-sueno",
+  "pathSegment": "ES-PATH-300-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-300-CUERPO",
+      "order": 1
+    }
+  ]
+}

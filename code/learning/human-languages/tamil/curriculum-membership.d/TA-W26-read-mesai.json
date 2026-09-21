@@ -1,0 +1,11 @@
+{
+  "id": "TA-W26-read-mesai",
+  "pathSegment": "TA-PATH-70-ROOM",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-70-ROOM",
+      "order": 2
+    }
+  ]
+}

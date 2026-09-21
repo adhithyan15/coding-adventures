@@ -1,0 +1,11 @@
+{
+  "id": "MR-C54-puresa",
+  "pathSegment": "MR-PATH-057",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-070-AMOUNTS",
+      "order": 1
+    }
+  ]
+}

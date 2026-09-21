@@ -190,6 +190,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private(set) var lastPrintRequest: NSDictionary?
   private(set) var lastShareRequest: NSDictionary?
   private(set) var lastPageInfoRequest: NSDictionary?
+  private(set) var lastCancelledSubresources: [NSDictionary]?
 
   required override init() {
     let native = VentureNativeLibrary()
@@ -259,6 +260,11 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
       NotificationCenter.default.post(
         name: Notification.Name("VenturePageInfoRequested"), object: self,
         userInfo: ["request": effect])
+    } else if type == "cancel-subresources", let requests = effect["requests"] as? [NSDictionary] {
+      lastCancelledSubresources = requests
+      NotificationCenter.default.post(
+        name: Notification.Name("VentureSubresourcesCancelled"), object: self,
+        userInfo: ["requests": requests])
     } else if type == "write-clipboard", let text = effect["text"] as? String {
       NSPasteboard.general.clearContents()
       NSPasteboard.general.setString(text, forType: .string)
@@ -314,7 +320,9 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     let currentAddress = props?["address"] as? String ?? ""
     let backDisabled = props?["back-disabled"] as? Bool
     let forwardDisabled = props?["forward-disabled"] as? Bool
-    guard currentAddress == startURL, backDisabled == true, forwardDisabled == true else {
+    let stopDisabled = props?["stop-disabled"] as? Bool
+    guard currentAddress == startURL, backDisabled == true, forwardDisabled == true,
+      stopDisabled == true else {
       writeInteractionResult(
         [
           "backend": "swiftui", "status": "error", "address": currentAddress,
@@ -325,8 +333,10 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     }
     let backEventCount = chromeEventCounts["onBack", default: 0]
     let forwardEventCount = chromeEventCounts["onForward", default: 0]
+    let stopEventCount = chromeEventCounts["onStop", default: 0]
     guard performNativeButtonClick(identifier: "back-button"),
-      performNativeButtonClick(identifier: "forward-button")
+      performNativeButtonClick(identifier: "forward-button"),
+      performNativeButtonClick(identifier: "stop-button")
     else {
       writeInteractionResult(
         [
@@ -339,16 +349,18 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self, weak address] in
       self?.verifyInitialDisabledControls(
         address: address, startURL: startURL, targetURL: targetURL, markerPath: markerPath,
-        backEventCount: backEventCount, forwardEventCount: forwardEventCount)
+        backEventCount: backEventCount, forwardEventCount: forwardEventCount,
+        stopEventCount: stopEventCount)
     }
   }
 
   private func verifyInitialDisabledControls(
     address: NSTextField?, startURL: String, targetURL: String, markerPath: String,
-    backEventCount: Int, forwardEventCount: Int
+    backEventCount: Int, forwardEventCount: Int, stopEventCount: Int
   ) {
     guard chromeEventCounts["onBack", default: 0] == backEventCount,
-      chromeEventCounts["onForward", default: 0] == forwardEventCount
+      chromeEventCounts["onForward", default: 0] == forwardEventCount,
+      chromeEventCounts["onStop", default: 0] == stopEventCount
     else {
       writeInteractionResult(
         [
@@ -628,16 +640,17 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     let bookmarkLabel = props?["bookmark-label"] as? String ?? ""
     let bookmarkEvents = chromeEventCounts["onToggleBookmark", default: 0]
     if bookmarkLabel == "Remove Bookmark", bookmarkEvents == eventCount + 1 {
-      guard performNativeButtonClick(identifier: "bookmark-button") else {
+      let catalogEvents = chromeEventCounts["onBookmarksOpen", default: 0]
+      guard performNativeButtonClick(identifier: "bookmarks-button") else {
         writeInteractionResult(
-          ["backend": "swiftui", "status": "error", "error": "bookmark-button not found"],
+          ["backend": "swiftui", "status": "error", "error": "bookmarks-button not found"],
           to: markerPath)
         return
       }
       DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
-        self?.verifyBookmarkRemoved(
+        self?.verifyBookmarkCatalog(
           startURL: startURL, targetURL: targetURL, markerPath: markerPath,
-          eventCount: eventCount, remaining: 50)
+          bookmarkEventCount: eventCount, catalogEventCount: catalogEvents, remaining: 50)
       }
       return
     }
@@ -655,6 +668,76 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
       self?.verifyBookmarkAdded(
         startURL: startURL, targetURL: targetURL, markerPath: markerPath,
         eventCount: eventCount, remaining: remaining - 1)
+    }
+  }
+
+  private func verifyBookmarkCatalog(
+    startURL: String, targetURL: String, markerPath: String, bookmarkEventCount: Int,
+    catalogEventCount: Int, remaining: Int
+  ) {
+    let props = applyProps()?["props"] as? NSDictionary
+    let open = props?["bookmarks-open"] as? Bool
+    let position = props?["bookmarks-position"] as? String ?? ""
+    let address = props?["bookmarks-address"] as? String ?? ""
+    let catalogEvents = chromeEventCounts["onBookmarksOpen", default: 0]
+    if open == true, position == "1 of 1", address == targetURL,
+      catalogEvents == catalogEventCount + 1
+    {
+      let closeEvents = chromeEventCounts["onBookmarksClose", default: 0]
+      _ = handleEvent([:], name: "onBookmarksClose")
+      propsChangedHandler?()
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
+        self?.verifyBookmarkCatalogClosed(
+          startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+          bookmarkEventCount: bookmarkEventCount, closeEventCount: closeEvents,
+          remaining: 50)
+      }
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        ["backend": "swiftui", "status": "error", "error": "bookmark catalog did not open"],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifyBookmarkCatalog(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        bookmarkEventCount: bookmarkEventCount, catalogEventCount: catalogEventCount,
+        remaining: remaining - 1)
+    }
+  }
+
+  private func verifyBookmarkCatalogClosed(
+    startURL: String, targetURL: String, markerPath: String, bookmarkEventCount: Int,
+    closeEventCount: Int, remaining: Int
+  ) {
+    let open = (applyProps()?["props"] as? NSDictionary)?["bookmarks-open"] as? Bool
+    if open == false, chromeEventCounts["onBookmarksClose", default: 0] == closeEventCount + 1 {
+      guard performNativeButtonClick(identifier: "bookmark-button") else {
+        writeInteractionResult(
+          ["backend": "swiftui", "status": "error", "error": "bookmark-button not found"],
+          to: markerPath)
+        return
+      }
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
+        self?.verifyBookmarkRemoved(
+          startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+          eventCount: bookmarkEventCount, remaining: 50)
+      }
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        ["backend": "swiftui", "status": "error", "error": "bookmark catalog did not close"],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifyBookmarkCatalogClosed(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        bookmarkEventCount: bookmarkEventCount, closeEventCount: closeEventCount,
+        remaining: remaining - 1)
     }
   }
 
@@ -900,9 +983,84 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     let address = lastPageInfoRequest?["address"] as? String ?? ""
     let title = lastPageInfoRequest?["title"] as? String ?? ""
     let status = lastPageInfoRequest?["status"] as? Int ?? 0
+    let pageInfoOpen = (applyProps()?["props"] as? NSDictionary)?["page-info-open"] as? Bool
     if pageInfoEvents == eventCount + 1, requestedAddress == targetURL, address == targetURL,
-      title == "Venture interaction acceptance", status == 200
+      title == "Venture interaction acceptance", status == 200, pageInfoOpen == true
     {
+      let closeEvents = chromeEventCounts["onPageInfoClose", default: 0]
+      if !performNativeButtonClick(identifier: "page-info-close-button") {
+        _ = handleEvent([:], name: "onPageInfoClose")
+        propsChangedHandler?()
+      }
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
+        self?.verifyPageInfoClosed(
+          startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+          eventCount: closeEvents, remaining: 50)
+      }
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error",
+          "pageInfoRequestedAddress": requestedAddress, "pageInfoAddress": address,
+          "pageInfoTitle": title, "pageInfoStatus": String(status),
+          "pageInfoEvents": String(pageInfoEvents), "pageInfoOpen": String(pageInfoOpen ?? false),
+          "error": "native Page Information effect did not preserve response identity",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifyPageInfo(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        eventCount: eventCount, remaining: remaining - 1)
+    }
+  }
+
+  private func verifyPageInfoClosed(
+    startURL: String, targetURL: String, markerPath: String, eventCount: Int, remaining: Int
+  ) {
+    let closeEvents = chromeEventCounts["onPageInfoClose", default: 0]
+    let pageInfoOpen = (applyProps()?["props"] as? NSDictionary)?["page-info-open"] as? Bool
+    if closeEvents == eventCount + 1, pageInfoOpen == false {
+      let zoomEvents = chromeEventCounts["onZoomIn", default: 0]
+      guard performNativeButtonClick(identifier: "zoom-in-button") else {
+        writeInteractionResult(
+          ["backend": "swiftui", "status": "error", "error": "zoom-in-button not found"],
+          to: markerPath)
+        return
+      }
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
+        self?.verifyZoom(
+          startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+          eventCount: zoomEvents, remaining: 50)
+      }
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error",
+          "pageInfoCloseEvents": String(closeEvents),
+          "pageInfoOpen": String(pageInfoOpen ?? true),
+          "error": "native Page Information panel did not close",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifyPageInfoClosed(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        eventCount: eventCount, remaining: remaining - 1)
+    }
+  }
+
+  private func verifyZoom(
+    startURL: String, targetURL: String, markerPath: String, eventCount: Int, remaining: Int
+  ) {
+    let zoomEvents = chromeEventCounts["onZoomIn", default: 0]
+    if zoomEvents == eventCount + 1 {
       let viewSourceEvents = chromeEventCounts["onViewSource", default: 0]
       guard performNativeButtonClick(identifier: "view-source-button") else {
         writeInteractionResult(
@@ -919,18 +1077,12 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     }
     guard remaining > 0 else {
       writeInteractionResult(
-        [
-          "backend": "swiftui", "status": "error",
-          "pageInfoRequestedAddress": requestedAddress, "pageInfoAddress": address,
-          "pageInfoTitle": title, "pageInfoStatus": String(status),
-          "pageInfoEvents": String(pageInfoEvents),
-          "error": "native Page Information effect did not preserve response identity",
-        ],
+        ["backend": "swiftui", "status": "error", "error": "native page zoom did not dispatch"],
         to: markerPath)
       return
     }
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-      self?.verifyPageInfo(
+      self?.verifyZoom(
         startURL: startURL, targetURL: targetURL, markerPath: markerPath,
         eventCount: eventCount, remaining: remaining - 1)
     }
@@ -942,9 +1094,89 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     let viewSourceEvents = chromeEventCounts["onViewSource", default: 0]
     let address = lastAuxiliaryDocument?["address"] as? String ?? ""
     let html = lastAuxiliaryDocument?["html"] as? String ?? ""
+    let props = applyProps()?["props"] as? NSDictionary
+    let sourceOpen = props?["view-source-open"] as? Bool
+    let sourceAddress = props?["view-source-address"] as? String ?? ""
+    let sourceContent = props?["view-source-content"] as? String ?? ""
     if viewSourceEvents == eventCount + 1, address == "view-source:\(targetURL)",
-      html.contains("&lt;title&gt;Venture interaction acceptance&lt;/title&gt;")
+      html.contains("&lt;title&gt;Venture interaction acceptance&lt;/title&gt;"),
+      sourceOpen == true, sourceAddress == targetURL,
+      sourceContent.contains("<title>Venture interaction acceptance</title>")
     {
+      let copyEvents = chromeEventCounts["onViewSourceCopy", default: 0]
+      if !performNativeButtonClick(identifier: "view-source-copy-button") {
+        _ = handleEvent([:], name: "onViewSourceCopy")
+        propsChangedHandler?()
+      }
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
+        self?.verifyViewSourceCopied(
+          startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+          expectedSource: sourceContent, eventCount: copyEvents, remaining: 50)
+      }
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error", "address": address,
+          "viewSourceEvents": String(viewSourceEvents),
+          "sourceOpen": String(sourceOpen ?? false), "sourceAddress": sourceAddress,
+          "error": "native View Source panel did not preserve retained source",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifyViewSource(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        eventCount: eventCount, remaining: remaining - 1)
+    }
+  }
+
+  private func verifyViewSourceCopied(
+    startURL: String, targetURL: String, markerPath: String, expectedSource: String,
+    eventCount: Int, remaining: Int
+  ) {
+    let copyEvents = chromeEventCounts["onViewSourceCopy", default: 0]
+    let sourceOpen = (applyProps()?["props"] as? NSDictionary)?["view-source-open"] as? Bool
+    let clipboardSource = NSPasteboard.general.string(forType: .string) ?? ""
+    if copyEvents == eventCount + 1, sourceOpen == true, clipboardSource == expectedSource {
+      let closeEvents = chromeEventCounts["onViewSourceClose", default: 0]
+      if !performNativeButtonClick(identifier: "view-source-close-button") {
+        _ = handleEvent([:], name: "onViewSourceClose")
+        propsChangedHandler?()
+      }
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
+        self?.verifyViewSourceClosed(
+          startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+          eventCount: closeEvents, remaining: 50)
+      }
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error",
+          "viewSourceCopyEvents": String(copyEvents),
+          "sourceOpen": String(sourceOpen ?? false),
+          "error": "native Copy Source did not preserve exact retained source",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifyViewSourceCopied(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        expectedSource: expectedSource, eventCount: eventCount, remaining: remaining - 1)
+    }
+  }
+
+  private func verifyViewSourceClosed(
+    startURL: String, targetURL: String, markerPath: String, eventCount: Int, remaining: Int
+  ) {
+    let closeEvents = chromeEventCounts["onViewSourceClose", default: 0]
+    let sourceOpen = (applyProps()?["props"] as? NSDictionary)?["view-source-open"] as? Bool
+    if closeEvents == eventCount + 1, sourceOpen == false {
       guard performNativeButtonClick(identifier: "reload-button") else {
         writeInteractionResult(
           ["backend": "swiftui", "status": "error", "error": "reload-button not found"],
@@ -960,15 +1192,16 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     guard remaining > 0 else {
       writeInteractionResult(
         [
-          "backend": "swiftui", "status": "error", "address": address,
-          "viewSourceEvents": String(viewSourceEvents),
-          "error": "native View Source effect did not preserve retained source",
+          "backend": "swiftui", "status": "error",
+          "viewSourceCloseEvents": String(closeEvents),
+          "sourceOpen": String(sourceOpen ?? true),
+          "error": "native View Source panel did not close",
         ],
         to: markerPath)
       return
     }
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-      self?.verifyViewSource(
+      self?.verifyViewSourceClosed(
         startURL: startURL, targetURL: targetURL, markerPath: markerPath,
         eventCount: eventCount, remaining: remaining - 1)
     }
@@ -1428,6 +1661,8 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
           "controls": "back-forward-reload-home-bookmark", "addressCommit": "native-return",
           "bookmarkPersistence": "native-toggle",
           "navigationState": "native-disabled-transitions",
+          "pageInfoPanel": "shared-open-close",
+          "viewSourcePanel": "shared-open-close",
           "failedNavigation": "transaction-retained", "failureStatus": statusText,
           "failureAddress": failureURL,
           "surfaceWheel": "scroll", "surfaceFocus": "native",
@@ -1507,8 +1742,8 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
 
   private func nativeToolbarControlPoint(identifier: String) -> (NSPoint, NSWindow)? {
     let identifiers = [
-      "back-button", "forward-button", "home-button", "reload-button",
-      "bookmark-button",
+      "back-button", "forward-button", "home-button", "reload-button", "stop-button",
+      "bookmark-button", "bookmarks-button", "history-button",
     ]
     guard let controlIndex = identifiers.firstIndex(of: identifier) else { return nil }
     var visited = Set<ObjectIdentifier>()
@@ -1537,7 +1772,8 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private func nativePageActionControlPoint(identifier: String) -> (NSPoint, NSWindow)? {
     let identifiers = [
       "copy-address-button", "open-page-button", "save-page-button",
-      "print-page-button", "share-page-button", "page-info-button", "view-source-button",
+      "print-page-button", "share-page-button", "page-info-button",
+      "zoom-out-button", "zoom-reset-button", "zoom-in-button", "view-source-button",
     ]
     guard let controlIndex = identifiers.firstIndex(of: identifier) else { return nil }
     var visited = Set<ObjectIdentifier>()
@@ -1582,14 +1818,24 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     case "forward-button": return ["Forward"]
     case "home-button": return ["Home"]
     case "reload-button": return ["Reload"]
+    case "stop-button": return ["Stop"]
     case "bookmark-button": return ["Bookmark", "Remove Bookmark"]
+    case "bookmarks-button": return ["Bookmarks (0)", "Bookmarks (1)"]
+    case "history-button": return ["History (0)", "History (1)", "History (2)"]
+    case "bookmarks-close-button": return ["Close"]
     case "copy-address-button": return ["Copy", "Copy Address"]
     case "open-page-button": return ["New Window", "Open in New Window"]
     case "save-page-button": return ["Save", "Save Page"]
     case "print-page-button": return ["Print", "Print Page"]
     case "share-page-button": return ["Share", "Share Page"]
     case "page-info-button": return ["Info", "Page Information"]
+    case "page-info-close-button": return ["Close"]
+    case "zoom-out-button": return ["Zoom Out"]
+    case "zoom-reset-button": return ["50%", "75%", "100%", "125%", "150%", "175%", "200%"]
+    case "zoom-in-button": return ["Zoom In"]
     case "view-source-button": return ["Source", "View Source"]
+    case "view-source-copy-button": return ["Copy Source"]
+    case "view-source-close-button": return ["Close Source"]
     default: return []
     }
   }

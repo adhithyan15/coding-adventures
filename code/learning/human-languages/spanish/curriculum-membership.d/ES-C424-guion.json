@@ -1,0 +1,11 @@
+{
+  "id": "ES-C424-guion",
+  "pathSegment": "ES-PATH-424-SIGNOS",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ES-EXT-424-SIGNOS",
+      "order": 6
+    }
+  ]
+}

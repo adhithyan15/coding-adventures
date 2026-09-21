@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-PU-01",
+  "category": "Punctuation and written conventions",
+  "label": "the danda, and the full stop that has largely replaced it",
+  "probe": [
+    "MR-SCRIPT-DANDA"
+  ],
+  "note": "Every headword in the corpus punctuates with a full stop, which is what Marathi does now, and a candidate who had never seen a danda met it on the first authentic notice. MR-W64-danda closes it at chapter 64. It is the FIRST MARK IN THE TRACK TAUGHT FOR RECOGNITION RATHER THAN PRODUCTION -- the reader keeps writing the full stop and learns to read the upright stroke in poetry, older printing and signs nobody has reset -- and the lesson names that distinction because it recurs.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [
+    "A1-O3-01"
+  ]
+}

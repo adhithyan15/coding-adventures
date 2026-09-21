@@ -1,0 +1,11 @@
+{
+  "id": "UR-C01-shukriya",
+  "pathSegment": "UR-PATH-002",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-001B-SHUKRIYA-SCRIPT",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C18-count-the-face",
+  "pathSegment": "JA-PATH-017",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-025-COUNTERS",
+      "order": 3
+    }
+  ]
+}

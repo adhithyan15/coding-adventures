@@ -1,0 +1,11 @@
+{
+  "id": "UR-W07-alif-madda",
+  "pathSegment": "UR-PATH-007-C",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-017D-SCRIPT-ALIF-MADDA",
+      "order": 0
+    }
+  ]
+}

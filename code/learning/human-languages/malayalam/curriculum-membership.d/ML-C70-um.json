@@ -1,0 +1,11 @@
+{
+  "id": "ML-C70-um",
+  "pathSegment": "ML-PATH-70-JOINING",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ML-EXT-70-JOINING",
+      "order": 0
+    }
+  ]
+}

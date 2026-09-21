@@ -1,0 +1,11 @@
+{
+  "id": "SA-S215-letter-tha",
+  "pathSegment": "SA-PATH-100",
+  "pathOrder": 35,
+  "extensions": [
+    {
+      "id": "SA-EXT-100-SCRIPT-RECOGNITION",
+      "order": 35
+    }
+  ]
+}

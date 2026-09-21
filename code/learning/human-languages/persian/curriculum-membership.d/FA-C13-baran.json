@@ -1,0 +1,11 @@
+{
+  "id": "FA-C13-baran",
+  "pathSegment": "FA-PATH-014",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-021-LANGUAGE-SPECIFIC",
+      "order": 4
+    }
+  ]
+}

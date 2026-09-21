@@ -1,0 +1,21 @@
+{
+  "id": "ML-A1-ADV-05",
+  "category": "Kriyaavisheshanam (adverbs)",
+  "label": "sequence: then, soon, sometimes",
+  "probe": [
+    "ML-LEX-C64-SMALL-01",
+    "ML-LEX-C64-SMALL-02",
+    "ML-LEX-C64-SMALL-03"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NG4-03",
+    "A1-NG3-06"
+  ],
+  "malayalamSpecific": false,
+  "note": "pinne, udane, chilappol -- chapter 64. These order EVENTS across turns; they do not join clauses, which is the distinction ML-A1-JOIN-01 turns on."
+}

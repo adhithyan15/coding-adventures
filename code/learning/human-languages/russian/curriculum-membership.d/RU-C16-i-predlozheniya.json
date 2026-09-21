@@ -1,0 +1,11 @@
+{
+  "id": "RU-C16-i-predlozheniya",
+  "pathSegment": "RU-PATH-017",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-022-COORDINATORS",
+      "order": 1
+    }
+  ]
+}

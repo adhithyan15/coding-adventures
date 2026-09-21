@@ -1,0 +1,11 @@
+{
+  "id": "ES-C402-camiseta",
+  "pathSegment": "ES-PATH-402-THINGS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-402-SHOPPING",
+      "order": 1
+    }
+  ]
+}

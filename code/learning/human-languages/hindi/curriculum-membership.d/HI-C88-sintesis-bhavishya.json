@@ -1,0 +1,11 @@
+{
+  "id": "HI-C88-sintesis-bhavishya",
+  "pathSegment": "HI-PATH-96-FUTURE",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "HI-EXT-96-FUTURE",
+      "order": 7
+    }
+  ]
+}

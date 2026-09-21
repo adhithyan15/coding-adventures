@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NE11-03",
+  "category": "Services",
+  "label": "health services",
+  "probe": null,
+  "note": "Untaught.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE11-03"
+  ]
+}

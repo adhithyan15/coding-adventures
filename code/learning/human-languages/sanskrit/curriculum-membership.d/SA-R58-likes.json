@@ -1,0 +1,11 @@
+{
+  "id": "SA-R58-likes",
+  "pathSegment": "SA-PATH-58-LIKES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-058-LIKES",
+      "order": 2
+    }
+  ]
+}

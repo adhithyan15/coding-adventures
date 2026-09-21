@@ -2,6 +2,31 @@
 
 ## Unreleased
 
+### Fixed — Compose native startup failures are visible and recoverable (#15786)
+
+Strict generated Compose Desktop shells now open their window before loading the
+Rust runtime and initial snapshot. They show a system-theme-aware loading state,
+turn initialization errors into an in-window message with diagnostic detail and
+saved-data reassurance, and let the user retry initialization without relaunching.
+The first host and props load run off the UI thread; a failed partial host is
+closed before retry.
+
+### Added — package-owned desktop window size (#14789)
+
+Generated Compose, Qt, SwiftUI, XAML, and Electron project shells now honor
+the manifest's optional `[app]` initial window dimensions. A missing declaration
+keeps the existing emitter defaults, while a declared size reaches each
+platform's native window API.
+
+- Implement WebComponent table numeric typography and scoped editor inheritance;
+  retain direct table input/button nodes and nested tables (#15713).
+
+- Recognize WebComponent text/control numeric typography; retain the degradation
+  diagnostic for table-wide inheritance (#15692).
+
+- Support HTML HostTable numeric typography with scoped native-control inheritance,
+  row/container overrides and nested-table boundaries (#15677).
+
 - Recognize HTML numeric typography on text, buttons and inputs; retain
   diagnostics for HTML tables and WebComponent bindings (#15647).
 
@@ -169,6 +194,12 @@ build script and that file has a migration in flight.
 - Recognize validated Compose typography projections while continuing to report unsupported backends, primitives and binding forms explicitly.
 
 ## Unreleased
+
+- Recognize WebComponent text/control numeric typography; retain the degradation
+  diagnostic for table-wide inheritance (#15692).
+
+- Support HTML HostTable numeric typography with scoped native-control inheritance,
+  row/container overrides and nested-table boundaries (#15677).
 
 - Recognize HTML numeric typography on text, buttons and inputs; retain
   diagnostics for HTML tables and WebComponent bindings (#15647).

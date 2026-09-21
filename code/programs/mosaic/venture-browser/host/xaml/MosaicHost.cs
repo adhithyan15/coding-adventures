@@ -39,12 +39,14 @@ public static class MosaicHost
     public static JsonElement? LastPrintRequest { get; private set; }
     public static JsonElement? LastShareRequest { get; private set; }
     public static JsonElement? LastPageInfoRequest { get; private set; }
+    public static JsonElement? LastCancelledSubresources { get; private set; }
     public static event Action<JsonElement>? AuxiliaryDocumentRequested;
     public static event Action<JsonElement>? BrowsingContextRequested;
     public static event Action<JsonElement>? DownloadRequested;
     public static event Action<JsonElement>? PrintRequested;
     public static event Action<JsonElement>? ShareRequested;
     public static event Action<JsonElement>? PageInfoRequested;
+    public static event Action<JsonElement>? SubresourcesCancelled;
     public static JsonElement? LastFilePickerRequest { get; private set; }
     public static event Action<JsonElement>? FilePickerRequested;
 
@@ -165,6 +167,13 @@ public static class MosaicHost
             LastPageInfoRequest = retained;
             PageInfoRequested?.Invoke(retained);
         }
+        else if (type.GetString() == "cancel-subresources"
+            && effect.TryGetProperty("requests", out var requests))
+        {
+            var retained = requests.Clone();
+            LastCancelledSubresources = retained;
+            SubresourcesCancelled?.Invoke(retained);
+        }
         else if (type.GetString() == "write-clipboard"
             && effect.TryGetProperty("text", out var text))
         {
@@ -206,6 +215,14 @@ public static class MosaicHost
                 var homeButton = await FindAutomationElementAsync<Button>(component, "home-button");
                 var reloadButton = await FindAutomationElementAsync<Button>(
                     component, "reload-button");
+                var stopButton = await FindAutomationElementAsync<Button>(
+                    component, "stop-button");
+                var bookmarkButton = await FindAutomationElementAsync<Button>(
+                    component, "bookmark-button");
+                var bookmarksButton = await FindAutomationElementAsync<Button>(
+                    component, "bookmarks-button");
+                var historyButton = await FindAutomationElementAsync<Button>(
+                    component, "history-button");
                 var copyAddressButton = await FindAutomationElementAsync<Button>(
                     component, "copy-address-button");
                 var openPageButton = await FindAutomationElementAsync<Button>(
@@ -218,6 +235,10 @@ public static class MosaicHost
                     component, "share-page-button");
                 var pageInfoButton = await FindAutomationElementAsync<Button>(
                     component, "page-info-button");
+                var zoomResetButton = await FindAutomationElementAsync<Button>(
+                    component, "zoom-reset-button");
+                var zoomInButton = await FindAutomationElementAsync<Button>(
+                    component, "zoom-in-button");
                 var viewSourceButton = await FindAutomationElementAsync<Button>(
                     component, "view-source-button");
                 var goButton = await FindAutomationElementAsync<Button>(component, "go-button");
@@ -226,12 +247,18 @@ public static class MosaicHost
                     || forwardButton is null
                     || homeButton is null
                     || reloadButton is null
+                    || stopButton is null
+                    || bookmarkButton is null
+                    || bookmarksButton is null
+                    || historyButton is null
                     || copyAddressButton is null
                     || openPageButton is null
                     || savePageButton is null
                     || printPageButton is null
                     || sharePageButton is null
                     || pageInfoButton is null
+                    || zoomResetButton is null
+                    || zoomInButton is null
                     || viewSourceButton is null
                     || goButton is null)
                 {
@@ -248,6 +275,7 @@ public static class MosaicHost
                     () => !backButton.IsEnabled
                         && !forwardButton.IsEnabled
                         && reloadButton.IsEnabled
+                        && !stopButton.IsEnabled
                         && goButton.IsEnabled
                         && !addressInput.IsReadOnly))
                 {
@@ -316,6 +344,83 @@ public static class MosaicHost
                         backend = "xaml",
                         status = "error",
                         error = "native navigation controls did not update after navigation",
+                    });
+                    return;
+                }
+                (new ButtonAutomationPeer(historyButton) as IInvokeProvider)?.Invoke();
+                if (!await WaitForControlStateAsync(
+                    () => component.HistoryOpen
+                        && component.HistoryLabel == "History (2)"
+                        && component.HistoryPosition == "2 of 2"
+                        && component.HistoryAddress == targetUrl))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native history catalog did not expose shared traversal state",
+                    });
+                    return;
+                }
+                var historyCloseButton = await FindAutomationElementAsync<Button>(
+                    component, "history-close-button");
+                (historyCloseButton is null
+                    ? null
+                    : new ButtonAutomationPeer(historyCloseButton) as IInvokeProvider)?.Invoke();
+                if (historyCloseButton is null
+                    || !await WaitForControlStateAsync(() => !component.HistoryOpen))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native history catalog did not close through shared state",
+                    });
+                    return;
+                }
+                var bookmarkProvider = new ButtonAutomationPeer(bookmarkButton) as IInvokeProvider;
+                bookmarkProvider?.Invoke();
+                if (bookmarkProvider is null
+                    || !await WaitForControlStateAsync(
+                        () => component.BookmarkLabel == "Remove Bookmark"
+                            && component.BookmarksLabel == "Bookmarks (1)"
+                            && bookmarksButton.IsEnabled))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native bookmark catalog did not receive the durable entry",
+                    });
+                    return;
+                }
+                (new ButtonAutomationPeer(bookmarksButton) as IInvokeProvider)?.Invoke();
+                if (!await WaitForControlStateAsync(
+                    () => component.BookmarksOpen
+                        && component.BookmarksPosition == "1 of 1"
+                        && component.BookmarksAddress == targetUrl))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native bookmark catalog did not open shared selection state",
+                    });
+                    return;
+                }
+                var bookmarksCloseButton = await FindAutomationElementAsync<Button>(
+                    component, "bookmarks-close-button");
+                (bookmarksCloseButton is null
+                    ? null
+                    : new ButtonAutomationPeer(bookmarksCloseButton) as IInvokeProvider)?.Invoke();
+                if (bookmarksCloseButton is null
+                    || !await WaitForControlStateAsync(() => !component.BookmarksOpen))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native bookmark catalog did not close through shared state",
                     });
                     return;
                 }
@@ -440,6 +545,20 @@ public static class MosaicHost
                     });
                     return;
                 }
+                var zoomInProvider = new ButtonAutomationPeer(zoomInButton) as IInvokeProvider;
+                zoomInProvider?.Invoke();
+                if (zoomInProvider is null
+                    || !await WaitForControlStateAsync(
+                        () => zoomResetButton.Content?.ToString() == "125%"))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native page zoom did not reflow through shared state",
+                    });
+                    return;
+                }
                 var viewSourceProvider = new ButtonAutomationPeer(viewSourceButton)
                     as IInvokeProvider;
                 viewSourceProvider?.Invoke();
@@ -457,6 +576,42 @@ public static class MosaicHost
                         backend = "xaml",
                         status = "error",
                         error = "native View Source effect did not preserve retained source",
+                    });
+                    return;
+                }
+                var expectedSource = component.ViewSourceContent;
+                var copySourceButton = await FindAutomationElementAsync<Button>(
+                    component, "view-source-copy-button");
+                var copySourceProvider = copySourceButton is null
+                    ? null
+                    : new ButtonAutomationPeer(copySourceButton) as IInvokeProvider;
+                copySourceProvider?.Invoke();
+                var copiedSource = string.Empty;
+                for (var remaining = 20; remaining >= 0; remaining--)
+                {
+                    var clipboard = Clipboard.GetContent();
+                    if (clipboard.Contains(StandardDataFormats.Text))
+                    {
+                        copiedSource = await clipboard.GetTextAsync();
+                    }
+                    if (string.Equals(copiedSource, expectedSource, StringComparison.Ordinal)
+                        && component.ViewSourceOpen
+                        && component.StatusText == "Page source copied")
+                    {
+                        break;
+                    }
+                    await System.Threading.Tasks.Task.Delay(50);
+                }
+                if (copySourceProvider is null
+                    || !string.Equals(copiedSource, expectedSource, StringComparison.Ordinal)
+                    || !component.ViewSourceOpen
+                    || component.StatusText != "Page source copied")
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native Copy Source did not preserve exact retained source",
                     });
                     return;
                 }
@@ -1017,13 +1172,57 @@ public static class MosaicHost
                 value => component.StatusText = value);
             component.BackDisabled = props.GetProperty("back-disabled").GetBoolean();
             component.ForwardDisabled = props.GetProperty("forward-disabled").GetBoolean();
+            component.StopDisabled = props.GetProperty("stop-disabled").GetBoolean();
             SetIfChanged(component.BookmarkLabel, props.GetProperty("bookmark-label").GetString(),
                 value => component.BookmarkLabel = value);
             component.BookmarkDisabled = props.GetProperty("bookmark-disabled").GetBoolean();
+            SetIfChanged(component.BookmarksLabel, props.GetProperty("bookmarks-label").GetString(),
+                value => component.BookmarksLabel = value);
+            component.BookmarksDisabled = props.GetProperty("bookmarks-disabled").GetBoolean();
+            component.BookmarksOpen = props.GetProperty("bookmarks-open").GetBoolean();
+            SetIfChanged(component.BookmarksPosition,
+                props.GetProperty("bookmarks-position").GetString(),
+                value => component.BookmarksPosition = value);
+            SetIfChanged(component.BookmarksTitle, props.GetProperty("bookmarks-title").GetString(),
+                value => component.BookmarksTitle = value);
+            SetIfChanged(component.BookmarksAddress,
+                props.GetProperty("bookmarks-address").GetString(),
+                value => component.BookmarksAddress = value);
+            component.BookmarksPreviousDisabled =
+                props.GetProperty("bookmarks-previous-disabled").GetBoolean();
+            component.BookmarksNextDisabled =
+                props.GetProperty("bookmarks-next-disabled").GetBoolean();
+            component.BookmarksNavigateDisabled =
+                props.GetProperty("bookmarks-navigate-disabled").GetBoolean();
+            SetIfChanged(component.HistoryLabel, props.GetProperty("history-label").GetString(),
+                value => component.HistoryLabel = value);
+            component.HistoryDisabled = props.GetProperty("history-disabled").GetBoolean();
+            component.HistoryOpen = props.GetProperty("history-open").GetBoolean();
+            SetIfChanged(component.HistoryPosition,
+                props.GetProperty("history-position").GetString(),
+                value => component.HistoryPosition = value);
+            SetIfChanged(component.HistoryAddress,
+                props.GetProperty("history-address").GetString(),
+                value => component.HistoryAddress = value);
+            component.HistoryPreviousDisabled =
+                props.GetProperty("history-previous-disabled").GetBoolean();
+            component.HistoryNextDisabled =
+                props.GetProperty("history-next-disabled").GetBoolean();
+            component.HistoryNavigateDisabled =
+                props.GetProperty("history-navigate-disabled").GetBoolean();
             component.CopyAddressDisabled = props.GetProperty("copy-address-disabled").GetBoolean();
             component.OpenPageDisabled = props.GetProperty("open-page-disabled").GetBoolean();
             component.SavePageDisabled = props.GetProperty("save-page-disabled").GetBoolean();
             component.ViewSourceDisabled = props.GetProperty("view-source-disabled").GetBoolean();
+            component.ViewSourceOpen = props.GetProperty("view-source-open").GetBoolean();
+            SetIfChanged(component.ViewSourceTitle, props.GetProperty("view-source-title").GetString(),
+                value => component.ViewSourceTitle = value);
+            SetIfChanged(component.ViewSourceAddress,
+                props.GetProperty("view-source-address").GetString(),
+                value => component.ViewSourceAddress = value);
+            SetIfChanged(component.ViewSourceContent,
+                props.GetProperty("view-source-content").GetString(),
+                value => component.ViewSourceContent = value);
             component.FindOpen = props.GetProperty("find-open").GetBoolean();
             SetIfChanged(component.FindQuery, props.GetProperty("find-query").GetString(),
                 value => component.FindQuery = value);

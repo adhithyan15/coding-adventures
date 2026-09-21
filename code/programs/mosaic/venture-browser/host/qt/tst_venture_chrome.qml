@@ -56,14 +56,36 @@ TestCase {
                 "statusText": "Ready",
                 "backDisabled": disabled,
                 "forwardDisabled": disabled,
+                "stopDisabled": true,
                 "bookmarkLabel": "Bookmark",
                 "bookmarkDisabled": disabled,
+                "bookmarksLabel": "Bookmarks (1)",
+                "bookmarksDisabled": disabled,
+                "bookmarksOpen": false,
+                "bookmarksPosition": "1 of 1",
+                "bookmarksTitle": "Venture Qt acceptance",
+                "bookmarksAddress": "http://venture.test/start",
+                "bookmarksPreviousDisabled": true,
+                "bookmarksNextDisabled": true,
+                "bookmarksNavigateDisabled": disabled,
+                "historyLabel": "History (2)",
+                "historyDisabled": disabled,
+                "historyOpen": false,
+                "historyPosition": "2 of 2",
+                "historyAddress": "http://venture.test/start",
+                "historyPreviousDisabled": disabled,
+                "historyNextDisabled": disabled,
+                "historyNavigateDisabled": true,
                 "copyAddressDisabled": disabled,
                 "openPageDisabled": disabled,
                 "savePageDisabled": disabled,
                 "printPageDisabled": disabled,
                 "sharePageDisabled": disabled,
                 "pageInfoDisabled": disabled,
+                "zoomLabel": "100%",
+                "zoomOutDisabled": disabled,
+                "zoomResetDisabled": true,
+                "zoomInDisabled": disabled,
                 "viewSourceDisabled": disabled,
                 "findOpen": false,
                 "findQuery": "",
@@ -87,12 +109,17 @@ TestCase {
         verify(!nativeControl("back-button").enabled)
         verify(!nativeControl("forward-button").enabled)
         verify(!nativeControl("reload-button").enabled)
+        verify(!nativeControl("stop-button").enabled)
+        verify(!nativeControl("bookmarks-button").enabled)
         verify(!nativeControl("copy-address-button").enabled)
         verify(!nativeControl("open-page-button").enabled)
         verify(!nativeControl("save-page-button").enabled)
         verify(!nativeControl("print-page-button").enabled)
         verify(!nativeControl("share-page-button").enabled)
         verify(!nativeControl("page-info-button").enabled)
+        verify(!nativeControl("zoom-out-button").enabled)
+        verify(!nativeControl("zoom-reset-button").enabled)
+        verify(!nativeControl("zoom-in-button").enabled)
         verify(!nativeControl("view-source-button").enabled)
         verify(!nativeControl("find-button").enabled)
         verify(nativeControl("address-input").readOnly)
@@ -104,12 +131,17 @@ TestCase {
         mouseClick(nativeControl("back-button"))
         mouseClick(nativeControl("forward-button"))
         mouseClick(nativeControl("reload-button"))
+        mouseClick(nativeControl("stop-button"))
+        mouseClick(nativeControl("bookmarks-button"))
         mouseClick(nativeControl("copy-address-button"))
         mouseClick(nativeControl("open-page-button"))
         mouseClick(nativeControl("save-page-button"))
         mouseClick(nativeControl("print-page-button"))
         mouseClick(nativeControl("share-page-button"))
         mouseClick(nativeControl("page-info-button"))
+        mouseClick(nativeControl("zoom-out-button"))
+        mouseClick(nativeControl("zoom-reset-button"))
+        mouseClick(nativeControl("zoom-in-button"))
         mouseClick(nativeControl("view-source-button"))
         mouseClick(nativeControl("find-button"))
         mouseClick(nativeControl("go-button"))
@@ -149,6 +181,19 @@ TestCase {
         compare(chrome.statusText, "Navigated through MosaicHost")
     }
 
+    function test_stop_crosses_the_mosaic_host_seam_only_while_enabled() {
+        hydrate(false)
+        chrome.applyMosaicResponse({ "props": { "stopDisabled": false } })
+        recordingHost.reset()
+        const stopButton = nativeControl("stop-button")
+        verify(stopButton.enabled)
+        stopButton.forceActiveFocus()
+        keyClick(Qt.Key_Space)
+        wait(0)
+        compare(recordingHost.events.length, 1)
+        compare(recordingHost.events[0].event, "onStop")
+    }
+
     function test_view_source_crosses_the_mosaic_host_seam() {
         hydrate(false)
         recordingHost.reset()
@@ -159,6 +204,57 @@ TestCase {
         wait(0)
         compare(recordingHost.events.length, 1)
         compare(recordingHost.events[0].event, "onViewSource")
+
+        chrome.applyMosaicResponse({
+            "props": {
+                "viewSourceOpen": true,
+                "viewSourceTitle": "Venture Qt acceptance",
+                "viewSourceAddress": "http://venture.test/start",
+                "viewSourceContent": "<html><title>Venture Qt acceptance</title></html>"
+            }
+        })
+        wait(0)
+        const copySourceButton = nativeControl("view-source-copy-button")
+        copySourceButton.forceActiveFocus()
+        keyClick(Qt.Key_Space)
+        wait(0)
+        compare(recordingHost.events.length, 2)
+        compare(recordingHost.events[1].event, "onViewSourceCopy")
+        compare(chrome.viewSourceOpen, true)
+    }
+
+    function test_bookmark_catalog_crosses_the_mosaic_host_seam() {
+        hydrate(false)
+        recordingHost.reset()
+        const bookmarksButton = nativeControl("bookmarks-button")
+        verify(bookmarksButton.enabled)
+        bookmarksButton.forceActiveFocus()
+        keyClick(Qt.Key_Space)
+        wait(0)
+        compare(recordingHost.events.length, 1)
+        compare(recordingHost.events[0].event, "onBookmarksOpen")
+
+        chrome.applyMosaicResponse({
+            "props": {
+                "bookmarksOpen": true,
+                "bookmarksPosition": "1 of 1",
+                "bookmarksTitle": "Venture Qt acceptance",
+                "bookmarksAddress": "http://venture.test/start",
+                "bookmarksPreviousDisabled": true,
+                "bookmarksNextDisabled": true,
+                "bookmarksNavigateDisabled": false
+            }
+        })
+        wait(0)
+        compare(chrome.bookmarksOpen, true)
+        verify(!nativeControl("bookmarks-previous-button").enabled)
+        verify(!nativeControl("bookmarks-next-button").enabled)
+        const closeButton = nativeControl("bookmarks-close-button")
+        closeButton.forceActiveFocus()
+        keyClick(Qt.Key_Space)
+        wait(0)
+        compare(recordingHost.events.length, 2)
+        compare(recordingHost.events[1].event, "onBookmarksClose")
     }
 
     function test_copy_address_crosses_the_mosaic_host_seam() {
@@ -171,6 +267,38 @@ TestCase {
         wait(0)
         compare(recordingHost.events.length, 1)
         compare(recordingHost.events[0].event, "onCopyAddress")
+    }
+
+    function test_history_catalog_crosses_the_mosaic_host_seam() {
+        hydrate(false)
+        recordingHost.reset()
+        const historyButton = nativeControl("history-button")
+        verify(historyButton.enabled)
+        historyButton.forceActiveFocus()
+        keyClick(Qt.Key_Space)
+        wait(0)
+        compare(recordingHost.events.length, 1)
+        compare(recordingHost.events[0].event, "onHistoryOpen")
+
+        chrome.applyMosaicResponse({
+            "props": {
+                "historyOpen": true,
+                "historyPosition": "2 of 2",
+                "historyAddress": "http://venture.test/start",
+                "historyPreviousDisabled": false,
+                "historyNextDisabled": false,
+                "historyNavigateDisabled": true
+            }
+        })
+        wait(0)
+        compare(chrome.historyOpen, true)
+        const previousButton = nativeControl("history-previous-button")
+        verify(previousButton.enabled)
+        previousButton.forceActiveFocus()
+        keyClick(Qt.Key_Space)
+        wait(0)
+        compare(recordingHost.events.length, 2)
+        compare(recordingHost.events[1].event, "onHistoryPrevious")
     }
 
     function test_open_page_crosses_the_mosaic_host_seam() {
@@ -231,6 +359,21 @@ TestCase {
         wait(0)
         compare(recordingHost.events.length, 1)
         compare(recordingHost.events[0].event, "onPageInfo")
+    }
+
+    function test_zoom_actions_cross_the_mosaic_host_seam() {
+        hydrate(false)
+        recordingHost.reset()
+        const zoomInButton = nativeControl("zoom-in-button")
+        zoomInButton.forceActiveFocus()
+        keyClick(Qt.Key_Space)
+        const zoomOutButton = nativeControl("zoom-out-button")
+        zoomOutButton.forceActiveFocus()
+        keyClick(Qt.Key_Space)
+        wait(0)
+        compare(recordingHost.events.length, 2)
+        compare(recordingHost.events[0].event, "onZoomIn")
+        compare(recordingHost.events[1].event, "onZoomOut")
     }
 
     function test_find_actions_cross_the_mosaic_host_seam() {

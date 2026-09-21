@@ -2,7 +2,7 @@
 
 closurec — Closure Compiler clone CLI driver. Mirrors the flag surface of the upstream Java Closure Compiler (google/closure-compiler @ CommandLineRunner.java) for drop-in compatibility.
 
-Version: 0.245.0
+Version: 0.246.0
 
 ## Flags
 
@@ -33,6 +33,8 @@ Assume input sources are to run in strict mode.
 ### `--jscomp_dev_mode` (enum, default: OFF)
 
 Enable extra validity checks when modifying compiler.
+
+Aliases: `--dev_mode`
 
 ### `--logging_level` (string, default: WARNING)
 
@@ -158,6 +160,8 @@ Turn off the named warning class. '*' adds every supported diagnostic.
 
 Override the value of an @define variable; format is <name>[=<val>] (boolean true if omitted).
 
+Aliases: `--D`
+
 ### `--charset` (string, default: "")
 
 Input and output charset for all files. Default: UTF-8 in, US_ASCII out.
@@ -173,6 +177,8 @@ Use multiple threads to parallelize parts of the compilation (hidden).
 ### `--checks_only` (boolean, default: false)
 
 Don't generate output; run checks only.
+
+Aliases: `--checks-only`
 
 ### `--incremental_check_mode` (enum, default: OFF)
 
@@ -281,6 +287,8 @@ File(s) containing additional command-line options (hidden).
 ### `--warnings_allowlist_file` (string, default: "")
 
 A file containing warnings to suppress.
+
+Aliases: `--warnings_whitelist_file`
 
 ### `--hide_warnings_for` (string)
 
@@ -453,4 +461,3 @@ File with serialized property renaming map from a prior compilation.
 ### `--expected_diagnostics` (string)
 
 Expected diagnostics in format [(line,col)]CODE:regex.
-

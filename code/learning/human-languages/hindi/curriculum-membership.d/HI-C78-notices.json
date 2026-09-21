@@ -1,0 +1,11 @@
+{
+  "id": "HI-C78-notices",
+  "pathSegment": "HI-PATH-78-READING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-78-READING",
+      "order": 1
+    }
+  ]
+}

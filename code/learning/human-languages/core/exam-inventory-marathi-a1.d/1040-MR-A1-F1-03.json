@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-F1-03",
+  "category": "Giving and asking for information",
+  "label": "give personal information: name, age, origin",
+  "probe": null,
+  "note": "Two thirds of it works now. Name is taught, and ORIGIN closed in chapter 46 -- 'mii puNyaahuun yeto' is sayable and askable. AGE is what remains, and it needs a number above five (MR-A1-QU-03). This is the A1 speaking interview's opening question and it is now one number short of complete.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [
+    "A1-F1-03",
+    "A1-NE03-01"
+  ]
+}

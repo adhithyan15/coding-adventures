@@ -1,0 +1,11 @@
+{
+  "id": "GE-C37-ihn",
+  "pathSegment": "GE-PATH-A1-OBJEKTPRONOMEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-A1-OBJEKTPRONOMEN",
+      "order": 1
+    }
+  ]
+}

@@ -6,9 +6,5 @@
   "canDo": "I can recognise a neutral-tone syllable from the absence of a tone mark, say it short and light, and tell it apart from a tone that changes under a sandhi rule.",
   "prerequisites": [
     "ZH-EXT-017-ZAO-SHANG-SCRIPT"
-  ],
-  "lessons": [
-    "ZH-C07-zaoshang",
-    "ZH-C07-zaoshanghao"
   ]
 }

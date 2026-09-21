@@ -1,0 +1,11 @@
+{
+  "id": "FR-C13-aube",
+  "pathSegment": "FR-PATH-015",
+  "pathOrder": 71,
+  "extensions": [
+    {
+      "id": "FR-EXT-015-LANGUAGE-SPECIFIC",
+      "order": 71
+    }
+  ]
+}

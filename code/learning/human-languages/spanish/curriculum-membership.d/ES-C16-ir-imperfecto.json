@@ -1,0 +1,11 @@
+{
+  "id": "ES-C16-ir-imperfecto",
+  "pathSegment": "ES-PATH-040",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-040-LANGUAGE-SPECIFIC",
+      "order": 5
+    }
+  ]
+}

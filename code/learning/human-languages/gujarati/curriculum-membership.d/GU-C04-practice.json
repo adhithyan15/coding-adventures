@@ -1,0 +1,11 @@
+{
+  "id": "GU-C04-practice",
+  "pathSegment": "GU-PATH-C4P",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-004-CONSOLIDATION",
+      "order": 0
+    }
+  ]
+}

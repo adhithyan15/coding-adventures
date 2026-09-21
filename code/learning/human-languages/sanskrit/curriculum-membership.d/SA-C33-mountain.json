@@ -1,0 +1,11 @@
+{
+  "id": "SA-C33-mountain",
+  "pathSegment": "SA-PATH-33-LAND",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-33-LAND",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/der-tlv-v1.json",
+  "title": "X.690 DER TLV framing v1 conformance corpus",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "profile", "defaults", "error_ids", "cases"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "profile": { "const": "x690-der-tlv-framing-v1" },
+    "defaults": { "$ref": "#/$defs/limits" },
+    "error_ids": {
+      "type": "array",
+      "minItems": 17,
+      "maxItems": 17,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/error_id" }
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 50,
+      "items": { "$ref": "#/$defs/case" }
+    }
+  },
+  "$defs": {
+    "case_id": {
+      "type": "string",
+      "pattern": "^der-tlv-v1-[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "error_id": {
+      "enum": [
+        "empty-input",
+        "truncated-high-tag",
+        "truncated-length",
+        "truncated-value",
+        "end-of-contents",
+        "non-minimal-tag",
+        "tag-overflow",
+        "indefinite-length",
+        "reserved-length",
+        "non-minimal-length",
+        "length-too-wide",
+        "length-host-overflow",
+        "input-limit-exceeded",
+        "value-limit-exceeded",
+        "element-limit-exceeded",
+        "tag-limit-exceeded",
+        "trailing-data"
+      ]
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_input_len", "max_value_len", "max_elements", "max_tag_number"],
+      "properties": {
+        "max_input_len": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        "max_value_len": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        "max_elements": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        "max_tag_number": { "type": "integer", "minimum": 0, "maximum": 4294967295 }
+      }
+    },
+    "limits_override": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_input_len": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        "max_value_len": {
+          "oneOf": [
+            { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+            { "const": "host-max" }
+          ]
+        },
+        "max_elements": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        "max_tag_number": { "type": "integer", "minimum": 0, "maximum": 4294967295 }
+      }
+    },
+    "input_segment": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["hex"],
+          "properties": { "hex": { "type": "string", "pattern": "^(?:[0-9a-f]{2})*$" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["repeat_hex", "count"],
+          "properties": {
+            "repeat_hex": { "type": "string", "pattern": "^[0-9a-f]{2}$" },
+            "count": { "type": "integer", "minimum": 0, "maximum": 1048576 }
+          }
+        }
+      ]
+    },
+    "tag": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["class", "constructed", "number"],
+      "properties": {
+        "class": { "enum": ["universal", "application", "context-specific", "private"] },
+        "constructed": { "type": "boolean" },
+        "number": { "type": "integer", "minimum": 0, "maximum": 4294967295 }
+      }
+    },
+    "element_event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "element_offset", "tag", "header_len", "encoded_len", "remainder_offset"],
+      "properties": {
+        "outcome": { "const": "element" },
+        "element_offset": { "type": "integer", "minimum": 0 },
+        "tag": { "$ref": "#/$defs/tag" },
+        "header_len": { "type": "integer", "minimum": 2 },
+        "encoded_len": { "type": "integer", "minimum": 2 },
+        "remainder_offset": { "type": "integer", "minimum": 2 }
+      }
+    },
+    "error_event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "error_id", "offset"],
+      "properties": {
+        "outcome": { "const": "error" },
+        "error_id": { "$ref": "#/$defs/error_id" },
+        "offset": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "end_event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome"],
+      "properties": { "outcome": { "const": "end" } }
+    },
+    "finish_event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome"],
+      "properties": { "outcome": { "const": "finished" } }
+    },
+    "decode_case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "operation", "input", "expected"],
+      "properties": {
+        "id": { "$ref": "#/$defs/case_id" },
+        "operation": { "enum": ["decode-exact", "decode-one"] },
+        "input": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/input_segment" } },
+        "limits": { "$ref": "#/$defs/limits_override" },
+        "redacted_input_hex": { "type": "string", "pattern": "^(?:[0-9a-f]{2})+$" },
+        "expected": { "oneOf": [{ "$ref": "#/$defs/element_event" }, { "$ref": "#/$defs/error_event" }] }
+      }
+    },
+    "cursor_case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "operation", "input", "actions", "expected"],
+      "properties": {
+        "id": { "$ref": "#/$defs/case_id" },
+        "operation": { "const": "cursor" },
+        "input": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/input_segment" } },
+        "limits": { "$ref": "#/$defs/limits_override" },
+        "actions": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "enum": ["read", "finish"] }
+        },
+        "expected": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["events", "elements_read", "remaining_offset"],
+          "properties": {
+            "events": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "oneOf": [
+                  { "$ref": "#/$defs/element_event" },
+                  { "$ref": "#/$defs/error_event" },
+                  { "$ref": "#/$defs/end_event" },
+                  { "$ref": "#/$defs/finish_event" }
+                ]
+              }
+            },
+            "elements_read": { "type": "integer", "minimum": 0 },
+            "remaining_offset": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "case": { "oneOf": [{ "$ref": "#/$defs/decode_case" }, { "$ref": "#/$defs/cursor_case" }] }
+  }
+}

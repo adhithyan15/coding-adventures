@@ -1,0 +1,11 @@
+{
+  "id": "RU-C03-govorit",
+  "pathSegment": "RU-PATH-007",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-007-CORE-VERBS",
+      "order": 3
+    }
+  ]
+}

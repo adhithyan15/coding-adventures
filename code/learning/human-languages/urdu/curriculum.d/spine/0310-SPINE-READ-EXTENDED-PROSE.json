@@ -1,5 +1,4 @@
 {
-  "segments": [],
   "omits": [
     "DISCOURSE-TOPIC-SENTENCE",
     "RELATIVE-CLAUSE",

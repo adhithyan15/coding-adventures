@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-F5-05",
+  "category": "Social relations",
+  "label": "respond to an introduction",
+  "probe": [
+    "MR-A1-MESSAGE-LINE-MEETING"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-spine"
+  ],
+  "derivedFrom": [
+    "A1-F5-05"
+  ]
+}

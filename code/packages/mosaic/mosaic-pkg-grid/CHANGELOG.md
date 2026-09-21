@@ -1,10 +1,16 @@
 # Changelog
 
+## 2026-09-20
+
+- Name inline cell editors through the shared grid editor-label slot and the Rust-selected absolute cell address (#15752).
+
 All notable changes to `mosaic-pkg-grid` are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/) and
 the package follows semantic versioning.
 
 ## Unreleased
+
+- Expose RowHeaderGrid font, row-label and row-height slots for consistent scaled typography and geometry (#14690).
 
 ### Added -- `cell-editor` part, so the inline editor stops changing the row's height (#15048)
 

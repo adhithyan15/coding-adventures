@@ -1,0 +1,11 @@
+{
+  "id": "GE-C31-finger",
+  "pathSegment": "GE-PATH-034",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-034-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

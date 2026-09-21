@@ -1,0 +1,11 @@
+{
+  "id": "TE-C61-ghee",
+  "pathSegment": "TE-PATH-61-KITCHEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-61-KITCHEN",
+      "order": 1
+    }
+  ]
+}

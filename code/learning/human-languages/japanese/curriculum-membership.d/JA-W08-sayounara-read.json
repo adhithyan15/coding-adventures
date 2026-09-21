@@ -1,0 +1,11 @@
+{
+  "id": "JA-W08-sayounara-read",
+  "pathSegment": "JA-PATH-008",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-015-SAYOUNARA-FAREWELL",
+      "order": 4
+    }
+  ]
+}

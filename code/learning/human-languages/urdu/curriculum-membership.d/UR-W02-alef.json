@@ -1,0 +1,11 @@
+{
+  "id": "UR-W02-alef",
+  "pathSegment": "UR-PATH-004",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-003B-SCRIPT-ALIF-LAM-MIM",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "id": "ML-A1-LEX-17",
+  "category": "Padakosham (lexicon by domain)",
+  "label": "the house: door, chair, mat, basket, box",
+  "probe": [
+    "ML-LEX-C52-WELCOME-01",
+    "ML-LEX-C52-WELCOME-02",
+    "ML-LEX-C56-HOUSE-01",
+    "ML-LEX-C56-HOUSE-02",
+    "ML-LEX-C56-HOUSE-05"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NE10-04",
+    "A1-NE10-02"
+  ],
+  "malayalamSpecific": false,
+  "note": "Objects, yes; the names of the ROOMS of a dwelling, which the Spanish point also asks for, are not taught."
+}

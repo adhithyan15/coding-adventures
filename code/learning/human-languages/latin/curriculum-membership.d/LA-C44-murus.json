@@ -1,0 +1,11 @@
+{
+  "id": "LA-C44-murus",
+  "pathSegment": "LA-PATH-013",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-044-HOUSE",
+      "order": 2
+    }
+  ]
+}

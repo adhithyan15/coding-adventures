@@ -5,6 +5,59 @@ cross-platform proving application. Items are ordered by risk and dependency.
 
 ## Prioritized discoveries
 
+- [x] **P1 browser usability - browsable session-history catalog.** Project
+  the ordered navigation stack into one core-owned Mosaic panel with stable
+  entry identity, address, current position, wraparound Previous/Next
+  selection, and direct Open traversal. Core and generated-host acceptance
+  cover repeated URLs, exact per-entry form and scroll restoration, and
+  fetch-free stack movement without toolkit-owned history policy.
+
+- [x] **P1 browser convergence - exact Copy Source transaction.** Add one
+  semantic Copy Source event to the shared panel, copy the retained raw
+  response bytes through the existing typed clipboard effect, keep the panel
+  open, and project one shared success status. Deterministic core and generated
+  host acceptance now prevent refetching, reconstruction, or toolkit-owned
+  source-selection policy.
+
+- [x] **P1 browser usability - browsable bookmark catalog.** Project the
+  durable ordered catalog into one core-owned Mosaic panel with count,
+  canonical address, title, wraparound Previous/Next traversal, and an Open
+  command that reuses the shared navigation transaction. Generated-host and
+  core acceptance cover empty, open, browse, close, and navigation dismissal
+  without toolkit-owned catalog policy.
+
+- [x] **P2 browser usability - cancel pending page loads.** Add one shared Stop
+  transaction that is enabled only for outstanding stylesheet or image work,
+  invalidates late completions, settles retained resources for fallback
+  reflow, preserves the committed document and history, and emits the ordered
+  typed cancellation list through every generated host scheduler seam.
+
+- [x] **P1 browser convergence - shared View Source presentation.** Preserve
+  the typed auxiliary-document effect for richer platform integrations, while
+  also retaining the exact response text in browser core and rendering it in
+  one closable Mosaic panel. Every generated shell now visibly presents the
+  same title, committed address, raw source, and close lifecycle without a
+  refetch or toolkit-owned source reconstruction.
+
+- [x] **P1 browser convergence - shared page-information presentation.** Keep
+  the typed Page Information host effect for richer platform integrations, but
+  also retain and render one core-owned metadata snapshot in the Mosaic chrome
+  so every generated shell gives users visible title, requested/final address,
+  status, and resource diagnostics with the same close lifecycle.
+
+- [x] **P1 browser architecture - shared native bridge codec.** Move the
+  generated Mosaic event vocabulary, value validation, chrome-prop JSON, and
+  typed host-effect JSON into `venture-browser-core`. Keep macOS, Windows, and
+  Cairo as FFI translators, serialize real navigation-disabled state, and add
+  deterministic protocol and source-contract coverage that prevents host drift.
+
+- [x] **P1 browser convergence - shared page composition scale and zoom.** Move
+  physical-surface to logical-layout scale policy into `BrowserSession`, then
+  add bounded 50%-200% Zoom Out, Reset, and Zoom In transactions that reflow
+  retained content without navigation or refetch. Keep labels, disabled state,
+  bridge serialization, native repaint, and deterministic acceptance aligned
+  across every generated host.
+
 - [x] **P1 browser convergence - shared retained-response information.** Add
   one Mosaic-authored Page Information control that snapshots requested and
   final response URLs, normalized title, HTTP status, and image/stylesheet
@@ -18,15 +71,6 @@ cross-platform proving application. Items are ordered by risk and dependency.
   request without navigation or refetch. Keep disabled state, status, bridge
   serialization, presenter seams, and deterministic acceptance aligned across
   every generated host.
-
-### Deferred architecture discovery
-
-Page zoom remains valuable, but it is intentionally not scheduled as a host
-feature. The current core session retains browser state while each platform
-bridge still owns final page composition and logical viewport width; adding
-zoom now would duplicate reflow policy across toolkits. A future zoom phase
-should first centralize page-composition ownership, then expose one shared scale
-transaction to every host.
 
 - [x] **P1 browser convergence - shared current-page print transaction.** Add
   one Mosaic-authored Print Page control that snapshots the retained page's
@@ -164,6 +208,10 @@ transaction to every host.
   bounded versioned native-profile file adapter with atomic replacement, route
   one shared Mosaic bookmark command through every host, and cover rollback,
   restart, generated DOM, and direct SwiftUI toolbar behavior.
+- [x] **P1 browser usability — browsable bookmark catalog.** Expose the
+  ordered durable catalog through shared Mosaic slots and events, retain the
+  selection and wraparound policy in browser core, and reuse ordinary shared
+  navigation to open entries across every generated host.
 - [x] **P1 browser convergence — host-neutral View Source.** Project the
   already-retained response source into a synthetic preformatted browser page
   through a reusable core command before adding toolkit-specific windows or

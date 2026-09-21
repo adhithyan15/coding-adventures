@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-PU-08",
+  "category": "Punctuation and written conventions",
+  "label": "symbols: the rupee sign, the numeral sign, the percent sign",
+  "probe": null,
+  "note": "Untaught, and a price on a sign is written with one. The rupee's NAME arrived in chapter 59; its SIGN did not, and the two are separate debts.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [
+    "A1-O4-03"
+  ]
+}

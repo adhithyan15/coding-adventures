@@ -1,0 +1,11 @@
+{
+  "id": "FR-C08-midi",
+  "pathSegment": "FR-PATH-029",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-029-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

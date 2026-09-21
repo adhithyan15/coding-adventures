@@ -1,0 +1,11 @@
+{
+  "id": "SA-C11-kutumbam",
+  "pathSegment": "SA-PATH-014",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-014-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

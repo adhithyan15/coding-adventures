@@ -12,6 +12,17 @@
 > first-party-only configuration that imports stages directly works
 > against FM03 today, with FM02 layering in third-party plugins later.
 
+## Implementation status
+
+| Surface | Status | Evidence / next step |
+|---|---|---|
+| Config validation and typed DAG | Implemented | `forme-pipeline-config` and `forme-orchestrator` power both live sites. |
+| Deterministic fan-in/fan-out | Implemented | Named ports, bounded multicast, and stable ordering are tested. |
+| Persistent cache and affected set | Implemented | External source ledgers and topology checkpoints work across CLI processes. |
+| Concurrent scheduling and cancellation | Implemented | One FIFO permit pool bounds ready stages, items, and iterator pulls. |
+| Reproducible reports | Implemented | Clean and warm live builds compare canonical reports and artifact hashes. |
+| Third-party stage loading | Pending | [FM02](FM02-forme-plugin-host.md) owns the host boundary. |
+
 ---
 
 ## 0. Preface
@@ -247,8 +258,9 @@ export default config;
 The orchestrator is invoked via:
 
 ```bash
-forme run                            # default forme.config.ts
-forme run --config pipelines/blog.ts # explicit
+forme build                            # default forme.config.ts
+forme build --config pipelines/blog.ts # explicit
+# `forme run` is an exact compatibility alias.
 forme watch                          # config + watcher
 ```
 
@@ -500,9 +512,9 @@ DAG is built as follows:
 
 Multiple consumers of one producer's output are allowed and treated as
 fan-out. Multiple producers feeding distinct ports of one consumer are fan-in.
-The v0 scheduler materializes each producer once and creates an independently
-replayable iterator for every stream port. FM-B010 replaces eager
-materialization with bounded multiplexing and backpressure.
+The scheduler opens each stream producer once and publishes one bounded branch
+per edge. Named fan-in preserves independently replayable iterators at the join
+boundary; ordinary stream edges remain single-pass and backpressured.
 
 ### 3.4 Type compatibility checking
 
@@ -542,6 +554,24 @@ When an instance completes, the orchestrator:
    the ready queue.
 4. Schedules from the ready queue up to `maxConcurrency`.
 
+The ready queue is stable: instances with no unmet dependencies enter in
+pipeline declaration order, and consumers that become ready together use that
+same order. Readiness bookkeeping may run ahead of execution, but every
+`Stage.run` invocation acquires from the one shared permit pool (§4.3.1).
+Summaries and named outputs remain in topological/declaration order regardless
+of completion order. After cancellation or the first fatal failure, queued
+invocations are rejected and no newly ready instance is submitted. Already
+active invocations observe the shared cancellation token and unwind
+cooperatively before disposal begins.
+
+Async cache and checkpoint reads cannot reorder admission. A ready instance
+retains its stable turn until its first `Stage.run` call has started or a
+validated cache/checkpoint hit has removed the need to call it. Cache lookups
+for per-item work make the same source-ordered hand-off when they hit or when
+their `Stage.run` call begins. Per-invocation cache lookups remain inside the
+shared permit budget; whole-instance checkpoint reads retain the single stable
+ready turn until they resolve.
+
 ### 4.2 Streaming and fan-out
 
 For stages that produce a `Stream<K>`, the orchestrator does not wait
@@ -562,12 +592,47 @@ Fan-in: a stage with `inputPorts` is invoked once with a stable object whose
 the declared named inputs in lexical order. Stream shape must match at every
 port; per-item stream promotion applies only to legacy single-input stages.
 
+Per-item invocations join the same FIFO permit queue in source order. Their
+results are written into source-order slots, so downstream materialized values,
+revision hashes, cache checkpoints, and item counts do not depend on completion
+order. A fatal item failure cancels queued sibling invocations; active siblings
+must unwind before the owning stage is considered complete.
+
 ### 4.3 Parallelism control
 
 The `settings.maxConcurrency` cap applies across the whole pipeline.
 A future stage-level annotation (open question §16) may override per
 stage. Within a stage, concurrent invocations are independent — stages
 must remain pure (FM01 §3.3).
+
+#### 4.3.1 Shared permit contract
+
+All stage and per-item invocations acquire from one FIFO permit pool. The
+configured limit must be a positive safe integer; `null` resolves once per run
+to the host's available hardware concurrency, with a minimum of one. A queued
+invocation begins only after every earlier live waiter has either acquired or
+been cancelled. Completion and synchronous or asynchronous failure release
+the permit exactly once.
+
+A holder that must wait for an upstream stream value yields its permit before
+calling `next()`. If the wait succeeds, reacquisition joins the tail of the
+same FIFO queue before stage code resumes. A non-cancellation wait failure also
+reacquires before it is exposed to task code, so a caller that catches the
+error cannot continue outside the concurrency budget. Every yielded-wait
+failure remains terminal for the owning invocation and takes precedence over
+later task errors, even if task code awaits, catches, or discards its promise.
+Pipeline cancellation does not reacquire; it poisons
+the invocation so catching the local error cannot turn the cancelled task into
+success. This release/reacquire boundary
+is what allows a producer and consumer to make progress with
+`maxConcurrency: 1`; a holder may have only one yield in flight, and the pool
+settles that yield before the owning task can finish.
+
+Pipeline cancellation rejects queued acquisitions with `CancellationError`
+and refuses new work. Active holders remain cooperatively cancellable through
+their normal `StageContext` token, and their eventual unwind still releases
+capacity. Permit-pool instrumentation reports the active count, queued count,
+and peak active count without exposing mutable scheduler state.
 
 ### 4.4 Stream backpressure
 
@@ -585,6 +650,73 @@ Discipline:
   buffering.
 - The orchestrator reads from a `Stream` lazily, never eagerly
   drains.
+
+#### 4.4.1 Bounded multicast contract
+
+The scheduler's streaming primitive receives the complete, statically known
+consumer count before it opens the upstream iterator. It returns exactly one
+single-use `AsyncIterable` branch per consumer. The primitive pulls the
+upstream at most once for each logical value and delivers that value to every
+branch that is still attached, preserving source order independently on every
+branch.
+
+Each attached branch owns an ordered window of at most 64 values. An upstream
+pull may begin only when every attached branch has room for the resulting
+value. A branch waiting in `next()` receives the value directly rather than
+placing it in its window. Therefore one slow branch backpressures the shared
+producer after at most 64 queued values, and total retained queue entries are
+bounded by `attachedBranches * 64`. The primitive does not prefetch without
+consumer demand and permits only one unresolved `next()` call per branch.
+
+Calling `return()` on a branch detaches it, discards only that branch's queued
+values, and immediately removes it from the backpressure calculation. When the
+last branch detaches, the primitive calls `return()` on the upstream iterator
+exactly once. Pipeline cancellation rejects pending reads with the normal
+`CancellationError`, detaches every branch, clears all windows, and closes the
+upstream iterator.
+
+Normal upstream completion reaches each branch after that branch drains its
+window. An upstream exception is remembered and rethrown by every attached
+branch after its already-delivered and queued prefix, so a fast branch cannot
+hide the failure from a slow one. Upstream `return()` cleanup failures never
+replace an earlier cancellation or source failure.
+
+#### 4.4.2 Scheduler integration
+
+When `Stage.run` returns an `AsyncIterable`, the instance publishes one live
+transport before the iterable completes. Every statically known downstream
+input edge receives one bounded branch. When the instance is eligible for an
+exact checkpoint, a separate internal branch feeds the stream-checkpoint
+writer. A terminal stream output may add one output
+collector branch because returning that stream in `RunResult.outputs`
+necessarily materializes the caller-visible value. The stage iterable is
+opened once; consumers and checkpointing never invoke the producer again.
+
+The iterator's `next()`, `return()`, and `throw()` methods execute through the
+same shared permit pool as ordinary `Stage.run` calls. A collector or per-item
+consumer yields its held permit while awaiting its branch and reacquires at the
+FIFO tail before executing stage code. Per-item consumers may have multiple
+workers, but access to one branch is serialized: each value receives its
+source-order index before the next worker can take a value, and completed
+results occupy that index regardless of finish order. This permits progress at
+`maxConcurrency: 1` without an unbounded queue of scheduled item promises.
+
+Dependency readiness for a stream edge means that its branch has been
+published, not that the producer has completed. Instance completion still
+waits for the checkpoint branch to observe normal end-of-stream. Only then may
+the scheduler finalize `itemsProduced`, the ordered stream revision, the
+producer's output revision, downstream input revisions, and the next revision
+ledger. A checkpoint manifest is committed last. Cache-write failure is
+fail-open and leaves no visible partial manifest; source failure remains a
+pipeline failure even when no downstream consumer is attached.
+
+An unchanged stream instance validates its complete checkpoint tree before it
+publishes a lazy replay iterable. Replay then uses the same bounded fan-out and
+permit-aware pull path as a live producer. Missing, malformed, cyclic,
+count-mismatched, or revision-mismatched checkpoints fall back to one normal
+stage execution. Cancellation or fatal failure detaches every transport branch
+and closes each opened upstream iterator exactly once before stage disposal and
+before any successful revision ledger is written.
 
 ### 4.5 Resource limits
 
@@ -678,6 +810,46 @@ All encoders are deterministic — same logical value, same bytes. This
 is what makes the `contentHash` integrity check meaningful: a cache
 read that doesn't decode to a value with the recorded hash is treated
 as corruption and re-computed.
+
+#### 5.4.1 Bounded stream checkpoints
+
+A stream checkpoint MUST NOT encode the complete stream as one array. Doing
+so would preserve cache reuse while defeating the bounded-memory guarantee in
+§4.4. Instead, the orchestrator stores a content-addressed ordered tree:
+
+- A **leaf** contains one canonical encoded stream value and has count `1`.
+- A **branch** contains the cache keys and counts of its left and right
+  children. Its count is their checked sum.
+- The writer retains only one complete subtree per binary level. Appending a
+  value merges equal-sized frontier trees like a binary carry, so retained
+  writer state is `O(log n)` and every completed leaf/branch is written
+  immediately.
+- Finalisation folds the frontier from largest to smallest. For every branch,
+  the left child count is the largest power of two strictly below the branch
+  count and the right child contains the remainder. This canonical shape
+  preserves order, admits no alternative encodings, and bounds depth to 53 for
+  JavaScript safe-integer item counts.
+
+The instance-checkpoint key stores only a small manifest containing the schema
+version, root key (or `null` for an empty stream), item count, and stream output
+revision. The manifest is published **after** every referenced tree node; an
+interrupted writer therefore leaves unreachable cache entries, never a
+partially visible checkpoint. Normal cache GC may collect those entries.
+
+Before restoring a stream, the orchestrator performs a validation traversal
+that reads every referenced entry, verifies the cache entry integrity and
+content-derived key, decodes the node, checks canonical child counts and safe
+integer arithmetic, and confirms the manifest count and expected output
+revision. Missing, corrupt, cyclic/non-decreasing, over-deep, or
+count-mismatched trees are invalidated at the manifest and treated as a cache
+miss before any consumer or replay hook runs. After validation, a second
+depth-first traversal yields leaves lazily in original order. Both traversals
+observe cancellation between cache reads.
+
+The stream output revision is the BLAKE2b revision of a domain-separated
+descriptor containing the checkpoint schema, root key, and item count. Since
+every node key is itself content-addressed, this revision commits to every
+ordered encoded value without retaining or re-encoding the full stream.
 
 ### 5.5 Cache invalidation
 
@@ -1172,6 +1344,10 @@ Unit tests:
   prevents unbounded memory.
 - Cache: hits skip execution; misses populate; integrity failures
   re-execute.
+- Stream checkpoints: a stream larger than the 64-item transport window keeps
+  only an `O(log n)` writer frontier; empty, duplicate-value, and non-power-of-
+  two streams round-trip in order; missing/corrupt/wrong-key/non-canonical
+  trees fail open before iteration; validation and replay honor cancellation.
 - Incremental: affected-set is exactly the changed-and-downstream
   set.
 - Side-effect replay: an unchanged replay-capable sink restores a deleted
@@ -1509,9 +1685,10 @@ Appendix B for the broader Forme vocabulary.
 - **FM01** — Kernel: types, kinds, stages, capabilities, identity, manifest
 - **FM02** (next) — Plugin host: loading, sandboxing, extension registry
 - **FM04** — Style IR
-- **FM05** — Interactivity IR
-- **FM06** — AOT compiler
-- **FM07** — Dev server, CLI, and shell integration
+- **[FM05](FM05-forme-interactivity-ir.md)** — Interactivity IR
+- **[FM06](FM06-forme-aot-compiler.md)** — AOT compiler
+- **[FM07](FM07-forme-cli-dev-server.md)** — Dev server, CLI, and shell integration
+- **[FM08](FM08-forme-deploy-runner.md)** — Deploy runner
 
 ## Appendix D — This is a living document
 

@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-REG-02",
+  "category": "Bhaashaabhedam (register: Sanskritic and native, familiar and respectful)",
+  "label": "the native word narrowed into narrative or literary use",
+  "probe": [
+    "ML-CONCEPT-C23-NAAL-01",
+    "ML-CONCEPT-C24-NATIVE-NIGHT-WORDS-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-N-02"
+  ],
+  "malayalamSpecific": false,
+  "note": "The only two lessons in the corpus marked register: literary-narrative and literary. Both teach a native word that the everyday Sanskrit one displaced -- naal beside divasam, iravu beside raathri. A learner needs to recognise them and should not produce them, and the corpus marks that."
+}

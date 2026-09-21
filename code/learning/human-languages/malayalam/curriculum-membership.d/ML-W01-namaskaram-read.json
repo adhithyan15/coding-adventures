@@ -1,0 +1,11 @@
+{
+  "id": "ML-W01-namaskaram-read",
+  "pathSegment": "ML-PATH-001",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "ML-EXT-001-INLINE-SCRIPT",
+      "order": 7
+    }
+  ]
+}

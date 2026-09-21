@@ -1,0 +1,11 @@
+{
+  "id": "PT-C09-estacoes",
+  "pathSegment": "PT-PATH-014",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-014-LANGUAGE-SPECIFIC",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C41-claudo",
+  "pathSegment": "LA-PATH-029-B",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-029-LANGUAGE-SPECIFIC-B",
+      "order": 2
+    }
+  ]
+}

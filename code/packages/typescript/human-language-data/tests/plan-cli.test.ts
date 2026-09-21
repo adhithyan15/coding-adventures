@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { runCompletionPlan } from "../src/plan-cli.js";
 import { defaultCurriculumRoot } from "../src/loader.js";
+import { EXAM_INVENTORY_META_OWNER } from "../src/exam-inventory-shards.js";
 
 // `plan-cli` had no test file at all, so every one of the security review's dirty
 // controls left the suite green. These pin the coupling the review found: the
@@ -42,6 +43,28 @@ function editInventory(root: string, name: string, edit: (doc: Record<string, un
   const doc = JSON.parse(readFileSync(path, "utf8")) as Record<string, unknown>;
   edit(doc);
   writeFileSync(path, JSON.stringify(doc));
+}
+
+function committedInventoryPairs(root = defaultCurriculumRoot()): Set<string> {
+  const directory = join(root, "core");
+  return new Set(
+    readdirSync(directory, { withFileTypes: true })
+      .filter(
+        (entry) =>
+          entry.name.startsWith("exam-inventory-") &&
+          (entry.name.endsWith(".json") || entry.name.endsWith(".d")),
+      )
+      .map((entry) => {
+        const source = entry.name.endsWith(".d")
+          ? join(directory, entry.name, EXAM_INVENTORY_META_OWNER)
+          : join(directory, entry.name);
+        const doc = JSON.parse(readFileSync(source, "utf8")) as {
+          language?: string;
+          level?: string;
+        };
+        return `${doc.language}/${doc.level}`;
+      }),
+  );
 }
 
 describe("the plan CLI", () => {
@@ -140,16 +163,7 @@ describe("the plan CLI", () => {
     // as partial -- against a count derived from the directory listing, which
     // the plan engine does not produce. Two authors landing two inventories now
     // both pass, and an inventory that goes missing from the report fails.
-    const written = new Set(
-      readdirSync(join(defaultCurriculumRoot(), "core"))
-        .filter((file) => /^exam-inventory-.*\.json$/.test(file))
-        .map((file) => {
-          const doc = JSON.parse(
-            readFileSync(join(defaultCurriculumRoot(), "core", file), "utf8"),
-          ) as { language?: string; level?: string };
-          return `${doc.language}/${doc.level}`;
-        }),
-    );
+    const written = committedInventoryPairs();
     expect(written.size).toBeGreaterThan(0);
     expect(out).toMatch(new RegExp(`0 complete and ${written.size} partial of 138`));
   }, 120_000);
@@ -188,16 +202,7 @@ describe("the plan CLI", () => {
     // the same reason. `- 1` because this test corrupts exactly one file, which
     // is the property the sentence above has been asserting in prose since the
     // fourth entry; it is now asserted in code.
-    const readable = new Set(
-      readdirSync(join(defaultCurriculumRoot(), "core"))
-        .filter((file) => /^exam-inventory-.*\.json$/.test(file))
-        .map((file) => {
-          const doc = JSON.parse(
-            readFileSync(join(defaultCurriculumRoot(), "core", file), "utf8"),
-          ) as { language?: string; level?: string };
-          return `${doc.language}/${doc.level}`;
-        }),
-    ).size - 1;
+    const readable = committedInventoryPairs().size - 1;
     expect(out).toMatch(new RegExp(`0 complete and ${readable} partial of 138`));
     expect(out).toMatch(/1 exist but could not be READ/);
   }, 120_000);
@@ -263,16 +268,7 @@ describe("the plan CLI", () => {
     // And the written count must equal the distinct (language, level) pairs on
     // disk -- derived from the directory listing, which is not produced by the
     // plan engine, so this is a genuine cross-check rather than f(x) == x.
-    const distinct = new Set(
-      readdirSync(join(defaultCurriculumRoot(), "core"))
-        .filter((f) => /^exam-inventory-.*\.json$/.test(f))
-        .map((f) => {
-          const doc = JSON.parse(
-            readFileSync(join(defaultCurriculumRoot(), "core", f), "utf8"),
-          ) as { language?: string; level?: string };
-          return `${doc.language}/${doc.level}`;
-        }),
-    );
+    const distinct = committedInventoryPairs();
     expect(Number(before![2])).toBe(distinct.size);
     expect(distinct.size).toBeGreaterThan(0);
   });

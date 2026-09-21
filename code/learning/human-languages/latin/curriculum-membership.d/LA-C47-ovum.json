@@ -1,0 +1,11 @@
+{
+  "id": "LA-C47-ovum",
+  "pathSegment": "LA-PATH-021",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-047-TABLE",
+      "order": 3
+    }
+  ]
+}

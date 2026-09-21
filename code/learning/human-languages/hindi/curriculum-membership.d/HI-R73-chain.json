@@ -1,0 +1,11 @@
+{
+  "id": "HI-R73-chain",
+  "pathSegment": "HI-PATH-73-KAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-073-CHAINED-ACTIONS",
+      "order": 1
+    }
+  ]
+}

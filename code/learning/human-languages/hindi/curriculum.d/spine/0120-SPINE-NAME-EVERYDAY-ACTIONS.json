@@ -1,10 +1,4 @@
 {
-  "segments": [
-    "HI-PATH-A1-KARNA",
-    "HI-PATH-029-B",
-    "HI-PATH-029-D",
-    "HI-PATH-86-TIMED"
-  ],
   "omits": [
     "VERB-GIVE",
     "VERB-PUT",

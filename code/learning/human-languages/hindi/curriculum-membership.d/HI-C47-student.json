@@ -1,0 +1,11 @@
+{
+  "id": "HI-C47-student",
+  "pathSegment": "HI-PATH-47-ROLE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-47-ROLE",
+      "order": 1
+    }
+  ]
+}

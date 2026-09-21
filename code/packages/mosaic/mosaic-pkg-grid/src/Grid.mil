@@ -78,6 +78,8 @@
 // any Grid implementation that exposes the same slot interface.
 
 component Grid {
+  // Accessible name for the active cell editor, supplied by the presentation model.
+  slot editor-label : text = "Cell value" ;
   slot viewport-rows  : list<list<text>> ;
   slot column-headers : list<text> ;
   slot column-widths  : list<number> ;

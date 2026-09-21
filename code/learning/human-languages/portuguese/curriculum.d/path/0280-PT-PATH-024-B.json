@@ -1,9 +1,6 @@
 {
   "id": "PT-PATH-024-B",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
-  "lessons": [
-    "PT-C20-perguntar"
-  ],
   "before": [],
   "inline": [
     "PT-EXT-024-LANGUAGE-SPECIFIC-B"

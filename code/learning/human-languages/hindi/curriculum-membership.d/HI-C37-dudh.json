@@ -1,0 +1,11 @@
+{
+  "id": "HI-C37-dudh",
+  "pathSegment": "HI-PATH-031",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-031-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

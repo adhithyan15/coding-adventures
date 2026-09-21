@@ -1,0 +1,11 @@
+{
+  "id": "ES-C367-fruta",
+  "pathSegment": "ES-PATH-367-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-367-REF",
+      "order": 1
+    }
+  ]
+}

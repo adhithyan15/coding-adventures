@@ -1,0 +1,11 @@
+{
+  "id": "MW-W04-pa",
+  "pathSegment": "MW-PATH-004",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-007-WRITE-PAANI",
+      "order": 0
+    }
+  ]
+}

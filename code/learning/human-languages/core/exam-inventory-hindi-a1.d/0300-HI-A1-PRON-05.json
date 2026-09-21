@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-PRON-05",
+  "category": "Sarvanam (pronouns)",
+  "label": "the oblique first person mujhe, when the sentence will not let you be its subject",
+  "probe": [
+    "HI-CONCEPT-C35-PASAND-01"
+  ],
+  "derivedFrom": "ES:A1-PRON-03, ES:A1-SV-05"
+}

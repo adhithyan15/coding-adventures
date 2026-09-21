@@ -1,0 +1,11 @@
+{
+  "id": "ML-C52-chair",
+  "pathSegment": "ML-PATH-52-WELCOME",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-52-WELCOME",
+      "order": 1
+    }
+  ]
+}

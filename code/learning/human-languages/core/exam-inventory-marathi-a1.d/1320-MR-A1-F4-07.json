@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-F4-07",
+  "category": "Influencing the listener",
+  "label": "offer and invite",
+  "probe": null,
+  "note": "Untaught.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-F4-07"
+  ]
+}

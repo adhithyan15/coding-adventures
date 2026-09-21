@@ -1,0 +1,11 @@
+{
+  "id": "SA-S05-sign-virama",
+  "pathSegment": "SA-PATH-100",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "SA-EXT-100-SCRIPT-RECOGNITION",
+      "order": 5
+    }
+  ]
+}

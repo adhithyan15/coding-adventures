@@ -1,0 +1,11 @@
+{
+  "id": "PA-C08-samajhna",
+  "pathSegment": "PA-PATH-012",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-012-MIND-VERBS",
+      "order": 1
+    }
+  ]
+}

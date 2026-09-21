@@ -1,0 +1,11 @@
+{
+  "id": "AR-C34-jubn",
+  "pathSegment": "AR-PATH-031",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-031-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

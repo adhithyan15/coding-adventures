@@ -1,0 +1,11 @@
+{
+  "id": "ES-C321-respeto",
+  "pathSegment": "ES-PATH-321-01",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-321-COURT",
+      "order": 2
+    }
+  ]
+}

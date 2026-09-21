@@ -1,13 +1,6 @@
 {
   "id": "PT-PATH-012",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
-  "lessons": [
-    "PT-C05-falar",
-    "PT-C05-morar",
-    "PT-C05-trabalhar",
-    "PT-C05-falo-portugues",
-    "PT-C05-practice"
-  ],
   "before": [],
   "inline": [
     "PT-EXT-012-LANGUAGE-SPECIFIC",

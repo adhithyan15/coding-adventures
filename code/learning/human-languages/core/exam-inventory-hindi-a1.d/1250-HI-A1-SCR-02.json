@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-SCR-02",
+  "category": "Devanagari lipi (script and orthography)",
+  "label": "the abugida principle: a bare consonant already carries the inherent a",
+  "probe": [
+    "HI-CONCEPT-W02-ABUGIDA-KA-TA-01"
+  ],
+  "derivedFrom": "hindi-specific",
+  "note": "The deepest script difference from the proxy, which is alphabetic. Devanagari is an abugida and nothing in a Spanish inventory has anything to say about it."
+}

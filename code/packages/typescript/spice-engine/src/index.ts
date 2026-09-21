@@ -15543,6 +15543,7 @@ export function transient(
     );
     const branchCurrents = new Map(solution.branchCurrents);
     insertTransientCapacitorCurrents(capacitorStates, branchCurrents);
+    insertTransientNonlinearChargeCurrents(circuit, capacitorStates, branchCurrents);
     for (const [name, current] of lineCurrents) {
       branchCurrents.set(name, current);
     }
@@ -15879,6 +15880,7 @@ export function transientAdaptive(
     );
     const branchCurrents = new Map(solution.branchCurrents);
     insertTransientCapacitorCurrents(capacitorStates, branchCurrents);
+    insertTransientNonlinearChargeCurrents(circuit, capacitorStates, branchCurrents);
     for (const [name, current] of lineCurrents) {
       branchCurrents.set(name, current);
     }
@@ -18275,6 +18277,7 @@ function linearSolutionFromVector(
     branchCurrents.set(`I(${sourceName})`, solution[nodeCount + branchIndex]);
   }
   insertRealPassiveBranchCurrents(circuit, nodeVoltages, branchCurrents);
+  insertRealNonlinearBranchCurrents(circuit, nodeVoltages, branchCurrents);
   insertTransientInductorCurrents(
     circuit,
     inductorStates,
@@ -18309,6 +18312,79 @@ function insertRealPassiveBranchCurrents(
       // placeholder with the companion-model current after each solve.
       branchCurrents.set(`I(${element.name})`, 0.0);
     }
+  }
+}
+
+function insertRealNonlinearBranchCurrents(
+  circuit: Circuit,
+  nodeVoltages: ReadonlyMap<string, number>,
+  branchCurrents: Map<string, number>,
+): void {
+  for (const element of circuit.elements()) {
+    if (element.kind === "diode") {
+      const current = element.seriesResistance > 0.0
+        ? (voltageAt(nodeVoltages, element.anode) -
+          voltageAt(nodeVoltages, diodeIntrinsicAnodeNode(element))) / element.seriesResistance
+        : diodeCurrentConductance(
+          element,
+          voltageAt(nodeVoltages, element.anode) - voltageAt(nodeVoltages, element.cathode),
+        )[0];
+      branchCurrents.set(`I(${element.name})`, current);
+      continue;
+    }
+    if (element.kind === "bjt") {
+      const collectorVoltage = voltageAt(nodeVoltages, bjtIntrinsicCollectorNode(element));
+      const baseVoltage = voltageAt(nodeVoltages, bjtIntrinsicBaseNode(element));
+      const emitterVoltage = voltageAt(nodeVoltages, bjtIntrinsicEmitterNode(element));
+      const isNpn = element.polarity === "NPN";
+      const junctionVoltage = isNpn ? baseVoltage - emitterVoltage : emitterVoltage - baseVoltage;
+      const reverseVoltage = isNpn ? baseVoltage - collectorVoltage : collectorVoltage - baseVoltage;
+      const outputVoltage = isNpn ? collectorVoltage - emitterVoltage : emitterVoltage - collectorVoltage;
+      const thermalVoltage = element.thermalVoltage * element.forwardEmissionCoefficient;
+      const exponent = Math.max(-40.0, Math.min(40.0, junctionVoltage / thermalVoltage));
+      const expValue = Math.exp(exponent);
+      const diffusionCurrent = element.saturationCurrent * (expValue - 1.0);
+      const diffusionConductance = element.saturationCurrent / thermalVoltage * expValue;
+      const transport = bjtForwardTransport(
+        element, diffusionCurrent, diffusionConductance,
+        bjtEarlyFactor(element, junctionVoltage, outputVoltage),
+      );
+      const collectorLeakage = bjtBaseCollectorLeakage(element, reverseVoltage).current;
+      const reverseBaseCurrent = bjtReverseBaseCurrent(element, reverseVoltage).current;
+      const intrinsicCurrent = (isNpn ? 1.0 : -1.0) *
+        (transport.collectorCurrent - collectorLeakage - reverseBaseCurrent);
+      const current = element.collectorResistance > 0.0
+        ? (voltageAt(nodeVoltages, element.collector) - collectorVoltage) / element.collectorResistance
+        : intrinsicCurrent;
+      branchCurrents.set(`I(${element.name})`, current);
+      continue;
+    }
+    if (element.kind === "jfet") {
+      const drainVoltage = voltageAt(nodeVoltages, jfetIntrinsicDrainNode(element));
+      const sourceVoltage = voltageAt(nodeVoltages, jfetIntrinsicSourceNode(element));
+      const current = element.drainResistance > 0.0
+        ? (voltageAt(nodeVoltages, element.drain) - drainVoltage) / element.drainResistance
+        : evaluateJfet(
+          element,
+          voltageAt(nodeVoltages, element.gate) - sourceVoltage,
+          drainVoltage - sourceVoltage,
+        ).drainCurrent;
+      branchCurrents.set(`I(${element.name})`, current);
+      continue;
+    }
+    if (element.kind !== "mosfet") continue;
+    const drainVoltage = voltageAt(nodeVoltages, mosfetIntrinsicDrainNode(element));
+    const sourceVoltage = voltageAt(nodeVoltages, mosfetIntrinsicSourceNode(element));
+    const drainResistance = mosfetDrainResistance(element);
+    const current = drainResistance > 0.0
+      ? (voltageAt(nodeVoltages, element.drain) - drainVoltage) / drainResistance
+      : evaluateMosfetLevel1(
+        element,
+        voltageAt(nodeVoltages, element.gate) - sourceVoltage,
+        drainVoltage - sourceVoltage,
+        voltageAt(nodeVoltages, element.body) - sourceVoltage,
+      ).drainCurrent;
+    branchCurrents.set(`I(${element.name})`, current);
   }
 }
 
@@ -18382,6 +18458,80 @@ function insertComplexPassiveBranchCurrents(
       branchCurrents.set(`I(${element.name})`, divideByJOmega(voltage, omega * element.inductanceHenrys));
     }
   }
+}
+
+function insertComplexNonlinearBranchCurrents(
+  circuit: Circuit,
+  omega: number,
+  nodeIndices: ReadonlyMap<string, number>,
+  operatingPoint: readonly number[],
+  nodeVoltages: ReadonlyMap<string, Complex>,
+  branchCurrents: Map<string, Complex>,
+): void {
+  const nodeCount = nodeIndices.size;
+  for (const element of circuit.elements()) {
+    let terminal: string;
+    if (element.kind === "diode") terminal = element.anode;
+    else if (element.kind === "bjt") terminal = element.collector;
+    else if (element.kind === "jfet" || element.kind === "mosfet") terminal = element.drain;
+    else continue;
+
+    const matrix = Array.from({ length: nodeCount }, () =>
+      Array.from({ length: nodeCount }, () => complex(0.0, 0.0)),
+    );
+    if (element.kind === "diode") {
+      validateDiode(element);
+      const intrinsicAnode = diodeIntrinsicAnodeNode(element);
+      const anode = nodeIndex(nodeIndices, intrinsicAnode);
+      const cathode = nodeIndex(nodeIndices, element.cathode);
+      const voltage = vectorVoltage(operatingPoint, anode) - vectorVoltage(operatingPoint, cathode);
+      const [, conductance] = diodeCurrentConductance(element, voltage);
+      stampComplexConductance(
+        matrix,
+        anode,
+        cathode,
+        complex(conductance, omega * diodeDynamicCapacitance(element, voltage)),
+      );
+      if (element.seriesResistance > 0.0) {
+        stampComplexConductance(
+          matrix,
+          nodeIndex(nodeIndices, element.anode),
+          anode,
+          complex(1.0 / element.seriesResistance, 0.0),
+        );
+      }
+    } else if (element.kind === "bjt") {
+      stampAcBjtSmallSignal(element, nodeIndices, matrix, operatingPoint, omega);
+    } else if (element.kind === "jfet") {
+      stampAcJfetSmallSignal(element, nodeIndices, matrix, operatingPoint, omega);
+    } else {
+      stampAcMosfetSmallSignal(element, nodeIndices, matrix, operatingPoint, omega);
+    }
+    branchCurrents.set(
+      `I(${element.name})`,
+      acTerminalCurrent(matrix, nodeIndices, nodeVoltages, terminal),
+    );
+  }
+}
+
+function acTerminalCurrent(
+  matrix: readonly (readonly Complex[])[],
+  nodeIndices: ReadonlyMap<string, number>,
+  nodeVoltages: ReadonlyMap<string, Complex>,
+  terminal: string,
+): Complex {
+  const rowCurrent = (row: readonly Complex[]): Complex => {
+    let current = complex(0.0, 0.0);
+    for (const [node, index] of nodeIndices.entries()) {
+      current = complexAdd(current, complexMul(row[index], complexVoltageAt(nodeVoltages, node)));
+    }
+    return current;
+  };
+  const index = nodeIndex(nodeIndices, terminal);
+  if (index !== undefined) return rowCurrent(matrix[index]);
+  let current = complex(0.0, 0.0);
+  for (const row of matrix) current = complexAdd(current, rowCurrent(row));
+  return complexScale(current, -1.0);
 }
 
 function complexVoltageAt(nodeVoltages: ReadonlyMap<string, Complex>, node: string): Complex {
@@ -18643,6 +18793,14 @@ function solveAcCircuit(circuit: Circuit, omega: number): AcSolution {
     branchCurrents.set(`I(${sourceName})`, solution[nodeCount + branchIndex]);
   }
   insertComplexPassiveBranchCurrents(circuit, omega, nodeVoltages, branchCurrents);
+  insertComplexNonlinearBranchCurrents(
+    circuit,
+    omega,
+    nodeIndices,
+    operatingPoint,
+    nodeVoltages,
+    branchCurrents,
+  );
   return { nodeVoltages, branchCurrents };
 }
 
@@ -22341,6 +22499,49 @@ function insertTransientCapacitorCurrents(
 ): void {
   for (const state of capacitorStates) {
     branchCurrents.set(`I(${state.name})`, state.previousCurrent);
+  }
+}
+
+function insertTransientNonlinearChargeCurrents(
+  circuit: Circuit,
+  capacitorStates: readonly CapacitorState[],
+  branchCurrents: Map<string, number>,
+): void {
+  const stateCurrents = new Map(
+    capacitorStates.map((state) => [state.name, state.previousCurrent]),
+  );
+  for (const element of circuit.elements()) {
+    let terminal: string | undefined;
+    let states: readonly { readonly name: string; readonly positive: string; readonly negative: string }[];
+    if (element.kind === "diode" && element.seriesResistance === 0.0) {
+      terminal = element.anode;
+      states = [{
+        name: diodeChargeStateName(element),
+        positive: diodeIntrinsicAnodeNode(element),
+        negative: element.cathode,
+      }];
+    } else if (element.kind === "bjt" && element.collectorResistance === 0.0) {
+      terminal = element.collector;
+      states = bjtChargeStateSpecs(element);
+    } else if (element.kind === "jfet" && element.drainResistance === 0.0) {
+      terminal = element.drain;
+      states = jfetChargeStateSpecs(element);
+    } else if (element.kind === "mosfet" && mosfetDrainResistance(element) === 0.0) {
+      terminal = element.drain;
+      states = mosfetChargeStateSpecs(element);
+    } else {
+      continue;
+    }
+    let chargeCurrent = 0.0;
+    for (const state of states) {
+      const current = stateCurrents.get(state.name) ?? 0.0;
+      if (state.positive === terminal) chargeCurrent += current;
+      if (state.negative === terminal) chargeCurrent -= current;
+    }
+    branchCurrents.set(
+      `I(${element.name})`,
+      (branchCurrents.get(`I(${element.name})`) ?? 0.0) + chargeCurrent,
+    );
   }
 }
 

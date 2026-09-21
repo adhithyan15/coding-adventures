@@ -1,0 +1,11 @@
+{
+  "id": "KA-C37-kivi",
+  "pathSegment": "KA-PATH-029",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-030-FACE-WORDS",
+      "order": 1
+    }
+  ]
+}

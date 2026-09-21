@@ -1,0 +1,11 @@
+{
+  "id": "GU-R18-wellbeing-r4",
+  "pathSegment": "GU-PATH-C3P-R4",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-028-WELLBEING-R4",
+      "order": 0
+    }
+  ]
+}

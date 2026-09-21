@@ -4,8 +4,5 @@
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can form the singular completed past of the known regular -ar verb hablar.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-C14-hablar-preterite"
-  ]
+  "prerequisites": []
 }

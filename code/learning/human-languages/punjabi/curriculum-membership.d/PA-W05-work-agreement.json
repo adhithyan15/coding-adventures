@@ -1,0 +1,11 @@
+{
+  "id": "PA-W05-work-agreement",
+  "pathSegment": "PA-PATH-021",
+  "pathOrder": 10,
+  "extensions": [
+    {
+      "id": "PA-EXT-026-A1-WORK-FIELD",
+      "order": 10
+    }
+  ]
+}

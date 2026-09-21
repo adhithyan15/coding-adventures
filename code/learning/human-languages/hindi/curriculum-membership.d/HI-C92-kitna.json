@@ -1,0 +1,11 @@
+{
+  "id": "HI-C92-kitna",
+  "pathSegment": "HI-PATH-100-DEGREE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-100-DEGREE",
+      "order": 3
+    }
+  ]
+}

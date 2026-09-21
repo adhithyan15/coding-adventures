@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C14-xiaoxuesheng",
+  "pathSegment": "ZH-PATH-013",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ZH-EXT-037-PRIMARY-SCRIPT",
+      "order": 3
+    }
+  ]
+}

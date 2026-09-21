@@ -1,0 +1,11 @@
+{
+  "id": "GU-C24-hear-mahino",
+  "pathSegment": "GU-PATH-023",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "GU-EXT-035-TIME-EIGHT",
+      "order": 7
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C13-syr",
+  "pathSegment": "RU-PATH-015",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-015-MORE-FOOD-DRINK",
+      "order": 1
+    }
+  ]
+}

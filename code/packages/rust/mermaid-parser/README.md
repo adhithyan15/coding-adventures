@@ -28,13 +28,22 @@ The current native pipeline supports documented subsets of:
 - `kanban`
 - `architecture` / `architecture-beta`
 
-The initial Architecture subset parses groups, services, declared containment,
-standard icon identifiers, titles, and undirected or right-directed edge syntax into the
+The Architecture subset parses groups, services, junctions, declared containment,
+standard icon identifiers, titles, sibling row/column alignment hints, and undirected or directed edge syntax into the
 shared structural semantic IR. Existing structural layout and PaintScene
-lowering provide deterministic backend-neutral group, node, edge, and shaped
-text rendering. Junctions, alignment hints, group-edge modifiers, left and
-bidirectional arrows, custom icon text, icon artwork, edge labels, port-aware routing, and configuration remain
-outside the partial compatibility claim.
+lowering provide deterministic backend-neutral group, node, junction, edge, and shaped
+text rendering. Quoted service icon text is preserved as typed metadata, reserves
+layout geometry, and lowers to a backend-neutral badge plus shaped glyphs. Left,
+right, and bidirectional arrowheads survive semantic and layout IR and lower to
+backend-neutral path geometry. Group-edge modifiers on contained services resolve
+relationship endpoints to deterministic group-boundary geometry. Explicit `L`,
+`R`, `T`, and `B` ports survive semantic and layout IR and anchor relationship
+geometry to the requested node or group boundary. Architecture edges resolve to
+deterministic orthogonal polylines before backend-neutral PaintScene lowering.
+Named service and group icons lower to canonical backend-neutral glyph geometry.
+Namespaced icon identifiers survive typed IR and use a generic glyph when vendor
+artwork is unavailable. Full vendor icon artwork, obstacle avoidance, and
+configuration remain outside the partial compatibility claim.
 
 The initial `kanban` subset preserves indentation-defined columns and cards,
 including plain labels and explicit `id[label]` forms, in typed board IR.
@@ -208,6 +217,10 @@ properties, and details references through PaintScene metadata without IR inject
 Timeline parsing covers the pinned core header directions, titles,
 accessibility metadata, sections, periods, and ordered events. It lowers to
 timeline-specific temporal IR rather than reusing Gantt task semantics.
+Architecture parsing preserves native `-[label]-` and `-[label]->` edge labels
+in structural semantic IR for deterministic layout and backend-neutral Paint
+text lowering. Titles plus single-line or braced accessibility metadata use
+dedicated grammar tokens and survive through the native pipeline.
 Actor identifiers may contain multiple whitespace-separated words; the full ID
 is retained consistently across declarations, messages, notes, lifecycle events,
 and metadata commands.

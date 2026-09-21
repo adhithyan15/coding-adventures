@@ -1,0 +1,11 @@
+{
+  "id": "GU-C20-ghar",
+  "pathSegment": "GU-PATH-022",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-031-PLACES-THREE",
+      "order": 4
+    }
+  ]
+}

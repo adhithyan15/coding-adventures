@@ -1,0 +1,11 @@
+{
+  "id": "IT-C02-stare",
+  "pathSegment": "IT-PATH-008",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-008-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

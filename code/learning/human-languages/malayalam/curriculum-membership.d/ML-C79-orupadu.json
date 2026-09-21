@@ -1,0 +1,11 @@
+{
+  "id": "ML-C79-orupadu",
+  "pathSegment": "ML-PATH-79-DEGREE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-79-DEGREE",
+      "order": 1
+    }
+  ]
+}

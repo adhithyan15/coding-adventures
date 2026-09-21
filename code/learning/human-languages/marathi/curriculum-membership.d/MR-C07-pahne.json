@@ -1,0 +1,11 @@
+{
+  "id": "MR-C07-pahne",
+  "pathSegment": "MR-PATH-012-C",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-012-CORE-VERBS-C",
+      "order": 1
+    }
+  ]
+}

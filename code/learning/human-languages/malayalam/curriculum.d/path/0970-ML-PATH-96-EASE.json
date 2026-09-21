@@ -1,11 +1,6 @@
 {
   "id": "ML-PATH-96-EASE",
   "spine_node": "SPINE-DEFINITE-REFERENCE",
-  "lessons": [
-    "ML-C96-eluppam",
-    "ML-C96-prayaasam",
-    "ML-R96-ease-recall"
-  ],
   "before": [],
   "inline": [
     "ML-EXT-96-EASE"

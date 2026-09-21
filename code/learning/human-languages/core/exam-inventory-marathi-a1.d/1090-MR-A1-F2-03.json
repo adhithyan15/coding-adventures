@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-F2-03",
+  "category": "Opinions, attitudes and knowledge",
+  "label": "ask for an evaluation",
+  "probe": [
+    "MR-LEX-KASA",
+    "MR-PHRASE-TUMHI-KASE-AAHAT"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-F2-03"
+  ]
+}

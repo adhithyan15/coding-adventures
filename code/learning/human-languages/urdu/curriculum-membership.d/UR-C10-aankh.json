@@ -1,0 +1,11 @@
+{
+  "id": "UR-C10-aankh",
+  "pathSegment": "UR-PATH-011",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-021-FACE-WORDS",
+      "order": 2
+    }
+  ]
+}

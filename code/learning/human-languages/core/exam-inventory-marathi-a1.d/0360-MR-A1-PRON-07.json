@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-PRON-07",
+  "category": "Pronouns",
+  "label": "the exclamative kitii with an adjective or adverb",
+  "probe": [
+    "MR-EXCLAM-KITI"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-PRON-07"
+  ]
+}

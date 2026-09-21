@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-CO-01",
+  "category": "Coordination",
+  "label": "joining with aani",
+  "probe": [
+    "MR-JOIN-AANI"
+  ],
+  "note": "Closed by MR-C30-aani (chapter 30), which teaches aani joining two full clauses, not only two nouns -- the 30-40 connected words of the writing task want the clause join.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [
+    "A1-CO-01"
+  ]
+}

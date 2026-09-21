@@ -1,0 +1,11 @@
+{
+  "id": "IT-C12-numeri-17-20",
+  "pathSegment": "IT-PATH-017",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-017-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

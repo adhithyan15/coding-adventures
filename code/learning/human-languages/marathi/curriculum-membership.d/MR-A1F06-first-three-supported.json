@@ -1,0 +1,11 @@
+{
+  "id": "MR-A1F06-first-three-supported",
+  "pathSegment": "MR-PATH-023",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-026-A1-PRACTICAL-FORM",
+      "order": 2
+    }
+  ]
+}

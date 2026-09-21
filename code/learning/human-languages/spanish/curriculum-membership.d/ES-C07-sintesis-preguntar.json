@@ -1,0 +1,11 @@
+{
+  "id": "ES-C07-sintesis-preguntar",
+  "pathSegment": "ES-PATH-015",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-015-CONSOLIDATION",
+      "order": 1
+    }
+  ]
+}

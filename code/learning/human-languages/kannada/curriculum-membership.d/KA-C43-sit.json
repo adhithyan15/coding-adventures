@@ -1,0 +1,11 @@
+{
+  "id": "KA-C43-sit",
+  "pathSegment": "KA-PATH-43-VERBS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-43-VERBS",
+      "order": 1
+    }
+  ]
+}

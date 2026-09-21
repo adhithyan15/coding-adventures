@@ -1,7 +1,4 @@
 {
-  "segments": [
-    "HI-PATH-70-CAN"
-  ],
   "omits": [
     "VERB-HAVE"
   ],

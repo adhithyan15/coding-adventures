@@ -1,0 +1,11 @@
+{
+  "id": "SA-C18-k-words",
+  "pathSegment": "SA-PATH-204",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-204-ASK",
+      "order": 4
+    }
+  ]
+}

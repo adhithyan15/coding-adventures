@@ -1,0 +1,11 @@
+{
+  "id": "SA-C12-mukham",
+  "pathSegment": "SA-PATH-015",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-015-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

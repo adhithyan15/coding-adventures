@@ -1,0 +1,11 @@
+{
+  "id": "KA-C66-paddy",
+  "pathSegment": "KA-PATH-66-FIELD",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-66-FIELD",
+      "order": 2
+    }
+  ]
+}

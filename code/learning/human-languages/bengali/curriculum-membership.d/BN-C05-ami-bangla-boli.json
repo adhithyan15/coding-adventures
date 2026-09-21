@@ -1,0 +1,11 @@
+{
+  "id": "BN-C05-ami-bangla-boli",
+  "pathSegment": "BN-PATH-017",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-017-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

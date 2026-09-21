@@ -21,6 +21,11 @@ generated element preserves literal and slot-backed value/bounds, disabled and
 accessible-name bindings, dispatches numeric `onChange` payloads on `input`,
 and numeric `onCommit` payloads on `change`.
 
+`HostNavigationSplit` preserves the pane/detail contract as a flex wrapper
+containing a named `<nav>` landmark and a `<section>` detail region. Its
+preferred pane width becomes the pane flex basis. Web collapse remains static
+until UI48 supplies a runtime viewport signal.
+
 ## Dependencies
 
 - mosaic-vm

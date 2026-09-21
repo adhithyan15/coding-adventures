@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NE07-02",
+  "category": "Work",
+  "label": "workplaces and tools",
+  "probe": null,
+  "note": "Untaught.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE07-02"
+  ]
+}

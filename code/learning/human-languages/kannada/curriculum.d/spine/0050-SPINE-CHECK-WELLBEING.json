@@ -1,16 +1,4 @@
 {
-  "segments": [
-    "KA-PATH-005",
-    "KA-PATH-007",
-    "KA-PATH-008-RECAP",
-    "KA-PATH-016",
-    "KA-PATH-029",
-    "KA-PATH-030",
-    "KA-PATH-47-BODY",
-    "KA-PATH-57-BODY",
-    "KA-PATH-63-HEALTH",
-    "KA-PATH-69-ASK"
-  ],
   "omits": [
     "WORD-GOOD",
     "WORD-SOSO"

@@ -8,7 +8,6 @@
 #[cfg(target_vendor = "apple")]
 use browser_bookmarks_file::{default_bookmark_path, FileBookmarkRepository};
 use html_to_layout::mosaic_html_theme;
-use html_to_paint::HtmlPaintViewport;
 use layout_text_measure_native::NativeMeasurer;
 use std::fmt;
 #[cfg(target_vendor = "apple")]
@@ -23,10 +22,10 @@ use window_core::{ElementState, Key, NamedKey, PointerButton, WindowError, Windo
 
 #[cfg(target_vendor = "apple")]
 use venture_browser_core::{
-    BookmarkRepository, BrowserChromeEvent, BrowserChromeProps, BrowserCommandError,
-    BrowserFetchRequest, BrowserHostController, BrowserHostEffect, BrowserHostEventOutcome,
-    BrowserScrollMetrics, ControlSuggestionPickerAction, HostFileSelection, HttpBrowserFetcher,
-    MemoryBookmarkRepository,
+    browser_bridge_response_json, BookmarkRepository, BrowserChromeEvent, BrowserChromeProps,
+    BrowserCommandError, BrowserFetchRequest, BrowserHostController, BrowserHostEffect,
+    BrowserHostEventOutcome, BrowserScrollMetrics, ControlSuggestionPickerAction,
+    HostFileSelection, HttpBrowserFetcher, MemoryBookmarkRepository,
 };
 
 pub const VERSION: &str = "0.1.0";
@@ -106,15 +105,15 @@ where
     let shaper = NativeShaper::new();
     let metrics = NativeMetrics::new();
     let resolver = NativeResolver::new();
+    let mut session = BrowserSession::new(start_url, height);
     let pipeline = BrowserPagePipeline::new(
         &theme,
-        HtmlPaintViewport::new(width, height, 1.0),
+        session.paint_viewport(width, height),
         &measurer,
         &shaper,
         &metrics,
         &resolver,
     );
-    let mut session = BrowserSession::new(start_url, height);
     session.execute(
         BrowserNavigation::Navigate(start_url.to_string()),
         &pipeline,
@@ -142,7 +141,7 @@ where
     let resolver = NativeResolver::new();
     let pipeline = BrowserPagePipeline::new(
         &theme,
-        HtmlPaintViewport::new(width, height, 1.0),
+        session.paint_viewport(width, height),
         &measurer,
         &shaper,
         &metrics,
@@ -173,7 +172,7 @@ where
     let resolver = NativeResolver::new();
     let pipeline = BrowserPagePipeline::new(
         &theme,
-        HtmlPaintViewport::new(width, height, 1.0),
+        session.paint_viewport(width, height),
         &measurer,
         &shaper,
         &metrics,
@@ -357,7 +356,7 @@ where
     let resolver = NativeResolver::new();
     let pipeline = BrowserPagePipeline::new(
         &theme,
-        HtmlPaintViewport::new(width, height, 1.0),
+        session.paint_viewport(width, height),
         &measurer,
         &shaper,
         &metrics,
@@ -490,7 +489,7 @@ where
     let resolver = NativeResolver::new();
     let pipeline = BrowserPagePipeline::new(
         &theme,
-        HtmlPaintViewport::new(width, height, 1.0),
+        session.paint_viewport(width, height),
         &measurer,
         &shaper,
         &metrics,
@@ -517,7 +516,7 @@ where
     let resolver = NativeResolver::new();
     let pipeline = BrowserPagePipeline::new(
         &theme,
-        HtmlPaintViewport::new(width, height, 1.0),
+        session.paint_viewport(width, height),
         &measurer,
         &shaper,
         &metrics,
@@ -540,7 +539,7 @@ pub fn complete_session_subresource(
     let resolver = NativeResolver::new();
     let pipeline = BrowserPagePipeline::new(
         &theme,
-        HtmlPaintViewport::new(width, height, 1.0),
+        session.paint_viewport(width, height),
         &measurer,
         &shaper,
         &metrics,
@@ -645,11 +644,15 @@ impl MacBrowserHost {
         let width = self.width;
         let height = self.height;
         let fetcher = &self.fetcher;
-        self.controller.handle_event_with_effect(
+        let outcome = self.controller.handle_event_with_effect(
             event,
             self.bookmarks.as_mut(),
             |session, navigation| navigate_session(session, navigation, width, height, fetcher),
-        )
+        )?;
+        if outcome.page_reflow_required {
+            self.reflow_retained(width, height);
+        }
+        Ok(outcome)
     }
 
     pub fn scroll_by(&mut self, delta_y: f64) -> bool {
@@ -697,7 +700,9 @@ impl MacBrowserHost {
         let resolver = NativeResolver::new();
         let pipeline = BrowserPagePipeline::new(
             &theme,
-            HtmlPaintViewport::new(self.width, self.height, 1.0),
+            self.controller
+                .session()
+                .paint_viewport(self.width, self.height),
             &measurer,
             &shaper,
             &metrics,
@@ -721,7 +726,9 @@ impl MacBrowserHost {
         let resolver = NativeResolver::new();
         let pipeline = BrowserPagePipeline::new(
             &theme,
-            HtmlPaintViewport::new(self.width, self.height, 1.0),
+            self.controller
+                .session()
+                .paint_viewport(self.width, self.height),
             &measurer,
             &shaper,
             &metrics,
@@ -752,7 +759,9 @@ impl MacBrowserHost {
         let resolver = NativeResolver::new();
         let pipeline = BrowserPagePipeline::new(
             &theme,
-            HtmlPaintViewport::new(self.width, self.height, 1.0),
+            self.controller
+                .session()
+                .paint_viewport(self.width, self.height),
             &measurer,
             &shaper,
             &metrics,
@@ -781,7 +790,9 @@ impl MacBrowserHost {
         let resolver = NativeResolver::new();
         let pipeline = BrowserPagePipeline::new(
             &theme,
-            HtmlPaintViewport::new(self.width, self.height, 1.0),
+            self.controller
+                .session()
+                .paint_viewport(self.width, self.height),
             &measurer,
             &shaper,
             &metrics,
@@ -847,7 +858,9 @@ impl MacBrowserHost {
         let resolver = NativeResolver::new();
         let pipeline = BrowserPagePipeline::new(
             &theme,
-            HtmlPaintViewport::new(self.width, self.height, 1.0),
+            self.controller
+                .session()
+                .paint_viewport(self.width, self.height),
             &measurer,
             &shaper,
             &metrics,
@@ -884,7 +897,9 @@ impl MacBrowserHost {
         let resolver = NativeResolver::new();
         let pipeline = BrowserPagePipeline::new(
             &theme,
-            HtmlPaintViewport::new(self.width, self.height, 1.0),
+            self.controller
+                .session()
+                .paint_viewport(self.width, self.height),
             &measurer,
             &shaper,
             &metrics,
@@ -934,7 +949,9 @@ impl MacBrowserHost {
         let resolver = NativeResolver::new();
         let pipeline = BrowserPagePipeline::new(
             &theme,
-            HtmlPaintViewport::new(self.width, self.height, 1.0),
+            self.controller
+                .session()
+                .paint_viewport(self.width, self.height),
             &measurer,
             &shaper,
             &metrics,
@@ -980,17 +997,7 @@ impl MacBrowserHost {
         )
     }
 
-    /// Reflow the retained page for a new logical content-surface size.
-    /// The HTML document and navigation history stay in the shared session;
-    /// only layout, paint, image placement, and scroll bounds are recomputed.
-    pub fn resize(&mut self, width: f64, height: f64) -> bool {
-        self.controller.clear_hover();
-        let width = finite_positive_or(width, self.width);
-        let height = finite_positive_or(height, self.height);
-        if self.width == width && self.height == height {
-            return false;
-        }
-
+    fn reflow_retained(&mut self, width: f64, height: f64) -> bool {
         let theme = mosaic_html_theme();
         let measurer = NativeMeasurer::new();
         let shaper = NativeShaper::new();
@@ -998,17 +1005,27 @@ impl MacBrowserHost {
         let resolver = NativeResolver::new();
         let pipeline = BrowserPagePipeline::new(
             &theme,
-            HtmlPaintViewport::new(width, height, 1.0),
+            self.controller.session().paint_viewport(width, height),
             &measurer,
             &shaper,
             &metrics,
             &resolver,
         );
-        let reflowed = self
-            .controller
+        self.controller
             .session_mut()
             .reflow(&pipeline, &self.fetcher, height)
-            .is_some();
+            .is_some()
+    }
+
+    /// Reflow the retained page for a new logical content-surface size.
+    pub fn resize(&mut self, width: f64, height: f64) -> bool {
+        self.controller.clear_hover();
+        let width = finite_positive_or(width, self.width);
+        let height = finite_positive_or(height, self.height);
+        if self.width == width && self.height == height {
+            return false;
+        }
+        let reflowed = self.reflow_retained(width, height);
         self.width = width;
         self.height = height;
         reflowed
@@ -1041,126 +1058,12 @@ mod mosaic_ffi {
             .map(str::to_string)
     }
 
-    fn json_string(value: &str) -> String {
-        let mut out = String::with_capacity(value.len() + 2);
-        out.push('"');
-        for ch in value.chars() {
-            match ch {
-                '"' => out.push_str("\\\""),
-                '\\' => out.push_str("\\\\"),
-                '\n' => out.push_str("\\n"),
-                '\r' => out.push_str("\\r"),
-                '\t' => out.push_str("\\t"),
-                ch if ch.is_control() => {
-                    use std::fmt::Write;
-                    let _ = write!(out, "\\u{:04x}", ch as u32);
-                }
-                ch => out.push(ch),
-            }
-        }
-        out.push('"');
-        out
-    }
-
-    fn json_bytes(bytes: &[u8]) -> String {
-        format!(
-            "[{}]",
-            bytes
-                .iter()
-                .map(u8::to_string)
-                .collect::<Vec<_>>()
-                .join(",")
-        )
-    }
-
-    fn effect_json(effect: &BrowserHostEffect) -> String {
-        match effect {
-            BrowserHostEffect::OpenAuxiliaryDocument(document) => format!(
-                "{{\"type\":\"open-auxiliary-document\",\"document\":{{\"kind\":{},\"address\":{},\"title\":{},\"html\":{}}}}}",
-                json_string(document.kind.name()),
-                json_string(&document.address),
-                json_string(&document.title),
-                json_string(&document.html),
-            ),
-            BrowserHostEffect::OpenBrowsingContext(context) => format!(
-                "{{\"type\":\"open-browsing-context\",\"target\":{},\"request\":{{\"url\":{},\"method\":{},\"contentType\":{},\"body\":{}}},\"noopener\":{},\"noreferrer\":{}}}",
-                json_string(context.target.name()),
-                json_string(&context.request.url),
-                json_string(match context.request.method {
-                    venture_browser_core::BrowserFetchMethod::Get => "GET",
-                    venture_browser_core::BrowserFetchMethod::Post => "POST",
-                }),
-                context.request.content_type.as_deref().map(json_string).unwrap_or_else(|| "null".into()),
-                json_bytes(&context.request.body),
-                context.noopener,
-                context.noreferrer,
-            ),
-            BrowserHostEffect::Download(download) => format!(
-                "{{\"type\":\"download\",\"request\":{{\"url\":{},\"method\":\"GET\",\"contentType\":null,\"body\":[]}},\"suggestedFilename\":{}}}",
-                json_string(&download.request.url),
-                download.suggested_filename.as_deref().map(json_string).unwrap_or_else(|| "null".into()),
-            ),
-            BrowserHostEffect::Print(request) => format!(
-                "{{\"type\":\"print\",\"address\":{},\"title\":{}}}",
-                json_string(&request.address),
-                json_string(&request.title),
-            ),
-            BrowserHostEffect::Share(request) => format!(
-                "{{\"type\":\"share\",\"address\":{},\"title\":{}}}",
-                json_string(&request.address),
-                json_string(&request.title),
-            ),
-            BrowserHostEffect::PageInfo(request) => format!(
-                "{{\"type\":\"page-info\",\"requestedAddress\":{},\"address\":{},\"title\":{},\"status\":{},\"imageResourceCount\":{},\"imageFailureCount\":{},\"stylesheetResourceCount\":{},\"stylesheetFailureCount\":{}}}",
-                json_string(&request.requested_address),
-                json_string(&request.address),
-                json_string(&request.title),
-                request.status,
-                request.image_resource_count,
-                request.image_failure_count,
-                request.stylesheet_resource_count,
-                request.stylesheet_failure_count,
-            ),
-            BrowserHostEffect::WriteClipboard(text) => format!(
-                "{{\"type\":\"write-clipboard\",\"text\":{}}}",
-                json_string(text),
-            ),
-        }
-    }
-
     fn response(
         host: &MacBrowserHost,
         effect: Option<&BrowserHostEffect>,
         error: Option<&str>,
     ) -> *mut c_char {
-        let props = host.props();
-        let effect = effect
-            .map(|effect| format!(",\"effect\":{}", effect_json(effect)))
-            .unwrap_or_default();
-        let error = error
-            .map(|message| format!(",\"error\":{}", json_string(message)))
-            .unwrap_or_default();
-        let value = format!(
-            "{{\"props\":{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"bookmark-label\":{},\"bookmark-disabled\":{},\"copy-address-disabled\":{},\"open-page-disabled\":{},\"save-page-disabled\":{},\"print-page-disabled\":{},\"share-page-disabled\":{},\"page-info-disabled\":{},\"view-source-disabled\":{},\"find-open\":{},\"find-query\":{},\"find-result-label\":{},\"find-disabled\":{},\"navigation-disabled\":false}}{effect}{error}}}",
-            json_string(&props.address),
-            json_string(&props.page_title),
-            json_string(&props.status_text),
-            props.back_disabled,
-            props.forward_disabled,
-            json_string(&props.bookmark_label),
-            props.bookmark_disabled,
-            props.copy_address_disabled,
-            props.open_page_disabled,
-            props.save_page_disabled,
-            props.print_page_disabled,
-            props.share_page_disabled,
-            props.page_info_disabled,
-            props.view_source_disabled,
-            props.find_open,
-            json_string(&props.find_query),
-            json_string(&props.find_result_label),
-            props.find_disabled,
-        );
+        let value = browser_bridge_response_json(&host.props(), effect, error);
         CString::new(value)
             .expect("JSON response contains no NUL")
             .into_raw()
@@ -1211,29 +1114,9 @@ mod mosaic_ffi {
         let Some(name) = string_arg(name) else {
             return response(host, None, Some("missing Mosaic event name"));
         };
-        let event = match name.as_str() {
-            "onBack" => Some(BrowserChromeEvent::Back),
-            "onForward" => Some(BrowserChromeEvent::Forward),
-            "onHome" => Some(BrowserChromeEvent::Home),
-            "onReload" => Some(BrowserChromeEvent::Reload),
-            "onToggleBookmark" => Some(BrowserChromeEvent::ToggleBookmark),
-            "onCopyAddress" => Some(BrowserChromeEvent::CopyAddress),
-            "onOpenPageInNewWindow" => Some(BrowserChromeEvent::OpenPageInNewWindow),
-            "onSavePage" => Some(BrowserChromeEvent::SavePage),
-            "onPrintPage" => Some(BrowserChromeEvent::PrintPage),
-            "onSharePage" => Some(BrowserChromeEvent::SharePage),
-            "onPageInfo" => Some(BrowserChromeEvent::PageInfo),
-            "onViewSource" => Some(BrowserChromeEvent::ViewSource),
-            "onFindOpen" => Some(BrowserChromeEvent::FindOpen),
-            "onFindChange" => string_arg(value).map(BrowserChromeEvent::FindChange),
-            "onFindNext" => Some(BrowserChromeEvent::FindNext),
-            "onFindPrevious" => Some(BrowserChromeEvent::FindPrevious),
-            "onFindClose" => Some(BrowserChromeEvent::FindClose),
-            "onNavigate" => Some(BrowserChromeEvent::Navigate),
-            "onAddressChange" => string_arg(value).map(BrowserChromeEvent::AddressChange),
-            _ => None,
-        };
-        let Some(event) = event else {
+        let value = string_arg(value);
+        let event = BrowserChromeEvent::from_mosaic_event(&name, value.as_deref());
+        let Ok(event) = event else {
             return response(host, None, Some("unknown or malformed Mosaic event"));
         };
         let result = catch_unwind(AssertUnwindSafe(|| host.handle_event_with_effect(event)));
@@ -2130,6 +2013,16 @@ mod tests {
             panic!("view source must request an auxiliary document");
         };
         assert!(document.html.contains("&lt;title&gt;Start&lt;/title&gt;"));
+        let source_props = host.props();
+        assert!(source_props.view_source_open);
+        assert_eq!(
+            source_props.view_source_title,
+            "Source: http://example.test/"
+        );
+        assert_eq!(source_props.view_source_address, "http://example.test/");
+        assert!(source_props
+            .view_source_content
+            .contains("<title>Start</title>"));
         let link = host
             .controller
             .session()
@@ -2142,6 +2035,11 @@ mod tests {
         assert!(host.update_hover(link.x + link.width / 2.0, link.y + link.height / 2.0));
         assert_eq!(host.props().status_text, "http://example.test/next.html");
         assert!(!host.update_hover(f64::NAN, f64::NAN));
+        assert_eq!(host.props().status_text, "Page source shown");
+        assert!(host
+            .handle_event(BrowserChromeEvent::ViewSourceClose)
+            .expect("source panel closes"));
+        assert!(!host.props().view_source_open);
         assert_eq!(host.props().status_text, "Ready");
         host.handle_event(BrowserChromeEvent::AddressChange(
             "http://example.test/next.html".into(),

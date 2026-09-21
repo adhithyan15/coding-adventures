@@ -1,0 +1,11 @@
+{
+  "id": "ES-C395-perder",
+  "pathSegment": "ES-PATH-395-01",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-395-VERB",
+      "order": 3
+    }
+  ]
+}

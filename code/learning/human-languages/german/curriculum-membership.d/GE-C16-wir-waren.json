@@ -1,0 +1,11 @@
+{
+  "id": "GE-C16-wir-waren",
+  "pathSegment": "GE-PATH-021-B",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-021-B-SEIN-PRAETERITUM",
+      "order": 3
+    }
+  ]
+}

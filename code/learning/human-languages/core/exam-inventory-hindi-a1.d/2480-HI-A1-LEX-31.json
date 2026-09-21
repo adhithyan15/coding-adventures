@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-LEX-31",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "working activity",
+  "probe": [
+    "HI-CONCEPT-C05-KARNA-01"
+  ],
+  "derivedFrom": "ES:A1-NE07-03"
+}

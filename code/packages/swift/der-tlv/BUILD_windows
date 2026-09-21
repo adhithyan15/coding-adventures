@@ -1,0 +1,1 @@
+swift format lint Sources\DerTlv\DerTlv.swift Tests\DerTlvTests\DerTlvTests.swift && swift test --enable-code-coverage --verbose && swift build -c release -Xswiftc -warnings-as-errors

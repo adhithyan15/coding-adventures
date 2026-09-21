@@ -1,0 +1,11 @@
+{
+  "id": "ML-C93-angal",
+  "pathSegment": "ML-PATH-93-PLURAL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-93-PLURAL",
+      "order": 1
+    }
+  ]
+}

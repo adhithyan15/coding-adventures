@@ -1,0 +1,11 @@
+{
+  "id": "FR-C05-je-parle-francais",
+  "pathSegment": "FR-PATH-014",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-014-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

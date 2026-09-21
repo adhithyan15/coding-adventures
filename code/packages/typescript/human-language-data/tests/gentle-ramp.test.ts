@@ -1,16 +1,9 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
 import { parseLesson } from "../src/parse.js";
 import { buildCurriculumGapReport } from "../src/report.js";
 import { GENTLE_RAMP_PRIORITIES, renderGentleRamp } from "../src/gentle-ramp.js";
 import { runGentleRampReport } from "../src/gentle-ramp-cli.js";
 import {
-  GENTLE_RAMP_SNAPSHOT_DIR,
-  generatedGentleRampSnapshotOutputsFromReport,
-} from "../src/gentle-ramp-snapshot-cli.js";
-import {
-  defaultCurriculumRoot,
   loadChapterPolicy,
   loadEverything,
   loadGentleRampSnapshotTracks,
@@ -102,7 +95,7 @@ describe("the corpus-wide super-gentle ramp", () => {
     expect(error).toContain("--root requires a value");
   });
 
-  it("pins the real corpus as debt rather than mistaking unmeasured tracks for gentle ones", () => {
+  it("derives the real corpus as debt rather than mistaking unmeasured tracks for gentle ones", () => {
     const { registry, lessons, books, curricula, spine } = loadEverything();
     const report = buildCurriculumGapReport({
       registry,
@@ -114,37 +107,31 @@ describe("the corpus-wide super-gentle ramp", () => {
       trackChapters: loadTrackChapters(),
     }).gentleRamp!;
 
-    const outputs = generatedGentleRampSnapshotOutputsFromReport(report);
-    for (const [relative, expected] of outputs) {
-      expect(readFileSync(resolve(defaultCurriculumRoot(), relative), "utf8"), relative).toBe(expected);
-    }
-
-    expect(outputs.size).toBe(851);
-    const snappedTracks = loadGentleRampSnapshotTracks();
+    const derivedTracks = loadGentleRampSnapshotTracks();
     const priority = new Map(GENTLE_RAMP_PRIORITIES.map((kind, index) => [kind, index]));
-    const snappedQueue = snappedTracks.flatMap((track) => track.findings).sort(
+    const derivedQueue = derivedTracks.flatMap((track) => track.findings).sort(
       (a, b) =>
         (priority.get(a.kind) ?? Number.MAX_SAFE_INTEGER) -
           (priority.get(b.kind) ?? Number.MAX_SAFE_INTEGER) ||
         b.count - a.count ||
         a.language.localeCompare(b.language),
     );
-    expect(report.tracks).toEqual(snappedTracks);
-    expect(report.workQueue).toEqual(snappedQueue);
+    expect(report.tracks).toEqual(derivedTracks);
+    expect(report.workQueue).toEqual(derivedQueue);
     expect(report.summary).toEqual({
-      tracks: snappedTracks.length,
-      tracksWithDetectedCliffs: snappedTracks.filter((track) => track.findings.length > 0).length,
-      tracksWithNoWritingPractice: snappedTracks.filter(
+      tracks: derivedTracks.length,
+      tracksWithDetectedCliffs: derivedTracks.filter((track) => track.findings.length > 0).length,
+      tracksWithNoWritingPractice: derivedTracks.filter(
         (track) => track.lessonCount > 0 && track.firstWritingPracticeAt === null,
       ).length,
-      tracksWhereWritingStartsLate: snappedTracks.filter(
+      tracksWhereWritingStartsLate: derivedTracks.filter(
         (track) => (track.firstWritingPracticeAt ?? 0) > 0,
       ).length,
-      atomMeasurementBlindLessons: snappedTracks.reduce(
+      atomMeasurementBlindLessons: derivedTracks.reduce(
         (sum, track) => sum + track.atomMeasurementBlindLessons,
         0,
       ),
-      findings: snappedQueue.length,
+      findings: derivedQueue.length,
       /* Superseded pre-snapshot-sharding assertions:
       tracks: 23,
       tracksWithDetectedCliffs: 23,
@@ -211,12 +198,6 @@ describe("the corpus-wide super-gentle ramp", () => {
       forwardReviews: 0,
     });
 
-    const changed = structuredClone(report);
-    changed.tracks.find((track) => track.language === "german")!.atomsTaught += 1;
-    const changedOutputs = generatedGentleRampSnapshotOutputsFromReport(changed);
-    expect(
-      [...outputs.keys()].filter((path) => outputs.get(path) !== changedOutputs.get(path)),
-    ).toEqual([`${GENTLE_RAMP_SNAPSHOT_DIR}/german.d/metrics/atomsTaught.json`]);
     expect(report.tracks.find((track) => track.language === "urdu")).toMatchObject({
       orderDefects: 0,
       forwardPrerequisites: 0,

@@ -1,0 +1,11 @@
+{
+  "id": "ML-S123-letter-da",
+  "pathSegment": "ML-PATH-100",
+  "pathOrder": 39,
+  "extensions": [
+    {
+      "id": "ML-EXT-100-SCRIPT-RECOGNITION",
+      "order": 39
+    }
+  ]
+}

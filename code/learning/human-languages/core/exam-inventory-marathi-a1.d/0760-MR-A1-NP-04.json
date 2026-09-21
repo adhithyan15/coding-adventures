@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-NP-04",
+  "category": "The noun phrase",
+  "label": "the vocative: addressing someone by name",
+  "probe": [
+    "MR-A1-MESSAGE-LINE-GREETING"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-SN-04",
+    "A1-F5-03"
+  ]
+}

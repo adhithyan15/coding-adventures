@@ -1,0 +1,11 @@
+{
+  "id": "GE-C09-zeit",
+  "pathSegment": "GE-PATH-016-B-C",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-016-B-C-JAHRESZEITEN",
+      "order": 1
+    }
+  ]
+}

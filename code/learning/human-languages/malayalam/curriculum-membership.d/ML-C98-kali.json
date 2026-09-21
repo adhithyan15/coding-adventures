@@ -1,0 +1,11 @@
+{
+  "id": "ML-C98-kali",
+  "pathSegment": "ML-PATH-98-LEISURE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ML-EXT-98-LEISURE",
+      "order": 0
+    }
+  ]
+}

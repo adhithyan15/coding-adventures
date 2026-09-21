@@ -1,0 +1,12 @@
+{
+  "id": "HI-A1-F-32",
+  "category": "Sanvad-karya (communicative functions)",
+  "label": "ask for an opinion, and give one",
+  "probe": [
+    "HI-CONCEPT-C34-SOCHNA-01",
+    "HI-CONCEPT-C02-KYA-01",
+    "HI-CONCEPT-C05-BOLTAHUN-01"
+  ],
+  "derivedFrom": "ES:A1-F2-01",
+  "note": "Covered by productive combination, not by a single lesson: `sochna` is introduced, and the habitual template is introduced as applying to any stem, so `ap kya sochte hain?` is buildable from taught parts. Attaching the OPINION ITSELF is not -- that needs `ki`, and HI-A1-CJ-04 records it as missing."
+}

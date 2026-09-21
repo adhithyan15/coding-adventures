@@ -1,0 +1,11 @@
+{
+  "id": "AR-C39-la-wala",
+  "pathSegment": "AR-PATH-036",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-036-DENY-AND-ASK",
+      "order": 2
+    }
+  ]
+}

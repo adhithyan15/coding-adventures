@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-DEM-01",
+  "category": "Demonstratives",
+  "label": "the forms haa/hii/he and to/tii/te, in all three genders",
+  "probe": [
+    "MR-LEX-HA-HI-HE",
+    "MR-LEX-TO-TI-TE"
+  ],
+  "note": "Chapter 69. Two fronts and three endings make six words: ha- for near, ta- for far, with -aa / -ii / -e chosen by the noun's gender rather than by the speaker. Taught on mitra, kholi and ghar, whose genders are STATED in the corpus (MR-C41-kholi says ghar is neuter and kholi feminine; maajhaa mitra gives the masculine) rather than assumed -- chahaa was dropped from a draft because its gender is nowhere stated.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-DEM-01"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-R19-three-refusals",
+  "pathSegment": "UR-PATH-020",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-030-THREE-REFUSALS",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C21-prostite",
+  "pathSegment": "RU-PATH-023",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-028-REPAIR",
+      "order": 1
+    }
+  ]
+}

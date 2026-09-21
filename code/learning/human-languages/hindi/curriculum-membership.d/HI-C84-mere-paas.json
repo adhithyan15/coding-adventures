@@ -1,0 +1,11 @@
+{
+  "id": "HI-C84-mere-paas",
+  "pathSegment": "HI-PATH-92-POSSESSIVE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-92-POSSESSIVE",
+      "order": 4
+    }
+  ]
+}

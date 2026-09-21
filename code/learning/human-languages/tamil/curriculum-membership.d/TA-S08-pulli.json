@@ -1,0 +1,11 @@
+{
+  "id": "TA-S08-pulli",
+  "pathSegment": "TA-PATH-100",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "TA-EXT-100-SCRIPT-DRIZZLE",
+      "order": 7
+    }
+  ]
+}

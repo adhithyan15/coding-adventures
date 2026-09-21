@@ -1,29 +1,4 @@
 {
-  "segments": [
-    "ES-PATH-015",
-    "ES-PATH-015-LOCATION",
-    "ES-PATH-015-IR",
-    "ES-PATH-015-HAY",
-    "ES-PATH-015-HAY-ETYM",
-    "ES-PATH-015-HAY-QUE",
-    "ES-PATH-015-REVIEW-HAY",
-    "ES-PATH-015-SYNTH-HAY",
-    "ES-PATH-340-01",
-    "ES-PATH-341-01",
-    "ES-PATH-346-01",
-    "ES-PATH-347-01",
-    "ES-PATH-353-01",
-    "ES-PATH-354-01",
-    "ES-PATH-355-01",
-    "ES-PATH-362-01",
-    "ES-PATH-363-01",
-    "ES-PATH-369-01",
-    "ES-PATH-370-01",
-    "ES-PATH-378-01",
-    "ES-PATH-407-LOCATIONS",
-    "ES-PATH-407-REVIEWS",
-    "ES-PATH-420-ARTS-PLACES"
-  ],
   "omits": [],
   "relocates": {}
 }

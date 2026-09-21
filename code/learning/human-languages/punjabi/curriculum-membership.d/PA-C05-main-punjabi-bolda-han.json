@@ -1,0 +1,11 @@
+{
+  "id": "PA-C05-main-punjabi-bolda-han",
+  "pathSegment": "PA-PATH-010",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-010-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

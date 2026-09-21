@@ -1,0 +1,11 @@
+{
+  "id": "HI-C57-fragrance",
+  "pathSegment": "HI-PATH-57-GIFT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-57-GIFT",
+      "order": 3
+    }
+  ]
+}

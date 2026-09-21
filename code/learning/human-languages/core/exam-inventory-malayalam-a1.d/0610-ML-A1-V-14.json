@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-V-14",
+  "category": "Kriya (the verb)",
+  "label": "verbs of perception: to see, to hear",
+  "probe": [
+    "ML-CONCEPT-C32-KAANUKA-01",
+    "ML-LEX-LISTEN"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NG5-01",
+    "A1-NG5-02"
+  ],
+  "malayalamSpecific": false
+}

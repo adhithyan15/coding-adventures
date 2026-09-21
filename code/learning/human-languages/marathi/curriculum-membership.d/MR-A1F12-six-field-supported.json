@@ -1,0 +1,11 @@
+{
+  "id": "MR-A1F12-six-field-supported",
+  "pathSegment": "MR-PATH-023",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "MR-EXT-026-A1-PRACTICAL-FORM",
+      "order": 8
+    }
+  ]
+}

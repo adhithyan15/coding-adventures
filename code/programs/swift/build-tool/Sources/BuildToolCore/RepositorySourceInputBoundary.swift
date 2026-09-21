@@ -156,6 +156,7 @@ enum RepositorySourceInputBoundaryProjection {
               "input_origin": "lua",
               "applies_to": {
                 "exact_roots": [
+                  "code/packages/lua/der_tlv",
                   "code/packages/lua/image-codec-png",
                   "code/packages/lua/pixel-container",
                   "code/packages/lua/zip"
@@ -661,6 +662,7 @@ enum RepositorySourceInputBoundaryProjection {
                   "code/packages/typescript/forme-collect-by-author",
                   "code/packages/typescript/forme-collect-by-tag",
                   "code/packages/typescript/forme-collect-chronological",
+                  "code/packages/typescript/forme-deploy-runner-core",
                   "code/packages/typescript/forme-dev-server",
                   "code/packages/typescript/forme-doc-code-block-decorator",
                   "code/packages/typescript/forme-doc-frontmatter",

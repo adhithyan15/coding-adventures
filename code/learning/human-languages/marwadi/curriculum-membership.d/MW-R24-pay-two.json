@@ -1,0 +1,11 @@
+{
+  "id": "MW-R24-pay-two",
+  "pathSegment": "MW-PATH-023",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-037-FINAL-PRICE",
+      "order": 4
+    }
+  ]
+}

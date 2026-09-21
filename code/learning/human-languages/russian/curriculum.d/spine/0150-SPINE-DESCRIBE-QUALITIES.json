@@ -1,8 +1,4 @@
 {
-  "segments": [
-    "RU-PATH-017",
-    "RU-PATH-018"
-  ],
   "omits": [],
   "relocates": {}
 }

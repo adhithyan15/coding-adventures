@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-NE13-01",
+  "category": "Health and hygiene",
+  "label": "health and illness: saying how one feels",
+  "probe": [
+    "MR-LEX-BARAM-01",
+    "MR-LEX-VATNE",
+    "MR-GRAMMAR-DATIVE-FEELING"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-spine"
+  ],
+  "derivedFrom": [
+    "A1-NE13-01"
+  ]
+}

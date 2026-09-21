@@ -1,0 +1,11 @@
+{
+  "id": "ES-C347-centro",
+  "pathSegment": "ES-PATH-347-01",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-347-PLACE",
+      "order": 3
+    }
+  ]
+}

@@ -1,9 +1,4 @@
 {
-  "segments": [
-    "MW-PATH-005",
-    "MW-PATH-008",
-    "MW-PATH-009"
-  ],
   "omits": [
     "PRONOUN-I",
     "PRONOUN-ME",

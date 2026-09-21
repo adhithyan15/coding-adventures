@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NE09-06",
+  "category": "Information and media",
+  "label": "the internet, and giving an e-mail address",
+  "probe": null,
+  "note": "Untaught.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE09-06"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C430-bolso",
+  "pathSegment": "ES-PATH-430-PARO-ROPA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-430-PARO-ROPA",
+      "order": 3
+    }
+  ]
+}

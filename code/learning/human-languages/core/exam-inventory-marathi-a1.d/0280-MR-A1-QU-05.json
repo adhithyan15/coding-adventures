@@ -1,0 +1,18 @@
+{
+  "id": "MR-A1-QU-05",
+  "category": "Quantifiers",
+  "label": "thodaa and khuup, and their agreement",
+  "probe": [
+    "MR-LEX-THODA",
+    "MR-LEX-KHUP",
+    "MR-GRAMMAR-ADJ-AGREEMENT"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-Q-03",
+    "A1-NG2-02"
+  ]
+}

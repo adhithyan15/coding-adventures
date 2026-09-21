@@ -1,0 +1,18 @@
+{
+  "id": "ML-A1-JOIN-07",
+  "category": "Samuchayam (joining and subordination)",
+  "label": "when: locating one event against another",
+  "probe": [
+    "ML-GRAMMAR-C75-UMBOL-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-SUB-08"
+  ],
+  "malayalamSpecific": false,
+  "note": "Chapter 75. -umbol on the end of the verb, built visibly from the future form plus the same pol that sits inside eppol. Malayalam spends no word in front of the clause; the whole of 'when he comes' is one word."
+}

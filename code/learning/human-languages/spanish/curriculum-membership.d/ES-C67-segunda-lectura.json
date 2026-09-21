@@ -1,0 +1,11 @@
+{
+  "id": "ES-C67-segunda-lectura",
+  "pathSegment": "ES-PATH-A1-LECTURA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-A1-LECTURA",
+      "order": 1
+    }
+  ]
+}

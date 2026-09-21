@@ -1,0 +1,11 @@
+{
+  "id": "HI-C42-come",
+  "pathSegment": "HI-PATH-42-VERBS",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-42-VERBS",
+      "order": 0
+    }
+  ]
+}

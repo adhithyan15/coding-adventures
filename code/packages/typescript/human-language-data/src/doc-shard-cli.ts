@@ -60,11 +60,13 @@ import {
   rmSync,
   writeFileSync,
 } from "node:fs";
+import { createHash } from "node:crypto";
 import { basename, dirname, join, normalize, relative as pathRelative, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { reportableFilename } from "./constants.js";
 import { assertRelativeManifestPath } from "./manifest-path.js";
 import {
+  DOC_META_SHARD,
   type DocShardPlan,
   assertRealDocFile,
   docShardContents,
@@ -116,6 +118,7 @@ export function defaultRepoRoot(): string {
  * Per-language changelogs remain separate by default. Hindi became the measured
  * exception: 23 same-track commits touched its monolith in the window recorded
  * by #14245, so independently authored Hindi tranches were still serialized.
+ * Malayalam followed at 25 touches in the 200-commit window after #15661.
  */
 export const DOC_SHARD_PLANS: readonly DocShardPlan[] = [
   {
@@ -124,6 +127,14 @@ export const DOC_SHARD_PLANS: readonly DocShardPlan[] = [
     // name is derived from the heading text rather than from an id pattern —
     // an id-based scheme would have had to special-case it or reject the file.
     path: "code/learning/human-languages/BACKLOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+  },
+  {
+    // Malayalam's sustained chapter campaign made this the next per-track
+    // monolith to cross the measured contention threshold: 57 historical
+    // sections and 25 touches, now one stable owner per newest-first entry.
+    path: "code/learning/human-languages/malayalam/CHANGELOG.md",
     headingLevel: 2,
     newestFirst: true,
   },
@@ -154,6 +165,28 @@ export const DOC_SHARD_PLANS: readonly DocShardPlan[] = [
     headingLevel: 2,
     newestFirst: true,
   },
+  // The remaining Indian-track changelogs crossed the same contention
+  // threshold in the 500-commit audit for #15740. Keep these together: each
+  // document is newest-first, split at its independently authored level-2
+  // chapter/release-note headings, and rendered only as a local view.
+  ...[
+    "bengali",
+    "gujarati",
+    "kannada",
+    "marathi",
+    "marwadi",
+    "punjabi",
+    "sanskrit",
+    "tamil",
+    "telugu",
+    "urdu",
+  ].map(
+    (track): DocShardPlan => ({
+      path: `code/learning/human-languages/${track}/CHANGELOG.md`,
+      headingLevel: 2,
+      newestFirst: true,
+    }),
+  ),
   {
     // Script Ductus release notes are independently authored alongside script
     // evidence. Split at level 3 so each note owns one file; historical level-2
@@ -301,6 +334,82 @@ export const DOC_SHARD_PLANS: readonly DocShardPlan[] = [
     newestFirst: true,
   },
 ];
+
+const BACKLOG_PATH = "code/learning/human-languages/BACKLOG.md";
+const BACKLOG_FINGERPRINT_CUTOVER_RANK = 5_000;
+const BACKLOG_HEADING = /^## HL-C([0-9]+)(?:-([0-9a-f]{8}))? — (\S(?:.*\S)?)$/u;
+
+/**
+ * Allocate the stable id for a new backlog subject.
+ *
+ * The decimal portion preserves the familiar chronological sequence. The
+ * subject fingerprint is the concurrency-safe identity: two branches may both
+ * select the same next number, but different subjects cannot silently claim the
+ * same id. NFC makes the result independent of canonically equivalent Unicode
+ * input, while retaining case and punctuation keeps genuinely different titles
+ * distinct.
+ */
+export function backlogIdForSubject(sequence: number, subject: string): string {
+  const normalized = subject.normalize("NFC").trim();
+  if (!Number.isSafeInteger(sequence) || sequence < 1) {
+    throw new Error(`backlog id sequence must be a positive safe integer, got ${sequence}`);
+  }
+  if (normalized.length === 0) {
+    throw new Error("backlog id subject must not be empty");
+  }
+  const fingerprint = createHash("sha256")
+    .update(normalized, "utf8")
+    .digest("hex")
+    .slice(0, 8);
+  return `HL-C${sequence}-${fingerprint}`;
+}
+
+/** Validate post-cutover backlog headings without rewriting historical shards. */
+export function backlogIdentityErrors(shards: ReadonlyMap<string, string>): string[] {
+  const errors: string[] = [];
+  const seen = new Map<string, string>();
+  for (const [name, body] of shards) {
+    if (name === DOC_META_SHARD) continue;
+    const rank = Number.parseInt(name.slice(0, 5), 10);
+    if (rank <= BACKLOG_FINGERPRINT_CUTOVER_RANK) continue;
+    const heading = body.split("\n", 1)[0];
+    const match = BACKLOG_HEADING.exec(heading);
+    if (match === null || match[2] === undefined) {
+      errors.push(
+        `${name}: new backlog headings must use ` +
+          "'## HL-C<number>-<subject fingerprint> — <subject>'",
+      );
+      continue;
+    }
+    const [, sequence, fingerprint, subject] = match;
+    const expected = backlogIdForSubject(Number(sequence), subject);
+    const actual = `HL-C${sequence}-${fingerprint}`;
+    if (actual !== expected) {
+      errors.push(`${name}: backlog id '${actual}' must be '${expected}' for subject '${subject}'`);
+      continue;
+    }
+    const previous = seen.get(actual);
+    if (previous !== undefined) {
+      errors.push(`${name}: backlog id '${actual}' is already owned by ${previous}`);
+    } else {
+      seen.set(actual, name);
+    }
+  }
+  return errors;
+}
+
+function nextBacklogId(root: string, subject: string): string {
+  const plan = DOC_SHARD_PLANS.find((candidate) => candidate.path === BACKLOG_PATH)!;
+  const document = safeDocumentPath(root, plan.path);
+  const shards = readDocShards(document, plan);
+  if (shards === null) throw new Error(`${BACKLOG_PATH}: shard directory is missing`);
+  let maximum = 0;
+  for (const body of shards.values()) {
+    const match = /^## HL-C([0-9]+)/u.exec(body);
+    if (match !== null) maximum = Math.max(maximum, Number(match[1]));
+  }
+  return backlogIdForSubject(maximum + 1, subject);
+}
 
 /**
  * `lstatSync`, or `undefined` if the path is not there at all.
@@ -486,9 +595,9 @@ export function runDocShardCli(
   root = defaultRepoRoot(),
 ): number {
   const usage =
-    "usage: doc-shard-cli (--shard <path> | --unshard <path> | --check [<path>])\n";
+    "usage: doc-shard-cli (--shard <path> | --unshard <path> | --check [<path>] | --backlog-id <subject>)\n";
   const mode = args[0];
-  if (mode !== "--shard" && mode !== "--unshard" && mode !== "--check") {
+  if (mode !== "--shard" && mode !== "--unshard" && mode !== "--check" && mode !== "--backlog-id") {
     process.stderr.write(usage);
     return 2;
   }
@@ -499,6 +608,14 @@ export function runDocShardCli(
   if (mode === "--check" && args.length > 2) {
     process.stderr.write(usage);
     return 2;
+  }
+  if (mode === "--backlog-id") {
+    if (args.length !== 2) {
+      process.stderr.write(usage);
+      return 2;
+    }
+    process.stdout.write(`${nextBacklogId(root, args[1])}\n`);
+    return 0;
   }
 
   const requested = args[1];
@@ -535,6 +652,13 @@ export function runDocShardCli(
       continue;
     }
     const expected = unshardDocContents(root, plan);
+    if (plan.path === BACKLOG_PATH) {
+      const shards = readDocShards(monolith, plan)!;
+      for (const error of backlogIdentityErrors(shards)) {
+        process.stderr.write(`${plan.path}: ${error}\n`);
+        failed = true;
+      }
+    }
     const shardCount = listDocShardNames(monolith, plan).length - 1; // `_meta.md`
     const sectionCount = docShardContents(expected, plan).size - 1;
     if (sectionCount !== shardCount) {

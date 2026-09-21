@@ -1,0 +1,11 @@
+{
+  "id": "UR-C20-ya",
+  "pathSegment": "UR-PATH-021",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-031-JOINING",
+      "order": 1
+    }
+  ]
+}

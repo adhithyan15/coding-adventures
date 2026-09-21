@@ -1,0 +1,11 @@
+{
+  "id": "PT-C07-dias-2",
+  "pathSegment": "PT-PATH-014",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-014-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

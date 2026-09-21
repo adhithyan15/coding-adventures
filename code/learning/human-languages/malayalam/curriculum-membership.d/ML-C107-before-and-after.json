@@ -1,0 +1,11 @@
+{
+  "id": "ML-C107-before-and-after",
+  "pathSegment": "ML-PATH-107-MEDICINE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-107-MEDICINE",
+      "order": 3
+    }
+  ]
+}

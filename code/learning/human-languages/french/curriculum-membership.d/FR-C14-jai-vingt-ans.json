@@ -1,0 +1,11 @@
+{
+  "id": "FR-C14-jai-vingt-ans",
+  "pathSegment": "FR-PATH-016",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-016-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

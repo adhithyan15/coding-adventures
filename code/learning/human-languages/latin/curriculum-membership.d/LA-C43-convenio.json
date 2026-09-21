@@ -1,0 +1,11 @@
+{
+  "id": "LA-C43-convenio",
+  "pathSegment": "LA-PATH-031",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-031-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

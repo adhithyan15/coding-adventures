@@ -1,0 +1,11 @@
+{
+  "id": "IT-C32-quando",
+  "pathSegment": "IT-PATH-036",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-036-UNIRE",
+      "order": 3
+    }
+  ]
+}

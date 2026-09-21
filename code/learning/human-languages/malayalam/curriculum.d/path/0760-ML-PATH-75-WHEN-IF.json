@@ -1,12 +1,6 @@
 {
   "id": "ML-PATH-75-WHEN-IF",
   "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
-  "lessons": [
-    "ML-C75-eppol",
-    "ML-C75-umbol",
-    "ML-C75-aal",
-    "ML-R75-when-and-if-recall"
-  ],
   "before": [],
   "inline": [
     "ML-EXT-75-WHEN-IF"

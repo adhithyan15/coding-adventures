@@ -32,6 +32,13 @@ diagnostics rather than fetch loops. Link, import, and rule media all evaluate
 against the pipeline's logical viewport. Image failures remain recoverable Mosaic-style bordered
 `alt` text.
 
+`BrowserSession::stop_loading` exposes the same lifecycle to browser chrome.
+It returns the currently dispatched requests in deterministic order, advances
+the generation so late deliveries are ignored, and settles every retained
+pending stylesheet and image as a user cancellation. The host reflows that
+retained page to expose stylesheet fallback and failed-image presentation;
+history, the committed document, and editable address state do not move.
+
 The default `HttpBrowserFetcher` adapts `http1-client`, but tests and platform
 hosts can inject any transport. Font measurement, shaping, metrics, resolution,
 and the final paint backend also remain caller-owned.
@@ -85,7 +92,20 @@ Share Page snapshots the same identity into one typed share request. None of
 these commands reads the editable address draft or mutates the current session.
 Page Information extends that boundary with the retained requested and final
 URLs, response status, normalized title, and image/stylesheet resource and
-failure counts. Native hosts only present the typed effects.
+failure counts. Browser core also retains that bounded snapshot for a shared
+closable Mosaic panel, while native hosts may still present the typed effect in
+a richer platform surface. Navigation synchronization clears stale metadata.
+Copy Source reads the exact retained response from that panel snapshot and
+reuses the typed clipboard effect without refetching, reconstructing source, or
+closing the panel. Core owns the `Page source copied` status; hosts perform only
+the final platform clipboard write.
+
+The native Mosaic bridge protocol follows the same ownership rule.
+`BrowserChromeEvent::from_mosaic_event` owns event names and required values;
+`browser_bridge_response_json` owns every chrome slot, typed host-effect
+envelope, error envelope, and JSON escape. Platform FFI crates only decode C
+strings and return that shared response, including the live
+`navigation-disabled` projection.
 
 Typed inputs retain that single-owner design. The session exposes
 `ControlValueState` for live validity and accessibility projection, routes
@@ -123,6 +143,11 @@ Those snapshots are keyed by stable history-entry identity rather than URL, so
 repeated visits restore independent public form and custom-element state. The
 same bounded entry snapshot restores the shared logical scroll offset before
 native/web hosts repaint, including fetch-free fragment traversal.
+Browser chrome exposes that same identity model as an ordered Session History
+catalog. Opening and browsing the panel never navigates; Open moves directly to
+the selected stable entry through the existing restoration transaction without
+allocating a new visit. Generated hosts only render the projected address and
+position and forward semantic catalog events.
 The session exposes dirty/default state, grouped autofill descriptors, explicit
 public-versus-credential transactions, and ordered mutation events. Passwords
 are excluded from public snapshots and autofill, file payloads are never
@@ -148,6 +173,11 @@ commands with save-before-commit transaction semantics, while native hosts
 inject either the durable `browser-bookmarks-file` adapter or an isolated
 in-memory repository for tests. Bookmark URL identity deliberately retains
 fragments so separate document anchors can be saved independently.
+
+`BrowserChromeController` projects that ordered catalog into shared generated
+chrome. It owns the selected entry, wraparound traversal, empty-state
+disabledness, and dismissal after an entry reuses ordinary navigation, so host
+toolkits do not acquire bookmark-list policy.
 
 `ScrollState` clamps vertical offsets against content and viewport geometry,
 performs scroll-aware link hit-testing, and feeds `scrolled_viewport_scene`.
@@ -186,6 +216,11 @@ effects, and `complete_subresource`. Reflow,
 reload, Back, and Forward all project the retained state into blue/purple link
 styling without coupling browser history to HTML layout.
 
+Page composition scale is session-owned. `paint_viewport` converts a physical
+host surface into the logical layout viewport and paint scale for the retained
+50%-200% zoom level. Semantic zoom commands request one retained-page reflow
+without navigation, document fetch, or host-specific scaling policy.
+
 `BrowserControlModel` owns focus, values, checked/radio state, select indexes,
 character-indexed selection/caret state, composition text, validation feedback,
 and disabled/read-only policy. Pointer, keyboard, text, and IME input
@@ -200,8 +235,10 @@ navigation, bookmark, Copy Address, Save Page, and View Source events to host-ne
 only after a successful load, and projects one coherent `BrowserChromeProps`
 snapshot for the declared MIL slots. `BrowserAuxiliaryDocument::view_source`
 escapes the already-retained response text into synthetic preformatted HTML,
-and `BrowserHostEventOutcome` carries the resulting platform-owned window
-effect without navigation, history mutation, or a network fetch. Generated Mosaic shells expose the native
+while `BrowserSourceSnapshot` retains the same title, committed address, and
+exact raw text for a shared closable Mosaic panel. `BrowserHostEventOutcome`
+still carries the resulting platform-owned window effect without navigation,
+history mutation, or a network fetch. Generated Mosaic shells expose the native
 node seam on all registered backends. The SwiftUI adapter connects this reducer
 to the live Metal renderer, WinUI mounts Direct2D pixels, and Qt, Flutter, and
 Compose share the Cairo bridge. Platform-native integration gates exercise the

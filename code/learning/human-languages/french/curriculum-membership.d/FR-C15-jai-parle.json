@@ -1,0 +1,11 @@
+{
+  "id": "FR-C15-jai-parle",
+  "pathSegment": "FR-PATH-017",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-017-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

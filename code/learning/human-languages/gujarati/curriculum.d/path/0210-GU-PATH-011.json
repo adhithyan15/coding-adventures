@@ -1,10 +1,6 @@
 {
   "id": "GU-PATH-011",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
-  "lessons": [
-    "GU-C08-vicharvun",
-    "GU-C08-samajvun"
-  ],
   "before": [],
   "inline": [],
   "after": []

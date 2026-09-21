@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-NE10-02",
+  "category": "Housing",
+  "label": "types of dwelling and its rooms",
+  "probe": [
+    "MR-LEX-GHAR",
+    "MR-LEX-KHOLI"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-spine"
+  ],
+  "derivedFrom": [
+    "A1-NE10-02"
+  ]
+}

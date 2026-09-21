@@ -1,0 +1,11 @@
+{
+  "id": "FR-C30-sel",
+  "pathSegment": "FR-PATH-027",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-027-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

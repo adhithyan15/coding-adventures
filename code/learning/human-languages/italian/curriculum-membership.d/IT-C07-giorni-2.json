@@ -1,0 +1,11 @@
+{
+  "id": "IT-C07-giorni-2",
+  "pathSegment": "IT-PATH-014",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-014-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

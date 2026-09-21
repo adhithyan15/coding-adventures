@@ -1,0 +1,11 @@
+{
+  "id": "TA-W31-read-aanaal",
+  "pathSegment": "TA-PATH-76-CHOICE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-76-CHOICE",
+      "order": 2
+    }
+  ]
+}

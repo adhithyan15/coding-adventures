@@ -1,5 +1,10 @@
 # Changelog
 
+- Replace the local Mosaic event and response JSON codec with the shared
+  browser-core bridge protocol.
+
+- Reflow retained Direct2D pages from the shared browser zoom viewport policy.
+
 ## Unreleased
 
 - Map the shared Page Information event and disabled state through one typed

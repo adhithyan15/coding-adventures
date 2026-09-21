@@ -1,10 +1,4 @@
 {
-  "segments": [
-    "PT-PATH-010",
-    "PT-PATH-015",
-    "PT-PATH-019",
-    "PT-PATH-029"
-  ],
   "omits": [
     "QUESTION-WHAT",
     "PRONOUN-ME",

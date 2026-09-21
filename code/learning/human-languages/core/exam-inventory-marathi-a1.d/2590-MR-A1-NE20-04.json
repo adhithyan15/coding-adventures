@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NE20-04",
+  "category": "Geography and nature",
+  "label": "weather and climate",
+  "probe": null,
+  "note": "Untaught.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE20-04"
+  ]
+}

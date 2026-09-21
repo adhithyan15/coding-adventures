@@ -1,0 +1,11 @@
+{
+  "id": "MW-C05-kain",
+  "pathSegment": "MW-PATH-005",
+  "pathOrder": 16,
+  "extensions": [
+    {
+      "id": "MW-EXT-013-WRITE-NAME-QUESTION",
+      "order": 5
+    }
+  ]
+}

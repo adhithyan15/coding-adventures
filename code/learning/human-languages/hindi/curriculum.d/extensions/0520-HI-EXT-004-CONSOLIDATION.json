@@ -6,8 +6,5 @@
   "canDo": "I can take my leave in Hindi at three levels of formality, and say when I expect to meet again.",
   "prerequisites": [
     "HI-EXT-100-SCRIPT-RECOGNITION"
-  ],
-  "lessons": [
-    "HI-C04-practice"
   ]
 }

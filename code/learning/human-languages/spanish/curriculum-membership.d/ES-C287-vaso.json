@@ -1,0 +1,11 @@
+{
+  "id": "ES-C287-vaso",
+  "pathSegment": "ES-PATH-287-01",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-287-PEDIR",
+      "order": 2
+    }
+  ]
+}

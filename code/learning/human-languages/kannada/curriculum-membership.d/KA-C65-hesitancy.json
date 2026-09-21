@@ -1,0 +1,11 @@
+{
+  "id": "KA-C65-hesitancy",
+  "pathSegment": "KA-PATH-65-MANNERS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-65-MANNERS",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C57-icchati",
+  "pathSegment": "SA-PATH-57-WANT",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-057-WANT",
+      "order": 0
+    }
+  ]
+}

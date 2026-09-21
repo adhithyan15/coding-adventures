@@ -1,0 +1,11 @@
+{
+  "id": "TA-S09-i-sign",
+  "pathSegment": "TA-PATH-100",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "TA-EXT-100-SCRIPT-DRIZZLE",
+      "order": 8
+    }
+  ]
+}

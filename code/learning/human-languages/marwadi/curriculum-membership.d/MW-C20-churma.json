@@ -1,0 +1,11 @@
+{
+  "id": "MW-C20-churma",
+  "pathSegment": "MW-PATH-019",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-033-FOOD-SEVEN",
+      "order": 1
+    }
+  ]
+}

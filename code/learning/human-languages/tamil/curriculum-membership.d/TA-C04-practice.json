@@ -1,0 +1,11 @@
+{
+  "id": "TA-C04-practice",
+  "pathSegment": "TA-PATH-012",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-012-CONSOLIDATION",
+      "order": 0
+    }
+  ]
+}

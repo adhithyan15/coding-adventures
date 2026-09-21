@@ -55,6 +55,8 @@ pub const OP_STLOC_0: u8 = 0x0A;
 pub const OP_STLOC_3: u8 = 0x0D;
 pub const OP_LDLOC_S: u8 = 0x11;
 pub const OP_STLOC_S: u8 = 0x13;
+/// Push the compact signed int32 constant -1.
+pub const OP_LDC_I4_M1: u8 = 0x15;
 pub const OP_LDC_I4_0: u8 = 0x16;
 pub const OP_LDC_I4_8: u8 = 0x1E;
 pub const OP_LDC_I4_S: u8 = 0x1F;
@@ -70,14 +72,24 @@ pub const OP_LDARG_S: u8 = 0x0E;
 /// `call <methodTok>` (0x28 + 4-byte token) — McCarthy W8b (lambda). Invoke
 /// another method: pop its arguments, push a call frame, transfer control.
 pub const OP_CALL: u8 = 0x28;
+/// Reserved host MemberRefs for strict encoded integer input.
+pub const BASIC_INPUT_I64_TOKEN: u32 = 0x0A00_0006;
+pub const BASIC_INPUT_MORE_TOKEN: u32 = 0x0A00_0007;
+pub const BASIC_INPUT_STR_TOKEN: u32 = 0x0A00_0008;
 pub const OP_RET: u8 = 0x2A;
 pub const OP_BR_S: u8 = 0x2B;
 pub const OP_BRFALSE_S: u8 = 0x2C;
 pub const OP_BRTRUE_S: u8 = 0x2D;
+/// Long branches carry a signed four-byte displacement from the next instruction.
+pub const OP_BR: u8 = 0x38;
+pub const OP_BRFALSE: u8 = 0x39;
+pub const OP_BRTRUE: u8 = 0x3A;
 pub const OP_ADD: u8 = 0x58;
 pub const OP_SUB: u8 = 0x59;
 pub const OP_MUL: u8 = 0x5A;
 pub const OP_DIV: u8 = 0x5B;
+/// Signed integer remainder, preserving the matched operand width.
+pub const OP_REM: u8 = 0x5D;
 /// `xor` (0x61) — McCarthy W7 logical `not` lowers to `x ^ 1`.
 pub const OP_XOR: u8 = 0x61;
 /// Per-bit conjunction, preserving the integer width.
@@ -96,6 +108,8 @@ pub const OP_SHR: u8 = 0x63;
 /// dispatch never implemented it, so it fell through to the "unknown opcode"
 /// panic. Real CoreCLR (via `ilasm`/`dotnet`) already supports `neg` natively.
 pub const OP_NEG: u8 = 0x65;
+/// Per-bit complement, preserving the integer width.
+pub const OP_NOT: u8 = 0x66;
 /// Explicit signed integer width conversions; narrowing discards high bits.
 pub const OP_CONV_I4: u8 = 0x69;
 pub const OP_CONV_I8: u8 = 0x6A;
@@ -150,6 +164,8 @@ pub enum Value {
     /// A distinct stack type: small int64 values must not become int32.
     Int64(i64),
     Ref(Option<usize>),
+    /// An immutable byte string in the simulator-owned string arena.
+    String(usize),
 }
 
 impl Value {
@@ -159,7 +175,9 @@ impl Value {
         match self {
             Value::Int(n) => n,
             Value::Int64(_) => panic!("expected int32, found int64"),
-            Value::Ref(_) => panic!("expected an int on the CLR stack, found a reference"),
+            Value::Ref(_) | Value::String(_) => {
+                panic!("expected an int on the CLR stack, found a reference")
+            }
         }
     }
 
@@ -173,7 +191,7 @@ impl Value {
             Value::Int(n) => n,
             Value::Int64(_) => panic!("int64 requires matched-width comparison"),
             Value::Ref(None) => 0,
-            Value::Ref(Some(_)) => 1,
+            Value::Ref(Some(_)) | Value::String(_) => 1,
         }
     }
 
@@ -184,6 +202,7 @@ impl Value {
             Value::Int(n) => n != 0,
             Value::Int64(n) => n != 0,
             Value::Ref(r) => r.is_some(),
+            Value::String(_) => true,
         }
     }
 }
@@ -195,6 +214,7 @@ impl fmt::Display for Value {
             Value::Int64(n) => write!(f, "{n}"),
             Value::Ref(None) => write!(f, "null"),
             Value::Ref(Some(i)) => write!(f, "obj#{i}"),
+            Value::String(i) => write!(f, "str#{i}"),
         }
     }
 }
@@ -247,6 +267,8 @@ pub struct CLRSimulator {
     /// The object heap: each entry is one allocated array (`object[]`). A
     /// `Value::Ref(Some(i))` references `heap[i]`.
     pub heap: Vec<Vec<Value>>,
+    /// Immutable byte strings returned by encoded string host calls.
+    strings: Vec<Vec<u8>>,
     pub pc: usize,
     pub bytecode: Vec<u8>,
     pub halted: bool,
@@ -260,6 +282,9 @@ pub struct CLRSimulator {
     cur_method: usize,
     /// The call stack of saved caller contexts (W8b).
     frames: Vec<Frame>,
+    /// Caller-supplied host input and the next unread byte.
+    input: Vec<u8>,
+    input_pos: usize,
 }
 
 impl CLRSimulator {
@@ -268,6 +293,7 @@ impl CLRSimulator {
             stack: Vec::new(),
             locals: vec![None; 16],
             heap: Vec::new(),
+            strings: Vec::new(),
             pc: 0,
             bytecode: Vec::new(),
             halted: false,
@@ -275,7 +301,61 @@ impl CLRSimulator {
             methods: Vec::new(),
             cur_method: 0,
             frames: Vec::new(),
+            input: Vec::new(),
+            input_pos: 0,
         }
+    }
+
+    /// Replace the simulator-owned input stream and rewind it to the start.
+    /// Loading bytecode does not otherwise clear or rewind this stream.
+    pub fn set_input(&mut self, input: impl AsRef<[u8]>) {
+        self.input.clear();
+        self.input.extend_from_slice(input.as_ref());
+        self.input_pos = 0;
+    }
+
+    fn read_input_line(&mut self) -> Option<&[u8]> {
+        if self.input_pos >= self.input.len() {
+            return None;
+        }
+        let start = self.input_pos;
+        while self.input_pos < self.input.len() && self.input[self.input_pos] != b'\n' {
+            self.input_pos += 1;
+        }
+        let end = self.input_pos;
+        if self.input_pos < self.input.len() {
+            self.input_pos += 1;
+        }
+        Some(&self.input[start..end])
+    }
+
+    fn read_input_i64(&mut self) -> i64 {
+        let Some(line) = self.read_input_line() else {
+            return 0;
+        };
+        std::str::from_utf8(line)
+            .ok()
+            .map(|line| line.trim_matches(|ch: char| ch.is_ascii_whitespace()))
+            .and_then(|line| line.parse::<i64>().ok())
+            .unwrap_or(0)
+    }
+
+    fn read_input_string(&mut self) -> Value {
+        let bytes = self
+            .read_input_line()
+            .map(|line| line.strip_suffix(b"\r").unwrap_or(line).to_vec())
+            .unwrap_or_default();
+        let index = self.strings.len();
+        self.strings.push(bytes);
+        Value::String(index)
+    }
+
+    /// Return the immutable bytes behind a string value, if its handle is valid.
+    pub fn string_bytes(&self, value: Value) -> Option<&[u8]> {
+        let Value::String(index) = value else {
+            return None;
+        };
+        self.strings.get(index).map(Vec::as_slice)
     }
 
     /// Load a single method's bytecode and configure local variable count. This
@@ -295,6 +375,7 @@ impl CLRSimulator {
         assert!(entry < methods.len(), "entry method index out of range");
         self.stack.clear();
         self.heap.clear();
+        self.strings.clear();
         self.frames.clear();
         self.cur_method = entry;
         self.bytecode = methods[entry].body.clone();
@@ -366,6 +447,12 @@ impl CLRSimulator {
             self.stack.push(top);
             self.pc += 1;
             return self.trace(pc, "dup", stack_before, "duplicate top of stack".to_string());
+        }
+
+        if opcode_byte == OP_LDC_I4_M1 {
+            self.stack.push(Some(Value::Int(-1)));
+            self.pc += 1;
+            return self.trace(pc, "ldc.i4.m1", stack_before, "push -1".to_string());
         }
 
         // ldc.i4.N: push small integer constants 0-8.
@@ -568,7 +655,7 @@ impl CLRSimulator {
             let result = match a {
                 Value::Int(n) => Value::Int(n.wrapping_neg()),
                 Value::Int64(n) => Value::Int64(n.wrapping_neg()),
-                Value::Ref(_) => panic!("neg requires an integer"),
+                Value::Ref(_) | Value::String(_) => panic!("neg requires an integer"),
             };
             self.stack.push(Some(result));
             self.pc += 1;
@@ -583,6 +670,60 @@ impl CLRSimulator {
                 a.checked_div(b).expect("System.ArithmeticException: division overflow")
             });
         }
+        if opcode_byte == OP_REM {
+            // Validate and compute before consuming either operand. This keeps
+            // malformed bytecode and arithmetic exceptions observable without
+            // partially mutating the simulator state.
+            let len = self.stack.len();
+            assert!(len >= 2, "rem requires two initialized integer operands");
+            let result = match (self.stack[len - 2], self.stack[len - 1]) {
+                (Some(Value::Int(a)), Some(Value::Int(b))) => {
+                    assert!(b != 0, "System.DivideByZeroException: remainder by zero");
+                    Value::Int(
+                        a.checked_rem(b)
+                            .expect("System.ArithmeticException: remainder overflow"),
+                    )
+                }
+                (Some(Value::Int64(a)), Some(Value::Int64(b))) => {
+                    assert!(b != 0, "System.DivideByZeroException: remainder by zero");
+                    Value::Int64(
+                        a.checked_rem(b)
+                            .expect("System.ArithmeticException: remainder overflow"),
+                    )
+                }
+                _ => panic!("rem requires initialized integers of matching widths"),
+            };
+            self.stack.truncate(len - 2);
+            self.stack.push(Some(result));
+            self.pc += 1;
+            return self.trace(
+                pc,
+                "rem",
+                stack_before,
+                format!("signed remainder: {result}"),
+            );
+        }
+        if opcode_byte == OP_NOT {
+            let value = self
+                .stack
+                .last()
+                .copied()
+                .flatten()
+                .unwrap_or_else(|| panic!("not requires an initialized integer operand"));
+            let result = match value {
+                Value::Int(n) => Value::Int(!n),
+                Value::Int64(n) => Value::Int64(!n),
+                Value::Ref(_) | Value::String(_) => panic!("not requires an integer operand"),
+            };
+            *self.stack.last_mut().expect("validated operand") = Some(result);
+            self.pc += 1;
+            return self.trace(
+                pc,
+                "not",
+                stack_before,
+                format!("complement {value}: {result}"),
+            );
+        }
 
         // ── call <methodTok> (0x28) — McCarthy W8b (lambda) ──
         // The 4-byte token is a MethodDef: 0x0600_00NN → methods[NN − 1]. Pop the
@@ -595,9 +736,24 @@ impl CLRSimulator {
                 self.bytecode[pc + 1], self.bytecode[pc + 2],
                 self.bytecode[pc + 3], self.bytecode[pc + 4],
             ]);
-            // A metadata row is meaningful only inside its table. MemberRef
-            // row 2 is not MethodDef row 2; without host resolution we must
-            // refuse it before consuming arguments or changing call frames.
+            if token >> 24 == 0x0A {
+                let (name, value) = match token {
+                    BASIC_INPUT_I64_TOKEN => {
+                        ("input_i64", Value::Int64(self.read_input_i64()))
+                    }
+                    BASIC_INPUT_MORE_TOKEN => (
+                        "input_more",
+                        Value::Int64(i64::from(self.input_pos < self.input.len())),
+                    ),
+                    BASIC_INPUT_STR_TOKEN => ("input_str", self.read_input_string()),
+                    _ => panic!("call: unsupported MemberRef token 0x{token:08X}"),
+                };
+                self.stack.push(Some(value));
+                self.pc += 5;
+                return self.trace(pc, name, stack_before, format!("host {name}: {value}"));
+            }
+            // A metadata row is meaningful only inside its table. Unknown
+            // MemberRefs must never alias a same-row internal MethodDef.
             assert!(
                 token >> 24 == 0x06,
                 "call: unsupported call token table in 0x{token:08X}; only MethodDef (0x06) is supported"
@@ -654,6 +810,9 @@ impl CLRSimulator {
             return self.trace(pc, "ret", stack_before, "return (halt)".to_string());
         }
 
+        if matches!(opcode_byte, OP_BR | OP_BRFALSE | OP_BRTRUE) {
+            return self.execute_branch_long(stack_before, opcode_byte);
+        }
         if opcode_byte == OP_BR_S {
             return self.execute_branch_s(stack_before, "br.s", true, false);
         }
@@ -685,7 +844,9 @@ impl CLRSimulator {
         match r {
             Value::Ref(Some(i)) => &self.heap[i],
             Value::Ref(None) => panic!("System.NullReferenceException"),
-            Value::Int(_) | Value::Int64(_) => panic!("expected an array reference, found an int"),
+            Value::Int(_) | Value::Int64(_) | Value::String(_) => {
+                panic!("expected an array reference")
+            }
         }
     }
 
@@ -694,7 +855,9 @@ impl CLRSimulator {
         match r {
             Value::Ref(Some(i)) => &mut self.heap[i],
             Value::Ref(None) => panic!("System.NullReferenceException"),
-            Value::Int(_) | Value::Int64(_) => panic!("expected an array reference, found an int"),
+            Value::Int(_) | Value::Int64(_) | Value::String(_) => {
+                panic!("expected an array reference")
+            }
         }
     }
 
@@ -762,6 +925,45 @@ impl CLRSimulator {
         self.trace(pc, mnemonic, stack_before, format!("pop {b} and {a}, push {result}"))
     }
 
+    /// Decode and validate before consuming a condition. A failed branch must
+    /// leave the machine available for inspecting the original instruction.
+    /// Range checking is deliberately not a full CIL instruction verifier.
+    fn execute_branch_long(
+        &mut self,
+        stack_before: Vec<Option<Value>>,
+        opcode: u8,
+    ) -> CLRTrace {
+        let pc = self.pc;
+        let mnemonic = match opcode {
+            OP_BR => "br",
+            OP_BRFALSE => "brfalse",
+            _ => "brtrue",
+        };
+        let next_pc = pc.checked_add(5)
+            .filter(|&end| end <= self.bytecode.len())
+            .unwrap_or_else(|| panic!("Truncated operand on {mnemonic} at PC={pc}"));
+        let raw = i32::from_le_bytes(self.bytecode[pc + 1..next_pc].try_into().unwrap());
+        // i128 holds every usize plus every i32 displacement without wrapping,
+        // including negative destinations which must not become large indices.
+        let target = next_pc as i128 + i128::from(raw);
+        assert!(target >= 0 && target < self.bytecode.len() as i128,
+            "Invalid target on {mnemonic} at PC={pc}");
+        let take = if opcode == OP_BR {
+            true
+        } else {
+            let value = self.stack.last().copied().flatten()
+                .unwrap_or_else(|| panic!("Missing stack operand on {mnemonic} at PC={pc}"));
+            let truthy = value.is_truthy();
+            if opcode == OP_BRFALSE { !truthy } else { truthy }
+        };
+        if opcode != OP_BR {
+            self.stack.pop();
+        }
+        self.pc = if take { target as usize } else { next_pc };
+        self.trace(pc, mnemonic, stack_before,
+            format!("branch taken={take}, next PC={} (offset {raw})", self.pc))
+    }
+
     fn execute_branch_s(
         &mut self,
         stack_before: Vec<Option<Value>>,
@@ -818,6 +1020,9 @@ impl Default for CLRSimulator {
 
 /// Encode ldc.i4 with automatic compact form selection.
 pub fn encode_ldc_i4(n: i32) -> Vec<u8> {
+    if n == -1 {
+        return vec![OP_LDC_I4_M1];
+    }
     if (0..=8).contains(&n) {
         return vec![(OP_LDC_I4_0 as i32 + n) as u8];
     }
@@ -1000,7 +1205,11 @@ mod tests {
                 .expect_err("non-MethodDef token must not enter the same-row internal method");
             let message = failure.downcast_ref::<String>().map(String::as_str)
                 .or_else(|| failure.downcast_ref::<&str>().copied()).unwrap_or("");
-            assert!(message.contains("unsupported call token table"), "{message}");
+            if table == 0x0A {
+                assert!(message.contains("unsupported MemberRef token"), "{message}");
+            } else {
+                assert!(message.contains("unsupported call token table"), "{message}");
+            }
             assert_eq!(sim.pc, 0);
             assert_eq!(sim.cur_method, 0);
             assert_eq!(sim.bytecode, original_body);

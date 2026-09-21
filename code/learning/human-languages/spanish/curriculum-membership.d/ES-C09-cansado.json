@@ -1,0 +1,11 @@
+{
+  "id": "ES-C09-cansado",
+  "pathSegment": "ES-PATH-030-CANSADO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-030-CANSADO",
+      "order": 0
+    }
+  ]
+}

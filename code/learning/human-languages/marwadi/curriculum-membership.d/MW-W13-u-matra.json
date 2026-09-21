@@ -1,0 +1,11 @@
+{
+  "id": "MW-W13-u-matra",
+  "pathSegment": "MW-PATH-013",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-027-SHOPPING-FIVE",
+      "order": 1
+    }
+  ]
+}

@@ -710,6 +710,9 @@ void MosaicHost::consumeEffect(const QVariantMap &response)
              == QStringLiteral("page-info")) {
     emit pageInfoRequested(effect);
   } else if (effect.value(QStringLiteral("type")).toString()
+             == QStringLiteral("cancel-subresources")) {
+    emit subresourcesCancelled(effect.value(QStringLiteral("requests")).toList());
+  } else if (effect.value(QStringLiteral("type")).toString()
              == QStringLiteral("write-clipboard")) {
     QGuiApplication::clipboard()->setText(effect.value(QStringLiteral("text")).toString());
   }
@@ -722,12 +725,47 @@ QVariantMap MosaicHost::normalizeProps(const QVariantMap &props)
     {QStringLiteral("status-text"), QStringLiteral("statusText")},
     {QStringLiteral("back-disabled"), QStringLiteral("backDisabled")},
     {QStringLiteral("forward-disabled"), QStringLiteral("forwardDisabled")},
+    {QStringLiteral("stop-disabled"), QStringLiteral("stopDisabled")},
     {QStringLiteral("bookmark-label"), QStringLiteral("bookmarkLabel")},
     {QStringLiteral("bookmark-disabled"), QStringLiteral("bookmarkDisabled")},
+    {QStringLiteral("bookmarks-label"), QStringLiteral("bookmarksLabel")},
+    {QStringLiteral("bookmarks-disabled"), QStringLiteral("bookmarksDisabled")},
+    {QStringLiteral("bookmarks-open"), QStringLiteral("bookmarksOpen")},
+    {QStringLiteral("bookmarks-position"), QStringLiteral("bookmarksPosition")},
+    {QStringLiteral("bookmarks-title"), QStringLiteral("bookmarksTitle")},
+    {QStringLiteral("bookmarks-address"), QStringLiteral("bookmarksAddress")},
+    {QStringLiteral("bookmarks-previous-disabled"), QStringLiteral("bookmarksPreviousDisabled")},
+    {QStringLiteral("bookmarks-next-disabled"), QStringLiteral("bookmarksNextDisabled")},
+    {QStringLiteral("bookmarks-navigate-disabled"), QStringLiteral("bookmarksNavigateDisabled")},
+    {QStringLiteral("history-label"), QStringLiteral("historyLabel")},
+    {QStringLiteral("history-disabled"), QStringLiteral("historyDisabled")},
+    {QStringLiteral("history-open"), QStringLiteral("historyOpen")},
+    {QStringLiteral("history-position"), QStringLiteral("historyPosition")},
+    {QStringLiteral("history-address"), QStringLiteral("historyAddress")},
+    {QStringLiteral("history-previous-disabled"), QStringLiteral("historyPreviousDisabled")},
+    {QStringLiteral("history-next-disabled"), QStringLiteral("historyNextDisabled")},
+    {QStringLiteral("history-navigate-disabled"), QStringLiteral("historyNavigateDisabled")},
     {QStringLiteral("copy-address-disabled"), QStringLiteral("copyAddressDisabled")},
     {QStringLiteral("open-page-disabled"), QStringLiteral("openPageDisabled")},
     {QStringLiteral("save-page-disabled"), QStringLiteral("savePageDisabled")},
+    {QStringLiteral("print-page-disabled"), QStringLiteral("printPageDisabled")},
+    {QStringLiteral("share-page-disabled"), QStringLiteral("sharePageDisabled")},
+    {QStringLiteral("page-info-disabled"), QStringLiteral("pageInfoDisabled")},
+    {QStringLiteral("page-info-open"), QStringLiteral("pageInfoOpen")},
+    {QStringLiteral("page-info-title"), QStringLiteral("pageInfoTitle")},
+    {QStringLiteral("page-info-address"), QStringLiteral("pageInfoAddress")},
+    {QStringLiteral("page-info-requested-address"), QStringLiteral("pageInfoRequestedAddress")},
+    {QStringLiteral("page-info-status"), QStringLiteral("pageInfoStatus")},
+    {QStringLiteral("page-info-resources"), QStringLiteral("pageInfoResources")},
+    {QStringLiteral("zoom-label"), QStringLiteral("zoomLabel")},
+    {QStringLiteral("zoom-out-disabled"), QStringLiteral("zoomOutDisabled")},
+    {QStringLiteral("zoom-reset-disabled"), QStringLiteral("zoomResetDisabled")},
+    {QStringLiteral("zoom-in-disabled"), QStringLiteral("zoomInDisabled")},
     {QStringLiteral("view-source-disabled"), QStringLiteral("viewSourceDisabled")},
+    {QStringLiteral("view-source-open"), QStringLiteral("viewSourceOpen")},
+    {QStringLiteral("view-source-title"), QStringLiteral("viewSourceTitle")},
+    {QStringLiteral("view-source-address"), QStringLiteral("viewSourceAddress")},
+    {QStringLiteral("view-source-content"), QStringLiteral("viewSourceContent")},
     {QStringLiteral("find-open"), QStringLiteral("findOpen")},
     {QStringLiteral("find-query"), QStringLiteral("findQuery")},
     {QStringLiteral("find-result-label"), QStringLiteral("findResultLabel")},

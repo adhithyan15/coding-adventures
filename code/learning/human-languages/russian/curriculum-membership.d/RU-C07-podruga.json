@@ -1,0 +1,11 @@
+{
+  "id": "RU-C07-podruga",
+  "pathSegment": "RU-PATH-011",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-011-FRIEND-FAMILY",
+      "order": 1
+    }
+  ]
+}

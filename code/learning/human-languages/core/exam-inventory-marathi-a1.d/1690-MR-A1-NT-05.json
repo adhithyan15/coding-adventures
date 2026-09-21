@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NT-05",
+  "category": "Temporal notions",
+  "label": "the seasons",
+  "probe": null,
+  "note": "Untaught.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NG4-02"
+  ]
+}

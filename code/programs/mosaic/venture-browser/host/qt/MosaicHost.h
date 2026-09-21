@@ -65,6 +65,7 @@ signals:
   void printRequested(const QVariantMap &request);
   void shareRequested(const QVariantMap &request);
   void pageInfoRequested(const QVariantMap &request);
+  void subresourcesCancelled(const QVariantList &requests);
 
 private:
   using NewFn = void *(*)(const char *, double, double);

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C25-shubha-ratri",
+  "pathSegment": "TE-PATH-025",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-025-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

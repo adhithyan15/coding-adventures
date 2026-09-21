@@ -1,7 +1,4 @@
 {
-  "segments": [
-    "JA-PATH-001"
-  ],
   "omits": [
     "RESPONSE-YESNO",
     "RESPONSE-OKAY"

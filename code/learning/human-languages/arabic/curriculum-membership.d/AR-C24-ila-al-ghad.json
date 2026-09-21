@@ -1,0 +1,11 @@
+{
+  "id": "AR-C24-ila-al-ghad",
+  "pathSegment": "AR-PATH-024",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "AR-EXT-024-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

@@ -2,8 +2,21 @@
 
 ## [Unreleased]
 
+- Reconcile HostNavigationSplit with the scoped typography context after parallel
+  changes merged; fixes the Rust build on main (#15694).
+
+- Support HTML HostTable numeric typography with scoped native-control inheritance,
+  row/container overrides and nested-table boundaries (#15677).
+
 - Retain authored Text styles and numeric font-size bindings on semantic table
   cells, including row and cell loops (#15655). Unstyled cells keep their output.
+
+### Added -- `HostNavigationSplit` semantic web lowering (UI29-6, #15666)
+
+- Emit the pane as a named `<nav>` landmark and the detail as `<section>` in a
+  flex shell, preserving literal and slot-backed pane titles plus pane width.
+- Keep collapse static and explicit until UI48 provides a runtime viewport
+  signal.
 
 ### Numeric text and control typography (#15647)
 

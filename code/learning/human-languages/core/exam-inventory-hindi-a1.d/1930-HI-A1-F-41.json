@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-F-41",
+  "category": "Sanvad-karya (communicative functions)",
+  "label": "give an instruction",
+  "probe": [
+    "HI-CONCEPT-C37-CHAI-01"
+  ],
+  "derivedFrom": "ES:A1-F4-01"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C19-hear-baati",
+  "pathSegment": "MW-PATH-018",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-032-FOOD-FIVE",
+      "order": 3
+    }
+  ]
+}

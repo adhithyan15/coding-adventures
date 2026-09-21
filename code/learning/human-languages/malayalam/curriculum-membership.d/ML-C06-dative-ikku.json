@@ -1,0 +1,11 @@
+{
+  "id": "ML-C06-dative-ikku",
+  "pathSegment": "ML-PATH-011",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ML-EXT-011-LANGUAGE-SPECIFIC",
+      "order": 4
+    }
+  ]
+}

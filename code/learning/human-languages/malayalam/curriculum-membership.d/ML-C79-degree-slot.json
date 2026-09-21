@@ -1,0 +1,11 @@
+{
+  "id": "ML-C79-degree-slot",
+  "pathSegment": "ML-PATH-79-DEGREE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-79-DEGREE",
+      "order": 2
+    }
+  ]
+}

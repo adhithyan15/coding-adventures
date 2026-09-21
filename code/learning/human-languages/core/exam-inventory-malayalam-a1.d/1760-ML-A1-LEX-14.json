@@ -1,0 +1,20 @@
+{
+  "id": "ML-A1-LEX-14",
+  "category": "Padakosham (lexicon by domain)",
+  "label": "the meal itself",
+  "probe": [
+    "ML-CONCEPT-C40-OON-01",
+    "ML-CONCEPT-C40-OON-02"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NE05-01",
+    "A1-NE05-04"
+  ],
+  "malayalamSpecific": false,
+  "note": "oon, and the second eat-verb behind it. The Spanish points also ask for the names of the meals of the day, which are not taught."
+}

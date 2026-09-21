@@ -1,0 +1,8 @@
+{
+  "id": "HI-A1-LEX-50",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "commerce, businesses, industry and energy",
+  "probe": null,
+  "derivedFrom": "ES:A1-NE15-02, ES:A1-NE15-03, ES:A1-NE15-04",
+  "note": "Untaught, and plausibly above A1 in practice; enumerated because the proxy places it at A1 and this file does not silently overrule the proxy on level."
+}

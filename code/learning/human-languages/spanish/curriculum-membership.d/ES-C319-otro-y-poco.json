@@ -1,0 +1,11 @@
+{
+  "id": "ES-C319-otro-y-poco",
+  "pathSegment": "ES-PATH-319-04",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-319-RESPUESTAS",
+      "order": 1
+    }
+  ]
+}

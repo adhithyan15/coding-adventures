@@ -1,0 +1,11 @@
+{
+  "id": "LA-C15-weather-verbs",
+  "pathSegment": "LA-PATH-016",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-016-GRAMMAR",
+      "order": 0
+    }
+  ]
+}

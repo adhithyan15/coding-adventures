@@ -1,0 +1,11 @@
+{
+  "id": "KA-C22-hasiru-haladi",
+  "pathSegment": "KA-PATH-023",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-023-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

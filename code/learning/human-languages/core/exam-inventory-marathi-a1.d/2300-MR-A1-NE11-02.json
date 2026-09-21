@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NE11-02",
+  "category": "Services",
+  "label": "banks and money services",
+  "probe": null,
+  "note": "Untaught.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE11-02"
+  ]
+}

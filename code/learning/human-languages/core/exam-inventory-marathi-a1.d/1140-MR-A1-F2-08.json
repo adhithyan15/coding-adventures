@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-F2-08",
+  "category": "Opinions, attitudes and knowledge",
+  "label": "show scepticism: malaa maahiit naahii",
+  "probe": [
+    "MR-PHRASE-MAHIT-NAHI"
+  ],
+  "note": "Closed by MR-C32-nahi-verb (chapter 32), which teaches malaa maahiit naahii as a named construction rather than leaving the two halves to be assembled.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-F2-08",
+    "A1-F2-15"
+  ]
+}

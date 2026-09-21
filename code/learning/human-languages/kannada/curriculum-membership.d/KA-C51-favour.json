@@ -1,0 +1,11 @@
+{
+  "id": "KA-C51-favour",
+  "pathSegment": "KA-PATH-51-COURTESY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-51-COURTESY",
+      "order": 1
+    }
+  ]
+}

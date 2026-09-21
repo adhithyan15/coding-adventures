@@ -1,0 +1,11 @@
+{
+  "id": "FR-R35-au-cafe",
+  "pathSegment": "FR-PATH-A1-CONTRACTIONS",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-A1-CONTRACTIONS",
+      "order": 5
+    }
+  ]
+}

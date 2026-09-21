@@ -1,0 +1,11 @@
+{
+  "id": "MR-R18-script-warmup",
+  "pathSegment": "MR-PATH-020",
+  "pathOrder": 12,
+  "extensions": [
+    {
+      "id": "MR-EXT-023-SCRIPT-DISTANT",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C86-ennai-unnai",
+  "pathSegment": "TA-PATH-86-ACCUSATIVE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-86-ACCUSATIVE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C08-pasand",
+  "pathSegment": "UR-PATH-009-C-B",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "UR-EXT-019-SOCIAL-VERBS-D",
+      "order": 0
+    }
+  ]
+}

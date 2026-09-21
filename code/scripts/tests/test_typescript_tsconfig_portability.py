@@ -414,12 +414,17 @@ console.log(prose, nested);
         # +1: forme-load-assets-fs, the canonical-contained Asset IR loader.
         # +1: forme-cli, the shared-config headless project driver.
         # +1: forme-dev-server, the in-memory live-preview boundary.
-        self.assertEqual(summary.total_projects, 471)
-        self.assertEqual(summary.shared_projects, 293)
+        # +1: forme-deploy-runner-core, the capability-free deployment planner.
+        # +1: der-tlv, the standalone portable DER framing lane.
+        # +1: forme-deploy-runner-fs-adapter, the atomic publication boundary.
+        # +1: forme-deploy-runner-github-pages-adapter, the hosted publication
+        # boundary over GitHub's Git Data API.
+        self.assertEqual(summary.total_projects, 475)
+        self.assertEqual(summary.shared_projects, 296)
         self.assertEqual(summary.inherited_root_dir, 130)
         self.assertEqual(summary.inherited_out_dir, 133)
-        self.assertEqual(summary.standalone_emit_projects, 148)
-        self.assertEqual(summary.isolated_standalone_projects, 148)
+        self.assertEqual(summary.standalone_emit_projects, 149)
+        self.assertEqual(summary.isolated_standalone_projects, 149)
         self.assertEqual(summary.unbounded_root_projects, 0)
         self.assertEqual(summary.outside_root_inputs, 0)
         # 94: +1 for script-ductus. Nothing the package SHIPS touches a Node
@@ -449,7 +454,14 @@ console.log(prose, nested);
         # esbuild; the entrypoint reads a deck from stdin and writes canonical
         # JSON to stdout, so its direct Node types are part of the package's
         # portable compiler contract.
-        self.assertEqual(summary.node_api_projects, 70)
+        # +1: forme-orchestrator resolves a null concurrency setting through
+        # Node's availableParallelism API while retaining an explicit runtime
+        # fallback for hosts that report no usable count.
+        # +1: forme-deploy-runner-core hashes verified publication snapshots.
+        # +1: forme-deploy-runner-fs-adapter owns its filesystem transaction.
+        # +1: forme-deploy-runner-github-pages-adapter encodes verified bytes
+        # and ownership manifests through the Node Buffer API.
+        self.assertEqual(summary.node_api_projects, 74)
         # +1: script-ductus owns `@types/node` directly, because its tests
         # read the shipped fonts off disk to verify the pen paths.
         # +1: chief-of-staff-channel-store owns the test-only Node provider.
@@ -463,7 +475,13 @@ console.log(prose, nested);
         # -1: see node_api_projects -- parser no longer needs a Node provider.
         # +1: VisiCalc owns the Node types used by its interaction tests.
         # +1: spice-netlist-parser owns the Node types used by its CLI bundle.
-        self.assertEqual(summary.node_provider_projects, 70)
+        # +1: forme-orchestrator directly owns the Node types used by its
+        # hardware-concurrency default.
+        # +1: forme-deploy-runner-core owns the Node crypto type provider.
+        # +1: forme-deploy-runner-fs-adapter owns its Node filesystem provider.
+        # +1: forme-deploy-runner-github-pages-adapter owns its Node Buffer
+        # provider for binary Git blob transport.
+        self.assertEqual(summary.node_provider_projects, 74)
         self.assertEqual(summary.missing_node_provider_projects, 0)
         self.assertEqual(summary.stale_node_provider_locks, 0)
         self.assertEqual(summary.node_lock_exemptions, 1)
@@ -488,7 +506,12 @@ console.log(prose, nested);
         # +3: hkdf, ed25519, and x25519 lock the TypeScript prerequisites
         # shared by the D18 conformance lanes.
         # +1: VisiCalc now commits its compiler and test dependency lockfile.
-        self.assertEqual(summary.locked_compilers, 470)
+        # +1: forme-deploy-runner-core commits its compiler and test lockfile.
+        # +1: der-tlv commits its compiler and test dependency lockfile.
+        # +1: forme-deploy-runner-fs-adapter locks its compiler and test graph.
+        # +1: forme-deploy-runner-github-pages-adapter locks its compiler and
+        # test graph.
+        self.assertEqual(summary.locked_compilers, 474)
 
 
 if __name__ == "__main__":

@@ -793,6 +793,9 @@ struct EmitContext<'a> {
     /// Whether this component emitted a HostButton with `selected:` (UI86)
     /// and therefore needs the component-scoped selectable Button subclass.
     needs_selectable_button_support: bool,
+    /// Whether this component emitted HostNavigationSplit and therefore needs
+    /// a NavigationView peer that exposes the authored pane as UIA Pane.
+    needs_navigation_split_support: bool,
     needs_font_size_support: bool,
     table_font_size: Option<LayoutPropValue>,
 }
@@ -842,6 +845,7 @@ impl<'a> EmitContext<'a> {
             needs_native_drag_support: false,
             needs_native_slider_support: false,
             needs_selectable_button_support: false,
+            needs_navigation_split_support: false,
             needs_font_size_support: false,
             table_font_size: None,
         }
@@ -2295,6 +2299,16 @@ fn translate_xaml_value(key: &str, raw: &str) -> Option<String> {
     // Length setters: strip CSS `px` units (and reject percentages,
     // which WinUI's `Double`-typed length properties can't express).
     if is_length_setter(key) {
+        // CSS intrinsic sizing and cascade keywords are not WinUI Double
+        // literals. The markup compiler accepts them but LoadComponent throws
+        // at launch. Report the unsupported style instead of emitting it.
+        if matches!(trimmed.to_ascii_lowercase().as_str(),
+            "max-content" | "min-content" | "fit-content" | "stretch"
+                | "inherit" | "initial" | "unset" | "revert" | "revert-layer")
+            || trimmed.to_ascii_lowercase().starts_with("fit-content(")
+        {
+            return None;
+        }
         // `100%` (or any percentage) — WinUI lengths are absolute
         // Doubles. Drop the whole property; the layout container
         // (StackPanel / Grid `*`) sizes the element instead.
@@ -4582,6 +4596,7 @@ fn emit_code_behind(
         || ctx.needs_native_drag_support
         || ctx.needs_native_slider_support
         || ctx.needs_selectable_button_support
+        || ctx.needs_navigation_split_support
     {
         writeln!(out, "using Microsoft.UI.Xaml.Automation;").unwrap();
         writeln!(out, "using Microsoft.UI.Xaml.Automation.Peers;").unwrap();
@@ -4730,7 +4745,40 @@ fn emit_code_behind(
     if ctx.needs_selectable_button_support {
         out.push_str(&emit_selectable_button_support_source(name));
     }
+    if ctx.needs_navigation_split_support {
+        out.push_str(&emit_navigation_split_support_source(name));
+    }
     Ok(out)
+}
+
+/// WinUI's stock NavigationView peer reports ControlType.Custom. The kernel
+/// primitive promises a named navigation-pane landmark, so use the native
+/// control unchanged while narrowing only its UI Automation control type.
+fn emit_navigation_split_support_source(component: &str) -> String {
+    r#"
+
+/// <summary>
+/// NavigationView whose UI Automation peer exposes the kernel navigation
+/// landmark as a Pane while retaining NavigationView's native adaptation.
+/// </summary>
+public sealed class __COMPONENT__MosaicNavigationView : Microsoft.UI.Xaml.Controls.NavigationView
+{
+    protected override Microsoft.UI.Xaml.Automation.Peers.AutomationPeer OnCreateAutomationPeer() =>
+        new __COMPONENT__MosaicNavigationViewAutomationPeer(this);
+}
+
+public sealed class __COMPONENT__MosaicNavigationViewAutomationPeer : Microsoft.UI.Xaml.Automation.Peers.NavigationViewAutomationPeer
+{
+    public __COMPONENT__MosaicNavigationViewAutomationPeer(Microsoft.UI.Xaml.Controls.NavigationView owner)
+        : base(owner)
+    {
+    }
+
+    protected override Microsoft.UI.Xaml.Automation.Peers.AutomationControlType GetAutomationControlTypeCore() =>
+        Microsoft.UI.Xaml.Automation.Peers.AutomationControlType.Pane;
+}
+"#
+    .replace("__COMPONENT__", component)
 }
 
 /// The component-scoped `Button` subclass that carries UI86's selected state.
@@ -9093,7 +9141,9 @@ fn emit_host_input(
             name: handler.clone(),
             source: body,
         });
-        attrs.push_str(&format!(" KeyDown=\"{handler}\""));
+        // TextBox handles Enter internally before the bubbling KeyDown event.
+        // Observe the tunneling event so commit/cancel reach the app.
+        attrs.push_str(&format!(" PreviewKeyDown=\"{handler}\""));
     }
 
     // onFocus → GotFocus
@@ -11231,6 +11281,7 @@ fn emit_host_navigation_split(
     part_styles: &PartStyleMap,
     ctx: &mut EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
+    ctx.needs_navigation_split_support = true;
     // moslayout already refuses any other count (UI29-6 Section 4.1).
     // This is the second line of defence, for a caller that assembled a
     // tree without going through validation.
@@ -11261,6 +11312,16 @@ fn emit_host_navigation_split(
         "PaneTitle",
         ctx,
     )?);
+    // PaneTitle draws WinUI's pane header, but NavigationView does not expose
+    // that string as the control's UI Automation name. Carry the authored
+    // landmark name explicitly so runtime accessibility checks see the same
+    // name a sighted user sees.
+    attrs.push_str(&navigation_split_text_attr(
+        node,
+        "pane-title",
+        "AutomationProperties.Name",
+        ctx,
+    )?);
 
     // `collapse` picks the display mode. Absent means `auto`, the
     // adaptive one, so a layout that says nothing gets the behaviour the
@@ -11276,9 +11337,14 @@ fn emit_host_navigation_split(
         }
     };
     if pinned {
-        attrs.push_str(" PaneDisplayMode=\"Left\" IsPaneToggleButtonVisible=\"False\"");
+        attrs.push_str(
+            " PaneDisplayMode=\"Left\" IsPaneOpen=\"True\" IsPaneToggleButtonVisible=\"False\"",
+        );
     } else {
-        attrs.push_str(" PaneDisplayMode=\"Auto\"");
+        // NavigationView defaults IsPaneOpen to false even at its expanded
+        // width. Start open so a wide split actually presents both children;
+        // Auto still closes it when WinUI crosses into compact/minimal mode.
+        attrs.push_str(" PaneDisplayMode=\"Auto\" IsPaneOpen=\"True\"");
     }
 
     // `pane-width` is the *preferred* width, and `OpenPaneLength` is
@@ -11294,7 +11360,8 @@ fn emit_host_navigation_split(
     // lowered to several siblings (a bare `For`, say) goes through the
     // same neutral StackPanel wrapper every other single-content host
     // here uses.
-    let mut out = format!("{pad}<NavigationView x:Name=\"{x_name}\"{attrs}{style}>\n");
+    let tag = format!("local:{}MosaicNavigationView", ctx.component_name);
+    let mut out = format!("{pad}<{tag} x:Name=\"{x_name}\"{attrs}{style}>\n");
     writeln!(out, "{pad}    <NavigationView.PaneCustomContent>").unwrap();
     out.push_str(&emit_xaml_single_content_children(
         std::slice::from_ref(pane),
@@ -11309,7 +11376,7 @@ fn emit_host_navigation_split(
         part_styles,
         ctx,
     )?);
-    writeln!(out, "{pad}</NavigationView>").unwrap();
+    writeln!(out, "{pad}</{tag}>").unwrap();
     Ok(out)
 }
 
@@ -11707,7 +11774,7 @@ fn emit_native_host_table(
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let pad2 = " ".repeat(indent + 4);
-    let style = part_style_attr(node, part_styles);
+    let (style, text_setters) = partition_box_style(node.part_name.as_deref(), part_styles);
     let component = ctx.component_name;
     let table_type = format!("{component}MosaicTable");
     let header_path = ctx.slot_property_name(shape.header_slot);
@@ -11790,6 +11857,7 @@ fn emit_native_host_table(
         escape_xaml_attr(&table_name)
     )
     .unwrap();
+    emit_text_style_resources(&mut out, "Grid", indent + 4, &text_setters);
     writeln!(out, "{pad2}<Grid.RowDefinitions>").unwrap();
     writeln!(out, "{pad2}    <RowDefinition Height=\"Auto\"/>").unwrap();
     writeln!(out, "{pad2}    <RowDefinition Height=\"*\"/>").unwrap();
@@ -11861,7 +11929,7 @@ fn emit_host_table_contents(
 
     let pad = " ".repeat(indent);
     let pad2 = " ".repeat(indent + 4);
-    let style = part_style_attr(node, part_styles);
+    let (style, text_setters) = partition_box_style(node.part_name.as_deref(), part_styles);
 
     // UI31 §3.2 RTL contract. WinUI's `FrameworkElement.FlowDirection`
     // is the canonical RTL knob: setting it to `RightToLeft` on the
@@ -12006,6 +12074,7 @@ fn emit_host_table_contents(
     // -- 4. Assemble the XAML. --
     let mut out = String::new();
     writeln!(out, "{pad}<Grid{flow_direction_attr}{style}>").unwrap();
+    emit_text_style_resources(&mut out, "Grid", indent + 4, &text_setters);
     writeln!(out, "{pad2}<Grid.RowDefinitions>").unwrap();
     for r in &row_defs {
         writeln!(out, "{pad2}    <RowDefinition Height=\"{r}\"/>").unwrap();
@@ -13958,15 +14027,26 @@ mod tests {
         );
         let r = compile(&c, &l, &empty_style("Shell"));
 
-        assert!(r.xaml.contains("<NavigationView "), "got:\n{}", r.xaml);
+        assert!(
+            r.xaml.contains("<local:ShellMosaicNavigationView "),
+            "got:\n{}",
+            r.xaml
+        );
         // The pane's name, which is the whole point of the prop.
         assert!(r.xaml.contains("PaneTitle=\"Projects\""), "got:\n{}", r.xaml);
+        assert!(
+            r.xaml
+                .contains("AutomationProperties.Name=\"Projects\""),
+            "got:\n{}",
+            r.xaml
+        );
         // The adaptive mode is the default, not an opt-in.
         assert!(
             r.xaml.contains("PaneDisplayMode=\"Auto\""),
             "got:\n{}",
             r.xaml
         );
+        assert!(r.xaml.contains("IsPaneOpen=\"True\""), "got:\n{}", r.xaml);
         assert!(
             r.xaml.contains("OpenPaneLength=\"236\""),
             "got:\n{}",
@@ -13988,6 +14068,12 @@ mod tests {
                 .contains("AutomationProperties.AutomationId=\"app-shell\""),
             "got:\n{}",
             r.xaml
+        );
+        assert!(
+            r.code_behind
+                .contains("AutomationControlType.Pane"),
+            "got:\n{}",
+            r.code_behind
         );
     }
 
@@ -14711,6 +14797,53 @@ mod tests {
                     children: Vec::new(),
                 })
                 .collect(),
+        }
+    }
+
+    #[test]
+    fn host_table_scopes_typography_instead_of_setting_grid_properties() {
+        for table in [
+            host_table_node(
+                Some("sheet"),
+                vec![section_node(
+                    "HostTableBody",
+                    vec![row_with_text_cells(&["value"])],
+                )],
+            ),
+            canonical_native_table_node(),
+        ] {
+            let c = component("Foo", vec![], vec![]);
+            let l = layout_with_root("Foo", table);
+            let s = style_for_box(
+                "sheet",
+                vec![
+                    ("font-family", "Consolas"),
+                    ("font-size", "16"),
+                    ("color", "#123456"),
+                    ("background", "#ffffff"),
+                ],
+            );
+            let r = compile(&c, &l, &s);
+            assert!(r.xaml.contains("<Grid.Resources>"), "{}", r.xaml);
+            for (property, value) in [
+                ("FontFamily", "Consolas"),
+                ("FontSize", "16"),
+                ("Foreground", "#123456"),
+            ] {
+                assert!(
+                    r.xaml.contains(&format!(
+                        "<Setter Property=\"{property}\" Value=\"{value}\""
+                    )),
+                    "{}",
+                    r.xaml
+                );
+                assert!(
+                    !r.xaml.contains(&format!(" {property}=\"{value}\"")),
+                    "{}",
+                    r.xaml
+                );
+            }
+            assert!(r.xaml.contains("Background=\"#ffffff\""));
         }
     }
 
@@ -16002,7 +16135,7 @@ mod tests {
         let r = compile(&c, &l, &empty_style("Foo"));
         // One KeyDown handler that branches on Enter / Escape.
         assert!(
-            r.xaml.contains("KeyDown=\"FormulaField_KeyDown\""),
+            r.xaml.contains("PreviewKeyDown=\"FormulaField_KeyDown\""),
             "got:\n{}",
             r.xaml
         );
@@ -19655,6 +19788,38 @@ mod tests {
         assert_eq!(dropped.len(), 1, "got: {dropped:?}");
         assert_eq!(dropped[0].name, "width");
         assert_eq!(dropped[0].value, "50%");
+    }
+
+    #[test]
+    fn intrinsic_dimensions_are_reported_instead_of_crashing_at_launch() {
+        for value in [
+            "max-content",
+            "min-content",
+            "fit-content",
+            "fit-content(100px)",
+            "stretch",
+            "inherit",
+            "unset",
+            "initial",
+            "revert",
+            "revert-layer",
+        ] {
+            for property in ["width", "height", "min-width", "max-height"] {
+                let style = style_for_box("sheet", vec![(property, value)]);
+                let dropped = dropped_style_properties(&style);
+                assert_eq!(dropped.len(), 1, "{property}: {value}");
+                assert_eq!(dropped[0].value, value);
+                let c = component("Foo", vec![], vec![]);
+                let l = layout_with_root("Foo", styled_box_with_text_child("sheet"));
+                assert!(!compile(&c, &l, &style).xaml.contains(value));
+            }
+        }
+        assert_eq!(translate_xaml_value("Width", "Auto"), Some("Auto".into()));
+        assert_eq!(translate_xaml_value("Width", "120px"), Some("120".into()));
+        assert_eq!(
+            translate_xaml_value("Width", "{Binding Size}"),
+            Some("{Binding Size}".into())
+        );
     }
 
     /// An unrecognised/typo'd property name falls through to the generic

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C32-quel",
+  "pathSegment": "FR-PATH-030",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "FR-EXT-029-ASKING",
+      "order": 8
+    }
+  ]
+}

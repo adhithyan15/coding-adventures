@@ -1,0 +1,11 @@
+{
+  "id": "ML-C71-avar",
+  "pathSegment": "ML-PATH-71-PRONOUNS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-71-PRONOUNS",
+      "order": 1
+    }
+  ]
+}

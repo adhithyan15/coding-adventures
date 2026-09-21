@@ -1,0 +1,11 @@
+{
+  "id": "GE-C11-wein-vinum",
+  "pathSegment": "GE-PATH-016-D",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-016-D-ESSEN",
+      "order": 5
+    }
+  ]
+}

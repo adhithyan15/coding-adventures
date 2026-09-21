@@ -126,6 +126,22 @@ impl FlagInfo {
             has_default_when_present: has_dwp,
         }
     }
+
+    /// Build classifier entries for the canonical long spelling and aliases.
+    ///
+    /// Alias entries carry only their long spelling so short and
+    /// single-dash-long lookup remain unambiguous.
+    pub fn from_flag_def_and_aliases(def: &FlagDef) -> Vec<Self> {
+        let mut infos = vec![Self::from_flag_def(def)];
+        infos.extend(def.long_aliases.iter().map(|alias| {
+            let mut info = Self::from_flag_def(def);
+            info.short = None;
+            info.long = Some(alias.clone());
+            info.single_dash_long = None;
+            info
+        }));
+        infos
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -573,6 +589,7 @@ mod tests {
             id: "verbose".into(),
             short: Some("v".into()),
             long: Some("verbose".into()),
+            long_aliases: Vec::new(),
             single_dash_long: None,
             description: "Be verbose".into(),
             flag_type: "boolean".into(),
@@ -600,6 +617,7 @@ mod tests {
             id: "output".into(),
             short: Some("o".into()),
             long: Some("output".into()),
+            long_aliases: Vec::new(),
             single_dash_long: None,
             description: "Output file".into(),
             flag_type: "string".into(),
@@ -618,12 +636,52 @@ mod tests {
     }
 
     #[test]
+    fn test_flag_info_expands_long_aliases() {
+        use crate::types::FlagDef;
+        let def = FlagDef {
+            id: "define".into(),
+            short: None,
+            long: Some("define".into()),
+            long_aliases: vec!["D".into(), "define-value".into()],
+            single_dash_long: None,
+            description: "Define".into(),
+            flag_type: "string".into(),
+            required: false,
+            default: None,
+            value_name: None,
+            enum_values: vec![],
+            conflicts_with: vec![],
+            requires: vec![],
+            required_unless: vec![],
+            repeatable: false,
+            default_when_present: None,
+        };
+
+        let infos = FlagInfo::from_flag_def_and_aliases(&def);
+        assert_eq!(infos.len(), 3);
+        assert_eq!(infos[0].long.as_deref(), Some("define"));
+        assert_eq!(infos[1].long.as_deref(), Some("D"));
+        assert_eq!(infos[2].long.as_deref(), Some("define-value"));
+        assert!(infos.iter().all(|info| info.id == "define"));
+
+        let classifier = TokenClassifier::new(infos);
+        assert_eq!(
+            classifier.classify("--D=DEBUG=false"),
+            vec![TokenEvent::LongFlagWithValue(
+                "D".into(),
+                "DEBUG=false".into()
+            )]
+        );
+    }
+
+    #[test]
     fn test_flag_info_from_flag_def_sdl() {
         use crate::types::FlagDef;
         let def = FlagDef {
             id: "classpath".into(),
             short: None,
             long: None,
+            long_aliases: Vec::new(),
             single_dash_long: Some("classpath".into()),
             description: "classpath".into(),
             flag_type: "string".into(),
@@ -650,6 +708,7 @@ mod tests {
             id: "test".into(),
             short: Some("".into()), // empty string
             long: Some("test".into()),
+            long_aliases: Vec::new(),
             single_dash_long: None,
             description: "test".into(),
             flag_type: "boolean".into(),

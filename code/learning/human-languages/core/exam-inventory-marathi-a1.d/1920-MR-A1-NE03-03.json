@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NE03-03",
+  "category": "Personal identity",
+  "label": "personal objects",
+  "probe": null,
+  "note": "Untaught.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE03-03"
+  ]
+}

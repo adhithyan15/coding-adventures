@@ -1,0 +1,11 @@
+{
+  "id": "KA-S154-other-marks",
+  "pathSegment": "KA-PATH-77-MARKS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-77-MARKS",
+      "order": 2
+    }
+  ]
+}

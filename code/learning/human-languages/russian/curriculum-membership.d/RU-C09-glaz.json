@@ -1,0 +1,11 @@
+{
+  "id": "RU-C09-glaz",
+  "pathSegment": "RU-PATH-012",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-012-BODY-PARTS",
+      "order": 3
+    }
+  ]
+}

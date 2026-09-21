@@ -1,0 +1,11 @@
+{
+  "id": "JA-C01-gozaimasu",
+  "pathSegment": "JA-PATH-004",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-006-TEINEIGO-REGISTER",
+      "order": 0
+    }
+  ]
+}

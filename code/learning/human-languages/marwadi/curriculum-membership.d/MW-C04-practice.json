@@ -1,0 +1,11 @@
+{
+  "id": "MW-C04-practice",
+  "pathSegment": "MW-PATH-004",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "MW-EXT-008-RETRIEVE-PAANI",
+      "order": 0
+    }
+  ]
+}

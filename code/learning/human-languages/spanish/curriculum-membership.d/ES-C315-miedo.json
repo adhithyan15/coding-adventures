@@ -1,0 +1,11 @@
+{
+  "id": "ES-C315-miedo",
+  "pathSegment": "ES-PATH-315-01",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-315-BODY",
+      "order": 3
+    }
+  ]
+}

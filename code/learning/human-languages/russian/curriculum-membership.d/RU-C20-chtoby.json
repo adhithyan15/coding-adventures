@@ -1,0 +1,11 @@
+{
+  "id": "RU-C20-chtoby",
+  "pathSegment": "RU-PATH-021",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-026-WANT",
+      "order": 2
+    }
+  ]
+}

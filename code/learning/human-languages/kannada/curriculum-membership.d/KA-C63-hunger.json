@@ -1,0 +1,11 @@
+{
+  "id": "KA-C63-hunger",
+  "pathSegment": "KA-PATH-63-HEALTH",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-63-HEALTH",
+      "order": 0
+    }
+  ]
+}

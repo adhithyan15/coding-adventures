@@ -1,0 +1,11 @@
+{
+  "id": "IT-C33-questo-caffe",
+  "pathSegment": "IT-PATH-037",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-037-DIMOSTRATIVI",
+      "order": 2
+    }
+  ]
+}

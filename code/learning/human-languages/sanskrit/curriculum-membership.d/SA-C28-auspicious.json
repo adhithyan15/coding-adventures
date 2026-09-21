@@ -1,0 +1,11 @@
+{
+  "id": "SA-C28-auspicious",
+  "pathSegment": "SA-PATH-28-LEAVE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-28-LEAVE",
+      "order": 3
+    }
+  ]
+}

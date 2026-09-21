@@ -1,0 +1,11 @@
+{
+  "id": "HI-S125-letter-vocalic-r",
+  "pathSegment": "HI-PATH-016",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-016-RRI-SCRIPT",
+      "order": 0
+    }
+  ]
+}

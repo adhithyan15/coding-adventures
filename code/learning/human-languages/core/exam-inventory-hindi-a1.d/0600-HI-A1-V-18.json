@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-V-18",
+  "category": "Kriya (the verb)",
+  "label": "the conjunctive participle -kar, Hindi's everyday clause-chainer",
+  "probe": [
+    "HI-GRAMMAR-KAR-01"
+  ],
+  "derivedFrom": "ES:A1-V-13",
+  "note": "Closed by HI-C73-kar (chapter 73), which teaches the -kar chain against the jab/tab frame it replaces and states the property that makes it worth having: only the last verb takes a person ending."
+}

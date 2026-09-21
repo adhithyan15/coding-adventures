@@ -1,0 +1,11 @@
+{
+  "id": "SA-C25-tooth",
+  "pathSegment": "SA-PATH-25-BODY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-25-BODY",
+      "order": 3
+    }
+  ]
+}

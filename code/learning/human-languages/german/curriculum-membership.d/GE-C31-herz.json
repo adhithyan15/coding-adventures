@@ -1,0 +1,11 @@
+{
+  "id": "GE-C31-herz",
+  "pathSegment": "GE-PATH-034",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-034-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

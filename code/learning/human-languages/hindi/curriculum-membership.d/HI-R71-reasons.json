@@ -1,0 +1,11 @@
+{
+  "id": "HI-R71-reasons",
+  "pathSegment": "HI-PATH-71-WHY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-071-WHY-AND-BECAUSE",
+      "order": 2
+    }
+  ]
+}

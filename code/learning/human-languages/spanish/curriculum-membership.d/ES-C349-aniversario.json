@@ -1,0 +1,11 @@
+{
+  "id": "ES-C349-aniversario",
+  "pathSegment": "ES-PATH-349-01",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-349-SPAN",
+      "order": 3
+    }
+  ]
+}

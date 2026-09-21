@@ -1,0 +1,11 @@
+{
+  "id": "KA-C57-bone",
+  "pathSegment": "KA-PATH-57-BODY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-57-BODY",
+      "order": 4
+    }
+  ]
+}

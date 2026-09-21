@@ -6,8 +6,5 @@
   "canDo": "I can distinguish heard thāro, your, from mhāro, my.",
   "prerequisites": [
     "MW-EXT-011-NAME-ANSWER"
-  ],
-  "lessons": [
-    "MW-C05-hear-tharo"
   ]
 }

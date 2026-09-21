@@ -1,0 +1,11 @@
+{
+  "id": "GE-C29-freundin",
+  "pathSegment": "GE-PATH-032",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-032-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

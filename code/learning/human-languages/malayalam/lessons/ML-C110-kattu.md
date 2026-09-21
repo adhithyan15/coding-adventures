@@ -33,7 +33,7 @@ reviews_of: [ML-C110-phon]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C110-PHONE-01] -->
 
-[PAUSE 2s] Say the word for a telephone — the one given by ear.
+[PAUSE 2s] Read and say the word for a telephone: **ഫോൺ**.
 
 [PAUSE 2s] Now think of the older way of reaching somebody who is far off.
 
@@ -78,4 +78,4 @@ that keeps this one separate from both.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C110-LETTER-01, ML-LEX-C110-PHONE-01] -->
 
 [PAUSE 3s] A letter? (**കത്ത്**.) Does it have anything to do with **അകത്ത്**?
-(**No** — the shapes overlap and the words do not.) A telephone? (***phōṇ***.)
+(**No** — the shapes overlap and the words do not.) A telephone? (**ഫോൺ**.)

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C10-chaha",
+  "pathSegment": "MR-PATH-015",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-015-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

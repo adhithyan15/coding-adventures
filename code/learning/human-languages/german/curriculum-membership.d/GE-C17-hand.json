@@ -1,0 +1,11 @@
+{
+  "id": "GE-C17-hand",
+  "pathSegment": "GE-PATH-022",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-022-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

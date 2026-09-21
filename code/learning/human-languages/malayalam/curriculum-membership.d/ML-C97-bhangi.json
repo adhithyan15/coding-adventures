@@ -1,0 +1,11 @@
+{
+  "id": "ML-C97-bhangi",
+  "pathSegment": "ML-PATH-97-BEAUTY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-97-BEAUTY",
+      "order": 1
+    }
+  ]
+}

@@ -4,12 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can answer with never, always, all and nothing in Spanish.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-C316-llanto",
-    "ES-C316-nunca",
-    "ES-C316-siempre",
-    "ES-C316-todo",
-    "ES-C316-nada"
-  ]
+  "prerequisites": []
 }

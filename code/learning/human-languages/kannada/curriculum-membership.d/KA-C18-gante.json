@@ -1,0 +1,11 @@
+{
+  "id": "KA-C18-gante",
+  "pathSegment": "KA-PATH-019",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-019-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

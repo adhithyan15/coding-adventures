@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-F2-05",
+  "category": "Opinions, attitudes and knowledge",
+  "label": "express approval and disapproval",
+  "probe": [
+    "MR-SENSE-CHALEL-OKAY",
+    "MR-GRAMMAR-NEGATE-NAHI"
+  ],
+  "note": "Closed once sentence negation existed. Approval runs through the already-taught chaalel; disapproval is MR-C32-nahi-verb's own worked example, malaa duudh aavaDat naahii.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-F2-05"
+  ]
+}

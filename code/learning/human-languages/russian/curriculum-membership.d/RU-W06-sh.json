@@ -1,0 +1,11 @@
+{
+  "id": "RU-W06-sh",
+  "pathSegment": "RU-PATH-005",
+  "pathOrder": 10,
+  "extensions": [
+    {
+      "id": "RU-EXT-020-SCRIPT-ELEVEN",
+      "order": 8
+    }
+  ]
+}

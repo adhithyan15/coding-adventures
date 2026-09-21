@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NE14-03",
+  "category": "Travel and transport",
+  "label": "getting about: bus, train, ticket, station",
+  "probe": null,
+  "note": "Untaught; SPINE-HANDLE-TRAVEL has no realization in this track.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE14-03"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C07-lune",
+  "pathSegment": "FR-PATH-015",
+  "pathOrder": 12,
+  "extensions": [
+    {
+      "id": "FR-EXT-015-LANGUAGE-SPECIFIC",
+      "order": 12
+    }
+  ]
+}

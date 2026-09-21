@@ -1,0 +1,9 @@
+[package]
+name = "x509-validity"
+version = "0.1.0"
+edition = "2021"
+description = "Allocation-free RFC 5280 certificate Validity decoding"
+
+[dependencies]
+der-asn1 = { path = "../der-asn1" }
+x509-time = { path = "../x509-time" }

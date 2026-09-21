@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C22-buyizhi",
+  "pathSegment": "ZH-PATH-021",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-056-NO-ENDINGS",
+      "order": 1
+    }
+  ]
+}

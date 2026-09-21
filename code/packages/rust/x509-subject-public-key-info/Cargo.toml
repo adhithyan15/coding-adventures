@@ -1,0 +1,9 @@
+[package]
+name = "x509-subject-public-key-info"
+version = "0.1.0"
+edition = "2021"
+description = "Allocation-free generic RFC 5280 SubjectPublicKeyInfo decoding"
+
+[dependencies]
+der-asn1 = { path = "../der-asn1" }
+x509-algorithm-identifier = { path = "../x509-algorithm-identifier" }

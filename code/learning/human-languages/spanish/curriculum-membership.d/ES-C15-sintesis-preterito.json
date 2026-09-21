@@ -1,0 +1,11 @@
+{
+  "id": "ES-C15-sintesis-preterito",
+  "pathSegment": "ES-PATH-039-CONSOLIDATION-CH15",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-039-CONSOLIDATION-PRETERITE",
+      "order": 0
+    }
+  ]
+}

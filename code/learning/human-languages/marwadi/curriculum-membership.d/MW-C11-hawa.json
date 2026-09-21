@@ -1,0 +1,11 @@
+{
+  "id": "MW-C11-hawa",
+  "pathSegment": "MW-PATH-011",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-025-WEATHER-THREE",
+      "order": 1
+    }
+  ]
+}

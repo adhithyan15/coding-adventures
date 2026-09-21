@@ -1,0 +1,11 @@
+{
+  "id": "TA-C70-roof",
+  "pathSegment": "TA-PATH-70-ROOM",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "TA-EXT-70-ROOM",
+      "order": 5
+    }
+  ]
+}

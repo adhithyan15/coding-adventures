@@ -1,0 +1,11 @@
+{
+  "id": "MW-R08-script-close",
+  "pathSegment": "MW-PATH-008",
+  "pathOrder": 21,
+  "extensions": [
+    {
+      "id": "MW-EXT-022-FAMILY-SEVEN",
+      "order": 21
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "HI-A1-DET-06",
+  "category": "Nirdeshak (determiners and definiteness)",
+  "label": "the remaining possessives: uska, hamara, tumhara",
+  "probe": [
+    "HI-LEX-C84-POSS-01",
+    "HI-LEX-C84-POSS-02",
+    "HI-LEX-C84-POSS-03"
+  ],
+  "derivedFrom": "ES:A1-POS-01, ES:A1-POS-02",
+  "note": "uska, hamara and tumhara are introduced by chapter 92, beside the mera and apka the track already had. The chapter teaches them as one system rather than three words: all six end in -aa and all six agree with the THING OWNED rather than with the owner, which is the opposite of English."
+}

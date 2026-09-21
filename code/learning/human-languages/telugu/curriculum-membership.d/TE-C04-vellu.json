@@ -1,0 +1,11 @@
+{
+  "id": "TE-C04-vellu",
+  "pathSegment": "TE-PATH-010",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-010-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

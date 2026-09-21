@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-OR-16",
+  "category": "Devanagari letters and signs",
+  "label": "the i-matra is written BEFORE the letter it is read after",
+  "probe": [
+    "MR-SCRIPT-I-MATRA-01"
+  ],
+  "note": "MARATHI-SPECIFIC decoding rule with no Latin counterpart: the reading order and the writing order come apart, which is the commonest early decoding error.",
+  "anchorIds": [
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [],
+  "marathiSpecific": true
+}

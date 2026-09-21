@@ -1,0 +1,11 @@
+{
+  "id": "TA-C63-humility",
+  "pathSegment": "TA-PATH-63-MANNERS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-63-MANNERS",
+      "order": 4
+    }
+  ]
+}

@@ -6,9 +6,5 @@
   "canDo": "I can retrieve package and abroad in a short post-office message.",
   "prerequisites": [
     "ES-EXT-415-PACKAGE"
-  ],
-  "lessons": [
-    "ES-C415-package-recall-1",
-    "ES-C415-package-recall-2"
   ]
 }

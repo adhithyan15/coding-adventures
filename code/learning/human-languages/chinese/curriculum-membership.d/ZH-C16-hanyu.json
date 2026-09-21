@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C16-hanyu",
+  "pathSegment": "ZH-PATH-015",
+  "pathOrder": 12,
+  "extensions": [
+    {
+      "id": "ZH-EXT-043-LANGUAGE-IDENTITY-SCRIPT",
+      "order": 8
+    }
+  ]
+}

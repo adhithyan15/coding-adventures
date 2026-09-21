@@ -1,0 +1,11 @@
+{
+  "id": "PT-C16-ser-estar-meaning",
+  "pathSegment": "PT-PATH-020",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-020-GRAMMAR",
+      "order": 0
+    }
+  ]
+}

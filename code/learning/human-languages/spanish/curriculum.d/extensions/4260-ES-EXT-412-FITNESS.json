@@ -4,9 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can identify a gym and talk about doing sport.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-C412-gimnasio",
-    "ES-C412-deporte"
-  ]
+  "prerequisites": []
 }

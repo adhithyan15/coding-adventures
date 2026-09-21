@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-F6-01",
+  "category": "Structuring the exchange",
+  "label": "open a conversation and react to its opening",
+  "probe": [
+    "MR-LEX-NAMASKAR-01",
+    "MR-A1-MESSAGE-LINE-GREETING"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [
+    "A1-F6-01",
+    "A1-F6-02"
+  ]
+}

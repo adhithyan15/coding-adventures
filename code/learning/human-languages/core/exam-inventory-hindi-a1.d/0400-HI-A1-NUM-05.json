@@ -1,0 +1,8 @@
+{
+  "id": "HI-A1-NUM-05",
+  "category": "Sankhya-vachak (quantifiers and numerals)",
+  "label": "the Devanagari digits 0-9 as written on signs and forms",
+  "probe": null,
+  "derivedFrom": "hindi-specific",
+  "note": "No Spanish counterpart: Spanish uses the same digits the learner already has. Hindi does not, and no atom introduces the Devanagari digit shapes. Both mocks render times and quantities in words, which conceals the gap rather than closing it."
+}

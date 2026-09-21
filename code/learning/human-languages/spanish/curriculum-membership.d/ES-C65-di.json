@@ -1,0 +1,11 @@
+{
+  "id": "ES-C65-di",
+  "pathSegment": "ES-PATH-A1-VI-DI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-A1-VI-DI",
+      "order": 1
+    }
+  ]
+}

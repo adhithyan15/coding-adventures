@@ -4,11 +4,5 @@
   "kind": "required",
   "category": "grammar",
   "canDo": "I can offer somebody a choice and say what I do and do not want.",
-  "prerequisites": [],
-  "lessons": [
-    "TA-C76-but",
-    "TA-C76-or",
-    "TA-W31-read-aanaal",
-    "TA-C76-choice"
-  ]
+  "prerequisites": []
 }

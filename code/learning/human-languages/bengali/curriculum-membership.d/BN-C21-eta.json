@@ -1,0 +1,11 @@
+{
+  "id": "BN-C21-eta",
+  "pathSegment": "BN-PATH-029",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-030-POINTING",
+      "order": 3
+    }
+  ]
+}

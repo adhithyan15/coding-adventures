@@ -1,0 +1,11 @@
+{
+  "id": "LA-C06-ruber-caeruleus",
+  "pathSegment": "LA-PATH-009",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-009-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C27-pervoe-chtenie",
+  "pathSegment": "RU-PATH-029",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-034-READING",
+      "order": 2
+    }
+  ]
+}

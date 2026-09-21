@@ -6,9 +6,5 @@
   "canDo": "I can write a nine-stroke character by finishing the piece I already know on top before starting the body underneath.",
   "prerequisites": [
     "ZH-EXT-012-NEGATE-CONSOLIDATION"
-  ],
-  "lessons": [
-    "ZH-W05-shi",
-    "ZH-C05-shi"
   ]
 }

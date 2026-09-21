@@ -4,10 +4,5 @@
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can ask for what I want in Tamil with the dative-subject shape, refuse with the verb's own negative, and ask what something costs.",
-  "prerequisites": [],
-  "lessons": [
-    "TA-C39-vendum",
-    "TA-C39-evvalavu",
-    "TA-C39-oru"
-  ]
+  "prerequisites": []
 }

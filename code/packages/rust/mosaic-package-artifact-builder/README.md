@@ -126,6 +126,10 @@ package source tree. Typed `node` slots remain in-process host objects rather
 than serialized scalars: the generated shell resolves the matching native
 view, element, widget, composable, or QML/WinUI object through its optional
 `MosaicHost` contract.
+If the package manifest declares paired `[app]` `initial-window-width` and
+`initial-window-height` values, desktop shells start at that logical-pixel size.
+Compose, Qt, SwiftUI, XAML, and Electron map the same manifest contract to their
+native window APIs; browser and mobile launches keep platform defaults.
 Compose Desktop shells install Mosaic's standard JNA runtime binding. The binding
 owns the Rust application handle, buffer lifecycle, startup context, event
 sequence, and JSON updates; applications no longer need to rebuild that FFI

@@ -1,4 +1,19 @@
 component VisiCalc {
+  slot editor-label : text ;
+  slot row-height : number = 32 ;
+  slot font-eyebrow : number = 10 ;
+  slot font-row : number = 11 ;
+  slot font-caption : number = 12 ;
+  slot font-body : number = 13 ;
+  slot font-input : number = 14 ;
+  slot font-introduction : number = 18 ;
+  slot font-symbol : number = 22 ;
+  slot font-title : number = 38 ;
+  slot text-scale-label : text ;
+  slot smaller-text-disabled : bool ;
+  slot larger-text-disabled : bool ;
+  emit onSmallerText ;
+  emit onLargerText ;
   slot workbook-empty : bool ;
   slot file-status : text ;
   slot selection-summary : text ;

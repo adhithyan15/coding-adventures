@@ -1,0 +1,11 @@
+{
+  "id": "ML-C50-set-out",
+  "pathSegment": "ML-PATH-50-LEAVE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-50-LEAVE",
+      "order": 4
+    }
+  ]
+}

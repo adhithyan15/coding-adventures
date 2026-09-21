@@ -1,0 +1,11 @@
+{
+  "id": "ML-C94-innale",
+  "pathSegment": "ML-PATH-94-DAYS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-94-DAYS",
+      "order": 1
+    }
+  ]
+}

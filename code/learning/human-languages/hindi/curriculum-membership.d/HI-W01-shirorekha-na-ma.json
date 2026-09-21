@@ -1,0 +1,11 @@
+{
+  "id": "HI-W01-shirorekha-na-ma",
+  "pathSegment": "HI-PATH-001",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-001-SCRIPT",
+      "order": 0
+    }
+  ]
+}

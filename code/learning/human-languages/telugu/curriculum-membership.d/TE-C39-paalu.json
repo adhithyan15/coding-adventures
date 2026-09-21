@@ -1,0 +1,11 @@
+{
+  "id": "TE-C39-paalu",
+  "pathSegment": "TE-PATH-032",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-033-TEA-MILK",
+      "order": 1
+    }
+  ]
+}

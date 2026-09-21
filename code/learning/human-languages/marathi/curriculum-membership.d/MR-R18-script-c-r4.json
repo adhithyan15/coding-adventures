@@ -1,0 +1,11 @@
+{
+  "id": "MR-R18-script-c-r4",
+  "pathSegment": "MR-PATH-020",
+  "pathOrder": 15,
+  "extensions": [
+    {
+      "id": "MR-EXT-023-SCRIPT-DISTANT",
+      "order": 3
+    }
+  ]
+}

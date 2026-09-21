@@ -1,0 +1,11 @@
+{
+  "id": "KA-C45-wife",
+  "pathSegment": "KA-PATH-45-FAMILY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-45-FAMILY",
+      "order": 3
+    }
+  ]
+}

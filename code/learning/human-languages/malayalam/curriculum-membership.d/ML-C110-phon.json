@@ -1,0 +1,11 @@
+{
+  "id": "ML-C110-phon",
+  "pathSegment": "ML-PATH-110-MESSAGE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-110-MESSAGE",
+      "order": 1
+    }
+  ]
+}

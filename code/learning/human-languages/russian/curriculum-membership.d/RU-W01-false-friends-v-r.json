@@ -1,0 +1,11 @@
+{
+  "id": "RU-W01-false-friends-v-r",
+  "pathSegment": "RU-PATH-001",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-001-INLINE-SCRIPT",
+      "order": 1
+    }
+  ]
+}

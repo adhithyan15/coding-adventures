@@ -38,6 +38,8 @@ import {
   splitDocument,
 } from "../src/doc-shard.js";
 import {
+  backlogIdForSubject,
+  backlogIdentityErrors,
   DOC_SHARD_PLANS,
   defaultRepoRoot,
   runDocShardCli,
@@ -52,6 +54,7 @@ const PLAN: DocShardPlan = { path: "x/DOC.md", headingLevel: 2, newestFirst: tru
 const OLDEST_FIRST: DocShardPlan = { ...PLAN, newestFirst: false };
 const DUCTUS_CHANGELOG = "code/packages/typescript/script-ductus/CHANGELOG.md";
 const HINDI_CHANGELOG = "code/learning/human-languages/hindi/CHANGELOG.md";
+const MALAYALAM_CHANGELOG = "code/learning/human-languages/malayalam/CHANGELOG.md";
 const HINDI_PLAN: DocShardPlan = {
   path: HINDI_CHANGELOG,
   headingLevel: 2,
@@ -60,6 +63,14 @@ const HINDI_PLAN: DocShardPlan = {
 const HINDI_FORWARD_FRAGMENT =
   "00250-UNRELEASED-HINDI-CHANGELOG-AUTHORING-IS-SHARDED-6788c56d.md";
 const HINDI_MIGRATION_MAX_RANK = 240;
+const MALAYALAM_PLAN: DocShardPlan = {
+  path: MALAYALAM_CHANGELOG,
+  headingLevel: 2,
+  newestFirst: true,
+};
+const MALAYALAM_FORWARD_FRAGMENT =
+  "00580-CHANGELOG-ENTRIES-NOW-HAVE-STABLE-OWNERS-15670-6061dc1b.md";
+const MALAYALAM_MIGRATION_MAX_RANK = 570;
 
 /**
  * The fewest entries for which sharding a document buys anything.
@@ -71,7 +82,7 @@ const HINDI_MIGRATION_MAX_RANK = 240;
  * with "expected 31 to be greater than 100", a true statement about a perfectly
  * healthy changelog.
  */
-const MIN_SHARDABLE_ENTRIES = 20;
+const MIN_SHARDABLE_ENTRIES = 10;
 const DUCTUS_PLAN: DocShardPlan = {
   path: DUCTUS_CHANGELOG,
   headingLevel: 3,
@@ -80,6 +91,62 @@ const DUCTUS_PLAN: DocShardPlan = {
 const DUCTUS_FORWARD_FRAGMENT =
   "01625-CHANGED-SHARD-NATIVE-SCRIPT-INVENTORIES-9fa3a043.md";
 const DUCTUS_MIGRATION_MAX_RANK = 1_630;
+
+describe("concurrency-safe backlog ids", () => {
+  it("keeps the sequence readable while deriving identity from the NFC subject", () => {
+    expect(backlogIdForSubject(412, "A new finding")).toMatch(/^HL-C412-[0-9a-f]{8}$/);
+    expect(backlogIdForSubject(412, "A new finding")).toBe(
+      backlogIdForSubject(412, "  A new finding  "),
+    );
+    expect(backlogIdForSubject(412, "Cafe\u0301")).toBe(
+      backlogIdForSubject(412, "Café"),
+    );
+    expect(backlogIdForSubject(412, "A new finding")).not.toBe(
+      backlogIdForSubject(412, "A different finding"),
+    );
+  });
+
+  it("accepts parallel same-rank entries because their subjects own distinct ids", () => {
+    const first = "First concurrent finding";
+    const second = "Second concurrent finding";
+    const firstId = backlogIdForSubject(412, first);
+    const secondId = backlogIdForSubject(412, second);
+    const shards = new Map([
+      [DOC_META_SHARD, "# Backlog\n"],
+      ["05010-FIRST-11111111.md", `## ${firstId} — ${first}\n`],
+      ["05010-SECOND-22222222.md", `## ${secondId} — ${second}\n`],
+    ]);
+
+    expect(firstId).not.toBe(secondId);
+    expect(backlogIdentityErrors(shards)).toEqual([]);
+  });
+
+  it("rejects hand-written, stale, and duplicate post-cutover ids", () => {
+    const subject = "One owned finding";
+    const id = backlogIdForSubject(412, subject);
+    const shards = new Map([
+      [DOC_META_SHARD, "# Backlog\n"],
+      ["05010-BARE-11111111.md", `## HL-C412 — ${subject}\n`],
+      ["05020-WRONG-22222222.md", `## HL-C413-deadbeef — ${subject}\n`],
+      ["05030-OWNED-33333333.md", `## ${id} — ${subject}\n`],
+      ["05040-DUPLICATE-44444444.md", `## ${id} — ${subject}\n`],
+    ]);
+
+    expect(backlogIdentityErrors(shards)).toEqual([
+      expect.stringMatching(/05010.*must use/),
+      expect.stringMatching(/05020.*must be 'HL-C413-/),
+      expect.stringMatching(/05040.*already owned by 05030/),
+    ]);
+  });
+
+  it("grandfathers the append-only history through rank 05000", () => {
+    const shards = new Map([
+      [DOC_META_SHARD, "# Backlog\n"],
+      ["05000-LEGACY-11111111.md", "## HL-C411 — historical heading\n"],
+    ]);
+    expect(backlogIdentityErrors(shards)).toEqual([]);
+  });
+});
 
 describe("Hindi changelog ownership", () => {
   it("registers the changelog as a fixed newest-first level-2 shard plan", () => {
@@ -119,6 +186,75 @@ describe("Hindi changelog ownership", () => {
       "ffb767831fd61e6e6d5ca7f79f61a06516b128e1169a08b8a7e95989b91b6590",
     );
   });
+});
+
+describe("Malayalam changelog ownership", () => {
+  it("registers the changelog as a fixed newest-first level-2 shard plan", () => {
+    expect(DOC_SHARD_PLANS.find((plan) => plan.path === MALAYALAM_CHANGELOG)).toEqual(
+      MALAYALAM_PLAN,
+    );
+  });
+
+  it("keeps the generated monolith absent from a clean checkout", () => {
+    const monolith = safeDocumentPath(defaultRepoRoot(), MALAYALAM_CHANGELOG);
+    let cause: unknown;
+    try {
+      lstatSync(monolith);
+    } catch (error) {
+      cause = error;
+    }
+    expect(isAbsentErrno((cause as NodeJS.ErrnoException | undefined)?.code)).toBe(true);
+  });
+
+  it("preserves the pre-migration Malayalam history byte-for-byte", () => {
+    const monolith = safeDocumentPath(defaultRepoRoot(), MALAYALAM_CHANGELOG);
+    const shards = readDocShards(monolith, MALAYALAM_PLAN);
+    expect(shards).not.toBeNull();
+
+    const historical = new Map(
+      [...shards!].filter(
+        ([name]) =>
+          name !== MALAYALAM_FORWARD_FRAGMENT &&
+          (name === DOC_META_SHARD || Number(name.slice(0, 5)) <= MALAYALAM_MIGRATION_MAX_RANK),
+      ),
+    );
+    const rendered = joinDocShards(historical, MALAYALAM_PLAN);
+
+    expect(Buffer.byteLength(rendered)).toBe(150_974);
+    expect(splitDocument(rendered, 2).sections).toHaveLength(57);
+    expect(createHash("sha256").update(rendered).digest("hex")).toBe(
+      "6edf7f921c2734a989cc8c57d58afb99ef839cc29ca8237fc6c7f1e0ce1e7960",
+    );
+  });
+});
+
+const INDIAN_CHANGELOG_BASELINES = [
+  ["bengali", 87_574, 22, "420d87c734f42bba27395c3f058a9322e6488d8f2e4362daea833478d8289857"],
+  ["gujarati", 74_551, 14, "a9a8baf724b7e82075a6c120cd6354183ca43f6f0c510991bf7d9d639495d4d7"],
+  ["kannada", 97_937, 33, "adba39431edb4dcbc4f6a0e78e3b503402a2c5dbfcdc3acd97b4a3ca8f0ac363"],
+  ["marathi", 121_452, 41, "8e6d52193c6f39ca487cd08af82f2556f444bb286a224c14573f19f42a38356f"],
+  ["marwadi", 29_457, 23, "57ac65a35c1505d829768dba881d7143ae784d6a5fd7bf73885a05bb467d7a67"],
+  ["punjabi", 56_717, 33, "23ff699efb287f38ed38fefcad18575a241da9f1b601738c10023ea01aa895cb"],
+  ["sanskrit", 87_588, 29, "0ea8cd5dc1c3145669d3b4824be27d4d9f2c3a3a4882fd2a0bc347c2c978b715"],
+  ["tamil", 122_756, 37, "962fe3ecac73abaa5f62ace918272a9e2e0766c46704050464b0a1f3cddd8ee6"],
+  ["telugu", 117_595, 37, "0a5e0fc838a38b0cc7f13c7d9189469306f7a1236a35fe74f1c7d1f17febcae4"],
+  ["urdu", 62_410, 25, "79f203bcf45627b9fd2ed650fe617ebe131f0488c65ad9fe2e3274e50e571cc7"],
+] as const;
+
+describe("remaining Indian changelog ownership", () => {
+  it.each(INDIAN_CHANGELOG_BASELINES)(
+    "%s preserves its pre-migration history byte-for-byte",
+    (track, bytes, sections, sha256) => {
+      const path = `code/learning/human-languages/${track}/CHANGELOG.md`;
+      const plan = DOC_SHARD_PLANS.find((candidate) => candidate.path === path);
+      expect(plan).toEqual({ path, headingLevel: 2, newestFirst: true });
+
+      const rendered = unshardDocContents(defaultRepoRoot(), plan!);
+      expect(Buffer.byteLength(rendered)).toBe(bytes);
+      expect(splitDocument(rendered, 2).sections).toHaveLength(sections);
+      expect(createHash("sha256").update(rendered).digest("hex")).toBe(sha256);
+    },
+  );
 });
 
 describe("HL26 Script Ductus changelog ownership", () => {

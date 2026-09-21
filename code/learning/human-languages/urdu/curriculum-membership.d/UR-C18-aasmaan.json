@@ -1,0 +1,11 @@
+{
+  "id": "UR-C18-aasmaan",
+  "pathSegment": "UR-PATH-019",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-029-SCRIPT-MEETING",
+      "order": 1
+    }
+  ]
+}

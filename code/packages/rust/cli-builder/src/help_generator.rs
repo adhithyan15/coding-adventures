@@ -294,12 +294,18 @@ fn format_flag_signature(f: &FlagDef) -> String {
     }
     if let Some(ref l) = f.long {
         forms.push(format!("--{}{}", l, value_part));
-    } else if let Some(ref sdl) = f.single_dash_long {
-        forms.push(format!("-{}{}", sdl, value_part));
-    } else if !value_part.is_empty() {
-        // Append value_part to the short form if no long form.
-        if let Some(last) = forms.last_mut() {
-            last.push_str(&value_part);
+    }
+    for alias in &f.long_aliases {
+        forms.push(format!("--{}{}", alias, value_part));
+    }
+    if f.long.is_none() && f.long_aliases.is_empty() {
+        if let Some(ref sdl) = f.single_dash_long {
+            forms.push(format!("-{}{}", sdl, value_part));
+        } else if !value_part.is_empty() {
+            // Append value_part to the short form if no long form.
+            if let Some(last) = forms.last_mut() {
+                last.push_str(&value_part);
+            }
         }
     }
 
@@ -345,6 +351,7 @@ fn builtin_flag_stubs(spec: &CliSpec) -> Vec<FlagDef> {
             id: "__help__".to_string(),
             short: Some("h".to_string()),
             long: Some("help".to_string()),
+            long_aliases: Vec::new(),
             single_dash_long: None,
             description: "Show this help message and exit.".to_string(),
             flag_type: "boolean".to_string(),
@@ -365,6 +372,7 @@ fn builtin_flag_stubs(spec: &CliSpec) -> Vec<FlagDef> {
             id: "__version__".to_string(),
             short: None,
             long: Some("version".to_string()),
+            long_aliases: Vec::new(),
             single_dash_long: None,
             description: "Show version and exit.".to_string(),
             flag_type: "boolean".to_string(),
@@ -544,6 +552,7 @@ mod tests {
             id: "verbose".into(),
             short: Some("v".into()),
             long: Some("verbose".into()),
+            long_aliases: Vec::new(),
             single_dash_long: None,
             description: "Be verbose".into(),
             flag_type: "boolean".into(),
@@ -569,6 +578,7 @@ mod tests {
             id: "output".into(),
             short: Some("o".into()),
             long: Some("output".into()),
+            long_aliases: Vec::new(),
             single_dash_long: None,
             description: "Output file".into(),
             flag_type: "file".into(),
@@ -661,6 +671,7 @@ mod tests {
             id: "classpath".into(),
             short: None,
             long: None,
+            long_aliases: Vec::new(),
             single_dash_long: Some("classpath".into()),
             description: "Set classpath".into(),
             flag_type: "string".into(),
@@ -686,6 +697,7 @@ mod tests {
             id: "key".into(),
             short: Some("k".into()),
             long: None,
+            long_aliases: Vec::new(),
             single_dash_long: None,
             description: "Sort key".into(),
             flag_type: "string".into(),
@@ -711,6 +723,7 @@ mod tests {
             id: "output".into(),
             short: Some("o".into()),
             long: Some("output".into()),
+            long_aliases: Vec::new(),
             single_dash_long: None,
             description: "Output".into(),
             flag_type: "file".into(),

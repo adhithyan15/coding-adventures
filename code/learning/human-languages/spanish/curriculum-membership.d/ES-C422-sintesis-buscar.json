@@ -1,0 +1,11 @@
+{
+  "id": "ES-C422-sintesis-buscar",
+  "pathSegment": "ES-PATH-422-WEB-PAGE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-422-WEB-PAGE",
+      "order": 2
+    }
+  ]
+}

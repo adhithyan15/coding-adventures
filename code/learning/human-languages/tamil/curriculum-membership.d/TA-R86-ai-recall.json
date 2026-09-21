@@ -1,0 +1,11 @@
+{
+  "id": "TA-R86-ai-recall",
+  "pathSegment": "TA-PATH-86-ACCUSATIVE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-86-ACCUSATIVE",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C35-abbastanza",
+  "pathSegment": "IT-PATH-039",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-039-SAPERE",
+      "order": 4
+    }
+  ]
+}

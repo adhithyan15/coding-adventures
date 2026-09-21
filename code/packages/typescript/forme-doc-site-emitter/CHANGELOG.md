@@ -38,7 +38,7 @@ guessed the capability would be `[fs:write]` since the package
 shows the correct answer is `[]` — site-emitter does NOT write
 to disk, it returns a `PageBundleConfig` data structure; the
 disk writes happen downstream in `forme-deploy-runner` (which
-already owns `fs:write` per FM05).  The spec is explicit: "Every
+owns `fs:write` under FM08).  The spec is explicit: "Every
 DOC00 package has `required_capabilities.json` → `capabilities:
 []`.  **No exceptions in v0.**"  This package follows the spec.
 The cron prompt's guess was wrong; this implementation does NOT

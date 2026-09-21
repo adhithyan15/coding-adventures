@@ -1,0 +1,11 @@
+{
+  "id": "FA-C09-kelid",
+  "pathSegment": "FA-PATH-010",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-017-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-S134-vowel-sign-au",
+  "pathSegment": "HI-PATH-100",
+  "pathOrder": 31,
+  "extensions": [
+    {
+      "id": "HI-EXT-100-SCRIPT-RECOGNITION",
+      "order": 31
+    }
+  ]
+}

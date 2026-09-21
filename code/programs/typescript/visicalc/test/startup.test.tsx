@@ -84,3 +84,15 @@ it("catches synchronous load failures and disposes stale results from replaced l
     expect(newHost.update.props.formula).toBe("15");
   } finally { await act(async () => root.unmount()); container.remove(); }
 });
+
+it.each([1, 1.5, 2])("scales startup typography before the runtime loads (%s)", async textScale => {
+  const pending = deferred();
+  const load = vi.fn(() => pending.promise);
+  const container = document.createElement("div"); document.body.append(container);
+  const root = createRoot(container);
+  try {
+    await act(async () => root.render(<App load={load} textScale={textScale} />));
+    expect((container.querySelector("h2") as HTMLElement).style.fontSize).toBe(`${19 * textScale}px`);
+    expect(load).toHaveBeenCalledWith(textScale);
+  } finally { await act(async () => root.unmount()); container.remove(); }
+});

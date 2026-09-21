@@ -1,0 +1,11 @@
+{
+  "id": "GU-C37-kyaan",
+  "pathSegment": "GU-PATH-036",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-048-QUESTIONS",
+      "order": 1
+    }
+  ]
+}

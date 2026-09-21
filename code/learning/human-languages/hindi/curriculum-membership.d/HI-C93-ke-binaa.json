@@ -1,0 +1,11 @@
+{
+  "id": "HI-C93-ke-binaa",
+  "pathSegment": "HI-PATH-101-RELATION",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-101-RELATION",
+      "order": 1
+    }
+  ]
+}

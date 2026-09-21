@@ -4,13 +4,5 @@
   "kind": "required",
   "category": "grammar",
   "canDo": "I can describe things in Hindi — big, small, good, new, old — and I can see the one pattern the six words are built from.",
-  "prerequisites": [],
-  "lessons": [
-    "HI-C41-big",
-    "HI-C41-small",
-    "HI-C41-good",
-    "HI-C41-new",
-    "HI-C41-old",
-    "HI-C41-adjective-system"
-  ]
+  "prerequisites": []
 }

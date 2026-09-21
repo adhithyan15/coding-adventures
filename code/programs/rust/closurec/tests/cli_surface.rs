@@ -109,14 +109,38 @@ fn rejects_stale_deprecated_alias() {
 
 #[test]
 fn rejects_unreviewed_upstream_alias() {
-    let mut mutant = report();
-    mutant
-        .classification
-        .unsupported_upstream_aliases
-        .retain(|alias| alias.name != "--checks-only");
-    let errors = verify_report(&mutant, &spec_bytes());
-    assert_has(&errors, "unsupported upstream alias classification drifted");
-    assert_has(&errors, "unclassified");
+    let mut root: Value = serde_json::from_slice(&spec_bytes()).expect("parse spec");
+    let flags = root["flags"].as_array_mut().expect("flags array");
+    let checks = flags
+        .iter_mut()
+        .find(|flag| flag["id"] == "checks_only")
+        .expect("checks_only flag");
+    checks["long_aliases"] = json!([]);
+    let mutant_spec = serde_json::to_vec(&root).expect("serialize mutant spec");
+    let mut mutant_report = report();
+    mutant_report.local_spec_sha256 = coding_adventures_sha256::sha256_hex(&mutant_spec);
+    assert_has(
+        &verify_report(&mutant_report, &mutant_spec),
+        "--checks-only",
+    );
+}
+
+#[test]
+fn rejects_unclassified_local_long_alias() {
+    let mut root: Value = serde_json::from_slice(&spec_bytes()).expect("parse spec");
+    let flags = root["flags"].as_array_mut().expect("flags array");
+    let define = flags
+        .iter_mut()
+        .find(|flag| flag["id"] == "define")
+        .expect("define flag");
+    define["long_aliases"] = json!(["D", "surprise"]);
+    let mutant_spec = serde_json::to_vec(&root).expect("serialize mutant spec");
+    let mut mutant_report = report();
+    mutant_report.local_spec_sha256 = coding_adventures_sha256::sha256_hex(&mutant_spec);
+    assert_has(
+        &verify_report(&mutant_report, &mutant_spec),
+        "unclassified local long aliases",
+    );
 }
 
 #[test]

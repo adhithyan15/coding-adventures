@@ -1,0 +1,11 @@
+{
+  "id": "SA-C51-wife",
+  "pathSegment": "SA-PATH-51-KIN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-51-KIN",
+      "order": 1
+    }
+  ]
+}

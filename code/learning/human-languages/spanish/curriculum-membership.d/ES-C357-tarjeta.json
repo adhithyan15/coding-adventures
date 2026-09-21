@@ -1,0 +1,11 @@
+{
+  "id": "ES-C357-tarjeta",
+  "pathSegment": "ES-PATH-357-01",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ES-EXT-357-SPAN",
+      "order": 4
+    }
+  ]
+}

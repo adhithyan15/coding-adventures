@@ -1,0 +1,11 @@
+{
+  "id": "FR-C16-pronominal-seul",
+  "pathSegment": "FR-PATH-017",
+  "pathOrder": 32,
+  "extensions": [
+    {
+      "id": "FR-EXT-017-LANGUAGE-SPECIFIC",
+      "order": 32
+    }
+  ]
+}

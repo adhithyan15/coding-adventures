@@ -1,0 +1,11 @@
+{
+  "id": "ES-C426-abreviaturas",
+  "pathSegment": "ES-PATH-426-MAYUSCULAS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-426-MAYUSCULAS",
+      "order": 2
+    }
+  ]
+}

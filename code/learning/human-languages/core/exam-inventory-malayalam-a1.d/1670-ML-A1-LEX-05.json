@@ -1,0 +1,18 @@
+{
+  "id": "ML-A1-LEX-05",
+  "category": "Padakosham (lexicon by domain)",
+  "label": "the heart and the chest",
+  "probe": [
+    "ML-CONCEPT-C38-HRUDAYAM-01",
+    "ML-CONCEPT-C38-NENCHU-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NE01-01"
+  ],
+  "malayalamSpecific": false
+}

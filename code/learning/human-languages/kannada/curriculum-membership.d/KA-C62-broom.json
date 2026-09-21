@@ -1,0 +1,11 @@
+{
+  "id": "KA-C62-broom",
+  "pathSegment": "KA-PATH-62-MADE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-62-MADE",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C57-smoke",
+  "pathSegment": "TA-PATH-57-FIRE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-57-FIRE",
+      "order": 3
+    }
+  ]
+}

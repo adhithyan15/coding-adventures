@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-SCR-10",
+  "category": "Lipi (script and orthography)",
+  "label": "writing a known word from sound alone",
+  "probe": [
+    "ML-SCRIPT-GUIDED-COPY-SANTOSHAM-02",
+    "ML-SCRIPT-OBSERVE-TRACE-SANTOSHAM-02"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-O1-07"
+  ],
+  "malayalamSpecific": false,
+  "note": "The trace / guided-copy / delayed-copy / dictation ladder, which the track runs twice."
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C38-hasanan",
+  "pathSegment": "AR-PATH-035",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-035-JOINING",
+      "order": 3
+    }
+  ]
+}

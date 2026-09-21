@@ -1,0 +1,11 @@
+{
+  "id": "GE-C14-jahr-alt",
+  "pathSegment": "GE-PATH-019",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-019-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

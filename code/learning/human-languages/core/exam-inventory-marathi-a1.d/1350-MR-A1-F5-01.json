@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-F5-01",
+  "category": "Social relations",
+  "label": "greet",
+  "probe": [
+    "MR-LEX-NAMASKAR-01",
+    "MR-A1-MESSAGE-LINE-GREETING"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-spine"
+  ],
+  "derivedFrom": [
+    "A1-F5-01"
+  ]
+}

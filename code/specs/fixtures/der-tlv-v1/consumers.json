@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "profile": "x690-der-tlv-framing-v1-portable-consumers",
+  "fixture": "code/specs/fixtures/der-tlv-v1/cases.json",
+  "case_count": 54,
+  "error_id_count": 17,
+  "established_lane_count": 15,
+  "consumers": [
+    {
+      "language": "csharp", "package_root": "code/packages/csharp/der-tlv",
+      "api_source": "code/packages/csharp/der-tlv/DerTlv.cs",
+      "fixture_test": "code/packages/csharp/der-tlv/tests/CodingAdventures.DerTlv.CSharp.Tests/PortableConformanceTests.cs",
+      "build_files": ["code/packages/csharp/der-tlv/BUILD", "code/packages/csharp/der-tlv/BUILD_windows"],
+      "capability_manifest": "code/packages/csharp/der-tlv/required_capabilities.json",
+      "surface": {"decode_one":"DecodeOne","decode_exact":"DecodeExact","cursor":"Cursor","limits":"Limits","error_taxonomy":"Error"}
+    },
+    {
+      "language": "dart", "package_root": "code/packages/dart/der-tlv",
+      "api_source": "code/packages/dart/der-tlv/lib/src/der_tlv.dart",
+      "fixture_test": "code/packages/dart/der-tlv/test/der_tlv_test.dart",
+      "build_files": ["code/packages/dart/der-tlv/BUILD", "code/packages/dart/der-tlv/BUILD_windows"],
+      "capability_manifest": "code/packages/dart/der-tlv/required_capabilities.json",
+      "surface": {"decode_one":"decodeOne","decode_exact":"decodeExact","cursor":"DerCursor","limits":"DerLimits","error_taxonomy":"DerErrorKind"}
+    },
+    {
+      "language": "elixir", "package_root": "code/packages/elixir/der_tlv",
+      "api_source": "code/packages/elixir/der_tlv/lib/coding_adventures/der_tlv.ex",
+      "fixture_test": "code/packages/elixir/der_tlv/test/der_tlv_test.exs",
+      "build_files": ["code/packages/elixir/der_tlv/BUILD", "code/packages/elixir/der_tlv/BUILD_windows"],
+      "capability_manifest": "code/packages/elixir/der_tlv/required_capabilities.json",
+      "surface": {"decode_one":"decode_one","decode_exact":"decode_exact","cursor":"Cursor","limits":"default_limits","error_taxonomy":"Error"}
+    },
+    {
+      "language": "fsharp", "package_root": "code/packages/fsharp/der-tlv",
+      "api_source": "code/packages/fsharp/der-tlv/DerTlv.fs",
+      "fixture_test": "code/packages/fsharp/der-tlv/tests/CodingAdventures.DerTlv.FSharp.Tests/PortableConformanceTests.fs",
+      "build_files": ["code/packages/fsharp/der-tlv/BUILD", "code/packages/fsharp/der-tlv/BUILD_windows"],
+      "capability_manifest": "code/packages/fsharp/der-tlv/required_capabilities.json",
+      "surface": {"decode_one":"decodeOne","decode_exact":"decodeExact","cursor":"DerCursor","limits":"DerLimits","error_taxonomy":"DerError"}
+    },
+    {
+      "language": "go", "package_root": "code/packages/go/der-tlv",
+      "api_source": "code/packages/go/der-tlv/der_tlv.go",
+      "fixture_test": "code/packages/go/der-tlv/der_tlv_test.go",
+      "build_files": ["code/packages/go/der-tlv/BUILD"],
+      "capability_manifest": "code/packages/go/der-tlv/required_capabilities.json",
+      "surface": {"decode_one":"DecodeOne","decode_exact":"DecodeExact","cursor":"Cursor","limits":"Limits","error_taxonomy":"ErrorKind"}
+    },
+    {
+      "language": "haskell", "package_root": "code/packages/haskell/der-tlv",
+      "api_source": "code/packages/haskell/der-tlv/src/CodingAdventures/DerTlv.hs",
+      "fixture_test": "code/packages/haskell/der-tlv/test/PortableConformanceSpec.hs",
+      "build_files": ["code/packages/haskell/der-tlv/BUILD", "code/packages/haskell/der-tlv/BUILD_windows"],
+      "capability_manifest": "code/packages/haskell/der-tlv/required_capabilities.json",
+      "surface": {"decode_one":"decodeOne","decode_exact":"decodeExact","cursor":"DerCursor","limits":"DerLimits","error_taxonomy":"DerErrorKind"}
+    },
+    {
+      "language": "java", "package_root": "code/packages/java/der-tlv",
+      "api_source": "code/packages/java/der-tlv/src/main/java/com/codingadventures/dertlv/DerTlv.java",
+      "fixture_test": "code/packages/java/der-tlv/src/test/java/com/codingadventures/dertlv/DerTlvTest.java",
+      "build_files": ["code/packages/java/der-tlv/BUILD", "code/packages/java/der-tlv/BUILD_windows"],
+      "capability_manifest": "code/packages/java/der-tlv/required_capabilities.json",
+      "surface": {"decode_one":"decodeOne","decode_exact":"decodeExact","cursor":"Cursor","limits":"Limits","error_taxonomy":"Error"}
+    },
+    {
+      "language": "kotlin", "package_root": "code/packages/kotlin/der-tlv",
+      "api_source": "code/packages/kotlin/der-tlv/src/main/kotlin/com/codingadventures/dertlv/DerTlv.kt",
+      "fixture_test": "code/packages/kotlin/der-tlv/src/test/kotlin/com/codingadventures/dertlv/DerTlvTest.kt",
+      "build_files": ["code/packages/kotlin/der-tlv/BUILD", "code/packages/kotlin/der-tlv/BUILD_windows"],
+      "capability_manifest": "code/packages/kotlin/der-tlv/required_capabilities.json",
+      "surface": {"decode_one":"decodeOne","decode_exact":"decodeExact","cursor":"Cursor","limits":"Limits","error_taxonomy":"DerError"}
+    },
+    {
+      "language": "lua", "package_root": "code/packages/lua/der_tlv",
+      "api_source": "code/packages/lua/der_tlv/src/coding_adventures/der_tlv/init.lua",
+      "fixture_test": "code/packages/lua/der_tlv/tests/test_der_tlv.lua",
+      "build_files": ["code/packages/lua/der_tlv/BUILD", "code/packages/lua/der_tlv/BUILD_windows"],
+      "capability_manifest": "code/packages/lua/der_tlv/required_capabilities.json",
+      "surface": {"decode_one":"decode_one","decode_exact":"decode_exact","cursor":"Cursor","limits":"default_limits","error_taxonomy":"Error"}
+    },
+    {
+      "language": "perl", "package_root": "code/packages/perl/der-tlv",
+      "api_source": "code/packages/perl/der-tlv/lib/CodingAdventures/DerTlv.pm",
+      "fixture_test": "code/packages/perl/der-tlv/t/portable-conformance.t",
+      "build_files": ["code/packages/perl/der-tlv/BUILD", "code/packages/perl/der-tlv/BUILD_windows"],
+      "capability_manifest": "code/packages/perl/der-tlv/required_capabilities.json",
+      "surface": {"decode_one":"decode_one","decode_exact":"decode_exact","cursor":"CodingAdventures::DerTlv::Cursor","limits":"default_limits","error_taxonomy":"CodingAdventures::DerTlv::Error"}
+    },
+    {
+      "language": "python", "package_root": "code/packages/python/der-tlv",
+      "api_source": "code/packages/python/der-tlv/src/der_tlv/__init__.py",
+      "fixture_test": "code/packages/python/der-tlv/tests/test_der_tlv.py",
+      "build_files": ["code/packages/python/der-tlv/BUILD", "code/packages/python/der-tlv/BUILD_windows"],
+      "capability_manifest": "code/packages/python/der-tlv/required_capabilities.json",
+      "surface": {"decode_one":"decode_one","decode_exact":"decode_exact","cursor":"DerCursor","limits":"DerLimits","error_taxonomy":"DerErrorKind"}
+    },
+    {
+      "language": "ruby", "package_root": "code/packages/ruby/der_tlv",
+      "api_source": "code/packages/ruby/der_tlv/lib/coding_adventures_der_tlv.rb",
+      "fixture_test": "code/packages/ruby/der_tlv/test/test_der_tlv.rb",
+      "build_files": ["code/packages/ruby/der_tlv/BUILD", "code/packages/ruby/der_tlv/BUILD_windows"],
+      "capability_manifest": "code/packages/ruby/der_tlv/required_capabilities.json",
+      "surface": {"decode_one":"decode_one","decode_exact":"decode_exact","cursor":"Cursor","limits":"DEFAULT_LIMITS","error_taxonomy":"Error"}
+    },
+    {
+      "language": "rust", "package_root": "code/packages/rust/der-tlv",
+      "api_source": "code/packages/rust/der-tlv/src/lib.rs",
+      "fixture_test": "code/packages/rust/der-tlv/tests/portable_conformance.rs",
+      "build_files": ["code/packages/rust/der-tlv/BUILD"],
+      "capability_manifest": "code/packages/rust/der-tlv/required_capabilities.json",
+      "surface": {"decode_one":"decode_one","decode_exact":"decode_exact","cursor":"DerCursor","limits":"DerLimits","error_taxonomy":"DerErrorKind"}
+    },
+    {
+      "language": "swift", "package_root": "code/packages/swift/der-tlv",
+      "api_source": "code/packages/swift/der-tlv/Sources/DerTlv/DerTlv.swift",
+      "fixture_test": "code/packages/swift/der-tlv/Tests/DerTlvTests/DerTlvTests.swift",
+      "build_files": ["code/packages/swift/der-tlv/BUILD", "code/packages/swift/der-tlv/BUILD_windows"],
+      "capability_manifest": "code/packages/swift/der-tlv/required_capabilities.json",
+      "surface": {"decode_one":"decodeOne","decode_exact":"decodeExact","cursor":"Cursor","limits":"Limits","error_taxonomy":"FramingError"}
+    },
+    {
+      "language": "typescript", "package_root": "code/packages/typescript/der-tlv",
+      "api_source": "code/packages/typescript/der-tlv/src/index.ts",
+      "fixture_test": "code/packages/typescript/der-tlv/tests/der-tlv.test.ts",
+      "build_files": ["code/packages/typescript/der-tlv/BUILD", "code/packages/typescript/der-tlv/BUILD_windows"],
+      "capability_manifest": "code/packages/typescript/der-tlv/required_capabilities.json",
+      "surface": {"decode_one":"decodeOne","decode_exact":"decodeExact","cursor":"DerCursor","limits":"DerLimits","error_taxonomy":"DerErrorKind"}
+    }
+  ]
+}

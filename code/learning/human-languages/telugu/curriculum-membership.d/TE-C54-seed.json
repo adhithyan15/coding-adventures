@@ -1,0 +1,11 @@
+{
+  "id": "TE-C54-seed",
+  "pathSegment": "TE-PATH-54-TREE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-54-TREE",
+      "order": 3
+    }
+  ]
+}

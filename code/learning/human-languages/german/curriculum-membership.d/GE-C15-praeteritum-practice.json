@@ -1,0 +1,11 @@
+{
+  "id": "GE-C15-praeteritum-practice",
+  "pathSegment": "GE-PATH-020-C",
+  "pathOrder": 9,
+  "extensions": [
+    {
+      "id": "GE-EXT-020-C-CONSOLIDATION",
+      "order": 0
+    }
+  ]
+}

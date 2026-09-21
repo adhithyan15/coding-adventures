@@ -1,0 +1,11 @@
+{
+  "id": "GU-C32-athava",
+  "pathSegment": "GU-PATH-031",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-043-JOIN-THREE",
+      "order": 3
+    }
+  ]
+}

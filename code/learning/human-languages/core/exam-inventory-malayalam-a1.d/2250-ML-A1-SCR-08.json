@@ -1,0 +1,25 @@
+{
+  "id": "ML-A1-SCR-08",
+  "category": "Lipi (script and orthography)",
+  "label": "the Sanskrit-borrowed consonants a Malayalam text cannot do without",
+  "probe": [
+    "ML-SCRIPT-RECOG-121",
+    "ML-SCRIPT-RECOG-123",
+    "ML-SCRIPT-RECOG-124",
+    "ML-SCRIPT-RECOG-127",
+    "ML-SCRIPT-RECOG-129",
+    "ML-SCRIPT-RECOG-130",
+    "ML-SCRIPT-RECOG-132",
+    "ML-SCRIPT-RECOG-145"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-O1-03"
+  ],
+  "malayalamSpecific": false,
+  "note": "ssa, da, sa, ha, bha, tha, ga, ja. The track teaches a lot of Sanskrit vocabulary and these are the letters it is written with."
+}

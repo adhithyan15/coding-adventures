@@ -1,0 +1,11 @@
+{
+  "id": "FA-C17-practice",
+  "pathSegment": "FA-PATH-018",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FA-EXT-025-COUNT-TEN",
+      "order": 5
+    }
+  ]
+}

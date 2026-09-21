@@ -1,0 +1,11 @@
+{
+  "id": "IT-C09-stagioni",
+  "pathSegment": "IT-PATH-014",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-014-LANGUAGE-SPECIFIC",
+      "order": 5
+    }
+  ]
+}

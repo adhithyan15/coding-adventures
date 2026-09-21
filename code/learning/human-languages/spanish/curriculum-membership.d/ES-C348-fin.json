@@ -1,0 +1,11 @@
+{
+  "id": "ES-C348-fin",
+  "pathSegment": "ES-PATH-348-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-348-SPAN",
+      "order": 1
+    }
+  ]
+}

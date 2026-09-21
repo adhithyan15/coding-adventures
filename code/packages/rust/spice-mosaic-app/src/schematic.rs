@@ -24,10 +24,176 @@ pub enum SchematicComponentKind {
     Resistor,
     Capacitor,
     Inductor,
+    Diode,
+    Bjt,
+    Jfet,
+    Mosfet,
     DcVoltage,
     DcCurrent,
     AcVoltage,
     Ground,
+}
+
+/// The semiconductor polarity selected for transistor symbols.
+///
+/// The owning component kind determines the Berkeley model family: BJT uses
+/// NPN/PNP, JFET uses NJF/PJF, and MOSFET uses NMOS/PMOS.
+#[derive(Clone, Copy, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]
+pub enum SchematicModelPolarity {
+    #[default]
+    N,
+    P,
+}
+
+/// A finite, family-specific model-card field exposed by schematic capture.
+///
+/// This deliberately covers the primary and corpus-backed Berkeley parameters
+/// for each built-in nonlinear symbol. Vendor libraries and arbitrary
+/// parameter names remain a separate capture concern.
+#[derive(Clone, Copy, Debug, Deserialize, Eq, Ord, PartialEq, PartialOrd, Serialize)]
+pub enum SchematicModelParameter {
+    SaturationCurrent,
+    EmissionCoefficient,
+    ZeroBiasJunctionCapacitance,
+    TransitTime,
+    ForwardBeta,
+    BjtBaseEmitterCapacitance,
+    BjtForwardTransitTime,
+    JfetTransconductance,
+    ThresholdVoltage,
+    ChannelLengthModulation,
+    JfetGateSourceCapacitance,
+    JfetGateDrainCapacitance,
+    MosfetTransconductance,
+    MosfetSubstrateDoping,
+    MosfetDrainBulkCapacitance,
+    MosfetGateSourceOverlapCapacitance,
+    MosfetGateDrainOverlapCapacitance,
+    MosfetGateBulkOverlapCapacitance,
+    MosfetSourceBulkCapacitance,
+    MosfetBulkJunctionPotential,
+    MosfetBulkJunctionGradingCoefficient,
+}
+
+impl SchematicModelParameter {
+    pub fn key(self) -> &'static str {
+        match self {
+            Self::SaturationCurrent => "IS",
+            Self::EmissionCoefficient => "N",
+            Self::ZeroBiasJunctionCapacitance => "CJO",
+            Self::TransitTime => "TT",
+            Self::ForwardBeta => "BF",
+            Self::BjtBaseEmitterCapacitance => "CJE",
+            Self::BjtForwardTransitTime => "TF",
+            Self::JfetTransconductance => "BETA",
+            Self::ThresholdVoltage => "VTO",
+            Self::ChannelLengthModulation => "LAMBDA",
+            Self::JfetGateSourceCapacitance => "CGS",
+            Self::JfetGateDrainCapacitance => "CGD",
+            Self::MosfetTransconductance => "KP",
+            Self::MosfetSubstrateDoping => "NSUB",
+            Self::MosfetDrainBulkCapacitance => "CBD",
+            Self::MosfetGateSourceOverlapCapacitance => "CGSO",
+            Self::MosfetGateDrainOverlapCapacitance => "CGDO",
+            Self::MosfetGateBulkOverlapCapacitance => "CGBO",
+            Self::MosfetSourceBulkCapacitance => "CBS",
+            Self::MosfetBulkJunctionPotential => "PB",
+            Self::MosfetBulkJunctionGradingCoefficient => "MJ",
+        }
+    }
+
+    pub fn label(self) -> &'static str {
+        match self {
+            Self::SaturationCurrent => "Saturation current (IS)",
+            Self::EmissionCoefficient => "Emission coefficient (N)",
+            Self::ZeroBiasJunctionCapacitance => "Zero-bias junction capacitance (CJO)",
+            Self::TransitTime => "Transit time (TT)",
+            Self::ForwardBeta => "Forward beta (BF)",
+            Self::BjtBaseEmitterCapacitance => "Base-emitter capacitance (CJE)",
+            Self::BjtForwardTransitTime => "Forward transit time (TF)",
+            Self::JfetTransconductance => "Transconductance (BETA)",
+            Self::ThresholdVoltage => "Threshold voltage (VTO)",
+            Self::ChannelLengthModulation => "Channel-length modulation (LAMBDA)",
+            Self::JfetGateSourceCapacitance => "Gate-source capacitance (CGS)",
+            Self::JfetGateDrainCapacitance => "Gate-drain capacitance (CGD)",
+            Self::MosfetTransconductance => "Transconductance (KP)",
+            Self::MosfetSubstrateDoping => "Substrate doping (NSUB)",
+            Self::MosfetDrainBulkCapacitance => "Drain-bulk capacitance (CBD)",
+            Self::MosfetGateSourceOverlapCapacitance => "Gate-source overlap capacitance (CGSO)",
+            Self::MosfetGateDrainOverlapCapacitance => "Gate-drain overlap capacitance (CGDO)",
+            Self::MosfetGateBulkOverlapCapacitance => "Gate-bulk overlap capacitance (CGBO)",
+            Self::MosfetSourceBulkCapacitance => "Source-bulk capacitance (CBS)",
+            Self::MosfetBulkJunctionPotential => "Bulk junction potential (PB)",
+            Self::MosfetBulkJunctionGradingCoefficient => "Bulk junction grading coefficient (MJ)",
+        }
+    }
+
+    fn for_kind(kind: SchematicComponentKind) -> &'static [Self] {
+        match kind {
+            SchematicComponentKind::Diode => &[
+                Self::SaturationCurrent,
+                Self::EmissionCoefficient,
+                Self::ZeroBiasJunctionCapacitance,
+                Self::TransitTime,
+            ],
+            SchematicComponentKind::Bjt => &[
+                Self::SaturationCurrent,
+                Self::ForwardBeta,
+                Self::BjtBaseEmitterCapacitance,
+                Self::BjtForwardTransitTime,
+            ],
+            SchematicComponentKind::Jfet => &[
+                Self::JfetTransconductance,
+                Self::ThresholdVoltage,
+                Self::ChannelLengthModulation,
+                Self::JfetGateSourceCapacitance,
+                Self::JfetGateDrainCapacitance,
+            ],
+            SchematicComponentKind::Mosfet => &[
+                Self::ThresholdVoltage,
+                Self::MosfetTransconductance,
+                Self::ChannelLengthModulation,
+                Self::MosfetSubstrateDoping,
+                Self::MosfetDrainBulkCapacitance,
+                Self::MosfetGateSourceOverlapCapacitance,
+                Self::MosfetGateDrainOverlapCapacitance,
+                Self::MosfetGateBulkOverlapCapacitance,
+                Self::MosfetSourceBulkCapacitance,
+                Self::MosfetBulkJunctionPotential,
+                Self::MosfetBulkJunctionGradingCoefficient,
+            ],
+            _ => &[],
+        }
+    }
+}
+
+impl SchematicModelPolarity {
+    /// Parse the stable host-control values.
+    pub fn from_host_value(value: &str) -> Result<Self, SchematicError> {
+        match value {
+            "N" => Ok(Self::N),
+            "P" => Ok(Self::P),
+            _ => Err(invalid("schematic model polarity must be N or P")),
+        }
+    }
+
+    /// Return the Berkeley model keyword for one transistor family.
+    fn model_keyword(self, kind: SchematicComponentKind) -> Option<&'static str> {
+        match (kind, self) {
+            (SchematicComponentKind::Bjt, Self::N) => Some("NPN"),
+            (SchematicComponentKind::Bjt, Self::P) => Some("PNP"),
+            (SchematicComponentKind::Jfet, Self::N) => Some("NJF"),
+            (SchematicComponentKind::Jfet, Self::P) => Some("PJF"),
+            (SchematicComponentKind::Mosfet, Self::N) => Some("NMOS"),
+            (SchematicComponentKind::Mosfet, Self::P) => Some("PMOS"),
+            _ => None,
+        }
+    }
+
+    /// Return the inspector label for one transistor family.
+    pub fn label(self, kind: SchematicComponentKind) -> Option<&'static str> {
+        self.model_keyword(kind)
+    }
 }
 
 impl SchematicComponentKind {
@@ -37,6 +203,10 @@ impl SchematicComponentKind {
             "Resistor" => Ok(Self::Resistor),
             "Capacitor" => Ok(Self::Capacitor),
             "Inductor" => Ok(Self::Inductor),
+            "Diode" => Ok(Self::Diode),
+            "BJT" => Ok(Self::Bjt),
+            "JFET" => Ok(Self::Jfet),
+            "MOSFET" => Ok(Self::Mosfet),
             "DC source" => Ok(Self::DcVoltage),
             "DC current" => Ok(Self::DcCurrent),
             "AC source" => Ok(Self::AcVoltage),
@@ -51,6 +221,10 @@ impl SchematicComponentKind {
             Self::Resistor => "Resistor",
             Self::Capacitor => "Capacitor",
             Self::Inductor => "Inductor",
+            Self::Diode => "Diode",
+            Self::Bjt => "BJT",
+            Self::Jfet => "JFET",
+            Self::Mosfet => "MOSFET",
             Self::DcVoltage => "DC source",
             Self::DcCurrent => "DC current",
             Self::AcVoltage => "AC source",
@@ -63,6 +237,10 @@ impl SchematicComponentKind {
             Self::Resistor => 'R',
             Self::Capacitor => 'C',
             Self::Inductor => 'L',
+            Self::Diode => 'D',
+            Self::Bjt => 'Q',
+            Self::Jfet => 'J',
+            Self::Mosfet => 'M',
             Self::DcVoltage | Self::AcVoltage => 'V',
             Self::DcCurrent => 'I',
             Self::Ground => 'G',
@@ -75,9 +253,30 @@ impl SchematicComponentKind {
             Self::Resistor
             | Self::Capacitor
             | Self::Inductor
+            | Self::Diode
             | Self::DcVoltage
             | Self::DcCurrent
             | Self::AcVoltage => 2,
+            Self::Bjt | Self::Jfet => 3,
+            Self::Mosfet => 4,
+        }
+    }
+
+    fn is_transistor(self) -> bool {
+        matches!(self, Self::Bjt | Self::Jfet | Self::Mosfet)
+    }
+
+    pub fn is_nonlinear(self) -> bool {
+        matches!(self, Self::Diode | Self::Bjt | Self::Jfet | Self::Mosfet)
+    }
+
+    /// Return the N- and P-type model labels for inspector controls.
+    pub fn model_polarity_labels(self) -> Option<(&'static str, &'static str)> {
+        match self {
+            Self::Bjt => Some(("NPN", "PNP")),
+            Self::Jfet => Some(("NJF", "PJF")),
+            Self::Mosfet => Some(("NMOS", "PMOS")),
+            _ => None,
         }
     }
 }
@@ -273,6 +472,14 @@ pub struct SchematicDocument {
     pub output_probes: Vec<SchematicOutputProbe>,
     #[serde(default)]
     pub scoped_output_probes: Vec<SchematicScopedOutputProbes>,
+    /// Explicit transistor-polarity selections keyed by component reference.
+    /// Missing legacy entries retain the N-type default.
+    #[serde(default)]
+    pub model_polarities: BTreeMap<String, SchematicModelPolarity>,
+    /// Typed primary model-card fields keyed by component reference.
+    /// Missing legacy entries continue to lower from the scalar component value.
+    #[serde(default)]
+    pub model_parameters: BTreeMap<String, BTreeMap<SchematicModelParameter, String>>,
     #[serde(default)]
     pub analysis: SchematicAnalysis,
     #[serde(default)]
@@ -295,6 +502,11 @@ impl Error for SchematicError {}
 
 fn invalid(message: impl Into<String>) -> SchematicError {
     SchematicError(message.into())
+}
+
+fn legacy_model_parameter(value: &str, parameter: SchematicModelParameter) -> Option<String> {
+    let (name, value) = value.split_once('=')?;
+    (name.eq_ignore_ascii_case(parameter.key()) && !value.is_empty()).then(|| value.to_owned())
 }
 
 fn analysis_parameter_values(
@@ -493,7 +705,8 @@ impl SchematicDocument {
         let terminals = match kind {
             SchematicComponentKind::Resistor
             | SchematicComponentKind::Capacitor
-            | SchematicComponentKind::Inductor => vec![
+            | SchematicComponentKind::Inductor
+            | SchematicComponentKind::Diode => vec![
                 SchematicPoint {
                     x: center.x - 20,
                     y: center.y,
@@ -515,12 +728,48 @@ impl SchematicDocument {
                     y: center.y + 20,
                 },
             ],
+            SchematicComponentKind::Bjt | SchematicComponentKind::Jfet => vec![
+                SchematicPoint {
+                    x: center.x - 20,
+                    y: center.y,
+                },
+                SchematicPoint {
+                    x: center.x + 20,
+                    y: center.y - 20,
+                },
+                SchematicPoint {
+                    x: center.x + 20,
+                    y: center.y + 20,
+                },
+            ],
+            SchematicComponentKind::Mosfet => vec![
+                SchematicPoint {
+                    x: center.x - 20,
+                    y: center.y,
+                },
+                SchematicPoint {
+                    x: center.x + 20,
+                    y: center.y - 20,
+                },
+                SchematicPoint {
+                    x: center.x + 20,
+                    y: center.y + 20,
+                },
+                SchematicPoint {
+                    x: center.x,
+                    y: center.y + 40,
+                },
+            ],
             SchematicComponentKind::Ground => vec![center],
         };
         let value = match kind {
             SchematicComponentKind::Resistor => "1k",
             SchematicComponentKind::Capacitor => "1u",
             SchematicComponentKind::Inductor => "1m",
+            SchematicComponentKind::Diode => "IS=1e-14",
+            SchematicComponentKind::Bjt => "BF=100",
+            SchematicComponentKind::Jfet => "BETA=1m",
+            SchematicComponentKind::Mosfet => "VTO=0.7",
             SchematicComponentKind::DcVoltage => "5",
             SchematicComponentKind::DcCurrent => "1m",
             SchematicComponentKind::AcVoltage => "1",
@@ -650,6 +899,8 @@ impl SchematicDocument {
             .position(|component| component.reference == reference)
             .ok_or_else(|| invalid("schematic component reference is unknown"))?;
         let component = self.components.remove(index);
+        self.model_polarities.remove(reference);
+        self.model_parameters.remove(reference);
         let terminals = component.terminals.into_iter().collect::<BTreeSet<_>>();
         let wire_count = self.wires.len();
         self.wires
@@ -815,6 +1066,14 @@ impl SchematicDocument {
                 }
             }
         }
+        if let Some(polarity) = self.model_polarities.remove(&old_reference) {
+            self.model_polarities
+                .insert(new_reference.to_owned(), polarity);
+        }
+        if let Some(parameters) = self.model_parameters.remove(&old_reference) {
+            self.model_parameters
+                .insert(new_reference.to_owned(), parameters);
+        }
         Ok(updated_cards)
     }
 
@@ -845,6 +1104,112 @@ impl SchematicDocument {
         Ok(())
     }
 
+    /// Return the selected semiconductor polarity for one component.
+    pub fn component_model_polarity(
+        &self,
+        reference: &str,
+    ) -> Result<Option<SchematicModelPolarity>, SchematicError> {
+        let component = self
+            .components
+            .iter()
+            .find(|component| component.reference == reference)
+            .ok_or_else(|| invalid("schematic component reference is unknown"))?;
+        Ok(component.kind.is_transistor().then(|| {
+            self.model_polarities
+                .get(reference)
+                .copied()
+                .unwrap_or_default()
+        }))
+    }
+
+    /// Set the typed polarity of one BJT, JFET, or MOSFET symbol.
+    pub fn set_component_model_polarity(
+        &mut self,
+        reference: &str,
+        polarity: SchematicModelPolarity,
+    ) -> Result<(), SchematicError> {
+        let component = self
+            .components
+            .iter()
+            .find(|component| component.reference == reference)
+            .ok_or_else(|| invalid("schematic component reference is unknown"))?;
+        if !component.kind.is_transistor() {
+            return Err(invalid(format!(
+                "{} does not support a semiconductor model polarity",
+                component.reference
+            )));
+        }
+        self.model_polarities.insert(reference.to_owned(), polarity);
+        Ok(())
+    }
+
+    /// Return the two typed primary model fields available for one component.
+    pub fn component_model_parameters(
+        &self,
+        reference: &str,
+    ) -> Result<Vec<(SchematicModelParameter, String)>, SchematicError> {
+        let component = self
+            .components
+            .iter()
+            .find(|component| component.reference == reference)
+            .ok_or_else(|| invalid("schematic component reference is unknown"))?;
+        let overrides = self.model_parameters.get(reference);
+        Ok(SchematicModelParameter::for_kind(component.kind)
+            .iter()
+            .copied()
+            .map(|parameter| {
+                let value = overrides
+                    .and_then(|parameters| parameters.get(&parameter))
+                    .cloned()
+                    .or_else(|| legacy_model_parameter(&component.value, parameter))
+                    .unwrap_or_default();
+                (parameter, value)
+            })
+            .collect())
+    }
+
+    /// Set or clear one typed primary nonlinear model field.
+    pub fn set_component_model_parameter(
+        &mut self,
+        reference: &str,
+        parameter: SchematicModelParameter,
+        value: &str,
+    ) -> Result<(), SchematicError> {
+        let component = self
+            .components
+            .iter()
+            .find(|component| component.reference == reference)
+            .ok_or_else(|| invalid("schematic component reference is unknown"))?;
+        if !SchematicModelParameter::for_kind(component.kind).contains(&parameter) {
+            return Err(invalid(format!(
+                "{} does not support {}",
+                component.reference,
+                parameter.key()
+            )));
+        }
+        if !value.is_empty() && value.chars().any(char::is_whitespace) {
+            return Err(invalid(format!(
+                "{} {} must be one SPICE token",
+                component.reference,
+                parameter.key()
+            )));
+        }
+        if value.is_empty() {
+            if let Some(parameters) = self.model_parameters.get_mut(reference) {
+                parameters.remove(&parameter);
+                if parameters.is_empty() {
+                    self.model_parameters.remove(reference);
+                }
+            }
+        } else {
+            self.model_parameters
+                .entry(reference.to_owned())
+                .or_default()
+                .insert(parameter, value.to_owned());
+        }
+        Ok(())
+    }
+
     /// Return selectable independent sources for source-controlled analysis cards.
     pub fn independent_source_references(&self) -> Vec<&str> {
         self.components
@@ -871,6 +1236,10 @@ impl SchematicDocument {
                     SchematicComponentKind::Resistor
                         | SchematicComponentKind::Capacitor
                         | SchematicComponentKind::Inductor
+                        | SchematicComponentKind::Diode
+                        | SchematicComponentKind::Bjt
+                        | SchematicComponentKind::Jfet
+                        | SchematicComponentKind::Mosfet
                         | SchematicComponentKind::DcVoltage
                         | SchematicComponentKind::AcVoltage
                 )
@@ -1560,6 +1929,56 @@ impl SchematicDocument {
                 ground_count += 1;
             }
         }
+        for reference in self.model_polarities.keys() {
+            let component = self
+                .components
+                .iter()
+                .find(|component| component.reference == *reference)
+                .ok_or_else(|| {
+                    invalid(format!(
+                        "model polarity references unknown component {reference}"
+                    ))
+                })?;
+            if !component.kind.is_transistor() {
+                return Err(invalid(format!(
+                    "{} does not support a semiconductor model polarity",
+                    component.reference
+                )));
+            }
+        }
+        for (reference, parameters) in &self.model_parameters {
+            let component = self
+                .components
+                .iter()
+                .find(|component| component.reference == *reference)
+                .ok_or_else(|| {
+                    invalid(format!(
+                        "model parameters reference unknown component {reference}"
+                    ))
+                })?;
+            if !component.kind.is_nonlinear() {
+                return Err(invalid(format!(
+                    "{} does not support semiconductor model parameters",
+                    component.reference
+                )));
+            }
+            for (parameter, value) in parameters {
+                if !SchematicModelParameter::for_kind(component.kind).contains(parameter) {
+                    return Err(invalid(format!(
+                        "{} does not support {}",
+                        component.reference,
+                        parameter.key()
+                    )));
+                }
+                if value.is_empty() || value.chars().any(char::is_whitespace) {
+                    return Err(invalid(format!(
+                        "{} {} must be one SPICE token",
+                        component.reference,
+                        parameter.key()
+                    )));
+                }
+            }
+        }
         if ground_count == 0 {
             return Err(invalid("schematic requires at least one ground symbol"));
         }
@@ -1608,6 +2027,28 @@ impl SchematicDocument {
         let mut document = self.clone();
         document.migrate_legacy_analysis_cards();
         document.to_berkeley_netlist_materialized()
+    }
+
+    fn model_parameter_text(&self, component: &SchematicComponent) -> String {
+        let mut tokens = vec![component.value.clone()];
+        let Some(overrides) = self.model_parameters.get(&component.reference) else {
+            return tokens.join(" ");
+        };
+        for parameter in SchematicModelParameter::for_kind(component.kind) {
+            let Some(value) = overrides.get(parameter) else {
+                continue;
+            };
+            let token = format!("{}={value}", parameter.key());
+            if let Some(existing) = tokens
+                .iter_mut()
+                .find(|existing| legacy_model_parameter(existing, *parameter).is_some())
+            {
+                *existing = token;
+            } else {
+                tokens.push(token);
+            }
+        }
+        tokens.join(" ")
     }
 
     fn to_berkeley_netlist_materialized(&self) -> Result<String, SchematicError> {
@@ -1679,6 +2120,65 @@ impl SchematicDocument {
                     "{} {} {} AC {}",
                     component.reference, terminals[0], terminals[1], component.value
                 ),
+                SchematicComponentKind::Diode => {
+                    let model = format!("Schematic{}Model", component.reference);
+                    lines.push(format!(
+                        ".model {model} D({})",
+                        self.model_parameter_text(component)
+                    ));
+                    format!(
+                        "{} {} {} {model}",
+                        component.reference, terminals[0], terminals[1]
+                    )
+                }
+                SchematicComponentKind::Bjt => {
+                    let model = format!("Schematic{}Model", component.reference);
+                    let model_kind = self
+                        .component_model_polarity(&component.reference)?
+                        .expect("BJT supports a model polarity")
+                        .model_keyword(component.kind)
+                        .expect("BJT model polarity has a keyword");
+                    lines.push(format!(
+                        ".model {model} {model_kind}({})",
+                        self.model_parameter_text(component)
+                    ));
+                    format!(
+                        "{} {} {} {} {model}",
+                        component.reference, terminals[0], terminals[1], terminals[2]
+                    )
+                }
+                SchematicComponentKind::Jfet => {
+                    let model = format!("Schematic{}Model", component.reference);
+                    let model_kind = self
+                        .component_model_polarity(&component.reference)?
+                        .expect("JFET supports a model polarity")
+                        .model_keyword(component.kind)
+                        .expect("JFET model polarity has a keyword");
+                    lines.push(format!(
+                        ".model {model} {model_kind}({})",
+                        self.model_parameter_text(component)
+                    ));
+                    format!(
+                        "{} {} {} {} {model}",
+                        component.reference, terminals[0], terminals[1], terminals[2]
+                    )
+                }
+                SchematicComponentKind::Mosfet => {
+                    let model = format!("Schematic{}Model", component.reference);
+                    let model_kind = self
+                        .component_model_polarity(&component.reference)?
+                        .expect("MOSFET supports a model polarity")
+                        .model_keyword(component.kind)
+                        .expect("MOSFET model polarity has a keyword");
+                    lines.push(format!(
+                        ".model {model} {model_kind}(LEVEL=1 {})",
+                        self.model_parameter_text(component)
+                    ));
+                    format!(
+                        "{} {} {} {} {} {model}",
+                        component.reference, terminals[0], terminals[1], terminals[2], terminals[3]
+                    )
+                }
                 SchematicComponentKind::Ground => unreachable!("ground symbols are skipped"),
             };
             lines.push(line);
@@ -1756,6 +2256,8 @@ mod tests {
             net_labels: Vec::new(),
             output_probes: Vec::new(),
             scoped_output_probes: Vec::new(),
+            model_polarities: BTreeMap::new(),
+            model_parameters: BTreeMap::new(),
             analysis: SchematicAnalysis::OperatingPoint,
             analysis_settings: SchematicAnalysisSettings::default(),
             analysis_cards: Vec::new(),
@@ -1909,6 +2411,8 @@ mod tests {
             net_labels: Vec::new(),
             output_probes: Vec::new(),
             scoped_output_probes: Vec::new(),
+            model_polarities: BTreeMap::new(),
+            model_parameters: BTreeMap::new(),
             analysis: SchematicAnalysis::default(),
             analysis_settings: SchematicAnalysisSettings::default(),
             analysis_cards: Vec::new(),
@@ -1998,6 +2502,8 @@ mod tests {
             net_labels: Vec::new(),
             output_probes: Vec::new(),
             scoped_output_probes: Vec::new(),
+            model_polarities: BTreeMap::new(),
+            model_parameters: BTreeMap::new(),
             analysis: SchematicAnalysis::AcSweep,
             analysis_settings: SchematicAnalysisSettings::default(),
             analysis_cards: Vec::new(),
@@ -2393,6 +2899,303 @@ mod tests {
         );
         assert!(document.add_saved_output_current_probe("L1").unwrap());
         assert_eq!(document.saved_output_probe_tokens(), ["I(L1)"]);
+    }
+
+    #[test]
+    fn nonlinear_palette_symbols_use_stable_defaults_and_terminal_arities() {
+        let mut document = rc_document();
+        for (label, reference, value, terminal_count) in [
+            ("Diode", "D1", "IS=1e-14", 2),
+            ("BJT", "Q1", "BF=100", 3),
+            ("JFET", "J1", "BETA=1m", 3),
+            ("MOSFET", "M1", "VTO=0.7", 4),
+        ] {
+            let kind = SchematicComponentKind::from_palette_label(label).unwrap();
+            assert_eq!(document.place_palette_component(kind).unwrap(), reference);
+            let component = document.components.last().unwrap();
+            assert_eq!(component.value, value);
+            assert_eq!(component.terminals.len(), terminal_count);
+        }
+
+        assert_eq!(
+            document.branch_current_element_references(),
+            ["C1", "V1", "R1", "D1", "Q1", "J1", "M1"]
+        );
+    }
+
+    #[test]
+    fn nonlinear_branch_currents_lower_through_global_and_scoped_output_selection() {
+        let mut document = rc_document();
+        document.components.extend([
+            SchematicComponent {
+                reference: "D1".to_owned(),
+                kind: SchematicComponentKind::Diode,
+                value: "IS=1e-14".to_owned(),
+                terminals: vec![point(0, 20), point(0, 0)],
+            },
+            SchematicComponent {
+                reference: "Q1".to_owned(),
+                kind: SchematicComponentKind::Bjt,
+                value: "BF=100".to_owned(),
+                terminals: vec![point(0, 20), point(0, 20), point(0, 0)],
+            },
+            SchematicComponent {
+                reference: "J1".to_owned(),
+                kind: SchematicComponentKind::Jfet,
+                value: "BETA=1m".to_owned(),
+                terminals: vec![point(0, 20), point(0, 0), point(0, 0)],
+            },
+            SchematicComponent {
+                reference: "M1".to_owned(),
+                kind: SchematicComponentKind::Mosfet,
+                value: "VTO=0.7".to_owned(),
+                terminals: vec![point(0, 20), point(0, 20), point(0, 0), point(0, 0)],
+            },
+        ]);
+
+        assert_eq!(
+            document.branch_current_element_references(),
+            ["C1", "V1", "R1", "D1", "Q1", "J1", "M1"]
+        );
+        for reference in ["D1", "Q1", "J1", "M1"] {
+            assert!(document.add_saved_output_current_probe(reference).unwrap());
+        }
+        let ac = document.add_analysis_card(SchematicAnalysis::AcSweep);
+        for reference in ["D1", "Q1", "J1", "M1"] {
+            assert!(document
+                .add_scoped_output_current_probe(ac, reference)
+                .unwrap());
+        }
+
+        let deck = document.to_berkeley_netlist().unwrap();
+        for model in [
+            ".model SchematicD1Model D(IS=1e-14)",
+            ".model SchematicQ1Model NPN(BF=100)",
+            ".model SchematicJ1Model NJF(BETA=1m)",
+            ".model SchematicM1Model NMOS(LEVEL=1 VTO=0.7)",
+        ] {
+            assert!(deck.contains(model), "missing {model} in {deck}");
+        }
+        assert!(deck.contains(".save I(D1) I(Q1) I(J1) I(M1)"));
+        assert!(deck.contains(".probe ac I(D1) I(Q1) I(J1) I(M1)"));
+        parse_netlist(&deck).unwrap();
+    }
+
+    #[test]
+    fn nonlinear_model_fields_are_typed_persisted_and_lowered_deterministically() {
+        let mut document = rc_document();
+        document.components.extend([
+            SchematicComponent {
+                reference: "D1".to_owned(),
+                kind: SchematicComponentKind::Diode,
+                value: "IS=1e-14".to_owned(),
+                terminals: vec![point(0, 20), point(0, 0)],
+            },
+            SchematicComponent {
+                reference: "Q1".to_owned(),
+                kind: SchematicComponentKind::Bjt,
+                value: "BF=100".to_owned(),
+                terminals: vec![point(0, 20), point(0, 20), point(0, 0)],
+            },
+            SchematicComponent {
+                reference: "J1".to_owned(),
+                kind: SchematicComponentKind::Jfet,
+                value: "BETA=1m".to_owned(),
+                terminals: vec![point(0, 20), point(0, 0), point(0, 0)],
+            },
+            SchematicComponent {
+                reference: "M1".to_owned(),
+                kind: SchematicComponentKind::Mosfet,
+                value: "VTO=0.7".to_owned(),
+                terminals: vec![point(0, 20), point(0, 20), point(0, 0), point(0, 0)],
+            },
+        ]);
+        for (reference, parameter, value) in [
+            ("D1", SchematicModelParameter::EmissionCoefficient, "1.2"),
+            (
+                "D1",
+                SchematicModelParameter::ZeroBiasJunctionCapacitance,
+                "1.5e-12",
+            ),
+            ("D1", SchematicModelParameter::TransitTime, "4e-9"),
+            ("Q1", SchematicModelParameter::SaturationCurrent, "2e-14"),
+            (
+                "Q1",
+                SchematicModelParameter::BjtBaseEmitterCapacitance,
+                "2e-12",
+            ),
+            (
+                "Q1",
+                SchematicModelParameter::BjtForwardTransitTime,
+                "1e-10",
+            ),
+            ("J1", SchematicModelParameter::ThresholdVoltage, "-2"),
+            (
+                "J1",
+                SchematicModelParameter::ChannelLengthModulation,
+                "0.02",
+            ),
+            (
+                "J1",
+                SchematicModelParameter::JfetGateSourceCapacitance,
+                "2n",
+            ),
+            (
+                "J1",
+                SchematicModelParameter::JfetGateDrainCapacitance,
+                "100p",
+            ),
+            ("M1", SchematicModelParameter::MosfetTransconductance, "2m"),
+            (
+                "M1",
+                SchematicModelParameter::ChannelLengthModulation,
+                "0.04",
+            ),
+            ("M1", SchematicModelParameter::MosfetSubstrateDoping, "1.6"),
+            (
+                "M1",
+                SchematicModelParameter::MosfetDrainBulkCapacitance,
+                "3e-13",
+            ),
+            (
+                "M1",
+                SchematicModelParameter::MosfetGateSourceOverlapCapacitance,
+                "20p",
+            ),
+            (
+                "M1",
+                SchematicModelParameter::MosfetGateDrainOverlapCapacitance,
+                "5p",
+            ),
+            (
+                "M1",
+                SchematicModelParameter::MosfetGateBulkOverlapCapacitance,
+                "1p",
+            ),
+            (
+                "M1",
+                SchematicModelParameter::MosfetSourceBulkCapacitance,
+                "4e-13",
+            ),
+            (
+                "M1",
+                SchematicModelParameter::MosfetBulkJunctionPotential,
+                "0.9",
+            ),
+            (
+                "M1",
+                SchematicModelParameter::MosfetBulkJunctionGradingCoefficient,
+                "0.45",
+            ),
+        ] {
+            document
+                .set_component_model_parameter(reference, parameter, value)
+                .unwrap();
+        }
+        assert_eq!(
+            document.component_model_parameters("Q1").unwrap(),
+            vec![
+                (
+                    SchematicModelParameter::SaturationCurrent,
+                    "2e-14".to_owned()
+                ),
+                (SchematicModelParameter::ForwardBeta, "100".to_owned()),
+                (
+                    SchematicModelParameter::BjtBaseEmitterCapacitance,
+                    "2e-12".to_owned()
+                ),
+                (
+                    SchematicModelParameter::BjtForwardTransitTime,
+                    "1e-10".to_owned()
+                ),
+            ]
+        );
+        let deck = document.to_berkeley_netlist().unwrap();
+        for model in [
+            ".model SchematicD1Model D(IS=1e-14 N=1.2 CJO=1.5e-12 TT=4e-9)",
+            ".model SchematicQ1Model NPN(BF=100 IS=2e-14 CJE=2e-12 TF=1e-10)",
+            ".model SchematicJ1Model NJF(BETA=1m VTO=-2 LAMBDA=0.02 CGS=2n CGD=100p)",
+            ".model SchematicM1Model NMOS(LEVEL=1 VTO=0.7 KP=2m LAMBDA=0.04 NSUB=1.6 CBD=3e-13 CGSO=20p CGDO=5p CGBO=1p CBS=4e-13 PB=0.9 MJ=0.45)",
+        ] {
+            assert!(deck.contains(model), "missing {model} in {deck}");
+        }
+        parse_netlist(&deck).unwrap();
+
+        document.rename_component("Q1", "QMODEL").unwrap();
+        assert!(document.model_parameters.contains_key("QMODEL"));
+        document.remove_component("J1").unwrap();
+        assert!(!document.model_parameters.contains_key("J1"));
+
+        let persisted = serde_json::to_value(&document).unwrap();
+        let restored: SchematicDocument = serde_json::from_value(persisted).unwrap();
+        assert_eq!(restored, document);
+        assert_eq!(
+            document
+                .set_component_model_parameter("R1", SchematicModelParameter::ForwardBeta, "50")
+                .unwrap_err()
+                .to_string(),
+            "R1 does not support BF"
+        );
+    }
+
+    #[test]
+    fn transistor_polarities_are_typed_persisted_and_lowered_by_model_family() {
+        let mut document = rc_document();
+        document.components.extend([
+            SchematicComponent {
+                reference: "Q1".to_owned(),
+                kind: SchematicComponentKind::Bjt,
+                value: "BF=100".to_owned(),
+                terminals: vec![point(0, 20), point(0, 20), point(0, 0)],
+            },
+            SchematicComponent {
+                reference: "J1".to_owned(),
+                kind: SchematicComponentKind::Jfet,
+                value: "BETA=1m".to_owned(),
+                terminals: vec![point(0, 20), point(0, 0), point(0, 0)],
+            },
+            SchematicComponent {
+                reference: "M1".to_owned(),
+                kind: SchematicComponentKind::Mosfet,
+                value: "VTO=0.7".to_owned(),
+                terminals: vec![point(0, 20), point(0, 20), point(0, 0), point(0, 0)],
+            },
+        ]);
+        for reference in ["Q1", "J1", "M1"] {
+            document
+                .set_component_model_polarity(reference, SchematicModelPolarity::P)
+                .unwrap();
+        }
+        assert_eq!(
+            document.component_model_polarity("Q1").unwrap(),
+            Some(SchematicModelPolarity::P)
+        );
+        assert_eq!(
+            SchematicComponentKind::Mosfet.model_polarity_labels(),
+            Some(("NMOS", "PMOS"))
+        );
+        let deck = document.to_berkeley_netlist().unwrap();
+        for model in [
+            ".model SchematicQ1Model PNP(BF=100)",
+            ".model SchematicJ1Model PJF(BETA=1m)",
+            ".model SchematicM1Model PMOS(LEVEL=1 VTO=0.7)",
+        ] {
+            assert!(deck.contains(model), "missing {model} in {deck}");
+        }
+        document.rename_component("Q1", "QP1").unwrap();
+        assert_eq!(
+            document.component_model_polarity("QP1").unwrap(),
+            Some(SchematicModelPolarity::P)
+        );
+        document.remove_component("J1").unwrap();
+        assert!(!document.model_polarities.contains_key("J1"));
+        document
+            .model_polarities
+            .insert("R1".to_owned(), SchematicModelPolarity::P);
+        assert_eq!(
+            document.validate().unwrap_err().to_string(),
+            "R1 does not support a semiconductor model polarity"
+        );
     }
 
     #[test]

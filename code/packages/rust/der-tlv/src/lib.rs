@@ -245,7 +245,12 @@ fn decode_one_at<'a>(
         .ok_or_else(|| DerError::new(DerErrorKind::LengthHostOverflow, base_offset))?;
     let encoded_len = header_len
         .checked_add(value_len)
-        .ok_or_else(|| DerError::new(DerErrorKind::LengthHostOverflow, base_offset))?;
+        .ok_or_else(|| {
+            DerError::new(
+                DerErrorKind::LengthHostOverflow,
+                add_offset(base_offset, identifier_len),
+            )
+        })?;
     if encoded_len > input.len() {
         return Err(DerError::new(
             DerErrorKind::TruncatedValue,

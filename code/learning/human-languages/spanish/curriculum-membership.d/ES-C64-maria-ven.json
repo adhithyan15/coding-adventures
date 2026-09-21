@@ -1,0 +1,11 @@
+{
+  "id": "ES-C64-maria-ven",
+  "pathSegment": "ES-PATH-A1-VOCATIVO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-A1-VOCATIVO",
+      "order": 0
+    }
+  ]
+}

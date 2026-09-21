@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-OR-10",
+  "category": "Devanagari letters and signs",
+  "label": "the nasals of the velar and palatal rows, which survive mainly inside conjuncts",
+  "probe": null,
+  "note": "Untaught. Lower priority than the other rows and listed because the row inventory is not closed without them.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [
+    "A1-O1-03"
+  ]
+}

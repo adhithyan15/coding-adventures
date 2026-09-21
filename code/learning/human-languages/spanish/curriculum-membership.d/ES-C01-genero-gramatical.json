@@ -1,0 +1,11 @@
+{
+  "id": "ES-C01-genero-gramatical",
+  "pathSegment": "ES-PATH-003",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-003-GRAMMAR",
+      "order": 0
+    }
+  ]
+}

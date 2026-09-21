@@ -1,0 +1,11 @@
+{
+  "id": "MR-C49-adj-agreement",
+  "pathSegment": "MR-PATH-052",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-065-THE-ADJECTIVE",
+      "order": 1
+    }
+  ]
+}

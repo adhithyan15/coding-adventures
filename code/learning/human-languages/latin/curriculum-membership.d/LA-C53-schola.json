@@ -1,0 +1,11 @@
+{
+  "id": "LA-C53-schola",
+  "pathSegment": "LA-PATH-037",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-053-SCHOOL",
+      "order": 3
+    }
+  ]
+}

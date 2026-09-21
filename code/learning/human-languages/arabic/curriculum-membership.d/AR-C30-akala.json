@@ -1,0 +1,11 @@
+{
+  "id": "AR-C30-akala",
+  "pathSegment": "AR-PATH-027-C",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-027-LANGUAGE-SPECIFIC-C",
+      "order": 3
+    }
+  ]
+}

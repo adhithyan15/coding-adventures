@@ -1,0 +1,11 @@
+{
+  "id": "ES-C428-guion-bajo",
+  "pathSegment": "ES-PATH-428-PIEZAS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-428-PIEZAS",
+      "order": 1
+    }
+  ]
+}

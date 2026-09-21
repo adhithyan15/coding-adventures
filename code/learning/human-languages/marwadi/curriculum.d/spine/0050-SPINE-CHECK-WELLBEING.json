@@ -1,7 +1,4 @@
 {
-  "segments": [
-    "MW-PATH-006"
-  ],
   "omits": [
     "QUESTION-HOW",
     "WORD-GOOD",

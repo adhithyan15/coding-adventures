@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-V-20",
+  "category": "The verb",
+  "label": "possession: the postposition plus aahe construction",
+  "probe": [
+    "MR-POSTP-KADE",
+    "MR-GRAMMAR-POSSESSION",
+    "MR-LEX-AAHE-COPULA"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-spine"
+  ],
+  "derivedFrom": [
+    "A1-NG1-01"
+  ]
+}

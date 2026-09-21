@@ -1,0 +1,11 @@
+{
+  "id": "TA-W07-number-words-6-10",
+  "pathSegment": "TA-PATH-014",
+  "pathOrder": 11,
+  "extensions": [
+    {
+      "id": "TA-EXT-014-LANGUAGE-SPECIFIC",
+      "order": 10
+    }
+  ]
+}

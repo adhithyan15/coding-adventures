@@ -1,0 +1,11 @@
+{
+  "id": "TA-C58-hen",
+  "pathSegment": "TA-PATH-58-ANIMAL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-58-ANIMAL",
+      "order": 2
+    }
+  ]
+}

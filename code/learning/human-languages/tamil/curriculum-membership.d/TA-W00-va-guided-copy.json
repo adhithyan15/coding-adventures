@@ -1,0 +1,11 @@
+{
+  "id": "TA-W00-va-guided-copy",
+  "pathSegment": "TA-PATH-001",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-001-INLINE-SCRIPT",
+      "order": 1
+    }
+  ]
+}

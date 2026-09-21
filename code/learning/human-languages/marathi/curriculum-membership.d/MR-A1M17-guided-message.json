@@ -1,0 +1,11 @@
+{
+  "id": "MR-A1M17-guided-message",
+  "pathSegment": "MR-PATH-022",
+  "pathOrder": 16,
+  "extensions": [
+    {
+      "id": "MR-EXT-025-A1-NAMED-READER-MESSAGE",
+      "order": 16
+    }
+  ]
+}

@@ -4,6 +4,38 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+### Fixed — Compose startup no longer fails outside the window (#15786)
+
+The generated Compose Desktop app now paints a themed loading state before its
+Rust engine and saved workspace initialize. A failed runtime or snapshot load is
+shown in the window with its detail, an explicit statement that saved tasks were
+not changed, and a **Try again** action that creates a fresh host and reruns the
+initial props load. Generated UI acceptance drives loading, failure, and recovery
+in addition to the existing real-runtime task lifecycle.
+
+### Fixed — local storage details remain legible (#15263)
+
+The persistence status and local data path now occupy separate lines. Their
+combined intrinsic width exceeded the generated Compose window, causing the
+old horizontal row to paint both strings over each other in every acceptance
+frame. The stacked summary keeps both pieces of recovery information visible
+without weakening Compose's no-starvation rule for row children.
+
+### Fixed — generated desktop windows fit TaskApp on first launch (#14789)
+
+TaskApp now declares a 1280 x 900 initial desktop window in its Mosaic package
+manifest. Every generated desktop shell consumes the same author-owned size,
+matching the viewport already proven by native acceptance tests instead of
+letting Compose open at its too-small 800 x 600 framework default.
+
+### Changed — adaptive native project pane (#15486)
+
+The app shell now uses `HostNavigationSplit` for its project rail and detail
+area. Native hosts receive a named Projects pane, keep the existing 236-pixel
+preferred width and separator, and let the platform collapse and restore the
+pane as the window narrows and widens. The WinUI runtime smoke resizes the real
+app and proves both the adaptive behavior and the pane's UI Automation name.
+
 ### Fixed — WinUI Board view startup (#15473)
 
 The native app adapter now emits all four cells required by each Board column:

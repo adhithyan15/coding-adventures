@@ -1,0 +1,11 @@
+{
+  "id": "ES-C37-repaso-sentado-de-pie-andando",
+  "pathSegment": "ES-PATH-033-B",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-033-B-CONSOLIDATION-POSTURA",
+      "order": 0
+    }
+  ]
+}

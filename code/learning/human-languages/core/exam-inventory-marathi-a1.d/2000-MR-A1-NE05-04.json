@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NE05-04",
+  "category": "Food and drink",
+  "label": "dishes and courses",
+  "probe": null,
+  "note": "Untaught: bhaat, bhaajii, polii and jevan have no atoms.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE05-04"
+  ]
+}

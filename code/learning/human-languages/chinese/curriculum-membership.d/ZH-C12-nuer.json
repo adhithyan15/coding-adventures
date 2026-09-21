@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C12-nuer",
+  "pathSegment": "ZH-PATH-011",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ZH-EXT-031-FAMILY-SCRIPT",
+      "order": 2
+    }
+  ]
+}

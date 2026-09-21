@@ -1,0 +1,11 @@
+{
+  "id": "SA-C51-uncle",
+  "pathSegment": "SA-PATH-51-KIN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-51-KIN",
+      "order": 4
+    }
+  ]
+}

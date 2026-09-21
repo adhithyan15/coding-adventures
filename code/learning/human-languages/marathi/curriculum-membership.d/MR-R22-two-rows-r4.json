@@ -1,0 +1,11 @@
+{
+  "id": "MR-R22-two-rows-r4",
+  "pathSegment": "MR-PATH-020",
+  "pathOrder": 18,
+  "extensions": [
+    {
+      "id": "MR-EXT-036-SECOND-RUNWAY-DISTANT",
+      "order": 1
+    }
+  ]
+}

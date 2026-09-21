@@ -4,8 +4,5 @@
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can hold a whole Sanskrit introduction — my name, the question back, and a reply to a first meeting.",
-  "prerequisites": [],
-  "lessons": [
-    "SA-C02-practice"
-  ]
+  "prerequisites": []
 }

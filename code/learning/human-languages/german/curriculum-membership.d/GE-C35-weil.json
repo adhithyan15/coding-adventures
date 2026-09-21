@@ -1,0 +1,11 @@
+{
+  "id": "GE-C35-weil",
+  "pathSegment": "GE-PATH-A1-VERBINDUNGEN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-A1-VERBINDUNGEN",
+      "order": 4
+    }
+  ]
+}

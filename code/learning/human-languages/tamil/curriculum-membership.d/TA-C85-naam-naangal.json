@@ -1,0 +1,11 @@
+{
+  "id": "TA-C85-naam-naangal",
+  "pathSegment": "TA-PATH-85-THIRD-PERSON",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-85-THIRD-PERSON",
+      "order": 2
+    }
+  ]
+}

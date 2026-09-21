@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-POST-02",
+  "category": "Parsarg (postpositions and case)",
+  "label": "me for location and containment",
+  "probe": [
+    "HI-CONCEPT-C05-RAHNA-01"
+  ],
+  "derivedFrom": "ES:A1-NG3-01"
+}

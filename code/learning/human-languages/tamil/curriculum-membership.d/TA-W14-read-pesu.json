@@ -1,0 +1,11 @@
+{
+  "id": "TA-W14-read-pesu",
+  "pathSegment": "TA-PATH-003",
+  "pathOrder": 18,
+  "extensions": [
+    {
+      "id": "TA-EXT-003-SCRIPT",
+      "order": 18
+    }
+  ]
+}

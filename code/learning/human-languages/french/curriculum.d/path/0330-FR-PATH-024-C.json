@@ -1,10 +1,6 @@
 {
   "id": "FR-PATH-024-C",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
-  "lessons": [
-    "FR-C26-courir",
-    "FR-C27-sasseoir"
-  ],
   "before": [],
   "inline": [],
   "after": []

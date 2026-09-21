@@ -1,5 +1,45 @@
 # Changelog
 
+## 0.18.0
+
+- Preserve typed Mermaid Architecture group icon names in layout IR.
+
+## 0.17.0
+
+- Reserve structural header geometry for named Architecture service icon badges.
+
+## 0.16.0
+
+- Route structural relationships through deterministic orthogonal polylines when requested.
+
+## 0.15.0
+
+- Resolve explicit structural relationship ports to deterministic boundary anchors.
+
+## 0.14.0
+
+- Resolve structural group-edge modifiers to deterministic group-boundary endpoints.
+
+## 0.13.0
+
+- Carry structural start and end arrowhead intent into resolved relationship geometry.
+
+## 0.12.0
+
+- Reserve structural header geometry for Architecture service icon text.
+
+## 0.11.0
+
+- Resolve structural row and column alignment constraints to deterministic geometry.
+
+## 0.10.0
+
+- Resolve typed structural junctions to compact backend-neutral geometry.
+
+## 0.9.0
+
+- Reserve a deterministic title band in structural diagram geometry.
+
 ## 0.8.0
 
 - Reserve structural node geometry from resolved typography styles.

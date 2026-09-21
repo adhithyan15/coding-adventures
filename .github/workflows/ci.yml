@@ -190,14 +190,28 @@ jobs:
             force_flag=(-force)
             shard_flags=(-shard-count 15 -emit-shard-matrix)
           fi
-          ./build-tool \
-            -root . \
-            -diff-base "${{ steps.diff-base.outputs.base }}" \
-            "${force_flag[@]}" \
-            -validate-build-files \
-            -detect-languages \
-            -emit-plan build-plan.json \
-            "${shard_flags[@]}"
+          emit_plan() {
+            ./build-tool \
+              -root . \
+              -diff-base "${{ steps.diff-base.outputs.base }}" \
+              "${force_flag[@]}" \
+              -validate-build-files \
+              -detect-languages \
+              -emit-plan build-plan.json \
+              "${shard_flags[@]}"
+          }
+          if plan_output="$(emit_plan 2>&1)"; then
+            printf '%s\n' "$plan_output"
+          else
+            plan_status=$?
+            printf '%s\n' "$plan_output"
+            if ! grep -Fqx "Error evaluating CI gate registry: CI_GATE_MATCH_LIMIT_EXCEEDED" <<< "$plan_output"; then
+              exit "$plan_status"
+            fi
+            echo "::notice::CI gate match-work ceiling exceeded; starting a separate forced run-all planning operation"
+            force_flag=(-force)
+            emit_plan
+          fi
 
       # Guard against the one failure mode gating introduces: if the build tool
       # emitted no verdicts (registry disabled, flag typo, plan written by an
@@ -582,6 +596,7 @@ jobs:
           # lesson could be filed twice without git ever seeing a collision.
           python3 code/scripts/lessons.py validate
           python3 -m unittest discover -s code/scripts/tests -p 'test_lessons.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_forme_spec_map.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_package_parity_report.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_elixir_windows_build_fronts.py'
           python3 code/scripts/validate_elixir_windows_build_fronts.py --format json > /tmp/elixir-windows-build-fronts.json
@@ -2210,13 +2225,51 @@ jobs:
           installed_taskapp="$taskapp_bin/App"
           test -x "$installed_taskapp"
           taskapp_log="$RUNNER_TEMP/mosaic-swift-taskapp-launch.log"
+          diagnose_taskapp_crash() {
+            local diagnostic_log="$RUNNER_TEMP/mosaic-swift-taskapp-lldb.log"
+            local entitlements="$RUNNER_TEMP/taskapp-debug-entitlements.plist"
+            cat >"$entitlements" <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>com.apple.security.get-task-allow</key>
+            <true/>
+          </dict>
+          </plist>
+          PLIST
+            codesign --force --sign - --entitlements "$entitlements" "$installed_taskapp"
+            (
+              cd /
+              env -u MOSAIC_APP_LIBRARY \
+                lldb --batch -o run -o "thread backtrace all" -- "$installed_taskapp" \
+                >"$diagnostic_log" 2>&1 &
+              debugger_pid=$!
+              sleep 10
+              if kill -0 "$debugger_pid" 2>/dev/null; then
+                pkill -TERM -P "$debugger_pid" 2>/dev/null || true
+                kill "$debugger_pid" 2>/dev/null || true
+              fi
+              wait "$debugger_pid" || true
+            )
+            cat "$diagnostic_log"
+          }
           (
             cd /
-            env -u MOSAIC_APP_LIBRARY "$installed_taskapp" >"$taskapp_log" 2>&1 &
+            env -u MOSAIC_APP_LIBRARY \
+              SWIFT_BACKTRACE="enable=yes,interactive=no,output-to=stderr" \
+              "$installed_taskapp" >"$taskapp_log" 2>&1 &
             taskapp_pid=$!
             trap 'kill "$taskapp_pid" 2>/dev/null || true' EXIT
             sleep 5
-            kill -0 "$taskapp_pid"
+            if ! kill -0 "$taskapp_pid" 2>/dev/null; then
+              cat "$taskapp_log"
+              sleep 2
+              find "$HOME/Library/Logs/DiagnosticReports" -type f \
+                -name 'App*.ips' -mmin -2 -print -exec cat {} \; || true
+              diagnose_taskapp_crash
+              exit 1
+            fi
             kill "$taskapp_pid"
             wait "$taskapp_pid" || true
             trap - EXIT
@@ -2826,7 +2879,7 @@ jobs:
           MOSAIC_APP_STATE_PATH="$taskapp_ui_state" \
             JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_taskapp_runtime")" \
             xvfb-run -a gradle --no-daemon --stacktrace -p "$taskapp_output/compose" \
-              test --tests TaskAppUiTest.generatedControlsDriveRustSchedulingLifecycle
+              test --tests TaskAppUiTest
           MOSAIC_APP_STATE_PATH="$taskapp_ui_state" MOSAIC_EXPECT_RESTORED=1 \
             JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_taskapp_runtime")" \
             xvfb-run -a gradle --no-daemon --stacktrace --rerun-tasks -p "$taskapp_output/compose" \
@@ -2865,14 +2918,14 @@ jobs:
           text = open(sys.argv[1]).read()
           install = text.index("installEngramEffects(it)")
 
-          # After the host exists: installing onto a host that has not been
-          # loaded yet would not compile, but installing after the UI is built
-          # would compile and silently miss every effect raised during the first
-          # composition.
-          creation = text.index("val mosaicHost = remember")
+          # After the host exists and before the loader returns it: installing
+          # onto a host that has not been loaded yet would not compile, while
+          # returning the host first would let the initial composition raise
+          # effects before the handler is attached.
+          creation = text.index("val mosaicHost =")
           assert creation < install, "install must follow the host's creation"
-          window = text.index("Window(onCloseRequest")
-          assert install < window, "install must precede the first composition"
+          returned = text.index("return mosaicHost", creation)
+          assert install < returned, "install must precede returning the host"
           PY
 
           # The gate: it builds. `compileKotlin` is enough -- this lane already

@@ -1,0 +1,11 @@
+{
+  "id": "TE-S04-sign-anusvara",
+  "pathSegment": "TE-PATH-100",
+  "pathOrder": 9,
+  "extensions": [
+    {
+      "id": "TE-EXT-100-SCRIPT-RECOGNITION",
+      "order": 9
+    }
+  ]
+}

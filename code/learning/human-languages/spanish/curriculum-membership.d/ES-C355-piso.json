@@ -1,0 +1,11 @@
+{
+  "id": "ES-C355-piso",
+  "pathSegment": "ES-PATH-355-01",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-355-PLACE",
+      "order": 2
+    }
+  ]
+}

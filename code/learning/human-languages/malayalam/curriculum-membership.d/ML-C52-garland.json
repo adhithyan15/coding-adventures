@@ -1,0 +1,11 @@
+{
+  "id": "ML-C52-garland",
+  "pathSegment": "ML-PATH-52-WELCOME",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-52-WELCOME",
+      "order": 4
+    }
+  ]
+}

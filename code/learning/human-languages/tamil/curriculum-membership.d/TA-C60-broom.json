@@ -1,0 +1,11 @@
+{
+  "id": "TA-C60-broom",
+  "pathSegment": "TA-PATH-60-MADE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-60-MADE",
+      "order": 3
+    }
+  ]
+}

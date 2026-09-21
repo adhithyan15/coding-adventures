@@ -5992,6 +5992,31 @@
   ],
   "finalConsonants": [
     {
+      "glyph": "ൺ",
+      "sound": "ṇ",
+      "role": "consonant",
+      "components": [
+        "the compact inner loop and broad outer-left bowl",
+        "the joined central stems and middle arch",
+        "the right loop rising into the above-line chillu hook"
+      ],
+      "strokeOrder": [
+        "start at the inner-left tip and sweep clockwise around the compact inner loop",
+        "without lifting, continue clockwise around the broad outer-left bowl and climb to the upper junction",
+        "without lifting, descend the first central stem, retrace upward, carry the middle arch, and descend the second stem",
+        "without lifting, carry the upper shoulder right and sweep clockwise around the right loop",
+        "without lifting, rise into the chillu hook and curl left above the line"
+      ],
+      "strokeOrderNote": "Five visible movements in one continuous pen-down run: the nested left loops flow through the paired central stems, right loop, and finishing chillu hook above the line.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Sriveenkat, Ml ൺ order.gif, Malayalam chillu NN stroke-order animation, 00:03.0–00:12.8 (Wikimedia Commons, 2 July 2023)",
+        "url": "https://commons.wikimedia.org/wiki/File:Ml_%E0%B5%BA_order.gif",
+        "variation": "The 97-frame Gayathri-font animation draws ൺ in one uninterrupted run: compact inner loop, broad outer-left bowl, first central stem, middle arch and second stem, right loop, then the finishing hook above the line. This is one attested pedagogical order fitted to the bundled Noto Sans Malayalam outline; loop width, stem spacing, and hook height vary by hand, but the zero-lift order remains the same."
+      },
+      "notes": "Atomic Malayalam chillu NN (U+0D7A): a vowel-free retroflex nasal final consonant, not the base ണ with its inherent a."
+    },
+    {
       "glyph": "ൽ",
       "sound": "l",
       "role": "consonant",

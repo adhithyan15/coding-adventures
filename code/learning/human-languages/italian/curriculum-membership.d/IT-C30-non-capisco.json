@@ -1,0 +1,11 @@
+{
+  "id": "IT-C30-non-capisco",
+  "pathSegment": "IT-PATH-034",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-034-NON",
+      "order": 1
+    }
+  ]
+}

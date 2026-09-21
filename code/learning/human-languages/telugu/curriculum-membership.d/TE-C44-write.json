@@ -1,0 +1,11 @@
+{
+  "id": "TE-C44-write",
+  "pathSegment": "TE-PATH-44-SEESAY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-44-SEESAY",
+      "order": 3
+    }
+  ]
+}

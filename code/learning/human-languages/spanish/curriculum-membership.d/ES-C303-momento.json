@@ -1,0 +1,11 @@
+{
+  "id": "ES-C303-momento",
+  "pathSegment": "ES-PATH-303-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-303-REPARAR",
+      "order": 1
+    }
+  ]
+}

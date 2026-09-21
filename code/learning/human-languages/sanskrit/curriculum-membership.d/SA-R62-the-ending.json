@@ -1,0 +1,11 @@
+{
+  "id": "SA-R62-the-ending",
+  "pathSegment": "SA-PATH-62-ORDINAL",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "SA-EXT-062-ORDINAL-MA",
+      "order": 5
+    }
+  ]
+}

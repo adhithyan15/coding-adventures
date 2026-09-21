@@ -1,0 +1,11 @@
+{
+  "id": "TA-C48-time",
+  "pathSegment": "TA-PATH-48-LEAVE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-48-LEAVE",
+      "order": 1
+    }
+  ]
+}

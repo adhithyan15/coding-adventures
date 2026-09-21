@@ -1,0 +1,11 @@
+{
+  "id": "ML-C61-chilli",
+  "pathSegment": "ML-PATH-61-SHELF",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-61-SHELF",
+      "order": 4
+    }
+  ]
+}

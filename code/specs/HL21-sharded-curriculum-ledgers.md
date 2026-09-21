@@ -53,10 +53,12 @@ since moved from language aggregates to stable direct-owner directories:
 core/generated-book-hashes/<lang>.d/         metadata + one owner per chapter
 core/generated-narration-hashes/<lang>.d/    metadata + one owner per chapter
 core/lesson-modality/<lang>.d/               metadata + one owner per lesson
-core/gentle-ramp-snapshots/<lang>.d/          metadata + metric/finding owners
+core/gentle-ramp-snapshots/<lang>.d/          metadata + metric/finding owners (retired by HL38)
 ```
 
-HL21 generalises that shape rather than adding a second one beside it.
+HL21 generalised that shape rather than adding a second one beside it. HL38
+later retired the gentle-ramp row because its owners were entirely derived; the
+other consumer artifacts remain direct-owned.
 
 ---
 
@@ -517,6 +519,13 @@ shard mode for `spine`. That is a real but contained generalisation of
 >    losing their ordinals. The convention still applies to all 23: those two are
 >    one authored id away from joining the other twenty-one, and nothing would
 >    announce it.
+>
+> 3. **The reverse `segments` arrays are retired by HL39.** Sharding reduced the
+>    collision from one curriculum monolith to one spine-node owner, but every
+>    new path segment under a popular node still edited that existing owner.
+>    `path[*].spine_node` is now the single authored membership edge. Spine
+>    owners retain only `omits` and `relocates`; readers derive the public
+>    `segments` arrays in exact path order and reject a stored copy.
 >
 > 3. **The arrays are not last, and §2.5's refusal had to go.** Every track is
 >    `{version, language, path, spine, extensions}`, Spanish adding

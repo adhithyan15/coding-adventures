@@ -1,0 +1,11 @@
+{
+  "id": "GU-C10-rotli",
+  "pathSegment": "GU-PATH-013",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-013-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

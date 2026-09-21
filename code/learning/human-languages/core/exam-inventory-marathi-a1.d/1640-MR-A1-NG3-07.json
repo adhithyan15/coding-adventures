@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-NG3-07",
+  "category": "Spatial notions",
+  "label": "origin: where one is from",
+  "probe": [
+    "MR-POSTP-HUUN",
+    "MR-QUESTION-KUTHUN",
+    "MR-A1-FORM-LABEL-SHAHAR"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [
+    "A1-NG3-07"
+  ]
+}

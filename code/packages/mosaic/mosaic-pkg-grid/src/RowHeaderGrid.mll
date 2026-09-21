@@ -1,6 +1,6 @@
 // An opt-in numbered-row Grid. Data coordinates are unchanged by the header.
 layout RowHeaderGrid {
-  HostTable [sheet] (focusable: true, a11y-label: "Data table", selected-row: slot: selected-row, selected-col: slot: selected-col, onViewportRows: emit: onViewportRows, viewport-offset: slot: viewport-offset, total-rows: slot: total-rows, onViewportShift: emit: onViewportShift) {
+  HostTable [sheet] (font-size: slot: font-size, focusable: true, a11y-label: "Data table", selected-row: slot: selected-row, selected-col: slot: selected-col, onViewportRows: emit: onViewportRows, viewport-offset: slot: viewport-offset, total-rows: slot: total-rows, onViewportShift: emit: onViewportShift) {
     HostTableColGroup {
       Col (width: 48)
       For (each: slot: column-widths, as: w, index: cw) { Col (width: (w)) }
@@ -40,11 +40,13 @@ layout RowHeaderGrid {
           // one the leading static `Col` describes, and a bare Text sizes to
           // its own glyph rather than to the authored column width.
           Box [row-heading] (table-cell-role: row-header) {
-            Text [row-heading-text] (content: (rowHeaders[r]))
+            Text [row-heading-text] (font-size: slot: row-font-size, content: (rowHeaders[r]))
           }
           For (each: row, as: v, index: c) {
             Box [data-cell] (table-cell-role: data) {
               pkg::mosaic-pkg-grid::Cell (
+                height: slot: row-height,
+                editor-label: slot: editor-label,
                 value: (v), row: (r), col: (c), edit-content: slot: edit-content,
                 is-editing: (r == editRow && c == editCol),
                 is-selected: (r == selectedRow && c == selectedCol),

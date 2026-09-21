@@ -1,0 +1,11 @@
+{
+  "id": "HI-C43-speak",
+  "pathSegment": "HI-PATH-43-SEESAY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-43-SEESAY",
+      "order": 2
+    }
+  ]
+}

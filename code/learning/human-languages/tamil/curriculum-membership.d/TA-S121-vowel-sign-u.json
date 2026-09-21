@@ -1,0 +1,11 @@
+{
+  "id": "TA-S121-vowel-sign-u",
+  "pathSegment": "TA-PATH-100",
+  "pathOrder": 21,
+  "extensions": [
+    {
+      "id": "TA-EXT-100-SCRIPT-RECOGNITION",
+      "order": 12
+    }
+  ]
+}

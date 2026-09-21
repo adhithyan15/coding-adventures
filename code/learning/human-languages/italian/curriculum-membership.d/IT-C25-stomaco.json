@@ -1,0 +1,11 @@
+{
+  "id": "IT-C25-stomaco",
+  "pathSegment": "IT-PATH-029",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-029-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-A1M08-thinking-line",
+  "pathSegment": "MR-PATH-022",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "MR-EXT-025-A1-NAMED-READER-MESSAGE",
+      "order": 7
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C69-ticket",
+  "pathSegment": "HI-PATH-69-GOING",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-69-GOING",
+      "order": 3
+    }
+  ]
+}

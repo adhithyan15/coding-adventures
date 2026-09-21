@@ -1,0 +1,11 @@
+{
+  "id": "LA-C44-focus",
+  "pathSegment": "LA-PATH-013",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "LA-EXT-044-HOUSE",
+      "order": 4
+    }
+  ]
+}

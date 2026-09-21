@@ -1,0 +1,11 @@
+{
+  "id": "SA-C31-wind",
+  "pathSegment": "SA-PATH-31-SKY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-31-SKY",
+      "order": 3
+    }
+  ]
+}

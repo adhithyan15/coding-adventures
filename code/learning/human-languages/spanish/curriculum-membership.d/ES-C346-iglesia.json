@@ -1,0 +1,11 @@
+{
+  "id": "ES-C346-iglesia",
+  "pathSegment": "ES-PATH-346-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-346-PLACE",
+      "order": 1
+    }
+  ]
+}

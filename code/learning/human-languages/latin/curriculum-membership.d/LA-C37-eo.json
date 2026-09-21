@@ -1,0 +1,11 @@
+{
+  "id": "LA-C37-eo",
+  "pathSegment": "LA-PATH-025",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-025-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

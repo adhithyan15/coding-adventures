@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NE09-03",
+  "category": "Information and media",
+  "label": "the telephone",
+  "probe": null,
+  "note": "Untaught, and giving a number needs the Devanagari digits of MR-A1-OR-24.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [
+    "A1-NE09-03"
+  ]
+}

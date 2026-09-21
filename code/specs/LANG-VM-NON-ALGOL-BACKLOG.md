@@ -10,6 +10,185 @@ roadmap is reconciled.
 
 ## Encoded CLR input prerequisites (selected 2026-09-19 after VM-058)
 
+### CLR14 source artifact API landed; CLR15 strict encoded string input selected (2026-09-20)
+
+PR #15808 merged as `cd406cc46f`. It exposes the opt-in strict source
+artifact API selected by the source-width audit while preserving the legacy
+encoded path and its refusal behavior.
+
+Select the next bounded ABI slice: reserve one exact MemberRef for strict
+`input_str`, add a distinct simulator string arena handle, and permit only
+typed string transport through locals, parameters, returns, moves, and direct
+calls. Preserve input bytes exactly while consuming LF/CRLF delimiters; EOF is
+an empty string. String constants and operations, default source migration,
+real PE host metadata, byte input, and general callbacks remain separate.
+See `CLR15-strict-encoded-string-input.md`. ALGOL remains separately owned.
+
+### CLR13 landed; source width audit resumed (2026-09-20)
+
+PR #15780 merged externally as `fccff7c84f2da01c692b709c9f3bede0ec3103a2`.
+All four latest workflows passed at reviewed head
+`4e4cb545f85154a192191ff01d8013070e80301d`, including both Ubuntu CI jobs.
+No predecessor monitoring remains. Fresh open ownership found no CLR/BEAM
+overlap; ALGOL #15803 remains separate.
+
+A valid wide source from the existing `cil_emit.rs` test, McCarthy Lisp
+`4294967296`, compiles to raw IIR but strict lowering refuses `ref<any>`.
+Default encoded lowering correctly refuses the out-of-i32 literal. Textual
+CIL emits an int64 local and `ldc.i8 4294967296`, then `conv.i4` at the int32
+MccarthyEntry return boundary. This is emission evidence, not runtime proof
+of a full-width source result. The exploratory probe and log are preserved
+outside the checkout as `lang-vm-clr-wide-source-probe.rs` and `.log`.
+
+Next specify the intended scalar source result ABI and prove a valid wide
+arithmetic/helper program before selecting an opt-in adapter. Do not merely
+relabel ref/any or narrow types to i64. Existing Nib mutable locals, loops,
+narrow masks and integer comparison results also need explicit treatment.
+The prior source audit branch remains preserved separately. No production
+change or migration contract is introduced by this audit checkpoint.
+
+### CLR13 strict encoded integer input selected (2026-09-20)
+
+CLR12 production and complementary conformance proofs landed in #15762 and
+#15763. A fresh main/open-PR audit found no overlapping non-ALGOL CLR work.
+Select the first bounded host-input slice: exact MemberRef dispatch plus a
+simulator-owned line buffer for strict `input_i64` and non-consuming
+`input_more`. Preserve i64 values and the existing default encoded lowerer's
+input refusal; that legacy path still allocates int32 locals. String input,
+default source migration, real PE host metadata and byte input remain separate
+follow-ups. See `CLR13-strict-encoded-integer-input.md`.
+
+### CLR12 landed; independent coverage reconciled (2026-09-20)
+
+PR #15762 merged as `77326b211e106e1dc7d6466df8cedad4b93d5707` after all four
+workflows succeeded (48 checks: 15 success, 33 skipped). Existing #15763 was
+subsequently found to duplicate its forward-only contract. Reconciliation keeps
+the landed production implementation and its resource bound, preserving the
+independent contract as historical context and its additional byte/refusal/runtime
+proofs. No second implementation or broader source/input support is claimed.
+
+### CLR12 forward-only scalar control flow implemented locally (2026-09-20)
+
+Contract `CLR12-strict-forward-scalar-control-flow.md` was committed as
+`2159a5d79ed64d458014a4f40981aa933a430bb0` before implementation. The opt-in
+backend validates forward control, reachability and intersection definite
+assignment, then emits builder branches and multiple returns. Backend and
+encoded execution tests pass; publication validation is in progress. General
+cycles, default source routing and input ABI remain deferred. CLR11's remaining
+push CI passed: all five exact-head workflows succeeded; monitoring is complete.
+
+### CLR11 landed; strict CFG contract next (2026-09-20)
+
+PR #15730 was merged externally as
+`a4597c2e8c907382ac3311b8176e72a1a8e89e8f`. Its three PR workflows and
+OCaml push workflow succeeded at exact head
+`1545e36d2431eeb4c16fd7140676edd672a8f584`; push CI run 35494497713
+remains queued and must still be monitored. This is not an all-CI-green claim.
+Canonical strict i32 minus-one now uses builder opcode 0x15; i64 encoding and
+input/type gates remain unchanged.
+
+The next bounded task is a strict CFG audit and preimplementation contract,
+provisionally CLR12 after a fresh ownership check. Specify control instruction
+shapes and hints, unique/resolved labels, logical Bool conditions, path-sensitive
+definite assignment at joins, returns and reachability, and the supported cycle
+policy before changing lowering. Preserve exact types, single assignment,
+256-slot bounds, structural i32 indices, and CLR01/input gates. Default source
+i64 narrowing remains unresolved. No strict CFG implementation is claimed here.
+
+### CLR10 landed; CLR11 canonical strict minus-one follow-up active (2026-09-20)
+
+CLR10 checked long branches merged in #15728 as
+`379fcdf372e2cf41a4cf06f6bf3f3ddc8c4f7593` after all 48 checks completed
+(15 success, 33 skipped) and all four exact-head workflows succeeded.
+CLR09's four workflows also completed successfully.
+
+Existing PR #15730 owns removal of the strict i32 minus-one workaround. Its
+contract was committed as CLR10 before implementation and is renamed CLR11 to
+avoid the landed long-branch number. Preserve its exact compact-byte and actual
+execution proofs, i64 encoding, and every input/type gate. This is the only
+active implementation PR; strict CFG lowering remains a subsequent contract.
+
+### CLR09 landed; CLR10 long branches selected (2026-09-20)
+
+PR #15711 merged CLR09 compact ldc.i4.m1 execution as
+`3a67aec819c35f59a0a9d52f6c73ee6b0c6c31f4`. PR workflows passed; the
+push workflow was still queued when the merge was observed. Proceed with CLR10. The CLR10 contract
+was committed under its original CLR09 name before implementation; see
+`CLR10-encoded-long-branches.md`. Baseline probes proved br/brfalse/brtrue
+unknown; literal and automatic builder-promotion execution tests now pass.
+Strict CFG lowering still needs its own subsequent contract. Preserve gates.
+
+### CLR08 landed; strict scalar control-flow audit selected (2026-09-20)
+
+CLR08 merged in #15698 as `13e17dec1c05c48570c0c7b3e12dc6b9a599ae8e`
+after all 48 checks completed (15 success, 33 skipped), with all four
+exact-head workflows successful. Main is refreshed; no open CLR overlap found.
+CLR07's remaining push workflow also completed successfully.
+
+Next audit bounded control flow for the strict scalar API. Actual IIR operation
+names are `label`, `jmp`, `jmp_if_true`, and `jmp_if_false`; branch targets are
+Var operands, and conditional sources are [condition, target]. Current strict
+validation reads every instruction's scalar hint before dispatch and permits
+only one final return. A safe extension needs explicit control-instruction
+shapes/hints, label uniqueness and resolution, logical boolean branch conditions,
+and path-sensitive definite assignment at joins. Textual prior definition alone
+cannot justify a load when a branch skips its assignment.
+
+Establish actual-artifact refusal and branch execution baselines, decide a
+bounded acyclic or general CFG contract with explicit return/reachability rules,
+and commit the detailed CLR09 specification before production edits. Preserve
+single assignment, exact scalar types, structural i32 indices, slot bounds,
+CLR01 literal/input gates and default source routing. No control-flow contract
+or implementation is selected merely from builder availability.
+
+### CLR08 landed; CLR09 compact minus-one execution selected (2026-09-20)
+
+CLR08 strict scalar comparisons merged in #15698 as
+`13e17dec1c05c48570c0c7b3e12dc6b9a599ae8e` after all required checks passed.
+Fresh main and open-PR audits show no non-ALGOL CLR overlap; ALGOL remains
+separately owned.
+
+CLR08 recorded a bounded builder/simulator mismatch: the standard builder
+selects compact `ldc.i4.m1` (`0x15`) for integer -1, while the simulator only
+executes the neighboring compact constants zero through eight. Select CLR09 to
+add independently verified raw-byte execution and canonical helper encoding.
+Keep CLR08's full-form emitter workaround until this prerequisite lands; branch
+lowering, source migration and encoded host input remain later contracts.
+
+### CLR07 landed; CLR08 strict comparisons selected (2026-09-20)
+
+CLR07 remainder/NOT execution merged in #15689 as
+`5f5bd1fcabddf882864a9770e24bf78fa6c5c530`. Its PR workflows passed;
+the exact-head push workflow was still running when the merge was observed.
+CLR06 previously merged as `4b1cb8ebcfc73315a285ab30099eb6bac342f0b9`.
+
+CLR08 extends the explicit strict typed-scalar API with six matched-width
+integer comparisons and a logically distinct bool type transported using
+int32 metadata. The detailed contract was committed before implementation;
+actual artifact tests cover both widths, signed and high-bit values, boolean
+moves, calls and returns. See `CLR08-strict-scalar-comparisons.md`.
+
+Branches and default source migration remain separate future contracts.
+Keep CLR01 immediate/input gates and structural indices intact. Default
+source routing still narrows i64 hints; this extension does not repair it.
+
+
+### CLR05 landed; typed scalar lowering audit selected (2026-09-19)
+
+CLR05 merged in #15654 as `294271884bc4ebad60d49707d8a670bea2713c20`
+after all 46 checks completed (15 success, 31 skipped). Main is refreshed;
+open ownership has no encoded CLR overlap. Simulator conversions, signed shifts
+and bitwise AND/OR prerequisites are now landed.
+
+Return to the encoded IIR width defect: reproduce 2147483647+1 on current main,
+then map type hints and inferred scalar widths through constants, locals,
+parameters, returns, comparisons and direct calls. Select a bounded typed
+scalar contract that explicitly excludes or refuses unsupported closure/array/
+boxing paths, instead of globally widening structural indices. Determine how
+existing untyped IIR callers remain compatible. Commit a detailed specification
+before changing lowering. Keep wide-immediate/input gates until the chosen
+contract works; preserve the original checkout and separately owned ALGOL.
+
 ### CLR04 landed; bitwise execution audit selected (2026-09-19)
 
 CLR04 merged in #15642 as `ee2c260fddc0141e5039f5a5fbbd8b06af81bce0`

@@ -1,0 +1,11 @@
+{
+  "id": "SA-S116-letter-tta",
+  "pathSegment": "SA-PATH-100",
+  "pathOrder": 32,
+  "extensions": [
+    {
+      "id": "SA-EXT-100-SCRIPT-RECOGNITION",
+      "order": 32
+    }
+  ]
+}

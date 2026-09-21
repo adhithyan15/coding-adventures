@@ -1,0 +1,11 @@
+{
+  "id": "MR-A1F07-first-three-spelling",
+  "pathSegment": "MR-PATH-023",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-026-A1-PRACTICAL-FORM",
+      "order": 3
+    }
+  ]
+}

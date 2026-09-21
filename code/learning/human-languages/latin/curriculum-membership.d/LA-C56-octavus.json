@@ -1,0 +1,11 @@
+{
+  "id": "LA-C56-octavus",
+  "pathSegment": "LA-PATH-040",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-056-ORDINAL-TO-TENTH",
+      "order": 2
+    }
+  ]
+}

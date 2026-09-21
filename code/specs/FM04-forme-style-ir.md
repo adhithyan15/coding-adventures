@@ -13,6 +13,17 @@
 > integration that lets authors preview style changes in real time
 > (FM07).
 
+## Implementation status
+
+| Surface | Status | Evidence / next step |
+|---|---|---|
+| Style IR and validator | Implemented | `forme-style-ir` defines and validates the shipped schema. |
+| Themes and orchestration | Implemented | `forme-style-theme`, `forme-theme-classless`, and `forme-style-orchestrator`. |
+| CSS, LaTeX, and terminal translation | Implemented | Backend translators have focused package coverage. |
+| Per-page CSS slicing | Implemented | [FM06](FM06-forme-aot-compiler.md) is exercised by both live sites. |
+| Live theme persistence/editor UX | Pending | The FM07 authoring surface and FM-B016 own it. |
+| Cross-backend product proof | Pending | FM-B017 owns explicit degradation and parity tests. |
+
 ---
 
 ## 0. Preface
@@ -1251,9 +1262,10 @@ once that package lands.
 - **FM02** — Plugin host (manifest extensions for style)
 - **FM03** — Orchestrator (carries `Document` containing
   `StyleDocument`)
-- **FM05** — Interactivity IR (parallel to this spec)
-- **FM06** — AOT compiler (consumes `usedStyle` for slicing)
-- **FM07** — CLI and dev server (theme registry persistence)
+- **[FM05](FM05-forme-interactivity-ir.md)** — Interactivity IR (parallel to this spec)
+- **[FM06](FM06-forme-aot-compiler.md)** — AOT compiler (consumes `usedStyle` for slicing)
+- **[FM07](FM07-forme-cli-dev-server.md)** — CLI and dev server (theme registry persistence)
+- **[FM08](FM08-forme-deploy-runner.md)** — Deploy runner
 
 ## Appendix D — This is a living document
 

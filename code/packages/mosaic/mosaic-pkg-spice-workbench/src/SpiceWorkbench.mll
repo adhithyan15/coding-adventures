@@ -310,6 +310,36 @@ layout SpiceWorkbench {
           disabled : slot: schematic-value-disabled ,
           onChange : emit: onSchematicValueChange
         )
+        Text [ schematic-model-polarity-label ] ( content : slot: schematic-model-polarity-label )
+        Text [ selected-schematic-model-polarity ] ( content : slot: selected-schematic-model-polarity )
+        Row [ schematic-model-polarity-controls ] {
+          HostButton [ schematic-model-n-control ] (
+            label : slot: schematic-model-n-label ,
+            disabled : slot: schematic-model-polarity-disabled ,
+            onClick : emit: onSetSchematicModelPolarityN
+          )
+          HostButton [ schematic-model-p-control ] (
+            label : slot: schematic-model-p-label ,
+            disabled : slot: schematic-model-polarity-disabled ,
+            onClick : emit: onSetSchematicModelPolarityP
+          )
+        }
+        Text [ schematic-model-parameters-label ] ( content : slot: schematic-model-parameters-label )
+        Row [ schematic-model-parameter-options ] {
+          For ( each: slot: schematic-model-parameter-options , as: parameter , index: parameter-index ) {
+            HostButton [ schematic-model-parameter-option ] (
+              label : ( parameter ) ,
+              onClick : emit: onSelectSchematicModelParameter
+            )
+          }
+        }
+        Text [ selected-schematic-model-parameter-label ] ( content : slot: selected-schematic-model-parameter-label )
+        HostInput [ schematic-selected-model-parameter-input ] (
+          value : slot: schematic-selected-model-parameter-value ,
+          placeholder : slot: selected-schematic-model-parameter-label ,
+          disabled : slot: schematic-selected-model-parameter-disabled ,
+          onChange : emit: onSchematicModelParameterChange
+        )
         HostButton [ remove-schematic-component ] (
           label : slot: remove-schematic-component-label ,
           disabled : slot: remove-schematic-component-disabled ,

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C45-mare",
+  "pathSegment": "LA-PATH-023",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "LA-EXT-045-WORLD",
+      "order": 4
+    }
+  ]
+}

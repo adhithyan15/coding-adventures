@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-PRON-02",
+  "category": "Pronouns",
+  "label": "object pronouns: the dative-accusative malaa, tulaa, tyaalaa",
+  "probe": null,
+  "note": "Untaught as a paradigm. malaa appears inside taught lines and the review lesson MR-R25-dative-frame, always with a fixed first person.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-PRON-02"
+  ]
+}

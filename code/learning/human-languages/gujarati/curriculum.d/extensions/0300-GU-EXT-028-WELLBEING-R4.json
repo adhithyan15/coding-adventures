@@ -6,8 +6,5 @@
   "canDo": "I can rebuild and write the complete wellbeing exchange at R4.",
   "prerequisites": [
     "GU-EXT-027-VANDHO-R4"
-  ],
-  "lessons": [
-    "GU-R18-wellbeing-r4"
   ]
 }

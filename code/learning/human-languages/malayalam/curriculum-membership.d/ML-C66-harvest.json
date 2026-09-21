@@ -1,0 +1,11 @@
+{
+  "id": "ML-C66-harvest",
+  "pathSegment": "ML-PATH-66-PADDY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-66-PADDY",
+      "order": 4
+    }
+  ]
+}

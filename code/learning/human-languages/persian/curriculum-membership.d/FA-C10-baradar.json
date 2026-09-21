@@ -1,0 +1,11 @@
+{
+  "id": "FA-C10-baradar",
+  "pathSegment": "FA-PATH-011",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-018-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

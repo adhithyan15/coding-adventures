@@ -1,0 +1,11 @@
+{
+  "id": "KA-C59-fire",
+  "pathSegment": "KA-PATH-59-GROUND",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-59-GROUND",
+      "order": 4
+    }
+  ]
+}

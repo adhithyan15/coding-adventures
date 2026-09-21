@@ -89,7 +89,10 @@ XAML/WinUI also bundles the concrete adapter and verifies it byte-for-byte besid
 event lifecycle plus restart restoration through the generated .NET binding,
 while hosted-runner UI Automation launches the real packaged app and drives its
 native controls through creation, scheduling, completion, deletion, and
-replacement-executable restoration. Its strict
+replacement-executable restoration. The same runtime gate resizes the window,
+proving that the named Projects pane is visible beside the detail at wide
+widths, collapses while the detail remains usable at a narrow width, and
+returns when widened. Its strict
 `native-complete` build has zero degradations: the canonical Sheet exposes native
 UI Automation table semantics, while board and calendar interactions use native
 WinUI pointer/touch drag/drop plus an accessible keyboard path. The gate does not
@@ -99,6 +102,8 @@ window without one.
 ## What it does
 
 - Add a task (name + optional `YYYY-MM-DD` due date).
+- See the local-save status and data location on separate lines, so the full
+  recovery path stays readable in a normal desktop window.
 - A new empty Inbox points to the task-name field, focuses it initially, and lets
   Enter add tasks without leaving the keyboard capture flow.
 - Blank names and invalid or impossible due dates are rejected before any task
@@ -113,8 +118,9 @@ window without one.
   saved workspace initialize, and a failed start becomes a message with the
   underlying detail and a retry that re-runs initialization in place, rather than
   an empty page and a console error. The host-neutral contract is
-  `code/specs/task-app-startup-states-v1.md`; generated native hosts still report
-  startup failure only through process and log evidence (#13984).
+  `code/specs/task-app-startup-states-v1.md`. Compose Desktop now enforces the
+  same visible loading/failure/retry contract through generated UI acceptance;
+  Qt, Flutter, SwiftUI, and WinUI remain tracked in #13984.
 - **Persistence is explicit** — the whole workspace is saved to IndexedDB after each
   change and restored on reload when durable browser storage is available (see
   `host/web/`); an in-app warning identifies volatile fallback, failed writes, or a

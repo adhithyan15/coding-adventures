@@ -1,0 +1,11 @@
+{
+  "id": "TE-C31-subha-madhyahnam-register",
+  "pathSegment": "TE-PATH-025",
+  "pathOrder": 9,
+  "extensions": [
+    {
+      "id": "TE-EXT-025-REGISTER",
+      "order": 0
+    }
+  ]
+}

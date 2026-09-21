@@ -1,0 +1,11 @@
+{
+  "id": "ES-C374-guante",
+  "pathSegment": "ES-PATH-374-01",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-374-REF",
+      "order": 2
+    }
+  ]
+}

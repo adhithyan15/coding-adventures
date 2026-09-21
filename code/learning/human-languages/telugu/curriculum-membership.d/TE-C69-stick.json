@@ -1,0 +1,11 @@
+{
+  "id": "TE-C69-stick",
+  "pathSegment": "TE-PATH-69-TOOL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-69-TOOL",
+      "order": 4
+    }
+  ]
+}

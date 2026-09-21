@@ -1,0 +1,11 @@
+{
+  "id": "ES-C21-sabado-domingo",
+  "pathSegment": "ES-PATH-019",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-019-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

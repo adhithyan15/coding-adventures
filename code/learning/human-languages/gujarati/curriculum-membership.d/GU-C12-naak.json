@@ -1,0 +1,11 @@
+{
+  "id": "GU-C12-naak",
+  "pathSegment": "GU-PATH-015",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-015-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

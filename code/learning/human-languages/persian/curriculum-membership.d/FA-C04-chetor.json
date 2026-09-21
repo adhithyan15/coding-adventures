@@ -1,0 +1,11 @@
+{
+  "id": "FA-C04-chetor",
+  "pathSegment": "FA-PATH-005",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-008-QUESTION-SCRIPT",
+      "order": 0
+    }
+  ]
+}

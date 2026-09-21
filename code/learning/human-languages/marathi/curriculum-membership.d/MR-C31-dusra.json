@@ -1,0 +1,11 @@
+{
+  "id": "MR-C31-dusra",
+  "pathSegment": "MR-PATH-033",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-046-PAIRED-JOINS",
+      "order": 2
+    }
+  ]
+}

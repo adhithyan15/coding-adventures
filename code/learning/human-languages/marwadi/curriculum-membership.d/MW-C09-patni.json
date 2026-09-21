@@ -1,0 +1,11 @@
+{
+  "id": "MW-C09-patni",
+  "pathSegment": "MW-PATH-009",
+  "pathOrder": 9,
+  "extensions": [
+    {
+      "id": "MW-EXT-023-FAMILY-TWELVE",
+      "order": 9
+    }
+  ]
+}

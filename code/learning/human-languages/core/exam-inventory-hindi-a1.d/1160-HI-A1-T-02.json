@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-T-02",
+  "category": "Samay aur tarikh (time and date)",
+  "label": "the months of the year",
+  "probe": [
+    "HI-CONCEPT-C16-MAHINE-01"
+  ],
+  "derivedFrom": "ES:A1-NG4-02"
+}

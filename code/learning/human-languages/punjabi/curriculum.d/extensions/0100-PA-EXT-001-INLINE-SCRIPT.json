@@ -4,8 +4,5 @@
   "kind": "required",
   "category": "script",
   "canDo": "I can recognize the first Punjabi script pattern inside a greeting I already understand.",
-  "prerequisites": [],
-  "lessons": [
-    "PA-C01-sat-sri-akal"
-  ]
+  "prerequisites": []
 }

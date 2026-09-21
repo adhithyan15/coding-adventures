@@ -1,0 +1,11 @@
+{
+  "id": "TA-C63-permission",
+  "pathSegment": "TA-PATH-63-MANNERS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-63-MANNERS",
+      "order": 1
+    }
+  ]
+}

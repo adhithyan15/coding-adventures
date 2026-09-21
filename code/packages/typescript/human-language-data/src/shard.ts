@@ -724,6 +724,9 @@ function assertSafeKey(key: unknown, where: string): string {
   if (key === "__proto__" || key === "constructor" || key === "prototype") {
     throw new Error(`${where}: must not name '${key}'`);
   }
+  if (/^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])$/i.test(key)) {
+    throw new Error(`${where}: '${key}' is a Windows reserved device name`);
+  }
   return key;
 }
 
@@ -739,15 +742,113 @@ export interface MergeSection {
 /**
  * `<track>/curriculum.d/`'s shape, in the one place both readers agree on.
  *
- * `spine` is the reason this ledger was sharded at all: every content tranche
- * in every track appends to `spine[<node>].segments`, and there are only 33
- * nodes for 23 tracks' worth of authors to collide on.
+ * `spine` keeps one stable policy owner per canonical node. Reverse segment
+ * membership is deliberately absent from those owners and derived from the
+ * independently owned `path[*].spine_node` edges by `mergeCurriculumShards`.
+ * Path and extension lesson arrays are also absent; HL40 attaches them from the
+ * separate direct per-lesson membership ledger after this projection is read.
  */
 export const CURRICULUM_SECTIONS: readonly MergeSection[] = [
   { key: "path", dir: "path" },
   { key: "spine", dir: "spine", kind: "object" },
   { key: "extensions", dir: "extensions" },
 ];
+
+/**
+ * Rebuild a curriculum and derive each spine node's reverse membership from
+ * the ordered path owners.
+ *
+ * `path[*].spine_node` is the single authored membership edge. Persisting the
+ * same edge again as `spine[*].segments` made every new path owner edit an
+ * existing spine owner and let the two copies drift. Spine shards therefore
+ * carry only their independent `omits` and `relocates` policy. The historical
+ * public `LanguageCurriculum` shape still exposes `segments`, derived here in
+ * exact path order.
+ */
+export function mergeCurriculumShards(shards: Shard[]): Record<string, unknown> {
+  const document = mergeSectionedShards(shards, CURRICULUM_SECTIONS);
+  const path = document.path;
+  const spine = document.spine;
+  if (!Array.isArray(path)) {
+    throw new Error("curriculum shards: reconstructed path must be an array");
+  }
+  if (typeof spine !== "object" || spine === null || Array.isArray(spine)) {
+    throw new Error("curriculum shards: reconstructed spine must be an object");
+  }
+
+  const derived: Record<string, unknown> = {};
+  const memberships = new Map<string, string[]>();
+  for (const [node, raw] of Object.entries(spine)) {
+    if (typeof raw !== "object" || raw === null || Array.isArray(raw)) {
+      throw new Error(`curriculum spine '${node}': owner must be an object`);
+    }
+    if (Object.hasOwn(raw, "segments")) {
+      throw new Error(
+        `curriculum spine '${node}': must not store derived 'segments'; ` +
+          "membership is owned by path[*].spine_node",
+      );
+    }
+    memberships.set(node, []);
+    defineKey(derived, node, raw);
+  }
+
+  const seen = new Set<string>();
+  for (const [index, raw] of path.entries()) {
+    if (typeof raw !== "object" || raw === null || Array.isArray(raw)) {
+      throw new Error(`curriculum path[${index}]: owner must be an object`);
+    }
+    const segment = raw as Record<string, unknown>;
+    const id = segment.id;
+    const node = segment.spine_node;
+    if (typeof id !== "string" || id.length === 0) {
+      throw new Error(`curriculum path[${index}]: id must be a non-empty string`);
+    }
+    if (seen.has(id)) {
+      throw new Error(`curriculum path: duplicate segment id '${id}'`);
+    }
+    if (Object.hasOwn(segment, "lessons")) {
+      throw new Error(
+        `curriculum path segment '${id}': must not store derived 'lessons'; ` +
+          "membership is owned by direct lesson owners",
+      );
+    }
+    seen.add(id);
+    if (typeof node !== "string" || !memberships.has(node)) {
+      throw new Error(
+        `curriculum path segment '${id}': spine_node '${String(node)}' has no spine owner; ` +
+          `missing [${String(node)}]`,
+      );
+    }
+    memberships.get(node)!.push(id);
+  }
+
+  for (const [node, raw] of Object.entries(derived)) {
+    const value: Record<string, unknown> = {};
+    defineKey(value, "segments", memberships.get(node)!);
+    for (const [key, entry] of Object.entries(raw as Record<string, unknown>)) {
+      defineKey(value, key, entry);
+    }
+    defineKey(derived, node, value);
+  }
+  const extensions = document.extensions;
+  if (!Array.isArray(extensions)) {
+    throw new Error("curriculum shards: reconstructed extensions must be an array");
+  }
+  for (const [index, raw] of extensions.entries()) {
+    if (typeof raw !== "object" || raw === null || Array.isArray(raw)) {
+      throw new Error(`curriculum extensions[${index}]: owner must be an object`);
+    }
+    const extension = raw as Record<string, unknown>;
+    if (Object.hasOwn(extension, "lessons")) {
+      throw new Error(
+        `curriculum extension '${String(extension.id)}': must not store derived 'lessons'; ` +
+          "membership is owned by direct lesson owners",
+      );
+    }
+  }
+  defineKey(document, "spine", derived);
+  return document;
+}
 
 /**
  * Keys in the former grouped book-generation projection.

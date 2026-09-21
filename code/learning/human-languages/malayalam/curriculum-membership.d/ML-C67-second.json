@@ -1,0 +1,11 @@
+{
+  "id": "ML-C67-second",
+  "pathSegment": "ML-PATH-67-ORDINAL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-67-ORDINAL",
+      "order": 1
+    }
+  ]
+}

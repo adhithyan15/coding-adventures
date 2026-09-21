@@ -1,0 +1,11 @@
+{
+  "id": "ML-C56-knife",
+  "pathSegment": "ML-PATH-56-HOUSE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-56-HOUSE",
+      "order": 2
+    }
+  ]
+}

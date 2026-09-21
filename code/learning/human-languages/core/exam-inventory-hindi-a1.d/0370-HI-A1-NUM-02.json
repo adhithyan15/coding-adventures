@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-NUM-02",
+  "category": "Sankhya-vachak (quantifiers and numerals)",
+  "label": "the irregular numerals eleven to twenty",
+  "probe": [
+    "HI-CONCEPT-C22-GYARAH-BEES-01"
+  ],
+  "derivedFrom": "ES:A1-Q-01, ES:A1-NG2-01"
+}

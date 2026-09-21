@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-DET-03",
+  "category": "Nirdeshak (determiners and definiteness)",
+  "label": "a demonstrative used adnominally, in front of its noun (yah kitab)",
+  "probe": [
+    "HI-LEX-C91-NOUN-07"
+  ],
+  "derivedFrom": "ES:A1-DEM-03",
+  "note": "PARTLY STALE NOTE, corrected. It said the deixis chapter teaches yah and vah as standalone pronouns and never puts either in front of a noun. The corpus DOES print the adnominal shape -- HI-C69-verb-last has yah kitaab hai and HI-C78-pehla-paath has vah kitaab padhtaa hai -- but neither lesson introduces it, so the point was genuinely uncovered and the precise complaint is that the shape was SHOWN and never TAUGHT. HI-C91-yah-kitab teaches it, and adds the reason it matters more in Hindi than the English parallel suggests: with no article in the language, yah and vah are what a writer reaches for where English would have used the, so vah aadmi is often best read as THE man rather than THAT man."
+}

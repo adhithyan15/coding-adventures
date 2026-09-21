@@ -1,0 +1,11 @@
+{
+  "id": "ES-W00-hola-delayed-copy",
+  "pathSegment": "ES-PATH-001",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-001-WRITING-RUNWAY",
+      "order": 2
+    }
+  ]
+}

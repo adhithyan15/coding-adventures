@@ -1,0 +1,8 @@
+{
+  "id": "HI-A1-SCR-20",
+  "category": "Devanagari lipi (script and orthography)",
+  "label": "completing every field of an A1 practical form (name, city, language, time, drink, date)",
+  "probe": null,
+  "derivedFrom": "ES:A1-NE03-01",
+  "note": "The form rung proves exactly one field, the name. Both mocks' writing task 1 asks for six, and the rubric gives a blank field no content point."
+}

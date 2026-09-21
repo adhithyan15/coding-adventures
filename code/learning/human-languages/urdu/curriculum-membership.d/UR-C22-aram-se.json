@@ -1,0 +1,11 @@
+{
+  "id": "UR-C22-aram-se",
+  "pathSegment": "UR-PATH-023",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-033-REPAIR-KIT",
+      "order": 2
+    }
+  ]
+}

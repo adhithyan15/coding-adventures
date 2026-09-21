@@ -1,0 +1,11 @@
+{
+  "id": "GE-C38-moechten",
+  "pathSegment": "GE-PATH-A1-KLAMMER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-A1-KLAMMER",
+      "order": 1
+    }
+  ]
+}

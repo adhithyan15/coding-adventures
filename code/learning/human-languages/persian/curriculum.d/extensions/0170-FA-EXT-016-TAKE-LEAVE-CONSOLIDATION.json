@@ -6,8 +6,5 @@
   "canDo": "I can open and close a short respectful Persian interaction using only independently learned lines.",
   "prerequisites": [
     "FA-EXT-015-FAREWELL-SCRIPT-REGISTER"
-  ],
-  "lessons": [
-    "FA-C05-practice"
   ]
 }

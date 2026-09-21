@@ -1,0 +1,11 @@
+{
+  "id": "PT-C16-ser-vs-estar",
+  "pathSegment": "PT-PATH-020",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-020-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

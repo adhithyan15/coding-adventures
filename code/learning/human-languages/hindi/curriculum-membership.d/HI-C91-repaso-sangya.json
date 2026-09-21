@@ -1,0 +1,11 @@
+{
+  "id": "HI-C91-repaso-sangya",
+  "pathSegment": "HI-PATH-99-NOUN",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "HI-EXT-99-NOUN",
+      "order": 7
+    }
+  ]
+}

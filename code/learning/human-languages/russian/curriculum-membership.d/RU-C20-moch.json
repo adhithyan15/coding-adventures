@@ -1,0 +1,11 @@
+{
+  "id": "RU-C20-moch",
+  "pathSegment": "RU-PATH-022",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-027-CAN-AND-MUST",
+      "order": 0
+    }
+  ]
+}

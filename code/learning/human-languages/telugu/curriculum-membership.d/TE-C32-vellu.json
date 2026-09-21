@@ -1,0 +1,11 @@
+{
+  "id": "TE-C32-vellu",
+  "pathSegment": "TE-PATH-026",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-026-CORE-VERBS",
+      "order": 1
+    }
+  ]
+}

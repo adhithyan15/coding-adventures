@@ -1,0 +1,19 @@
+{
+  "id": "MR-A1-NE01-01",
+  "category": "The person: the body",
+  "label": "parts of the body",
+  "probe": [
+    "MR-LEX-DOLA",
+    "MR-LEX-KAAN",
+    "MR-LEX-NAAK",
+    "MR-LEX-TOND",
+    "MR-LEX-HRUDAYA"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE01-01"
+  ]
+}

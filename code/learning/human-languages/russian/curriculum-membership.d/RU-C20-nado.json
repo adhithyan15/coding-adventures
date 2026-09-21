@@ -1,0 +1,11 @@
+{
+  "id": "RU-C20-nado",
+  "pathSegment": "RU-PATH-022",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-027-CAN-AND-MUST",
+      "order": 1
+    }
+  ]
+}

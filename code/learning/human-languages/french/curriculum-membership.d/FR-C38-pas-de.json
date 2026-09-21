@@ -1,0 +1,11 @@
+{
+  "id": "FR-C38-pas-de",
+  "pathSegment": "FR-PATH-A1-SILENT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-A1-SILENT",
+      "order": 4
+    }
+  ]
+}

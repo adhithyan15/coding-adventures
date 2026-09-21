@@ -355,6 +355,12 @@ exports = ["Grid", "Cell", "Column"]
 # defaults without requiring each consuming application to pass a CLI flag.
 token_palette = "tokens/grid.json"
 
+[app]
+# Optional. When both values are present, desktop project shells open at this
+# logical-pixel size. Browser and mobile shells ignore desktop window metadata.
+initial-window-width = 1280
+initial-window-height = 900
+
 [kernel]
 version = "1"      // declares which UI29 kernel revision the package targets
 ```
@@ -368,6 +374,14 @@ dependency palette styles that dependency and its transitive package
 components. The consuming package's palette overrides dependency values, and
 an explicit application/CLI palette has final precedence. Backend overrides
 inside each schema-v1 palette are selected before the layers are combined.
+
+`[app]` is optional and describes the generated application shell, not a
+component's layout. `initial-window-width` and `initial-window-height` are a
+pair: authors provide both or neither, and each must be an integer from 1
+through 2,147,483,647 so every target window API can represent it.
+Desktop shells that own a resizable window (Compose, Qt, SwiftUI, XAML, and
+Electron) translate the pair to their native initial-size API. Browser shells
+and mobile-only launches keep their platform defaults.
 
 ### 4.3 Compiling a package
 

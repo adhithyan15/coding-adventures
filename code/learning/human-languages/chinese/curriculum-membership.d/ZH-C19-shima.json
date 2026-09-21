@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C19-shima",
+  "pathSegment": "ZH-PATH-018",
+  "pathOrder": 9,
+  "extensions": [
+    {
+      "id": "ZH-EXT-052-ASKING-SCRIPT",
+      "order": 5
+    }
+  ]
+}

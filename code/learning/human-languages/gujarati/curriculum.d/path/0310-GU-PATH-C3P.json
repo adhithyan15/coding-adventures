@@ -1,9 +1,6 @@
 {
   "id": "GU-PATH-C3P",
   "spine_node": "SPINE-CHECK-WELLBEING",
-  "lessons": [
-    "GU-C03-practice"
-  ],
   "before": [],
   "inline": [
     "GU-EXT-003-CONSOLIDATION"

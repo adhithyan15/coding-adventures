@@ -1,0 +1,11 @@
+{
+  "id": "AR-R38-two-at-once",
+  "pathSegment": "AR-PATH-035",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-035-JOINING",
+      "order": 4
+    }
+  ]
+}

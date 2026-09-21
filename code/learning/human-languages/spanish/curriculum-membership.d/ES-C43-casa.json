@@ -1,0 +1,11 @@
+{
+  "id": "ES-C43-casa",
+  "pathSegment": "ES-PATH-003-CASA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-003-CASA",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C45-form",
+  "pathSegment": "PA-PATH-047",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-067-READING",
+      "order": 1
+    }
+  ]
+}

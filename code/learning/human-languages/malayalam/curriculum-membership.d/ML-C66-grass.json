@@ -1,0 +1,11 @@
+{
+  "id": "ML-C66-grass",
+  "pathSegment": "ML-PATH-66-PADDY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-66-PADDY",
+      "order": 1
+    }
+  ]
+}

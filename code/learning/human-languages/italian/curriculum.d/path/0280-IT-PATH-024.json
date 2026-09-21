@@ -1,9 +1,6 @@
 {
   "id": "IT-PATH-024",
   "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
-  "lessons": [
-    "IT-C20-portare"
-  ],
   "before": [],
   "inline": [],
   "after": []

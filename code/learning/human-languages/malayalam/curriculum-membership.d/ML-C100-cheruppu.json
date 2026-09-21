@@ -1,0 +1,11 @@
+{
+  "id": "ML-C100-cheruppu",
+  "pathSegment": "ML-PATH-100-CLOTHING",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-100-CLOTHING",
+      "order": 2
+    }
+  ]
+}

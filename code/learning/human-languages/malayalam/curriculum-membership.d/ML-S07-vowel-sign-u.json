@@ -1,0 +1,11 @@
+{
+  "id": "ML-S07-vowel-sign-u",
+  "pathSegment": "ML-PATH-100",
+  "pathOrder": 9,
+  "extensions": [
+    {
+      "id": "ML-EXT-100-SCRIPT-RECOGNITION",
+      "order": 9
+    }
+  ]
+}

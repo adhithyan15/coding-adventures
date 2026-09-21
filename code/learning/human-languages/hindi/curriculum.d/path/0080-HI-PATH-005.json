@@ -1,9 +1,6 @@
 {
   "id": "HI-PATH-005",
   "spine_node": "SPINE-COURTESY-THANK",
-  "lessons": [
-    "HI-C03-aapka-swagat-hai"
-  ],
   "before": [],
   "inline": [],
   "after": []

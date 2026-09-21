@@ -1,9 +1,4 @@
 {
-  "segments": [
-    "MW-PATH-026",
-    "MW-PATH-027",
-    "MW-PATH-031"
-  ],
   "omits": [],
   "relocates": {}
 }

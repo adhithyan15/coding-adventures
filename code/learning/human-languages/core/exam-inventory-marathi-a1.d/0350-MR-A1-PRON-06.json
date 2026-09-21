@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-PRON-06",
+  "category": "Pronouns",
+  "label": "interrogative pronouns: kon, kaay, kitii",
+  "probe": [
+    "MR-QUESTION-KON",
+    "MR-LEX-KAAY",
+    "MR-QUESTION-KITI"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-PRON-06"
+  ]
+}

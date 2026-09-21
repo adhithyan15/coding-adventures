@@ -1,0 +1,11 @@
+{
+  "id": "MR-C30-kinva",
+  "pathSegment": "MR-PATH-032",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-045-FLAT-JOINS",
+      "order": 1
+    }
+  ]
+}

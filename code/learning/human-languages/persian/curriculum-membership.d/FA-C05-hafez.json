@@ -1,0 +1,11 @@
+{
+  "id": "FA-C05-hafez",
+  "pathSegment": "FA-PATH-006",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-014-HAFEZ-ROOT",
+      "order": 0
+    }
+  ]
+}

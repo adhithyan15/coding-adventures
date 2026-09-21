@@ -5,8 +5,9 @@
  * cross-call state the orchestrator needs.  The returned `Orchestrator`
  * exposes the FM03 §3.1 lifecycle methods, including a host-driven watch
  * session. Pure stage invocations reuse the injected cache; successful runs
- * persist source observations and per-instance revision state. Exact affected-
- * bounded concurrent streaming remains a follow-up.
+ * persist source observations and per-instance revision state. Live streams
+ * use bounded fan-out and content-addressed checkpoints across concurrent DAG
+ * branches.
  */
 
 import { memoryCache } from "@coding-adventures/forme-cache";

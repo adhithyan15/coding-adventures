@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-F-22",
+  "category": "Sanvad-karya (communicative functions)",
+  "label": "say which language you speak",
+  "probe": [
+    "HI-CONCEPT-C05-MAINHINDIBOLTAHUN-01"
+  ],
+  "derivedFrom": "ES:A1-F1-03, ES:A1-NG7-02"
+}

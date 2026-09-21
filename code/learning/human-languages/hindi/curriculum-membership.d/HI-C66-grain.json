@@ -1,0 +1,11 @@
+{
+  "id": "HI-C66-grain",
+  "pathSegment": "HI-PATH-66-FIELD",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-66-FIELD",
+      "order": 2
+    }
+  ]
+}

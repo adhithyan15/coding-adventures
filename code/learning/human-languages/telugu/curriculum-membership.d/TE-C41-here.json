@@ -1,0 +1,11 @@
+{
+  "id": "TE-C41-here",
+  "pathSegment": "TE-PATH-200",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-200-DEIXIS",
+      "order": 2
+    }
+  ]
+}

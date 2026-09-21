@@ -1,0 +1,11 @@
+{
+  "id": "FR-C15-passe-simple",
+  "pathSegment": "FR-PATH-017",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "FR-EXT-017-LANGUAGE-SPECIFIC",
+      "order": 8
+    }
+  ]
+}

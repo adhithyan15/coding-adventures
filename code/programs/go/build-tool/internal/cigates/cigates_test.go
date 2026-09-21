@@ -9,6 +9,8 @@ import (
 	"sort"
 	"strings"
 	"testing"
+
+	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/globmatch"
 )
 
 // realRegistryPath locates the checked-in registry from this package's
@@ -190,9 +192,9 @@ func TestMatchWorkPreflightUsesUnicodeScalarsAndRunsBeforeMatching(t *testing.T)
 	patterns := make([]string, 20)
 	files := make([]string, 10)
 	for index := range patterns {
-		patterns[index] = strings.Repeat(string(rune('a'+index)), 499)
+		patterns[index] = "*" + strings.Repeat(string(rune('a'+index)), 497) + "*"
 	}
-	patterns[0] = "😀" + strings.Repeat("a", 498)
+	patterns[0] = "*😀" + strings.Repeat("a", 496) + "*"
 	for index := range files {
 		files[index] = strings.Repeat(string(rune('0'+index)), 499)
 	}
@@ -259,6 +261,101 @@ func TestMatchWorkPreflightUsesUnicodeScalarsAndRunsBeforeMatching(t *testing.T)
 				t.Fatalf("bypass returned %v after %d matcher calls", got, calls)
 			}
 		})
+	}
+}
+
+func TestLiteralSegmentBoundsAreSoundForRootGlobstarAndExactPaths(t *testing.T) {
+	tests := []struct {
+		pattern string
+		path    string
+		want    bool
+	}{
+		{pattern: "**/dune-workspace", path: "dune-workspace", want: true},
+		{pattern: "**/dune-workspace", path: "nested/dune-workspace", want: true},
+		{pattern: "code/packages/*/tool/**", path: "code/packages/rust/tool/src/lib.rs", want: true},
+		{pattern: "code/packages/*/tool/**", path: "code/learning/tool/src/lib.rs", want: false},
+		{pattern: "code/scripts/exact.py", path: "code/scripts/exact.py", want: true},
+		{pattern: "code/scripts/exact.py", path: "code/scripts/exact.py/extra", want: false},
+	}
+	for _, test := range tests {
+		t.Run(test.pattern+"/"+test.path, func(t *testing.T) {
+			bounds := makeLiteralSegmentBounds(test.pattern)
+			got := bounds.couldMatch(splitPathSegments(test.path))
+			if got != test.want {
+				t.Fatalf("literal bounds candidate = %t, want %t", got, test.want)
+			}
+			if globmatch.MatchPath(test.pattern, test.path) && !got {
+				t.Fatal("literal bounds rejected a real glob match")
+			}
+		})
+	}
+}
+
+func TestPathShardedLanguageDiffsStaySelective(t *testing.T) {
+	reg, err := Load(realRegistryPath)
+	if err != nil {
+		t.Fatalf("load real registry: %v", err)
+	}
+	tracks := []string{
+		"bengali", "gujarati", "hindi", "kannada", "malayalam", "marathi",
+		"marwadi", "punjabi", "sanskrit", "tamil", "telugu", "urdu",
+	}
+	for _, count := range []int{256, 10_751} {
+		t.Run(fmt.Sprintf("%d-paths", count), func(t *testing.T) {
+			changed := make([]string, 0, count)
+			packageFiles := 8
+			for index := 0; index < count-packageFiles; index++ {
+				track := tracks[index%len(tracks)]
+				changed = append(changed, fmt.Sprintf(
+					"code/learning/human-languages/%s/curriculum-membership.d/%05d-owner.json",
+					track, index,
+				))
+			}
+			for index := 0; index < packageFiles; index++ {
+				changed = append(changed, fmt.Sprintf(
+					"code/packages/typescript/human-language-data/tests/owners/%02d.test.ts",
+					index,
+				))
+			}
+
+			calls := 0
+			got, err := evaluateWithMatcher(reg, map[string]bool{}, changed, false, func(pattern, path string) bool {
+				calls++
+				return globmatch.MatchPath(pattern, path)
+			})
+			if err != nil {
+				t.Fatalf("Evaluate: %v", err)
+			}
+			assertAll(t, got, false, "unrelated path-sharded language diff")
+			if calls > 100 {
+				t.Fatalf("matcher calls = %d, want at most 100 after literal-segment filtering", calls)
+			}
+		})
+	}
+}
+
+func TestIdenticalGatePatternsShareOneBoundedMatch(t *testing.T) {
+	reg := &Registry{SchemaVersion: 1, Gates: map[string]Gate{
+		"alpha": {Description: "First consumer.", Paths: []string{"code/fixtures/**"}},
+		"beta":  {Description: "Second consumer.", Paths: []string{"code/fixtures/**"}},
+	}}
+	calls := 0
+	got, err := evaluateWithMatcher(
+		reg,
+		map[string]bool{},
+		[]string{"code/fixtures/example/data.json"},
+		false,
+		func(pattern, path string) bool {
+			calls++
+			return globmatch.MatchPath(pattern, path)
+		},
+	)
+	if err != nil {
+		t.Fatalf("Evaluate: %v", err)
+	}
+	assertAll(t, got, true, "shared path pattern")
+	if calls != 1 {
+		t.Fatalf("matcher calls = %d, want 1 for one distinct pattern/file pair", calls)
 	}
 }
 
@@ -776,6 +873,33 @@ func TestCapabilitySchemaChangeFiresCapabilityCageGate(t *testing.T) {
 			got := mustEvaluate(t, reg, map[string]bool{}, []string{schema}, false)
 			if !got["contracts-capability-cage"] {
 				t.Errorf("contracts-capability-cage must fire when %s changes", schema)
+			}
+		})
+	}
+}
+
+func TestOCamlBuildToolChangeFiresBuildToolConformanceGate(t *testing.T) {
+	reg := loadRealRegistry(t)
+	tests := []struct {
+		name     string
+		affected map[string]bool
+		changed  []string
+	}{
+		{
+			name:     "package clause",
+			affected: map[string]bool{"ocaml/programs/build-tool": true},
+		},
+		{
+			name:    "path clause",
+			changed: []string{"code/programs/ocaml/build-tool/src/coding_adventures_build_tool.ml"},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			got := mustEvaluate(t, reg, test.affected, test.changed, false)
+			if !got["contracts-build-tool-conformance"] {
+				t.Fatal("OCaml build-tool change must require build-tool conformance")
 			}
 		})
 	}

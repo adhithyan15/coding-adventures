@@ -1,0 +1,11 @@
+{
+  "id": "LA-C37-venio",
+  "pathSegment": "LA-PATH-025-B",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-025-LANGUAGE-SPECIFIC-B",
+      "order": 0
+    }
+  ]
+}

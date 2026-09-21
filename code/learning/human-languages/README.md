@@ -39,8 +39,10 @@ Every track shares the same shape:
 ```text
 <language>/
   README.md                  what this track is, how to use it, current progress
-  CHANGELOG.md                per-chapter content additions (rendered from CHANGELOG.d in sharded tracks)
+  CHANGELOG.d/               append-only per-chapter release-note owners in sharded tracks
+  CHANGELOG.md               ignored local view rendered from CHANGELOG.d when needed
   curriculum.d/              ordered shared-spine path + extensions, sharded by entry
+  curriculum-membership.d/   one direct path/extension membership owner per lesson
   chapters.d/                authored chapter can-dos and payoffs, one file per chapter
   roadmap.md                  themed-chapter skeleton
   session-map.md              how lessons compose into commute sessions + review schedule
@@ -49,6 +51,10 @@ Every track shares the same shape:
   book/                        authored LaTeX fragments + chapters; book.tex is projected on demand
 ```
 
+For every track with a `CHANGELOG.d/`, add one ranked fragment there; never
+edit or commit the rendered `CHANGELOG.md`. The document-shard check rejects
+missing, malformed, linked, case-fold-colliding, or resurrected owners.
+
 The machine-readable layer alongside the tracks is:
 
 ```text
@@ -56,9 +62,10 @@ core/languages.json             complete active-language registry and default mi
 core/spine.d/*.json             ordered, language-independent can-do spine: one file per node
 core/book-generation.d/*/*.json chapter, backmatter, and script-set book declarations
 core/sound-tags.d/<language>.json authored pronunciation vocabulary, one owner per language
+core/reading-reach-floor.d/<language>--<level>.json reading-reach ratchet, one owner per task shape
+core/exam-inventory-{hindi,malayalam,marathi}-a1.d/*.json A1 metadata + one owner per exam point
 core/latex-warning-baseline.json  per-track LaTeX warning debt the book gate holds the line on
 core/lesson-modality/<language>.d/*.json generated voice/sight/pen, one owner per lesson
-core/gentle-ramp-snapshots/<language>.d/ generated metric/finding owners; no flat aggregate
 core/generated-book-hashes/<language>.d/ generated book hashes, one JSON owner per chapter
 core/generated-narration-hashes/<language>.d/ generated narration hashes, one JSON owner per chapter
 core/figure-generation.json     configured canonical-data SVG figures and safe book targets
@@ -67,11 +74,11 @@ concepts/taxonomy.json          cross-language semantic join keys
 data/scripts/*.json             writing-system inventories and teaching metadata
 ```
 
-Gentle-ramp snapshots reconstruct the unchanged per-language report in memory from
-one stable metadata owner, 26 metric owners, and ten finding-kind owners. Exact
-registry/source/narration identity checks and `check:gentle-snapshots` reject missing,
-extra, unsafe, noncanonical, or flat aggregate state. See
-[`HL33`](../../specs/HL33-sharded-gentle-ramp-ownership.md).
+Gentle-ramp metrics and findings are derived on demand from canonical lessons,
+curricula, chapter policy, and chapter ledgers. There is no tracked generated
+snapshot to refresh. `check:gentle-snapshots` now proves the retired path remains
+absent and exercises the complete derivation; a resurrected aggregate or owner
+tree fails. See [`HL38`](../../specs/HL38-retired-gentle-ramp-snapshots.md).
 
 Exam-inventory regression evidence is language-owned too. Generic parser and
 security behavior stays in the data package's `tests/exam-inventory.test.ts`;
@@ -79,6 +86,14 @@ coverage pins, exact unmapped-point queues, and source-specific assertions live
 under `tests/exam-inventories/<language>.test.ts` or a track's older independent
 `tests/exam-inventory-<language>.test.ts`. Adding one track's lesson or probe must
 not edit a corpus-wide exam test.
+
+The Hindi, Malayalam, and Marathi A1 inventories are point-owned as well. Each `_meta.json` holds the
+stable source/scope contract plus the ordered point-id completeness manifest;
+each `NNNN-<point-id>.json` owns exactly one full point. The loader reconstructs
+the unchanged public inventory, rejects missing/extra/reordered/noncanonical
+owners and aggregate resurrection, and lets independent chapter agents update
+different probes or notes without meeting in a language-wide file. See
+[`HL37`](../../specs/HL37-sharded-exam-inventory-point-ownership.md).
 
 The two generated-hash families use stable four-digit chapter owners rather
 than per-language arrays: `_meta.json` carries document-wide fields and
@@ -145,6 +160,14 @@ loader requires the exact filename set from `core/languages.json` before it
 opens owner bytes, so deleting a language owner cannot silently shrink the
 vocabulary. There is no `core/sound-tags.json` compatibility aggregate.
 
+Reading-reach floors are shard-only too. Every registered task-shape inventory
+has one self-binding `core/reading-reach-floor.d/<language>--<level>.json`
+owner, including an explicit zero owner before the first passage reaches an exam
+part. The loader proves that owner set against task-shape identities before it
+opens any owner bytes, folds only positive floors into the historical public
+ratchet, and rejects a resurrected `core/reading-reach-floor.json` aggregate.
+Raising one track/rung therefore never edits another track's policy owner.
+
 Generated Class-B figures live beside the book that consumes them under
 `<language>/book/figures/`. The data package renders them from canonical lesson
 claims, Language Ladder bundles the same SVG, and the unified books job verifies the
@@ -160,6 +183,15 @@ that the track omits or deliberately teaches elsewhere. The data-package gate
 proves that every registered map covers its schema-v2 and canonical lessons without
 jumping over a prerequisite. Books and the app still read the lesson Markdown;
 the map is the shared scheduling contract, not a second copy of the content.
+
+The path and extension shards define those nodes but do not repeat lesson ids.
+`curriculum-membership.d/<lesson-id>.json` owns one lesson's path, stable order,
+and zero or more attached extension edges. Its exact owner set is derived from
+the track's lesson filenames, so deleting or adding either side alone fails.
+Loaders reconstruct the historical `path[*].lessons` and
+`extensions[*].lessons` arrays byte-for-byte in memory. Ordinary lesson work
+therefore never appends to a shared curriculum array. See
+[`HL40`](../../specs/HL40-direct-curriculum-lesson-membership.md).
 
 The unified publication job also emits `curriculum-gaps.json` and
 `curriculum-gaps.txt` beside the books. They record the effective duration budget

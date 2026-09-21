@@ -4,11 +4,5 @@
   "kind": "required",
   "category": "grammar",
   "canDo": "I can ask a question of my own devising and be answered.",
-  "prerequisites": [],
-  "lessons": [
-    "TA-C75-polar",
-    "TA-C75-answering",
-    "TA-W30-read-sariyaa",
-    "TA-C75-permission"
-  ]
+  "prerequisites": []
 }

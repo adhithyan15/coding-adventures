@@ -1,0 +1,11 @@
+{
+  "id": "MR-C32-nako",
+  "pathSegment": "MR-PATH-034",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-047-SENTENCE-NEGATION",
+      "order": 1
+    }
+  ]
+}

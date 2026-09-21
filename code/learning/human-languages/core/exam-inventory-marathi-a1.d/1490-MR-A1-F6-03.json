@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-F6-03",
+  "category": "Structuring the exchange",
+  "label": "show that one is following what is said",
+  "probe": [
+    "MR-LEX-HO-01",
+    "MR-LEX-BARAM-01"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [
+    "A1-F6-04"
+  ]
+}

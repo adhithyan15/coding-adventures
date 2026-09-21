@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-PRON-06",
+  "category": "Sarvanam (pronouns)",
+  "label": "the other oblique pronouns: apko, use, hamen, tumhen",
+  "probe": [
+    "HI-LEX-C86-PRON-03",
+    "HI-LEX-C86-PRON-04"
+  ],
+  "derivedFrom": "ES:A1-PRON-02, ES:A1-SV-05",
+  "note": "hamen, tumhen, aapko and use are introduced by chapter 94. The note was right that mujhe existed only inside the pasand frame; the chapter's finding is that the frame was never a lump -- mujhe is main in its oblique form, and once the set is visible the liking question can be asked at any level of address. Two of the five obliques show ko plainly and three take the nasal ending."
+}

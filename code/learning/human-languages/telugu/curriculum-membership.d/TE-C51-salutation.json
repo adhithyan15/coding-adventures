@@ -1,0 +1,11 @@
+{
+  "id": "TE-C51-salutation",
+  "pathSegment": "TE-PATH-51-COURTESY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-51-COURTESY",
+      "order": 4
+    }
+  ]
+}

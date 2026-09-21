@@ -1,0 +1,11 @@
+{
+  "id": "JA-C13-family-check",
+  "pathSegment": "JA-PATH-013",
+  "pathOrder": 16,
+  "extensions": [
+    {
+      "id": "JA-EXT-020-FAMILY-NINE",
+      "order": 16
+    }
+  ]
+}

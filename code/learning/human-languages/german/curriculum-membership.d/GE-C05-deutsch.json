@@ -1,0 +1,11 @@
+{
+  "id": "GE-C05-deutsch",
+  "pathSegment": "GE-PATH-014-B",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-014-SENTENCE-PIECES",
+      "order": 1
+    }
+  ]
+}

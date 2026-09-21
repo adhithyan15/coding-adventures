@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C18-hear-haokan",
+  "pathSegment": "ZH-PATH-017",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "ZH-EXT-048-LOOKING-READING-MEANING-FIRST",
+      "order": 2
+    }
+  ]
+}

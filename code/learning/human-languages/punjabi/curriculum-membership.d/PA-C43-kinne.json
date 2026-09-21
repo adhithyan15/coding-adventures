@@ -1,0 +1,11 @@
+{
+  "id": "PA-C43-kinne",
+  "pathSegment": "PA-PATH-045",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-065-QUESTIONS",
+      "order": 4
+    }
+  ]
+}

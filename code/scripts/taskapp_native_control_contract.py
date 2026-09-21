@@ -2,7 +2,7 @@
 """Validate that generated native TaskApp controls remain wired to Rust events.
 
 The live conformance programs prove the host boundary, scheduling projections,
-error atomicity, and persistence. This source contract closes the remaining
+error atomicity, persistence, and recoverable startup. This source contract closes the remaining
 gap for backends where hosted-runner accessibility APIs are not dependable: it
 requires the emitted input/button controls, event payloads, row projections,
 and host-to-view update subscription to remain connected.
@@ -93,8 +93,8 @@ CONTRACTS: dict[str, dict[str, tuple[str, ...]]] = {
             '.testTag("name-input-corrected")',
             '.testTag("due-input-error")',
             '.testTag("due-input-corrected")',
-            "Text(newTaskNameError",
-            "Text(newTaskDueError",
+            "Text(text = newTaskNameError",
+            "Text(text = newTaskDueError",
             '.testTag("due-input")',
             "onValueChange = { v -> dispatch(TaskAppEvent.NewTaskDueChange(v)) }",
             '.testTag("add-btn")',
@@ -111,11 +111,19 @@ CONTRACTS: dict[str, dict[str, tuple[str, ...]]] = {
             "onClick = { dispatch(TaskAppEvent.EditTask(i)) }",
             "onClick = { dispatch(TaskAppEvent.SaveTaskEdit) }",
             "onClick = { dispatch(TaskAppEvent.CancelTaskEdit) }",
-            "Text(( row [ 2 ] )",
-            "Text(( row [ 3 ] )",
-            'Text("Your Inbox is ready"',
+            "Text(text = ( row [ 2 ] )",
+            "Text(text = ( row [ 3 ] )",
+            'Text(text = "Your Inbox is ready"',
         ),
         "src/main/kotlin/Main.kt": (
+            "fun MosaicStartup(",
+            'testTag("mosaic-startup-loading")',
+            'Text("Starting TaskApp…")',
+            'testTag("mosaic-startup-failure")',
+            'Text("TaskApp could not start")',
+            'Text("Your saved tasks have not been changed. Retrying is safe.")',
+            'Button(onClick = { attempt += 1 }) { Text("Try again") }',
+            "withContext(Dispatchers.IO)",
             "mosaicHost.setPropsChangedHandler",
             "hostProps = nextProps",
             "mosaicHost.handleEvent(event.mosaicEnvelope)",
@@ -156,7 +164,7 @@ CONTRACTS: dict[str, dict[str, tuple[str, ...]]] = {
         "Sources/App/App.swift": (
             "bridge.setPropsChangedHandler?",
             "self?.refreshProps()",
-            "applyHostResponse(bridge.handleEvent(event.mosaicEnvelope as NSDictionary, name: event.mosaicName as NSString)",
+            'applyHostResponse(bridge.handleEvent(["payload": event.mosaicPayload] as NSDictionary, name: event.mosaicName as NSString)',
             "applyHostResponse(bridge.applyProps()",
         ),
     },

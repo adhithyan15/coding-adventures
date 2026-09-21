@@ -1,0 +1,11 @@
+{
+  "id": "LA-C07-frater-soror",
+  "pathSegment": "LA-PATH-010",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-010-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

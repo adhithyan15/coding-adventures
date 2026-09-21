@@ -6,10 +6,5 @@
   "canDo": "I can say whether something is easy or difficult.",
   "prerequisites": [
     "ML-EXT-95-OPEN-CLOSED"
-  ],
-  "lessons": [
-    "ML-C96-eluppam",
-    "ML-C96-prayaasam",
-    "ML-R96-ease-recall"
   ]
 }

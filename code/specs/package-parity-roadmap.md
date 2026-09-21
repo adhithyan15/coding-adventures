@@ -13668,7 +13668,7 @@ cover both exact packages plus the foreign-package rejection boundary.
 The language registry digest is now
 `190d7e79d88d8ab4478d29f1e41d355271b466e8c21ffdaca97ffb443130a530`.
 Its repository-boundary cascade is
-`cb396d048211f3ec20f1e4d5a438746e5b19642b6d2b039e33c93876a841cd6d`.
+`9ec107a831f564e811bfd7942512f97117fe720d1c9f9b40fef46c852b781973`.
 The Python oracle and already-adopted Go, Haskell, Swift, and shared .NET
 engines consume the same exact-root rules; all five checked projections
 regenerate byte-for-byte. The registry test additionally proves that every
@@ -13940,6 +13940,200 @@ Before publication, the implementation rebased conflict-free onto exact
 two Malayalam, CLR, TLS, SPICE, and Mermaid commits have no implementation-path
 overlap with this tranche. Focused native, generator, CI-registry, corpus, Go,
 state-graph, parity, and diff checks all pass again after the rebase.
+
+### Post-PR #15646 refresh and OCaml representative-chain CI selection
+
+PR #15646 completed both protected final gates successfully with no failed
+check and a conflict-free mergeable head. Guarded squash auto-merge was enabled
+only after those required contexts were terminal, and GitHub merged the Dart
+core automatically at `2026-09-19T21:42:09Z` as
+`f4e7d4c3cdb6e69f777c809388f64db2307151f6` without a plain manual merge
+command.
+
+The collision-checked schema-3 inventory at that exact merged main now contains
+15 established lanes, 1,443 implementation identities, 4,668 implementation
+slots, and 1,483 all-reported identities. Completion bands are 175/265,
+123/934, 181/2,282, and 964/13,496; Rust has 784 singleton identities, OCaml
+remains an emerging five-package lane, and canonical collisions and unknown
+language buckets remain zero. The Dart build-tool program does not create a
+package identity. The two new identities since the preceding merged inventory
+are Rust-only `tls-server-identity` and `der-tlv`.
+
+Both new identities are portable, zero-runtime-dependency, empty-capability
+cores and now have explicit pending owners. The TLS identity owner first freezes
+typed-SAN neutral fixtures, including the malformed IPv4-looking dotted-decimal
+boundary, before established-lane ports; it excludes certificate parsing,
+trust, IDNA, transport, sockets, clocks, randomness, and credentials. The DER
+TLV owner first freezes canonical borrowed-byte framing fixtures and the Rust
+oracle before established-lane ports; it excludes ASN.1 schema decoding, X.509,
+cryptography, trust, TLS, and transport. They are independent P4 singleton
+waves: future X.509 work depends on DER framing, while a later TLS closure may
+compose both.
+
+The dependency/leverage pass selects
+`ocaml-representative-package-ci-execution` as the explicit roadmap successor.
+Its representative-core, exact toolchain, and capability-analyzer dependencies
+are merged, and it supplies the real Ubuntu, macOS, and Windows evidence needed
+before native OCaml build-tool qualification and lane promotion. The selected
+slice uses a separate OCAML07 contract, closed manifest, validator, and
+commit-pinned representative workflow so the exact OCAML03 job set remains
+unchanged and open Dependabot PR #15548's `build-ocaml.yml`/`ci.yml` overlap is
+avoided. It must prove real leaf-first format, test, per-production-file numeric
+coverage, install, archive, installed downstream, warning-clean odoc 3.0.0,
+retained evidence, analyzer enforcement, and no skip-success path on all three
+targets without promoting OCaml. The reconciled graph has 847 owners and 1,571
+edges: 220 merged, 626 pending, and exactly this owner in progress.
+
+### PR #15668 OCaml representative-chain CI publication
+
+The selected owner is implemented and published as ready-for-review PR #15668
+from exact head `279eeabc97a6b9417b6e93bfa98280a8c8a0618f`. The standalone
+workflow leaves OCAML03 and `ci.yml` unchanged while binding its own exact
+commit-pinned actions, OCaml 5.2.1/opam 2.5.2/Dune 3.17.2 toolchain, odoc 3.0.0,
+three reviewed targets, four-package dependency order, independent analyzer,
+source archives, installed consumers, and retained evidence to a closed
+OCAML07 manifest and validator.
+
+Tests-first local execution ran every real Windows BUILD front for logic-gates,
+graph, directed-graph, and state-machine. Their production coverage is 97.35%,
+97.07%, 98.72%, and 96.64%; release install and warning-clean documentation
+builds pass. The analyzer passes its 29 native test surfaces with 95.19% library
+and 100% CLI coverage and accepts each representative package independently.
+Both consumers pass from a clean copied downstream fixture against installed
+packages, including the leaf-only state-machine link, and exact Windows output
+ends in LF rather than CRLF. Offline contract suites, archive validation,
+neutral build-tool corpus, package-parity collision checks, the 847-owner and
+1,571-edge state graph, Ruff, Bandit, YAML, lessons, and diff hygiene pass.
+
+Parallel reviews and the real local Windows run caught and closed incorrect
+opam 2.5.2 flags, incomplete evidence assertions, warning-scan error masking,
+stale coverage assertions, Windows path conversion for coverage, analyzer, and
+pins, missing native analyzer construction, unformatted downstream sources,
+and CRLF receipt rewriting. No P0/P1 review finding remains. GitHub reports the
+opened head mergeable; checks are pending, so guarded auto-merge is not yet
+enabled and no second parity implementation may begin.
+
+### PR #15668 merge, exact-main inventory, and OCaml graph/diff selection
+
+Every required and advisory check on PR #15668 reached a terminal acceptable
+conclusion, including the real Ubuntu, macOS, and Windows representative-chain
+jobs and both protected final gates. GitHub reported the reviewed head clean and
+mergeable. Guarded squash auto-merge was enabled only after that evidence was
+complete, and GitHub merged it automatically at `2026-09-20T01:50:46Z` as
+`0fdac8165b42c629a74ffba7b47f7afe18c8fca0`; no plain manual merge command was
+used.
+
+The collision-checked schema-3 inventory at that exact merged main contains 15
+established lanes, 1,445 implementation identities, 4,670 implementation
+slots, and 1,485 all-reported identities. Completion bands are 175/265,
+123/934, 181/2,282, and 966/13,524; Rust has 786 singleton identities, OCaml
+remains an emerging five-package lane, and canonical collisions and unknown
+language buckets remain zero. The established-lane package counts are C# 199,
+Dart 86, Elixir 279, F# 198, Go 296, Haskell 204, Java 134, Kotlin 133, Lua 252,
+Perl 251, Python 503, Ruby 298, Rust 1,222, Swift 162, and TypeScript 453.
+
+The two newly unowned Rust singletons are now registered as portable pending
+owners. `der-asn1-portable-conformance` owns the typed, allocation-free ASN.1
+DER value layer above the existing DER TLV framing contract, with canonical
+primitive and wrapper fixtures, shared budgets, non-advancing failures, and no
+X.509, trust, signature, TLS, network, credential, or ambient authority.
+`x509-time-portable-conformance` owns the RFC 5280 UTCTime and GeneralizedTime
+core above both DER contracts, including the fixed 1950/2050 split, Gregorian
+and leap boundaries, fixed Zulu syntax, bounded work, and redacted failures;
+clocks, validity decisions, X.509 path/trust/signature behavior, and TLS remain
+outside it. Open downstream x509-validity work does not supersede that owner.
+
+The dependency/leverage pass selects
+`ocaml-build-tool-process-free-graph-diff-core` from exact main on branch
+`codex/parity-ocaml-build-tool-graph-diff-20260919`. All seven formal
+dependencies are merged, this is the next dependency-shaped OCaml promotion
+step, and it unlocks 19 unfinished descendants. The bounded tranche owns only
+the pure eight-case graph and eleven-case diff-selection core: deterministic
+topology and closures, exact stable failures, strict bounded Unicode-scalar
+glob matching, and no filesystem, Git, process, environment, network,
+credential, or execution authority. No open PR touches the prospective OCaml
+build-tool program, neutral graph/diff fixtures, or their conformance contract.
+Dependabot PR #15548 does overlap `.github/workflows/ci.yml`, so that shared
+file must be avoided or the collision reassessed immediately before
+publication; the already-governed OCaml graph and directed-graph package trees
+also remain outside this tranche. The reconciled graph has 849 owners and 1,574
+edges: 221 merged, 627 pending, and exactly this owner in progress.
+
+### PR #15708 merge, exact-main inventory, and DER TLV selection
+
+Every required and advisory check on PR #15708 reached a terminal acceptable
+conclusion, including both protected CI gates and the Linux, macOS, and Windows
+OCaml fresh-solve and locked-fixture jobs. GitHub reported the reviewed head
+clean and mergeable. Guarded squash auto-merge was enabled only after that
+evidence was complete, and GitHub merged it automatically at
+`2026-09-20T06:46:10Z` as
+`a6149a44b8a3184e84ffa076d05c04340d6d7825`; no plain manual merge command was
+used.
+
+The collision-checked schema-3 inventory at that exact merged main contains 15
+established lanes, 1,448 implementation identities, 4,673 implementation
+slots, and 1,488 all-reported identities. Completion bands are 175/265,
+123/934, 181/2,282, and 969/13,566; Rust has 789 singleton identities, OCaml
+remains an emerging five-package lane, and canonical collisions and unknown
+language buckets remain zero.
+
+Three newly unowned Rust singletons are now registered as portable pending
+owners. `x509-validity-portable-conformance` owns the exact two-time RFC 5280
+Validity sequence and explicit caller-time classification above the DER ASN.1
+and X.509 time contracts. `x509-algorithm-identifier-portable-conformance` owns
+the generic algorithm OID plus absent-or-one opaque canonical DER parameters,
+without an algorithm registry or parameter policy. The dependent
+`x509-subject-public-key-info-portable-conformance` owns the exact
+AlgorithmIdentifier-plus-BIT-STRING sequence without key parsing, crypto,
+trust, TLS, clocks, transport, or ambient authority. All three are
+allocation-free, empty-capability portable cores. Open PR #15748's proposed
+`x509-extension` package remains prospective and will receive an owner only if
+it lands on main.
+
+The dependency/leverage pass selects `der-tlv-portable-conformance` from exact
+main on branch `codex/parity-der-tlv-portable-conformance-20260919`. It is the
+only unblocked root of the six-owner confirmed DER/X.509 graph and directly
+unlocks DER ASN.1 and X.509 time, transitively unlocking X.509 validity,
+AlgorithmIdentifier, and SubjectPublicKeyInfo. The selected root has no runtime
+dependencies, declares no capabilities, and exposes only allocation-free
+borrowed-byte framing. The tranche first freezes a language-neutral behavior
+suite and the Rust oracle, then delivers independently tested implementations
+in all fourteen missing established lanes. The reconciled graph has 852 owners
+and 1,579 edges: 222 merged, 629 pending, and exactly this owner in progress.
+
+### DER TLV 15-lane delivery and validation
+
+The selected tranche now has a closed language-neutral DER TLV v1 behavior
+suite with 54 cases and 17 stable error kinds, plus package-native consumers in
+all 15 established implementation lanes: Rust, Python, Go, TypeScript, Dart,
+Elixir, Ruby, Perl, Lua, Java, Kotlin, Swift, Haskell, C#, and F#. The contract
+pins byte-exact projections and untouched remainders, transactional cursor
+advancement, explicit supported-index overflow handling, canonical identifier
+and length encoding, exact-input rejection, payload-blind errors, and empty
+capability manifests. ASN.1 value decoding, X.509 policy, cryptography, trust,
+TLS, transport, and ambient authority remain outside this owner.
+
+The closed consumer registry is itself schema-checked and the aggregate gate
+rejects missing, duplicated, escaped, cross-wired, or unexpected consumers,
+stale fixture references, and invalid capability identities. Package-native
+tests, builds, lint or vet, and coverage gates pass across all 15 lanes. The
+Rust `der-asn1` and `x509-time` downstream suites also pass. The package-parity
+report recognizes `der-tlv` in exactly 15/15 established lanes with no
+collisions or unknown languages, and a real Go build-tool dry-run evaluated 45
+Starlark files, discovered 5,211 packages, selected 15 changed and 21 affected
+packages, and passed orphan checks.
+
+Independent review verified the registry closure and found one C# construction
+path that could bypass configured-limit invariants; the implementation now uses
+constructor-only immutable limits, and fresh C# and F# suites both exceed their
+95 percent line-coverage gates. Rust tests, downstream tests, Clippy with
+warnings denied, and release builds pass. `cargo llvm-cov` can execute the Rust
+tests on Windows, but report generation exceeds the Windows command-line limit
+with OS error 206 because of its generated workspace ignore expression; this
+local reporting limitation is recorded rather than treated as implementation
+coverage evidence. The 19 implementation commits rebased conflict-free onto
+current `origin/main` before publication preparation, while the state remains
+`in-progress` until the ready-for-review PR actually exists.
 
 ## Autonomous Loop Protocol
 

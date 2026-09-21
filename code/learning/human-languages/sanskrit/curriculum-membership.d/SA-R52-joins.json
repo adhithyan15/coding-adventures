@@ -1,0 +1,11 @@
+{
+  "id": "SA-R52-joins",
+  "pathSegment": "SA-PATH-52-JOINS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-052-JOINS",
+      "order": 4
+    }
+  ]
+}

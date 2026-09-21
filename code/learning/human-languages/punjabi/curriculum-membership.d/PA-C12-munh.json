@@ -1,0 +1,11 @@
+{
+  "id": "PA-C12-munh",
+  "pathSegment": "PA-PATH-016",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-016-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

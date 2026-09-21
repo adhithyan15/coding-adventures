@@ -1,0 +1,11 @@
+{
+  "id": "TA-W30-read-sariyaa",
+  "pathSegment": "TA-PATH-75-YESNO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-75-YESNO",
+      "order": 2
+    }
+  ]
+}

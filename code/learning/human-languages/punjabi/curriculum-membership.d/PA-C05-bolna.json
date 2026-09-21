@@ -1,0 +1,11 @@
+{
+  "id": "PA-C05-bolna",
+  "pathSegment": "PA-PATH-010",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PA-EXT-010-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C04-practice",
+  "pathSegment": "AR-PATH-009",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "AR-EXT-009-CONSOLIDATION",
+      "order": 0
+    }
+  ]
+}

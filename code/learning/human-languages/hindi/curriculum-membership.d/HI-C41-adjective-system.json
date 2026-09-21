@@ -1,0 +1,11 @@
+{
+  "id": "HI-C41-adjective-system",
+  "pathSegment": "HI-PATH-201",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "HI-EXT-201-ADJ",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C24-practice",
+  "pathSegment": "RU-PATH-026",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "RU-EXT-031-COUNT-TEN",
+      "order": 5
+    }
+  ]
+}

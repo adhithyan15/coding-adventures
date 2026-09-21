@@ -1,0 +1,11 @@
+{
+  "id": "IT-C22-te",
+  "pathSegment": "IT-PATH-026",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-026-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

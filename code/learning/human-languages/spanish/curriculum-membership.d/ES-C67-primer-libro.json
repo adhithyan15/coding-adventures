@@ -1,0 +1,11 @@
+{
+  "id": "ES-C67-primer-libro",
+  "pathSegment": "ES-PATH-A1-ORDINALES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-A1-ORDINALES",
+      "order": 1
+    }
+  ]
+}

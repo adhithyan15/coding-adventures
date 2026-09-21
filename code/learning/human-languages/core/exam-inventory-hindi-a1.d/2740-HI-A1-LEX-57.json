@@ -1,0 +1,12 @@
+{
+  "id": "HI-A1-LEX-57",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "urban and rural spaces",
+  "probe": [
+    "HI-LEX-C56-ROAD-01",
+    "HI-LEX-C56-ROAD-02",
+    "HI-LEX-C56-ROAD-05",
+    "HI-LEX-C56-ROAD-03"
+  ],
+  "derivedFrom": "ES:A1-NE20-03"
+}

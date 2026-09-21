@@ -4,12 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can name five ordinary household things in Malayalam.",
-  "prerequisites": [],
-  "lessons": [
-    "ML-C56-mat",
-    "ML-C56-basket",
-    "ML-C56-knife",
-    "ML-C56-vessel",
-    "ML-C56-box"
-  ]
+  "prerequisites": []
 }

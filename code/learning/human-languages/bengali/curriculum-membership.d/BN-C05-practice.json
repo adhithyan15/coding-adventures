@@ -1,0 +1,11 @@
+{
+  "id": "BN-C05-practice",
+  "pathSegment": "BN-PATH-017",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-017-LANGUAGE-SPECIFIC",
+      "order": 4
+    }
+  ]
+}

@@ -1,8 +1,10 @@
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.click
 import androidx.compose.ui.test.junit4.v2.createComposeRule
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -19,6 +21,13 @@ import kotlin.test.assertTrue
 import org.junit.Rule
 import org.junit.Test
 
+private fun startPageHtml(): String = """
+    <html><head><title>Compose Start</title></head><body>
+    <a href="/link">Open the Compose link target</a>
+    ${List(80) { index -> "<p>scroll row $index</p>" }.joinToString("")}
+    </body></html>
+""".trimIndent()
+
 private class VenturePageServer : AutoCloseable {
     private val executor = Executors.newCachedThreadPool()
     private val server = HttpServer.create(InetSocketAddress("127.0.0.1", 0), 0)
@@ -30,12 +39,7 @@ private class VenturePageServer : AutoCloseable {
         server.executor = executor
         server.createContext("/") { exchange ->
             val html = when (exchange.requestURI.path) {
-                "/start" -> """
-                    <html><head><title>Compose Start</title></head><body>
-                    <a href="/link">Open the Compose link target</a>
-                    ${List(80) { index -> "<p>scroll row $index</p>" }.joinToString("")}
-                    </body></html>
-                """.trimIndent()
+                "/start" -> startPageHtml()
                 "/target" -> """
                     <html><head><title>Compose Address Target</title></head>
                     <body>address navigation reached the shared browser</body></html>
@@ -77,7 +81,21 @@ class VentureChromeInteractionTest {
             rule.waitUntil(10_000) { host.renderedFrameCount.get() > 0 }
             rule.onNodeWithText("Compose Start").assertExists()
             val surface = rule.onNodeWithTag("venture-content-surface").assertExists()
+            rule.onNodeWithTag("stop-button").assertIsNotEnabled()
             println("compose-live-stage=shell-mounted")
+
+            rule.onNodeWithTag("bookmark-button").assertIsEnabled().performClick()
+            rule.waitUntil(10_000) {
+                runCatching { rule.onNodeWithText("Bookmarks (1)").assertExists() }.isSuccess
+            }
+            rule.onNodeWithText("Bookmarks (1)").assertExists().performClick()
+            rule.waitUntil(10_000) {
+                runCatching { rule.onNodeWithText("1 of 1").assertExists() }.isSuccess
+            }
+            rule.onAllNodesWithText("Compose Start").assertCountEquals(2)
+            rule.onNodeWithTag("bookmarks-close-button").performClick()
+            rule.onNodeWithTag("bookmarks-panel").assertDoesNotExist()
+            println("compose-live-stage=bookmark-catalog")
 
             rule.onNodeWithTag("copy-address-button").assertIsEnabled().performClick()
             rule.waitUntil(10_000) { host.lastClipboardText != null }
@@ -129,12 +147,21 @@ class VentureChromeInteractionTest {
             rule.waitForIdle()
             println("compose-live-stage=page-info")
 
+            rule.onNodeWithTag("zoom-in-button").assertIsEnabled().performClick()
+            rule.onNodeWithText("125%").assertExists().performClick()
+            rule.onNodeWithText("100%").assertExists()
+            println("compose-live-stage=page-zoom")
+
             rule.onNodeWithTag("view-source-button").assertIsEnabled().performClick()
             rule.waitUntil(10_000) { host.lastAuxiliaryDocument != null }
             val sourceDocument = assertNotNull(host.lastAuxiliaryDocument)
             assertEquals("view-source", sourceDocument["kind"])
             assertTrue(sourceDocument["address"].toString().startsWith("view-source:"))
             assertTrue(sourceDocument["html"].toString().contains("&lt;title&gt;Compose Start&lt;/title&gt;"))
+            rule.onNodeWithTag("view-source-copy-button").assertIsEnabled().performClick()
+            rule.waitUntil(10_000) { host.lastClipboardText == startPageHtml() }
+            assertEquals(startPageHtml(), host.lastClipboardText)
+            rule.onNodeWithTag("view-source-copy-button").assertExists()
             println("compose-live-stage=view-source")
 
             rule.onNodeWithTag("back-button").assertIsNotEnabled()
@@ -158,6 +185,16 @@ class VentureChromeInteractionTest {
                 runCatching { rule.onNodeWithText("Compose Address Target").assertExists() }.isSuccess
             }
             rule.onNodeWithTag("back-button").performClick()
+            rule.waitUntil(10_000) {
+                runCatching { rule.onNodeWithText("Compose Start").assertExists() }.isSuccess
+            }
+            rule.onNodeWithText("History (2)").assertExists().performClick()
+            rule.onNodeWithTag("history-next-button").assertIsEnabled().performClick()
+            rule.onNodeWithTag("history-open-button").assertIsEnabled().performClick()
+            rule.waitUntil(10_000) {
+                runCatching { rule.onNodeWithText("Compose Address Target").assertExists() }.isSuccess
+            }
+            rule.onNodeWithTag("back-button").assertIsEnabled().performClick()
             rule.waitUntil(10_000) {
                 runCatching { rule.onNodeWithText("Compose Start").assertExists() }.isSuccess
             }

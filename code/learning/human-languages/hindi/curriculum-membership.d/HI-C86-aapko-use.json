@@ -1,0 +1,11 @@
+{
+  "id": "HI-C86-aapko-use",
+  "pathSegment": "HI-PATH-94-PRONOUNS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-94-PRONOUNS",
+      "order": 3
+    }
+  ]
+}

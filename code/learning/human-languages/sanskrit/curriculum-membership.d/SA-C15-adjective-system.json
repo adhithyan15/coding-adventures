@@ -1,0 +1,11 @@
+{
+  "id": "SA-C15-adjective-system",
+  "pathSegment": "SA-PATH-201",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "SA-EXT-201-ADJ",
+      "order": 5
+    }
+  ]
+}

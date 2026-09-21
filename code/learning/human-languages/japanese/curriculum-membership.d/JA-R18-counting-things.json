@@ -1,0 +1,11 @@
+{
+  "id": "JA-R18-counting-things",
+  "pathSegment": "JA-PATH-017",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "JA-EXT-025-COUNTERS",
+      "order": 8
+    }
+  ]
+}

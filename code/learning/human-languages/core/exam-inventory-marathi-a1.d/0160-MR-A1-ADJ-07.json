@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-ADJ-07",
+  "category": "The adjective",
+  "label": "invariable adjectives, which do not agree at all",
+  "probe": [
+    "MR-GRAMMAR-ADJ-INVARIABLE",
+    "MR-LEX-LAHAAN",
+    "MR-LEX-SUNDAR"
+  ],
+  "anchorIds": [
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [],
+  "marathiSpecific": true
+}

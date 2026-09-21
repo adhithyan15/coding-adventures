@@ -1,0 +1,11 @@
+{
+  "id": "TA-C54-knife",
+  "pathSegment": "TA-PATH-54-HOUSE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-54-HOUSE",
+      "order": 2
+    }
+  ]
+}

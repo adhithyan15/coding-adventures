@@ -1,0 +1,11 @@
+{
+  "id": "ML-C95-adaykkuka",
+  "pathSegment": "ML-PATH-95-OPEN-CLOSED",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-95-OPEN-CLOSED",
+      "order": 1
+    }
+  ]
+}

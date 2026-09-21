@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-F4-08",
+  "category": "Influencing the listener",
+  "label": "accept a proposal, an offer or an invitation",
+  "probe": null,
+  "note": "The acceptance TOKENS exist (ho, chaalel); there is no invitation vocabulary for them to accept, so the exchange cannot be completed and the point is not scored as covered on the strength of half of it.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-F4-08"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-R26-transport-counter",
+  "pathSegment": "MW-PATH-025",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-039-COUNTER-EXCHANGE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-F-35",
+  "category": "Sanvad-karya (communicative functions)",
+  "label": "say what you prefer",
+  "probe": [
+    "HI-CONCEPT-C35-PASAND-01"
+  ],
+  "derivedFrom": "ES:A1-F3-03",
+  "note": "The pasand lesson teaches `pasand karna` explicitly as the active choosing sense, nearer to 'I prefer' than to 'I like'."
+}

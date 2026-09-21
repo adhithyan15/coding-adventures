@@ -1,0 +1,11 @@
+{
+  "id": "PA-C41-je-tan",
+  "pathSegment": "PA-PATH-043",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-063-CONDITION",
+      "order": 1
+    }
+  ]
+}

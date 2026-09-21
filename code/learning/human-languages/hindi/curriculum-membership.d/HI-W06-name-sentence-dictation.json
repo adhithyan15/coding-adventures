@@ -1,0 +1,11 @@
+{
+  "id": "HI-W06-name-sentence-dictation",
+  "pathSegment": "HI-PATH-004A",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-006-CONNECTED-WRITING",
+      "order": 3
+    }
+  ]
+}

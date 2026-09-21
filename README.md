@@ -249,7 +249,7 @@ See the [Mosaic overview](./code/specs/UI00-mosaic.md) and
 
 Forme is the repository's universal authoring pipeline: typed, capability-aware
 stages turn content into web pages, documentation sites, feeds, search indexes,
-and deployment artifacts. Its 63 TypeScript packages now cover the kernel and
+and deployment artifacts. Its 66 TypeScript packages now cover the kernel and
 orchestrator, filesystem and Markdown sources, routing and collection,
 transformations, Style IR, HTML/AOT emitters, metadata, sitemaps, feeds,
 fingerprinted assets, an in-memory live-preview server, and a complete
@@ -269,20 +269,32 @@ Product sites and focused demos prove the composition model:
   highlighting, and browser search.
 
 The headless build path and general build/check/clean/watch CLI work, including
-loopback preview, live reload, last-good-output behavior, and deterministic
-cross-process affected-stage scheduling through a configured project cache.
-Filesystem emitters can replay validated artifacts to reconstruct a deleted
-output tree without rerunning unrelated pure stages. Forme is not yet a turnkey
-site generator: the remaining product layer includes bounded concurrent
-streaming, the deploy runner, a reconciled specification map, the plugin host
-and OS sandboxes, interactivity, and the authoring shell.
+loopback preview, live reload, last-good-output behavior, deterministic
+cross-process affected-stage scheduling, and bounded concurrent streaming
+through one pipeline-wide permit budget. Filesystem emitters can replay
+validated artifacts to reconstruct a deleted output tree without rerunning
+unrelated pure stages. The capability-free deploy core now validates complete
+manifests, plans owned creates/updates/skips/deletes, verifies content hashes,
+and emits reproducible dry-run reports. Its filesystem adapter stages and
+reversibly swaps complete output trees. The GitHub Pages adapter preserves
+independently owned prefixes of a shared source branch and publishes each site
+through one atomic non-forced ref update. Forme is not yet a turnkey site
+generator: the remaining product layer includes deploy-command composition,
+plugin host and OS sandboxes,
+interactivity, and the authoring shell. Its canonical specification map now
+runs collision-free from FM01 through FM08, with an implementation ledger in
+every Forme specification and an always-on CI contract guarding the map.
 The checked-in [completion roadmap](./code/specs/FM00-forme-completion-roadmap.md)
 tracks that path and the gaps discovered while dogfooding both live sites.
 
 Start with the [Forme vision](./code/specs/FM00-forme-vision.md),
 [kernel](./code/specs/FM01-forme-kernel.md),
 [orchestrator](./code/specs/FM03-forme-orchestrator.md), and
-[Style IR](./code/specs/FM04-forme-style-ir.md).
+[Style IR](./code/specs/FM04-forme-style-ir.md). The remaining canonical map is
+[Interactivity IR](./code/specs/FM05-forme-interactivity-ir.md),
+[AOT compiler](./code/specs/FM06-forme-aot-compiler.md),
+[CLI and development server](./code/specs/FM07-forme-cli-dev-server.md), and
+[deploy runner](./code/specs/FM08-forme-deploy-runner.md).
 
 ### Applications and product experiments
 

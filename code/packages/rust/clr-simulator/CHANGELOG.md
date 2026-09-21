@@ -1,5 +1,41 @@
 # Changelog
 
+## Unreleased — strict encoded string input (CLR15)
+
+Reserve MemberRef row 8 for `input_str` and add immutable byte-string arena
+handles to the simulator value model. Line reads preserve content bytes exactly,
+strip LF/CRLF delimiters, return an empty string at EOF, and remain observable
+through a checked read-only accessor. Locals, arguments and returns transport
+handles without conflating them with object arrays or integers.
+
+## Unreleased — strict encoded integer input (CLR13)
+
+Reserve MemberRef rows 6 and 7 for line-oriented `input_i64` and non-consuming
+`input_more` host calls. Add an explicit replace-and-rewind input buffer while
+keeping program loads input-neutral. Reads preserve the full signed i64 domain
+and return zero for EOF, empty, malformed or overflowing lines. Exact-token and
+stream-lifecycle tests keep unknown MemberRefs fail-closed without state change.
+
+## Unreleased — checked long branches (CLR10)
+
+Execute br, brfalse and brtrue with signed four-byte offsets. Validate operand
+length, target range and initialized conditions before changing stack or pc.
+Preserve existing Int/Int64/Ref truthiness. Literal tests and builder-promotion
+execution cover both outcomes, signed offsets and malformed state.
+
+## Unreleased — compact int32 minus one (CLR09)
+
+Execute standard `ldc.i4.m1` (`0x15`) as `Int(-1)` and make the public integer
+encoding helper select that canonical one-byte form. Raw-byte, trace, program
+counter and encoding-boundary tests cover the new path.
+
+## Unreleased — remainder and bitwise NOT (CLR07)
+
+Execute signed `rem` and bitwise `not` for Int and Int64 values, preserving
+operand width. Remainder rejects zero and MIN/-1 overflow. Missing,
+uninitialized, reference and mixed-width operands refuse before stack or pc
+mutation. Raw-byte and source-to-artifact execution tests cover both opcodes.
+
 ## Unreleased — bitwise AND and OR (CLR05)
 
 Execute and/or on matched Int or Int64 operands, preserving every bit and width.

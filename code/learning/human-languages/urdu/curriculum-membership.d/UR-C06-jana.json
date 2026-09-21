@@ -1,0 +1,11 @@
+{
+  "id": "UR-C06-jana",
+  "pathSegment": "UR-PATH-007",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-017-CORE-VERBS",
+      "order": 1
+    }
+  ]
+}

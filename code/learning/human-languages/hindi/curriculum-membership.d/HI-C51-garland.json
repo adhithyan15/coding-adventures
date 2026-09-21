@@ -1,0 +1,11 @@
+{
+  "id": "HI-C51-garland",
+  "pathSegment": "HI-PATH-51-WELCOME",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-51-WELCOME",
+      "order": 1
+    }
+  ]
+}

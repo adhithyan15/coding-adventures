@@ -1,0 +1,11 @@
+{
+  "id": "MW-C10-hear-bajar",
+  "pathSegment": "MW-PATH-010",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MW-EXT-024-TRAVEL-FIVE",
+      "order": 0
+    }
+  ]
+}

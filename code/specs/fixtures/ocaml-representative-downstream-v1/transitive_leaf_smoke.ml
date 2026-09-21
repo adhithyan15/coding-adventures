@@ -7,9 +7,9 @@ let () =
   in
   let machine =
     unwrap "leaf DFA creation failed"
-      (Coding_adventures_state_machine.Dfa.create
-         ~states:[ "cold"; "warm" ] ~alphabet:[ "boot" ]
-         ~transitions:[ transition ] ~initial:"cold" ~accepting:[ "warm" ] ())
+      (Coding_adventures_state_machine.Dfa.create ~states:[ "cold"; "warm" ]
+         ~alphabet:[ "boot" ] ~transitions:[ transition ] ~initial:"cold"
+         ~accepting:[ "warm" ] ())
   in
   let reachable =
     Coding_adventures_state_machine.Dfa.reachable_states machine
@@ -20,5 +20,6 @@ let () =
       (Coding_adventures_state_machine.Dfa.process machine "boot")
   in
   require (current = "warm") "unexpected DFA state";
+  set_binary_mode_out stdout true;
   print_endline
     {|{"schema_version":1,"fixture":"ocaml-state-machine-transitive-link-v1","reachable":["cold","warm"],"dfa_state":"warm","passes":true}|}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C33-artham-cesuko",
+  "pathSegment": "TE-PATH-027",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-027-MIND-VERBS",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-R12-family-six",
+  "pathSegment": "ZH-PATH-011",
+  "pathOrder": 12,
+  "extensions": [
+    {
+      "id": "ZH-EXT-032-FAMILY-FOUR-SKILL",
+      "order": 0
+    }
+  ]
+}

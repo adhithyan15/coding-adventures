@@ -1,0 +1,11 @@
+{
+  "id": "HI-C47-farmer",
+  "pathSegment": "HI-PATH-47-ROLE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-47-ROLE",
+      "order": 2
+    }
+  ]
+}

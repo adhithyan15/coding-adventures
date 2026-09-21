@@ -1,0 +1,11 @@
+{
+  "id": "MW-R39-script-close",
+  "pathSegment": "MW-PATH-032",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-046-REFUSAL",
+      "order": 4
+    }
+  ]
+}

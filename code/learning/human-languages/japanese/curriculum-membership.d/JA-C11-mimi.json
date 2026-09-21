@@ -1,0 +1,11 @@
+{
+  "id": "JA-C11-mimi",
+  "pathSegment": "JA-PATH-011",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "JA-EXT-018-BODY-SEVEN",
+      "order": 5
+    }
+  ]
+}

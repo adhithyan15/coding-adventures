@@ -1,0 +1,11 @@
+{
+  "id": "ES-C355-rincon",
+  "pathSegment": "ES-PATH-355-01",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-355-PLACE",
+      "order": 3
+    }
+  ]
+}

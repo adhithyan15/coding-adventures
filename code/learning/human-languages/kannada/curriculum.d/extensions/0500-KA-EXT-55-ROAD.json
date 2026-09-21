@@ -4,12 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can name four Kannada landmarks and ask for the way to one.",
-  "prerequisites": [],
-  "lessons": [
-    "KA-C55-river",
-    "KA-C55-tank",
-    "KA-C55-hill",
-    "KA-C55-village",
-    "KA-C55-path"
-  ]
+  "prerequisites": []
 }

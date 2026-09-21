@@ -1,0 +1,11 @@
+{
+  "id": "PA-C41-jadon",
+  "pathSegment": "PA-PATH-043",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-063-CONDITION",
+      "order": 3
+    }
+  ]
+}

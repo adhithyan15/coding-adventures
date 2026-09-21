@@ -6,8 +6,5 @@
   "canDo": "I can apply third-tone sandhi to the greeting, and I know that neither the pinyin nor the characters record the change.",
   "prerequisites": [
     "ZH-EXT-002-COMPONENT-HOOK"
-  ],
-  "lessons": [
-    "ZH-C01-tone-sandhi"
   ]
 }

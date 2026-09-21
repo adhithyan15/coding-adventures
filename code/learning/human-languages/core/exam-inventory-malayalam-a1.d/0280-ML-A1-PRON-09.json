@@ -1,0 +1,16 @@
+{
+  "id": "ML-A1-PRON-09",
+  "category": "Sarvanaamam (pronouns)",
+  "label": "exclamative: how good!, what a thing!",
+  "probe": null,
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-PRON-07"
+  ],
+  "malayalamSpecific": false,
+  "note": "Not taught. enthoru and the exclamative use of the e- series are both absent."
+}

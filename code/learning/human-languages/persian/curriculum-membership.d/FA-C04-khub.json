@@ -1,0 +1,11 @@
+{
+  "id": "FA-C04-khub",
+  "pathSegment": "FA-PATH-005",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-010-INHERITED-LEXICON",
+      "order": 0
+    }
+  ]
+}

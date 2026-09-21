@@ -6,6 +6,13 @@ the four Dravidian tracks (after [Tamil](../tamil/README.md) the anchor,
 same way as: one word per lesson, taken apart and traced to its root; the
 pieces taught before the whole; and a book you can read straight through.
 
+## Authoring ownership
+
+Add release notes as a new ranked fragment under `CHANGELOG.d/`; do not edit or
+commit `CHANGELOG.md`. The latter is only the deterministic local rendered view
+produced by the document-shard tooling, so parallel chapters keep independent
+history owners.
+
 ## What's different about the Malayalam track
 
 - **The script is taught through useful words, with a writing runway.** Hear and

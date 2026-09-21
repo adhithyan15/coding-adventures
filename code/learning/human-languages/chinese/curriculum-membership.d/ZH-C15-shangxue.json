@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C15-shangxue",
+  "pathSegment": "ZH-PATH-014",
+  "pathOrder": 13,
+  "extensions": [
+    {
+      "id": "ZH-EXT-040-SCHOOL-COMPOUNDS-SCRIPT",
+      "order": 6
+    }
+  ]
+}

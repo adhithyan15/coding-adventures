@@ -1,0 +1,20 @@
+{
+  "id": "ML-A1-F-18",
+  "category": "Vyavahaaram (communicative functions)",
+  "label": "take leave",
+  "probe": [
+    "ML-PHRASE-C04-POYI-VARAAM-01",
+    "ML-LEX-C50-LEAVE-05"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-F5-11",
+    "A1-F6-06"
+  ],
+  "malayalamSpecific": false,
+  "note": "poyi varaam, and vida. The corpus is explicit that Malayalam does not say 'goodbye' but 'I will go and come back'."
+}

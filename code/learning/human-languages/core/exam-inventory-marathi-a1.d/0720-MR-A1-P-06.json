@@ -1,0 +1,18 @@
+{
+  "id": "MR-A1-P-06",
+  "category": "Case and postpositions",
+  "label": "postpositions of place: var, khaalii, madhye, javal, samor",
+  "probe": [
+    "MR-POSTP-VAR",
+    "MR-POSTP-KHAALI",
+    "MR-POSTP-MADHYE",
+    "MR-POSTP-JAVAL",
+    "MR-POSTP-SAMOR"
+  ],
+  "anchorIds": [
+    "editorial-marathi-structure",
+    "ca-spine"
+  ],
+  "derivedFrom": [],
+  "marathiSpecific": true
+}

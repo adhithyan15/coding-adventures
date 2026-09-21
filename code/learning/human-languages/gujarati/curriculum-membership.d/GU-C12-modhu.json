@@ -1,0 +1,11 @@
+{
+  "id": "GU-C12-modhu",
+  "pathSegment": "GU-PATH-015",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-015-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

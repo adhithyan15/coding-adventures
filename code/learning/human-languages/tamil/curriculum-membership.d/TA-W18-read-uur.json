@@ -1,0 +1,11 @@
+{
+  "id": "TA-W18-read-uur",
+  "pathSegment": "TA-PATH-003",
+  "pathOrder": 21,
+  "extensions": [
+    {
+      "id": "TA-EXT-003-SCRIPT",
+      "order": 21
+    }
+  ]
+}

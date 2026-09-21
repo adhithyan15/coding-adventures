@@ -1,0 +1,11 @@
+{
+  "id": "ES-C313-pasaporte",
+  "pathSegment": "ES-PATH-313-01",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-313-ASK",
+      "order": 2
+    }
+  ]
+}

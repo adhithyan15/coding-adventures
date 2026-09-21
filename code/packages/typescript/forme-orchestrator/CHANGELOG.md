@@ -1,5 +1,148 @@
 # Changelog — @coding-adventures/forme-orchestrator
 
+## Unreleased
+
+### Documentation
+
+- Reconciled the public entry-point, watch-loop, scheduler-state, and README
+  descriptions with the completed pipeline-wide concurrent scheduler. Bounded
+  live fan-out, exact affected scheduling, and explicit side-effect replay are
+  shipped behavior rather than deferred work.
+
+## 0.12.0 — 2026-09-19
+
+### Added — live bounded stream scheduling
+
+- A stage that returns an `AsyncIterable` now publishes bounded fan-out
+  branches before its producer completes. Downstream collectors and per-item
+  stages therefore start on live values instead of waiting for an eager array.
+- Producer iterator operations run through the pipeline's shared permit pool.
+  Consumers yield their permit while awaiting a branch and reacquire fairly,
+  which keeps collector and per-item pipelines live even at
+  `maxConcurrency: 1`.
+- Checkpointable streams feed the content-addressed checkpoint writer in the
+  same traversal as their downstream edges. The manifest is committed last,
+  while terminal outputs alone retain a caller-visible result array.
+- Validated stream checkpoints publish lazy replay branches. A restored
+  downstream stage detaches an unused branch cleanly, so exact affected-set
+  reuse cannot strand upstream completion.
+- Named fan-in keeps its existing replayable-stream contract at the join
+  boundary, and incremental runs wait for an unknown producer revision only
+  when that revision is required to make an exact downstream scheduling
+  decision.
+
+### Tests
+
+- Eleven scheduler integration cases prove pre-completion consumption,
+  one-permit progress, one-traversal slow-branch backpressure beyond the
+  64-value window, cache-failure-independent draining, fatal and recoverable
+  source-error provenance, promoted per-item restoration, hostile iterator
+  handling, and cancellation during an active pull. Named fan-in and reorder
+  tests additionally cover concurrent replay and a full 64-value window.
+- The complete orchestrator suite has 165 passing cases and exceeds the
+  package's 85% line-coverage target.
+
+## 0.11.0 — 2026-09-19
+
+### Added — concurrent DAG and per-item scheduling
+
+- DAG-ready instances now submit `Stage.run` work in stable declaration order
+  through one pipeline-wide FIFO permit pool. Independent branches execute in
+  parallel without changing topological summary or named-output order.
+- Materialized stream-to-item stages invoke items concurrently through the same
+  pool and write results into source-order slots, keeping revisions, cache
+  checkpoints, output arrays, and item counts deterministic.
+- `settings.maxConcurrency: null` resolves once per run to the host's available
+  hardware parallelism. Explicit limits must be positive safe integers.
+- Fatal failure and external cancellation close the pool before the active
+  permit is released, so already queued invocations cannot start. Active work
+  receives the composed cooperative cancellation token and settles before
+  disposal.
+
+### Tests
+
+- Eleven scheduler cases cover stable ready order, out-of-order item completion,
+  one shared stage/item budget, fail-fast queue closure, and external
+  cancellation, including falsy per-item failures and invalid external-state
+  manifests, mixed recoverable/fatal item severity, caller-token listener
+  cleanup, and delayed cache/checkpoint admission. The full orchestrator suite
+  has 151 passing cases.
+
+## 0.10.0 — 2026-09-19
+
+### Added — shared scheduler permit pool
+
+- A FIFO concurrency pool now provides one positive safe-integer permit budget
+  for stage and per-item scheduler work, with exact release on success,
+  synchronous failure, and asynchronous failure.
+- A holder can yield its permit while awaiting upstream and reacquire at the
+  queue tail. This supplies the deadlock-free `maxConcurrency: 1` primitive
+  needed by the live-stream scheduler without bypassing older waiters.
+- Pipeline cancellation rejects queued and future work with
+  `CancellationError`, while active work retains cooperative cancellation and
+  releases capacity when it unwinds.
+- Read-only instrumentation reports active, queued, and peak-active work.
+  FM-B042 and FM-B043 own DAG and live-stream integration.
+
+### Tests
+
+- Twenty-two focused cases cover input bounds, peak concurrency, FIFO starts and
+  reacquisition, sync/async failure cleanup, queued/future cancellation,
+  cancellation during reacquisition, one-permit producer/consumer progress,
+  failed waits, awaited and unawaited yield settlement, concurrent-yield
+  rejection, and already-cancelled pools.
+
+## 0.9.0 — 2026-09-19
+
+### Added — bounded lazy stream fan-out
+
+- One lazily opened upstream iterator can now feed a statically known set of
+  single-use consumer branches without recomputing source values.
+- Every attached branch has an ordered 64-value window. A full slow branch
+  backpressures upstream pulls, while `return()` detaches that consumer and
+  immediately releases its queued values and pressure.
+- Completion and source failures reach every branch after its delivered
+  prefix. Pipeline cancellation rejects pending reads, clears every window,
+  and closes the upstream iterator exactly once.
+- Read-only instrumentation exposes upstream pulls, active consumers, current
+  retained values, and peak retained values for boundedness tests. FM-B040
+  owns integration with the pipeline-wide concurrent scheduler.
+
+### Tests
+
+- Nineteen focused cases cover lazy source opening, order, one-pull multicast,
+  slow-branch backpressure, detachment, source failure and hostile iterator
+  results, cancellation before/during/after delivery, invalid bounds,
+  single-use branches, concurrent-read rejection, zero consumers, and streams
+  larger than the default 64-value window.
+
+## 0.8.0 — 2026-09-19
+
+### Added — bounded stream checkpoint foundation
+
+- Stream values can be written incrementally into a content-addressed,
+  left-complete ordered tree. The writer persists completed nodes immediately
+  and retains only an `O(log n)` binary-counter frontier.
+- A small manifest is published separately and last, so interrupted writes
+  cannot expose a partial stream checkpoint. The stream revision commits to
+  the ordered root and item count without re-encoding a materialized array.
+- Loading performs a complete integrity, content-key, count, shape, and
+  revision validation pass before exposing a second lazy replay traversal.
+  Invalid state fails open by invalidating the manifest; cancellation
+  propagates without destroying valid cache state.
+- This release establishes FM-B038's storage boundary. The existing scheduler
+  continues to materialize streams until FM-B039 and FM-B040 connect bounded
+  multicast transport and pipeline-wide scheduling to it.
+
+### Tests
+
+- Thirty focused cases cover empty, duplicate, power-of-two boundary, and
+  257-value streams; logarithmic retained state; content deduplication; lazy
+  iteration; malformed manifests and nodes; non-canonical trees; missing and
+  wrong-key entries; invalidation failure; and cancellation during validation
+  and replay.
+- The new checkpoint module exceeds 96% line coverage.
+
 ## 0.7.0 — 2026-09-19
 
 ### Added — side-effect replay

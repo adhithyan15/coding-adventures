@@ -1,0 +1,11 @@
+{
+  "id": "ML-C02-practice",
+  "pathSegment": "ML-PATH-005",
+  "pathOrder": 10,
+  "extensions": [
+    {
+      "id": "ML-EXT-005-CHECKPOINT",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C19-kogda-vopros",
+  "pathSegment": "RU-PATH-020",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-025-REASON-AND-TIME",
+      "order": 2
+    }
+  ]
+}

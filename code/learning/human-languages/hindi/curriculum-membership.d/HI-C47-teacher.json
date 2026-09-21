@@ -1,0 +1,11 @@
+{
+  "id": "HI-C47-teacher",
+  "pathSegment": "HI-PATH-47-ROLE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-47-ROLE",
+      "order": 0
+    }
+  ]
+}

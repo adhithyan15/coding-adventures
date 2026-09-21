@@ -1,0 +1,11 @@
+{
+  "id": "HI-C50-salutation",
+  "pathSegment": "HI-PATH-50-COURTESY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-50-COURTESY",
+      "order": 4
+    }
+  ]
+}

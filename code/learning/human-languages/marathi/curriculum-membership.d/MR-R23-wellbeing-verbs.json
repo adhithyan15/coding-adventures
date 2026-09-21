@@ -1,0 +1,11 @@
+{
+  "id": "MR-R23-wellbeing-verbs",
+  "pathSegment": "MR-PATH-025",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-028-WELLBEING-VERBS",
+      "order": 4
+    }
+  ]
+}

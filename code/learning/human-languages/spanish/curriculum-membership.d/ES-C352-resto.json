@@ -1,0 +1,11 @@
+{
+  "id": "ES-C352-resto",
+  "pathSegment": "ES-PATH-352-01",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-352-COUNT",
+      "order": 3
+    }
+  ]
+}

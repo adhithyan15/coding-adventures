@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-CJ-01",
+  "category": "Samuchchay (joining clauses)",
+  "label": "joining with aur",
+  "probe": [
+    "HI-JOIN-AUR-01"
+  ],
+  "derivedFrom": "ES:A1-CO-01",
+  "note": "Closed by HI-C68-aur (chapter 68), and taught GLOSS-FIRST for the reason this note used to record as a blocker: `aur` opens on the independent vowel au, which no writing lesson has ever drawn and which the corpus shows exactly once, inside `aurat`. Its Devanagari therefore appears only in the headword, where the romanization exemption makes it exposure; the body is entirely romanized and says in as many words that the letter is owed. The word is far too load-bearing to wait for a script lesson -- it carries a clause join in five of the six mock profile texts -- and the debt is recorded rather than hidden."
+}

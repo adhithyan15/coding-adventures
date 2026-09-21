@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NE14-01",
+  "category": "Travel and transport",
+  "label": "travel documents and luggage",
+  "probe": null,
+  "note": "Untaught.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE14-01"
+  ]
+}

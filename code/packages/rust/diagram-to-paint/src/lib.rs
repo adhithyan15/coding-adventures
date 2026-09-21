@@ -41,7 +41,7 @@ use diagram_ir::{
     LayoutedTemporalDiagram, LayoutedTemporalItem, Orientation, Point, RelKind, SequenceArrowhead,
     SequenceBlockKind, SequenceCentralConnection, SequenceLineStyle, SequenceParticipantKind,
     GanttTaskTags, SequenceProperty, SwimlaneEdgeKind, TextAlign as GeoTextAlign, TreeViewNodeKind,
-    RailroadElementKind,
+    RailroadElementKind, StructuralNodeKind,
 };
 use layout_ir::{Color, Content, FontSpec, PositionedNode, TextAlign, TextContent};
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
@@ -2603,6 +2603,70 @@ fn pie_slice_commands(cx: f64, cy: f64, r: f64, start: f64, end: f64) -> Vec<Pat
 // ============================================================================
 
 /// Lower a [`LayoutedStructuralDiagram`] into a [`PaintScene`].
+fn push_architecture_icon(instructions: &mut Vec<PaintInstruction>, name: &str, x: f64, y: f64, size: f64) {
+    let white_rect = |x, y, width, height| PaintInstruction::Rect(PaintRect {
+        base: PaintBase::default(), x, y, width, height, fill: Some("#ffffff".into()),
+        stroke: None, stroke_width: None, corner_radius: Some(1.0), stroke_dash: None,
+        stroke_dash_offset: None,
+    });
+    match name {
+        "database" => {
+            instructions.push(white_rect(x + size * 0.24, y + size * 0.3, size * 0.52, size * 0.42));
+            for cy in [0.3, 0.51, 0.72] {
+                instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+                    base: PaintBase::default(), cx: x + size * 0.5, cy: y + size * cy,
+                    rx: size * 0.26, ry: size * 0.1, fill: Some("#ffffff".into()),
+                    stroke: Some("#087ebf".into()), stroke_width: Some(1.0), stroke_dash: None,
+                    stroke_dash_offset: None,
+                }));
+            }
+        }
+        "server" => {
+            for offset in [0.25, 0.46, 0.67] {
+                instructions.push(white_rect(x + size * 0.2, y + size * offset, size * 0.6, size * 0.13));
+            }
+        }
+        "disk" => {
+            instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+                base: PaintBase::default(), cx: x + size * 0.5, cy: y + size * 0.5,
+                rx: size * 0.29, ry: size * 0.29, fill: Some("#ffffff".into()),
+                stroke: None, stroke_width: None, stroke_dash: None, stroke_dash_offset: None,
+            }));
+            instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+                base: PaintBase::default(), cx: x + size * 0.5, cy: y + size * 0.5,
+                rx: size * 0.08, ry: size * 0.08, fill: Some("#087ebf".into()),
+                stroke: None, stroke_width: None, stroke_dash: None, stroke_dash_offset: None,
+            }));
+        }
+        "cloud" => {
+            for (cx, cy, rx, ry) in [(0.36, 0.56, 0.2, 0.16), (0.53, 0.43, 0.23, 0.23), (0.68, 0.57, 0.2, 0.16)] {
+                instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+                    base: PaintBase::default(), cx: x + size * cx, cy: y + size * cy,
+                    rx: size * rx, ry: size * ry, fill: Some("#ffffff".into()), stroke: None,
+                    stroke_width: None, stroke_dash: None, stroke_dash_offset: None,
+                }));
+            }
+        }
+        "internet" => {
+            instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+                base: PaintBase::default(), cx: x + size * 0.5, cy: y + size * 0.5,
+                rx: size * 0.28, ry: size * 0.28, fill: None, stroke: Some("#ffffff".into()),
+                stroke_width: Some(2.0), stroke_dash: None, stroke_dash_offset: None,
+            }));
+            instructions.push(white_rect(x + size * 0.47, y + size * 0.24, size * 0.06, size * 0.52));
+            instructions.push(white_rect(x + size * 0.24, y + size * 0.47, size * 0.52, size * 0.06));
+        }
+        _ => {
+            instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+                base: PaintBase::default(), cx: x + size * 0.5, cy: y + size * 0.5,
+                rx: size * 0.26, ry: size * 0.26, fill: None, stroke: Some("#ffffff".into()),
+                stroke_width: Some(2.0), stroke_dash: None, stroke_dash_offset: None,
+            }));
+            instructions.push(white_rect(x + size * 0.44, y + size * 0.32, size * 0.12, size * 0.36));
+        }
+    }
+}
+
 pub fn diagram_to_paint_structural<S, M, R>(
     diagram: &LayoutedStructuralDiagram,
     options: &DiagramToPaintOptions<'_, S, M, R>,
@@ -2624,6 +2688,23 @@ where
     let lf = options.label_font.clone();
     let ls = lf.size;
 
+    if let Some(title) = &diagram.title {
+        text_children.push(text_node(
+            title,
+            8.0,
+            6.0,
+            diagram.width - 16.0,
+            30.0,
+            options.title_font.clone(),
+            Color {
+                r: 15,
+                g: 23,
+                b: 42,
+                a: 255,
+            },
+        ));
+    }
+
     // Groups are backend-neutral containers. Draw outer groups first so nested
     // groups, relationships, and nodes naturally layer above them.
     for group in &diagram.groups {
@@ -2644,11 +2725,30 @@ where
             Some(stereotype) => format!("«{stereotype}» {}", group.label),
             None => group.label.clone(),
         };
+        let (label_x, label_width) = if let Some(icon_name) = &group.icon_name {
+            instructions.push(PaintInstruction::Rect(PaintRect {
+                base: PaintBase::default(),
+                x: group.x + 10.0,
+                y: group.y + 6.0,
+                width: 28.0,
+                height: 20.0,
+                fill: Some("#087ebf".into()),
+                stroke: None,
+                stroke_width: None,
+                corner_radius: Some(2.0),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }));
+            push_architecture_icon(&mut instructions, icon_name, group.x + 10.0, group.y + 2.0, 28.0);
+            (group.x + 46.0, group.width - 56.0)
+        } else {
+            (group.x + 10.0, group.width - 20.0)
+        };
         text_children.push(text_node(
             &label,
-            group.x + 10.0,
+            label_x,
             group.y + 6.0,
-            group.width - 20.0,
+            label_width,
             ls * 1.3,
             lf.clone(),
             Color {
@@ -2667,15 +2767,34 @@ where
             "#6b7280",
             1.5,
         )));
-        // Arrowhead on the last segment
-        if rel.points.len() >= 2 {
+        if rel.end_arrow && rel.points.len() >= 2 {
             let tip = &rel.points[rel.points.len() - 1];
             let prev = &rel.points[rel.points.len() - 2];
             instructions.push(PaintInstruction::Path(structural_arrowhead(
                 prev, tip, &rel.kind,
             )));
         }
+        if rel.start_arrow && rel.points.len() >= 2 {
+            instructions.push(PaintInstruction::Path(structural_arrowhead(
+                &rel.points[1],
+                &rel.points[0],
+                &rel.kind,
+            )));
+        }
         if let Some((ref pos, ref lbl)) = rel.label {
+            instructions.push(PaintInstruction::Rect(PaintRect {
+                base: PaintBase::default(),
+                x: pos.x - 44.0,
+                y: pos.y - ls * 0.7,
+                width: 88.0,
+                height: ls * 1.4,
+                fill: Some("#ffffff".into()),
+                stroke: None,
+                stroke_width: None,
+                corner_radius: Some(3.0),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }));
             text_children.push(text_node(
                 lbl,
                 pos.x - 40.0,
@@ -2736,6 +2855,21 @@ where
 
     // ── Node boxes ───────────────────────────────────────────────────────────
     for node in &diagram.nodes {
+        if node.node_kind == StructuralNodeKind::Junction {
+            instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+                base: PaintBase::default(),
+                cx: node.x + node.width / 2.0,
+                cy: node.y + node.height / 2.0,
+                rx: node.width / 2.0,
+                ry: node.height / 2.0,
+                fill: Some("#334155".into()),
+                stroke: Some("#0f172a".into()),
+                stroke_width: Some(1.5),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }));
+            continue;
+        }
         let header_height = node
             .compartments
             .first()
@@ -2775,6 +2909,48 @@ where
             "#d1d5db",
             1.0,
         )));
+        let badge_text = node
+            .icon_text
+            .as_deref()
+            .or(node.icon_name.as_deref());
+        let (header_x, header_width) = if let Some(icon_text) = badge_text {
+            let icon_size = (header_height - 16.0).min(48.0);
+            instructions.push(PaintInstruction::Rect(PaintRect {
+                base: PaintBase::default(),
+                x: node.x + 8.0,
+                y: node.y + (header_height - icon_size) / 2.0,
+                width: icon_size,
+                height: icon_size,
+                fill: Some("#087ebf".into()),
+                stroke: None,
+                stroke_width: None,
+                corner_radius: Some(4.0),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }));
+            if node.icon_text.is_some() {
+                text_children.push(text_node(
+                    icon_text,
+                    node.x + 10.0,
+                    node.y + (header_height - icon_size) / 2.0 + 4.0,
+                    icon_size - 4.0,
+                    icon_size - 8.0,
+                    node_font.clone(),
+                    Color { r: 255, g: 255, b: 255, a: 255 },
+                ));
+            } else if let Some(icon_name) = &node.icon_name {
+                push_architecture_icon(
+                    &mut instructions,
+                    icon_name,
+                    node.x + 8.0,
+                    node.y + (header_height - icon_size) / 2.0,
+                    icon_size,
+                );
+            }
+            (node.x + icon_size + 16.0, node.width - icon_size - 24.0)
+        } else {
+            (node.x, node.width)
+        };
         // Header text (with optional stereotype)
         let header_label = if let Some(ref st) = node.stereotype {
             format!("«{}»\n{}", st, node.header)
@@ -2783,9 +2959,9 @@ where
         };
         text_children.push(text_node(
             &header_label,
-            node.x,
+            header_x,
             node.y + 8.0,
-            node.width,
+            header_width,
             header_height - 8.0,
             node_font.clone(),
             css_to_color(&node.style.text_color),
@@ -5185,6 +5361,108 @@ mod tests {
     #[test]
     fn version_exists() {
         assert_eq!(crate::VERSION, "0.63.0");
+    }
+
+    #[test]
+    fn architecture_icon_text_lowers_to_backend_neutral_badge_and_glyphs() {
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = LayoutedStructuralDiagram {
+            width: 200.0,
+            height: 100.0,
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            groups: vec![],
+            nodes: vec![diagram_ir::LayoutedStructuralNode {
+                id: "api".into(),
+                node_kind: StructuralNodeKind::Element,
+                x: 20.0,
+                y: 12.0,
+                width: 160.0,
+                height: 72.0,
+                header: "Gateway".into(),
+                stereotype: None,
+                icon_name: None,
+                icon_text: Some("API".into()),
+                style: default_style(),
+                compartments: vec![],
+            }],
+            relationships: vec![],
+        };
+
+        let scene = diagram_to_paint_structural(&layout, &opts);
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#087ebf")
+        )));
+        assert!(
+            scene
+                .instructions
+                .iter()
+                .filter(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_)))
+                .count()
+                >= 2
+        );
+    }
+
+    #[test]
+    fn architecture_named_icons_lower_to_backend_neutral_geometry() {
+        let mut instructions = Vec::new();
+        push_architecture_icon(&mut instructions, "database", 0.0, 0.0, 48.0);
+        assert!(instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))));
+        assert!(instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
+        let known_count = instructions.len();
+        push_architecture_icon(&mut instructions, "aws:lambda", 0.0, 0.0, 48.0);
+        assert!(instructions.len() > known_count);
+    }
+
+    #[test]
+    fn structural_bidirectional_relationship_lowers_both_arrowheads() {
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = LayoutedStructuralDiagram {
+            width: 200.0,
+            height: 80.0,
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            groups: vec![],
+            nodes: vec![],
+            relationships: vec![diagram_ir::LayoutedStructuralRelationship {
+                from_id: "api".into(),
+                to_id: "db".into(),
+                kind: RelKind::Dependency,
+                start_arrow: true,
+                end_arrow: true,
+                from_group: false,
+                to_group: false,
+                from_port: None,
+                to_port: None,
+                routing: diagram_ir::StructuralRouting::Direct,
+                points: vec![Point { x: 20.0, y: 40.0 }, Point { x: 180.0, y: 40.0 }],
+                from_mult: None,
+                to_mult: None,
+                label: None,
+            }],
+        };
+
+        let scene = diagram_to_paint_structural(&layout, &opts);
+        assert_eq!(
+            scene
+                .instructions
+                .iter()
+                .filter(|instruction| matches!(
+                    instruction,
+                    PaintInstruction::Path(path) if path.fill.as_deref() == Some("#6b7280")
+                ))
+                .count(),
+            2
+        );
     }
 
     #[test]

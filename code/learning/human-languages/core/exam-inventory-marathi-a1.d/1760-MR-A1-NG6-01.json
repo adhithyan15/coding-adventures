@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-NG6-01",
+  "category": "Evaluative notions",
+  "label": "general evaluation: good, bad, all right",
+  "probe": [
+    "MR-LEX-BARAM-01",
+    "MR-SENSE-CHALEL-OKAY"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NG6-01",
+    "A1-NG6-07"
+  ]
+}

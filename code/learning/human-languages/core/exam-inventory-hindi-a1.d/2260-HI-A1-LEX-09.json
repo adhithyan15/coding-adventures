@@ -1,0 +1,13 @@
+{
+  "id": "HI-A1-LEX-09",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "physical characteristics of a person",
+  "probe": [
+    "HI-LEX-C82-BODY-01",
+    "HI-LEX-C82-BODY-02",
+    "HI-LEX-C82-BODY-03",
+    "HI-LEX-C82-BODY-04"
+  ],
+  "derivedFrom": "ES:A1-NE01-02",
+  "note": "All four characteristics the source names are now introduced by chapter 90: lambaa (tall), naataa (short in height), patlaa (thin) and motaa (stout). chhota is deliberately NOT part of the probe even though it is taught: about a person it means YOUNGER, not short, which is why naataa had to be authored rather than the point wired on the size words the track already had."
+}

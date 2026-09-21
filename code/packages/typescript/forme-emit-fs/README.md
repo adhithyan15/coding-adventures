@@ -103,10 +103,9 @@ order doesn't affect the hash either.
   yet. Assets will get their own emit pipeline that this stage's
   manifest merges with.
 - **`DeployRoute.islands` / `DeployRoute.css` are always `[]`** —
-  the renderer doesn't track them (theme CSS is inlined in `<style>`
-  per page). When FM04 (Style IR) + FM05 (Interactivity IR) land,
-  the renderer will populate them and this stage will copy them
-  through verbatim.
+  this compatibility emitter keeps theme CSS inline. The asset-aware product
+  emitter carries the implemented FM04 style path; FM05 interactivity usage
+  remains pending.
 - **`DeployRoute.target` is always `{ kind: "file", path }`** — no
   handler-typed routes for the static blog.
 

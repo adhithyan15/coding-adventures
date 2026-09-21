@@ -1,0 +1,11 @@
+{
+  "id": "ES-C361-pescado",
+  "pathSegment": "ES-PATH-361-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-361-REF",
+      "order": 1
+    }
+  ]
+}

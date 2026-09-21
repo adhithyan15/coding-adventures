@@ -1,0 +1,11 @@
+{
+  "id": "AR-C33-qahwa",
+  "pathSegment": "AR-PATH-030",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-030-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

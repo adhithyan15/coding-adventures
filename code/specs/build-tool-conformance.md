@@ -146,17 +146,19 @@ over the canonical sorted 16-key registry, and enforce the shared per-file and
 aggregate ceilings without reading host state or gaining filesystem, process,
 environment, Git, clock, randomness, credential, or network authority.
 
-### Java, Kotlin, and Dart graph/diff core tranche
+### Java, Kotlin, Dart, and OCaml graph/diff core tranche
 
-Java, Kotlin, and Dart begin build-tool parity with independent, process-free native
-cores rooted at `code/programs/java/build-tool` and
-`code/programs/kotlin/build-tool`, and `code/programs/dart/build-tool`. This tranche is deliberately narrower than
-a complete build-tool implementation: it establishes the graph and
+Java, Kotlin, Dart, and emerging-lane OCaml begin build-tool parity with
+independent, process-free native cores rooted at
+`code/programs/java/build-tool`, `code/programs/kotlin/build-tool`,
+`code/programs/dart/build-tool`, and `code/programs/ocaml/build-tool`. This
+tranche is deliberately narrower than a complete build-tool implementation: it
+establishes the graph and
 `diff_selection` contracts through native module surfaces, but it does not add
 a CLI, conformance adapter, package discovery, build-file evaluation, planning,
 or execution authority. Until those later tranches are complete, the
-implementation manifest MUST continue to report the Java, Kotlin, and Dart front doors
-and adapters as missing.
+implementation manifest MUST continue to report the Java, Kotlin, Dart, and
+OCaml front doors and adapters as missing.
 
 Each core MUST expose native operations equivalent to:
 
@@ -170,8 +172,8 @@ tranche MUST NOT read files, environment variables, system properties, Git
 state, clocks, randomness, credentials, processes, or the network. JSON and
 fixture-path handling belong only to package-local tests.
 
-All three native suites MUST discover and independently evaluate the complete shared
-`graph` and `diff_selection` fixture set. They MUST assert the exact case-ID
+All four native suites MUST discover and independently evaluate the complete
+shared `graph` and `diff_selection` fixture set. They MUST assert the exact case-ID
 roster so a newly added case cannot be skipped silently. The required roster
 contains eight graph cases and eleven diff-selection cases. In addition to
 canonical edge ordering, deterministic levels, cycle rejection, transitive
@@ -205,7 +207,9 @@ glob implementation for the portable contract.
 
 Direct fixture consumption by these native suites is conformance evidence for
 this bounded core only. It MUST NOT be represented as a ready front door,
-adapter, or complete Java/Kotlin/Dart build-tool implementation.
+adapter, or complete Java/Kotlin/Dart/OCaml build-tool implementation. The
+OCaml-specific packaging, pure dependency, capability, and validation boundary
+is defined by [`OCAML08-build-tool-graph-diff-core.md`](OCAML08-build-tool-graph-diff-core.md).
 
 C and C++ remain emerging implementation lanes. OCaml also begins as emerging
 and must implement this contract before promotion. WASM is an execution target,
@@ -1305,18 +1309,21 @@ structured command fields use the shared definitions in the corpus schema.
 | `cli` | a portable action, decision condition, and whether the action would require later execution | exit code only |
 
 `ci_gate_selection` applies one fixed operation-wide ceiling of 50,000,000
-match-work units whenever `force` is false, both snapshots are non-null, and no
-changed path is a fixed gating-machinery sentinel. After structural registry
-and glob validation, but before package intersection or any matcher call, the
-implementation MUST charge the complete Cartesian product of every gate path
-pattern and changed file. Each pair costs `(pattern Unicode-scalar count + 1)
-* (changed-file Unicode-scalar count + 1)`. Exactly 50,000,000 units proceeds;
-checked-arithmetic overflow or a larger total returns an empty result and
-exactly one `CI_GATE_MATCH_LIMIT_EXCEEDED` error diagnostic without calling the
-matcher. Preflight includes work hidden by package intersection and early
-matches. Force, either null snapshot, and fixed machinery sentinels return all
-gates as true without enforcing the ceiling. Successful expectations MUST
-reject arbitrary adapter errors.
+path-selection work units whenever `force` is false, both snapshots are
+non-null, and no changed path is a fixed gating-machinery sentinel. After
+structural registry and glob validation, but before package intersection or any
+matcher call, the implementation MUST deduplicate identical globs and charge a
+literal-segment filter for every distinct pattern/file pair. The filter compares
+the literal leading and trailing path segments outside the first-to-last
+wildcard segment and costs each literal segment's Unicode-scalar count plus one.
+Only a pair whose bounds can match additionally costs
+`(pattern Unicode-scalar count + 1) * (changed-file Unicode-scalar count + 1)`.
+Exactly 50,000,000 units proceeds; checked-arithmetic overflow or a larger total
+returns an empty result and exactly one `CI_GATE_MATCH_LIMIT_EXCEEDED` error
+diagnostic without calling the matcher. Preflight includes candidate work hidden
+by package intersection and early matches. Force, either null snapshot, and
+fixed machinery sentinels return all gates as true without enforcing the
+ceiling. Successful expectations MUST reject arbitrary adapter errors.
 
 These records intentionally model decisions, not host operations:
 

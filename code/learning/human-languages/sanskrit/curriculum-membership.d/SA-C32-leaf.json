@@ -1,0 +1,11 @@
+{
+  "id": "SA-C32-leaf",
+  "pathSegment": "SA-PATH-32-TREE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-32-TREE",
+      "order": 1
+    }
+  ]
+}

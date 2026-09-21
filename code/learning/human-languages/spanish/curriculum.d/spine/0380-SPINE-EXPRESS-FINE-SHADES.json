@@ -1,10 +1,4 @@
 {
-  "segments": [
-    "ES-PATH-275-01",
-    "ES-PATH-275-02",
-    "ES-PATH-275-03",
-    "ES-PATH-275-04"
-  ],
   "omits": [],
   "relocates": {}
 }

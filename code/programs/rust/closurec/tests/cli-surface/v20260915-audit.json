@@ -11,7 +11,7 @@
     "extracted_surface_sha256": "a7d2346f5ad4bbe77acfe8bc176065d08ea3a8fa9ceb4ee4d05ade68644c8947"
   },
   "local_spec_path": "cli.spec.json",
-  "local_spec_sha256": "b1b17cee8e5838190e44338394a0e9743dc33b1e8100c786043a51297d5539c9",
+  "local_spec_sha256": "9a59145a672a6d61ca69a8f865d44bc0133edeed53e9c3dd35a74748e22b4bed",
   "counts": {
     "upstream_options": 102,
     "upstream_aliases": 7,
@@ -21,7 +21,7 @@
     "local_extensions": 11,
     "deprecated_aliases": 1,
     "unsupported_upstream_flags": 0,
-    "unsupported_upstream_aliases": 4
+    "unsupported_upstream_aliases": 0
   },
   "upstream_options": [
     {
@@ -574,27 +574,6 @@
       }
     ],
     "unsupported_upstream_flags": [],
-    "unsupported_upstream_aliases": [
-      {
-        "name": "--D",
-        "canonical": "define",
-        "reason": "cli-builder does not yet model long-form flag aliases"
-      },
-      {
-        "name": "--checks-only",
-        "canonical": "checks_only",
-        "reason": "cli-builder does not yet model long-form flag aliases"
-      },
-      {
-        "name": "--dev_mode",
-        "canonical": "jscomp_dev_mode",
-        "reason": "cli-builder does not yet model long-form flag aliases"
-      },
-      {
-        "name": "--warnings_whitelist_file",
-        "canonical": "warnings_allowlist_file",
-        "reason": "cli-builder does not yet model long-form flag aliases"
-      }
-    ]
+    "unsupported_upstream_aliases": []
   }
 }

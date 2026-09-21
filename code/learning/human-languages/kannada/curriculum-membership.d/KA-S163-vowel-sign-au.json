@@ -1,0 +1,11 @@
+{
+  "id": "KA-S163-vowel-sign-au",
+  "pathSegment": "KA-PATH-79-SIGNS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-79-SIGNS",
+      "order": 2
+    }
+  ]
+}

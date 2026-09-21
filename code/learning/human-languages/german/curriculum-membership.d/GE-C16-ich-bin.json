@@ -1,0 +1,11 @@
+{
+  "id": "GE-C16-ich-bin",
+  "pathSegment": "GE-PATH-021",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-021-SEIN-PRAESENS",
+      "order": 0
+    }
+  ]
+}

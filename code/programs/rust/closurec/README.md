@@ -6,9 +6,9 @@ so a script written against
 `java -jar closure-compiler.jar --js foo.js --js_output_file
 out.js --compilation_level ADVANCED` works unchanged when the
 `java -jar …` invocation is swapped for `closurec`. Per
-[CLOC08](../../../specs/CLOC08-closurec-cli-surface.md).
-Four deprecated upstream long aliases remain explicitly unsupported below;
-semantic support also varies by flag and is tracked in the parity backlog.
+[CLOC08](../../../specs/CLOC08-closurec-cli-surface.md). All canonical options
+and all seven upstream aliases in the pinned surface audit are accepted;
+semantic support still varies by flag and is tracked in the parity backlog.
 
 The binary ties together every crate in Stages 1–4: lexer,
 parser, type sidecar, JSDoc extractor, type-checker, pass
@@ -37,6 +37,7 @@ cli-builder handles:
 - enum-value validation (`--compilation_level ADVANCED`),
 - repeatable flags (`--js a.js --js b.js --js c.js`),
 - short aliases (`-O ADVANCED` ↔ `--compilation_level ADVANCED`),
+- alternate long spellings (`--checks-only` ↔ `--checks_only`),
 - type validation (integers, booleans, paths, enums),
 - conflict checking,
 - fuzzy "did you mean?" suggestions on unknown flags,
@@ -79,6 +80,15 @@ Short aliases the Java tool ships:
 | `-W`  | `--warning_level` |
 | `-D`  | `--define` |
 
+Alternate long spellings retained by the Java tool are also accepted:
+
+| Alternate long spelling | Canonical spelling |
+|-------------------------|--------------------|
+| `--D` | `--define` |
+| `--checks-only` | `--checks_only` |
+| `--dev_mode` | `--jscomp_dev_mode` |
+| `--warnings_whitelist_file` | `--warnings_allowlist_file` |
+
 `--typed_ast_output_file` is the current canonical upstream spelling.
 `closurec` also accepts its historical misspelling
 `--typed_ast_output_file__INTENRNAL_USE_ONLY` as a deprecated compatibility
@@ -93,12 +103,12 @@ pins the 87,726-byte `CommandLineRunner.java` blob at upstream commit
 SHA-256. The deterministic report classifies 102 upstream options, seven
 upstream aliases, 112 local spec flags, two cli-builder-generated flags,
 eleven local correlation-vector extensions, one deprecated compatibility
-alias, and the four unsupported long aliases listed below.
+alias, and zero unsupported upstream aliases.
 
 The offline `cli_surface` integration test verifies that every upstream and
 local name has exactly one reviewed disposition, the report still hashes the
-current `cli.spec.json`, supported single-dash aliases are present, and no
-unsupported alias disposition has gone stale. To regenerate from an
+current `cli.spec.json`, and every supported short or long alias maps to its
+reviewed canonical flag. To regenerate from an
 independently obtained pinned source file:
 
 ```sh
@@ -118,22 +128,6 @@ cargo run --example cli_surface_audit -- \
 
 Compiler diagnostics are written to stderr. A failed SIMPLE/ADVANCED compile
 writes no JavaScript output and does not create the requested output file.
-
-## Known compatibility gaps
-
-cli-builder doesn't currently support long-form aliases per flag. These exact
-upstream aliases are classified as **unsupported** by the audit — use the
-canonical name instead:
-
-| Deprecated alias    | Use instead              |
-|---------------------|--------------------------|
-| `--checks-only`     | `--checks_only`          |
-| `--dev_mode`        | `--jscomp_dev_mode`      |
-| `--warnings_whitelist_file` | `--warnings_allowlist_file` |
-| `--D` (long form)   | `--define` or `-D`       |
-
-Real-world Closure Compiler invocations use the canonical
-underscored names; these deprecated forms are rarely seen.
 
 ## Scope (v1)
 
@@ -258,8 +252,6 @@ match a glob. Normal tests and CI never download or execute the JAR.
   the warning level map; `--define` populates a value map the
   passes consult; `--compilation_level` selects a canonical
   pass preset.
-- Add hyphenated long-form aliases when
-  cli-builder grows alias support.
 
 ## Dependency whitelist
 

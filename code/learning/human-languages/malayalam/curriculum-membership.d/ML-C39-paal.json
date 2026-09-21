@@ -1,0 +1,11 @@
+{
+  "id": "ML-C39-paal",
+  "pathSegment": "ML-PATH-033",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-033-TEA-COFFEE-MILK",
+      "order": 2
+    }
+  ]
+}

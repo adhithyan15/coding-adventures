@@ -1,0 +1,11 @@
+{
+  "id": "ES-C17-sintesis-futuro-condicional",
+  "pathSegment": "ES-PATH-041",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "ES-EXT-041-CONSOLIDATION-FUTCOND",
+      "order": 0
+    }
+  ]
+}

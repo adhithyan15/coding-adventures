@@ -1,0 +1,11 @@
+{
+  "id": "ML-C102-day-and-hour",
+  "pathSegment": "ML-PATH-102-WHEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-102-WHEN",
+      "order": 3
+    }
+  ]
+}

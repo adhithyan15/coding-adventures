@@ -1,0 +1,11 @@
+{
+  "id": "SA-C52-na-na",
+  "pathSegment": "SA-PATH-52-JOINS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-052-JOINS",
+      "order": 3
+    }
+  ]
+}

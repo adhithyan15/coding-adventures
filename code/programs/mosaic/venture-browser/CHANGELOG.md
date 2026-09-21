@@ -1,5 +1,24 @@
 # Changelog
 
+- Add a shared browsable bookmark catalog with durable count, selected title
+  and canonical address, wraparound traversal, and ordinary navigation across
+  every generated host.
+
+- Add a shared Copy Source control that sends the exact retained response
+  through the existing clipboard effect, keeps the source panel open, and
+  reports one core-owned success status across generated hosts.
+- Render the core-owned View Source snapshot in one shared closable Mosaic
+  panel across every generated host while preserving typed auxiliary effects.
+
+- Render the core-owned Page Information snapshot in one shared closable Mosaic
+  panel across every generated host while preserving typed presenter effects.
+
+- Centralize generated Mosaic event decoding and native bridge response JSON
+  in browser core so macOS, Windows, and Cairo share one protocol.
+
+- Centralize page-composition scale in browser core and add shared 50%-200%
+  Zoom Out, Reset, and Zoom In controls with retained reflow across every host.
+
 ## [Unreleased]
 
 - Add a shared Page Information transaction that snapshots retained response

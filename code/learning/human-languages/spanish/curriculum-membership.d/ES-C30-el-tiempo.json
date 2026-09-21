@@ -1,0 +1,11 @@
+{
+  "id": "ES-C30-el-tiempo",
+  "pathSegment": "ES-PATH-025",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-025-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

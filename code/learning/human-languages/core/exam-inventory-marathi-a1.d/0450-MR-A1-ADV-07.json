@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-ADV-07",
+  "category": "Adverbs",
+  "label": "interrogative adverbs: kuthe, kadhii, kasaa",
+  "probe": [
+    "MR-QUESTION-KUTHE",
+    "MR-QUESTION-KADHI",
+    "MR-LEX-KASA"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-ADV-07"
+  ]
+}

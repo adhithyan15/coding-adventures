@@ -1,0 +1,11 @@
+{
+  "id": "TA-C43-daughter",
+  "pathSegment": "TA-PATH-43-KIN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-43-KIN",
+      "order": 2
+    }
+  ]
+}

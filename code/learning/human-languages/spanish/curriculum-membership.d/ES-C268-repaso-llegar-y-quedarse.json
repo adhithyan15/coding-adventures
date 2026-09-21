@@ -1,0 +1,11 @@
+{
+  "id": "ES-C268-repaso-llegar-y-quedarse",
+  "pathSegment": "ES-PATH-268-ROOM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-268-CONSOLIDATION-ROOM",
+      "order": 0
+    }
+  ]
+}

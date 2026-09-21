@@ -1,0 +1,11 @@
+{
+  "id": "TE-C54-seedling",
+  "pathSegment": "TE-PATH-54-TREE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-54-TREE",
+      "order": 4
+    }
+  ]
+}

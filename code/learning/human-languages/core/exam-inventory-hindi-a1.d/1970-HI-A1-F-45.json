@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-F-45",
+  "category": "Sanvad-karya (communicative functions)",
+  "label": "ask for help",
+  "probe": [
+    "HI-CONCEPT-C35-MADAD-01"
+  ],
+  "derivedFrom": "ES:A1-F4-03"
+}

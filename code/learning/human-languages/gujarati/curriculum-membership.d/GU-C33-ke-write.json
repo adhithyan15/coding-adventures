@@ -1,0 +1,11 @@
+{
+  "id": "GU-C33-ke-write",
+  "pathSegment": "GU-PATH-032",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-044-KE-FRAMES",
+      "order": 2
+    }
+  ]
+}

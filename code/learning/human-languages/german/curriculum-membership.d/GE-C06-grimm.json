@@ -1,0 +1,11 @@
+{
+  "id": "GE-C06-grimm",
+  "pathSegment": "GE-PATH-015",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-015-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

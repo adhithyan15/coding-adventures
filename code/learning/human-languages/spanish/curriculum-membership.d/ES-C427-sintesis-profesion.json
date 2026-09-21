@@ -1,0 +1,11 @@
+{
+  "id": "ES-C427-sintesis-profesion",
+  "pathSegment": "ES-PATH-427-OFICIOS",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "ES-EXT-427-OFICIOS",
+      "order": 7
+    }
+  ]
+}

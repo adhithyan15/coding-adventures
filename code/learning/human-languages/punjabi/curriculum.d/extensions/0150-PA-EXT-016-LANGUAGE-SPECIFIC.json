@@ -4,11 +4,5 @@
   "kind": "required",
   "category": "language-specific",
   "canDo": "I can name the eye, ear, mouth, and nose in Punjabi.",
-  "prerequisites": [],
-  "lessons": [
-    "PA-C12-akkh",
-    "PA-C12-kann",
-    "PA-C12-munh",
-    "PA-C12-nakk"
-  ]
+  "prerequisites": []
 }

@@ -131,6 +131,8 @@ class MosaicHost private constructor(
         private set
     var lastPageInfoRequest: Map<String, Any?>? = null
         private set
+    var lastCancelledSubresources: List<Any?>? = null
+        private set
     var lastClipboardText: String? = null
         private set
     val renderedFrameCount = AtomicInteger(0)
@@ -322,6 +324,8 @@ class MosaicHost private constructor(
             lastShareRequest = effect
         } else if (effect["type"] == "page-info") {
             lastPageInfoRequest = effect
+        } else if (effect["type"] == "cancel-subresources") {
+            lastCancelledSubresources = effect["requests"] as? List<Any?>
         } else if (effect["type"] == "write-clipboard") {
             lastClipboardText = effect["text"] as? String
             lastClipboardText?.let { text ->

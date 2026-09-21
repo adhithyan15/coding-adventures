@@ -1,0 +1,11 @@
+{
+  "id": "MW-C05-hear-tharo",
+  "pathSegment": "MW-PATH-005",
+  "pathOrder": 10,
+  "extensions": [
+    {
+      "id": "MW-EXT-012-HEAR-THARO",
+      "order": 0
+    }
+  ]
+}

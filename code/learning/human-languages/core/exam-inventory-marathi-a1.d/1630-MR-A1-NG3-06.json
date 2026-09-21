@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NG3-06",
+  "category": "Spatial notions",
+  "label": "order: first, next, before and after",
+  "probe": null,
+  "note": "Still untaught AS A POINT, and now for a narrower reason. Its FIRST is supplied: pahilaa is taught in chapter 60 and Molesworth's adverbial sense ('at first, in the beginning') is named there. What is still missing is the rest of the sequence -- next, before, after -- for which Marathi's aadhii, nantar and mag are taught nowhere in the track. The ordinal tranche deliberately did not invent them: this point wants ordering EXPONENTS, not more ordinals.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NG3-06"
+  ]
+}

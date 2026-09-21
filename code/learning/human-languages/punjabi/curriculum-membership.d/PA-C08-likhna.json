@@ -1,0 +1,11 @@
+{
+  "id": "PA-C08-likhna",
+  "pathSegment": "PA-PATH-012-B",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-012-MIND-VERBS-B",
+      "order": 1
+    }
+  ]
+}

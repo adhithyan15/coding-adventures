@@ -1,0 +1,11 @@
+{
+  "id": "ES-C382-quedar",
+  "pathSegment": "ES-PATH-382-01",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-382-VERB",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-R31-pairs",
+  "pathSegment": "MR-PATH-033",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-046-PAIRED-JOINS",
+      "order": 3
+    }
+  ]
+}

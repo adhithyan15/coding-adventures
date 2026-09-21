@@ -440,7 +440,7 @@ describe("the bounded human-language ledger virtual modules", () => {
     expect(watched).not.toContain(join(root, "core", "spine.json"));
   });
 
-  it("assembles one curriculum module from only that track's shards", () => {
+  it("assembles one curriculum module from only that track's direct owners", () => {
     const watched: string[] = [];
     const source = loadHumanLanguageLedgerModule(
       `\0${CURRICULUM_MODULE_PREFIX}spanish`,
@@ -452,10 +452,12 @@ describe("the bounded human-language ledger virtual modules", () => {
     );
     expect(defaultExport(source)).toEqual(spanish);
     expect(watched.length).toBeGreaterThan(100);
-    const dir = join(root, "spanish", "curriculum.d");
-    expect(watched.slice(1).every((path) => isPathWithin(dir, path))).toBe(
-      true,
+    const trackRoot = join(root, "spanish");
+    expect(watched.every((path) => isPathWithin(trackRoot, path))).toBe(true);
+    expect(watched).toContain(
+      join(root, "spanish", "curriculum-membership.d", "_meta.json"),
     );
+    expect(watched.some((path) => isPathWithin(join(trackRoot, "lessons"), path))).toBe(true);
   });
 
   it("assembles current authored chapter capabilities, preserving stale-book detection", () => {

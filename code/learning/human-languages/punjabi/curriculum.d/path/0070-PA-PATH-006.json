@@ -1,9 +1,6 @@
 {
   "id": "PA-PATH-006",
   "spine_node": "SPINE-EXCHANGE-NAMES",
-  "lessons": [
-    "PA-C03-main"
-  ],
   "before": [],
   "inline": [],
   "after": []

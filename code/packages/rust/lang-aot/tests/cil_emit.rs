@@ -45,6 +45,9 @@ fn compile_and_run(language: Language, source: &str) -> i32 {
         Some(Value::Ref(_)) => {
             panic!("`{source}` left an object reference, not an int, on the stack")
         }
+        Some(Value::String(_)) => {
+            panic!("`{source}` left a string reference, not an int, on the stack")
+        }
         None => panic!("`{source}` left no value on the stack"),
     }
 }
@@ -60,4 +63,19 @@ fn mccarthy_scalar_emits_and_runs_on_clr() {
 fn twig_scalar_emits_and_runs_on_clr() {
     // Reusability: Twig flows through the identical CLR scalar path.
     assert_eq!(compile_and_run(Language::Twig, "42"), 42, "Twig 42");
+}
+
+#[test]
+fn nib_remainder_and_not_execute_on_encoded_clr() {
+    assert_eq!(
+        compile_and_run(Language::Nib, "fn main() -> u8 { return 86 % 7; }"),
+        2,
+    );
+    assert_eq!(
+        compile_and_run(
+            Language::Nib,
+            "fn main() -> u8 { let x: u8 = 0; return ~x; }"
+        ),
+        255,
+    );
 }

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C05-hasta",
+  "pathSegment": "ES-PATH-012",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-012-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

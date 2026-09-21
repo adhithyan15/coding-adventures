@@ -4,10 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can turn any Kannada statement into a question, ask for agreement, and ask why.",
-  "prerequisites": [],
-  "lessons": [
-    "KA-C69-is-it",
-    "KA-C69-isnt-it",
-    "KA-C69-why"
-  ]
+  "prerequisites": []
 }

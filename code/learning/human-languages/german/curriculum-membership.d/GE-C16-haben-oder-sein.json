@@ -1,0 +1,11 @@
+{
+  "id": "GE-C16-haben-oder-sein",
+  "pathSegment": "GE-PATH-021-C",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "GE-EXT-021-C-CONSOLIDATION",
+      "order": 0
+    }
+  ]
+}

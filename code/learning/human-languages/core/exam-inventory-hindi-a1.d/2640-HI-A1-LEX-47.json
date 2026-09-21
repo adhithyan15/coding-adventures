@@ -1,0 +1,12 @@
+{
+  "id": "HI-A1-LEX-47",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "payment: money, price and change",
+  "probe": [
+    "HI-LEX-C72-COST-01",
+    "HI-LEX-C72-COST-02",
+    "HI-LEX-C72-COST-03"
+  ],
+  "derivedFrom": "ES:A1-NE12-03, ES:A1-NG6-02, ES:A1-NE15-01",
+  "note": "HI-C72 teaches `paisa`, `rupaya` and `dam`. The numerals above twenty that the cafe role-play needs to STATE a price are still missing and are enumerated at HI-A1-NUM-03; this point covers the vocabulary of payment, not the ability to say every amount."
+}

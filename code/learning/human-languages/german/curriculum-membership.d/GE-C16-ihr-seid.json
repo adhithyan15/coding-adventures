@@ -1,0 +1,11 @@
+{
+  "id": "GE-C16-ihr-seid",
+  "pathSegment": "GE-PATH-021",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-021-SEIN-PRAESENS",
+      "order": 4
+    }
+  ]
+}

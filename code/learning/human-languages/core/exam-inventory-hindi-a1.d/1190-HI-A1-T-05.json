@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-T-05",
+  "category": "Samay aur tarikh (time and date)",
+  "label": "telling the hour with bajna (ek baj raha hai)",
+  "probe": [
+    "HI-CONCEPT-C18-GHANTA-01"
+  ],
+  "derivedFrom": "ES:A1-NG4-01"
+}

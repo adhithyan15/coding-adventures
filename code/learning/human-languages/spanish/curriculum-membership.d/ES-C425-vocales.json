@@ -1,0 +1,11 @@
+{
+  "id": "ES-C425-vocales",
+  "pathSegment": "ES-PATH-425-ABECEDARIO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-425-ABECEDARIO",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C37-khaana",
+  "pathSegment": "HI-PATH-031",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-031-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

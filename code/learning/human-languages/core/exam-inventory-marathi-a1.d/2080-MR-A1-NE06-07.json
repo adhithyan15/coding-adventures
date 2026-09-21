@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NE06-07",
+  "category": "Education",
+  "label": "teaching materials and classroom objects",
+  "probe": null,
+  "note": "Untaught; pustak and pen have no atoms.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE06-07"
+  ]
+}

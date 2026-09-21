@@ -1,0 +1,11 @@
+{
+  "id": "ES-C292-lago",
+  "pathSegment": "ES-PATH-292-01",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-292-TIERRA",
+      "order": 3
+    }
+  ]
+}

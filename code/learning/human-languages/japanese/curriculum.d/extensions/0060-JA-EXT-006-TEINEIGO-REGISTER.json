@@ -6,8 +6,5 @@
   "canDo": "I can choose the polite -masu form for someone outside my circle and explain that Japanese marks politeness on the predicate of every sentence.",
   "prerequisites": [
     "JA-EXT-005-DAKUTEN"
-  ],
-  "lessons": [
-    "JA-C01-gozaimasu"
   ]
 }

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C52-erste-lesung",
+  "pathSegment": "GE-PATH-A1-LESUNG",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-A1-LESUNG",
+      "order": 2
+    }
+  ]
+}

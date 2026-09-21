@@ -1,0 +1,11 @@
+{
+  "id": "ES-C409-fin-de-semana",
+  "pathSegment": "ES-PATH-409-PLANNING",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-409-PLANNING",
+      "order": 2
+    }
+  ]
+}

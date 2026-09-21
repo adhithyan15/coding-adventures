@@ -1,0 +1,11 @@
+{
+  "id": "MW-W35-digits-six-seven-eight",
+  "pathSegment": "MW-PATH-029",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-043-DIGITS",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C02-buenas-noches",
+  "pathSegment": "ES-PATH-006",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-006-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

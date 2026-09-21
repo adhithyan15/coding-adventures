@@ -1,0 +1,11 @@
+{
+  "id": "TE-C62-mirror",
+  "pathSegment": "TE-PATH-62-MADE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-62-MADE",
+      "order": 4
+    }
+  ]
+}

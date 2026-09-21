@@ -1,0 +1,11 @@
+{
+  "id": "TA-W27-read-payam",
+  "pathSegment": "TA-PATH-72-FEEL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-72-FEEL",
+      "order": 2
+    }
+  ]
+}

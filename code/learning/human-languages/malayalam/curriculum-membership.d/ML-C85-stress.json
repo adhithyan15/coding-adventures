@@ -1,0 +1,11 @@
+{
+  "id": "ML-C85-stress",
+  "pathSegment": "ML-PATH-85-HELD-SOUNDS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-85-HELD-SOUNDS",
+      "order": 2
+    }
+  ]
+}

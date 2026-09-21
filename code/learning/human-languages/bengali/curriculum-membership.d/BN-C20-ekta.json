@@ -1,0 +1,11 @@
+{
+  "id": "BN-C20-ekta",
+  "pathSegment": "BN-PATH-028",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-029-CLASSIFIER",
+      "order": 2
+    }
+  ]
+}

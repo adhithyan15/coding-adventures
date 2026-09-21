@@ -1,0 +1,11 @@
+{
+  "id": "MR-R69-dem-recall",
+  "pathSegment": "MR-PATH-071",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-084-POINTING-WORDS",
+      "order": 3
+    }
+  ]
+}

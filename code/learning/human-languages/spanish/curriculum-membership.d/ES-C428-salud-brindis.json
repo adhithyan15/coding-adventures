@@ -1,0 +1,11 @@
+{
+  "id": "ES-C428-salud-brindis",
+  "pathSegment": "ES-PATH-428-PIEZAS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-428-PIEZAS",
+      "order": 3
+    }
+  ]
+}

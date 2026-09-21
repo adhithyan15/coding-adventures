@@ -1,0 +1,11 @@
+{
+  "id": "HI-C47-neighbour",
+  "pathSegment": "HI-PATH-47-ROLE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-47-ROLE",
+      "order": 4
+    }
+  ]
+}

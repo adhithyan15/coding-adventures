@@ -1,0 +1,11 @@
+{
+  "id": "PA-C10-dudh",
+  "pathSegment": "PA-PATH-014",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-014-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

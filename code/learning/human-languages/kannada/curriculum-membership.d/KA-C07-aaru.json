@@ -1,0 +1,11 @@
+{
+  "id": "KA-C07-aaru",
+  "pathSegment": "KA-PATH-011",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "KA-EXT-011-LANGUAGE-SPECIFIC",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C83-sintesis-svabhaav",
+  "pathSegment": "HI-PATH-91-CHARACTER",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "HI-EXT-91-CHARACTER",
+      "order": 7
+    }
+  ]
+}

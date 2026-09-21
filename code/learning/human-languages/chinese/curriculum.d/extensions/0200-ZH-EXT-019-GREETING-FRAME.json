@@ -6,9 +6,5 @@
   "canDo": "I can use the X + 好 greeting frame, and I can say why the third-tone sandhi rule fires in 你好 but not in 早上好.",
   "prerequisites": [
     "ZH-EXT-018-NEUTRAL-TONE"
-  ],
-  "lessons": [
-    "ZH-C07-zaoshanghao",
-    "ZH-C07-practice"
   ]
 }

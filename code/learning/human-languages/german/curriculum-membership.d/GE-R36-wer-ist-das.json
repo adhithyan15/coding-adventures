@@ -1,0 +1,11 @@
+{
+  "id": "GE-R36-wer-ist-das",
+  "pathSegment": "GE-PATH-A1-POSSESSIV",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-A1-POSSESSIV",
+      "order": 5
+    }
+  ]
+}

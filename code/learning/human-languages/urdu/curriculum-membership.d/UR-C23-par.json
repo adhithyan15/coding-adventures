@@ -1,0 +1,11 @@
+{
+  "id": "UR-C23-par",
+  "pathSegment": "UR-PATH-024",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-034-OBLIQUE-AND-POSTPOSITIONS",
+      "order": 4
+    }
+  ]
+}

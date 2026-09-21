@@ -1,0 +1,11 @@
+{
+  "id": "IT-C05-parlo-italiano",
+  "pathSegment": "IT-PATH-012",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-012-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

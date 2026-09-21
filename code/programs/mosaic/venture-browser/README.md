@@ -1,9 +1,9 @@
 # Venture browser chrome
 
 This package is the shared Mosaic source of truth for Venture's native browser
-chrome. It authors the title, Back, Forward, Home, Reload, address input, Go
-action, bookmark, Copy Address, Open in New Window, Save Page, Print Page,
-Share Page, Page Information, View Source, and find-in-page controls, status
+chrome. It authors the title, Back, Forward, Home, Reload, Stop, address input, Go
+action, bookmark toggle and catalog, session-history catalog, Copy Address, Open in New Window, Save Page, Print Page,
+Share Page, Page Information, bounded page zoom, View Source, and find-in-page controls, status
 line, disabled states, and dispatch contract once
 in MIL, MLL, and MSL.
 
@@ -17,20 +17,35 @@ recreating the surrounding chrome in backend-specific UI code.
 
 ## Contract
 
-- Slots carry the current address, page title, status text, bookmark label, and
-  host-derived disabled flags; the host supplies the native page renderer as a
-  node slot.
-- Emits carry Back, Forward, Home, Reload, address edits, Navigate, the
-  storage-neutral bookmark toggle command, host-neutral Copy Address and Open
+- Slots carry the current address, page title, status text, bookmark label,
+  bookmark/history catalog selection, and host-derived disabled flags; the host supplies
+  the native page renderer as a node slot.
+- Emits carry Back, Forward, Home, Reload, Stop, address edits, Navigate, the
+  storage-neutral bookmark and identity-preserving history catalog commands, host-neutral Copy Address and Open
   in New Window transactions, a host-neutral Save Page download, and a
-  host-neutral Print Page, Share Page, Page Information, and View Source requests.
+  host-neutral Print Page, Share Page, Page Information, View Source, and Copy
+  Source requests.
 - `venture-browser-core::BrowserChromeController` is the shared reducer and
   slot projection for that exact contract.
+- `venture-browser-core` also owns the generated Mosaic event decoder and the
+  complete native bridge response codec. macOS, Windows, and Cairo only
+  translate C strings and return the shared JSON envelope, so slot names,
+  value requirements, effects, and disabled-state projection cannot drift by
+  toolkit.
 - `venture-browser-core::BrowserHostController` owns the native-host state
   machine around that reducer: load status, transactional synchronization,
   scrolling, native scrollbar offsets, link activation, and hover projection
   are shared by the macOS and Windows bridges. Platform crates supply only
   their text/page composition and final paint backends.
+- `BrowserSession` owns the 50%-200% page scale and maps physical host surfaces
+  to logical layout width, height, and paint scale. Zoom reflows the retained
+  page without refetching or changing history; native bridges only repaint.
+- Stop remains disabled until the committed page has outstanding stylesheet or
+  image work. Core advances the navigation generation, settles every retained
+  pending resource for fallback reflow, and emits the exact ordered
+  cancellation requests through one typed host effect. Late completions,
+  history, the address draft, and the committed document follow the same
+  policy on every backend.
 - Access keys retain an independent document order through layout and paint so
   targets with negative `tabindex` remain available without entering Tab
   traversal. Core resolves normalized duplicates, disabledness, modal scope,
@@ -43,11 +58,19 @@ recreating the surrounding chrome in backend-specific UI code.
   backend-neutral paint highlights are shared. The same retained state owns
   whether the conditionally rendered Mosaic bar is open; generated hosts only
   forward open, query, next, previous, and close events.
-- View Source never refetches the page. The core escapes the exact retained
-  response text into a synthetic `<pre>` HTML document and emits one typed
-  `open-auxiliary-document` effect. SwiftUI, WinUI, Qt, Flutter, and Compose
-  adapters forward or retain that effect for their platform window presenter;
-  toolkit code does not parse, escape, or reconstruct source.
+- Session History projects the complete ordered navigation stack from stable
+  entry identifiers rather than URLs. The shared panel owns wraparound
+  selection and direct traversal, so repeated URLs retain independent form,
+  editing, and scroll snapshots while generated hosts only forward semantic
+  open, previous, next, navigate, and close events.
+- View Source never refetches the page. Core retains the exact response text,
+  projects it into one closable Mosaic source panel for every generated shell,
+  and also escapes it into a synthetic `<pre>` HTML document carried by the
+  typed `open-auxiliary-document` effect for richer platform presenters.
+  Copy Source sends those same retained bytes through the existing typed
+  clipboard effect, leaves the panel open, and projects the shared `Page source
+  copied` status. Toolkit code does not parse, select, escape, or reconstruct
+  source.
 - Copy Address resolves the committed history URL rather than the editable
   address draft and emits one typed clipboard-write effect. Generated hosts
   only present that text through their native clipboard API; URL selection,
@@ -70,9 +93,10 @@ recreating the surrounding chrome in backend-specific UI code.
   page identity, disabledness, status projection, and encoding remain shared.
 - Page Information snapshots the retained request URL, final response URL,
   normalized title, response status, and image/stylesheet resource and failure
-  counts without navigating or refetching. Generated hosts only present that
-  typed snapshot; response identity, diagnostics, disabledness, status
-  projection, and encoding remain shared.
+  counts without navigating or refetching. Mosaic renders the same retained
+  snapshot in a shared closable panel on every generated host, while richer
+  platform presenters can still consume the typed effect; response identity,
+  diagnostics, lifecycle, disabledness, and encoding remain shared.
 - Both themes expose the same parts and interaction states.
 - `tests/package_compiles.rs` guards the package contract; the package artifact
   builder compiles these exact sources, emits project shells, and verifies a

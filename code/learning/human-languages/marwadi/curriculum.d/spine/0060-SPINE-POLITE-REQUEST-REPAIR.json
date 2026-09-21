@@ -1,26 +1,4 @@
 {
-  "segments": [
-    "MW-PATH-004",
-    "MW-PATH-010",
-    "MW-PATH-011",
-    "MW-PATH-012",
-    "MW-PATH-013",
-    "MW-PATH-014",
-    "MW-PATH-015",
-    "MW-PATH-016",
-    "MW-PATH-017",
-    "MW-PATH-018",
-    "MW-PATH-019",
-    "MW-PATH-020",
-    "MW-PATH-021",
-    "MW-PATH-022",
-    "MW-PATH-023",
-    "MW-PATH-024",
-    "MW-PATH-025",
-    "MW-PATH-028",
-    "MW-PATH-029",
-    "MW-PATH-030"
-  ],
   "omits": [
     "COURTESY-PLEASE",
     "COURTESY-SORRY"

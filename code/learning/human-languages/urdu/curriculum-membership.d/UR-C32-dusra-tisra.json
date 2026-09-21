@@ -1,0 +1,11 @@
+{
+  "id": "UR-C32-dusra-tisra",
+  "pathSegment": "UR-PATH-033",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-043-ORDINALS",
+      "order": 1
+    }
+  ]
+}

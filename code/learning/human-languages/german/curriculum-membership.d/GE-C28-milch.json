@@ -1,0 +1,11 @@
+{
+  "id": "GE-C28-milch",
+  "pathSegment": "GE-PATH-031",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-031-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

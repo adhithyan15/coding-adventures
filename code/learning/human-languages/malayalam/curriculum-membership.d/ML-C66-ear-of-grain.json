@@ -1,0 +1,11 @@
+{
+  "id": "ML-C66-ear-of-grain",
+  "pathSegment": "ML-PATH-66-PADDY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-66-PADDY",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-W16-fu",
+  "pathSegment": "JA-PATH-015",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-023-NATIVE-COUNT-ONE-TO-FIVE",
+      "order": 2
+    }
+  ]
+}

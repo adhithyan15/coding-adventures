@@ -1,5 +1,21 @@
 # Changelog — iir-to-beam
 
+## Unreleased - initialize and restore normal GC roots
+
+Initialize non-parameter X registers to nil at entry and clear clobbered normal
+registers after imported and local call restoration, preserving results and
+live values. This closes additional invalid-prefix hazards in tape index and
+scalar arithmetic; putchar compaction alone did not resolve the Linux crash.
+Independent emitted-root tracking and real Erlang byte-call tests cover future
+locals, calls, tape references, aliased destinations and scalar arithmetic.
+Linux CI remains required before treating the persistent crash as resolved.
+
+## Unreleased - compact putchar GC root
+
+Save live values in Y slots and compact the character into x0 before reserving
+its list cell. Scan only that initialized X root, avoiding uninitialized or
+clobbered registers exposed by the Linux Brainfuck byte-sweep CI crash.
+
 ## 0.17.0 - 2026-09-16 - `global_store` lowers `erlang:put/2` via `call_ext`, not `gc_bif2` (BEAM08, closes #15332)
 
 Closed issue #15332, the `global_store`-side half of BEAM07's VM-D036

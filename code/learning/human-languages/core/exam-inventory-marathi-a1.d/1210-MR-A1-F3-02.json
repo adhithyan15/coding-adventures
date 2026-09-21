@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-F3-02",
+  "category": "Likes, wishes and feelings",
+  "label": "ask about a preference by offering alternatives",
+  "probe": null,
+  "note": "Blocked behind MR-A1-CO-03: offering alternatives needs 'or'.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-F3-02"
+  ]
+}

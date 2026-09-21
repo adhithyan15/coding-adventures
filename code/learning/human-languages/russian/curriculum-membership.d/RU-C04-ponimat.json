@@ -1,0 +1,11 @@
+{
+  "id": "RU-C04-ponimat",
+  "pathSegment": "RU-PATH-008",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-008-MIND-VERBS",
+      "order": 1
+    }
+  ]
+}

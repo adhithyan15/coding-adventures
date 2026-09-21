@@ -1,0 +1,11 @@
+{
+  "id": "ML-C91-vila-panam",
+  "pathSegment": "ML-PATH-91-SHOPPING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-91-SHOPPING",
+      "order": 1
+    }
+  ]
+}

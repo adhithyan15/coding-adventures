@@ -1,0 +1,11 @@
+{
+  "id": "BN-C08-bojha",
+  "pathSegment": "BN-PATH-012",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-012-MIND-AND-PAGE",
+      "order": 1
+    }
+  ]
+}

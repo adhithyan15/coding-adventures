@@ -1,0 +1,11 @@
+{
+  "id": "BN-C10-jol",
+  "pathSegment": "BN-PATH-014",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-014-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

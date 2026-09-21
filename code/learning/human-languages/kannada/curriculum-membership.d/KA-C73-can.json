@@ -1,0 +1,11 @@
+{
+  "id": "KA-C73-can",
+  "pathSegment": "KA-PATH-73-ABLE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-73-ABLE",
+      "order": 2
+    }
+  ]
+}

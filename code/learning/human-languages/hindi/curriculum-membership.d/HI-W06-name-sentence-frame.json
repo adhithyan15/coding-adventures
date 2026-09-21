@@ -1,0 +1,11 @@
+{
+  "id": "HI-W06-name-sentence-frame",
+  "pathSegment": "HI-PATH-004A",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-006-CONNECTED-WRITING",
+      "order": 0
+    }
+  ]
+}

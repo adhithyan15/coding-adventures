@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-PH-02",
+  "category": "Uccharan (pronunciation)",
+  "label": "the retroflex/dental contrast changes the word",
+  "probe": [
+    "HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-01",
+    "HI-SCRIPT-DA-RETROFLEX-01"
+  ],
+  "derivedFrom": "hindi-specific"
+}

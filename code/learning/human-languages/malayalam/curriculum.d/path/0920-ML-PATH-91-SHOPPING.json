@@ -1,13 +1,6 @@
 {
   "id": "ML-PATH-91-SHOPPING",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
-  "lessons": [
-    "ML-C91-kada",
-    "ML-C91-vila-panam",
-    "ML-C91-ethra-rupa",
-    "ML-C91-vaanguka",
-    "ML-R91-shopping-recall"
-  ],
   "before": [],
   "inline": [
     "ML-EXT-91-SHOPPING"

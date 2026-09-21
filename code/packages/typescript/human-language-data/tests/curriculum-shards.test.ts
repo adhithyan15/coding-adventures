@@ -5,10 +5,9 @@
 // Why this ledger mattered most
 // ---------------------------------------------------------------------------
 //
-// `spine` is the single worst conflict point in the corpus. Every content
-// tranche in every track appends to `spine[<node>].segments`, and there are only
-// 33 nodes for 23 tracks' worth of authors to collide on. One file per node is
-// the whole prize: two tranches touching two different nodes never meet.
+// `spine[<node>].segments` was still a same-node conflict point after sharding:
+// every path owner repeated its membership in an existing spine owner. The path
+// shard's `spine_node` is now the single edge; reverse lists are derived.
 //
 // ---------------------------------------------------------------------------
 // The trap this ledger sprang, which the spec said it would not
@@ -36,11 +35,17 @@ import { describe, expect, it } from "vitest";
 import { SHARD_PLANS, runShardCli, shardContents, unshardContents } from "../src/shard-cli.js";
 import {
   defaultCurriculumRoot,
+  loadAuthoredLanguageCurricula,
   loadCurriculumSpine,
   loadLanguageCurricula,
   loadLanguageRegistry,
 } from "../src/loader.js";
-import { listShardNames, mergeSectionedShards } from "../src/shard.js";
+import {
+  listShardNames,
+  mergeCurriculumShards,
+  mergeSectionedShards,
+  type Shard,
+} from "../src/shard.js";
 
 const root = defaultCurriculumRoot();
 const CURRICULUM_PLANS = SHARD_PLANS.filter((plan) => plan.path.endsWith("/curriculum.json"));
@@ -109,6 +114,65 @@ describe("spine: sorted shard order reproduces the authored ladder", () => {
       expect([...keys].sort(codeUnit)).not.toEqual(keys);
     },
   );
+});
+
+describe("spine membership has one owner", () => {
+  it.each(CURRICULUM_PLANS.map((p) => p.path))(
+    "%s: raw spine owners omit derived segments and the public graph restores exact path order",
+    (path) => {
+      const plan = SHARD_PLANS.find((p) => p.path === path)!;
+      const curriculum = JSON.parse(unshardContents(root, plan)) as {
+        path: { id: string; spine_node: string }[];
+        spine: Record<string, { segments: string[] }>;
+      };
+      const dir = join(root, `${path.slice(0, -".json".length)}.d`, "spine");
+      for (const name of listShardNames(join(root, path)).filter((entry) =>
+        entry.startsWith("spine/"),
+      )) {
+        const owner = JSON.parse(readFileSync(join(dir, name.slice("spine/".length)), "utf8"));
+        expect(Object.hasOwn(owner, "segments"), `${path}: ${name}`).toBe(false);
+      }
+      for (const [node, realization] of Object.entries(curriculum.spine)) {
+        expect(realization.segments, `${path}: ${node}`).toEqual(
+          curriculum.path
+            .filter((segment) => segment.spine_node === node)
+            .map((segment) => segment.id),
+        );
+      }
+    },
+  );
+
+  const shards = (pathValue: unknown, spineValue: unknown): Shard[] => [
+    { name: "_meta.json", path: "_meta.json", value: { version: 1, language: "test" } },
+    { name: "path/0010-TEST-PATH.json", path: "path/0010-TEST-PATH.json", value: pathValue },
+    {
+      name: "spine/0010-SPINE-TEST.json",
+      path: "spine/0010-SPINE-TEST.json",
+      value: spineValue,
+    },
+  ];
+
+  it("rejects resurrection of the duplicated reverse list", () => {
+    expect(() =>
+      mergeCurriculumShards(
+        shards(
+          { id: "TEST-PATH", spine_node: "SPINE-TEST", lessons: ["TEST-L1"] },
+          { segments: ["TEST-PATH"], omits: [], relocates: {} },
+        ),
+      ),
+    ).toThrow(/must not store derived 'segments'/);
+  });
+
+  it("rejects a path whose spine target has no owner", () => {
+    expect(() =>
+      mergeCurriculumShards(
+        shards(
+          { id: "TEST-PATH", spine_node: "SPINE-MISSING" },
+          { omits: [], relocates: {} },
+        ),
+      ),
+    ).toThrow(/has no spine owner/);
+  });
 });
 
 describe("path and extensions", () => {
@@ -374,6 +438,7 @@ describe("_keys must be a permutation, not an arbitrary subset", () => {
 
 describe("the loader sees the sharded curricula", () => {
   const loaded = loadLanguageCurricula(root);
+  const authored = loadAuthoredLanguageCurricula(root);
 
   it("still returns all twenty-three tracks", () => {
     // The `existsSync` canary again: `loadLanguageCurricula` skips a track with
@@ -382,13 +447,13 @@ describe("the loader sees the sharded curricula", () => {
     expect(loaded).toHaveLength(23);
   });
 
-  it("reads the same document the canonical shards rebuild", () => {
-    // The loader and `--unshard` must not have two ideas of what these files
-    // mean; `--check` only compares the monolith against `unshardContents`, so a
-    // divergent loader would go unreported.
+  it("reads the same authored projection the canonical shards rebuild", () => {
+    // Direct lesson owners are attached after the curriculum shards rebuild.
+    // The authored half must still have exactly one meaning shared by the
+    // loader and `--unshard`.
     for (const plan of CURRICULUM_PLANS) {
       const language = plan.path.slice(0, plan.path.indexOf("/"));
-      const fromLoader = loaded.find((c) => c.language === language);
+      const fromLoader = authored.find((c) => c.language === language);
       expect(fromLoader, `${language} missing`).toBeDefined();
       expect(`${JSON.stringify(fromLoader, null, 2)}\n`).toBe(unshardContents(root, plan));
     }

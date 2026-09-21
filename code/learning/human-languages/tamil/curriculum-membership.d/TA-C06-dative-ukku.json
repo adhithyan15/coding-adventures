@@ -1,0 +1,11 @@
+{
+  "id": "TA-C06-dative-ukku",
+  "pathSegment": "TA-PATH-013",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "TA-EXT-013-LANGUAGE-SPECIFIC",
+      "order": 4
+    }
+  ]
+}

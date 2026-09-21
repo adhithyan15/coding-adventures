@@ -1,0 +1,11 @@
+{
+  "id": "MW-C10-hear-paisa",
+  "pathSegment": "MW-PATH-010",
+  "pathOrder": 11,
+  "extensions": [
+    {
+      "id": "MW-EXT-024-TRAVEL-FIVE",
+      "order": 11
+    }
+  ]
+}

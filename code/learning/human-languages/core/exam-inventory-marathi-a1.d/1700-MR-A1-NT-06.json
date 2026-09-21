@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NT-06",
+  "category": "Temporal notions",
+  "label": "before and after: ordering two events",
+  "probe": null,
+  "note": "Untaught.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-NG4-03"
+  ]
+}

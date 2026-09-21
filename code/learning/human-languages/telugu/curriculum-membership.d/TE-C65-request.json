@@ -1,0 +1,11 @@
+{
+  "id": "TE-C65-request",
+  "pathSegment": "TE-PATH-65-MANNERS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-65-MANNERS",
+      "order": 2
+    }
+  ]
+}

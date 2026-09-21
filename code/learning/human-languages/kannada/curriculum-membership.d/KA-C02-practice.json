@@ -1,0 +1,11 @@
+{
+  "id": "KA-C02-practice",
+  "pathSegment": "KA-PATH-004",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "KA-EXT-004-CONSOLIDATION",
+      "order": 0
+    }
+  ]
+}

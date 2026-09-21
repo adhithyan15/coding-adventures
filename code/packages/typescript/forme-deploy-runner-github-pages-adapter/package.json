@@ -1,0 +1,23 @@
+{
+  "name": "@coding-adventures/forme-deploy-runner-github-pages-adapter",
+  "version": "0.1.0",
+  "description": "Atomic source-branch publication for Forme sites hosted by GitHub Pages.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/forme-deploy-runner-core": "file:../forme-deploy-runner-core"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.1",
+    "@vitest/coverage-v8": "^4.1.0",
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0"
+  }
+}

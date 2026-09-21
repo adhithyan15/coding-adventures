@@ -1,0 +1,11 @@
+{
+  "id": "ES-C356-desde",
+  "pathSegment": "ES-PATH-356-01",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-356-SPAN",
+      "order": 0
+    }
+  ]
+}

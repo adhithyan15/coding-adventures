@@ -1,0 +1,11 @@
+{
+  "id": "ML-C45-wife",
+  "pathSegment": "ML-PATH-45-FAMILY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-45-FAMILY",
+      "order": 3
+    }
+  ]
+}

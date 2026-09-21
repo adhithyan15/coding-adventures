@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-F-61",
+  "category": "Sanvad-karya (communicative functions)",
+  "label": "read a practical form's field labels and say which field holds what",
+  "probe": [
+    "HI-FORM-LABEL-NAME-01",
+    "HI-FORM-NAME-CUE-MAP-01"
+  ],
+  "derivedFrom": "ES:A1-NE03-01"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-R13-school-six",
+  "pathSegment": "ZH-PATH-012",
+  "pathOrder": 15,
+  "extensions": [
+    {
+      "id": "ZH-EXT-035-SCHOOL-FOUR-SKILL",
+      "order": 0
+    }
+  ]
+}

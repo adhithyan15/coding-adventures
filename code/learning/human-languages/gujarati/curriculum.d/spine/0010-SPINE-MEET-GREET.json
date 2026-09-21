@@ -1,8 +1,4 @@
 {
-  "segments": [
-    "GU-PATH-001",
-    "GU-PATH-DOORWAY-SCRIPT"
-  ],
   "omits": [
     "GREETING-FORMAL",
     "GREETING-PEACE",

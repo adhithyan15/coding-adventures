@@ -1,0 +1,11 @@
+{
+  "id": "MW-R23-bargain-two",
+  "pathSegment": "MW-PATH-022",
+  "pathOrder": 11,
+  "extensions": [
+    {
+      "id": "MW-EXT-036-BARGAIN",
+      "order": 11
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C31-saala",
+  "pathSegment": "AR-PATH-028-B",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-028-LANGUAGE-SPECIFIC-B",
+      "order": 1
+    }
+  ]
+}

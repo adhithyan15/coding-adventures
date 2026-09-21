@@ -1,0 +1,11 @@
+{
+  "id": "HI-C96-sintesis-daam",
+  "pathSegment": "HI-PATH-104-GINTI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-104-GINTI",
+      "order": 4
+    }
+  ]
+}

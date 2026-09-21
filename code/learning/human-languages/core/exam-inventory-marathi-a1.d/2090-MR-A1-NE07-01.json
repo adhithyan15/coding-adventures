@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NE07-01",
+  "category": "Work",
+  "label": "professions and posts",
+  "probe": null,
+  "note": "Untaught, and it is a field on the A1 practical form.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [
+    "A1-NE07-01"
+  ]
+}

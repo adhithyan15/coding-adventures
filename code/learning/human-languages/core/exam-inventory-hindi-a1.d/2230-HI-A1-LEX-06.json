@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-LEX-06",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "ease and difficulty",
+  "probe": [
+    "HI-LEX-C80-EASE-01",
+    "HI-LEX-C80-EASE-02"
+  ],
+  "derivedFrom": "ES:A1-NG6-10",
+  "note": "asan and mushkil are both introduced by HI-C80-aasaan-mushkil, so a learner can now say the language is hard. Both are loans ending in a consonant and neither agrees, which the lesson teaches off the kaalaa/safed contrast rather than as a new rule."
+}

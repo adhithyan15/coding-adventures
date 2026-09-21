@@ -1,11 +1,4 @@
 {
-  "segments": [
-    "PT-PATH-022-B",
-    "PT-PATH-023-B",
-    "PT-PATH-024-B",
-    "PT-PATH-025",
-    "PT-PATH-025-C"
-  ],
   "omits": [
     "VERB-DRINK",
     "VERB-GIVE",

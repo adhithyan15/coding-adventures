@@ -1,0 +1,11 @@
+{
+  "id": "TA-C80-one-and-other",
+  "pathSegment": "TA-PATH-80-OTHER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-80-OTHER",
+      "order": 1
+    }
+  ]
+}

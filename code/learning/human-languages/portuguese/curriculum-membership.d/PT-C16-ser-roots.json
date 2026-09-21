@@ -1,0 +1,11 @@
+{
+  "id": "PT-C16-ser-roots",
+  "pathSegment": "PT-PATH-020",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-020-ETYMOLOGY",
+      "order": 0
+    }
+  ]
+}

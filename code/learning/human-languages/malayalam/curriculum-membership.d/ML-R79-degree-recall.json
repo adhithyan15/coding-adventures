@@ -1,0 +1,11 @@
+{
+  "id": "ML-R79-degree-recall",
+  "pathSegment": "ML-PATH-79-DEGREE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-79-DEGREE",
+      "order": 3
+    }
+  ]
+}

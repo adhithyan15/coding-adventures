@@ -1,0 +1,11 @@
+{
+  "id": "TA-C77-opinion",
+  "pathSegment": "TA-PATH-77-SAY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-77-SAY",
+      "order": 3
+    }
+  ]
+}

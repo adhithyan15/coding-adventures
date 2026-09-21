@@ -1,0 +1,11 @@
+{
+  "id": "LA-C49-possum",
+  "pathSegment": "LA-PATH-033",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-049-FRAME",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C58-rocate",
+  "pathSegment": "SA-PATH-58-LIKES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-058-LIKES",
+      "order": 1
+    }
+  ]
+}

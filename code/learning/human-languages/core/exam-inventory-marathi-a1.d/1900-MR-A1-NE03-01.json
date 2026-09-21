@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NE03-01",
+  "category": "Personal identity",
+  "label": "personal data: name, address, telephone, age",
+  "probe": null,
+  "note": "Name and city are taught as form fields; address, telephone and age are not, and the telephone number additionally needs the Devanagari digits of MR-A1-OR-24. This is the A1 writing paper's first task.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [
+    "A1-NE03-01"
+  ]
+}

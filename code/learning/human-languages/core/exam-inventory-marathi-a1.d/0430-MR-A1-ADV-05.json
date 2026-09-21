@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-ADV-05",
+  "category": "Adverbs",
+  "label": "polarity: ho and naahii",
+  "probe": [
+    "MR-LEX-HO-01",
+    "MR-LEX-NAHI-01"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-spine"
+  ],
+  "derivedFrom": [
+    "A1-ADV-05"
+  ]
+}

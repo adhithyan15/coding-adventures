@@ -1,0 +1,21 @@
+{
+  "id": "ML-A1-S-07",
+  "category": "Vaakyam (the sentence)",
+  "label": "the vocative: calling somebody by name or role",
+  "probe": [
+    "ML-LEX-C82-ADDRESS-01",
+    "ML-LEX-C82-ADDRESS-02",
+    "ML-CONCEPT-C82-VOCATIVE-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-SN-04",
+    "A1-F5-03"
+  ],
+  "malayalamSpecific": false,
+  "note": "Chapter 82. The old note was right that no vocative particle and no term of address was taught, so a learner could not open a conversation by addressing anyone. The fix was cheaper than the note suggested because the WORDS were already there: chettan (older brother) and chechi (older sister) have been taught since the family chapter, and in Kerala the sibling words are used well outside the family -- a shopkeeper, a driver, somebody a little older in a queue. You address a stranger as KIN, and that is ordinary politeness rather than a familiarity to be earned. What was new is the CALLING form: a word ending in -an swaps that ending for -aa when you call somebody with it, so chettan becomes chettaa. chechi has no -an to swap and stands as it is, which the lesson states as a rule having nothing to act on rather than as an exception. Verified before writing: chettaa returned ZERO files; chettan and chechi returned three each, all citation uses."
+}

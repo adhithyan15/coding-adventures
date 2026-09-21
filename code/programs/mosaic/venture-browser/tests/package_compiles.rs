@@ -14,6 +14,18 @@ fn read_package_file(name: &str) -> String {
     fs::read_to_string(&path).unwrap_or_else(|error| panic!("read {}: {error}", path.display()))
 }
 
+fn assert_native_bridge_uses_shared_codec(name: &str, path: &str) {
+    let bridge = read_package_file(path);
+    assert!(
+        bridge.contains("BrowserChromeEvent::from_mosaic_event"),
+        "{name} must decode events through browser core"
+    );
+    assert!(
+        bridge.contains("browser_bridge_response_json"),
+        "{name} must serialize responses through browser core"
+    );
+}
+
 #[test]
 fn venture_chrome_sources_compile_with_matching_theme_topology() {
     let interface =
@@ -642,16 +654,7 @@ fn find_in_page_uses_one_shared_transaction_across_generated_hosts() {
             "../../../packages/rust/venture-browser-windows/src/lib.rs",
         ),
     ] {
-        let host = read_package_file(path);
-        for symbol in [
-            "onFindOpen",
-            "onFindChange",
-            "onFindNext",
-            "onFindPrevious",
-            "onFindClose",
-        ] {
-            assert!(host.contains(symbol), "{name} bridge omits {symbol}");
-        }
+        assert_native_bridge_uses_shared_codec(name, path);
     }
 
     for path in [
@@ -661,6 +664,66 @@ fn find_in_page_uses_one_shared_transaction_across_generated_hosts() {
     ] {
         let acceptance = read_package_file(path);
         assert!(acceptance.contains("findNext") || acceptance.contains("onFindNext"));
+    }
+}
+
+#[test]
+fn stop_loading_uses_one_shared_cancellation_transaction_across_generated_hosts() {
+    let interface = read_package_file("src/VentureChrome.mil");
+    let layout = read_package_file("src/VentureChrome.mll");
+    assert!(interface.contains("slot stop-disabled"));
+    assert!(interface.contains("emit onStop"));
+    assert!(layout.contains("HostButton [ stop-button ]"));
+    assert!(layout.contains("disabled : slot: stop-disabled"));
+
+    let core = read_package_file("../../../packages/rust/venture-browser-core/src/lib.rs");
+    for symbol in [
+        "StopLoading",
+        "pub fn stop_loading",
+        "CancelSubresources(Vec<BrowserSubresourceRequest>)",
+        "IgnoredStaleNavigation",
+        "Loading stopped",
+    ] {
+        assert!(core.contains(symbol), "shared Stop core omits {symbol}");
+    }
+
+    for (name, path, seam) in [
+        (
+            "SwiftUI",
+            "host/swiftui/MosaicHost.swift",
+            "VentureSubresourcesCancelled",
+        ),
+        ("XAML", "host/xaml/MosaicHost.cs", "SubresourcesCancelled"),
+        ("Qt", "host/qt/MosaicHost.cpp", "subresourcesCancelled"),
+        (
+            "Flutter",
+            "host/flutter/mosaic_host.dart",
+            "lastCancelledSubresources",
+        ),
+        (
+            "Compose",
+            "host/compose/MosaicHost.kt",
+            "lastCancelledSubresources",
+        ),
+    ] {
+        let host = read_package_file(path);
+        assert!(
+            host.contains("cancel-subresources"),
+            "{name} omits the typed cancellation effect"
+        );
+        assert!(host.contains(seam), "{name} omits its scheduler seam");
+    }
+
+    for path in [
+        "host/qt/tst_venture_chrome.qml",
+        "host/react/VentureChromeInteraction.test.tsx",
+        "host/web/VentureChromeInteraction.test.js",
+    ] {
+        let acceptance = read_package_file(path);
+        assert!(
+            acceptance.contains("stop-button") || acceptance.contains("Stop"),
+            "generated-host acceptance omits Stop in {path}"
+        );
     }
 }
 
@@ -732,15 +795,7 @@ fn copy_address_uses_one_typed_clipboard_effect_across_generated_hosts() {
             "../../../packages/rust/venture-browser-windows/src/lib.rs",
         ),
     ] {
-        let bridge = read_package_file(path);
-        assert!(
-            bridge.contains("onCopyAddress"),
-            "{name} omits the copy event"
-        );
-        assert!(
-            bridge.contains("write-clipboard"),
-            "{name} omits effect serialization"
-        );
+        assert_native_bridge_uses_shared_codec(name, path);
     }
 }
 
@@ -809,15 +864,7 @@ fn open_page_reuses_one_typed_browsing_context_effect_across_generated_hosts() {
             "../../../packages/rust/venture-browser-windows/src/lib.rs",
         ),
     ] {
-        let bridge = read_package_file(path);
-        assert!(
-            bridge.contains("onOpenPageInNewWindow"),
-            "{name} omits the event"
-        );
-        assert!(
-            bridge.contains("open-browsing-context"),
-            "{name} omits effect serialization"
-        );
+        assert_native_bridge_uses_shared_codec(name, path);
     }
 }
 
@@ -879,12 +926,7 @@ fn save_page_reuses_one_typed_download_effect_across_generated_hosts() {
             "../../../packages/rust/venture-browser-windows/src/lib.rs",
         ),
     ] {
-        let bridge = read_package_file(path);
-        assert!(bridge.contains("onSavePage"), "{name} omits the event");
-        assert!(
-            bridge.contains("\\\"type\\\":\\\"download\\\""),
-            "{name} omits effect serialization"
-        );
+        assert_native_bridge_uses_shared_codec(name, path);
     }
 
     for path in [
@@ -963,12 +1005,7 @@ fn print_page_uses_one_typed_presenter_request_across_generated_hosts() {
             "../../../packages/rust/venture-browser-windows/src/lib.rs",
         ),
     ] {
-        let bridge = read_package_file(path);
-        assert!(bridge.contains("onPrintPage"), "{name} omits the event");
-        assert!(
-            bridge.contains("\\\"type\\\":\\\"print\\\""),
-            "{name} omits effect serialization"
-        );
+        assert_native_bridge_uses_shared_codec(name, path);
     }
 
     for path in [
@@ -1047,12 +1084,7 @@ fn share_page_uses_one_typed_presenter_request_across_generated_hosts() {
             "../../../packages/rust/venture-browser-windows/src/lib.rs",
         ),
     ] {
-        let bridge = read_package_file(path);
-        assert!(bridge.contains("onSharePage"), "{name} omits the event");
-        assert!(
-            bridge.contains("\\\"type\\\":\\\"share\\\""),
-            "{name} omits effect serialization"
-        );
+        assert_native_bridge_uses_shared_codec(name, path);
     }
 
     for path in [
@@ -1077,23 +1109,184 @@ fn share_page_uses_one_typed_presenter_request_across_generated_hosts() {
 }
 
 #[test]
+fn bookmark_catalog_uses_one_ordered_shared_state_machine_across_generated_hosts() {
+    let interface = read_package_file("src/VentureChrome.mil");
+    let layout = read_package_file("src/VentureChrome.mll");
+    for symbol in [
+        "slot bookmarks-label",
+        "slot bookmarks-open",
+        "slot bookmarks-position",
+        "slot bookmarks-title",
+        "slot bookmarks-address",
+        "emit onBookmarksOpen",
+        "emit onBookmarksPrevious",
+        "emit onBookmarksNext",
+        "emit onBookmarksNavigate",
+        "emit onBookmarksClose",
+    ] {
+        assert!(interface.contains(symbol), "bookmark interface omits {symbol}");
+    }
+    for control in [
+        "bookmarks-button",
+        "bookmarks-panel",
+        "bookmarks-previous-button",
+        "bookmarks-next-button",
+        "bookmarks-open-button",
+        "bookmarks-close-button",
+    ] {
+        assert!(layout.contains(control), "bookmark layout omits {control}");
+    }
+
+    let core = read_package_file("../../../packages/rust/venture-browser-core/src/lib.rs");
+    for symbol in [
+        "OpenBookmarkCatalog",
+        "BrowseBookmarkCatalog",
+        "CloseBookmarkCatalog",
+        "bookmark_selection",
+        "Bookmarks ({}",
+        "bookmark_catalog_wraps_and_opens_the_selected_entry",
+    ] {
+        assert!(core.contains(symbol), "shared bookmark core omits {symbol}");
+    }
+
+    for path in [
+        "host/compose/VentureChromeInteractionTest.kt",
+        "host/flutter/venture_chrome_interaction_test.dart",
+        "host/qt/tst_venture_chrome.qml",
+        "host/react/VentureChromeInteraction.test.tsx",
+        "host/swiftui/MosaicHost.swift",
+        "host/web/VentureChromeInteraction.test.js",
+        "host/xaml/MosaicHost.cs",
+    ] {
+        let acceptance = read_package_file(path);
+        assert!(
+            acceptance.contains("bookmarks-button")
+                || acceptance.contains("Bookmarks (1)"),
+            "{path} omits bookmark catalog acceptance"
+        );
+    }
+
+    for (path, mapping) in [
+        ("host/qt/MosaicHost.cpp", "bookmarksPosition"),
+        ("host/xaml/MosaicHost.cs", "BookmarksPosition"),
+    ] {
+        assert!(
+            read_package_file(path).contains(mapping),
+            "{path} omits bookmark catalog bridge hydration"
+        );
+    }
+}
+
+#[test]
+fn history_catalog_uses_one_identity_preserving_transaction_across_generated_hosts() {
+    let interface = read_package_file("src/VentureChrome.mil");
+    let layout = read_package_file("src/VentureChrome.mll");
+    for symbol in [
+        "slot history-label",
+        "slot history-open",
+        "slot history-position",
+        "slot history-address",
+        "emit onHistoryOpen",
+        "emit onHistoryPrevious",
+        "emit onHistoryNext",
+        "emit onHistoryNavigate",
+        "emit onHistoryClose",
+    ] {
+        assert!(interface.contains(symbol), "history interface omits {symbol}");
+    }
+    for control in [
+        "history-button",
+        "history-panel",
+        "history-previous-button",
+        "history-next-button",
+        "history-open-button",
+        "history-close-button",
+    ] {
+        assert!(layout.contains(control), "history layout omits {control}");
+    }
+
+    let core = read_package_file("../../../packages/rust/venture-browser-core/src/lib.rs");
+    for symbol in [
+        "OpenHistoryCatalog",
+        "BrowseHistoryCatalog",
+        "CloseHistoryCatalog",
+        "history_selection",
+        "History ({})",
+        "history_catalog_wraps_and_traverses_to_stable_duplicate_entries",
+    ] {
+        assert!(core.contains(symbol), "shared history core omits {symbol}");
+    }
+
+    for path in [
+        "host/compose/VentureChromeInteractionTest.kt",
+        "host/flutter/venture_chrome_interaction_test.dart",
+        "host/qt/tst_venture_chrome.qml",
+        "host/react/VentureChromeInteraction.test.tsx",
+        "host/swiftui/MosaicHost.swift",
+        "host/web/VentureChromeInteraction.test.js",
+        "host/xaml/MosaicHost.cs",
+    ] {
+        let acceptance = read_package_file(path);
+        assert!(
+            acceptance.contains("history-button") || acceptance.contains("History (2)"),
+            "{path} omits history catalog acceptance"
+        );
+    }
+
+    for (path, mapping) in [
+        ("host/qt/MosaicHost.cpp", "historyPosition"),
+        ("host/xaml/MosaicHost.cs", "HistoryPosition"),
+    ] {
+        assert!(
+            read_package_file(path).contains(mapping),
+            "{path} omits history catalog bridge hydration"
+        );
+    }
+}
+
+#[test]
 fn page_info_uses_one_typed_response_snapshot_across_generated_hosts() {
     let interface = read_package_file("src/VentureChrome.mil");
     let layout = read_package_file("src/VentureChrome.mll");
-    assert!(interface.contains("slot page-info-disabled"));
-    assert!(interface.contains("emit onPageInfo"));
-    assert!(layout.contains("HostButton [ page-info-button ]"));
+    for symbol in [
+        "slot page-info-disabled",
+        "slot page-info-open",
+        "slot page-info-title",
+        "slot page-info-address",
+        "slot page-info-requested-address",
+        "slot page-info-status",
+        "slot page-info-resources",
+        "emit onPageInfo",
+        "emit onPageInfoClose",
+    ] {
+        assert!(
+            interface.contains(symbol),
+            "page-info interface omits {symbol}"
+        );
+    }
+    for control in [
+        "page-info-button",
+        "page-info-panel",
+        "page-info-close-button",
+    ] {
+        assert!(layout.contains(control), "page-info layout omits {control}");
+    }
 
     let core = read_package_file("../../../packages/rust/venture-browser-core/src/lib.rs");
     for symbol in [
         "BrowserChromeAction::PageInfo",
         "BrowserHostEffect::PageInfo",
         "BrowserPageInfoRequest",
-        "Page information requested",
+        "Page information shown",
+        "show_page_info",
+        "page_info_resources",
         "image_resource_count",
         "stylesheet_failure_count",
     ] {
-        assert!(core.contains(symbol), "shared page-info core omits {symbol}");
+        assert!(
+            core.contains(symbol),
+            "shared page-info core omits {symbol}"
+        );
     }
 
     for (name, path, presenter) in [
@@ -1109,7 +1302,11 @@ fn page_info_uses_one_typed_response_snapshot_across_generated_hosts() {
             "host/flutter/mosaic_host.dart",
             "lastPageInfoRequest",
         ),
-        ("Compose", "host/compose/MosaicHost.kt", "lastPageInfoRequest"),
+        (
+            "Compose",
+            "host/compose/MosaicHost.kt",
+            "lastPageInfoRequest",
+        ),
     ] {
         let host = read_package_file(path);
         assert!(host.contains("page-info"), "{name} omits the shared effect");
@@ -1130,16 +1327,7 @@ fn page_info_uses_one_typed_response_snapshot_across_generated_hosts() {
             "../../../packages/rust/venture-browser-windows/src/lib.rs",
         ),
     ] {
-        let bridge = read_package_file(path);
-        assert!(bridge.contains("onPageInfo"), "{name} omits the event");
-        assert!(
-            bridge.contains("\\\"type\\\":\\\"page-info\\\""),
-            "{name} omits effect serialization"
-        );
-        assert!(
-            bridge.contains("requestedAddress") && bridge.contains("imageFailureCount"),
-            "{name} omits page-info diagnostics"
-        );
+        assert_native_bridge_uses_shared_codec(name, path);
     }
 
     for path in [
@@ -1159,6 +1347,172 @@ fn page_info_uses_one_typed_response_snapshot_across_generated_hosts() {
                 || acceptance.contains("pageInfo")
                 || acceptance.contains("lastPageInfoRequest"),
             "{path} omits Page Information acceptance"
+        );
+    }
+
+    let swiftui_acceptance = read_package_file("host/swiftui/MosaicHost.swift");
+    for symbol in [
+        "page-info-close-button",
+        "onPageInfoClose",
+        "shared-open-close",
+    ] {
+        assert!(
+            swiftui_acceptance.contains(symbol),
+            "SwiftUI acceptance omits the shared Page Information panel lifecycle: {symbol}"
+        );
+    }
+}
+
+#[test]
+fn view_source_uses_one_retained_snapshot_and_visible_lifecycle_across_generated_hosts() {
+    let interface = read_package_file("src/VentureChrome.mil");
+    let layout = read_package_file("src/VentureChrome.mll");
+    for symbol in [
+        "slot view-source-open",
+        "slot view-source-title",
+        "slot view-source-address",
+        "slot view-source-content",
+        "emit onViewSource",
+        "emit onViewSourceCopy",
+        "emit onViewSourceClose",
+    ] {
+        assert!(
+            interface.contains(symbol),
+            "view-source interface omits {symbol}"
+        );
+    }
+    for control in [
+        "view-source-button",
+        "view-source-panel",
+        "view-source-copy-button",
+        "view-source-close-button",
+        "view-source-content",
+    ] {
+        assert!(
+            layout.contains(control),
+            "view-source layout omits {control}"
+        );
+    }
+
+    let core = read_package_file("../../../packages/rust/venture-browser-core/src/lib.rs");
+    for symbol in [
+        "BrowserSourceSnapshot",
+        "BrowserChromeAction::ViewSource",
+        "BrowserChromeAction::CopyViewSource",
+        "BrowserChromeAction::CloseViewSource",
+        "pub fn view_source(page: &BrowserPage)",
+        "Page source shown",
+        "Page source copied",
+        "show_source_view",
+        "view_source_content",
+    ] {
+        assert!(
+            core.contains(symbol),
+            "shared view-source core omits {symbol}"
+        );
+    }
+
+    for path in [
+        "host/compose/VentureChromeInteractionTest.kt",
+        "host/flutter/venture_chrome_interaction_test.dart",
+        "host/qt/tst_venture_chrome.qml",
+        "host/react/VentureChromeInteraction.test.tsx",
+        "host/swiftui/MosaicHost.swift",
+        "host/web/VentureChromeInteraction.test.js",
+        "host/xaml/MosaicHost.cs",
+    ] {
+        let acceptance = read_package_file(path);
+        assert!(
+            acceptance.contains("view-source-button")
+                || acceptance.contains("View Source")
+                || acceptance.contains("onViewSource")
+                || acceptance.contains("viewSource")
+                || acceptance.contains("lastAuxiliaryDocument"),
+            "{path} omits View Source acceptance"
+        );
+        assert!(
+            acceptance.contains("view-source-copy-button")
+                || acceptance.contains("Copy Source")
+                || acceptance.contains("onViewSourceCopy")
+                || acceptance.contains("viewSourceCopy"),
+            "{path} omits Copy Source acceptance"
+        );
+    }
+
+    let swiftui_acceptance = read_package_file("host/swiftui/MosaicHost.swift");
+    for symbol in [
+        "view-source-close-button",
+        "view-source-copy-button",
+        "onViewSourceCopy",
+        "onViewSourceClose",
+        "sourceContent.contains",
+        "viewSourcePanel",
+    ] {
+        assert!(
+            swiftui_acceptance.contains(symbol),
+            "SwiftUI acceptance omits the shared View Source panel lifecycle: {symbol}"
+        );
+    }
+}
+
+#[test]
+fn page_zoom_uses_one_shared_scale_and_reflow_policy_across_generated_hosts() {
+    let interface = read_package_file("src/VentureChrome.mil");
+    let layout = read_package_file("src/VentureChrome.mll");
+    for symbol in [
+        "slot zoom-label",
+        "emit onZoomOut",
+        "emit onZoomReset",
+        "emit onZoomIn",
+    ] {
+        assert!(interface.contains(symbol), "zoom interface omits {symbol}");
+    }
+    for control in ["zoom-out-button", "zoom-reset-button", "zoom-in-button"] {
+        assert!(layout.contains(control), "zoom layout omits {control}");
+    }
+
+    let core = read_package_file("../../../packages/rust/venture-browser-core/src/lib.rs");
+    for symbol in [
+        "paint_viewport",
+        "page_reflow_required",
+        "zoom_percent",
+        "ZoomReset",
+    ] {
+        assert!(core.contains(symbol), "shared zoom core omits {symbol}");
+    }
+
+    for (name, path) in [
+        (
+            "Cairo",
+            "../../../packages/rust/venture-browser-cairo/src/lib.rs",
+        ),
+        (
+            "macOS",
+            "../../../packages/rust/venture-browser-macos/src/lib.rs",
+        ),
+        (
+            "Windows",
+            "../../../packages/rust/venture-browser-windows/src/lib.rs",
+        ),
+    ] {
+        assert_native_bridge_uses_shared_codec(name, path);
+    }
+
+    for path in [
+        "host/compose/VentureChromeInteractionTest.kt",
+        "host/flutter/venture_chrome_interaction_test.dart",
+        "host/qt/tst_venture_chrome.qml",
+        "host/react/VentureChromeInteraction.test.tsx",
+        "host/swiftui/MosaicHost.swift",
+        "host/web/VentureChromeInteraction.test.js",
+        "host/xaml/MosaicHost.cs",
+    ] {
+        let acceptance = read_package_file(path);
+        assert!(
+            acceptance.contains("zoom-in-button")
+                || acceptance.contains("Zoom In")
+                || acceptance.contains("zoomIn"),
+            "{path} omits page zoom acceptance"
         );
     }
 }
@@ -1234,6 +1588,29 @@ fn browsing_context_effects_are_available_to_every_native_host() {
         venture_browser_core::BrowserBrowsingContextTarget::from_effective_target(Some("reports")),
         venture_browser_core::BrowserBrowsingContextTarget::Named("reports".into())
     );
+}
+
+#[test]
+fn native_rust_hosts_share_one_mosaic_bridge_codec() {
+    for path in [
+        "../../../packages/rust/venture-browser-macos/src/lib.rs",
+        "../../../packages/rust/venture-browser-windows/src/lib.rs",
+        "../../../packages/rust/venture-browser-cairo/src/lib.rs",
+    ] {
+        let source = read_package_file(path);
+        assert!(
+            source.contains("browser_bridge_response_json"),
+            "{path} must use the shared response codec"
+        );
+        assert!(
+            source.contains("BrowserChromeEvent::from_mosaic_event"),
+            "{path} must use the shared event decoder"
+        );
+        assert!(
+            !source.contains("fn effect_json(") && !source.contains("\"onPageInfo\" =>"),
+            "{path} must not recreate shared bridge policy"
+        );
+    }
 }
 
 #[test]
@@ -1842,6 +2219,17 @@ fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
     assert!(
         powershell.contains("cmd.exe /d /c \"java -version 2>&1\""),
         "Windows matrix must capture Java's stderr without turning it into a terminating error"
+    );
+    assert!(
+        shell.contains("VENTURE_BOOKMARKS_PATH=\"$flutter_bookmarks_path\"")
+            && shell.contains("VENTURE_BOOKMARKS_PATH=\"$compose_bookmarks_path\""),
+        "POSIX native acceptance gates must use isolated bookmark profiles"
+    );
+    assert!(
+        powershell.contains("$env:VENTURE_BOOKMARKS_PATH = $xamlBookmarksPath")
+            && powershell.contains("$env:VENTURE_BOOKMARKS_PATH = $flutterBookmarksPath")
+            && powershell.contains("$env:VENTURE_BOOKMARKS_PATH = $composeBookmarksPath"),
+        "PowerShell native acceptance gates must use isolated bookmark profiles"
     );
     let backends = [
         "react",

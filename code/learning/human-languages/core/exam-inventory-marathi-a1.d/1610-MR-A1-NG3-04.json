@@ -1,0 +1,18 @@
+{
+  "id": "MR-A1-NG3-04",
+  "category": "Spatial notions",
+  "label": "movement and rest",
+  "probe": [
+    "MR-LEX-YENE",
+    "MR-LEX-JANE",
+    "MR-LEX-CHALNE",
+    "MR-LEX-BASNE"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-spine"
+  ],
+  "derivedFrom": [
+    "A1-NG3-04"
+  ]
+}

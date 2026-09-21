@@ -86,6 +86,17 @@ jobs:
             doc_shard_globs=(
               'code/learning/human-languages/BACKLOG.d/*.md'
               'code/learning/human-languages/hindi/CHANGELOG.d/*.md'
+              'code/learning/human-languages/malayalam/CHANGELOG.d/*.md'
+              'code/learning/human-languages/bengali/CHANGELOG.d/*.md'
+              'code/learning/human-languages/gujarati/CHANGELOG.d/*.md'
+              'code/learning/human-languages/kannada/CHANGELOG.d/*.md'
+              'code/learning/human-languages/marathi/CHANGELOG.d/*.md'
+              'code/learning/human-languages/marwadi/CHANGELOG.d/*.md'
+              'code/learning/human-languages/punjabi/CHANGELOG.d/*.md'
+              'code/learning/human-languages/sanskrit/CHANGELOG.d/*.md'
+              'code/learning/human-languages/tamil/CHANGELOG.d/*.md'
+              'code/learning/human-languages/telugu/CHANGELOG.d/*.md'
+              'code/learning/human-languages/urdu/CHANGELOG.d/*.md'
               'code/packages/typescript/human-language-data/CHANGELOG.d/*.md'
               'code/programs/typescript/language-ladder/CHANGELOG.d/*.md'
               'code/packages/rust/lang-aot/CHANGELOG.d/*.md'
@@ -130,6 +141,17 @@ jobs:
           tracked_doc_monoliths=$(git ls-files -- \
             code/learning/human-languages/BACKLOG.md \
             code/learning/human-languages/hindi/CHANGELOG.md \
+            code/learning/human-languages/malayalam/CHANGELOG.md \
+            code/learning/human-languages/bengali/CHANGELOG.md \
+            code/learning/human-languages/gujarati/CHANGELOG.md \
+            code/learning/human-languages/kannada/CHANGELOG.md \
+            code/learning/human-languages/marathi/CHANGELOG.md \
+            code/learning/human-languages/marwadi/CHANGELOG.md \
+            code/learning/human-languages/punjabi/CHANGELOG.md \
+            code/learning/human-languages/sanskrit/CHANGELOG.md \
+            code/learning/human-languages/tamil/CHANGELOG.md \
+            code/learning/human-languages/telugu/CHANGELOG.md \
+            code/learning/human-languages/urdu/CHANGELOG.md \
             code/packages/typescript/human-language-data/CHANGELOG.md \
             code/packages/typescript/script-ductus/CHANGELOG.md \
             code/programs/typescript/language-ladder/CHANGELOG.md \
@@ -329,9 +351,9 @@ jobs:
           # lessons, and book manifest. This check keeps the 23 retired tracked
           # cards absent while exercising every in-memory per-language row.
           npm run check:progress
-          # Corpus debt stays exact, but each language owns a separate generated
-          # snapshot so independent curriculum PRs do not collide on one test line.
-          # Regenerate with `npm run generate:gentle-snapshots`.
+          # Gentle-ramp debt is derived from canonical curriculum sources. This
+          # read-only compatibility check exercises every track and rejects any
+          # resurrection of the retired generated snapshot tree.
           npm run check:gentle-snapshots
           # The per-language modality shards (core/lesson-modality/*.json) are
           # derived from the lessons and let the complete book, the app, and the future

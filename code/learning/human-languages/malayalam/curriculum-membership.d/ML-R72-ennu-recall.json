@@ -1,0 +1,11 @@
+{
+  "id": "ML-R72-ennu-recall",
+  "pathSegment": "ML-PATH-72-QUOTATIVE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-72-QUOTATIVE",
+      "order": 2
+    }
+  ]
+}

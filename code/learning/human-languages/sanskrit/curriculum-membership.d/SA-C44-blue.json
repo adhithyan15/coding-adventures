@@ -1,0 +1,11 @@
+{
+  "id": "SA-C44-blue",
+  "pathSegment": "SA-PATH-44-COLOUR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-44-COLOUR",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C332-disculpa",
+  "pathSegment": "ES-PATH-332-01",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-332-WORD",
+      "order": 2
+    }
+  ]
+}

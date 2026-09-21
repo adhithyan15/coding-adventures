@@ -1,0 +1,11 @@
+{
+  "id": "ES-C395-volver",
+  "pathSegment": "ES-PATH-395-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-395-VERB",
+      "order": 1
+    }
+  ]
+}

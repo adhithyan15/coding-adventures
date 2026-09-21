@@ -1,0 +1,12 @@
+{
+  "id": "HI-A1-LEX-33",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "free time and entertainment",
+  "probe": [
+    "HI-LEX-C70-LEISURE-01",
+    "HI-LEX-C70-LEISURE-02",
+    "HI-LEX-C70-LEISURE-05"
+  ],
+  "derivedFrom": "ES:A1-NE08-01, ES:A1-NE08-02",
+  "note": "HI-C70 teaches `khel`, `khelna` and `aram`, which answer playing and resting. An outing is still unnamed."
+}

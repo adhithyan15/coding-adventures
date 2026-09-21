@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-LEX-07",
+  "category": "Padakosham (lexicon by domain)",
+  "label": "the immediate family: father, mother, and four age-graded siblings",
+  "probe": [
+    "ML-CONCEPT-C12-KUDUMBAM-01",
+    "ML-CONCEPT-C12-KUDUMBAM-02"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NE04-01"
+  ],
+  "malayalamSpecific": false,
+  "note": "Malayalam grades siblings by age rather than only by sex, so the six words are not the Spanish four."
+}

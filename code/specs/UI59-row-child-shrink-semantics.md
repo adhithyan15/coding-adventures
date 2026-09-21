@@ -281,6 +281,22 @@ reading the same precomputed set, so the writers cannot give different answers.
 Compose only, and only where a part is named — a leaf with no part carries no
 style to consult.
 
+### Oversubscribed rows still need an authoring decision
+
+The intrinsic-width floor prevents a child from disappearing; it does not make
+an impossible row fit. TaskApp's persistence banner placed a status sentence
+and a full local filesystem path in one row. At the declared 1280px desktop
+viewport their combined intrinsic width exceeded the available space, so the
+two preserved children painted over each other (#15263).
+
+That content has a natural hierarchy rather than a horizontal relationship:
+status first, recovery location second. TaskApp now authors `storage-summary`
+as a `Column`, and the real generated Compose screenshot at 1280 x 900 shows
+both complete strings on separate lines in the empty, one-task, and completed
+states. The emitter keeps the no-starvation floor; application authors remain
+responsible for choosing wrapping, truncation, stacking, or scrolling when a
+row's content cannot fit.
+
 ## 11. Flutter has the same defect, and it does not starve — it throws
 
 Measured while implementing `max-width` on Flutter (#14851, #14857). Capping

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C58-no-thanks",
+  "pathSegment": "TE-PATH-58-REPLY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-58-REPLY",
+      "order": 3
+    }
+  ]
+}

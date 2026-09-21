@@ -1,10 +1,6 @@
 {
   "id": "PA-PATH-011",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
-  "lessons": [
-    "PA-C07-hona",
-    "PA-C07-jana"
-  ],
   "before": [],
   "inline": [],
   "after": []

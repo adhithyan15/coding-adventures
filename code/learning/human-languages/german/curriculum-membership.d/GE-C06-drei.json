@@ -1,0 +1,11 @@
+{
+  "id": "GE-C06-drei",
+  "pathSegment": "GE-PATH-015",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-015-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

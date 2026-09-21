@@ -1,0 +1,11 @@
+{
+  "id": "SA-S210-vowel-sign-ii",
+  "pathSegment": "SA-PATH-100",
+  "pathOrder": 27,
+  "extensions": [
+    {
+      "id": "SA-EXT-100-SCRIPT-RECOGNITION",
+      "order": 27
+    }
+  ]
+}

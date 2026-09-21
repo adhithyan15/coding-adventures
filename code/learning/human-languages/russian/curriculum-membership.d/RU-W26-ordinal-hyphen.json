@@ -1,0 +1,11 @@
+{
+  "id": "RU-W26-ordinal-hyphen",
+  "pathSegment": "RU-PATH-028",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-033-ORDINALS",
+      "order": 2
+    }
+  ]
+}

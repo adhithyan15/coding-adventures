@@ -1,0 +1,11 @@
+{
+  "id": "TA-C38-sugam",
+  "pathSegment": "TA-PATH-034",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-034-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

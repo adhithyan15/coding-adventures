@@ -1,0 +1,11 @@
+{
+  "id": "ML-C47-tooth",
+  "pathSegment": "ML-PATH-47-BODY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-47-BODY",
+      "order": 1
+    }
+  ]
+}

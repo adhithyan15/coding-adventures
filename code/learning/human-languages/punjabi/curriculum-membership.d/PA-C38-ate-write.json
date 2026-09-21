@@ -1,0 +1,11 @@
+{
+  "id": "PA-C38-ate-write",
+  "pathSegment": "PA-PATH-040",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-060-COORDINATORS",
+      "order": 2
+    }
+  ]
+}

@@ -6,10 +6,5 @@
   "canDo": "I can report what somebody said, thought, knew or asked.",
   "prerequisites": [
     "ML-EXT-71-PRONOUNS"
-  ],
-  "lessons": [
-    "ML-C72-ennu",
-    "ML-C72-ennu-more",
-    "ML-R72-ennu-recall"
   ]
 }

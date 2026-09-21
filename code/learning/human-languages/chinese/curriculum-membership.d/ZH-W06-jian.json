@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W06-jian",
+  "pathSegment": "ZH-PATH-005",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-016-CONVERSATION-CLOSE",
+      "order": 0
+    }
+  ]
+}

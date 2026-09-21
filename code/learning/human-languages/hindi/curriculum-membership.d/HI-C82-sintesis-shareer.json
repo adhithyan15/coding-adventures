@@ -1,0 +1,11 @@
+{
+  "id": "HI-C82-sintesis-shareer",
+  "pathSegment": "HI-PATH-90-BODY",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "HI-EXT-90-BODY",
+      "order": 5
+    }
+  ]
+}

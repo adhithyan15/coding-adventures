@@ -4,8 +4,5 @@
   "kind": "required",
   "category": "register",
   "canDo": "I can choose the Russian form that fits this relationship and setting.",
-  "prerequisites": [],
-  "lessons": [
-    "RU-C02-vy-formality"
-  ]
+  "prerequisites": []
 }

@@ -6,12 +6,5 @@
   "canDo": "I can say what I am doing right now, and ask somebody when they are coming.",
   "prerequisites": [
     "ML-EXT-103-SCHOOL"
-  ],
-  "lessons": [
-    "ML-C104-one-present",
-    "ML-C104-ippol",
-    "ML-C104-no-am",
-    "ML-C104-eppol-answer",
-    "ML-R104-present-recall"
   ]
 }

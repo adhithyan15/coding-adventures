@@ -42,25 +42,31 @@ import {
 import {
   readModalityManifestOwners,
 } from "./modality-shards.js";
-import { readGentleRampOwners } from "./gentle-ramp-shards.js";
 import type { TrackGentleRamp } from "./gentle-ramp.js";
+import { assertGentleRampSnapshotsRetired } from "./gentle-ramp-retirement.js";
 import { narrationLessonIdentityIndex } from "./generated-hash-shards.js";
+import { buildCurriculumGapReport } from "./report.js";
 import { buildDataset, parseLesson, type ParsedLesson } from "./parse.js";
 import {
   EXAM_CONTENT_DIMENSIONS,
   type ExamContentDimension,
   type ExamInventory,
 } from "./exam-inventory.js";
+import { readExamInventoryOwnersIfPresent } from "./exam-inventory-shards.js";
 import { parseTaskShapeInventory, type TaskShapeInventory } from "./task-shapes.js";
 import {
-  CURRICULUM_SECTIONS,
   LedgerParseError,
   isSharded,
+  mergeCurriculumShards,
   mergeMetaAndList,
-  mergeSectionedShards,
   readLedgerFile,
   readMaybeSharded,
 } from "./shard.js";
+import {
+  attachCurriculumLessonMemberships,
+  type AuthoredLanguageCurriculum,
+} from "./curriculum-membership.js";
+import { readCurriculumMembershipOwners } from "./curriculum-membership-shards.js";
 import { CEFR_LEVELS, type CefrLevel } from "./levels.js";
 import { mergeScriptInventoryShards } from "./script-shards.js";
 import {
@@ -75,6 +81,10 @@ import {
   type SoundTagRegistry,
 } from "./sound-tags.js";
 import { readSoundTagRegistryOwners } from "./sound-tag-shards.js";
+import {
+  readReadingReachFloorOwners,
+  type ReadingReachFloorRegistry,
+} from "./reading-reach-floor-shards.js";
 import type {
   BookChapter,
   BookCorpus,
@@ -340,6 +350,15 @@ export function listTaskShapeInventories(root = defaultCurriculumRoot()): Array<
   return found;
 }
 
+/** Load the sharded reading-reach ratchet against independent task-shape identities. */
+export function loadReadingReachFloors(
+  root = defaultCurriculumRoot(),
+): ReadingReachFloorRegistry {
+  return readReadingReachFloorOwners(root, {
+    expectedInventories: listTaskShapeInventories(root),
+  });
+}
+
 /**
  * The shared can-do spine, from `core/spine.d/` if it exists and `core/spine.json`
  * if it does not (HL21).
@@ -386,9 +405,11 @@ export function loadTrackGrammarCells(
   return readLedgerFile<TrackGrammarCells>(join(root, language, "grammar-cells.json"));
 }
 
-/** Read each track's authored shared-spine realization map. */
-export function loadLanguageCurricula(root = defaultCurriculumRoot()): LanguageCurriculum[] {
-  const out: LanguageCurriculum[] = [];
+/** Read the canonical curriculum owners before lesson membership is projected. */
+export function loadAuthoredLanguageCurricula(
+  root = defaultCurriculumRoot(),
+): AuthoredLanguageCurriculum[] {
+  const out: AuthoredLanguageCurriculum[] = [];
   for (const track of sortedEntries(root)) {
     if (!track.isDirectory()) continue;
     const path = join(root, track.name, "curriculum.json");
@@ -397,14 +418,23 @@ export function loadLanguageCurricula(root = defaultCurriculumRoot()): LanguageC
     // track has no authored curriculum", which would drop it from every gate.
     if (!existsSync(path) && !isSharded(path)) continue;
     out.push(
-      readMaybeSharded<LanguageCurriculum>(
+      readMaybeSharded<AuthoredLanguageCurriculum>(
         path,
-        (shards) =>
-          mergeSectionedShards(shards, CURRICULUM_SECTIONS) as unknown as LanguageCurriculum,
+        (shards) => mergeCurriculumShards(shards) as unknown as AuthoredLanguageCurriculum,
       ),
     );
   }
   return out.sort((left, right) => left.language.localeCompare(right.language));
+}
+
+/** Read each track's executable shared-spine map with derived lesson arrays. */
+export function loadLanguageCurricula(root = defaultCurriculumRoot()): LanguageCurriculum[] {
+  return loadAuthoredLanguageCurricula(root).map((authored) =>
+    attachCurriculumLessonMemberships(
+      authored,
+      readCurriculumMembershipOwners(root, authored.language).owners,
+    ),
+  );
 }
 
 /**
@@ -719,30 +749,27 @@ export function loadModalityManifest(
 }
 
 /**
- * Read the generated gentle-ramp direct owners and reconstruct the historical
- * per-language TrackGentleRamp snapshots without a flat-aggregate fallback.
+ * Preserve the historical public API while deriving every track from canonical
+ * curriculum sources. No generated gentle-ramp state is read or accepted.
  */
 export function loadGentleRampSnapshotTracks(
   root = defaultCurriculumRoot(),
   registry = loadLanguageRegistry(root),
 ): TrackGentleRamp[] {
-  const languages = registry.languages.map((language) => language.id);
-  const sourceIds = new Map(languages.map((language) => [language, [] as string[]]));
-  for (const lesson of loadLessons(root)) {
-    const id = lesson.frontmatter.id;
-    if (typeof id !== "string" || id.length === 0) {
-      throw new Error(`lesson in '${lesson.language}' has no usable id`);
-    }
-    const ids = sourceIds.get(lesson.language);
-    if (ids === undefined) throw new Error(`lesson '${id}' has unregistered language '${lesson.language}'`);
-    ids.push(id);
+  assertGentleRampSnapshotsRetired(root);
+  const report = buildCurriculumGapReport({
+    registry,
+    lessons: loadLessons(root),
+    books: loadBookCorpus(root),
+    curricula: loadLanguageCurricula(root),
+    spine: loadCurriculumSpine(root),
+    chapterPolicy: loadChapterPolicy(root),
+    trackChapters: loadTrackChapters(root),
+  }).gentleRamp;
+  if (report === undefined) {
+    throw new Error("chapter policy was not loaded; cannot derive the gentle ramp");
   }
-  for (const ids of sourceIds.values()) ids.sort();
-  return readGentleRampOwners(root, {
-    expectedLanguages: languages,
-    expectedLessonIds: sourceIds,
-    expectedNarrationLessonIds: narrationLessonIdentityIndex(root, languages),
-  });
+  return report.tracks;
 }
 
 /**
@@ -993,7 +1020,13 @@ export function loadExamInventory(
     throw new Error("exam inventory: resolved path escapes the curriculum root");
   }
 
-  const parsed = readLedgerFile<unknown>(file);
+  const expectedLevel = CEFR_LEVELS.find(
+    (candidate) => candidate.toLowerCase() === level.toLowerCase(),
+  ) ?? level;
+  const parsed = readExamInventoryOwnersIfPresent(file, {
+    expectedLanguage: normalized,
+    expectedLevel,
+  }) ?? readLedgerFile<unknown>(file);
   if (
     typeof parsed !== "object" ||
     parsed === null ||
@@ -1067,7 +1100,8 @@ export function loadExamInventory(
  * `spanish` to the code `es`, so the file is `exam-inventory-es-a1.json` while
  * the track is `spanish` — and a queue keyed on the filename would therefore
  * report Spanish's A1 inventory as missing and queue somebody to write it again.
- * The file states `language` and `level` itself; that is the answer.
+ * The file, or a shard-native directory's `_meta.json`, states `language` and
+ * `level` itself; that is the answer.
  *
  * A malformed file is SKIPPED rather than thrown on. This function answers
  * "which targets are written down", and one unparseable file should not stop the
@@ -1080,10 +1114,20 @@ export function listExamInventories(
   const directory = resolve(root, "core");
   if (!existsSync(directory)) return [];
   const found: { language: string; level: string; complete: boolean }[] = [];
-  for (const file of readdirSync(directory).sort()) {
-    if (!file.startsWith("exam-inventory-") || !file.endsWith(".json")) continue;
+  const entries = readdirSync(directory, { withFileTypes: true }).sort((a, b) =>
+    a.name < b.name ? -1 : a.name > b.name ? 1 : 0,
+  );
+  for (const entry of entries) {
+    const file = entry.name;
+    if (!file.startsWith("exam-inventory-")) continue;
+    const source = file.endsWith(".json")
+      ? resolve(directory, file)
+      : file.endsWith(".d")
+        ? resolve(directory, file, "_meta.json")
+        : undefined;
+    if (source === undefined) continue;
     try {
-      const parsed = readLedgerFile<Partial<ExamInventory>>(resolve(directory, file));
+      const parsed = readLedgerFile<Partial<ExamInventory>>(source);
       if (typeof parsed.language === "string" && typeof parsed.level === "string") {
         found.push({
           language: parsed.language,

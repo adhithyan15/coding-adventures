@@ -1,0 +1,11 @@
+{
+  "id": "HI-A1-LEX-19",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "drink",
+  "probe": [
+    "HI-CONCEPT-C37-CHAI-01",
+    "HI-CONCEPT-C37-DUDH-01",
+    "HI-CONCEPT-C15-PAANI-ROTI-01"
+  ],
+  "derivedFrom": "ES:A1-NE05-02"
+}

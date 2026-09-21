@@ -1,0 +1,11 @@
+{
+  "id": "LA-C08-manus",
+  "pathSegment": "LA-PATH-011",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-011-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C296-oveja",
+  "pathSegment": "ES-PATH-296-01",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-296-ANIMALES",
+      "order": 2
+    }
+  ]
+}

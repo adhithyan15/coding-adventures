@@ -1,0 +1,11 @@
+{
+  "id": "GE-C10-schwester-soror",
+  "pathSegment": "GE-PATH-016-C",
+  "pathOrder": 9,
+  "extensions": [
+    {
+      "id": "GE-EXT-016-C-FAMILIE",
+      "order": 9
+    }
+  ]
+}

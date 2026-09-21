@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-DET-05",
+  "category": "Nirdeshak (determiners and definiteness)",
+  "label": "possessive apka for the respectful addressee",
+  "probe": [
+    "HI-CONCEPT-C02-AAPKANAAMKYAHAI-01"
+  ],
+  "derivedFrom": "ES:A1-POS-01"
+}

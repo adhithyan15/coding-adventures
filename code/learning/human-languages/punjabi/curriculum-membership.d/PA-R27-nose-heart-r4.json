@@ -1,0 +1,11 @@
+{
+  "id": "PA-R27-nose-heart-r4",
+  "pathSegment": "PA-PATH-028",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-033-A1-BODY-WORDS-R4",
+      "order": 1
+    }
+  ]
+}

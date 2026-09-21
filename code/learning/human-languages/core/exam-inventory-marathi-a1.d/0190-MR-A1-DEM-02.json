@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-DEM-02",
+  "category": "Demonstratives",
+  "label": "spatial deixis: Marathi's two-way near/far against Spanish's three-way",
+  "probe": [
+    "MR-GRAMMAR-DEM-TWO-WAY"
+  ],
+  "note": "Chapter 69. Marathi points in TWO directions and stops, against Spanish's three-way este/ese/aquel. The point transfers with its cardinality changed, which is what the proxy is for.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-DEM-02"
+  ]
+}

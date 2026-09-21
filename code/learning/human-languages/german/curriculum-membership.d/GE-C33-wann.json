@@ -1,0 +1,11 @@
+{
+  "id": "GE-C33-wann",
+  "pathSegment": "GE-PATH-A1-FRAGE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-A1-FRAGE",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C70-because",
+  "pathSegment": "KA-PATH-70-TELL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-70-TELL",
+      "order": 2
+    }
+  ]
+}

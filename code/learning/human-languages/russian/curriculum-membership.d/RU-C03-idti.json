@@ -1,0 +1,11 @@
+{
+  "id": "RU-C03-idti",
+  "pathSegment": "RU-PATH-007",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "RU-EXT-007-CORE-VERBS",
+      "order": 5
+    }
+  ]
+}

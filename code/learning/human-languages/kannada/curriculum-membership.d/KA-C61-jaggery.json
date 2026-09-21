@@ -1,0 +1,11 @@
+{
+  "id": "KA-C61-jaggery",
+  "pathSegment": "KA-PATH-61-KITCHEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-61-KITCHEN",
+      "order": 3
+    }
+  ]
+}

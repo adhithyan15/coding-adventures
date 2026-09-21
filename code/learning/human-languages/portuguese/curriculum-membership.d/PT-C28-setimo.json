@@ -1,0 +1,11 @@
+{
+  "id": "PT-C28-setimo",
+  "pathSegment": "PT-PATH-032",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-032-ORDINAIS-ATE-DECIMO",
+      "order": 1
+    }
+  ]
+}

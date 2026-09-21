@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C13-hear-daxue",
+  "pathSegment": "ZH-PATH-012",
+  "pathOrder": 11,
+  "extensions": [
+    {
+      "id": "ZH-EXT-033-SCHOOL-MEANING-FIRST",
+      "order": 4
+    }
+  ]
+}

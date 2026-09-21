@@ -1,13 +1,6 @@
 {
   "id": "PT-PATH-010",
   "spine_node": "SPINE-EXCHANGE-NAMES",
-  "lessons": [
-    "PT-C03-eu",
-    "PT-C03-me-chamo",
-    "PT-C03-como-se-chama",
-    "PT-C03-prazer",
-    "PT-C03-practice"
-  ],
   "before": [],
   "inline": [],
   "after": [

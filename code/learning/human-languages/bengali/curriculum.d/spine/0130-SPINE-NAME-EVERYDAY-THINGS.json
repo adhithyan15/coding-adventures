@@ -1,7 +1,4 @@
 {
-  "segments": [
-    "BN-PATH-030"
-  ],
   "omits": [
     "LODGING-ROOM"
   ],

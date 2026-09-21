@@ -1,0 +1,11 @@
+{
+  "id": "SA-C26-king",
+  "pathSegment": "SA-PATH-26-ROLE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-26-ROLE",
+      "order": 2
+    }
+  ]
+}

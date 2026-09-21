@@ -104,6 +104,7 @@
 //! | `HostTableFoot` | `<tfoot>…</tfoot>` (children walked as `<tr>` rows of `<td>`)    |
 //! | `HostTableColGroup` | `<colgroup><col></colgroup>`                                 |
 //! | `HostDialog`    | `<dialog id="mos-dlg-N">…</dialog>` plus a post-`innerHTML` block in `_render()` that calls `showModal()`/`show()`/`close()` and wires `close`/`cancel` events (U29-1) |
+//! | `HostNavigationSplit` | flex shell with named `<nav>` pane and `<section>` detail (UI29-6) |
 //! | `If`            | `${(cond) ? `then-html` : `else-html`}` (Else is consumed from the next sibling) |
 //! | `Else`          | element of the surrounding `If` — never reached as a top-level node when paired; standalone `Else` produces an empty interpolation |
 //! | `For`           | `${collection.map((item, idx) => `body-html`).join('')}`         |
@@ -792,6 +793,8 @@ pub fn from_pipeline(
         });
     }
 
+    validate_font_sizes(&layout.root, &interface.slots)?;
+
     let component_name = &interface.component;
     let class_name = format!("Mos{component_name}");
     let custom_tag = format!("mos-{}", to_kebab_case(component_name));
@@ -886,7 +889,7 @@ function safeHref(value) {
     //    Build the author-declared part-style map first (UI28 — style
     //    inlining) so the HTML walker can attach `style="..."` to every
     //    element that carries a `part_name`.
-    let part_styles = build_part_style_map(style, &interface.slots);
+    let part_styles = HtmlStyles { parts: build_part_style_map(style, &interface.slots), table_font: false };
     out.push_str(&emit_render(
         &interface.slots,
         &interface.emits,
@@ -977,7 +980,7 @@ fn emit_render(
     slots: &[SlotDecl],
     emits: &[EmitDecl],
     layout_root: &LayoutNode,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
     writeln!(out, "  _render() {{").unwrap();
@@ -1051,6 +1054,16 @@ fn emit_render(
     // inside the template literal — keeps the output compact and avoids
     // surprising whitespace inside `<span>` and `<div>` text content).
     writeln!(out, "    this.shadowRoot.innerHTML = `{html}`;").unwrap();
+    if has_font_size_tree(layout_root) {
+        out.push_str(r#"    for (const element of this.shadowRoot.querySelectorAll('[data-mosaic-font-size-slot]')) {
+      // Component attributes stay independent of template loop locals.
+      const raw = this.getAttribute(element.getAttribute('data-mosaic-font-size-slot'));
+      const value = raw === null ? NaN : Number(raw);
+      if (Number.isFinite(value) && value > 0) element.style.fontSize = `${value}px`;
+      // A fresh render restores authored/state CSS when the value is invalid.
+    }
+"#);
+    }
     for line in ctx.post_script_lines {
         writeln!(out, "    {line}").unwrap();
     }
@@ -1134,12 +1147,29 @@ fn emit_signal_method(emit: &EmitDecl) -> Result<String, PipelineEmitError> {
 /// regardless.) The parameter is kept for symmetry with the React /
 /// Qt / SwiftUI walkers and to leave a clear hook for a future
 /// pretty-printer.
+struct HtmlStyles {
+    parts: HashMap<String, String>,
+    table_font: bool,
+}
+
 fn emit_html_tree(
     node: &LayoutNode,
     _depth: usize,
     ctx: &mut RenderCtx<'_>,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> Result<String, PipelineEmitError> {
+    // Each table owns its typography scope, including across nested tables.
+    let reset_table_size = node.tag == "HostTable" && part_styles.table_font;
+    let scoped_styles;
+    let part_styles = if node.tag == "HostTable" {
+        scoped_styles = HtmlStyles {
+            parts: part_styles.parts.clone(),
+            table_font: has_native_font_size(node),
+        };
+        &scoped_styles
+    } else {
+        part_styles
+    };
     // -----------------------------------------------------------------
     // UI29 kernel — dedicated emitters first.
     //
@@ -1175,6 +1205,11 @@ fn emit_html_tree(
         // UI29-4 §3.2; richer tooltips are reserved for UI29-5.
         "HostTooltip" => return emit_host_tooltip(node, ctx, part_styles),
 
+        // UI29-6 — a semantic pane/detail split. Web Components do not have
+        // a native adaptive split element, so this preserves the landmark and
+        // sizing contract while UI48 owns future viewport-driven collapse.
+        "HostNavigationSplit" => return emit_host_navigation_split(node, ctx, part_styles),
+
         // UI29-4 — `HostNumberInput` → `<input type="number"
         // inputmode="numeric" ...>` with onchange wired through
         // `this.getRootNode().host.dispatch({type, value:
@@ -1206,6 +1241,11 @@ fn emit_html_tree(
     // resulting `style="..."` into the open tag. Author declarations
     // come AFTER the built-in so they win on collisions, exactly like
     // the HTML/React backends' `merge_styles`.
+    let builtin_style = if reset_table_size {
+        merge_styles(&builtin_style, "font-size: initial")
+    } else {
+        builtin_style
+    };
     let style_attr = build_style_attr(node, &builtin_style, part_styles);
     if !style_attr.is_empty() {
         open_with_attrs = insert_attrs_before_close(&open_with_attrs, &style_attr);
@@ -1290,7 +1330,7 @@ fn emit_html_tree(
 /// Mount host-owned light-DOM content through the platform's native named-slot
 /// mechanism. The wrapper remains inside Mosaic's shadow tree so shared MSL
 /// layout and colour still apply around the supplied browser viewport.
-fn emit_host_surface(node: &LayoutNode, part_styles: &HashMap<String, String>) -> String {
+fn emit_host_surface(node: &LayoutNode, part_styles: &HtmlStyles) -> String {
     let slot = find_slot_ref(node, "content").unwrap_or("");
     let style = build_style_attr(node, "", part_styles);
     format!("<div data-mosaic-host-surface=\"{slot}\"{style}><slot name=\"{slot}\"></slot></div>")
@@ -1307,7 +1347,7 @@ fn emit_host_surface(node: &LayoutNode, part_styles: &HashMap<String, String>) -
 fn emit_branch_children(
     parent: &LayoutNode,
     ctx: &mut RenderCtx<'_>,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
     let mut i = 0;
@@ -1343,7 +1383,7 @@ fn emit_if(
     if_node: &LayoutNode,
     else_node: Option<&LayoutNode>,
     ctx: &mut RenderCtx<'_>,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> Result<String, PipelineEmitError> {
     // Pull the `when:` prop. moslayout-compiler's validator already
     // requires this and rejects any other prop name on an `If`; this
@@ -1379,7 +1419,7 @@ fn emit_if(
 fn emit_for(
     node: &LayoutNode,
     ctx: &mut RenderCtx<'_>,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> Result<String, PipelineEmitError> {
     let bindings = for_bindings(node);
     ctx.push_for_payload(bindings.as_name.clone(), bindings.explicit_index.clone());
@@ -1426,7 +1466,7 @@ fn emit_table_section(
     node: &LayoutNode,
     cell_tag: &str,
     ctx: &mut RenderCtx<'_>,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
     for child in &node.children {
@@ -1456,7 +1496,7 @@ fn try_emit_table_for_rows(
     for_node: &LayoutNode,
     cell_tag: &str,
     ctx: &mut RenderCtx<'_>,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> Result<Option<String>, PipelineEmitError> {
     if for_node.children.len() != 1 || for_node.children[0].tag != "Row" {
         return Ok(None);
@@ -1489,7 +1529,7 @@ fn emit_table_row(
     row: &LayoutNode,
     cell_tag: &str,
     ctx: &mut RenderCtx<'_>,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> Result<String, PipelineEmitError> {
     let tr_style = build_style_attr(row, "", part_styles);
     let mut cells = String::new();
@@ -1497,7 +1537,8 @@ fn emit_table_row(
         match cell.tag.as_str() {
             "Text" => {
                 let body = build_text_content(cell).unwrap_or_default();
-                cells.push_str(&format!("<{cell_tag}>{body}</{cell_tag}>"));
+                let style = build_style_attr(cell, "", part_styles);
+                cells.push_str(&format!("<{cell_tag}{style}>{body}</{cell_tag}>"));
             }
             "For" => {
                 if let Some(block) = try_emit_table_for_cells(cell, cell_tag, ctx, part_styles)? {
@@ -1523,7 +1564,7 @@ fn try_emit_table_for_cells(
     for_node: &LayoutNode,
     cell_tag: &str,
     ctx: &mut RenderCtx<'_>,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> Result<Option<String>, PipelineEmitError> {
     if for_node.children.len() != 1 || for_node.children[0].tag == "Row" {
         return Ok(None);
@@ -1533,7 +1574,8 @@ fn try_emit_table_for_cells(
     let leaf = &for_node.children[0];
     let cell_result = if leaf.tag == "Text" {
         let body = build_text_content(leaf).unwrap_or_default();
-        Ok(format!("<{cell_tag}>{body}</{cell_tag}>"))
+        let style = build_style_attr(leaf, "", part_styles);
+        Ok(format!("<{cell_tag}{style}>{body}</{cell_tag}>"))
     } else {
         emit_table_cell(leaf, cell_tag, ctx, part_styles)
     };
@@ -1556,8 +1598,15 @@ fn emit_table_cell(
     cell: &LayoutNode,
     cell_tag: &str,
     ctx: &mut RenderCtx<'_>,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> Result<String, PipelineEmitError> {
+    if matches!(
+        cell.tag.as_str(),
+        "HostInput" | "Input" | "HostButton" | "HostTable"
+    ) {
+        let inner = emit_html_tree(cell, 0, ctx, part_styles)?;
+        return Ok(format!("<{cell_tag}>{inner}</{cell_tag}>"));
+    }
     let style_attr = build_style_attr(cell, "", part_styles);
     let inner = emit_branch_children(cell, ctx, part_styles)?;
     Ok(format!("<{cell_tag}{style_attr}>{inner}</{cell_tag}>"))
@@ -1657,7 +1706,7 @@ fn layout_value_to_js_expr(v: &LayoutPropValue) -> String {
 /// All inline handlers reach the host via `this.getRootNode().host`
 /// because in the shadow DOM `this` inside an inline handler is the
 /// element where the handler is declared, not the Custom Element.
-fn emit_host_input(node: &LayoutNode, part_styles: &HashMap<String, String>) -> String {
+fn emit_host_input(node: &LayoutNode, part_styles: &HtmlStyles) -> String {
     let multiline = node.tag == "Input" && find_keyword(node, "multiline") == Some("true");
     let mut attrs = if multiline {
         String::from("<textarea")
@@ -1783,7 +1832,7 @@ fn emit_host_input(node: &LayoutNode, part_styles: &HashMap<String, String>) -> 
 fn emit_host_button(
     node: &LayoutNode,
     ctx: &RenderCtx<'_>,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> Result<String, PipelineEmitError> {
     let mut attrs = String::new();
     attrs.push_str(&build_style_attr(node, "", part_styles));
@@ -2029,7 +2078,7 @@ fn template_identifier_body(name: &str) -> String {
 /// === "true"` imperatively. The literal `indeterminate: true` keyword
 /// case gets the hardcoded `data-indeterminate="true"` so the same
 /// hydration pass sets the property on mount.
-fn emit_host_checkbox(node: &LayoutNode, part_styles: &HashMap<String, String>) -> String {
+fn emit_host_checkbox(node: &LayoutNode, part_styles: &HtmlStyles) -> String {
     let mut attrs = String::from(r#"<input type="checkbox""#);
     attrs.push_str(&build_style_attr(node, "", part_styles));
 
@@ -2109,7 +2158,7 @@ fn emit_host_checkbox(node: &LayoutNode, part_styles: &HashMap<String, String>) 
 ///   payload, and gates the dispatch on `event.target.checked` so
 ///   sibling-caused deselects don't fire `onSelect` ("this radio was
 ///   chosen" semantics, UI29-2 §2.2).
-fn emit_host_radio(node: &LayoutNode, part_styles: &HashMap<String, String>) -> String {
+fn emit_host_radio(node: &LayoutNode, part_styles: &HtmlStyles) -> String {
     let mut attrs = String::from(r#"<input type="radio""#);
     attrs.push_str(&build_style_attr(node, "", part_styles));
 
@@ -2214,7 +2263,7 @@ fn emit_host_radio(node: &LayoutNode, part_styles: &HashMap<String, String>) -> 
 fn emit_host_link(
     node: &LayoutNode,
     ctx: &RenderCtx<'_>,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> Result<String, PipelineEmitError> {
     let mut attrs = String::new();
     attrs.push_str(&build_style_attr(node, "", part_styles));
@@ -2345,7 +2394,7 @@ fn host_link_single_payload_binding(
 fn emit_host_tooltip(
     node: &LayoutNode,
     ctx: &mut RenderCtx<'_>,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> Result<String, PipelineEmitError> {
     let mut attrs = String::new();
     attrs.push_str(&build_style_attr(node, "", part_styles));
@@ -2370,12 +2419,66 @@ fn emit_host_tooltip(
     Ok(format!("<span{attrs}>{inner}</span>"))
 }
 
+/// Lower UI29-6 `HostNavigationSplit` to a flex wrapper containing a named
+/// `<nav>` landmark and a `<section>` detail region. The preferred pane width
+/// is expressed as a fixed flex basis; the detail fills the remainder.
+fn emit_host_navigation_split(
+    node: &LayoutNode,
+    ctx: &mut RenderCtx<'_>,
+    part_styles: &HtmlStyles,
+) -> Result<String, PipelineEmitError> {
+    let [pane, detail] = node.children.as_slice() else {
+        return Err(PipelineEmitError::InvalidPropValue(
+            "HostNavigationSplit requires exactly two children".to_string(),
+        ));
+    };
+    let wrapper_style = build_style_attr(node, "display: flex; flex-direction: row;", part_styles);
+
+    let mut label = String::new();
+    if let Some(value) = find_string(node, "pane-title") {
+        label.push_str(&format!(
+            r#" aria-label="{}""#,
+            escape_html_attribute(value)
+        ));
+    } else if let Some(slot) = find_slot_ref(node, "pane-title") {
+        let name = to_camel_case_first_lower(slot);
+        if is_safe_identifier(&name) {
+            label.push_str(&format!(
+                r#" aria-label="${{escapeHtmlAttribute({name})}}""#
+            ));
+        }
+    } else if let Some(LayoutPropValue::Expr(expr)) = node
+        .props
+        .iter()
+        .find(|prop| prop.name == "pane-title")
+        .map(|prop| &prop.value)
+    {
+        let expression = strip_outer_parens(expr.trim());
+        if !expression.is_empty() {
+            label.push_str(&format!(
+                r#" aria-label="${{escapeHtmlAttribute({expression})}}""#
+            ));
+        }
+    }
+
+    let pane_style = find_number(node, "pane-width")
+        .filter(|width| width.is_finite() && *width > 0.0)
+        .map(|width| format!(r#" style="flex: 0 0 {width}px""#))
+        .unwrap_or_default();
+
+    let pane_html = emit_html_tree(pane, 0, ctx, part_styles)?;
+    let detail_html = emit_html_tree(detail, 0, ctx, part_styles)?;
+    Ok(format!(
+        r#"<div{wrapper_style}><nav{label}{pane_style}>{pane_html}</nav><section style="flex: 1; min-width: 0">{detail_html}</section></div>"#
+    ))
+}
+
 /// Lower a `HostNumberInput` node to `<input type="number"
 /// inputmode="numeric" ...>`. The inputmode triggers the mobile
 /// numeric keyboard; the onchange handler dispatches with
 /// `event.target.valueAsNumber` (DOM standard numeric parser) to
 /// match the kernel-canonical `value: number` payload type.
-fn emit_host_number_input(node: &LayoutNode, part_styles: &HashMap<String, String>) -> String {
+fn emit_host_number_input(node: &LayoutNode, part_styles: &HtmlStyles) -> String {
     let mut attrs = String::from(r#"<input type="number" inputmode="numeric""#);
     attrs.push_str(&build_style_attr(node, "", part_styles));
 
@@ -2437,7 +2540,7 @@ fn emit_host_number_input(node: &LayoutNode, part_styles: &HashMap<String, Strin
 /// Lower `HostSlider` to a native `<input type="range">`.
 /// `input` provides continuous changes while `change` marks the committed
 /// pointer/keyboard edit, and both carry the DOM's numeric value.
-fn emit_host_slider(node: &LayoutNode, part_styles: &HashMap<String, String>) -> String {
+fn emit_host_slider(node: &LayoutNode, part_styles: &HtmlStyles) -> String {
     let mut attrs = String::from(r#"<input type="range""#);
     attrs.push_str(&build_style_attr(node, "", part_styles));
 
@@ -2524,7 +2627,7 @@ fn emit_host_slider(node: &LayoutNode, part_styles: &HashMap<String, String>) ->
 fn emit_host_dialog(
     node: &LayoutNode,
     ctx: &mut RenderCtx<'_>,
-    part_styles: &HashMap<String, String>,
+    part_styles: &HtmlStyles,
 ) -> Result<String, PipelineEmitError> {
     let dlg_idx = ctx.next_dialog_id();
     let dlg_id = format!("mos-dlg-{dlg_idx}");
@@ -3324,17 +3427,67 @@ fn merge_styles(builtin: &str, author: &str) -> String {
 ///
 /// Returns `""` when nothing applies, so the caller can splice it
 /// unconditionally.
-fn build_style_attr(
-    node: &LayoutNode,
-    builtin: &str,
-    part_styles: &HashMap<String, String>,
-) -> String {
+/// Numeric typography implemented by the generated custom element.
+pub fn has_native_font_size(node: &LayoutNode) -> bool {
+    matches!(
+        node.tag.as_str(),
+        "Text" | "HostButton" | "Input" | "HostInput" | "HostTable"
+    ) && match node
+        .props
+        .iter()
+        .find(|p| p.name == "font-size")
+        .map(|p| &p.value)
+    {
+        Some(LayoutPropValue::Number(n)) => n.is_finite() && *n > 0.0,
+        Some(LayoutPropValue::SlotRef(_)) => true,
+        _ => false,
+    }
+}
+
+fn has_font_size_tree(node: &LayoutNode) -> bool {
+    has_native_font_size(node) || node.children.iter().any(has_font_size_tree)
+}
+
+fn validate_font_sizes(node: &LayoutNode, slots: &[SlotDecl]) -> Result<(), PipelineEmitError> {
+    if matches!(
+        node.tag.as_str(),
+        "Text" | "HostButton" | "Input" | "HostInput" | "HostTable"
+    ) {
+        if let Some(prop) = node.props.iter().find(|p| p.name == "font-size") {
+            let valid = match &prop.value {
+                LayoutPropValue::Number(n) => n.is_finite() && *n > 0.0,
+                LayoutPropValue::SlotRef(name) => slots
+                    .iter()
+                    .any(|s| s.name == *name && s.r#type == SlotType::Number),
+                _ => false,
+            };
+            if !valid {
+                return Err(PipelineEmitError::InvalidPropValue(
+                    "font-size must be a positive finite number or numeric component slot".into(),
+                ));
+            }
+        }
+    }
+    for child in &node.children {
+        validate_font_sizes(child, slots)?;
+    }
+    Ok(())
+}
+
+fn build_style_attr(node: &LayoutNode, builtin: &str, part_styles: &HtmlStyles) -> String {
     let part_style = node
         .part_name
         .as_deref()
-        .and_then(|n| part_styles.get(n).map(String::as_str))
+        .and_then(|n| part_styles.parts.get(n).map(String::as_str))
         .unwrap_or("");
-    let mut base = merge_styles(builtin, part_style);
+    let inherited = if part_styles.table_font
+        && matches!(node.tag.as_str(), "HostButton" | "Input" | "HostInput")
+    {
+        merge_styles(builtin, "font-size: inherit")
+    } else {
+        builtin.to_owned()
+    };
+    let mut base = merge_styles(&inherited, part_style);
 
     // `Col [col] ( width: ( w ) )` — the For-binding `w` is the runtime
     // per-column pixel width. Emit `width: ${w}px` so each column gets a
@@ -3354,10 +3507,27 @@ fn build_style_attr(
     // entry in the part-style map.
     let state_ternaries = build_state_ternaries(node, part_styles);
 
-    if base.is_empty() && state_ternaries.is_empty() {
-        return String::new();
+    let mut numeric = String::new();
+    let mut binding = String::new();
+    if has_native_font_size(node) {
+        match &node
+            .props
+            .iter()
+            .find(|p| p.name == "font-size")
+            .unwrap()
+            .value
+        {
+            LayoutPropValue::Number(value) => numeric = format!("; font-size: {value}px"),
+            LayoutPropValue::SlotRef(name) => {
+                binding = format!(" data-mosaic-font-size-slot=\"{}\"", name)
+            }
+            _ => {}
+        }
     }
-    format!(r#" style="{base}{state_ternaries}""#)
+    if base.is_empty() && state_ternaries.is_empty() && numeric.is_empty() {
+        return binding;
+    }
+    format!(r#" style="{base}{state_ternaries}{numeric}"{binding}"#)
 }
 
 /// Build the `width: ${w}px` CSS for a `Col` node from its `width:` prop.
@@ -3413,7 +3583,7 @@ fn build_col_width_css(node: &LayoutNode) -> Option<String> {
 ///
 /// Returns `""` when the node has no `part_name` or no applicable
 /// `state-when-*` props.
-fn build_state_ternaries(node: &LayoutNode, part_styles: &HashMap<String, String>) -> String {
+fn build_state_ternaries(node: &LayoutNode, part_styles: &HtmlStyles) -> String {
     let Some(part) = node.part_name.as_deref() else {
         return String::new();
     };
@@ -3423,7 +3593,7 @@ fn build_state_ternaries(node: &LayoutNode, part_styles: &HashMap<String, String
             continue;
         };
         let state_key = format!("{part}:{state_name}");
-        let Some(state_css) = part_styles.get(&state_key) else {
+        let Some(state_css) = part_styles.parts.get(&state_key) else {
             continue;
         };
         if state_css.is_empty() {
@@ -4482,6 +4652,65 @@ mod tests {
         assert!(
             out.contains(r#"style="overflow: auto;""#),
             "axis: both, got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn host_navigation_split_emits_named_nav_and_detail_regions() {
+        let render = |title: LayoutPropValue| {
+            let m = component(
+                "X",
+                vec![slot("nav-title", SlotType::Text, true)],
+                vec![],
+            );
+            let split = LayoutNode {
+                tag: "HostNavigationSplit".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "pane-title".to_string(),
+                        value: title,
+                    },
+                    LayoutProp {
+                        name: "pane-width".to_string(),
+                        value: LayoutPropValue::Number(236.0),
+                    },
+                ],
+                children: vec![
+                    leaf_with_props(
+                        "Text",
+                        vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::String("PANE".to_string()),
+                        }],
+                    ),
+                    leaf_with_props(
+                        "Text",
+                        vec![LayoutProp {
+                            name: "content".to_string(),
+                            value: LayoutPropValue::String("DETAIL".to_string()),
+                        }],
+                    ),
+                ],
+            };
+            from_pipeline(&m, &root_layout("X", split), &empty_style("X"))
+                .unwrap()
+                .output
+        };
+
+        let literal = render(LayoutPropValue::String("Projects".to_string()));
+        assert!(literal.contains(r#"<nav aria-label="Projects""#), "{literal}");
+        assert!(literal.contains(r#"style="flex: 0 0 236px""#), "{literal}");
+        assert!(
+            literal.contains(r#"<section style="flex: 1; min-width: 0">"#),
+            "{literal}"
+        );
+        assert!(literal.find("PANE").unwrap() < literal.find("DETAIL").unwrap());
+
+        let bound = render(LayoutPropValue::SlotRef("nav-title".to_string()));
+        assert!(
+            bound.contains(r#"<nav aria-label="${escapeHtmlAttribute(navTitle)}""#),
+            "{bound}"
         );
     }
 

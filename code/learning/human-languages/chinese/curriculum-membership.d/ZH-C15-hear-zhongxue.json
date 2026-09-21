@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C15-hear-zhongxue",
+  "pathSegment": "ZH-PATH-014",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-039-SCHOOL-COMPOUNDS-MEANING-FIRST",
+      "order": 1
+    }
+  ]
+}

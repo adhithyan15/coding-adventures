@@ -1,0 +1,11 @@
+{
+  "id": "AR-W11-ha-and-ta-marbuta",
+  "pathSegment": "AR-PATH-009",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-009-SCRIPT",
+      "order": 1
+    }
+  ]
+}

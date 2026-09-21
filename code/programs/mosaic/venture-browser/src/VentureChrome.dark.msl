@@ -23,10 +23,39 @@ style VentureChrome {
     background : "#3b3630" ; color : "#f1eadf" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ;
     state hover { background : "#51483c" ; } state pressed { background : "#6a4a27" ; } state focused { outline-color : "#e1a45d" ; outline-width : 2 ; } state disabled { opacity : 0.45 ; }
   }
+  part stop-button {
+    background : "#4b2d28" ;
+    color : "#ffd7cf" ;
+    border-color : "#8c5a50" ;
+    state disabled { opacity : 0.42 ; }
+  }
   part bookmark-button {
     background : "#3b3630" ; color : "#f1eadf" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ;
     state hover { background : "#51483c" ; } state pressed { background : "#6a4a27" ; } state focused { outline-color : "#e1a45d" ; outline-width : 2 ; } state disabled { opacity : 0.45 ; }
   }
+  part bookmarks-button { background : "#3b3630" ; color : "#f1eadf" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ; state hover { background : "#51483c" ; } state pressed { background : "#6a4a27" ; } state focused { outline-color : "#e1a45d" ; outline-width : 2 ; } state disabled { opacity : 0.45 ; } }
+  part bookmarks-panel { background : "#211e1a" ; color : "#f1eadf" ; padding : 10 ; gap : 7 ; border-bottom-width : 1 ; border-bottom-color : "#50483d" ; }
+  part bookmarks-header { gap : 12 ; align : center-vertical ; }
+  part bookmarks-heading { color : "#e1a45d" ; font-size : 14 ; font-weight : bold ; flex-grow : 1 ; }
+  part bookmarks-position { color : "#bdb4a7" ; font-size : 11 ; }
+  part bookmarks-close-button { background : "#3b3630" ; color : "#f1eadf" ; padding : 6 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ; }
+  part bookmarks-title { color : "#d8d0c4" ; font-weight : bold ; }
+  part bookmarks-address { color : "#bdb4a7" ; font-family : monospace ; font-size : 11 ; }
+  part bookmarks-actions { gap : 6 ; align : center-vertical ; }
+  part bookmarks-previous-button { background : "#3b3630" ; color : "#f1eadf" ; padding : 6 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ; state disabled { opacity : 0.45 ; } }
+  part bookmarks-next-button { background : "#3b3630" ; color : "#f1eadf" ; padding : 6 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ; state disabled { opacity : 0.45 ; } }
+  part bookmarks-open-button { background : "#b36f26" ; color : "#ffffff" ; padding : 6 ; border-radius : 5 ; border-width : 1 ; border-color : "#d18b3d" ; state disabled { opacity : 0.45 ; } }
+  part history-button { background : "#3b3630" ; color : "#f1eadf" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ; state hover { background : "#51483c" ; } state pressed { background : "#6a4a27" ; } state focused { outline-color : "#e1a45d" ; outline-width : 2 ; } state disabled { opacity : 0.45 ; } }
+  part history-panel { background : "#211e1a" ; color : "#f1eadf" ; padding : 10 ; gap : 7 ; border-bottom-width : 1 ; border-bottom-color : "#50483d" ; }
+  part history-header { gap : 12 ; align : center-vertical ; }
+  part history-heading { color : "#e1a45d" ; font-size : 14 ; font-weight : bold ; flex-grow : 1 ; }
+  part history-position { color : "#bdb4a7" ; font-size : 11 ; }
+  part history-close-button { background : "#3b3630" ; color : "#f1eadf" ; padding : 6 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ; }
+  part history-address { color : "#bdb4a7" ; font-family : monospace ; font-size : 11 ; }
+  part history-actions { gap : 6 ; align : center-vertical ; }
+  part history-previous-button { background : "#3b3630" ; color : "#f1eadf" ; padding : 6 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ; state disabled { opacity : 0.45 ; } }
+  part history-next-button { background : "#3b3630" ; color : "#f1eadf" ; padding : 6 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ; state disabled { opacity : 0.45 ; } }
+  part history-open-button { background : "#b36f26" ; color : "#ffffff" ; padding : 6 ; border-radius : 5 ; border-width : 1 ; border-color : "#d18b3d" ; state disabled { opacity : 0.45 ; } }
   part copy-address-button {
     background : "#3b3630" ; color : "#f1eadf" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ;
     state hover { background : "#51483c" ; } state pressed { background : "#6a4a27" ; } state focused { outline-color : "#e1a45d" ; outline-width : 2 ; } state disabled { opacity : 0.45 ; }
@@ -51,10 +80,44 @@ style VentureChrome {
     background : "#3b3630" ; color : "#f1eadf" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ;
     state hover { background : "#51483c" ; } state pressed { background : "#6a4a27" ; } state focused { outline-color : "#e1a45d" ; outline-width : 2 ; } state disabled { opacity : 0.45 ; }
   }
+  part page-info-panel { background : "#211e1a" ; color : "#f1eadf" ; padding : 10 ; gap : 6 ; border-bottom-width : 1 ; border-bottom-color : "#50483d" ; }
+  part page-info-header { gap : 12 ; align : center-vertical ; }
+  part page-info-heading { color : "#e1a45d" ; font-size : 14 ; font-weight : bold ; flex-grow : 1 ; }
+  part page-info-close-button { background : "#3b3630" ; color : "#f1eadf" ; padding : 6 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ; }
+  part page-info-title-row { gap : 8 ; }
+  part page-info-address-row { gap : 8 ; }
+  part page-info-requested-row { gap : 8 ; }
+  part page-info-status-row { gap : 8 ; }
+  part page-info-resources-row { gap : 8 ; }
+  part page-info-title-label { color : "#bdb4a7" ; font-weight : bold ; }
+  part page-info-address-label { color : "#bdb4a7" ; font-weight : bold ; }
+  part page-info-requested-label { color : "#bdb4a7" ; font-weight : bold ; }
+  part page-info-status-label { color : "#bdb4a7" ; font-weight : bold ; }
+  part page-info-resources-label { color : "#bdb4a7" ; font-weight : bold ; }
+  part zoom-out-button {
+    background : "#3b3630" ; color : "#f1eadf" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ;
+    state hover { background : "#51483c" ; } state pressed { background : "#6a4a27" ; } state focused { outline-color : "#e1a45d" ; outline-width : 2 ; } state disabled { opacity : 0.45 ; }
+  }
+  part zoom-reset-button {
+    background : "#3b3630" ; color : "#f1eadf" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ;
+    state hover { background : "#51483c" ; } state pressed { background : "#6a4a27" ; } state focused { outline-color : "#e1a45d" ; outline-width : 2 ; } state disabled { opacity : 0.45 ; }
+  }
+  part zoom-in-button {
+    background : "#3b3630" ; color : "#f1eadf" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ;
+    state hover { background : "#51483c" ; } state pressed { background : "#6a4a27" ; } state focused { outline-color : "#e1a45d" ; outline-width : 2 ; } state disabled { opacity : 0.45 ; }
+  }
   part view-source-button {
     background : "#3b3630" ; color : "#f1eadf" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ;
     state hover { background : "#51483c" ; } state pressed { background : "#6a4a27" ; } state focused { outline-color : "#e1a45d" ; outline-width : 2 ; } state disabled { opacity : 0.45 ; }
   }
+  part view-source-panel { background : "#171512" ; color : "#f1eadf" ; padding : 10 ; gap : 7 ; border-bottom-width : 1 ; border-bottom-color : "#50483d" ; }
+  part view-source-header { gap : 12 ; align : center-vertical ; }
+  part view-source-heading { color : "#e1a45d" ; font-size : 14 ; font-weight : bold ; flex-grow : 1 ; }
+  part view-source-copy-button { background : "#3b3630" ; color : "#f1eadf" ; padding : 6 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ; }
+  part view-source-close-button { background : "#3b3630" ; color : "#f1eadf" ; padding : 6 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ; }
+  part view-source-title { color : "#d8d0c4" ; font-weight : bold ; }
+  part view-source-address { color : "#bdb4a7" ; font-family : monospace ; font-size : 11 ; }
+  part view-source-content { background : "#0f0e0c" ; color : "#f1eadf" ; padding : 10 ; border-width : 1 ; border-color : "#50483d" ; font-family : monospace ; font-size : 11 ; height : 180 ; max-width : 960 ; overflow : auto ; }
   part address-input { background : "#171512" ; color : "#f1eadf" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ; flex-grow : 1 ; state focused { border-color : "#e1a45d" ; outline-color : "#e1a45d" ; outline-width : 1 ; } }
   part go-button {
     background : "#b36f26" ; color : "#ffffff" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#d18b3d" ;

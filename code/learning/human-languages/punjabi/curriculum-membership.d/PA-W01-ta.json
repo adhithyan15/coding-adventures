@@ -1,0 +1,11 @@
+{
+  "id": "PA-W01-ta",
+  "pathSegment": "PA-PATH-001S",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-016-SCRIPT-FIRST-PIECES",
+      "order": 4
+    }
+  ]
+}

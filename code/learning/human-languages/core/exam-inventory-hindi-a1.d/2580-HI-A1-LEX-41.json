@@ -1,0 +1,13 @@
+{
+  "id": "HI-A1-LEX-41",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "health and illness",
+  "probe": [
+    "HI-LEX-C63-STATE-04",
+    "HI-LEX-C63-STATE-05",
+    "HI-LEX-C63-STATE-01",
+    "HI-LEX-C63-STATE-02",
+    "HI-LEX-C63-STATE-03"
+  ],
+  "derivedFrom": "ES:A1-NE13-01"
+}

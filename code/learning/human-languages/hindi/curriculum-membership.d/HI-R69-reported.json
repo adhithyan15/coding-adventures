@@ -1,0 +1,11 @@
+{
+  "id": "HI-R69-reported",
+  "pathSegment": "HI-PATH-69-KI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-069-CLAUSE-AS-OBJECT",
+      "order": 2
+    }
+  ]
+}

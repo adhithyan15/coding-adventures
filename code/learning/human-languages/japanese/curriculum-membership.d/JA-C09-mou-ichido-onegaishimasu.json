@@ -1,0 +1,11 @@
+{
+  "id": "JA-C09-mou-ichido-onegaishimasu",
+  "pathSegment": "JA-PATH-009",
+  "pathOrder": 11,
+  "extensions": [
+    {
+      "id": "JA-EXT-016-REPAIR-REPEAT",
+      "order": 9
+    }
+  ]
+}

@@ -325,13 +325,79 @@ model-card parameter, or a UI artifact is not a completion signal.
      Rust, and TypeScript. The follow-on schematic document and Mosaic controls
      now select R/C/L and voltage-source branch currents through the same ordered
      global and card-scoped output contract.
-   - **Mosaic schematic nonlinear-current selection** (current phase): discovery after
-     PR #15599: the canonical document can now author every linear passive
-     branch current, but nonlinear device currents remain outside the shared
-     result-map contract. Re-audit executable diode, BJT, JFET, and MOS branch
-     currents across the three engines before extending schematic controls; keep
-     arbitrary arithmetic expressions, nested sweeps, and vendor-output controls
-     for later phases.
+   - **Mosaic schematic nonlinear-current selection** (completed): discovery after
+     PR #15599: the canonical document could author every linear passive branch
+     current, but nonlinear device currents remained outside the shared result-map
+     contract. The cross-language D/Q/J/M result-map phase cleared that blocker,
+     so the workbench now captures diode, BJT, JFET, and Level-1 MOS symbols with
+     their correct terminal arity and deterministic per-instance default model
+     cards. Their external-terminal `I(element)` values are selectable through the
+     existing ordered global `.save` and card-scoped `.probe` controls, survive
+     rename/history/snapshots, and lower to parser-validated decks. Keep arbitrary
+     model-card editing, vendor models, and expression outputs for later product
+     phases; they need a separate coherent capture contract rather than an
+     unstructured value field.
+   - **Mosaic schematic transistor-polarity configuration** (completed in this
+     typed polarity slice): discovery after nonlinear-current selection: the
+     schematic palette could lower only NPN, NJF, and NMOS model cards even
+     though the Berkeley parser already supports their P-family counterparts.
+     BJT, JFET, and MOSFET symbols now persist an explicit N/P selection keyed
+     by component reference, with legacy captures retaining the N-type default.
+     The inspector presents family-correct NPN/PNP, NJF/PJF, and NMOS/PMOS
+     controls; rename, removal, undo/history, snapshots, and canonical JSON
+     preserve that typed selection. Lowering emits the selected model keyword
+     while retaining deterministic per-instance names and the existing
+     one-token default parameter value. Keep multi-parameter model-card editing,
+     vendor model libraries, and expression-valued parameters for a later
+     structured capture phase rather than extending the scalar value field.
+   - **Mosaic schematic primary nonlinear model fields** (completed in this
+     structured-capture slice): discovery after transistor-polarity
+     configuration: nonlinear symbols still exposed their sole default model
+     token as a scalar editor value, so a second parameter would require an
+     unstructured text escape hatch. Diode, BJT, JFET, and Level-1 MOS symbols
+     now persist two family-specific primary model fields per reference:
+     `IS`/`N`, `IS`/`BF`, `BETA`/`VTO`, and `VTO`/`KP`. Legacy scalar cards
+     remain readable and lower unchanged until a typed override is captured;
+     overrides are deterministic, survive rename/removal/history/snapshots,
+     and lower through the Berkeley parser. Keep arbitrary parameter names,
+     vendor libraries, and expression-valued fields for a later complete model
+     library contract rather than reintroducing raw model-card text editing.
+   - **Mosaic schematic corpus-backed nonlinear model capture** (completed in
+     this selector-driven slice): discovery
+     after the primary-field slice: the frozen Berkeley corpus exercises
+     junction capacitance and storage time for diodes; junction capacitance and
+     transit time for BJTs; channel modulation and gate capacitances for JFETs;
+     and channel, substrate, overlap, and bulk-junction fields for Level-1 MOS.
+     The adapter currently hard-codes two inspector inputs, which prevents a
+     schematic author from recreating those runnable reference models without
+     raw document injection. Add one selector-driven, finite field catalog for
+     the corpus-backed D/Q/J/M parameters; preserve typed persistence,
+     rename/removal/history/snapshot behavior, deterministic model-card
+     lowering, and Mosaic host coverage. Keep vendor libraries, arbitrary
+     parameter names, expression-valued fields, and the full post-Berkeley
+     model-library catalog for a separate product phase.
+   - **Mosaic SPICE WebAssembly lifecycle contract** (in progress): discovery
+     after the Berkeley-core audit: `spice-mosaic-app` exports the standard
+     `mosaic_wasm_*` ABI, but its package gate validates only native Rust state.
+     Add one compiled workbench artifact gate that drives the public browser
+     host through initialization, canonical schematic synchronization,
+     protocol-2 awaited file completion, snapshot restore, and disposal. This
+     is a single product-boundary contract, not a generic transport change or
+     another schematic control slice.
+   - **Nonlinear branch-current result-map contract** (completed): export
+     diode anode, BJT collector, JFET drain, and level-1 MOS drain currents as
+     canonical `I(element)` values across Python, Rust, and TypeScript. Define
+     the values at the external first terminal so optional series resistances,
+     dynamic junction charge in transient analysis, and linearized small-signal
+     current in AC share a stable observable. Cover operating-point, DC sweep,
+     AC, and transient result rows plus `.save`, `.probe`, `.print`, and `.plot`
+     corpus fixtures before extending schematic controls. The Python, Rust, and
+     TypeScript parser suites now pin D/Q/J/M operating-point selection plus
+     MOS DC-sweep, AC, and transient rows; AC reads the exact small-signal
+     stamp and transient adds the accepted companion-state current without
+     double-counting an external series terminal. Keep arbitrary
+     arithmetic expressions, nested sweeps, and vendor-output controls for later
+     phases.
 
 ### Operating rules
 

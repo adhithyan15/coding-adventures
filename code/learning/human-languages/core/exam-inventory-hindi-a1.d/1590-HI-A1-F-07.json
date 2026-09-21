@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-F-07",
+  "category": "Sanvad-karya (communicative functions)",
+  "label": "judge which greeting register a situation wants",
+  "probe": [
+    "HI-CONCEPT-C32-EVENING-REGISTER-01"
+  ],
+  "derivedFrom": "hindi-specific",
+  "note": "Hindi's Sanskritic/Perso-Arabic register split has no Spanish A1 counterpart, and the corpus teaches it deliberately -- dhanyavad against shukriya, kripaya against dijiye."
+}

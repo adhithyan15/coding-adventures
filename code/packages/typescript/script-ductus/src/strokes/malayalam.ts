@@ -952,6 +952,113 @@ export const entries: DuctusEntry[] = [
       source: malayalamAlphabetSource("ൻ"),
     },
   ],
+  // Sriveenkat's 97-frame animation draws chillu ൺ as one uninterrupted run:
+  // the compact inner loop flows around the broad outer-left bowl, retraces
+  // through the paired central stems, circles the right loop, and finishes in
+  // the above-line hook. These five movements preserve that zero-lift order on
+  // Noto Sans Malayalam.
+  [
+    "malayalam:ൺ",
+    {
+      script: "malayalam",
+      glyph: "ൺ",
+      strokes: [
+        {
+          segments: [
+            {
+              label:
+                "start at the inner-left tip and sweep clockwise around the compact inner loop",
+              path: [
+                { x: 95, y: 220 },
+                { x: 155, y: 285 },
+                { x: 245, y: 295 },
+                { x: 330, y: 245 },
+                { x: 368, y: 165 },
+                { x: 345, y: 80 },
+                { x: 292, y: 28 },
+                { x: 240, y: 22 },
+                { x: 175, y: 50 },
+                { x: 115, y: 130 },
+                { x: 95, y: 220 },
+              ],
+            },
+            {
+              label:
+                "without lifting, continue clockwise around the broad outer-left bowl and climb to the upper junction",
+              path: [
+                { x: 95, y: 220 },
+                { x: 82, y: 300 },
+                { x: 110, y: 405 },
+                { x: 180, y: 495 },
+                { x: 270, y: 535 },
+                { x: 360, y: 530 },
+                { x: 445, y: 485 },
+                { x: 520, y: 430 },
+              ],
+            },
+            {
+              label:
+                "without lifting, descend the first central stem, retrace upward, carry the middle arch, and descend the second stem",
+              path: [
+                { x: 520, y: 430 },
+                { x: 566, y: 350 },
+                { x: 566, y: 240 },
+                { x: 566, y: 125 },
+                { x: 566, y: 28 },
+                { x: 566, y: 240 },
+                { x: 585, y: 420 },
+                { x: 650, y: 500 },
+                { x: 740, y: 530 },
+                { x: 825, y: 500 },
+                { x: 905, y: 430 },
+                { x: 912, y: 300 },
+                { x: 912, y: 150 },
+                { x: 912, y: 28 },
+              ],
+            },
+            {
+              label:
+                "without lifting, carry the upper shoulder right and sweep clockwise around the right loop",
+              path: [
+                { x: 912, y: 28 },
+                { x: 912, y: 230 },
+                { x: 935, y: 420 },
+                { x: 1010, y: 500 },
+                { x: 1100, y: 530 },
+                { x: 1200, y: 530 },
+                { x: 1290, y: 490 },
+                { x: 1385, y: 390 },
+                { x: 1435, y: 265 },
+                { x: 1435, y: 155 },
+                { x: 1375, y: 55 },
+                { x: 1280, y: 25 },
+                { x: 1200, y: 65 },
+                { x: 1135, y: 150 },
+                { x: 1125, y: 245 },
+                { x: 1160, y: 355 },
+                { x: 1245, y: 473 },
+              ],
+            },
+            {
+              label:
+                "without lifting, rise into the chillu hook and curl left above the line",
+              path: [
+                { x: 1245, y: 473 },
+                { x: 1305, y: 535 },
+                { x: 1365, y: 620 },
+                { x: 1365, y: 675 },
+                { x: 1330, y: 730 },
+                { x: 1260, y: 755 },
+                { x: 1195, y: 748 },
+                { x: 1165, y: 738 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamAlphabetSource("ൺ"),
+    },
+  ],
   // Sriveenkat's 65-frame animation draws chillu ൾ in one uninterrupted run:
   // the left bowl climbs into the upper shoulder, flows clockwise around the
   // right loop, then rises through the crossing into the above-line hook.

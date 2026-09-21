@@ -1,0 +1,11 @@
+{
+  "id": "MR-C12-kaan",
+  "pathSegment": "MR-PATH-017",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-017-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

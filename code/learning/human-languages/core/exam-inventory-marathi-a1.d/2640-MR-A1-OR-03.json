@@ -1,0 +1,18 @@
+{
+  "id": "MR-A1-OR-03",
+  "category": "Devanagari letters and signs",
+  "label": "the velar row ka kha ga gha",
+  "probe": [
+    "MR-SCRIPT-KA-01",
+    "MR-SCRIPT-KHA-01",
+    "MR-SCRIPT-GA-01",
+    "MR-SCRIPT-GHA-01"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [
+    "A1-O1-03"
+  ]
+}

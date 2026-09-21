@@ -1,11 +1,4 @@
 {
-  "segments": [
-    "FR-PATH-023-B",
-    "FR-PATH-023-D",
-    "FR-PATH-024-B",
-    "FR-PATH-024-D",
-    "FR-PATH-A1-OUVRIR-FERMER"
-  ],
   "omits": [
     "VERB-DRINK",
     "VERB-GIVE",

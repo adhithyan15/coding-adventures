@@ -50,7 +50,10 @@ class TaskAppScreenshots {
             val host = checkNotNull(MosaicRuntimeHost.load()) {
                 "standard Compose binding did not load the TaskApp Rust runtime"
             }
-            setContent { MosaicApp(host) }
+            val initialResponse = checkNotNull(host.props()) {
+                "standard Compose binding returned no TaskApp startup props"
+            }
+            setContent { MosaicApp(host, initialResponse) }
             waitForIdle()
 
             fun shot(name: String) {

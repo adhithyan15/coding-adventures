@@ -76,11 +76,12 @@ const (
 	maxGlobRunes     = 512
 )
 
-// MaxMatchWork is the operation-wide Unicode-scalar path-match budget.
+// MaxMatchWork is the operation-wide Unicode-scalar path-selection budget.
 const MaxMatchWork uint64 = 50_000_000
 
-// ErrMatchWorkLimitExceeded is returned before any matcher call when the full
-// declared gate-pattern/file Cartesian product exceeds MaxMatchWork.
+// ErrMatchWorkLimitExceeded is returned before any matcher call when the
+// bounded literal-segment prefilter plus every candidate glob match exceeds
+// MaxMatchWork.
 var ErrMatchWorkLimitExceeded = errors.New("CI_GATE_MATCH_LIMIT_EXCEEDED")
 
 // DefaultRegistryPath is the registry's home, relative to the repo root.
@@ -483,30 +484,176 @@ func evaluateWithMatcher(
 		return result, nil
 	}
 
-	remaining := MaxMatchWork
-	for _, id := range SortedGateIDs(reg) {
-		gate := reg.Gates[id]
-		var patternFactor uint64
-		for _, pattern := range gate.Paths {
-			units := uint64(utf8.RuneCountInString(pattern)) + 1
-			if units > MaxMatchWork-patternFactor {
-				return nil, ErrMatchWorkLimitExceeded
-			}
-			patternFactor += units
+	selection, err := preflightPathSelection(reg, changedFiles)
+	if err != nil {
+		return nil, err
+	}
+	patternMatches := make(map[string]bool, len(selection.patterns))
+	patternEvaluated := make(map[string]bool, len(selection.patterns))
+	matchPattern := func(pattern string) bool {
+		if patternEvaluated[pattern] {
+			return patternMatches[pattern]
 		}
-		for _, file := range changedFiles {
-			pathFactor := uint64(utf8.RuneCountInString(file)) + 1
-			if patternFactor != 0 && pathFactor > remaining/patternFactor {
-				return nil, ErrMatchWorkLimitExceeded
+		patternEvaluated[pattern] = true
+		patternIndex := selection.patternIndexes[pattern]
+		for fileIndex, file := range changedFiles {
+			if !selection.candidate(patternIndex, fileIndex) {
+				continue
 			}
-			remaining -= patternFactor * pathFactor
+			if matcher(pattern, file) {
+				patternMatches[pattern] = true
+				return true
+			}
 		}
+		return false
 	}
 
 	for _, id := range SortedGateIDs(reg) {
-		result[id] = gateFires(reg.Gates[id], affected, changedFiles, matcher)
+		result[id] = gateFires(reg.Gates[id], affected, matchPattern)
 	}
 	return result, nil
+}
+
+type literalSegmentBounds struct {
+	prefix    []string
+	suffix    []string
+	exact     bool
+	workUnits uint64
+}
+
+type pathSelectionPreflight struct {
+	patterns       []string
+	patternIndexes map[string]int
+	fileCount      int
+	candidates     []uint64
+}
+
+func (selection *pathSelectionPreflight) candidate(patternIndex, fileIndex int) bool {
+	bit := patternIndex*selection.fileCount + fileIndex
+	return selection.candidates[bit/64]&(uint64(1)<<uint(bit%64)) != 0
+}
+
+func preflightPathSelection(reg *Registry, changedFiles []string) (*pathSelectionPreflight, error) {
+	patternSet := make(map[string]bool)
+	for _, gate := range reg.Gates {
+		for _, pattern := range gate.Paths {
+			patternSet[pattern] = true
+		}
+	}
+	patterns := make([]string, 0, len(patternSet))
+	for pattern := range patternSet {
+		patterns = append(patterns, pattern)
+	}
+	sort.Strings(patterns)
+
+	// Every pair costs at least two units: either one non-empty literal segment
+	// plus its separator unit, or a candidate matcher grid whose factors are at
+	// least two and one. Reject before allocating the compact candidate bitset.
+	if len(patterns) != 0 && uint64(len(changedFiles)) > (MaxMatchWork/2)/uint64(len(patterns)) {
+		return nil, ErrMatchWorkLimitExceeded
+	}
+	pairCount := len(patterns) * len(changedFiles)
+	selection := &pathSelectionPreflight{
+		patterns:       patterns,
+		patternIndexes: make(map[string]int, len(patterns)),
+		fileCount:      len(changedFiles),
+		candidates:     make([]uint64, (pairCount+63)/64),
+	}
+	for index, pattern := range patterns {
+		selection.patternIndexes[pattern] = index
+	}
+
+	fileSegments := make([][]string, len(changedFiles))
+	fileFactors := make([]uint64, len(changedFiles))
+	for index, file := range changedFiles {
+		fileSegments[index] = splitPathSegments(file)
+		fileFactors[index] = uint64(utf8.RuneCountInString(file)) + 1
+	}
+
+	remaining := MaxMatchWork
+	for patternIndex, pattern := range patterns {
+		bounds := makeLiteralSegmentBounds(pattern)
+		patternFactor := uint64(utf8.RuneCountInString(pattern)) + 1
+		for fileIndex := range changedFiles {
+			if bounds.workUnits > remaining {
+				return nil, ErrMatchWorkLimitExceeded
+			}
+			remaining -= bounds.workUnits
+			if !bounds.couldMatch(fileSegments[fileIndex]) {
+				continue
+			}
+			pathFactor := fileFactors[fileIndex]
+			if pathFactor > remaining/patternFactor {
+				return nil, ErrMatchWorkLimitExceeded
+			}
+			remaining -= patternFactor * pathFactor
+			bit := patternIndex*len(changedFiles) + fileIndex
+			selection.candidates[bit/64] |= uint64(1) << uint(bit%64)
+		}
+	}
+	return selection, nil
+}
+
+func makeLiteralSegmentBounds(pattern string) literalSegmentBounds {
+	segments := splitPathSegments(pattern)
+	firstMeta := len(segments)
+	lastMeta := -1
+	for index, segment := range segments {
+		if strings.ContainsAny(segment, "*?[]") {
+			if firstMeta == len(segments) {
+				firstMeta = index
+			}
+			lastMeta = index
+		}
+	}
+	bounds := literalSegmentBounds{exact: lastMeta == -1}
+	if bounds.exact {
+		bounds.prefix = segments
+	} else {
+		bounds.prefix = segments[:firstMeta]
+		bounds.suffix = segments[lastMeta+1:]
+	}
+	for _, segment := range bounds.prefix {
+		bounds.workUnits += uint64(utf8.RuneCountInString(segment)) + 1
+	}
+	for _, segment := range bounds.suffix {
+		bounds.workUnits += uint64(utf8.RuneCountInString(segment)) + 1
+	}
+	return bounds
+}
+
+func (bounds literalSegmentBounds) couldMatch(path []string) bool {
+	if bounds.exact {
+		return len(path) == len(bounds.prefix) && equalSegments(bounds.prefix, path)
+	}
+	if len(path) < len(bounds.prefix)+len(bounds.suffix) ||
+		!equalSegments(bounds.prefix, path[:len(bounds.prefix)]) {
+		return false
+	}
+	return equalSegments(bounds.suffix, path[len(path)-len(bounds.suffix):])
+}
+
+func equalSegments(left, right []string) bool {
+	if len(left) != len(right) {
+		return false
+	}
+	for index := range left {
+		if left[index] != right[index] {
+			return false
+		}
+	}
+	return true
+}
+
+func splitPathSegments(path string) []string {
+	parts := strings.Split(strings.TrimRight(path, "/"), "/")
+	segments := make([]string, 0, len(parts))
+	for _, part := range parts {
+		if part != "" {
+			segments = append(segments, part)
+		}
+	}
+	return segments
 }
 
 // touchesGatingMachinery reports whether the change edits ci.yml, the registry,
@@ -531,8 +678,7 @@ func touchesGatingMachinery(changedFiles []string) bool {
 func gateFires(
 	gate Gate,
 	affected map[string]bool,
-	changedFiles []string,
-	matcher func(string, string) bool,
+	matchPattern func(string) bool,
 ) bool {
 	// Package clause: any declared package inside the affected closure.
 	for _, pkg := range gate.Packages {
@@ -545,10 +691,8 @@ func gateFires(
 	// that catches fixture, grammar, spec and script edits, which never appear
 	// in the affected closure at all (see the package doc comment).
 	for _, pattern := range gate.Paths {
-		for _, file := range changedFiles {
-			if matcher(pattern, file) {
-				return true
-			}
+		if matchPattern(pattern) {
+			return true
 		}
 	}
 

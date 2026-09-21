@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-20
+
+- Name inline cell editors through the shared grid editor-label slot and the Rust-selected absolute cell address (#15752).
+
+## 2026-09-12
+
+- Add text-size commands and derived typography/row/column metrics. Preserve pending edits, workbook content and current host scale when restoring a workbook.
+
 ## Unreleased
 
 - Verify formula edits update example-workbook totals immediately and preserve them across snapshot restoration (#15519).

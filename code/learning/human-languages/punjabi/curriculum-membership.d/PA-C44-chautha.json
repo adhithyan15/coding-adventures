@@ -1,0 +1,11 @@
+{
+  "id": "PA-C44-chautha",
+  "pathSegment": "PA-PATH-046",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-066-ORDINALS",
+      "order": 2
+    }
+  ]
+}

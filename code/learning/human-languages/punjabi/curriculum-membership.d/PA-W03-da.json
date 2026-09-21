@@ -1,0 +1,11 @@
+{
+  "id": "PA-W03-da",
+  "pathSegment": "PA-PATH-019",
+  "pathOrder": 9,
+  "extensions": [
+    {
+      "id": "PA-EXT-024-A1-LANGUAGE-FIELD",
+      "order": 9
+    }
+  ]
+}

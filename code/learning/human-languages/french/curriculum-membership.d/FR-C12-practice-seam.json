@@ -1,0 +1,11 @@
+{
+  "id": "FR-C12-practice-seam",
+  "pathSegment": "FR-PATH-015",
+  "pathOrder": 68,
+  "extensions": [
+    {
+      "id": "FR-EXT-015-LANGUAGE-SPECIFIC",
+      "order": 68
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-W01-haa-delayed-copy",
+  "pathSegment": "GU-PATH-004",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-001-WRITING-RUNWAY",
+      "order": 1
+    }
+  ]
+}

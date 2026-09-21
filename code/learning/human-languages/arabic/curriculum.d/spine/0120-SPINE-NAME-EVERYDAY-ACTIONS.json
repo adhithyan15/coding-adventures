@@ -1,8 +1,4 @@
 {
-  "segments": [
-    "AR-PATH-027-B",
-    "AR-PATH-028-B"
-  ],
   "omits": [
     "VERB-DRINK",
     "VERB-GIVE",

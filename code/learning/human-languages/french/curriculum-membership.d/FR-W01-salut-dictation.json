@@ -1,0 +1,11 @@
+{
+  "id": "FR-W01-salut-dictation",
+  "pathSegment": "FR-PATH-001",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-001-WRITING-RUNWAY",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C353-farmacia",
+  "pathSegment": "ES-PATH-353-01",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-353-PLACE",
+      "order": 2
+    }
+  ]
+}

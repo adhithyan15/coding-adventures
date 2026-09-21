@@ -350,8 +350,8 @@ function summarizeOutput(value: unknown): unknown {
   const files = candidate.files as Record<string, unknown>;
   return {
     kind: "DeployArtifact",
-    variant: candidate.variant ?? null,
-    manifest: candidate.manifest,
+    variant: canonicalReportValue(candidate.variant ?? null),
+    manifest: canonicalReportValue(candidate.manifest),
     files: Object.keys(files).sort().map(path => {
       const bytes = files[path];
       if (!(bytes instanceof Uint8Array)) return { path, byteLength: null, sha256: null };
@@ -362,6 +362,20 @@ function summarizeOutput(value: unknown): unknown {
       };
     }),
   };
+}
+
+/** Keep report bytes independent of live-stage versus checkpoint object order. */
+function canonicalReportValue(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(canonicalReportValue);
+  if (typeof value !== "object" || value === null) return value;
+  const prototype = Object.getPrototypeOf(value);
+  if (prototype !== Object.prototype && prototype !== null) return value;
+
+  const result: Record<string, unknown> = {};
+  for (const key of Object.keys(value).sort()) {
+    result[key] = canonicalReportValue((value as Record<string, unknown>)[key]);
+  }
+  return result;
 }
 
 async function resolveConfigPath(

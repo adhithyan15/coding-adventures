@@ -1,0 +1,11 @@
+{
+  "id": "RU-C11-spokoynoy-nochi",
+  "pathSegment": "RU-PATH-013",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "RU-EXT-013-PARTING-WORDS",
+      "order": 5
+    }
+  ]
+}

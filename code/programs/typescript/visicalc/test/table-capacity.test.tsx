@@ -136,3 +136,41 @@ it("ignores a collapsed-border half pixel at the first row boundary", () => {
   const report = vi.fn(); const ref = mosaic$tableCapacityRef(report);
   ref(table); flush(); expect(report.mock.calls).toEqual([[9]]); ref(null);
 });
+
+it("does not feed programmatic reveal or intermediate render geometry back as scrolling", () => {
+  const body = table.tBodies[0];
+  const before = document.createElement("tbody"), after = document.createElement("tbody");
+  before.dataset.mosaicSpacer = "before"; after.dataset.mosaicSpacer = "after";
+  before.innerHTML = after.innerHTML = "<tr><td></td></tr>";
+  table.insertBefore(before, body); table.append(after);
+  table.getBoundingClientRect = () => ({ top: -frame.scrollTop } as DOMRect);
+  frame.getBoundingClientRect = () => ({ top: 0 } as DOMRect);
+  const shift = vi.fn();
+  const reveal = vi.fn(() => { frame.scrollTop += 34; });
+  let ref = mosaic$tableCapacityRef(vi.fn(), reveal, {offset:0,total:100,shift});
+  ref(table); flush();
+  // Browsers deliver a native event after a programmatic scrollTop write.
+  frame.dispatchEvent(new Event("scroll"));
+  expect(shift).not.toHaveBeenCalled();
+  ref(null);
+  ref = mosaic$tableCapacityRef(vi.fn(), reveal, {offset:10,total:100,shift});
+  ref(table);
+  // New rows are committed before the measuring frame synchronizes spacers.
+  frame.scrollTop = 1500; frame.dispatchEvent(new Event("scroll"));
+  expect(shift).not.toHaveBeenCalled();
+  flush();
+  frame.dispatchEvent(new Event("scroll"));
+  expect(shift).not.toHaveBeenCalled();
+  // Genuine physical travel remains effective after synchronization.
+  frame.scrollTop = 680; frame.dispatchEvent(new Event("scroll"));
+  expect(shift.mock.calls).toEqual([[10]]);
+  ref(null);
+  reveal.mockClear();
+  ref = mosaic$tableCapacityRef(vi.fn(), reveal, {offset:20,total:100,shift});
+  ref(table); flush();
+  const nativePosition = frame.scrollTop;
+  observers.at(-1)!.notify(); flush();
+  expect(reveal).not.toHaveBeenCalled();
+  expect(frame.scrollTop).toBe(nativePosition);
+  ref(null);
+});

@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-NG7-01",
+  "category": "Mental notions",
+  "label": "reflection and knowledge",
+  "probe": [
+    "MR-LEX-VICHAR-KARNE",
+    "MR-LEX-SAMAJNE",
+    "MR-LEX-MAHIT-JANNE"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-spine"
+  ],
+  "derivedFrom": [
+    "A1-NG7-01"
+  ]
+}

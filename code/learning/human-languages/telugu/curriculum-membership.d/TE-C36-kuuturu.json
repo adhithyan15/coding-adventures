@@ -1,0 +1,11 @@
+{
+  "id": "TE-C36-kuuturu",
+  "pathSegment": "TE-PATH-029",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-030-SON-DAUGHTER",
+      "order": 1
+    }
+  ]
+}

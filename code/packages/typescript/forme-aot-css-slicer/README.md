@@ -142,8 +142,8 @@ Implements FM06 §3 (per-page CSS slicing) and consumes FM01 §2.3.6
 
 ## v0 simplifications
 
-- **No incremental cache.**  Recomputes every page on every call.
-  FM06 §4 (incremental rebuilds) is a future package that wraps
-  this one with a content-addressed store.
+- **No cache inside the slicer.** It remains a pure compiler pass;
+  `forme-aot-incremental-cache` implements FM06 §4 by wrapping it with a
+  content-addressed store.
 - **CSS only.**  LaTeX / terminal per-page slicing would follow
   the same pattern but isn't shipped yet.

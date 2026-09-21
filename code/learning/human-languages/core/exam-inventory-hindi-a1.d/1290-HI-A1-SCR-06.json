@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-SCR-06",
+  "category": "Devanagari lipi (script and orthography)",
+  "label": "conjunct consonants fuse a vowel-less consonant with the next",
+  "probe": [
+    "HI-CONCEPT-W05-CONJUNCTS-01"
+  ],
+  "derivedFrom": "ES:A1-O1-03",
+  "note": "The nearest proxy point is the one about digraphs; conjuncts are a far larger demand, since Hindi builds hundreds of them and their shapes are not always predictable from the parts."
+}

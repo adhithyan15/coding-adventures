@@ -1,0 +1,11 @@
+{
+  "id": "TE-C66-threshing-floor",
+  "pathSegment": "TE-PATH-66-FIELD",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-66-FIELD",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C423-inteligente",
+  "pathSegment": "ES-PATH-423-CHARACTER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-423-CHARACTER",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-S113-letter-nna",
+  "pathSegment": "ML-PATH-100",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ML-EXT-100-SCRIPT-RECOGNITION",
+      "order": 6
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "id": "ML-A1-CASE-02",
+  "category": "Vibhakti (case endings and postpositions)",
+  "label": "the locative -il: in, at",
+  "probe": [
+    "ML-CONCEPT-C05-POSTPOSITION-IL-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-NG3-01",
+    "A1-SV-06"
+  ],
+  "malayalamSpecific": false,
+  "note": "Taught inside taamasikkuka, which is where a learner first needs it: 'I live IN somewhere'."
+}

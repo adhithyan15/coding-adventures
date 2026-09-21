@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-PH-04",
+  "category": "Uccharan (pronunciation)",
+  "label": "long and short vowels are different vowels",
+  "probe": [
+    "HI-SCRIPT-II-MATRA-01",
+    "HI-SCRIPT-U-MATRA-01"
+  ],
+  "derivedFrom": "hindi-specific"
+}

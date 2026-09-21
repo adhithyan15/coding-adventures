@@ -1,0 +1,1 @@
+mkdir -p .dotnet .artifacts && HOME="$PWD/.dotnet" DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1 DOTNET_CLI_HOME="$PWD/.dotnet" dotnet test tests/CodingAdventures.DerTlv.CSharp.Tests/CodingAdventures.DerTlv.CSharp.Tests.csproj --disable-build-servers --artifacts-path .artifacts /p:CollectCoverage=true /p:Threshold=95 /p:ThresholdType=line "/p:Include=[CodingAdventures.DerTlv.CSharp]*"

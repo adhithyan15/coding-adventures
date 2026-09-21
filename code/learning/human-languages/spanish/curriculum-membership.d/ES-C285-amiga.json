@@ -1,0 +1,11 @@
+{
+  "id": "ES-C285-amiga",
+  "pathSegment": "ES-PATH-285-01",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-285-QUIEN",
+      "order": 1
+    }
+  ]
+}

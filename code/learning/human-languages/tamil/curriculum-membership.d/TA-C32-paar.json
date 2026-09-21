@@ -1,0 +1,11 @@
+{
+  "id": "TA-C32-paar",
+  "pathSegment": "TA-PATH-028-C",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-028-CORE-VERBS-C",
+      "order": 1
+    }
+  ]
+}

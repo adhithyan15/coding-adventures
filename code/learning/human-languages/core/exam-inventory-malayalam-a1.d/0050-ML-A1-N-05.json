@@ -1,0 +1,20 @@
+{
+  "id": "ML-A1-N-05",
+  "category": "Naamam (the noun)",
+  "label": "natural gender by separate words: makan against makal, achhan against amma",
+  "probe": [
+    "ML-CONCEPT-C36-MAKAN-01",
+    "ML-CONCEPT-C36-MAKAL-01",
+    "ML-CONCEPT-C12-KUDUMBAM-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-N-04"
+  ],
+  "malayalamSpecific": false,
+  "note": "Where Spanish has padre/madre, Malayalam has the same heteronymy: makan/makal and the six kudumbam words."
+}

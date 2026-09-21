@@ -2833,6 +2833,41 @@ def _ci_gate_touches_machinery(changed_files: list[str]) -> bool:
     return False
 
 
+def _ci_gate_literal_segment_bounds(
+    pattern: str,
+) -> tuple[list[str], list[str], bool, int]:
+    segments = [segment for segment in pattern.rstrip("/").split("/") if segment]
+    meta_indexes = [
+        index
+        for index, segment in enumerate(segments)
+        if any(character in segment for character in "*?[]")
+    ]
+    if not meta_indexes:
+        prefix = segments
+        suffix: list[str] = []
+        exact = True
+    else:
+        prefix = segments[: meta_indexes[0]]
+        suffix = segments[meta_indexes[-1] + 1 :]
+        exact = False
+    work = sum(len(segment) + 1 for segment in [*prefix, *suffix])
+    return prefix, suffix, exact, work
+
+
+def _ci_gate_literal_bounds_allow(
+    bounds: tuple[list[str], list[str], bool, int], path: str
+) -> bool:
+    prefix, suffix, exact, _ = bounds
+    segments = [segment for segment in path.rstrip("/").split("/") if segment]
+    if exact:
+        return segments == prefix
+    if len(segments) < len(prefix) + len(suffix):
+        return False
+    if segments[: len(prefix)] != prefix:
+        return False
+    return not suffix or segments[-len(suffix) :] == suffix
+
+
 def _expected_ci_gate_selection(
     options: dict[str, Any],
 ) -> list[dict[str, Any]] | str:
@@ -2855,26 +2890,51 @@ def _expected_ci_gate_selection(
             for gate in gates
         ]
 
+    patterns = sorted({pattern for gate in gates for pattern in gate["paths"]})
+    if patterns and len(changed_files) > (
+        MAX_CI_GATE_SELECTION_MATCH_WORK // 2
+    ) // len(patterns):
+        return "CI_GATE_MATCH_LIMIT_EXCEEDED"
+
     remaining_work = MAX_CI_GATE_SELECTION_MATCH_WORK
-    for gate in gates:
-        pattern_factor = sum(len(pattern) + 1 for pattern in gate["paths"])
+    candidates: dict[str, bytearray] = {}
+    for pattern in patterns:
+        bounds = _ci_gate_literal_segment_bounds(pattern)
+        pattern_factor = len(pattern) + 1
+        pattern_candidates = bytearray()
         for path in changed_files:
+            filter_work = bounds[3]
+            if filter_work > remaining_work:
+                return "CI_GATE_MATCH_LIMIT_EXCEEDED"
+            remaining_work -= filter_work
+            candidate = _ci_gate_literal_bounds_allow(bounds, path)
+            pattern_candidates.append(int(candidate))
+            if not candidate:
+                continue
             path_factor = len(path) + 1
-            if pattern_factor and path_factor > remaining_work // pattern_factor:
+            if path_factor > remaining_work // pattern_factor:
                 return "CI_GATE_MATCH_LIMIT_EXCEEDED"
             remaining_work -= pattern_factor * path_factor
+        candidates[pattern] = pattern_candidates
 
     affected = set(affected_packages or [])
     changed = changed_files or []
+    pattern_matches: dict[str, bool] = {}
+
+    def path_pattern_matches(pattern: str) -> bool:
+        if pattern not in pattern_matches:
+            pattern_matches[pattern] = any(
+                candidates[pattern][index]
+                and _portable_glob_matches(pattern, path)
+                for index, path in enumerate(changed)
+            )
+        return pattern_matches[pattern]
+
     verdicts = []
     for gate in gates:
         required = bool(affected.intersection(gate["packages"]))
         if not required:
-            required = any(
-                _portable_glob_matches(pattern, path)
-                for pattern in gate["paths"]
-                for path in changed
-            )
+            required = any(path_pattern_matches(pattern) for pattern in gate["paths"])
         verdicts.append(
             {
                 "id": gate["id"],

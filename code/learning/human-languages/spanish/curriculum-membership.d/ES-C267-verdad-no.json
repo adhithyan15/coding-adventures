@@ -1,0 +1,11 @@
+{
+  "id": "ES-C267-verdad-no",
+  "pathSegment": "ES-PATH-267",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-267-NEGATE-ASK",
+      "order": 3
+    }
+  ]
+}

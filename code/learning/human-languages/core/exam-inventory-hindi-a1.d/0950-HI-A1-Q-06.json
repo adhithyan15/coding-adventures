@@ -1,0 +1,9 @@
+{
+  "id": "HI-A1-Q-06",
+  "category": "Prashn (asking questions)",
+  "label": "kitna / kitne for quantity",
+  "probe": [
+    "HI-CONCEPT-C19-AGE-GRAMMAR-01"
+  ],
+  "derivedFrom": "ES:A1-PRON-06"
+}

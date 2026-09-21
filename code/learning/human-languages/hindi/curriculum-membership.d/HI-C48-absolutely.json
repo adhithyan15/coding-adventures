@@ -1,0 +1,11 @@
+{
+  "id": "HI-C48-absolutely",
+  "pathSegment": "HI-PATH-48-REPLY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-48-REPLY",
+      "order": 4
+    }
+  ]
+}

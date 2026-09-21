@@ -1,0 +1,11 @@
+{
+  "id": "FR-R39-qui-est-ce",
+  "pathSegment": "FR-PATH-A1-PRONOUNS",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-A1-PRONOUNS",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C03-repaso-nombre",
+  "pathSegment": "ES-PATH-007",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "ES-EXT-007-CONSOLIDATION-NOMBRE",
+      "order": 0
+    }
+  ]
+}

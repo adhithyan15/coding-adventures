@@ -1,0 +1,11 @@
+{
+  "id": "ES-C426-sintesis-formulario",
+  "pathSegment": "ES-PATH-426-MAYUSCULAS",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "ES-EXT-426-MAYUSCULAS",
+      "order": 7
+    }
+  ]
+}

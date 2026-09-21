@@ -498,9 +498,77 @@ itself. The typed `der-asn1` layer is now shipped above that framing primitive:
 it provides allocation-free canonical BOOLEAN, INTEGER, BIT STRING, OCTET
 STRING, NULL, and OBJECT IDENTIFIER decoding plus exact SEQUENCE, SET, and
 explicit context-wrapper traversal under one shared depth and total-element
-budget. It still provides no certificate schema, time or name semantics,
-signature verification, path construction, revocation, or trust-root source,
-so concrete HTTPS remains blocked.
+budget. It also validates universal IA5String and schema-selected implicit
+OCTET STRING, IA5String, and OBJECT IDENTIFIER values under exact primitive
+context-specific tags, providing the typed value prerequisite for later
+GeneralName decoding without claiming any name semantics. A separate
+`x509-time` profile layer now validates exact RFC 5280
+UTCTime and GeneralizedTime tags, fixed Zulu forms, the 1950/2050 century
+split, and Gregorian fields without a clock or platform calendar. A bounded
+`x509-validity` layer is now shipped above them: it decodes the exact two-field
+`Validity` sequence, rejects inverted endpoints, and classifies an explicitly
+supplied validated time against inclusive endpoints. These layers still
+provide no certificate-wide schema, clock authority, name semantics, signature
+verification, path construction, revocation, or trust-root source, so concrete
+HTTPS remains blocked. A bounded `x509-algorithm-identifier` prerequisite is
+now shipped: it decodes a generic validated algorithm OID plus one optional
+opaque canonical DER parameter element. It intentionally adds no algorithm
+registry, parameter policy, key access, signing, or verification.
+A bounded `x509-subject-public-key-info` composition is now shipped above that
+syntax: it decodes the exact two-field algorithm-and-key-bit-string container
+under the same shared budgets. It deliberately does not recognize algorithms,
+interpret public keys, or grant key, signing, or verification authority.
+A bounded `x509-extension` prerequisite now decodes one exact generic extension
+OID, canonical omitted-default critical flag, and opaque OCTET STRING under the
+same shared budgets. It does not recognize extension OIDs, parse encapsulated
+values, process unknown critical extensions, or decode an extension list.
+A bounded `x509-extensions` composition now decodes the non-empty certificate
+extension sequence into at most 64 allocation-free borrowed values, preserves
+wire order, and rejects duplicate extension OIDs under the same shared budgets.
+It still does not recognize OIDs, parse encapsulated values, or decide whether
+an unknown critical extension is supported.
+A bounded `x509-basic-constraints` semantic layer now recognizes only the
+RFC 5280 Basic Constraints OID and decodes its exact encapsulated sequence. It
+enforces canonical omission of the default false CA flag, non-negative path
+lengths, and the rule that a path length cannot appear unless CA is true while
+preserving arbitrarily large canonical integers as borrowed bytes. It does not
+grant CA authority, enforce certificate-wide criticality or Key Usage policy,
+build paths, verify signatures, or select trust roots.
+A bounded `x509-key-usage` semantic layer now recognizes only the RFC 5280 Key
+Usage OID and decodes its exact encapsulated BIT STRING. It requires at least
+one asserted usage, exposes only the nine defined flags, and rejects undefined
+or non-minimal named-bit encodings. It does not authorize a key operation,
+assign a certificate role, enforce outer criticality, or combine the result
+with Basic Constraints or Extended Key Usage policy.
+A bounded `x509-extended-key-usage` semantic layer now recognizes only the RFC
+5280 Extended Key Usage OID and decodes its exact non-empty sequence under a
+fixed 64-purpose bound. It preserves arbitrary canonical purpose OIDs in wire
+order without embedding a purpose registry. It does not authorize a purpose,
+assign a certificate role, enforce outer criticality, or intersect the result
+with Key Usage or Basic Constraints policy.
+A bounded `x509-subject-alt-name` semantic layer now recognizes only the RFC
+5280 Subject Alternative Name OID and decodes at most 256 non-empty GeneralName
+envelopes. It retains allocation-free DNS-ID strings and typed IPv4/IPv6 IP-ID
+values for the separate server-identity matcher, validates every primitive
+choice, and keeps constructed choices bounded and opaque for later schema
+packages. It does not validate DNS syntax, establish identity, interpret
+constructed names, parse a certificate, build paths, verify signatures, or
+select trust roots.
+A bounded `x509-serial-number` semantic layer now decodes one canonical RFC
+5280 certificate serial-number INTEGER. It requires a positive nonzero value,
+enforces the 20-content-octet ceiling, and retains only borrowed canonical and
+normalized magnitude views. It does not generate values, prove per-issuer
+uniqueness, parse a complete certificate, validate paths, or verify signatures.
+A bounded `x509-certificate-version` semantic layer now decodes the optional
+constructed `[0] EXPLICIT Version` field under shared depth and element limits.
+It exposes omitted `v1` as the caller's default, rejects an explicitly encoded
+DER default, and accepts only explicit `v2` or `v3`. It does not parse the
+surrounding certificate or enforce version-dependent field policy.
+A bounded `x509-name` semantic layer now decodes exact RFC 5280 RDN sequences,
+non-empty DER-ordered RDN sets, and OID-plus-opaque-value attributes under
+shared limits. It retains exact borrowed values and RDN boundaries without
+claiming DirectoryString normalization, semantic name equality, issuer/subject
+relationship decisions, or path validation.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

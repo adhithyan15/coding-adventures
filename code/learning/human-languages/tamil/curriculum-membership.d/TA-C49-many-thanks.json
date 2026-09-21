@@ -1,0 +1,11 @@
+{
+  "id": "TA-C49-many-thanks",
+  "pathSegment": "TA-PATH-49-COURTESY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-49-COURTESY",
+      "order": 4
+    }
+  ]
+}

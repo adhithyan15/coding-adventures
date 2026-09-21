@@ -1,0 +1,11 @@
+{
+  "id": "GE-C06-fuenf",
+  "pathSegment": "GE-PATH-015-B",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-015-B-VIER-FUENF",
+      "order": 1
+    }
+  ]
+}

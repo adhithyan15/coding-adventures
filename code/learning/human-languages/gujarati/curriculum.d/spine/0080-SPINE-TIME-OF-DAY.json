@@ -1,5 +1,4 @@
 {
-  "segments": [],
   "omits": [
     "TIME-DAY",
     "TIME-MORNING",

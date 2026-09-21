@@ -261,6 +261,8 @@ fn package_owned_swiftui_project_launches_renders_and_interacts() {
     assert!(interaction.contains("\"bookmarkPersistence\":\"native-toggle\""));
     assert!(interaction.contains("\"addressCommit\":\"native-return\""));
     assert!(interaction.contains("\"navigationState\":\"native-disabled-transitions\""));
+    assert!(interaction.contains("\"pageInfoPanel\":\"shared-open-close\""));
+    assert!(interaction.contains("\"viewSourcePanel\":\"shared-open-close\""));
     assert!(interaction.contains("\"failedNavigation\":\"transaction-retained\""));
     assert!(interaction.contains("HTTP status 503"));
     assert!(interaction.contains("\"surfaceFocus\":\"native\""));

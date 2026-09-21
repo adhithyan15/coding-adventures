@@ -1,13 +1,6 @@
 {
   "id": "FA-PATH-019",
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
-  "lessons": [
-    "FA-C18-yazdah",
-    "FA-C18-sizdah",
-    "FA-C18-panzdah",
-    "FA-C18-bist-sad",
-    "FA-C18-practice"
-  ],
   "before": [],
   "inline": [],
   "after": [

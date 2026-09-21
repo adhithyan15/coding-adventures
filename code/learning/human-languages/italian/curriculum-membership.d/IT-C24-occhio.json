@@ -1,0 +1,11 @@
+{
+  "id": "IT-C24-occhio",
+  "pathSegment": "IT-PATH-028",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-028-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

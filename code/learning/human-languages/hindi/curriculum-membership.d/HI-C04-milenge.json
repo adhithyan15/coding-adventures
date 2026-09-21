@@ -1,0 +1,11 @@
+{
+  "id": "HI-C04-milenge",
+  "pathSegment": "HI-PATH-009",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-009-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

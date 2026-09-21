@@ -1,0 +1,11 @@
+{
+  "id": "TE-C57-lip",
+  "pathSegment": "TE-PATH-57-BODY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-57-BODY",
+      "order": 2
+    }
+  ]
+}

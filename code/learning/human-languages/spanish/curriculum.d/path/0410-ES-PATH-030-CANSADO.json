@@ -1,9 +1,6 @@
 {
   "id": "ES-PATH-030-CANSADO",
   "spine_node": "SPINE-DESCRIBE-QUALITIES",
-  "lessons": [
-    "ES-C09-cansado"
-  ],
   "before": [],
   "inline": [
     "ES-EXT-030-CANSADO"

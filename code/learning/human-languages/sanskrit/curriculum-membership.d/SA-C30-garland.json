@@ -1,0 +1,11 @@
+{
+  "id": "SA-C30-garland",
+  "pathSegment": "SA-PATH-30-WELCOME",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-30-WELCOME",
+      "order": 3
+    }
+  ]
+}

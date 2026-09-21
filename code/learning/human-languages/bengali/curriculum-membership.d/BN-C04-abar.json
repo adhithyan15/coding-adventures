@@ -1,0 +1,11 @@
+{
+  "id": "BN-C04-abar",
+  "pathSegment": "BN-PATH-009",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "BN-EXT-009-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

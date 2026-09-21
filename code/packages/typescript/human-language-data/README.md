@@ -23,7 +23,8 @@ rollups cannot return.
 
 ```
 lessons/*.md frontmatter    ─┐
-<track>/curriculum.d/**/*   ─┼─►  Dataset + local realization paths
+<track>/curriculum.d/**/*   ─┤
+<track>/curriculum-membership.d/* ─┼─►  Dataset + local realization paths
 concepts/taxonomy.json      ─┤         + validate() / validateCurriculum()
 data/scripts/*.{json,d/}    ─┘         + independent frontier planning
 ```
@@ -44,10 +45,26 @@ backmatter and script sets live in independently owned section directories.
 The authored lesson-sound vocabulary uses `core/sound-tags.d/<language>.json`,
 one self-binding `{ language, tags }` owner per registered track plus a stable
 `_meta.json`; the former cross-language aggregate is not tracked.
+The reading-reach ratchet uses
+`core/reading-reach-floor.d/<language>--<level>.json`, one self-binding
+`{ language, level, floor }` owner for every task-shape inventory. Zero owners
+preserve the historical absent-entry-zero behavior; the reconstructed public
+map contains only positive floors, and the former aggregate is forbidden.
 Generated lesson modality uses the finer
 `core/lesson-modality/<language>.d/{_meta.json,<lesson-id>.json}` boundary. The
 metadata owner holds only stable derivation policy and each lesson file holds its
 own row and findings; flat per-language aggregates are forbidden.
+Curriculum path-to-spine membership is owned only by the new path shard's
+`spine_node`. Do not edit an existing `curriculum.d/spine/*.json` owner when
+adding a path segment: those files contain only stable `omits`/`relocates`
+policy, and the public `segments` lists are derived in path order at load time.
+Lesson membership is single-owned under
+`<track>/curriculum-membership.d/<lesson-id>.json`. Each direct owner names one
+path segment, its exact order there, and any attached extensions with their
+exact order. Path and extension shards must not store `lessons` arrays. Adding
+one lesson adds one membership owner rather than editing either shared array;
+the loader and Language Ladder reconstruct the unchanged public arrays. See
+[`HL40`](../../../specs/HL40-direct-curriculum-lesson-membership.md).
 Browser consumers fold only their respective canonical shards behind bounded
 build-time modules. Language Ladder does not import the modality owner corpus.
 
@@ -57,9 +74,9 @@ npm run check:shards
 
 CI rebuilds every shard set in memory and rejects a resurrected aggregate. For
 the 47 generic core-spine, chapter, and curriculum plans, it also compares the
-logical owner set with an independent source: curriculum spine maps prove the
+logical owner set with independent graph evidence: curriculum maps prove the
 core spine, generated narration chapter owners prove chapter capabilities, and
-core/path/extension references prove each curriculum section. A clean deletion,
+lesson/path/extension validation closes each curriculum section. A clean deletion,
 unexpected owner, duplicate identity, filename/body mismatch, or case-fold
 collision therefore fails even when the surviving shards still reconstruct.
 Ordinal prefixes remain ordering coordinates, so an id-bearing owner inserted
@@ -234,6 +251,14 @@ audits, and source notes live in `tests/exam-inventories/<language>.test.ts`
 its language-owned test. The owned suites use `loadTrackLessons` rather than
 loading all 23 tracks, so parallel ownership does not multiply the full-corpus
 cost tracked by #12732.
+
+Hindi, Malayalam, and Marathi A1 inventories are also shard-native. Stable document fields
+and the ordered identity manifest live in each
+`core/exam-inventory-<language>-a1.d/_meta.json`; every complete exam point lives
+in one canonical `NNNN-<point-id>.json` owner. `loadExamInventory` preserves the
+same public `ExamInventory` contract while rejecting missing, unexpected,
+reordered, unsafe, noncanonical, nested, linked, or resurrected aggregate data.
+Ordinary lesson work edits only the points whose probes or notes changed.
 
 ### Chapter capabilities (HL05)
 
@@ -419,23 +444,19 @@ opening defect cannot be averaged away. Writing exposure does not count as writi
 practice, and the report names how many opening lessons precede the first real
 writing/script lesson or block.
 
-The exact corpus regression lives in stable generated owners rather than full-track
-language aggregates or hand-edited totals in the test body:
+The exact report is derived on demand from canonical curriculum sources:
 
 ```bash
-npm run generate:gentle-snapshots  # write direct owners under core/gentle-ramp-snapshots/*.d/
-npm run check:gentle-snapshots     # fail on owner drift, deletion, or aggregate resurrection
+npm run report:gentle-ramp         # render the current learner-first queue
+npm run check:gentle-snapshots     # derive every track and reject snapshot resurrection
 ```
 
-Each `<language>.d/` has immutable `_meta.json`, 26 fixed metric owners (the R1-R4
-reinforcement windows have separate identities), and ten always-present finding-kind
-owners. `lessonCount` is derived from exact parsed and narration lesson identities;
-`next`, the global queue, and summaries are reconstructed in memory. Thus two agents
-can change different dimensions of Tamil without sharing a generated file. The checker
-requires the exact registered-language tree, exact fixed filenames, canonical bytes,
-and exact public `TrackGentleRamp` reconstruction. It rejects a resurrected flat
-aggregate, and generation validates a complete staged replacement before removing the
-old tree. See [`HL33`](../../../specs/HL33-sharded-gentle-ramp-ownership.md).
+The former 851 metric/finding owners were exact generated copies of those same
+sources, not independent policy. They are retired: the compatibility checker is
+read-only, derives all registered tracks, and rejects any case-fold variant of
+`core/gentle-ramp-snapshots`. Hard invariants and authored budgets remain in their
+source gates; reporting-only counts can now change without a generated-file edit.
+See [`HL38`](../../../specs/HL38-retired-gentle-ramp-snapshots.md).
 
 Level coverage is computed on demand from the canonical lessons, curricula, and shared
 spine by `summarizeLevels()`. The level tests prove exact registered-track closure,
@@ -999,6 +1020,8 @@ until the existing corpus has been split.
 | `parse.ts` | frontmatter + Markdown → typed lesson AST; realizations → `Dataset` | ✅ |
 | `activity.ts` | typed block activities → normalized runtime answer contracts | ✅ |
 | `hash.ts` | stable canonical lesson serialization and deterministic fingerprints | ✅ |
+| `curriculum-membership.ts` | direct lesson owners → exact public path/extension arrays | ✅ |
+| `curriculum-membership-shards.ts` | strict per-lesson curriculum owner fold and filesystem boundary | ⛔ (fs) |
 | `sound-tags.ts` | pure closed-vocabulary shape and tag validation | ✅ |
 | `sound-tag-shards.ts` | strict per-language owner fold and filesystem boundary | ⛔ (fs) |
 | `book.ts` | typed lesson AST → LaTeX chapter | ✅ |
@@ -1011,7 +1034,7 @@ until the existing corpus has been split.
 | `narration.ts` | typed lesson AST → narration segments and the continuous voice script | ✅ |
 | `modality-manifest.ts` | derived modality rows, rollups, and unchanged filterable public manifest | ✅ |
 | `modality-shards.ts` | strict direct-owner fold and filesystem boundary | ⛔ (fs) |
-| `gentle-ramp-shards.ts` | strict metric/finding owner fold and filesystem boundary | ⛔ (fs) |
+| `gentle-ramp-retirement.ts` | rejects resurrection of retired generated snapshots | ⛔ (fs) |
 | `report.ts` | deterministic duration, prerequisite, book, schema, and modality gap report | ✅ |
 | `lesson-budgets.ts` | explicit idiom, sense, and culture-claim budget measurement | ✅ |
 | `loader.ts` | reads the curriculum off disk | ⛔ (fs) |
@@ -1019,7 +1042,7 @@ until the existing corpus has been split.
 | `report-cli.ts` | prints JSON or text for CI artifact capture | ⛔ (fs) |
 | `book-cli.ts` | writes or checks generated chapters and their hash manifest | ⛔ (fs) |
 | `modality-cli.ts` | writes or checks `core/lesson-modality/<language>.d/*.json` | ⛔ (fs) |
-| `gentle-ramp-snapshot-cli.ts` | stages, writes, or checks `core/gentle-ramp-snapshots/<language>.d/` | ⛔ (fs) |
+| `gentle-ramp-snapshot-cli.ts` | compatibility check: rejects retired snapshots and derives every track | ⛔ (fs) |
 | `narration-cli.ts` | writes or checks the narration export and its hash manifest | ⛔ (fs) |
 | `track-progress.ts` | registry/curriculum/book facts → progress rows and cards | ✅ |
 | `track-progress-cli.ts` | prints the progress table or rejects tracked rollups | ⛔ (fs) |

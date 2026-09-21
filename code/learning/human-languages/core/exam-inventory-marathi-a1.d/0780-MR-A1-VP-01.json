@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-VP-01",
+  "category": "The verb phrase",
+  "label": "the liking verb and its argument structure",
+  "probe": [
+    "MR-LEX-AVADNE",
+    "MR-GRAMMAR-DATIVE-LIKING"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-SV-01"
+  ]
+}

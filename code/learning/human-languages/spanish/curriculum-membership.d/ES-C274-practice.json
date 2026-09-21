@@ -1,0 +1,11 @@
+{
+  "id": "ES-C274-practice",
+  "pathSegment": "ES-PATH-274-04",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-274-WEIGHT",
+      "order": 0
+    }
+  ]
+}

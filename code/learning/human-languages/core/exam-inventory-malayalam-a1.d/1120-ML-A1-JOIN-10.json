@@ -1,0 +1,21 @@
+{
+  "id": "ML-A1-JOIN-10",
+  "category": "Samuchayam (joining and subordination)",
+  "label": "the relative participle: joining a clause to a noun",
+  "probe": [
+    "ML-GRAMMAR-C90-PARTICIPLE-01",
+    "ML-CONCEPT-C90-NO-RELATIVE-01",
+    "ML-GRAMMAR-C90-PAST-PARTICIPLE-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "ML-CORPUS",
+    "ED-MALAYALAM"
+  ],
+  "derivedFrom": [
+    "A1-SUB-04",
+    "A1-SUB-05"
+  ],
+  "malayalamSpecific": false,
+  "note": "Chapter 90, closed by the same three atoms as ML-A1-PRON-08, which its own note pointed at. The Spanish inventory files the relative clause under subordination and this file answers both. See ML-A1-PRON-08 for the account: the describing form is one vowel sign off the end of a taught verb form, the clause goes in front of the noun, and there is no joining word at all."
+}

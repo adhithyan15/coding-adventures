@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-20
+
+- Prevent programmatic selection reveal and intermediate row-window geometry from feeding back into native table scrolling (#15753).
+
 ## 2026-09-12
 
 - HostInput inherits parent font family and size by default; authored styles and valid numeric typography bindings retain precedence.
@@ -7,6 +11,12 @@
 All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
+
+### Added -- `HostNavigationSplit` semantic web lowering (UI29-6, #15666)
+
+`HostNavigationSplit` now emits a flex shell with a named `<nav>` pane and a
+`<section>` detail region. `pane-width` becomes the pane's flex basis; runtime
+collapse remains UI48 work rather than a hand-rolled resize event.
 
 ### Added -- `HostButton` `selected` lowers to `aria-pressed` (UI86, #15420)
 

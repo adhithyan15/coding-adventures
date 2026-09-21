@@ -1,0 +1,11 @@
+{
+  "id": "HI-C93-ke-piichhe",
+  "pathSegment": "HI-PATH-101-RELATION",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-101-RELATION",
+      "order": 4
+    }
+  ]
+}

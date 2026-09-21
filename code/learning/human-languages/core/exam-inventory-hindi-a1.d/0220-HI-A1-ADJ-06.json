@@ -1,0 +1,10 @@
+{
+  "id": "HI-A1-ADJ-06",
+  "category": "Visheshan (the adjective)",
+  "label": "the intensifier bahut, and kafi",
+  "probe": [
+    "HI-LEX-C71-TODAY-03"
+  ],
+  "derivedFrom": "ES:A1-ADJ-06, ES:A1-SADJ-01, ES:A1-NG2-03, ES:A1-Q-04",
+  "note": "`bahut` is taught in HI-C71-very, which is the intensifier this point is about and the direct counterpart of the proxy's `muy`. `kafi` is still untaught; it is a second exponent of the same demand, not a second demand."
+}

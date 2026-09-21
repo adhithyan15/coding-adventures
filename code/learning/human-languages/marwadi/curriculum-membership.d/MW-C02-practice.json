@@ -1,0 +1,11 @@
+{
+  "id": "MW-C02-practice",
+  "pathSegment": "MW-PATH-002",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-004-FORMAL-THANKS",
+      "order": 3
+    }
+  ]
+}

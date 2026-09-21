@@ -4,12 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can qualify, conclude, correct a negative statement and carve out an exception.",
-  "prerequisites": [],
-  "lessons": [
-    "ES-C329-tal",
-    "ES-C329-cual",
-    "ES-C329-pues",
-    "ES-C329-sino",
-    "ES-C329-salvo"
-  ]
+  "prerequisites": []
 }

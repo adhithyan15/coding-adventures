@@ -1,13 +1,6 @@
 {
   "id": "FR-PATH-001",
   "spine_node": "SPINE-MEET-GREET",
-  "lessons": [
-    "FR-C01-salut",
-    "FR-W01-salut-observe",
-    "FR-W01-salut-guided-copy",
-    "FR-W01-salut-delayed-copy",
-    "FR-W01-salut-dictation"
-  ],
   "before": [],
   "inline": [],
   "after": [

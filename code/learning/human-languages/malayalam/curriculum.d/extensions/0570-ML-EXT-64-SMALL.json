@@ -4,12 +4,5 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can say then, soon, sometimes, only and but in Malayalam.",
-  "prerequisites": [],
-  "lessons": [
-    "ML-C64-then",
-    "ML-C64-soon",
-    "ML-C64-sometimes",
-    "ML-C64-only",
-    "ML-C64-but"
-  ]
+  "prerequisites": []
 }

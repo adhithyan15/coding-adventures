@@ -1,0 +1,11 @@
+{
+  "id": "HI-C62-clay",
+  "pathSegment": "HI-PATH-62-HANDS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-62-HANDS",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C290-tomate",
+  "pathSegment": "ES-PATH-290-01",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-290-COSECHA",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C92-sintesis-maatra",
+  "pathSegment": "HI-PATH-100-DEGREE",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "HI-EXT-100-DEGREE",
+      "order": 6
+    }
+  ]
+}

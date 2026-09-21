@@ -6,11 +6,5 @@
   "canDo": "I can name the punctuation a Kannada page uses and say which of it I write myself.",
   "prerequisites": [
     "KA-EXT-76-READING"
-  ],
-  "lessons": [
-    "KA-S152-full-stop-and-comma",
-    "KA-S153-question-mark",
-    "KA-S154-other-marks",
-    "KA-R77-marks-recall"
   ]
 }

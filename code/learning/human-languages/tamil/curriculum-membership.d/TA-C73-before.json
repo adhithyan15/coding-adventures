@@ -1,0 +1,11 @@
+{
+  "id": "TA-C73-before",
+  "pathSegment": "TA-PATH-73-WHEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-73-WHEN",
+      "order": 3
+    }
+  ]
+}

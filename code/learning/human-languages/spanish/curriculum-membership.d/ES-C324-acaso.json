@@ -1,0 +1,11 @@
+{
+  "id": "ES-C324-acaso",
+  "pathSegment": "ES-PATH-324-01",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-324-TRUE",
+      "order": 2
+    }
+  ]
+}

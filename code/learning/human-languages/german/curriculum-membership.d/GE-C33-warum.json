@@ -1,0 +1,11 @@
+{
+  "id": "GE-C33-warum",
+  "pathSegment": "GE-PATH-A1-FRAGE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-A1-FRAGE",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C32-hoogu",
+  "pathSegment": "KA-PATH-025",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-025-CORE-VERBS",
+      "order": 1
+    }
+  ]
+}

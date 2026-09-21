@@ -1,0 +1,11 @@
+{
+  "id": "ES-C401-cambiar",
+  "pathSegment": "ES-PATH-401-ACTIONS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-401-ACTIONS",
+      "order": 1
+    }
+  ]
+}

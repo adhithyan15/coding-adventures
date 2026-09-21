@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-OR-17",
+  "category": "Devanagari letters and signs",
+  "label": "anusvara and candrabindu: the two nasal marks and the difference between them",
+  "probe": [
+    "MR-SCRIPT-ANUSVARA-01",
+    "MR-SCRIPT-CANDRABINDU-01"
+  ],
+  "anchorIds": [
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [],
+  "marathiSpecific": true
+}

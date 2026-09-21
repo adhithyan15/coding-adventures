@@ -1,0 +1,11 @@
+{
+  "id": "SA-C35-book",
+  "pathSegment": "SA-PATH-35-HOUSE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-35-HOUSE",
+      "order": 3
+    }
+  ]
+}

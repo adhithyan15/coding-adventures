@@ -1,0 +1,11 @@
+{
+  "id": "ES-C341-delante",
+  "pathSegment": "ES-PATH-341-01",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-341-WHERE",
+      "order": 2
+    }
+  ]
+}

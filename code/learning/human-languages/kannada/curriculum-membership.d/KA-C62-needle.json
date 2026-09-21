@@ -1,0 +1,11 @@
+{
+  "id": "KA-C62-needle",
+  "pathSegment": "KA-PATH-62-MADE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-62-MADE",
+      "order": 1
+    }
+  ]
+}

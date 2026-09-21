@@ -6,8 +6,5 @@
   "canDo": "I can identify and order ice cream.",
   "prerequisites": [
     "ES-EXT-370-WHERE"
-  ],
-  "lessons": [
-    "ES-C411-helado"
   ]
 }

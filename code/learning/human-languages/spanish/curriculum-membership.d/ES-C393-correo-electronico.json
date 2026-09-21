@@ -1,0 +1,11 @@
+{
+  "id": "ES-C393-correo-electronico",
+  "pathSegment": "ES-PATH-393-01",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-393-THING",
+      "order": 2
+    }
+  ]
+}

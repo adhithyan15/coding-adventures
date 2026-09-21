@@ -1,5 +1,63 @@
 # Changelog — iir-to-cil-bytecode
 
+## Unreleased — strict encoded string input (CLR15)
+
+Extend only `lower_typed_scalars_to_cil` with `str` transport through locals,
+parameters, moves, direct calls and returns, plus `input_str` at exact MemberRef
+row 8. Emit `string` metadata and refuse string literals, arithmetic,
+comparisons, malformed builtins and all general string operations. Legacy
+encoded lowering and source routing retain their existing input gates.
+
+## Unreleased — strict encoded integer input (CLR13)
+
+Extend only `lower_typed_scalars_to_cil` with i64 `input_i64` and `input_more`
+builtins, emitting the simulator's exact reserved MemberRef tokens. Preserve
+strict flow validation and i64 local metadata, reject malformed names, shapes
+and result types, and keep all legacy encoded input gates unchanged. Artifact
+and execution tests cover exact bytes, wide values, sequential reads and peeks.
+
+## Unreleased — strict control-flow conformance coverage
+
+Preserve the independent #15763 short-branch exact-byte proof, parameter-driven
+long promotion and malformed/path-dependent refusal cases against landed CLR12.
+Keep the existing production implementation and bounded assignment prepass.
+
+## Unreleased — strict forward scalar control flow (CLR12)
+
+Add opt-in forward-only labels and branches with void control shapes, Bool
+conditions and multiple typed returns. Require reachability and definite
+assignment at every join; refuse backward edges, unresolved labels and falloff.
+Bound destinations before assignment propagation. Encoded execution tests cover
+both conditional outcomes, nested branches, wide values and long promotion.
+Default source routing and scalar/literal/input gates remain unchanged.
+
+## Unreleased — canonical strict minus-one encoding (CLR11)
+
+Remove the strict scalar emitter's obsolete full-width i32 -1 workaround now
+that the simulator executes `ldc.i4.m1`. Exact artifact bytes use the canonical
+one-byte opcode; actual execution coverage preserves distinct i32/i64 values.
+
+## Unreleased — strict comparisons and boolean transport (CLR08)
+
+Extend the opt-in strict entrypoint with six signed/equality comparisons and
+logical bool constants, moves, parameters, calls and returns. Keep bool distinct
+from i32 during validation while using normalized int32 result metadata.
+Reject mixed widths, malformed comparisons and bool arithmetic. CLR11 replaces
+this release's full i32 -1 workaround with canonical compact encoding.
+Actual artifact tests cover both widths, truth cases, negative/high values,
+comparison bytes and boolean call transport. Default source routing and gates
+remain unchanged.
+
+## Unreleased — strict typed scalar artifacts (CLR06)
+
+Add opt-in lower_typed_scalars_to_cil with full-width i64 scalar execution and
+int32/int64 locals, parameters and return metadata. Validate the entire module:
+exact operand shapes, single assignments, prior definitions, direct call
+signatures, supported operations and executable slot limits. Preserve i32
+wrapping and the CLR01 literal range gate. Default lowering and source routing
+are unchanged. Regression tests execute actual artifacts including wide results,
+method calls, high-bit arithmetic and maximum short argument/local indices.
+
 ## Unreleased — refuse lossy encoded integer immediates (CLR01)
 
 Reject every out-of-i32 integer operand before encoded artifact creation,

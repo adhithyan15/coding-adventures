@@ -1,0 +1,11 @@
+{
+  "id": "MR-A1M04-language-line",
+  "pathSegment": "MR-PATH-022",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-025-A1-NAMED-READER-MESSAGE",
+      "order": 3
+    }
+  ]
+}

@@ -118,6 +118,14 @@ fn manifest_and_component_contract_are_complete() {
     assert!(component
         .slots
         .iter()
+        .any(|slot| slot.name == "schematic-model-parameter-options"));
+    assert!(component
+        .slots
+        .iter()
+        .any(|slot| slot.name == "selected-schematic-model-parameter-label"));
+    assert!(component
+        .slots
+        .iter()
         .any(|slot| slot.name == "schematic-reference-disabled"));
     assert!(component
         .slots
@@ -175,6 +183,10 @@ fn manifest_and_component_contract_are_complete() {
     assert!(component
         .emits
         .iter()
+        .any(|emit| emit.name == "onAddSchematicSavedOutputCurrent"));
+    assert!(component
+        .emits
+        .iter()
         .any(|emit| emit.name == "onAddSchematicSavedOutputDifferential"));
     assert!(component
         .emits
@@ -184,6 +196,10 @@ fn manifest_and_component_contract_are_complete() {
         .emits
         .iter()
         .any(|emit| emit.name == "onAddSchematicScopedOutputVoltage"));
+    assert!(component
+        .emits
+        .iter()
+        .any(|emit| emit.name == "onAddSchematicScopedOutputCurrent"));
     assert!(component
         .emits
         .iter()
@@ -236,6 +252,14 @@ fn manifest_and_component_contract_are_complete() {
         .emits
         .iter()
         .any(|emit| emit.name == "onSchematicValueChange"));
+    assert!(component
+        .emits
+        .iter()
+        .any(|emit| emit.name == "onSelectSchematicModelParameter"));
+    assert!(component
+        .emits
+        .iter()
+        .any(|emit| emit.name == "onSchematicModelParameterChange"));
     assert!(component
         .emits
         .iter()

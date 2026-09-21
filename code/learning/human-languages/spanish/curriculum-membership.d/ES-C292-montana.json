@@ -1,0 +1,11 @@
+{
+  "id": "ES-C292-montana",
+  "pathSegment": "ES-PATH-292-01",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ES-EXT-292-TIERRA",
+      "order": 4
+    }
+  ]
+}

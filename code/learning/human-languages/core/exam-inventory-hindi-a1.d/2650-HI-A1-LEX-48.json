@@ -1,0 +1,13 @@
+{
+  "id": "HI-A1-LEX-48",
+  "category": "Shabd-bhandar (core lexis)",
+  "label": "transport: bus, train, bicycle, station",
+  "probe": [
+    "HI-LEX-C69-GOING-01",
+    "HI-LEX-C69-GOING-02",
+    "HI-LEX-C69-GOING-03",
+    "HI-LEX-C69-GOING-04"
+  ],
+  "derivedFrom": "ES:A1-NE14-03",
+  "note": "HI-C69 teaches `gari`, `rel`, `steshan` and `tikat`, and `bas` was already taught. A bicycle is still not named, so the label's fourth item is the one gap left."
+}

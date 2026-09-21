@@ -1,0 +1,11 @@
+{
+  "id": "HI-C63-thirst",
+  "pathSegment": "HI-PATH-63-STATE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-63-STATE",
+      "order": 1
+    }
+  ]
+}

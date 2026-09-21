@@ -1,0 +1,11 @@
+{
+  "id": "ML-S147-letter-ttha",
+  "pathSegment": "ML-PATH-103-SCHOOL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-103-SCHOOL",
+      "order": 1
+    }
+  ]
+}

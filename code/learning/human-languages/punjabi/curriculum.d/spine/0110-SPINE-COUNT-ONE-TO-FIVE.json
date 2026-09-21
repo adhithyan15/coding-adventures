@@ -1,8 +1,4 @@
 {
-  "segments": [
-    "PA-PATH-010",
-    "PA-PATH-046"
-  ],
   "omits": [
     "NUMBER-ONE-TO-FIVE"
   ],

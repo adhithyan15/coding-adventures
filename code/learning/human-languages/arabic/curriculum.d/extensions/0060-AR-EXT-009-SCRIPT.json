@@ -4,10 +4,5 @@
   "kind": "required",
   "category": "script",
   "canDo": "I can recognize and use the Arabic script features introduced inside these words.",
-  "prerequisites": [],
-  "lessons": [
-    "AR-W10-ayn",
-    "AR-W11-ha-and-ta-marbuta",
-    "AR-W12-maa-salama"
-  ]
+  "prerequisites": []
 }

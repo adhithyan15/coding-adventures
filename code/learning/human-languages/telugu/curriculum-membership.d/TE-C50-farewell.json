@@ -1,0 +1,11 @@
+{
+  "id": "TE-C50-farewell",
+  "pathSegment": "TE-PATH-50-LEAVE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-50-LEAVE",
+      "order": 4
+    }
+  ]
+}

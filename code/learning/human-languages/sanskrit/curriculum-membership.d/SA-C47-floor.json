@@ -1,0 +1,11 @@
+{
+  "id": "SA-C47-floor",
+  "pathSegment": "SA-PATH-47-DWELL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-47-DWELL",
+      "order": 4
+    }
+  ]
+}

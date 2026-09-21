@@ -7,7 +7,42 @@ layer**.
 Encoded integer immediates currently must fit signed 32-bit values. Validation
 refuses wider values before artifact creation; it never silently truncates them.
 The separate textual `emit_il` path supports `int64` literals on CoreCLR.
-Full-width encoded arithmetic and host input remain future work.
+The opt-in `lower_typed_scalars_to_cil(&module, &config)` API preserves i32/i64
+scalar widths in encoded literals, locals, parameters, returns and direct calls.
+It accepts single-assignment forward-only functions using const, mov, arithmetic,
+bitwise operations, negation, comparisons and typed returns. All hints and call signatures
+must agree; unsupported operations and mixed widths return errors. Parameters
+and locals are each limited to 256, matching executable short-slot opcodes.
+For example, typed i64 `2147483647 + 1` returns `Int64(2147483648)` in the
+simulator; the i32 version still wraps. Resolve the artifact's `entry_label`
+when selecting the entry method, since `entry_method()` returns the first method.
+
+This API is separate from default `lower_iir_to_cil` and source compilation.
+Default source routing still narrows scalar hints; its full-width migration,
+general loops, heap/closure ABI and source-routed host input remain future work.
+The CLR01 immediate range restriction also remains in the strict API.
+
+The strict API also accepts `cmp_eq/ne/lt/le/gt/ge` on matched i32 or i64
+variables. Results have logical `bool` type and normalized int32 zero/one
+representation. Bool constants use `Operand::Bool`; moves, parameters, calls
+and returns retain the logical type even though metadata uses int32. Bool
+arithmetic and implicit bool/integer conversions are refused. Signed i32 -1
+uses the canonical compact `ldc.i4.m1` encoding supported by the simulator.
+
+CLR12 accepts `label`, `jmp`, `jmp_if_true` and `jmp_if_false` with void hints
+and no destination. Conditional values must be logical Bool. Every instruction
+must be reachable, targets must be forward, and each value read must be assigned
+on every incoming path. Multiple exact typed returns are supported. Backward
+edges, malformed controls, skipped definitions at joins and falloff are refused.
+
+CLR13 accepts zero-argument `call_builtin input_i64` and `input_more`
+instructions with i64 destinations. CLR15 adds `input_str` with a string
+destination and permits that type only for moves, direct calls and returns.
+They lower to reserved MemberRef rows 6 through 8 for execution by
+`clr-simulator`; numeric reads preserve the full signed i64 domain, peeks return
+normalized i64 zero/one, and string reads preserve exact content bytes. These
+remain opt-in strict artifact features. The default encoded APIs still refuse
+every input builtin.
 
 ## What is CIL?
 
@@ -259,16 +294,14 @@ as numeric and string input. Peeks do not consume data; EOF returns zero.
 Numeric reads return zero at EOF or for malformed/out-of-range input, using
 Int32 or Int64 according to the destination. I/O exceptions propagate.
 Four FLOW-MATIC input/EOF cases execute through ilasm and dotnet in the LANG
-matrix. This proof does not extend the encoded CIL simulator input surface.
+matrix. The encoded strict API separately supports integer reads and peeks.
 
-### Encoded input refusal (VM-059)
+### Default encoded input refusal (VM-059)
 
 `IIRClrCodeGenerator::validate` and `lower_iir_to_cil` explicitly refuse
 `input_i64`, `input_str`, and `input_more` before returning an encoded artifact.
-The diagnostic identifies the missing simulator host reader and directs callers
-to `emit_il` with real CoreCLR. The simulator currently dispatches calls to
-internal methods; it has no host callback registry or shared input reader.
-Adding a name to the encoded whitelist cannot supply that infrastructure.
-VM-060 tracks table-aware host resolution and the input execution contract.
-A regression checks all three refusals through both public APIs and confirms
-that textual emission still accepts the same programs.
+The diagnostic directs callers to `emit_il` with real CoreCLR. A regression
+checks all three refusals through both public APIs and confirms that textual
+emission still accepts the same programs. The opt-in strict scalar API is
+separate: it can lower typed `input_i64`, `input_more` and `input_str` to the
+simulator's reserved host MemberRefs.
