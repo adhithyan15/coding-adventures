@@ -10,6 +10,15 @@ roadmap is reconciled.
 
 ## Encoded CLR input prerequisites (selected 2026-09-19 after VM-058)
 
+### CLR16 final carriage return repair (2026-09-20)
+
+CLR14 source artifacts landed in #15808 with all four workflows successful.
+CLR15 string input landed externally in #15809 as 346fbf47dc; its push CI was
+still pending when the merge was observed. A literal encoded-call probe and
+permanent regressions demonstrate lost CR bytes on unterminated final lines.
+The CLR16 contract was committed before repairing delimiter tracking. Preserve
+the CLR15 byte contract and integer trimming; no source/backend expansion.
+
 ### CLR14 source artifact API landed; CLR15 strict encoded string input selected (2026-09-20)
 
 PR #15808 merged as `cd406cc46f`. It exposes the opt-in strict source

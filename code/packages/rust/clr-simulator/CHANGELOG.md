@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — final carriage return preservation (CLR16)
+
+Keep trailing carriage returns in unterminated string input. Strip one CR only
+when immediately before a consumed LF; preserve existing integer trimming,
+stream peeking, and EOF behavior. Literal encoded-call regressions distinguish
+final CR content from CRLF delimiters and cover mixed integer/string reads.
+
 ## Unreleased — strict encoded string input (CLR15)
 
 Reserve MemberRef row 8 for `input_str` and add immutable byte-string arena
