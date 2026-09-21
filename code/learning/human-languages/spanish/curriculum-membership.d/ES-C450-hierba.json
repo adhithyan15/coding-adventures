@@ -1,0 +1,11 @@
+{
+  "id": "ES-C450-hierba",
+  "pathSegment": "ES-PATH-450-SUELO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-450-SUELO",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R450-repaso-suelo",
+    "language": "spanish",
+    "chapter": 450,
+    "sequence": 11810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:acc5db1b306f7287"
+  },
+  "findings": []
+}

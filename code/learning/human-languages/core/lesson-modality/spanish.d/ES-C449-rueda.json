@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C449-rueda",
+    "language": "spanish",
+    "chapter": 449,
+    "sequence": 11710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c94ea1f53a661e2a"
+  },
+  "findings": []
+}

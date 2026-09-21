@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C448-mudanza",
+    "language": "spanish",
+    "chapter": 448,
+    "sequence": 11630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:45dc3bd7868bbb85"
+  },
+  "findings": []
+}

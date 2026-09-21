@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-451-TURNO",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "before": [],
+  "inline": [
+    "ES-EXT-451-TURNO"
+  ],
+  "after": []
+}

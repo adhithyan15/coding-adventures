@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C451-carne",
+    "language": "spanish",
+    "chapter": 451,
+    "sequence": 11850,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:88d552e71897ad5c"
+  },
+  "findings": []
+}

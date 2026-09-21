@@ -1,0 +1,22 @@
+{
+  "chapter": 450,
+  "title": "El césped y el patio",
+  "label": "ch:es-suelo",
+  "canDo": "I can read a notice pinned to the gate of a sports ground: say where training has moved to, tell a maintained pitch from grass that is merely growing, and warn somebody about stones on a path.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "ES-C450-sintesis-suelo",
+    "kind": "task",
+    "summary": "Read the message or notice this chapter's words exist for, then say the same thing back.",
+    "assesses": [
+      "ES-LEX-C450-SUELO-01",
+      "ES-LEX-C450-SUELO-02",
+      "ES-LEX-C450-SUELO-03",
+      "ES-LEX-C450-SUELO-04",
+      "ES-LEX-C450-SUELO-05"
+    ],
+    "note": "HIERBA IS THE PLANT AND CESPED IS THE TENDED SURFACE, and the pair fails for an English speaker in the harder direction: 'grass' is wide enough to cover both, so nothing in English warns that a choice is waiting. Grass coming up between paving stones is hierba and could not be cesped; a mown lawn is cesped though it is made of hierba; and the sintesis notice uses each once, four lines apart, with 'se esta replantando' confirming the sort, since you replant the living thing and then mow it into a surface. patio/jardin fails the same way -- a patio is defined by what surrounds it, not by what grows in it. THE CHAPTER CARRIES ONE DELIBERATE roots: [] -- patio's origin is genuinely unsettled (Occitan pati, possibly Latin pactum, possibly patere, none established), and the lesson says so explicitly, because an empty root list in this material is a CLAIM that nobody has resolved it rather than a gap nobody filled; the value of saying so is that a listed root can then be trusted. Three words are the same stressed-vowel break seen from a second angle: herba gives hierba and petra gives piedra because a stressed e breaks to ie, exactly as a stressed o breaks to ue in rueda -- and entrenamiento keeps its plain e because the stress lands three syllables later. hierba's silent h is INHERITED from Latin, unlike the h of huevo and hueso, which scribes ADDED as a fence so an initial u would not be read as v. cesped is caespes, a cut sod of turf -- a thing you could carry, which is why the word names a surface -- and its written accent overrules the default final stress that a word ending in a consonant other than n or s would otherwise take. entrenamiento joins train-french with el tren: French entrainer, to drag along, so a train is what is dragged and a coach drags the squad along behind. -miento nouns are masculine as -anza nouns are feminine; which verb takes which ending is not predictable and the gender is."
+  }
+}
