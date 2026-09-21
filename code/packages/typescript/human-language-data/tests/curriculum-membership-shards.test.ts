@@ -69,9 +69,14 @@ describe("direct curriculum lesson owners", () => {
     const digest = createHash("sha256")
       .update(JSON.stringify(curricula))
       .digest("hex");
-    expect(digest).toBe("ef4c97754b1f7ca4ff6feaa22cd98ad66c6415613fde9d8184ef2f783fdcc7ae");
+    // The digest and count below are of the LIVE curriculum graph, so they move
+    // whenever any track gains a lesson -- not only when the membership
+    // migration changes shape. 7196 -> 7200 and a new digest are Malayalam
+    // chapter 111's four lessons; the guard still does its job, which is to make
+    // any OTHER change to the public graph fail loudly rather than pass quietly.
+    expect(digest).toBe("ec22e32e392bd6799fba678d338fbb5187e189b623abfa9674eea7f4ebe4d825");
     expect(curricula.flatMap((curriculum) => curriculum.path).flatMap((path) => path.lessons))
-      .toHaveLength(7196);
+      .toHaveLength(7200);
   });
 
   it("keeps the canonical curriculum shards free of derived lesson arrays", () => {
