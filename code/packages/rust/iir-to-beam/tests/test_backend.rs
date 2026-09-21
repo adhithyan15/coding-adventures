@@ -4948,3 +4948,599 @@ fn gc_roots_cover_future_locals_before_arithmetic_and_after_local_call() {
         vec![IIRInstr::new("ret", None, vec![v("x")], "i64")]));
     assert_valid_gc_roots(&lower_iir_to_beam(&module, &cfg()).unwrap(), 1);
 }
+
+// ===========================================================================
+// BEAM10 — array_len: which substrate, and how it is asked
+// ===========================================================================
+//
+// `iir-to-beam` keeps `array<i64>` on `:atomics` and `array<f64>`/`array<str>`
+// on `:ets` (BEAM04/BEAM06). Those two answer "how long are you?" completely
+// differently, and only one of them can answer at all, so `array_len` has to
+// dispatch between them.
+//
+// It cannot dispatch the way `array_get`/`array_set` do. Their `type_hint` is
+// the ELEMENT type; `array_len`'s is `"i64"`, the type of the length it
+// produces. Nor can the choice be deferred to runtime: both substrates are
+// references, so `is_reference/1` cannot separate them. The dispatch therefore
+// comes from a per-function map built from each handle's DEFINING
+// instruction — and these tests pin that it lands on the right substrate.
+//
+// The negative halves matter as much as the positive ones. Calling
+// `atomics:info/1` on an ets table raises `badarg` at runtime, and reading an
+// ets table's length with `ets:info/2` would return the number of cells
+// WRITTEN rather than the length declared — a plausible small number instead
+// of an error. Both are asserted against, not just the happy path.
+//
+// See `code/specs/BEAM10-array-length.md`.
+
+/// Does the lowered module actually CALL `Module:Function/Arity`?
+///
+/// Deliberately not a test of `beam.imports`. That table is interned during
+/// module setup for every import this backend knows about, whether or not the
+/// module uses it, so `imports.iter().any(...)` is true for `atomics:info/1`
+/// and `ets:lookup_element/3` in *every* module — an assertion written against
+/// it can neither pass nor fail for the right reason. The question is which
+/// call is EMITTED, so this walks the instruction stream and resolves each
+/// `call_ext`'s import-index operand back to an MFA.
+fn calls_mfa(beam: &ir_to_beam::encoder::BEAMModule, module: &str, func: &str, arity: u32) -> bool {
+    beam.instructions
+        .iter()
+        .filter(|i| i.opcode == 7 /* call_ext */)
+        .filter_map(|i| i.operands.get(1))
+        .filter_map(|op| beam.imports.get(op.value as usize))
+        .any(|imp| {
+            let m = beam.atoms.get(imp.module_atom_index as usize - 1).map(String::as_str);
+            let f = beam.atoms.get(imp.function_atom_index as usize - 1).map(String::as_str);
+            m == Some(module) && f == Some(func) && imp.arity == arity
+        })
+}
+
+/// A module that allocates one array of `elem_ty` and takes its length.
+fn array_len_module(array_ty: &str) -> IIRModule {
+    make_module_single(vec![
+        IIRInstr::new("const", Some("n".into()), vec![Operand::Int(4)], "i64"),
+        IIRInstr::new("alloc_array", Some("arr".into()), vec![Operand::Var("n".into())], array_ty),
+        IIRInstr::new("array_len", Some("len".into()), vec![Operand::Var("arr".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("len".into())], "i64"),
+    ])
+}
+
+#[test]
+fn beam10_array_len_on_i64_asks_atomics_for_its_size() {
+    let beam = lower_iir_to_beam(&array_len_module("array<i64>"), &IIRBeamConfig::default())
+        .expect("lower array<i64> array_len");
+    // `atomics:new/2` is fixed-size, so `atomics:info/1` reports the DECLARED
+    // extent. There is no `atomics:size/1`, and this backend emits no map
+    // opcodes, so the `size` key is projected with `maps:get/2`.
+    assert!(calls_mfa(&beam, "atomics", "info", 1), "must ask atomics:info/1 for the size");
+    assert!(calls_mfa(&beam, "maps", "get", 2), "must project the info map with maps:get/2");
+    // (The atom table is interned at module setup, so its contents prove
+    // nothing about this module in particular — the call assertions above are
+    // what carry the weight.)
+    // An i64 array is NOT on ets, so it must not consult the ets substrate.
+    assert!(
+        !calls_mfa(&beam, "ets", "lookup_element", 3),
+        "an atomics-backed array must not be read through ets"
+    );
+}
+
+/// On the ets substrate `array_len` emits **no call at all**.
+///
+/// The handle is the pair `[Tab | N]`, so the length is its tail: one
+/// `get_list`. That is the visible consequence of the representation this
+/// backend settled on after the in-table reserved key turned out to be both
+/// GC-unsafe (a second `call_ext` with the table parked in a non-root
+/// register) and forgeable from crafted IIR.
+///
+/// The two negatives are the point. `array_len`'s `type_hint` is `"i64"`, so
+/// a dispatch copied from `array_get` would conclude "not f64/str, therefore
+/// atomics" and call `atomics:info/1` on an ets handle. And `ets:info/2` must
+/// never be consulted: it counts entries INSERTED, so a ten-element array with
+/// three cells written would report 3 — plausible, wrong, and wrong on exactly
+/// the substrate ALGOL `real` arrays use.
+#[test]
+fn beam10_array_len_on_f64_reads_the_length_from_the_handle_pair() {
+    let beam = lower_iir_to_beam(&array_len_module("array<f64>"), &IIRBeamConfig::default())
+        .expect("lower array<f64> array_len");
+    assert!(
+        beam.instructions.iter().any(|i| i.opcode == 65 /* get_list */),
+        "array_len on an ets-backed array must destructure the [Tab | N] handle"
+    );
+    assert!(
+        !calls_mfa(&beam, "atomics", "info", 1),
+        "must NOT call atomics:info/1 on an ets-backed array"
+    );
+    assert!(
+        !calls_mfa(&beam, "ets", "info", 2),
+        "ets:info/2 counts inserted entries, not the declared length"
+    );
+    assert!(
+        !calls_mfa(&beam, "ets", "lookup_element", 3),
+        "the length no longer lives inside the table, so no lookup is needed"
+    );
+}
+
+/// `array<str>` shares the ets substrate, so it shares the pair handle too.
+#[test]
+fn beam10_array_len_on_str_shares_the_ets_substrate() {
+    let beam = lower_iir_to_beam(&array_len_module("array<str>"), &IIRBeamConfig::default())
+        .expect("lower array<str> array_len");
+    assert!(
+        beam.instructions.iter().any(|i| i.opcode == 65 /* get_list */),
+        "array<str> is ets-backed too, so its handle is a pair"
+    );
+    assert!(!calls_mfa(&beam, "atomics", "info", 1), "array<str> is not on atomics");
+}
+
+/// `alloc_array` on the ets path pairs the table with its declared length.
+///
+/// Before BEAM10 the size operand was discarded outright (`let _ =
+/// get_src!(...)`, "size is unused"), because `ets:new/2` takes no size. That
+/// was the only moment at which the declared length was still known, so
+/// `array_len` had nothing to read.
+///
+/// The negatives matter as much: the first version of this code inserted a
+/// length entry INTO the table, which needed `erlang:list_to_tuple/1` and so a
+/// second `call_ext` with the table parked in a non-GC-root scratch register.
+/// That corrupted the heap (`size_object: bad tag`) on macOS CI. A `put_list`
+/// needs no call, so neither of those instructions may appear on this path.
+#[test]
+fn beam10_alloc_array_on_ets_builds_the_handle_pair_without_a_second_call() {
+    let beam = lower_iir_to_beam(&array_len_module("array<f64>"), &IIRBeamConfig::default())
+        .expect("lower");
+    assert!(
+        calls_mfa(&beam, "ets", "new", 2),
+        "the table itself is still an ets table"
+    );
+    assert!(
+        beam.instructions.iter().any(|i| i.opcode == 69 /* put_list */),
+        "alloc_array on ets must build the [Tab | N] pair"
+    );
+    assert!(
+        !calls_mfa(&beam, "erlang", "list_to_tuple", 1),
+        "building the pair must not need a call — that call is what forced the \
+         table into a non-root register and corrupted the heap"
+    );
+    assert!(
+        !calls_mfa(&beam, "ets", "insert", 2),
+        "the length is carried by the handle, not inserted into the table"
+    );
+    // The reservation is still required: `put_list` allocates and does not
+    // grow the heap.
+    let heap = first_index_of(&beam, 16).expect("test_heap present");
+    let put = first_index_of(&beam, 69).expect("put_list present");
+    assert!(heap < put, "test_heap must precede the put_list ({heap} vs {put})");
+}
+
+/// The substrate map is seeded from `IIRFunction::params`, not only from
+/// defining instructions — an array passed into a procedure has no
+/// `alloc_array` in the callee at all.
+#[test]
+fn beam10_array_len_resolves_a_handle_arriving_as_a_parameter() {
+    let module = make_module_fn(
+        "takes_array",
+        vec![("arr", "array<f64>")],
+        "i64",
+        vec![
+            IIRInstr::new("array_len", Some("len".into()), vec![Operand::Var("arr".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("len".into())], "i64"),
+        ],
+    );
+    let beam = lower_iir_to_beam(&module, &IIRBeamConfig::default())
+        .expect("a parameter's declared type must resolve its substrate");
+    assert!(
+        beam.instructions.iter().any(|i| i.opcode == 65 /* get_list */),
+        "a param typed array<f64> is ets-backed, so its handle is a pair"
+    );
+    assert!(!calls_mfa(&beam, "atomics", "info", 1), "and must not be treated as atomics");
+}
+
+#[test]
+fn beam10_array_len_refuses_a_handle_of_unknown_substrate() {
+    // Guessing here does not fail loudly: it emits a call that raises `badarg`
+    // on the other substrate, or returns a plausible wrong number. So an
+    // unresolvable handle must be refused at compile time instead. Tested
+    // positively rather than assumed.
+    let module = make_module_fn(
+        "opaque",
+        vec![("h", "i64")], // NOT an array type — nothing says which substrate
+        "i64",
+        vec![
+            IIRInstr::new("array_len", Some("len".into()), vec![Operand::Var("h".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("len".into())], "i64"),
+        ],
+    );
+    let err = lower_iir_to_beam(&module, &IIRBeamConfig::default())
+        .expect_err("an unresolvable array handle must be refused, not guessed");
+    let msg = format!("{err}");
+    assert!(
+        msg.contains("array_len") && msg.contains("substrate"),
+        "the refusal must name the op and say why; got {msg:?}"
+    );
+    assert!(msg.contains('h'), "the refusal must name the handle; got {msg:?}");
+}
+
+#[test]
+fn beam10_array_len_is_listed_as_a_call_emitting_op() {
+    // THIS is the test that would have caught the bug the others missed.
+    //
+    // `array_len` emits `call_ext` on both substrates, so it must appear in
+    // `lower.rs`'s list of call-emitting ops. Omitting it does not merely skip
+    // saving registers: `restore_live_across_imported_call!` ends in
+    // `sanitize_normal_x_after_call!`, which nils every normal x-register it
+    // cannot prove is live or the result — and with an empty `live_across`
+    // entry it can prove nothing, so it nils them all. Every end-to-end ALGOL
+    // array program died with `{badarith,[{erlang,'-',[1,[]]}]}` until
+    // `array_len` was added to that list.
+    //
+    // A structural assertion that the emitted sequence is wrapped in a
+    // save/restore bracket would NOT have caught it. The bracket was present
+    // and correct; what was empty was the set of variables it had to save. So
+    // this test asserts membership in the list itself, which is the fact the
+    // behaviour actually depends on.
+    //
+    // Fourth occurrence of this class in this backend (VM-D029, VM-D035,
+    // issue #15332, and this one).
+    let src = include_str!("../src/lower.rs");
+    let list_start = src
+        .find("EVERY op that emits a `call_ext` must be listed here")
+        .expect("the call-emitting op list must still carry its warning comment");
+    let list_end = src[list_start..]
+        .find("\n            ) &&")
+        .map(|i| list_start + i)
+        .expect("the call-emitting op list must still end with a match close");
+    let list = &src[list_start..list_end];
+    assert!(
+        list.contains("\"array_len\""),
+        "array_len emits call_ext on both substrates and must be in the call-emitting op list"
+    );
+    // Control: if the slice were empty or mis-delimited the assertion above
+    // would be vacuous, so pin that the slice really does contain the list.
+    assert!(
+        list.contains("\"array_get\"") && list.contains("\"call_closure\""),
+        "the extracted slice must actually be the op list (control)"
+    );
+}
+
+// ===========================================================================
+// BEAM10 (security review) — the reserved atom namespace
+// ===========================================================================
+//
+// This backend keeps compiler-maintained state in BEAM terms keyed by fixed
+// atoms: `$lang_vm_input_peek` (BEAM07's stdin lookahead cache, in the process
+// dictionary) and `$lang_vm_array_len` (an ets-backed array's declared length,
+// which every bounds check derived from `array_len` depends on).
+//
+// Several lowering paths intern a SOURCE-SUPPLIED string as an atom, so a
+// crafted module can name one of those and reach that state. The comment in
+// `lower.rs` originally claimed this was impossible, on the reasoning that
+// nothing produces an atom as a runtime VALUE. That reasoning was wrong, and
+// `forging_the_array_length_key_via_a_closure_name_is_rejected` below encodes
+// the counterexample as an executable test rather than as prose.
+
+/// A module with one function whose body is exactly `instrs`.
+fn reserved_atom_module(fn_name: &str, instrs: Vec<IIRInstr>) -> IIRModule {
+    make_module_fn(fn_name, vec![], "i64", instrs)
+}
+
+#[test]
+fn a_global_named_with_the_reserved_prefix_is_rejected() {
+    // The easy case, and a PRE-EXISTING hole this check closes:
+    // `global_store` interns its key operand and does `erlang:put/2` with it,
+    // so this writes straight over BEAM07's stdin lookahead cache. No
+    // indirection required.
+    let module = reserved_atom_module(
+        "main",
+        vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new(
+                "global_store",
+                None,
+                vec![Operand::Str("$lang_vm_input_peek".into()), Operand::Var("v".into())],
+                "void",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i64"),
+        ],
+    );
+    let errors = validate_for_beam(&module);
+    assert!(
+        errors.iter().any(|e| e.starts_with("ReservedAtom")),
+        "a global named $lang_vm_input_peek must be rejected; got {errors:?}"
+    );
+}
+
+#[test]
+fn forging_the_array_length_key_via_a_closure_name_is_rejected() {
+    // The path security review found, which the code previously argued could
+    // not exist.
+    //
+    //   alloc_closure Str("$lang_vm_array_len")  interns the NAME as an atom
+    //                                            and put_lists it into a reg
+    //   field_load %c, 0                         get_list lifts the atom out
+    //                                            as an ORDINARY VALUE
+    //   array_set %arr, %k, 9999                 ets:insert(Tab, {reserved, N})
+    //   array_len %arr                           reads back the forged 9999
+    //
+    // The load-bearing step is the second one: `alloc_closure` turning a
+    // source string into an atom, and `field_load` turning that atom back into
+    // data, is exactly what "nothing produces an atom as a runtime value"
+    // denied.
+    let module = reserved_atom_module(
+        "main",
+        vec![
+            IIRInstr::new(
+                "alloc_closure",
+                Some("c".into()),
+                vec![Operand::Str("$lang_vm_array_len".into())],
+                "closure",
+            ),
+            IIRInstr::new("field_load", Some("k".into()), vec![Operand::Var("c".into()), Operand::Int(0)], "ref<any>"),
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(4)], "i64"),
+            IIRInstr::new("alloc_array", Some("arr".into()), vec![Operand::Var("n".into())], "array<f64>"),
+            IIRInstr::new(
+                "array_set",
+                None,
+                vec![Operand::Var("arr".into()), Operand::Var("k".into()), Operand::Var("n".into())],
+                "f64",
+            ),
+            IIRInstr::new("array_len", Some("len".into()), vec![Operand::Var("arr".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("len".into())], "i64"),
+        ],
+    );
+    let errors = validate_for_beam(&module);
+    assert!(
+        errors.iter().any(|e| e.starts_with("ReservedAtom")),
+        "a closure named $lang_vm_array_len must be rejected; got {errors:?}"
+    );
+}
+
+#[test]
+fn a_function_named_with_the_reserved_prefix_is_rejected() {
+    // `func.name` is interned too, and a locally-callable function named into
+    // the reserved space would collide just as readily.
+    let module = reserved_atom_module(
+        "$lang_vm_array_len",
+        vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i64"),
+        ],
+    );
+    let errors = validate_for_beam(&module);
+    assert!(
+        errors.iter().any(|e| e.starts_with("ReservedAtom")),
+        "a function named into the reserved space must be rejected; got {errors:?}"
+    );
+}
+
+#[test]
+fn ordinary_names_and_string_literals_are_not_swept_up_by_the_reserved_check() {
+    // The control, and it has real work to do in two directions.
+    //
+    // A prefix check that rejected too much would be just as broken as one
+    // that rejected too little, and `str_const` is the specific trap: it is
+    // the one op whose `Operand::Str` is a string LITERAL rather than a name.
+    // It lowers to an Erlang character list, never to an atom, so it cannot
+    // collide — and restricting it would make the reserved prefix unusable as
+    // ordinary program TEXT, which is a different bug.
+    let module = reserved_atom_module(
+        "main",
+        vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("$lang_vm_array_len".into())], "str"),
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(7)], "i64"),
+            IIRInstr::new("global_store", None, vec![Operand::Str("ordinary".into()), Operand::Var("v".into())], "void"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i64"),
+        ],
+    );
+    let errors = validate_for_beam(&module);
+    assert!(
+        !errors.iter().any(|e| e.starts_with("ReservedAtom")),
+        "a string LITERAL holding the prefix is data, not a name, and must be \
+         allowed; an ordinary global name must be too. got {errors:?}"
+    );
+}
+
+// ===========================================================================
+// BEAM10 (security review, round 2) — the module name that is actually interned
+// ===========================================================================
+//
+// `validate_for_beam` takes an `IIRModule` and screens `module.name`. But the
+// atom interned as BEAM atom #1 — the one the BEAM loader identifies the
+// module by — is `IIRBeamConfig::module_name`, a SEPARATE string supplied by
+// the embedder. Both real drivers thread the same operator-chosen name into
+// both fields, which is exactly why the divergence went unnoticed; nothing
+// enforces it.
+//
+// The consequence of the gap is not a crash. `encode_atu8` uses a
+// `debug_assert!` and then **silently truncates** in release builds, so an
+// over-long config module name produces a loadable but semantically wrong
+// module. That is a wrong answer rather than an error — the failure shape
+// BEAM10 exists to avoid — which is why it is worth closing even though it is
+// not reachable from crafted IIR.
+
+/// A minimal valid module whose `IIRModule::name` is deliberately innocuous,
+/// so that only the *config* name can be what a test is exercising.
+fn module_with_clean_name() -> IIRModule {
+    let mut m = make_module_single(vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1)], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i64"),
+    ]);
+    m.name = "clean".into();
+    m
+}
+
+#[test]
+fn an_over_long_config_module_name_is_rejected_rather_than_silently_truncated() {
+    let module = module_with_clean_name();
+    // 300 bytes: past BEAM's 255-byte atom limit.
+    let long_name = "m".repeat(300);
+    let err = lower_iir_to_beam(&module, &IIRBeamConfig::new(&long_name))
+        .expect_err("an over-long config module name must be rejected");
+    let msg = format!("{err}");
+    assert!(
+        msg.contains("AtomTooLong") && msg.contains("config module name"),
+        "the refusal must name the CONFIG module name specifically, since \
+         `module.name` here is short and valid; got {msg:?}"
+    );
+}
+
+#[test]
+fn a_config_module_name_in_the_reserved_namespace_is_rejected() {
+    let module = module_with_clean_name();
+    let err = lower_iir_to_beam(&module, &IIRBeamConfig::new("$lang_vm_array_len"))
+        .expect_err("a reserved config module name must be rejected");
+    assert!(
+        format!("{err}").contains("ReservedAtom"),
+        "got {err}"
+    );
+}
+
+#[test]
+fn an_ordinary_config_module_name_still_lowers() {
+    // The control. Both checks above are on a path every single lowering
+    // takes, so a rule that was even slightly too broad would break the whole
+    // backend rather than just these tests — but that is the kind of thing
+    // worth pinning rather than inferring, and it also proves the two tests
+    // above fail for their stated reason and not because `lower_iir_to_beam`
+    // rejects this fixture for some unrelated reason.
+    let module = module_with_clean_name();
+    let beam = lower_iir_to_beam(&module, &IIRBeamConfig::new("ordinary_name"))
+        .expect("an ordinary config module name must still lower");
+    assert_eq!(
+        beam.atoms.first().map(String::as_str),
+        Some("ordinary_name"),
+        "the config module name must be atom #1 — which is the whole reason it \
+         has to be screened separately from `module.name`"
+    );
+}
+
+// ===========================================================================
+// BEAM10 — heap reservation before `put_list`
+// ===========================================================================
+//
+// `put_list` allocates a cons cell and does NOT check or grow the process
+// heap; a preceding `test_heap` is required. Omitting it does not fail
+// cleanly — it writes past the heap limit and corrupts whatever is there.
+//
+// BEAM10's `alloc_array` length entry omitted it, and the result was the
+// emulator's own `size_object: bad tag for 0x…` on macOS and Windows CI while
+// every Linux job stayed green. Reproduced locally as a hard SEGFAULT by
+// allocating 2000 ets-backed arrays in one function; the same program runs
+// cleanly with the reservation in place.
+//
+// The nondeterminism is the reason these tests are structural as well as
+// behavioural: whether an unreserved write lands on anything depends on how
+// full the heap happens to be, so "it passed" is not evidence.
+
+/// Count `test_heap` instructions in a lowered module.
+fn test_heap_count(beam: &ir_to_beam::encoder::BEAMModule) -> usize {
+    beam.instructions.iter().filter(|i| i.opcode == 16 /* test_heap */).count()
+}
+
+/// Index of the first instruction with `opcode`, if any.
+fn first_index_of(beam: &ir_to_beam::encoder::BEAMModule, opcode: u8) -> Option<usize> {
+    beam.instructions.iter().position(|i| i.opcode == opcode)
+}
+
+#[test]
+fn beam10_alloc_array_on_ets_reserves_heap_before_building_its_length_entry() {
+    let beam = lower_iir_to_beam(&array_len_module("array<f64>"), &IIRBeamConfig::default())
+        .expect("lower");
+    assert!(
+        test_heap_count(&beam) >= 1,
+        "alloc_array's ets path builds a 2-cons-cell list with `put_list`, which \
+         does not grow the heap — a `test_heap` must precede it or the write runs \
+         past the heap limit (observed as a segfault at 2000 allocations)"
+    );
+    // Order matters, not just presence: a reservation after the allocation is
+    // no reservation at all.
+    let heap = first_index_of(&beam, 16).expect("test_heap present");
+    let put = first_index_of(&beam, 69 /* put_list */).expect("put_list present");
+    assert!(
+        heap < put,
+        "test_heap must come BEFORE the first put_list (found at {heap} and {put})"
+    );
+}
+
+#[test]
+fn beam10_array_set_on_ets_reserves_heap_before_building_its_tuple() {
+    // The same omission existed in `array_set`'s ets path and had simply not
+    // been caught — no promoted row happened to overflow. Fixed alongside,
+    // because the two are the same bug in the same file.
+    let module = make_module_single(vec![
+        IIRInstr::new("const", Some("n".into()), vec![Operand::Int(4)], "i64"),
+        IIRInstr::new("alloc_array", Some("arr".into()), vec![Operand::Var("n".into())], "array<f64>"),
+        IIRInstr::new("const", Some("i".into()), vec![Operand::Int(0)], "i64"),
+        IIRInstr::new(
+            "array_set",
+            None,
+            vec![Operand::Var("arr".into()), Operand::Var("i".into()), Operand::Var("n".into())],
+            "f64",
+        ),
+        IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+    ]);
+    let beam = lower_iir_to_beam(&module, &IIRBeamConfig::default()).expect("lower");
+    // One for alloc_array's length entry, one for array_set's tuple.
+    assert!(
+        test_heap_count(&beam) >= 2,
+        "both alloc_array and array_set build lists with `put_list` on the ets \
+         path, and each needs its own heap reservation; found {}",
+        test_heap_count(&beam)
+    );
+}
+
+/// The behavioural half, on real `erl`.
+///
+/// 2000 ets-backed allocations in one function. Without the reservation this
+/// segfaults the emulator outright — verified by reverting the fix — so this
+/// is a genuine end-to-end regression guard rather than a restatement of the
+/// structural tests above.
+#[test]
+fn test_99_real_erl_many_ets_allocations_do_not_corrupt_the_heap() {
+    if !erl_available() {
+        eprintln!("erl absent — skipping BEAM heap-stress test");
+        return;
+    }
+    const N: usize = 2000;
+    let mut instrs = vec![IIRInstr::new("const", Some("len".into()), vec![Operand::Int(4)], "i64")];
+    for _ in 0..N {
+        // One destination register, reused: the point is the number of
+        // ALLOCATIONS, and 2000 distinct variables would hit the 255-register
+        // limit long before the heap.
+        instrs.push(IIRInstr::new(
+            "alloc_array",
+            Some("a".into()),
+            vec![Operand::Var("len".into())],
+            "array<f64>",
+        ));
+    }
+    instrs.push(IIRInstr::new("ret", None, vec![Operand::Var("len".into())], "i64"));
+
+    use iir_to_beam::encode_beam;
+    let m = make_module_fn("main", vec![], "i64", instrs);
+    let beam_cfg = IIRBeamConfig::new("iir_heap_stress_test");
+    let beam_mod = lower_iir_to_beam(&m, &beam_cfg).expect("lower the stress module");
+    let bytes = encode_beam(&beam_mod);
+    let tmp = std::env::temp_dir().join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("temp dir");
+    std::fs::write(tmp.join("iir_heap_stress_test.beam"), &bytes).expect("write .beam");
+    let output = std::process::Command::new("erl")
+        .arg("-noshell")
+        .arg("-pa").arg(tmp.to_str().expect("tmp path is UTF-8"))
+        .arg("-eval")
+        .arg("io:format(\"~w~n\",[iir_heap_stress_test:main()]),halt(0).")
+        .output()
+        .expect("spawn erl");
+    assert!(
+        output.status.success(),
+        "2000 ets-backed allocations crashed the emulator: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let out = String::from_utf8_lossy(&output.stdout).to_string();
+    assert_eq!(
+        out.trim(),
+        "4",
+        "2000 ets-backed allocations must not corrupt the process heap; without \
+         the `test_heap` before each length entry's `put_list` pair this \
+         segfaults the emulator"
+    );
+}

@@ -131,11 +131,13 @@ assert_eq!(&bytes[0..4], b"FOR1");
 | `store_reg` | `move {x,src} {x,v}` |
 | `type_assert` | nop (erased at lowering time) |
 | `alloc_bytes` / `alloc_array` (not `array<f64>`/`array<str>`) | `call_ext atomics:new/2` — fixed-size, 64-bit-integer-only mutable array |
-| `alloc_array` (`array<f64>` or `array<str>`) | `call_ext ets:new/2` (BEAM04/BEAM06 — `:atomics` cannot hold floats or strings; no size argument, `:ets` grows dynamically) |
+| `alloc_array` (`array<f64>` or `array<str>`) | `call_ext ets:new/2` (BEAM04/BEAM06 — `:atomics` cannot hold floats or strings; no size argument, `:ets` grows dynamically), then `test_heap`/`put_list` pairing the table with its declared length as `[Tab \| N]` (BEAM10 — the size operand used to be discarded here, and this is the only point at which the length is still known) |
 | `store_byte` / `array_set` (not f64/str) | `idx+1` (`gc_bif2 erlang:+/2`), `call_ext atomics:put/3` (`store_byte` additionally masks the value `band 255`) |
 | `array_set` (f64 or str) | `put_list [Idx,Val]`, `call_ext erlang:list_to_tuple/1`, `call_ext ets:insert/2` (BEAM04/BEAM06 — no `+1`, `:ets` is not 1-indexed; identical for both element types) |
 | `load_byte` / `array_get` (not f64/str) | `idx+1` (`gc_bif2 erlang:+/2`), `call_ext atomics:get/2` |
-| `array_get` (f64 or str) | `call_ext ets:lookup_element/3` (BEAM04/BEAM06 — position `2` of the `{Idx,Val}` tuple; traps `badarg` on a missing key) |
+| `array_get` (f64 or str) | `get_list` recovering the table from the handle's head, then `call_ext ets:lookup_element/3` (BEAM04/BEAM06 — position `2` of the `{Idx,Val}` tuple; traps `badarg` on a missing key) |
+| `array_len` (`array<i64>`) | `call_ext atomics:info/1`, `call_ext maps:get/2` (BEAM10 — `atomics:new/2` is fixed-size so `info` reports the *declared* extent; there is no `atomics:size/1` and this backend emits no map opcodes, so the `size` key is projected with an ordinary `call_ext`) |
+| `array_len` (`array<f64>` or `array<str>`) | `get_list` taking the handle's tail — no call at all (BEAM10 — and **never** `ets:info/2`, which counts *inserted entries*: a ten-element array with three cells written would report `3`) |
 
 | `global_store` | `call_ext erlang:put/2` (process dictionary; BEAM08/#15332 — was `gc_bif2`, wrong: `put/2` is not a guard-safe BIF) |
 | `global_load` | `gc_bif1 erlang:get/1` |
@@ -229,8 +231,59 @@ rejected because it needs three entirely new opcode families
 backend has never implemented, versus `:ets`'s `call_ext`/`put_list`-only
 shape. One known, deliberately unfixed limitation: unlike `atomics:new`,
 `ets:new` does not pre-zero N cells, so reading a never-`array_set` index
-traps `badarg` instead of returning `0.0` — not reachable by any row
-promoted with BEAM04 (every one writes every cell it later reads).
+traps `badarg` instead of returning `0.0`.
+
+**BEAM10 update — this is now reachable.** It was previously described here
+as unreachable because every BEAM04-promoted row writes every cell it later
+reads. That remains true of promoted rows, but it was never the whole story:
+ALGOL's `emit_array_value_copy` reads every element of the *source* array
+when one is passed by value, and an ALGOL source array may be sparsely
+written. Implementing `array_len` let those programs get far enough to hit
+it — six ALGOL corpus programs now trap this way, each passing a sparse
+multi-dimensional `real`/`string` array by value, where previously they
+refused to compile at all. Logged as its own backlog item, with a fix that
+pays the O(n) cost entirely in `call_ext`s (`lists:seq/2`,
+`lists:duplicate/2`, `lists:zip/2`, one `ets:insert/2`) rather than an
+emitted loop.
+
+BEAM10 makes an ets-backed array handle the **pair `[Tab | N]`** rather than a
+bare table identifier, and that shape was arrived at the hard way. Storing the
+length inside the table under a reserved key needed `erlang:list_to_tuple/1` —
+a second `call_ext` — with the table parked in a scratch register above `live`,
+which is not a GC root. An ets tid is a heap-allocated magic reference, so a
+collection inside that call left the parked copy dangling: `size_object: bad
+tag`, intermittently, on macOS CI only, after passing Linux CI and the full
+local suite. The same reserved key was also forgeable from crafted IIR.
+
+A `put_list` needs no call, so nothing is parked across anything, and there is
+no in-table key to forge. `array_len` then costs one `get_list` instead of a
+`call_ext`.
+
+The `$lang_vm_` atom prefix is **reserved**, and `validate_for_beam` rejects
+any source-supplied name that uses it (module name, function names, and the
+leading `Operand::Str` of `global_load`/`global_store`/`alloc_closure`/`call`;
+`str_const` is exempt, since its operand is a string literal that lowers to a
+character list, never an atom). Two pieces of compiler-maintained state live
+under that prefix — BEAM07's stdin lookahead cache and BEAM10's array-length
+key — and without the check a crafted module could name either and overwrite
+it. `alloc_closure` interns its function name as an atom and `field_load` lifts
+it back out as an ordinary value, so an atom can become program data; the
+`global_store` case needs no indirection at all.
+
+BEAM10 adds `array_len`, which is harder than it looks because the two
+substrates above answer "how long are you?" differently and only one can
+answer at all. It also cannot dispatch the way `array_get`/`array_set` do:
+their `type_hint` is the *element* type, while `array_len`'s is `"i64"`, the
+type of the length it produces. Runtime dispatch is impossible too — both
+`atomics:new/2` and `ets:new/2` return references, so `is_reference/1` cannot
+separate them (confirmed on real `erl`). The substrate therefore comes from a
+per-function map built from each handle's *defining* instruction and from
+`IIRFunction::params`; a handle the map cannot resolve is refused rather than
+guessed, because guessing either raises `badarg` on the other substrate or
+returns a plausible wrong number. Measured across the ALGOL corpus, that rule
+resolves 202 of 202 `array_len` instructions with no holes, and 79 of them are
+on `:ets` — so an atomics-only implementation would have unblocked nothing.
+See `code/specs/BEAM10-array-length.md`.
 
 BEAM06 extends this SAME `:ets` substrate, completely unchanged, to
 `type_hint == "array<str>"`/`"str"` (see
