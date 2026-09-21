@@ -68,14 +68,44 @@ impl Dialect for FuzzDialect {
                 from: None,
                 system: false,
             }))),
-            "@define" => Some(Ok(Directive::Define {
-                name: line.get(1).map(|t| t.value.clone()).unwrap_or_default(),
-                // Object-like only in the test dialect; function-like macros
-                // are exercised through MacroOct and the macros module's own
-                // suite.
-                params: None,
-                body: line.get(2..).unwrap_or(&[]).to_vec(),
-            })),
+            "@define" => {
+                // Function-like when the token after the name is `(`, object-
+                // like otherwise.
+                //
+                // This used to hardcode `params: None`, and that hole was not
+                // cosmetic: the sweep could never generate a function-like
+                // macro, so the entire argument-pre-expansion path -- the one
+                // place the expander recurses natively, and the one a security
+                // review used to abort the process from a 21 KB file -- was
+                // outside the randomised oracle. A fuzz alphabet that cannot
+                // reach a code path is not fuzzing it.
+                let name = line.get(1).map(|t| t.value.clone()).unwrap_or_default();
+                let params = if line.get(2).is_some_and(|t| t.value == "(") {
+                    let mut ps = Vec::new();
+                    let mut i = 3;
+                    while let Some(t) = line.get(i) {
+                        if t.value == ")" {
+                            break;
+                        }
+                        if t.value != "," {
+                            ps.push(t.value.clone());
+                        }
+                        i += 1;
+                    }
+                    Some(ps)
+                } else {
+                    None
+                };
+                let body_at = match &params {
+                    Some(ps) => 4 + ps.len() * 2,
+                    None => 2,
+                };
+                Some(Ok(Directive::Define {
+                    name,
+                    params,
+                    body: line.get(body_at..).unwrap_or(&[]).to_vec(),
+                }))
+            }
             _ => None,
         }
     }

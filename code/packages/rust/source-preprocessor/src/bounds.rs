@@ -81,12 +81,31 @@ pub struct Bounds {
     /// rather than read and then rejected.
     pub bytes_per_file: u64,
 
-    /// Maximum depth of macro expansion. (Unused until macros land, but
-    /// declared here so the budget surface is stable.)
+    /// Maximum depth of nested macro-argument pre-expansion.
+    ///
+    /// This is the one bound that stands between a small input file and an
+    /// uncatchable process abort: argument pre-expansion is the only place the
+    /// expander recurses natively, and a Rust stack overflow cannot be caught.
+    /// A security review reached it from a 21 KB source file before this was
+    /// enforced.
+    ///
+    /// **This bound assumes roughly 1 MiB of usable stack.** Measured: the
+    /// default of 200 completes on a 1 MiB thread and overflows a 256 KiB one,
+    /// so a frame costs between about 1.3 and 5 KiB. Rust's default spawned
+    /// thread gets 2 MiB, which leaves comfortable margin — but a host running
+    /// the engine on a smaller stack (an embedded target, or a thread pool
+    /// configured tight) must `tighten` this, and the number to divide by is
+    /// ~5 KiB per level.
     pub macro_depth: u32,
 
     /// Maximum tokens **produced** — emitted, consumed by a conditional, or
     /// discarded. Not "emitted": see the module header.
+    ///
+    /// A token costs ~135 bytes all told, so this number is a memory budget in
+    /// disguise. It was 64,000,000 when reaching it required 64 million tokens
+    /// of real source; macro expansion made it reachable from a few kilobytes,
+    /// at which point the default allowed ~8.6 GB. Lowered to a figure whose
+    /// worst case (~270 MB) a CI runner can actually survive.
     pub tokens_produced: u64,
 
     /// Maximum length of a single token's spelling.
@@ -141,7 +160,7 @@ impl Default for Bounds {
             total_source_bytes: 256 * 1024 * 1024,
             bytes_per_file: 16 * 1024 * 1024,
             macro_depth: 200,
-            tokens_produced: 64_000_000,
+            tokens_produced: 2_000_000,
             token_spelling_bytes: 64 * 1024,
             synthesised_text_bytes: 64 * 1024 * 1024,
             arg_group_depth: 200,

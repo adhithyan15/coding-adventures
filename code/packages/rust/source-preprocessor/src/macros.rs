@@ -110,10 +110,12 @@ impl MacroTable {
 
 /// Expand every macro invocation in `input`.
 ///
-/// Iterative, with an explicit output buffer and a work stack — not recursive.
-/// In Rust a stack overflow is an abort rather than a catchable panic, so a
-/// recursive expander would turn [`Bounds::macro_depth`] from a diagnostic
-/// into a process kill.
+/// Rescanning is iterative, over an explicit work stack. Argument
+/// pre-expansion recurses, bounded by [`Bounds::macro_depth`] — see
+/// [`expand_at`] for why that bound is load-bearing rather than defensive.
+///
+/// `bounds` is clamped to the defaults on entry, so this entry point carries
+/// the same tighten-only guarantee `preprocess` does.
 pub fn expand(
     input: Vec<MToken>,
     table: &MacroTable,
@@ -121,10 +123,52 @@ pub fn expand(
     bounds: &Bounds,
     spend: &mut Spend,
 ) -> Result<Vec<MToken>, PpError> {
+    // Clamp on entry, exactly as `preprocess` does.
+    //
+    // This is a PUBLIC entry point, and `Bounds`'s fields are `pub`, so a host
+    // calling `expand` directly could otherwise hand it `u64::MAX` and
+    // reinstate the widening bypass that slice 1's review found and fixed at
+    // the other entry point. A guarantee enforced at one of two doors is not
+    // enforced.
+    let bounds = bounds.tighten(Bounds::default());
+    let mut rounds: u64 = 0;
+    expand_at(input, table, hides, &bounds, spend, 0, &mut rounds)
+}
+
+/// The real expander. `depth` counts nested ARGUMENT pre-expansion, which is
+/// the only place this function recurses.
+#[allow(clippy::too_many_arguments)]
+fn expand_at(
+    input: Vec<MToken>,
+    table: &MacroTable,
+    hides: &mut HideSets,
+    bounds: &Bounds,
+    spend: &mut Spend,
+    depth: u32,
+    rounds: &mut u64,
+) -> Result<Vec<MToken>, PpError> {
+    // The bound that makes `macro_depth` mean what `bounds.rs` says it means.
+    //
+    // Argument pre-expansion recurses natively, and a security review proved
+    // that unbounded: ~800 chained macros, each placing the next invocation
+    // inside an ARGUMENT, overflowed the stack from a 21 KB source file. No
+    // existing bound came close — the nesting is created by expansion rather
+    // than present in the text, so each level's paren depth is only 1, and the
+    // token and fuel counters see O(N) work for N levels of stack.
+    //
+    // A stack overflow in Rust is an abort, not a catchable panic: an
+    // embedding host cannot contain it with `catch_unwind`. This module's own
+    // header claimed that could not happen here. It could.
+    if depth > bounds.macro_depth {
+        return Err(PpError::new(format!(
+            "macro argument expansion nested deeper than {}",
+            bounds.macro_depth
+        )));
+    }
+
     let mut work: Vec<MToken> = input;
     work.reverse(); // pop() takes from the front of the logical stream
     let mut out: Vec<MToken> = Vec::new();
-    let mut rounds: u32 = 0;
 
     while let Some(cur) = work.pop() {
         spend.fuel_used = spend.fuel_used.saturating_add(1);
@@ -149,11 +193,23 @@ pub fn expand(
             continue;
         }
 
-        rounds = rounds.saturating_add(1);
-        if rounds > bounds.macro_depth.saturating_mul(bounds.macro_depth.max(1)) {
+        // Shared across the whole expansion, including nested argument
+        // pre-expansion, so it is a translation-unit total rather than a
+        // per-frame one. It used to be a local, which reset for every source
+        // line and every condition -- so a file of many short lines multiplied
+        // the budget freely.
+        //
+        // The limit is interpolated from the same expression that enforces it.
+        // It previously read `macro_depth` while enforcing `macro_depth`
+        // squared, so the diagnostic told an operator 200 when the real limit
+        // was 40,000 -- a factor-of-200 lie in the one message they would use
+        // to tune it.
+        let round_limit =
+            u64::from(bounds.macro_depth).saturating_mul(u64::from(bounds.macro_depth.max(1)));
+        *rounds = rounds.saturating_add(1);
+        if *rounds > round_limit {
             return Err(PpError::new(format!(
-                "macro expansion exceeded {} rounds",
-                bounds.macro_depth
+                "macro expansion exceeded {round_limit} rounds"
             ))
             .at_opt(position_of(&cur.token)));
         }
@@ -171,7 +227,7 @@ pub fn expand(
                 }
                 let (args, close_hide) = collect_args(&mut work, params.len(), bounds, spend, &cur)?;
                 let expanded_args =
-                    pre_expand_args(args, table, hides, bounds, spend)?;
+                    pre_expand_args(args, table, hides, bounds, spend, depth + 1, rounds)?;
                 // The intersection of the NAME token's hide set and the
                 // CLOSING PAREN's: the invocation spans both, so a name hidden
                 // in only one of them was not hidden across the whole
@@ -182,7 +238,7 @@ pub fn expand(
             }
         };
 
-        charge_tokens(produced.len(), bounds, spend)?;
+        charge_tokens(&produced, bounds, spend)?;
 
         // Rescan: the substituted tokens go back on the work stack so anything
         // they revealed is itself expanded. Termination comes from the hide
@@ -195,12 +251,49 @@ pub fn expand(
     Ok(out)
 }
 
-fn charge_tokens(n: usize, bounds: &Bounds, spend: &mut Spend) -> Result<(), PpError> {
-    spend.tokens_produced = spend.tokens_produced.saturating_add(n as u64);
+/// Charge produced tokens against both the count and the BYTE budgets.
+///
+/// Counting tokens alone is not enough, and the gap is large. A `Token` is 104
+/// bytes plus a heap `String` plus a `Locus` — about 135 bytes each in
+/// practice. A security review measured a 6.5 KB `.macrooct` file reaching a
+/// **2.2 GB** working set against a 16-million-token cap, and the shipped
+/// default of 64 million would have allowed roughly **8.6 GB from 6.5 KB**.
+///
+/// Before macros existed, reaching 64 million produced tokens required 64
+/// million tokens of actual source. Expansion turns that into a ~10,000x
+/// amplification, which is precisely why `bounds.rs` says "bound work AND
+/// bytes, not only shape" — and why `synthesised_text_bytes` existing but
+/// never being charged was the same "dead configuration reads as a guarantee
+/// nobody is providing" mistake that module applied when it deleted
+/// `max_diagnostics`.
+///
+/// The per-token spelling cap is enforced here too, not only in `emit`: `emit`
+/// sees survivors, and a discarded token is allocated just the same.
+fn charge_tokens(produced: &[MToken], bounds: &Bounds, spend: &mut Spend) -> Result<(), PpError> {
+    spend.tokens_produced = spend.tokens_produced.saturating_add(produced.len() as u64);
     if spend.tokens_produced > bounds.tokens_produced {
         return Err(PpError::new(format!(
             "macro expansion produced more than {} tokens",
             bounds.tokens_produced
+        )));
+    }
+
+    let mut bytes: u64 = 0;
+    for t in produced {
+        let len = t.token.value.len() as u64;
+        if len > bounds.token_spelling_bytes {
+            return Err(PpError::new(format!(
+                "macro expansion produced a token longer than {} bytes",
+                bounds.token_spelling_bytes
+            )));
+        }
+        bytes = bytes.saturating_add(len);
+    }
+    spend.synthesised_text_bytes = spend.synthesised_text_bytes.saturating_add(bytes);
+    if spend.synthesised_text_bytes > bounds.synthesised_text_bytes {
+        return Err(PpError::new(format!(
+            "macro expansion produced more than {} bytes of token text",
+            bounds.synthesised_text_bytes
         )));
     }
     Ok(())
@@ -277,16 +370,19 @@ fn collect_args(
 }
 
 /// Expand each argument in its own right, before substitution.
+#[allow(clippy::too_many_arguments)]
 fn pre_expand_args(
     args: Vec<Vec<MToken>>,
     table: &MacroTable,
     hides: &mut HideSets,
     bounds: &Bounds,
     spend: &mut Spend,
+    depth: u32,
+    rounds: &mut u64,
 ) -> Result<Vec<Vec<MToken>>, PpError> {
     let mut out = Vec::with_capacity(args.len());
     for a in args {
-        out.push(expand(a, table, hides, bounds, spend)?);
+        out.push(expand_at(a, table, hides, bounds, spend, depth, rounds)?);
     }
     Ok(out)
 }
@@ -509,6 +605,113 @@ mod tests {
     }
 
     // --- bounds ------------------------------------------------------------
+
+    #[test]
+    fn deep_argument_nesting_is_a_diagnostic_not_a_stack_overflow() {
+        // The shape a security review used to abort the process from a 21 KB
+        // source file, before `macro_depth` was enforced as a depth.
+        //
+        // Each macro puts the next invocation inside an ARGUMENT, so argument
+        // pre-expansion recurses once per level. Crucially the nesting is
+        // created BY EXPANSION, not present in the text: every level's paren
+        // depth is 1, and the token, fuel and round counters see only O(N)
+        // work for N levels of native stack. Nothing else catches it.
+        //
+        // Run on a deliberately small stack: 1 MiB, half of Rust's 2 MiB
+        // default for a spawned thread. A stack overflow is an abort, so a
+        // regression has to die on a stack the harness cannot quietly enlarge,
+        // or it hides behind whatever the runner happened to provide.
+        //
+        // 1 MiB rather than something smaller because it is MEASURED, not
+        // guessed: the default depth of 200 fits here with room to spare and
+        // overflows at 256 KiB, so a frame costs somewhere between 1.3 and
+        // 5 KiB. That measurement is why `Bounds::macro_depth` documents a
+        // minimum stack requirement -- a host on a smaller stack must tighten
+        // the bound, and now knows to.
+        let handle = std::thread::Builder::new()
+            .stack_size(1024 * 1024)
+            .spawn(|| {
+                let mut t = MacroTable::new();
+                func(&mut t, "E", &["y"], "y");
+                func(&mut t, "D0", &["x"], "x");
+                for i in 1..2000 {
+                    t.define(
+                        format!("D{i}"),
+                        MacroDef {
+                            params: Some(vec!["x".to_string()]),
+                            body: body(&format!("E ( D{} ( x ) )", i - 1)),
+                        },
+                    );
+                }
+                // Returns a Result either way; the point is that it RETURNS.
+                run(&t, "D1999 ( 42 )").is_err()
+            })
+            .expect("spawn");
+
+        let hit_the_bound = handle
+            .join()
+            .expect("expansion must return a diagnostic, not abort the process");
+        assert!(hit_the_bound, "a 2000-deep argument chain must hit the depth bound");
+    }
+
+    #[test]
+    fn the_depth_bound_names_the_configured_depth() {
+        let mut t = MacroTable::new();
+        func(&mut t, "E", &["y"], "y");
+        func(&mut t, "D0", &["x"], "x");
+        for i in 1..40 {
+            t.define(
+                format!("D{i}"),
+                MacroDef {
+                    params: Some(vec!["x".to_string()]),
+                    body: body(&format!("E ( D{} ( x ) )", i - 1)),
+                },
+            );
+        }
+        let mut hides = HideSets::new();
+        let mut spend = Spend::default();
+        let bounds = Bounds { macro_depth: 4, ..Bounds::default() };
+        let e = expand(toks("D39 ( 1 )"), &t, &mut hides, &bounds, &mut spend)
+            .expect_err("depth 4 must refuse a 39-deep chain");
+        assert!(e.to_string().contains("nested deeper than 4"), "{e}");
+    }
+
+    #[test]
+    fn a_widened_budget_is_clamped_at_this_entry_point_too() {
+        // `expand` is public. Slice 1 found the tighten-only guarantee false
+        // at `preprocess`; enforcing it at one of two doors is not enforcing
+        // it.
+        let mut t = MacroTable::new();
+        obj(&mut t, "WIDE", "a b c d e f g h i j");
+        let mut hides = HideSets::new();
+        let mut spend = Spend::default();
+        let greedy = Bounds {
+            tokens_produced: u64::MAX,
+            synthesised_text_bytes: u64::MAX,
+            macro_depth: u32::MAX,
+            ..Bounds::default()
+        };
+        // Still succeeds on a small program -- clamping is not refusal.
+        assert!(expand(toks("WIDE"), &t, &mut hides, &greedy, &mut spend).is_ok());
+        // But the budget in force is the default, not u64::MAX.
+        assert!(spend.tokens_produced <= Bounds::default().tokens_produced);
+    }
+
+    #[test]
+    fn expansion_charges_bytes_not_only_token_count() {
+        // A token is ~135 bytes in practice, so a token counter alone is a
+        // memory budget with the units filed off. Charging bytes is what makes
+        // `bounds.rs`'s "bound work AND bytes" true rather than aspirational.
+        let mut t = MacroTable::new();
+        let wide: String = (0..50).map(|i| format!("tok{i} ")).collect();
+        obj(&mut t, "WIDE", &wide);
+        let mut hides = HideSets::new();
+        let mut spend = Spend::default();
+        let bounds = Bounds { synthesised_text_bytes: 32, ..Bounds::default() };
+        let e = expand(toks("WIDE"), &t, &mut hides, &bounds, &mut spend)
+            .expect_err("a byte budget of 32 must refuse ~250 bytes of token text");
+        assert!(e.to_string().contains("bytes of token text"), "{e}");
+    }
 
     #[test]
     fn an_expansion_bomb_is_bounded() {

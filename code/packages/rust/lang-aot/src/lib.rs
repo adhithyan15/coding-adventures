@@ -3204,21 +3204,42 @@ mod tests {
         assert_eq!(format!("{a:#?}"), format!("{b:#?}"));
     }
 
-    /// A preprocessor failure is a `FrontendError`, like every other frontend
-    /// refusal — `@define` is recognised and then refused, because slice 1 has
-    /// no macro table. Silently ignoring it would be far more confusing.
+    /// `@define` lowers through the production entry point.
+    ///
+    /// This test asserted the opposite until slice 2 landed the macro
+    /// table -- it required `@define` to be REFUSED. The matrix rows were
+    /// updated when the feature arrived and this one was not, so it would
+    /// have failed CI on an `unwrap_err()` against an `Ok`.
+    ///
+    /// Worth keeping rather than deleting: it is the only check that the
+    /// `Language::MacroOct` arm of `compile_source_to_iir` -- the real
+    /// production path, not the frontend crate's own API -- handles a
+    /// definition at all.
     #[test]
-    fn macrooct_define_is_refused_until_slice_two() {
-        let err = compile_source_to_iir(
-            Language::MacroOct, "@define LED 1\nfn main() { }\n", "macrooct"
-        ).unwrap_err();
-        match err {
-            LangAotError::FrontendError { language, message } => {
-                assert_eq!(language, Language::MacroOct);
-                assert!(message.contains("slice 2"), "{message}");
-            }
-            other => panic!("expected a FrontendError, got {other:?}"),
-        }
+    fn macrooct_define_lowers_through_the_production_entry_point() {
+        let module = compile_source_to_iir(
+            Language::MacroOct,
+            "@define PORT 1
+fn main() { out(PORT, 42); }
+",
+            "macrooct",
+        )
+        .expect("@define must lower since PREP01 slice 2");
+
+        // The expanded program is the one Oct would have written by hand.
+        let expanded = compile_source_to_iir(
+            Language::Oct,
+            "fn main() { out(1, 42); }
+",
+            "macrooct",
+        )
+        .expect("the hand-expanded twin must compile");
+
+        assert_eq!(
+            module.functions.len(),
+            expanded.functions.len(),
+            "a defined macro must reach the lowered program"
+        );
     }
 
     /// MacroOct and Oct are distinguishable at every layer — which is the

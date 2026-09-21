@@ -43,21 +43,23 @@ MacroOct declines both and still has a complete macro facility, which is the
 point: the engine expands MacroOct's macros through the same code that will
 expand C's, with two of C's operators simply absent.
 
-### Known gap: controlling expressions are not macro-expanded
+### VM-068: controlling expressions are now macro-expanded
 
-`Dialect::eval_condition` receives a bare `&[Token]` — no macro table, and no
-expansion applied by the engine. So after `@define LED_PORT 1`, the line
-`@if LED_PORT == 1` still evaluates `LED_PORT` as undefined. C expands first and
-this engine will have to as well.
+After `@define LED_PORT 1`, the line `@if LED_PORT == 1` now takes the true
+branch. Until this slice it read `LED_PORT` as an *undefined* name, took the
+`@else` branch, and compiled to the wrong thing — silently, with no
+diagnostic. PREP01 §7's own worked example is exactly that shape, so the
+spec's canonical illustration of the feature was broken.
 
-Recorded here rather than worked around in a dialect, because it is the trait's
-shape that is wrong: closing it means the engine either expanding the slice
-before the call or handing the dialect a table, and `Directive::If(Vec<Token>)`
-would additionally have to say whether the tokens it carries are pre- or
-post-expansion. A dialect that solved it privately would have to become
-stateful, which is what today lets one dialect instance be shared across
-translation units without leaking between them.
+Fixed in the engine rather than the dialect, because no dialect could fix it:
+`eval_condition` receives a bare token slice with neither the macro table nor
+any expansion applied. The grouping-depth pre-scan now runs twice — once on
+the raw tokens, once after expansion, since a macro body can introduce
+grouping the source text did not have.
 
+Proved by a matched *pair* of matrix rows, because either alone is satisfied
+by a broken implementation: an always-zero evaluator passes the undefined-name
+row, and an always-truthy one passes the defined-name row.
 
 ## 0.1.0 — PREP01 slice 1: engine core
 

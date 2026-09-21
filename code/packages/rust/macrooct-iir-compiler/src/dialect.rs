@@ -650,38 +650,17 @@ impl Op {
 /// | `true` / `false` | 1 / 0 |
 /// | any other identifier | **0** — undefined |
 ///
-/// **Every name is 0 here, including one that `@define` has defined**, and
-/// that is a real limitation of the current [`Dialect`] interface rather than a
-/// choice this function makes. `eval_condition` receives `&[Token]` and nothing
-/// else: no macro table, and no expansion has been applied to the slice by the
-/// engine. So after slice 2 a MacroOct author can write
+/// A name that reaches here is genuinely undefined, and reads as 0 — C's
+/// rule. The engine macro-expands a controlling expression before calling
+/// `eval_condition`, so a DEFINED name has already become its value by this
+/// point and never appears as a bare name.
 ///
-/// ```text
-///     @define LED_PORT 1
-///     @if LED_PORT == 1      ← still FALSE: `LED_PORT` evaluates to 0
-/// ```
-///
-/// which is the one place MacroOct currently diverges from the C rule it
-/// otherwise follows. C expands macros in a controlling expression before
-/// evaluating it, and MacroOct will have to as well.
-///
-/// Fixing it is an *engine* change, not a dialect one, and deliberately not
-/// smuggled in here: a dialect that reached for a macro table would need the
-/// engine to hand it one, which is a change to the trait's shape — and
-/// `Directive::If(Vec<Token>)` would additionally have to say whether the
-/// tokens it carries are pre- or post-expansion. Doing that properly is how the
-/// interface earns the expansion, and doing it by giving `MacroOctDialect`
-/// private state would make the dialect stateful, which is what today lets one
-/// instance be shared across translation units without leaking between them.
-/// Recorded as the slice's headline interface finding.
-///
-/// Zero-for-undefined is itself C's rule, so the fallback is right even once
-/// expansion lands: after expansion, a name that survives really is undefined.
-///
-/// `true`/`false` are handled explicitly rather than falling through to the
-/// undefined-identifier rule, because falling through would make `@if true`
-/// quietly false — a trap with no diagnostic, in a language whose `true` is a
-/// keyword the author can see the compiler understands everywhere else.
+/// That expansion step was missing when `@define` first landed (VM-068):
+/// every name read as 0, defined or not, so `@if LED_PORT == 1` silently
+/// took the `@else` branch. Fixed in the engine, and pinned by a matched
+/// PAIR of matrix rows — either row alone passes a broken implementation,
+/// since an always-0 evaluator satisfies the undefined case and an
+/// always-truthy one satisfies the defined case.
 fn operand_value(token: &Token) -> Result<i64, PpError> {
     let text = token.value.as_str();
     match text {

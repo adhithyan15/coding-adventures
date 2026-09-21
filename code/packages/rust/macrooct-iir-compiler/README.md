@@ -123,16 +123,19 @@ it mean", and the second question has the same answer in every language.
 
 ## Two things that look like bugs and are not
 
-**A controlling expression is not macro-expanded.** After `@define LED_PORT 1`,
-the line `@if LED_PORT == 1` still evaluates `LED_PORT` as an undefined name —
-zero — and takes the `@else` branch. This is the one place MacroOct diverges
-from the C rule it otherwise follows, and it is an *interface* limitation rather
-than a choice: `Dialect::eval_condition` receives a bare `&[Token]`, with no
-macro table and no expansion applied, so no dialect can do better without the
-trait changing shape. Closing it belongs in the engine (see
-`dialect::operand_value`'s header for why doing it here would make the dialect
-stateful, which is what today lets one instance be shared across translation
-units).
+**A controlling expression IS macro-expanded.** After `@define LED_PORT 1`,
+the line `@if LED_PORT == 1` takes the true branch. A name that *survives*
+expansion is genuinely undefined and reads as 0, which is C's rule.
+
+That was not true when this crate's `@define` first landed, and the bug is
+worth recording because of where it had to be fixed. `Dialect::eval_condition`
+receives a bare `&[Token]` with no macro table and no expansion applied, so
+*no dialect could do better however written* — it was an engine defect
+surfacing in a dialect. Both dialect-side workarounds were worse than the
+gap: a private table makes the dialect stateful (which is what today lets one
+instance be shared across translation units), and expanding inside `classify`
+duplicates the engine's expander into every language. Tracked as VM-068 and
+fixed in the engine the same slice.
 
 **The module's `language` field says `"oct"`.** `compile_ast` is Oct's, and the
 string is true: after preprocessing, the program being lowered is Oct. It is

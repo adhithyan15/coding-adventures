@@ -60,15 +60,12 @@
 //! deciding between them (`@define F(x) …` is function-like; `@define F (x) …`
 //! is an object-like macro whose body begins with a parenthesis).
 //!
-//! **One divergence from C remains, and it is an interface limitation rather
-//! than a choice.** A controlling expression is *not* macro-expanded, so after
-//! `@define LED_PORT 1` the line `@if LED_PORT == 1` still evaluates `LED_PORT`
-//! as an undefined name — zero — and takes the `@else` branch. The engine hands
-//! [`Dialect::eval_condition`](coding_adventures_source_preprocessor::Dialect::eval_condition)
-//! a bare `&[Token]` with no macro table and no expansion applied, so no
-//! dialect can do better without the trait changing shape. See
-//! `dialect::operand_value`'s header for why closing the gap belongs in the
-//! engine and not here.
+//! Controlling expressions ARE macro-expanded: after `@define LED_PORT 1`,
+//! `@if LED_PORT == 1` takes the true branch. That was broken when this
+//! crate's `@define` first landed (VM-068) and was fixed in the engine the
+//! same slice — a dialect could not have fixed it, having neither the macro
+//! table nor any expansion applied. A name that SURVIVES expansion is
+//! genuinely undefined and still reads as 0, which is C's rule too.
 //!
 //! `stringize` and `paste` stay declined: MacroOct genuinely has neither `#`
 //! nor `##`, and a full macro facility that still declines two of C's operators
