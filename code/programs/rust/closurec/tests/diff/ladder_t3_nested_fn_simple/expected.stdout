@@ -1,0 +1,1 @@
+function o(){return 1}console.log(o());

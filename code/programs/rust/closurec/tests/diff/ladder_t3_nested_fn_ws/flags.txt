@@ -1,0 +1,4 @@
+--compilation_level
+WHITESPACE_ONLY
+--js
+tests/diff/ladder_t3_nested_fn_ws/input/a.js

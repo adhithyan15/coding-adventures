@@ -916,7 +916,11 @@ fn canonical_manifest_classifies_every_fixture_offline() {
         .flat_map(|set| &set.fixtures)
         .filter(|fixture| fixture.starts_with("minify_"))
         .count();
-    assert_eq!(fixture_count, 626, "reviewed fixture inventory changed");
+    // 626 pre-existing + 45 CCR-047 ladder rungs (15 rungs x 3 compilation
+    // levels). This assertion is a tripwire, not a fact to be kept current
+    // automatically: a fixture appearing without a reviewer noticing is the
+    // thing it exists to prevent, so update it deliberately or not at all.
+    assert_eq!(fixture_count, 671, "reviewed fixture inventory changed");
     assert_eq!(minify_count, 462, "reviewed minify cohort changed");
 }
 

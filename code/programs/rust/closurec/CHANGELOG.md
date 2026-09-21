@@ -11,6 +11,64 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 > downloaded by the tool). Tracked in
 > [#15832](https://github.com/adhithyan15/coding-adventures/issues/15832).
 
+### Added - the differential complexity ladder (CCR-047)
+
+`tests/diff/ladder_*` — 45 fixtures: 15 rungs across tiers 1-3, each compiled at
+`WHITESPACE_ONLY`, `SIMPLE`, and `ADVANCED`. Gated by `tests/ladder.rs`.
+
+Unlike the 462-fixture `minify_*` corpus, **`expected.stdout` here is
+upstream's output, not ours.** That corpus was captured from behaviour
+`closurec` already implemented, so it proves we have not regressed; it cannot
+prove parity, and it reports 100% agreement while a 52-rung ladder over the
+same pinned oracle finds 49/52 at `WHITESPACE_ONLY`, 31/52 at `SIMPLE`, and
+13/52 at `ADVANCED`.
+
+The rungs are ordered by deliberate complexity, so a failure is attributable to
+the simplest construct that produces it and the ladder is worked bottom-up.
+
+Six of the 45 diverge, all in tier 3, all the same family — single-use function
+inlining and unused-local removal:
+
+| Fixture | upstream | `closurec` |
+|---|---|---|
+| `ladder_t3_nested_fn_simple` | `function o(){return 1}…` | keeps the nested function |
+| `ladder_t3_unused_local_simple` | `function f(){return 2}…` | keeps `var u=1` |
+| `ladder_t3_nested_fn_advanced` | `console.log(1);` | emits the input |
+| `ladder_t3_unused_local_advanced` | `console.log(2);` | emits the input |
+| `ladder_t3_function_expr_advanced` | `console.log(1);` | emits the input |
+| `ladder_t3_iife_advanced` | `console.log(1);` | emits the input |
+
+Each is recorded in `tests/ladder/divergences.json` with a reason and a
+tracking issue. The ledger pins **our** current output as well as upstream's,
+which makes the known-gap list machine-checked in both directions: a gap cannot
+silently widen, and it cannot silently close either — matching upstream fails
+the harness, and that failure is the signal to delete the entry.
+
+The per-rung decision is a pure `verdict()` function so the gate's *failure*
+paths are themselves tested rather than assumed. Four negative tests drive it
+into each failure branch — an unrecorded divergence, a recorded gap that has
+started matching upstream, a recorded gap whose output has shifted (by stdout
+or by exit code), and a ledger whose record of upstream has drifted from the
+fixture bytes — plus one test asserting the two passing verdicts, so the
+negative tests cannot be satisfied by a `verdict` that only ever fails.
+
+The ledger's size is pinned at 6 in the same tripwire style as the reviewed
+fixture inventory. Without that, a change breaking a currently-passing rung
+could be made green by appending a ledger entry; growing the known-gap list
+should be a deliberate, reviewer-visible act.
+
+`flags.txt` is validated rather than passed through: each rung must be exactly
+`--compilation_level <level> --js tests/diff/<itself>/input/a.js`, with the
+level agreeing with the fixture-name suffix. That stops a rung being silently
+rewired to another rung's input, and keeps argv closed against write-capable
+flags. Output is compared as **bytes**, not via `from_utf8_lossy`, matching
+`tests/diff_minify.rs` — lossy decoding would let an encoding regression pass.
+
+Registered in `tests/oracle/manifest.json` as fixture set `ladder-v20260915`
+(`documented_release`, command `closure-flags-file-v1`). The reviewed fixture
+inventory tripwire in `tests/oracle_manifest.rs` moves from 626 to 671; the
+minify cohort is untouched at 462.
+
 ### Fixed - the correlation-vector trace no longer names passes that did not run
 
 The `passes` list in a correlation-vector trace came from two hand-maintained

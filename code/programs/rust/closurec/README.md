@@ -174,6 +174,28 @@ The `passes` field of a correlation-vector trace is taken directly from
 `PipelineOutput::execution_order`. A pass can appear there only by having run:
 there is no second list that could disagree with the pipeline.
 
+### Measured parity
+
+`tests/diff/ladder_*` is an ordered complexity ladder compiled by both
+`closurec` and the pinned Closure `v20260915` oracle. Agreement as of the
+2026-09-21 run over 52 rungs:
+
+| Level | Rungs agreeing | |
+|-------|---------------:|---|
+| `WHITESPACE_ONLY` | 49 / 52 | 94% |
+| `SIMPLE` | 31 / 52 | 60% |
+| `ADVANCED` | 13 / 52 | 25% |
+
+Agreement falls as the amount of claimed optimization rises. The `ADVANCED`
+figure flatters it: most of its agreements are rungs with nothing to optimize.
+Upstream `ADVANCED` reduces whole programs to their observable effect —
+`var o={a:1,b:2};console.log(o.a)` becomes `console.log(1)` — where `closurec`
+emits approximately the input. Treat `ADVANCED` as scaffolded rather than
+implemented.
+
+Known divergences are recorded in `tests/ladder/divergences.json`, each with a
+tracking issue, and are machine-checked: closing one fails the harness.
+
 The SIMPLE pipeline:
 
 ```text
