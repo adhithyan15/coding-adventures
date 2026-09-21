@@ -67,10 +67,30 @@ So for a preprocessed language:
   includes itself and re-lexes included files through the language's own lexer.
 
 The hook **API in this document is unchanged**, and no existing registration
-breaks. The preprocessor engine is constructed with its configuration and hands
-out a closure, so each call is still the pure `list[Token] → list[Token]`
-function this contract requires. Only the recommended *placement* of the
-inclusion step changes.
+breaks. Only the recommended *placement* of the inclusion step changes.
+
+### The preprocessor hook is stateful, and Principle 1 does not cover it
+
+The engine is constructed with its configuration and hands out a closure of the
+required `list[Token] → list[Token]` shape. That is the right *signature*, but
+it is **not** a pure function in the sense of Design Principle 1 above ("No
+side effects. No state."): it performs filesystem I/O to resolve includes, and
+it carries a macro table, an include stack and its resource counters.
+
+Principle 1 remains correct for the transforms it was written for. A
+preprocessor is the documented exception, and it carries extra obligations in
+exchange (see `PREP01-generic-source-preprocessor.md` §3):
+
+- It must be the **last** `post_tokenize` hook in the chain. It returns a
+  positional source map alongside the tokens, so a later hook that reorders or
+  synthesises tokens would silently misattribute every diagnostic's location.
+- Its closure is **single-use per translation unit**. It resets its macro
+  table, include stack and counters at the start of each invocation, or refuses
+  a second one — otherwise a reused lexer leaks macro definitions between
+  translation units.
+- Its source map is retrieved through an **explicit per-invocation accessor**,
+  never through ambient shared state, because this signature has no channel to
+  return it.
 
 ## Design Principles
 
