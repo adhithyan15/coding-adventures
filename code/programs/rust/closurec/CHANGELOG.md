@@ -4,6 +4,63 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Added - five ladder rungs for CCR-078, and the fix it stopped me shipping
+
+**No behaviour change.** This is measurement, and the reason it is only
+measurement is the useful part.
+
+`ladder_t6_{local_const,local_let,block_scope,top_const_cond,top_const_and}` at
+all three levels. The ladder is **57 rungs, 171 fixtures**; the reviewed
+inventory tripwire moves 782 → 797 and the ledger 62 → 68.
+
+CCR-078 reported that at SIMPLE `closurec` propagates a top-level `const` into
+its use site where upstream does not — the one place on the ladder where we
+optimize *more* than the oracle. Probing the oracle properly shows upstream
+treats a top-level `const` **two different ways depending on position**:
+
+| Position | upstream at SIMPLE |
+|---|---|
+| value — `const b=2;console.log(b);` | **not** substituted; comes back unchanged |
+| condition — `const DEBUG=false;if(DEBUG){…}else{…}` | value **is** used, branch folded, declaration kept: `const DEBUG=!1;console.log(2);` |
+
+The obvious fix — gate `inline-variables` to ADVANCED, as `inline`,
+`remove-unused-vars` and `treeshake` already are — closes the value-position
+rung and **breaks the whole condition-position family**, which `closurec`
+currently gets byte-identical to upstream. On a probe of eight condition shapes
+(`if` on `false`/`true`/`0`/`""`/`1`, `&&`, `||`, statement-position ternary),
+gating regressed **all eight**. Separately it closed the one **value**-position
+rung (`ladder_t6_let_const_simple`) that CCR-078 originally reported, and that
+is what made the change look like a fix — but no condition shape improves under
+it.
+
+Nothing caught that, because **no fixture in the 782-fixture inventory
+exercised a top-level `const` in a condition**. The suite passed at 0 failures
+with the regression present. `top_const_cond` and `top_const_and` exist so that
+cannot happen twice: they match upstream today and are pure regression guards.
+
+The three local-scope rungs measure the opposite defect, which the original
+rung also could not see because it declares at top level:
+
+| Input | upstream | `closurec` |
+|---|---|---|
+| `function f(){const b=2;return b+1}` | `function f(){return 3}` | unchanged |
+| `function f(){let b=2;return b+1}` | `function f(){return 3}` | unchanged |
+| `{const b=2;console.log(b);}` | `console.log(2);` | unchanged |
+
+`inline-variables` considers only top-level `const`, so nothing declared inside
+a function or block is propagated **at either optimizing level**. The `let` row
+shows the real constraint is scope, not `const`-ness.
+
+**The percentages move down, and that is correct.** `SIMPLE` 32/52 → 34/57 and
+`ADVANCED` 13/52 → 15/57: no rung closed, six divergences appeared that were
+always there and unmeasured, and the two new condition rungs match.
+`WHITESPACE_ONLY` is 54/57.
+
+The real fix is narrower than the issue implies — substitute into condition
+positions but not value positions at SIMPLE, and reach local scopes at both
+levels — and is left to CCR-078 with the corrected analysis recorded there.
+
+
 ### Fixed - the statement terminator, and a rung that closed (CCR-073)
 
 Depends on `closure-emitter` 0.59.0, which fixes two independent emitter
