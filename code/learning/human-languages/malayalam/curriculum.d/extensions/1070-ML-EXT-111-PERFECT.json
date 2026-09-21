@@ -1,0 +1,10 @@
+{
+  "id": "ML-EXT-111-PERFECT",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say that something has happened and still bears on now, not only that it happened.",
+  "prerequisites": [
+    "ML-EXT-110-MESSAGE"
+  ]
+}

@@ -2,7 +2,10 @@
   "id": "ML-A1-V-19",
   "category": "Kriya (the verb)",
   "label": "the present perfect: I have done it",
-  "probe": null,
+  "probe": [
+    "ML-GRAMMAR-C111-ITTU-01",
+    "ML-GRAMMAR-C111-PERFECT-01"
+  ],
   "anchorIds": [
     "ES-A1-PROXY",
     "ML-CORPUS",
@@ -14,5 +17,5 @@
     "A1-V-14"
   ],
   "malayalamSpecific": false,
-  "note": "Not taught. Malayalam builds it with the past participle plus undu, and neither the participle nor the construction appears -- so three Spanish points about participles and the perfect are open together."
+  "note": "CLOSED BY CHAPTER 111, AND THE OLD NOTE WAS HALF STALE. 'Neither the participle nor the construction appears' -- the participle half is FALSE (ML-C90-past-participle teaches vanna at sequence 3180, and establishes its regularity, which is what A1-V-10 and A1-V-14 ask about); the construction half is TRUE (a census for -ittu returned zero files). The chapter costs NO vocabulary: the past vannu (ML-C32-varuka) and undu (ML-C32-undu, whose gloss already read '[someone] has') were both long owned, and only the join was missing. It is taught as four shapes off one past form -- vannu, vanna, vannittu, vannittundu -- each the one above it with a single change, contrasting a vowel sign taken OFF against -ittu put ON."
 }

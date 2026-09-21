@@ -1,0 +1,18 @@
+{
+  "language": "malayalam",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:722111a64ef30ab2",
+  "lessonIds": [
+    "ML-C111-vannittu",
+    "ML-C111-vannittundu",
+    "ML-C111-past-or-perfect",
+    "ML-R111-perfect-recall"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "malayalam/narration/ch111.txt",
+  "json": "malayalam/narration/ch111.json",
+  "textHash": "fnv1a64:3a5c84d1cb247bf5",
+  "jsonHash": "fnv1a64:a266bbabee5ee810",
+  "findings": []
+}
