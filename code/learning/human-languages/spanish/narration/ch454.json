@@ -1,0 +1,975 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 454,
+  "title": "La vía cortada",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:49cbf060328c31c9",
+  "lessons": [
+    {
+      "id": "ES-C454-obra",
+      "sequence": 12030,
+      "title": "la obra — the works",
+      "headword": "la obra",
+      "romanization": "la obra",
+      "gloss": "the works, the building site — and the same Latin word as la oficina",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a8a0f35e45b5e85e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la oficina and arreglar. There is a Latin word for work hiding in the first, and it is about to come out on its own."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la obra",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la obra — the works: building work, and the site it happens on."
+            },
+            {
+              "kind": "speech",
+              "text": "Calle cortada por obras."
+            },
+            {
+              "kind": "speech",
+              "text": "Están de obras — they have the builders in. La obra empieza en marzo — work starts in March. Un obrero is a manual worker, and la mano de obra is labour."
+            },
+            {
+              "kind": "speech",
+              "text": "It also means a work of art or a play — una obra de teatro — which is the same idea: a thing somebody made."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: obras in the plural is the roadworks",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Singular and plural point at different things here:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Spanish",
+                "what it names"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "Spanish: la obra. what it names: the project, or the artwork.",
+                "Spanish: las obras. what it names: the works going on, the disruption."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Every barrier and diversion sign in Spain says OBRAS, plural. A Spaniard saying hay obras en mi calle is complaining about noise and dust, not about a sculpture."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep estar de obras as a phrase: it describes a building in the state of being worked on, and estar is right because it is a condition that will pass."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin opera, works — the plural of opus, a work, taken by Spanish as a singular feminine noun."
+            },
+            {
+              "kind": "speech",
+              "text": "The same opus is inside la oficina, which is opus plus facere: the place where work gets done. So a builder's site and an office are the same Latin word, arriving by different routes and landing far apart."
+            },
+            {
+              "kind": "speech",
+              "text": "Opera the music is the identical word again, borrowed through Italian: the works. And English operate, operation and opus are all here too. One Latin noun for work, and it has ended up meaning a hole in the road, a room with desks, and a night at the theatre."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "street closed for works",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: street closed for works]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "they have the builders in",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: they have the builders in]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what la obra and la oficina share",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *la obra* and *la oficina* share]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The roadworks? (Las obras, plural.) A play? (Una obra de teatro.) What did Latin opus mean? (A work.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C454-via",
+      "sequence": 12040,
+      "title": "la vía — the track",
+      "headword": "la vía",
+      "romanization": "la vía",
+      "gloss": "the track, the way — the word you have been saying inside todavía",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:76e49cf111e7a407",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el andén and todavía. One of those two has a road inside it, and it is not the one at the station."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la vía",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la vía — the track, the way, the route."
+            },
+            {
+              "kind": "speech",
+              "text": "Vía 4. Tren con destino Valencia."
+            },
+            {
+              "kind": "speech",
+              "text": "No cruce la vía — do not cross the track. La vía pública — the public highway, the wording on every municipal notice. Por vía aérea — by air."
+            },
+            {
+              "kind": "speech",
+              "text": "The andén is where you stand; the vía is the rails in front of it. A station announcement gives you both, and mixing them up will put you on the platform edge."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the accent that breaks a diphthong",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vía is two syllables: VÍ-a. Without the accent, via would be one syllable, because i and a together normally fuse."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "written",
+                "syllables"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "written: vía. syllables: VÍ-a.",
+                "written: día. syllables: DÍ-a.",
+                "written: familia. syllables: fa-MI-lia."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The mark on the i is not about stress position at all here. It is there to say: this vowel refuses to join the next one. Spanish has no other way to write that, so the accent does double duty across the language — sometimes marking stress, sometimes prising two vowels apart."
+            },
+            {
+              "kind": "speech",
+              "text": "Todavía has it for the same reason, and you have been reading it correctly for chapters without being told why."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin via, road — the word on every Roman milestone."
+            },
+            {
+              "kind": "speech",
+              "text": "And here is the payoff. Todavía is toda vía: all the way. It meant \"by every route, in any case\", and from there slid to \"still\" — the sense of something that has gone the whole distance and is still going."
+            },
+            {
+              "kind": "speech",
+              "text": "The family is everywhere once you see it: el viaje, a journey; el viaducto, a way carried over; English via, obvious (ob-viam, lying in the way), trivial (tri-vium, a place where three roads meet, so common it is worth nothing), and voyage."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "track 4, and do not cross the track",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: track 4, and do not cross the track]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which one is the platform and which the rails",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which one is the platform and which the rails]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what todavía is made of",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *todavía* is made of]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The track? (La vía.) How many syllables? (Two — the accent keeps them apart.) What does todavía literally say? (All the way.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C454-accidente",
+      "sequence": 12050,
+      "title": "el accidente — what falls on you",
+      "headword": "el accidente",
+      "romanization": "el accidente",
+      "gloss": "the accident — something that falls upon you, where an ocasión falls to you",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9c2f4e0aab272955",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la ocasión and roto. A chance and a breakage are about to meet in one Latin verb."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el accidente",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el accidente — the accident."
+            },
+            {
+              "kind": "speech",
+              "text": "Ha habido un accidente en la vía — there has been an accident on the track. Un accidente de tráfico — a road accident. Un accidente laboral — an accident at work, the phrase on every insurance form."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish says tener un accidente, and the adverb is por accidente — by accident, meaning unintentionally."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: -cc- is two sounds, not one",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "accidente has a double c, and unlike English the two letters do different jobs:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "letters",
+                "sound"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "letters: first c (before c). sound: k.",
+                "letters: second c (before i). sound: th in Spain, s elsewhere."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So the word is ak-thi-DEN-te, or ak-si-DEN-te. The rule underneath is one you already use: a Spanish c is hard before a, o, u and another consonant, and soft before e and i."
+            },
+            {
+              "kind": "speech",
+              "text": "The same double turns up in acción, dirección and lección. Once you hear the k in front of the soft one, these stop being awkward."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin accidere: ad-, towards, plus cadere, to fall. A thing that falls upon you."
+            },
+            {
+              "kind": "speech",
+              "text": "And la ocasión is the same cadere, with a different prefix — something that falls to you. Put the pair side by side and Spanish has a small map of luck:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "what falls, and how"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "word: la ocasión. what falls, and how: a chance falls your way.",
+                "word: el accidente. what falls, and how: a misfortune falls upon you."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Neither was chosen by anybody. That is the whole idea the root carries, and it is why accidental in English still means unplanned rather than harmful."
+            },
+            {
+              "kind": "speech",
+              "text": "The same cadere is in caer, to fall, and in English cadence, decay and cascade."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "there has been an accident on the track",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: there has been an accident on the track]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I did it by accident",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I did it by accident]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how ocasión and accidente are related",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how *ocasión* and *accidente* are related]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The accident? (El accidente.) What does cadere mean? (To fall.) Which one lands on you, and which drops in front of you? (Accidente on you, ocasión in front of you.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C454-servicio",
+      "sequence": 12060,
+      "title": "el servicio — the service",
+      "headword": "el servicio",
+      "romanization": "el servicio",
+      "gloss": "the service — and, on a door, the toilet",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:715b9fec7b0755d2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say servir and arreglar. Somebody comes out to the accident to do the second, and what they belong to is coming next."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el servicio",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el servicio — the service."
+            },
+            {
+              "kind": "speech",
+              "text": "El servicio de grúa — the recovery service, the tow truck. Los servicios de emergencia — the emergency services. Fuera de servicio — out of service, the sign on a broken lift or a stopped bus."
+            },
+            {
+              "kind": "speech",
+              "text": "And the one that catches people out: el servicio on a door means the toilet. ¿Dónde está el servicio? is how you ask, and los servicios is what the sign in a bar says."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: fuera de servicio, and its cousins",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Fuera de plus a bare noun is a fixed frame, and it turns up on notices constantly:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "sign",
+                "what it means"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "fuera de servicio means out of order.",
+                "fuera de plazo means past the deadline.",
+                "fuera de temporada means out of season."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "No article after de in any of them. That bare noun is the signal that you are looking at a set phrase rather than a description, and trying to insert el will sound wrong to a Spanish ear for the same reason \"out of the order\" does to an English one."
+            },
+            {
+              "kind": "speech",
+              "text": "Set beside estropeado, the difference is who is speaking: fuera de servicio is the institution's wording, estropeado is what a neighbour says."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin servitium, from servire, to serve — and behind that servus, a slave."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the uncomfortable root of a very ordinary word, and it has not disappeared: el siervo is a serf, and English servile keeps the sting. Spanish softened the rest of the family — servir is what a waiter does, el servicio is what a company sells — while the original sense stayed in the words nobody uses lightly."
+            },
+            {
+              "kind": "speech",
+              "text": "English got serve, servant and sergeant from the same place. The last one is serviens, \"one serving\", which rose from servant to soldier to rank."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the emergency services are on the way",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the emergency services are on the way]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the lift is out of service",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the lift is out of service]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how you would ask for the toilet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how you would ask for the toilet]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Out of service? (Fuera de servicio.) The toilet? (El servicio.) What was a servus? (A slave.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R454-repaso-corte",
+      "sequence": 12070,
+      "title": "(la obra, la vía, el accidente, el servicio) — from cold",
+      "headword": "(la obra, la vía, el accidente, el servicio)",
+      "romanization": "(la obra, la vía, el accidente, el servicio)",
+      "gloss": "cold retrieval of the four, and the two plurals that change what the word means",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:28d18cfc6dd82728",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say all four: the works, the track, the accident, the service."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the plural is not always more of the same",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two of these four shift meaning when you add the s:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "singular",
+                "plural"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "singular: la obra — the project. plural: las obras — the disruption.",
+                "singular: el servicio — the service. plural: los servicios — the toilets."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "This is worth holding because the plural is the form you will actually read. Every diversion sign says OBRAS and every bar door says SERVICIOS, so the singular meanings you learned are the ones you will meet less often."
+            },
+            {
+              "kind": "speech",
+              "text": "La vía and el accidente behave themselves and mean exactly more of the same thing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: every one of the four was already in the corpus",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "new word",
+                "where its root already was"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "new word: la obra. where its root already was: la oficina — opus + facere.",
+                "new word: la vía. where its root already was: todavía — toda vía, all the way.",
+                "new word: el accidente. where its root already was: la ocasión — both from cadere, to fall.",
+                "new word: el servicio. where its root already was: servir."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Todavía is the sharpest of the four. It is among the commonest words in the language, you have been using it for chapters, and the road was sitting inside it the whole time."
+            },
+            {
+              "kind": "speech",
+              "text": "That keeps happening — mira gave mirar, sí claro will give claro, el punto gave apuntar. When a new word looks like a piece of something you already say, check before learning it twice."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the street is closed for works",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the street is closed for works]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "do not cross the track",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: do not cross the track]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which two words change meaning in the plural",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which two words change meaning in the plural]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "All four again, in Spanish, without looking. Then one sentence that closes a road."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C454-sintesis-corte",
+      "sequence": 12080,
+      "title": "(calle cortada) — read it, then do it yourself",
+      "headword": "(calle cortada)",
+      "romanization": "(calle cortada)",
+      "gloss": "the payoff — read the barrier notice and the station announcement, then write one",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e56004b41cbe65ff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say las obras and la vía. Each one closes something below."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two notices on the same morning. Read both, then answer."
+            },
+            {
+              "kind": "speech",
+              "text": "1 — on a barrier."
+            },
+            {
+              "kind": "speech",
+              "text": "Calle cortada por obras hasta el día 12. Paso de peatones por la acera de enfrente."
+            },
+            {
+              "kind": "speech",
+              "text": "2 — over the loudspeaker."
+            },
+            {
+              "kind": "speech",
+              "text": "Atención. Por un accidente en la vía, el tren con destino Valencia saldrá con retraso. El servicio de autobús sustituirá al tren hasta las once."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how long the street is shut, and where to walk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how long the street is shut, and where to walk]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why the train is late",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why the train is late]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what is replacing it, and until when",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what is replacing it, and until when]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Por un accidente en la vía is doing the work of an English clause — \"because there has been an accident on the line\". Por plus a noun is how Spanish gives a cause on a notice, and it is shorter than any sentence you could build with porque. The same shape opened the first notice: cortada por obras."
+            },
+            {
+              "kind": "speech",
+              "text": "Then notice el servicio de autobús sustituirá al tren. The announcement names the service, not the buses, and the service is what acts. An English announcement would more likely say \"buses will replace the train\". Spanish prefers the institution as the subject in this register, which is the opposite of what the delivery card did — and the difference is that a card is apologising while an announcement is informing."
+            },
+            {
+              "kind": "speech",
+              "text": "Cortada agrees with la calle: feminine, because the street is."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now your turn, out loud and then in writing. Four lines: say the street is closed for works, say until when, say there has been an accident on the track, and say a bus service is replacing the train."
+            },
+            {
+              "kind": "speech",
+              "text": "Then check yourself: did you use por plus a noun to give the reason, and did cortada agree with what it describes?"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

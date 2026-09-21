@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:a5365f75ae251533",
+  "lessonIds": [
+    "ES-C454-obra",
+    "ES-C454-via",
+    "ES-C454-accidente",
+    "ES-C454-servicio",
+    "ES-R454-repaso-corte",
+    "ES-C454-sintesis-corte"
+  ],
+  "tex": "spanish/book/chapters/ch454-corte.tex"
+}

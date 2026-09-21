@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C453-limpieza",
+    "language": "spanish",
+    "chapter": 453,
+    "sequence": 11970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5409ebeeaa138de3"
+  },
+  "findings": []
+}

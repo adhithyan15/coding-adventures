@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:ab3cf746d3a279f9",
+  "lessonIds": [
+    "ES-C453-limpieza",
+    "ES-C453-instalacion",
+    "ES-C453-rotativo",
+    "ES-C453-consultar",
+    "ES-R453-repaso-limpieza",
+    "ES-C453-sintesis-limpieza"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch453.txt",
+  "json": "spanish/narration/ch453.json",
+  "textHash": "fnv1a64:0e0957e3fa1a5c43",
+  "jsonHash": "fnv1a64:b9bf9e5379da57a6",
+  "findings": []
+}

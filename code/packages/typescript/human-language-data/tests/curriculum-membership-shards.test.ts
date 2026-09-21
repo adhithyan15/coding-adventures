@@ -75,7 +75,8 @@ describe("direct curriculum lesson owners", () => {
     // tranche (chapters 431-436) and 7246 -> 7267 was the second (437-439) and
     // 7267 -> 7295 was the third (440-443) and
     // 7295 -> 7322 was the fourth (444-447) and
-    // 7322 -> 7351 is the fifth (448-451); the guard still does its job, which is to make any OTHER change to the public
+    // 7322 -> 7351 was the fifth (448-451) and
+    // 7351 -> 7376 is the sixth (452-455); the guard still does its job, which is to make any OTHER change to the public
     // graph fail loudly rather than pass quietly.
     //
     // Attribution was checked by RECONSTRUCTION, not assumed. A clean worktree
@@ -90,9 +91,9 @@ describe("direct curriculum lesson owners", () => {
     // segments from an in-memory graph leaves the remaining records ordered and
     // shaped as the larger load produced them, so it reproduces neither digest.
     // Only re-loading a checkout that never had the files answers the question.
-    expect(digest).toBe("37016337022aea6f679673edfd2e66dbb19602aa3846d745873d6100366b269f");
+    expect(digest).toBe("4a741b89803b22f66d6622bcc45b6ad73f6fc23a9f309269a6ed04b0116b8d99");
     expect(curricula.flatMap((curriculum) => curriculum.path).flatMap((path) => path.lessons))
-      .toHaveLength(7351);
+      .toHaveLength(7376);
   });
 
   it("keeps the canonical curriculum shards free of derived lesson arrays", () => {

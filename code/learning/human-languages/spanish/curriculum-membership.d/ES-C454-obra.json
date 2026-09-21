@@ -1,0 +1,11 @@
+{
+  "id": "ES-C454-obra",
+  "pathSegment": "ES-PATH-454-CORTE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-454-CORTE",
+      "order": 0
+    }
+  ]
+}

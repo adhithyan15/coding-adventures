@@ -1,0 +1,22 @@
+{
+  "chapter": 455,
+  "title": "La habitación",
+  "label": "ch:es-cuarto",
+  "canDo": "I can get a room ready and say so: what I have painted and what colour, what to put where, and what to hang out if the sun comes out.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "ES-C455-sintesis-cuarto",
+    "kind": "task",
+    "summary": "Read the message or notice this chapter's words exist for, then say the same thing back.",
+    "assesses": [
+      "ES-LEX-C455-CUARTO-01",
+      "ES-LEX-C455-CUARTO-02",
+      "ES-LEX-C455-CUARTO-03",
+      "ES-LEX-C455-CUARTO-04",
+      "ES-LEX-C455-CUARTO-05"
+    ],
+    "note": "CLARO IS THE FOURTH FREE CHAIN AND THE STRONGEST ONE YET. ES-C272-si-claro taught SÍ, CLARO early as a fixed way of agreeing AND glossed it as Latin clarus, bright -- what it never did was point the word at a colour or a room, which is the part this chapter adds; the reader has had the adjective in their mouth since the first weeks and never once used it of a wall, because agreeing asks nothing of the colour sense. Agreeing by saying 'clear!' is how Spanish arrives at 'of course'. The running list is now interesante->interesar, mira->mirar, el punto->apuntar, sí claro->claro, and LA TIENDA joins from the other direction: a shop IS this chapter's verb tender, a STRETCHED awning -- ES-C311-tienda already named that cloth, so this chapter supplies the VERB it was named from rather than revealing anything withheld, and tiendo/la tienda are visibly the same shape. THE STRESSED-VOWEL RULE IS CLOSED HERE, back where it started: ES-C36-dormir introduced ES-GRAMMAR-STEM-O-UE-06 for duermo in the first weeks, and dormitorio keeps the plain o because the stress lands three syllables along -- so the reader meets in one chapter the noun (rueda), the adjective pair, the conjugation (muestro, tiendo) and the original grammar atom, and can see that nothing was ever irregular. Two grammar points that pay beyond the chapter: a colour modified by claro or oscuro STOPS AGREEING (una pared verde but unas paredes verde claro), because the pair is standing in for 'of a light green colour' and Spanish leaves such compounds frozen; and METER IS NOT PONER -- meter is into an INSIDE and nearly always brings EN, poner is onto a place, so meter el libro en la caja against pon el libro en la mesa. meter is mittere worn smooth, and EL PERMISO is per + missus, something sent through -- one Latin verb, one arrival by speech and one from the page, the same split ch453 named. recién attaches only to participles IN SPAIN and agrees with them; much of Latin America, the Southern Cone especially, uses it as a plain adverb of time (recién llegué, recién ayer), and the lesson says so because it is tagged variety: general. pintar takes DE before the resulting colour."
+  }
+}

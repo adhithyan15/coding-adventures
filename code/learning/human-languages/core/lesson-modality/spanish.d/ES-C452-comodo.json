@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C452-comodo",
+    "language": "spanish",
+    "chapter": 452,
+    "sequence": 11940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b05176d5d034e59a"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C453-instalacion",
+    "language": "spanish",
+    "chapter": 453,
+    "sequence": 11980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3768c500da35727"
+  },
+  "findings": []
+}

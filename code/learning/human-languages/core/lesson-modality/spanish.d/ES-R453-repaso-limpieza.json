@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R453-repaso-limpieza",
+    "language": "spanish",
+    "chapter": 453,
+    "sequence": 12010,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:eadfcaff00bef02d"
+  },
+  "findings": []
+}

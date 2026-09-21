@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C454-servicio",
+    "language": "spanish",
+    "chapter": 454,
+    "sequence": 12060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:715b9fec7b0755d2"
+  },
+  "findings": []
+}

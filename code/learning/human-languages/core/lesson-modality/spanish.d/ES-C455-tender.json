@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C455-tender",
+    "language": "spanish",
+    "chapter": 455,
+    "sequence": 12120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:96b69dbd59877dfb"
+  },
+  "findings": []
+}

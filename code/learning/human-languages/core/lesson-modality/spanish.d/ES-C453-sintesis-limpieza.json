@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C453-sintesis-limpieza",
+    "language": "spanish",
+    "chapter": 453,
+    "sequence": 12020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:88c06e2cb77b0893"
+  },
+  "findings": []
+}
