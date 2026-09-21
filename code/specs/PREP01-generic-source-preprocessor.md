@@ -209,10 +209,28 @@ pub trait Dialect {
 /// check. The crate ships `RootedFs` as the only sanctioned production
 /// implementation; dialects MUST NOT supply their own `SourceFs`.
 pub trait SourceFs {
+    /// Resolves, opens and validates in one step. The returned `FileId`
+    /// names a RETAINED, already-verified open handle — see below.
     fn resolve(&self, request: &IncludeRequest) -> Result<FileId, PpError>;
     fn read(&self, file: FileId) -> Result<SourceText, PpError>;
 }
 ```
+
+**`FileId` names a retained open handle, and that is load-bearing.** Splitting
+the operation across two calls would otherwise reopen the very TOCTOU the rules
+below exist to close: if `resolve` opened a handle, validated it and dropped
+it, `read` would have to reopen, and every swap the handle check defeats — a
+symlink or junction substituted into a directory component, the file replaced
+after its size was checked — is live again in the window between the two calls.
+So `resolve` opens the file, performs every check below against that handle,
+and retains it; `FileId` indexes it; `read` reads *that* handle and never
+re-resolves a path. An implementation that reopens in `read` must re-perform
+the full identity and metadata verification on its own handle.
+
+**`FileId` is opaque and constructible only by `SourceFs`.** It is handed to
+dialects through `Dialect::lex(&self, text, file: FileId)`; a transparent
+newtype over an integer would let a dialect mint a `FileId` naming a different
+file and misattribute a token's provenance throughout the source map.
 
 **The engine never sees a path, so §6's containment row is enforced here.**
 That is a deliberate split — it keeps path policy in one auditable place — but
@@ -250,8 +268,11 @@ touches attacker-controlled input.
 
 ## 6. Resource and safety bounds
 
-These are engine-level and on by default; a dialect may tighten but not remove
-them. Each has a test in the slice that introduces it.
+These are engine-level and on by default. **Every bound has a finite default,
+and the configuration surface is tighten-only — for the embedding host as much
+as for a dialect.** Neither can raise a bound to infinity or disable one, so no
+deployment can reach an unbounded token or fuel budget through configuration
+alone. Each bound has a test in the slice that introduces it.
 
 The organising principle: **bound work and bytes, not only shape.** Counting
 nesting depth and emitted tokens leaves the dimensions an attacker actually
@@ -263,17 +284,17 @@ grow the token count, and fan-out that is never a cycle.
 | Include nesting depth | 200 | Deep include chains. (C requires ≥15 to work.) |
 | Include cycle detection | always on | `a.h` → `b.h` → `a.h`. **Stack-based**: a file may not appear twice on the *active* include stack. It is not global dedup, and cannot be — C permits a header to be included many times. |
 | **Total file inclusions** | 10 000 | The DAG include bomb, which defeats both rows above: `a.h` includes ten `b*.h`, each ten `c*.h`… At depth 8 — far inside the depth limit, and acyclic, so cycle detection never fires — that is 10⁸ file processings. §7 defers `#pragma once`, removing the one mechanism that would deduplicate it, so this counter is what holds v1 up. |
-| **Total source bytes processed** | configurable | Many small files rather than deep ones. |
-| **Maximum bytes per included file** | configurable | Checked from the opened handle's metadata before reading. |
+| **Total source bytes processed** | 256 MiB | Many small files rather than deep ones. |
+| **Maximum bytes per included file** | 16 MiB | Checked from the opened handle's metadata before reading. |
 | Path containment, regular-files-only, encoding | always on | See §5. Enforced in `RootedFs`. |
 | Macro expansion depth | 200 | Mutually recursive function-like macros. |
-| **Total tokens produced** | configurable | Expansion bombs. Counts every token the expander *creates* — emitted, consumed by `eval_condition`, or discarded. Counting only *emitted* tokens leaves a hole: `#define A0 1` / `A1 A0 A0` / … / `A40 A39 A39` inside `#if A40` produces 2⁴⁰ tokens that are consumed by the condition and never emitted, against a depth of only 40. The counter is shared across directive evaluation and body expansion and is never reset mid-translation-unit. |
+| **Total tokens produced** | 64 M | Expansion bombs. Counts every token the expander *creates* — emitted, consumed by `eval_condition`, or discarded. Counting only *emitted* tokens leaves a hole: `#define A0 1` / `A1 A0 A0` / … / `A40 A39 A39` inside `#if A40` produces 2⁴⁰ tokens that are consumed by the condition and never emitted, against a depth of only 40. The counter is shared across directive evaluation and body expansion and is never reset mid-translation-unit. |
 | **Maximum token spelling length** | 64 KiB | `stringize` and `paste` grow *bytes* while holding the token count flat, so a token counter is structurally blind to them. Nested pasting via an indirection layer yields identifier text exponential in source length from ~1 token. |
-| **Total bytes of synthesised token text** | configurable | Same class, aggregate. Both byte bounds are checked at the engine's `stringize`/`paste` call sites, not delegated to the dialect — a dialect's `paste` that allocates before returning is already past the bound. |
+| **Total bytes of synthesised token text** | 64 MiB | Same class, aggregate. Both byte bounds are checked at the engine's `stringize`/`paste` call sites, not delegated to the dialect — a dialect's `paste` that allocates before returning is already past the bound. |
 | **Macro-argument grouping nesting depth** | 200 | `F(((((…10⁶ parens…)))))` during argument collection. |
 | **Controlling-expression nesting depth** | 200 | The same, inside `#if`. |
 | Conditional nesting depth | 200 | Pathological `#if` nesting. |
-| **Total expansion steps ("fuel")** | configurable | The catch-all. One monotonically decreasing budget decremented by every token copied, hide-set union, rescan and file read, checked in the engine's main loop. This is the most valuable row in the table, because preprocessor DoS historically arrives through whichever dimension nobody enumerated — and no list, including this one, is complete. |
+| **Total expansion steps ("fuel")** | 2³⁰ | The catch-all. One monotonically decreasing budget decremented by every token copied, hide-set union, rescan and file read, checked in the engine's main loop. This is the most valuable row in the table, because preprocessor DoS historically arrives through whichever dimension nobody enumerated — and no list, including this one, is complete. |
 | **Maximum diagnostic count / quoted-text length** | 100 / 1 KiB | A stringized megabyte-long token renders a megabyte-long message, and a cascade emits one per token. Truncating *diagnostic text* is distinct from the no-silent-truncation rule on token streams below. |
 
 Three further requirements, normative because they constrain the engine's core
@@ -283,7 +304,11 @@ loop rather than adding a check to it:
    conditional traversals use explicit stacks. A recursive implementation turns
    a depth bound into a stack overflow, which in Rust is an abort — not a
    catchable panic, and not containable by any `catch_unwind` in an embedding
-   host. This constrains `Dialect::eval_condition` implementations too.
+   host. This constrains `Dialect::eval_condition` implementations too — and
+   because the dialect does that parsing, **the engine pre-scans the
+   controlling-expression token slice for grouping depth before dispatching to
+   `eval_condition`**, rather than trusting each dialect to self-police.
+   Otherwise a dialect authored later quietly reintroduces the abort.
 2. **Hide-sets are shared/persistent** — interned set ids or an immutable
    linked structure, never cloned per token. A naive owned hide-set makes
    expansion quadratic in tokens × active macros at no extra token count, i.e.
@@ -327,7 +352,12 @@ through the dialect hooks, not built in.
 *Acceptance:* the classic self-referential and mutually-recursive cases
 terminate with the standard-mandated output rather than looping; argument
 pre-expansion ordering matches the C rules on a table of cases drawn from the
-standard's own examples.
+standard's own examples; and **slice 1's no-panic / no-hang fuzz oracle is
+extended over macro definition and expansion**. That extension is required
+here, not optional: slice 1 fuzzes an engine that has no macros, while the
+exponential-blowup bounds in §6 (tokens produced, synthesised token bytes,
+fuel, hide-set cost) all guard subsystems that only come into existence in this
+slice.
 
 **Slice 3 — the C dialect, and real C.**
 `c.tokens` stops discarding `#…` lines; `c-lexer` surfaces directive tokens; a
