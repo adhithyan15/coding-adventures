@@ -8,6 +8,69 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-062 — four CLR test targets ran in no CI command (selected 2026-09-21)
+
+CLR16 landed in #15827. A fresh prioritization survey over
+`LANG-VM-FEATURE-COVERAGE.md`, `lang_matrix.rs`, `lang-aot/BUILD` and this
+backlog then found a rung-2 item ("missing CI protection for already-working
+conformance") outranking every rung-4/5 candidate, so it was selected ahead of
+them.
+
+`lang-aot/BUILD` runs its suites by naming each target explicitly. The
+CLR09-CLR16 campaign (2026-09-19..20) added `clr_long_branches`,
+`clr_source_typed`, `clr_strict_flow` and `clr_typed_scalars` and listed none of
+them; `BUILD` was last touched 2026-09-07. For the whole campaign those targets
+compiled in the check step and asserted nothing on any merge gate. All 19 tests
+pass when run by hand, so nothing is red — the defect is that nothing would have
+been reported if something had been. The BUILD header already warned about this
+exact failure mode and was still missed, because adding a `tests/*.rs` file is a
+complete, locally-green change and no tool reports an unprotected target.
+
+Fixed by listing the four targets, recording the mechanism in the BUILD header
+and in `lessons.d/`, and publishing a reusable `comm`-based diagnostic that
+diffs a crate's `tests/` directory against its BUILD list. Run before this fix
+it printed exactly those four names; after it, nothing.
+
+### Prioritization run, 2026-09-21
+
+Ranked by this document's own policy. VM-062 was taken first; the rest stay
+queued in this order.
+
+1. **VM-062 (rung 2, taken).** Four unprotected CLR test targets. Done here.
+2. **PREP01 generic source preprocessor (owner-directed).** A shared
+   preprocessor engine with per-language dialects. C is genuinely blocked on it:
+   `SIR27` scopes the frontend to ignoring two `#include` lines with no
+   `#define`, no macros and no conditionals, and `c.tokens` discards every `#…`
+   line in its `skip:` section. COBOL `COPY … REPLACING` is the second customer
+   and the proof the boundary is not C-shaped. Spec-first; see
+   `PREP01-generic-source-preprocessor.md`. This also corrects
+   `lexer-parser-hooks.md`, which places `#include` at `pre_tokenize` — not
+   faithful to C, where inclusion and conditionals interleave.
+3. **VM-058 publication (rung 2).** COBOL INSPECT region intersection is
+   implementation-complete locally with "publication/CI remains."
+4. **VM-063 ALGOL coverage-doc drift (rung 3, new).**
+   `LANG-VM-FEATURE-COVERAGE.md` states ALGOL 60 at 233 rows / 1631 cells;
+   `lang_matrix.rs` declares **292 rows / 2044 cells**. The pinned
+   `feature_coverage_doc_counts_match_programs_source` test asserts only the
+   seven non-ALGOL tuples, so the ALGOL row was free to drift and did. Rung 3
+   ("documentation that could send work down a dead path"), not rung 1: the
+   cells themselves are declared and run. ALGOL semantics remain separately
+   owned, but the *count* in a shared status document is this backlog's
+   business.
+5. **VM-064 ALGOL rows declare no BEAM backend (rung 4, new).** All 292 ALGOL
+   rows declare 7 backends, omitting `Beam`; every one of the 211 non-ALGOL rows
+   declares all 8. That is the only remaining systematic matrix hole — 292 cells.
+   Non-ALGOL BEAM is complete (BEAM08), so the substrate exists. Scope and
+   ownership need settling with the ALGOL owner before any work starts.
+6. **AOT00 T2 slice 2 (rung 5).** VM/JIT throw/catch reference oracle. The sole
+   unblocked rung of the only roadmap track with a written PR ladder; slice 1
+   landed in #15419. Its spec mandates one slice per PR.
+
+Also confirmed still open and unchanged, not re-ranked here: VM-059 (encoded
+CIL `call_builtin` lacks `input_i64`/`input_str`/`input_more`), VM-025 (full
+ALGOL CI exclusion, separately owned), the CLR carve-outs at lines 32-33 and
+86-105, and BEAM register allocation beyond 255 variables.
+
 ## Encoded CLR input prerequisites (selected 2026-09-19 after VM-058)
 
 ### CLR16 final carriage return repair (2026-09-20)
