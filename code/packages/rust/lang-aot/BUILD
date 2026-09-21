@@ -37,12 +37,24 @@
 # in CI. A bare `cargo test -p lang-aot` would make an accidental omission harder
 # to review.
 #
+# THAT WARNING HAS ALREADY BEEN MISSED ONCE. The CLR09-CLR16 campaign
+# (2026-09-19..20) added four test targets -- clr_long_branches,
+# clr_source_typed, clr_strict_flow, clr_typed_scalars, 19 tests between them --
+# and none were added here, because this file was last touched 2026-09-07. They
+# compiled in the check step and silently asserted nothing in CI for the whole
+# campaign. They are in the list below now.
+#
+# The failure mode is structural, not careless: adding a `tests/*.rs` file is a
+# complete, working, locally-green change, and nothing in the toolchain reports
+# that a new target went unprotected. If you add a test target to this crate,
+# add it to line 45 in the SAME commit.
+#
 # THE UNFILTERED TARGET IS DELIBERATELY EXCLUDED because it is red today:
 #
 #   lang_matrix          ALGOL-owned native-AOT four-dimensional-array cases
 #                        remain red on Linux (VM-D005). All non-ALGOL corpus
 #                        rows and focused differentials run separately below.
-cargo test -p lang-aot --lib --test cargo_archive_path --test array_ref_tracing --test beam_cons --test beam_emit --test beam_predicates --test beam_symbols_lambda --test cil_cons --test cil_emit --test cil_lambda --test cil_predicates --test cil_symbols --test clr_real_cons --test clr_real_lambda --test clr_real_macsyma --test clr_real_predicates --test clr_real_scalar --test clr_real_symbols --test conformance --test e6d2b_dynamic_arith --test end_to_end_smoke --test e6d6_llvm_records --test e6d6b_union_match_tagged --test e6d7a_wasm_closures --test historical_round_trip --test jit_mccarthy --test jvm_cons --test jvm_emit --test jvm_lambda --test jvm_predicates --test jvm_symbols --test llvm_cond --test llvm_cons --test llvm_gc_completion --test llvm_gc_write_barrier --test llvm_lambda --test llvm_predicates --test llvm_scalar --test llvm_symbols --test macos_native_lisp --test macsyma_conformance --test metacircular --test vm_gc_reclamation --test wasm_emit --test wasm_memory_growth
+cargo test -p lang-aot --lib --test cargo_archive_path --test array_ref_tracing --test beam_cons --test beam_emit --test beam_predicates --test beam_symbols_lambda --test cil_cons --test cil_emit --test cil_lambda --test cil_predicates --test cil_symbols --test clr_long_branches --test clr_real_cons --test clr_real_lambda --test clr_real_macsyma --test clr_real_predicates --test clr_real_scalar --test clr_real_symbols --test clr_source_typed --test clr_strict_flow --test clr_typed_scalars --test conformance --test e6d2b_dynamic_arith --test end_to_end_smoke --test e6d6_llvm_records --test e6d6b_union_match_tagged --test e6d7a_wasm_closures --test historical_round_trip --test jit_mccarthy --test jvm_cons --test jvm_emit --test jvm_lambda --test jvm_predicates --test jvm_symbols --test llvm_cond --test llvm_cons --test llvm_gc_completion --test llvm_gc_write_barrier --test llvm_lambda --test llvm_predicates --test llvm_scalar --test llvm_symbols --test macos_native_lisp --test macsyma_conformance --test metacircular --test vm_gc_reclamation --test wasm_emit --test wasm_memory_growth
 cargo test -p lang-aot --test lang_matrix t7_differential_random_basic_
 cargo test -p lang-aot --test lang_matrix portable_text_stdout_
 cargo test -p lang-aot --test lang_matrix non_algol_matrix_every_proven_cell_agrees -- --exact --nocapture
