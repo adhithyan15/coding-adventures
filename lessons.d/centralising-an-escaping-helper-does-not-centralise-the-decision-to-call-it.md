@@ -47,10 +47,28 @@ for src in hostile_cases {
 A missed call site shows up there automatically, because the bad output
 appears whether or not anyone remembered the site exists.
 
-**Verify the guard is not vacuous.** Revert the fix, confirm the test fails,
-restore it. This one was checked that way and did fail on the reverted bug â€” a
-hygiene test that passes because its inputs never reach the bad path is worse
-than none, since it reads as coverage.
+**Verify the guard is not vacuous — and check WHICH assertion fires.** The
+first version of this test asserted over `format!("{e:?}")`. `Debug for str`
+escapes control characters itself, so the control-character assertion could
+never fire: the guard was vacuous on exactly the half it was written for. It
+*was* "verified" by reverting the fix and watching the test go red — but the
+failure came from the unrelated *length* assertion, and nobody checked which
+one fired. A fourth review round caught it.
+
+Two rules follow:
+
+- A positive control must confirm the **specific** assertion you care about
+  fires, not merely that the test fails. Read the panic message.
+- Assert over the formatter **production** uses. Here that is `Display`:
+  `lang-aot` formats this error with `{}` straight into the build log, while
+  `Debug` sanitises on the way out and hides the very bug you are hunting.
+
+**Count sites, not inputs.** That same test had seven inputs and a comment
+claiming each reached a different message. Three of them were not lexable at
+all, died in the lexer with an identical error, and never reached the code
+under test — seven inputs, four sites. A `checked >= 5` floor on input count
+said nothing about coverage. Assert on the number of distinct message families
+actually reached.
 
 Applies equally to any cross-cutting obligation implemented as "call this
 helper": escaping, redaction, authorisation checks, quota accounting. If the

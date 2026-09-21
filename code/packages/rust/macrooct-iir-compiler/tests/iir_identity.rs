@@ -389,68 +389,117 @@ fn the_module_identifies_its_language_as_oct() {
 // Diagnostic hygiene, as a CLASS rather than a site
 // ===========================================================================
 
-/// No diagnostic reachable from the public entry point may carry a raw control
-/// character, nor run unbounded in length.
+/// Every diagnostic family reachable from the public entry point, driven with
+/// hostile text, asserting that none carries a raw control character or runs
+/// unbounded.
 ///
-/// This test exists because the same defect was found three times before it
-/// was fixed properly. `PpError::quote` escapes and truncates, and its own doc
-/// comment claimed that centralising it meant "a new interpolation cannot
-/// forget" — which is only true of call sites that actually call it. Review
-/// round after review round turned up one more that did not: first `RootedFs`,
-/// then the engine's include-cycle message, then `MemoryFs` — which is not
-/// test-only, it is what `lang-aot` builds for every MacroOct compile, so a
-/// raw `ESC [ 2 J` reached a build log from source alone.
+/// # Why this is an output-level test
 ///
-/// Centralising a helper does not centralise the decision to use it. So the
-/// invariant is asserted over OUTPUTS, where a missed call site shows up,
-/// rather than over call sites, where by definition it does not.
+/// `PpError::quote` escapes and truncates attacker-supplied text, and the same
+/// defect — a call site that simply did not call it — was found in three
+/// consecutive review rounds, in a different place each time: `RootedFs`, then
+/// the engine's cycle message and the dialect's `describe`, then `MemoryFs`
+/// (which is not test-only; `lang-aot` builds one for every MacroOct compile).
+///
+/// Centralising a helper centralises the implementation, not the decision to
+/// call it. A site that never calls it is invisible to any test that exercises
+/// sites somebody already thought of — so the invariant is asserted here, over
+/// outputs.
+///
+/// # Two traps this test itself fell into, recorded so they are not repeated
+///
+/// **Assert over `Display`, not `Debug`.** The first version used
+/// `format!("{e:?}")`. `Debug for str` escapes control characters itself, so
+/// the control-character assertion could never fire — the guard was vacuous on
+/// exactly the half it was written for. It was "verified" by reverting the fix
+/// and watching the test fail, but the failure came from the *length*
+/// assertion; nobody checked which one fired. `Display` is also what production
+/// uses: `lang-aot`'s MacroOct arm formats with `{}`.
+///
+/// **Count sites, not inputs.** The first version had seven inputs and a
+/// comment claiming each hit a different message. Three of them (a bare ESC
+/// after `@end`, `@if` and `@define`) are not lexable at all, so all three died
+/// in the lexer with the same error and never reached the dialect. Seven inputs,
+/// four sites. The only channel for a control character into a *token value* is
+/// a string literal, so the cases below use that deliberately.
 #[test]
 fn no_diagnostic_leaks_a_raw_control_character_or_runs_unbounded() {
-    let esc = "\u{1b}[2J";
+    const ESC: &str = "\u{1b}[2J";
     let long = "A".repeat(5000);
 
-    // Each entry must fail, and each routes through a different message.
-    let cases: Vec<String> = vec![
-        // missing include — via MemoryFs, the production path for MacroOct
-        format!("@include \"{esc}pwned\"\nfn main() {{ out(1, 0); }}\n"),
-        format!("@include \"{long}\"\nfn main() {{ out(1, 0); }}\n"),
-        // unknown directive — via the dialect's glued-suffix hint
-        format!("@end{esc}\nfn main() {{ out(1, 0); }}\n"),
-        format!("@end{long}\nfn main() {{ out(1, 0); }}\n"),
-        // condition operands and an unterminated group
-        format!("@if {esc}\nfn main() {{ out(1, 0); }}\n"),
-        "@if 1\nfn main() { out(1, 0); }\n".to_string(),
-        // a macro definition, which slice 1 refuses
-        format!("@define {esc} 1\nfn main() {{ out(1, 0); }}\n"),
+    // (label, source). The label names the diagnostic family each input is
+    // meant to reach, so a failure says which one broke.
+    let cases: Vec<(&str, String)> = vec![
+        // -- MemoryFs::resolve, the round-3 miss ---------------------------
+        ("missing-include-esc", format!("@include \"{ESC}pwned\"\nfn main() {{ out(1, 0); }}\n")),
+        ("missing-include-long", format!("@include \"{long}\"\nfn main() {{ out(1, 0); }}\n")),
+        // -- the lexer, which is where a bare control character dies -------
+        ("lexer-bare-esc", format!("@end{ESC}\nfn main() {{ out(1, 0); }}\n")),
+        // -- the dialect's unknown-directive hint --------------------------
+        ("unknown-directive-long", format!("@end{long}\nfn main() {{ out(1, 0); }}\n")),
+        // -- the dialect's describe(), reached ONLY via a string literal ---
+        //    A bare ESC never gets this far, so these are the cases that
+        //    actually exercise operand reporting with hostile text.
+        ("operand-esc-else", format!("@if 1\n@else \"{ESC}x\"\n@end\nfn main() {{ out(1, 0); }}\n")),
+        ("operand-esc-end", format!("@if 1\n@end \"{ESC}x\"\nfn main() {{ out(1, 0); }}\n")),
+        ("operand-esc-if", format!("@if \"{ESC}x\"\n@end\nfn main() {{ out(1, 0); }}\n")),
+        ("operand-esc-define", format!("@define \"{ESC}x\" 1\nfn main() {{ out(1, 0); }}\n")),
+        ("operand-long-end", format!("@if 1\n@end \"{long}\"\nfn main() {{ out(1, 0); }}\n")),
+        // -- the engine's own structural messages --------------------------
+        ("unterminated-if", "@if 1\nfn main() { out(1, 0); }\n".to_string()),
+        ("stray-end", "@end\nfn main() { out(1, 0); }\n".to_string()),
+        ("define-refused", "@define X 1\nfn main() { out(1, 0); }\n".to_string()),
     ];
 
-    let mut checked = 0;
-    for src in &cases {
-        let Err(e) = compile_source(src, "hygiene") else { continue };
-        checked += 1;
-        let msg = format!("{e:?}");
+    let mut seen_messages = std::collections::BTreeSet::new();
 
-        if let Some(bad) = msg.chars().find(|c| c.is_control()) {
+    for (label, src) in &cases {
+        // Display, not Debug: Debug escapes control characters on its own and
+        // would make the assertion below unfalsifiable. Display is also the
+        // formatter `lang-aot` uses for this error.
+        let msg = match compile_source(src, "hygiene") {
+            Ok(_) => panic!("`{label}` was expected to fail but compiled — this case no longer exercises the diagnostic path it guards"),
+            Err(e) => e.to_string(),
+        };
+
+        // Newline is legitimate: Oct's type errors are genuinely multi-line.
+        // Everything else — ESC above all, but also CR, which rewrites a line
+        // a reader has already seen — must not survive into a build log.
+        if let Some(bad) = msg.chars().find(|c| c.is_control() && *c != '\n') {
             panic!(
-                "diagnostic carries a raw control character {bad:?} — a terminal \
-                 escape reaches the build log from source alone: {msg:?}"
+                "`{label}`: diagnostic carries a raw control character {bad:?} — \
+                 a terminal escape reaches the build log from source alone: {msg:?}"
             );
         }
 
-        // Generous ceiling: 1 KiB of quoted text plus whatever fixed prose the
-        // message wraps it in. The point is that it is bounded at all.
         assert!(
-            msg.len() < 4096,
-            "diagnostic ran to {} bytes; attacker-derived text must be truncated: {}",
+            msg.len() < 8192,
+            "`{label}`: diagnostic ran to {} bytes; attacker-derived text must be \
+             truncated: {}",
             msg.len(),
             &msg[..200.min(msg.len())]
         );
+
+        // Record the message with its variable parts removed, so we can count
+        // how many DISTINCT families were actually reached.
+        let family: String = msg
+            .chars()
+            .filter(|c| !c.is_ascii_digit() && !c.is_control())
+            .collect::<String>()
+            .chars()
+            .take(60)
+            .collect();
+        seen_messages.insert(family);
     }
 
+    // Coverage is about distinct message FAMILIES, not input count. An earlier
+    // version asserted `checked >= 5` on inputs while three of them collapsed
+    // onto one site — a floor on count is not a floor on coverage.
     assert!(
-        checked >= 5,
-        "only {checked} of these inputs failed to compile — if MacroOct started \
-         accepting them, this test is no longer exercising the diagnostic paths \
-         it was written to guard"
+        seen_messages.len() >= 6,
+        "these inputs reached only {} distinct diagnostic families, so the guard \
+         covers less than it appears to; families seen: {:#?}",
+        seen_messages.len(),
+        seen_messages
     );
 }

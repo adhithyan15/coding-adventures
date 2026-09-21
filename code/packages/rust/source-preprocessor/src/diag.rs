@@ -70,6 +70,13 @@ impl PpError {
     /// entry point — a missed call site shows up there whether or not anyone
     /// remembered the site exists.
     ///
+    /// That test asserts over `Display`, not `Debug`, and the distinction is
+    /// load-bearing: `Debug for str` escapes control characters by itself, so
+    /// a `{:?}`-based assertion can never fire and the guard would be vacuous
+    /// on exactly the half it exists for. `Display` is also the formatter the
+    /// production consumer uses — `lang-aot`'s MacroOct arm formats this error
+    /// with `{}` straight into the build log.
+    ///
     /// **Truncation.** On a char boundary, because slicing a `String`
     /// mid-UTF-8 panics, and a diagnostic path that panics on hostile input
     /// defeats the whole no-panic contract. Note the order: escape first, then
