@@ -180,31 +180,60 @@ same shape `math:sqrt/1` and `ets:lookup_element/3` already use. No new opcode.
 needed here — and an off-by-one here would not raise, it would return a wrong
 number, so this is stated rather than assumed.
 
-### 4.2 `:ets` — a reserved atom key written at allocation
+### 4.2 `:ets` — the handle becomes the pair `[Tab | N]`
 
-The `:ets` table cannot report an extent it was never told, so `alloc_array`
-must record it. Today that path explicitly discards the length:
+An ets table cannot report an extent it was never told, so the length has to
+be carried by the program. **Where** it is carried is the whole of this
+section, and the first answer was wrong twice over.
 
-```rust
-let _ = get_src!(instr, 0); // shape check only; size is unused
+**What was tried first, and why it failed.** Store the length *inside* the
+table under a reserved key, and read it back with the `ets:lookup_element/3`
+that `array_get` already uses. It passes every test on Linux and on a
+developer's machine. It has two defects, and neither is visible from the code:
+
+1. **It is not GC-safe.** Inserting an entry needs a tuple, and this backend
+   has no tuple-construction opcode — so it needs `erlang:list_to_tuple/1`, a
+   *second* `call_ext`. The table identifier must survive that call, and the
+   only place to keep it is a scratch x-register above `live`, which is **not
+   a GC root**. An ets tid is a heap-allocated magic reference, so a collection
+   inside `list_to_tuple/1` relocates the real term and leaves the parked copy
+   dangling. The emulator reports `size_object: bad tag for 0x…` — and only
+   sometimes, because whether a collection happens there depends on how full
+   the heap is. It passed Linux CI and the full local suite, and failed on
+   macOS.
+2. **It is forgeable.** A reserved key inside a table the program can also
+   write is not reserved. Security review demonstrated the path:
+   `alloc_closure` interns any source-supplied string as an atom, `field_load`
+   lifts it back out as ordinary data, and `array_set` will then use it as an
+   index — overwriting the recorded length and forging the result of
+   `array_len`.
+
+**What is shipped.** The handle *is* the pair `[Tab | N]`.
+
+```
+  x0 = Tab (returned by ets:new/2),  x1 = N
+  test_heap 2, 2            ; one cons cell = 2 words; roots are x0 and x1
+  put_list x0, x1 -> dest   ; dest = [Tab | N]
 ```
 
-Instead, after `ets:new/2`, insert one extra entry pairing a reserved key with
-`N`, and implement `array_len` as `ets:lookup_element(Tab, <reserved>, 2)` —
-the same call `array_get` already uses, with a reserved key instead of an
-integer index.
+One opcode, emitted while the table is still in `x0` and still a root. No
+second call, so nothing is ever parked across one. No in-table key, so there
+is nothing to forge. Both defects vanish rather than being mitigated.
 
-**The reserved key must be an atom, not `-1`.** A negative integer key would
-also avoid collision with the `0..N-1` index space, but `BEAMOperand::i` takes
-a `u64` and this backend has no way to encode a negative literal operand. An
-atom key is directly expressible via the existing `BEAMOperand::a` (the
-`farray` table-name atom already uses it), and cannot collide with an integer
-index under any future index scheme, including one that admits negative
-indices.
+`array_len` on this substrate is then a single `get_list` taking the tail — no
+`call_ext` at all, where the previous shape needed one. `array_get` and
+`array_set` pay one `get_list` to recover the table from the head. The
+representation that is correct is also the cheaper one.
 
-Cost: one extra `ets:insert/2` per array allocation, O(1). The alternative
-considered — pre-populating all `N` cells at `alloc_array` — is O(n) and is
-**not** adopted here; see section 5.
+`test_heap` is still required: `put_list` allocates a cons cell and does not
+grow the heap. Its `live` is a plain count, so both values are moved down into
+`x0`/`x1` first, making `live = 2` correct *and* minimal — a wider count would
+sweep in uninitialised registers the GC would then try to read as live terms.
+
+**What this costs.** An ets-backed array handle is no longer interchangeable
+with a bare tid. Nothing outside the three array ops ever inspects one, so the
+change is contained, but it is a representation change rather than an addition
+and is recorded as such.
 
 ### 4.3 The liveness rule this backend keeps violating
 

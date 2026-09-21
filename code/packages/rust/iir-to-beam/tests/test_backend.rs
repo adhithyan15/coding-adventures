@@ -5024,79 +5024,99 @@ fn beam10_array_len_on_i64_asks_atomics_for_its_size() {
     );
 }
 
+/// On the ets substrate `array_len` emits **no call at all**.
+///
+/// The handle is the pair `[Tab | N]`, so the length is its tail: one
+/// `get_list`. That is the visible consequence of the representation this
+/// backend settled on after the in-table reserved key turned out to be both
+/// GC-unsafe (a second `call_ext` with the table parked in a non-root
+/// register) and forgeable from crafted IIR.
+///
+/// The two negatives are the point. `array_len`'s `type_hint` is `"i64"`, so
+/// a dispatch copied from `array_get` would conclude "not f64/str, therefore
+/// atomics" and call `atomics:info/1` on an ets handle. And `ets:info/2` must
+/// never be consulted: it counts entries INSERTED, so a ten-element array with
+/// three cells written would report 3 — plausible, wrong, and wrong on exactly
+/// the substrate ALGOL `real` arrays use.
 #[test]
-fn beam10_array_len_on_f64_reads_the_recorded_length_from_ets() {
+fn beam10_array_len_on_f64_reads_the_length_from_the_handle_pair() {
     let beam = lower_iir_to_beam(&array_len_module("array<f64>"), &IIRBeamConfig::default())
         .expect("lower array<f64> array_len");
     assert!(
-        calls_mfa(&beam, "ets", "lookup_element", 3),
-        "must read the recorded length back out of the ets table"
+        beam.instructions.iter().any(|i| i.opcode == 65 /* get_list */),
+        "array_len on an ets-backed array must destructure the [Tab | N] handle"
     );
-    // THE POINT OF THE TEST. `array_len`'s type_hint is "i64", so a dispatch
-    // copied from `array_get` would conclude "not f64/str, therefore atomics"
-    // and emit `atomics:info/1` against an ets table identifier — a runtime
-    // `badarg`. Assert that it does not.
     assert!(
         !calls_mfa(&beam, "atomics", "info", 1),
         "must NOT call atomics:info/1 on an ets-backed array"
     );
-    // And it must never ask ets for its own size: `ets:info(Tab, size)`
-    // returns the number of entries INSERTED, which for a sparsely-written
-    // array is a small, plausible, wrong answer rather than an error.
     assert!(
         !calls_mfa(&beam, "ets", "info", 2),
         "ets:info/2 counts inserted entries, not the declared length"
     );
+    assert!(
+        !calls_mfa(&beam, "ets", "lookup_element", 3),
+        "the length no longer lives inside the table, so no lookup is needed"
+    );
 }
 
+/// `array<str>` shares the ets substrate, so it shares the pair handle too.
 #[test]
 fn beam10_array_len_on_str_shares_the_ets_substrate() {
     let beam = lower_iir_to_beam(&array_len_module("array<str>"), &IIRBeamConfig::default())
         .expect("lower array<str> array_len");
-    assert!(calls_mfa(&beam, "ets", "lookup_element", 3), "array<str> is ets-backed too");
+    assert!(
+        beam.instructions.iter().any(|i| i.opcode == 65 /* get_list */),
+        "array<str> is ets-backed too, so its handle is a pair"
+    );
     assert!(!calls_mfa(&beam, "atomics", "info", 1), "array<str> is not on atomics");
 }
 
+/// `alloc_array` on the ets path pairs the table with its declared length.
+///
+/// Before BEAM10 the size operand was discarded outright (`let _ =
+/// get_src!(...)`, "size is unused"), because `ets:new/2` takes no size. That
+/// was the only moment at which the declared length was still known, so
+/// `array_len` had nothing to read.
+///
+/// The negatives matter as much: the first version of this code inserted a
+/// length entry INTO the table, which needed `erlang:list_to_tuple/1` and so a
+/// second `call_ext` with the table parked in a non-GC-root scratch register.
+/// That corrupted the heap (`size_object: bad tag`) on macOS CI. A `put_list`
+/// needs no call, so neither of those instructions may appear on this path.
 #[test]
-fn beam10_alloc_array_on_ets_records_the_declared_length() {
-    // Before BEAM10 the `:ets` path discarded its size operand entirely
-    // (`let _ = get_src!(instr, 0); // size is unused`), because `ets:new/2`
-    // takes no size. That was the only moment at which the declared length was
-    // still known, so `array_len` had nothing to read. It is now stored.
+fn beam10_alloc_array_on_ets_builds_the_handle_pair_without_a_second_call() {
     let beam = lower_iir_to_beam(&array_len_module("array<f64>"), &IIRBeamConfig::default())
         .expect("lower");
     assert!(
-        calls_mfa(&beam, "ets", "insert", 2),
-        "alloc_array on ets must insert the length entry"
+        calls_mfa(&beam, "ets", "new", 2),
+        "the table itself is still an ets table"
     );
-    // The reserved key must be an ATOM. A negative integer key would also
-    // avoid colliding with the 0..N-1 index space, but `BEAMOperand::i` takes
-    // a u64 — this backend cannot encode a negative literal operand at all.
-    // The reserved key must be an ATOM. A negative integer key would also
-    // avoid colliding with the 0..N-1 index space, but `BEAMOperand::i` takes
-    // a u64 — this backend cannot encode a negative literal operand at all.
-    // Assert the insert carries an atom operand naming the reserved key.
-    let key_atom = beam
-        .atoms
-        .iter()
-        .position(|a| a.contains("array_len"))
-        .map(|i| i + 1) // BEAM atom indices are 1-based; `position` is 0-based
-        .expect("the reserved length key must be in the atom table");
     assert!(
-        beam.instructions.iter().any(|i| {
-            i.operands.iter().any(|o| {
-                format!("{:?}", o.tag) == "A" && o.value as usize == key_atom
-            })
-        }),
-        "the reserved key atom must actually be referenced by an instruction"
+        beam.instructions.iter().any(|i| i.opcode == 69 /* put_list */),
+        "alloc_array on ets must build the [Tab | N] pair"
     );
+    assert!(
+        !calls_mfa(&beam, "erlang", "list_to_tuple", 1),
+        "building the pair must not need a call — that call is what forced the \
+         table into a non-root register and corrupted the heap"
+    );
+    assert!(
+        !calls_mfa(&beam, "ets", "insert", 2),
+        "the length is carried by the handle, not inserted into the table"
+    );
+    // The reservation is still required: `put_list` allocates and does not
+    // grow the heap.
+    let heap = first_index_of(&beam, 16).expect("test_heap present");
+    let put = first_index_of(&beam, 69).expect("put_list present");
+    assert!(heap < put, "test_heap must precede the put_list ({heap} vs {put})");
 }
 
+/// The substrate map is seeded from `IIRFunction::params`, not only from
+/// defining instructions — an array passed into a procedure has no
+/// `alloc_array` in the callee at all.
 #[test]
 fn beam10_array_len_resolves_a_handle_arriving_as_a_parameter() {
-    // The substrate map is seeded from `IIRFunction::params`, not only from
-    // defining instructions — an array passed into a procedure has no
-    // `alloc_array` in the callee at all.
     let module = make_module_fn(
         "takes_array",
         vec![("arr", "array<f64>")],
@@ -5108,7 +5128,10 @@ fn beam10_array_len_resolves_a_handle_arriving_as_a_parameter() {
     );
     let beam = lower_iir_to_beam(&module, &IIRBeamConfig::default())
         .expect("a parameter's declared type must resolve its substrate");
-    assert!(calls_mfa(&beam, "ets", "lookup_element", 3), "param typed array<f64> is ets-backed");
+    assert!(
+        beam.instructions.iter().any(|i| i.opcode == 65 /* get_list */),
+        "a param typed array<f64> is ets-backed, so its handle is a pair"
+    );
     assert!(!calls_mfa(&beam, "atomics", "info", 1), "and must not be treated as atomics");
 }
 

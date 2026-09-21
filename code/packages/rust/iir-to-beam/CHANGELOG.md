@@ -141,6 +141,38 @@ Both rules are now hoisted into `validate::check_module_name` and applied to
 `config.module_name` at the top of `lower_iir_to_beam`, so the string that is
 actually interned is the string that is checked.
 
+### The representation this arrived at, and the two defects that forced it
+
+An ets-backed array handle is the **pair `[Tab | N]`**, not a bare table
+identifier. That was not the first design, and the path to it is the useful
+part.
+
+Storing the length *inside* the table under a reserved key looks obvious and is
+wrong twice:
+
+1. **Not GC-safe.** An insert needs a tuple; this backend has no
+   tuple-construction opcode, so it needs `erlang:list_to_tuple/1` — a second
+   `call_ext` — with the table parked in a scratch x-register above `live`,
+   which is not a GC root. An ets tid is a heap-allocated magic reference, so a
+   collection inside that call relocated the real term and left the parked copy
+   dangling: `size_object: bad tag for 0x…`. Intermittently, on macOS CI only,
+   after passing Linux CI *and* the full local suite twice.
+2. **Forgeable.** A reserved key inside a table the program can also write is
+   not reserved: `alloc_closure` interns any source string as an atom,
+   `field_load` lifts it back out as data, and `array_set` will use it as an
+   index.
+
+A `put_list` needs no call. The pair is built while the table is still in `x0`
+and still a root, so nothing is parked across anything, and there is no
+in-table key to forge. Both defects vanish rather than being mitigated — and
+the correct shape is also the cheaper one: `array_len` on ets is now a single
+`get_list` where it was a `call_ext`, and `array_get`/`array_set` pay one
+`get_list` to recover the table.
+
+Verified: 2000 ets-backed allocations in one function (which segfaulted the
+emulator before) run cleanly, and the ALGOL corpus still reports **277 of 292**
+passing on real `erl` with no heap corruption in any bucket.
+
 ### The heap bug CI caught, and the latent one beside it
 
 `put_list` allocates a cons cell and does **not** check or grow the process

@@ -919,72 +919,36 @@ pub fn lower_iir_to_beam(
     //   plausible number instead of an error, on exactly the substrate ALGOL
     //   `real` arrays use. So `array_len` must never consult it.
     //
-    // Instead `alloc_array` records the length in the table under a RESERVED
-    // ATOM KEY, and `array_len` reads it back with the same
-    // `ets:lookup_element/3` that `array_get` already uses.
+    // So the length has to be carried by the program, and the choice of WHERE
+    // is the interesting part. The first version of this code stored it inside
+    // the ets table under a reserved key, and that was wrong twice over:
     //
-    // The key is an atom rather than a negative integer for a concrete
-    // reason, not a stylistic one: `BEAMOperand::i` takes a `u64`, so this
-    // backend has no way to encode a negative literal operand at all. An atom
-    // is directly expressible (the `farray` table name already is one), and
-    // cannot collide with an element index under any future index scheme —
-    // including one that admits negative indices. Verified on `erl` that an
-    // atom key coexists with integer keys in the same table and that integer
-    // lookups keep working beside it.
+    //   1. Inserting an entry needs a TUPLE, and this backend has no
+    //      tuple-construction opcode, so it needs `erlang:list_to_tuple/1` —
+    //      a second `call_ext`. The table identifier had to survive that call
+    //      in a scratch x-register above `live`, which is NOT a GC root. An
+    //      ets tid is a heap-allocated magic reference, so a collection inside
+    //      that call relocated the real term and left the parked copy
+    //      dangling: `size_object: bad tag for 0x…`, intermittently, on macOS
+    //      CI only.
+    //   2. A reserved key inside a table the program can also write is
+    //      forgeable. Security review demonstrated it: `alloc_closure` interns
+    //      any source-supplied string as an atom and `field_load` lifts it back
+    //      out as ordinary data, so `array_set` could be handed the reserved
+    //      key as an index and overwrite the recorded length.
     //
-    // The key IS forgeable from crafted IIR, and the name reflects that.
-    //
-    // An earlier version of this comment claimed otherwise, on the reasoning
-    // that `array_set`'s key operand always holds a runtime INTEGER and that
-    // nothing here produces an atom as a runtime VALUE. The first half is
-    // true; the second is FALSE, and security review found the path:
-    //
-    //     %c = alloc_closure Str("$lang_vm_array_len")  ; interns the NAME as
-    //                                                   ; an atom and builds
-    //                                                   ; [atom | captures]
-    //     %k = field_load %c, 0                         ; get_list -> %k = atom
-    //          array_set %arr, %k, 9999                 ; ets:insert(Tab,
-    //                                                   ;   {reserved, 9999})
-    //     %n = array_len %arr                           ; reads back 9999
-    //
-    // `alloc_closure` interns any source-supplied string as an atom and
-    // `put_list`s it into a register; `field_load` then lifts it out as an
-    // ordinary value. So an atom absolutely can become runtime data here.
-    //
-    // The consequence is bounded — a program can only corrupt its OWN array's
-    // recorded length, and every access is still type- and range-checked by
-    // BEAM's own BIFs, so this is guest data integrity rather than host memory
-    // safety. But a compiler-maintained invariant that untrusted input can
-    // rewrite is not an invariant, so it is closed rather than documented.
-    //
-    // Two measures, and the NAME is the smaller one:
-    //
-    //   1. The key uses the `$lang_vm_` prefix this backend already
-    //      established for `$lang_vm_input_peek` (see the BEAM07 input cache
-    //      above), instead of a short guessable `$array_len`.
-    //   2. `validate_for_beam` REJECTS that prefix at every site where a
-    //      source-supplied string becomes an atom — function names, the
-    //      `global_load`/`global_store` key, and `alloc_closure`'s function
-    //      name. That is what actually closes the hole; the prefix alone would
-    //      only make it marginally harder to hit by accident.
-    //
-    // Measure 2 also closes a pre-existing instance of the same class that
-    // needed no closure trick at all: `global_store Str("$lang_vm_input_peek")`
-    // would `erlang:put/2` straight over BEAM07's stdin lookahead cache.
-    //
-    // One observable side effect, recorded because it is real even though
-    // nothing here depends on it: the reserved entry makes
-    // `ets:info(Tab, size)` one larger than the element count. No code in
-    // this backend calls `ets:info/2` — that is precisely why the paragraph
-    // above is a design constraint rather than a live bug — but anything
-    // added later that does must subtract the length entry.
+    // The handle is instead the PAIR `[Tab | N]`, built with a single
+    // `put_list` while the table is still in x0 and still a root. No second
+    // call, so nothing is ever parked across one; no in-table key, so there is
+    // nothing to forge. `array_len` becomes one `get_list` instead of a
+    // `call_ext`, and `array_get`/`array_set` pay one `get_list` to recover
+    // the table — cheaper than the version that was also broken.
     //
     // See `code/specs/BEAM10-array-length.md`.
     let maps_atom = atoms.intern("maps");
     let atom_info = atoms.intern("info");
     let atom_get = atoms.intern("get");
     let atom_size = atoms.intern("size");
-    let atom_array_len_key = atoms.intern("$lang_vm_array_len");
     let import_atomics_info = imports.intern(atomics_atom, atom_info, 1); // atomics:info/1
     let import_maps_get = imports.intern(maps_atom, atom_get, 2); // maps:get/2
 
@@ -4103,25 +4067,25 @@ pub fn lower_iir_to_beam(
                             ]));
                         }
                         ArraySubstrate::Ets => {
-                            // An ets table has no extent, so we do NOT ask it
-                            // for one: `ets:info(Tab, size)` counts INSERTED
-                            // ENTRIES and would report 3 for a ten-element
-                            // array with three cells written (confirmed on
-                            // real `erl`). The length was recorded under the
-                            // reserved atom key by `alloc_array`; read that.
+                            // The handle IS `[Tab | N]`, so the length is its
+                            // TAIL. One `get_list`, no call, nothing to spend.
                             //
-                            // Same `ets:lookup_element/3` shape `array_get`
-                            // uses -- position 2 of the {Key, Val} tuple --
-                            // with an atom key in place of an integer index.
-                            instrs.push(BEAMInstruction::new(OP_MOVE, vec![
-                                BEAMOperand::a(atom_array_len_key), BEAMOperand::x(1),
-                            ]));
-                            instrs.push(BEAMInstruction::new(OP_MOVE, vec![
-                                BEAMOperand::i(2), BEAMOperand::x(2),
-                            ]));
-                            instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
-                                BEAMOperand::u(3),
-                                BEAMOperand::u(import_ets_lookup_element as u64),
+                            // An ets table cannot report its own extent, and
+                            // the alternative — asking it — is worse than
+                            // useless: `ets:info(Tab, size)` returns the number
+                            // of entries INSERTED, so a ten-element array with
+                            // three cells written reports 3. That is the worst
+                            // failure shape available: a small plausible number
+                            // instead of an error, on exactly the substrate
+                            // ALGOL `real` arrays use. Confirmed on real `erl`.
+                            //
+                            // Because there is no `call_ext` on this path, the
+                            // `move` into x0 above was pure overhead for it;
+                            // the head is discarded into a scratch register.
+                            instrs.push(BEAMInstruction::new(OP_GET_LIST, vec![
+                                BEAMOperand::x(0),      // Src  = the handle
+                                BEAMOperand::x(1),      // Head = the table (unused here)
+                                BEAMOperand::x(0),      // Tail = the length
                             ]));
                         }
                     }
@@ -4148,9 +4112,9 @@ pub fn lower_iir_to_beam(
                 // `:ets` table instead (see the module-setup comment above)
                 // — `ets:new/2` takes no size argument, so the length source
                 // `N` is not passed to `ets:new/2` -- but it is NOT discarded
-                // either. BEAM10 records it in the table under a reserved atom
-                // key, because an ets table has no extent of its own and this
-                // is the only point at which the declared length is still known.
+                // either. BEAM10 pairs it with the table as `[Tab | N]`,
+                // because an ets table has no extent of its own and this is
+                // the only point at which the declared length is still known.
                 "alloc_bytes" | "alloc_array" => {
                     let rd = match &instr.dest {
                         Some(name) => var_reg!(name),
@@ -4171,7 +4135,7 @@ pub fn lower_iir_to_beam(
                         // ets table has no extent of its own, so this is the
                         // only moment at which the declared length is still
                         // known, and `array_len` has nowhere else to read it
-                        // from. We stash it under the reserved atom key.
+                        // from. It becomes the tail of the handle pair.
                         let r_len = operand_reg!(get_src!(instr, 0));
                         let cur_idx = instr_idx - 1;
 
@@ -4180,19 +4144,18 @@ pub fn lower_iir_to_beam(
                         // caller's register holding N would not survive it.
                         // `move` never triggers GC, so the staged copy cannot
                         // be collected out from under us either.
-                        let top = meta.next_reg.checked_add(2).filter(|t| *t < 255);
+                        let top = meta.next_reg.checked_add(1).filter(|t| *t < 255);
                         if top.is_none() {
                             return Err(IIRBeamError::UnsupportedOp {
                                 function: fn_name.clone(),
                                 op: format!(
-                                    "alloc_array (f64/str via ets): needs 2 scratch \
-                                     registers but only {} remain below x255",
+                                    "alloc_array (f64/str via ets): needs 1 scratch \
+                                     register but only {} remain below x255",
                                     255u16 - meta.next_reg as u16
                                 ),
                             });
                         }
                         let s_len = meta.next_reg;
-                        let s_tab = meta.next_reg + 1;
                         instrs.push(BEAMInstruction::new(OP_MOVE, vec![
                             BEAMOperand::x(r_len), BEAMOperand::x(s_len),
                         ]));
@@ -4217,80 +4180,57 @@ pub fn lower_iir_to_beam(
                         // backend, so the pair is a 2-element list via
                         // `put_list` and then `erlang:list_to_tuple/1`.
                         //
-                        // ── RESERVE HEAP BEFORE BUILDING THE LIST ───────
+                        // ── The handle IS the pair `[Tab | N]` ──────────
                         //
-                        // `put_list` allocates a cons cell and does NOT check
-                        // or grow the process heap; a preceding `test_heap` is
-                        // required. Omitting it does not fail cleanly — it
-                        // walks off the end of the heap and corrupts unrelated
-                        // data, which surfaced here as the emulator's own
-                        // `size_object: bad tag for 0x…` on macOS and Windows
-                        // CI while every Linux job stayed green, because
-                        // whether the overflow lands on anything depends on
-                        // the heap's state at that moment.
+                        // An ets table cannot report its own extent, so the
+                        // length has to be carried somewhere. The obvious
+                        // place — an entry inside the table under a reserved
+                        // key — is what this code did first, and it was
+                        // wrong in a way worth recording.
                         //
-                        // Two cons cells = 4 words.
+                        // Inserting an entry needs a TUPLE, and this backend
+                        // has no tuple-construction opcode, so it needs
+                        // `erlang:list_to_tuple/1`: a second `call_ext`. The
+                        // table identifier must survive that call, and the
+                        // only place to keep it is a scratch x-register above
+                        // `live` — which is NOT a GC root. An ets tid is a
+                        // heap-allocated magic reference, so a collection
+                        // inside `list_to_tuple/1` relocated the real term and
+                        // left the parked copy dangling. The emulator reported
+                        // it as `size_object: bad tag for 0x…` on macOS CI,
+                        // intermittently, because whether a collection happens
+                        // there depends on the heap's state.
                         //
-                        // `live` is a plain COUNT: `x0..x(live-1)` are the
-                        // GC's root set and everything at or above `live` is
-                        // ignored. So the two values that must survive a
-                        // collection are moved DOWN into x0 and x1 first —
-                        // the table identifier (a boxed magic ref, which a
-                        // collection would relocate) and the length. A wider
-                        // `live` would sweep in uninitialised registers the
-                        // GC would then try to interpret as live terms, which
-                        // is the failure `call_builtin "input_str"` above
-                        // documents at length.
+                        // A cons cell needs NO call. `put_list` is one opcode,
+                        // emitted while the table is still in x0 and still a
+                        // root, so nothing is ever parked across anything:
+                        //
+                        //     x0 = Tab (from ets:new), x1 = N
+                        //     test_heap 2, 2      ← Tab and N are the roots
+                        //     put_list x0, x1 -> rd
+                        //
+                        // `array_len` then costs a single `get_list` instead
+                        // of a `call_ext`, and `array_get`/`array_set` pay one
+                        // `get_list` to recover the table. That is cheaper
+                        // than the version that was also broken.
+                        //
+                        // `test_heap`'s `live` is a plain COUNT: `x0..x(live-1)`
+                        // are the root set. Both values are moved down into
+                        // x0/x1 first so `live = 2` is correct AND minimal — a
+                        // wider count would sweep in uninitialised registers
+                        // the GC would then try to read as live terms, the
+                        // failure `call_builtin "input_str"` documents at
+                        // length above.
                         instrs.push(BEAMInstruction::new(OP_MOVE, vec![
                             BEAMOperand::x(s_len), BEAMOperand::x(1),
                         ]));
                         instrs.push(BEAMInstruction::new(OP_TEST_HEAP, vec![
-                            BEAMOperand::u(4), BEAMOperand::u(2),
-                        ]));
-
-                        // The table identifier must survive the two calls
-                        // below, so it is staged out. This is the same shape
-                        // `array_set`'s ets path uses for its own table
-                        // reference, and it carries the same known caveat
-                        // (issue #15882): a scratch register above `live` is
-                        // not a GC root, so a collection *inside*
-                        // `list_to_tuple/1` or `ets:insert/2` could leave it
-                        // stale. The `test_heap` above removes the collection
-                        // this code was actually triggering; the residual is
-                        // pre-existing and backend-wide, and is tracked rather
-                        // than half-fixed here.
-                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
-                            BEAMOperand::x(0), BEAMOperand::x(s_tab),
-                        ]));
-                        // [N | []], then [Key | [N]]  ->  [Key, N]
-                        instrs.push(BEAMInstruction::new(OP_PUT_LIST, vec![
-                            BEAMOperand::x(1), BEAMOperand::a(0), BEAMOperand::x(0),
+                            BEAMOperand::u(2), BEAMOperand::u(2),
                         ]));
                         instrs.push(BEAMInstruction::new(OP_PUT_LIST, vec![
-                            BEAMOperand::a(atom_array_len_key),
-                            BEAMOperand::x(0),
-                            BEAMOperand::x(0),
-                        ]));
-                        instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
-                            BEAMOperand::u(1),
-                            BEAMOperand::u(import_list_to_tuple as u64),
-                        ]));
-                        // x0 = {Key, N}; move it to x1 BEFORE writing x0, or
-                        // the tuple is lost.
-                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
-                            BEAMOperand::x(0), BEAMOperand::x(1),
-                        ]));
-                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
-                            BEAMOperand::x(s_tab), BEAMOperand::x(0),
-                        ]));
-                        instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
-                            BEAMOperand::u(2),
-                            BEAMOperand::u(import_ets_insert as u64),
-                        ]));
-                        // `ets:insert/2` returns `true`, not the table, so the
-                        // dest takes the staged identifier rather than x0.
-                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
-                            BEAMOperand::x(s_tab), BEAMOperand::x(rd),
+                            BEAMOperand::x(0),   // Head = the ets table
+                            BEAMOperand::x(1),   // Tail = the declared length
+                            BEAMOperand::x(rd),
                         ]));
                         restore_live_across_imported_call!(cur_idx);
                         continue;
@@ -4342,7 +4282,7 @@ pub fn lower_iir_to_beam(
                         // stores whatever term `Val` holds, a character
                         // list for `str` exactly as much as a boxed float
                         // for `f64`.
-                        let r_ref = operand_reg!(get_src!(instr, 0));
+                        let r_handle = operand_reg!(get_src!(instr, 0));
                         let r_idx = operand_reg!(get_src!(instr, 1));
                         let r_val = operand_reg!(get_src!(instr, 2));
 
@@ -4366,8 +4306,17 @@ pub fn lower_iir_to_beam(
                         // Stage every source into scratch BEFORE any call —
                         // same parallel-move-hazard/GC-safety discipline as
                         // the atomics staging just below.
-                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
-                            BEAMOperand::x(r_ref), BEAMOperand::x(s_ref),
+                        // BEAM10: the handle is the pair `[Tab | N]`, so the
+                        // table is its HEAD. `get_list` is a plain opcode —
+                        // no call, no allocation, nothing to reserve — and it
+                        // is emitted before the staging below so everything
+                        // downstream sees a table exactly as it did when the
+                        // handle WAS the table.
+                        instrs.push(BEAMInstruction::new(OP_GET_LIST, vec![
+                            BEAMOperand::x(r_handle),  // Src  = [Tab | N]
+                            BEAMOperand::x(s_ref),     // Head = Tab
+                            BEAMOperand::x(s_list),    // Tail = N (unused; s_list is
+                                                       // overwritten below)
                         ]));
                         instrs.push(BEAMInstruction::new(OP_MOVE, vec![
                             BEAMOperand::x(r_idx), BEAMOperand::x(s_idx),
@@ -4406,7 +4355,7 @@ pub fn lower_iir_to_beam(
                             BEAMOperand::x(s_ref), BEAMOperand::x(0),
                         ]));
                         instrs.push(BEAMInstruction::new(OP_MOVE, vec![
-                            BEAMOperand::x(s_idx), BEAMOperand::x(1),
+                            BEAMOperand::x(r_idx), BEAMOperand::x(1),
                         ]));
                         instrs.push(BEAMInstruction::new(OP_MOVE, vec![
                             BEAMOperand::x(s_val), BEAMOperand::x(2),
@@ -4575,7 +4524,7 @@ pub fn lower_iir_to_beam(
                         // needed on this path, unlike the `atomics` branch's
                         // index-only +1 below. Identical for `str` and
                         // `f64`: `:ets` returns whatever term was stored.
-                        let r_ref = operand_reg!(get_src!(instr, 0));
+                        let r_handle = operand_reg!(get_src!(instr, 0));
                         let r_idx = operand_reg!(get_src!(instr, 1));
 
                         let top = meta.next_reg.checked_add(3).filter(|t| *t < 255);
@@ -4594,8 +4543,13 @@ pub fn lower_iir_to_beam(
                         let s_pos = meta.next_reg + 2;
                         let cur_idx = instr_idx - 1;
 
-                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
-                            BEAMOperand::x(r_ref), BEAMOperand::x(s_ref),
+                        // BEAM10: the handle is the pair `[Tab | N]`; the
+                        // table is its head. A plain opcode, no call.
+                        instrs.push(BEAMInstruction::new(OP_GET_LIST, vec![
+                            BEAMOperand::x(r_handle),  // Src  = [Tab | N]
+                            BEAMOperand::x(s_ref),     // Head = Tab
+                            BEAMOperand::x(s_pos),     // Tail = N (unused; s_pos is
+                                                       // overwritten below)
                         ]));
                         instrs.push(BEAMInstruction::new(OP_MOVE, vec![
                             BEAMOperand::x(r_idx), BEAMOperand::x(s_idx),
