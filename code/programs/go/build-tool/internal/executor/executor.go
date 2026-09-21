@@ -687,6 +687,10 @@ func collectTransitivePredecessors(node string, graph *directedgraph.Graph) map[
 	return visited
 }
 
+// maxManifestBytes bounds a package.json read. Real manifests in this repo
+// are a few KB; anything past 4 MB is not a manifest we need to parse.
+const maxManifestBytes = 4 << 20
+
 var relPathRe = regexp.MustCompile(`(?:\.\.?[/\\][^ \t\r\n"'&|;()]+)+`)
 
 // buildResourceLocker hands out one RWMutex per resource key.
@@ -790,7 +794,7 @@ func (l *buildResourceLocker) lockFor(key string) *sync.RWMutex {
 // Scope is deliberately npm-only. This is a `node_modules` problem; other
 // ecosystems' shared state is covered by the `global:` keys above.
 func buildReadResourceKeys(pkg discovery.Package, pathToPkg map[string]string) []string {
-	if !usesNPM(pkg) {
+	if !usesNodeModules(pkg) {
 		return nil
 	}
 
@@ -804,7 +808,20 @@ func buildReadResourceKeys(pkg discovery.Package, pathToPkg map[string]string) [
 		visited[dir] = true
 
 		for _, target := range fileDependencyDirs(dir) {
-			if name, ok := pathToPkg[target]; ok && name != pkg.Name {
+			// Only ever step into a directory the discovery pass already
+			// identified as a package. A `file:` specifier is just text from
+			// a manifest, so "file:../../../../etc" resolves happily outside
+			// the checkout; confining the walk to known packages means a
+			// hostile or simply wrong specifier can neither send us
+			// traversing the filesystem nor point the read below at an
+			// arbitrary path. Nothing is lost: a file: dependency that is not
+			// a discovered package has no BUILD, so nothing can reinstall
+			// into it and there is no lock worth taking.
+			name, known := pathToPkg[target]
+			if !known {
+				continue
+			}
+			if name != pkg.Name {
 				found[name] = true
 			}
 			walk(target)
@@ -820,11 +837,22 @@ func buildReadResourceKeys(pkg discovery.Package, pathToPkg map[string]string) [
 	return keys
 }
 
-// usesNPM reports whether any BUILD command drives npm. Packages that do not
-// touch npm cannot participate in the node_modules race.
-func usesNPM(pkg discovery.Package) bool {
+// nodeToolRe matches a BUILD command that drives a Node package manager or
+// runner, as a whole word so `npmlike-thing` does not match.
+//
+// The list is wider than `npm` on purpose. The directory at risk is
+// `node_modules`, and anything that installs into it or resolves imports out
+// of it is exposed -- a package driving `tsx` or `pnpm` directly is in the
+// same position as one driving `npm`, and gating on `npm ` alone would leave
+// it taking no read locks at all.
+var nodeToolRe = regexp.MustCompile(`(^|[ 	;&|(])(npm|npx|pnpm|yarn|tsx|vite|vitest|node)([ 	]|$)`)
+
+// usesNodeModules reports whether any BUILD command drives a Node tool, and
+// so could install into or resolve out of a shared node_modules. Packages
+// that touch none cannot participate in the race.
+func usesNodeModules(pkg discovery.Package) bool {
 	for _, command := range pkg.BuildCommands {
-		if strings.Contains(command, "npm ") || strings.Contains(command, "npx ") {
+		if nodeToolRe.MatchString(command) {
 			return true
 		}
 	}
@@ -838,7 +866,21 @@ func usesNPM(pkg discovery.Package) bool {
 // key derivation runs for every package on every build, and a package
 // without a readable manifest simply has no file: links to protect.
 func fileDependencyDirs(dir string) []string {
-	raw, err := os.ReadFile(filepath.Join(dir, "package.json"))
+	// Reject anything that is not a plain, plausibly-sized file BEFORE
+	// reading it. This runs inside the build goroutine, after a semaphore
+	// slot has been taken, so a read that never returns does not just fail
+	// one package -- it burns a worker slot and the level's WaitGroup never
+	// completes, hanging the build until CI kills the job. A package.json
+	// symlinked to /dev/zero reads without EOF, and a FIFO blocks forever;
+	// Lstat rejects the symlink without following it and rejects the FIFO
+	// outright.
+	path := filepath.Join(dir, "package.json")
+	info, err := os.Lstat(path)
+	if err != nil || !info.Mode().IsRegular() || info.Size() > maxManifestBytes {
+		return nil
+	}
+
+	raw, err := os.ReadFile(path)
 	if err != nil {
 		return nil
 	}

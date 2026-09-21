@@ -1192,9 +1192,9 @@ func TestReadKeysCoverTransitiveFileDeps(t *testing.T) {
 	}
 }
 
-// TestReadKeysSkipNonNPMPackages: a Rust or Go package cannot participate in
+// TestReadKeysSkipNonNodePackages: a Rust or Go package cannot participate in
 // the node_modules race, so its key set must be untouched by B07.
-func TestReadKeysSkipNonNPMPackages(t *testing.T) {
+func TestReadKeysSkipNonNodePackages(t *testing.T) {
 	root := t.TempDir()
 	crate := filepath.Join(root, "crate")
 	dep := filepath.Join(root, "dep")
