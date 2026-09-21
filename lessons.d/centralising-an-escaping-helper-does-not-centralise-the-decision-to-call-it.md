@@ -63,6 +63,26 @@ Two rules follow:
   `lang-aot` formats this error with `{}` straight into the build log, while
   `Debug` sanitises on the way out and hides the very bug you are hunting.
 
+**A multi-limb assertion needs one mutation per limb.** Fixing the Debug trap
+above meant raising the length ceiling (4096 to 8192) so the length assertion
+would stop pre-empting the control-character one. That fixed the diagnosis and
+*disarmed the other limb*: the real maximum message was ~1194 bytes, so nothing
+could reach 8192, and a reviewer deleted truncation from the helper entirely
+with the test still green. The vacuousness had simply moved from one half of
+the guard to the other.
+
+A guard asserting N properties needs N mutations, each defeating exactly one
+property, each confirming the matching assertion fires. Here:
+
+| mutation | limb that must fire |
+|---|---|
+| helper returns text unescaped, truncation intact | control-character assertion |
+| helper never truncates, escaping intact | length assertion |
+
+Both were run, and the bound was then chosen to sit strictly between the real
+maximum (~1194) and the mutated maximum (~5152). A threshold outside that
+window cannot fail, whatever it is protecting.
+
 **Count sites, not inputs.** That same test had seven inputs and a comment
 claiming each reached a different message. Three of them were not lexable at
 all, died in the lexer with an identical error, and never reached the code

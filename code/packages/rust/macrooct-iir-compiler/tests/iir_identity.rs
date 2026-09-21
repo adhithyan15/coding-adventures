@@ -472,8 +472,22 @@ fn no_diagnostic_leaks_a_raw_control_character_or_runs_unbounded() {
             );
         }
 
+        // 2048, and the number is load-bearing rather than round.
+        //
+        // The real maximum across this input set is ~1194 bytes; with
+        // truncation defeated it is ~5152. A ceiling must sit strictly between
+        // those two or the assertion cannot fail. An earlier version used 4096,
+        // then 8192 — the second raise was made so the length assertion would
+        // stop pre-empting the control-character one, and it disarmed this limb
+        // completely: a reviewer deleted truncation from `PpError::quote`
+        // entirely and this test still passed green.
+        //
+        // That is the same defect as the Debug-vs-Display trap above, moved
+        // from one half of the guard to the other. Both limbs are now
+        // mutation-tested separately: drop the escape and the control-character
+        // assertion must fire; drop the truncation and this one must.
         assert!(
-            msg.len() < 8192,
+            msg.len() < 2048,
             "`{label}`: diagnostic ran to {} bytes; attacker-derived text must be \
              truncated: {}",
             msg.len(),
