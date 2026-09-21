@@ -1071,6 +1071,67 @@
       "fixtures": [
         "version-banner"
       ]
+    },
+    {
+      "id": "ladder-v20260915",
+      "disposition": "upstream_golden",
+      "command": "closure-flags-file-v1",
+      "current_provenance": {
+        "status": "documented_release",
+        "release": "v20260915",
+        "evidence": "tests/ladder/divergences.json"
+      },
+      "expectation": "expected_stdout",
+      "local_boundary": null,
+      "default_harness": "tests/ladder.rs",
+      "harnesses": {},
+      "fixtures": [
+        "ladder_t1_call_advanced",
+        "ladder_t1_call_simple",
+        "ladder_t1_call_ws",
+        "ladder_t1_empty_advanced",
+        "ladder_t1_empty_simple",
+        "ladder_t1_empty_ws",
+        "ladder_t1_string_advanced",
+        "ladder_t1_string_simple",
+        "ladder_t1_string_ws",
+        "ladder_t1_two_statements_advanced",
+        "ladder_t1_two_statements_simple",
+        "ladder_t1_two_statements_ws",
+        "ladder_t1_var_literal_advanced",
+        "ladder_t1_var_literal_simple",
+        "ladder_t1_var_literal_ws",
+        "ladder_t2_arith_fold_advanced",
+        "ladder_t2_arith_fold_simple",
+        "ladder_t2_arith_fold_ws",
+        "ladder_t2_bool_fold_advanced",
+        "ladder_t2_bool_fold_simple",
+        "ladder_t2_bool_fold_ws",
+        "ladder_t2_nested_arith_advanced",
+        "ladder_t2_nested_arith_simple",
+        "ladder_t2_nested_arith_ws",
+        "ladder_t2_str_length_advanced",
+        "ladder_t2_str_length_simple",
+        "ladder_t2_str_length_ws",
+        "ladder_t2_string_concat_advanced",
+        "ladder_t2_string_concat_simple",
+        "ladder_t2_string_concat_ws",
+        "ladder_t3_function_decl_advanced",
+        "ladder_t3_function_decl_simple",
+        "ladder_t3_function_decl_ws",
+        "ladder_t3_function_expr_advanced",
+        "ladder_t3_function_expr_simple",
+        "ladder_t3_function_expr_ws",
+        "ladder_t3_iife_advanced",
+        "ladder_t3_iife_simple",
+        "ladder_t3_iife_ws",
+        "ladder_t3_nested_fn_advanced",
+        "ladder_t3_nested_fn_simple",
+        "ladder_t3_nested_fn_ws",
+        "ladder_t3_unused_local_advanced",
+        "ladder_t3_unused_local_simple",
+        "ladder_t3_unused_local_ws"
+      ]
     }
   ]
 }

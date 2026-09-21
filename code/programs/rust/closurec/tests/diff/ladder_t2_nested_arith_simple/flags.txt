@@ -1,0 +1,4 @@
+--compilation_level
+SIMPLE_OPTIMIZATIONS
+--js
+tests/diff/ladder_t2_nested_arith_simple/input/a.js

@@ -1,0 +1,70 @@
+{
+ "description": "Rungs where closurec's output differs from the pinned oracle. Each entry pins the current closurec output so the gap cannot silently widen, and so closing it fails the harness \u2014 which is the signal to delete the entry.",
+ "divergences": {
+  "ladder_t3_function_expr_advanced": {
+   "closurec_exit": 0,
+   "closurec_stdout": "var f=function(a){return a};console.log(f(1));\n",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
+   "level": "ADVANCED",
+   "reason": "closurec does not propagate a single-use function expression to its call site and eliminate the binding.",
+   "rung": "function_expr",
+   "tier": 3,
+   "upstream_stdout": "console.log(1);\n"
+  },
+  "ladder_t3_iife_advanced": {
+   "closurec_exit": 0,
+   "closurec_stdout": "(function(){console.log(1)})();\n",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
+   "level": "ADVANCED",
+   "reason": "closurec does not inline an immediately invoked function expression.",
+   "rung": "iife",
+   "tier": 3,
+   "upstream_stdout": "console.log(1);\n"
+  },
+  "ladder_t3_nested_fn_advanced": {
+   "closurec_exit": 0,
+   "closurec_stdout": "function o(){function i(){return 1}return i()}console.log(o());\n",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
+   "level": "ADVANCED",
+   "reason": "closurec does not inline a single-use nested function. `inline` is registered only under ADVANCED, and even there handles a narrower case than upstream.",
+   "rung": "nested_fn",
+   "tier": 3,
+   "upstream_stdout": "console.log(1);\n"
+  },
+  "ladder_t3_nested_fn_simple": {
+   "closurec_exit": 0,
+   "closurec_stdout": "function o(){function i(){return 1}return i()}console.log(o());\n",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
+   "level": "SIMPLE",
+   "reason": "closurec does not inline a single-use nested function. `inline` is registered only under ADVANCED, and even there handles a narrower case than upstream.",
+   "rung": "nested_fn",
+   "tier": 3,
+   "upstream_stdout": "function o(){return 1}console.log(o());\n"
+  },
+  "ladder_t3_unused_local_advanced": {
+   "closurec_exit": 0,
+   "closurec_stdout": "function f(){var u=1;return 2}console.log(f());\n",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
+   "level": "ADVANCED",
+   "reason": "closurec does not remove a function-local binding that is never read. `remove-unused-vars` is gated to ADVANCED, but upstream removes scope-local bindings at SIMPLE too, where the open-world contract does not apply.",
+   "rung": "unused_local",
+   "tier": 3,
+   "upstream_stdout": "console.log(2);\n"
+  },
+  "ladder_t3_unused_local_simple": {
+   "closurec_exit": 0,
+   "closurec_stdout": "function f(){var u=1;return 2}console.log(f());\n",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
+   "level": "SIMPLE",
+   "reason": "closurec does not remove a function-local binding that is never read. `remove-unused-vars` is gated to ADVANCED, but upstream removes scope-local bindings at SIMPLE too, where the open-world contract does not apply.",
+   "rung": "unused_local",
+   "tier": 3,
+   "upstream_stdout": "function f(){return 2}console.log(f());\n"
+  }
+ },
+ "schema_version": 1,
+ "upstream": {
+  "commit": "10ca677aff381d2c2e6e1b254ba32861e503173d",
+  "release": "v20260915"
+ }
+}
