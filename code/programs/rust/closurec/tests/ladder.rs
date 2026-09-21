@@ -108,22 +108,19 @@ fn load_ledger() -> BTreeMap<String, Divergence> {
                             }),
                     )
                     .expect("upstream_exit fits in i32"),
-                    closurec_stderr_starts_with: match body.get("closurec_stderr_starts_with") {
-                        None => None,
-                        // Absent is allowed (a rung that produces stdout needs
-                        // no stage pin), but present-and-not-a-string is a typo
-                        // or a type error, and degrading it to None would
-                        // silently disarm the guard.
-                        Some(v) => Some(
-                            v.as_str()
-                                .unwrap_or_else(|| {
-                                    panic!(
-                                        "{fixture}: `closurec_stderr_starts_with` must be a string"
-                                    )
-                                })
-                                .to_string(),
-                        ),
-                    },
+                    // Absent is allowed (a rung that produces stdout needs no
+                    // stage pin), but present-and-not-a-string is a typo or a
+                    // type error. `map` keeps absent as `None` while the panic
+                    // inside rejects a present non-string, where the obvious
+                    // `.and_then(|v| v.as_str())` would degrade it to `None`
+                    // and silently disarm the guard.
+                    closurec_stderr_starts_with: body.get("closurec_stderr_starts_with").map(|v| {
+                        v.as_str()
+                            .unwrap_or_else(|| {
+                                panic!("{fixture}: `closurec_stderr_starts_with` must be a string")
+                            })
+                            .to_string()
+                    }),
                 },
             )
         })
@@ -484,7 +481,7 @@ fn well_formedness_error(fixture: &str, d: &Divergence) -> Option<String> {
     // that family's message grammar.
     if d.closurec_exit != 0 {
         let pin = d.closurec_stderr_starts_with.as_deref();
-        if !pin.is_some_and(|p| !p.trim().is_empty()) {
+        if pin.is_none_or(|p| p.trim().is_empty()) {
             return Some(format!(
                 "{fixture}: an entry that records a failure must pin the stage it fails \
                  at via a non-empty `closurec_stderr_starts_with`, or the gate only \
