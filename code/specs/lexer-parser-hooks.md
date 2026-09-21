@@ -44,6 +44,34 @@ Source Text
   Compiler
 ```
 
+### Amendment (PREP01): `#include` does not belong at `pre_tokenize`
+
+The diagram above lists "C #include" under `pre_tokenize` and "C #define
+expansion" / "#ifdef conditional compilation" under `post_tokenize`. **For C
+that split is incorrect**, and `PREP01-generic-source-preprocessor.md` §3
+supersedes it.
+
+Inclusion and conditional compilation are mutually dependent: an `#if` decides
+whether an `#include` happens at all, and the included file `#define`s symbols
+that later `#if` directives test. A text-level include pass running before the
+token-level conditional pass would include files it should have skipped, and
+would not have the included macros available in time. C is defined as a single
+ordered traversal in which inclusion, conditional selection and macro
+definition interleave.
+
+So for a preprocessed language:
+
+- `pre_tokenize` carries **line splicing only** (plus COBOL's column strip) —
+  the genuinely context-free text transforms.
+- `post_tokenize` carries the **whole preprocessor as one pass**, which resolves
+  includes itself and re-lexes included files through the language's own lexer.
+
+The hook **API in this document is unchanged**, and no existing registration
+breaks. The preprocessor engine is constructed with its configuration and hands
+out a closure, so each call is still the pure `list[Token] → list[Token]`
+function this contract requires. Only the recommended *placement* of the
+inclusion step changes.
+
 ## Design Principles
 
 ### 1. Transforms are pure functions
