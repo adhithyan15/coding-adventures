@@ -2,8 +2,10 @@
 
 **Status:** active  
 **Last reprioritized:** 2026-09-21  
-**Current selection:** CCR-066, the differential complexity ladder
-([#15837](https://github.com/adhithyan15/coding-adventures/issues/15837))<br>
+**Current selection:** none — CCR-066 (the differential complexity ladder,
+[#15837](https://github.com/adhithyan15/coding-adventures/issues/15837)) is
+complete, as its queue row and the loop record below both record. Pick the next
+item from the queue rather than from this line.<br>
 **Current local loop base:** `coding-adventures` at
 `d2610543e665da8978d45a49ea8993853810d7bb`<br>
 **Local audit base:** `coding-adventures` at `06fc0524051a397ccc53c628b08c019b2bbf75ba`  
@@ -201,20 +203,33 @@ Before minting an ID, list the repository's issues and take the next number
 above the highest `CCR-` in any issue title, open or closed — do not infer the
 next free number from this document.
 
-This matters because the two have drifted. As of 2026-09-21 the issue tracker
-holds CCR-001 through CCR-062 (plus CCR-015A), while this file tracks only
-CCR-001 through CCR-043 and then jumps to the items added today. CCR-044
-through CCR-062 exist as issues and are absent here:
+The two have drifted, **in both directions**, and only one direction has been
+fixed.
+
+CCR-044 – CCR-062 existed as issues and were absent from this file. **That gap
+is now closed** — see *Backfilled index* below, and as of 2026-09-21 every ID
+from CCR-001 through CCR-081 plus CCR-015A appears somewhere in this document.
+
+The other direction is still open and is the one that matters for ID
+allocation: **not every ID in this file has an issue.** CCR-011 – CCR-014,
+CCR-016 – CCR-021, CCR-023 – CCR-026, CCR-028 – CCR-030 and CCR-032 – CCR-040
+are tracked only by their row here — searching the tracker for them returns
+nothing. CCR-041 is tracked at
+[#15542](https://github.com/adhithyan15/coding-adventures/issues/15542), whose
+title carries no `CCR-` prefix, and CCR-001 landed as PR
+[#15529](https://github.com/adhithyan15/coding-adventures/pull/15529) rather
+than an issue.
 
 | Range | Where it lives |
 |---|---|
-| CCR-001 – CCR-043 | issues **and** this file |
-| CCR-044 – CCR-062 | issues only — **missing from this file** |
-| CCR-063 – CCR-072 | issues and this file (added 2026-09-21) |
+| CCR-001 – CCR-043 | this file; **some** also have issues (see the gaps above) |
+| CCR-044 – CCR-062 | issues **and** this file (backfilled 2026-09-21, see below) |
+| CCR-063 – CCR-081 | issues **and** this file |
 
-Backfilling CCR-044 – CCR-062 into the queue is itself outstanding work; until
-then this file is not a complete view of the backlog and should not be read as
-one.
+This is why the allocation rule above says to take the next number above the
+highest `CCR-` **in any issue title**, and not to infer it from this document:
+the highest ID here and the highest ID in the tracker are the same today
+(CCR-081), but the sets underneath them are not equal in either direction.
 
 New findings are added before selecting the next item. IDs are stable; priority
 order may change. A row marked `Blocked` names its prerequisite. `Survey` means
@@ -379,3 +394,65 @@ Not safe to run alongside a `closurec` PR: CCR-006 (same CLI registry and
 moves with it), and any two items that both edit this file — which remains the
 hotspot described above until it is sharded.
 
+
+## Backfilled index — CCR-044 – CCR-062, plus CCR-015A
+
+These twenty items existed only as issues until 2026-09-21 — the nineteen in
+CCR-044 – CCR-062, and CCR-015A, which had been named in prose but never had a
+row. They are indexed here so every allocated ID appears in this file.
+
+**Their acceptance evidence is deliberately not duplicated.** Every one of these
+issues already states an Objective, pinned oracle evidence, the upstream
+contract, the local root cause, required behaviour and acceptance evidence, in
+more detail than a table cell holds. Copying a summary of criteria without
+re-deriving each one is how a spec drifts from the issue it claims to mirror —
+so the issue is the source of truth for detail and this table is an index to it.
+The descriptions below are the issues' own titles. Two rows — CCR-058 and
+CCR-062 — append a dependency sentence taken from their issue's own
+"Dependencies and priority" section, because those dependencies decide where
+they can sit in the queue; nothing else is added anywhere.
+
+| ID | Work item | Issue |
+|---|---|---|
+| CCR-044 | Make `checks_only` parse `WHITESPACE_ONLY` and `TRANSPILE_ONLY` inputs. | [#15632](https://github.com/adhithyan15/coding-adventures/issues/15632) |
+| CCR-045 | Compile raw JavaScript from stdin instead of printing the identity banner. | [#15638](https://github.com/adhithyan15/coding-adventures/issues/15638) |
+| CCR-046 | Honor `--charset` for input and output bytes. | [#15673](https://github.com/adhithyan15/coding-adventures/issues/15673) |
+| CCR-047 | Audit Java charset provider and alias parity. | [#15683](https://github.com/adhithyan15/coding-adventures/issues/15683) |
+| CCR-048 | Implement `browser_featureset_year` validation and define semantics. | [#15693](https://github.com/adhithyan15/coding-adventures/issues/15693) |
+| CCR-049 | Honor `env` built-in extern selection. | [#15703](https://github.com/adhithyan15/coding-adventures/issues/15703) |
+| CCR-050 | Compile jszip archive sources instead of dropping them. | [#15704](https://github.com/adhithyan15/coding-adventures/issues/15704) |
+| CCR-051 | Expand flagfile arguments instead of silently discarding them. | [#15705](https://github.com/adhithyan15/coding-adventures/issues/15705) |
+| CCR-052 | Enforce `strict_mode_input` semantics. | [#15710](https://github.com/adhithyan15/coding-adventures/issues/15710) |
+| CCR-053 | Preserve `debugger` statements through DCE. | [#15717](https://github.com/adhithyan15/coding-adventures/issues/15717) |
+| CCR-015A | Validate diagnostic groups and compose warning guards. | [#15724](https://github.com/adhithyan15/coding-adventures/issues/15724) |
+| CCR-054 | Implement `assume_function_wrapper` optimization policy. | [#15726](https://github.com/adhithyan15/coding-adventures/issues/15726) |
+| CCR-055 | Honor `rename_variable_prefix` during variable renaming. | [#15731](https://github.com/adhithyan15/coding-adventures/issues/15731) |
+| CCR-056 | Implement the upstream `--debug` option bundle. | [#15732](https://github.com/adhithyan15/coding-adventures/issues/15732) |
+| CCR-057 | Emit real AST trees for `print_ast` and `print_tree` modes. | [#15733](https://github.com/adhithyan15/coding-adventures/issues/15733) |
+| CCR-058 | Implement `print_source_after_each_pass` tracing. Should consume the scheduler-derived pass inventory from CCR-041 rather than introducing another parallel list. | [#15734](https://github.com/adhithyan15/coding-adventures/issues/15734) |
+| CCR-059 | Preserve type annotations when requested. | [#15735](https://github.com/adhithyan15/coding-adventures/issues/15735) |
+| CCR-060 | Verify expected diagnostics and fail on mismatches. | [#15737](https://github.com/adhithyan15/coding-adventures/issues/15737) |
+| CCR-061 | Audit CLI value domains, defaults, and repeatability. | [#15738](https://github.com/adhithyan15/coding-adventures/issues/15738) |
+| CCR-062 | Implement `GENERATE_IJS` incremental interface mode. Depends on CCR-014, CCR-028/CCR-049 and CCR-059; module fidelity intersects CCR-025. | [#15739](https://github.com/adhithyan15/coding-adventures/issues/15739) |
+
+Priority: these sit below the parity and correctness work in P0–P2. Most are
+flags that parse and are then ignored, which is the "successful but weaker
+fallback" failure mode ranked second in the priority rules above — a flag that
+is accepted and silently does nothing is worse than one that is rejected.
+CCR-053 and CCR-060 are the two that touch observable compile output rather
+than flag plumbing, and rank highest of this group.
+
+## Findings from the 2026-09-21 parity session
+
+| ID | Work item | Issue |
+|---|---|---|
+| CCR-079 | The ladder's divergence ledger is trusted input to the gate that reads it. Four review rounds each found the same defect one level up, because every fix added a self-declared field. Derive the ledger from captured oracle runs instead of validating hand-written values. | [#15866](https://github.com/adhithyan15/coding-adventures/issues/15866) |
+| CCR-080 | The token-only `WHITESPACE_ONLY` path drops the program-final terminator after `do…while`. Must not be fixed by porting CCR-073's "ends with `}`" byte test — that output ends in `)`. | [#15867](https://github.com/adhithyan15/coding-adventures/issues/15867) |
+| CCR-081 | The 138-fixture `non-minify-unverified-stdout` set is dispositioned `upstream_golden` but only 62 of 138 match upstream byte-for-byte (68 ignoring a trailing newline); 59 differ and 17 are inputs upstream will not compile. Swept 2026-09-21; partition and next steps are on the issue. | [#15868](https://github.com/adhithyan15/coding-adventures/issues/15868) |
+
+CCR-081's sweep also enlarges CCR-075's decision surface: **eight** fixtures are
+inputs upstream genuinely refuses while `closurec` compiles them, not the three
+ladder rungs that issue was filed on. Two of the eight are `JSC_PARSE_ERROR`
+(a top-level `return`, and `new.target` outside a function) — accepting invalid
+syntax is a narrower front-end question that can be settled without waiting on
+the policy decision.
