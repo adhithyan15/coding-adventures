@@ -1,0 +1,11 @@
+{
+  "id": "ES-C445-responsabilidad",
+  "pathSegment": "ES-PATH-445-PUESTO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-445-PUESTO",
+      "order": 1
+    }
+  ]
+}

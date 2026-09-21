@@ -59,36 +59,22 @@
     ],
     "numericCredits": "0-100"
   },
-  "lessonCount": 1240,
-  "taughtForms": 2028,
-  "objectiveFailed": 59,
+  "lessonCount": 1267,
+  "taughtForms": 2071,
+  "objectiveFailed": 40,
   "mocks": [
     {
       "mock": 1,
-      "reading": 12,
-      "listening": 7,
-      "objectiveFailed": 31,
+      "reading": 19,
+      "listening": 14,
+      "objectiveFailed": 17,
       "failed": [
-        {
-          "paper": 1,
-          "item": 2,
-          "missing": [
-            "exigente"
-          ]
-        },
         {
           "paper": 1,
           "item": 3,
           "missing": [
             "invitar",
             "explicar"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 5,
-          "missing": [
-            "enseñar"
           ]
         },
         {
@@ -101,46 +87,11 @@
         },
         {
           "paper": 1,
-          "item": 11,
-          "missing": [
-            "análisis"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 14,
-          "missing": [
-            "mover"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 17,
-          "missing": [
-            "acompañar"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 19,
-          "missing": [
-            "torpe"
-          ]
-        },
-        {
-          "paper": 1,
           "item": 20,
           "missing": [
             "patio",
             "hierba",
             "piedra"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 21,
-          "missing": [
-            "plantar"
           ]
         },
         {
@@ -175,13 +126,6 @@
         },
         {
           "paper": 2,
-          "item": 26,
-          "missing": [
-            "repetir"
-          ]
-        },
-        {
-          "paper": 2,
           "item": 27,
           "missing": [
             "chaqueta",
@@ -198,13 +142,6 @@
             "imprimir",
             "conectar",
             "llamada"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 30,
-          "missing": [
-            "carrito"
           ]
         },
         {
@@ -252,27 +189,6 @@
         },
         {
           "paper": 2,
-          "item": 40,
-          "missing": [
-            "comentar"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 41,
-          "missing": [
-            "jubilarse"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 42,
-          "missing": [
-            "mirar"
-          ]
-        },
-        {
-          "paper": 2,
           "item": 43,
           "missing": [
             "descontar",
@@ -305,28 +221,14 @@
             "dentista",
             "fallar"
           ]
-        },
-        {
-          "paper": 2,
-          "item": 49,
-          "missing": [
-            "madera"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 50,
-          "missing": [
-            "cubrir"
-          ]
         }
       ]
     },
     {
       "mock": 2,
-      "reading": 11,
-      "listening": 11,
-      "objectiveFailed": 28,
+      "reading": 13,
+      "listening": 14,
+      "objectiveFailed": 23,
       "failed": [
         {
           "paper": 1,
@@ -350,13 +252,6 @@
             "pintar",
             "dormitorio",
             "claro"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 6,
-          "missing": [
-            "calefacción"
           ]
         },
         {
@@ -391,13 +286,6 @@
           "missing": [
             "rotativo",
             "consultar"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 18,
-          "missing": [
-            "responsabilidad"
           ]
         },
         {
@@ -449,13 +337,6 @@
         },
         {
           "paper": 2,
-          "item": 26,
-          "missing": [
-            "urgencia"
-          ]
-        },
-        {
-          "paper": 2,
           "item": 27,
           "missing": [
             "ticket",
@@ -485,13 +366,6 @@
           "missing": [
             "cola",
             "apuntar"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 32,
-          "missing": [
-            "directo"
           ]
         },
         {
@@ -551,13 +425,6 @@
             "entregar",
             "admitir"
           ]
-        },
-        {
-          "paper": 2,
-          "item": 49,
-          "missing": [
-            "partido"
-          ]
         }
       ]
     }
@@ -567,39 +434,32 @@
     "accidente",
     "aceptar",
     "acercar",
-    "acompañar",
     "admitir",
     "agencia",
     "alimentar",
     "almacén",
     "anotar",
-    "análisis",
     "apuntar",
     "arreglar",
     "avanzado",
     "avisar",
     "bufanda",
-    "calefacción",
     "cargo",
     "carné",
-    "carrito",
     "chaqueta",
     "claro",
     "cola",
-    "comentar",
     "comportamiento",
     "conectar",
     "consultar",
     "coste",
     "creer",
     "cuaderno",
-    "cubrir",
     "césped",
     "cómodo",
     "decidirse",
     "dentista",
     "descontar",
-    "directo",
     "director",
     "discutir",
     "donar",
@@ -609,14 +469,12 @@
     "encontrar",
     "encuesta",
     "ensalada",
-    "enseñar",
     "entregar",
     "entrenamiento",
     "espera",
     "estado",
     "estropeado",
     "estropear",
-    "exigente",
     "explicar",
     "fallar",
     "freno",
@@ -633,31 +491,25 @@
     "inventario",
     "invitar",
     "jefe",
-    "jubilarse",
     "lectura",
     "limpieza",
     "llamada",
     "lluvia",
-    "madera",
     "mango",
     "medicamento",
     "meter",
-    "mirar",
     "mostrar",
-    "mover",
     "mudanza",
     "mudarse",
     "objetivo",
     "obra",
     "organizar",
     "paraguas",
-    "partido",
     "patio",
     "peligroso",
     "perderse",
     "piedra",
     "pintar",
-    "plantar",
     "plazo",
     "principiante",
     "problema",
@@ -666,9 +518,7 @@
     "recomendar",
     "recordar",
     "reducir",
-    "repetir",
     "responder",
-    "responsabilidad",
     "revisar",
     "rotativo",
     "roto",
@@ -684,8 +534,6 @@
     "temperatura",
     "tender",
     "ticket",
-    "torpe",
-    "urgencia",
     "usuario",
     "visible",
     "vía"
@@ -712,10 +560,6 @@
       "count": 1
     },
     {
-      "lexeme": "acompañar",
-      "count": 1
-    },
-    {
       "lexeme": "admitir",
       "count": 1
     },
@@ -729,10 +573,6 @@
     },
     {
       "lexeme": "almacén",
-      "count": 1
-    },
-    {
-      "lexeme": "análisis",
       "count": 1
     },
     {
@@ -760,19 +600,11 @@
       "count": 1
     },
     {
-      "lexeme": "calefacción",
-      "count": 1
-    },
-    {
       "lexeme": "cargo",
       "count": 1
     },
     {
       "lexeme": "carné",
-      "count": 1
-    },
-    {
-      "lexeme": "carrito",
       "count": 1
     },
     {
@@ -789,10 +621,6 @@
     },
     {
       "lexeme": "cola",
-      "count": 1
-    },
-    {
-      "lexeme": "comentar",
       "count": 1
     },
     {
@@ -824,10 +652,6 @@
       "count": 1
     },
     {
-      "lexeme": "cubrir",
-      "count": 1
-    },
-    {
       "lexeme": "decidirse",
       "count": 1
     },
@@ -837,10 +661,6 @@
     },
     {
       "lexeme": "descontar",
-      "count": 1
-    },
-    {
-      "lexeme": "directo",
       "count": 1
     },
     {
@@ -880,10 +700,6 @@
       "count": 1
     },
     {
-      "lexeme": "enseñar",
-      "count": 1
-    },
-    {
       "lexeme": "entregar",
       "count": 1
     },
@@ -905,10 +721,6 @@
     },
     {
       "lexeme": "estropear",
-      "count": 1
-    },
-    {
-      "lexeme": "exigente",
       "count": 1
     },
     {
@@ -972,10 +784,6 @@
       "count": 1
     },
     {
-      "lexeme": "jubilarse",
-      "count": 1
-    },
-    {
       "lexeme": "lectura",
       "count": 1
     },
@@ -992,10 +800,6 @@
       "count": 1
     },
     {
-      "lexeme": "madera",
-      "count": 1
-    },
-    {
       "lexeme": "mango",
       "count": 1
     },
@@ -1008,15 +812,7 @@
       "count": 1
     },
     {
-      "lexeme": "mirar",
-      "count": 1
-    },
-    {
       "lexeme": "mostrar",
-      "count": 1
-    },
-    {
-      "lexeme": "mover",
       "count": 1
     },
     {
@@ -1044,10 +840,6 @@
       "count": 1
     },
     {
-      "lexeme": "partido",
-      "count": 1
-    },
-    {
       "lexeme": "patio",
       "count": 1
     },
@@ -1065,10 +857,6 @@
     },
     {
       "lexeme": "pintar",
-      "count": 1
-    },
-    {
-      "lexeme": "plantar",
       "count": 1
     },
     {
@@ -1104,15 +892,7 @@
       "count": 1
     },
     {
-      "lexeme": "repetir",
-      "count": 1
-    },
-    {
       "lexeme": "responder",
-      "count": 1
-    },
-    {
-      "lexeme": "responsabilidad",
       "count": 1
     },
     {
@@ -1173,14 +953,6 @@
     },
     {
       "lexeme": "ticket",
-      "count": 1
-    },
-    {
-      "lexeme": "torpe",
-      "count": 1
-    },
-    {
-      "lexeme": "urgencia",
       "count": 1
     },
     {

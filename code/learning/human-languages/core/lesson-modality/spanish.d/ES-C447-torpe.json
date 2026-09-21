@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C447-torpe",
+    "language": "spanish",
+    "chapter": 447,
+    "sequence": 11590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:29ccea5457eb48e7"
+  },
+  "findings": []
+}

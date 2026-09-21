@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:f4b24131e3876cea",
+  "lessonIds": [
+    "ES-C446-mirar",
+    "ES-C446-mover",
+    "ES-C446-acompanar",
+    "ES-C446-directo",
+    "ES-C446-partido",
+    "ES-R446-repaso-mover",
+    "ES-C446-sintesis-mover"
+  ],
+  "tex": "spanish/book/chapters/ch446-mover.tex"
+}

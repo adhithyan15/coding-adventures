@@ -1,0 +1,11 @@
+{
+  "id": "ES-C447-urgencia",
+  "pathSegment": "ES-PATH-447-JUICIO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-447-JUICIO",
+      "order": 2
+    }
+  ]
+}

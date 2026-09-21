@@ -4,7 +4,7 @@
   "chapter": 435,
   "title": "Los Papeles Del Trabajo",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:41a87c6fa9b772ef",
+  "sourceHash": "fnv1a64:25393610fa5b4c26",
   "lessons": [
     {
       "id": "ES-C435-curriculum",
@@ -585,7 +585,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a0da402a09b627b",
+      "sourceHash": "fnv1a64:c2324c966b5b1199",
       "notice": null,
       "blocks": [
         {

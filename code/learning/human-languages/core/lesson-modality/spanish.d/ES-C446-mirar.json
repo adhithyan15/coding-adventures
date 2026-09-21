@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C446-mirar",
+    "language": "spanish",
+    "chapter": 446,
+    "sequence": 11490,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b109739854990d11"
+  },
+  "findings": []
+}

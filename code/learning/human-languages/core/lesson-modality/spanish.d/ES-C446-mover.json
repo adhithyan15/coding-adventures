@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C446-mover",
+    "language": "spanish",
+    "chapter": 446,
+    "sequence": 11500,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:754308a5fd4255cc"
+  },
+  "findings": []
+}

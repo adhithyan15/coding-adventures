@@ -1,0 +1,11 @@
+{
+  "id": "ES-C447-sintesis-juicio",
+  "pathSegment": "ES-PATH-447-JUICIO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-447-JUICIO",
+      "order": 5
+    }
+  ]
+}

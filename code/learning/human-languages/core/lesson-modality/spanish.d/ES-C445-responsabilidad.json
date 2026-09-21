@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C445-responsabilidad",
+    "language": "spanish",
+    "chapter": 445,
+    "sequence": 11430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:78b44822ec274cd5"
+  },
+  "findings": []
+}
