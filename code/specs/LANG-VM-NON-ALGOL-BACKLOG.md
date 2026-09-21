@@ -8,6 +8,64 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+### VM-070 — `array_len` on BEAM is a representation question, not a missing case
+
+Selected as the next platform item after VM-064 showed `array_len` is the only
+thing blocking 31 of 37 ALGOL-to-BEAM lowerings, and that every other backend
+already implements it. Researched before writing any code, and the research
+changed the shape of the job.
+
+`iir-to-beam` deliberately uses **two different array substrates** (BEAM04,
+BEAM06):
+
+| element type | substrate | has a declared length? |
+|---|---|---|
+| `array<i64>` | `:atomics` | **yes** — `atomics:new/2` is fixed-size |
+| `array<f64>`, `array<str>` | `:ets` | **no** — ets tables grow dynamically |
+
+That split was the right call for `alloc_array`/`array_get`/`array_set` — the
+spec records that the bit-syntax alternative would have needed an entirely new
+operand-encoding subsystem, while ets needed zero new BEAM opcodes. But it
+means `array_len` has no single answer:
+
+- On `:atomics`, `atomics:info/1` returns a map carrying `size`. Straightforward.
+- On `:ets`, `ets:info(Tab, size)` returns **the number of inserted entries,
+  not the declared length**. A `DIM A(10)` with three writes would report 3.
+
+So a naive `array_len` would be *silently wrong* on exactly the substrate BASIC
+uses, and wrong in the direction that looks plausible — a small number rather
+than an error. That is worse than the current honest `UnsupportedOp`.
+
+This also connects to a limitation `iir-to-beam` already documents and left
+deliberately undecided: `ets:new` does not pre-zero cells, so reading an
+element never written traps `badarg` instead of returning `0.0`. Both problems
+have the same root — the ets substrate does not model an array's *extent*, only
+its populated entries.
+
+Options, none chosen yet because this needs a spec first (CLAUDE.md):
+
+1. Store the declared length in the ets table under a reserved key at
+   `alloc_array` time. Cheap, no new opcodes, but reserves a key from the
+   index space and every `array_get`/`array_set` must not collide with it.
+2. Pre-populate the ets table at `alloc_array`, which would fix the
+   read-before-write trap too — at an O(n) allocation cost the current design
+   deliberately avoids.
+3. Implement `array_len` for `:atomics` only and keep refusing on ets. Honest
+   and unblocks the ALGOL integer-array rows, but leaves the op partial in a
+   way that will confuse the next reader unless the refusal names the reason.
+
+Option 2 is the only one that also closes the pre-zero gap, which argues for
+taking them together rather than bolting length onto a substrate that cannot
+express extent.
+
+**Bug class to check during implementation, not after:** any `iir-to-beam` op
+emitting a `call_ext` must be wrapped in `save_live_across_imported_call!` /
+`restore_live_across_imported_call!`, or live SSA values in clobbered X
+registers are silently corrupted. `atomics:info/1` and `ets:info/2` are both
+`call_ext`. That class has bitten this backend three times already (VM-D029,
+VM-D035, issue #15332) — the third time was found only because a deferred item
+forced a re-read.
+
 ### VM-064 scoped: 252 of 289 ALGOL programs already lower to BEAM
 
 VM-064 (all 292 ALGOL rows omit `Beam`, the last systematic matrix hole) was
