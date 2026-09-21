@@ -8,6 +8,54 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+### VM-064 scoped: 252 of 289 ALGOL programs already lower to BEAM
+
+VM-064 (all 292 ALGOL rows omit `Beam`, the last systematic matrix hole) was
+logged as "scope to settle with the ALGOL owner", which was a way of saying
+nobody had measured it. Measured now, by extracting every ALGOL `src` from
+`PROGRAMS` and calling `compile_source_to_beam` on each:
+
+```
+ALGOL -> BEAM lowering: 252 / 289 succeeded
+refusals, by cause:
+    31  UnsupportedOp: array_len
+     4  ValidationFailed: UnsupportedType (function signatures)
+     2  FrontendError (ALGOL parse — mangled by the extraction, not real)
+```
+
+**One missing op accounts for 31 of the 37 refusals.** `iir-to-beam` has no
+`array_len` at all — confirmed by grep, while `array_get`, `array_set` and
+`alloc_array` are handled across 34 sites. The BEAM backend has arrays but not
+their length.
+
+What this does and does not establish, stated precisely because the difference
+is the whole value of the number:
+
+- It establishes that ALGOL's IIR is **not** structurally incompatible with
+  BEAM. The hole is not a design gap; it is a handful of unimplemented ops.
+- It does **not** establish that those 252 programs would *run correctly* on
+  real `erl`. Lowering is emission, not execution. Every promotion in the
+  non-ALGOL BEAM track required proof on real `erl`, and this probe is not that.
+  Treat 252 as "worth attempting", not as "252 green cells".
+
+So the product question for the ALGOL owner is now concrete rather than
+open-ended: **is closing `array_len` (plus a small signature-type gap) worth
+~250 additional proven cells?** That is a different conversation from "should
+ALGOL support BEAM at all".
+
+Sequencing note if it is taken up: implement `array_len` in `iir-to-beam`
+first, re-run this probe, and only then decide how many rows to promote — the
+non-ALGOL track's repeated lesson (BEAM03-BEAM08, VM-LOOP-24, VM-041) is that
+probing the whole group before implementing is dramatically more productive
+than promoting row by row. Note also that `iir-to-beam` has a recurring bug
+class: any op emitting `call_ext` must be wrapped in
+`save_live_across_imported_call!` / `restore_live_across_imported_call!`, or
+live SSA values are silently corrupted. That has bitten three times (VM-D029,
+VM-D035, #15332), so check it for `array_len` specifically.
+
+ALGOL semantics remain separately owned; this is measurement offered to that
+owner, not a claim on the work.
+
 ## VM-063 — ALGOL coverage-doc drift, corrected (2026-09-21)
 
 `LANG-VM-FEATURE-COVERAGE.md` recorded ALGOL 60 at 233 rows / 1631 cells while
