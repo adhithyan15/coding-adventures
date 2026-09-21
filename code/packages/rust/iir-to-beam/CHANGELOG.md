@@ -141,6 +141,42 @@ Both rules are now hoisted into `validate::check_module_name` and applied to
 `config.module_name` at the top of `lower_iir_to_beam`, so the string that is
 actually interned is the string that is checked.
 
+### The heap bug CI caught, and the latent one beside it
+
+`put_list` allocates a cons cell and does **not** check or grow the process
+heap; a preceding `test_heap` is required. The length entry's two `put_list`s
+were emitted without one.
+
+That does not fail cleanly. It writes past the heap limit and corrupts
+whatever is there — which surfaced as the emulator's own
+`size_object: bad tag for 0x…` on macOS and Windows CI while every Linux job
+stayed green, because whether the overflow lands on anything depends on how
+full the heap happens to be at that moment.
+
+Reproduced deterministically before fixing: 2000 ets-backed allocations in one
+function **segfault** the emulator without the reservation and run cleanly with
+it. That reproduction is now `test_99_real_erl_many_ets_allocations_do_not_corrupt_the_heap`,
+alongside two structural tests — one asserting the `test_heap` exists, one
+asserting it comes *before* the first `put_list`, since a reservation after the
+allocation is no reservation at all.
+
+**The same omission existed in `array_set`'s ets path** and had simply never
+been caught: no promoted row happened to overflow. Fixed in the same change,
+because it is the same bug in the same file, and a latent segfault is not
+something to leave behind having just learned what it looks like.
+
+`live` on each `test_heap` is minimal by construction: the values that must
+survive a collection are moved down into `x0..` first, because `live` is a
+plain count and a wider one would sweep in uninitialised registers the GC
+would then try to interpret as live terms — the failure `call_builtin
+"input_str"` documents at length.
+
+Not fixed here: a scratch register above `live` is not a GC root, so a
+collection *inside* `list_to_tuple/1` or `ets:insert/2` could still leave a
+staged table reference stale. That is pre-existing and backend-wide
+(`array_set`, `alloc_array` and `call_closure` all stage this way) and is
+tracked as issue #15882 rather than half-fixed here.
+
 ### Known gap, now reachable
 
 Implementing `array_len` exposes BEAM04's documented pre-zero limitation:

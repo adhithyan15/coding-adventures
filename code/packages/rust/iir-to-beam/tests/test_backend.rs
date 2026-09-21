@@ -5389,3 +5389,135 @@ fn an_ordinary_config_module_name_still_lowers() {
          has to be screened separately from `module.name`"
     );
 }
+
+// ===========================================================================
+// BEAM10 — heap reservation before `put_list`
+// ===========================================================================
+//
+// `put_list` allocates a cons cell and does NOT check or grow the process
+// heap; a preceding `test_heap` is required. Omitting it does not fail
+// cleanly — it writes past the heap limit and corrupts whatever is there.
+//
+// BEAM10's `alloc_array` length entry omitted it, and the result was the
+// emulator's own `size_object: bad tag for 0x…` on macOS and Windows CI while
+// every Linux job stayed green. Reproduced locally as a hard SEGFAULT by
+// allocating 2000 ets-backed arrays in one function; the same program runs
+// cleanly with the reservation in place.
+//
+// The nondeterminism is the reason these tests are structural as well as
+// behavioural: whether an unreserved write lands on anything depends on how
+// full the heap happens to be, so "it passed" is not evidence.
+
+/// Count `test_heap` instructions in a lowered module.
+fn test_heap_count(beam: &ir_to_beam::encoder::BEAMModule) -> usize {
+    beam.instructions.iter().filter(|i| i.opcode == 16 /* test_heap */).count()
+}
+
+/// Index of the first instruction with `opcode`, if any.
+fn first_index_of(beam: &ir_to_beam::encoder::BEAMModule, opcode: u8) -> Option<usize> {
+    beam.instructions.iter().position(|i| i.opcode == opcode)
+}
+
+#[test]
+fn beam10_alloc_array_on_ets_reserves_heap_before_building_its_length_entry() {
+    let beam = lower_iir_to_beam(&array_len_module("array<f64>"), &IIRBeamConfig::default())
+        .expect("lower");
+    assert!(
+        test_heap_count(&beam) >= 1,
+        "alloc_array's ets path builds a 2-cons-cell list with `put_list`, which \
+         does not grow the heap — a `test_heap` must precede it or the write runs \
+         past the heap limit (observed as a segfault at 2000 allocations)"
+    );
+    // Order matters, not just presence: a reservation after the allocation is
+    // no reservation at all.
+    let heap = first_index_of(&beam, 16).expect("test_heap present");
+    let put = first_index_of(&beam, 69 /* put_list */).expect("put_list present");
+    assert!(
+        heap < put,
+        "test_heap must come BEFORE the first put_list (found at {heap} and {put})"
+    );
+}
+
+#[test]
+fn beam10_array_set_on_ets_reserves_heap_before_building_its_tuple() {
+    // The same omission existed in `array_set`'s ets path and had simply not
+    // been caught — no promoted row happened to overflow. Fixed alongside,
+    // because the two are the same bug in the same file.
+    let module = make_module_single(vec![
+        IIRInstr::new("const", Some("n".into()), vec![Operand::Int(4)], "i64"),
+        IIRInstr::new("alloc_array", Some("arr".into()), vec![Operand::Var("n".into())], "array<f64>"),
+        IIRInstr::new("const", Some("i".into()), vec![Operand::Int(0)], "i64"),
+        IIRInstr::new(
+            "array_set",
+            None,
+            vec![Operand::Var("arr".into()), Operand::Var("i".into()), Operand::Var("n".into())],
+            "f64",
+        ),
+        IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+    ]);
+    let beam = lower_iir_to_beam(&module, &IIRBeamConfig::default()).expect("lower");
+    // One for alloc_array's length entry, one for array_set's tuple.
+    assert!(
+        test_heap_count(&beam) >= 2,
+        "both alloc_array and array_set build lists with `put_list` on the ets \
+         path, and each needs its own heap reservation; found {}",
+        test_heap_count(&beam)
+    );
+}
+
+/// The behavioural half, on real `erl`.
+///
+/// 2000 ets-backed allocations in one function. Without the reservation this
+/// segfaults the emulator outright — verified by reverting the fix — so this
+/// is a genuine end-to-end regression guard rather than a restatement of the
+/// structural tests above.
+#[test]
+fn test_99_real_erl_many_ets_allocations_do_not_corrupt_the_heap() {
+    if !erl_available() {
+        eprintln!("erl absent — skipping BEAM heap-stress test");
+        return;
+    }
+    const N: usize = 2000;
+    let mut instrs = vec![IIRInstr::new("const", Some("len".into()), vec![Operand::Int(4)], "i64")];
+    for _ in 0..N {
+        // One destination register, reused: the point is the number of
+        // ALLOCATIONS, and 2000 distinct variables would hit the 255-register
+        // limit long before the heap.
+        instrs.push(IIRInstr::new(
+            "alloc_array",
+            Some("a".into()),
+            vec![Operand::Var("len".into())],
+            "array<f64>",
+        ));
+    }
+    instrs.push(IIRInstr::new("ret", None, vec![Operand::Var("len".into())], "i64"));
+
+    use iir_to_beam::encode_beam;
+    let m = make_module_fn("main", vec![], "i64", instrs);
+    let beam_cfg = IIRBeamConfig::new("iir_heap_stress_test");
+    let beam_mod = lower_iir_to_beam(&m, &beam_cfg).expect("lower the stress module");
+    let bytes = encode_beam(&beam_mod);
+    let tmp = std::env::temp_dir().join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("temp dir");
+    std::fs::write(tmp.join("iir_heap_stress_test.beam"), &bytes).expect("write .beam");
+    let output = std::process::Command::new("erl")
+        .arg("-noshell")
+        .arg("-pa").arg(tmp.to_str().expect("tmp path is UTF-8"))
+        .arg("-eval")
+        .arg("io:format(\"~w~n\",[iir_heap_stress_test:main()]),halt(0).")
+        .output()
+        .expect("spawn erl");
+    assert!(
+        output.status.success(),
+        "2000 ets-backed allocations crashed the emulator: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let out = String::from_utf8_lossy(&output.stdout).to_string();
+    assert_eq!(
+        out.trim(),
+        "4",
+        "2000 ets-backed allocations must not corrupt the process heap; without \
+         the `test_heap` before each length entry's `put_list` pair this \
+         segfaults the emulator"
+    );
+}

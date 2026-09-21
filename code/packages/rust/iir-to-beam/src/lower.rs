@@ -4217,14 +4217,54 @@ pub fn lower_iir_to_beam(
                         // backend, so the pair is a 2-element list via
                         // `put_list` and then `erlang:list_to_tuple/1`.
                         //
-                        // The table identifier is in x0 and must survive both
-                        // of those calls, so it is staged out first.
+                        // ── RESERVE HEAP BEFORE BUILDING THE LIST ───────
+                        //
+                        // `put_list` allocates a cons cell and does NOT check
+                        // or grow the process heap; a preceding `test_heap` is
+                        // required. Omitting it does not fail cleanly — it
+                        // walks off the end of the heap and corrupts unrelated
+                        // data, which surfaced here as the emulator's own
+                        // `size_object: bad tag for 0x…` on macOS and Windows
+                        // CI while every Linux job stayed green, because
+                        // whether the overflow lands on anything depends on
+                        // the heap's state at that moment.
+                        //
+                        // Two cons cells = 4 words.
+                        //
+                        // `live` is a plain COUNT: `x0..x(live-1)` are the
+                        // GC's root set and everything at or above `live` is
+                        // ignored. So the two values that must survive a
+                        // collection are moved DOWN into x0 and x1 first —
+                        // the table identifier (a boxed magic ref, which a
+                        // collection would relocate) and the length. A wider
+                        // `live` would sweep in uninitialised registers the
+                        // GC would then try to interpret as live terms, which
+                        // is the failure `call_builtin "input_str"` above
+                        // documents at length.
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(s_len), BEAMOperand::x(1),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_TEST_HEAP, vec![
+                            BEAMOperand::u(4), BEAMOperand::u(2),
+                        ]));
+
+                        // The table identifier must survive the two calls
+                        // below, so it is staged out. This is the same shape
+                        // `array_set`'s ets path uses for its own table
+                        // reference, and it carries the same known caveat
+                        // (issue #15882): a scratch register above `live` is
+                        // not a GC root, so a collection *inside*
+                        // `list_to_tuple/1` or `ets:insert/2` could leave it
+                        // stale. The `test_heap` above removes the collection
+                        // this code was actually triggering; the residual is
+                        // pre-existing and backend-wide, and is tracked rather
+                        // than half-fixed here.
                         instrs.push(BEAMInstruction::new(OP_MOVE, vec![
                             BEAMOperand::x(0), BEAMOperand::x(s_tab),
                         ]));
                         // [N | []], then [Key | [N]]  ->  [Key, N]
                         instrs.push(BEAMInstruction::new(OP_PUT_LIST, vec![
-                            BEAMOperand::x(s_len), BEAMOperand::a(0), BEAMOperand::x(0),
+                            BEAMOperand::x(1), BEAMOperand::a(0), BEAMOperand::x(0),
                         ]));
                         instrs.push(BEAMInstruction::new(OP_PUT_LIST, vec![
                             BEAMOperand::a(atom_array_len_key),
@@ -4345,6 +4385,45 @@ pub fn lower_iir_to_beam(
                         instrs.push(BEAMInstruction::new(OP_MOVE, vec![
                             BEAMOperand::a(0), BEAMOperand::x(s_list), // nil
                         ]));
+                        // ── RESERVE HEAP BEFORE BUILDING THE LIST ───────
+                        //
+                        // Same requirement as `alloc_array`'s ets path above,
+                        // and the same omission: `put_list` allocates without
+                        // checking the heap, so two cons cells need 4 words
+                        // reserved first. This was missing here before BEAM10
+                        // and had simply not been caught — no promoted row
+                        // happened to overflow. The identical omission in
+                        // `alloc_array` DID overflow, as `size_object: bad
+                        // tag` on macOS and Windows CI, which is what sent
+                        // anyone looking at this at all.
+                        //
+                        // The three values that must survive a collection are
+                        // moved down into x0..x2 first, so `live = 3` is both
+                        // correct and minimal. They are moved back out
+                        // immediately afterwards, because the argument
+                        // staging below expects them where they were.
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(s_ref), BEAMOperand::x(0),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(s_idx), BEAMOperand::x(1),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(s_val), BEAMOperand::x(2),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_TEST_HEAP, vec![
+                            BEAMOperand::u(4), BEAMOperand::u(3),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(0), BEAMOperand::x(s_ref),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(1), BEAMOperand::x(s_idx),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(2), BEAMOperand::x(s_val),
+                        ]));
+
                         instrs.push(BEAMInstruction::new(OP_PUT_LIST, vec![
                             BEAMOperand::x(s_val), BEAMOperand::x(s_list), BEAMOperand::x(s_list),
                         ]));
