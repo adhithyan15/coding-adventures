@@ -8,6 +8,43 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed — the navigation split rendered nothing at all (#15833)
+
+`HostNavigationSplit` laid out to **0 × 0 at every window size**, so a Qt app
+built on it showed an empty window. Measured, not inferred: in a 1200 × 600
+window the root component item measured 1200 and the `SplitView` inside it
+measured 0; the pane and detail areas measured 0 as well.
+
+The split asked for its size with
+
+```qml
+Layout.fillWidth: true
+Layout.fillHeight: true
+```
+
+but those are `QtQuick.Layouts` attached properties, and they do something
+only inside a `RowLayout` / `ColumnLayout` / `GridLayout`. This emitter's
+component root is a plain `Item` — deliberately, so slots and signals hang off
+a wrapper rather than a layout primitive — so QML accepted both lines and
+ignored them, without a warning. `SplitView`, unlike `RowLayout`, also derives
+no implicit size from its panes. No anchors, no layout, no implicit size: no
+size from any source.
+
+A root split now takes `anchors.fill: parent` instead; deeper in the tree the
+attached properties stay, since there the parent may be a real layout where
+anchors are an error. Same window, after: split 1200 wide, pane exactly the
+authored 236, detail 892.
+
+**Why nothing caught it.** The emitter tests asserted on generated *text* —
+`out.contains("SplitView {")`, `out.contains("SplitView.preferredWidth: 236")`
+— and every one passes against markup that draws nothing. CI grepped the same
+strings and ran `cmake --build`, which compiles a zero-size component happily.
+Nothing ever asked how wide the thing was. So this change also adds
+`code/scripts/qt-navigation-split-render-check.qml`, which loads the generated
+QML at a known window size and asserts the measured geometry; the Qt CI lane
+runs it under `QT_QPA_PLATFORM=offscreen`. It passes on the fixed output and
+fails on the old one.
+
 ### Added — `HostNavigationSplit` lowers to Qt `SplitView` (UI29-6, #15481)
 
 The Qt emitter now lowers the ordered pane/detail pair to Qt Quick Controls'
