@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-451-TURNO",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can get through a counter: queue, put my name on a list, show the right card, keep the right slip of paper, and follow a notice that says what will be checked and when.",
+  "prerequisites": [
+    "ES-EXT-450-SUELO"
+  ]
+}

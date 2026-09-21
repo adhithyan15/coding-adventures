@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C448-sintesis-mudanza",
+    "language": "spanish",
+    "chapter": 448,
+    "sequence": 11680,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b6506dd6e3304f8c"
+  },
+  "findings": []
+}

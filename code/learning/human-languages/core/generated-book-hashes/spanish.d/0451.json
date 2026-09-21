@@ -1,0 +1,16 @@
+{
+  "language": "spanish",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:e7abdac259ccdf13",
+  "lessonIds": [
+    "ES-C451-cola",
+    "ES-C451-apuntar",
+    "ES-C451-carne",
+    "ES-C451-mostrar",
+    "ES-C451-ticket",
+    "ES-C451-revisar",
+    "ES-R451-repaso-turno",
+    "ES-C451-sintesis-turno"
+  ],
+  "tex": "spanish/book/chapters/ch451-turno.tex"
+}

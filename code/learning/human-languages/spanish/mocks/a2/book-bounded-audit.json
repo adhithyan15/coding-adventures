@@ -59,15 +59,15 @@
     ],
     "numericCredits": "0-100"
   },
-  "lessonCount": 1267,
-  "taughtForms": 2071,
-  "objectiveFailed": 40,
+  "lessonCount": 1296,
+  "taughtForms": 2124,
+  "objectiveFailed": 31,
   "mocks": [
     {
       "mock": 1,
-      "reading": 19,
+      "reading": 20,
       "listening": 14,
-      "objectiveFailed": 17,
+      "objectiveFailed": 16,
       "failed": [
         {
           "paper": 1,
@@ -83,15 +83,6 @@
           "missing": [
             "tender",
             "meter"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 20,
-          "missing": [
-            "patio",
-            "hierba",
-            "piedra"
           ]
         },
         {
@@ -226,18 +217,10 @@
     },
     {
       "mock": 2,
-      "reading": 13,
-      "listening": 14,
-      "objectiveFailed": 23,
+      "reading": 16,
+      "listening": 19,
+      "objectiveFailed": 15,
       "failed": [
-        {
-          "paper": 1,
-          "item": 1,
-          "missing": [
-            "mudarse",
-            "duro"
-          ]
-        },
         {
           "paper": 1,
           "item": 3,
@@ -252,23 +235,6 @@
             "pintar",
             "dormitorio",
             "claro"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 8,
-          "missing": [
-            "carné",
-            "mostrar"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 12,
-          "missing": [
-            "arreglar",
-            "freno",
-            "rueda"
           ]
         },
         {
@@ -320,9 +286,7 @@
           "paper": 1,
           "item": 24,
           "missing": [
-            "estropear",
             "accidente",
-            "roto",
             "servicio"
           ]
         },
@@ -337,35 +301,11 @@
         },
         {
           "paper": 2,
-          "item": 27,
-          "missing": [
-            "ticket",
-            "revisar"
-          ]
-        },
-        {
-          "paper": 2,
           "item": 29,
           "missing": [
             "medicamento",
             "encargar",
             "guardia"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 30,
-          "missing": [
-            "mudanza",
-            "estropeado"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 31,
-          "missing": [
-            "cola",
-            "apuntar"
           ]
         },
         {
@@ -403,22 +343,6 @@
         },
         {
           "paper": 2,
-          "item": 45,
-          "missing": [
-            "entrenamiento",
-            "césped"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 46,
-          "missing": [
-            "taladro",
-            "acercar"
-          ]
-        },
-        {
-          "paper": 2,
           "item": 48,
           "missing": [
             "plazo",
@@ -433,29 +357,23 @@
     "abrigo",
     "accidente",
     "aceptar",
-    "acercar",
     "admitir",
     "agencia",
     "alimentar",
     "almacén",
     "anotar",
-    "apuntar",
-    "arreglar",
     "avanzado",
     "avisar",
     "bufanda",
     "cargo",
-    "carné",
     "chaqueta",
     "claro",
-    "cola",
     "comportamiento",
     "conectar",
     "consultar",
     "coste",
     "creer",
     "cuaderno",
-    "césped",
     "cómodo",
     "decidirse",
     "dentista",
@@ -464,26 +382,20 @@
     "discutir",
     "donar",
     "dormitorio",
-    "duro",
     "encargar",
     "encontrar",
     "encuesta",
     "ensalada",
     "entregar",
-    "entrenamiento",
     "espera",
     "estado",
-    "estropeado",
-    "estropear",
     "explicar",
     "fallar",
-    "freno",
     "grado",
     "guardia",
     "guía",
     "habitual",
     "herramienta",
-    "hierba",
     "importar",
     "impresora",
     "imprimir",
@@ -498,17 +410,12 @@
     "mango",
     "medicamento",
     "meter",
-    "mostrar",
-    "mudanza",
-    "mudarse",
     "objetivo",
     "obra",
     "organizar",
     "paraguas",
-    "patio",
     "peligroso",
     "perderse",
-    "piedra",
     "pintar",
     "plazo",
     "principiante",
@@ -519,10 +426,7 @@
     "recordar",
     "reducir",
     "responder",
-    "revisar",
     "rotativo",
-    "roto",
-    "rueda",
     "ruta",
     "sección",
     "seguimiento",
@@ -530,10 +434,8 @@
     "servicio",
     "solicitar",
     "suficiente",
-    "taladro",
     "temperatura",
     "tender",
-    "ticket",
     "usuario",
     "visible",
     "vía"
@@ -553,10 +455,6 @@
     },
     {
       "lexeme": "aceptar",
-      "count": 1
-    },
-    {
-      "lexeme": "acercar",
       "count": 1
     },
     {
@@ -580,14 +478,6 @@
       "count": 1
     },
     {
-      "lexeme": "apuntar",
-      "count": 1
-    },
-    {
-      "lexeme": "arreglar",
-      "count": 1
-    },
-    {
       "lexeme": "avanzado",
       "count": 1
     },
@@ -604,23 +494,11 @@
       "count": 1
     },
     {
-      "lexeme": "carné",
-      "count": 1
-    },
-    {
-      "lexeme": "césped",
-      "count": 1
-    },
-    {
       "lexeme": "chaqueta",
       "count": 1
     },
     {
       "lexeme": "claro",
-      "count": 1
-    },
-    {
-      "lexeme": "cola",
       "count": 1
     },
     {
@@ -680,10 +558,6 @@
       "count": 1
     },
     {
-      "lexeme": "duro",
-      "count": 1
-    },
-    {
       "lexeme": "encargar",
       "count": 1
     },
@@ -704,10 +578,6 @@
       "count": 1
     },
     {
-      "lexeme": "entrenamiento",
-      "count": 1
-    },
-    {
       "lexeme": "espera",
       "count": 1
     },
@@ -716,19 +586,7 @@
       "count": 1
     },
     {
-      "lexeme": "estropeado",
-      "count": 1
-    },
-    {
-      "lexeme": "estropear",
-      "count": 1
-    },
-    {
       "lexeme": "fallar",
-      "count": 1
-    },
-    {
-      "lexeme": "freno",
       "count": 1
     },
     {
@@ -749,10 +607,6 @@
     },
     {
       "lexeme": "herramienta",
-      "count": 1
-    },
-    {
-      "lexeme": "hierba",
       "count": 1
     },
     {
@@ -812,18 +666,6 @@
       "count": 1
     },
     {
-      "lexeme": "mostrar",
-      "count": 1
-    },
-    {
-      "lexeme": "mudanza",
-      "count": 1
-    },
-    {
-      "lexeme": "mudarse",
-      "count": 1
-    },
-    {
       "lexeme": "objetivo",
       "count": 1
     },
@@ -840,19 +682,11 @@
       "count": 1
     },
     {
-      "lexeme": "patio",
-      "count": 1
-    },
-    {
       "lexeme": "peligroso",
       "count": 1
     },
     {
       "lexeme": "perderse",
-      "count": 1
-    },
-    {
-      "lexeme": "piedra",
       "count": 1
     },
     {
@@ -896,19 +730,7 @@
       "count": 1
     },
     {
-      "lexeme": "revisar",
-      "count": 1
-    },
-    {
       "lexeme": "rotativo",
-      "count": 1
-    },
-    {
-      "lexeme": "roto",
-      "count": 1
-    },
-    {
-      "lexeme": "rueda",
       "count": 1
     },
     {
@@ -940,19 +762,11 @@
       "count": 1
     },
     {
-      "lexeme": "taladro",
-      "count": 1
-    },
-    {
       "lexeme": "temperatura",
       "count": 1
     },
     {
       "lexeme": "tender",
-      "count": 1
-    },
-    {
-      "lexeme": "ticket",
       "count": 1
     },
     {

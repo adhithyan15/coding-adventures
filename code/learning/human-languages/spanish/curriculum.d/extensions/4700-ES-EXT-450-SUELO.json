@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-450-SUELO",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read a notice pinned to the gate of a sports ground: say where training has moved to, tell a maintained pitch from grass that is merely growing, and warn somebody about stones on a path.",
+  "prerequisites": [
+    "ES-EXT-449-TALLER"
+  ]
+}

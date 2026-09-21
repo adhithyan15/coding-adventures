@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C449-freno",
+    "language": "spanish",
+    "chapter": 449,
+    "sequence": 11700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d2feb39c955ae184"
+  },
+  "findings": []
+}

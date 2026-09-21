@@ -1,0 +1,11 @@
+{
+  "id": "ES-C448-sintesis-mudanza",
+  "pathSegment": "ES-PATH-448-MUDANZA",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ES-EXT-448-MUDANZA",
+      "order": 6
+    }
+  ]
+}
