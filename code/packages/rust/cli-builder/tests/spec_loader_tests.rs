@@ -70,6 +70,124 @@ fn test_flag_with_long_only() {
 }
 
 #[test]
+fn test_flag_with_long_aliases() {
+    let json = r#"{
+        "cli_builder_spec_version":"1.0","name":"x","description":"y",
+        "flags":[{
+            "id":"define","long":"define","long_aliases":["D","define-value"],
+            "description":"define","type":"string"
+        }]
+    }"#;
+    let spec = load_spec_from_str(json).unwrap();
+    assert_eq!(spec.flags[0].long_aliases, vec!["D", "define-value"]);
+}
+
+#[test]
+fn test_long_alias_requires_canonical_long() {
+    let json = r#"{
+        "cli_builder_spec_version":"1.0","name":"x","description":"y",
+        "flags":[{
+            "id":"define","short":"D","long_aliases":["define-value"],
+            "description":"define","type":"string"
+        }]
+    }"#;
+    let err = load_spec_from_str(json).unwrap_err().to_string();
+    assert!(err.contains("long_aliases") && err.contains("canonical"), "{err}");
+}
+
+#[test]
+fn test_duplicate_long_spelling_within_flag_rejected() {
+    let json = r#"{
+        "cli_builder_spec_version":"1.0","name":"x","description":"y",
+        "flags":[{
+            "id":"define","long":"define","long_aliases":["define"],
+            "description":"define","type":"string"
+        }]
+    }"#;
+    let err = load_spec_from_str(json).unwrap_err().to_string();
+    assert!(err.contains("repeats long spelling") && err.contains("define"), "{err}");
+}
+
+#[test]
+fn test_long_alias_collision_with_canonical_long_rejected() {
+    let json = r#"{
+        "cli_builder_spec_version":"1.0","name":"x","description":"y",
+        "flags":[
+            {"id":"define","long":"define","long_aliases":["checks"],"description":"define","type":"string"},
+            {"id":"checks","long":"checks","description":"checks","type":"boolean"}
+        ]
+    }"#;
+    let err = load_spec_from_str(json).unwrap_err().to_string();
+    assert!(err.contains("collides") && err.contains("--checks"), "{err}");
+}
+
+#[test]
+fn test_long_alias_collision_with_another_alias_rejected() {
+    let json = r#"{
+        "cli_builder_spec_version":"1.0","name":"x","description":"y",
+        "flags":[
+            {"id":"first","long":"first","long_aliases":["legacy"],"description":"first","type":"boolean"},
+            {"id":"second","long":"second","long_aliases":["legacy"],"description":"second","type":"boolean"}
+        ]
+    }"#;
+    let err = load_spec_from_str(json).unwrap_err().to_string();
+    assert!(err.contains("collides") && err.contains("--legacy"), "{err}");
+}
+
+#[test]
+fn test_long_alias_collision_with_builtin_rejected() {
+    let json = r#"{
+        "cli_builder_spec_version":"1.0","name":"x","description":"y",
+        "flags":[{
+            "id":"assist","long":"assist","long_aliases":["help"],
+            "description":"assist","type":"boolean"
+        }]
+    }"#;
+    let err = load_spec_from_str(json).unwrap_err().to_string();
+    assert!(err.contains("--help") && err.contains("built-in"), "{err}");
+}
+
+#[test]
+fn test_builtin_collision_cannot_hide_behind_reserved_id() {
+    let json = r#"{
+        "cli_builder_spec_version":"1.0","name":"x","description":"y",
+        "flags":[{
+            "id":"__builtin_help","long":"assist","long_aliases":["help"],
+            "description":"assist","type":"boolean"
+        }]
+    }"#;
+    let err = load_spec_from_str(json).unwrap_err().to_string();
+    assert!(err.contains("--help") && err.contains("built-in"), "{err}");
+}
+
+#[test]
+fn test_inherited_global_long_alias_collision_rejected() {
+    let json = r#"{
+        "cli_builder_spec_version":"1.0","name":"x","description":"y",
+        "global_flags":[{"id":"global","long":"global","long_aliases":["legacy"],"description":"global","type":"boolean"}],
+        "commands":[{
+            "id":"run","name":"run","description":"run",
+            "flags":[{"id":"local","long":"legacy","description":"local","type":"boolean"}]
+        }]
+    }"#;
+    let err = load_spec_from_str(json).unwrap_err().to_string();
+    assert!(err.contains("command 'run'") && err.contains("--legacy"), "{err}");
+}
+
+#[test]
+fn test_noninherited_global_long_alias_does_not_collide() {
+    let json = r#"{
+        "cli_builder_spec_version":"1.0","name":"x","description":"y",
+        "global_flags":[{"id":"global","long":"global","long_aliases":["legacy"],"description":"global","type":"boolean"}],
+        "commands":[{
+            "id":"run","name":"run","description":"run","inherit_global_flags":false,
+            "flags":[{"id":"local","long":"legacy","description":"local","type":"boolean"}]
+        }]
+    }"#;
+    assert!(load_spec_from_str(json).is_ok());
+}
+
+#[test]
 fn test_flag_with_sdl_only() {
     let json = r#"{
         "cli_builder_spec_version":"1.0","name":"x","description":"y",

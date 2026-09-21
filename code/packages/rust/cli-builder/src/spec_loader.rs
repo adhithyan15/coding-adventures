@@ -17,12 +17,12 @@
 // If validation passes, the caller gets back a `CliSpec` that is safe to use.
 // Any validation failure surfaces as `CliBuilderError::SpecError`.
 
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 use directed_graph::Graph;
 
 use crate::errors::CliBuilderError;
-use crate::types::{ArgumentDef, CliSpec, CommandDef, FlagDef};
+use crate::types::{ArgumentDef, BuiltinFlags, CliSpec, CommandDef, FlagDef};
 
 // ---------------------------------------------------------------------------
 // Public API
@@ -106,6 +106,102 @@ fn validate_spec(spec: &CliSpec) -> Result<(), CliBuilderError> {
         validate_command(cmd, &global_ids)?;
     }
 
+    validate_effective_long_forms(
+        &spec.global_flags,
+        &spec.flags,
+        true,
+        &spec.builtin_flags,
+        spec.version.is_some(),
+        &root_scope_name,
+    )?;
+    for cmd in &spec.commands {
+        validate_command_long_forms(
+            cmd,
+            &spec.global_flags,
+            &spec.builtin_flags,
+            spec.version.is_some(),
+        )?;
+    }
+
+    Ok(())
+}
+
+fn validate_command_long_forms(
+    cmd: &CommandDef,
+    global_flags: &[FlagDef],
+    builtins: &BuiltinFlags,
+    has_version: bool,
+) -> Result<(), CliBuilderError> {
+    let scope_name = format!("command '{}'", cmd.name);
+    validate_effective_long_forms(
+        global_flags,
+        &cmd.flags,
+        cmd.inherit_global_flags,
+        builtins,
+        has_version,
+        &scope_name,
+    )?;
+    for child in &cmd.commands {
+        validate_command_long_forms(child, global_flags, builtins, has_version)?;
+    }
+    Ok(())
+}
+
+fn validate_effective_long_forms(
+    global_flags: &[FlagDef],
+    local_flags: &[FlagDef],
+    inherit_globals: bool,
+    builtins: &BuiltinFlags,
+    has_version: bool,
+    scope_name: &str,
+) -> Result<(), CliBuilderError> {
+    let mut owners: HashMap<&str, &str> = HashMap::new();
+    let flags = global_flags
+        .iter()
+        .filter(|_| inherit_globals)
+        .chain(local_flags.iter());
+    for flag in flags {
+        let mut own_forms = HashSet::new();
+        if let Some(long) = flag.long.as_deref() {
+            own_forms.insert(long);
+        }
+        for alias in &flag.long_aliases {
+            if alias.is_empty() || alias.starts_with('-') {
+                return Err(CliBuilderError::SpecError(format!(
+                    "{}: flag {:?} has invalid long alias {:?}",
+                    scope_name, flag.id, alias
+                )));
+            }
+            if !own_forms.insert(alias.as_str()) {
+                return Err(CliBuilderError::SpecError(format!(
+                    "{}: flag {:?} repeats long spelling {:?}",
+                    scope_name, flag.id, alias
+                )));
+            }
+        }
+        for form in own_forms {
+            if let Some(owner) = owners.insert(form, flag.id.as_str()) {
+                if owner != flag.id {
+                    return Err(CliBuilderError::SpecError(format!(
+                        "{}: long spelling --{} collides between flags {:?} and {:?}",
+                        scope_name, form, owner, flag.id
+                    )));
+                }
+            }
+        }
+    }
+
+    for (enabled, name) in [
+        (builtins.help, "help"),
+        (builtins.version && has_version, "version"),
+    ] {
+        if enabled && owners.contains_key(name) {
+            return Err(CliBuilderError::SpecError(format!(
+                "{}: long spelling --{} collides with a built-in flag",
+                scope_name, name
+            )));
+        }
+    }
     Ok(())
 }
 
@@ -349,6 +445,12 @@ fn validate_flag_form(f: &FlagDef, scope_name: &str) -> Result<(), CliBuilderErr
     if f.short.is_none() && f.long.is_none() && f.single_dash_long.is_none() {
         return Err(CliBuilderError::SpecError(format!(
             "{}: flag {:?} must have at least one of 'short', 'long', or 'single_dash_long'",
+            scope_name, f.id
+        )));
+    }
+    if !f.long_aliases.is_empty() && f.long.is_none() {
+        return Err(CliBuilderError::SpecError(format!(
+            "{}: flag {:?} has long_aliases but no canonical 'long' form",
             scope_name, f.id
         )));
     }
