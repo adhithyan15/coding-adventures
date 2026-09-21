@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C112-poleesu",
+    "language": "malayalam",
+    "chapter": 112,
+    "sequence": 4150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e88376130a89aad2"
+  },
+  "findings": []
+}
