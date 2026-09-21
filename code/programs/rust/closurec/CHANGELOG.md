@@ -2,6 +2,65 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [Unreleased]
+
+> Not version-bumped: `tests/cli-surface/v20260915-audit.json` pins a SHA-256
+> over the whole of `cli.spec.json`, including its `version` field, so bumping
+> the version invalidates the audit and regenerating it requires the pinned
+> upstream `CommandLineRunner.java` (exact byte length and hash, never
+> downloaded by the tool). Tracked in
+> [#15832](https://github.com/adhithyan15/coding-adventures/issues/15832).
+
+### Fixed - the correlation-vector trace no longer names passes that did not run
+
+The `passes` list in a correlation-vector trace came from two hand-maintained
+constants, `SIMPLE_PASS_NAMES` and `ADVANCED_PASS_NAMES`, kept in parallel with
+the `pipeline.add(...)` calls a few hundred lines away. Nothing tied them
+together and they had drifted: `inline` is registered only under
+`if advanced.is_some()`, but the SIMPLE constant still listed it, so **every
+SIMPLE run emitted provenance naming a pass that never executed**.
+
+Both constants are gone. `run_typed_pipeline` now returns
+`TypedPipelineRun { code, executed_passes }`, taking the inventory from
+`PipelineOutput::execution_order` — the scheduler's own record of what it ran.
+The trace site can only report that value; it no longer decides anything. The
+`will_rename_properties` variable, which existed solely so the trace could
+re-derive whether `rename-properties` had been scheduled, is deleted with it.
+
+This also corrects the reported **order**. The constants listed registration
+order, which is not what executes: `closure-pass-pipeline`'s Kahn scheduler
+uses a FIFO ready queue, so every pass declaring no `depends_on` is scheduled
+ahead of every dependent pass. `rename` is registered eighth and runs second.
+Traces now show the real schedule. That ordering defect is tracked separately
+in [#15829](https://github.com/adhithyan15/coding-adventures/issues/15829); it
+is a defect in the scheduler, not in this trace.
+
+Observable change for `--correlation_vector` consumers:
+
+```text
+SIMPLE    before  ["constant-fold","fold-control-flow","dce","inline","inline-variables","rename"]
+SIMPLE    after   ["constant-fold","rename","fold-control-flow","dce","inline-variables"]
+ADVANCED  after   ["constant-fold","rename","rename-globals","fold-control-flow","dce",
+                   "inline","inline-variables","treeshake","remove-unused-vars"]
+```
+
+Emitted JavaScript is byte-identical; only the provenance record changed.
+
+### Fixed - `transform_source_with_cv` was undocumented
+
+Removing `SIMPLE_PASS_NAMES` revealed that the doc comment describing
+`transform_source_with_cv` and the full CV contribution-shape table had been
+orphaned onto that constant — a private constant carried the public function's
+documentation, and the function itself had none. Re-homed onto the function.
+
+### Added
+
+`tests/cv_executed_passes.rs`: six end-to-end tests asserting that
+conditionally registered passes (`inline`, `remove-unused-vars`, `treeshake`,
+`rename-globals`, `rename-properties`) appear in the trace exactly when they
+were registered, that every reported name is a known pass, and pinning the
+scheduler's real order so a future fix to #15829 must consciously update it.
+
 ## [0.246.0] - 2026-09-19
 
 ### Added - upstream long-form aliases

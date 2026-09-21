@@ -228,108 +228,6 @@ pub fn transform_source(
     transform_source_with_cv(source, config, None)
 }
 
-/// CV-aware variant of [`transform_source`] (CLOC11.61).
-///
-/// When `cv` is `Some((log, id))`, each pipeline stage appends a
-/// [`Contribution`](coding_adventures_correlation_vector::Contribution)
-/// to the per-file CV entry identified by `id`. The pre-CLOC11.61
-/// `run_compiler` recorded one summary `transform_source.applied`
-/// contribution per file; this slice replaces it with per-stage
-/// records so the trace shows which pass touched the bytes and by
-/// how much.
-///
-/// When `cv` is `None`, this function is byte-identical in
-/// behavior to the original `transform_source` — same Result,
-/// same error mapping, zero CV overhead.
-///
-/// # Contribution shape
-///
-/// | Stage              | `source`           | `tag`            | `meta`                                   |
-/// |--------------------|--------------------|------------------|------------------------------------------|
-/// | WhitespaceOnly     | `compilation_level`| `whitespace_only`| `{input_byte_len, output_byte_len}`      |
-/// | Simple             | `compilation_level`| `simple_v2`      | `{level, bridge_status, passes, input_byte_len, output_byte_len}` |
-/// | Advanced           | `compilation_level`| `advanced_v1`    | same shape as `simple_v2`; `passes` adds `rename-globals` (aggressive top-level renaming) |
-/// | Bundle / Transpile | `compilation_level`| `identity`       | `{level: "BUNDLE" \| "TRANSPILE_ONLY"}` |
-/// | Defines            | `defines`          | `applied`        | `{input_byte_len, output_byte_len, defines_count}` |
-///
-/// **`bridge_status`** (Simple and Advanced): `"ok"` when the full
-/// parse→bridge→passes→emit chain succeeded. A failed stage returns a
-/// [`CompilerError::TypedPipeline`] before any output or CV sidecar is written,
-/// so a successful trace can never describe a weaker fallback. `"n/a"` for
-/// compilation levels without the typed pipeline.
-///
-/// The `defines.applied` contribution lands for every input even
-/// when `--define` is empty (`defines_count: 0`), because the
-/// stage *ran* — it just didn't do any substitutions. That keeps
-/// the trace symmetric across files and visualization tools
-/// don't have to special-case zero-defines runs.
-/// The ordered list of optimization passes the SIMPLE level runs.
-///
-/// Each PR appends one more SIMPLE-appropriate pass here (and to the
-/// pipeline below) so the growth is auditable one pass at a time. The
-/// names are the passes' own canonical `Pass::name()` values; they also
-/// become the `passes` field in the correlation-vector trace.
-///
-/// The list is in execution order. Ordering is enforced two ways: every
-/// pass that needs a predecessor declares it via `Pass::depends_on`, and
-/// where two passes are mutually independent the pipeline falls back to
-/// *registration order* as the tie-breaker.
-///
-/// - constant-fold turns `2 > 3` into the literal `false`;
-/// - fold-control-flow then prunes `if (false) {A}` to an empty `;`;
-/// - dce then sweeps that empty statement (and any code after a `return`)
-///   away;
-/// - inline is a registered slot (an identity pass today) that pins the
-///   canonical position for local function inlining once it lands;
-/// - inline-variables propagates a `const = literal` to its use sites;
-/// - rename shortens leaf-function *local* names last.
-///
-/// ## SIMPLE is OPEN-WORLD — it never removes top-level names
-///
-/// The reference Closure Compiler treats a SIMPLE compile as *open-world*: a
-/// top-level (global-scope) `var`/`let`/`const`, `function`, or `class` may be
-/// read or called by another script sharing the same global object, so SIMPLE
-/// never removes it. `remove-unused-vars` (deletes unreferenced top-level
-/// `var/let/const`) and `treeshake` (deletes unreferenced top-level
-/// `function`/`class`) are therefore ADVANCED-only — see [`ADVANCED_PASS_NAMES`]
-/// and the gated `pipeline.add`s in [`run_typed_pipeline`]. Running them at
-/// SIMPLE was a miscompile: `var z = 1;` (a global another script might read)
-/// was dropped, where the reference compiler keeps it. Function-*local* unused
-/// bindings are still removed — that is scope-local and sound.
-const SIMPLE_PASS_NAMES: &[&str] = &[
-    "constant-fold",
-    "fold-control-flow",
-    "dce",
-    "inline",
-    "inline-variables",
-    "rename",
-];
-
-/// The ADVANCED pipeline = every SIMPLE pass, then `rename-globals` —
-/// aggressive renaming of program-private top-level names (the canonical
-/// ADVANCED-over-SIMPLE win). It runs *after* `rename` (which shortens
-/// leaf-function locals) so the two renamers shorten disjoint name
-/// layers. `rename-globals` is gated by the `--externs` do-not-rename
-/// boundary; see [`externs_do_not_rename`].
-///
-/// A further `rename-properties` pass runs after `rename-globals` **only
-/// when the user supplied `--externs`** (it is appended dynamically at the
-/// trace site, not listed here, because it is conditional). Property
-/// renaming is unsafe without an externs property boundary — the bundled
-/// built-in list omits the DOM — so it is opt-in via the externs contract.
-/// See [`AdvancedConfig`] and [`collect_externs_property_names`].
-const ADVANCED_PASS_NAMES: &[&str] = &[
-    "constant-fold",
-    "fold-control-flow",
-    "dce",
-    "inline",
-    "inline-variables",
-    "remove-unused-vars",
-    "treeshake",
-    "rename",
-    "rename-globals",
-];
-
 /// ADVANCED-only pipeline configuration. Passing `Some` to
 /// [`run_typed_pipeline`] selects ADVANCED; `None` is SIMPLE.
 ///
@@ -398,6 +296,22 @@ impl TypedPipelineFailure {
     }
 }
 
+/// What one SIMPLE/ADVANCED typed-pipeline run produced.
+///
+/// Two fields, because a correlation-vector trace needs both halves and they
+/// must come from the *same* run: the bytes we emitted, and the passes the
+/// scheduler actually executed to produce them. Returning them together is
+/// what removes the opportunity for the two to disagree.
+struct TypedPipelineRun {
+    /// The emitted (minified) JavaScript.
+    code: String,
+    /// The scheduler's real execution order, straight from
+    /// `PipelineOutput::execution_order`. Gated registrations (`inline`,
+    /// `remove-unused-vars`, `treeshake`, `rename-globals`,
+    /// `rename-properties`) are present exactly when they ran.
+    executed_passes: Vec<String>,
+}
+
 /// Run the typed-AST optimization pipeline over a bridged `Program` and
 /// emit the result as JavaScript text.
 ///
@@ -412,8 +326,23 @@ impl TypedPipelineFailure {
 /// `advanced` distinguishes the two levels: `None` is SIMPLE; `Some(cfg)`
 /// is ADVANCED, which appends `rename-globals` (always) and
 /// `rename-properties` (only when `cfg.rename_properties_externs` is
-/// `Some`) after the SIMPLE passes. See [`SIMPLE_PASS_NAMES`] /
-/// [`ADVANCED_PASS_NAMES`] / [`AdvancedConfig`].
+/// `Some`) after the SIMPLE passes. See [`AdvancedConfig`].
+///
+/// # Why this returns the pass inventory (CCR-041)
+///
+/// The correlation-vector trace must name the passes that *actually ran*.
+/// That used to be served by two hand-maintained `SIMPLE_PASS_NAMES` /
+/// `ADVANCED_PASS_NAMES` constants kept in parallel with the `pipeline.add`
+/// calls below — and they drifted: `inline` is registered only under
+/// ADVANCED, but the SIMPLE constant still listed it, so every SIMPLE trace
+/// claimed a pass that never executed.
+///
+/// A parallel list cannot be kept honest by discipline, so there is no longer
+/// one. [`PassPipeline::run`] already reports the schedule it used in
+/// `PipelineOutput::execution_order` (topologically sorted, gated
+/// registrations absent). That is now the single source of truth, returned
+/// here as [`TypedPipelineRun::executed_passes`] and written straight into
+/// the trace. A pass can only appear in provenance by having been run.
 fn run_typed_pipeline(
     program: coding_adventures_javascript_ast::Program,
     advanced: Option<AdvancedConfig>,
@@ -425,7 +354,7 @@ fn run_typed_pipeline(
     // behaviour, and output bytes are identical either way since CV ids
     // never influence folding or emission.
     cv: Option<&mut coding_adventures_correlation_vector::CVLog>,
-) -> Result<String, TypedPipelineFailure> {
+) -> Result<TypedPipelineRun, TypedPipelineFailure> {
     use coding_adventures_closure_emitter::{emit, EmitOptions};
     use coding_adventures_closure_pass_constant_fold::ConstantFoldPass;
     use coding_adventures_closure_pass_dce::DcePass;
@@ -508,10 +437,15 @@ fn run_typed_pipeline(
         }
     }
 
-    let optimized = pipeline
+    // `execution_order` is the scheduler's own record of what it ran, in the
+    // order it ran it. Taking it here (rather than rebuilding an equivalent
+    // list) is what makes the CV trace structurally unable to name a pass that
+    // did not execute.
+    let run = pipeline
         .run(program, &sidecar, &mut *pass_cv)
-        .map_err(|error| TypedPipelineFailure::Pass(error.to_string()))?
-        .program;
+        .map_err(|error| TypedPipelineFailure::Pass(error.to_string()))?;
+    let executed_passes = run.execution_order;
+    let optimized = run.program;
 
     // Emit minified JS (pretty=false). No source map at this layer —
     // SIMPLE source maps land with the dedicated source-map work.
@@ -520,10 +454,48 @@ fn run_typed_pipeline(
         ..Default::default()
     };
     emit(&optimized, &sidecar, &mut *pass_cv, &opts)
-        .map(|output| output.code)
+        .map(|output| TypedPipelineRun {
+            code: output.code,
+            executed_passes,
+        })
         .map_err(|error| TypedPipelineFailure::Emit(error.to_string()))
 }
 
+/// CV-aware variant of [`transform_source`] (CLOC11.61).
+///
+/// When `cv` is `Some((log, id))`, each pipeline stage appends a
+/// [`Contribution`](coding_adventures_correlation_vector::Contribution)
+/// to the per-file CV entry identified by `id`. The pre-CLOC11.61
+/// `run_compiler` recorded one summary `transform_source.applied`
+/// contribution per file; this slice replaces it with per-stage
+/// records so the trace shows which pass touched the bytes and by
+/// how much.
+///
+/// When `cv` is `None`, this function is byte-identical in
+/// behavior to the original `transform_source` — same Result,
+/// same error mapping, zero CV overhead.
+///
+/// # Contribution shape
+///
+/// | Stage              | `source`           | `tag`            | `meta`                                   |
+/// |--------------------|--------------------|------------------|------------------------------------------|
+/// | WhitespaceOnly     | `compilation_level`| `whitespace_only`| `{input_byte_len, output_byte_len}`      |
+/// | Simple             | `compilation_level`| `simple_v2`      | `{level, bridge_status, passes, input_byte_len, output_byte_len}` |
+/// | Advanced           | `compilation_level`| `advanced_v1`    | same shape as `simple_v2`; `passes` adds `rename-globals` (aggressive top-level renaming) |
+/// | Bundle / Transpile | `compilation_level`| `identity`       | `{level: "BUNDLE" \| "TRANSPILE_ONLY"}` |
+/// | Defines            | `defines`          | `applied`        | `{input_byte_len, output_byte_len, defines_count}` |
+///
+/// **`bridge_status`** (Simple and Advanced): `"ok"` when the full
+/// parse→bridge→passes→emit chain succeeded. A failed stage returns a
+/// [`CompilerError::TypedPipeline`] before any output or CV sidecar is written,
+/// so a successful trace can never describe a weaker fallback. `"n/a"` for
+/// compilation levels without the typed pipeline.
+///
+/// The `defines.applied` contribution lands for every input even
+/// when `--define` is empty (`defines_count: 0`), because the
+/// stage *ran* — it just didn't do any substitutions. That keeps
+/// the trace symmetric across files and visualization tools
+/// don't have to special-case zero-defines runs.
 pub fn transform_source_with_cv(
     source: &str,
     config: &CompilerConfig,
@@ -557,6 +529,10 @@ pub fn transform_source_with_cv(
     // contribution below. Other levels leave it None, where the CV block
     // substitutes "n/a".
     let mut simple_bridge_status: Option<String> = None;
+    // CCR-041: the passes the scheduler actually executed, set only on the
+    // typed (SIMPLE/ADVANCED) path. `None` everywhere else, which is why the
+    // trace site treats it as an empty schedule rather than guessing one.
+    let mut executed_passes: Option<Vec<String>> = None;
 
     // Decide ADVANCED property renaming ONCE, fail-closed, so the pipeline
     // and the CV trace below agree (they must never disagree — one running
@@ -574,7 +550,10 @@ pub fn transform_source_with_cv(
         } else {
             None
         };
-    let will_rename_properties = rename_properties_externs.is_some();
+    // CCR-041 removed a `will_rename_properties` mirror of this decision that
+    // existed only so the trace site could re-derive whether that pass ran.
+    // The trace now reads the scheduler's own execution order, so the single
+    // decision below is the only one.
 
     // Step 1 — compilation-level transform.
     let after_level = match config.compilation.level {
@@ -667,10 +646,12 @@ pub fn transform_source_with_cv(
             let pipe_cv = cv_pair.as_mut().map(|(log, _id, _ids, _file)| {
                 *log as &mut coding_adventures_correlation_vector::CVLog
             });
-            let code = run_typed_pipeline(program, advanced, pipe_cv)
+            let run = run_typed_pipeline(program, advanced, pipe_cv)
                 .map_err(|failure| failure.into_compiler_error(level))?;
             simple_bridge_status = Some("ok".to_string());
-            code
+            // CCR-041: the trace reports this, not a hand-kept constant.
+            executed_passes = Some(run.executed_passes);
+            run.code
         }
         // Bundle / TranspileOnly: identity for now (module bundling and
         // language down-levelling are orthogonal to the optimization
@@ -701,22 +682,24 @@ pub fn transform_source_with_cv(
                 // passes today (it is ≥ SIMPLE) and gains advanced-only
                 // passes here as they land.
                 CompilationLevel::Simple | CompilationLevel::Advanced => {
-                    // The pass list is dynamic for ADVANCED: `rename-properties`
-                    // appears in the trace exactly when it actually ran —
-                    // `will_rename_properties` is the SAME fail-closed decision
-                    // that gated the pipeline above, so the trace can never
-                    // disagree with what executed.
-                    let (tag, level, passes_list): (&str, &str, Vec<&str>) =
-                        match config.compilation.level {
-                            CompilationLevel::Advanced => {
-                                let mut passes: Vec<&str> = ADVANCED_PASS_NAMES.to_vec();
-                                if will_rename_properties {
-                                    passes.push("rename-properties");
-                                }
-                                ("advanced_v1", "ADVANCED", passes)
-                            }
-                            _ => ("simple_v2", "SIMPLE", SIMPLE_PASS_NAMES.to_vec()),
-                        };
+                    // CCR-041: the pass list is whatever the scheduler
+                    // reported running, for BOTH levels. Nothing here decides
+                    // or re-derives which passes were scheduled — the gating
+                    // lives in `run_typed_pipeline` alone, and this site can
+                    // only report it. Conditional passes (`inline`,
+                    // `remove-unused-vars`, `treeshake`, `rename-globals`,
+                    // `rename-properties`) therefore appear exactly when they
+                    // ran, with no second copy of the gating logic to drift.
+                    //
+                    // `executed_passes` is `Some` on every path that reaches
+                    // here with a typed level: it is set immediately after the
+                    // pipeline returns, and a failed pipeline returns before
+                    // any CV contribution is built.
+                    let passes_list: Vec<String> = executed_passes.clone().unwrap_or_default();
+                    let (tag, level) = match config.compilation.level {
+                        CompilationLevel::Advanced => ("advanced_v1", "ADVANCED"),
+                        _ => ("simple_v2", "SIMPLE"),
+                    };
                     (
                         tag,
                         vec![
@@ -736,7 +719,7 @@ pub fn transform_source_with_cv(
                                 serde_json::Value::Array(
                                     passes_list
                                         .iter()
-                                        .map(|p| serde_json::Value::String((*p).into()))
+                                        .map(|p| serde_json::Value::String(p.clone()))
                                         .collect(),
                                 ),
                             ),
@@ -6837,10 +6820,21 @@ mod tests {
             body.contains("\"bridge_status\":\"ok\""),
             "expected bridge_status=ok in CV sidecar: {body}"
         );
-        // The pass pipeline must be recorded in the trace, in order.
+        // CCR-041: the trace records the passes the scheduler REALLY ran, in
+        // the order it really ran them. This assertion used to read
+        // `["constant-fold","fold-control-flow","dce","inline",
+        // "inline-variables","rename"]`, copied from the hand-maintained
+        // `SIMPLE_PASS_NAMES` constant — so it could only ever prove the copy
+        // was faithful. Both halves of it were wrong: `inline` is registered
+        // only under ADVANCED, and the scheduler does not execute in
+        // registration order.
+        assert!(
+            !body.contains("\"inline\""),
+            "SIMPLE must not report the ADVANCED-only `inline` pass: {body}"
+        );
         assert!(
             body.contains(
-                "\"passes\":[\"constant-fold\",\"fold-control-flow\",\"dce\",\"inline\",\"inline-variables\",\"rename\"]"
+                "\"passes\":[\"constant-fold\",\"rename\",\"fold-control-flow\",\"dce\",\"inline-variables\"]"
             ),
             "expected SIMPLE (open-world) passes list in CV sidecar: {body}"
         );
