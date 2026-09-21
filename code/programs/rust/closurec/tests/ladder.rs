@@ -108,10 +108,22 @@ fn load_ledger() -> BTreeMap<String, Divergence> {
                             }),
                     )
                     .expect("upstream_exit fits in i32"),
-                    closurec_stderr_starts_with: body
-                        .get("closurec_stderr_starts_with")
-                        .and_then(|v| v.as_str())
-                        .map(str::to_string),
+                    closurec_stderr_starts_with: match body.get("closurec_stderr_starts_with") {
+                        None => None,
+                        // Absent is allowed (a rung that produces stdout needs
+                        // no stage pin), but present-and-not-a-string is a typo
+                        // or a type error, and degrading it to None would
+                        // silently disarm the guard.
+                        Some(v) => Some(
+                            v.as_str()
+                                .unwrap_or_else(|| {
+                                    panic!(
+                                        "{fixture}: `closurec_stderr_starts_with` must be a string"
+                                    )
+                                })
+                                .to_string(),
+                        ),
+                    },
                 },
             )
         })
@@ -263,9 +275,10 @@ fn verdict(
         // from a bridge-stage one, so a regression that moves the failure
         // between stages would otherwise stay green as a known divergence.
         Some(k)
-            if k.closurec_stderr_starts_with
-                .as_deref()
-                .is_some_and(|want| !stderr.starts_with(want)) =>
+            if actual.is_empty()
+                && k.closurec_stderr_starts_with
+                    .as_deref()
+                    .is_some_and(|want| !stderr.starts_with(want)) =>
         {
             Verdict::Fail(format!(
                 "{name}: still fails, but differently than recorded.\n    \
@@ -352,6 +365,21 @@ fn every_divergence_is_well_formed() {
             !d.reason.trim().is_empty(),
             "{fixture}: divergence must say why it diverges"
         );
+        // An entry with no stdout otherwise asserts only "it fails somehow".
+        // Nothing else requires the stage pin, so deleting the key, nulling it,
+        // or setting it to "" would each silently restore that weakness — and
+        // `starts_with("")` is vacuously true, so emptiness must be rejected
+        // explicitly rather than merely presence checked.
+        if d.closurec_stdout.is_empty() {
+            assert!(
+                d.closurec_stderr_starts_with
+                    .as_deref()
+                    .is_some_and(|p| !p.trim().is_empty()),
+                "{fixture}: an entry with no stdout must pin the stage it fails at via a \
+                 non-empty `closurec_stderr_starts_with`, or the gate only asserts that it \
+                 failed somehow"
+            );
+        }
         let suffix = match d.level.as_str() {
             "WHITESPACE_ONLY" => "_ws",
             "SIMPLE" => "_simple",

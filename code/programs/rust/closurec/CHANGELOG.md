@@ -135,6 +135,23 @@ pin `closurec_stderr_starts_with`, and a changed stage fails the gate.
 
 Both guards have negative tests, bringing the ladder's own test count to 11.
 
+**And the stage pin is itself pinned.** A second review round found the fix
+above was silently reversible: nothing required an entry to carry
+`closurec_stderr_starts_with`, so deleting the key, setting it to `null`, or
+setting it to `""` each left every test green while restoring exactly the "it
+fails somehow" weakness — `starts_with("")` is vacuously true. Two changes
+close that: an entry with empty `closurec_stdout` must now carry a non-empty
+stage pin, and a present-but-not-a-string value panics instead of degrading to
+`None`. All three evasions were tried against the real ledger and all three now
+fail the harness.
+
+The verdict's arm order was also wrong for one shape: a rung recorded as a hard
+failure that *starts succeeding* with output unlike upstream's matched the
+changed-stage arm before the changed-output arm, reporting a stale-stderr
+message for what is really a changed result. That arm now also requires the
+observed output to be empty, so a rung that produces output is judged on its
+output.
+
 Registered in `tests/oracle/manifest.json`; the reviewed fixture inventory
 tripwire moves from 707 to 782 and the ledger tripwire from 20 to 63.
 
