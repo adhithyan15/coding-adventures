@@ -294,12 +294,14 @@ try {
         throw "Could not find the task composer input. Buttons present: $((Get-ButtonNames $root) -join ', ')"
     }
     $taskName = 'CI smoke task'
+    $composer.SetFocus()
     $composer.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue($taskName)
     $due = '2026-01-09'
     $dueInput = Find-ByAutomationId $root 'due-input' ([System.Windows.Automation.ControlType]::Edit)
     if (-not $dueInput) {
         throw "Could not find the due-date input."
     }
+    $dueInput.SetFocus()
     $dueInput.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue($due)
     Start-Sleep -Seconds 2
 
@@ -397,8 +399,21 @@ try {
     }
 
     # ── 7. Persist a second task, restart, and prove it is restored ─────
+    #
+    # The composer and due-date inputs lost focus to the toggle/delete
+    # controls exercised above. WinUI's generated onChange handler only
+    # dispatches TextChanged from a focused TextBox (see
+    # mosaic-emit-xaml's emit_host_input), which real typing always
+    # satisfies but ValuePattern.SetValue does not by itself — it writes
+    # the Text property directly without focusing the control. Explicitly
+    # focusing first (as SetFocus() below does) mirrors how a real user
+    # would tab or click into the field before typing, and is what drives
+    # WinUI's FocusState to Programmatic so the change is not mistaken for
+    # an inactive/teardown notification.
     $persistedTask = 'Persisted native task'
+    $composer.SetFocus()
     $composer.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue($persistedTask)
+    $dueInput.SetFocus()
     $dueInput.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue($due)
     Start-Sleep -Seconds 1
     $addButton.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
