@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C437-coincidir",
+    "language": "spanish",
+    "chapter": 437,
+    "sequence": 10870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c63f4008dc4346fe"
+  },
+  "findings": []
+}

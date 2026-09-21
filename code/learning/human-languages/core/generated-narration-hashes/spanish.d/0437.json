@@ -1,0 +1,21 @@
+{
+  "language": "spanish",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:51096f3af2b9b262",
+  "lessonIds": [
+    "ES-C437-decidir",
+    "ES-C437-coincidir",
+    "ES-C437-equivocarse",
+    "ES-C437-tardar",
+    "ES-C437-cenar",
+    "ES-R437-repaso-planes",
+    "ES-C437-sintesis-plan"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "spanish/narration/ch437.txt",
+  "json": "spanish/narration/ch437.json",
+  "textHash": "fnv1a64:a7cf0e1c2bc992d7",
+  "jsonHash": "fnv1a64:591dbb6b238542e3",
+  "findings": []
+}

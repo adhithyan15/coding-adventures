@@ -1,0 +1,1047 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 438,
+  "title": "El Cuerpo Y El Descanso",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:b0101e7f8363487e",
+  "lessons": [
+    {
+      "id": "ES-C438-polideportivo",
+      "sequence": 10930,
+      "title": "el polideportivo — one roof, many sports",
+      "headword": "el polideportivo",
+      "romanization": "el polideportivo",
+      "gloss": "the sports centre — one building, many sports, and the word says so",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0326ee140b078889",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el deporte and el gimnasio. A gimnasio holds one room of machines. Now picture a building that holds a pool, a court and a running track at once."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el polideportivo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el polideportivo — the municipal sports centre."
+            },
+            {
+              "kind": "speech",
+              "text": "Every town of any size has one, and its sign is the one you read to find out what the pool costs and when the court is free. It is a deporte word, so it is masculine: el polideportivo, los polideportivos."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three pieces, and the middle one is already yours."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "piece",
+                "where it comes from"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "piece: poli-. where it comes from: Greek polýs, many.",
+                "piece: deportiv-. where it comes from: from deporte, sport.",
+                "piece: -o. where it comes from: masculine ending."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Many-sport-place. Spanish did not borrow this word from anywhere; it built it, in the twentieth century, out of a Greek prefix and a Latin stem, because town councils needed a name for a thing that did not exist before."
+            },
+            {
+              "kind": "speech",
+              "text": "That Greek poli- is the same one inside polígono and poliglota. It is not the poli- of policía, which is a different Greek word entirely — pólis, the city. Two prefixes that look identical and mean nothing like each other."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el polideportivo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el polideportivo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the difference between a gimnasio and a polideportivo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the difference between a gimnasio and a polideportivo]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the piece poli- is doing in the word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the piece *poli-* is doing in the word]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The sports centre? (El polideportivo.) What does poli- mean? (Many.) Which syllable carries the stress? (-ti-, the second from last.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C438-natacion",
+      "sequence": 10940,
+      "title": "la natación — the same root, arriving twice",
+      "headword": "la natación",
+      "romanization": "la natación",
+      "gloss": "swimming as a discipline — the Latin twin of nadar, borrowed back whole",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:86144cb75cc165d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say nadar. Now say el polideportivo. The timetable on its door does not list nadar; it lists a noun."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la natación",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la natación — swimming, the activity as a named thing."
+            },
+            {
+              "kind": "speech",
+              "text": "Hago natación los martes — I swim on Tuesdays. Un curso de natación — a swimming course. nadar is what your arms do; la natación is what the timetable, the club and the medal call it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nat- from Latin natāre, to swim, plus -ción, the ending you met on documentación for turning an action into a thing."
+            },
+            {
+              "kind": "speech",
+              "text": "documentar gave documentación; natar gives natación. Same machine."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here is the part worth slowing down for. nadar and la natación come from the same Latin word, and they do not look alike. That is because they took different roads out of Latin."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the word",
+                "the road it took"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "the word: nadar. the road it took: carried in every mouth, worn smooth.",
+                "the word: natación. the road it took: lifted off the page, centuries later."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "natāre was spoken without a break for a thousand years, and a thousand years of speaking wore the t soft into a d and dropped a syllable: natāre became nadar. Then scholars who could read Latin needed a formal noun, went back to the written form, and took natātiōnem out intact."
+            },
+            {
+              "kind": "speech",
+              "text": "A pair like this is called a doublet: one word, two arrivals, both alive. Once you can see them, Spanish is full of them, and the learned twin is nearly always the one on the official sign."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la natación",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la natación*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I do swimming at the sports centre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I do swimming at the sports centre]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why nadar and natación look so different",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why *nadar* and *natación* look so different]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Swimming, the discipline? (La natación.) Which ending makes it a noun? (-ción.) Which of the twins was worn down by mouths? (Nadar.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C438-torcerse",
+      "sequence": 10950,
+      "title": "torcerse — the ankle that turns the wrong way",
+      "headword": "torcerse",
+      "romanization": "torcerse",
+      "gloss": "to twist something of your own — the injury verb, and a stem that breaks under stress",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b7337b3f5b47cb2d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la natación, el pie and el tobillo. Getting out of the pool, the tiled edge is wet. Name the part of you that is about to go wrong."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: torcerse",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "torcer — to twist something. torcerse — to twist a part of yourself."
+            },
+            {
+              "kind": "speech",
+              "text": "Me he torcido el pie — I have twisted my foot. This is the sentence a Spanish doctor's waiting room hears twenty times a week, and it is the one you want ready before you need it."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish does not say my foot here. It says el pie and lets me carry the ownership: me torcí el tobillo, not mi tobillo. When the body part is yours and the verb is reflexive, the possessive is redundant and Spanish drops it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin torquēre, to twist. It is one of those roots that stayed busy."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "the twist in it"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: torcer. the twist in it: a joint, the wrong way.",
+                "word: torcido. the twist in it: crooked, not straight.",
+                "word: antorcha. the twist in it: a torch, of twisted rags."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "English took the same root twice over: torque, the twisting force on a shaft, and torture, which needs no explanation once you know the root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the stem that breaks",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dormir taught you that some verbs split their vowel when the stress lands on it: dormir but duermo. torcer does the same thing."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "form",
+                "vowel"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "form: torcer, torcemos. vowel: o, unstressed.",
+                "form: me tuerzo, se tuerce. vowel: ue, stressed."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "What decides it is stress, not person. Wherever the stress falls on the stem vowel, the o breaks into ue; wherever the ending pulls the stress away, the o holds. That is why torcemos keeps its o while tuerce does not — and why you never have to memorise which forms change."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "torcerse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *torcerse*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I twisted my foot at the swimming class",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I twisted my foot at the swimming class]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "torcemos and se tuerce, and why the vowel differs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *torcemos* and *se tuerce*, and why the vowel differs]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To twist your own ankle? (Torcerse.) What is the Latin root? (Torquēre, to twist.) What happens to the o when the stress lands on it? (It breaks into ue.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C438-descansar",
+      "sequence": 10960,
+      "title": "descansar — to un-tire yourself",
+      "headword": "descansar",
+      "romanization": "descansar",
+      "gloss": "to rest — named in Spanish as the undoing of tiredness, not as a state",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a5473f3884932923",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say cansado, the word for a body with nothing left in it. Say torcerse. You have twisted your ankle and you are tired. Name what the doctor is about to tell you to do."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: descansar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "descansar — to rest."
+            },
+            {
+              "kind": "speech",
+              "text": "Tiene que descansar dos días — you have to rest for two days. Descanse on a sign at a viewpoint or a clinic is an invitation to sit. The related noun el descanso is what a timetable calls a break, and what a football match calls half-time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "des- plus cansar, and you already own the second half."
+            },
+            {
+              "kind": "speech",
+              "text": "Cansado came from Latin campsāre, which was a sailor's word: to turn a ship round a headland. Turning the ship round, over and over, was the hard work that wore a crew out, and the word slid from the manoeuvre to the exhaustion it caused."
+            },
+            {
+              "kind": "speech",
+              "text": "des- is the undoing prefix. Put it on cansar and you get the reversal:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "what it does to the tiredness"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "word: cansar. what it does to the tiredness: puts it there.",
+                "word: descansar. what it does to the tiredness: takes it away."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English rest names a condition you are in. Spanish descansar names an action you perform on a condition: you go in and remove the tiredness."
+            },
+            {
+              "kind": "speech",
+              "text": "That is not a curiosity, it changes how the word behaves. Because it is a reversal and not a state, it takes a duration the way any action does — descansé media hora, I rested for half an hour — where English has to reach for had a rest to make rest countable."
+            },
+            {
+              "kind": "speech",
+              "text": "The prefix is productive, so the move is reusable. des- on a verb you already know gives you its undoing, and you can often guess the result before anyone teaches it to you."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "descansar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *descansar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I twisted my ankle, so I have to rest",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I twisted my ankle, so I have to rest]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what des- is doing to cansar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what **des-** is doing to *cansar*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To rest? (Descansar.) What does des- do? (Undoes.) What was campsāre originally about? (Turning a ship round a headland.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C438-reir",
+      "sequence": 10970,
+      "title": "reír — the prefix that is not there",
+      "headword": "reír",
+      "romanization": "reír",
+      "gloss": "to laugh — a word that wears a prefix it never had, and an accent that marks a missing consonant",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:726a2486331828c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la risa, the noun for the sound itself. Say descansar. You are resting a twisted ankle and the whole thing is faintly ridiculous. Name the verb risa belongs to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: reír",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "reír — to laugh. reírse de — to laugh at something."
+            },
+            {
+              "kind": "speech",
+              "text": "Nos reímos mucho — we laughed a lot. No te rías — do not laugh. And sonreír, with son- from Latin sub-, under: a laugh kept low, which is exactly what a smile is."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here is the trap, and it is worth setting off deliberately."
+            },
+            {
+              "kind": "speech",
+              "text": "reír looks like re- plus ír. It is neither. There is no prefix and there is no ir. The whole word is Latin rīdēre, to laugh, arriving in one piece — the r-e at the front is nothing more than the first two letters of the root."
+            },
+            {
+              "kind": "speech",
+              "text": "You met batería, a word that wears an ending it never earned. This is the other half of that lesson: a word that wears a prefix it never had. Spanish has both kinds, and neither announces itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The written accent on reír is physical evidence, and you can read it."
+            },
+            {
+              "kind": "speech",
+              "text": "Rīdēre had a d between its vowels: ri-d-ere. Spanish wore intervocalic d away in word after word, and when it went here it left the i and the e standing next to each other with nothing between them."
+            },
+            {
+              "kind": "speech",
+              "text": "Two vowels side by side would normally collapse into one syllable. These do not, because they were never together — a consonant used to hold them apart. The accent on the í is how Spanish writes down that refusal: re-ír, two syllables, the join still visible where the d used to be."
+            },
+            {
+              "kind": "speech",
+              "text": "The family keeps the evidence too: la risa lost the same d, while ridículo was borrowed back from Latin late enough to keep it. One root, one missing consonant, and a word on each side of the loss."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reír",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reír*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "we rested and we laughed a lot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: we rested and we laughed a lot]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the accent on the í is recording",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the accent on the **í** is recording]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To laugh? (Reír.) Is the re- a prefix? (No — it is part of the root.) Which consonant fell out and left the accent behind? (The d.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R438-repaso-cuerpo",
+      "sequence": 10980,
+      "title": "(polideportivo, natación, torcerse, descansar, reír) — from cold",
+      "headword": "(polideportivo, natación, torcerse, descansar, reír)",
+      "romanization": "(polideportivo, natación, torcerse, descansar, reír)",
+      "gloss": "cold retrieval of the five, and of the two ways a word can wear a piece it never earned",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:31a526b975c39e44",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say all five: the sports centre, swimming, to twist your ankle, to rest, to laugh."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: pieces that are real, and pieces that are not",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three of this chapter's words look built. Two of them are."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "the front piece"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: polideportivo. the front piece: real — Greek polýs, many.",
+                "word: descansar. the front piece: real — des-, the undoing.",
+                "word: reír. the front piece: not a piece at all."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The test is not how the word looks; it is whether the rest of the word survives without the piece. Take poli- off and deportivo stands. Take des- off and cansar stands. Take re- off reír and nothing is left, which is the proof that it was never a prefix."
+            },
+            {
+              "kind": "speech",
+              "text": "Carry that test forward. It is the one move that keeps morphology from turning into guesswork, and it costs you a second per word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I do swimming at the sports centre on Tuesdays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I do swimming at the sports centre on Tuesdays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I twisted my ankle getting out of the pool",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I twisted my ankle getting out of the pool]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "torcemos and se tuerce, and which one breaks the vowel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *torcemos* and *se tuerce*, and which one breaks the vowel]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now say where you exercise, what goes wrong there, what you have to do about it, and how you feel about the whole business. That is a complete small episode, and it is the shape a clinic conversation and a message to a friend both take."
+            },
+            {
+              "kind": "speech",
+              "text": "You also have a second doublet. nadar and la natación are one Latin verb arriving twice, once worn down by mouths and once lifted off the page — and the learned twin is the one on the timetable."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To laugh? (Reír.) To rest? (Descansar.) The sports centre? (El polideportivo.) Which of those three has no prefix? (Reír.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C438-sintesis-cuerpo",
+      "sequence": 10990,
+      "title": "(una lesión en el polideportivo) — read it, then do it yourself",
+      "headword": "(una lesión en el polideportivo)",
+      "romanization": "(una lesión en el polideportivo)",
+      "gloss": "the payoff — read the notice, read the message, then report the injury yourself",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:48c9accda16a10e3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el polideportivo and la natación. Both are on the notice you are about to read, and one of them is cancelled."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the notice once straight through, then answer."
+            },
+            {
+              "kind": "speech",
+              "text": "AVISO — POLIDEPORTIVO MUNICIPAL Los cursos de natación de la tarde quedan suspendidos del 3 al 10 de octubre por obras en los vestuarios. Las clases de la mañana siguen igual. Para cualquier duda, escriba a avisos@polideportivo.invalid."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which classes are suspended, and for how long",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which classes are suspended, and for how long]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which classes are not affected",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which classes are not affected]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "where to write if you have a question",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: where to write if you have a question]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now a message from a friend who went anyway, on a morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Fui por la mañana y me torcí el tobillo saliendo de la piscina. Nada grave: el médico dice que tengo que descansar tres días. Luego nos reímos, porque llevaba veinte años sin caerme en ningún sitio."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice what each verb is doing. Me torcí puts the injury on the speaker without blaming anyone. Descansar is an instruction with a duration attached. Nos reímos closes the episode, and that closing move is what a Spanish speaker expects at the end of a small misfortune: name it, size it, laugh it off."
+            },
+            {
+              "kind": "speech",
+              "text": "A report that stops after me torcí el tobillo sounds like a complaint. The same report with nos reímos on the end sounds like a story. Same facts, and the last clause decides which one the listener hears."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now your turn, out loud and then in writing. Four sentences: where you went, what you were doing there, what you twisted, and what you have to do now. End it the way the message above ends it."
+            },
+            {
+              "kind": "speech",
+              "text": "Then check yourself: did you say me torcí el tobillo and not mi tobillo?"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

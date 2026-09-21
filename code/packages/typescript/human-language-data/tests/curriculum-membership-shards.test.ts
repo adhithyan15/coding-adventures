@@ -71,16 +71,25 @@ describe("direct curriculum lesson owners", () => {
       .digest("hex");
     // The digest and count below are of the LIVE curriculum graph, so they move
     // whenever any track gains a lesson -- not only when the membership
-    // migration changes shape. 7204 -> 7246 and a new digest are the first
-    // Spanish A2 vocabulary tranche, chapters 431-436; the guard still does its
-    // job, which is to make any OTHER change to the public graph fail loudly
-    // rather than pass quietly.
-    // Attribution was checked, not assumed: the six new path segments
-    // ES-PATH-431-PEDIDO .. ES-PATH-436-GENTE hold exactly 42 lessons between
-    // them, and the corpus-wide count moved by exactly 42.
-    expect(digest).toBe("0642465984745a36642812ab3add0a06b0788ffe2ac1cb4d422135e272b841ec");
+    // migration changes shape. 7204 -> 7246 was the first Spanish A2 vocabulary
+    // tranche (chapters 431-436) and 7246 -> 7267 is the second (437-439); the
+    // guard still does its job, which is to make any OTHER change to the public
+    // graph fail loudly rather than pass quietly.
+    //
+    // Attribution was checked by RECONSTRUCTION, not assumed. A clean worktree
+    // at the previous commit was loaded by this same function and reproduced
+    // 7246 and digest 0642465984... byte for byte, so nothing outside the three
+    // new path segments moved. ES-PATH-437-PLAN, ES-PATH-438-CUERPO and
+    // ES-PATH-439-VIA hold exactly 21 lessons between them, and the corpus-wide
+    // count moved by exactly 21.
+    //
+    // Filtering the loaded object is NOT a substitute for that control: dropping
+    // segments from an in-memory graph leaves the remaining records ordered and
+    // shaped as the larger load produced them, so it reproduces neither digest.
+    // Only re-loading a checkout that never had the files answers the question.
+    expect(digest).toBe("ab6d34bef4e9d568cfa7eeb2524ec655b93a7da26a45a8d352224aa9e84c3ecf");
     expect(curricula.flatMap((curriculum) => curriculum.path).flatMap((path) => path.lessons))
-      .toHaveLength(7246);
+      .toHaveLength(7267);
   });
 
   it("keeps the canonical curriculum shards free of derived lesson arrays", () => {

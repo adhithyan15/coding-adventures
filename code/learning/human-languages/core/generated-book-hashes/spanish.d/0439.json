@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:64de0bbbb7209a38",
+  "lessonIds": [
+    "ES-C439-anden",
+    "ES-C439-trasladar",
+    "ES-C439-cerrado",
+    "ES-C439-cortar",
+    "ES-C439-tirar",
+    "ES-R439-repaso-via",
+    "ES-C439-sintesis-via"
+  ],
+  "tex": "spanish/book/chapters/ch439-via.tex"
+}
