@@ -1,0 +1,17 @@
+{
+  "chapter": 112,
+  "title": "Where to Go",
+  "label": "ch:ml-places",
+  "canDo": "I can name a bank, a hospital and the police, and tell which everyday words my English ear can decode for me.",
+  "payoff": {
+    "lesson": "ML-R112-places-recall",
+    "kind": "production",
+    "summary": "From cold: three places, and which of the three the learner's English ear could not reach.",
+    "assesses": [
+      "ML-LEX-C112-BANK-01",
+      "ML-LEX-C112-POLICE-01",
+      "ML-LEX-C112-HOSPITAL-01"
+    ],
+    "note": "THE INVENTORY NOTE FOR THIS POINT WAS STALE AND IS REWRITTEN BY THIS CHAPTER. It read 'vaidyan (a doctor) is the only word in this whole area', which was true when it was written and false by the time it was read. The medicine chapter has since taught marunnu (ML-C107-marunnu) and cikitsa (ML-C107-chikitsa), and the shopping words taught panam (ML-C91-vila-panam, atom ML-LEX-C91-MONEY-02 -- MONEY-01 is vila, the price). So the health and money halves of this point were ALREADY COVERED and only the buildings were missing. That is the fourth closed point in a row whose defect was a sentence asserting meaning rather than anything mechanical; the census, not the note, is what decided the scope. WHAT WAS ACTUALLY MISSING: bank, hospital, police. Confirmed by census -- 'police' and 'pharmac' returned zero hits of any kind, and the hits for 'bank' and 'hospital' were all ENGLISH PROSE (ML-C59-ember 'banked at night', ML-C01-athe 'Bank athe as the simple word', ML-C48-doctor and ML-C107-chikitsa discussing the English word for a hospital doctor, ML-C48-guest on hospitality). Control greps confirmed the search reached all 484 lessons. THE CHAPTER COSTS NO SCRIPT DEBT: all three spellings sit inside the 69 glyphs the track's 75 script lessons already teach, and none introduces a new glyph in reading order. THE SPINE IS A CONTRAST THE LEARNER CAN TEST: bank and police hand themselves to an English ear; aashupathri does not. That is why aashupathri is placed third -- the first two build the expectation the third one breaks, and the recall asks the learner which one they could not decode. THE ORIGIN OF aashupathri IS DELIBERATELY NOT CLAIMED. Its etymology has more than one account in circulation, the lesson says so in the text rather than guessing, and its roots list is empty on purpose. Do not let a later pass fill it in without a source. roots: IS THE COUSINS JOIN KEY (src/cousins.ts), so a slug asserts a shared etymology across languages. This track's own convention is the PROXIMATE source -- ML-C110-phon uses english-phone, not a Greek root -- so bank and police take english-bank and english-police. Spanish's banka-germanic (ES-C353-banco) and hospitale-latin (ES-C353-hospital) were deliberately NOT reused: those are ultimate roots, a different granularity, and pairing on them would overclaim. CAUGHT IN DRAFT: aashupathri was first tagged malayalam-conjunct-pra, but the word contains tra, not pra, and core/sound-tags.d/malayalam.json has no tra tag at all."
+  }
+}
