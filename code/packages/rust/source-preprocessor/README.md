@@ -104,11 +104,21 @@ recursive cases rather than looping. Stringize and paste stay routed through the
 nevertheless having a full macro facility, which is a stronger genericity result
 than a dialect that quietly needed them.
 
-One gap is recorded rather than papered over: a controlling expression is not
-macro-expanded before `Dialect::eval_condition` sees it, so `@if LED_PORT == 1`
-still reads a defined `LED_PORT` as undefined. That is a limitation of the
-trait's shape (`eval_condition` receives a bare `&[Token]`, with no table and no
-expansion applied), not of any dialect, and closing it is an engine change.
+Controlling expressions are macro-expanded before `Dialect::eval_condition`
+sees them, so `@if LED_PORT == 1` takes the true branch after
+`@define LED_PORT 1`. A name that *survives* expansion is genuinely undefined
+and still reads as 0, which is C's rule.
+
+That was broken when `@define` first landed and is worth recording for where it
+had to be fixed: `eval_condition` receives a bare `&[Token]` with no table and
+no expansion applied, so *no dialect could have fixed it* — it was an engine
+defect surfacing in a dialect (VM-068).
+
+Two gaps remain, recorded rather than papered over. `Locus::expansion` is always
+`None`, so an expanded token carries the position of its *invocation* rather
+than a full "in expansion of FOO, defined at …" chain (VM-069). And argument
+pre-expansion is the one place the expander recurses natively; it is bounded by
+`macro_depth`, which assumes roughly 1 MiB of stack.
 
 **Slice 3**: MacroNib, a second dialect in a third syntax. **Slice 4**: C.
 **Slice 5**: COBOL `COPY`.

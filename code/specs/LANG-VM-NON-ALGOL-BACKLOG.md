@@ -15,43 +15,6 @@ non-recursive expansion algorithm, and gives MacroOct `@define`. Stringize and
 paste stay unimplemented dialect hooks — MacroOct declines both, which is
 itself a test that the engine does not assume they exist.
 
-### VM-068 — `Dialect::eval_condition` cannot see the macro table (found 2026-09-21)
-
-The one place MacroOct diverges from C after slice 2, and it is an **interface**
-defect rather than a dialect bug:
-
-```macrooct
-@define LED_PORT 1
-@if LED_PORT == 1        ← FALSE. `LED_PORT` evaluates as an undefined name, 0.
-```
-
-C expands macros in a controlling expression before evaluating it. This engine
-does not: `Dialect::eval_condition` receives a bare `&[Token]` — no macro
-table, and no expansion applied by the engine on the way in — so **no dialect
-can do better**, however it is written. `MacroOctDialect::operand_value`
-therefore returns 0 for every name, defined or not.
-
-Discovered while implementing slice 2's MacroOct half, and deliberately not
-worked around there. The available workarounds are each worse than the gap:
-
-- Giving `MacroOctDialect` a private macro table would make the dialect
-  **stateful**, which is what today lets one instance be shared across
-  translation units with nothing leaking between them.
-- Expanding inside `classify` would duplicate `macros::expand` in every dialect
-  — the exact duplication PREP01 exists to remove.
-
-Closing it properly is an engine change with a question attached:
-`Directive::If(Vec<Token>)` would have to say whether the tokens it carries are
-pre- or post-expansion, since a future `defined()`-style operator must see its
-operand **un**expanded while the rest of the expression is expanded. That is C's
-own rule and it is why the split has to be in the interface rather than in a
-convention.
-
-Blast radius today is small and the spelling that hurts is visible: PREP01's own
-worked example (`@define LED_PORT 1` / `@if LED_PORT == 1`) is exactly the shape
-that silently takes the wrong branch, so this should not sit long. It is also a
-prerequisite for slice 4 — C's `#if defined(X)` is unimplementable without it.
-
 ### VM-069 — expanded tokens have no expansion provenance (interim fix in slice 2)
 
 Slice 2's security review found that an expanded token carried the macro

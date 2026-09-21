@@ -170,21 +170,58 @@ const ALPHABET: &[&str] = &[
     "M", "N", "M", "N",
 ];
 
+/// Emit one whole logical line from `words`.
+fn emit_line(out: &mut Vec<Token>, line: usize, words: &[&str]) {
+    for (i, w) in words.iter().enumerate() {
+        out.push(Token {
+            type_: TokenType::Name,
+            value: (*w).to_string(),
+            line,
+            column: i + 1,
+            type_name: None,
+            flags: None,
+            cv: None,
+        });
+    }
+}
+
 fn generate(rng: &mut Rng, max_lines: usize) -> Vec<Token> {
     let lines = 1 + rng.below(max_lines);
     let mut out = Vec::new();
     for line in 1..=lines {
-        let words = rng.below(5);
-        for _ in 0..words {
-            out.push(Token {
-                type_: TokenType::Name,
-                value: ALPHABET[rng.below(ALPHABET.len())].to_string(),
-                line,
-                column: 1,
-                type_name: None,
-                flags: None,
-                cv: None,
-            });
+        // One line in six is a PAIRED function-like define or its invocation.
+        //
+        // Without this the sweep could not reach function-like macros at all,
+        // and the alphabet change that was supposed to fix that was cosmetic:
+        // the shortest usable `@define M ( x ) body` is six tokens, while the
+        // random arm emits at most four per line. A census over these very
+        // seeds found 1001 `@define` lines, 22 function-like, and ZERO with a
+        // parameter and a non-empty body -- `pre_expand_args` was entered zero
+        // times across every sweep.
+        //
+        // That matters because argument pre-expansion is the only place the
+        // expander recurses, and it is where the stack-overflow finding and
+        // the quadratic-substitution finding both lived. A fuzz alphabet that
+        // cannot reach a code path is not fuzzing it.
+        match rng.below(6) {
+            0 => emit_line(&mut out, line, &["@define", "M", "(", "x", ")", "x", "N"]),
+            1 => emit_line(&mut out, line, &["@define", "N", "(", "y", ")", "M", "(", "y", ")"]),
+            2 => emit_line(&mut out, line, &["M", "(", "1", ")"]),
+            3 => emit_line(&mut out, line, &["N", "(", "M", "(", "1", ")", ")"]),
+            _ => {
+                let words = rng.below(5);
+                for i in 0..words {
+                    out.push(Token {
+                        type_: TokenType::Name,
+                        value: ALPHABET[rng.below(ALPHABET.len())].to_string(),
+                        line,
+                        column: i + 1,
+                        type_name: None,
+                        flags: None,
+                        cv: None,
+                    });
+                }
+            }
         }
     }
     out
@@ -407,4 +444,57 @@ fn a_doubling_chain_inside_a_skipped_group_costs_nothing() {
     };
     let values: Vec<&str> = out.tokens.iter().map(|t| t.value.as_str()).collect();
     assert_eq!(values, ["survivor"]);
+}
+
+/// The sweep must actually REACH function-like macro expansion.
+///
+/// This test exists because the previous attempt to fix this blind spot looked
+/// right and reached nothing. `FuzzDialect` was taught to parse parameter
+/// lists, which appeared to open the path -- but the generator emitted at most
+/// four tokens per line while the shortest usable `@define M ( x ) body` is
+/// six, so a census over these very seeds found 1001 `@define` lines, 22
+/// function-like, and **zero** with a parameter and a non-empty body.
+/// `pre_expand_args` was entered zero times.
+///
+/// A coverage claim that is not measured is a coverage claim that is wrong.
+/// So the sweep now asserts its own reach rather than asserting it in a
+/// comment.
+#[test]
+fn the_sweep_actually_generates_function_like_macro_invocations() {
+    let mut defines_with_params = 0usize;
+    let mut invocations = 0usize;
+
+    for seed in 1..=3_000u64 {
+        let mut rng = Rng(seed.wrapping_mul(0x9E37_79B9_7F4A_7C15) | 1);
+        let toks = generate(&mut rng, 20);
+
+        // Group by line, the unit the dialect classifies.
+        let mut by_line: std::collections::BTreeMap<usize, Vec<&str>> = Default::default();
+        for t in &toks {
+            by_line.entry(t.line).or_default().push(t.value.as_str());
+        }
+        for words in by_line.values() {
+            if words.first() == Some(&"@define")
+                && words.get(2) == Some(&"(")
+                && words.len() > 5
+            {
+                defines_with_params += 1;
+            }
+            if matches!(words.first(), Some(&"M") | Some(&"N")) && words.get(1) == Some(&"(") {
+                invocations += 1;
+            }
+        }
+    }
+
+    assert!(
+        defines_with_params > 100,
+        "only {defines_with_params} function-like defines with a body in 3000 seeds — \
+         the generator cannot reach argument pre-expansion, which is where the \
+         stack-overflow and quadratic-substitution findings both lived"
+    );
+    assert!(
+        invocations > 100,
+        "only {invocations} function-like invocations in 3000 seeds — a define \
+         nothing calls exercises no expansion"
+    );
 }

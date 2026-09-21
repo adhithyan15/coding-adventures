@@ -89,13 +89,16 @@ pub struct Bounds {
     /// A security review reached it from a 21 KB source file before this was
     /// enforced.
     ///
-    /// **This bound assumes roughly 1 MiB of usable stack.** Measured: the
-    /// default of 200 completes on a 1 MiB thread and overflows a 256 KiB one,
-    /// so a frame costs between about 1.3 and 5 KiB. Rust's default spawned
-    /// thread gets 2 MiB, which leaves comfortable margin — but a host running
-    /// the engine on a smaller stack (an embedded target, or a thread pool
-    /// configured tight) must `tighten` this, and the number to divide by is
-    /// ~5 KiB per level.
+    /// **This bound assumes roughly 1 MiB of usable stack.** Measured: depth
+    /// 100 overflows a 256 KiB thread and depth 200 overflows a 512 KiB one,
+    /// so a frame costs at least ~2.6 KiB; budget ~5 KiB per level to be safe.
+    /// The default of 200 completes on a 1 MiB thread, and Rust's default
+    /// spawned thread gets 2 MiB, which leaves margin. A host on a smaller
+    /// stack must `tighten` this.
+    ///
+    /// Tightening it costs only stack depth. It used to also collapse the work
+    /// budget, because the round limit was derived from this field squared —
+    /// see [`Bounds::expansion_rounds`], which is now separate.
     pub macro_depth: u32,
 
     /// Maximum tokens **produced** — emitted, consumed by a conditional, or
@@ -116,6 +119,15 @@ pub struct Bounds {
     /// Maximum total bytes of token text the engine synthesises (as opposed to
     /// copying from source).
     pub synthesised_text_bytes: u64,
+
+    /// Maximum total macro expansion steps over the whole translation unit.
+    ///
+    /// Its own field, deliberately. This was once derived as `macro_depth²`,
+    /// which silently welded a STACK bound to a WORK bound: a host told (by
+    /// this module) to tighten `macro_depth` for a small stack would land near
+    /// 25 and lose over 99% of its expansion budget, failing ordinary programs
+    /// with a rounds diagnostic. Two unrelated limits should not be one number.
+    pub expansion_rounds: u64,
 
     /// Maximum grouping nesting inside a macro argument list.
     pub arg_group_depth: u32,
@@ -163,6 +175,7 @@ impl Default for Bounds {
             tokens_produced: 2_000_000,
             token_spelling_bytes: 64 * 1024,
             synthesised_text_bytes: 64 * 1024 * 1024,
+            expansion_rounds: 40_000,
             arg_group_depth: 200,
             condition_depth: 200,
             conditional_depth: 200,
@@ -190,6 +203,7 @@ impl Bounds {
             tokens_produced: self.tokens_produced.min(other.tokens_produced),
             token_spelling_bytes: self.token_spelling_bytes.min(other.token_spelling_bytes),
             synthesised_text_bytes: self.synthesised_text_bytes.min(other.synthesised_text_bytes),
+            expansion_rounds: self.expansion_rounds.min(other.expansion_rounds),
             arg_group_depth: self.arg_group_depth.min(other.arg_group_depth),
             condition_depth: self.condition_depth.min(other.condition_depth),
             conditional_depth: self.conditional_depth.min(other.conditional_depth),
@@ -210,6 +224,11 @@ pub struct Spend {
     pub tokens_produced: u64,
     pub synthesised_text_bytes: u64,
     pub fuel_used: u64,
+    /// Expansion steps so far. Lives in `Spend` rather than as a local in
+    /// `expand` precisely so it is a TRANSLATION-UNIT total: `expand` is
+    /// called once per emitted line and once per condition, so a local reset
+    /// every line and the limit bounded nothing across a file.
+    pub expansion_rounds: u64,
 }
 
 #[cfg(test)]

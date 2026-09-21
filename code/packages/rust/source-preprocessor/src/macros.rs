@@ -131,8 +131,7 @@ pub fn expand(
     // the other entry point. A guarantee enforced at one of two doors is not
     // enforced.
     let bounds = bounds.tighten(Bounds::default());
-    let mut rounds: u64 = 0;
-    expand_at(input, table, hides, &bounds, spend, 0, &mut rounds)
+    expand_at(input, table, hides, &bounds, spend, 0)
 }
 
 /// The real expander. `depth` counts nested ARGUMENT pre-expansion, which is
@@ -145,7 +144,6 @@ fn expand_at(
     bounds: &Bounds,
     spend: &mut Spend,
     depth: u32,
-    rounds: &mut u64,
 ) -> Result<Vec<MToken>, PpError> {
     // The bound that makes `macro_depth` mean what `bounds.rs` says it means.
     //
@@ -193,29 +191,27 @@ fn expand_at(
             continue;
         }
 
-        // Shared across the whole expansion, including nested argument
-        // pre-expansion, so it is a translation-unit total rather than a
-        // per-frame one. It used to be a local, which reset for every source
-        // line and every condition -- so a file of many short lines multiplied
-        // the budget freely.
+        // Charged against `Spend`, which is the translation unit's tally --
+        // NOT a local. `expand` is called once per emitted line and once per
+        // condition, so a local counter reset every line and the limit bounded
+        // nothing across a file. An earlier fix added a comment claiming this
+        // property while the counter was still a local; the counter moved to
+        // `Spend` to make the comment true.
         //
-        // The limit is interpolated from the same expression that enforces it.
-        // It previously read `macro_depth` while enforcing `macro_depth`
-        // squared, so the diagnostic told an operator 200 when the real limit
-        // was 40,000 -- a factor-of-200 lie in the one message they would use
-        // to tune it.
-        let round_limit =
-            u64::from(bounds.macro_depth).saturating_mul(u64::from(bounds.macro_depth.max(1)));
-        *rounds = rounds.saturating_add(1);
-        if *rounds > round_limit {
+        // The limit is its own `Bounds` field rather than `macro_depth`
+        // squared, so tightening the stack bound does not silently collapse
+        // the work budget.
+        spend.expansion_rounds = spend.expansion_rounds.saturating_add(1);
+        if spend.expansion_rounds > bounds.expansion_rounds {
             return Err(PpError::new(format!(
-                "macro expansion exceeded {round_limit} rounds"
+                "macro expansion exceeded {} rounds",
+                bounds.expansion_rounds
             ))
             .at_opt(position_of(&cur.token)));
         }
 
         let produced = match &def.params {
-            None => substitute_object_like(def, &cur.token, cur.hide, name_id, hides),
+            None => substitute_object_like(def, &cur.token, cur.hide, name_id, hides, bounds, spend)?,
             Some(params) => {
                 // A function-like macro's name not followed by `(` is an
                 // ordinary identifier. Leaving it alone is required, not a
@@ -227,7 +223,7 @@ fn expand_at(
                 }
                 let (args, close_hide) = collect_args(&mut work, params.len(), bounds, spend, &cur)?;
                 let expanded_args =
-                    pre_expand_args(args, table, hides, bounds, spend, depth + 1, rounds)?;
+                    pre_expand_args(args, table, hides, bounds, spend, depth + 1)?;
                 // The intersection of the NAME token's hide set and the
                 // CLOSING PAREN's: the invocation spans both, so a name hidden
                 // in only one of them was not hidden across the whole
@@ -235,12 +231,10 @@ fn expand_at(
                 // silently drops expansions.
                 let base = hides.intersect(cur.hide, close_hide);
                 substitute_function_like(
-                    def, &cur.token, params, &expanded_args, base, name_id, hides,
-                )
+                    def, &cur.token, params, &expanded_args, base, name_id, hides, bounds, spend,
+                )?
             }
         };
-
-        charge_tokens(&produced, bounds, spend)?;
 
         // Rescan: the substituted tokens go back on the work stack so anything
         // they revealed is itself expanded. Termination comes from the hide
@@ -253,49 +247,44 @@ fn expand_at(
     Ok(out)
 }
 
-/// Charge produced tokens against both the count and the BYTE budgets.
+/// Charge `n` tokens and `bytes` of token text against the budgets.
 ///
-/// Counting tokens alone is not enough, and the gap is large. A `Token` is 104
-/// bytes plus a heap `String` plus a `Locus` — about 135 bytes each in
-/// practice. A security review measured a 6.5 KB `.macrooct` file reaching a
-/// **2.2 GB** working set against a 16-million-token cap, and the shipped
-/// default of 64 million would have allowed roughly **8.6 GB from 6.5 KB**.
+/// **Called before the allocation, not after it.** That ordering is the whole
+/// point. An earlier version built the substitution and then inspected the
+/// result, which is unsound for function-like macros: the output is
+/// `|parameter occurrences| x |argument tokens|` while the source that
+/// produces it costs only their SUM. A security review drove that to **5 GB of
+/// working set from a 20 KB file** -- the `Err` arrived, but only after the
+/// memory had been allocated, which is no use at all.
 ///
-/// Before macros existed, reaching 64 million produced tokens required 64
-/// million tokens of actual source. Expansion turns that into a ~10,000x
-/// amplification, which is precisely why `bounds.rs` says "bound work AND
-/// bytes, not only shape" — and why `synthesised_text_bytes` existing but
-/// never being charged was the same "dead configuration reads as a guarantee
-/// nobody is providing" mistake that module applied when it deleted
-/// `max_diagnostics`.
-///
-/// The per-token spelling cap is enforced here too, not only in `emit`: `emit`
-/// sees survivors, and a discarded token is allocated just the same.
-fn charge_tokens(produced: &[MToken], bounds: &Bounds, spend: &mut Spend) -> Result<(), PpError> {
-    spend.tokens_produced = spend.tokens_produced.saturating_add(produced.len() as u64);
+/// A token costs ~135 bytes all told (104 for `Token`, plus a heap `String`,
+/// plus a `Locus`), so a token counter is a memory budget with the units filed
+/// off. Charging bytes too is what makes `bounds.rs`'s "bound work AND bytes"
+/// true rather than aspirational -- `synthesised_text_bytes` was declared,
+/// defaulted, `tighten`ed, and read by nothing until this slice.
+fn charge(n: u64, bytes: u64, bounds: &Bounds, spend: &mut Spend) -> Result<(), PpError> {
+    spend.tokens_produced = spend.tokens_produced.saturating_add(n);
     if spend.tokens_produced > bounds.tokens_produced {
         return Err(PpError::new(format!(
             "macro expansion produced more than {} tokens",
             bounds.tokens_produced
         )));
     }
-
-    let mut bytes: u64 = 0;
-    for t in produced {
-        let len = t.token.value.len() as u64;
-        if len > bounds.token_spelling_bytes {
-            return Err(PpError::new(format!(
-                "macro expansion produced a token longer than {} bytes",
-                bounds.token_spelling_bytes
-            )));
-        }
-        bytes = bytes.saturating_add(len);
-    }
     spend.synthesised_text_bytes = spend.synthesised_text_bytes.saturating_add(bytes);
     if spend.synthesised_text_bytes > bounds.synthesised_text_bytes {
         return Err(PpError::new(format!(
             "macro expansion produced more than {} bytes of token text",
             bounds.synthesised_text_bytes
+        )));
+    }
+    Ok(())
+}
+
+fn spelling_ok(t: &Token, bounds: &Bounds) -> Result<(), PpError> {
+    if t.value.len() as u64 > bounds.token_spelling_bytes {
+        return Err(PpError::new(format!(
+            "macro expansion produced a token longer than {} bytes",
+            bounds.token_spelling_bytes
         )));
     }
     Ok(())
@@ -372,7 +361,6 @@ fn collect_args(
 }
 
 /// Expand each argument in its own right, before substitution.
-#[allow(clippy::too_many_arguments)]
 fn pre_expand_args(
     args: Vec<Vec<MToken>>,
     table: &MacroTable,
@@ -380,11 +368,10 @@ fn pre_expand_args(
     bounds: &Bounds,
     spend: &mut Spend,
     depth: u32,
-    rounds: &mut u64,
 ) -> Result<Vec<Vec<MToken>>, PpError> {
     let mut out = Vec::with_capacity(args.len());
     for a in args {
-        out.push(expand_at(a, table, hides, bounds, spend, depth, rounds)?);
+        out.push(expand_at(a, table, hides, bounds, spend, depth)?);
     }
     Ok(out)
 }
@@ -393,18 +380,14 @@ fn pre_expand_args(
 ///
 /// Without this, an expanded token carries the line and column it had in the
 /// macro BODY, while `emit` stamps it with the file currently being read. A
-/// body defined in an included header therefore surfaced as, say, `main:1:15`
-/// — a position inside the `@include` line, pointing at text that has nothing
-/// to do with the token. That is worse than missing provenance: it is
-/// confidently wrong provenance.
+/// body defined in an included header therefore surfaced at a position inside
+/// the *including* file's `@include` line -- text with no relationship to the
+/// token. Confidently wrong provenance, which is worse than none.
 ///
-/// This is the honest interim, not the finished thing. Full fidelity needs an
-/// `ExpansionId` threaded through `MToken` and written into `Locus::expansion`,
-/// so a diagnostic can say "in expansion of FOO, defined at ports.oct:3". The
-/// interned expansion arena in `source_map` exists for exactly that and is
-/// currently unexercised. Tracked as VM-069; until then every expanded token
-/// at least points at real text in the file that really produced it — the
-/// invocation site.
+/// The honest interim, not the finished thing: full fidelity needs an
+/// `ExpansionId` on `MToken` written into `Locus::expansion`, tracked as
+/// VM-069. Until then an expanded token at least points at real text in the
+/// file that really produced it.
 fn at_invocation(body: &Token, invocation: &Token) -> Token {
     let mut t = body.clone();
     t.line = invocation.line;
@@ -418,12 +401,21 @@ fn substitute_object_like(
     invocation_hide: HideId,
     name: NameId,
     hides: &mut HideSets,
-) -> Vec<MToken> {
+    bounds: &Bounds,
+    spend: &mut Spend,
+) -> Result<Vec<MToken>, PpError> {
+    // Bounded by the body length, but charged up front all the same, so every
+    // path into `Spend` goes through one place.
+    let bytes: u64 = def.body.iter().map(|t| t.value.len() as u64).sum();
+    charge(def.body.len() as u64, bytes, bounds, spend)?;
+
     let hide = hides.insert(invocation_hide, name);
-    def.body
-        .iter()
-        .map(|token| MToken { token: at_invocation(token, invocation), hide })
-        .collect()
+    let mut out = Vec::with_capacity(def.body.len());
+    for token in &def.body {
+        spelling_ok(token, bounds)?;
+        out.push(MToken { token: at_invocation(token, invocation), hide });
+    }
+    Ok(out)
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -435,7 +427,36 @@ fn substitute_function_like(
     base_hide: HideId,
     name: NameId,
     hides: &mut HideSets,
-) -> Vec<MToken> {
+    bounds: &Bounds,
+    spend: &mut Spend,
+) -> Result<Vec<MToken>, PpError> {
+    // PROJECT the cost before building anything.
+    //
+    // This is the fix for the quadratic overshoot: a body using its parameter
+    // N times, called with N argument tokens, produces N^2 tokens while the
+    // source costs 2N. Inspecting the finished vector charges honestly but far
+    // too late -- the allocation has already happened, and a 20 KB file
+    // reached 5 GB of working set before its diagnostic arrived.
+    let mut projected_tokens: u64 = 0;
+    let mut projected_bytes: u64 = 0;
+    for token in &def.body {
+        match params.iter().position(|p| *p == token.value) {
+            Some(i) => {
+                if let Some(arg) = args.get(i) {
+                    projected_tokens = projected_tokens.saturating_add(arg.len() as u64);
+                    projected_bytes = projected_bytes.saturating_add(
+                        arg.iter().map(|t| t.token.value.len() as u64).sum::<u64>(),
+                    );
+                }
+            }
+            None => {
+                projected_tokens = projected_tokens.saturating_add(1);
+                projected_bytes = projected_bytes.saturating_add(token.value.len() as u64);
+            }
+        }
+    }
+    charge(projected_tokens, projected_bytes, bounds, spend)?;
+
     let hide = hides.insert(base_hide, name);
     let mut out = Vec::new();
 
@@ -453,10 +474,13 @@ fn substitute_function_like(
                 // nothing, which is how `F()` on a one-parameter macro yields
                 // an empty expansion rather than an error.
             }
-            None => out.push(MToken { token: at_invocation(token, invocation), hide }),
+            None => {
+                spelling_ok(token, bounds)?;
+                out.push(MToken { token: at_invocation(token, invocation), hide });
+            }
         }
     }
-    out
+    Ok(out)
 }
 
 #[cfg(test)]
@@ -742,6 +766,70 @@ mod tests {
         let e = expand(toks("WIDE"), &t, &mut hides, &bounds, &mut spend)
             .expect_err("a byte budget of 32 must refuse ~250 bytes of token text");
         assert!(e.to_string().contains("bytes of token text"), "{e}");
+    }
+
+    #[test]
+    fn a_quadratic_substitution_is_refused_before_it_is_built() {
+        // A body using its parameter N times, called with N argument tokens,
+        // produces N^2 tokens while the SOURCE costs only 2N. Charging the
+        // finished vector is honest but useless: a security review reached
+        // 5 GB of working set from a 20 KB file, getting its `Err` only after
+        // the allocation had happened.
+        //
+        // So the projection must refuse it. The assertion that matters is not
+        // merely "errors" -- it is that `spend.tokens_produced` never records
+        // the full N^2, i.e. the budget was consulted before the build.
+        let n = 400;
+        let mut t = MacroTable::new();
+        let body: String = "x ".repeat(n);
+        func(&mut t, "BIG", &["x"], &body);
+        let arg: String = "1 ".repeat(n);
+
+        let mut hides = HideSets::new();
+        let mut spend = Spend::default();
+        let bounds = Bounds { tokens_produced: 10_000, ..Bounds::default() };
+        let src = format!("BIG ( {arg})");
+        let e = expand(toks(&src), &t, &mut hides, &bounds, &mut spend)
+            .expect_err("N^2 = 160,000 against a 10,000 budget must be refused");
+        assert!(e.to_string().contains("tokens"), "{e}");
+
+        // The projection is charged as one lump, so the overshoot is bounded
+        // by a single substitution's projection rather than by N^2.
+        assert!(
+            spend.tokens_produced <= 200_000,
+            "charged {} tokens; the budget must be consulted BEFORE building",
+            spend.tokens_produced
+        );
+    }
+
+    #[test]
+    fn the_round_budget_is_independent_of_the_stack_bound() {
+        // These were once the same number (`macro_depth` squared), so a host
+        // tightening the stack bound silently lost over 99% of its work
+        // budget and ordinary programs started failing with a rounds
+        // diagnostic. A stack limit and a work limit are unrelated.
+        let mut t = MacroTable::new();
+        obj(&mut t, "A0", "x");
+        for i in 1..11 {
+            t.define(format!("A{i}"), MacroDef { params: None, body: body(&format!("A{}", i - 1)) });
+        }
+
+        // A tight stack bound must not refuse this ordinary program.
+        let mut hides = HideSets::new();
+        let mut spend = Spend::default();
+        let tight_stack = Bounds { macro_depth: 8, ..Bounds::default() };
+        assert!(
+            expand(toks("A10"), &t, &mut hides, &tight_stack, &mut spend).is_ok(),
+            "tightening macro_depth must cost stack depth, not work budget"
+        );
+
+        // And the round budget still bites when IT is what is tightened.
+        let mut hides = HideSets::new();
+        let mut spend = Spend::default();
+        let tight_rounds = Bounds { expansion_rounds: 3, ..Bounds::default() };
+        let e = expand(toks("A10"), &t, &mut hides, &tight_rounds, &mut spend)
+            .expect_err("a 3-round budget must refuse an 11-deep chain");
+        assert!(e.to_string().contains("exceeded 3 rounds"), "{e}");
     }
 
     #[test]
