@@ -2574,16 +2574,25 @@ jobs:
           cmake -S "$navigation_split_output/qt" -B "$navigation_split_output/qt/build" -DCMAKE_BUILD_TYPE=Release
           cmake --build "$navigation_split_output/qt/build" --config Release --parallel
 
+          # qt_main_with_startup_states (this PR) made every native-complete Qt
+          # shell keep a missing/failed runtime visible in the window and
+          # retryable instead of exiting, so RatingControls no longer exits
+          # non-zero here either. Rebuild it with the same compile-time
+          # acceptance seam TaskApp's startup probe uses above: it self-drives
+          # two attempts and only exits (0) once the second failure is
+          # observed, proving the missing-runtime path is actually reached
+          # and recovered rather than merely not crashing.
+          strict_startup_source="$RUNNER_TEMP/mosaic-qt-rating-controls-startup-conformance"
+          cp -R "$strict_output/qt" "$strict_startup_source"
+          cmake -S "$strict_startup_source" -B "$strict_startup_source/startup-build" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_CXX_FLAGS=-DMOSAIC_STARTUP_CONFORMANCE=1
+          cmake --build "$strict_startup_source/startup-build" --config Release --parallel
           strict_log="$RUNNER_TEMP/mosaic-qt-native-complete-missing-runtime.log"
-          set +e
-          QT_QPA_PLATFORM=offscreen \
+          env QT_QPA_PLATFORM=offscreen \
             MOSAIC_APP_LIBRARY="$RUNNER_TEMP/mosaic-app-does-not-exist.so" \
-            timeout 15s "$strict_output/qt/build/RatingControls" >"$strict_log" 2>&1
-          strict_status=$?
-          set -e
-          test "$strict_status" -ne 0
-          test "$strict_status" -ne 124
-          grep -F "native-complete requires the Mosaic Rust application runtime" "$strict_log"
+            timeout 15s "$strict_startup_source/startup-build/RatingControls" >"$strict_log" 2>&1
+          grep -F "Qt startup failure/retry conformance passed" "$strict_log"
 
       - name: Round-trip Rust engine through standard Flutter binding
         if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
