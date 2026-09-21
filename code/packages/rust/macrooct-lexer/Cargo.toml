@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-macrooct-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "MacroOct lexer — tokenizes MacroOct source text (Oct's lexical rules plus @-prefixed preprocessor directives) using the grammar-driven Rust lexer (PREP01 slice 1)."
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

@@ -11,6 +11,10 @@ nib-iir-compiler      = { path = "../nib-iir-compiler" }
 brainfuck-iir-compiler = { path = "../brainfuck-iir-compiler" }
 dartmouth-basic-iir-compiler = { path = "../dartmouth-basic-iir-compiler" }
 oct-iir-compiler     = { path = "../oct-iir-compiler" }
+# MacroOct (PREP01 slice 1) — Oct plus a preprocessor. Its frontend reuses
+# Oct's parser grammar, type checker and IIR lowering unchanged, so this arm
+# adds a preprocessing stage and nothing else to the pipeline.
+coding-adventures-macrooct-iir-compiler = { path = "../macrooct-iir-compiler" }
 mccarthy-lisp-iir-compiler = { path = "../mccarthy-lisp-iir-compiler" }
 algol-iir-compiler = { path = "../algol-iir-compiler" }
 flow-matic-iir-compiler = { path = "../flow-matic-iir-compiler" }

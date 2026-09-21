@@ -456,10 +456,22 @@ to the corresponding unmodified Oct programs and agree with them on all eight
 backends; `macrooct.tokens` is proven to agree with `oct.tokens` on every
 non-directive rule; each §6 bound has a test proving it yields a located
 diagnostic; `RootedFs` has a test per rejected path form in §5, including the
-Windows set; and **the engine is fuzzed against arbitrary byte input with a
-no-panic / no-hang oracle**. The fuzz target is the highest-value item in this
-slice, because it covers the dimensions §6 did not manage to enumerate.
-`LANG-VM-FEATURE-COVERAGE.md` gains an MacroOct row, which the pinned
+Windows set; and **the engine passes a no-panic / no-hang oracle over
+randomised input**, covering the dimensions §6 did not manage to enumerate.
+
+*Corrected after implementation, so this criterion describes what was actually
+delivered.* An earlier draft said "fuzzed". What slice 1 ships is a
+**deterministic randomised sweep** — 2,000 fixed seeds over a directive-dense
+alphabet asserting the engine always returns and never panics, plus direct
+tests that 5,000 nested conditionals and a 500-deep include chain terminate as
+located diagnostics rather than aborts. That runs as an ordinary CI gate and is
+genuinely useful, but it is **not** coverage-guided fuzzing: a
+`cargo-fuzz`/libFuzzer target needs a nightly toolchain this repo's CI does not
+use, so it could not have been a merge gate. It covers shallow malformed input
+well and deep structured input poorly. A coverage-guided target is recorded as
+follow-up work rather than quietly claimed.
+
+`LANG-VM-FEATURE-COVERAGE.md` gains a MacroOct row, which the pinned
 `feature_coverage_doc_counts_match_programs_source` test makes mandatory rather
 than optional — Oct's own pinned tuple is unchanged.
 
