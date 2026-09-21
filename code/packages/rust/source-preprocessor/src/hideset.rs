@@ -165,7 +165,9 @@ impl HideSets {
     /// hidden across the whole invocation and must stay expandable. Using the
     /// name token's set alone over-hides and silently drops expansions.
     ///
-    /// O(|a| × |b|), both bounded by the macro-depth budget.
+    /// O(|a| × |b|). Chain length is bounded by the number of DISTINCT macro
+    /// names painted along a path — in practice by the expansion-round budget,
+    /// not by `macro_depth`, which bounds argument nesting rather than paint.
     pub fn intersect(&mut self, a: HideId, b: HideId) -> HideId {
         if a == b {
             return a;

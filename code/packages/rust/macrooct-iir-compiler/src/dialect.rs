@@ -514,6 +514,7 @@ fn parameter_list<'a>(
     }
 
     let mut params: Vec<String> = Vec::new();
+    let mut seen_params: std::collections::HashSet<String> = std::collections::HashSet::new();
     loop {
         let Some(param) = rest.first() else {
             return Err(unterminated());
@@ -524,7 +525,11 @@ fn parameter_list<'a>(
                 describe(Some(param))
             )));
         }
-        if params.iter().any(|seen| seen == &param.value) {
+        // Set membership, not a linear scan. The scan made this O(k^2) in
+        // the parameter count with no budget behind it: a security review
+        // pushed a 263 KB parameter list through it in 1.0 s of CPU and got
+        // `Ok` back, with no bound involved at any point.
+        if !seen_params.insert(param.value.clone()) {
             // Not merely redundant: `substitute_function_like` resolves a
             // parameter by its POSITION, so the first occurrence would win and
             // the second argument would vanish without a word.

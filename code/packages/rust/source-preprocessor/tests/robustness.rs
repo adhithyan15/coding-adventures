@@ -96,8 +96,22 @@ impl Dialect for FuzzDialect {
                 } else {
                     None
                 };
+                // `@define NAME ( p0 , p1 , ... , pk-1 ) body`
+                //   0       1    2  3    4  5  ...        2k+1  2k+2
+                // The `)` sits at 2k+2, so the body starts at 2k+3.
+                //
+                // This was `4 + 2k`, i.e. 2k+2 -- the index OF the `)`, not
+                // after it. Every function-like define in the sweep therefore
+                // lost its first body token: the arm `@define M ( x ) x N`
+                // installed a body of `N` with the parameter reference gone,
+                // and `@define N ( y ) M ( y )` lost the `M` that was supposed
+                // to drive nested expansion. Across 3,000 seeds the deepest
+                // argument pre-expansion reached was 2 and bodies repeating a
+                // parameter numbered 0 of 10,655 -- so the sweep still did not
+                // touch the shapes the stack-overflow and quadratic findings
+                // lived in, while the coverage assertion passed green.
                 let body_at = match &params {
-                    Some(ps) => 4 + ps.len() * 2,
+                    Some(ps) => 2 * ps.len() + 3,
                     None => 2,
                 };
                 Some(Ok(Directive::Define {
@@ -203,11 +217,16 @@ fn generate(rng: &mut Rng, max_lines: usize) -> Vec<Token> {
         // expander recurses, and it is where the stack-overflow finding and
         // the quadratic-substitution finding both lived. A fuzz alphabet that
         // cannot reach a code path is not fuzzing it.
-        match rng.below(6) {
+        match rng.below(7) {
             0 => emit_line(&mut out, line, &["@define", "M", "(", "x", ")", "x", "N"]),
             1 => emit_line(&mut out, line, &["@define", "N", "(", "y", ")", "M", "(", "y", ")"]),
             2 => emit_line(&mut out, line, &["M", "(", "1", ")"]),
             3 => emit_line(&mut out, line, &["N", "(", "M", "(", "1", ")", ")"]),
+            // A body that REPEATS its parameter. Nothing else here generates
+            // one, and it is the shape behind the quadratic-substitution
+            // finding: output is |occurrences| x |argument tokens| while the
+            // source costs their sum.
+            4 => emit_line(&mut out, line, &["@define", "M", "(", "x", ")", "x", "x", "x"]),
             _ => {
                 let words = rng.below(5);
                 for i in 0..words {
@@ -448,53 +467,73 @@ fn a_doubling_chain_inside_a_skipped_group_costs_nothing() {
 
 /// The sweep must actually REACH function-like macro expansion.
 ///
-/// This test exists because the previous attempt to fix this blind spot looked
-/// right and reached nothing. `FuzzDialect` was taught to parse parameter
-/// lists, which appeared to open the path -- but the generator emitted at most
-/// four tokens per line while the shortest usable `@define M ( x ) body` is
-/// six, so a census over these very seeds found 1001 `@define` lines, 22
-/// function-like, and **zero** with a parameter and a non-empty body.
-/// `pre_expand_args` was entered zero times.
+/// Two earlier attempts at this looked right and reached nothing, which is why
+/// the assertion is what it is.
 ///
-/// A coverage claim that is not measured is a coverage claim that is wrong.
-/// So the sweep now asserts its own reach rather than asserting it in a
-/// comment.
+/// The first taught `FuzzDialect` to parse parameter lists while the generator
+/// still emitted at most four tokens per line -- and the shortest usable
+/// `@define M ( x ) body` is six. The second fixed the generator but computed
+/// the body offset as `2k+2`, the index *of* the `)`, so every function-like
+/// define lost its first body token: across 3,000 seeds the deepest argument
+/// pre-expansion reached was 2, and bodies repeating a parameter numbered
+/// **0 of 10,655**.
+///
+/// Both times the coverage test passed green, because it counted raw token
+/// TEXT and never asked the dialect what it had actually parsed. So this one
+/// classifies through `FuzzDialect` and asserts on the resulting `MacroDef`:
+/// a stripped body shows up immediately, where a token count cannot see it.
 #[test]
 fn the_sweep_actually_generates_function_like_macro_invocations() {
-    let mut defines_with_params = 0usize;
+    use coding_adventures_source_preprocessor::dialect::Directive;
+
+    let d = FuzzDialect;
+    let mut with_param_in_body = 0usize;
+    let mut repeating_a_param = 0usize;
     let mut invocations = 0usize;
 
     for seed in 1..=3_000u64 {
         let mut rng = Rng(seed.wrapping_mul(0x9E37_79B9_7F4A_7C15) | 1);
         let toks = generate(&mut rng, 20);
 
-        // Group by line, the unit the dialect classifies.
-        let mut by_line: std::collections::BTreeMap<usize, Vec<&str>> = Default::default();
+        let mut by_line: std::collections::BTreeMap<usize, Vec<Token>> = Default::default();
         for t in &toks {
-            by_line.entry(t.line).or_default().push(t.value.as_str());
+            by_line.entry(t.line).or_default().push(t.clone());
         }
+
         for words in by_line.values() {
-            if words.first() == Some(&"@define")
-                && words.get(2) == Some(&"(")
-                && words.len() > 5
-            {
-                defines_with_params += 1;
+            // Ask the dialect, not the text.
+            if let Some(Ok(Directive::Define { params: Some(ps), body, .. })) = d.classify(words) {
+                let uses: usize =
+                    body.iter().filter(|t| ps.contains(&t.value)).count();
+                if uses >= 1 {
+                    with_param_in_body += 1;
+                }
+                if uses >= 2 {
+                    repeating_a_param += 1;
+                }
             }
-            if matches!(words.first(), Some(&"M") | Some(&"N")) && words.get(1) == Some(&"(") {
+            if matches!(words.first().map(|t| t.value.as_str()), Some("M") | Some("N"))
+                && words.get(1).map(|t| t.value.as_str()) == Some("(")
+            {
                 invocations += 1;
             }
         }
     }
 
     assert!(
-        defines_with_params > 100,
-        "only {defines_with_params} function-like defines with a body in 3000 seeds — \
-         the generator cannot reach argument pre-expansion, which is where the \
-         stack-overflow and quadratic-substitution findings both lived"
+        with_param_in_body > 100,
+        "only {with_param_in_body} function-like defines whose body USES a parameter — \
+         argument pre-expansion is the only place the expander recurses, and it is \
+         where the stack-overflow finding lived"
+    );
+    assert!(
+        repeating_a_param > 50,
+        "only {repeating_a_param} bodies REPEAT a parameter — that is the shape behind \
+         the quadratic-substitution finding (output is occurrences x argument tokens)"
     );
     assert!(
         invocations > 100,
-        "only {invocations} function-like invocations in 3000 seeds — a define \
-         nothing calls exercises no expansion"
+        "only {invocations} function-like invocations — a define nothing calls \
+         exercises no expansion"
     );
 }

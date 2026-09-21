@@ -206,8 +206,7 @@ fn expand_at(
             return Err(PpError::new(format!(
                 "macro expansion exceeded {} rounds",
                 bounds.expansion_rounds
-            ))
-            .at_opt(position_of(&cur.token)));
+            )));
         }
 
         let produced = match &def.params {
@@ -288,10 +287,6 @@ fn spelling_ok(t: &Token, bounds: &Bounds) -> Result<(), PpError> {
         )));
     }
     Ok(())
-}
-
-fn position_of(_t: &Token) -> Option<crate::source_map::Position> {
-    None
 }
 
 fn next_is_open_paren(work: &[MToken]) -> bool {
@@ -437,16 +432,42 @@ fn substitute_function_like(
     // source costs 2N. Inspecting the finished vector charges honestly but far
     // too late -- the allocation has already happened, and a 20 KB file
     // reached 5 GB of working set before its diagnostic arrived.
+    // Measure each argument ONCE, up front.
+    //
+    // The obvious projection re-sums an argument's bytes at every parameter
+    // occurrence, which makes computing the estimate O(occurrences x argument
+    // tokens) -- the very N^2 the projection exists to avoid. It allocates
+    // nothing, so memory stays flat and no bound fires; it simply burns CPU.
+    // Measured before this hoist: 781 KB of source took 85.8 s, against 0.49 s
+    // for the same byte count with a single parameter occurrence. 175x the
+    // work, invisible to every counter.
+    //
+    // With the metrics hoisted the projection is O(|body| x |params|) and each
+    // argument is summed once.
+    let arg_metrics: Vec<(u64, u64)> = args
+        .iter()
+        .map(|a| {
+            (a.len() as u64, a.iter().map(|t| t.token.value.len() as u64).sum::<u64>())
+        })
+        .collect();
+
     let mut projected_tokens: u64 = 0;
     let mut projected_bytes: u64 = 0;
     for token in &def.body {
+        // Charged per body token, so even the estimate is inside the fuel
+        // budget rather than outside it. `bounds.rs` says every loop in the
+        // engine needs a finite budget; this one used to be the exception.
+        spend.fuel_used = spend.fuel_used.saturating_add(1);
+        if spend.fuel_used > bounds.fuel {
+            return Err(PpError::new(
+                "exhausted the preprocessing budget projecting a substitution",
+            ));
+        }
         match params.iter().position(|p| *p == token.value) {
             Some(i) => {
-                if let Some(arg) = args.get(i) {
-                    projected_tokens = projected_tokens.saturating_add(arg.len() as u64);
-                    projected_bytes = projected_bytes.saturating_add(
-                        arg.iter().map(|t| t.token.value.len() as u64).sum::<u64>(),
-                    );
+                if let Some((n, bytes)) = arg_metrics.get(i) {
+                    projected_tokens = projected_tokens.saturating_add(*n);
+                    projected_bytes = projected_bytes.saturating_add(*bytes);
                 }
             }
             None => {

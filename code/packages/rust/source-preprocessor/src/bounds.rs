@@ -175,7 +175,7 @@ impl Default for Bounds {
             tokens_produced: 2_000_000,
             token_spelling_bytes: 64 * 1024,
             synthesised_text_bytes: 64 * 1024 * 1024,
-            expansion_rounds: 40_000,
+            expansion_rounds: 1_000_000,
             arg_group_depth: 200,
             condition_depth: 200,
             conditional_depth: 200,

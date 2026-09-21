@@ -509,6 +509,56 @@ fn the_pre_scan_runs_before_the_dialect_sees_the_expression() {
 }
 
 #[test]
+fn the_round_budget_is_a_translation_unit_total_not_a_per_line_one() {
+    // The regression this pins shipped once already, with a comment claiming
+    // the opposite.
+    //
+    // `expand` is called once per emitted line and once per condition. While
+    // the round counter was a local inside it, the limit reset on every line,
+    // so a 500-line file ran over a million rounds against a budget of 40,000
+    // and nothing fired. The counter now lives in `Spend`, which `preprocess`
+    // creates once for the whole unit.
+    //
+    // Crucially this test goes through `preprocess`, not `expand`: the only
+    // previous rounds test called `expand` once with a fresh `Spend`, so it
+    // passed identically whether the counter was global or local and could
+    // never have caught the bug.
+    let mut fs = MemoryFs::new();
+    let mut lines: Vec<String> = vec!["@define ONE 1".to_string()];
+    for _ in 0..500 {
+        lines.push("value = ONE ;".to_string());
+    }
+    let refs: Vec<&str> = lines.iter().map(String::as_str).collect();
+
+    let bounds = Bounds { expansion_rounds: 100, ..Bounds::default() };
+    let e = run(&refs, &mut fs, bounds)
+        .expect_err("500 expansions must exhaust a 100-round budget across the unit");
+    assert!(e.to_string().contains("exceeded 100 rounds"), "{e}");
+
+    // And the same program is fine when the budget genuinely allows it.
+    let mut fs = MemoryFs::new();
+    assert!(run(&refs, &mut fs, Bounds::default()).is_ok());
+}
+
+#[test]
+fn conditions_share_the_round_budget_with_ordinary_lines() {
+    // The other `expand` caller. A per-call counter would give every `@if` its
+    // own fresh budget too.
+    let mut fs = MemoryFs::new();
+    let mut lines: Vec<String> = vec!["@define ONE 1".to_string()];
+    for _ in 0..300 {
+        lines.push("@if ONE".to_string());
+        lines.push("@end".to_string());
+    }
+    let refs: Vec<&str> = lines.iter().map(String::as_str).collect();
+
+    let bounds = Bounds { expansion_rounds: 50, ..Bounds::default() };
+    let e = run(&refs, &mut fs, bounds)
+        .expect_err("300 conditional expansions must exhaust a 50-round budget");
+    assert!(e.to_string().contains("rounds"), "{e}");
+}
+
+#[test]
 fn the_token_budget_is_enforced() {
     let mut fs = MemoryFs::new();
     let bounds = Bounds { tokens_produced: 3, ..Bounds::default() };
