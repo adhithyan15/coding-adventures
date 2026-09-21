@@ -70,6 +70,11 @@ pub enum TypedPipelineStage {
     Bridge,
     Pass,
     Emit,
+    /// Building the correlation-vector trace after a successful compile.
+    /// Reached only when an internal invariant about the recorded pass
+    /// schedule is violated — see the fail-closed branch in
+    /// `transform_source_with_cv`.
+    Trace,
 }
 
 impl std::fmt::Display for TypedPipelineStage {
@@ -79,6 +84,7 @@ impl std::fmt::Display for TypedPipelineStage {
             Self::Bridge => f.write_str("typed AST bridge"),
             Self::Pass => f.write_str("optimization pass"),
             Self::Emit => f.write_str("emit"),
+            Self::Trace => f.write_str("correlation-vector trace"),
         }
     }
 }
@@ -695,7 +701,29 @@ pub fn transform_source_with_cv(
                     // here with a typed level: it is set immediately after the
                     // pipeline returns, and a failed pipeline returns before
                     // any CV contribution is built.
-                    let passes_list: Vec<String> = executed_passes.clone().unwrap_or_default();
+                    //
+                    // It is still matched rather than defaulted. Defaulting to
+                    // an empty list would answer a broken invariant by emitting
+                    // a well-formed, exit-0 sidecar asserting that no pass ran
+                    // — indistinguishable downstream from a real empty
+                    // pipeline, and the exact failure mode (confidently wrong
+                    // provenance) this change exists to remove. A refactor that
+                    // adds an early return or a second producer for a typed
+                    // level should break loudly here instead.
+                    let passes_list: Vec<String> = match &executed_passes {
+                        Some(passes) => passes.clone(),
+                        None => {
+                            return Err(CompilerError::TypedPipeline {
+                                level: config.compilation.level,
+                                stage: TypedPipelineStage::Trace,
+                                message: "internal invariant: a typed compilation reached the \
+                                          correlation-vector trace without a recorded pass \
+                                          schedule; refusing to emit provenance rather than \
+                                          claim that no pass ran"
+                                    .to_string(),
+                            });
+                        }
+                    };
                     let (tag, level) = match config.compilation.level {
                         CompilationLevel::Advanced => ("advanced_v1", "ADVANCED"),
                         _ => ("simple_v2", "SIMPLE"),

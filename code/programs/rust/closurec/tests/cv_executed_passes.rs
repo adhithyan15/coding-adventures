@@ -50,9 +50,21 @@ const BINARY: &str = env!("CARGO_BIN_EXE_closurec");
 /// Compile `source` at `level` with CV tracing on and return the `passes`
 /// array recorded in the sidecar.
 fn traced_passes(tag: &str, level: &str, source: &str) -> Vec<String> {
-    let dir = std::env::temp_dir().join(format!("closurec-ccr041-{tag}-{level}"));
-    let _ = std::fs::remove_dir_all(&dir);
-    std::fs::create_dir_all(&dir).expect("create temp dir");
+    // Same temp-dir discipline as `tests/conformance.rs`. A fixed name under a
+    // shared `/tmp` is both a local-attacker hazard (another user pre-creates
+    // the directory with `out.js.cv.json` symlinked somewhere we can write, and
+    // a sticky-bit `/tmp` stops us removing it) and a straightforward collision
+    // between parallel `cargo test` threads. pid + a monotonic counter makes
+    // the path per-invocation distinct, and `create_dir` — not `create_dir_all`
+    // — fails rather than adopting a directory somebody else already owns.
+    use std::sync::atomic::{AtomicU64, Ordering};
+    static SEQ: AtomicU64 = AtomicU64::new(0);
+    let dir = std::env::temp_dir().join(format!(
+        "closurec_ccr041_{}_{}_{tag}_{level}",
+        std::process::id(),
+        SEQ.fetch_add(1, Ordering::Relaxed),
+    ));
+    std::fs::create_dir(&dir).expect("create temp dir");
     let input = dir.join("in.js");
     let output = dir.join("out.js");
     let sidecar = dir.join("out.js.cv.json");
