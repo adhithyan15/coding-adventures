@@ -1,0 +1,10 @@
+{
+  "id": "ML-EXT-112-PLACES",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the bank, the hospital and the police, and tell which everyday words my English ear can decode.",
+  "prerequisites": [
+    "ML-EXT-111-PERFECT"
+  ]
+}

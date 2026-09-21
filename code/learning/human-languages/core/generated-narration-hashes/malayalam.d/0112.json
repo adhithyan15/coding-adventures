@@ -1,0 +1,18 @@
+{
+  "language": "malayalam",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:4f20c9a2898ce883",
+  "lessonIds": [
+    "ML-C112-bank",
+    "ML-C112-poleesu",
+    "ML-C112-aashupathri",
+    "ML-R112-places-recall"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "malayalam/narration/ch112.txt",
+  "json": "malayalam/narration/ch112.json",
+  "textHash": "fnv1a64:e3bfc8d1ee45bb48",
+  "jsonHash": "fnv1a64:9d26314947560d37",
+  "findings": []
+}

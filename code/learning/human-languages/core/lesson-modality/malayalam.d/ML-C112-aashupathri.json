@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C112-aashupathri",
+    "language": "malayalam",
+    "chapter": 112,
+    "sequence": 4160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e3f23a108a0314ae"
+  },
+  "findings": []
+}

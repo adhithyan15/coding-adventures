@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-112-PLACES",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "before": [],
+  "inline": [
+    "ML-EXT-112-PLACES"
+  ],
+  "after": []
+}

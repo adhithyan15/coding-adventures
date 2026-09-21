@@ -1,0 +1,12 @@
+{
+  "language": "malayalam",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:002a7edb9e61f4bd",
+  "lessonIds": [
+    "ML-C112-bank",
+    "ML-C112-poleesu",
+    "ML-C112-aashupathri",
+    "ML-R112-places-recall"
+  ],
+  "tex": "malayalam/book/chapters/ch112-places.tex"
+}
