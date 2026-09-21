@@ -47,3 +47,67 @@ Options:
 
 Worth doing with HL-C417, since both are about a lesson inheriting a level from
 a spine node chosen for something else.
+
+---
+
+### CORRECTION (measured after filing, before acting)
+
+**Do not do option 1. The premise above is wrong for the word that mattered.**
+
+This entry claimed the mismatch was that "a plain vocabulary item, `explicar`,
+rides along with [the reason-giving grammar] and inherits a level chosen for it",
+and recommended splitting `ES-PATH-037`. Checking the lesson before acting on my
+own recommendation shows otherwise.
+
+`ES-C41-explicar` declares `prerequisites: [ES-C41-deber, ES-C41-asi-que,
+ES-C41-creer]`, requires `ES-LEX-DEBER-05`, `ES-LEX-ASI-QUE-03`,
+`ES-LEX-CREER-01` and `ES-LEX-PORQUE-03`, and **introduces
+`ES-GRAMMAR-REASON-CHAIN-09`**. It is not a vocabulary item riding along — it is
+the **capstone** of the reason-chain unit, and the grammar atom is its own.
+
+Tracing each word to the lowest level it could honestly sit at, by the level of
+the lessons introducing its required atoms:
+
+| word | lowest honest level | why |
+|---|---|---|
+| **explicar** | **B1** | needs `deber`, `así que`, `creer` — all B1 |
+| creer | A2 | needs only `pensar`, already A2 |
+| problema | A1 | needs only `habitación`, already A1 |
+
+So **`explicar` cannot move.** Putting it in an A2 segment would place a lesson
+in the A2 book that depends on three B1 lessons — precisely the failure
+`lessonsUpToLevel` exists to prevent, and worse than leaving it where it is.
+
+**And the value was overstated.** Crediting all three would have taken
+`objectiveFailed` 40 → 38. Crediting only the two that can actually move takes
+it **40 → 39** — one item, for a re-mapping of two lessons across two segments,
+one of which would pull a B1-segment lesson into the **A1** book and needs its
+own pedagogical justification. That is a bad trade, so it is not being made.
+
+**What is actually true, and what it would take.** `explicar` is the only lexeme
+appearing in more than one remaining failing row, so it is still the single
+highest-value word in the A2 gap. Reaching it means deciding that the whole
+reason-giving unit — *creer*, *así que*, *deber*, *explicar*, and the
+`SPINE-GIVE-REASONS` node itself — belongs at A2 rather than B1. That is a
+**curriculum judgement about the ladder**, not a mapping tidy-up, and it should
+be argued on whether an A2 candidate is expected to give reasons at all, never
+on the two exam items it would buy.
+
+**Two smaller inaccuracies in the original body, also corrected here.**
+
+The paragraph above says all three lessons derive to B1 "because their path
+segments name `SPINE-GIVE-REASONS`". That is true of `explicar` and `creer`
+only. `problema` sits in `ES-PATH-268-PROBLEM`, which names
+`SPINE-HANDLE-TRAVEL` — a different node that is *also* B1. The conclusion
+survives, the attribution does not, and the sentence generalised from two cases
+to three without checking the third.
+
+And the one item that the movable pair buys comes entirely from `problema`.
+Crediting `creer` alone clears nothing, because its row is also missing
+`descontar`. So the achievable gain is one item from one word.
+
+**Method note.** The error was writing a recommendation from a lesson's *list
+entry* rather than from the lesson. The list said "vocabulary item"; the
+frontmatter said "capstone with three prerequisites and its own grammar atom".
+One `cat` of the file was the difference, and the shard had already named
+`ES-PATH-037`'s four members without anyone reading what the fourth one does.
