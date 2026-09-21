@@ -531,8 +531,11 @@ fn parameter_list<'a>(
         // `Ok` back, with no bound involved at any point.
         if !seen_params.insert(param.value.clone()) {
             // Not merely redundant: `substitute_function_like` resolves a
-            // parameter by its POSITION, so the first occurrence would win and
-            // the second argument would vanish without a word.
+            // parameter through a precomputed index, so with a duplicate the
+            // LAST occurrence wins and the first argument vanishes without a
+            // word. (It was the first that won when that lookup was a linear
+            // scan; which one it is matters less than that one of them is
+            // silently discarded, which is why this is refused here.)
             return Err(PpError::new(format!(
                 "macro parameter {} is listed twice — the second argument would be \
                  silently discarded",

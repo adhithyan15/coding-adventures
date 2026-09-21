@@ -74,10 +74,35 @@ pub struct MacroDef {
     pub body: Vec<Token>,
 }
 
+/// A definition plus the lookup table substitution needs.
+#[derive(Debug)]
+pub struct StoredMacro {
+    pub def: MacroDef,
+    /// Parameter name -> position, built ONCE when the macro is defined.
+    ///
+    /// Not per invocation, and the difference is a denial of service. Building
+    /// it per invocation costs O(|params|) each time, so N invocations of a
+    /// k-parameter macro cost O(N x k) from O(N + k) of source -- and the build
+    /// sits before the only loop that charges fuel, which iterates the BODY, so
+    /// a short body charges nothing for it. A security review measured 0.66 MB
+    /// of source at 359 seconds with every counter flat and the preprocessor
+    /// returning `Ok`.
+    ///
+    /// That is the same signature as the per-body-token scan fixed one round
+    /// earlier. Hoisting to definition time removes the cost outright rather
+    /// than charging for it: a definition is charged once, as source.
+    ///
+    /// NOTE: `collect` lets a later duplicate win, where the old linear scan
+    /// took the first. Dialects reject duplicate parameters, but the engine
+    /// must not depend on that, so the behaviour is stated here rather than
+    /// assumed away.
+    pub param_index: HashMap<String, usize>,
+}
+
 /// The macro table.
 #[derive(Debug, Default)]
 pub struct MacroTable {
-    defs: HashMap<String, MacroDef>,
+    defs: HashMap<String, StoredMacro>,
 }
 
 impl MacroTable {
@@ -87,11 +112,16 @@ impl MacroTable {
     }
 
     pub fn define(&mut self, name: impl Into<String>, def: MacroDef) {
-        self.defs.insert(name.into(), def);
+        let param_index = def
+            .params
+            .as_ref()
+            .map(|ps| ps.iter().enumerate().map(|(i, p)| (p.clone(), i)).collect())
+            .unwrap_or_default();
+        self.defs.insert(name.into(), StoredMacro { def, param_index });
     }
 
     #[must_use]
-    pub fn get(&self, name: &str) -> Option<&MacroDef> {
+    pub fn get(&self, name: &str) -> Option<&StoredMacro> {
         self.defs.get(name)
     }
 
@@ -178,7 +208,7 @@ fn expand_at(
         }
 
         let name = cur.token.value.clone();
-        let Some(def) = table.get(&name) else {
+        let Some(stored) = table.get(&name) else {
             out.push(cur);
             continue;
         };
@@ -222,6 +252,7 @@ fn expand_at(
             )));
         }
 
+        let def = &stored.def;
         let produced = match &def.params {
             None => substitute_object_like(def, &cur.token, cur.hide, name_id, hides, bounds, spend)?,
             Some(params) => {
@@ -243,7 +274,8 @@ fn expand_at(
                 // silently drops expansions.
                 let base = hides.intersect(cur.hide, close_hide);
                 substitute_function_like(
-                    def, &cur.token, params, &expanded_args, base, name_id, hides, bounds, spend,
+                    def, &stored.param_index, &cur.token, &expanded_args, base, name_id,
+                    hides, bounds, spend,
                 )?
             }
         };
@@ -429,8 +461,10 @@ fn substitute_object_like(
 #[allow(clippy::too_many_arguments)]
 fn substitute_function_like(
     def: &MacroDef,
+    // The precomputed index replaces the parameter slice entirely: nothing
+    // here needs the names in order any more, only name -> position.
+    param_index: &HashMap<String, usize>,
     invocation: &Token,
-    params: &[String],
     args: &[Vec<MToken>],
     base_hide: HideId,
     name: NameId,
@@ -464,17 +498,12 @@ fn substitute_function_like(
         })
         .collect();
 
-    // Parameter name -> index, built once.
-    //
-    // Both loops below used `params.iter().position(..)` per body token, which
-    // is O(|body| x |params|) with nothing bounding |params| -- `Bounds` has no
-    // such field and the dialect imposes no limit. A security review drove
-    // 1.08 MB of source to 36.8 s with output EMPTY, memory flat and
-    // `tokens_produced` at zero: every counter saw O(k) while the CPU did
-    // O(k^2). The projection loop charged fuel per body token, but the scan
-    // inside it -- the part doing the actual work -- was charged nothing.
-    let param_index: HashMap<&str, usize> =
-        params.iter().enumerate().map(|(i, p)| (p.as_str(), i)).collect();
+    // The parameter index arrives precomputed -- see `StoredMacro`. Both loops
+    // below once used `params.iter().position(..)` per body token, which is
+    // O(|body| x |params|); building the map here instead merely moved the
+    // same O(|params|) cost to once per INVOCATION, which a security review
+    // then drove to 359 seconds from 0.66 MB of source with every counter
+    // flat. Built at definition time it is charged once, as source.
 
     let mut projected_tokens: u64 = 0;
     let mut projected_bytes: u64 = 0;
@@ -488,7 +517,7 @@ fn substitute_function_like(
                 "exhausted the preprocessing budget projecting a substitution",
             ));
         }
-        match param_index.get(token.value.as_str()).copied() {
+        match param_index.get(&token.value).copied() {
             Some(i) => {
                 if let Some((n, bytes)) = arg_metrics.get(i) {
                     projected_tokens = projected_tokens.saturating_add(*n);
@@ -507,7 +536,7 @@ fn substitute_function_like(
     let mut out = Vec::new();
 
     for token in &def.body {
-        match param_index.get(token.value.as_str()).copied() {
+        match param_index.get(&token.value).copied() {
             Some(i) => {
                 // Substituted argument tokens keep THEIR OWN hide sets. They
                 // were expanded in the caller's context, so repainting them
@@ -812,6 +841,60 @@ mod tests {
         let e = expand(toks("WIDE"), &t, &mut hides, &bounds, &mut spend)
             .expect_err("a byte budget of 32 must refuse ~250 bytes of token text");
         assert!(e.to_string().contains("bytes of token text"), "{e}");
+    }
+
+    #[test]
+    fn repeated_invocations_do_not_re_pay_for_the_parameter_list() {
+        // The parameter index is built when the macro is DEFINED, not per
+        // invocation. Built per invocation it cost O(|params|) each time, so N
+        // invocations of a k-parameter macro cost O(N x k) from O(N + k) of
+        // source -- and the build ran before the only fuel-charging loop,
+        // which iterates the BODY, so a short body charged nothing for it. A
+        // security review measured 0.66 MB of source at 359 seconds with every
+        // counter flat and preprocessing returning `Ok`.
+        //
+        // As with the sibling tests, timing is not asserted. What is asserted
+        // is completion at a size the O(N x k) version could not finish, and
+        // that the work actually happened.
+        let k = 2_000;
+        let n = 2_000;
+        let names: Vec<String> = (0..k).map(|i| format!("p{i}")).collect();
+        let refs: Vec<&str> = names.iter().map(String::as_str).collect();
+
+        let mut t = MacroTable::new();
+        func(&mut t, "F", &refs, "0");
+
+        let mut hides = HideSets::new();
+        let mut spend = Spend::default();
+        let src = std::iter::repeat_n("F ( )", n).collect::<Vec<_>>().join(" ");
+        let out = expand(toks(&src), &t, &mut hides, &Bounds::default(), &mut spend)
+            .expect("many invocations of a wide macro is legal");
+        assert_eq!(out.len(), n, "each invocation yields the one-token body");
+    }
+
+    #[test]
+    fn a_duplicate_parameter_resolves_to_the_last_occurrence() {
+        // Dialects reject duplicate parameters, but the engine must not depend
+        // on that -- so its behaviour is pinned rather than left to whichever
+        // lookup happens to be in use.
+        //
+        // The precomputed index is a map, so a later duplicate wins; the old
+        // linear `position()` scan took the first. Neither is more correct
+        // (the construct is ill-formed), but the charge/build invariant must
+        // still hold, which is what actually matters for the memory bound.
+        let mut t = MacroTable::new();
+        func(&mut t, "F", &["x", "x"], "x + x");
+
+        let mut hides = HideSets::new();
+        let mut spend = Spend::default();
+        let out = expand(toks("F ( 1 , 2 )"), &t, &mut hides, &Bounds::default(), &mut spend)
+            .expect("an ill-formed duplicate must not panic");
+        let got: Vec<&str> = out.iter().map(|m| m.token.value.as_str()).collect();
+        assert_eq!(got, ["2", "+", "2"], "the later duplicate wins under a map lookup");
+
+        // The projection and the build must still agree, or the memory bound
+        // is bypassable.
+        assert_eq!(spend.tokens_produced, out.len() as u64);
     }
 
     #[test]

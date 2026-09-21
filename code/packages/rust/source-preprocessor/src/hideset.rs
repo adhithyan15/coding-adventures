@@ -227,8 +227,9 @@ impl HideSets {
     /// name token's set alone over-hides and silently drops expansions.
     ///
     /// O(|a| × |b|). Chain length is bounded by the number of DISTINCT macro
-    /// names painted along a path — in practice by the expansion-round budget,
-    /// not by `macro_depth`, which bounds argument nesting rather than paint.
+    /// names painted along a path — bounded by
+    /// `Bounds::hide_set_depth`, which exists precisely because walking this
+    /// chain per token is what made expansion quadratic in time.
     pub fn intersect(&mut self, a: HideId, b: HideId) -> HideId {
         if a == b {
             return a;
@@ -324,6 +325,76 @@ mod tests {
         assert!(h.contains(sab, b));
         // {A} plus {A,B} is two nodes, not three: the chain shares its tail.
         assert_eq!(h.node_count(), 2);
+    }
+
+    #[test]
+    fn the_summary_never_produces_a_false_negative() {
+        // The correctness invariant the whole optimisation rests on.
+        //
+        // `contains` returns early when the Bloom summary says a name is
+        // absent. A false POSITIVE costs one chain walk and stays exact. A
+        // false NEGATIVE would be catastrophic and silent: it would drop the
+        // blue-paint rule for that token, so a self-referential macro would
+        // expand again, and again — the infinite expansion hide sets exist to
+        // prevent, reintroduced as a performance optimisation.
+        //
+        // It cannot happen by construction (`filter = filter_of(parent) |
+        // bit(name)`, so every name on a chain has its bit set), but the
+        // construction is one line in `insert` and this is what makes breaking
+        // it loud. 2,000 names on one chain is far past the 64-bit summary's
+        // saturation point, which is exactly where a naive filter would fail.
+        let mut h = HideSets::new();
+        let names: Vec<NameId> = (0..2_000).map(|i| h.name(&format!("M{i}"))).collect();
+
+        let mut set = HideId::EMPTY;
+        for (i, n) in names.iter().enumerate() {
+            set = h.insert(set, *n);
+            // Everything inserted so far must still be reported as present.
+            for earlier in &names[..=i] {
+                assert!(
+                    h.contains(set, *earlier),
+                    "false negative after {} insertions — blue paint would be dropped",
+                    i + 1
+                );
+            }
+            if i > 40 {
+                break; // O(n^2) check; past saturation is the interesting part
+            }
+        }
+
+        // And a name never inserted is still absent, so the filter has not
+        // simply been made to say "yes" to everything.
+        let absent = h.name("NEVER_INSERTED");
+        assert!(!h.contains(set, absent));
+    }
+
+    #[test]
+    fn a_colliding_summary_bit_stays_exact() {
+        // Two names sharing a summary bit is expected — six bits of hash over
+        // an unbounded name space. The consequence must be a wasted walk, not
+        // a wrong answer, and an attacker picks the names.
+        let mut h = HideSets::new();
+        let mut a = None;
+        let mut b = None;
+        // Find a genuine collision rather than assuming one exists.
+        let ids: Vec<NameId> = (0..500).map(|i| h.name(&format!("N{i}"))).collect();
+        'outer: for (i, x) in ids.iter().enumerate() {
+            for y in &ids[i + 1..] {
+                if HideSets::bit(*x) == HideSets::bit(*y) {
+                    a = Some(*x);
+                    b = Some(*y);
+                    break 'outer;
+                }
+            }
+        }
+        let (a, b) = (a.expect("a collision must exist in 500 names"), b.unwrap());
+
+        let set = h.insert(HideId::EMPTY, a);
+        assert!(h.contains(set, a), "the inserted name is present");
+        assert!(
+            !h.contains(set, b),
+            "a name that merely COLLIDES in the summary must not be reported present"
+        );
     }
 
     #[test]
