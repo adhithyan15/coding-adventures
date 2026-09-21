@@ -8,6 +8,34 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-063 — ALGOL coverage-doc drift, corrected (2026-09-21)
+
+`LANG-VM-FEATURE-COVERAGE.md` recorded ALGOL 60 at 233 rows / 1631 cells while
+`lang_matrix.rs` declares **292 / 2044** — 59 rows of drift. Measured exactly:
+292 rows inside `PROGRAMS`, every one declaring seven backends, none declaring
+`Beam`.
+
+The root cause is two layers deep, and the second layer is the interesting one.
+`feature_coverage_doc_counts_match_programs_source` asserts only the seven
+non-ALGOL tuples, so the ALGOL row was free to drift — that was the diagnosis
+when this was logged. VM-065 then found the pinning test **matched none of
+BUILD name filters and had never run in CI at all**, so nothing was enforcing
+any tuple. The non-ALGOL numbers matching source was discipline, not a gate.
+
+Fixed the number. Deliberately did NOT pin ALGOL: that campaign is separately
+owned and actively adding rows, so a pinned tuple would make every ALGOL PR
+edit this shared document — a cross-campaign serialization point, a conflict
+class this repo has already paid for. Instead the doc carries a re-derivation
+command, verified to reproduce 292 before being published, and says plainly
+that the row is a snapshot.
+
+That command counts rows strictly INSIDE `PROGRAMS` on purpose: a repo-wide
+grep over the file over-counts, because `Language::Algol60` also appears in
+comments and helpers. Not hypothetical — that mistake produced Dartmouth BASIC
+as 57 against the pinned 51 during an earlier pass.
+
+VM-064 (all 292 ALGOL rows omit `Beam`, the last systematic matrix hole)
+remains open and still needs scope settled with the ALGOL owner.
 ## PREP01 slice 2 — macro expansion (selected 2026-09-21 after slice 1 merged)
 
 Slice 1 merged as #15853. Slice 2 adds the macro table and the hide-set
