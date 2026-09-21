@@ -1,6 +1,6 @@
 # ladder_t3_unused_local_advanced
 
-Rung 3.unused_local of the CCR-047 differential complexity ladder, at
+Rung 3.unused_local of the CCR-066 differential complexity ladder, at
 `ADVANCED`.
 
 ## What this rung is for

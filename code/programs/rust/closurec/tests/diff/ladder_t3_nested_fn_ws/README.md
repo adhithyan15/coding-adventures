@@ -1,6 +1,6 @@
 # ladder_t3_nested_fn_ws
 
-Rung 3.nested_fn of the CCR-047 differential complexity ladder, at
+Rung 3.nested_fn of the CCR-066 differential complexity ladder, at
 `WHITESPACE_ONLY`.
 
 ## What this rung is for

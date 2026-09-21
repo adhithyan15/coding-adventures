@@ -1,6 +1,6 @@
 # ladder_t3_iife_ws
 
-Rung 3.iife of the CCR-047 differential complexity ladder, at
+Rung 3.iife of the CCR-066 differential complexity ladder, at
 `WHITESPACE_ONLY`.
 
 ## What this rung is for

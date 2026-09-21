@@ -11,7 +11,7 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 > downloaded by the tool). Tracked in
 > [#15832](https://github.com/adhithyan15/coding-adventures/issues/15832).
 
-### Added - the differential complexity ladder (CCR-047)
+### Added - the differential complexity ladder (CCR-066)
 
 `tests/diff/ladder_*` — 45 fixtures: 15 rungs across tiers 1-3, each compiled at
 `WHITESPACE_ONLY`, `SIMPLE`, and `ADVANCED`. Gated by `tests/ladder.rs`.

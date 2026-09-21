@@ -1,6 +1,6 @@
 # ladder_t2_string_concat_advanced
 
-Rung 2.string_concat of the CCR-047 differential complexity ladder, at
+Rung 2.string_concat of the CCR-066 differential complexity ladder, at
 `ADVANCED`.
 
 ## What this rung is for

@@ -1,6 +1,6 @@
 # ladder_t1_two_statements_simple
 
-Rung 1.two_statements of the CCR-047 differential complexity ladder, at
+Rung 1.two_statements of the CCR-066 differential complexity ladder, at
 `SIMPLE`.
 
 ## What this rung is for

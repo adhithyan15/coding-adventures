@@ -1,6 +1,6 @@
 # ladder_t2_nested_arith_ws
 
-Rung 2.nested_arith of the CCR-047 differential complexity ladder, at
+Rung 2.nested_arith of the CCR-066 differential complexity ladder, at
 `WHITESPACE_ONLY`.
 
 ## What this rung is for

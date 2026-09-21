@@ -916,7 +916,7 @@ fn canonical_manifest_classifies_every_fixture_offline() {
         .flat_map(|set| &set.fixtures)
         .filter(|fixture| fixture.starts_with("minify_"))
         .count();
-    // 626 pre-existing + 45 CCR-047 ladder rungs (15 rungs x 3 compilation
+    // 626 pre-existing + 45 CCR-066 ladder rungs (15 rungs x 3 compilation
     // levels). This assertion is a tripwire, not a fact to be kept current
     // automatically: a fixture appearing without a reviewer noticing is the
     // thing it exists to prevent, so update it deliberately or not at all.

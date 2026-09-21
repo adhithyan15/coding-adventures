@@ -1,6 +1,6 @@
 # ladder_t2_bool_fold_simple
 
-Rung 2.bool_fold of the CCR-047 differential complexity ladder, at
+Rung 2.bool_fold of the CCR-066 differential complexity ladder, at
 `SIMPLE`.
 
 ## What this rung is for

@@ -1,4 +1,4 @@
-//! CCR-047 — the differential complexity ladder.
+//! CCR-066 — the differential complexity ladder.
 //!
 //! # Why this exists when 462 golden fixtures already pass
 //!

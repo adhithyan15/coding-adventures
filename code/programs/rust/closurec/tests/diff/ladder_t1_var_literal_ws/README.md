@@ -1,6 +1,6 @@
 # ladder_t1_var_literal_ws
 
-Rung 1.var_literal of the CCR-047 differential complexity ladder, at
+Rung 1.var_literal of the CCR-066 differential complexity ladder, at
 `WHITESPACE_ONLY`.
 
 ## What this rung is for
