@@ -71,17 +71,16 @@ describe("direct curriculum lesson owners", () => {
       .digest("hex");
     // The digest and count below are of the LIVE curriculum graph, so they move
     // whenever any track gains a lesson -- not only when the membership
-    // migration changes shape. 7200 -> 7204 and a new digest are Malayalam
-    // chapter 112's four lessons; the guard still does its job, which is to make
-    // any OTHER change to the public graph fail loudly rather than pass quietly.
-    // Attribution was checked, not assumed: ML-PATH-112-PLACES holds exactly
-    // ML-C112-bank, ML-C112-poleesu, ML-C112-aashupathri, ML-R112-places-recall
-    // and nothing else, and the count moved by exactly four. (ML-S112-letter-pa
-    // matches a naive /112/ search but is a SCRIPT lesson on ML-PATH-100, the
-    // same false match ML-S111-letter-ca produced last chapter.)
-    expect(digest).toBe("9f13e9a970c45f7b0c354dee7e1f0812d37d8834917fd9e935105280bdfc098c");
+    // migration changes shape. 7204 -> 7246 and a new digest are the first
+    // Spanish A2 vocabulary tranche, chapters 431-436; the guard still does its
+    // job, which is to make any OTHER change to the public graph fail loudly
+    // rather than pass quietly.
+    // Attribution was checked, not assumed: the six new path segments
+    // ES-PATH-431-PEDIDO .. ES-PATH-436-GENTE hold exactly 42 lessons between
+    // them, and the corpus-wide count moved by exactly 42.
+    expect(digest).toBe("0642465984745a36642812ab3add0a06b0788ffe2ac1cb4d422135e272b841ec");
     expect(curricula.flatMap((curriculum) => curriculum.path).flatMap((path) => path.lessons))
-      .toHaveLength(7204);
+      .toHaveLength(7246);
   });
 
   it("keeps the canonical curriculum shards free of derived lesson arrays", () => {

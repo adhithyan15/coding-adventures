@@ -1,0 +1,11 @@
+{
+  "id": "ES-R435-repaso-papeles",
+  "pathSegment": "ES-PATH-435-PAPELES",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-435-PAPELES",
+      "order": 5
+    }
+  ]
+}

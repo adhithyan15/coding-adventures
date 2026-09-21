@@ -1,0 +1,11 @@
+{
+  "id": "ES-C432-sintesis-aviso",
+  "pathSegment": "ES-PATH-432-CASA",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ES-EXT-432-CASA",
+      "order": 6
+    }
+  ]
+}

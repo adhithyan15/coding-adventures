@@ -1,0 +1,21 @@
+{
+  "language": "spanish",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:1541bb05f6610ae7",
+  "lessonIds": [
+    "ES-C432-lavadora",
+    "ES-C432-contador",
+    "ES-C432-estanteria",
+    "ES-C432-tuberia",
+    "ES-C432-sofa",
+    "ES-R432-repaso-casa",
+    "ES-C432-sintesis-aviso"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "spanish/narration/ch432.txt",
+  "json": "spanish/narration/ch432.json",
+  "textHash": "fnv1a64:18611818b168e58a",
+  "jsonHash": "fnv1a64:e93e1384d0eca937",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-435-PAPELES",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "before": [],
+  "inline": [
+    "ES-EXT-435-PAPELES"
+  ],
+  "after": []
+}

@@ -59,21 +59,20 @@
     ],
     "numericCredits": "0-100"
   },
-  "lessonCount": 1149,
-  "taughtForms": 1867,
-  "objectiveFailed": 93,
+  "lessonCount": 1191,
+  "taughtForms": 1947,
+  "objectiveFailed": 88,
   "mocks": [
     {
       "mock": 1,
-      "reading": 4,
-      "listening": 0,
-      "objectiveFailed": 46,
+      "reading": 6,
+      "listening": 2,
+      "objectiveFailed": 42,
       "failed": [
         {
           "paper": 1,
           "item": 1,
           "missing": [
-            "ofrecer",
             "decidir"
           ]
         },
@@ -88,7 +87,6 @@
           "paper": 1,
           "item": 3,
           "missing": [
-            "compañero",
             "invitar",
             "explicar"
           ]
@@ -97,7 +95,6 @@
           "paper": 1,
           "item": 5,
           "missing": [
-            "sofá",
             "enseñar"
           ]
         },
@@ -105,16 +102,13 @@
           "paper": 1,
           "item": 6,
           "missing": [
-            "cortar",
-            "tubería",
-            "garaje"
+            "cortar"
           ]
         },
         {
           "paper": 1,
           "item": 7,
           "missing": [
-            "lavadora",
             "tender",
             "meter"
           ]
@@ -123,18 +117,7 @@
           "paper": 1,
           "item": 8,
           "missing": [
-            "préstamo",
-            "devolver",
-            "retraso"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 9,
-          "missing": [
-            "experiencia",
-            "previo",
-            "currículum"
+            "préstamo"
           ]
         },
         {
@@ -162,14 +145,6 @@
         },
         {
           "paper": 1,
-          "item": 13,
-          "missing": [
-            "cargador",
-            "devolver"
-          ]
-        },
-        {
-          "paper": 1,
           "item": 14,
           "missing": [
             "mover"
@@ -179,15 +154,13 @@
           "paper": 1,
           "item": 16,
           "missing": [
-            "cenar",
-            "junto"
+            "cenar"
           ]
         },
         {
           "paper": 1,
           "item": 17,
           "missing": [
-            "compañero",
             "acompañar"
           ]
         },
@@ -213,7 +186,6 @@
           "paper": 1,
           "item": 21,
           "missing": [
-            "jubilado",
             "plantar"
           ]
         },
@@ -224,8 +196,7 @@
             "cuaderno",
             "anotar",
             "temperatura",
-            "lluvia",
-            "recoger"
+            "lluvia"
           ]
         },
         {
@@ -252,9 +223,7 @@
           "paper": 2,
           "item": 26,
           "missing": [
-            "recoger",
-            "repetir",
-            "junto"
+            "repetir"
           ]
         },
         {
@@ -264,8 +233,7 @@
             "chaqueta",
             "grado",
             "bufanda",
-            "abrigo",
-            "prestar"
+            "abrigo"
           ]
         },
         {
@@ -280,13 +248,6 @@
         },
         {
           "paper": 2,
-          "item": 29,
-          "missing": [
-            "ofrecer"
-          ]
-        },
-        {
-          "paper": 2,
           "item": 30,
           "missing": [
             "tardar",
@@ -297,7 +258,6 @@
           "paper": 2,
           "item": 31,
           "missing": [
-            "grupo",
             "avanzado",
             "perderse",
             "principiante",
@@ -308,10 +268,6 @@
           "paper": 2,
           "item": 32,
           "missing": [
-            "taller",
-            "batería",
-            "recoger",
-            "documentación",
             "factura"
           ]
         },
@@ -319,7 +275,6 @@
           "paper": 2,
           "item": 33,
           "missing": [
-            "retraso",
             "obra",
             "vía",
             "andén"
@@ -350,13 +305,6 @@
             "cerrado",
             "inventario",
             "habitual"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 37,
-          "missing": [
-            "portera"
           ]
         },
         {
@@ -417,7 +365,6 @@
           "missing": [
             "equivocarse",
             "ensalada",
-            "devolver",
             "cargo"
           ]
         },
@@ -445,17 +392,14 @@
           "missing": [
             "recordar",
             "dentista",
-            "fallar",
-            "cobrar"
+            "fallar"
           ]
         },
         {
           "paper": 2,
           "item": 49,
           "missing": [
-            "estantería",
             "madera",
-            "portal",
             "tirar"
           ]
         },
@@ -471,15 +415,14 @@
     {
       "mock": 2,
       "reading": 0,
-      "listening": 3,
-      "objectiveFailed": 47,
+      "listening": 4,
+      "objectiveFailed": 46,
       "failed": [
         {
           "paper": 1,
           "item": 1,
           "missing": [
             "mudarse",
-            "sofá",
             "duro"
           ]
         },
@@ -487,7 +430,6 @@
           "paper": 1,
           "item": 2,
           "missing": [
-            "lavadora",
             "reír"
           ]
         },
@@ -495,8 +437,6 @@
           "paper": 1,
           "item": 3,
           "missing": [
-            "jubilado",
-            "ofrecer",
             "explicar"
           ]
         },
@@ -530,8 +470,6 @@
           "paper": 1,
           "item": 7,
           "missing": [
-            "cargador",
-            "prestar",
             "acercarse"
           ]
         },
@@ -547,8 +485,6 @@
           "paper": 1,
           "item": 9,
           "missing": [
-            "experiencia",
-            "previo",
             "contrato"
           ]
         },
@@ -556,10 +492,6 @@
           "paper": 1,
           "item": 10,
           "missing": [
-            "pedido",
-            "retraso",
-            "proveedor",
-            "devolver",
             "envío"
           ]
         },
@@ -567,8 +499,6 @@
           "paper": 1,
           "item": 11,
           "missing": [
-            "contador",
-            "portera",
             "concertar"
           ]
         },
@@ -576,7 +506,6 @@
           "paper": 1,
           "item": 12,
           "missing": [
-            "taller",
             "arreglar",
             "freno",
             "rueda"
@@ -596,7 +525,6 @@
           "item": 14,
           "missing": [
             "reducir",
-            "cobrar",
             "decidirse",
             "jefe"
           ]
@@ -621,7 +549,6 @@
           "paper": 1,
           "item": 17,
           "missing": [
-            "compañero",
             "interesar"
           ]
         },
@@ -643,10 +570,7 @@
           "paper": 1,
           "item": 20,
           "missing": [
-            "prestar",
-            "norma",
-            "firmar",
-            "devolver"
+            "firmar"
           ]
         },
         {
@@ -674,7 +598,6 @@
           "missing": [
             "herramienta",
             "solicitar",
-            "máquina",
             "espera"
           ]
         },
@@ -683,7 +606,6 @@
           "item": 24,
           "missing": [
             "estropear",
-            "cobrar",
             "accidente",
             "roto",
             "servicio"
@@ -695,16 +617,13 @@
           "missing": [
             "recomendar",
             "estado",
-            "explicar",
-            "norma"
+            "explicar"
           ]
         },
         {
           "paper": 2,
           "item": 26,
           "missing": [
-            "taller",
-            "batería",
             "urgencia"
           ]
         },
@@ -712,9 +631,6 @@
           "paper": 2,
           "item": 27,
           "missing": [
-            "devolver",
-            "estantería",
-            "pieza",
             "ticket",
             "revisar"
           ]
@@ -723,9 +639,7 @@
           "paper": 2,
           "item": 28,
           "missing": [
-            "coincidir",
-            "recoger",
-            "grupo"
+            "coincidir"
           ]
         },
         {
@@ -750,9 +664,6 @@
           "item": 31,
           "missing": [
             "cola",
-            "devolver",
-            "máquina",
-            "retraso",
             "apuntar"
           ]
         },
@@ -769,16 +680,7 @@
           "missing": [
             "cerrado",
             "limpieza",
-            "contador",
             "instalación"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 34,
-          "missing": [
-            "lavadora",
-            "pieza"
           ]
         },
         {
@@ -793,8 +695,6 @@
           "paper": 2,
           "item": 37,
           "missing": [
-            "tubería",
-            "garaje",
             "cortar"
           ]
         },
@@ -827,7 +727,6 @@
           "paper": 2,
           "item": 42,
           "missing": [
-            "grupo",
             "disfrutar"
           ]
         },
@@ -835,10 +734,7 @@
           "paper": 2,
           "item": 44,
           "missing": [
-            "pedido",
             "almacén",
-            "retraso",
-            "proveedor",
             "seguimiento"
           ]
         },
@@ -856,7 +752,6 @@
           "item": 46,
           "missing": [
             "taladro",
-            "estantería",
             "acercar"
           ]
         },
@@ -873,8 +768,6 @@
           "missing": [
             "plazo",
             "entregar",
-            "currículum",
-            "documentación",
             "admitir"
           ]
         },
@@ -891,9 +784,7 @@
           "paper": 2,
           "item": 50,
           "missing": [
-            "cortar",
-            "portal",
-            "tubería"
+            "cortar"
           ]
         }
       ]
@@ -919,11 +810,9 @@
     "arrepentirse",
     "avanzado",
     "avisar",
-    "batería",
     "boda",
     "bufanda",
     "calefacción",
-    "cargador",
     "cargo",
     "carné",
     "carrito",
@@ -932,17 +821,14 @@
     "cerrado",
     "chaqueta",
     "claro",
-    "cobrar",
     "coincidir",
     "cola",
     "comentar",
-    "compañero",
     "comportamiento",
     "concentrarse",
     "concertar",
     "conectar",
     "consultar",
-    "contador",
     "contrato",
     "cortar",
     "coste",
@@ -950,7 +836,6 @@
     "cuaderno",
     "cubrir",
     "cumpleaños",
-    "currículum",
     "césped",
     "cómodo",
     "decidir",
@@ -958,12 +843,10 @@
     "dentista",
     "descansar",
     "descontar",
-    "devolver",
     "directo",
     "director",
     "discutir",
     "disfrutar",
-    "documentación",
     "doler",
     "donar",
     "dormitorio",
@@ -979,20 +862,16 @@
     "equivocarse",
     "espera",
     "estado",
-    "estantería",
     "estropeado",
     "estropear",
     "exigente",
-    "experiencia",
     "explicar",
     "factura",
     "fallar",
     "fijo",
     "firmar",
     "freno",
-    "garaje",
     "grado",
-    "grupo",
     "guardia",
     "guía",
     "habitual",
@@ -1007,10 +886,7 @@
     "inventario",
     "invitar",
     "jefe",
-    "jubilado",
     "jubilarse",
-    "junto",
-    "lavadora",
     "lectura",
     "limpieza",
     "llamada",
@@ -1024,44 +900,32 @@
     "mover",
     "mudanza",
     "mudarse",
-    "máquina",
     "natación",
-    "norma",
     "objetivo",
     "obra",
-    "ofrecer",
     "organizar",
     "pantalla",
     "paraguas",
     "partido",
     "patio",
-    "pedido",
     "peligroso",
     "perderse",
     "piedra",
-    "pieza",
     "pintar",
     "plantar",
     "plazo",
     "polideportivo",
-    "portal",
-    "portera",
-    "prestar",
-    "previo",
     "principiante",
     "problema",
     "producir",
-    "proveedor",
     "préstamo",
     "rechazar",
-    "recoger",
     "recomendar",
     "recordar",
     "reducir",
     "repetir",
     "responder",
     "responsabilidad",
-    "retraso",
     "reunión",
     "revisar",
     "reír",
@@ -1073,11 +937,9 @@
     "seguimiento",
     "sencillo",
     "servicio",
-    "sofá",
     "solicitar",
     "suficiente",
     "taladro",
-    "taller",
     "tardar",
     "temperatura",
     "tender",
@@ -1086,7 +948,6 @@
     "torcerse",
     "torpe",
     "trasladar",
-    "tubería",
     "urgencia",
     "usuario",
     "visible",
@@ -1094,31 +955,11 @@
   ],
   "missingFrequency": [
     {
-      "lexeme": "devolver",
-      "count": 7
-    },
-    {
-      "lexeme": "retraso",
-      "count": 5
-    },
-    {
-      "lexeme": "recoger",
-      "count": 4
-    },
-    {
       "lexeme": "cenar",
       "count": 3
     },
     {
-      "lexeme": "cobrar",
-      "count": 3
-    },
-    {
       "lexeme": "coincidir",
-      "count": 3
-    },
-    {
-      "lexeme": "compañero",
       "count": 3
     },
     {
@@ -1130,35 +971,7 @@
       "count": 3
     },
     {
-      "lexeme": "estantería",
-      "count": 3
-    },
-    {
       "lexeme": "explicar",
-      "count": 3
-    },
-    {
-      "lexeme": "grupo",
-      "count": 3
-    },
-    {
-      "lexeme": "lavadora",
-      "count": 3
-    },
-    {
-      "lexeme": "ofrecer",
-      "count": 3
-    },
-    {
-      "lexeme": "prestar",
-      "count": 3
-    },
-    {
-      "lexeme": "taller",
-      "count": 3
-    },
-    {
-      "lexeme": "tubería",
       "count": 3
     },
     {
@@ -1166,23 +979,7 @@
       "count": 2
     },
     {
-      "lexeme": "batería",
-      "count": 2
-    },
-    {
-      "lexeme": "cargador",
-      "count": 2
-    },
-    {
       "lexeme": "cerrado",
-      "count": 2
-    },
-    {
-      "lexeme": "contador",
-      "count": 2
-    },
-    {
-      "lexeme": "currículum",
       "count": 2
     },
     {
@@ -1190,31 +987,7 @@
       "count": 2
     },
     {
-      "lexeme": "documentación",
-      "count": 2
-    },
-    {
       "lexeme": "equivocarse",
-      "count": 2
-    },
-    {
-      "lexeme": "experiencia",
-      "count": 2
-    },
-    {
-      "lexeme": "garaje",
-      "count": 2
-    },
-    {
-      "lexeme": "jubilado",
-      "count": 2
-    },
-    {
-      "lexeme": "junto",
-      "count": 2
-    },
-    {
-      "lexeme": "máquina",
       "count": 2
     },
     {
@@ -1222,43 +995,11 @@
       "count": 2
     },
     {
-      "lexeme": "norma",
-      "count": 2
-    },
-    {
-      "lexeme": "pedido",
-      "count": 2
-    },
-    {
-      "lexeme": "pieza",
-      "count": 2
-    },
-    {
       "lexeme": "polideportivo",
       "count": 2
     },
     {
-      "lexeme": "portal",
-      "count": 2
-    },
-    {
-      "lexeme": "portera",
-      "count": 2
-    },
-    {
-      "lexeme": "previo",
-      "count": 2
-    },
-    {
-      "lexeme": "proveedor",
-      "count": 2
-    },
-    {
       "lexeme": "reír",
-      "count": 2
-    },
-    {
-      "lexeme": "sofá",
       "count": 2
     },
     {

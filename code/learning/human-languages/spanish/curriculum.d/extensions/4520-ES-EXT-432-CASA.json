@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-432-CASA",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the machines and fittings a building notice talks about, and read a notice about the water being cut off.",
+  "prerequisites": [
+    "ES-EXT-431-PEDIDO"
+  ]
+}

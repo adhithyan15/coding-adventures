@@ -1,0 +1,11 @@
+{
+  "id": "ES-C436-prestar",
+  "pathSegment": "ES-PATH-436-GENTE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-436-GENTE",
+      "order": 3
+    }
+  ]
+}

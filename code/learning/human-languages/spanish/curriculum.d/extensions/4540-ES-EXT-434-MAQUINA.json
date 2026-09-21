@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-434-MAQUINA",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that a device has stopped working, what part is missing, where it has gone to be repaired and what I am being charged.",
+  "prerequisites": [
+    "ES-EXT-433-EDIFICIO"
+  ]
+}

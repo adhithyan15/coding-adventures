@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C432-tuberia",
+    "language": "spanish",
+    "chapter": 432,
+    "sequence": 10540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f34ca1d77b4d10c"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C432-sofa",
+    "language": "spanish",
+    "chapter": 432,
+    "sequence": 10550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bdbb4c59e07d65d3"
+  },
+  "findings": []
+}

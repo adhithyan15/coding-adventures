@@ -1,0 +1,1029 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 436,
+  "title": "Gente Y Trato",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:eb0b447fbf7c80dd",
+  "lessons": [
+    {
+      "id": "ES-C436-companero",
+      "sequence": 10790,
+      "title": "el compañero — you already know where this comes from",
+      "headword": "el compañero",
+      "romanization": "el compañero",
+      "gloss": "the colleague — the word whose story you were told when you learned bread, finally given to you as a word",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:714bfaf7b839b541",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el pan. When you learned it you were told what com- plus pānis makes. Say that word now, before reading on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el compañero",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el compañero / la compañera — the colleague, the classmate, the companion."
+            },
+            {
+              "kind": "speech",
+              "text": "You were given the etymology long ago and never the word. The bread lesson told you it means one you share bread with; this lesson hands you the word to use."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "com- with, plus pan, bread, plus -ero, the person-ending you met on la portera. Three pieces you already hold, and not one of them new."
+            },
+            {
+              "kind": "speech",
+              "text": "What is worth adding is how wide the word runs in practice:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "phrase",
+                "who it means"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "phrase: un compañero de trabajo. who it means: a colleague.",
+                "phrase: un compañero de clase. who it means: a classmate.",
+                "phrase: mi compañero. who it means: a partner, depending on context."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "On its own, mi compañero is ambiguous between a work partner and a life partner, and Spanish speakers disambiguate with de trabajo, de piso, de clase when it matters. That ambiguity is not sloppiness; the word never promised more than the one I share things with."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el compañero",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el compañero*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a colleague from work",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a colleague from work]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three pieces the word is made of",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three pieces the word is made of]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The colleague? (el compañero.) What is hiding in the middle of it? (pan.) How do you make it mean classmate? (de clase.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C436-grupo",
+      "sequence": 10800,
+      "title": "el grupo — the unit things get organised into",
+      "headword": "el grupo",
+      "romanization": "el grupo",
+      "gloss": "the group — a short plain word that came in whole, and the unit a course or a trip is organised into",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:85041f940cc6150f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la clase. Say el compañero. A course splits its people into smaller sets. Name a set."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el grupo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el grupo — the group."
+            },
+            {
+              "kind": "speech",
+              "text": "cambiar de grupo — to switch groups. el grupo de los martes — the Tuesday group."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This one does not come apart. It arrived whole, by way of Italian, and there is no Spanish piece inside it to recognise."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the second thing this run has taught you about long-versus-short words:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "kind of word",
+                "what to do"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "kind of word: long and formal. what to do: look for the ending.",
+                "kind of word: short and plain. what to do: learn it whole."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "el grupo is short and plain, so there is nothing to unfold. Spending time hunting for a join in a five-letter noun is the opposite of the habit — the habit is to look once, cheaply, and move on when nothing is there."
+            },
+            {
+              "kind": "speech",
+              "text": "Where it matters most for you is administrative: courses, trips, exams and sports are all divided into grupos, and the DELE pass rule itself is written in terms of two of them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el grupo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el grupo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I have changed groups",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I have changed groups]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Tuesday group is too advanced for me",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Tuesday group is too advanced for me]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The group? (el grupo.) Does it come apart? (No — it arrived whole.) To switch groups? (cambiar de grupo.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C436-ofrecer",
+      "sequence": 10810,
+      "title": "ofrecer — to carry it toward somebody",
+      "headword": "ofrecer",
+      "romanization": "ofrecer",
+      "gloss": "to offer — to carry something toward somebody, and the verb a shop reaches for when it cannot give you what you asked",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:05b233c4ac11ed73",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ayudar. Say cobrar. The restaurant has no table on Friday. Say what it does next instead of refusing outright."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ofrecer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ofrecer — to offer."
+            },
+            {
+              "kind": "speech",
+              "text": "Le puedo ofrecer el jueves — I can offer you Thursday. It is the polite move between no and nothing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ob- toward, plus ferre, to carry. To carry a thing toward somebody."
+            },
+            {
+              "kind": "speech",
+              "text": "That ferre is one of the most productive roots in the language, and once you see it you will read words you have never met:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "what is carried"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: ofrecer. what is carried: toward you.",
+                "word: transferir. what is carried: across.",
+                "word: referir. what is carried: back."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Watch the spelling in the yo form. Ofrecer takes a z before the o: ofrezco, not ofreco. Every verb ending -cer after a vowel does the same — conocer / conozco, parecer / parezco — so learning this one buys the pattern for a large family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ofrecer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ofrecer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I can offer you Thursday",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I can offer you Thursday]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the yo form, with its z",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the yo form, with its z]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To offer? (ofrecer.) The yo form? (ofrezco.) What do the two pieces mean? (To carry toward.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C436-prestar",
+      "sequence": 10820,
+      "title": "prestar — the move that devolver undoes",
+      "headword": "prestar",
+      "romanization": "prestar",
+      "gloss": "to lend — the other half of devolver, and the verb that decides which way the object is moving",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:53fa1276ef9d0abf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say devolver. Say el cargador. You can already say you gave the charger back. Say how it reached you in the first place."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: prestar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "prestar — to lend."
+            },
+            {
+              "kind": "speech",
+              "text": "Te presto el cargador — I lend you the charger. And then, later, te lo devuelvo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: which way is it moving",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English has one word doing two opposite jobs — people say borrow and lend and then muddle them. Spanish keeps the giver's side and marks the receiver's with a preposition:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Spanish",
+                "English"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "te presto el libro means I lend you the book.",
+                "pedir prestado un libro means to borrow a book."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So prestar is always the lender speaking. To be the borrower you say pedir prestado — literally to ask for it lent, which uses the pedir under el pedido from four chapters ago."
+            },
+            {
+              "kind": "speech",
+              "text": "The three verbs now sit in a cycle you can say end to end: prestar hands it over, the other person has it, devolver brings it back."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prestar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prestar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I lend you my charger",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I lend you my charger]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I lent it to him and he has not given it back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I lent it to him and he has not given it back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how to say it from the borrower's side",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how to say it from the borrower's side]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To lend? (prestar.) To borrow? (pedir prestado.) And to give it back? (devolver.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C436-recoger",
+      "sequence": 10830,
+      "title": "recoger — to gather it back up",
+      "headword": "recoger",
+      "romanization": "recoger",
+      "gloss": "to collect, to pick up — the single most demanded verb in the A2 papers, and one word for four English ones",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7e557fa365f501e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el pedido. Say el taller. The order is ready and the car is repaired. Say what you go and do at both."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: recoger",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "recoger — to collect, to pick up, to fetch, to tidy away."
+            },
+            {
+              "kind": "speech",
+              "text": "Vengo a recoger unas fotos — I have come to collect some photos. Recojo a los niños del colegio — I pick the children up from school."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "re- back, plus coger, to take. To take back up what is there."
+            },
+            {
+              "kind": "speech",
+              "text": "One Spanish verb covers what English splits four ways, and the split is arbitrary in English rather than meaningful:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what you recoger",
+                "English wants"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "what you recoger: un pedido. English wants: collect.",
+                "what you recoger: a los niños. English wants: pick up.",
+                "what you recoger: la mesa. English wants: clear.",
+                "what you recoger: la ropa tendida. English wants: bring in."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Hold the Spanish idea — gather back up — and all four fall out of it. Trying to remember four English translations is four times the work for less accuracy."
+            },
+            {
+              "kind": "speech",
+              "text": "Watch the spelling: recojo with a j in the yo form, because ge would be said differently from go. The sound stays put and the letter moves, which is the reverse of what English spelling usually does to you."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "recoger",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *recoger*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I have come to collect the order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I have come to collect the order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I pick the children up at five",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I pick the children up at five]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the yo form, with its j",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the yo form, with its j]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To collect? (recoger.) The yo form? (recojo.) What do the two pieces mean? (To take back up.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R436-repaso-gente",
+      "sequence": 10840,
+      "title": "(compañero, grupo, ofrecer, prestar, recoger) — from cold",
+      "headword": "(compañero, grupo, ofrecer, prestar, recoger)",
+      "romanization": "(compañero, grupo, ofrecer, prestar, recoger)",
+      "gloss": "cold retrieval of the five, and of the lending cycle they complete",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:91f87346905ace18",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say the colleague, to lend and to collect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the cycle is now complete",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "step",
+                "verb"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "step: I hand it over. verb: presto.",
+                "step: you go and get it. verb: recoges.",
+                "step: you give it back. verb: devuelves."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Six chapters ago you could buy a thing and pay for it. You can now describe its whole life: ordered, delayed, collected, lent, returned."
+            },
+            {
+              "kind": "speech",
+              "text": "prestar is the lender's verb only. The borrower says pedir prestado, which contains the pedir under el pedido from the first chapter of this run — so the cycle closes on the word it opened with."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two of these you could have guessed and did not need to be told. compañero was fully explained when you learned pan, years of pages ago in book time — com- plus pānis, one you share bread with — and all this chapter did was hand you the word the story was about. ofrecer unfolds into carry toward."
+            },
+            {
+              "kind": "speech",
+              "text": "The other three are plainer, and that is the honest proportion: some words open, some do not, and the only way to know is to try."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five words",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five words]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I lent my colleague the charger and he has not given it back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I lent my colleague the charger and he has not given it back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I can offer you Thursday",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I can offer you Thursday]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I have come to collect the order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I have come to collect the order]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To lend? (prestar.) To collect? (recoger.) What is hiding inside compañero? (pan.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C436-sintesis-aviso-grupo",
+      "sequence": 10850,
+      "title": "(un aviso del curso) — read it as the person it is for",
+      "headword": "(un aviso del curso)",
+      "romanization": "(un aviso del curso)",
+      "gloss": "the payoff — read a course notice and answer as the person it is addressed to",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:478fe76e7d07a0ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el grupo and recoger. Both are in the notice you are about to read."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read it once straight through, then answer."
+            },
+            {
+              "kind": "speech",
+              "text": "CURSO DE COCINA — AVISO El grupo de los martes está completo. Podemos ofrecer plaza en el de los jueves. Los materiales se recogen en recepción el primer día."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which group is full",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which group is full]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what they can offer instead",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what they can offer instead]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "where and when you collect the materials",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: where and when you collect the materials]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now produce it. Say aloud:"
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I have changed to the Thursday group",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I have changed to the Thursday group]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a colleague from work lent me the book",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a colleague from work lent me the book]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I will collect the materials on the first day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I will collect the materials on the first day]"
+            },
+            {
+              "kind": "speech",
+              "text": "Notice what kind of text this is. It is not a conversation, not a story and not a dialogue between two friends in a café. It is an administrative notice addressed to somebody who has to act on it — and that is what the A2 reading paper is mostly made of."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which group is full? (el de los martes.) What do they offer? (plaza el jueves.) What do you do with the materials? (recogerlos en recepción.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
