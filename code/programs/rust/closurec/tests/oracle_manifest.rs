@@ -916,11 +916,13 @@ fn canonical_manifest_classifies_every_fixture_offline() {
         .flat_map(|set| &set.fixtures)
         .filter(|fixture| fixture.starts_with("minify_"))
         .count();
-    // 626 pre-existing + 156 CCR-066 ladder rungs (52 rungs x 3 compilation
-    // levels; tiers 1-7, the full ladder). This assertion is a tripwire, not a fact to be kept current
+    // 626 pre-existing + 171 CCR-066 ladder rungs (57 rungs x 3 compilation
+    // levels; tiers 1-7, plus the five rungs CCR-078 added — three for
+    // local-scope propagation and two pinning top-level `const` in a CONDITION
+    // position). This assertion is a tripwire, not a fact to be kept current
     // automatically: a fixture appearing without a reviewer noticing is the
     // thing it exists to prevent, so update it deliberately or not at all.
-    assert_eq!(fixture_count, 782, "reviewed fixture inventory changed");
+    assert_eq!(fixture_count, 797, "reviewed fixture inventory changed");
     assert_eq!(minify_count, 462, "reviewed minify cohort changed");
 }
 

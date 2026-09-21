@@ -221,6 +221,28 @@
    "upstream_exit": 0,
    "upstream_stdout": "console.log(2);\n"
   },
+  "ladder_t6_block_scope_advanced": {
+   "closurec_exit": 0,
+   "closurec_stdout": "{const b=2;console.log(b)};\n",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15863",
+   "level": "ADVANCED",
+   "reason": "closurec keeps the block and the binding. Upstream propagates the value, drops the dead binding, and unwraps the now-single-statement block, leaving `console.log(2);`. Two causes: the local-scope propagation gap (CCR-078) and brace-dropping (CCR-076).",
+   "rung": "block_scope",
+   "tier": 6,
+   "upstream_exit": 0,
+   "upstream_stdout": "console.log(2);\n"
+  },
+  "ladder_t6_block_scope_simple": {
+   "closurec_exit": 0,
+   "closurec_stdout": "{const b=2;console.log(b)};\n",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15863",
+   "level": "SIMPLE",
+   "reason": "closurec keeps the block and the binding. Upstream propagates the value, drops the dead binding, and unwraps the now-single-statement block, leaving `console.log(2);`. Two causes: the local-scope propagation gap (CCR-078) and brace-dropping (CCR-076).",
+   "rung": "block_scope",
+   "tier": 6,
+   "upstream_exit": 0,
+   "upstream_stdout": "console.log(2);\n"
+  },
   "ladder_t6_class_advanced": {
    "closurec_exit": 1,
    "closurec_stderr_starts_with": "ADVANCED compilation failed at parse stage:",
@@ -358,6 +380,50 @@
    "tier": 6,
    "upstream_exit": 0,
    "upstream_stdout": "let a=1;const b=2;console.log(a+b);\n"
+  },
+  "ladder_t6_local_const_advanced": {
+   "closurec_exit": 0,
+   "closurec_stdout": "function f(){const b=2;return b+1}console.log(f());\n",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15863",
+   "level": "ADVANCED",
+   "reason": "closurec does not propagate a binding declared inside a function. `inline-variables` considers only TOP-LEVEL `const` declarations, so a function-local one is never substituted and the body cannot fold. Upstream folds `b+1` to `3` at SIMPLE and inlines the whole call at ADVANCED. CCR-078.",
+   "rung": "local_const",
+   "tier": 6,
+   "upstream_exit": 0,
+   "upstream_stdout": "console.log(3);\n"
+  },
+  "ladder_t6_local_const_simple": {
+   "closurec_exit": 0,
+   "closurec_stdout": "function f(){const b=2;return b+1}console.log(f());\n",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15863",
+   "level": "SIMPLE",
+   "reason": "closurec does not propagate a binding declared inside a function. `inline-variables` considers only TOP-LEVEL `const` declarations, so a function-local one is never substituted and the body cannot fold. Upstream folds `b+1` to `3` at SIMPLE and inlines the whole call at ADVANCED. CCR-078.",
+   "rung": "local_const",
+   "tier": 6,
+   "upstream_exit": 0,
+   "upstream_stdout": "function f(){return 3}console.log(f());\n"
+  },
+  "ladder_t6_local_let_advanced": {
+   "closurec_exit": 0,
+   "closurec_stdout": "function f(){let b=2;return b+1}console.log(f());\n",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15863",
+   "level": "ADVANCED",
+   "reason": "Same gap as `local_const`, and it shows the constraint is scope, not `const`-ness: a function-local binding is not observable from outside, so upstream folds `let` here as readily as `const`. `inline-variables` takes only top-level `const`, so neither is reached. CCR-078.",
+   "rung": "local_let",
+   "tier": 6,
+   "upstream_exit": 0,
+   "upstream_stdout": "console.log(3);\n"
+  },
+  "ladder_t6_local_let_simple": {
+   "closurec_exit": 0,
+   "closurec_stdout": "function f(){let b=2;return b+1}console.log(f());\n",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15863",
+   "level": "SIMPLE",
+   "reason": "Same gap as `local_const`, and it shows the constraint is scope, not `const`-ness: a function-local binding is not observable from outside, so upstream folds `let` here as readily as `const`. `inline-variables` takes only top-level `const`, so neither is reached. CCR-078.",
+   "rung": "local_let",
+   "tier": 6,
+   "upstream_exit": 0,
+   "upstream_stdout": "function f(){return 3}console.log(f());\n"
   },
   "ladder_t6_rest_param_advanced": {
    "closurec_exit": 0,
