@@ -562,9 +562,18 @@ mod tests {
         // gate written only against `is_absolute()` let it through on the
         // platform this repo primarily runs on. Keep both spellings here.
         assert!(RootedFs::screen_spelling("/etc/passwd").is_err());
-        assert!(RootedFs::screen_spelling("\\Windows\\win.ini").is_err());
+
+        // Drive-qualified spellings are caught by a byte check rather than by
+        // `Path`, so they are refused identically on every platform.
         assert!(RootedFs::screen_spelling("C:relative.h").is_err());
         assert!(RootedFs::screen_spelling("C:\\Windows\\win.ini").is_err());
+
+        // A backslash-rooted spelling is Windows-only BY NATURE, and harmless
+        // elsewhere rather than a gap: on Unix `\\Windows\\win.ini` is a single
+        // ordinary filename, so it joins under a root and canonicalises inside
+        // it — it cannot escape, and refusing it would reject a legal filename.
+        #[cfg(windows)]
+        assert!(RootedFs::screen_spelling("\\Windows\\win.ini").is_err());
     }
 
     #[test]
@@ -856,9 +865,18 @@ mod tests {
         assert!(!Path::new("/a/bc/secret.h").starts_with(root), "sibling prefix must NOT be contained");
         assert!(!Path::new("/a/bcd").starts_with(root));
 
-        let wroot = Path::new(r"C:\a\b");
-        assert!(Path::new(r"C:\a\b\ok.h").starts_with(wroot));
-        assert!(!Path::new(r"C:\a\bc\secret.h").starts_with(wroot));
+        // The Windows spellings are asserted only on Windows, and that is
+        // not a cop-out: on Unix a backslash is an ordinary filename
+        // character, so `C:\a\b\ok.h` is ONE component rather than four and
+        // the assertion would be testing nothing. The property under test —
+        // that `starts_with` compares whole components — is asserted above
+        // with separators that are real on both platforms.
+        #[cfg(windows)]
+        {
+            let wroot = Path::new(r"C:\a\b");
+            assert!(Path::new(r"C:\a\b\ok.h").starts_with(wroot));
+            assert!(!Path::new(r"C:\a\bc\secret.h").starts_with(wroot));
+        }
     }
 
     #[test]
