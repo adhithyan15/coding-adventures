@@ -227,6 +227,14 @@ and retains it; `FileId` indexes it; `read` reads *that* handle and never
 re-resolves a path. An implementation that reopens in `read` must re-perform
 the full identity and metadata verification on its own handle.
 
+*Implementation note, not a security property:* retaining a handle per `FileId`
+can hold open descriptors up to the §6 inclusion cap of 10 000, which on some
+hosts exceeds the default per-process descriptor limit. Nothing requires
+retention past `read`, so slice 1 should release the handle once the file's
+text has been read and verified. If a descriptor limit is hit first it surfaces
+as an ordinary `PpError` diagnostic — it fails closed — but it should not
+surprise the implementation.
+
 **`FileId` is opaque and constructible only by `SourceFs`.** It is handed to
 dialects through `Dialect::lex(&self, text, file: FileId)`; a transparent
 newtype over an integer would let a dialect mint a `FileId` naming a different
