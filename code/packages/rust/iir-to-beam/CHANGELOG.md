@@ -1,5 +1,92 @@
 # Changelog — iir-to-beam
 
+## 0.19.0 - BEAM10: `array_len`
+
+This backend had arrays but not their length: `array_len` fell through to
+`UnsupportedOp`, and it was the only backend missing the op (LLVM, WASM, CIL,
+JVM and vm-core all implement it). That single gap blocked 31 of the 37 ALGOL
+60 corpus programs that refused to lower to BEAM.
+
+Measured before and after, by compiling all 292 ALGOL matrix rows to `.beam`
+and **executing them on real `erl`** (OTP 27) against each row's declared
+`Expect`:
+
+| | before | after |
+|---|---|---|
+| run correctly on real `erl` | 254 | **277** |
+| refused to compile (`array_len`) | 31 | 0 |
+| trapped at runtime | 1 | 9 |
+| unchanged either way | 6 | 6 |
+
+(The 6 unchanged are 4 rows whose function signatures hit `UnsupportedType`, 1
+other compile refusal, and 1 program that both prints and returns a value,
+which the measuring harness scores as a mismatch. Listed so the columns sum to
+292.)
+
+The accounting closes exactly: of the 31 that could not compile, 23 now run
+correctly and 8 now trap. No program that passed before changed behaviour.
+
+### Why this was not a one-line addition
+
+Arrays live on two substrates (BEAM04/BEAM06) that answer "how long are you?"
+differently, and only one can answer at all:
+
+- `array<i64>` is `:atomics`, which is fixed-size. `atomics:info/1` reports the
+  declared extent — verified on real `erl` to be unchanged by writes. There is
+  no `atomics:size/1` and this backend emits no map opcodes, so the `size` key
+  is projected with `maps:get/2`, an ordinary `call_ext`.
+- `array<f64>`/`array<str>` is `:ets`, which has no extent at all.
+  `ets:info(Tab, size)` returns the number of entries INSERTED: a ten-element
+  array with three cells written reports `3`. That is the worst failure shape
+  available — a small plausible number instead of an error, on exactly the
+  substrate ALGOL `real` arrays use. So `alloc_array` now records the declared
+  length under a reserved atom key (its size operand was previously discarded),
+  and `array_len` reads that back with `ets:lookup_element/3`.
+
+The key is an atom rather than `-1` because `BEAMOperand::i` takes a `u64` —
+this backend cannot encode a negative literal operand at all.
+
+Dispatch cannot be copied from `array_get`/`array_set`: their `type_hint` is
+the element type, while `array_len`'s is `"i64"`, its own result type. Nor can
+it be deferred to runtime — both substrates are references, so `is_reference/1`
+cannot separate them (confirmed on `erl`). It comes instead from a per-function
+map built from each handle's defining instruction and from `IIRFunction::params`.
+A handle the map cannot resolve is **refused**, not guessed: guessing emits a
+call that raises `badarg` on the other substrate, or returns a wrong number.
+
+That rule was measured before it was written. Across the 31 blocked programs it
+resolves 202 of 202 `array_len` instructions with no holes — and 79 of those
+202 are on `:ets`, so the cheap "atomics-only" option would have unblocked none
+of them.
+
+### The bug this shipped with, and then without
+
+`array_len` was missing from the list of ops that emit a `call_ext`. That is
+not a missing optimisation: `restore_live_across_imported_call!` ends in
+`sanitize_normal_x_after_call!`, which nils every normal x-register it cannot
+prove live, and an empty `live_across` entry lets it prove nothing. All five
+end-to-end programs died with `{badarith,[{erlang,'-',[1,[]]}]}` until it was
+added. Fourth occurrence of this class here (VM-D029, VM-D035, #15332) — and
+the first to happen despite a spec section written to prevent it.
+
+The originally-planned test for this ("assert the emitted sequence sits in a
+save/restore bracket") would have passed against the broken code: the bracket
+was present and correct; what was empty was the set of variables it had to
+save. The shipped test asserts membership in the op list itself.
+
+### Known gap, now reachable
+
+Implementing `array_len` exposes BEAM04's documented pre-zero limitation:
+`ets:new` does not pre-zero cells, so reading a never-written element raises
+`badarg`/`badkey`. Six ALGOL programs hit this, all of them passing a sparse
+multi-dimensional `real`/`string` array **by value** — `emit_array_value_copy`
+reads every element of the source. Previously these refused at `array_len`
+before getting that far. Logged as its own backlog item with a design that
+pays the O(n) cost entirely in `call_ext`s (`lists:seq/2`, `lists:duplicate/2`,
+`lists:zip/2`, one `ets:insert/2`) rather than an emitted loop.
+
+See `code/specs/BEAM10-array-length.md`.
+
 ## Unreleased - initialize and restore normal GC roots
 
 Initialize non-parameter X registers to nil at entry and clear clobbered normal

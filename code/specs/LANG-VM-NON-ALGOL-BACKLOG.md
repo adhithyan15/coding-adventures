@@ -8,6 +8,116 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+### VM-071 — BEAM04's pre-zero gap is no longer unreachable (opened by VM-070)
+
+Tracked as issue #15880.
+
+`ets:new` does not pre-zero cells, so reading an `array<f64>`/`array<str>`
+element that was never written raises `badarg`/`badkey` instead of returning
+`0.0`. BEAM04 recorded this and left it undecided on the grounds that no
+promoted row reaches it.
+
+That reasoning was too narrow, and VM-070 proved it by running the corpus.
+ALGOL's `emit_array_value_copy` writes every element of the *destination* but
+**reads every element of the source**, and an ALGOL source array may be
+sparsely written — `real array A[1:3]` with only `A[1]` and `A[3]` assigned has
+nothing at flat index 1. Passing such an array by value therefore reads a cell
+that was never written.
+
+**Six ALGOL corpus programs now trap this way**, every one of them a
+call-by-value pass of a sparse multi-dimensional `real`/`string` array. They
+previously refused at `array_len` before getting that far, so implementing
+`array_len` did not create the bug — it made an existing one reachable. It is
+now the largest single cause of ALGOL-on-BEAM runtime failure (6 of 15
+remaining).
+
+Two further programs fail with `badarith`/`badarg` reading `own` storage that
+was never initialised. Same family — uninitialised storage read before
+writing — but a different mechanism, and not an array problem.
+
+Design, which is the part worth recording: the O(n) cost can be paid entirely
+in `call_ext`s, with **no emitted loop and no new opcodes**, using the shapes
+this backend already emits:
+
+```
+lists:seq(0, N-1)                  -> [0, 1, ..., N-1]
+lists:duplicate(N, <zero>)         -> [Z, Z, ..., Z]
+lists:zip(Keys, Zeros)             -> [{0,Z}, {1,Z}, ...]
+ets:insert(Tab, ThatList)          -> the whole table, pre-populated
+```
+
+`<zero>` is `0.0` for `array<f64>` (via the existing float literal pool) and
+the empty list for `array<str>`, since an empty Erlang string *is* `[]`. The
+element type is available at `alloc_array` from its `type_hint`, which is where
+the pre-population belongs.
+
+Cost to weigh: this makes every ets-backed allocation O(n) where it is
+currently O(1), plus four `call_ext`s. BEAM04 deliberately avoided that. The
+counter-argument is that an array whose cells cannot be read is not really an
+array, and six corpus programs now demonstrate it rather than hypothesise it.
+
+Note that the reserved length key from BEAM10 is independent and stays correct
+alongside this: pre-population fills the integer key space `0..N-1`, the length
+lives under an atom key, and the two cannot collide. Anything added later that
+reads `ets:info(Tab, size)` must subtract the length entry, which would
+otherwise inflate the count by one (verified on real `erl`).
+
+### VM-070 — `array_len` on BEAM — **DELIVERED**
+
+Spec `code/specs/BEAM10-array-length.md`; implemented in `iir-to-beam` 0.19.0
+with real-`erl` coverage in `lang-aot` `tests/beam_array_len.rs`.
+
+Measured before and after by compiling all 292 ALGOL matrix rows to `.beam` and
+**executing them on real `erl`** (OTP 27) against each row's declared `Expect`:
+
+| | before | after |
+|---|---|---|
+| run correctly on real `erl` | 254 | **277** |
+| refused to compile (`array_len`) | 31 | 0 |
+| trapped at runtime | 1 | 9 |
+| unchanged either way | 6 | 6 |
+
+(The 6 unchanged are 4 `UnsupportedType` function signatures, 1 other compile
+refusal, and 1 program that both prints and returns a value, which the
+measuring harness scores as a mismatch. Listed so the columns sum to 292.)
+
+The accounting closes exactly: of the 31 that could not compile, 23 now run
+correctly and 8 now trap. No program that passed before changed behaviour. The
+8 are VM-071 above (6) plus two `own`-storage cases (2).
+
+Three things the research changed, recorded because each killed an option the
+original entry listed as viable:
+
+1. **The obvious implementation is silently wrong.** `ets:info(Tab, size)`
+   returns inserted entries, not declared length — confirmed on real `erl`: a
+   ten-element array with three writes reports `3`. Plausible, wrong, and wrong
+   on exactly the substrate ALGOL `real` arrays use. Worse than the honest
+   refusal it would have replaced.
+2. **The cheap option would have unblocked nothing.** Option 3 in the original
+   entry was "implement for `:atomics` only". Of 202 `array_len` instructions
+   across the 31 blocked programs, **79 are on `:ets`** — an ALGOL program with
+   a `real` array generally also bounds-checks it. Dead on evidence, not taste.
+3. **Dispatch could not be copied from the neighbouring ops.**
+   `array_get`/`array_set` dispatch on `type_hint` because theirs is the
+   element type; `array_len`'s is `"i64"`, its own result type. And both
+   substrates are references at runtime, so `is_reference/1` cannot separate
+   them. Hence the per-function substrate map, measured to resolve 202/202 with
+   zero holes before it was written.
+
+And the bug it shipped with, then without: `array_len` was missing from
+`lower.rs`'s list of `call_ext`-emitting ops, so every end-to-end program died
+with `{badarith,[{erlang,'-',[1,[]]}]}`. Fourth occurrence of this class
+(VM-D029, VM-D035, #15332) and the first to happen *despite* a spec section
+written to prevent it. The originally-planned test — "assert the emitted
+sequence sits in a save/restore bracket" — would have passed against the broken
+code, because the bracket was present and correct; what was empty was the set
+of variables it had to save. The shipped test asserts membership in the op list
+itself.
+
+Promotion of ALGOL matrix rows to declare `Beam` remains a separate decision
+for the ALGOL owner (VM-064), now much better informed: 277 of 292 rows are
+demonstrated to run correctly on real `erl`, not merely to emit.
+
 ### VM-070 — `array_len` on BEAM is a representation question, not a missing case
 
 Selected as the next platform item after VM-064 showed `array_len` is the only

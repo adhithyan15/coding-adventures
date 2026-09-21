@@ -237,18 +237,58 @@ of returning `0.0`. Pre-populating the table at `alloc_array` would fix both
 that and this spec's problem at once, which is the argument for doing them
 together.
 
-It is not adopted, for a reason worth stating rather than assuming:
-pre-population is O(n) per allocation on a path that is currently O(1), and
-nothing in the blocked set needs it. ALGOL's own `emit_array_value_copy`
-allocates and then writes every element before any read, and the bounds-check
-path that calls `array_len` does not read elements at all. Paying O(n) on every
-allocation to fix a trap no corpus program reaches would be a real regression
-bought with a hypothetical benefit.
+It is not adopted here, but the reason originally written in this section was
+**wrong**, and the correction is worth more than the conclusion.
 
-The pre-zero gap therefore stays open and stays recorded. If a future frontend
-does read-before-write on a float array, pre-population becomes the right fix
-and the reserved length key remains correct alongside it — the two are
-independent.
+That reason was: "nothing in the blocked set needs it, because ALGOL's own
+`emit_array_value_copy` allocates and then writes every element before any
+read." The first half of that sentence is true of the *destination* array and
+irrelevant. `emit_array_value_copy` also **reads every element of the source**,
+and an ALGOL source array may be sparsely written — `real array A[1:3]` with
+only `A[1]` and `A[3]` assigned has nothing at flat index 1. Passing such an
+array by value therefore reads a cell that was never written, which on `:ets`
+raises `badarg`/`badkey` rather than yielding `0.0`.
+
+This was not caught by reading the code. It was caught by running the corpus on
+real `erl`: six ALGOL programs trap in exactly this way, every one of them a
+call-by-value pass of a sparse multi-dimensional `real` or `string` array. A
+claim about what a corpus does needs the corpus to be run.
+
+The measured position, before and after this spec's change (292 ALGOL rows,
+compiled to `.beam` and executed on OTP 27, checked against each row's own
+declared `Expect`):
+
+| | before | after |
+|---|---|---|
+| run correctly on real `erl` | 254 | **277** |
+| refused to compile (`array_len`) | 31 | 0 |
+| trapped at runtime | 1 | 9 |
+| unchanged either way [^1] | 6 | 6 |
+
+[^1]: 4 rows whose function signatures hit `UnsupportedType`, 1 other compile
+refusal, and 1 program that both prints and returns a value, which the
+measuring harness scores as a mismatch. Listed so the columns sum to 292.
+
+The accounting closes exactly: of the 31 programs that previously could not
+compile, 23 now run correctly and 8 now trap. **No program that passed before
+changed behaviour.** Of the 8, six are the pre-zero gap above; the other two
+read `own` storage that was never initialised, which is a different gap in the
+same family and is not an array problem at all.
+
+So the honest summary of what this spec ships is: +23 correct programs, and 8
+programs moved from a compile-time refusal to a runtime trap. That is not a
+regression in any declared behaviour — no coverage-matrix row claims `Beam` for
+ALGOL, so neither state is visible today — and a loud trap is a better failure
+than a silently wrong length. But it is a real change in failure mode and is
+recorded as one rather than rounded off.
+
+Pre-population stays out of *this* spec because it is BEAM04's gap, not this
+one's, and because it deserves its own design: the O(n) cost can be paid
+entirely in `call_ext`s with no emitted loop — `lists:seq/2`,
+`lists:duplicate/2`, `lists:zip/2`, then a single `ets:insert/2` of the whole
+list — which is a different shape of change from anything here. It is logged
+as its own backlog item with this evidence attached. The reserved length key
+remains correct alongside it; the two are independent.
 
 ## 6. Tests
 
@@ -270,10 +310,33 @@ the emitted instruction sequence, not on the absence of an error.
    instruction's `type_hint`.
 7. `array_len` on an unknown handle refuses with `UnsupportedOp` naming the
    handle — the step-4 guard, tested positively rather than assumed.
-8. Every new `call_ext` sits inside a save/restore bracket, asserted
-   structurally against the emitted sequence (4.3).
-9. End-to-end: an ALGOL program using both an `integer` and a `real` array
-   lowers to BEAM without error, where it previously refused.
+8. `array_len` appears in the list of ops that emit a `call_ext`, asserted
+   against that list directly.
+
+   **This test replaces the one originally planned here**, which was "every
+   new `call_ext` sits inside a save/restore bracket, asserted structurally
+   against the emitted sequence". That test would have passed while the code
+   was broken. The bracket *was* present and correct; what was empty was the
+   set of variables it had to save, because `array_len` was missing from the
+   op list in 4.3. Every one of the end-to-end programs below died with
+   `{badarith,[{erlang,'-',[1,[]]}]}` until it was added — the fourth time
+   this backend has been bitten by this class, and the first time despite a
+   spec section written specifically to prevent it.
+
+   The lesson generalises past this op: a structural assertion about the shape
+   of emitted code cannot see a data-flow fact the shape depends on. Asserting
+   membership in the list is the assertion that can actually fail.
+9. End-to-end **on real `erl`**, not merely lowering: ALGOL programs on each
+   substrate and both together, each with a hand-computed expected value so a
+   wrong length shows up as a wrong number rather than only as a crash.
+
+   At least one case must pass an array **by value** (`value a; integer array
+   a`). That is the only construct in which `array_len`'s value is *observed*
+   rather than compared — it becomes the copy count in
+   `emit_array_value_copy`. Every other case merely feeds a bounds check,
+   which a too-LARGE length sails straight through. Without a by-value case
+   the suite is insensitive in one direction, which is how it would pass while
+   `array_len` over-reported.
 
 ## 7. Open
 

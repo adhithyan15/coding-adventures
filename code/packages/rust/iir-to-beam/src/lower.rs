@@ -94,6 +94,91 @@ use ir_to_beam::encoder::{
 use crate::validate::validate_for_beam;
 
 // ===========================================================================
+// BEAM10: which substrate is this array handle on?
+// ===========================================================================
+//
+// `array_get`/`array_set` decide this from their own `type_hint`, because for
+// those ops the hint is the ELEMENT type (`"f64"`, `"str"`). `array_len`
+// cannot: its hint is `"i64"`, the type of the length it *produces*, which
+// says nothing about the handle it consumes. Copying the neighbouring
+// dispatch would read `"i64"`, conclude "not f64/str, therefore atomics", and
+// call `atomics:info/1` on an ets table.
+//
+// Nor can the choice be deferred to runtime: `atomics:new/2` and `ets:new/2`
+// BOTH return references in OTP 21+, so `is_reference/1` cannot tell them
+// apart (verified on real `erl`). The substrate has to be recovered
+// statically.
+//
+// It can be, because the DEFINING instruction always carries the array type
+// even though the use does not — `alloc_array` is typed `array<f64>`, so is
+// the `global_load` that reads a global array back, and parameters carry
+// their declared type in `IIRFunction::params`. See
+// `code/specs/BEAM10-array-length.md`.
+
+/// Which runtime object a given IIR array type lives in on BEAM.
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+enum ArraySubstrate {
+    /// `atomics:new/2` — fixed-size 64-bit integer cells (BEAM's `array<i64>`).
+    Atomics,
+    /// `ets:new/2` — a term table (BEAM04 `array<f64>`, BEAM06 `array<str>`).
+    Ets,
+}
+
+/// Map an IIR type to its substrate, or `None` if it is not an array type.
+///
+/// This mirrors the dispatch `alloc_array` already performs, deliberately
+/// written as one function so the two cannot drift apart: `array<f64>` and
+/// `array<str>` go to `:ets`, and every other array type goes to `:atomics`.
+///
+/// Note the ordering. A new element type added to the `:ets` branch of
+/// `alloc_array` but not here would be silently classified as `:atomics` and
+/// would emit `atomics:info/1` against an ets table — a runtime `badarg`
+/// rather than a compile error. The `array<` prefix test is the catch-all,
+/// and it defaults to the substrate `alloc_array` itself defaults to.
+fn array_substrate_of(ty: &str) -> Option<ArraySubstrate> {
+    match ty {
+        "array<f64>" | "array<str>" => Some(ArraySubstrate::Ets),
+        _ if ty.starts_with("array<") => Some(ArraySubstrate::Atomics),
+        _ => None,
+    }
+}
+
+/// Build the per-function `handle -> substrate` map consulted by `array_len`.
+///
+/// Seeded from the parameter list, then extended by every instruction that
+/// defines an array-typed value.
+///
+/// A value of `None` means **conflicting** bindings were seen for that handle
+/// — the same name defined once as an `:ets` array and once as an `:atomics`
+/// one. Measurement across the ALGOL corpus found zero rebindings of any kind
+/// (handles are freshly-named temporaries), so this is unreachable today; it
+/// is represented explicitly anyway because the alternative, last-write-wins,
+/// would resolve such a case *silently and arbitrarily* into one of the two
+/// wrong-answer shapes this whole design exists to avoid. Refusing is the only
+/// safe response to a handle whose substrate is genuinely ambiguous.
+fn array_substrate_map(
+    func: &interpreter_ir::IIRFunction,
+) -> HashMap<&str, Option<ArraySubstrate>> {
+    let mut map: HashMap<&str, Option<ArraySubstrate>> = HashMap::new();
+    for (name, ty) in &func.params {
+        if let Some(sub) = array_substrate_of(ty) {
+            map.insert(name.as_str(), Some(sub));
+        }
+    }
+    for instr in &func.instructions {
+        let (Some(dest), Some(sub)) = (&instr.dest, array_substrate_of(&instr.type_hint)) else {
+            continue;
+        };
+        match map.get(dest.as_str()) {
+            Some(Some(prev)) if *prev != sub => { map.insert(dest.as_str(), None); }
+            Some(_) => {}
+            None => { map.insert(dest.as_str(), Some(sub)); }
+        }
+    }
+    map
+}
+
+// ===========================================================================
 // BEAM opcode constants
 // ===========================================================================
 //
@@ -808,6 +893,76 @@ pub fn lower_iir_to_beam(
     let import_ets_lookup_element = imports.intern(ets_atom, atom_lookup_element, 3); // ets:lookup_element/3
     let import_list_to_tuple = imports.intern(erlang_atom, atom_list_to_tuple, 1); // erlang:list_to_tuple/1
 
+    // ── BEAM10: `array_len` — asking each substrate for its extent ─────────
+    //
+    // The two substrates above answer "how long are you?" differently, and
+    // only one of them can answer at all:
+    //
+    //   `:atomics` KNOWS. `atomics:new(N, [])` is fixed-size, and
+    //   `atomics:info/1` reports that N in a map — verified on real `erl`
+    //   (OTP 27) to be the DECLARED size, unchanged by writes, not a count of
+    //   cells touched. There is no `atomics:size/1`, so the map has to be
+    //   projected; this backend has never emitted a map opcode, so the
+    //   projection is `maps:get/2` — an ordinary `call_ext`, the same shape
+    //   `math:sqrt/1` already uses, and no new opcode.
+    //
+    //   `:ets` DOES NOT. An ets table has no extent, only entries, and
+    //   `ets:info(Tab, size)` returns the number INSERTED. Confirmed on real
+    //   `erl`: a ten-element array with three cells written reports `3`. That
+    //   is not a near-miss, it is the worst possible failure shape — a small
+    //   plausible number instead of an error, on exactly the substrate ALGOL
+    //   `real` arrays use. So `array_len` must never consult it.
+    //
+    // Instead `alloc_array` records the length in the table under a RESERVED
+    // ATOM KEY, and `array_len` reads it back with the same
+    // `ets:lookup_element/3` that `array_get` already uses.
+    //
+    // The key is an atom rather than a negative integer for a concrete
+    // reason, not a stylistic one: `BEAMOperand::i` takes a `u64`, so this
+    // backend has no way to encode a negative literal operand at all. An atom
+    // is directly expressible (the `farray` table name already is one), and
+    // cannot collide with an element index under any future index scheme —
+    // including one that admits negative indices. Verified on `erl` that an
+    // atom key coexists with integer keys in the same table and that integer
+    // lookups keep working beside it.
+    //
+    // The reserved key also cannot be FORGED by a source program, which
+    // matters because forging it would let untrusted input rewrite an array's
+    // recorded length and so defeat every bounds check derived from it. Two
+    // independent reasons, either alone sufficient:
+    //
+    //   1. `array_set` is the only other writer to these tables, and its key
+    //      operand is always an x-register holding the runtime INTEGER index
+    //      (`operand_reg!(get_src!(instr, 1))`). `:ets` matches keys by exact
+    //      term, and an integer never equals an atom in Erlang — not for any
+    //      value, and not across any size, since there is no numeric/atom
+    //      coercion in term equality.
+    //   2. Nothing in this backend produces this atom as a runtime VALUE in
+    //      the first place. Source-level strings are Erlang character lists
+    //      (see the `str_const` arm), not atoms; booleans and nil are
+    //      immediates. Atoms are emitted only as fixed operands chosen here.
+    //
+    // A source-level *global* named the same thing would intern the same atom
+    // — atom interning is by name — but globals live in the process
+    // dictionary via `erlang:put/2`, not in any array table, so the two never
+    // meet.
+    //
+    // One observable side effect, recorded because it is real even though
+    // nothing here depends on it: the reserved entry makes
+    // `ets:info(Tab, size)` one larger than the element count. No code in
+    // this backend calls `ets:info/2` — that is precisely why the paragraph
+    // above is a design constraint rather than a live bug — but anything
+    // added later that does must subtract the length entry.
+    //
+    // See `code/specs/BEAM10-array-length.md`.
+    let maps_atom = atoms.intern("maps");
+    let atom_info = atoms.intern("info");
+    let atom_get = atoms.intern("get");
+    let atom_size = atoms.intern("size");
+    let atom_array_len_key = atoms.intern("$array_len");
+    let import_atomics_info = imports.intern(atomics_atom, atom_info, 1); // atomics:info/1
+    let import_maps_get = imports.intern(maps_atom, atom_get, 2); // maps:get/2
+
     // ── Closure dispatch atoms and imports (LANG35) ───────────────────────
     //
     // `alloc_closure` / `call_closure` lower to two call_ext calls:
@@ -1184,6 +1339,32 @@ pub fn lower_iir_to_beam(
                     // see the `import_sqrt`/… comment above.
                     | "f64_sqrt" | "f64_sin" | "f64_cos" | "f64_ln" | "f64_exp"
                     | "f64_atan" | "f64_tan"
+                    // BEAM10: `array_len` emits `call_ext` on BOTH substrates
+                    // -- `atomics:info/1` then `maps:get/2`, or
+                    // `ets:lookup_element/3`. Omitting it here does NOT mean
+                    // "no registers get saved and everything else still
+                    // works": `restore_live_across_imported_call!` ends with
+                    // `sanitize_normal_x_after_call!`, which nils every normal
+                    // x-register it cannot prove is live or the result. With
+                    // an empty `live_across` entry it can prove nothing, so it
+                    // nils them ALL, and the next arithmetic op fails with
+                    // `badarith` on `[]` instead of a number.
+                    //
+                    // That is exactly what happened: every one of the five
+                    // end-to-end ALGOL array programs died with
+                    // `{badarith,[{erlang,'-',[1,[]]}]}` until `array_len` was
+                    // added to this list -- and it happened despite BEAM10
+                    // carrying a section warning about this precise class,
+                    // which is the fourth time this backend has been bitten by
+                    // it (VM-D029, VM-D035, #15332).
+                    //
+                    // Note for anyone adding the next call-emitting op: a test
+                    // asserting "the emitted sequence is wrapped in a
+                    // save/restore bracket" would NOT have caught this. The
+                    // bracket was present and correct. What was empty was the
+                    // set of variables it had to save. Only running the code,
+                    // or asserting against THIS list, catches it.
+                    | "array_len"
                     // BEAM08/issue #15332: `global_store` emits `erlang:put/2`
                     // via `call_ext` (previously `gc_bif2` — see the
                     // `"global_store"` match arm below for the full
@@ -1395,6 +1576,14 @@ pub fn lower_iir_to_beam(
         let n_yregs = meta.n_yregs;
         let iir_label_map = &meta.iir_label_map;
         let fn_name = &func.name;
+
+        // BEAM10: `array_len` needs to know which substrate each handle lives
+        // on, and its own `type_hint` cannot tell it. Built once for the whole
+        // function rather than accumulated as the loop walks, so that a handle
+        // defined on a later-numbered block but reached first through a back
+        // edge still resolves -- a linear accumulation would see a use before
+        // its definition and refuse a program that is perfectly well-formed.
+        let substrates = array_substrate_map(func);
 
         // Helper closure: look up a variable register or return an error.
         // (We define this as a macro-like helper to avoid borrow issues.)
@@ -3770,6 +3959,156 @@ pub fn lower_iir_to_beam(
                     restore_live_across_imported_call!(cur_idx);
                 }
 
+                // -- BEAM10: array_len -> the substrate's own extent ---------
+                //
+                // Dispatch CANNOT come from `instr.type_hint` the way
+                // `array_get`/`array_set` do: theirs is the element type,
+                // this one's is "i64" -- the type of the length produced, not
+                // of the handle consumed. Nor can it be deferred to runtime,
+                // because `atomics:new/2` and `ets:new/2` both return
+                // references. It comes from `substrates`, built once per
+                // function from the DEFINING instruction of each handle.
+                //
+                // See `code/specs/BEAM10-array-length.md`.
+                "array_len" => {
+                    let rd = match &instr.dest {
+                        Some(name) => var_reg!(name),
+                        None => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "array_len must have a dest".to_string(),
+                        }),
+                    };
+                    let handle = match get_src!(instr, 0) {
+                        Operand::Var(name) => name,
+                        other => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: format!(
+                                "array_len: srcs[0] must be a variable holding an \
+                                 array handle, got {other:?}"
+                            ),
+                        }),
+                    };
+                    // Refuse rather than guess. Picking a substrate here when
+                    // we do not know it does not fail loudly -- it emits a
+                    // call that raises `badarg` at runtime on the other
+                    // substrate, or worse, returns a plausible wrong number.
+                    let substrate = match substrates.get(handle.as_str()) {
+                        Some(Some(sub)) => *sub,
+                        Some(None) => return Err(IIRBeamError::UnsupportedOp {
+                            function: fn_name.clone(),
+                            op: format!(
+                                "array_len: handle {handle:?} is defined with two \
+                                 different array element types, so its runtime \
+                                 substrate is ambiguous"
+                            ),
+                        }),
+                        None => return Err(IIRBeamError::UnsupportedOp {
+                            function: fn_name.clone(),
+                            op: format!(
+                                "array_len: cannot determine the array substrate for \
+                                 handle {handle:?} -- no parameter or defining \
+                                 instruction gives it an array type"
+                            ),
+                        }),
+                    };
+                    let r_ref = var_reg!(handle);
+                    let cur_idx = instr_idx - 1;
+
+                    // One scratch register, staged above `live` BEFORE the
+                    // first call, exactly as `array_get` stages its operands:
+                    // moving `r_ref` straight into x0 is a parallel-move
+                    // hazard, and after a `call_ext` the caller's register is
+                    // clobbered anyway.
+                    let top = meta.next_reg.checked_add(1).filter(|t| *t < 255);
+                    if top.is_none() {
+                        return Err(IIRBeamError::UnsupportedOp {
+                            function: fn_name.clone(),
+                            op: format!(
+                                "array_len: needs 1 scratch register but only {} \
+                                 remain below x255",
+                                255u16 - meta.next_reg as u16
+                            ),
+                        });
+                    }
+                    let s_ref = meta.next_reg;
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(r_ref), BEAMOperand::x(s_ref),
+                    ]));
+
+                    save_live_across_imported_call!(cur_idx);
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(s_ref), BEAMOperand::x(0),
+                    ]));
+
+                    match substrate {
+                        ArraySubstrate::Atomics => {
+                            // `atomics:new(N, [])` is fixed-size and
+                            // `atomics:info/1` reports that N -- verified on
+                            // real `erl` to be the DECLARED size, unchanged by
+                            // writes. And no off-by-one correction belongs
+                            // here: `alloc_array` passes the IIR length
+                            // straight to `atomics:new/2`, and the 0-based to
+                            // 1-based `+1` lives in `array_get`/`array_set`,
+                            // not in the allocation. Stated because an
+                            // off-by-one here would not raise -- it would
+                            // quietly return a number one too large.
+                            instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                                BEAMOperand::u(1),
+                                BEAMOperand::u(import_atomics_info as u64),
+                            ]));
+                            // x0 now holds the info map. There is no
+                            // `atomics:size/1`, and this backend has never
+                            // emitted a map opcode, so project it with
+                            // `maps:get/2` -- an ordinary call_ext.
+                            //
+                            // Move the map OUT of x0 before overwriting x0
+                            // with the key, or the map is lost. Nothing is
+                            // staged above `live` across this second call:
+                            // both its arguments are produced after the first
+                            // call returns.
+                            instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                                BEAMOperand::x(0), BEAMOperand::x(1),
+                            ]));
+                            instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                                BEAMOperand::a(atom_size), BEAMOperand::x(0),
+                            ]));
+                            instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                                BEAMOperand::u(2),
+                                BEAMOperand::u(import_maps_get as u64),
+                            ]));
+                        }
+                        ArraySubstrate::Ets => {
+                            // An ets table has no extent, so we do NOT ask it
+                            // for one: `ets:info(Tab, size)` counts INSERTED
+                            // ENTRIES and would report 3 for a ten-element
+                            // array with three cells written (confirmed on
+                            // real `erl`). The length was recorded under the
+                            // reserved atom key by `alloc_array`; read that.
+                            //
+                            // Same `ets:lookup_element/3` shape `array_get`
+                            // uses -- position 2 of the {Key, Val} tuple --
+                            // with an atom key in place of an integer index.
+                            instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                                BEAMOperand::a(atom_array_len_key), BEAMOperand::x(1),
+                            ]));
+                            instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                                BEAMOperand::i(2), BEAMOperand::x(2),
+                            ]));
+                            instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                                BEAMOperand::u(3),
+                                BEAMOperand::u(import_ets_lookup_element as u64),
+                            ]));
+                        }
+                    }
+
+                    if rd != 0 {
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(0), BEAMOperand::x(rd),
+                        ]));
+                    }
+                    restore_live_across_imported_call!(cur_idx);
+                }
+
                 // ── alloc_bytes / alloc_array → atomics:new(N, []) ──────────
                 //
                 // Both allocate a fixed-size mutable integer array; the only
@@ -3783,7 +4122,10 @@ pub fn lower_iir_to_beam(
                 // `"array<str>"` (BEAM04/BEAM06): that path allocates an
                 // `:ets` table instead (see the module-setup comment above)
                 // — `ets:new/2` takes no size argument, so the length source
-                // `N` is validated for shape but otherwise unused.
+                // `N` is not passed to `ets:new/2` -- but it is NOT discarded
+                // either. BEAM10 records it in the table under a reserved atom
+                // key, because an ets table has no extent of its own and this
+                // is the only point at which the declared length is still known.
                 "alloc_bytes" | "alloc_array" => {
                     let rd = match &instr.dest {
                         Some(name) => var_reg!(name),
@@ -3797,8 +4139,39 @@ pub fn lower_iir_to_beam(
                     {
                         // BEAM04/BEAM06: ets-backed float/string array — see
                         // the `:ets` module-setup comment above.
-                        let _ = get_src!(instr, 0); // shape check only; size is unused
+                        //
+                        // BEAM10: the length operand used to be discarded here
+                        // (`let _ = get_src!(...)`, "size is unused"), because
+                        // `ets:new/2` takes no size. It is no longer unused: an
+                        // ets table has no extent of its own, so this is the
+                        // only moment at which the declared length is still
+                        // known, and `array_len` has nowhere else to read it
+                        // from. We stash it under the reserved atom key.
+                        let r_len = operand_reg!(get_src!(instr, 0));
                         let cur_idx = instr_idx - 1;
+
+                        // Stage the length ABOVE `live` before any call: the
+                        // `ets:new/2` below clobbers every x-register, so the
+                        // caller's register holding N would not survive it.
+                        // `move` never triggers GC, so the staged copy cannot
+                        // be collected out from under us either.
+                        let top = meta.next_reg.checked_add(2).filter(|t| *t < 255);
+                        if top.is_none() {
+                            return Err(IIRBeamError::UnsupportedOp {
+                                function: fn_name.clone(),
+                                op: format!(
+                                    "alloc_array (f64/str via ets): needs 2 scratch \
+                                     registers but only {} remain below x255",
+                                    255u16 - meta.next_reg as u16
+                                ),
+                            });
+                        }
+                        let s_len = meta.next_reg;
+                        let s_tab = meta.next_reg + 1;
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(r_len), BEAMOperand::x(s_len),
+                        ]));
+
                         save_live_across_imported_call!(cur_idx);
                         instrs.push(BEAMInstruction::new(OP_MOVE, vec![
                             BEAMOperand::a(atom_farray), BEAMOperand::x(0),
@@ -3810,11 +4183,50 @@ pub fn lower_iir_to_beam(
                             BEAMOperand::u(2),
                             BEAMOperand::u(import_ets_new as u64),
                         ]));
-                        if rd != 0 {
-                            instrs.push(BEAMInstruction::new(OP_MOVE, vec![
-                                BEAMOperand::x(0), BEAMOperand::x(rd),
-                            ]));
-                        }
+
+                        // -- BEAM10: ets:insert(Tab, {ReservedKey, N}) -------
+                        //
+                        // Built exactly the way `array_set` builds its
+                        // `{Idx, Val}` tuple, and for the same reason: there is
+                        // no tuple-construction opcode anywhere in this
+                        // backend, so the pair is a 2-element list via
+                        // `put_list` and then `erlang:list_to_tuple/1`.
+                        //
+                        // The table identifier is in x0 and must survive both
+                        // of those calls, so it is staged out first.
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(0), BEAMOperand::x(s_tab),
+                        ]));
+                        // [N | []], then [Key | [N]]  ->  [Key, N]
+                        instrs.push(BEAMInstruction::new(OP_PUT_LIST, vec![
+                            BEAMOperand::x(s_len), BEAMOperand::a(0), BEAMOperand::x(0),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_PUT_LIST, vec![
+                            BEAMOperand::a(atom_array_len_key),
+                            BEAMOperand::x(0),
+                            BEAMOperand::x(0),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                            BEAMOperand::u(1),
+                            BEAMOperand::u(import_list_to_tuple as u64),
+                        ]));
+                        // x0 = {Key, N}; move it to x1 BEFORE writing x0, or
+                        // the tuple is lost.
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(0), BEAMOperand::x(1),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(s_tab), BEAMOperand::x(0),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                            BEAMOperand::u(2),
+                            BEAMOperand::u(import_ets_insert as u64),
+                        ]));
+                        // `ets:insert/2` returns `true`, not the table, so the
+                        // dest takes the staged identifier rather than x0.
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(s_tab), BEAMOperand::x(rd),
+                        ]));
                         restore_live_across_imported_call!(cur_idx);
                         continue;
                     }

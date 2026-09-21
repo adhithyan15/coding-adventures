@@ -4948,3 +4948,233 @@ fn gc_roots_cover_future_locals_before_arithmetic_and_after_local_call() {
         vec![IIRInstr::new("ret", None, vec![v("x")], "i64")]));
     assert_valid_gc_roots(&lower_iir_to_beam(&module, &cfg()).unwrap(), 1);
 }
+
+// ===========================================================================
+// BEAM10 — array_len: which substrate, and how it is asked
+// ===========================================================================
+//
+// `iir-to-beam` keeps `array<i64>` on `:atomics` and `array<f64>`/`array<str>`
+// on `:ets` (BEAM04/BEAM06). Those two answer "how long are you?" completely
+// differently, and only one of them can answer at all, so `array_len` has to
+// dispatch between them.
+//
+// It cannot dispatch the way `array_get`/`array_set` do. Their `type_hint` is
+// the ELEMENT type; `array_len`'s is `"i64"`, the type of the length it
+// produces. Nor can the choice be deferred to runtime: both substrates are
+// references, so `is_reference/1` cannot separate them. The dispatch therefore
+// comes from a per-function map built from each handle's DEFINING
+// instruction — and these tests pin that it lands on the right substrate.
+//
+// The negative halves matter as much as the positive ones. Calling
+// `atomics:info/1` on an ets table raises `badarg` at runtime, and reading an
+// ets table's length with `ets:info/2` would return the number of cells
+// WRITTEN rather than the length declared — a plausible small number instead
+// of an error. Both are asserted against, not just the happy path.
+//
+// See `code/specs/BEAM10-array-length.md`.
+
+/// Does the lowered module actually CALL `Module:Function/Arity`?
+///
+/// Deliberately not a test of `beam.imports`. That table is interned during
+/// module setup for every import this backend knows about, whether or not the
+/// module uses it, so `imports.iter().any(...)` is true for `atomics:info/1`
+/// and `ets:lookup_element/3` in *every* module — an assertion written against
+/// it can neither pass nor fail for the right reason. The question is which
+/// call is EMITTED, so this walks the instruction stream and resolves each
+/// `call_ext`'s import-index operand back to an MFA.
+fn calls_mfa(beam: &ir_to_beam::encoder::BEAMModule, module: &str, func: &str, arity: u32) -> bool {
+    beam.instructions
+        .iter()
+        .filter(|i| i.opcode == 7 /* call_ext */)
+        .filter_map(|i| i.operands.get(1))
+        .filter_map(|op| beam.imports.get(op.value as usize))
+        .any(|imp| {
+            let m = beam.atoms.get(imp.module_atom_index as usize - 1).map(String::as_str);
+            let f = beam.atoms.get(imp.function_atom_index as usize - 1).map(String::as_str);
+            m == Some(module) && f == Some(func) && imp.arity == arity
+        })
+}
+
+/// A module that allocates one array of `elem_ty` and takes its length.
+fn array_len_module(array_ty: &str) -> IIRModule {
+    make_module_single(vec![
+        IIRInstr::new("const", Some("n".into()), vec![Operand::Int(4)], "i64"),
+        IIRInstr::new("alloc_array", Some("arr".into()), vec![Operand::Var("n".into())], array_ty),
+        IIRInstr::new("array_len", Some("len".into()), vec![Operand::Var("arr".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("len".into())], "i64"),
+    ])
+}
+
+#[test]
+fn beam10_array_len_on_i64_asks_atomics_for_its_size() {
+    let beam = lower_iir_to_beam(&array_len_module("array<i64>"), &IIRBeamConfig::default())
+        .expect("lower array<i64> array_len");
+    // `atomics:new/2` is fixed-size, so `atomics:info/1` reports the DECLARED
+    // extent. There is no `atomics:size/1`, and this backend emits no map
+    // opcodes, so the `size` key is projected with `maps:get/2`.
+    assert!(calls_mfa(&beam, "atomics", "info", 1), "must ask atomics:info/1 for the size");
+    assert!(calls_mfa(&beam, "maps", "get", 2), "must project the info map with maps:get/2");
+    // (The atom table is interned at module setup, so its contents prove
+    // nothing about this module in particular — the call assertions above are
+    // what carry the weight.)
+    // An i64 array is NOT on ets, so it must not consult the ets substrate.
+    assert!(
+        !calls_mfa(&beam, "ets", "lookup_element", 3),
+        "an atomics-backed array must not be read through ets"
+    );
+}
+
+#[test]
+fn beam10_array_len_on_f64_reads_the_recorded_length_from_ets() {
+    let beam = lower_iir_to_beam(&array_len_module("array<f64>"), &IIRBeamConfig::default())
+        .expect("lower array<f64> array_len");
+    assert!(
+        calls_mfa(&beam, "ets", "lookup_element", 3),
+        "must read the recorded length back out of the ets table"
+    );
+    // THE POINT OF THE TEST. `array_len`'s type_hint is "i64", so a dispatch
+    // copied from `array_get` would conclude "not f64/str, therefore atomics"
+    // and emit `atomics:info/1` against an ets table identifier — a runtime
+    // `badarg`. Assert that it does not.
+    assert!(
+        !calls_mfa(&beam, "atomics", "info", 1),
+        "must NOT call atomics:info/1 on an ets-backed array"
+    );
+    // And it must never ask ets for its own size: `ets:info(Tab, size)`
+    // returns the number of entries INSERTED, which for a sparsely-written
+    // array is a small, plausible, wrong answer rather than an error.
+    assert!(
+        !calls_mfa(&beam, "ets", "info", 2),
+        "ets:info/2 counts inserted entries, not the declared length"
+    );
+}
+
+#[test]
+fn beam10_array_len_on_str_shares_the_ets_substrate() {
+    let beam = lower_iir_to_beam(&array_len_module("array<str>"), &IIRBeamConfig::default())
+        .expect("lower array<str> array_len");
+    assert!(calls_mfa(&beam, "ets", "lookup_element", 3), "array<str> is ets-backed too");
+    assert!(!calls_mfa(&beam, "atomics", "info", 1), "array<str> is not on atomics");
+}
+
+#[test]
+fn beam10_alloc_array_on_ets_records_the_declared_length() {
+    // Before BEAM10 the `:ets` path discarded its size operand entirely
+    // (`let _ = get_src!(instr, 0); // size is unused`), because `ets:new/2`
+    // takes no size. That was the only moment at which the declared length was
+    // still known, so `array_len` had nothing to read. It is now stored.
+    let beam = lower_iir_to_beam(&array_len_module("array<f64>"), &IIRBeamConfig::default())
+        .expect("lower");
+    assert!(
+        calls_mfa(&beam, "ets", "insert", 2),
+        "alloc_array on ets must insert the length entry"
+    );
+    // The reserved key must be an ATOM. A negative integer key would also
+    // avoid colliding with the 0..N-1 index space, but `BEAMOperand::i` takes
+    // a u64 — this backend cannot encode a negative literal operand at all.
+    // The reserved key must be an ATOM. A negative integer key would also
+    // avoid colliding with the 0..N-1 index space, but `BEAMOperand::i` takes
+    // a u64 — this backend cannot encode a negative literal operand at all.
+    // Assert the insert carries an atom operand naming the reserved key.
+    let key_atom = beam
+        .atoms
+        .iter()
+        .position(|a| a.contains("array_len"))
+        .map(|i| i + 1) // BEAM atom indices are 1-based; `position` is 0-based
+        .expect("the reserved length key must be in the atom table");
+    assert!(
+        beam.instructions.iter().any(|i| {
+            i.operands.iter().any(|o| {
+                format!("{:?}", o.tag) == "A" && o.value as usize == key_atom
+            })
+        }),
+        "the reserved key atom must actually be referenced by an instruction"
+    );
+}
+
+#[test]
+fn beam10_array_len_resolves_a_handle_arriving_as_a_parameter() {
+    // The substrate map is seeded from `IIRFunction::params`, not only from
+    // defining instructions — an array passed into a procedure has no
+    // `alloc_array` in the callee at all.
+    let module = make_module_fn(
+        "takes_array",
+        vec![("arr", "array<f64>")],
+        "i64",
+        vec![
+            IIRInstr::new("array_len", Some("len".into()), vec![Operand::Var("arr".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("len".into())], "i64"),
+        ],
+    );
+    let beam = lower_iir_to_beam(&module, &IIRBeamConfig::default())
+        .expect("a parameter's declared type must resolve its substrate");
+    assert!(calls_mfa(&beam, "ets", "lookup_element", 3), "param typed array<f64> is ets-backed");
+    assert!(!calls_mfa(&beam, "atomics", "info", 1), "and must not be treated as atomics");
+}
+
+#[test]
+fn beam10_array_len_refuses_a_handle_of_unknown_substrate() {
+    // Guessing here does not fail loudly: it emits a call that raises `badarg`
+    // on the other substrate, or returns a plausible wrong number. So an
+    // unresolvable handle must be refused at compile time instead. Tested
+    // positively rather than assumed.
+    let module = make_module_fn(
+        "opaque",
+        vec![("h", "i64")], // NOT an array type — nothing says which substrate
+        "i64",
+        vec![
+            IIRInstr::new("array_len", Some("len".into()), vec![Operand::Var("h".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("len".into())], "i64"),
+        ],
+    );
+    let err = lower_iir_to_beam(&module, &IIRBeamConfig::default())
+        .expect_err("an unresolvable array handle must be refused, not guessed");
+    let msg = format!("{err}");
+    assert!(
+        msg.contains("array_len") && msg.contains("substrate"),
+        "the refusal must name the op and say why; got {msg:?}"
+    );
+    assert!(msg.contains('h'), "the refusal must name the handle; got {msg:?}");
+}
+
+#[test]
+fn beam10_array_len_is_listed_as_a_call_emitting_op() {
+    // THIS is the test that would have caught the bug the others missed.
+    //
+    // `array_len` emits `call_ext` on both substrates, so it must appear in
+    // `lower.rs`'s list of call-emitting ops. Omitting it does not merely skip
+    // saving registers: `restore_live_across_imported_call!` ends in
+    // `sanitize_normal_x_after_call!`, which nils every normal x-register it
+    // cannot prove is live or the result — and with an empty `live_across`
+    // entry it can prove nothing, so it nils them all. Every end-to-end ALGOL
+    // array program died with `{badarith,[{erlang,'-',[1,[]]}]}` until
+    // `array_len` was added to that list.
+    //
+    // A structural assertion that the emitted sequence is wrapped in a
+    // save/restore bracket would NOT have caught it. The bracket was present
+    // and correct; what was empty was the set of variables it had to save. So
+    // this test asserts membership in the list itself, which is the fact the
+    // behaviour actually depends on.
+    //
+    // Fourth occurrence of this class in this backend (VM-D029, VM-D035,
+    // issue #15332, and this one).
+    let src = include_str!("../src/lower.rs");
+    let list_start = src
+        .find("EVERY op that emits a `call_ext` must be listed here")
+        .expect("the call-emitting op list must still carry its warning comment");
+    let list_end = src[list_start..]
+        .find("\n            ) &&")
+        .map(|i| list_start + i)
+        .expect("the call-emitting op list must still end with a match close");
+    let list = &src[list_start..list_end];
+    assert!(
+        list.contains("\"array_len\""),
+        "array_len emits call_ext on both substrates and must be in the call-emitting op list"
+    );
+    // Control: if the slice were empty or mis-delimited the assertion above
+    // would be vacuous, so pin that the slice really does contain the list.
+    assert!(
+        list.contains("\"array_get\"") && list.contains("\"call_closure\""),
+        "the extracted slice must actually be the op list (control)"
+    );
+}
