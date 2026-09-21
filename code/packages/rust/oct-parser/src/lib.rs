@@ -20,6 +20,7 @@
 
 use coding_adventures_oct_lexer::tokenize_oct;
 use parser::grammar_parser::{GrammarASTNode, GrammarParseError, GrammarParser};
+use lexer::token::Token;
 
 mod _grammar;
 
@@ -71,6 +72,32 @@ pub fn create_oct_parser(source: &str) -> GrammarParser {
     let tokens = tokenize_oct(source);
     let grammar = _grammar::parser_grammar();
     GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH)
+}
+
+/// Create a `GrammarParser` over tokens that have *already* been produced,
+/// with the same grammar and the same [`MAX_RULE_DEPTH`] guard that
+/// [`create_oct_parser`] uses.
+///
+/// # Why this exists
+///
+/// A preprocessor dialect of Oct (MacroOct, PREP01) lexes with its own
+/// `.tokens` grammar — it has to, because its directives (`@if`, `@include`)
+/// are tokens Oct's own lexer would reject. It then runs the preprocessor,
+/// which *consumes* those directive tokens. What comes out the other side is
+/// a pure Oct token stream, and it should be parsed by Oct's grammar, not by
+/// a copy of it.
+///
+/// Without this entry point the only public way in is [`create_oct_parser`],
+/// which takes a `&str` and re-lexes — so a dialect would have to embed a
+/// second compiled copy of `oct.grammar` and restate `MAX_RULE_DEPTH`. Both
+/// would then drift silently: a retuned depth constant in particular would
+/// diverge with nothing to catch it.
+///
+/// This adds no Oct syntax, semantics or behaviour. It exposes the parser Oct
+/// already builds, over tokens the caller already has, so that "MacroOct
+/// reuses Oct's parser unchanged" is literally true rather than aspirational.
+pub fn create_oct_parser_from_tokens(tokens: Vec<Token>) -> GrammarParser {
+    GrammarParser::new(tokens, _grammar::parser_grammar()).with_max_depth(MAX_RULE_DEPTH)
 }
 
 /// Parse an Oct source string into a grammar AST rooted at `program`.

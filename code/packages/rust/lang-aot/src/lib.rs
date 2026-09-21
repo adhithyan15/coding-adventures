@@ -27,6 +27,7 @@
 //! | Brainfuck | `brainfuck-iir-compiler` |
 //! | Dartmouth BASIC | `dartmouth-basic-iir-compiler` |
 //! | Oct | `oct-iir-compiler` |
+//! | MacroOct | `macrooct-iir-compiler` |
 //! | McCarthy Lisp | `mccarthy-lisp-iir-compiler` |
 //! | ALGOL 60 | `algol-iir-compiler` |
 //! | FLOW-MATIC | `flow-matic-iir-compiler` |
@@ -76,6 +77,22 @@ pub enum Language {
     /// Oct — integer subset (let/if/while/calls) via the `oct-iir-compiler`
     /// Rust frontend over the shared IIR; `main` is void (exits 0).
     Oct,
+    /// MacroOct — **Oct, plus a preprocessor, and nothing else** (PREP01
+    /// slice 1).  `@include` / `@if` / `@else` / `@end` are consumed by the
+    /// generic `source-preprocessor` engine before parsing; what reaches Oct's
+    /// own parser grammar, type checker and `compile_ast` is a pure Oct token
+    /// stream, all three unchanged.
+    ///
+    /// The reason this is a separate `Language` rather than a flag on `Oct`:
+    /// PREP01 holds Oct fixed as the *reference* MacroOct is checked against.
+    /// A MacroOct program must lower to IIR **identical** to its hand-expanded
+    /// Oct equivalent (`macrooct-iir-compiler/tests/iir_identity.rs`), which is
+    /// a claim you cannot make about a language you are also editing.
+    ///
+    /// No backend learns anything about preprocessing — a preprocessor runs
+    /// before the parser, so by the time IIR exists there is nothing left of
+    /// it to know.
+    MacroOct,
     /// McCarthy Lisp — the 1960 Lisp 1.0, compiled via
     /// `mccarthy-lisp-iir-compiler` over the `lispy-runtime` value model.
     McCarthyLisp,
@@ -107,6 +124,7 @@ impl fmt::Display for Language {
             Language::Brainfuck => write!(f, "brainfuck"),
             Language::DartmouthBasic => write!(f, "dartmouth-basic"),
             Language::Oct => write!(f, "oct"),
+            Language::MacroOct => write!(f, "macrooct"),
             Language::McCarthyLisp => write!(f, "mccarthy-lisp"),
             Language::Algol60 => write!(f, "algol60"),
             Language::FlowMatic => write!(f, "flow-matic"),
@@ -125,6 +143,10 @@ impl Language {
             "brainfuck" | "bf" => Ok(Self::Brainfuck),
             "dartmouth-basic" | "basic" | "bas" => Ok(Self::DartmouthBasic),
             "oct" => Ok(Self::Oct),
+            // No `macro-oct` alias, and no `moct`. MacroOct's whole reason to
+            // exist is that it is distinguishable from Oct at every layer;
+            // spelling variants would put a way to confuse the two back in.
+            "macrooct" => Ok(Self::MacroOct),
             "mccarthy-lisp" | "mccarthy" | "mcl" | "lisp" => Ok(Self::McCarthyLisp),
             "algol" | "algol60" | "algol-60" | "a60" => Ok(Self::Algol60),
             "flow-matic" | "flowmatic" | "flow" | "fm" | "b0" => Ok(Self::FlowMatic),
@@ -132,7 +154,7 @@ impl Language {
             "macsyma" | "mac" => Ok(Self::Macsyma),
             other => Err(format!(
                 "unknown language {other:?}; expected one of: twig, nib, \
-                 brainfuck (or bf), dartmouth-basic (or basic / bas), oct, \
+                 brainfuck (or bf), dartmouth-basic (or basic / bas), oct, macrooct, \
                  mccarthy-lisp (or mccarthy / mcl / lisp), algol60 \
                  (or algol / algol-60 / a60), flow-matic (or fm / b0), \
                  cobol60 (or cobol / cobol-60 / cob), macsyma (or mac)")),
@@ -151,6 +173,7 @@ pub fn detect_language_from_path(path: &Path) -> Option<Language> {
         "bf" | "b" => Some(Language::Brainfuck),
         "bas" | "basic" => Some(Language::DartmouthBasic),
         "oct" => Some(Language::Oct),
+        "macrooct" => Some(Language::MacroOct),
         "mcl" | "lisp" => Some(Language::McCarthyLisp),
         "algol" | "alg" | "a60" => Some(Language::Algol60),
         "flowmatic" | "fm" | "b0" => Some(Language::FlowMatic),
@@ -420,6 +443,20 @@ pub fn compile_source_to_iir(
         }
         Language::Oct => {
             oct_iir_compiler::compile_source(source, module_name)
+                .map_err(|e| LangAotError::FrontendError {
+                    language,
+                    message: format!("{e}"),
+                })
+        }
+        // Identical in shape to the `Oct` arm above, and that is the claim
+        // PREP01 slice 1 set out to test: adding a preprocessor to a language
+        // costs one frontend crate and one match arm. No lowering pass, no
+        // backend change, and nothing downstream of here can tell the two
+        // apart — `macrooct-iir-compiler` hands Oct's own `compile_ast` a pure
+        // Oct token stream, so the module it returns is one Oct could have
+        // produced from the hand-expanded source.
+        Language::MacroOct => {
+            coding_adventures_macrooct_iir_compiler::compile_source(source, module_name)
                 .map_err(|e| LangAotError::FrontendError {
                     language,
                     message: format!("{e}"),
@@ -3137,6 +3174,65 @@ mod tests {
         assert!(!iir.functions.is_empty(),
                 "Oct module must have at least main");
         assert_eq!(iir.functions[0].name, "main");
+    }
+
+    /// PREP01 slice 1 — MacroOct dispatches through the preprocessor and
+    /// arrives at Oct's own lowering.
+    #[test]
+    fn macrooct_compiles_to_iir() {
+        let iir = compile_source_to_iir(
+            Language::MacroOct,
+            "@if 1\nfn main() { out(1, 42); }\n@else\nfn main() { out(1, 7); }\n@end\n",
+            "macrooct",
+        ).expect("macrooct should compile");
+        assert_eq!(iir.functions.len(), 1,
+                   "only the taken branch's `main` should survive");
+        assert_eq!(iir.functions[0].name, "main");
+        // `compile_ast` is Oct's, so the module identifies as Oct -- which is
+        // true: after preprocessing, the program being lowered IS Oct. The
+        // identity oracle in `tests/lang_matrix.rs` depends on this.
+        assert_eq!(iir.language, "oct");
+    }
+
+    /// Every Oct program is also a MacroOct program, and compiles identically.
+    /// A directive-free source must pass through the preprocessor untouched.
+    #[test]
+    fn macrooct_accepts_plain_oct_unchanged() {
+        let src = "fn main() { out(1, 200 + 100); }";
+        let a = compile_source_to_iir(Language::MacroOct, src, "m").expect("macrooct");
+        let b = compile_source_to_iir(Language::Oct, src, "m").expect("oct");
+        assert_eq!(format!("{a:#?}"), format!("{b:#?}"));
+    }
+
+    /// A preprocessor failure is a `FrontendError`, like every other frontend
+    /// refusal — `@define` is recognised and then refused, because slice 1 has
+    /// no macro table. Silently ignoring it would be far more confusing.
+    #[test]
+    fn macrooct_define_is_refused_until_slice_two() {
+        let err = compile_source_to_iir(
+            Language::MacroOct, "@define LED 1\nfn main() { }\n", "macrooct"
+        ).unwrap_err();
+        match err {
+            LangAotError::FrontendError { language, message } => {
+                assert_eq!(language, Language::MacroOct);
+                assert!(message.contains("slice 2"), "{message}");
+            }
+            other => panic!("expected a FrontendError, got {other:?}"),
+        }
+    }
+
+    /// MacroOct and Oct are distinguishable at every layer — which is the
+    /// point of making it a separate `Language` rather than a flag on `Oct`.
+    #[test]
+    fn macrooct_is_its_own_language_at_every_entry_point() {
+        let p = |s: &str| std::path::PathBuf::from(s);
+        assert_eq!(Language::parse("macrooct").unwrap(), Language::MacroOct);
+        assert_eq!(Language::MacroOct.to_string(), "macrooct");
+        assert_eq!(detect_language_from_path(&p("foo.macrooct")), Some(Language::MacroOct));
+        // And `.oct` still means Oct. A dialect that quietly captured its
+        // parent's extension would be a very quiet way to modify Oct.
+        assert_eq!(detect_language_from_path(&p("foo.oct")), Some(Language::Oct));
+        assert_ne!(Language::MacroOct, Language::Oct);
     }
 
     /// 8008 intrinsics still produce a clean error (Unsupported8008Intrinsic

@@ -1276,6 +1276,142 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
+    // ───────────────────────────────────────────────────────────────────────
+    // MacroOct — Oct, plus a preprocessor, and nothing else (PREP01 slice 1).
+    // ───────────────────────────────────────────────────────────────────────
+    //
+    // These rows are unlike every other block in this file, and the difference
+    // is the point. Each one is **not** proving a new language feature: it is
+    // proving that a preprocessed program is the SAME program. A preprocessor
+    // runs before the parser, so by the time IIR exists there is nothing left
+    // of it to know — no backend learned anything, no lowering pass changed,
+    // and `macrooct-iir-compiler` hands Oct's own untouched `compile_ast` a
+    // pure Oct token stream.
+    //
+    // That claim is checked directly rather than inferred from the output:
+    // `macrooct_rows_lower_to_iir_identical_to_hand_expanded_oct` pairs every
+    // row below with the Oct source a human would write to mean the same
+    // thing, compiles both, and asserts the two IIR modules match. The eight
+    // backend cells then answer the *other* question — that the selected
+    // program really runs everywhere — and together they are much stronger
+    // than either alone.
+    //
+    // Note the physical newlines (`\n`) instead of this file's usual trailing
+    // backslash continuations. That is required, not stylistic: a backslash
+    // continuation in a Rust string literal strips the newline, which would
+    // put the whole program on one source line — and the preprocessor is
+    // line-oriented, so every directive would swallow the code after it.
+    //
+    // No `@include` row. `compile_source_to_iir` takes a source *string*,
+    // which has no directory for a relative include to resolve against, so
+    // includes are unreachable through this harness by construction. They are
+    // covered where the filesystem is: `source-preprocessor`'s own engine and
+    // `RootedFs` tests, and `macrooct-iir-compiler`'s `iir_identity.rs`, which
+    // runs five include shapes through the same identical-IIR oracle.
+
+    // MacroOct — `@if`/`@else`/`@end`, TAKEN branch. Prints 42; the untaken
+    // branch prints 7, so a preprocessor that emitted both (or the wrong one)
+    // is immediately visible in stdout rather than needing IIR inspection.
+    Prog {
+        lang: Language::MacroOct,
+        ext: "macrooct",
+        src: "@if 1\nfn main() { out(1, 42); }\n@else\nfn main() { out(1, 7); }\n@end\n",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+    // MacroOct — the same program with the condition flipped, so the `@else`
+    // branch is the one that survives. The pair matters: a preprocessor that
+    // always kept the first branch would pass the row above and fail here.
+    Prog {
+        lang: Language::MacroOct,
+        ext: "macrooct",
+        src: "@if 0\nfn main() { out(1, 42); }\n@else\nfn main() { out(1, 7); }\n@end\n",
+        expect: Expect::Stdout("7"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+    // MacroOct — a real comparison in the controlling expression, the shape
+    // PREP01's own worked example uses (`@if LED_PORT == 1`). The dialect's
+    // evaluator has to agree with Oct's own precedence here or a program
+    // selects the branch its author read as the other one.
+    Prog {
+        lang: Language::MacroOct,
+        ext: "macrooct",
+        src: "@if 1 == 1\nfn main() { out(1, 200); }\n@else\nfn main() { out(0, 200); }\n@end\n",
+        expect: Expect::Stdout("200"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+    // MacroOct — `&&` and `!=` in one condition. Proves the conditional
+    // evaluator's precedence layering end to end: `1 == 1 && 2 != 3` must
+    // group as `(1 == 1) && (2 != 3)`, not `1 == (1 && 2) != 3`.
+    Prog {
+        lang: Language::MacroOct,
+        ext: "macrooct",
+        src: "@if 1 == 1 && 2 != 3\nfn main() { out(1, 42); }\n@else\nfn main() { out(1, 7); }\n@end\n",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+    // MacroOct — an undefined name is 0, which is slice 1's ONLY possible
+    // answer: with no macro table, "undefined" is the only state a name can be
+    // in. Printing 42 (the `LED_PORT == 0` branch) is the observable proof;
+    // slice 2 replaces the rule with a real lookup and this row becomes a
+    // regression test for it.
+    Prog {
+        lang: Language::MacroOct,
+        ext: "macrooct",
+        src: "@if LED_PORT == 0\nfn main() { out(1, 42); }\n@else\nfn main() { out(1, 7); }\n@end\n",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+    // MacroOct — NESTED conditionals: the inner `@else` inside a taken outer
+    // group. The engine tracks nesting on an explicit stack, and a group
+    // inside a skipped group is never even evaluated — so a nesting bug would
+    // most likely surface as the wrong branch here rather than as a crash.
+    Prog {
+        lang: Language::MacroOct,
+        ext: "macrooct",
+        src: "@if 1\n@if 0\nfn main() { out(1, 7); }\n@else\nfn main() { out(1, 42); }\n@end\n@end\n",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+    // MacroOct — a group with no `@else`, dropping a whole FUNCTION. If the
+    // skipped `fn unused` survived, Oct would still compile it and `main`
+    // would still print 42 — so this row is paired with the IIR-identity
+    // oracle, where a leaked function shows up as an extra `IIRFunction` even
+    // though stdout looks right. A row whose stdout cannot distinguish the bug
+    // is exactly why the identity test exists.
+    Prog {
+        lang: Language::MacroOct,
+        ext: "macrooct",
+        src: "@if 0\nfn unused() -> u8 { return 7; }\n@end\nfn main() { out(1, 42); }\n",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+    // MacroOct — directives wrapped around Oct's u8 WRAP (`200 + 100` = 44,
+    // LANG-FULL O2). Deliberately a semantic behaviour the preprocessor knows
+    // nothing about: if preprocessing perturbed the token stream at all — a
+    // dropped token, a shifted type hint — the wrap is where it would show,
+    // because an unmasked add prints 300 rather than 44.
+    Prog {
+        lang: Language::MacroOct,
+        ext: "macrooct",
+        src: "@if 1\nfn main() { out(1, 200 + 100); }\n@end\n",
+        expect: Expect::Stdout("44"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+    // MacroOct — a multi-function program selected as a unit, with a `static`
+    // module global, a call across functions, and a `while` loop inside the
+    // taken branch. The longest MacroOct row, and the one that proves a
+    // conditional can wrap real structure rather than a one-liner: 250 + 10×3
+    // wraps to 24.
+    Prog {
+        lang: Language::MacroOct,
+        ext: "macrooct",
+        src: "static counter: u8 = 250;\n@if 1\nfn bump() { counter = counter + 10; }\n@end\n\
+fn main() { let i: u8 = 0; while i < 3 { bump(); i = i + 1; } out(1, counter); }\n",
+        expect: Expect::Stdout("24"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+
     // ALGOL 60 — a begin/end block with real integer arithmetic (`17 mod 5` = 2).
     Prog {
         lang: Language::Algol60,
@@ -9775,6 +9911,11 @@ fn feature_coverage_doc_counts_match_programs_source() {
         (Language::Brainfuck, 6, 48),
         (Language::DartmouthBasic, 51, 408),
         (Language::Oct, 12, 96),
+        // MacroOct (PREP01 slice 1). Oct's own tuple above is deliberately
+        // unchanged: PREP01 holds Oct fixed as the reference MacroOct is
+        // checked against, so a slice that moved it would have invalidated its
+        // own oracle.
+        (Language::MacroOct, 9, 72),
         (Language::FlowMatic, 8, 64),
         (Language::Cobol60, 59, 472),
     ];
@@ -9803,6 +9944,194 @@ fn feature_coverage_doc_counts_match_programs_source() {
              LANG-VM-FEATURE-COVERAGE.md"
         );
     }
+}
+
+/// Every MacroOct row above, paired with the Oct source a human would write to
+/// mean the same thing.
+///
+/// Hand-expanded by a reader, never generated by the preprocessor. If the
+/// right-hand side were produced by the code under test, the oracle below
+/// would be comparing the implementation against itself and could not fail.
+const MACROOCT_EXPANSIONS: &[(&str, &str)] = &[
+    (
+        "@if 1\nfn main() { out(1, 42); }\n@else\nfn main() { out(1, 7); }\n@end\n",
+        "fn main() { out(1, 42); }\n",
+    ),
+    (
+        "@if 0\nfn main() { out(1, 42); }\n@else\nfn main() { out(1, 7); }\n@end\n",
+        "fn main() { out(1, 7); }\n",
+    ),
+    (
+        "@if 1 == 1\nfn main() { out(1, 200); }\n@else\nfn main() { out(0, 200); }\n@end\n",
+        "fn main() { out(1, 200); }\n",
+    ),
+    (
+        "@if 1 == 1 && 2 != 3\nfn main() { out(1, 42); }\n@else\nfn main() { out(1, 7); }\n@end\n",
+        "fn main() { out(1, 42); }\n",
+    ),
+    (
+        "@if LED_PORT == 0\nfn main() { out(1, 42); }\n@else\nfn main() { out(1, 7); }\n@end\n",
+        "fn main() { out(1, 42); }\n",
+    ),
+    (
+        "@if 1\n@if 0\nfn main() { out(1, 7); }\n@else\nfn main() { out(1, 42); }\n@end\n@end\n",
+        "fn main() { out(1, 42); }\n",
+    ),
+    (
+        "@if 0\nfn unused() -> u8 { return 7; }\n@end\nfn main() { out(1, 42); }\n",
+        "fn main() { out(1, 42); }\n",
+    ),
+    (
+        "@if 1\nfn main() { out(1, 200 + 100); }\n@end\n",
+        "fn main() { out(1, 200 + 100); }\n",
+    ),
+    (
+        "static counter: u8 = 250;\n@if 1\nfn bump() { counter = counter + 10; }\n@end\n\
+fn main() { let i: u8 = 0; while i < 3 { bump(); i = i + 1; } out(1, counter); }\n",
+        "static counter: u8 = 250;\nfn bump() { counter = counter + 10; }\n\
+fn main() { let i: u8 = 0; while i < 3 { bump(); i = i + 1; } out(1, counter); }\n",
+    ),
+];
+
+/// **PREP01 slice 1's acceptance criterion, stated over this corpus.**
+///
+/// A preprocessor is backend-agnostic by construction: it rewrites a token
+/// stream and gets out of the way. So a MacroOct program must lower to **the
+/// same IIR** as its hand-expanded equivalent — and because MacroOct is a
+/// dialect of Oct, that equivalent is a *valid Oct program*, compiled by Oct's
+/// own untouched frontend through the `Language::Oct` arm of the very same
+/// dispatch function.
+///
+/// This is strictly stronger than the eight backend cells those rows declare.
+/// The cells prove the selected program behaves; this proves the preprocessor
+/// contributed *nothing beyond selecting text*, from which every backend
+/// result follows for free. Some bugs are only visible here: the
+/// dropped-`fn unused` row prints `42` whether or not the skipped function
+/// leaked into the module, so stdout cannot distinguish the failure and an
+/// extra `IIRFunction` is the only evidence there is.
+///
+/// ## What is compared, and what is excluded
+///
+/// Everything, via `{:#?}`, except `IIRFunction::source_map`. `IIRModule` does
+/// not derive `PartialEq`, and a hand-written field-by-field comparison would
+/// silently stop covering any field added later — the exact failure this
+/// oracle exists to catch — whereas `Debug` picks up a new field the day it is
+/// added.
+///
+/// `source_map` is per-instruction *provenance*: the line and column each
+/// instruction came from. The two programs are different text — the MacroOct
+/// one has extra lines, because `@if`, `@else` and `@end` occupy lines of
+/// their own — so their instructions genuinely do come from different lines,
+/// and demanding equality there would be demanding that a preprocessor not
+/// preprocess. That exclusion is not a loophole left open: it is measured in
+/// `macrooct-iir-compiler/tests/iir_identity.rs`, which aligns two sources'
+/// line numbers by padding and then compares the full `{:#?}` *including*
+/// provenance. The lockstep length invariant is still asserted below, so
+/// "excluded from the comparison" never means "unchecked".
+#[test]
+fn macrooct_rows_lower_to_iir_identical_to_hand_expanded_oct() {
+    fn without_provenance(module: &interpreter_ir::IIRModule) -> String {
+        let mut module = module.clone();
+        for f in &mut module.functions {
+            f.source_map.clear();
+        }
+        format!("{module:#?}")
+    }
+
+    let rows: Vec<&Prog> =
+        PROGRAMS.iter().filter(|p| p.lang == Language::MacroOct).collect();
+    assert!(!rows.is_empty(), "the MacroOct rows disappeared from PROGRAMS");
+    assert_eq!(
+        rows.len(),
+        MACROOCT_EXPANSIONS.len(),
+        "every MacroOct row needs a hand-expanded Oct twin in MACROOCT_EXPANSIONS — \
+         a row without one would be running on eight backends while proving nothing \
+         about whether it is still the same program"
+    );
+
+    for row in rows {
+        let (_, oct_src) = MACROOCT_EXPANSIONS
+            .iter()
+            .find(|(macrooct_src, _)| *macrooct_src == row.src)
+            .unwrap_or_else(|| {
+                panic!(
+                    "no hand-expanded Oct twin for this MacroOct row; add one to \
+                     MACROOCT_EXPANSIONS:\n{:?}",
+                    row.src
+                )
+            });
+
+        let from_macrooct =
+            lang_aot::compile_source_to_iir(Language::MacroOct, row.src, "identity")
+                .unwrap_or_else(|e| panic!("MacroOct failed to compile: {e:?}\n{:?}", row.src));
+        let from_oct = lang_aot::compile_source_to_iir(Language::Oct, oct_src, "identity")
+            .unwrap_or_else(|e| {
+                panic!("the hand-expanded Oct twin failed to compile: {e:?}\n{oct_src:?}")
+            });
+
+        assert_eq!(
+            without_provenance(&from_macrooct),
+            without_provenance(&from_oct),
+            "PREP01 slice 1's acceptance criterion failed.\n\
+             This MacroOct program did NOT lower to the same IIR as its hand-expanded \
+             Oct equivalent, which means the preprocessor contributed something beyond \
+             selecting source text.\n  MacroOct: {:?}\n  Oct:      {oct_src:?}",
+            row.src
+        );
+
+        // The lockstep invariant `IIRFunction::source_map` documents — one
+        // entry per instruction — checked even though provenance is excluded
+        // from the comparison above.
+        for (m, o) in from_macrooct.functions.iter().zip(from_oct.functions.iter()) {
+            assert_eq!(
+                m.source_map.len(),
+                m.instructions.len(),
+                "MacroOct's `{}` broke the source_map/instructions lockstep",
+                m.name
+            );
+            assert_eq!(
+                m.source_map.len(),
+                o.source_map.len(),
+                "`{}` has a different number of source positions than Oct's",
+                m.name
+            );
+        }
+    }
+}
+
+/// A MacroOct program with no directives at all must be the same compilation
+/// as the identical Oct program — provenance included, because with no
+/// directives there is no line shift to excuse.
+///
+/// The degenerate case, and the one that catches the crudest regression there
+/// is: a preprocessor that mangles a stream it should have passed through
+/// untouched. It reuses the existing Oct corpus as its input rather than
+/// inventing programs, so it grows automatically as Oct's rows do.
+#[test]
+fn macrooct_compiles_every_oct_corpus_row_byte_identically() {
+    let mut checked = 0usize;
+    for program in PROGRAMS.iter().filter(|p| p.lang == Language::Oct) {
+        let as_macrooct =
+            lang_aot::compile_source_to_iir(Language::MacroOct, program.src, "identity")
+                .unwrap_or_else(|e| {
+                    panic!(
+                        "every Oct program is also a MacroOct program, but this one \
+                         failed: {e:?}\n{:?}",
+                        program.src
+                    )
+                });
+        let as_oct = lang_aot::compile_source_to_iir(Language::Oct, program.src, "identity")
+            .expect("the Oct corpus compiles as Oct");
+        assert_eq!(
+            format!("{as_macrooct:#?}"),
+            format!("{as_oct:#?}"),
+            "MacroOct perturbed a directive-free program. Source:\n{:?}",
+            program.src
+        );
+        checked += 1;
+    }
+    assert!(checked >= 12, "the Oct corpus shrank unexpectedly ({checked} rows)");
+    eprintln!("MacroOct: {checked} directive-free Oct programs compiled byte-identically");
 }
 
 #[test]

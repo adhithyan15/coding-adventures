@@ -249,19 +249,46 @@ file and misattribute a token's provenance throughout the source map.
 That is a deliberate split — it keeps path policy in one auditable place — but
 it means the guarantee is only as good as `RootedFs`, which must:
 
-- **Verify containment on the opened handle, not on the path.** Canonicalise-
-  then-open is TOCTOU by construction: a symlink swapped into a directory
-  component between the check and the open wins. Open with symlink-following
-  disabled (`O_NOFOLLOW` / `FILE_FLAG_OPEN_REPARSE_POINT`), or open
-  directory-relative and verify the opened file's identity (device+inode /
-  `FILE_ID_INFO`) lies under the root.
-- **Reject, each with a located diagnostic:** absolute paths (`/etc/passwd`,
-  `C:\…`); any symlink or reparse-point component; and — this repo is
-  Windows-primary — UNC paths (`\\host\share\x.h`, which triggers an outbound
+- **Resolve, open and verify in one step, and never re-open by path.**
+  `resolve` canonicalises (which follows symlinks and reparse points), checks
+  the *result* against the roots, opens the file once, and verifies size and
+  file-kind against the **open handle**. `read` reads that handle. Slice 1
+  implements this; an earlier version stored only a `PathBuf` and had `read`
+  call `std::fs::read`, which a security review broke without needing a race
+  at all.
+
+  *Amended after implementation, because the original wording claimed more than
+  is delivered.* This spec previously required `O_NOFOLLOW` /
+  `FILE_FLAG_OPEN_REPARSE_POINT` or a device+inode identity check. Slice 1 uses
+  canonicalise-then-contain plus a retained handle instead, which closes the
+  path-swap window (a symlink planted at the canonical path, or the name
+  rebound to a different file, cannot affect a handle we already hold).
+
+  It does **not** close the *rewrite* window: `std::fs::write` truncates and
+  rewrites the same file object, which an open handle sees. That was measured,
+  not assumed — 5 MB went through a 64-byte bound with the handle retained. So
+  the per-file size bound is enforced **on the read itself** (`take(limit + 1)`)
+  rather than only on the pre-read metadata, which holds regardless of what
+  happened to the file in between. Handle-identity verification remains
+  worthwhile future work; it is recorded here rather than claimed.
+- **Reject, each with a diagnostic:** absolute *and root-anchored* paths
+  (`/etc/passwd`, `C:\…` — note `Path::is_absolute()` is false on Windows for
+  a root-relative path, so `has_root()` must be checked too); and — this repo
+  is Windows-primary — UNC paths (`\\host\share\x.h`, which triggers an outbound
   SMB authentication and leaks an NTLM hash, a credential-disclosure primitive
   from nothing but a source file), NTFS alternate data streams (`x.h::$DATA`),
-  reserved device names (`CON`, `NUL`, `COM1`…), 8.3 short names, and directory
-  junctions.
+  reserved device names (`CON`, `NUL`, `COM1`… including the trailing-space
+  and trailing-dot spellings Win32 normalisation strips), and embedded NUL
+  bytes.
+
+  *Amended after implementation.* This bullet previously also required
+  rejecting symlink/reparse-point components, 8.3 short names and directory
+  junctions outright. Slice 1 does not: it canonicalises through them and
+  relies on the containment check on the result, which is equivalent for
+  escape purposes and simpler to get right. The residual difference is the
+  narrow window between canonicalising and opening, recorded above. Component
+  rejection remains worthwhile defence-in-depth; it is future work rather than
+  a claim.
 - **Read only regular files.** A FIFO or character device is the most durable
   DoS available: `#include "/dev/stdin"` or an included FIFO blocks forever and
   no §6 bound fires, because the engine is stuck inside `read`. `/dev/zero`
@@ -308,7 +335,7 @@ grow the token count, and fan-out that is never a cycle.
 | **Controlling-expression nesting depth** | 200 | The same, inside `#if`. |
 | Conditional nesting depth | 200 | Pathological `#if` nesting. |
 | **Total expansion steps ("fuel")** | 2³⁰ | The catch-all. One monotonically decreasing budget decremented by every token copied, hide-set union, rescan and file read, checked in the engine's main loop. This is the most valuable row in the table, because preprocessor DoS historically arrives through whichever dimension nobody enumerated — and no list, including this one, is complete. |
-| **Maximum diagnostic count / quoted-text length** | 100 / 1 KiB | A stringized megabyte-long token renders a megabyte-long message, and a cascade emits one per token. Truncating *diagnostic text* is distinct from the no-silent-truncation rule on token streams below. |
+| **Quoted-text length in a diagnostic** | 1 KiB | A stringized megabyte-long token would otherwise render a megabyte-long message. Quoted text is also **escaped**, because an include spelling can carry terminal control sequences straight into a shared builder's CI log. Truncating *diagnostic text* is distinct from the no-silent-truncation rule on token streams below. (An earlier draft also specified a maximum diagnostic *count*. Slice 1 returns on the first error rather than recovering, so at most one diagnostic exists per run and the bound could never fire; it was removed rather than left as dead configuration, and must return if a later slice introduces error recovery.) |
 
 Three further requirements, normative because they constrain the engine's core
 loop rather than adding a check to it:
@@ -456,10 +483,22 @@ to the corresponding unmodified Oct programs and agree with them on all eight
 backends; `macrooct.tokens` is proven to agree with `oct.tokens` on every
 non-directive rule; each §6 bound has a test proving it yields a located
 diagnostic; `RootedFs` has a test per rejected path form in §5, including the
-Windows set; and **the engine is fuzzed against arbitrary byte input with a
-no-panic / no-hang oracle**. The fuzz target is the highest-value item in this
-slice, because it covers the dimensions §6 did not manage to enumerate.
-`LANG-VM-FEATURE-COVERAGE.md` gains an MacroOct row, which the pinned
+Windows set; and **the engine passes a no-panic / no-hang oracle over
+randomised input**, covering the dimensions §6 did not manage to enumerate.
+
+*Corrected after implementation, so this criterion describes what was actually
+delivered.* An earlier draft said "fuzzed". What slice 1 ships is a
+**deterministic randomised sweep** — 2,000 fixed seeds over a directive-dense
+alphabet asserting the engine always returns and never panics, plus direct
+tests that 5,000 nested conditionals and a 500-deep include chain terminate as
+located diagnostics rather than aborts. That runs as an ordinary CI gate and is
+genuinely useful, but it is **not** coverage-guided fuzzing: a
+`cargo-fuzz`/libFuzzer target needs a nightly toolchain this repo's CI does not
+use, so it could not have been a merge gate. It covers shallow malformed input
+well and deep structured input poorly. A coverage-guided target is recorded as
+follow-up work rather than quietly claimed.
+
+`LANG-VM-FEATURE-COVERAGE.md` gains a MacroOct row, which the pinned
 `feature_coverage_doc_counts_match_programs_source` test makes mandatory rather
 than optional — Oct's own pinned tuple is unchanged.
 
