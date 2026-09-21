@@ -1,0 +1,4 @@
+--compilation_level
+WHITESPACE_ONLY
+--js
+tests/diff/ladder_t4_dead_branch_ws/input/a.js

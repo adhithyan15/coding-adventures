@@ -1,0 +1,2 @@
+var r = /ab+c/g;
+console.log(r.test('abc'));

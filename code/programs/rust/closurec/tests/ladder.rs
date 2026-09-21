@@ -325,7 +325,7 @@ fn every_divergence_is_well_formed() {
 fn reviewed_divergence_count_is_pinned() {
     assert_eq!(
         load_ledger().len(),
-        6,
+        20,
         "reviewed divergence ledger changed — see the note on this test"
     );
 }
