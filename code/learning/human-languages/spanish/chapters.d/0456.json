@@ -1,0 +1,22 @@
+{
+  "chapter": 456,
+  "title": "La cuenta",
+  "label": "ch:es-cuenta",
+  "canDo": "I can order from a set menu and then read the bill: name a first course, tell a price from a charge, query something that was added, and ask whether they take cards.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "ES-C456-sintesis-cuenta",
+    "kind": "task",
+    "summary": "Read the message or notice this chapter's words exist for, then say the same thing back.",
+    "assesses": [
+      "ES-LEX-C456-CUENTA-01",
+      "ES-LEX-C456-CUENTA-02",
+      "ES-LEX-C456-CUENTA-03",
+      "ES-LEX-C456-CUENTA-04",
+      "ES-LEX-C456-CUENTA-05"
+    ],
+    "note": "The last scene above the flat rate: five words finishing TWO exam rows where everything else left costs three words per item. THREE WORDS NOW STAND BETWEEN THE READER AND A BILL, and the order is the order of a transaction: EL PRECIO is what the seller asks and sits on a label, EL COSTE is what it comes to once postage and the rest are in, EL CARGO is what has been ADDED to an account afterwards. That last distinction is what makes a polite complaint possible -- 'hay un cargo que no entiendo' is the sentence, where 'hay un precio que no entiendo' would suggest confusion about the menu. FOUR OF THE FIVE WERE RELATIVES OF WORDS ALREADY TAUGHT: ensalada is en + SAL, the salted thing, and salsa and salario are built on the same salt -- but NOT the soldiers-paid-in-salt story, which ES-C361-sal (a prerequisite of this chapter) already debunks as an eighteenth-century invention with no ancient source; salarium < sal is all that may be claimed; cargo is carricare on CARRUS, the cart inside el carrito, so a charge is a LOAD PUT ON A CART and la carga, el cargamento and descargar all follow, with English charge and cargo being the same Latin verb borrowed twice; coste is con + STARE, to stand firm, so a cost is the point at which the reckoning comes to rest, and English kept the n in CONSTANT while Spanish dropped it; agencia is AGERE, to do, and so is LA AGENDA, a Latin plural meaning 'the things that must be done' -- a diary and a travel agent are one verb, one listing what must be done and the other doing it. Even aceptar has a relative already taught: its capere (ad-capere, to take TOWARDS yourself) is the capere inside EL PRINCIPIO, where princeps is the one who TAKES FIRST PLACE -- so every word in the chapter had a relative waiting, and capere being a new SLUG is not the same as the reader never having met the root. Grammar: 'de primero / de segundo / de postre' orders a course with no verb, and adding quiero makes it heavier rather than politer; -encia and -ancia join -anza, -eza and -ción: five feminine SUFFIX families against the masculine -miento. The claim must stay on the suffixes and NOT generalise to abstract nouns, because el coste and el cargo in this very chapter are masculine and end in none of them."
+  }
+}

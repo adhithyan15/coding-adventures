@@ -1,0 +1,11 @@
+{
+  "id": "ES-R458-repaso-plazo",
+  "pathSegment": "ES-PATH-458-PLAZO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-458-PLAZO",
+      "order": 3
+    }
+  ]
+}

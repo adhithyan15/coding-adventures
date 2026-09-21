@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C458-plazo",
+    "language": "spanish",
+    "chapter": 458,
+    "sequence": 12280,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3dfc3a6dea19144f"
+  },
+  "findings": []
+}

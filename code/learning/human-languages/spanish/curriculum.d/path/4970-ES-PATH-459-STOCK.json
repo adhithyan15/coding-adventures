@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-459-STOCK",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "before": [],
+  "inline": [
+    "ES-EXT-459-STOCK"
+  ],
+  "after": []
+}

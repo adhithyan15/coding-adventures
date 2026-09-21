@@ -1,0 +1,21 @@
+{
+  "language": "spanish",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:63c0373c5084ffbe",
+  "lessonIds": [
+    "ES-C456-ensalada",
+    "ES-C456-cargo",
+    "ES-C456-aceptar",
+    "ES-C456-coste",
+    "ES-C456-agencia",
+    "ES-R456-repaso-cuenta",
+    "ES-C456-sintesis-cuenta"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch456.txt",
+  "json": "spanish/narration/ch456.json",
+  "textHash": "fnv1a64:fd808bb0d4b5618d",
+  "jsonHash": "fnv1a64:62e7539d4d10c14c",
+  "findings": []
+}

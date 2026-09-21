@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C456-sintesis-cuenta",
+    "language": "spanish",
+    "chapter": 456,
+    "sequence": 12220,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:02d296aaa87d43d9"
+  },
+  "findings": []
+}

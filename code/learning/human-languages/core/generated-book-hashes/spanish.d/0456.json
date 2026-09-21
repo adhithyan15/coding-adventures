@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:a6a84af65f55974d",
+  "lessonIds": [
+    "ES-C456-ensalada",
+    "ES-C456-cargo",
+    "ES-C456-aceptar",
+    "ES-C456-coste",
+    "ES-C456-agencia",
+    "ES-R456-repaso-cuenta",
+    "ES-C456-sintesis-cuenta"
+  ],
+  "tex": "spanish/book/chapters/ch456-cuenta.tex"
+}

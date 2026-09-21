@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:4c4848e7bc8b0067",
+  "lessonIds": [
+    "ES-C457-medicamento",
+    "ES-C457-encargar",
+    "ES-C457-guardia",
+    "ES-R457-repaso-guardia",
+    "ES-C457-sintesis-guardia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch457.txt",
+  "json": "spanish/narration/ch457.json",
+  "textHash": "fnv1a64:c5db9927561877c3",
+  "jsonHash": "fnv1a64:bfdd26fcde8156ea",
+  "findings": []
+}

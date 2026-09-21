@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C458-admitir",
+    "language": "spanish",
+    "chapter": 458,
+    "sequence": 12300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:389e50120a78a20e"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C457-guardia",
+  "pathSegment": "ES-PATH-457-GUARDIA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-457-GUARDIA",
+      "order": 2
+    }
+  ]
+}

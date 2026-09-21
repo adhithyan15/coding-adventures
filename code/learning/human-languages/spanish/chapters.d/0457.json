@@ -1,0 +1,20 @@
+{
+  "chapter": 457,
+  "title": "La farmacia de guardia",
+  "label": "ch:es-guardia",
+  "canDo": "I can get a medicine that is not in stock: ask for it by the word on the box, ask them to order it in, find out when it arrives, and find the chemist that is open tonight.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "ES-C457-sintesis-guardia",
+    "kind": "task",
+    "summary": "Read the message or notice this chapter's words exist for, then say the same thing back.",
+    "assesses": [
+      "ES-LEX-C457-GUARDIA-01",
+      "ES-LEX-C457-GUARDIA-02",
+      "ES-LEX-C457-GUARDIA-03"
+    ],
+    "note": "ALL THREE WORDS ARE RELATIVES OF WORDS ALREADY TAUGHT, and encargar is the clearest chain in the tranche: carrus (the cart) gave el carrito, then el cargo (a load put on a bill, ch456), then ENCARGAR -- a TASK LOADED ONTO SOMEBODY. Four lessons apart and one picture throughout, which is also why encargarse de means taking responsibility and el encargado is the person with the load on; English reached for the same metaphor in 'in charge' and 'charged with'. ENCARGAR IS NOT PEDIR: you pedir what is on the menu and encargar what has to be brought in -- pedir takes something off a list, encargar creates a job for somebody. medicamento is medicus and medēri, to heal, so el médico and el medicamento are the healer and the thing that heals; an older root behind medeor is independently supported by modus, moderate and meditate, but the lesson refuses the causal story: glossing that root as 'measure' and offering a doctor's judgement as proof argues in a circle, which ES-C394-medico (a prerequisite) says explicitly. -MENTO AND -MIENTO ARE THE SAME LATIN ENDING BY THE TWO ROADS (seguimiento/medicamento, pensamiento/documento), both masculine, and the spelling carries REGISTER rather than meaning: -miento everyday, -mento formal. la guardia is Germanic wardōn, the root of guardar, and Spanish gu- regularly answers English w- (guardar/ward, guerra/war), with English guard being the same Germanic word arriving back by way of French. ONE WORD, TWO GENDERS, TWO MEANINGS: la guardia is the watch and el guardia is the officer keeping it, and the pattern is consistent -- feminine for the abstract thing, masculine for the person (la guía/el guía, la policía/el policía)."
+  }
+}
