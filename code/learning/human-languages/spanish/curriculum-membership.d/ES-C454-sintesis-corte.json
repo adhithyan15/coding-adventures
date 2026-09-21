@@ -1,0 +1,11 @@
+{
+  "id": "ES-C454-sintesis-corte",
+  "pathSegment": "ES-PATH-454-CORTE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-454-CORTE",
+      "order": 5
+    }
+  ]
+}

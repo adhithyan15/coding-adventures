@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:77ab3f14604d9329",
+  "lessonIds": [
+    "ES-C452-almacen",
+    "ES-C452-ruta",
+    "ES-C452-seguimiento",
+    "ES-C452-comodo",
+    "ES-R452-repaso-reparto",
+    "ES-C452-sintesis-reparto"
+  ],
+  "tex": "spanish/book/chapters/ch452-reparto.tex"
+}

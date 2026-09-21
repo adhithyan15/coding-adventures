@@ -1,5 +1,205 @@
 # Changelog
 
+## Chapters 452-455 — the tie-break, used deliberately
+
+Seventeen headwords across four chapters, and a better rate than the tranche
+before it.
+
+```
+A2 objectiveFailed          31 -> 23
+A2 missingObjectiveLexemes  85 -> 68
+```
+
+Predicted from the audit before anything was wired and reproduced exactly.
+Six tranches, six exact predictions.
+
+| tranche | words | items cleared | words per item |
+|---|---|---|---|
+| 3b (444-447) | 19 | 19 | 1.00 |
+| 4a (448-451) | 22 | 9 | 2.44 |
+| **4b (452-455)** | **17** | **8** | **2.12** |
+
+## The improvement is not a better ranking
+
+There is no ranking left — only `explicar` appears in more than one failing
+row, and a greedy set cover over the remainder is flat. What 4b does is use
+the **tie-break** on purpose.
+
+When every word costs the same, the only lever is *which rows a scene happens
+to complete*. So this tranche goes after the **cheapest remaining rows** — seven
+two-word rows and one three-word row, which is why chapter 455 carries five
+headwords rather than four — grouped into four scenes, so **every chapter
+finishes exactly two rows on its own**:
+
+| chapter | scene | words | rows |
+|---|---|---|---|
+| 452 | the delivery round | almacén, la ruta, el seguimiento, cómodo | 2 |
+| 453 | the shift | limpieza, instalación, rotativo, consultar | 2 |
+| 454 | the closed road | la obra, la vía, el accidente, el servicio | 2 |
+| 455 | the room | pintar, dormitorio, claro, tender, meter | 2 |
+
+That is the whole method now: pick the cheapest rows, then find the scene that
+holds them. It will keep working until the cheap rows run out.
+
+## Thirteen of seventeen words landed on roots the track already carried
+
+The highest free-join rate of any tranche, and it was designed that way —
+candidates were checked against the corpus's own `roots:` fields before the
+scenes were fixed.
+
+| new word | joins | what becomes visible |
+|---|---|---|
+| la ruta | `rumpere-latin` with *romper*, *roto* | *via rupta* — a **broken** way |
+| el accidente | `cadere-latin` with *la ocasión* | one falls **upon** you, one falls **to** you |
+| tender | `tendere-latin` with *la tienda* | a shop is a **stretched** awning |
+| meter | `mittere-latin` with *el permiso* | *per-missus*, sent through |
+| la obra | `opus-latin` with *la oficina* | *opus* + *facere*, the place work is done |
+| la vía | `via-latin` with *todavía* | *toda vía* — **all the way** |
+| rotativo | `rota-latin` with *la rueda*, *alrededor* | third route out of one Latin noun |
+| cómodo | `modus-latin` with *el modo* | *com* + *modus*, "with measure" |
+| claro | `clarus` with *sí, claro* | the adjective behind the phrase |
+
+**`la ruta` is the one that pays best**, because chapter 448 taught *roto* four
+chapters earlier. A *ruta* is Latin *via rupta*, a **broken** way — a road
+forced through what stood in it. Latin dropped the *via* and kept the
+adjective, so a word meaning "broken" came to mean "route". A smashed plate
+and a mountain pass are the same word applied to two different obstacles, and
+English *rout* and *routine* are that participle again.
+
+**`todavía` is the sharpest.** It is among the commonest words in the language,
+the reader has used it for a hundred chapters, and *toda vía* — "all the way" —
+had a Roman road sitting inside it the whole time.
+
+## The fourth free chain, and the strongest
+
+`ES-C455-claro`. `ES-C272-si-claro` taught **sí, claro** early as a fixed way
+of agreeing *and* glossed it as Latin *clarus*, bright. What it never did was
+point the word at a colour or a room — and that is the part this chapter adds.
+Agreeing by saying "clear!" is how Spanish arrives at "of course".
+
+| what you already said | the word inside it |
+|---|---|
+| *interesante* | interesar |
+| *mira* | mirar |
+| *el punto* | apuntar |
+| ***sí, claro*** | **claro** |
+
+This is the strongest instance because *sí, claro* is among the first things
+anybody learns to say. The reader has had the adjective in their mouth since
+the first weeks and has never once used it of a wall, because agreeing with
+somebody asks nothing of the colour sense.
+
+## Two arcs close
+
+**The suffix arc**, stated as a set in chapter 453:
+
+| ending | example | gender |
+|---|---|---|
+| -anza | la mudanza (448) | feminine |
+| -miento | el seguimiento (452) | masculine |
+| -eza | la limpieza (453) | feminine |
+| -ción | la instalación (453) | feminine |
+
+Three feminine, one masculine. Which ending a verb takes is **not**
+predictable and no rule is waiting to be found; the gender always is, and that
+is most of what a reader needs.
+
+**The stressed-vowel arc**, closed in chapter 455 where it started.
+`ES-C36-dormir` introduced `ES-GRAMMAR-STEM-O-UE-06` for *duermo* in the first
+weeks of the book. *Dormitorio* keeps the plain **o** because the stress lands
+three syllables along — so one chapter now holds the noun (*rueda*), the
+conjugations (*muestro*, *tiendo*) and the original grammar atom together, and
+the reader can see that nothing was ever irregular. One vowel, one condition.
+
+## The finding worth keeping: a Latin word can arrive twice
+
+Chapter 453's real content. The same Latin word can reach Spanish **through
+speech** and **through books**, and the two arrivals look nothing alike:
+
+| worn down by speech | lifted from the page |
+|---|---|
+| la r**ue**da | r**o**tativo |
+| el cons**ejo** | cons**ultar** |
+
+The practical payoff is a **register clue readable straight off the spelling**:
+when a Spanish word looks *more* like its Latin or English cousin, it is the
+later, bookish arrival — and it will belong to forms, notices and writing
+rather than to the kitchen.
+
+## Numbers
+
+| metric | before → after |
+|---|---|
+| A2 `objectiveFailed` | 31 → 23 |
+| A2 `missingObjectiveLexemes` | 85 → 68 |
+| mock 1 reading / listening passes | 20 / 14 → 21 / 15 |
+| mock 2 reading / listening passes | 16 / 19 → 19 / 22 |
+| curriculum graph lessons | 7351 → 7376 |
+| new lessons | 25 |
+| new headwords | 17 |
+
+Every one of the eight pass-count deltas is accounted for by a named cleared
+row — mock 1 lost one reading row and one listening row, mock 2 lost three and
+three. That check is worth running: a pass count that rose *without* a cleared
+row to explain it would mean the audit had changed rather than the corpus.
+
+## Six findings from the security review, all in my prose
+
+The review passed on security and then, as last tranche, caught factual
+errors. Two were the same class as the one it caught before — **a claim about
+what the corpus has withheld, falsified by the corpus**:
+
+- `ES-C455-tender` said the reader had been buying things in a *stretched*
+  thing "without being told". `ES-C311-tienda` tells them exactly that, in its
+  own gloss. The chapter's real contribution is the **verb** the noun was
+  named from, and it now says so.
+- `ES-C455-claro` said "nobody told you that *claro* was an adjective".
+  `ES-C272-si-claro` glosses it as *clarus*, "bright, clear". Narrowed to what
+  is actually new: the colour sense, and pointing it at a room.
+
+The rule both violations break is the same one: **before writing that the
+corpus has not said something, read the lesson that would have said it.**
+
+Three etymological corrections:
+
+- *pintoresco* / *picturesque* come from Italian *pittoresco*, built on
+  *pittore*, "painter" — squarely the painting side. I had them arriving "by
+  way of the prick rather than the colour", which is wrong.
+- *pingere* meaning "embroider" was stated as an **earlier** sense than
+  "paint". It ran alongside it; the genuinely older layer is a word for
+  pricking or cutting a mark. Corrected, including the quiz answer that
+  repeated it.
+- `ES-C454-accidente` contrasted *ad-* "towards" with an *ocasión* that falls
+  "to" you. The prefix in *occāsiō* is *ob-*, "down, against" — which
+  `ES-C356-ocasion` states correctly. The mnemonic was dressed as a prefix
+  fact; it is now back to being a picture.
+
+And one variety problem: `recién` attaches only to participles **in Spain**.
+Much of Latin America uses it as a plain adverb of time — *recién llegué*,
+*recién ayer*. The lesson is tagged `variety: general`, so it now says both.
+
+## Verification
+
+`human-language-data` full suite; all thirteen `check:*` gates;
+`check-book-compile.sh spanish` under XeLaTeX with
+`scan_latex_log_warnings.py --baseline` afterwards.
+
+Digest attributed by **reconstruction**: `origin/main` was loaded in a clean
+`git worktree` and reproduced `37016337…` and 7351 byte for byte. The four new
+segments hold 6 + 6 + 6 + 7 = 25 lessons and the count moved by exactly 25.
+
+My pre-flight gained the standalone-book patterns this tranche, after catching
+"the whole course of your Spanish" in a draft. That phrase matches the gate's
+own regex and would have failed CI; it is the third time authored prose has
+tripped that rule, and the first time it was caught before pushing.
+
+## What this does not claim
+
+Eight more exam items are now supported by the book's own vocabulary. No item
+has been graded against a reader. **Twenty-three objective items still fail**,
+and until that reaches zero the A2 book cannot be said to prepare anybody to
+sit the paper.
+
 ## Chapters 448-451 — the ranking runs out, and scenes replace it
 
 Twenty-two headwords across four chapters, chosen by situation rather than by

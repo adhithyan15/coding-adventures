@@ -59,15 +59,15 @@
     ],
     "numericCredits": "0-100"
   },
-  "lessonCount": 1296,
-  "taughtForms": 2124,
-  "objectiveFailed": 31,
+  "lessonCount": 1321,
+  "taughtForms": 2170,
+  "objectiveFailed": 23,
   "mocks": [
     {
       "mock": 1,
-      "reading": 20,
-      "listening": 14,
-      "objectiveFailed": 16,
+      "reading": 21,
+      "listening": 15,
+      "objectiveFailed": 14,
       "failed": [
         {
           "paper": 1,
@@ -75,14 +75,6 @@
           "missing": [
             "invitar",
             "explicar"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 7,
-          "missing": [
-            "tender",
-            "meter"
           ]
         },
         {
@@ -143,14 +135,6 @@
             "perderse",
             "principiante",
             "sencillo"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 33,
-          "missing": [
-            "obra",
-            "vía"
           ]
         },
         {
@@ -217,9 +201,9 @@
     },
     {
       "mock": 2,
-      "reading": 16,
-      "listening": 19,
-      "objectiveFailed": 15,
+      "reading": 19,
+      "listening": 22,
+      "objectiveFailed": 9,
       "failed": [
         {
           "paper": 1,
@@ -230,28 +214,11 @@
         },
         {
           "paper": 1,
-          "item": 4,
-          "missing": [
-            "pintar",
-            "dormitorio",
-            "claro"
-          ]
-        },
-        {
-          "paper": 1,
           "item": 14,
           "missing": [
             "reducir",
             "decidirse",
             "jefe"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 15,
-          "missing": [
-            "rotativo",
-            "consultar"
           ]
         },
         {
@@ -284,14 +251,6 @@
         },
         {
           "paper": 1,
-          "item": 24,
-          "missing": [
-            "accidente",
-            "servicio"
-          ]
-        },
-        {
-          "paper": 1,
           "item": 25,
           "missing": [
             "recomendar",
@@ -310,35 +269,11 @@
         },
         {
           "paper": 2,
-          "item": 33,
-          "missing": [
-            "limpieza",
-            "instalación"
-          ]
-        },
-        {
-          "paper": 2,
           "item": 39,
           "missing": [
             "organizar",
             "guía",
             "importar"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 41,
-          "missing": [
-            "cómodo",
-            "ruta"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 44,
-          "missing": [
-            "almacén",
-            "seguimiento"
           ]
         },
         {
@@ -355,33 +290,27 @@
   ],
   "missingObjectiveLexemes": [
     "abrigo",
-    "accidente",
     "aceptar",
     "admitir",
     "agencia",
     "alimentar",
-    "almacén",
     "anotar",
     "avanzado",
     "avisar",
     "bufanda",
     "cargo",
     "chaqueta",
-    "claro",
     "comportamiento",
     "conectar",
-    "consultar",
     "coste",
     "creer",
     "cuaderno",
-    "cómodo",
     "decidirse",
     "dentista",
     "descontar",
     "director",
     "discutir",
     "donar",
-    "dormitorio",
     "encargar",
     "encontrar",
     "encuesta",
@@ -399,24 +328,19 @@
     "importar",
     "impresora",
     "imprimir",
-    "instalación",
     "inventario",
     "invitar",
     "jefe",
     "lectura",
-    "limpieza",
     "llamada",
     "lluvia",
     "mango",
     "medicamento",
-    "meter",
     "objetivo",
-    "obra",
     "organizar",
     "paraguas",
     "peligroso",
     "perderse",
-    "pintar",
     "plazo",
     "principiante",
     "problema",
@@ -426,19 +350,13 @@
     "recordar",
     "reducir",
     "responder",
-    "rotativo",
-    "ruta",
     "sección",
-    "seguimiento",
     "sencillo",
-    "servicio",
     "solicitar",
     "suficiente",
     "temperatura",
-    "tender",
     "usuario",
-    "visible",
-    "vía"
+    "visible"
   ],
   "missingFrequency": [
     {
@@ -447,10 +365,6 @@
     },
     {
       "lexeme": "abrigo",
-      "count": 1
-    },
-    {
-      "lexeme": "accidente",
       "count": 1
     },
     {
@@ -467,10 +381,6 @@
     },
     {
       "lexeme": "alimentar",
-      "count": 1
-    },
-    {
-      "lexeme": "almacén",
       "count": 1
     },
     {
@@ -498,23 +408,11 @@
       "count": 1
     },
     {
-      "lexeme": "claro",
-      "count": 1
-    },
-    {
-      "lexeme": "cómodo",
-      "count": 1
-    },
-    {
       "lexeme": "comportamiento",
       "count": 1
     },
     {
       "lexeme": "conectar",
-      "count": 1
-    },
-    {
-      "lexeme": "consultar",
       "count": 1
     },
     {
@@ -551,10 +449,6 @@
     },
     {
       "lexeme": "donar",
-      "count": 1
-    },
-    {
-      "lexeme": "dormitorio",
       "count": 1
     },
     {
@@ -622,10 +516,6 @@
       "count": 1
     },
     {
-      "lexeme": "instalación",
-      "count": 1
-    },
-    {
       "lexeme": "inventario",
       "count": 1
     },
@@ -639,10 +529,6 @@
     },
     {
       "lexeme": "lectura",
-      "count": 1
-    },
-    {
-      "lexeme": "limpieza",
       "count": 1
     },
     {
@@ -662,15 +548,7 @@
       "count": 1
     },
     {
-      "lexeme": "meter",
-      "count": 1
-    },
-    {
       "lexeme": "objetivo",
-      "count": 1
-    },
-    {
-      "lexeme": "obra",
       "count": 1
     },
     {
@@ -687,10 +565,6 @@
     },
     {
       "lexeme": "perderse",
-      "count": 1
-    },
-    {
-      "lexeme": "pintar",
       "count": 1
     },
     {
@@ -730,27 +604,11 @@
       "count": 1
     },
     {
-      "lexeme": "rotativo",
-      "count": 1
-    },
-    {
-      "lexeme": "ruta",
-      "count": 1
-    },
-    {
       "lexeme": "sección",
       "count": 1
     },
     {
-      "lexeme": "seguimiento",
-      "count": 1
-    },
-    {
       "lexeme": "sencillo",
-      "count": 1
-    },
-    {
-      "lexeme": "servicio",
       "count": 1
     },
     {
@@ -766,15 +624,7 @@
       "count": 1
     },
     {
-      "lexeme": "tender",
-      "count": 1
-    },
-    {
       "lexeme": "usuario",
-      "count": 1
-    },
-    {
-      "lexeme": "vía",
       "count": 1
     },
     {

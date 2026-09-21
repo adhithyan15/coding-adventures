@@ -1,0 +1,11 @@
+{
+  "id": "ES-C455-sintesis-cuarto",
+  "pathSegment": "ES-PATH-455-CUARTO",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ES-EXT-455-CUARTO",
+      "order": 6
+    }
+  ]
+}

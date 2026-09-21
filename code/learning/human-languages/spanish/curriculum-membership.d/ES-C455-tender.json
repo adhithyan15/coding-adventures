@@ -1,0 +1,11 @@
+{
+  "id": "ES-C455-tender",
+  "pathSegment": "ES-PATH-455-CUARTO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-455-CUARTO",
+      "order": 3
+    }
+  ]
+}

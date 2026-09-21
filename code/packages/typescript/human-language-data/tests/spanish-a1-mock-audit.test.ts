@@ -102,21 +102,22 @@ describe("Spanish A2 book-bounded mock audit", () => {
   it("pins the CURRENT DEBT: the exam names the vocabulary that is still missing", () => {
     const audit = buildSpanishA1MockAudit(defaultCurriculumRoot(), "A2");
     expect(audit.level).toBe("A2");
-    expect(audit.objectiveFailed).toBe(31);
+    expect(audit.objectiveFailed).toBe(23);
     expect(audit.mocks.map(({ reading, listening, objectiveFailed }) => ({
       reading,
       listening,
       objectiveFailed,
     }))).toEqual([
-      { reading: 20, listening: 14, objectiveFailed: 16 },
-      { reading: 16, listening: 19, objectiveFailed: 15 },
+      { reading: 21, listening: 15, objectiveFailed: 14 },
+      { reading: 19, listening: 22, objectiveFailed: 9 },
     ]);
     // THIS NUMBER MUST ONLY EVER FALL. A rise means a mock gained an item the
     // corpus cannot support.
     //
-    // 191 -> 161 -> 146 -> 126 -> 107 -> 85 are the five vocabulary tranches:
-    // 431-436, 437-439, 440-443, 444-447 and 448-451. EVERY drop is exact -- 30
-    // headwords removed 30 lexemes, then 15, then 20, then 19, then 22. That
+    // 191 -> 161 -> 146 -> 126 -> 107 -> 85 -> 68 are the six vocabulary
+    // tranches: 431-436, 437-439, 440-443, 444-447, 448-451 and 452-455. EVERY
+    // drop is exact -- 30 headwords removed 30 lexemes, then 15, 20, 19, 22,
+    // 17. That
     // arithmetic is the evidence a word was genuinely absent; one already taught
     // under another name would have made the drop smaller. Each was PREDICTED
     // from the audit before the chapters were wired and reproduced exactly by
@@ -130,13 +131,14 @@ describe("Spanish A2 book-bounded mock audit", () => {
     // honest reading, since the adjective is the form on the lift door.
     //
     // THE ITEM COUNT IS WHERE THE SELECTION RULE SHOWS, and it is the whole
-    // point. objectiveFailed went 93 -> 88 -> 79 -> 59 -> 40 -> 31:
+    // point. objectiveFailed went 93 -> 88 -> 79 -> 59 -> 40 -> 31 -> 23:
     //
     //     tranche 1  (431-436)  30 words   5 items
     //     tranche 2  (437-439)  15 words   9 items
     //     tranche 3a (440-443)  20 words  20 items
     //     tranche 3b (444-447)  19 words  19 items
     //     tranche 4a (448-451)  22 words   9 items
+    //     tranche 4b (452-455)  17 words   8 items
     //
     // An item passes only when EVERY lexeme in its `requires` row is taught, so
     // a word helps in proportion to how close its rows already are. Tranches
@@ -161,6 +163,16 @@ describe("Spanish A2 book-bounded mock audit", () => {
     // 2.4 words per item, which is the flat rate the set cover predicted, and
     // predicting it in advance is what makes the number checkable.
     //
+    // TRANCHE 4b IS THE SAME RULE APPLIED HARDER, and it beats 4a: 17 words for
+    // 8 items, 2.12 per item. The improvement is not a better ranking -- no
+    // ranking exists any more -- it is the tie-break used deliberately. 4b goes
+    // after the CHEAPEST remaining rows (seven two-word rows and one
+    // three-word row, which is why chapter 455 carries five headwords rather
+    // than four) grouped into four scenes, so EVERY chapter finishes exactly
+    // two rows on its own. When every word costs the same, the only lever left
+    // is which rows a scene happens to complete, and choosing scenes around the
+    // cheapest rows is that lever.
+    //
     // The two remaining solo blockers, `explicar` and `problema`, are NOT
     // authoring work: both are already headwords whose spine nodes put them at
     // B1, so a reader of the A2 book has not met them. See the HL-C418 shard in
@@ -175,7 +187,13 @@ describe("Spanish A2 book-bounded mock audit", () => {
     // listening paper and three in its reading paper, which is exactly what the
     // pass counts above record -- mock 2 went 13 -> 16 reading and 14 -> 19
     // listening, mock 1 went 19 -> 20 reading and did not move on listening.
-    expect(audit.missingObjectiveLexemes).toHaveLength(85);
+    //
+    // Tranche 4b fell evenly by comparison: mock 1 lost 2 (one reading, one
+    // listening) and mock 2 lost 6 (three and three). Every one of the eight
+    // deltas above is accounted for by a named row, which is the check worth
+    // running -- a pass count that rose without a cleared row to explain it
+    // would mean the audit had changed rather than the corpus.
+    expect(audit.missingObjectiveLexemes).toHaveLength(68);
   });
 
   it("measures a LARGER taught set than A1, which is what makes it a different gate", () => {

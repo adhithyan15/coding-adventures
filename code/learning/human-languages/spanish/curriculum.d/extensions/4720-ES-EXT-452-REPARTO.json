@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-452-REPARTO",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can deal with a delivery: read the card left through the door, say where the parcel has gone, quote a tracking number, and ask for a time that suits me.",
+  "prerequisites": [
+    "ES-EXT-451-TURNO"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C452-ruta",
+    "language": "spanish",
+    "chapter": 452,
+    "sequence": 11920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:abe1b10e82f77523"
+  },
+  "findings": []
+}

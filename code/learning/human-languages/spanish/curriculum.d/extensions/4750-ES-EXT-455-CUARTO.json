@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-455-CUARTO",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can get a room ready and say so: what I have painted and what colour, what to put where, and what to hang out if the sun comes out.",
+  "prerequisites": [
+    "ES-EXT-454-CORTE"
+  ]
+}

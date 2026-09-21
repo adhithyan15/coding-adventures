@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-452-REPARTO",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "before": [],
+  "inline": [
+    "ES-EXT-452-REPARTO"
+  ],
+  "after": []
+}
