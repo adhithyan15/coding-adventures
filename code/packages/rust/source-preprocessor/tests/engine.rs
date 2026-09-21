@@ -357,6 +357,54 @@ fn the_token_budget_is_enforced() {
 }
 
 #[test]
+fn tokens_inside_a_skipped_group_are_still_charged() {
+    // The bound must count tokens PRODUCED, not tokens emitted.
+    //
+    // A security review measured what counting only emitted tokens costs:
+    // ~4 MiB of source inside `@if 0` expanded to a 279 MiB working set while
+    // the token counter read ZERO, because every token was allocated, retained
+    // by its frame, and then discarded without ever being emitted. An attacker
+    // does not need their tokens to survive in order to spend your memory on
+    // them.
+    //
+    // So: a budget of 4 must be exhausted by a skipped group, even though the
+    // program emits nothing at all.
+    let mut fs = MemoryFs::new();
+    let bounds = Bounds { tokens_produced: 4, ..Bounds::default() };
+    let e = run(&["@if 0", "a b c d e f g h", "@end"], &mut fs, bounds)
+        .expect_err("tokens in a skipped group must be charged");
+    assert!(e.to_string().contains("more than 4 tokens"), "{e}");
+}
+
+#[test]
+fn a_budget_cannot_be_widened_past_the_defaults() {
+    // `Bounds`'s fields are public, so a caller CAN write `u64::MAX`. The
+    // engine clamps on entry, so asking for more than the default silently
+    // yields the default rather than honouring the request.
+    let mut fs = MemoryFs::new();
+    let greedy = Bounds { tokens_produced: u64::MAX, fuel: u64::MAX, ..Bounds::default() };
+    // Still succeeds on a small program — clamping is not refusal.
+    assert_eq!(run(&["kept"], &mut fs, greedy).unwrap(), ["kept"]);
+
+    // And a genuinely tighter budget is still honoured exactly.
+    let mut fs = MemoryFs::new();
+    let tight = Bounds { tokens_produced: 2, ..Bounds::default() };
+    assert!(run(&["a b c d"], &mut fs, tight).is_err());
+}
+
+#[test]
+fn a_macro_definition_inside_a_skipped_group_is_inert() {
+    // `@define` is refused outright in slice 1, but a skipped group must not
+    // reach the refusal -- and more importantly, when slice 2 replaces that
+    // arm with real expansion, an unguarded version would make every expansion
+    // bomb reachable from inside `@if 0`.
+    let mut fs = MemoryFs::new();
+    let out = run(&["@if 0", "@define X 1", "@end", "after"], &mut fs, Bounds::default())
+        .expect("a skipped @define must not be refused");
+    assert_eq!(out, ["after"]);
+}
+
+#[test]
 fn the_fuel_budget_is_enforced() {
     let mut fs = MemoryFs::new();
     let bounds = Bounds { fuel: 2, ..Bounds::default() };

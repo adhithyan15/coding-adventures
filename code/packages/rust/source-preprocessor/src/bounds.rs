@@ -30,10 +30,19 @@
 //!
 //! ## Tighten-only
 //!
-//! Every field has a finite default and [`Bounds::tighten`] is the only way to
-//! change one. A dialect *or an embedding host* may lower a bound; neither can
-//! raise one or disable it. A configuration surface that can set a budget to
-//! infinity is a configuration surface that will eventually be set to infinity.
+//! Every field has a finite default. A dialect *or an embedding host* may
+//! lower a bound; neither can raise one or disable it. A configuration surface
+//! that can set a budget to infinity is a configuration surface that will
+//! eventually be set to infinity.
+//!
+//! That is enforced at the entry point, not by the type. The fields are `pub`,
+//! so `Bounds { fuel: u64::MAX, ..Default::default() }` compiles — and a
+//! security review pointed out that this made the paragraph above simply
+//! untrue, since struct-literal construction is the idiom the tests use.
+//! [`crate::preprocess`] therefore begins by clamping whatever it is handed
+//! with `bounds.tighten(Bounds::default())`. Because [`Bounds::tighten`] is a
+//! pointwise `min`, a tighter budget is honoured exactly and a looser one
+//! silently becomes the default.
 //!
 //! ## Fuel is the one that matters most
 //!

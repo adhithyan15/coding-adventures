@@ -93,6 +93,15 @@ pub fn preprocess(
     fs: &mut dyn SourceFs,
     bounds: Bounds,
 ) -> Result<Preprocessed, PpError> {
+    // Clamp to the defaults on the way in. `Bounds`'s fields are public, so
+    // a caller can write `Bounds { fuel: u64::MAX, ..Default::default() }` and
+    // the type alone cannot stop them — which made the module's "tighten-only,
+    // you cannot express unlimited" claim false in practice. `tighten` is a
+    // pointwise `min`, so this honours any budget TIGHTER than the default and
+    // silently refuses any request to loosen one. The literal-struct idiom the
+    // tests use keeps working; only widening stops working.
+    let bounds = bounds.tighten(Bounds::default());
+
     let mut out = Vec::new();
     let mut map = SourceMap::new();
     let mut spend = Spend::default();
@@ -134,11 +143,30 @@ pub fn preprocess(
         let run: Vec<Token> = frame.tokens[start..end].to_vec();
         let current_file = frame.file;
 
-        spend.fuel_used += run.len() as u64;
+        spend.fuel_used = spend.fuel_used.saturating_add(run.len() as u64);
         if spend.fuel_used > bounds.fuel {
             return Err(PpError::new(format!(
                 "exhausted the {}-step preprocessing budget",
                 bounds.fuel
+            )));
+        }
+
+        // Charged HERE, for every token the engine produces — not inside
+        // `emit`, which only ever sees tokens that survive.
+        //
+        // Counting emitted tokens is the mistake `bounds` exists to warn
+        // about, and an earlier version of this loop made it anyway. Tokens
+        // inside a skipped group, or lexed from an included file and then
+        // discarded, are *produced*: they are allocated, they are retained by
+        // their frame, and they are what an attacker actually spends your
+        // memory on. A security review measured the gap at ~70x — 4 MiB of
+        // source expanding to a 279 MiB working set with the emitted-token
+        // counter reading ZERO, because the bulk sat inside `@if 0`.
+        spend.tokens_produced = spend.tokens_produced.saturating_add(run.len() as u64);
+        if spend.tokens_produced > bounds.tokens_produced {
+            return Err(PpError::new(format!(
+                "produced more than {} tokens",
+                bounds.tokens_produced
             )));
         }
 
@@ -147,7 +175,7 @@ pub fn preprocess(
         match dialect.classify(&run) {
             None => {
                 if emitting {
-                    emit(&run, current_file, &mut out, &mut map, &mut spend, &bounds)?;
+                    emit(&run, current_file, &mut out, &mut map, &bounds)?;
                 }
             }
             Some(Err(e)) => return Err(e),
@@ -185,17 +213,11 @@ fn emit(
     file: FileId,
     out: &mut Vec<Token>,
     map: &mut SourceMap,
-    spend: &mut Spend,
     bounds: &Bounds,
 ) -> Result<(), PpError> {
     for t in run {
-        spend.tokens_produced += 1;
-        if spend.tokens_produced > bounds.tokens_produced {
-            return Err(PpError::new(format!(
-                "produced more than {} tokens",
-                bounds.tokens_produced
-            )));
-        }
+        // No token counting here: see the main loop, which charges every
+        // token produced rather than only those that survive.
         if t.value.len() as u64 > bounds.token_spelling_bytes {
             return Err(PpError::new(format!(
                 "a token's spelling exceeds {} bytes",
@@ -291,7 +313,7 @@ fn apply_directive(
                 ))
                 .at(here));
             }
-            spend.inclusions += 1;
+            spend.inclusions = spend.inclusions.saturating_add(1);
             if spend.inclusions > bounds.total_inclusions {
                 return Err(PpError::new(format!(
                     "more than {} total inclusions — a fan-out include graph can exceed this \
@@ -300,7 +322,7 @@ fn apply_directive(
                 ))
                 .at(here));
             }
-            spend.fuel_used += 1;
+            spend.fuel_used = spend.fuel_used.saturating_add(1);
 
             let mut request = request;
             request.from = Some(current_file);
@@ -315,7 +337,7 @@ fn apply_directive(
             }
 
             let text = fs.read(id).map_err(|e| e.at(here))?;
-            spend.source_bytes += text.len() as u64;
+            spend.source_bytes = spend.source_bytes.saturating_add(text.len() as u64);
             if spend.source_bytes > bounds.total_source_bytes {
                 return Err(PpError::new(format!(
                     "read more than {} total source bytes",
@@ -332,6 +354,15 @@ fn apply_directive(
 
         // --- not yet live --------------------------------------------------
         Directive::Define { .. } => {
+            // Inert inside a skipped group, like every other directive. Slice
+            // 1 refuses `@define` outright, so without this guard `@if 0/
+            // @define X 1/@end` would fail — and, more importantly, when slice
+            // 2 replaces this arm with real expansion, an unguarded version
+            // would make every expansion bomb reachable from inside `@if 0`.
+            // Whatever lands here next must keep this line.
+            if !emitting {
+                return Ok(());
+            }
             // Slice 1 has no macro table. A dialect that emits this before
             // macros land should hear about it rather than have it silently
             // ignored -- a `@define` that does nothing would be far more

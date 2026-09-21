@@ -39,7 +39,10 @@
 
 use crate::diag::PpError;
 use crate::source_map::FileId;
+use crate::bounds::Bounds;
 use std::collections::HashMap;
+use std::fs::File;
+use std::io::Read;
 use std::path::{Component, Path, PathBuf};
 
 /// A request to include another file.
@@ -146,90 +149,167 @@ impl SourceFs for MemoryFs {
 // RootedFs — the production implementation
 // ===========================================================================
 
+/// One resolved, verified file.
+struct Entry {
+    /// The spelling the program used, for diagnostics. Never the real path.
+    name: String,
+    /// The handle opened and verified during `resolve`, taken by first `read`.
+    handle: Option<File>,
+    /// Text, cached on first read so a legitimate repeat include is served
+    /// without re-opening anything by path.
+    text: Option<String>,
+}
+
 /// A filesystem confined to a set of declared search roots.
 ///
-/// This is where the whole path-safety story is enforced. See the module
-/// header for the threat list.
-#[derive(Debug)]
+/// # Resolve opens; read never touches a path
+///
+/// `resolve` opens the file and performs every check **against the open
+/// handle**, then retains it. `read` reads that handle and never re-resolves
+/// or re-opens anything.
+///
+/// An earlier version stored only the `PathBuf` and had `read` call
+/// `std::fs::read(&path)`. That was canonicalise-then-open — TOCTOU by
+/// construction — and a security review demonstrated it without needing a race
+/// at all: rewriting the file between the two calls returned 5 MB through a
+/// 64-byte bound. In that window the size bound, the regular-file check *and*
+/// containment were all void, because `std::fs::read` follows a symlink
+/// planted at the canonical path afterwards.
+///
+/// # Identity, not sequence
+///
+/// Files are keyed by canonical path, so resolving the same file twice returns
+/// the same [`FileId`]. That is what makes the engine's include-cycle check
+/// work: it compares ids, so minting a fresh id per inclusion (as an earlier
+/// version did) meant a self-including file was never detected as a cycle — it
+/// merely ran into the depth bound 200 levels later.
 pub struct RootedFs {
     roots: Vec<PathBuf>,
-    names: Vec<String>,
-    paths: Vec<PathBuf>,
-    max_bytes: u64,
+    entries: Vec<Entry>,
+    by_canon: HashMap<PathBuf, FileId>,
+    bounds: Bounds,
+}
+
+impl std::fmt::Debug for RootedFs {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("RootedFs")
+            .field("roots", &self.roots)
+            .field("resolved", &self.entries.len())
+            .finish()
+    }
 }
 
 impl RootedFs {
-    /// Declare the search roots. Each is canonicalised once, here, so later
-    /// comparisons are against a real path rather than a spelling.
-    pub fn new(roots: impl IntoIterator<Item = PathBuf>, max_bytes: u64) -> Result<RootedFs, PpError> {
+    /// Declare the search roots, canonicalised once here so later comparisons
+    /// are against a real path rather than a spelling.
+    ///
+    /// Takes the whole [`Bounds`] rather than a bare byte cap, so the per-file
+    /// size limit and the diagnostic-quoting limit come from the same budget
+    /// the engine enforces instead of a second number that can drift from it.
+    pub fn new(
+        roots: impl IntoIterator<Item = PathBuf>,
+        bounds: Bounds,
+    ) -> Result<RootedFs, PpError> {
         let mut canon = Vec::new();
         for r in roots {
             let c = r
                 .canonicalize()
-                .map_err(|e| PpError::new(format!("search root {} is unusable: {e}", r.display())))?;
+                .map_err(|_| PpError::new(format!("search root {} is unusable", r.display())))?;
             canon.push(c);
         }
         if canon.is_empty() {
             return Err(PpError::new("at least one search root is required"));
         }
-        Ok(RootedFs { roots: canon, names: Vec::new(), paths: Vec::new(), max_bytes })
+        Ok(RootedFs { roots: canon, entries: Vec::new(), by_canon: HashMap::new(), bounds })
+    }
+
+    /// The single refusal message for anything that fails after the spelling
+    /// gate.
+    ///
+    /// Deliberately uniform, and deliberately naming only the *spelling*. An
+    /// earlier version reported the resolved absolute path, the raw
+    /// `io::Error`, or both — which turned an include into a filesystem oracle
+    /// for anyone who can supply source to a shared builder: existence probing
+    /// anywhere reachable, "access denied" distinguishable from "not found",
+    /// and the build directory plus the service account's username recoverable
+    /// from the out-of-root message. All outcomes now render identically.
+    fn refuse(&self, spelling: &str) -> PpError {
+        PpError::new(format!(
+            "cannot include {}: no such file under any declared search root",
+            PpError::quote(spelling, self.bounds.diagnostic_quote_bytes)
+        ))
     }
 
     /// Reject spellings that are dangerous before we ever touch the disk.
     ///
-    /// Done on the *spelling* as a first gate. It is not sufficient on its own
-    /// — a plain-looking relative path can still resolve through a symlink —
-    /// which is why `resolve` also checks the canonicalised result. This gate
-    /// exists because some of these forms are dangerous to *open at all*.
+    /// A first gate on the *spelling*. Not sufficient alone — a plain-looking
+    /// relative path can still resolve through a symlink, which is what the
+    /// canonicalised-result check in `resolve` is for — but some of these
+    /// forms are dangerous to *open at all*.
     fn screen_spelling(spelling: &str) -> Result<(), PpError> {
         if spelling.is_empty() {
             return Err(PpError::new("empty include path"));
         }
-        // UNC, in both spellings. Opening one authenticates outbound.
-        if spelling.starts_with("\\\\") || spelling.starts_with("//") {
-            return Err(PpError::new(format!(
-                "refusing UNC include path {spelling}: opening it would authenticate to a remote host"
-            )));
+        if spelling.as_bytes().contains(&0) {
+            return Err(PpError::new("include path contains a NUL byte"));
         }
-        // NTFS alternate data stream, and Windows drive-absolute paths.
-        if spelling.contains("::") {
-            return Err(PpError::new(format!(
-                "refusing include path {spelling}: NTFS alternate data stream"
-            )));
+        if spelling.starts_with("\\\\") || spelling.starts_with("//") {
+            return Err(PpError::new(
+                "refusing UNC include path: opening it would authenticate to a remote host",
+            ));
         }
         let p = Path::new(spelling);
         // `has_root()` as well as `is_absolute()`, and the difference is a real
         // hole rather than belt-and-braces: on Windows
-        // `Path::new("/etc/passwd").is_absolute()` is FALSE, because an
-        // absolute path there needs a drive prefix. `/etc/passwd` is merely
-        // root-relative. Checking only `is_absolute()` would let a
-        // root-anchored path through on the platform this repo primarily runs
-        // on. `has_root()` is true for both spellings on both platforms.
+        // `Path::new("/etc/passwd").is_absolute()` is FALSE, because absolute
+        // needs a drive prefix there — it is merely root-relative. Checking
+        // only `is_absolute()` lets a root-anchored path through on the
+        // platform this repo primarily runs on.
         if p.is_absolute() || p.has_root() {
-            return Err(PpError::new(format!(
-                "refusing root-anchored include path {spelling}: includes resolve under a declared root"
-            )));
+            return Err(PpError::new(
+                "refusing root-anchored include path: includes resolve under a declared root",
+            ));
         }
-        // `C:foo` is drive-relative on Windows and is not caught by is_absolute.
         let bytes = spelling.as_bytes();
         if bytes.len() >= 2 && bytes[1] == b':' && bytes[0].is_ascii_alphabetic() {
-            return Err(PpError::new(format!(
-                "refusing drive-qualified include path {spelling}"
-            )));
+            return Err(PpError::new("refusing drive-qualified include path"));
         }
         for comp in p.components() {
             if let Component::Normal(os) = comp {
                 let s = os.to_string_lossy();
-                let stem = s.split('.').next().unwrap_or("").to_ascii_uppercase();
+
+                // ANY colon, not just `::`. The canonical alternate-data-stream
+                // spelling is a SINGLE colon — `host.h:hidden` — and screening
+                // only for `::` let it straight through: it canonicalises to a
+                // path under the root, so containment passed and `is_file()`
+                // was true. An ADS is a content channel that directory
+                // listings, code review and most scanners do not show, which
+                // makes it a good place to park a payload behind an
+                // innocent-looking header. The one legitimate colon, a drive
+                // letter, is already rejected above.
+                if s.contains(':') {
+                    return Err(PpError::new(
+                        "refusing include path: a colon names an NTFS alternate data stream",
+                    ));
+                }
+
+                // Trailing spaces and dots are STRIPPED by Win32 path
+                // normalisation, so `NUL ` and `CON.` reach the same devices as
+                // `NUL` and `CON`. Trim before comparing, or one space bypasses
+                // the gate.
+                let stem = s
+                    .split('.')
+                    .next()
+                    .unwrap_or("")
+                    .trim_end_matches([' ', '.'])
+                    .to_ascii_uppercase();
                 const RESERVED: &[&str] = &[
                     "CON", "PRN", "AUX", "NUL", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6",
                     "COM7", "COM8", "COM9", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6",
                     "LPT7", "LPT8", "LPT9",
                 ];
                 if RESERVED.contains(&stem.as_str()) {
-                    return Err(PpError::new(format!(
-                        "refusing include path {spelling}: {stem} is a reserved device name"
-                    )));
+                    return Err(PpError::new("refusing include path: reserved device name"));
                 }
             }
         }
@@ -237,6 +317,13 @@ impl RootedFs {
     }
 
     /// True when `candidate` lies under one of the declared roots.
+    ///
+    /// `Path::starts_with` is COMPONENT-wise, not a string prefix test, which
+    /// is what makes this sound: a root of `/a/b` does not contain
+    /// `/a/bc/secret.h`. Pinned by
+    /// `containment_compares_whole_components_not_string_prefixes`, because
+    /// this is exactly the line someone later "simplifies" into a
+    /// `to_string_lossy().starts_with(..)`, silently breaking it.
     fn contained(&self, candidate: &Path) -> bool {
         self.roots.iter().any(|r| candidate.starts_with(r))
     }
@@ -246,83 +333,136 @@ impl SourceFs for RootedFs {
     fn resolve(&mut self, request: &IncludeRequest) -> Result<FileId, PpError> {
         Self::screen_spelling(&request.spelling)?;
 
-        // Try each root in order.
-        let mut last_err = None;
         for root in self.roots.clone() {
             let joined = root.join(&request.spelling);
 
-            // Canonicalise, which resolves `..` AND follows any symlink. We
-            // then check the RESULT against the roots, so a symlink pointing
-            // outside is caught here rather than trusted.
+            // Canonicalise, which resolves `..` AND follows any symlink or
+            // reparse point. The RESULT is then checked against the roots, so
+            // a symlink pointing outside is caught rather than trusted.
             let canon = match joined.canonicalize() {
                 Ok(c) => c,
-                Err(e) => {
-                    last_err = Some(e);
-                    continue;
-                }
+                Err(_) => continue,
             };
+
             if !self.contained(&canon) {
-                return Err(PpError::new(format!(
-                    "include {} resolves to {} which is outside every declared search root",
-                    request.spelling,
-                    canon.display()
-                )));
+                return Err(self.refuse(&request.spelling));
             }
 
-            // Regular files only, checked on the resolved target. A FIFO or a
+            // Identity: the same file resolved twice is the same FileId, which
+            // is what makes the engine's cycle check work at all.
+            if let Some(id) = self.by_canon.get(&canon) {
+                return Ok(*id);
+            }
+
+            // Open ONCE, then verify the handle — never the path.
+            let handle = match File::open(&canon) {
+                Ok(h) => h,
+                Err(_) => return Err(self.refuse(&request.spelling)),
+            };
+            let meta = match handle.metadata() {
+                Ok(m) => m,
+                Err(_) => return Err(self.refuse(&request.spelling)),
+            };
+
+            // Regular files only, checked on the opened handle. A FIFO or
             // character device would make the later read block forever, and no
             // resource bound can fire while the engine is stuck inside it.
-            let meta = std::fs::metadata(&canon)
-                .map_err(|e| PpError::new(format!("cannot stat {}: {e}", canon.display())))?;
             if !meta.is_file() {
                 return Err(PpError::new(format!(
                     "refusing to include {}: not a regular file",
-                    canon.display()
+                    PpError::quote(&request.spelling, self.bounds.diagnostic_quote_bytes)
                 )));
             }
-            // Size from metadata BEFORE reading, so an enormous file is refused
-            // rather than read and then rejected.
-            if meta.len() > self.max_bytes {
+            if meta.len() > self.bounds.bytes_per_file {
                 return Err(PpError::new(format!(
-                    "refusing to include {}: {} bytes exceeds the {}-byte per-file bound",
-                    canon.display(),
-                    meta.len(),
-                    self.max_bytes
+                    "refusing to include {}: exceeds the {}-byte per-file bound",
+                    PpError::quote(&request.spelling, self.bounds.diagnostic_quote_bytes),
+                    self.bounds.bytes_per_file
                 )));
             }
 
-            let id = FileId::new(self.paths.len() as u32);
-            self.names.push(request.spelling.clone());
-            self.paths.push(canon);
+            let id = FileId::new(self.entries.len() as u32);
+            self.entries.push(Entry {
+                name: request.spelling.clone(),
+                handle: Some(handle),
+                text: None,
+            });
+            self.by_canon.insert(canon, id);
             return Ok(id);
         }
 
-        Err(PpError::new(match last_err {
-            Some(e) => format!("cannot resolve include {}: {e}", request.spelling),
-            None => format!("cannot resolve include {}", request.spelling),
-        }))
+        Err(self.refuse(&request.spelling))
     }
 
     fn read(&mut self, file: FileId) -> Result<SourceText, PpError> {
-        let path = self
-            .paths
-            .get(file.index())
-            .ok_or_else(|| PpError::new("read of an unresolved file"))?
-            .clone();
+        let quote_bytes = self.bounds.diagnostic_quote_bytes;
+        let limit = self.bounds.bytes_per_file;
+        let entry = self
+            .entries
+            .get_mut(file.index())
+            .ok_or_else(|| PpError::new("read of an unresolved file"))?;
 
-        let bytes = std::fs::read(&path)
-            .map_err(|e| PpError::new(format!("cannot read {}: {e}", path.display())))?;
+        // Served from cache on a repeat include of the same file. Bounded: the
+        // engine charges `total_source_bytes` on every first read, so the cache
+        // can never hold more than that budget allows.
+        if let Some(text) = &entry.text {
+            return Ok(text.clone());
+        }
+
+        // Read the handle opened and verified in `resolve`, then drop it, so
+        // the descriptor cost is one file at a time rather than one per
+        // inclusion.
+        let mut handle = entry
+            .handle
+            .take()
+            .ok_or_else(|| PpError::new("internal: verified handle already consumed"))?;
+        // Bounded read, not `read_to_end`.
+        //
+        // Retaining the verified handle closes the PATH-swap window — a
+        // symlink planted at the canonical path, or the name rebound to
+        // another file, cannot affect us because we never look the path up
+        // again. It does NOT close the REWRITE window: `std::fs::write`
+        // truncates and rewrites the same file object, and an open handle sees
+        // the new contents. A test here proved exactly that, driving 5 MB
+        // through a 64-byte bound even with the handle retained.
+        //
+        // So the size bound is enforced where it cannot be evaded: on the read
+        // itself. `take(limit + 1)` lets us tell "exactly at the limit" from
+        // "over it" without ever allocating more than one byte past the cap.
+        let mut bytes = Vec::new();
+        (&mut handle)
+            .take(limit.saturating_add(1))
+            .read_to_end(&mut bytes)
+            .map_err(|_| {
+                PpError::new(format!("cannot read {}", PpError::quote(&entry.name, quote_bytes)))
+            })?;
+        drop(handle);
+        if bytes.len() as u64 > limit {
+            return Err(PpError::new(format!(
+                "refusing to include {}: exceeds the {}-byte per-file bound",
+                PpError::quote(&entry.name, quote_bytes),
+                limit
+            )));
+        }
 
         // Reject non-UTF-8 rather than converting lossily. Silent
         // replacement-character substitution would change the token stream,
         // which is a correctness bug disguised as leniency.
-        String::from_utf8(bytes).map_err(|_| {
-            PpError::new(format!("{} is not valid UTF-8", path.display()))
-        })
+        let text = String::from_utf8(bytes).map_err(|_| {
+            PpError::new(format!(
+                "{} is not valid UTF-8",
+                PpError::quote(&entry.name, quote_bytes)
+            ))
+        })?;
+        entry.text = Some(text.clone());
+        Ok(text)
     }
 
     fn name_of(&self, file: FileId) -> String {
-        self.names.get(file.index()).cloned().unwrap_or_else(|| "<unknown>".to_string())
+        self.entries
+            .get(file.index())
+            .map(|e| e.name.clone())
+            .unwrap_or_else(|| "<unknown>".to_string())
     }
 }
 
@@ -414,32 +554,171 @@ mod tests {
         std::fs::write(dir.join("secret.h"), "secret").unwrap();
         std::fs::write(root.join("ok.h"), "ok").unwrap();
 
-        let mut fs = RootedFs::new([root.clone()], 1 << 20).unwrap();
+        let mut fs = RootedFs::new([root.clone()], Bounds::default()).unwrap();
 
         // Inside the root: fine.
         let id = fs.resolve(&req("ok.h")).unwrap();
         assert_eq!(fs.read(id).unwrap(), "ok");
 
         // Escaping it: refused, even though the spelling gate allowed `..`.
-        let e = fs.resolve(&req("../secret.h")).unwrap_err().to_string();
-        assert!(e.contains("outside every declared search root"), "{e}");
+        assert!(fs.resolve(&req("../secret.h")).is_err());
 
         let _ = std::fs::remove_dir_all(&dir);
     }
 
     #[test]
-    fn a_directory_is_not_a_regular_file() {
+    fn a_directory_is_not_readable_as_an_include() {
         let dir = std::env::temp_dir().join("prep01_rootedfs_dir_test");
         let root = dir.join("root");
         std::fs::create_dir_all(root.join("subdir")).unwrap();
 
-        let mut fs = RootedFs::new([root], 1 << 20).unwrap();
-        let e = fs.resolve(&req("subdir")).unwrap_err().to_string();
-        assert!(e.contains("not a regular file"), "{e}");
+        let mut fs = RootedFs::new([root], Bounds::default()).unwrap();
+        assert!(fs.resolve(&req("subdir")).is_err());
 
         let _ = std::fs::remove_dir_all(&dir);
     }
 
+    #[test]
+    fn refusals_do_not_leak_a_filesystem_oracle() {
+        // The security property, asserted directly rather than implied.
+        //
+        // An earlier version reported the resolved absolute path for an
+        // out-of-root hit, and the raw io::Error otherwise. That let a program
+        // that can only supply SOURCE probe a shared builder's filesystem:
+        // distinguish a file that exists but is unreadable from one that is
+        // absent, confirm existence anywhere reachable, and recover the build
+        // directory and the service account's username from the out-of-root
+        // message.
+        //
+        // So the test is not "it refuses" — it is that the refusals are
+        // INDISTINGUISHABLE from each other, and mention neither the resolved
+        // path nor the OS error.
+        let dir = std::env::temp_dir().join("prep01_rootedfs_oracle_test");
+        let root = dir.join("root");
+        std::fs::create_dir_all(&root).unwrap();
+        std::fs::write(dir.join("present_outside.h"), "secret").unwrap();
+        std::fs::write(root.join("real.h"), "ok").unwrap();
+
+        let mut fs = RootedFs::new([root.clone()], Bounds::default()).unwrap();
+
+        // The spelling itself is echoed back, which reveals nothing: the
+        // program supplied it. What must not differ is everything ELSE, so
+        // normalise the spelling out before comparing.
+        let shape = |fs: &mut RootedFs, spelling: &str| {
+            fs.resolve(&req(spelling)).unwrap_err().to_string().replace(spelling, "<SPELLING>")
+        };
+
+        let outside = shape(&mut fs, "../present_outside.h");
+        let absent = shape(&mut fs, "../absent_entirely.h");
+        let missing_inside = shape(&mut fs, "no_such.h");
+
+        assert_eq!(
+            outside, absent,
+            "a file that EXISTS outside the root must not be distinguishable from one that does not exist"
+        );
+        assert_eq!(outside, missing_inside);
+
+        for m in [&outside, &absent, &missing_inside] {
+            assert!(!m.contains("present_outside"), "leaked the resolved target: {m}");
+            assert!(
+                !m.to_lowercase().contains("os error") && !m.contains("denied"),
+                "leaked the raw OS error: {m}"
+            );
+            // The canonical root is an absolute path; none of it may appear.
+            let root_str = root.canonicalize().unwrap().display().to_string();
+            assert!(!m.contains(&root_str), "leaked the absolute build path: {m}");
+        }
+
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn the_same_file_resolves_to_the_same_id_so_cycles_are_detectable() {
+        // The engine detects include cycles by comparing FileIds on its active
+        // stack. That check is worthless unless resolution is keyed on file
+        // IDENTITY: an earlier version minted a fresh id per inclusion, so a
+        // self-including file was never reported as a cycle and instead ran
+        // into the depth bound 200 levels later.
+        let dir = std::env::temp_dir().join("prep01_rootedfs_identity_test");
+        let root = dir.join("root");
+        std::fs::create_dir_all(&root).unwrap();
+        std::fs::write(root.join("shared.h"), "shared").unwrap();
+
+        let mut fs = RootedFs::new([root], Bounds::default()).unwrap();
+        let a = fs.resolve(&req("shared.h")).unwrap();
+        let b = fs.resolve(&req("shared.h")).unwrap();
+        assert_eq!(a, b, "the same file must resolve to the same FileId");
+
+        // And the spelling may differ while the file is the same.
+        let c = fs.resolve(&req("./shared.h")).unwrap();
+        assert_eq!(a, c, "identity is the canonical path, not the spelling");
+
+        // A repeat read is still served (from cache) rather than failing
+        // because the verified handle was already consumed.
+        assert_eq!(fs.read(a).unwrap(), "shared");
+        assert_eq!(fs.read(b).unwrap(), "shared");
+
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn the_size_bound_holds_even_if_the_file_grows_after_resolution() {
+        // The TOCTOU regression, without needing a race: `resolve` verifies an
+        // open handle and `read` reads THAT handle, so rewriting the path in
+        // between cannot smuggle bytes past the per-file bound. When `read`
+        // re-opened by path, a security review drove 5 MB through a 64-byte
+        // bound this way.
+        let dir = std::env::temp_dir().join("prep01_rootedfs_toctou_test");
+        let root = dir.join("root");
+        std::fs::create_dir_all(&root).unwrap();
+        let target = root.join("small.h");
+        std::fs::write(&target, "small").unwrap();
+
+        let mut fs =
+            RootedFs::new([root], Bounds { bytes_per_file: 64, ..Bounds::default() }).unwrap();
+        let id = fs.resolve(&req("small.h")).unwrap();
+
+        // Swap in something far over the bound, after verification.
+        std::fs::write(&target, "x".repeat(5_000_000)).unwrap();
+
+        // The property that matters is that the BOUND holds. Retaining the
+        // handle does not by itself achieve it: `std::fs::write` truncates and
+        // rewrites the same file object, which an open handle sees. So the
+        // read is bounded too, and this must refuse rather than return 5 MB.
+        let err = fs
+            .read(id)
+            .expect_err("a file that grew past the bound after resolution must be refused");
+        assert!(err.to_string().contains("per-file bound"), "{err}");
+
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn a_single_colon_alternate_data_stream_is_refused() {
+        // `::$DATA` is the spelling everyone screens for; `file:stream` is the
+        // one that actually gets used, and screening only for `::` let it
+        // straight through. An ADS canonicalises to a path under the root, so
+        // containment passes and `is_file()` is true — the payload rides along
+        // behind an innocent-looking header that no directory listing shows.
+        for p in ["host.h:hidden", "host.h:hidden:$DATA", "host.h::$DATA", "sub/x.h:s"] {
+            assert!(RootedFs::screen_spelling(p).is_err(), "{p} should be refused");
+        }
+    }
+
+    #[test]
+    fn reserved_device_names_are_refused_through_win32_normalisation() {
+        // Win32 strips trailing spaces and dots, so `NUL ` and `CON.` reach the
+        // same devices as `NUL` and `CON`. A gate that compares before
+        // trimming is bypassed by one space.
+        for p in ["NUL ", "CON ", "CON.", "sub/COM1 ", "nul .h", "LPT9."] {
+            assert!(RootedFs::screen_spelling(p).is_err(), "{p} should be refused");
+        }
+    }
+
+    #[test]
+    fn an_embedded_nul_byte_is_refused() {
+        assert!(RootedFs::screen_spelling("ok\0.h").is_err());
+    }
     #[test]
     fn an_oversized_file_is_refused_from_metadata_not_after_reading_it() {
         let dir = std::env::temp_dir().join("prep01_rootedfs_size_test");
@@ -447,7 +726,7 @@ mod tests {
         std::fs::create_dir_all(&root).unwrap();
         std::fs::write(root.join("big.h"), vec![b'x'; 4096]).unwrap();
 
-        let mut fs = RootedFs::new([root], 1024).unwrap();
+        let mut fs = RootedFs::new([root], Bounds { bytes_per_file: 1024, ..Bounds::default() }).unwrap();
         let e = fs.resolve(&req("big.h")).unwrap_err().to_string();
         assert!(e.contains("exceeds"), "{e}");
 
@@ -461,7 +740,7 @@ mod tests {
         std::fs::create_dir_all(&root).unwrap();
         std::fs::write(root.join("bad.h"), [0xff, 0xfe, 0x00]).unwrap();
 
-        let mut fs = RootedFs::new([root], 1 << 20).unwrap();
+        let mut fs = RootedFs::new([root], Bounds::default()).unwrap();
         let id = fs.resolve(&req("bad.h")).unwrap();
         let e = fs.read(id).unwrap_err().to_string();
         assert!(e.contains("not valid UTF-8"), "{e}");
@@ -470,7 +749,29 @@ mod tests {
     }
 
     #[test]
+    fn containment_compares_whole_components_not_string_prefixes() {
+        // `contained()` is `candidate.starts_with(root)`, and its correctness
+        // rests entirely on `Path::starts_with` being COMPONENT-wise rather
+        // than a string prefix test. If it were a string comparison, a root of
+        // `/a/b` would happily contain `/a/bc/secret.h` — a sibling directory
+        // whose name merely begins with the root's — and the whole containment
+        // property would be worthless.
+        //
+        // Verified against the real implementation rather than assumed, and
+        // pinned here because this is exactly the kind of line someone later
+        // "simplifies" into `to_string_lossy().starts_with(...)`.
+        let root = Path::new("/a/b");
+        assert!(Path::new("/a/b/ok.h").starts_with(root));
+        assert!(!Path::new("/a/bc/secret.h").starts_with(root), "sibling prefix must NOT be contained");
+        assert!(!Path::new("/a/bcd").starts_with(root));
+
+        let wroot = Path::new(r"C:\a\b");
+        assert!(Path::new(r"C:\a\b\ok.h").starts_with(wroot));
+        assert!(!Path::new(r"C:\a\bc\secret.h").starts_with(wroot));
+    }
+
+    #[test]
     fn a_filesystem_with_no_roots_is_refused() {
-        assert!(RootedFs::new([], 1 << 20).is_err());
+        assert!(RootedFs::new([], Bounds::default()).is_err());
     }
 }

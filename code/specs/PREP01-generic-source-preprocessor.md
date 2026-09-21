@@ -249,12 +249,28 @@ file and misattribute a token's provenance throughout the source map.
 That is a deliberate split — it keeps path policy in one auditable place — but
 it means the guarantee is only as good as `RootedFs`, which must:
 
-- **Verify containment on the opened handle, not on the path.** Canonicalise-
-  then-open is TOCTOU by construction: a symlink swapped into a directory
-  component between the check and the open wins. Open with symlink-following
-  disabled (`O_NOFOLLOW` / `FILE_FLAG_OPEN_REPARSE_POINT`), or open
-  directory-relative and verify the opened file's identity (device+inode /
-  `FILE_ID_INFO`) lies under the root.
+- **Resolve, open and verify in one step, and never re-open by path.**
+  `resolve` canonicalises (which follows symlinks and reparse points), checks
+  the *result* against the roots, opens the file once, and verifies size and
+  file-kind against the **open handle**. `read` reads that handle. Slice 1
+  implements this; an earlier version stored only a `PathBuf` and had `read`
+  call `std::fs::read`, which a security review broke without needing a race
+  at all.
+
+  *Amended after implementation, because the original wording claimed more than
+  is delivered.* This spec previously required `O_NOFOLLOW` /
+  `FILE_FLAG_OPEN_REPARSE_POINT` or a device+inode identity check. Slice 1 uses
+  canonicalise-then-contain plus a retained handle instead, which closes the
+  path-swap window (a symlink planted at the canonical path, or the name
+  rebound to a different file, cannot affect a handle we already hold).
+
+  It does **not** close the *rewrite* window: `std::fs::write` truncates and
+  rewrites the same file object, which an open handle sees. That was measured,
+  not assumed — 5 MB went through a 64-byte bound with the handle retained. So
+  the per-file size bound is enforced **on the read itself** (`take(limit + 1)`)
+  rather than only on the pre-read metadata, which holds regardless of what
+  happened to the file in between. Handle-identity verification remains
+  worthwhile future work; it is recorded here rather than claimed.
 - **Reject, each with a located diagnostic:** absolute paths (`/etc/passwd`,
   `C:\…`); any symlink or reparse-point component; and — this repo is
   Windows-primary — UNC paths (`\\host\share\x.h`, which triggers an outbound
