@@ -926,26 +926,45 @@ pub fn lower_iir_to_beam(
     // atom key coexists with integer keys in the same table and that integer
     // lookups keep working beside it.
     //
-    // The reserved key also cannot be FORGED by a source program, which
-    // matters because forging it would let untrusted input rewrite an array's
-    // recorded length and so defeat every bounds check derived from it. Two
-    // independent reasons, either alone sufficient:
+    // The key IS forgeable from crafted IIR, and the name reflects that.
     //
-    //   1. `array_set` is the only other writer to these tables, and its key
-    //      operand is always an x-register holding the runtime INTEGER index
-    //      (`operand_reg!(get_src!(instr, 1))`). `:ets` matches keys by exact
-    //      term, and an integer never equals an atom in Erlang — not for any
-    //      value, and not across any size, since there is no numeric/atom
-    //      coercion in term equality.
-    //   2. Nothing in this backend produces this atom as a runtime VALUE in
-    //      the first place. Source-level strings are Erlang character lists
-    //      (see the `str_const` arm), not atoms; booleans and nil are
-    //      immediates. Atoms are emitted only as fixed operands chosen here.
+    // An earlier version of this comment claimed otherwise, on the reasoning
+    // that `array_set`'s key operand always holds a runtime INTEGER and that
+    // nothing here produces an atom as a runtime VALUE. The first half is
+    // true; the second is FALSE, and security review found the path:
     //
-    // A source-level *global* named the same thing would intern the same atom
-    // — atom interning is by name — but globals live in the process
-    // dictionary via `erlang:put/2`, not in any array table, so the two never
-    // meet.
+    //     %c = alloc_closure Str("$lang_vm_array_len")  ; interns the NAME as
+    //                                                   ; an atom and builds
+    //                                                   ; [atom | captures]
+    //     %k = field_load %c, 0                         ; get_list -> %k = atom
+    //          array_set %arr, %k, 9999                 ; ets:insert(Tab,
+    //                                                   ;   {reserved, 9999})
+    //     %n = array_len %arr                           ; reads back 9999
+    //
+    // `alloc_closure` interns any source-supplied string as an atom and
+    // `put_list`s it into a register; `field_load` then lifts it out as an
+    // ordinary value. So an atom absolutely can become runtime data here.
+    //
+    // The consequence is bounded — a program can only corrupt its OWN array's
+    // recorded length, and every access is still type- and range-checked by
+    // BEAM's own BIFs, so this is guest data integrity rather than host memory
+    // safety. But a compiler-maintained invariant that untrusted input can
+    // rewrite is not an invariant, so it is closed rather than documented.
+    //
+    // Two measures, and the NAME is the smaller one:
+    //
+    //   1. The key uses the `$lang_vm_` prefix this backend already
+    //      established for `$lang_vm_input_peek` (see the BEAM07 input cache
+    //      above), instead of a short guessable `$array_len`.
+    //   2. `validate_for_beam` REJECTS that prefix at every site where a
+    //      source-supplied string becomes an atom — function names, the
+    //      `global_load`/`global_store` key, and `alloc_closure`'s function
+    //      name. That is what actually closes the hole; the prefix alone would
+    //      only make it marginally harder to hit by accident.
+    //
+    // Measure 2 also closes a pre-existing instance of the same class that
+    // needed no closure trick at all: `global_store Str("$lang_vm_input_peek")`
+    // would `erlang:put/2` straight over BEAM07's stdin lookahead cache.
     //
     // One observable side effect, recorded because it is real even though
     // nothing here depends on it: the reserved entry makes
@@ -959,7 +978,7 @@ pub fn lower_iir_to_beam(
     let atom_info = atoms.intern("info");
     let atom_get = atoms.intern("get");
     let atom_size = atoms.intern("size");
-    let atom_array_len_key = atoms.intern("$array_len");
+    let atom_array_len_key = atoms.intern("$lang_vm_array_len");
     let import_atomics_info = imports.intern(atomics_atom, atom_info, 1); // atomics:info/1
     let import_maps_get = imports.intern(maps_atom, atom_get, 2); // maps:get/2
 

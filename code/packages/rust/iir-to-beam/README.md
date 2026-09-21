@@ -246,6 +246,17 @@ pays the O(n) cost entirely in `call_ext`s (`lists:seq/2`,
 `lists:duplicate/2`, `lists:zip/2`, one `ets:insert/2`) rather than an
 emitted loop.
 
+The `$lang_vm_` atom prefix is **reserved**, and `validate_for_beam` rejects
+any source-supplied name that uses it (module name, function names, and the
+leading `Operand::Str` of `global_load`/`global_store`/`alloc_closure`/`call`;
+`str_const` is exempt, since its operand is a string literal that lowers to a
+character list, never an atom). Two pieces of compiler-maintained state live
+under that prefix — BEAM07's stdin lookahead cache and BEAM10's array-length
+key — and without the check a crafted module could name either and overwrite
+it. `alloc_closure` interns its function name as an atom and `field_load` lifts
+it back out as an ordinary value, so an atom can become program data; the
+`global_store` case needs no indirection at all.
+
 BEAM10 adds `array_len`, which is harder than it looks because the two
 substrates above answer "how long are you?" differently and only one can
 answer at all. It also cannot dispatch the way `array_get`/`array_set` do:

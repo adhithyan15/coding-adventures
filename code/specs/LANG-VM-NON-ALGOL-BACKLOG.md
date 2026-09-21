@@ -12,6 +12,13 @@ roadmap is reconciled.
 
 Tracked as issue #15880.
 
+Security review of the VM-070 PR also filed **#15882** — scratch x-registers
+parked across a `call_ext` are not GC roots. Pre-existing and backend-wide
+(`array_set`, `alloc_array`, `call_closure` all do it), so not VM-070's to
+fix, but it is the same subject as the recurring `live_across` op-list bug
+approached from the other side: not *which* variables get spilled, but *where*
+they are parked.
+
 `ets:new` does not pre-zero cells, so reading an `array<f64>`/`array<str>`
 element that was never written raises `badarg`/`badkey` instead of returning
 `0.0`. BEAM04 recorded this and left it undecided on the grounds that no

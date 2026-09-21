@@ -74,6 +74,54 @@ save/restore bracket") would have passed against the broken code: the bracket
 was present and correct; what was empty was the set of variables it had to
 save. The shipped test asserts membership in the op list itself.
 
+### Security review found the reserved key was forgeable, and a claim in this code was wrong
+
+The first version of this change named the key `$array_len` and carried a
+comment arguing it could not be forged, on the reasoning that `array_set`'s key
+operand always holds a runtime integer and that nothing in this backend
+produces an atom as a runtime *value*. The first half is true. **The second is
+false**, and security review supplied the counterexample:
+
+```
+%c = alloc_closure Str("$array_len")   ; interns the NAME as an atom and
+                                       ; put_lists it into a register
+%k = field_load %c, 0                  ; get_list lifts the atom back out
+                                       ; as an ordinary value
+     array_set %arr, %k, 9999          ; ets:insert(Tab, {reserved, 9999})
+%n = array_len %arr                    ; reads back the forged 9999
+```
+
+Verified rather than accepted: with the new check disabled, lowering *accepts*
+that module, the source-supplied name interns to the **same atom index** the
+compiler uses for its own key, and `ets:insert/2` is emitted. (An atom key
+coexisting with integer keys in one ets table, and reading back through
+`lookup_element`, was separately confirmed on real `erl`.) Running the forged
+module end to end was not completed — a hand-built module needs export
+scaffolding unrelated to the question — so the claim made here is exactly the
+collision and the emitted call, not an observed wrong answer at runtime.
+
+The impact is bounded: a program can only corrupt its own array's recorded
+length, and BEAM's own BIFs still type- and range-check every access, so this
+is guest data integrity rather than host memory safety. But a
+compiler-maintained invariant that untrusted input can rewrite is not an
+invariant. Two changes:
+
+- The key is renamed to `$lang_vm_array_len`, matching the `$lang_vm_` prefix
+  this backend already established for `$lang_vm_input_peek`.
+- `validate_for_beam` now **rejects** that prefix wherever a source-supplied
+  string becomes an atom: the module name, function names, and the leading
+  `Operand::Str` of `global_load`/`global_store`/`alloc_closure`/`call`.
+  `str_const` is deliberately exempt — its `Str` is a string *literal* that
+  lowers to a character list, never an atom, and restricting it would make the
+  prefix unusable as ordinary program text.
+
+The validation also closes a **pre-existing** instance of the same class that
+needed no closure trick: `global_store Str("$lang_vm_input_peek")` does
+`erlang:put/2` straight over BEAM07's stdin lookahead cache.
+
+Re-running the 292-row ALGOL corpus after the change: still 277 passing, and
+**zero** programs rejected by the new check. It costs nothing.
+
 ### Known gap, now reachable
 
 Implementing `array_len` exposes BEAM04's documented pre-zero limitation:

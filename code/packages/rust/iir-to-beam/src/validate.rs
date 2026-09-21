@@ -241,6 +241,72 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
         }
     }
 
+    // ── Check 1.6: reserved atom namespace (trust-boundary guard) ───────────
+    //
+    // This backend keeps compiler-maintained state in BEAM terms keyed by
+    // fixed atoms: `$lang_vm_input_peek` holds BEAM07's stdin lookahead cache
+    // in the process dictionary, and `$lang_vm_array_len` holds an ets-backed
+    // array's declared length (BEAM10), which every bounds check derived from
+    // `array_len` depends on.
+    //
+    // Several lowering paths intern a SOURCE-SUPPLIED string as an atom, so
+    // without this check a crafted module can name one of those and reach the
+    // compiler's own state:
+    //
+    //   - `global_store Str("$lang_vm_input_peek")` does `erlang:put/2`
+    //     directly over the input cache. No indirection needed.
+    //   - `alloc_closure Str("$lang_vm_array_len")` interns the name as an
+    //     atom and `put_list`s it into a register; a following `field_load`
+    //     lifts it out as an ordinary value, which `array_set` will then
+    //     happily use as an ets KEY — overwriting the recorded length and so
+    //     forging the result of `array_len`.
+    //
+    // The blast radius is a program corrupting its own state, not escaping
+    // into the host: BEAM's BIFs still type- and range-check every access.
+    // But an invariant untrusted input can rewrite is not an invariant, so
+    // the namespace is reserved rather than merely documented.
+    //
+    // Checked on the WHOLE module before any lowering, because a name only has
+    // to reach the atom table once to collide.
+    const RESERVED_ATOM_PREFIX: &str = "$lang_vm_";
+
+    let reserve_check = |what: &str, name: &str, ctx: &str| -> Option<String> {
+        name.starts_with(RESERVED_ATOM_PREFIX).then(|| {
+            format!(
+                "ReservedAtom: {what} {name:?}{ctx} uses the {RESERVED_ATOM_PREFIX:?} \
+                 prefix, which is reserved for this backend's own compiler-maintained \
+                 state (the BEAM07 input cache and the BEAM10 array-length key). \
+                 A source-supplied name that interns to one of those atoms can \
+                 overwrite it."
+            )
+        })
+    };
+
+    if let Some(e) = reserve_check("module name", &module.name, "") {
+        errors.push(e);
+    }
+    for func in &module.functions {
+        if let Some(e) = reserve_check("function name", &func.name, "") {
+            errors.push(e);
+        }
+        for instr in &func.instructions {
+            // `str_const` is a string LITERAL — it lowers to an Erlang
+            // character list, never to an atom, so it cannot collide and must
+            // not be restricted. Every other op whose first operand is a
+            // `Str` uses it as a NAME that gets interned: `global_load`,
+            // `global_store`, `alloc_closure`, `call`.
+            if instr.op == "str_const" {
+                continue;
+            }
+            if let Some(Operand::Str(name)) = instr.srcs.first() {
+                let ctx = format!(" (op {:?} in function {:?})", instr.op, func.name);
+                if let Some(e) = reserve_check("name operand", name, &ctx) {
+                    errors.push(e);
+                }
+            }
+        }
+    }
+
     for func in &module.functions {
         // ── Check 2: EmptyFunction ───────────────────────────────────────────
         //

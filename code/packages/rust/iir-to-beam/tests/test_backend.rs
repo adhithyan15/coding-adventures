@@ -5178,3 +5178,140 @@ fn beam10_array_len_is_listed_as_a_call_emitting_op() {
         "the extracted slice must actually be the op list (control)"
     );
 }
+
+// ===========================================================================
+// BEAM10 (security review) — the reserved atom namespace
+// ===========================================================================
+//
+// This backend keeps compiler-maintained state in BEAM terms keyed by fixed
+// atoms: `$lang_vm_input_peek` (BEAM07's stdin lookahead cache, in the process
+// dictionary) and `$lang_vm_array_len` (an ets-backed array's declared length,
+// which every bounds check derived from `array_len` depends on).
+//
+// Several lowering paths intern a SOURCE-SUPPLIED string as an atom, so a
+// crafted module can name one of those and reach that state. The comment in
+// `lower.rs` originally claimed this was impossible, on the reasoning that
+// nothing produces an atom as a runtime VALUE. That reasoning was wrong, and
+// `forging_the_array_length_key_via_a_closure_name_is_rejected` below encodes
+// the counterexample as an executable test rather than as prose.
+
+/// A module with one function whose body is exactly `instrs`.
+fn reserved_atom_module(fn_name: &str, instrs: Vec<IIRInstr>) -> IIRModule {
+    make_module_fn(fn_name, vec![], "i64", instrs)
+}
+
+#[test]
+fn a_global_named_with_the_reserved_prefix_is_rejected() {
+    // The easy case, and a PRE-EXISTING hole this check closes:
+    // `global_store` interns its key operand and does `erlang:put/2` with it,
+    // so this writes straight over BEAM07's stdin lookahead cache. No
+    // indirection required.
+    let module = reserved_atom_module(
+        "main",
+        vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new(
+                "global_store",
+                None,
+                vec![Operand::Str("$lang_vm_input_peek".into()), Operand::Var("v".into())],
+                "void",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i64"),
+        ],
+    );
+    let errors = validate_for_beam(&module);
+    assert!(
+        errors.iter().any(|e| e.starts_with("ReservedAtom")),
+        "a global named $lang_vm_input_peek must be rejected; got {errors:?}"
+    );
+}
+
+#[test]
+fn forging_the_array_length_key_via_a_closure_name_is_rejected() {
+    // The path security review found, which the code previously argued could
+    // not exist.
+    //
+    //   alloc_closure Str("$lang_vm_array_len")  interns the NAME as an atom
+    //                                            and put_lists it into a reg
+    //   field_load %c, 0                         get_list lifts the atom out
+    //                                            as an ORDINARY VALUE
+    //   array_set %arr, %k, 9999                 ets:insert(Tab, {reserved, N})
+    //   array_len %arr                           reads back the forged 9999
+    //
+    // The load-bearing step is the second one: `alloc_closure` turning a
+    // source string into an atom, and `field_load` turning that atom back into
+    // data, is exactly what "nothing produces an atom as a runtime value"
+    // denied.
+    let module = reserved_atom_module(
+        "main",
+        vec![
+            IIRInstr::new(
+                "alloc_closure",
+                Some("c".into()),
+                vec![Operand::Str("$lang_vm_array_len".into())],
+                "closure",
+            ),
+            IIRInstr::new("field_load", Some("k".into()), vec![Operand::Var("c".into()), Operand::Int(0)], "ref<any>"),
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(4)], "i64"),
+            IIRInstr::new("alloc_array", Some("arr".into()), vec![Operand::Var("n".into())], "array<f64>"),
+            IIRInstr::new(
+                "array_set",
+                None,
+                vec![Operand::Var("arr".into()), Operand::Var("k".into()), Operand::Var("n".into())],
+                "f64",
+            ),
+            IIRInstr::new("array_len", Some("len".into()), vec![Operand::Var("arr".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("len".into())], "i64"),
+        ],
+    );
+    let errors = validate_for_beam(&module);
+    assert!(
+        errors.iter().any(|e| e.starts_with("ReservedAtom")),
+        "a closure named $lang_vm_array_len must be rejected; got {errors:?}"
+    );
+}
+
+#[test]
+fn a_function_named_with_the_reserved_prefix_is_rejected() {
+    // `func.name` is interned too, and a locally-callable function named into
+    // the reserved space would collide just as readily.
+    let module = reserved_atom_module(
+        "$lang_vm_array_len",
+        vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i64"),
+        ],
+    );
+    let errors = validate_for_beam(&module);
+    assert!(
+        errors.iter().any(|e| e.starts_with("ReservedAtom")),
+        "a function named into the reserved space must be rejected; got {errors:?}"
+    );
+}
+
+#[test]
+fn ordinary_names_and_string_literals_are_not_swept_up_by_the_reserved_check() {
+    // The control, and it has real work to do in two directions.
+    //
+    // A prefix check that rejected too much would be just as broken as one
+    // that rejected too little, and `str_const` is the specific trap: it is
+    // the one op whose `Operand::Str` is a string LITERAL rather than a name.
+    // It lowers to an Erlang character list, never to an atom, so it cannot
+    // collide — and restricting it would make the reserved prefix unusable as
+    // ordinary program TEXT, which is a different bug.
+    let module = reserved_atom_module(
+        "main",
+        vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("$lang_vm_array_len".into())], "str"),
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(7)], "i64"),
+            IIRInstr::new("global_store", None, vec![Operand::Str("ordinary".into()), Operand::Var("v".into())], "void"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i64"),
+        ],
+    );
+    let errors = validate_for_beam(&module);
+    assert!(
+        !errors.iter().any(|e| e.starts_with("ReservedAtom")),
+        "a string LITERAL holding the prefix is data, not a name, and must be \
+         allowed; an ordinary global name must be too. got {errors:?}"
+    );
+}
