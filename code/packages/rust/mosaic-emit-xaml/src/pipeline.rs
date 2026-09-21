@@ -9089,7 +9089,10 @@ fn emit_host_input(
     }
 
     // -- Event wiring --
-    // onChange handler dispatches with the new text payload.
+    // Unfocused inputs receive deferred binding/teardown TextChanged events.
+    // They must not dispatch user edits (for example, a removed cell editor
+    // clearing the active formula bar after commit).
+    // onChange handler dispatches the active input's new text payload.
     if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop_value(node, "onChange") {
         let handler = format!("{x_name}_TextChanged");
         let emit_case = strip_on_prefix(emit_name);
@@ -9097,7 +9100,7 @@ fn emit_host_input(
         let component = ctx.component_name;
         let args = host_input_event_args(ctx, emit_name, "tb.Text")?;
         let body = format!(
-            "    private void {handler}(object sender, Microsoft.UI.Xaml.Controls.TextChangedEventArgs e)\n    {{\n        if (sender is Microsoft.UI.Xaml.Controls.TextBox tb)\n        {{\n            Dispatch?.Invoke(this, new {component}Event.{case_pascal}({args}));\n        }}\n    }}"
+            "    private void {handler}(object sender, Microsoft.UI.Xaml.Controls.TextChangedEventArgs e)\n    {{\n        if (sender is Microsoft.UI.Xaml.Controls.TextBox tb && tb.FocusState != Microsoft.UI.Xaml.FocusState.Unfocused)\n        {{\n            Dispatch?.Invoke(this, new {component}Event.{case_pascal}({args}));\n        }}\n    }}"
         );
         ctx.add_host_handler(HostHandler {
             name: handler.clone(),
@@ -16107,6 +16110,7 @@ mod tests {
         );
         // Handler dispatches FormulaChange(tb.Text).
         assert!(r.code_behind.contains("FooEvent.FormulaChange(tb.Text)"));
+        assert!(r.code_behind.contains("tb.FocusState != Microsoft.UI.Xaml.FocusState.Unfocused"));
     }
 
     #[test]
