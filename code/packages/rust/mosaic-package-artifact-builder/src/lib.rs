@@ -14789,7 +14789,20 @@ version = "1"
         let root = scratch();
         let out = root.join("out");
         fs::create_dir_all(&out).expect("create the output directory");
-        fs::write(out.join("leftover.h"), b"// from a previous run\n").expect("write it");
+        let leftover = out.join("leftover.h");
+        fs::write(&leftover, b"// from a previous run\n").expect("write it");
+
+        // Give the pre-emission file a deliberately old, explicit timestamp.
+        // Two immediate writes are allowed to share the same reported mtime on
+        // Windows, which made this stamp-path test depend on ambient filesystem
+        // granularity instead of the comparison it is meant to exercise.
+        let before_modified = std::time::UNIX_EPOCH + std::time::Duration::from_secs(1_600_000_000);
+        fs::OpenOptions::new()
+            .write(true)
+            .open(&leftover)
+            .expect("open the pre-emission file")
+            .set_times(fs::FileTimes::new().set_modified(before_modified))
+            .expect("set the pre-emission mtime");
 
         let pre_emission = pre_emission_stamps(&out);
         let generated = generated_files_on_disk(&out, &pre_emission, &HashSet::new())
@@ -14805,10 +14818,20 @@ version = "1"
         // content and the length half of the stamp can never differ -- mtime is
         // the only half doing work. A fixture that changes the length passes on
         // the inert half and leaves the real discriminator unpinned, which is
-        // what the first version of this test did.
-        let before = fs::metadata(out.join("leftover.h")).expect("stat").len();
-        fs::write(out.join("leftover.h"), b"// rewritten by build!\n").expect("rewrite it");
-        let after = fs::metadata(out.join("leftover.h")).expect("stat").len();
+        // what the first version of this test did. Set the post-write mtime too
+        // so the test remains deterministic even on a same-tick filesystem.
+        let before = fs::metadata(&leftover).expect("stat").len();
+        fs::write(&leftover, b"// rewritten by build!\n").expect("rewrite it");
+        fs::OpenOptions::new()
+            .write(true)
+            .open(&leftover)
+            .expect("open the rewritten file")
+            .set_times(
+                fs::FileTimes::new()
+                    .set_modified(before_modified + std::time::Duration::from_secs(2)),
+            )
+            .expect("set the rewritten mtime");
+        let after = fs::metadata(&leftover).expect("stat").len();
         assert_eq!(before, after, "the rewrite must not change the length");
         let generated = generated_files_on_disk(&out, &pre_emission, &HashSet::new())
             .expect("walk the output directory");

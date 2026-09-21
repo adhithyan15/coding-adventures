@@ -31,6 +31,8 @@
 //!
 //! <description>
 //!
+//! Aliases: `--<alternate>`, `--<alternate-2>`
+//!
 //! ### `--<long>` ...
 //! ```
 //!
@@ -87,6 +89,13 @@ pub fn format_help_markdown(spec: &CliSpec) -> String {
         append_flag_section(&mut out, f);
     }
 
+    // Each section ends with a blank line for separation. Remove one of the
+    // final two line feeds so the document has the conventional single
+    // trailing newline while retaining blank lines between sections.
+    if out.ends_with("\n\n") {
+        out.pop();
+    }
+
     out
 }
 
@@ -133,6 +142,18 @@ fn append_flag_section(out: &mut String, f: &FlagDef) {
     // markers — they're plain English sentences.
     out.push_str(&f.description);
     out.push_str("\n\n");
+    if !f.long_aliases.is_empty() {
+        out.push_str("Aliases: ");
+        for (index, alias) in f.long_aliases.iter().enumerate() {
+            if index > 0 {
+                out.push_str(", ");
+            }
+            out.push_str("`--");
+            out.push_str(alias);
+            out.push('`');
+        }
+        out.push_str("\n\n");
+    }
 }
 
 /// Render a JSON `Value` default as a short literal.
@@ -179,7 +200,7 @@ mod tests {
       "version": "9.9.9",
       "parsing_mode": "gnu",
       "flags": [
-        { "id": "verbose", "long": "verbose", "short": "v", "type": "boolean", "default": false, "description": "Be loud." },
+        { "id": "verbose", "long": "verbose", "long_aliases": ["loud", "chatty"], "short": "v", "type": "boolean", "default": false, "description": "Be loud." },
         { "id": "out", "long": "out", "type": "string", "default": "out.txt", "description": "Output path." },
         { "id": "level", "long": "level", "type": "integer", "default": 1, "description": "Numeric level." }
       ]
@@ -227,6 +248,13 @@ mod tests {
         assert!(md.contains("Be loud."));
         assert!(md.contains("Output path."));
         assert!(md.contains("Numeric level."));
+    }
+
+    #[test]
+    fn emits_long_aliases_in_declaration_order() {
+        let spec = load_spec_from_str(MINI_SPEC).unwrap();
+        let md = format_help_markdown(&spec);
+        assert!(md.contains("Aliases: `--loud`, `--chatty`"), "got: {md}");
     }
 
     #[test]
