@@ -1,0 +1,11 @@
+{
+  "id": "ES-C449-freno",
+  "pathSegment": "ES-PATH-449-TALLER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-449-TALLER",
+      "order": 1
+    }
+  ]
+}

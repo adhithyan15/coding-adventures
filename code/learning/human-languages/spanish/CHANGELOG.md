@@ -1,5 +1,214 @@
 # Changelog
 
+## Chapters 448-451 — the ranking runs out, and scenes replace it
+
+Twenty-two headwords across four chapters, chosen by situation rather than by
+rank, because ranking no longer discriminates.
+
+```
+A2 objectiveFailed          40 -> 31
+A2 missingObjectiveLexemes 107 -> 85
+```
+
+Both numbers were predicted from the audit before anything was wired and
+reproduced exactly by the generator. Five tranches, five exact predictions.
+
+| tranche | words | items cleared |
+|---|---|---|
+| 1 (431-436) | 30 | 5 |
+| 2 (437-439) | 15 | 9 |
+| 3a (440-443) | 20 | 20 |
+| 3b (444-447) | 19 | 19 |
+| **4a (448-451)** | **22** | **9** |
+
+## The falling yield is the finding, not a regression
+
+Tranches 1-2 ranked lexemes by how often they appeared across failing exam
+rows. That stopped discriminating when 145 of 146 remaining lexemes appeared in
+exactly one row. Tranche 3 then ranked by how close each row was to being
+unblocked and taught only words that were the sole survivor in their row — one
+word, one item, both halves. That rule took the failing count from 79 to 40 and
+left **two** solo blockers where there had been forty-one.
+
+There is no third rule, and this was measured rather than assumed. A greedy set
+cover over the forty remaining rows comes out **flat at roughly 2.7 words per
+item** all the way from five words to a hundred and seven, because only one
+lexeme — *explicar* — still appears in more than one row. The other hundred and
+six appear exactly once, so set cover degenerates into "teach them all" and
+every ordering costs the same.
+
+**That is the ranking having finished its job.** The cheap wins were taken in
+tranches 1-3, and what remains is a uniformly priced tail. So the grouping rule
+is now scene coherence, with a tie-break: among equally priced scenes, prefer
+the ones whose words happen to finish whole rows. Twenty-two words for nine
+items is 2.4 words per item, which is the flat rate the set cover predicted.
+
+## The two words that are left are not authoring work
+
+*explicar* and *problema* are the only remaining solo blockers, and both are
+**already headwords**. Their path segments name spine nodes that sit at B1, so a
+reader who has finished the A2 book has not met them.
+
+That is a mapping question, filed as `HL-C418`, and the shard's first version
+was wrong: it recommended re-levelling all three candidates. Reading
+`ES-C41-explicar` rather than its index entry showed that *explicar* requires
+atoms from three B1 lessons — *deber*, *así que*, *creer* — and **cannot move**
+without dragging the reasoning chain down with it. The correction is appended in
+place in the shard.
+
+## The four chapters
+
+| chapter | scene | words |
+|---|---|---|
+| 448 | a house move | mudarse, la mudanza, duro, estropear / estropeado, roto |
+| 449 | a bike workshop | arreglar, el freno, la rueda, el taladro, acercar |
+| 450 | the ground outside | el patio, la hierba, la piedra, el césped, el entrenamiento |
+| 451 | a service counter | la cola, apuntar, el carné, mostrar, el ticket, revisar |
+
+Chapter 451 carries six words rather than five because the counter scene
+finished three exam rows at once, and splitting it would have separated *el
+carné* from *el ticket*, which the chapter exists to contrast.
+
+Chapter 448 carries six lexemes in five lessons. `ES-C448-estropear` uses the
+slash headword **estropear / estropeado**, and the audit splits a headword on
+`/ `, so both are credited. That is the honest reading rather than a trick: the
+participle-adjective is the form on the lift door, and a lesson that teaches the
+verb without it would be teaching the rarer half.
+
+## Two pairs English cannot help you with
+
+**roto against estropeado** is chapter 448's spine. Both translate as "broken".
+*Roto* is *romper*'s participle and says the thing came apart; *estropeado* says
+it stopped working, whether or not anything came apart.
+
+| the situation | the word |
+|---|---|
+| lift stuck between floors | estropeado |
+| window with a hole in it | roto |
+| milk that has gone off | estropeado |
+
+The milk is the case that earns the chapter. Nothing in a carton can come apart,
+so *roto* is not available — and English offers no guidance at all, since it
+would say neither "broken milk" nor "out-of-order milk".
+
+**hierba against césped** is chapter 450's, and it fails in the harder
+direction: English "grass" is wide enough to cover both, so nothing in the
+reader's own language warns that a choice is waiting. *Hierba* is the plant;
+*césped* is the maintained surface. Grass between paving stones is *hierba* and
+could not be *césped*; a mown lawn is *césped* though it is made of *hierba*.
+The chapter's payoff notice uses each once, four lines apart, and
+*se está replantando* confirms the sort — you replant the living thing, then mow
+it into a surface.
+
+*patio* against *jardín* fails the same way, and for the same reason.
+
+## Three root slugs the track already carried
+
+The chapters were built to land on slugs already in the corpus, so the cousin
+panels join rather than start over.
+
+| new word | joins | what becomes visible |
+|---|---|---|
+| la rueda | `rota-latin` with *alrededor* | *retro* bent sideways by the wheel |
+| arreglar | `regula-latin` with *regular* | a-rregl-ar is back to the straight edge |
+| revisar | `latin-videre` with *ver*, *el aviso* | three words, one Latin verb, three depths |
+| el entrenamiento | `train-french` with *el tren* | *entraîner*, to drag along behind you |
+| estropear | `turpis-latin` with *torpe* | one Latin word for "shameful", two landings |
+| apuntar | `pungere-latin` with *el punto* | every sense is putting a point on something |
+| acercar | `circa-latin` with *cerca*, *acercarse* | the transitive twin |
+| duro | `durare` with *durante* | what resists is what lasts |
+
+*estropear* is the one worth dwelling on. It reaches Spanish through Italian
+*stroppiare* from Latin **turpis**, shameful — so it is a cousin of *torpe*,
+introduced one chapter earlier. The same Latin word landed as "wreck a thing" in
+one branch and as the near-apology you make over a spilled glass in the other.
+Chapter 447 asserted that a root tells you where a word came from and never how
+hard it lands today; chapter 448 demonstrates it.
+
+*revisar* is the cheapest of the eight. *Ver* is *videre* worn down to two
+letters and *el aviso* hides it in the middle, so neither looks like Latin until
+the third member arrives and makes the family visible.
+
+`alrededor` is the one that needed care rather than enthusiasm. The join to
+`rota-latin` is real — `ES-C347-alrededor` carries that slug — but that lesson
+is precise about it: *rededor* is Latin *retrō*, backwards, **pulled sideways
+by** *rota*. A first draft of `ES-C449-rueda` flattened this to "*rededor*
+traces back to the same *rota*", which is both wrong and a contradiction of a
+lesson the reader met a hundred chapters earlier. The security review caught
+it. **A cousin slug licenses the join, not the sentence**: sharing a root slug
+says two words touch the same etymon somewhere, never that one descends from
+it cleanly.
+
+## One deliberate empty root list
+
+`ES-C450-patio` carries `roots: []`, and the lesson says why in its own text.
+The origin is genuinely unsettled: Occitan *pati* by way of Latin *pactum* is
+the best-supported account, Latin *patere* fits the meaning better and the sound
+worse, and neither has settled it.
+
+**An empty root list in this material is a claim, not a gap.** It asserts that
+nobody has resolved the etymology, and the value of asserting it is that a
+listed root can then be trusted. Three empty lists were filled in during the
+previous tranche precisely because nobody had looked; this one stays empty
+because somebody did.
+
+## One sound change, seen from four angles
+
+Three of chapter 450's words and two of chapter 449's are the same Latin vowel
+break caught at different moments, and the chapters are sequenced to make that
+visible rather than to assert it.
+
+| Latin | Spanish | what broke |
+|---|---|---|
+| rota | la r**ue**da | stressed o |
+| petra | la p**ie**dra | stressed e |
+| herba | la h**ie**rba | stressed e |
+
+The condition is stress and nothing else: *rueda* has the diphthong and
+*rodamos* does not, *piedra* has it and *petrificar* does not, and
+*entrenamiento* keeps its plain **e** because the stress lands three syllables
+later. `ES-C451-mostrar` then shows the same break inside a conjugation —
+*muestro* against *mostramos* — so a reader meets it once in a noun and once in
+a verb and can see that most of what looks irregular in Spanish verbs is one
+vowel obeying one condition.
+
+## Numbers
+
+| metric | before → after |
+|---|---|
+| A2 `objectiveFailed` | 40 → 31 |
+| A2 `missingObjectiveLexemes` | 107 → 85 |
+| mock 1 reading / listening passes | 19 / 14 → 20 / 14 |
+| mock 2 reading / listening passes | 13 / 14 → 16 / 19 |
+| curriculum graph lessons | 7322 → 7351 |
+| new lessons | 29 |
+| new headwords | 22 |
+
+The per-mock split moves unevenly because a tranche clears whole rows rather
+than a fixed share of each paper. Of the nine rows cleared, five were in mock
+2's listening paper and three in its reading paper; mock 1 lost one.
+
+## Verification
+
+`human-language-data` full suite (2204 passed); all thirteen `check:*` gates;
+`check-book-compile.sh spanish` under XeLaTeX, followed by
+`scan_latex_log_warnings.py` **with** `--baseline` — the flag whose omission let
+an underfull box through in an earlier tranche, because an unseeded scan exits
+zero having compared nothing.
+
+The curriculum digest was attributed by **reconstruction**: `origin/main` was
+loaded in a clean `git worktree` and reproduced the previous digest and count
+byte for byte, so nothing outside the four new path segments moved. Those
+segments hold 7 + 7 + 7 + 8 = 29 lessons, and the corpus-wide count moved by
+exactly 29.
+
+## What this does not claim
+
+Nine more exam items are now supported by the book's own vocabulary. No item has
+been graded against a reader. **Thirty-one objective items still fail**, and
+until that reaches zero the A2 book cannot be said to prepare anybody to sit the
+paper.
+
 ## Chapters 444-447 — tranche 3 completed, and the limit of etymology
 
 Nineteen headwords, and the rule that replaced the exhausted one holds for a

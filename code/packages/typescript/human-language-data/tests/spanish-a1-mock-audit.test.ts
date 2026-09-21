@@ -102,45 +102,80 @@ describe("Spanish A2 book-bounded mock audit", () => {
   it("pins the CURRENT DEBT: the exam names the vocabulary that is still missing", () => {
     const audit = buildSpanishA1MockAudit(defaultCurriculumRoot(), "A2");
     expect(audit.level).toBe("A2");
-    expect(audit.objectiveFailed).toBe(40);
+    expect(audit.objectiveFailed).toBe(31);
     expect(audit.mocks.map(({ reading, listening, objectiveFailed }) => ({
       reading,
       listening,
       objectiveFailed,
     }))).toEqual([
-      { reading: 19, listening: 14, objectiveFailed: 17 },
-      { reading: 13, listening: 14, objectiveFailed: 23 },
+      { reading: 20, listening: 14, objectiveFailed: 16 },
+      { reading: 16, listening: 19, objectiveFailed: 15 },
     ]);
     // THIS NUMBER MUST ONLY EVER FALL. A rise means a mock gained an item the
     // corpus cannot support.
     //
-    // 191 -> 161 -> 146 -> 126 -> 107 are the four vocabulary tranches: 431-436,
-    // 437-439, 440-443 and 444-447. EVERY drop is exact -- 30 headwords removed
-    // 30 lexemes, then 15, then 20, then 19. That arithmetic is the evidence a
-    // word was genuinely absent; one already taught under another name would
-    // have made the drop smaller. Each was PREDICTED from the audit before the
-    // chapters were wired and reproduced exactly by the generator, so the
-    // selection rule is mechanical rather than a judgement call.
+    // 191 -> 161 -> 146 -> 126 -> 107 -> 85 are the five vocabulary tranches:
+    // 431-436, 437-439, 440-443, 444-447 and 448-451. EVERY drop is exact -- 30
+    // headwords removed 30 lexemes, then 15, then 20, then 19, then 22. That
+    // arithmetic is the evidence a word was genuinely absent; one already taught
+    // under another name would have made the drop smaller. Each was PREDICTED
+    // from the audit before the chapters were wired and reproduced exactly by
+    // the generator, so the selection rule is mechanical rather than a
+    // judgement call.
     //
-    // THE ITEM COUNT IS WHERE THE RULE CHANGE SHOWS, and it is the whole point.
-    // objectiveFailed went 93 -> 88 -> 79 -> 59 -> 40:
+    // Tranche 4a's 22 lexemes came from 21 lessons, because ES-C448-estropear
+    // carries the slash headword `estropear / estropeado`. The audit splits a
+    // headword on `/ `, so a lesson that genuinely teaches a verb and its
+    // participle-adjective together is credited with both -- which is the
+    // honest reading, since the adjective is the form on the lift door.
     //
-    //     tranche 1 (431-436)   30 words   5 items
-    //     tranche 2 (437-439)   15 words   9 items
+    // THE ITEM COUNT IS WHERE THE SELECTION RULE SHOWS, and it is the whole
+    // point. objectiveFailed went 93 -> 88 -> 79 -> 59 -> 40 -> 31:
+    //
+    //     tranche 1  (431-436)  30 words   5 items
+    //     tranche 2  (437-439)  15 words   9 items
     //     tranche 3a (440-443)  20 words  20 items
     //     tranche 3b (444-447)  19 words  19 items
+    //     tranche 4a (448-451)  22 words   9 items
     //
     // An item passes only when EVERY lexeme in its `requires` row is taught, so
     // a word helps in proportion to how close its rows already are. Tranches
     // 1-2 ranked by how OFTEN a lexeme appeared, which stopped discriminating
     // once 145 of 146 remaining lexemes appeared in exactly one item. Tranche 3
-    // ranks by how close each item is to being unblocked and teaches only words
-    // that are the sole survivor in their row: one word, one item, both halves.
+    // ranked by how close each item was to being unblocked and taught only
+    // words that were the sole survivor in their row: one word, one item, both
+    // halves.
+    //
+    // TRANCHE 4a IS WHERE THE RANKING RUNS OUT, and the falling yield above is
+    // the evidence rather than a regression. After tranche 3 only TWO solo
+    // blockers were left, and only ONE lexeme (`explicar`) appeared in more
+    // than one failing row; the other 106 appeared in exactly one. A greedy set
+    // cover over the 40 remaining rows came out flat at roughly 2.7 words per
+    // item from 5 words to 107, so no ordering front-loads value any more.
+    // That is the ranking having finished its job, not a failure of it: the
+    // cheap wins were all taken in tranches 1-3.
+    //
+    // So tranche 4a groups by SCENE instead -- a house move, a bike workshop,
+    // the ground outside a sports centre, a service counter -- preferring
+    // scenes whose words happen to finish whole rows. 22 words for 9 items is
+    // 2.4 words per item, which is the flat rate the set cover predicted, and
+    // predicting it in advance is what makes the number checkable.
+    //
+    // The two remaining solo blockers, `explicar` and `problema`, are NOT
+    // authoring work: both are already headwords whose spine nodes put them at
+    // B1, so a reader of the A2 book has not met them. See the HL-C418 shard in
+    // BACKLOG.d, and note that its first version recommended re-mapping all
+    // three candidates and was wrong -- `explicar` requires atoms from three B1
+    // lessons and cannot move.
     //
     // The per-mock split moves unevenly because a tranche clears whole rows,
     // not a fixed share of each paper. A uniform movement would be the
-    // surprising result.
-    expect(audit.missingObjectiveLexemes).toHaveLength(107);
+    // surprising result. Tranche 4a is the clearest case: mock 2 lost 8 failing
+    // items and mock 1 lost 1. Of the nine cleared rows, five were in mock 2's
+    // listening paper and three in its reading paper, which is exactly what the
+    // pass counts above record -- mock 2 went 13 -> 16 reading and 14 -> 19
+    // listening, mock 1 went 19 -> 20 reading and did not move on listening.
+    expect(audit.missingObjectiveLexemes).toHaveLength(85);
   });
 
   it("measures a LARGER taught set than A1, which is what makes it a different gate", () => {

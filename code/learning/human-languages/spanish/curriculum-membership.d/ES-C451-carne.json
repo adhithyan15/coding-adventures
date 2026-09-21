@@ -1,0 +1,11 @@
+{
+  "id": "ES-C451-carne",
+  "pathSegment": "ES-PATH-451-TURNO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-451-TURNO",
+      "order": 2
+    }
+  ]
+}

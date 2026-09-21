@@ -74,7 +74,8 @@ describe("direct curriculum lesson owners", () => {
     // migration changes shape. 7204 -> 7246 was the first Spanish A2 vocabulary
     // tranche (chapters 431-436) and 7246 -> 7267 was the second (437-439) and
     // 7267 -> 7295 was the third (440-443) and
-    // 7295 -> 7322 is the fourth (444-447); the guard still does its job, which is to make any OTHER change to the public
+    // 7295 -> 7322 was the fourth (444-447) and
+    // 7322 -> 7351 is the fifth (448-451); the guard still does its job, which is to make any OTHER change to the public
     // graph fail loudly rather than pass quietly.
     //
     // Attribution was checked by RECONSTRUCTION, not assumed. A clean worktree
@@ -89,9 +90,9 @@ describe("direct curriculum lesson owners", () => {
     // segments from an in-memory graph leaves the remaining records ordered and
     // shaped as the larger load produced them, so it reproduces neither digest.
     // Only re-loading a checkout that never had the files answers the question.
-    expect(digest).toBe("162fdb4c602a46b039d8f26d10e6c3cab2045b017a63fe2db11f793c923781ae");
+    expect(digest).toBe("37016337022aea6f679673edfd2e66dbb19602aa3846d745873d6100366b269f");
     expect(curricula.flatMap((curriculum) => curriculum.path).flatMap((path) => path.lessons))
-      .toHaveLength(7322);
+      .toHaveLength(7351);
   });
 
   it("keeps the canonical curriculum shards free of derived lesson arrays", () => {

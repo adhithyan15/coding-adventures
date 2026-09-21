@@ -1,0 +1,11 @@
+{
+  "id": "ES-C450-sintesis-suelo",
+  "pathSegment": "ES-PATH-450-SUELO",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ES-EXT-450-SUELO",
+      "order": 6
+    }
+  ]
+}

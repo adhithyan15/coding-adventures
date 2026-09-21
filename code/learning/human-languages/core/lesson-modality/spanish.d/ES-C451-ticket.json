@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C451-ticket",
+    "language": "spanish",
+    "chapter": 451,
+    "sequence": 11870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:19f8196d1acb7d94"
+  },
+  "findings": []
+}
