@@ -491,7 +491,18 @@ fn no_diagnostic_leaks_a_raw_control_character_or_runs_unbounded() {
             "`{label}`: diagnostic ran to {} bytes; attacker-derived text must be \
              truncated: {}",
             msg.len(),
-            &msg[..200.min(msg.len())]
+            // Char-boundary backoff, not `&msg[..200]`. Printable multi-byte
+            // text passes the control-character filter by design, so a naive
+            // byte slice can panic HERE — inside the already-failing path,
+            // replacing the real diagnostic with a slice panic and hiding what
+            // actually broke.
+            {
+                let mut end = 200.min(msg.len());
+                while end > 0 && !msg.is_char_boundary(end) {
+                    end -= 1;
+                }
+                &msg[..end]
+            }
         );
 
         // Record the message with its variable parts removed, so we can count

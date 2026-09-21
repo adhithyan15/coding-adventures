@@ -36,11 +36,18 @@ point and asserts that no resulting diagnostic contains a control character or
 exceeds a length bound:
 
 ```rust
-for src in hostile_cases {
-    let Err(e) = compile_source(src, "hygiene") else { continue };
-    let msg = format!("{e:?}");
-    assert!(msg.chars().find(|c| c.is_control()).is_none());
-    assert!(msg.len() < 4096);
+for (label, src) in hostile_cases {
+    // Display, NOT Debug: Debug escapes control characters itself and would
+    // make the next assertion unfalsifiable. Display is also what production
+    // formats with.
+    let Err(e) = compile_source(src, "hygiene") else {
+        panic!("`{label}` no longer fails, so it stopped exercising this path")
+    };
+    let msg = e.to_string();
+    assert!(msg.chars().find(|c| c.is_control() && *c != '
+').is_none());
+    // Ceiling strictly between the real max and the mutation-defeated max.
+    assert!(msg.len() < 2048);
 }
 ```
 
