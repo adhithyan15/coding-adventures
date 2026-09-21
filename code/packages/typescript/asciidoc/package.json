@@ -17,8 +17,8 @@
     "@coding-adventures/document-ast-to-html": "file:../document-ast-to-html"
   },
   "devDependencies": {
-    "vitest": "^4.1.11",
-    "@vitest/coverage-v8": "^4.1.11",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0",
     "typescript": "^5.0.0"
   }
 }

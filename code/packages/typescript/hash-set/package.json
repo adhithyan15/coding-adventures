@@ -15,8 +15,8 @@
     "@coding-adventures/hash-map": "file:../hash-map"
   },
   "devDependencies": {
-    "@vitest/coverage-v8": "^4.1.11",
+    "@vitest/coverage-v8": "^4.1.0",
     "typescript": "^5.0.0",
-    "vitest": "^4.1.11"
+    "vitest": "^4.1.0"
   }
 }

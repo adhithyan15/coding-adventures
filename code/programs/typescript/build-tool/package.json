@@ -28,9 +28,9 @@
   "license": "MIT AND Unicode-3.0",
   "devDependencies": {
     "@types/node": "22.20.1",
-    "@vitest/coverage-v8": "^4.1.11",
+    "@vitest/coverage-v8": "^4.1.0",
     "tsx": "^4.23.5",
     "typescript": "7.0.2",
-    "vitest": "^4.1.11"
+    "vitest": "^4.1.0"
   }
 }
