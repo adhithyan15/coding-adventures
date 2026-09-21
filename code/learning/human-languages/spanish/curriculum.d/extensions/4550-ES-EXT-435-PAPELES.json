@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-435-PAPELES",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read a job advert, say what experience I have, and say what I must send and bring.",
+  "prerequisites": [
+    "ES-EXT-434-MAQUINA"
+  ]
+}

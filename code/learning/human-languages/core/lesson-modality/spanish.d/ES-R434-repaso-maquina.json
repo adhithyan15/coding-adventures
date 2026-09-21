@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R434-repaso-maquina",
+    "language": "spanish",
+    "chapter": 434,
+    "sequence": 10700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb5866f3880c611d"
+  },
+  "findings": []
+}

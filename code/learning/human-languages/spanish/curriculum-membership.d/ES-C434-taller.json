@@ -1,0 +1,11 @@
+{
+  "id": "ES-C434-taller",
+  "pathSegment": "ES-PATH-434-MAQUINA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-434-MAQUINA",
+      "order": 0
+    }
+  ]
+}

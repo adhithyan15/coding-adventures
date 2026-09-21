@@ -1,0 +1,11 @@
+{
+  "id": "ES-R433-repaso-edificio",
+  "pathSegment": "ES-PATH-433-EDIFICIO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-433-EDIFICIO",
+      "order": 5
+    }
+  ]
+}

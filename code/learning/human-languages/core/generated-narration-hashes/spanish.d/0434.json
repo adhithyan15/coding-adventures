@@ -1,0 +1,21 @@
+{
+  "language": "spanish",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:7b009a5ce3903345",
+  "lessonIds": [
+    "ES-C434-taller",
+    "ES-C434-maquina",
+    "ES-C434-pieza",
+    "ES-C434-bateria",
+    "ES-C434-cargador",
+    "ES-R434-repaso-maquina",
+    "ES-C434-sintesis-averia"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "spanish/narration/ch434.txt",
+  "json": "spanish/narration/ch434.json",
+  "textHash": "fnv1a64:a3e8b26c6b0cd911",
+  "jsonHash": "fnv1a64:c72c426b4c9c4c02",
+  "findings": []
+}

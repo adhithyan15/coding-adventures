@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-436-GENTE",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about colleagues and groups, offer an alternative, and say who lent, collected or returned a thing.",
+  "prerequisites": [
+    "ES-EXT-435-PAPELES"
+  ]
+}

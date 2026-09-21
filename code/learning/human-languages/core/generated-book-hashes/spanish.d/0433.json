@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:51d38be39989d4cb",
+  "lessonIds": [
+    "ES-C433-portal",
+    "ES-C433-portera",
+    "ES-C433-garaje",
+    "ES-C433-norma",
+    "ES-C433-junto",
+    "ES-R433-repaso-edificio",
+    "ES-C433-sintesis-llave"
+  ],
+  "tex": "spanish/book/chapters/ch433-edificio.tex"
+}

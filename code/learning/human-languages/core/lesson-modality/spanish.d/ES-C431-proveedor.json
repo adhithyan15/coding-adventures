@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C431-proveedor",
+    "language": "spanish",
+    "chapter": 431,
+    "sequence": 10470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a263d19f0bf94e50"
+  },
+  "findings": []
+}

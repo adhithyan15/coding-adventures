@@ -1,0 +1,11 @@
+{
+  "id": "ES-C433-portera",
+  "pathSegment": "ES-PATH-433-EDIFICIO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-433-EDIFICIO",
+      "order": 1
+    }
+  ]
+}

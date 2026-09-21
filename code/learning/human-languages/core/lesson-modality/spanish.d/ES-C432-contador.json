@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C432-contador",
+    "language": "spanish",
+    "chapter": 432,
+    "sequence": 10520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a494262c03960eab"
+  },
+  "findings": []
+}

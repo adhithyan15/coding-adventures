@@ -1,0 +1,22 @@
+{
+  "chapter": 432,
+  "title": "La Casa Por Dentro",
+  "label": "ch:es-casa-dentro",
+  "canDo": "I can name the machines and fittings a building notice talks about, and read a notice about the water being cut off.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "ES-C432-sintesis-aviso",
+    "kind": "task",
+    "summary": "Read the notice or advert this chapter's words exist for, then say the same thing back.",
+    "assesses": [
+      "ES-LEX-C432-CASA-01",
+      "ES-LEX-C432-CASA-02",
+      "ES-LEX-C432-CASA-03",
+      "ES-LEX-C432-CASA-04",
+      "ES-LEX-C432-CASA-05"
+    ],
+    "note": "First A2 vocabulary tranche. THE WORDLIST WAS DERIVED FROM THE EXAM, not chosen by theme: spanish/mocks/a2/book-bounded-audit.json named 191 lexemes the two DELE A2 mocks need and the corpus does not teach, and the 46 appearing in two or more items are taught first. This tranche covers 30 of them. Choosing by theme was tried and discarded -- 27 of 35 thematic candidates were already taught, because at ~817 headwords the obvious concrete domains are saturated. THE CHAPTERS CARRY A MORPHOLOGY SPINE: 431 introduces the doer-ending -dor; 432 reuses it (lavadora, contador) and adds the collecting -eria; 433 adds -ero for the person; 434 reuses -dor and then BREAKS the pattern with bateria, which wears the ending but was built in French so the pieces never entered Spanish; 435 adds -cion and -encia and closes a loop with jubilado, a participle-as-person answering el pedido's participle-as-thing in 431; 436 completes a lending cycle (prestar -> recoger -> devolver) whose pedir is the same pedir under el pedido. EVERY CHAPTER CARRIES ONE WORD THAT CANNOT BE DECOMPOSED -- sofa (Arabic, whole), garaje (French, respelled), curriculum (kept Latin -um), grupo (via Italian) -- so the habit taught is 'look for the join', never 'there is always a join'. compañero is a special case: ES-C26-pan has taught its etymology since chapter 26 under ES-ETYMON-COMPANION-03, so its lesson CHAINS to that rather than presenting it as new. A census found 45 of the 191 already appear in lesson bodies without being headwords -- exposure, not teaching, the same distinction script-closure draws for glyphs. STAGE IS A2 ON PURPOSE: level-gate.ts reads the extension's stage to decide what level a lesson counts at, and chapter 430's neighbours are A1."
+  }
+}

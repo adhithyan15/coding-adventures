@@ -102,18 +102,29 @@ describe("Spanish A2 book-bounded mock audit", () => {
   it("pins the CURRENT DEBT: the exam names the vocabulary that is still missing", () => {
     const audit = buildSpanishA1MockAudit(defaultCurriculumRoot(), "A2");
     expect(audit.level).toBe("A2");
-    expect(audit.objectiveFailed).toBe(93);
+    expect(audit.objectiveFailed).toBe(88);
     expect(audit.mocks.map(({ reading, listening, objectiveFailed }) => ({
       reading,
       listening,
       objectiveFailed,
     }))).toEqual([
-      { reading: 4, listening: 0, objectiveFailed: 46 },
-      { reading: 0, listening: 3, objectiveFailed: 47 },
+      { reading: 6, listening: 2, objectiveFailed: 42 },
+      { reading: 0, listening: 4, objectiveFailed: 46 },
     ]);
-    // 191 distinct lexemes, ~6 tranches at 35 per tranche. THIS NUMBER MUST ONLY
-    // EVER FALL. A rise means a mock gained an item the corpus cannot support.
-    expect(audit.missingObjectiveLexemes).toHaveLength(191);
+    // THIS NUMBER MUST ONLY EVER FALL. A rise means a mock gained an item the
+    // corpus cannot support.
+    //
+    // 191 -> 161 is the first vocabulary tranche (chapters 431-436). It fell by
+    // EXACTLY 30, the number of headwords that tranche teaches, which is the
+    // proof that all 30 were genuinely missing and are now credited -- a word
+    // already taught under another name would have made the drop smaller.
+    //
+    // objectiveFailed fell only 93 -> 88 over the same 30 words, and that is
+    // expected rather than disappointing: an item passes only when EVERY lexeme
+    // in its `requires` row is taught, so the last missing word in a row holds
+    // the whole item red. The lexeme count is the leading indicator; the item
+    // count moves in steps as rows complete.
+    expect(audit.missingObjectiveLexemes).toHaveLength(161);
   });
 
   it("measures a LARGER taught set than A1, which is what makes it a different gate", () => {
