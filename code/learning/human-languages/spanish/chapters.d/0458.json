@@ -1,0 +1,20 @@
+{
+  "chapter": 458,
+  "title": "El plazo",
+  "label": "ch:es-plazo",
+  "canDo": "I can deal with a deadline: read the window of dates, hand a form in the right way, and understand that nothing is accepted once the window shuts.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "ES-C458-sintesis-plazo",
+    "kind": "task",
+    "summary": "Read the message or notice this chapter's words exist for, then say the same thing back.",
+    "assesses": [
+      "ES-LEX-C458-PLAZO-01",
+      "ES-LEX-C458-PLAZO-02",
+      "ES-LEX-C458-PLAZO-03"
+    ],
+    "note": "THE THREE WORDS ARE ONE SENTENCE IN THE ORDER THEY HAPPEN -- entregue la solicitud dentro del plazo, fuera de plazo no se admiten -- and every Spanish form uses at least two of them. EL PLAZO IS NOT LA FECHA: a fecha is a day on the calendar, a plazo is the STRETCH OF TIME allowed, so 'el plazo termina el viernes' and 'la fecha límite es el viernes' say the same thing from opposite ends; official Spanish prefers plazo because a form cares how long you have. plazo is Latin PLACITUM, 'a thing agreed', the participle of placēre, to please -- so it is a relative of EL PLACER, and the middle step is that what pleased both parties was what they had settled on; French made plaid from it and English has plea and plead. entregar is INTEGRARE, to make whole, from integer (in- + tangere, untouched), so to entregar is to hand a thing over ENTIRE -- entero and íntegro are the Spanish twins, English took integer and INTEGRITY, and integrity is exactly what entregar asks for. ENTREGAR IS NOT DAR: dar passes something, entregar hands over what was OWED, which is why a courier entrega and a friend da. admitir is ad + MITTERE, making the FOURTH word in the corpus off that verb, after el permiso (ch332), PERMITIR (ch405) and meter (ch455) -- the prefix does all the steering. The count was wrong in the first draft because ES-C405-permitir carries the slug permittere-latin while the others carry mittere-latin, so a census keyed on the slug cannot see it: that is a fifth live instance of HL-C419, and the one proving the census UNDERCOUNTS rather than merely miscounts, and meter looks least like the others because it is the only one that came through speech. THE SINTESIS TURNS ON THE SUBJUNCTIVE: 'aunque queden plazas' rather than quedan, because the office is not conceding that there are places -- the subjunctive lets a notice state a rule without commenting on the facts, and the indicative would read as spite rather than procedure."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R459-repaso-stock",
+    "language": "spanish",
+    "chapter": 459,
+    "sequence": 12360,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:db5b102b6f7e6d22"
+  },
+  "findings": []
+}

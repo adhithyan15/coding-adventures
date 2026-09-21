@@ -1,0 +1,11 @@
+{
+  "id": "ES-C456-aceptar",
+  "pathSegment": "ES-PATH-456-CUENTA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-456-CUENTA",
+      "order": 2
+    }
+  ]
+}

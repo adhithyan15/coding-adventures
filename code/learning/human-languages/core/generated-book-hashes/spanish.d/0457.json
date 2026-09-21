@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:1c15e478ff7b97a1",
+  "lessonIds": [
+    "ES-C457-medicamento",
+    "ES-C457-encargar",
+    "ES-C457-guardia",
+    "ES-R457-repaso-guardia",
+    "ES-C457-sintesis-guardia"
+  ],
+  "tex": "spanish/book/chapters/ch457-guardia.tex"
+}

@@ -1,5 +1,215 @@
 # Changelog
 
+## Chapters 456-459 — the last cheap row, and the floor underneath
+
+Fourteen headwords across four chapters.
+
+```
+A2 objectiveFailed          23 -> 18
+A2 missingObjectiveLexemes  68 -> 54
+```
+
+Predicted from the audit before anything was wired and reproduced exactly.
+**Seven tranches, seven exact predictions.**
+
+| tranche | words | items | words per item |
+|---|---|---|---|
+| 4a (448-451) | 22 | 9 | 2.44 |
+| 4b (452-455) | 17 | 8 | 2.12 |
+| **4c (456-459)** | **14** | **5** | **2.80** |
+
+## The rate went up, and that was not avoidable
+
+Before authoring anything, every coherent scene still available was measured.
+**All but one came out at exactly 3.00 words per item.**
+
+The exception was `La cuenta` at 2.50, because it holds the **last unblocked
+two-word row** in either mock. So 4c took that scene first and then three
+3.00 scenes, and no grouping available could have done better.
+
+4b's 2.12 came from a tie-break — group the cheap rows — and that tie-break is
+now spent. **From here the floor is 3.00.**
+
+## Except that it is not, and the reason is not authoring
+
+Five of the eighteen remaining rows are waiting on `explicar`, `creer` or
+`problema`. All three are **already taught**. All three sit above the A2
+book's ceiling because of the spine node their path segment names.
+
+| credited | objectiveFailed | rows left needing one word |
+|---|---|---|
+| nothing (today) | 18 | — |
+| `problema` + `creer` — both can move | 17 | descontar |
+| all three — needs `SPINE-GIVE-REASONS` at A2 | **16** | descontar, invitar |
+
+Zero new lessons. When this was first measured it was worth 40 → 39; it is now
+worth more than a chapter of authoring, and it will keep growing as everything
+around it gets taught. `explicar` still cannot move alone — it requires atoms
+from three B1 lessons and introduces the reason-chain grammar atom itself — so
+this is a decision about the ladder, not a mapping tidy-up. Filed as
+`HL-C418`, left for that decision.
+
+## The four chapters
+
+| chapter | scene | words |
+|---|---|---|
+| 456 | the bill | ensalada, cargo, aceptar, coste, agencia |
+| 457 | the duty chemist | medicamento, encargar, guardia |
+| 458 | the deadline | plazo, entregar, admitir |
+| 459 | the stocktake | sección, inventario, habitual |
+
+Three of the four teach only **three** headwords and run five lessons rather
+than seven. The scenes left are small; the chapters are not padded.
+
+## Eleven of fourteen landed on roots the track already carried
+
+| new word | joins | what becomes visible |
+|---|---|---|
+| el cargo, encargar | `carrus-latin` with *el carrito* | a charge is a **load on a cart** |
+| el coste | `constare-latin` with *costar* | *con-stare*, where the reckoning stands still |
+| la agencia | `agere-latin` with *la agenda* | a diary and a travel agent, one verb |
+| el inventario | `venire-latin` with *venir* | *in-venire* — **a list of what was found** |
+| habitual | `habere-latin` with *haber* | a habit is a thing you **hold** |
+| el plazo | `placere-latin` with *el placer* | *placitum*, **a thing agreed** |
+| admitir | `mittere-latin` with *meter*, *el permiso* | third word off one verb |
+| la guardia | `wardon-germanic` with *guardar* | Germanic *wardōn*, to watch over |
+| la ensalada | `sal-latin` with *la sal* | the **salted** thing |
+| aceptar | new slug `capere-latin` | but *capere* was already taught, in *el principio* |
+
+**`el inventario` and `habitual` are the two worth stopping on**, because they
+hide the commonest verbs in the language inside the dullest words in the
+chapter. An inventory is *in-venire*, a list of what was **come upon** — which
+is exactly what a stocktake produces: what is actually on the shelves, not
+what the records claim. And *habitual* is *habēre*, the **haber** of *he
+hablado*, worn down by centuries into an auxiliary so small it barely looks
+like a word. Set `he hablado` beside `habitual` and the two roads are visible
+in a single line.
+
+**`encargar` is the longest chain in the corpus so far**: *carrus* the cart →
+`el carrito` (444) → `el cargo`, a load put on a bill (456) → `encargar`, a
+**task loaded onto somebody** (457). Four chapters apart, one picture
+throughout — and it explains *encargarse de* and *el encargado* for free.
+
+## A choice the join key forced, and it should not have
+
+`habitual` descends from *habēre*. The Spanish track spells that etymon **two
+ways**: `habere` (on *hablaré*) and `habere-latin` (on *deber*, *he hablado*,
+*haber*). The cousins join is exact string equality, so picking one silently
+joins or splits the panel, and **nothing in CI catches the wrong choice**.
+
+I took `habere-latin`, the majority spelling, and the join is right. A census
+over the track's own `roots:` fields — stripping the language suffix and
+prefix, nothing else — finds **31 etymon cores spelled more than one way**, of
+which **29 are pure shape splits** (same language, different slug shape) and 2
+are cross-language pairs. A first pass said 36; that number came from a looser
+normaliser and is withdrawn.
+
+| etymon | spellings | what fails to join |
+|---|---|---|
+| stare | `stare`, `stare-latin`, `latin-stare` | *está* / *estar* / *estuve* — three ways |
+| sperare | `sperare`, `sperare-latin` | *espero viajar* / *esperar* |
+| caput | `caput-latin`, `latin-caput` | *acabar* / *la cabeza* |
+| bursa | `bursa-greek`, `bursa-latin` | ***el bolso* / *la bolsa*** |
+
+The **bursa** pair is the sharpest and is not an artefact of the census: Greek
+*byrsa* entered Latin as *bursa*, and **both** Spanish words descend from the
+Latin. Tagging one `-greek` and one `-latin` separates two words that are
+plainly cousins.
+
+**And the census undercounts**, which the security review found by catching an
+error of mine. `ES-C458-admitir` claimed to be the **third** corpus word off
+*mittere*, after *meter* and *el permiso*. It is the **fourth**: `ES-C405-permitir`
+has been teaching *mittere* since chapter 405. I missed it because that lesson
+carries the slug `permittere-latin` while the others carry `mittere-latin` — so
+a census keyed on the slug **cannot see the relationship at all**, and 31 is a
+floor rather than a count.
+
+`HL-C419` proposed a `check:root-slug-splits` guard for exactly this. It has
+stopped being a cleanup: four of this tranche's own candidates landed on split
+etymons, one of them made me miscount a family in a published lesson, and the
+next tranche will hit more.
+
+## Numbers
+
+| metric | before → after |
+|---|---|
+| A2 `objectiveFailed` | 23 → 18 |
+| A2 `missingObjectiveLexemes` | 68 → 54 |
+| mock 1 reading / listening passes | 21 / 15 → 21 / 18 |
+| mock 2 reading / listening passes | 19 / 22 → 19 / 24 |
+| curriculum graph lessons | 7376 → 7398 |
+| new lessons | 22 |
+| new headwords | 14 |
+
+**Neither reading count moved, and that is exactly right**: all five cleared
+rows are paper-2 rows. Mock 1 lost three listening rows and mock 2 lost two.
+Every delta is accounted for by a named row.
+
+## Verification
+
+`human-language-data` full suite; all thirteen `check:*` gates;
+`check-book-compile.sh spanish` under XeLaTeX with
+`scan_latex_log_warnings.py --baseline` afterwards.
+
+Digest attributed by **reconstruction**: `origin/main` was loaded in a clean
+`git worktree` and reproduced `4a741b89…` and 7376 byte for byte. The four new
+segments hold 7 + 5 + 5 + 5 = 22 lessons and the count moved by exactly 22.
+
+The pre-flight caught "using the course phrase" in a chapter about **menu
+courses** — where the word is entirely legitimate three lines earlier. That is
+the third instance of the standalone-book rule and the first where the offending
+phrase was about food.
+
+## Eight findings from the security review
+
+Security passed. The factual pass found eight, and **three are the same failure
+mode as the last two tranches: a lesson asserting something its own
+prerequisite contradicts.**
+
+- `ES-C456-ensalada` told the story that Roman soldiers were paid in salt.
+  `ES-C361-sal` — **a listed prerequisite of that very lesson** — says the tale
+  is "an eighteenth-century invention with no ancient source behind it".
+  *salārium* < *sal* is all that may be claimed, and now all that is.
+- `ES-C457-medicamento` argued that "healing was named after careful measuring",
+  citing a doctor measuring a dose. `ES-C394-medico`, also a prerequisite, names
+  that exact inference as circular and forbids it. Reduced to the cognacy claim.
+- `ES-R456-repaso-cuenta` said `aceptar` was the one word with no relative in
+  the reader's vocabulary. `ES-C348-principio` already teaches *capere*, inside
+  *princeps*, "the one who takes first place". Every word in the chapter had a
+  relative waiting.
+
+**The rule is the same one, for the third tranche running: before writing that
+the corpus has not said something, read the lesson that would have said it.**
+What is new is that all three falsifiers were *listed prerequisites* — the
+check is not "search the corpus", it is "read the files this lesson already
+names".
+
+Three more corrections of fact:
+
+- English **cargo** came straight from Spanish in the seventeenth century, not
+  through French. Only *charge* took the French road.
+- **la sierra** is Latin *serra* and is **not** in the *secare* family. The
+  saw-teeth picture of a mountain ridge is right; the etymology was not. It is
+  now explicitly marked as a look-alike kept outside the family.
+- `ES-C458-admitir` miscounted the *mittere* family (above).
+
+And two grammar over-reaches:
+
+- `ES-C456-agencia` generalised to "if a Spanish abstract noun does not end in
+  *-miento*, expect feminine". **Its own chapter teaches *el coste* and *el
+  cargo*.** Pulled back to the suffix-scoped claim, which is what
+  `ES-C453-limpieza` had already stated correctly.
+- `ES-C457-sintesis-guardia` called *fuera de ese horario* an instance of
+  *fuera de* + bare noun. It has a determiner. Now used to draw the contrast
+  instead: the fixed phrase takes nothing, the pointing one needs *ese*.
+
+## What this does not claim
+
+Five more exam items are now supported by the book's own vocabulary. No item
+has been graded against a reader. **Eighteen objective items still fail**, and
+until that reaches zero the A2 book cannot be said to prepare anybody to sit
+the paper.
+
 ## Chapters 452-455 — the tie-break, used deliberately
 
 Seventeen headwords across four chapters, and a better rate than the tranche

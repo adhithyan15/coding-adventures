@@ -1,0 +1,11 @@
+{
+  "id": "ES-C458-admitir",
+  "pathSegment": "ES-PATH-458-PLAZO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-458-PLAZO",
+      "order": 2
+    }
+  ]
+}

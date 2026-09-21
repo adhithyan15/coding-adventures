@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:188834decc911829",
+  "lessonIds": [
+    "ES-C459-seccion",
+    "ES-C459-inventario",
+    "ES-C459-habitual",
+    "ES-R459-repaso-stock",
+    "ES-C459-sintesis-stock"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "spanish/narration/ch459.txt",
+  "json": "spanish/narration/ch459.json",
+  "textHash": "fnv1a64:23f9115ec9a485d5",
+  "jsonHash": "fnv1a64:2085f84fd534699f",
+  "findings": []
+}

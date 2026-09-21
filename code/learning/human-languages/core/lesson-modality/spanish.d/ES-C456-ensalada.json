@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C456-ensalada",
+    "language": "spanish",
+    "chapter": 456,
+    "sequence": 12160,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e7013d17040acf47"
+  },
+  "findings": []
+}

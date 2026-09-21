@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R458-repaso-plazo",
+    "language": "spanish",
+    "chapter": 458,
+    "sequence": 12310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f8e0fb8016f4e2a"
+  },
+  "findings": []
+}

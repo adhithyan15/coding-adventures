@@ -102,22 +102,22 @@ describe("Spanish A2 book-bounded mock audit", () => {
   it("pins the CURRENT DEBT: the exam names the vocabulary that is still missing", () => {
     const audit = buildSpanishA1MockAudit(defaultCurriculumRoot(), "A2");
     expect(audit.level).toBe("A2");
-    expect(audit.objectiveFailed).toBe(23);
+    expect(audit.objectiveFailed).toBe(18);
     expect(audit.mocks.map(({ reading, listening, objectiveFailed }) => ({
       reading,
       listening,
       objectiveFailed,
     }))).toEqual([
-      { reading: 21, listening: 15, objectiveFailed: 14 },
-      { reading: 19, listening: 22, objectiveFailed: 9 },
+      { reading: 21, listening: 18, objectiveFailed: 11 },
+      { reading: 19, listening: 24, objectiveFailed: 7 },
     ]);
     // THIS NUMBER MUST ONLY EVER FALL. A rise means a mock gained an item the
     // corpus cannot support.
     //
-    // 191 -> 161 -> 146 -> 126 -> 107 -> 85 -> 68 are the six vocabulary
-    // tranches: 431-436, 437-439, 440-443, 444-447, 448-451 and 452-455. EVERY
-    // drop is exact -- 30 headwords removed 30 lexemes, then 15, 20, 19, 22,
-    // 17. That
+    // 191 -> 161 -> 146 -> 126 -> 107 -> 85 -> 68 -> 54 are the seven
+    // vocabulary tranches: 431-436, 437-439, 440-443, 444-447, 448-451,
+    // 452-455 and 456-459. EVERY drop is exact -- 30 headwords removed 30
+    // lexemes, then 15, 20, 19, 22, 17, 14. That
     // arithmetic is the evidence a word was genuinely absent; one already taught
     // under another name would have made the drop smaller. Each was PREDICTED
     // from the audit before the chapters were wired and reproduced exactly by
@@ -131,7 +131,7 @@ describe("Spanish A2 book-bounded mock audit", () => {
     // honest reading, since the adjective is the form on the lift door.
     //
     // THE ITEM COUNT IS WHERE THE SELECTION RULE SHOWS, and it is the whole
-    // point. objectiveFailed went 93 -> 88 -> 79 -> 59 -> 40 -> 31 -> 23:
+    // point. objectiveFailed went 93 -> 88 -> 79 -> 59 -> 40 -> 31 -> 23 -> 18:
     //
     //     tranche 1  (431-436)  30 words   5 items
     //     tranche 2  (437-439)  15 words   9 items
@@ -139,6 +139,7 @@ describe("Spanish A2 book-bounded mock audit", () => {
     //     tranche 3b (444-447)  19 words  19 items
     //     tranche 4a (448-451)  22 words   9 items
     //     tranche 4b (452-455)  17 words   8 items
+    //     tranche 4c (456-459)  14 words   5 items
     //
     // An item passes only when EVERY lexeme in its `requires` row is taught, so
     // a word helps in proportion to how close its rows already are. Tranches
@@ -173,6 +174,19 @@ describe("Spanish A2 book-bounded mock audit", () => {
     // is which rows a scene happens to complete, and choosing scenes around the
     // cheapest rows is that lever.
     //
+    // TRANCHE 4c IS WHERE THAT LEVER RUNS OUT TOO, and the rate says so: 2.80,
+    // up from 4b's 2.12. Before authoring it, every coherent scene left was
+    // measured, and all but one came out at EXACTLY 3.00 words per item. The
+    // exception was `La cuenta` at 2.50, holding the last unblocked two-word
+    // row. So 4c took that scene first and then three 3.00 scenes, and no
+    // grouping available could have done better.
+    //
+    // From here the floor is 3.00 until the B1-mapped words move. FIVE of the
+    // remaining rows are waiting on `explicar`, `creer` or `problema` -- all
+    // three ALREADY TAUGHT, all three above the A2 book's ceiling. Crediting
+    // them costs ZERO new lessons and is now worth more than a whole tranche
+    // of authoring: see the HL-C418 shard in BACKLOG.d.
+    //
     // The two remaining solo blockers, `explicar` and `problema`, are NOT
     // authoring work: both are already headwords whose spine nodes put them at
     // B1, so a reader of the A2 book has not met them. See the HL-C418 shard in
@@ -193,7 +207,11 @@ describe("Spanish A2 book-bounded mock audit", () => {
     // deltas above is accounted for by a named row, which is the check worth
     // running -- a pass count that rose without a cleared row to explain it
     // would mean the audit had changed rather than the corpus.
-    expect(audit.missingObjectiveLexemes).toHaveLength(68);
+    //
+    // 4c fell 3 and 2: mock 1 lost three listening rows, mock 2 lost two
+    // listening rows, and neither reading paper moved. All five cleared rows
+    // are paper-2 rows, which is why both reading counts are unchanged.
+    expect(audit.missingObjectiveLexemes).toHaveLength(54);
   });
 
   it("measures a LARGER taught set than A1, which is what makes it a different gate", () => {
