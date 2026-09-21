@@ -220,8 +220,17 @@ class MosaicQtRuntimeCIAcceptanceTests(unittest.TestCase):
             workflow,
         )
         self.assertIn("mosaic-qt-native-complete-rating-controls", workflow)
+        # native-complete Qt shells keep a missing/failed runtime visible in
+        # the window with a retry action instead of exiting
+        # (qt_main_with_startup_states), so the missing-runtime probe rebuilds
+        # RatingControls with the same MOSAIC_STARTUP_CONFORMANCE acceptance
+        # seam TaskApp's own startup probe uses above, rather than expecting
+        # it to exit non-zero.
+        self.assertIn("mosaic-qt-rating-controls-startup-conformance", workflow)
+        self.assertIn("-DCMAKE_CXX_FLAGS=-DMOSAIC_STARTUP_CONFORMANCE=1", workflow)
         self.assertIn(
-            "native-complete requires the Mosaic Rust application runtime", workflow
+            'grep -F "Qt startup failure/retry conformance passed" "$strict_log"',
+            workflow,
         )
 
     def test_harness_does_not_duplicate_the_generated_binding(self) -> None:
