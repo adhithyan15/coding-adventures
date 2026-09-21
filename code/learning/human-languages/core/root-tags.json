@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "why": [
+    "`roots:` is the cousins join key and the join is EXACT STRING EQUALITY on",
+    "the slug (see src/cousins.ts). The corpus spells the same etymon three",
+    "ways -- bare `lemma`, `lemma-<tag>`, and `<tag>-lemma` -- so two lessons",
+    "that share an etymon can fail to join, and a missing cousin panel looks",
+    "exactly like a word with no cousins yet. HL-C419.",
+    "",
+    "A split cannot be detected without knowing which hyphen-separated token is",
+    "a LANGUAGE TAG and which is part of the lemma or a gloss. The corpus has",
+    "both: `-latin` (651 slugs) and `-dravidian` (63) are tags, while `-see`,",
+    "`-heart`, `-speak` and bare single letters are glosses. Nothing in a slug",
+    "distinguishes them, which is why this list exists and is checked in.",
+    "",
+    "HOW THIS LIST WAS BUILT, so it can be rebuilt: every leading and trailing",
+    "hyphen-separated token across all 2403 live slugs was counted, and the",
+    "language names among them were kept. The judgement is only ever `is this",
+    "token the name of a language or language stage` -- it is never about",
+    "frequency, so a tag used once is as valid as `latin`.",
+    "",
+    "ADDING A TAG IS EXPECTED. A new track brings new tags. Add it here and the",
+    "guard starts seeing that tag's splits; leave it out and slugs using it are",
+    "treated as opaque, which loses coverage but never invents a false split."
+  ],
+  "matching": [
+    "A tag is matched at EITHER end of a slug, longest first, so",
+    "`old-french` wins over `french` on `corlieu-old-french`. The remainder is",
+    "the lemma. A slug with no declared tag at either end is `bare` and its",
+    "whole text is the lemma."
+  ],
+  "aliases": {
+    "pie": "proto-indo-european"
+  },
+  "aliasesWhy": [
+    "`pie` and `proto-indo-european` are the SAME language written two ways, so",
+    "they are folded together before grouping and a `dwoh-pie` /",
+    "`proto-indo-european-dwoh` pair is reported as the split it is.",
+    "",
+    "Ancestor/descendant pairs are deliberately NOT aliased. `dravidian` and",
+    "`proto-dravidian` co-occur on eight lemmas, `frankish` and `germanic` on",
+    "three, `latin` and `pie` on five -- in every one of those the two tags name",
+    "genuinely different languages and a lesson may legitimately cite either."
+  ],
+  "tags": [
+    "akkadian", "albanian", "ancient-greek", "aramaic", "arabic", "armenian",
+    "aryan", "avestan", "basque", "bengali", "brahui", "catalan", "celtic",
+    "chinese", "classical-persian", "dravidian", "dutch", "egyptian", "english",
+    "etruscan", "frankish", "french", "gaulish", "german", "germanic", "gothic",
+    "greek", "gujarati", "hebrew", "hindi", "hungarian", "indo-aryan",
+    "indo-iranian", "iranian", "irish", "italian", "japanese", "kannada",
+    "kodava", "koine-greek", "korean", "late-latin", "latin", "lithuanian",
+    "malay", "malayalam", "marathi", "middle-chinese", "middle-dutch",
+    "middle-english", "middle-french", "middle-indo-aryan", "middle-persian",
+    "mongolian", "nahuatl", "norse", "occitan", "old-church-slavonic",
+    "old-english", "old-french", "old-gujarati", "old-high-german",
+    "old-iranian", "old-italian", "old-marathi", "old-norse", "old-persian",
+    "old-provencal", "old-spanish", "pali", "persian", "phoenician", "pie",
+    "portuguese", "prakrit", "proto-dravidian", "proto-germanic",
+    "proto-indo-european", "proto-indo-iranian", "proto-slavic", "punjabi",
+    "quechua", "romance", "russian", "sanskrit", "semitic", "slavic", "spanish",
+    "sumerian", "swahili", "taino", "tamil", "telugu", "tibetan", "tulu",
+    "turkish", "urdu", "vulgar-latin", "welsh"
+  ],
+  "semiticNote": [
+    "`semitic` is a FAMILY, not a language, and fifteen live slugs use it as a",
+    "tag. It is kept because the corpus uses it as one and excluding it would",
+    "hide any split among those fifteen; the same reasoning keeps `germanic`,",
+    "`slavic`, `celtic`, `romance`, `dravidian`, `iranian` and `aryan`."
+  ]
+}

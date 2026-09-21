@@ -491,3 +491,15 @@ export {
   type ClosureViolation,
   type TrackClosure,
 } from "./script-closure.js";
+export {
+  ROOT_SLUG_BASELINE_PATH,
+  ROOT_TAGS_PATH,
+  diffRootSlugSplits,
+  findRootSlugSplits,
+  liveRootSlugs,
+  loadRootSlugBaseline,
+  loadRootTagVocabulary,
+  parseRootSlug,
+  serialiseRootSlugBaseline,
+} from "./root-slug-splits.js";
+export { runRootSlugSplitsCli } from "./root-slug-splits-cli.js";
