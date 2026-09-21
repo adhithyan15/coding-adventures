@@ -1,0 +1,1861 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "level": "A2",
+  "policy": {
+    "description": "Credit explicit A2 headwords, their article-free and token forms, documented citation aliases, and Spanish numerals 0-100.",
+    "citationFormCredits": [
+      "llevar",
+      "andar",
+      "dar",
+      "llover",
+      "amigo",
+      "sol",
+      "vivir",
+      "llamar",
+      "llamarse",
+      "año",
+      "mes"
+    ],
+    "numberWordCredits": [
+      "cero",
+      "uno",
+      "dos",
+      "tres",
+      "cuatro",
+      "cinco",
+      "seis",
+      "siete",
+      "ocho",
+      "nueve",
+      "diez",
+      "once",
+      "doce",
+      "trece",
+      "catorce",
+      "quince",
+      "dieciséis",
+      "diecisiete",
+      "dieciocho",
+      "diecinueve",
+      "veinte",
+      "veintiuno",
+      "veintidós",
+      "veintitrés",
+      "veinticuatro",
+      "veinticinco",
+      "veintiséis",
+      "veintisiete",
+      "veintiocho",
+      "veintinueve",
+      "treinta",
+      "cuarenta",
+      "cincuenta",
+      "sesenta",
+      "setenta",
+      "ochenta",
+      "noventa",
+      "cien"
+    ],
+    "numericCredits": "0-100"
+  },
+  "lessonCount": 1149,
+  "taughtForms": 1867,
+  "objectiveFailed": 93,
+  "mocks": [
+    {
+      "mock": 1,
+      "reading": 4,
+      "listening": 0,
+      "objectiveFailed": 46,
+      "failed": [
+        {
+          "paper": 1,
+          "item": 1,
+          "missing": [
+            "ofrecer",
+            "decidir"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 2,
+          "missing": [
+            "exigente"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 3,
+          "missing": [
+            "compañero",
+            "invitar",
+            "explicar"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 5,
+          "missing": [
+            "sofá",
+            "enseñar"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 6,
+          "missing": [
+            "cortar",
+            "tubería",
+            "garaje"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 7,
+          "missing": [
+            "lavadora",
+            "tender",
+            "meter"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 8,
+          "missing": [
+            "préstamo",
+            "devolver",
+            "retraso"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 9,
+          "missing": [
+            "experiencia",
+            "previo",
+            "currículum"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 10,
+          "missing": [
+            "natación",
+            "trasladar"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 11,
+          "missing": [
+            "análisis"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 12,
+          "missing": [
+            "celebrar",
+            "polideportivo"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 13,
+          "missing": [
+            "cargador",
+            "devolver"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 14,
+          "missing": [
+            "mover"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 16,
+          "missing": [
+            "cenar",
+            "junto"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 17,
+          "missing": [
+            "compañero",
+            "acompañar"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 19,
+          "missing": [
+            "torpe",
+            "equivocarse",
+            "reír"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 20,
+          "missing": [
+            "patio",
+            "hierba",
+            "piedra"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 21,
+          "missing": [
+            "jubilado",
+            "plantar"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 22,
+          "missing": [
+            "cuaderno",
+            "anotar",
+            "temperatura",
+            "lluvia",
+            "recoger"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 23,
+          "missing": [
+            "director",
+            "visible",
+            "comportamiento",
+            "discutir"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 24,
+          "missing": [
+            "producir",
+            "suficiente",
+            "alimentar",
+            "objetivo"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 26,
+          "missing": [
+            "recoger",
+            "repetir",
+            "junto"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 27,
+          "missing": [
+            "chaqueta",
+            "grado",
+            "bufanda",
+            "abrigo",
+            "prestar"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 28,
+          "missing": [
+            "impresora",
+            "imprimir",
+            "conectar",
+            "llamada"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 29,
+          "missing": [
+            "ofrecer"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 30,
+          "missing": [
+            "tardar",
+            "carrito"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 31,
+          "missing": [
+            "grupo",
+            "avanzado",
+            "perderse",
+            "principiante",
+            "sencillo"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 32,
+          "missing": [
+            "taller",
+            "batería",
+            "recoger",
+            "documentación",
+            "factura"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 33,
+          "missing": [
+            "retraso",
+            "obra",
+            "vía",
+            "andén"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 34,
+          "missing": [
+            "concentrarse",
+            "cenar"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 35,
+          "missing": [
+            "agencia",
+            "coste",
+            "aceptar"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 36,
+          "missing": [
+            "sección",
+            "cerrado",
+            "inventario",
+            "habitual"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 37,
+          "missing": [
+            "portera"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 38,
+          "missing": [
+            "administración"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 39,
+          "missing": [
+            "problema"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 40,
+          "missing": [
+            "comentar",
+            "decidir"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 41,
+          "missing": [
+            "jubilarse"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 42,
+          "missing": [
+            "mirar",
+            "coincidir"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 43,
+          "missing": [
+            "descontar",
+            "creer"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 44,
+          "missing": [
+            "cumpleaños"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 45,
+          "missing": [
+            "equivocarse",
+            "ensalada",
+            "devolver",
+            "cargo"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 46,
+          "missing": [
+            "reunión",
+            "cenar"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 47,
+          "missing": [
+            "paraguas",
+            "mango",
+            "encontrar",
+            "avisar"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 48,
+          "missing": [
+            "recordar",
+            "dentista",
+            "fallar",
+            "cobrar"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 49,
+          "missing": [
+            "estantería",
+            "madera",
+            "portal",
+            "tirar"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 50,
+          "missing": [
+            "cubrir"
+          ]
+        }
+      ]
+    },
+    {
+      "mock": 2,
+      "reading": 0,
+      "listening": 3,
+      "objectiveFailed": 47,
+      "failed": [
+        {
+          "paper": 1,
+          "item": 1,
+          "missing": [
+            "mudarse",
+            "sofá",
+            "duro"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 2,
+          "missing": [
+            "lavadora",
+            "reír"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 3,
+          "missing": [
+            "jubilado",
+            "ofrecer",
+            "explicar"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 4,
+          "missing": [
+            "pintar",
+            "dormitorio",
+            "claro"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 5,
+          "missing": [
+            "tardar",
+            "humor"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 6,
+          "missing": [
+            "natación",
+            "trasladar",
+            "calefacción"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 7,
+          "missing": [
+            "cargador",
+            "prestar",
+            "acercarse"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 8,
+          "missing": [
+            "carné",
+            "mostrar"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 9,
+          "missing": [
+            "experiencia",
+            "previo",
+            "contrato"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 10,
+          "missing": [
+            "pedido",
+            "retraso",
+            "proveedor",
+            "devolver",
+            "envío"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 11,
+          "missing": [
+            "contador",
+            "portera",
+            "concertar"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 12,
+          "missing": [
+            "taller",
+            "arreglar",
+            "freno",
+            "rueda"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 13,
+          "missing": [
+            "torcerse",
+            "descansar",
+            "doler"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 14,
+          "missing": [
+            "reducir",
+            "cobrar",
+            "decidirse",
+            "jefe"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 15,
+          "missing": [
+            "decidir",
+            "rotativo",
+            "consultar"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 16,
+          "missing": [
+            "arrepentirse"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 17,
+          "missing": [
+            "compañero",
+            "interesar"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 18,
+          "missing": [
+            "responsabilidad"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 19,
+          "missing": [
+            "fijo"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 20,
+          "missing": [
+            "prestar",
+            "norma",
+            "firmar",
+            "devolver"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 21,
+          "missing": [
+            "encuesta",
+            "usuario",
+            "responder",
+            "lectura"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 22,
+          "missing": [
+            "donar",
+            "peligroso",
+            "rechazar"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 23,
+          "missing": [
+            "herramienta",
+            "solicitar",
+            "máquina",
+            "espera"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 24,
+          "missing": [
+            "estropear",
+            "cobrar",
+            "accidente",
+            "roto",
+            "servicio"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 25,
+          "missing": [
+            "recomendar",
+            "estado",
+            "explicar",
+            "norma"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 26,
+          "missing": [
+            "taller",
+            "batería",
+            "urgencia"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 27,
+          "missing": [
+            "devolver",
+            "estantería",
+            "pieza",
+            "ticket",
+            "revisar"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 28,
+          "missing": [
+            "coincidir",
+            "recoger",
+            "grupo"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 29,
+          "missing": [
+            "medicamento",
+            "encargar",
+            "guardia"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 30,
+          "missing": [
+            "mudanza",
+            "estropeado"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 31,
+          "missing": [
+            "cola",
+            "devolver",
+            "máquina",
+            "retraso",
+            "apuntar"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 32,
+          "missing": [
+            "directo"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 33,
+          "missing": [
+            "cerrado",
+            "limpieza",
+            "contador",
+            "instalación"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 34,
+          "missing": [
+            "lavadora",
+            "pieza"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 36,
+          "missing": [
+            "andén",
+            "pantalla"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 37,
+          "missing": [
+            "tubería",
+            "garaje",
+            "cortar"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 39,
+          "missing": [
+            "organizar",
+            "guía",
+            "importar"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 40,
+          "missing": [
+            "coincidir",
+            "boda"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 41,
+          "missing": [
+            "cómodo",
+            "ruta"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 42,
+          "missing": [
+            "grupo",
+            "disfrutar"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 44,
+          "missing": [
+            "pedido",
+            "almacén",
+            "retraso",
+            "proveedor",
+            "seguimiento"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 45,
+          "missing": [
+            "entrenamiento",
+            "césped",
+            "polideportivo"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 46,
+          "missing": [
+            "taladro",
+            "estantería",
+            "acercar"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 47,
+          "missing": [
+            "tirar"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 48,
+          "missing": [
+            "plazo",
+            "entregar",
+            "currículum",
+            "documentación",
+            "admitir"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 49,
+          "missing": [
+            "torcerse",
+            "descansar",
+            "partido"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 50,
+          "missing": [
+            "cortar",
+            "portal",
+            "tubería"
+          ]
+        }
+      ]
+    }
+  ],
+  "missingObjectiveLexemes": [
+    "abrigo",
+    "accidente",
+    "aceptar",
+    "acercar",
+    "acercarse",
+    "acompañar",
+    "administración",
+    "admitir",
+    "agencia",
+    "alimentar",
+    "almacén",
+    "andén",
+    "anotar",
+    "análisis",
+    "apuntar",
+    "arreglar",
+    "arrepentirse",
+    "avanzado",
+    "avisar",
+    "batería",
+    "boda",
+    "bufanda",
+    "calefacción",
+    "cargador",
+    "cargo",
+    "carné",
+    "carrito",
+    "celebrar",
+    "cenar",
+    "cerrado",
+    "chaqueta",
+    "claro",
+    "cobrar",
+    "coincidir",
+    "cola",
+    "comentar",
+    "compañero",
+    "comportamiento",
+    "concentrarse",
+    "concertar",
+    "conectar",
+    "consultar",
+    "contador",
+    "contrato",
+    "cortar",
+    "coste",
+    "creer",
+    "cuaderno",
+    "cubrir",
+    "cumpleaños",
+    "currículum",
+    "césped",
+    "cómodo",
+    "decidir",
+    "decidirse",
+    "dentista",
+    "descansar",
+    "descontar",
+    "devolver",
+    "directo",
+    "director",
+    "discutir",
+    "disfrutar",
+    "documentación",
+    "doler",
+    "donar",
+    "dormitorio",
+    "duro",
+    "encargar",
+    "encontrar",
+    "encuesta",
+    "ensalada",
+    "enseñar",
+    "entregar",
+    "entrenamiento",
+    "envío",
+    "equivocarse",
+    "espera",
+    "estado",
+    "estantería",
+    "estropeado",
+    "estropear",
+    "exigente",
+    "experiencia",
+    "explicar",
+    "factura",
+    "fallar",
+    "fijo",
+    "firmar",
+    "freno",
+    "garaje",
+    "grado",
+    "grupo",
+    "guardia",
+    "guía",
+    "habitual",
+    "herramienta",
+    "hierba",
+    "humor",
+    "importar",
+    "impresora",
+    "imprimir",
+    "instalación",
+    "interesar",
+    "inventario",
+    "invitar",
+    "jefe",
+    "jubilado",
+    "jubilarse",
+    "junto",
+    "lavadora",
+    "lectura",
+    "limpieza",
+    "llamada",
+    "lluvia",
+    "madera",
+    "mango",
+    "medicamento",
+    "meter",
+    "mirar",
+    "mostrar",
+    "mover",
+    "mudanza",
+    "mudarse",
+    "máquina",
+    "natación",
+    "norma",
+    "objetivo",
+    "obra",
+    "ofrecer",
+    "organizar",
+    "pantalla",
+    "paraguas",
+    "partido",
+    "patio",
+    "pedido",
+    "peligroso",
+    "perderse",
+    "piedra",
+    "pieza",
+    "pintar",
+    "plantar",
+    "plazo",
+    "polideportivo",
+    "portal",
+    "portera",
+    "prestar",
+    "previo",
+    "principiante",
+    "problema",
+    "producir",
+    "proveedor",
+    "préstamo",
+    "rechazar",
+    "recoger",
+    "recomendar",
+    "recordar",
+    "reducir",
+    "repetir",
+    "responder",
+    "responsabilidad",
+    "retraso",
+    "reunión",
+    "revisar",
+    "reír",
+    "rotativo",
+    "roto",
+    "rueda",
+    "ruta",
+    "sección",
+    "seguimiento",
+    "sencillo",
+    "servicio",
+    "sofá",
+    "solicitar",
+    "suficiente",
+    "taladro",
+    "taller",
+    "tardar",
+    "temperatura",
+    "tender",
+    "ticket",
+    "tirar",
+    "torcerse",
+    "torpe",
+    "trasladar",
+    "tubería",
+    "urgencia",
+    "usuario",
+    "visible",
+    "vía"
+  ],
+  "missingFrequency": [
+    {
+      "lexeme": "devolver",
+      "count": 7
+    },
+    {
+      "lexeme": "retraso",
+      "count": 5
+    },
+    {
+      "lexeme": "recoger",
+      "count": 4
+    },
+    {
+      "lexeme": "cenar",
+      "count": 3
+    },
+    {
+      "lexeme": "cobrar",
+      "count": 3
+    },
+    {
+      "lexeme": "coincidir",
+      "count": 3
+    },
+    {
+      "lexeme": "compañero",
+      "count": 3
+    },
+    {
+      "lexeme": "cortar",
+      "count": 3
+    },
+    {
+      "lexeme": "decidir",
+      "count": 3
+    },
+    {
+      "lexeme": "estantería",
+      "count": 3
+    },
+    {
+      "lexeme": "explicar",
+      "count": 3
+    },
+    {
+      "lexeme": "grupo",
+      "count": 3
+    },
+    {
+      "lexeme": "lavadora",
+      "count": 3
+    },
+    {
+      "lexeme": "ofrecer",
+      "count": 3
+    },
+    {
+      "lexeme": "prestar",
+      "count": 3
+    },
+    {
+      "lexeme": "taller",
+      "count": 3
+    },
+    {
+      "lexeme": "tubería",
+      "count": 3
+    },
+    {
+      "lexeme": "andén",
+      "count": 2
+    },
+    {
+      "lexeme": "batería",
+      "count": 2
+    },
+    {
+      "lexeme": "cargador",
+      "count": 2
+    },
+    {
+      "lexeme": "cerrado",
+      "count": 2
+    },
+    {
+      "lexeme": "contador",
+      "count": 2
+    },
+    {
+      "lexeme": "currículum",
+      "count": 2
+    },
+    {
+      "lexeme": "descansar",
+      "count": 2
+    },
+    {
+      "lexeme": "documentación",
+      "count": 2
+    },
+    {
+      "lexeme": "equivocarse",
+      "count": 2
+    },
+    {
+      "lexeme": "experiencia",
+      "count": 2
+    },
+    {
+      "lexeme": "garaje",
+      "count": 2
+    },
+    {
+      "lexeme": "jubilado",
+      "count": 2
+    },
+    {
+      "lexeme": "junto",
+      "count": 2
+    },
+    {
+      "lexeme": "máquina",
+      "count": 2
+    },
+    {
+      "lexeme": "natación",
+      "count": 2
+    },
+    {
+      "lexeme": "norma",
+      "count": 2
+    },
+    {
+      "lexeme": "pedido",
+      "count": 2
+    },
+    {
+      "lexeme": "pieza",
+      "count": 2
+    },
+    {
+      "lexeme": "polideportivo",
+      "count": 2
+    },
+    {
+      "lexeme": "portal",
+      "count": 2
+    },
+    {
+      "lexeme": "portera",
+      "count": 2
+    },
+    {
+      "lexeme": "previo",
+      "count": 2
+    },
+    {
+      "lexeme": "proveedor",
+      "count": 2
+    },
+    {
+      "lexeme": "reír",
+      "count": 2
+    },
+    {
+      "lexeme": "sofá",
+      "count": 2
+    },
+    {
+      "lexeme": "tardar",
+      "count": 2
+    },
+    {
+      "lexeme": "tirar",
+      "count": 2
+    },
+    {
+      "lexeme": "torcerse",
+      "count": 2
+    },
+    {
+      "lexeme": "trasladar",
+      "count": 2
+    },
+    {
+      "lexeme": "abrigo",
+      "count": 1
+    },
+    {
+      "lexeme": "accidente",
+      "count": 1
+    },
+    {
+      "lexeme": "aceptar",
+      "count": 1
+    },
+    {
+      "lexeme": "acercar",
+      "count": 1
+    },
+    {
+      "lexeme": "acercarse",
+      "count": 1
+    },
+    {
+      "lexeme": "acompañar",
+      "count": 1
+    },
+    {
+      "lexeme": "administración",
+      "count": 1
+    },
+    {
+      "lexeme": "admitir",
+      "count": 1
+    },
+    {
+      "lexeme": "agencia",
+      "count": 1
+    },
+    {
+      "lexeme": "alimentar",
+      "count": 1
+    },
+    {
+      "lexeme": "almacén",
+      "count": 1
+    },
+    {
+      "lexeme": "análisis",
+      "count": 1
+    },
+    {
+      "lexeme": "anotar",
+      "count": 1
+    },
+    {
+      "lexeme": "apuntar",
+      "count": 1
+    },
+    {
+      "lexeme": "arreglar",
+      "count": 1
+    },
+    {
+      "lexeme": "arrepentirse",
+      "count": 1
+    },
+    {
+      "lexeme": "avanzado",
+      "count": 1
+    },
+    {
+      "lexeme": "avisar",
+      "count": 1
+    },
+    {
+      "lexeme": "boda",
+      "count": 1
+    },
+    {
+      "lexeme": "bufanda",
+      "count": 1
+    },
+    {
+      "lexeme": "calefacción",
+      "count": 1
+    },
+    {
+      "lexeme": "cargo",
+      "count": 1
+    },
+    {
+      "lexeme": "carné",
+      "count": 1
+    },
+    {
+      "lexeme": "carrito",
+      "count": 1
+    },
+    {
+      "lexeme": "celebrar",
+      "count": 1
+    },
+    {
+      "lexeme": "césped",
+      "count": 1
+    },
+    {
+      "lexeme": "chaqueta",
+      "count": 1
+    },
+    {
+      "lexeme": "claro",
+      "count": 1
+    },
+    {
+      "lexeme": "cola",
+      "count": 1
+    },
+    {
+      "lexeme": "comentar",
+      "count": 1
+    },
+    {
+      "lexeme": "cómodo",
+      "count": 1
+    },
+    {
+      "lexeme": "comportamiento",
+      "count": 1
+    },
+    {
+      "lexeme": "concentrarse",
+      "count": 1
+    },
+    {
+      "lexeme": "concertar",
+      "count": 1
+    },
+    {
+      "lexeme": "conectar",
+      "count": 1
+    },
+    {
+      "lexeme": "consultar",
+      "count": 1
+    },
+    {
+      "lexeme": "contrato",
+      "count": 1
+    },
+    {
+      "lexeme": "coste",
+      "count": 1
+    },
+    {
+      "lexeme": "creer",
+      "count": 1
+    },
+    {
+      "lexeme": "cuaderno",
+      "count": 1
+    },
+    {
+      "lexeme": "cubrir",
+      "count": 1
+    },
+    {
+      "lexeme": "cumpleaños",
+      "count": 1
+    },
+    {
+      "lexeme": "decidirse",
+      "count": 1
+    },
+    {
+      "lexeme": "dentista",
+      "count": 1
+    },
+    {
+      "lexeme": "descontar",
+      "count": 1
+    },
+    {
+      "lexeme": "directo",
+      "count": 1
+    },
+    {
+      "lexeme": "director",
+      "count": 1
+    },
+    {
+      "lexeme": "discutir",
+      "count": 1
+    },
+    {
+      "lexeme": "disfrutar",
+      "count": 1
+    },
+    {
+      "lexeme": "doler",
+      "count": 1
+    },
+    {
+      "lexeme": "donar",
+      "count": 1
+    },
+    {
+      "lexeme": "dormitorio",
+      "count": 1
+    },
+    {
+      "lexeme": "duro",
+      "count": 1
+    },
+    {
+      "lexeme": "encargar",
+      "count": 1
+    },
+    {
+      "lexeme": "encontrar",
+      "count": 1
+    },
+    {
+      "lexeme": "encuesta",
+      "count": 1
+    },
+    {
+      "lexeme": "ensalada",
+      "count": 1
+    },
+    {
+      "lexeme": "enseñar",
+      "count": 1
+    },
+    {
+      "lexeme": "entregar",
+      "count": 1
+    },
+    {
+      "lexeme": "entrenamiento",
+      "count": 1
+    },
+    {
+      "lexeme": "envío",
+      "count": 1
+    },
+    {
+      "lexeme": "espera",
+      "count": 1
+    },
+    {
+      "lexeme": "estado",
+      "count": 1
+    },
+    {
+      "lexeme": "estropeado",
+      "count": 1
+    },
+    {
+      "lexeme": "estropear",
+      "count": 1
+    },
+    {
+      "lexeme": "exigente",
+      "count": 1
+    },
+    {
+      "lexeme": "factura",
+      "count": 1
+    },
+    {
+      "lexeme": "fallar",
+      "count": 1
+    },
+    {
+      "lexeme": "fijo",
+      "count": 1
+    },
+    {
+      "lexeme": "firmar",
+      "count": 1
+    },
+    {
+      "lexeme": "freno",
+      "count": 1
+    },
+    {
+      "lexeme": "grado",
+      "count": 1
+    },
+    {
+      "lexeme": "guardia",
+      "count": 1
+    },
+    {
+      "lexeme": "guía",
+      "count": 1
+    },
+    {
+      "lexeme": "habitual",
+      "count": 1
+    },
+    {
+      "lexeme": "herramienta",
+      "count": 1
+    },
+    {
+      "lexeme": "hierba",
+      "count": 1
+    },
+    {
+      "lexeme": "humor",
+      "count": 1
+    },
+    {
+      "lexeme": "importar",
+      "count": 1
+    },
+    {
+      "lexeme": "impresora",
+      "count": 1
+    },
+    {
+      "lexeme": "imprimir",
+      "count": 1
+    },
+    {
+      "lexeme": "instalación",
+      "count": 1
+    },
+    {
+      "lexeme": "interesar",
+      "count": 1
+    },
+    {
+      "lexeme": "inventario",
+      "count": 1
+    },
+    {
+      "lexeme": "invitar",
+      "count": 1
+    },
+    {
+      "lexeme": "jefe",
+      "count": 1
+    },
+    {
+      "lexeme": "jubilarse",
+      "count": 1
+    },
+    {
+      "lexeme": "lectura",
+      "count": 1
+    },
+    {
+      "lexeme": "limpieza",
+      "count": 1
+    },
+    {
+      "lexeme": "llamada",
+      "count": 1
+    },
+    {
+      "lexeme": "lluvia",
+      "count": 1
+    },
+    {
+      "lexeme": "madera",
+      "count": 1
+    },
+    {
+      "lexeme": "mango",
+      "count": 1
+    },
+    {
+      "lexeme": "medicamento",
+      "count": 1
+    },
+    {
+      "lexeme": "meter",
+      "count": 1
+    },
+    {
+      "lexeme": "mirar",
+      "count": 1
+    },
+    {
+      "lexeme": "mostrar",
+      "count": 1
+    },
+    {
+      "lexeme": "mover",
+      "count": 1
+    },
+    {
+      "lexeme": "mudanza",
+      "count": 1
+    },
+    {
+      "lexeme": "mudarse",
+      "count": 1
+    },
+    {
+      "lexeme": "objetivo",
+      "count": 1
+    },
+    {
+      "lexeme": "obra",
+      "count": 1
+    },
+    {
+      "lexeme": "organizar",
+      "count": 1
+    },
+    {
+      "lexeme": "pantalla",
+      "count": 1
+    },
+    {
+      "lexeme": "paraguas",
+      "count": 1
+    },
+    {
+      "lexeme": "partido",
+      "count": 1
+    },
+    {
+      "lexeme": "patio",
+      "count": 1
+    },
+    {
+      "lexeme": "peligroso",
+      "count": 1
+    },
+    {
+      "lexeme": "perderse",
+      "count": 1
+    },
+    {
+      "lexeme": "piedra",
+      "count": 1
+    },
+    {
+      "lexeme": "pintar",
+      "count": 1
+    },
+    {
+      "lexeme": "plantar",
+      "count": 1
+    },
+    {
+      "lexeme": "plazo",
+      "count": 1
+    },
+    {
+      "lexeme": "préstamo",
+      "count": 1
+    },
+    {
+      "lexeme": "principiante",
+      "count": 1
+    },
+    {
+      "lexeme": "problema",
+      "count": 1
+    },
+    {
+      "lexeme": "producir",
+      "count": 1
+    },
+    {
+      "lexeme": "rechazar",
+      "count": 1
+    },
+    {
+      "lexeme": "recomendar",
+      "count": 1
+    },
+    {
+      "lexeme": "recordar",
+      "count": 1
+    },
+    {
+      "lexeme": "reducir",
+      "count": 1
+    },
+    {
+      "lexeme": "repetir",
+      "count": 1
+    },
+    {
+      "lexeme": "responder",
+      "count": 1
+    },
+    {
+      "lexeme": "responsabilidad",
+      "count": 1
+    },
+    {
+      "lexeme": "reunión",
+      "count": 1
+    },
+    {
+      "lexeme": "revisar",
+      "count": 1
+    },
+    {
+      "lexeme": "rotativo",
+      "count": 1
+    },
+    {
+      "lexeme": "roto",
+      "count": 1
+    },
+    {
+      "lexeme": "rueda",
+      "count": 1
+    },
+    {
+      "lexeme": "ruta",
+      "count": 1
+    },
+    {
+      "lexeme": "sección",
+      "count": 1
+    },
+    {
+      "lexeme": "seguimiento",
+      "count": 1
+    },
+    {
+      "lexeme": "sencillo",
+      "count": 1
+    },
+    {
+      "lexeme": "servicio",
+      "count": 1
+    },
+    {
+      "lexeme": "solicitar",
+      "count": 1
+    },
+    {
+      "lexeme": "suficiente",
+      "count": 1
+    },
+    {
+      "lexeme": "taladro",
+      "count": 1
+    },
+    {
+      "lexeme": "temperatura",
+      "count": 1
+    },
+    {
+      "lexeme": "tender",
+      "count": 1
+    },
+    {
+      "lexeme": "ticket",
+      "count": 1
+    },
+    {
+      "lexeme": "torpe",
+      "count": 1
+    },
+    {
+      "lexeme": "urgencia",
+      "count": 1
+    },
+    {
+      "lexeme": "usuario",
+      "count": 1
+    },
+    {
+      "lexeme": "vía",
+      "count": 1
+    },
+    {
+      "lexeme": "visible",
+      "count": 1
+    }
+  ]
+}

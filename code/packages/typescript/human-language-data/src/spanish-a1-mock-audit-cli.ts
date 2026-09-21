@@ -17,11 +17,12 @@ export const SPANISH_A1_MOCK_AUDIT = "spanish/mocks/a1/book-bounded-audit.json";
  * `lessonsUpToLevel` already takes the level, so nothing about the measurement
  * needed to change; only the three places that spelled `a1` out loud did.
  */
-export type MockAuditLevel = "pre-A1" | "A1";
+export type MockAuditLevel = "pre-A1" | "A1" | "A2";
 
 const AUDIT_DIR: Readonly<Record<MockAuditLevel, string>> = {
   "pre-A1": "spanish/mocks/pre-a1",
   A1: "spanish/mocks/a1",
+  A2: "spanish/mocks/a2",
 };
 
 export function spanishMockAuditPath(level: MockAuditLevel): string {
@@ -155,13 +156,13 @@ export function runSpanishA1MockAudit(
   const mode = args.find((arg) => arg.startsWith("--") && arg !== "--level");
   const levelArg = args.includes("--level") ? args[args.indexOf("--level") + 1] : "A1";
   const level: MockAuditLevel | undefined =
-    levelArg === "pre-A1" || levelArg === "A1" ? levelArg : undefined;
+    levelArg === "pre-A1" || levelArg === "A1" || levelArg === "A2" ? levelArg : undefined;
   if (
     (mode !== "--write" && mode !== "--check" && mode !== "--report") ||
     level === undefined
   ) {
     process.stderr.write(
-      "usage: spanish-a1-mock-audit-cli (--write | --check | --report) [--level pre-A1|A1]\n",
+      "usage: spanish-a1-mock-audit-cli (--write | --check | --report) [--level pre-A1|A1|A2]\n",
     );
     return 2;
   }
