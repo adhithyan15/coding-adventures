@@ -187,6 +187,60 @@ const UNSUPPORTED_OPS: &[&str] = &[
 /// };
 /// assert!(validate_for_beam(&module).is_empty());
 /// ```
+/// The atom prefix this backend reserves for its own compiler-maintained state.
+///
+/// Public because the *interning* happens in `lower.rs`, and one of the two
+/// names that must be screened — the module name — never passes through
+/// `validate_for_beam` at all (see `check_module_name`). Keeping the rule in
+/// one place is the only thing that stops the two from drifting.
+pub(crate) const RESERVED_ATOM_PREFIX: &str = "$lang_vm_";
+
+/// BEAM's hard limit on atom length, in bytes.
+pub(crate) const BEAM_ATOM_MAX_BYTES: usize = 255;
+
+/// Reject a source-supplied name that would intern into the reserved namespace.
+pub(crate) fn check_reserved_atom(what: &str, name: &str, ctx: &str) -> Option<String> {
+    name.starts_with(RESERVED_ATOM_PREFIX).then(|| {
+        format!(
+            "ReservedAtom: {what} {name:?}{ctx} uses the {RESERVED_ATOM_PREFIX:?} \
+             prefix, which is reserved for this backend's own compiler-maintained \
+             state (the BEAM07 input cache and the BEAM10 array-length key). \
+             A source-supplied name that interns to one of those atoms can \
+             overwrite it."
+        )
+    })
+}
+
+/// Screen `IIRBeamConfig::module_name`, which the module-wide checks miss.
+///
+/// `validate_for_beam` takes an `IIRModule` and checks `module.name`. But the
+/// atom actually interned as BEAM atom #1 is `config.module_name`, supplied
+/// separately by the embedder — a *different* string. The two agree in both
+/// real drivers, which is why the divergence went unnoticed, but nothing
+/// enforces that.
+///
+/// The consequence of the gap is not a crash: `encode_atu8` uses a
+/// `debug_assert!` and then SILENTLY TRUNCATES in release builds, so an
+/// over-long module name yields a loadable but semantically wrong module —
+/// a wrong answer rather than an error, which is the failure shape this
+/// backend works hardest to avoid elsewhere.
+///
+/// Called from `lower_iir_to_beam` immediately after `validate_for_beam`, so
+/// both strings are screened by the same two rules before any interning.
+pub(crate) fn check_module_name(module_name: &str) -> Vec<String> {
+    let mut errors = Vec::new();
+    if module_name.len() > BEAM_ATOM_MAX_BYTES {
+        errors.push(format!(
+            "AtomTooLong: config module name is {} bytes (max {BEAM_ATOM_MAX_BYTES})",
+            module_name.len()
+        ));
+    }
+    if let Some(e) = check_reserved_atom("config module name", module_name, "") {
+        errors.push(e);
+    }
+    errors
+}
+
 pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
     let mut errors = Vec::new();
 
@@ -210,7 +264,7 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
     //
     // This is the sole input-validation point for atom length; it runs on
     // all user-supplied IIR before any encoding takes place.
-    const BEAM_ATOM_MAX: usize = 255;
+    const BEAM_ATOM_MAX: usize = BEAM_ATOM_MAX_BYTES;
 
     if module.name.len() > BEAM_ATOM_MAX {
         errors.push(format!(
@@ -268,18 +322,8 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
     //
     // Checked on the WHOLE module before any lowering, because a name only has
     // to reach the atom table once to collide.
-    const RESERVED_ATOM_PREFIX: &str = "$lang_vm_";
-
     let reserve_check = |what: &str, name: &str, ctx: &str| -> Option<String> {
-        name.starts_with(RESERVED_ATOM_PREFIX).then(|| {
-            format!(
-                "ReservedAtom: {what} {name:?}{ctx} uses the {RESERVED_ATOM_PREFIX:?} \
-                 prefix, which is reserved for this backend's own compiler-maintained \
-                 state (the BEAM07 input cache and the BEAM10 array-length key). \
-                 A source-supplied name that interns to one of those atoms can \
-                 overwrite it."
-            )
-        })
+        check_reserved_atom(what, name, ctx)
     };
 
     if let Some(e) = reserve_check("module name", &module.name, "") {

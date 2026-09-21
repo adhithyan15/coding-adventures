@@ -122,6 +122,25 @@ needed no closure trick: `global_store Str("$lang_vm_input_peek")` does
 Re-running the 292-row ALGOL corpus after the change: still 277 passing, and
 **zero** programs rejected by the new check. It costs nothing.
 
+### And a second round found the checks were screening the wrong string
+
+`validate_for_beam` takes an `IIRModule` and screens `module.name`. The atom
+actually interned as BEAM atom #1 — the name the loader identifies the module
+by — is `IIRBeamConfig::module_name`, a *separate* string supplied by the
+embedder. Both real drivers thread the same operator-chosen name into both,
+which is exactly why the divergence went unnoticed; nothing enforced it.
+
+This affected the new reserved-prefix check and the pre-existing
+`AtomTooLong` check equally. The consequence is not a crash — `encode_atu8`
+uses a `debug_assert!` and then **silently truncates** in release builds — so
+an over-long config module name produced a loadable but semantically *wrong*
+module. A wrong answer rather than an error, which is the failure shape this
+whole spec exists to avoid.
+
+Both rules are now hoisted into `validate::check_module_name` and applied to
+`config.module_name` at the top of `lower_iir_to_beam`, so the string that is
+actually interned is the string that is checked.
+
 ### Known gap, now reachable
 
 Implementing `array_len` exposes BEAM04's documented pre-zero limitation:

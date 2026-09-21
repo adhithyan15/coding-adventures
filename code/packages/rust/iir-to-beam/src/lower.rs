@@ -584,7 +584,13 @@ pub fn lower_iir_to_beam(
     config: &IIRBeamConfig,
 ) -> Result<BEAMModule, IIRBeamError> {
     // ── Step 1: pre-flight validation ──────────────────────────────────────
-    let errs = validate_for_beam(module);
+    let mut errs = validate_for_beam(module);
+    // `validate_for_beam` screens `module.name`, but the atom interned below as
+    // BEAM atom #1 is `config.module_name` — a DIFFERENT string, supplied
+    // separately by the embedder. They agree in both real drivers, which is
+    // why the gap went unnoticed, but nothing enforces that, so screen the
+    // string that is actually used. Found during security review of BEAM10.
+    errs.extend(crate::validate::check_module_name(&config.module_name));
     if !errs.is_empty() {
         return Err(IIRBeamError::ValidationFailed(errs));
     }

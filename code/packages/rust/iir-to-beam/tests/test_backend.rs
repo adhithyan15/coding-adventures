@@ -5315,3 +5315,77 @@ fn ordinary_names_and_string_literals_are_not_swept_up_by_the_reserved_check() {
          allowed; an ordinary global name must be too. got {errors:?}"
     );
 }
+
+// ===========================================================================
+// BEAM10 (security review, round 2) — the module name that is actually interned
+// ===========================================================================
+//
+// `validate_for_beam` takes an `IIRModule` and screens `module.name`. But the
+// atom interned as BEAM atom #1 — the one the BEAM loader identifies the
+// module by — is `IIRBeamConfig::module_name`, a SEPARATE string supplied by
+// the embedder. Both real drivers thread the same operator-chosen name into
+// both fields, which is exactly why the divergence went unnoticed; nothing
+// enforces it.
+//
+// The consequence of the gap is not a crash. `encode_atu8` uses a
+// `debug_assert!` and then **silently truncates** in release builds, so an
+// over-long config module name produces a loadable but semantically wrong
+// module. That is a wrong answer rather than an error — the failure shape
+// BEAM10 exists to avoid — which is why it is worth closing even though it is
+// not reachable from crafted IIR.
+
+/// A minimal valid module whose `IIRModule::name` is deliberately innocuous,
+/// so that only the *config* name can be what a test is exercising.
+fn module_with_clean_name() -> IIRModule {
+    let mut m = make_module_single(vec![
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1)], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i64"),
+    ]);
+    m.name = "clean".into();
+    m
+}
+
+#[test]
+fn an_over_long_config_module_name_is_rejected_rather_than_silently_truncated() {
+    let module = module_with_clean_name();
+    // 300 bytes: past BEAM's 255-byte atom limit.
+    let long_name = "m".repeat(300);
+    let err = lower_iir_to_beam(&module, &IIRBeamConfig::new(&long_name))
+        .expect_err("an over-long config module name must be rejected");
+    let msg = format!("{err}");
+    assert!(
+        msg.contains("AtomTooLong") && msg.contains("config module name"),
+        "the refusal must name the CONFIG module name specifically, since \
+         `module.name` here is short and valid; got {msg:?}"
+    );
+}
+
+#[test]
+fn a_config_module_name_in_the_reserved_namespace_is_rejected() {
+    let module = module_with_clean_name();
+    let err = lower_iir_to_beam(&module, &IIRBeamConfig::new("$lang_vm_array_len"))
+        .expect_err("a reserved config module name must be rejected");
+    assert!(
+        format!("{err}").contains("ReservedAtom"),
+        "got {err}"
+    );
+}
+
+#[test]
+fn an_ordinary_config_module_name_still_lowers() {
+    // The control. Both checks above are on a path every single lowering
+    // takes, so a rule that was even slightly too broad would break the whole
+    // backend rather than just these tests — but that is the kind of thing
+    // worth pinning rather than inferring, and it also proves the two tests
+    // above fail for their stated reason and not because `lower_iir_to_beam`
+    // rejects this fixture for some unrelated reason.
+    let module = module_with_clean_name();
+    let beam = lower_iir_to_beam(&module, &IIRBeamConfig::new("ordinary_name"))
+        .expect("an ordinary config module name must still lower");
+    assert_eq!(
+        beam.atoms.first().map(String::as_str),
+        Some("ordinary_name"),
+        "the config module name must be atom #1 — which is the whole reason it \
+         has to be screened separately from `module.name`"
+    );
+}
