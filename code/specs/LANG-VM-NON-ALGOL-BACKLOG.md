@@ -8,6 +8,156 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+### VM-070 — `array_len` on BEAM is a representation question, not a missing case
+
+Selected as the next platform item after VM-064 showed `array_len` is the only
+thing blocking 31 of 37 ALGOL-to-BEAM lowerings, and that every other backend
+already implements it. Researched before writing any code, and the research
+changed the shape of the job.
+
+`iir-to-beam` deliberately uses **two different array substrates** (BEAM04,
+BEAM06):
+
+| element type | substrate | has a declared length? |
+|---|---|---|
+| `array<i64>` | `:atomics` | **yes** — `atomics:new/2` is fixed-size |
+| `array<f64>`, `array<str>` | `:ets` | **no** — ets tables grow dynamically |
+
+That split was the right call for `alloc_array`/`array_get`/`array_set` — the
+spec records that the bit-syntax alternative would have needed an entirely new
+operand-encoding subsystem, while ets needed zero new BEAM opcodes. But it
+means `array_len` has no single answer:
+
+- On `:atomics`, `atomics:info/1` returns a map carrying `size`. Straightforward.
+- On `:ets`, `ets:info(Tab, size)` returns **the number of inserted entries,
+  not the declared length**. A `DIM A(10)` with three writes would report 3.
+
+So a naive `array_len` would be *silently wrong* on exactly the substrate BASIC
+uses, and wrong in the direction that looks plausible — a small number rather
+than an error. That is worse than the current honest `UnsupportedOp`.
+
+This also connects to a limitation `iir-to-beam` already documents and left
+deliberately undecided: `ets:new` does not pre-zero cells, so reading an
+element never written traps `badarg` instead of returning `0.0`. Both problems
+have the same root — the ets substrate does not model an array's *extent*, only
+its populated entries.
+
+Options, none chosen yet because this needs a spec first (CLAUDE.md):
+
+1. Store the declared length in the ets table under a reserved key at
+   `alloc_array` time. Cheap, no new opcodes, but reserves a key from the
+   index space and every `array_get`/`array_set` must not collide with it.
+2. Pre-populate the ets table at `alloc_array`, which would fix the
+   read-before-write trap too — at an O(n) allocation cost the current design
+   deliberately avoids.
+3. Implement `array_len` for `:atomics` only and keep refusing on ets. Honest
+   and unblocks the ALGOL integer-array rows, but leaves the op partial in a
+   way that will confuse the next reader unless the refusal names the reason.
+
+Option 2 is the only one that also closes the pre-zero gap, which argues for
+taking them together rather than bolting length onto a substrate that cannot
+express extent.
+
+**Bug class to check during implementation, not after:** any `iir-to-beam` op
+emitting a `call_ext` must be wrapped in `save_live_across_imported_call!` /
+`restore_live_across_imported_call!`, or live SSA values in clobbered X
+registers are silently corrupted. `atomics:info/1` and `ets:info/2` are both
+`call_ext`. That class has bitten this backend three times already (VM-D029,
+VM-D035, issue #15332) — the third time was found only because a deferred item
+forced a re-read.
+
+### VM-064 scoped: 252 of 289 ALGOL programs already lower to BEAM
+
+VM-064 (all 292 ALGOL rows omit `Beam`, the last systematic matrix hole) was
+logged as "scope to settle with the ALGOL owner", which was a way of saying
+nobody had measured it. Measured now, by extracting every ALGOL `src` from
+`PROGRAMS` and calling `compile_source_to_beam` on each:
+
+```
+ALGOL -> BEAM lowering: 252 / 289 succeeded
+refusals, by cause:
+    31  UnsupportedOp: array_len
+     4  ValidationFailed: UnsupportedType (function signatures)
+     2  FrontendError (ALGOL parse — mangled by the extraction, not real)
+```
+
+**One missing op accounts for 31 of the 37 refusals.** `iir-to-beam` has no
+`array_len` at all — confirmed by grep, while `array_get`, `array_set` and
+`alloc_array` are handled across 34 sites. The BEAM backend has arrays but not
+their length.
+
+What this does and does not establish, stated precisely because the difference
+is the whole value of the number:
+
+- It establishes that ALGOL's IIR is **not** structurally incompatible with
+  BEAM. The hole is not a design gap; it is a handful of unimplemented ops.
+- It does **not** establish that those 252 programs would *run correctly* on
+  real `erl`. Lowering is emission, not execution. Every promotion in the
+  non-ALGOL BEAM track required proof on real `erl`, and this probe is not that.
+  Treat 252 as "worth attempting", not as "252 green cells".
+
+**And `array_len` is not ALGOL's to fix — it is a BEAM backend parity gap.**
+Checked across every backend:
+
+| backend | `array_len` |
+|---|---|
+| `iir-to-llvm`, `iir-to-wasm`, `iir-to-cil-bytecode`, `iir-to-jvm-class-file`, `vm-core` | implemented |
+| `iir-to-beam` | **absent** |
+
+Every other backend has it. ALGOL is merely the only frontend that currently
+emits it, which is why the gap has stayed invisible — the non-ALGOL BEAM track
+completed without ever needing it.
+
+That splits VM-064 cleanly along the ownership boundary this document already
+draws. Implementing `array_len` in `iir-to-beam` is **shared-platform work this
+backlog owns**: rung 4, missing backend parity for a feature every other
+backend already implements. It requires no ALGOL change and touches no ALGOL
+semantics. Only the subsequent question — whether to promote ALGOL rows to
+declare `Beam` — belongs to the ALGOL owner, and it is much easier to answer
+once the op exists and the probe can be re-run against a backend that supports
+it.
+
+Sequencing note if it is taken up: implement `array_len` in `iir-to-beam`
+first, re-run this probe, and only then decide how many rows to promote — the
+non-ALGOL track's repeated lesson (BEAM03-BEAM08, VM-LOOP-24, VM-041) is that
+probing the whole group before implementing is dramatically more productive
+than promoting row by row. Note also that `iir-to-beam` has a recurring bug
+class: any op emitting `call_ext` must be wrapped in
+`save_live_across_imported_call!` / `restore_live_across_imported_call!`, or
+live SSA values are silently corrupted. That has bitten three times (VM-D029,
+VM-D035, #15332), so check it for `array_len` specifically.
+
+ALGOL semantics remain separately owned; this is measurement offered to that
+owner, not a claim on the work.
+
+## VM-063 — ALGOL coverage-doc drift, corrected (2026-09-21)
+
+`LANG-VM-FEATURE-COVERAGE.md` recorded ALGOL 60 at 233 rows / 1631 cells while
+`lang_matrix.rs` declares **292 / 2044** — 59 rows of drift. Measured exactly:
+292 rows inside `PROGRAMS`, every one declaring seven backends, none declaring
+`Beam`.
+
+The root cause is two layers deep, and the second layer is the interesting one.
+`feature_coverage_doc_counts_match_programs_source` asserts only the seven
+non-ALGOL tuples, so the ALGOL row was free to drift — that was the diagnosis
+when this was logged. VM-065 then found the pinning test **matched none of
+BUILD name filters and had never run in CI at all**, so nothing was enforcing
+any tuple. The non-ALGOL numbers matching source was discipline, not a gate.
+
+Fixed the number. Deliberately did NOT pin ALGOL: that campaign is separately
+owned and actively adding rows, so a pinned tuple would make every ALGOL PR
+edit this shared document — a cross-campaign serialization point, a conflict
+class this repo has already paid for. Instead the doc carries a re-derivation
+command, verified to reproduce 292 before being published, and says plainly
+that the row is a snapshot.
+
+That command counts rows strictly INSIDE `PROGRAMS` on purpose: a repo-wide
+grep over the file over-counts, because `Language::Algol60` also appears in
+comments and helpers. Not hypothetical — that mistake produced Dartmouth BASIC
+as 57 against the pinned 51 during an earlier pass.
+
+VM-064 (all 292 ALGOL rows omit `Beam`, the last systematic matrix hole)
+remains open and still needs scope settled with the ALGOL owner.
 ## PREP01 slice 2 — macro expansion (selected 2026-09-21 after slice 1 merged)
 
 Slice 1 merged as #15853. Slice 2 adds the macro table and the hide-set

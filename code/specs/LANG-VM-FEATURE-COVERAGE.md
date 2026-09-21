@@ -31,11 +31,45 @@ refusal also does not imply the complete driver refuses that feature.
 | Dartmouth BASIC | 51 | 408 | All 51 of those cells are BEAM (18 pure-string + 2 numeric-baseline + 2 neg/pow + 12 general-arithmetic/control-flow + 5 math builtins + 4 arrays/DATA + 2 string arrays + 5 `INPUT` rows + `RND`, BEAM03/VM-LOOP-24/BEAM04/BEAM06/BEAM07/BEAM08); random differential suite and frontend JIT tests |
 | Oct | 12 | 96 | All eight columns, including real BEAM stdout and u8 wrap; frontend JIT control-flow tests |
 | MacroOct | 15 | 120 | All eight columns. Unlike every other row here, these do not prove a new language feature: PREP01's criterion is that each MacroOct program lowers to IIR **identical** to its hand-expanded Oct equivalent, asserted directly by `macrooct_rows_lower_to_iir_identical_to_hand_expanded_oct`, with Oct's own 12 rows additionally recompiled byte-identically through the MacroOct frontend. Slice 1's 9 conditional/include rows are joined by slice 2's 6 (five `@define` shapes plus the VM-068 positive control), whose hand-expanded twins are the *textual* expansion (`21 + 21`, not `42`) so a constant-folding frontend cannot satisfy the oracle. Oct's counts above are unchanged, deliberately — PREP01 holds Oct fixed as the reference |
-| ALGOL 60 | 233 | 1631 | Separate owner; full-matrix CI exclusion remains VM-025; not re-audited by VM-061 (see below) |
+| ALGOL 60 | 292 | 2044 | Separate owner; full-matrix CI exclusion remains VM-025. **Deliberately not pinned** — see the note below the table. Every row declares seven backends; none declares `Beam` (VM-064) |
 | FLOW-MATIC | 8 | 64 | All eight rows now declare Beam (BEAM07 promoted the four `READ-ITEM`/EOF rows that were on seven columns) |
 | COBOL-60 | 59 | 472 | All eight backends; VM-058 adds independently executed two-boundary INSPECT tally proof |
 | McCarthy Lisp | 0 | 0 | Dedicated 19-program capstone with nine runner lanes |
 | Macsyma | 0 | 0 | Dedicated 21-program capstone with eight runner lanes plus real CoreCLR |
+
+### Why the ALGOL row is not pinned, and how to re-derive it
+
+`feature_coverage_doc_counts_match_programs_source` asserts the seven non-ALGOL
+tuples and deliberately omits ALGOL. That omission is why this row was wrong:
+it read 233 rows / 1631 cells while `lang_matrix.rs` declared **292 / 2044** — a
+drift of 59 rows that nothing was checking.
+
+*(Compounding it, VM-065 found that the pinning test itself matched none of
+`lang-aot/BUILD`'s name filters and so had never run in CI at all. That is
+fixed; the non-ALGOL tuples are now genuinely enforced.)*
+
+Pinning ALGOL too is tempting and is the wrong trade. The ALGOL campaign is
+separately owned and actively adding rows; a pinned tuple would make every
+ALGOL PR edit this shared document, turning it into a cross-campaign
+serialization point — the exact conflict class this repo has already paid for
+elsewhere. So the number here is a **snapshot**, and the way to trust it is to
+re-derive it rather than to believe the table:
+
+```bash
+S=$(grep -n 'const PROGRAMS' code/packages/rust/lang-aot/tests/lang_matrix.rs | cut -d: -f1)
+E=$(awk -v s="$S" 'NR>s && /^\];/{print NR; exit}' code/packages/rust/lang-aot/tests/lang_matrix.rs)
+awk -v s="$S" -v e="$E" 'NR>s && NR<e' code/packages/rust/lang-aot/tests/lang_matrix.rs \
+  | grep -c 'lang: Language::Algol60'
+```
+
+Count the rows strictly *inside* `PROGRAMS`: a repo-wide grep over the file
+over-counts, because `Language::Algol60` also appears in comments and helpers.
+That is not hypothetical — it is how an earlier attempt at this got Dartmouth
+BASIC as 57 when the pinned test asserts 51.
+
+Cells are `rows x 7`: all 292 ALGOL rows declare exactly seven backends and
+none declares `Beam`, which is VM-064 and the only systematic hole left in the
+matrix.
 
 The normal non-ALGOL capstone declares 226 programs and 1808 cells (PREP01
 slice 1 added MacroOct's first 9 rows / 72 cells and slice 2 added 6 more /
