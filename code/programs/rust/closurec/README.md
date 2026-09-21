@@ -155,9 +155,24 @@ body fills in.**
 | Level | What it does |
 |-------|--------------|
 | `WHITESPACE_ONLY` | Strips comments and inter-token whitespace only. Token-level; never parses to a typed AST. |
-| `SIMPLE` | Runs `parse → bridge → constant-fold → fold-control-flow → dce → inline-variables → rename → emit`. It preserves top-level declarations under SIMPLE's open-world contract. |
+| `SIMPLE` | Runs `parse → bridge → <optimization passes> → emit`. It preserves top-level declarations under SIMPLE's open-world contract. The passes are `constant-fold`, `fold-control-flow`, `dce`, `inline-variables`, and `rename`; see the note below on the order they actually execute in. |
 | `ADVANCED` | Runs the SIMPLE passes plus closed-world `inline`, `remove-unused-vars`, `treeshake`, and `rename-globals`; `rename-properties` runs only with an explicit externs boundary. More advanced-only passes remain planned. |
 | `BUNDLE` / `TRANSPILE_ONLY` | Identity passthrough for now — module bundling and language down-levelling are orthogonal to the optimization pipeline and land separately. |
+
+Pass order, and what `--correlation_vector` reports, are the *scheduler's*,
+not the registration list's. `closure-pass-pipeline` topologically sorts on
+each pass's declared `depends_on`, and its ready queue is FIFO, so a pass with
+no declared dependencies is scheduled ahead of dependent passes wherever it was
+registered — `rename` is registered eighth and executes second. The pipeline
+then sweeps to a fixed point, so the final output does not depend on this, but
+the trace shows the true schedule rather than a tidied-up one. (That the
+scheduler ignores registration order as a tie-breaker, contrary to its own
+documented contract, is tracked in
+[#15829](https://github.com/adhithyan15/coding-adventures/issues/15829).)
+
+The `passes` field of a correlation-vector trace is taken directly from
+`PipelineOutput::execution_order`. A pass can appear there only by having run:
+there is no second list that could disagree with the pipeline.
 
 The SIMPLE pipeline:
 
