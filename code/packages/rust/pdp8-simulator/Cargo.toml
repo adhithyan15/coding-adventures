@@ -1,0 +1,10 @@
+[package]
+name = "pdp8-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "DEC PDP-8/E functional simulator"
+license = "MIT"
+
+[lib]
+name = "pdp8_simulator"
+path = "src/lib.rs"
