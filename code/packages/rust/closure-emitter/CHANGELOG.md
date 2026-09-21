@@ -2,6 +2,100 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.59.0] - 2026-09-21
+
+### Fixed - the program's last statement is terminated, whatever kind it is (CCR-073)
+
+`emit_program` appended the final `;` only when the last item was a function
+or class *declaration*. That is the subset someone happened to observe; it is
+not the rule. Probing the pinned oracle
+(`closure-compiler-v20260915`, sha256 verified) over every block-ended
+statement kind shows the rule is **positional**, not per-kind:
+
+| Program ends with | upstream emits |
+|---|---|
+| `switch(x){…}` | `…};` |
+| `try{…}catch(e){…}` / `try{…}finally{…}` | `…};` |
+| `while(x){…}`, `for(…){…}`, for-in, for-of | `…};` |
+| `if(x){…}` braced | `…};` |
+| `with(o){…}` | `…};` |
+| `{…}` bare, `L:{…}` labeled | `…};` |
+| `function f(){…}`, `class C{…}` | `…};` |
+
+and the same statement **mid-stream** gets no terminator:
+`switch(x){case 1:a()}b();`. Eight of those ten shapes silently lost the
+terminator before this change.
+
+The test is on the emitted bytes — "ends with `}`" — rather than on the node
+kind, and that is exact here because every statement either self-terminates
+with `;` (expression, `return`, `throw`, `break`, `continue`, `debugger`, a
+variable declaration, `do…while(x);`, the empty statement) or closes its own
+`}`. There is no third ending, so "ends with `}`" is precisely "did not
+terminate itself". This reasoning is specific to the AST emitter; see below.
+
+### Fixed - a switch's last case clause no longer over-terminates (CCR-073)
+
+The last statement of the final `case` clause sits immediately before the
+switch's closing `}`, so its terminator is redundant for exactly the reason it
+is redundant at the end of a block — ASI supplies it (ECMAScript §11.9) — and
+upstream omits it:
+
+```js
+switch(x){case 1:a()}    // was: switch(x){case 1:a();}
+```
+
+`emit_block_statement` has dropped it since gap-030; the switch body is a
+statement list too and was simply missed. The same
+`last_stmt_uses_terminator_semi` gate applies unchanged, so a `;` that is
+structurally a **body** is still preserved: `switch(x){case 1:if(x);}` keeps
+its `;`, because the grammar requires a Statement there and `}` cannot start
+one. Verified against the oracle.
+
+### Tests
+
+18 expectations across two crates were pinned to the old behaviour and are
+updated to the verified-correct bytes — 15 here, 3 in `closure-pass-inline`,
+which asserts on emitted output. None was deleted: two of them
+(`switch_with_break_in_consequent_emits_break_semicolon`,
+`debugger_followed_by_statement_keeps_semi`) are exactly what distinguishes
+"terminator popped before `}`" from "terminator dropped mid-stream", and
+`switch_with_two_cases_and_default_concatenates_in_order` now pins that only
+the final clause is popped: `switch(x){case 1:a;case 2:b;default:c};`.
+
+Six tests are new, and each was verified by breaking the implementation and
+watching it fail:
+
+- the truth-table rows above, asserting the program-final `;`;
+- the positional half — the same construct mid-program gets **no** terminator
+  (`switch(x){}b;`), which is what a naive "always append" would get wrong;
+- `switch(x){case 1:if(y);}` keeps its `;`, because there the `;` is the `if`'s
+  **body**, and popping it produces a SyntaxError rather than a cosmetic
+  difference;
+- the gate reads the **final** clause: `switch(x){case 1:a;case 2:if(y);};`
+  catches a gate that consults an earlier one.
+
+Three further rows — braced `while`, braced `if`, and `with` — had no emitter
+test at all and now do. Reproducing those against the oracle needs two things
+that are easy to trip over, so they are recorded next to the test: `with`
+requires `--strict_mode_input=false` or the jar refuses the input outright with
+`JSC_USE_OF_WITH`, and at SIMPLE the optimizer rewrites away the
+brace-terminated shapes unless the body resists fusion.
+
+The last two are the ones that bind. An empty final clause
+(`switch(x){case 1:a;case 2:};`) is also covered, but that test documents the
+`None` arm rather than discriminating it — with an empty clause the buffer ends
+in `:`, so the pop no-ops regardless of the gate.
+
+### Not fixed here
+
+`do{…}while(0)` at the end of a program still loses its `;` — but only at
+`WHITESPACE_ONLY`, which runs the token-only path that never builds an AST.
+The AST emitter has always been correct for it (`emit_do_while` writes the
+terminator itself), which is why the byte test above is sound. Tracked
+separately; do not "fix" it by generalising this rule, because our
+`do…while` output ends in `)`, not `}`.
+
+
 ## [0.58.0] - 2026-07-21
 
 ### Fixed - drop the redundant `;` after a block-final `var` declaration

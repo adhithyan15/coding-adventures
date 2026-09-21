@@ -4,6 +4,49 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - the statement terminator, and a rung that closed (CCR-073)
+
+Depends on `closure-emitter` 0.59.0, which fixes two independent emitter
+defects: the program's last statement was terminated only when it was a
+function or class declaration, and a switch's last case clause kept a
+terminator upstream drops.
+
+**The original diagnosis of CCR-073 was wrong and is withdrawn.** It was filed
+as "the terminator is placed inside a block-terminated `switch`/`try` rather
+than after it", read off the before/after bytes of two ladder rungs. Running
+the pinned oracle over 31 minimal probes shows the rule has nothing to do with
+`switch` or `try`: upstream terminates the **last statement of a program**
+whenever it ends with `}`, and suppresses that terminator mid-stream. `switch`
+and `try` were simply the two constructs those rungs happened to end with. The
+corrected analysis, and the evidence, are on the issue.
+
+Ladder effect — `SIMPLE` **31/52 → 32/52**:
+
+| Rung | Outcome |
+|---|---|
+| `ladder_t4_switch_simple` | **closed**, ledger entry deleted |
+| `ladder_t4_switch_advanced` | terminator now correct; still blocked on CCR-068 |
+| `ladder_t4_try_catch_{simple,advanced}` | terminator now correct; CCR-022 is now the *only* remaining difference |
+| `ladder_t6_for_of_{simple,advanced}` | terminator now correct; CCR-022 and CCR-076 remain |
+
+The ledger tripwire moves 63 → 62. `WHITESPACE_ONLY` (49/52) and `ADVANCED`
+(13/52) are unchanged, which is expected: `WHITESPACE_ONLY` runs the token-only
+path that never builds an AST, so the emitter fix cannot reach it.
+
+**Two `unverified` goldens were pinning the old behaviour**, `simple-try-catch`
+and `simple-with`, and were the only non-ladder fixtures the change touched —
+the blast radius measured before the work, and it held. Regenerating them
+surfaced something worth recording: running the pinned oracle over both inputs
+shows **upstream refuses to compile either of them**, exiting 1 with
+`JSC_PARSE_ERROR` ("return must be inside function") and `JSC_USE_OF_WITH`
+respectively, while `closurec` compiles both. They sit in the fixture set
+`non-minify-unverified-stdout` (138 fixtures) whose disposition is
+`upstream_golden` but whose provenance is `unverified`. An expected output
+upstream would never produce cannot be an upstream golden, so those two are not
+merely unverified but unverifiable in their present form. Tracked separately;
+same family as CCR-075.
+
+
 > Not version-bumped: `tests/cli-surface/v20260915-audit.json` pins a SHA-256
 > over the whole of `cli.spec.json`, including its `version` field, so bumping
 > the version invalidates the audit and regenerating it requires the pinned
