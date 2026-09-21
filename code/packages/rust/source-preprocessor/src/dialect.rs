@@ -45,9 +45,14 @@ pub enum Directive {
     /// End the innermost conditional. Spelled `@end` in MacroOct, `#endif` in
     /// C — the engine does not care which.
     EndIf,
-    /// Define a macro. Inert until macro expansion lands; carried here so the
-    /// dialect interface does not have to change when it does.
-    Define { name: String, body: Vec<Token> },
+    /// Define a macro.
+    ///
+    /// `params` is `None` for an object-like macro and `Some(names)` for a
+    /// function-like one. The distinction is the dialect's to make, because it
+    /// is lexical: in C, `#define F(x)` is function-like only when the `(`
+    /// touches the name with no space, and a language that spells its
+    /// directives differently may not use that rule at all.
+    Define { name: String, params: Option<Vec<String>>, body: Vec<Token> },
     /// A directive the dialect recognised but wants ignored (a no-op line).
     Ignore,
 }

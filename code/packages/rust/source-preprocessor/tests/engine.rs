@@ -67,6 +67,10 @@ impl Dialect for TestDialect {
             }
             "@define" => Some(Ok(Directive::Define {
                 name: line.get(1).map(|t| t.value.clone()).unwrap_or_default(),
+                // Object-like only in the test dialect; function-like macros
+                // are exercised through MacroOct and the macros module's own
+                // suite.
+                params: None,
                 body: line.get(2..).unwrap_or(&[]).to_vec(),
             })),
             _ => None,
@@ -75,7 +79,21 @@ impl Dialect for TestDialect {
 
     fn eval_condition(&self, tokens: &[Token]) -> Result<bool, PpError> {
         self.evals.set(self.evals.get() + 1);
-        Ok(tokens.first().map(|t| t.value != "0").unwrap_or(false))
+        // A numeric literal is its own truth value; anything else -- an
+        // identifier that no macro expanded away -- is UNDEFINED and therefore
+        // false, as in C and in MacroOct.
+        //
+        // An earlier version here was `value != "0"`, which made every
+        // identifier truthy. That is not merely unrealistic: it would let the
+        // "macros are expanded in conditions" tests pass whether or not
+        // expansion actually happened, since the unexpanded name is truthy
+        // too. The toy dialect has to model undefined-is-false or the property
+        // it is used to test becomes unfalsifiable.
+        Ok(tokens
+            .first()
+            .and_then(|t| t.value.parse::<i64>().ok())
+            .map(|n| n != 0)
+            .unwrap_or(false))
     }
 
     fn lex(&self, text: &str, _file: FileId) -> Result<Vec<Token>, PpError> {
@@ -209,12 +227,112 @@ fn a_conditional_closed_without_being_opened_is_refused() {
 }
 
 #[test]
-fn a_macro_definition_is_refused_rather_than_silently_ignored() {
-    // Slice 1 has no macro table. Accepting `@define` and doing nothing would
-    // be far more confusing than refusing it.
+fn a_macro_definition_takes_effect_on_later_lines() {
+    // Slice 1 refused `@define`; slice 2 implements it. The refusal test that
+    // stood here is now obsolete, and this replaces it rather than deleting
+    // the coverage.
     let mut fs = MemoryFs::new();
-    let e = run(&["@define X 1"], &mut fs, Bounds::default()).unwrap_err();
-    assert!(e.to_string().contains("slice 2"), "{e}");
+    let out = run(&["@define ANSWER 42", "value = ANSWER ;"], &mut fs, Bounds::default()).unwrap();
+    assert_eq!(out.join(" "), "value = 42 ;");
+}
+
+#[test]
+fn a_definition_does_not_apply_to_lines_before_it() {
+    // Definitions are positional, not file-scoped. A program that used a name
+    // before defining it must see the name.
+    let mut fs = MemoryFs::new();
+    let out = run(
+        &["before = ANSWER ;", "@define ANSWER 42", "after = ANSWER ;"],
+        &mut fs,
+        Bounds::default(),
+    )
+    .unwrap();
+    assert_eq!(out.join(" "), "before = ANSWER ; after = 42 ;");
+}
+
+#[test]
+fn a_definition_inside_a_skipped_group_never_takes_effect() {
+    // The guard that matters most in this slice. Before macros existed the
+    // skipped-group check on `@define` only avoided a spurious error; now it
+    // decides whether a definition the program explicitly skipped gets
+    // installed anyway.
+    let mut fs = MemoryFs::new();
+    let out = run(
+        &["@if 0", "@define ANSWER 999", "@end", "value = ANSWER ;"],
+        &mut fs,
+        Bounds::default(),
+    )
+    .unwrap();
+    assert_eq!(out.join(" "), "value = ANSWER ;", "a skipped @define must not define");
+}
+
+#[test]
+fn a_macro_is_expanded_inside_a_controlling_expression() {
+    // VM-068. Without expansion here, `LED_PORT` evaluates as an undefined
+    // name (0), the `@else` branch is taken, and the program compiles — to the
+    // wrong thing. Silent wrong-branch selection, not an error.
+    //
+    // This is PREP01 §7's own worked example, so the spec's canonical
+    // illustration was broken until the engine expanded conditions.
+    let mut fs = MemoryFs::new();
+    let out = run(
+        &["@define LED_PORT 1", "@if LED_PORT", "lit", "@else", "dark", "@end"],
+        &mut fs,
+        Bounds::default(),
+    )
+    .unwrap();
+    assert_eq!(out, ["lit"], "the defined value must drive the branch");
+}
+
+#[test]
+fn an_undefined_name_in_a_condition_is_still_falsey() {
+    // The other half: expansion must not make an UNDEFINED name suddenly
+    // truthy. Only a defined macro changes the outcome.
+    let mut fs = MemoryFs::new();
+    let out = run(
+        &["@if NEVER_DEFINED", "lit", "@else", "dark", "@end"],
+        &mut fs,
+        Bounds::default(),
+    )
+    .unwrap();
+    assert_eq!(out, ["dark"]);
+}
+
+#[test]
+fn a_macro_from_an_included_file_drives_a_later_condition() {
+    // Inclusion and conditional selection interleaving, end to end — the
+    // dependency that makes the one-pass design necessary rather than tidy.
+    let mut fs = MemoryFs::new();
+    fs.insert("ports.oct", "@define LED_PORT 1");
+    let out = run(
+        &["@include ports.oct", "@if LED_PORT", "lit", "@else", "dark", "@end"],
+        &mut fs,
+        Bounds::default(),
+    )
+    .unwrap();
+    assert_eq!(out, ["lit"]);
+}
+
+#[test]
+fn a_condition_expanded_from_a_macro_is_still_depth_bounded() {
+    // A macro body can introduce grouping the raw text did not have, so the
+    // pre-expansion scan alone does not bound what the dialect finally sees.
+    let mut fs = MemoryFs::new();
+    let deep = format!("@define DEEP {}1{}", "( ".repeat(40), " )".repeat(40));
+    let bounds = Bounds { condition_depth: 8, ..Bounds::default() };
+    let e = run(&[&deep, "@if DEEP", "x", "@end"], &mut fs, bounds)
+        .expect_err("grouping introduced BY a macro must still be bounded");
+    assert!(e.to_string().contains("nested deeper"), "{e}");
+}
+
+#[test]
+fn a_macro_defined_in_an_included_file_is_visible_afterwards() {
+    // Inclusion and definition interleave -- this is the dependency that makes
+    // the one-pass design necessary rather than merely tidy.
+    let mut fs = MemoryFs::new();
+    fs.insert("defs.oct", "@define ANSWER 42");
+    let out = run(&["@include defs.oct", "value = ANSWER ;"], &mut fs, Bounds::default()).unwrap();
+    assert_eq!(out.join(" "), "value = 42 ;");
 }
 
 // ===========================================================================

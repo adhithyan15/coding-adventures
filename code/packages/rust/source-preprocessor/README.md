@@ -93,11 +93,24 @@ much as for a dialect. A budget that *can* be set to infinity eventually is.
 
 ## Status
 
-**Slice 1** (this release): includes, conditionals, source mapping, bounds,
-`MemoryFs` and `RootedFs`. Macro expansion is refused with a diagnostic rather
-than silently ignored.
+**Slice 1**: includes, conditionals, source mapping, bounds, `MemoryFs` and
+`RootedFs`.
 
-**Slice 2**: macro expansion with hide-sets. **Slice 3**: MacroNib, a second
-dialect in a third syntax. **Slice 4**: C. **Slice 5**: COBOL `COPY`.
+**Slice 2** (this release): macro expansion. `MacroTable`, object-like and
+function-like macros, argument pre-expansion, and Prosser's per-token hide sets
+— which is what makes expansion terminate on the self-referential and mutually
+recursive cases rather than looping. Stringize and paste stay routed through the
+`Dialect` hooks and are **not** built in; MacroOct declines both while
+nevertheless having a full macro facility, which is a stronger genericity result
+than a dialect that quietly needed them.
+
+One gap is recorded rather than papered over: a controlling expression is not
+macro-expanded before `Dialect::eval_condition` sees it, so `@if LED_PORT == 1`
+still reads a defined `LED_PORT` as undefined. That is a limitation of the
+trait's shape (`eval_condition` receives a bare `&[Token]`, with no table and no
+expansion applied), not of any dialect, and closing it is an engine change.
+
+**Slice 3**: MacroNib, a second dialect in a third syntax. **Slice 4**: C.
+**Slice 5**: COBOL `COPY`.
 
 See `code/specs/PREP01-generic-source-preprocessor.md`.

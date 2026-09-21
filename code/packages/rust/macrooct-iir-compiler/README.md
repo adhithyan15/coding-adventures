@@ -1,7 +1,7 @@
-# `macrooct-iir-compiler` (PREP01 slice 1)
+# `macrooct-iir-compiler` (PREP01 slices 1-2)
 
 The MacroOct frontend for the LANG VM AOT chain — and the composition PREP01
-slice 1 exists to test.
+exists to test.
 
 ## What it does, in full
 
@@ -39,10 +39,11 @@ MacroOct program runs correctly — it is that the two lower to the *same IIR*:
 | "it runs correctly" | 8 backends × N programs | the selected branch behaves |
 | **"identical IIR"** | one comparison per program | the preprocessor contributed *nothing* beyond selecting text — every backend result then follows for free |
 
-`tests/iir_identity.rs` holds the oracle: 11 directive pairs and 5 include
-pairs, each compiled twice and compared field for field. `lang-aot`'s
+`tests/iir_identity.rs` holds the oracle: 25 directive pairs (11 for
+conditionals, 14 for `@define`) and 6 include pairs, each compiled twice and
+compared field for field. `lang-aot`'s
 `macrooct_rows_lower_to_iir_identical_to_hand_expanded_oct` applies the same
-oracle to the nine matrix rows, and
+oracle to the fourteen matrix rows, and
 `macrooct_compiles_every_oct_corpus_row_byte_identically` runs Oct's entire
 existing corpus through the MacroOct frontend and demands byte-identical
 output.
@@ -54,16 +55,20 @@ instructions genuinely come from different lines. That exclusion is measured,
 not assumed: `line_aligned_sources_produce_byte_identical_iir_including_provenance`
 pads the Oct source until the lines coincide and then compares everything.
 
-## Oct is not modified, which costs this crate two copies
+## Oct is not modified, and this crate keeps no copy of it
 
 PREP01 holds Oct fixed: a reference you are free to edit is not a reference.
-Two consequences, each guarded so the tax stays visible rather than becoming a
-fork:
+Note what that does *not* mean — Oct's **language** is untouched (grammar,
+semantics, type rules, corpus, matrix rows, specs), while Oct's **crate** gained
+exactly one additive entry point, `create_oct_parser_from_tokens`, which hands
+back the parser Oct already builds over tokens the caller supplies.
 
-| Copy | Why | Guard |
-|---|---|---|
-| `src/_oct_grammar.rs` | `oct-parser` keeps `parser_grammar()` behind a private `mod _grammar`; exposing it would mean editing Oct. Generated from the same `oct.grammar` by the same `grammar-tools` invocation, so it is byte-identical. | `the_embedded_oct_grammar_is_byte_identical_to_oct_parsers` |
-| `MAX_RULE_DEPTH` | `oct-parser`'s constant is private too. Must stay equal, or a MacroOct program could parse where its Oct twin did not — breaking the oracle exactly at the depth limit, on input nobody writes by hand. | `the_parser_depth_cap_matches_the_one_oct_parser_documents` |
+An earlier draft avoided even that by embedding a second compiled copy of
+`oct.grammar` and restating `MAX_RULE_DEPTH`. That was worse in a way a
+byte-identity test only half covered: the copied *grammar* was guarded, but the
+copied *constant* was not, so a retuned parser depth in Oct would have diverged
+silently. Reusing Oct's builder removes both copies and makes "MacroOct reuses
+Oct's parser unchanged" literally true rather than aspirational.
 
 ## The dialect
 
@@ -71,12 +76,12 @@ fork:
 engine refuses to answer itself:
 
 - **`classify`** — is this line a directive? `@include "path"`, `@if <expr>`,
-  `@else`, `@end`, `@define NAME body`. Nothing here is C-shaped, deliberately:
-  if the engine had quietly hardcoded C's vocabulary anywhere, `@end` (rather
-  than `@endif`) would break it.
+  `@else`, `@end`, `@define NAME body` and `@define NAME(a, b) body`. Nothing
+  here is C-shaped, deliberately: if the engine had quietly hardcoded C's
+  vocabulary anywhere, `@end` (rather than `@endif`) would break it.
 - **`eval_condition`** — integers `0`–`255` in Oct's own decimal/hex/binary
-  spellings, `true`/`false`, names (undefined → 0, the only state possible
-  before slice 2's macro table), the six comparisons, `&&`, `||` and
+  spellings, `true`/`false`, names (always 0 — see below), the six
+  comparisons, `&&`, `||` and
   parentheses. Anything else is a diagnostic, never a guess. Implemented as an
   iterative two-stack evaluator, because in Rust a stack overflow is an
   *abort*, and a recursive one would turn the engine's depth bound into a
@@ -84,17 +89,50 @@ engine refuses to answer itself:
 - **`lex`** — included text, through MacroOct's own grammar, so directives
   inside an include are directives.
 
-`stringize` and `paste` are left at the trait's `None` defaults. MacroOct has
-neither `#` nor `##`, and declining them is itself a test that the engine does
-not assume every dialect carries a C-shaped macro facility.
+`stringize` and `paste` are left at the trait's `None` defaults — including in
+slice 2, the slice that lands macros. MacroOct genuinely has neither `#` nor
+`##`: Oct has no string type for a stringize to produce, and no
+identifier-building idiom a paste would serve. A full macro facility that still
+declines two of C's operators is the strongest available form of the genericity
+test.
+
+## `@define`, and the one space that changes a line's meaning
+
+```macrooct
+@define LED_PORT 1              object-like
+@define SHIFT(x)  x + 1         function-like, one parameter
+@define SHIFT (x) x + 1         OBJECT-like, body `(x) x + 1`
+```
+
+The `(` counts as a parameter list only when it **touches** the name. That is
+C's rule, adopted rather than invented, and the reason a language free to choose
+differently still chooses it: without adjacency there is no way to give an
+object-like macro a parenthesised body — and `@define MASK (0xF0)` exists
+precisely so `MASK + 1` cannot reassociate at the use site.
+
+Everything else about a definition is checked, and nothing about the body is: a
+missing name, a non-identifier name, an unterminated or malformed parameter
+list, and a **duplicate parameter name** are each a located diagnostic. The
+duplicate is worth naming: substitution resolves a parameter by position, so
+`@define F(x, x) x + x` would let the first `x` win both slots and `F(1, 2)`
+would quietly mean `1 + 1`.
+
+Expansion itself lives in the engine (`source_preprocessor::macros`), not here.
+The dialect answers "what did the author write"; the engine answers "what does
+it mean", and the second question has the same answer in every language.
 
 ## Two things that look like bugs and are not
 
-**`@define` is refused.** Slice 1 has no macro table, so the engine answers
-`Directive::Define` with a located "not supported yet (PREP01 slice 2)"
-diagnostic. The dialect still *classifies* it — otherwise `@define LED 1` would
-reach Oct's parser and be rejected with a syntax error about `@`, which points
-at the lexer rather than at the feature the author was reaching for.
+**A controlling expression is not macro-expanded.** After `@define LED_PORT 1`,
+the line `@if LED_PORT == 1` still evaluates `LED_PORT` as an undefined name —
+zero — and takes the `@else` branch. This is the one place MacroOct diverges
+from the C rule it otherwise follows, and it is an *interface* limitation rather
+than a choice: `Dialect::eval_condition` receives a bare `&[Token]`, with no
+macro table and no expansion applied, so no dialect can do better without the
+trait changing shape. Closing it belongs in the engine (see
+`dialect::operand_value`'s header for why doing it here would make the dialect
+stateful, which is what today lets one instance be shared across translation
+units).
 
 **The module's `language` field says `"oct"`.** `compile_ast` is Oct's, and the
 string is true: after preprocessing, the program being lowered is Oct. It is
@@ -128,6 +166,6 @@ includes:
 
 ## Spec
 
-[PREP01](../../../specs/PREP01-generic-source-preprocessor.md) §7, slice 1.
-Slice 2 adds `@define` and the macro expander; slice 3 adds MacroNib in a third
-directive syntax; slice 4 is the real C dialect.
+[PREP01](../../../specs/PREP01-generic-source-preprocessor.md) §7, slices 1
+and 2. Slice 3 adds MacroNib in a third directive syntax; slice 4 is the real C
+dialect.

@@ -1,8 +1,8 @@
 [package]
 name = "coding-adventures-macrooct-iir-compiler"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "MacroOct frontend for the LANG VM AOT chain (PREP01 slice 1) — composes the generic source-preprocessor engine with Oct's UNCHANGED parser grammar, type checker and IIR lowering, so a MacroOct program lowers to IIR identical to its hand-expanded Oct equivalent."
+description = "MacroOct frontend for the LANG VM AOT chain (PREP01 slices 1-2) — composes the generic source-preprocessor engine with Oct's UNCHANGED parser grammar, type checker and IIR lowering, so a MacroOct program lowers to IIR identical to its hand-expanded Oct equivalent."
 
 [dependencies]
 # The preprocessor half.

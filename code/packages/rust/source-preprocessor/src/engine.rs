@@ -51,6 +51,8 @@ use crate::bounds::{Bounds, Spend};
 use crate::diag::PpError;
 use crate::dialect::{Dialect, Directive};
 use crate::fs::SourceFs;
+use crate::hideset::HideSets;
+use crate::macros::{expand, MToken, MacroDef, MacroTable};
 use crate::source_map::{FileId, Locus, Position, SourceMap};
 use lexer::token::Token;
 
@@ -109,6 +111,8 @@ pub fn preprocess(
     let mut frames: Vec<Frame> = vec![Frame { tokens, cursor: 0, file }];
     let mut open_files: Vec<FileId> = vec![file];
     let mut conds: Vec<Cond> = Vec::new();
+    let mut macros = MacroTable::new();
+    let mut hides = HideSets::new();
     // How many conditional groups were open when each frame was pushed, so an
     // unterminated group inside an included file is caught at that file's end
     // rather than leaking into its includer.
@@ -175,7 +179,21 @@ pub fn preprocess(
         match dialect.classify(&run) {
             None => {
                 if emitting {
-                    emit(&run, current_file, &mut out, &mut map, &bounds)?;
+                    // Expand before emitting. Note the ordering with the
+                    // conditional check above: a line inside a skipped group
+                    // is never expanded at all, so an expansion bomb cannot be
+                    // reached from inside `@if 0` -- the one place a reviewer
+                    // stops reading.
+                    let expanded = if macros.is_empty() {
+                        run.clone()
+                    } else {
+                        let input = run.iter().cloned().map(MToken::bare).collect();
+                        expand(input, &macros, &mut hides, &bounds, &mut spend)?
+                            .into_iter()
+                            .map(|m| m.token)
+                            .collect()
+                    };
+                    emit(&expanded, current_file, &mut out, &mut map, &bounds)?;
                 }
             }
             Some(Err(e)) => return Err(e),
@@ -190,6 +208,8 @@ pub fn preprocess(
                     &bounds,
                     &mut spend,
                     &mut conds,
+                    &mut macros,
+                    &mut hides,
                     &mut frames,
                     &mut open_files,
                     &mut cond_floor,
@@ -244,6 +264,8 @@ fn apply_directive(
     bounds: &Bounds,
     spend: &mut Spend,
     conds: &mut Vec<Cond>,
+    macros: &mut MacroTable,
+    hides: &mut HideSets,
     frames: &mut Vec<Frame>,
     open_files: &mut Vec<FileId>,
     cond_floor: &mut Vec<usize>,
@@ -272,6 +294,39 @@ fn apply_directive(
             }
             let parent_emitting = emitting;
             let value = if parent_emitting {
+                // Pre-scan the RAW tokens first: cheap, and it refuses a
+                // pathological argument list before any work is done on it.
+                check_group_depth(&condition, bounds.condition_depth, here)?;
+
+                // Expand macros in the controlling expression before handing it
+                // to the dialect.
+                //
+                // Without this, `@define LED_PORT 1` followed by
+                // `@if LED_PORT == 1` evaluates LED_PORT as an undefined name
+                // and silently takes the `@else` branch — the program compiles,
+                // and compiles to the wrong thing. This spec's own worked
+                // example (§7) is exactly that shape, so the canonical
+                // illustration was broken until this line existed.
+                //
+                // It has to happen HERE rather than in a dialect: a dialect
+                // receives only `&[Token]` and has no access to the macro
+                // table, so no dialect could do better however it were
+                // written. Pushing a table into each dialect would make every
+                // dialect stateful and duplicate `macros::expand` per
+                // language — the duplication this crate exists to remove.
+                let condition = if macros.is_empty() {
+                    condition
+                } else {
+                    let input = condition.into_iter().map(MToken::bare).collect();
+                    expand(input, macros, hides, bounds, spend)?
+                        .into_iter()
+                        .map(|m| m.token)
+                        .collect::<Vec<_>>()
+                };
+
+                // Re-scan after expansion: a macro body can introduce grouping
+                // the raw text did not have, so the pre-scan above does not
+                // bound what the dialect finally sees.
                 check_group_depth(&condition, bounds.condition_depth, here)?;
                 dialect.eval_condition(&condition)?
             } else {
@@ -356,24 +411,16 @@ fn apply_directive(
         }
 
         // --- not yet live --------------------------------------------------
-        Directive::Define { .. } => {
-            // Inert inside a skipped group, like every other directive. Slice
-            // 1 refuses `@define` outright, so without this guard `@if 0/
-            // @define X 1/@end` would fail — and, more importantly, when slice
-            // 2 replaces this arm with real expansion, an unguarded version
-            // would make every expansion bomb reachable from inside `@if 0`.
-            // Whatever lands here next must keep this line.
+        Directive::Define { name, params, body } => {
+            // Inert inside a skipped group, like every other directive. When
+            // this arm was a refusal the guard merely avoided a spurious
+            // error; now that it defines a macro the guard is load-bearing --
+            // without it, `@if 0 / @define BOMB ... / @end` would install a
+            // definition the program explicitly asked to skip.
             if !emitting {
                 return Ok(());
             }
-            // Slice 1 has no macro table. A dialect that emits this before
-            // macros land should hear about it rather than have it silently
-            // ignored -- a `@define` that does nothing would be far more
-            // confusing than one that refuses.
-            return Err(PpError::new(
-                "macro definitions are not supported yet (PREP01 slice 2)",
-            )
-            .at(here));
+            macros.define(name, MacroDef { params, body });
         }
         Directive::Ignore => {}
     }

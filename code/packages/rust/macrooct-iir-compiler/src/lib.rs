@@ -53,11 +53,26 @@
 //! builder removes both copies, and makes "MacroOct reuses Oct's parser
 //! unchanged" literally true rather than aspirational.
 //!
-//! ## Status: slice 1
+//! ## Status: slice 2
 //!
-//! `@include`, `@if`, `@else` and `@end` work. `@define` is *recognised* and
-//! then refused by the engine with a located diagnostic, because slice 1 has
-//! no macro table; slice 2 lands it.
+//! `@include`, `@if`, `@else`, `@end` and `@define` all work. `@define` covers
+//! both the object-like form and the function-like one, with C's adjacency rule
+//! deciding between them (`@define F(x) …` is function-like; `@define F (x) …`
+//! is an object-like macro whose body begins with a parenthesis).
+//!
+//! **One divergence from C remains, and it is an interface limitation rather
+//! than a choice.** A controlling expression is *not* macro-expanded, so after
+//! `@define LED_PORT 1` the line `@if LED_PORT == 1` still evaluates `LED_PORT`
+//! as an undefined name — zero — and takes the `@else` branch. The engine hands
+//! [`Dialect::eval_condition`](coding_adventures_source_preprocessor::Dialect::eval_condition)
+//! a bare `&[Token]` with no macro table and no expansion applied, so no
+//! dialect can do better without the trait changing shape. See
+//! `dialect::operand_value`'s header for why closing the gap belongs in the
+//! engine and not here.
+//!
+//! `stringize` and `paste` stay declined: MacroOct genuinely has neither `#`
+//! nor `##`, and a full macro facility that still declines two of C's operators
+//! is a stronger genericity result than one that quietly needed them.
 //!
 //! ## Example
 //!
@@ -420,15 +435,84 @@ mod tests {
     // --- refusals ----------------------------------------------------------
 
     #[test]
-    fn define_is_refused_with_a_located_diagnostic_in_slice_one() {
-        // The engine refuses `Directive::Define` because slice 1 has no macro
-        // table. That refusal is the CORRECT slice-1 behaviour: a `@define`
-        // that silently did nothing would be far more confusing.
-        let err = compile_source("@define LED 1\nfn main() { }\n", "m")
-            .expect_err("slice 1 must refuse @define");
-        let text = err.to_string();
-        assert!(matches!(err, MacroOctError::Preprocess(_)), "{text}");
-        assert!(text.contains("slice 2"), "{text}");
+    fn a_malformed_define_is_refused_with_a_preprocessor_diagnostic() {
+        // The refusal moved: slice 1 refused every `@define` because there was
+        // no macro table, and slice 2 refuses only the malformed ones. Each
+        // shape below must be a *preprocessor* error, not an Oct syntax error
+        // about `@` -- which is what would happen if the dialect had stopped
+        // recognising the directive.
+        for src in [
+            "@define\nfn main() { }\n",
+            "@define 1 2\nfn main() { }\n",
+            "@define F(x\nfn main() { }\n",
+            "@define F(1) x\nfn main() { }\n",
+            "@define F(x, x) x\nfn main() { }\n",
+        ] {
+            let err = compile_source(src, "m")
+                .err()
+                .unwrap_or_else(|| panic!("a malformed @define must be refused: {src:?}"));
+            assert!(
+                matches!(err, MacroOctError::Preprocess(_)),
+                "{src:?} must fail in the PREPROCESSOR, not downstream: {err}"
+            );
+        }
+    }
+
+    #[test]
+    fn an_object_like_macro_reaches_the_use_site() {
+        // End to end through the real pipeline, not just `classify`: the
+        // dialect classified it, the engine installed it, `macros::expand`
+        // substituted it, and Oct compiled the result.
+        let module = compile_source("@define LEVEL 42\nfn main() { out(1, LEVEL); }\n", "m")
+            .expect("compiles");
+        assert!(ops(&module).join(" ").contains("42"));
+    }
+
+    #[test]
+    fn a_define_inside_a_skipped_group_never_becomes_visible() {
+        // The engine guards this, and the guard is load-bearing now that the
+        // arm installs a definition rather than refusing one. If it were
+        // missing, `VALUE` would be 7 here -- the branch the program did NOT
+        // take. `@if 0` is where hostile input hides, so a directive that acted
+        // inside one would be the worst possible place to leak.
+        let module = compile_source(
+            "@if 0\n@define VALUE 7\n@else\n@define VALUE 42\n@end\nfn main() { out(1, VALUE); }\n",
+            "m",
+        )
+        .expect("compiles");
+        let text = ops(&module).join(" ");
+        assert!(text.contains("42"), "{text}");
+        assert!(!text.contains('7'), "the skipped branch's definition leaked: {text}");
+    }
+
+    #[test]
+    fn a_macro_defined_in_an_included_file_is_visible_to_the_includer() {
+        // The macro table is per translation unit, not per file. That is what
+        // makes a "header" of definitions work at all, and it is not something
+        // the dialect can arrange -- the engine owns the table.
+        let module = compile_source_with_includes(
+            "@include \"ports.macrooct\"\nfn main() { out(1, LEVEL); }\n",
+            "m",
+            &[("ports.macrooct", "@define LEVEL 42\n")],
+        )
+        .expect("compiles");
+        assert!(ops(&module).join(" ").contains("42"));
+    }
+
+    #[test]
+    fn a_definition_does_not_reach_back_up_its_own_line_or_the_lines_before_it() {
+        // A macro is visible from the line AFTER its definition. `counter` on
+        // the `static` line below is the Oct global, not an expansion, because
+        // the definition has not been seen yet -- and afterwards `counter`
+        // expands to itself and stays `counter` (the hide sets), so the program
+        // means the same thing either way. Compiling and printing 250 is the
+        // observable form of both halves.
+        let module = compile_source(
+            "static counter: u8 = 250;\n@define counter counter\nfn main() { out(1, counter); }\n",
+            "m",
+        )
+        .expect("a self-referential macro must terminate, not loop");
+        assert_eq!(module.functions.len(), 1);
     }
 
     #[test]

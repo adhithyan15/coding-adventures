@@ -20,7 +20,7 @@
 //!
 //! Nothing here is C-shaped, on purpose. The directives are `@`-prefixed, the
 //! conditional terminator is `@end` rather than `@endif`, and there is no
-//! `defined()` operator because there are no macros yet. If the engine had
+//! `defined()` operator even now that `@define` works. If the engine had
 //! quietly hardcoded C's vocabulary anywhere, MacroOct would not work — which
 //! is the point of proving the engine here rather than on C, the customer that
 //! motivated it. A customer is exactly what should not get to design the
@@ -286,10 +286,14 @@ impl Dialect for MacroOctDialect {
     }
 
     // `stringize` and `paste` are deliberately left at the trait's `None`
-    // defaults. MacroOct has no `#` and no `##`, and declining them is a
-    // positive test that the engine does not assume every dialect has a
-    // C-shaped macro facility. Slice 2 keeps this declined; the C dialect in
-    // slice 4 is where those hooks get their first real implementation.
+    // defaults, and slice 2 keeps them that way even though it is the slice
+    // that lands macros. MacroOct has no `#` and no `##`: Oct has no string
+    // type for a stringize to produce, and no identifier-building idiom a paste
+    // would serve. Declining them while nevertheless having a full macro
+    // facility is the strongest form of the genericity test — the engine
+    // expands MacroOct macros through the same `macros.rs` that will expand
+    // C's, with two of C's operators simply absent. The C dialect in slice 4 is
+    // where those hooks get their first real implementation.
 }
 
 // ===========================================================================
@@ -348,37 +352,204 @@ fn include_directive(rest: &[Token]) -> Result<Directive, PpError> {
 // @define
 // ===========================================================================
 
-/// `@define NAME body…`
+/// Is this token's spelling an identifier?
 ///
-/// Classified, and then **refused by the engine** — slice 1 has no macro
-/// table, and the engine answers `Directive::Define` with a located "not
-/// supported yet" diagnostic.
+/// Deliberately a check on the *spelling* rather than on `TokenType`. MacroOct's
+/// lexer promotes a `NAME` whose text is in the keyword set to a keyword token,
+/// so `@define F(in) in` would arrive with `in` typed as a keyword and not as a
+/// `NAME` — and refusing it on that basis would be wrong, because a
+/// preprocessor runs *before* the parser and has no business knowing which
+/// identifiers Oct later treats specially. C says the same thing in more words:
+/// its preprocessor works on `identifier` pp-tokens, and `#define F(int) int`
+/// is well-formed preprocessing even though `int` is a keyword afterwards.
 ///
-/// Recognising a directive the engine will refuse looks redundant and is not.
-/// If the dialect returned `None` here, `@define LED 1` would be classified as
-/// ordinary Oct source, handed to Oct's parser, and rejected with a syntax
-/// error about `@` — a message that points at the lexer rather than at the
-/// feature the author was reaching for. The refusal says what is actually
-/// true: the directive exists and is not implemented yet.
+/// ASCII-only, which is also what makes [`glued_open_paren`] safe: a spelling
+/// that passes here has one byte per character, so `value.len()` is a column
+/// width rather than a byte count.
+fn is_identifier(text: &str) -> bool {
+    text.starts_with(|c: char| c.is_ascii_alphabetic() || c == '_')
+        && text.chars().all(|c| c.is_ascii_alphanumeric() || c == '_')
+}
+
+/// Is the next token an `(` **touching** the macro name, with nothing between?
+///
+/// This one predicate is the whole difference between
+///
+/// ```text
+///     @define SHIFT(x)  x + 1      a function-like macro of one parameter
+///     @define SHIFT (x) x + 1      an OBJECT-like macro whose body is `(x) x + 1`
+/// ```
+///
+/// and the rule is C's, adopted here rather than invented. It is worth being
+/// explicit about why a language free to choose differently still chooses this:
+/// without an adjacency rule there is no way at all to give an object-like
+/// macro a parenthesised body, and a parenthesised body is the single most
+/// common thing a macro body *is* — `@define MASK (0xF0)` exists precisely so
+/// that `MASK + 1` cannot reassociate at the use site. A whitespace-insensitive
+/// rule would silently reinterpret that definition as a macro named `MASK`
+/// taking a parameter named `0xF0`, which is not even well-formed.
+///
+/// Adjacency is measured on `column`, exactly as [`glued_suffix`] measures the
+/// misspelled-directive case. Both are safe for the same reason: the left-hand
+/// spelling is known ASCII (a directive literal there, an identifier here, via
+/// [`is_identifier`]), so `len()` is a column width. The `line` check is not
+/// redundant belt-and-braces: the engine groups a logical line by `Token::line`
+/// and so cannot hand us two lines today, but `classify` is public API and a
+/// caller that assembled a slice by hand must not make column 4 of line 9 look
+/// adjacent to column 1 of line 2.
+fn glued_open_paren(name: &Token, rest: &[Token]) -> bool {
+    rest.first().is_some_and(|next| {
+        next.value == "("
+            && next.line == name.line
+            && next.column == name.column + name.value.len()
+    })
+}
+
+/// `@define NAME body…` and `@define NAME(a, b) body…`
+///
+/// Returns [`Directive::Define`] with `params: None` for the object-like form
+/// and `params: Some(names)` for the function-like one; the engine installs it
+/// in the macro table and [`crate::dialect`]'s companion module
+/// `source_preprocessor::macros` does the expanding. Nothing about *expansion*
+/// lives here, which is the layering the slice exists to test: the dialect
+/// answers "what did the author write", and the engine answers "what does it
+/// mean", and the second question has the same answer in every language.
+///
+/// ## Every way this can be malformed, and why each is a diagnostic
+///
+/// | Input | Refused because |
+/// |---|---|
+/// | `@define` | no name at all |
+/// | `@define 1 2` | a macro name must be an identifier |
+/// | `@define F(` | the parameter list is never closed |
+/// | `@define F(x` | likewise — the `)` is what ends it, not the end of line |
+/// | `@define F(1) x` | a parameter must be an identifier |
+/// | `@define F(x y) x` | two parameters with no `,` between them |
+/// | `@define F(x,) x` | a `,` with no parameter after it |
+/// | `@define F(x, x) x` | a duplicate parameter name |
+///
+/// The last is the one worth arguing for. A duplicate is not ambiguous to the
+/// *implementation* — `substitute_function_like` resolves a parameter by
+/// `position`, so the first `x` would simply win and the second argument would
+/// be silently discarded. It is ambiguous to the **reader**, who wrote
+/// `F(a, a)` meaning something and will get one of the two meanings with no
+/// indication which. A silently-dropped argument is exactly the class of bug a
+/// macro system is already too good at producing.
+///
+/// Note what is *not* checked: nothing about the body. A body may be empty
+/// (`@define DEBUG`, which expands to nothing and is the idiomatic way to
+/// delete a token), may mention parameters that do not exist, may mention the
+/// macro's own name (see the hide-set algorithm — that terminates by
+/// construction), and may be syntactically meaningless Oct. It is meaningless
+/// Oct *at the use site* that matters, and Oct's parser is what reports it.
 fn define_directive(rest: &[Token]) -> Result<Directive, PpError> {
     let Some(name) = rest.first() else {
         return Err(PpError::new("`@define` needs a macro name"));
     };
-    // A macro name is an identifier. Rejecting `@define 1 2` here rather than
-    // letting slice 2 discover it keeps the diagnostic close to the mistake.
-    let is_identifier = name
-        .value
-        .chars()
-        .next()
-        .is_some_and(|c| c.is_ascii_alphabetic() || c == '_')
-        && name.value.chars().all(|c| c.is_ascii_alphanumeric() || c == '_');
-    if !is_identifier {
+    if !is_identifier(&name.value) {
         return Err(PpError::new(format!(
             "`@define` needs an identifier for a macro name, but found {}",
             describe(Some(name))
         )));
     }
-    Ok(Directive::Define { name: name.value.clone(), body: rest[1..].to_vec() })
+    let after_name = &rest[1..];
+
+    if !glued_open_paren(name, after_name) {
+        // Object-like. Everything after the name is body, `(` included — see
+        // `glued_open_paren` for why a detached `(` must stay in the body.
+        return Ok(Directive::Define {
+            name: name.value.clone(),
+            params: None,
+            body: after_name.to_vec(),
+        });
+    }
+
+    // Function-like. `after_name[0]` is the `(` we just matched.
+    let (params, body) = parameter_list(&after_name[1..], name)?;
+    Ok(Directive::Define {
+        name: name.value.clone(),
+        params: Some(params),
+        body: body.to_vec(),
+    })
+}
+
+/// Parse `a, b, c)` — the tokens *after* a function-like macro's `(` — and
+/// return the parameter names together with the body that follows the `)`.
+///
+/// ## Termination
+///
+/// Every path through the loop consumes at least one token from `rest`, and
+/// `rest` only ever shrinks, so the loop runs at most `rest.len()` times. That
+/// is stated rather than assumed because this module's contract is to be total
+/// on **any** input: a parameter list is attacker-influenced text, and a
+/// preprocessor that could be made to spin on `@define F(,,,,…` would be a
+/// denial of service reachable from a source file alone.
+///
+/// ## Why the empty list is a special case
+///
+/// `@define F() body` is a zero-parameter function-like macro: `F()` expands to
+/// `body` and a bare `F` does not expand at all. It is genuinely different from
+/// the object-like `@define F body`, and it is different from a one-parameter
+/// macro called with an empty argument. Falling into the loop below would read
+/// the `)` as a parameter name and refuse a legal definition, so it is taken
+/// first.
+fn parameter_list<'a>(
+    mut rest: &'a [Token],
+    name: &Token,
+) -> Result<(Vec<String>, &'a [Token]), PpError> {
+    let unterminated = || {
+        PpError::new(format!(
+            "`@define {}(` is never closed — a macro's parameter list must end \
+             with `)` on the same line",
+            PpError::quote(&name.value, Bounds::default().diagnostic_quote_bytes)
+        ))
+    };
+
+    if let Some(close) = rest.first() {
+        if close.value == ")" {
+            return Ok((Vec::new(), &rest[1..]));
+        }
+    } else {
+        return Err(unterminated());
+    }
+
+    let mut params: Vec<String> = Vec::new();
+    loop {
+        let Some(param) = rest.first() else {
+            return Err(unterminated());
+        };
+        if !is_identifier(&param.value) {
+            return Err(PpError::new(format!(
+                "a macro parameter must be an identifier, but found {}",
+                describe(Some(param))
+            )));
+        }
+        if params.iter().any(|seen| seen == &param.value) {
+            // Not merely redundant: `substitute_function_like` resolves a
+            // parameter by its POSITION, so the first occurrence would win and
+            // the second argument would vanish without a word.
+            return Err(PpError::new(format!(
+                "macro parameter {} is listed twice — the second argument would be \
+                 silently discarded",
+                describe(Some(param))
+            )));
+        }
+        params.push(param.value.clone());
+        rest = &rest[1..];
+
+        match rest.first() {
+            Some(t) if t.value == "," => rest = &rest[1..],
+            Some(t) if t.value == ")" => return Ok((params, &rest[1..])),
+            Some(other) => {
+                return Err(PpError::new(format!(
+                    "expected `,` or `)` in `@define {}`'s parameter list, but found {}",
+                    PpError::quote(&name.value, Bounds::default().diagnostic_quote_bytes),
+                    describe(Some(other))
+                )))
+            }
+            None => return Err(unterminated()),
+        }
+    }
 }
 
 // ===========================================================================
@@ -479,11 +650,33 @@ impl Op {
 /// | `true` / `false` | 1 / 0 |
 /// | any other identifier | **0** — undefined |
 ///
-/// **Undefined is 0, and that is a placeholder, not a design.** It is the C
-/// rule, and it is the only answer available in a slice with no macro table:
-/// until `@define` lands there is nothing that could ever make a name defined,
-/// so "undefined" is the *only* state a name can be in. Slice 2 replaces this
-/// with a real lookup.
+/// **Every name is 0 here, including one that `@define` has defined**, and
+/// that is a real limitation of the current [`Dialect`] interface rather than a
+/// choice this function makes. `eval_condition` receives `&[Token]` and nothing
+/// else: no macro table, and no expansion has been applied to the slice by the
+/// engine. So after slice 2 a MacroOct author can write
+///
+/// ```text
+///     @define LED_PORT 1
+///     @if LED_PORT == 1      ← still FALSE: `LED_PORT` evaluates to 0
+/// ```
+///
+/// which is the one place MacroOct currently diverges from the C rule it
+/// otherwise follows. C expands macros in a controlling expression before
+/// evaluating it, and MacroOct will have to as well.
+///
+/// Fixing it is an *engine* change, not a dialect one, and deliberately not
+/// smuggled in here: a dialect that reached for a macro table would need the
+/// engine to hand it one, which is a change to the trait's shape — and
+/// `Directive::If(Vec<Token>)` would additionally have to say whether the
+/// tokens it carries are pre- or post-expansion. Doing that properly is how the
+/// interface earns the expansion, and doing it by giving `MacroOctDialect`
+/// private state would make the dialect stateful, which is what today lets one
+/// instance be shared across translation units without leaking between them.
+/// Recorded as the slice's headline interface finding.
+///
+/// Zero-for-undefined is itself C's rule, so the fallback is right even once
+/// expansion lands: after expansion, a name that survives really is undefined.
 ///
 /// `true`/`false` are handled explicitly rather than falling through to the
 /// undefined-identifier rule, because falling through would make `@if true`
@@ -524,10 +717,9 @@ fn operand_value(token: &Token) -> Result<i64, PpError> {
         };
     }
 
-    // An identifier. Undefined until slice 2 gives names a way to be defined.
-    if text.starts_with(|c: char| c.is_ascii_alphabetic() || c == '_')
-        && text.chars().all(|c| c.is_ascii_alphanumeric() || c == '_')
-    {
+    // An identifier. Zero, defined or not — see this function's header for why
+    // that is an interface limitation rather than a decision taken here.
+    if is_identifier(text) {
         return Ok(0);
     }
 
@@ -819,23 +1011,134 @@ mod tests {
         assert!(matches!(classify("@if"), Some(Err(_))));
     }
 
+    /// Spell a classified define as `NAME(params) body` / `NAME body`, so the
+    /// table-driven tests below read like the source they classify.
+    fn defined(src: &str) -> String {
+        match classify(src) {
+            Some(Ok(Directive::Define { name, params, body })) => {
+                let body: Vec<&str> = body.iter().map(|t| t.value.as_str()).collect();
+                match params {
+                    None => format!("{name} {}", body.join(" ")),
+                    Some(p) => format!("{name}({}) {}", p.join(", "), body.join(" ")),
+                }
+            }
+            other => panic!("expected a define from `{src}`, got {other:?}"),
+        }
+    }
+
     #[test]
-    fn define_is_classified_even_though_slice_one_refuses_it() {
-        // Classifying a directive the engine will refuse is deliberate: it is
-        // what turns "syntax error near @" into "macro definitions are not
-        // supported yet".
-        let Some(Ok(Directive::Define { name, body })) = classify("@define LED_PORT 1") else {
-            panic!("expected a define");
-        };
-        assert_eq!(name, "LED_PORT");
-        assert_eq!(body.len(), 1);
-        assert_eq!(body[0].value, "1");
+    fn an_object_like_define_carries_its_name_and_whole_body() {
+        assert_eq!(defined("@define LED_PORT 1"), "LED_PORT 1");
+        assert_eq!(defined("@define MASK 0xF0 | 1"), "MASK 0xF0 | 1");
+        // An empty body is legal and means "expands to nothing" -- the
+        // idiomatic way to delete a token at every use site.
+        assert_eq!(defined("@define DEBUG"), "DEBUG ");
+    }
+
+    #[test]
+    fn a_glued_paren_makes_a_function_like_macro_and_a_detached_one_does_not() {
+        // THE rule of this module, and the one case where a single space
+        // changes the meaning of a line. Both spellings below are legal and
+        // they define different things:
+        //
+        //   @define SHIFT(x) x + 1   function-like, one parameter
+        //   @define SHIFT (x) x + 1  object-like, body `(x) x + 1`
+        //
+        // Written as a pair because either alone is satisfied by a broken
+        // implementation: one that ignored adjacency passes the first, and one
+        // that never recognised a parameter list passes the second.
+        assert_eq!(defined("@define SHIFT(x) x + 1"), "SHIFT(x) x + 1");
+        assert_eq!(defined("@define SHIFT (x) x + 1"), "SHIFT ( x ) x + 1");
+        // The reason the rule has to exist at all: a parenthesised body is the
+        // commonest macro body there is, precisely so `MASK + 1` cannot
+        // reassociate at the use site.
+        assert_eq!(defined("@define MASK (0xF0)"), "MASK ( 0xF0 )");
+    }
+
+    #[test]
+    fn a_parameter_list_may_have_zero_one_or_many_names() {
+        // `F()` is NOT the object-like `F`: a bare `F` does not expand, and
+        // `F()` expands to the body. Reading the `)` as a parameter name would
+        // refuse a legal definition.
+        assert_eq!(defined("@define NOW() 1"), "NOW() 1");
+        assert_eq!(defined("@define ID(x) x"), "ID(x) x");
+        assert_eq!(defined("@define ADD(a, b) a + b"), "ADD(a, b) a + b");
+        assert_eq!(defined("@define TRI(a,b,c) a + b + c"), "TRI(a, b, c) a + b + c");
+        // Whitespace inside the list is free; only the `(` is positional.
+        assert_eq!(defined("@define ADD(  a ,  b  ) a - b"), "ADD(a, b) a - b");
+    }
+
+    #[test]
+    fn a_keyword_spelling_is_still_a_legal_parameter_name() {
+        // MacroOct's lexer promotes `in` from NAME to a keyword token. That is
+        // Oct's business and not the preprocessor's: a macro parameter is a
+        // spelling to substitute, and C's preprocessor likewise accepts
+        // `#define F(int) int`. Checking on `TokenType` instead of spelling
+        // would refuse this, which is why `is_identifier` looks at the text.
+        assert_eq!(defined("@define WRAP(in) in"), "WRAP(in) in");
     }
 
     #[test]
     fn define_requires_an_identifier_name() {
         assert!(matches!(classify("@define"), Some(Err(_))));
         assert!(matches!(classify("@define 1 2"), Some(Err(_))));
+        assert!(matches!(classify("@define \"x\" 2"), Some(Err(_))));
+        // A glued `(` after a NON-identifier is still the name error, not a
+        // parameter-list error: the name is checked first, so the message
+        // names the real mistake.
+        let Some(Err(e)) = classify("@define 1(x) 2") else { panic!("must be refused") };
+        assert!(e.to_string().contains("identifier for a macro name"), "{e}");
+    }
+
+    #[test]
+    fn every_malformed_parameter_list_is_a_diagnostic_and_never_a_panic() {
+        for (src, needle) in [
+            ("@define F(", "never closed"),
+            ("@define F(x", "never closed"),
+            ("@define F(x,", "never closed"),
+            ("@define F(1) x", "must be an identifier"),
+            ("@define F(\"s\") x", "must be an identifier"),
+            ("@define F(x,) x", "must be an identifier"),
+            ("@define F(,) x", "must be an identifier"),
+            ("@define F(x y) x", "expected `,` or `)`"),
+            ("@define F(x, x) x", "listed twice"),
+            ("@define F(a, b, a) x", "listed twice"),
+        ] {
+            let Some(Err(e)) = classify(src) else {
+                panic!("`{src}` must be refused with a diagnostic");
+            };
+            assert!(
+                e.to_string().contains(needle),
+                "`{src}` was refused, but for the wrong reason: {e}"
+            );
+        }
+    }
+
+    #[test]
+    fn a_duplicate_parameter_is_refused_rather_than_silently_dropping_an_argument() {
+        // Worth its own test rather than a row in the table above, because the
+        // failure it prevents is invisible: `substitute_function_like` resolves
+        // a parameter by POSITION, so with `@define F(x, x) x + x` the first
+        // `x` wins both slots and the second argument disappears with no
+        // diagnostic anywhere. `F(1, 2)` would quietly be `1 + 1`.
+        let Some(Err(e)) = classify("@define F(x, x) x + x") else {
+            panic!("a duplicate parameter must be refused");
+        };
+        assert!(e.to_string().contains("silently discarded"), "{e}");
+    }
+
+    #[test]
+    fn a_body_the_dialect_cannot_make_sense_of_is_still_accepted() {
+        // The dialect checks the DEFINITION's shape and nothing about the
+        // body. A body may name a parameter that does not exist, may name the
+        // macro itself (the hide sets make that terminate), and may be
+        // nonsense Oct -- which Oct's parser reports at the USE site, where the
+        // author can see the expansion that produced it. Refusing here would
+        // also refuse the legitimate case of a macro that is defined and never
+        // used.
+        assert_eq!(defined("@define F(x) y + z"), "F(x) y + z");
+        assert_eq!(defined("@define FOO FOO"), "FOO FOO");
+        assert_eq!(defined("@define ODD ) ) )"), "ODD ) ) )");
     }
 
     #[test]

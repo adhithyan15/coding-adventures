@@ -70,6 +70,10 @@ impl Dialect for FuzzDialect {
             }))),
             "@define" => Some(Ok(Directive::Define {
                 name: line.get(1).map(|t| t.value.clone()).unwrap_or_default(),
+                // Object-like only in the test dialect; function-like macros
+                // are exercised through MacroOct and the macros module's own
+                // suite.
+                params: None,
                 body: line.get(2..).unwrap_or(&[]).to_vec(),
             })),
             _ => None,
@@ -103,11 +107,37 @@ impl Dialect for FuzzDialect {
     }
 }
 
+/// Build a token stream from one source line per `&str`, as `engine.rs`'s
+/// helper does. Local to this file because the two suites are independent.
+fn program(lines: &[&str]) -> Vec<Token> {
+    let mut out = Vec::new();
+    for (i, line) in lines.iter().enumerate() {
+        for word in line.split_whitespace() {
+            out.push(Token {
+                type_: TokenType::Name,
+                value: word.to_string(),
+                line: i + 1,
+                column: 1,
+                type_name: None,
+                flags: None,
+                cv: None,
+            });
+        }
+    }
+    out
+}
+
 const ALPHABET: &[&str] = &[
     "@if", "@else", "@end", "@include", "@define", // directives
-    "0", "1", "(", ")", "==", "&&", // condition fragments
+    "0", "1", "(", ")", ",", "==", "&&", // condition and argument fragments
     "a.oct", "b.oct", "missing.oct", // include targets, some absent
     "fn", "main", "{", "}", ";", "x", // ordinary source
+    // Macro names, deliberately few and deliberately overlapping with the
+    // names the sweep also DEFINES, so the generator keeps producing
+    // self-referential and mutually-recursive definitions by accident. Those
+    // are the shapes that make a naive expander loop forever, and a wide
+    // alphabet would almost never hit them.
+    "M", "N", "M", "N",
 ];
 
 fn generate(rng: &mut Rng, max_lines: usize) -> Vec<Token> {
@@ -252,4 +282,99 @@ fn pathological_grouping_in_a_condition_terminates() {
 #[test]
 fn an_empty_program_is_fine() {
     check(Vec::new(), Bounds::default());
+}
+
+// ===========================================================================
+// Slice 2: the same oracle, extended over macro definition and expansion
+// ===========================================================================
+
+/// Randomised macro-dense programs terminate and never panic.
+///
+/// Required by PREP01 §7 rather than optional. Slice 1's sweep exercised an
+/// engine that had no macros at all, while the bounds most likely to be
+/// attacked — tokens produced, fuel, macro depth, hide-set cost — all guard
+/// subsystems that only come into existence in this slice.
+///
+/// The alphabet reuses two macro names (`M`, `N`) as both definition targets
+/// and body content, so the generator produces self-referential and mutually
+/// recursive definitions constantly. That is the point: those are exactly the
+/// shapes a naive expander loops on, and a realistic alphabet would almost
+/// never generate them.
+#[test]
+fn random_macro_dense_programs_terminate_and_never_panic() {
+    let bounds = Bounds {
+        fuel: 20_000,
+        tokens_produced: 5_000,
+        macro_depth: 16,
+        total_inclusions: 20,
+        include_depth: 8,
+        conditional_depth: 12,
+        arg_group_depth: 16,
+        ..Bounds::default()
+    };
+
+    for seed in 1..=3_000u64 {
+        let mut rng = Rng(seed.wrapping_mul(0x9E37_79B9_7F4A_7C15) | 1);
+        check(generate(&mut rng, 20), bounds);
+    }
+}
+
+/// A doubling chain is refused rather than exhausting memory.
+///
+/// Forty levels of `@define An A(n-1) A(n-1)` is 2^40 tokens from a few lines
+/// of source. This is the attack the "count tokens PRODUCED, not emitted"
+/// rule exists for, driven through the whole engine rather than the expander
+/// alone.
+#[test]
+fn a_doubling_macro_chain_is_bounded_end_to_end() {
+    let mut lines: Vec<String> = vec!["@define A0 x".to_string()];
+    for i in 1..40 {
+        lines.push(format!("@define A{i} A{} A{}", i - 1, i - 1));
+    }
+    lines.push("A39".to_string());
+    let refs: Vec<&str> = lines.iter().map(String::as_str).collect();
+
+    let mut fs = MemoryFs::new();
+    let main = fs.insert("<main>", "");
+    let bounds = Bounds { tokens_produced: 50_000, ..Bounds::default() };
+
+    let err = match preprocess(program(&refs), main, &FuzzDialect, &mut fs, bounds) {
+        Ok(_) => panic!("a 2^40 doubling chain must hit a bound, not run to completion"),
+        Err(e) => e,
+    };
+    let msg = err.to_string();
+    assert!(
+        msg.contains("tokens") || msg.contains("budget"),
+        "expected a resource diagnostic, got: {msg}"
+    );
+}
+
+/// A bomb hidden inside a skipped group is never built.
+///
+/// The group is skipped, so the definitions are never installed and the
+/// invocation never expands. If this ever starts failing on a bound, the
+/// skipped-group guard has regressed and every expansion attack is reachable
+/// from inside `@if 0`.
+#[test]
+fn a_doubling_chain_inside_a_skipped_group_costs_nothing() {
+    let mut lines: Vec<String> = vec!["@if 0".to_string(), "@define A0 x".to_string()];
+    for i in 1..40 {
+        lines.push(format!("@define A{i} A{} A{}", i - 1, i - 1));
+    }
+    lines.push("A39".to_string());
+    lines.push("@end".to_string());
+    lines.push("survivor".to_string());
+    let refs: Vec<&str> = lines.iter().map(String::as_str).collect();
+
+    let mut fs = MemoryFs::new();
+    let main = fs.insert("<main>", "");
+    // A budget far too small to build the bomb: it must never be touched.
+    let bounds = Bounds { tokens_produced: 200, ..Bounds::default() };
+
+    let out = match preprocess(program(&refs), main, &FuzzDialect, &mut fs, bounds) {
+        Ok(o) => o,
+        Err(e) => panic!("a skipped group must not expand anything, but: {e}"),
+    };
+    let values: Vec<&str> = out.tokens.iter().map(|t| t.value.as_str()).collect();
+    assert_eq!(values, ["survivor"]);
 }

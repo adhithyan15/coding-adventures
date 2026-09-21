@@ -8,6 +8,128 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## PREP01 slice 2 — macro expansion (selected 2026-09-21 after slice 1 merged)
+
+Slice 1 merged as #15853. Slice 2 adds the macro table and the hide-set
+non-recursive expansion algorithm, and gives MacroOct `@define`. Stringize and
+paste stay unimplemented dialect hooks — MacroOct declines both, which is
+itself a test that the engine does not assume they exist.
+
+### VM-068 — `Dialect::eval_condition` cannot see the macro table (found 2026-09-21)
+
+The one place MacroOct diverges from C after slice 2, and it is an **interface**
+defect rather than a dialect bug:
+
+```macrooct
+@define LED_PORT 1
+@if LED_PORT == 1        ← FALSE. `LED_PORT` evaluates as an undefined name, 0.
+```
+
+C expands macros in a controlling expression before evaluating it. This engine
+does not: `Dialect::eval_condition` receives a bare `&[Token]` — no macro
+table, and no expansion applied by the engine on the way in — so **no dialect
+can do better**, however it is written. `MacroOctDialect::operand_value`
+therefore returns 0 for every name, defined or not.
+
+Discovered while implementing slice 2's MacroOct half, and deliberately not
+worked around there. The available workarounds are each worse than the gap:
+
+- Giving `MacroOctDialect` a private macro table would make the dialect
+  **stateful**, which is what today lets one instance be shared across
+  translation units with nothing leaking between them.
+- Expanding inside `classify` would duplicate `macros::expand` in every dialect
+  — the exact duplication PREP01 exists to remove.
+
+Closing it properly is an engine change with a question attached:
+`Directive::If(Vec<Token>)` would have to say whether the tokens it carries are
+pre- or post-expansion, since a future `defined()`-style operator must see its
+operand **un**expanded while the rest of the expression is expanded. That is C's
+own rule and it is why the split has to be in the interface rather than in a
+convention.
+
+Blast radius today is small and the spelling that hurts is visible: PREP01's own
+worked example (`@define LED_PORT 1` / `@if LED_PORT == 1`) is exactly the shape
+that silently takes the wrong branch, so this should not sit long. It is also a
+prerequisite for slice 4 — C's `#if defined(X)` is unimplementable without it.
+
+### VM-068 — controlling expressions were not macro-expanded (found and fixed in slice 2)
+
+Found by the agent implementing MacroOct's `@define`, reported rather than
+worked around, and fixed in the engine the same slice.
+
+`Dialect::eval_condition` receives a bare `&[Token]`. It has no macro table and,
+until this fix, no expansion had been applied — so after `@define LED_PORT 1`,
+the line `@if LED_PORT == 1` evaluated `LED_PORT` as an *undefined* name (0) and
+took the `@else` branch. The program compiled, and compiled to the wrong thing.
+
+**PREP01 §7's own worked example is exactly that shape**, so the spec's
+canonical illustration of the feature was silently broken. That is what moved
+this from "log it" to "fix it now".
+
+The agent was right not to patch it dialect-side. Both workarounds are worse
+than the gap: a private macro table inside the dialect makes the dialect
+stateful, which is precisely what currently lets one instance be shared across
+translation units with nothing leaking; and expanding inside `classify`
+duplicates `macros::expand` into every dialect — the duplication this crate
+exists to remove. No dialect could have done better however written, which is
+what makes it an engine defect rather than a MacroOct one.
+
+Fixed by expanding the controlling expression in the engine before handing it to
+`eval_condition`, with the grouping-depth pre-scan run **twice**: once on the
+raw tokens (cheap, refuses a pathological list before any work) and once after
+expansion (a macro body can introduce grouping the raw text did not have, so the
+first scan does not bound what the dialect finally sees).
+
+Proved by a matched **pair** of matrix rows, because either alone can be
+satisfied by a broken implementation — an always-0 evaluator passes the
+undefined-name row, and an always-truthy one passes the defined-name row:
+
+| row | asserts |
+|---|---|
+| `@if LED_PORT == 0` with no definition | an undefined name still reads 0 *after* expansion runs |
+| `@define LED_PORT 1` then `@if LED_PORT == 1` | a defined name reaches the condition |
+
+Also pinned in the engine's own suite, including that grouping introduced *by a
+macro body* is still depth-bounded.
+
+**Still open, deliberately:** a `defined()`-style operator needs its operand
+left *un*expanded while the rest of the expression is expanded — C special-cases
+exactly this. `Directive::If(Vec<Token>)` does not yet say whether its tokens
+are pre- or post-expansion, and that question has to be answered before slice 4,
+because `#if defined(X)` is unimplementable without it.
+
+### VM-067 — Rust compiled grammars have no CI regeneration check (found 2026-09-21)
+
+`.github/workflows/ci.yml` runs `generate-compiled-grammars --lane ruby` and a
+Mosaic equivalent. **There is no Rust lane.** `grammar-tools/main.rb` supports
+only `--lane ruby`; omitting `--lane` regenerates every language, but CI never
+does that. So every `code/packages/rust/*-lexer/src/_grammar.rs` can drift from
+its `.tokens` source with nothing reporting it.
+
+Third variant of the same failure mode as VM-062 (an omitted `--test` target)
+and VM-065 (a test matching no CI filter): **a generated or gated artifact
+whose check looks present and is absent.** Worth noting the class explicitly,
+because it has now appeared in three unrelated mechanisms — target lists,
+name filters, and code generation.
+
+macrooct's own artifact was verified correct at slice 1: regenerated with the
+Rust `grammar-tools` binary directly and diffed byte-identical against the
+committed file.
+
+*A trap for whoever picks this up:* the full `generate-compiled-grammars` run
+exits 1 early on a Windows dev box (dies at the css/python step with
+"No such file or directory - mise") and never reaches most grammars, so a clean
+`git status` after that run proves nothing. Check the specific artifact with the
+Rust binary.
+
+Two options, and the cheaper one is probably right first:
+1. A per-crate test asserting every token name in the `.tokens` file appears in
+   the committed `_grammar.rs`. Cheap, local, no CI config, catches the realistic
+   "edited `.tokens`, forgot to regenerate" case.
+2. A real `--lane rust` plus a CI job. Stronger, but may turn CI red immediately
+   if other Rust grammars are already stale — which is worth discovering, and is
+   exactly why it belongs in its own PR rather than riding along with one.
+
 ## PREP01 slice 1 — the generic preprocessor engine, proven on MacroOct (2026-09-21)
 
 Owner-directed track. C is genuinely blocked without a preprocessor: `SIR27`
