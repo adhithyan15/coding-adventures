@@ -167,6 +167,34 @@ fn fixture_name(dir: &Path) -> String {
 /// short forms.
 fn closurec_args(dir: &Path) -> Vec<String> {
     let name = fixture_name(dir);
+
+    // `ladder_fixtures` uses lstat so a symlinked rung DIRECTORY cannot slip past
+    // the reviewed inventory. That closes the asymmetry one level up; this closes
+    // it at the file level, which is where the invariant below actually lives.
+    //
+    // The argv check pins the `--js` path STRING. It does not pin the bytes at
+    // that path. A committed symlink `input/a.js -> ../../ladder_t1_empty_simple/
+    // input/a.js` would re-point a hard rung at a trivial program while the
+    // manifest, the reviewed inventory and the argv assertion all stay put, and
+    // paired with a rewritten `expected.stdout` it goes green while measuring a
+    // different program than its name claims. `symlink_metadata` does not follow
+    // links, so a symlink is not a regular file and fails here.
+    for path in [
+        dir.join("flags.txt"),
+        dir.join("expected.stdout"),
+        dir.join("input").join("a.js"),
+    ] {
+        let meta =
+            std::fs::symlink_metadata(&path).unwrap_or_else(|e| panic!("{}: {e}", path.display()));
+        assert!(
+            meta.is_file(),
+            "{}: a rung's inputs must be regular files committed in this repository, \
+             not symlinks — otherwise the bytes a rung measures are not the bytes \
+             under review",
+            path.display()
+        );
+    }
+
     let raw = std::fs::read_to_string(dir.join("flags.txt")).expect("read flags.txt");
     let args: Vec<String> = raw
         .lines()
@@ -437,6 +465,23 @@ fn well_formedness_error(fixture: &str, d: &Divergence) -> Option<String> {
     // non-empty, looks plausible in review, and matches every stage's message
     // equally, which is the same vacuous guard one notch along. Requiring the
     // pin to reach `stage:` forces it past the discriminating word.
+    //
+    // Two things about this rule that are easy to get wrong later.
+    //
+    // It keys on `closurec_exit != 0`, not on empty stdout, and those are the
+    // same set only because the shape rule above already forced
+    // `empty <=> non-zero` and returned early. Relaxing the shape rule would
+    // silently narrow this one's coverage.
+    //
+    // And `"...stage:"` is the grammar of `CompilerError::TypedPipeline`, which
+    // is the only variant exiting 1. A failure exiting 2 (a `Minify` error, for
+    // instance, which is what a WHITESPACE_ONLY rung would fail with) carries no
+    // stage at all and so cannot be recorded here. That is fail-closed and fine
+    // today, since all 14 recorded failures are SIMPLE/ADVANCED exit-1. If a
+    // rung ever fails that way, do NOT relax this back to "non-empty" — that
+    // reopens the exact hole it was written to close. Key the requirement on the
+    // diagnostic family instead, and demand a pin equally discriminating for
+    // that family's message grammar.
     if d.closurec_exit != 0 {
         let pin = d.closurec_stderr_starts_with.as_deref();
         if !pin.is_some_and(|p| !p.trim().is_empty()) {
@@ -614,22 +659,67 @@ fn reviewed_divergence_count_is_pinned() {
     );
 }
 
-/// Rungs claiming upstream refused the input do not participate in staleness
-/// detection — `verdict` can never tell you their gap has closed, because there
-/// is no upstream behaviour to converge on. That is correct for the three
-/// `private_field` rungs, where Closure v20260915 rejects private class elements
-/// outright. It is also the single cheapest way to switch a rung off, so the
-/// size of that cohort is pinned alongside the ledger's own size: growing it
-/// should cost a deliberate edit here and be visible in review.
+/// The rungs recorded as refused by upstream, pinned **by name**.
+///
+/// Such a rung does not participate in staleness detection: `verdict` can never
+/// report that its gap has closed, because there is no upstream behaviour to
+/// converge on. That is correct for these three, where Closure v20260915
+/// rejects private class elements outright. It is also the cheapest way to
+/// switch a rung off entirely.
+///
+/// Pinning the *count* would not be enough, and the distinction is the whole
+/// point of this constant. A count is satisfied by any swap. Un-exempting one
+/// of these three is free: their recorded output is non-empty while
+/// `expected.stdout` is empty, so `agrees` is false either way and the entry
+/// still lands on `KnownDivergence`. Exempting some other rung in its place
+/// needs only that rung's `expected.stdout` blanked to match a blanked
+/// `upstream_stdout`. Four coordinated edits, no test moves, and that rung is
+/// exempt forever. Naming the set closes the swap: any change to *which* rungs
+/// are exempt fails here, and has to be argued for in review.
+const UPSTREAM_REFUSED: [&str; 3] = [
+    "ladder_t7_private_field_advanced",
+    "ladder_t7_private_field_simple",
+    "ladder_t7_private_field_ws",
+];
+
 #[test]
-fn reviewed_upstream_refusal_count_is_pinned() {
-    let refusals = load_ledger()
-        .values()
-        .filter(|d| d.upstream_exit != 0)
-        .count();
+fn reviewed_upstream_refusal_cohort_is_pinned() {
+    let refused: Vec<String> = load_ledger()
+        .iter()
+        .filter(|(_, d)| d.upstream_exit != 0)
+        .map(|(fixture, _)| fixture.clone())
+        .collect();
     assert_eq!(
-        refusals, 3,
-        "the set of rungs recorded as refused by upstream changed — these rungs are          exempt from staleness detection, so see the note on this test"
+        refused, UPSTREAM_REFUSED,
+        "the SET of rungs exempt from staleness detection changed - see the note on \
+         `UPSTREAM_REFUSED`"
+    );
+}
+
+/// The other half of the same lock: which rungs have an empty `expected.stdout`.
+///
+/// `well_formedness_error` never touches the filesystem, and `verdict` only
+/// checks that the ledger's `upstream_stdout` *equals* the fixture bytes, so
+/// blanking both sides at once is self-consistent and invisible to every other
+/// test. The reviewed fixture inventory does not help either: it counts
+/// fixtures, and `expected.stdout` only has to exist. So "exactly these three
+/// rungs have empty oracle output" is a load-bearing fact that nothing
+/// asserted, and it is the enabling condition for exempting an arbitrary rung.
+///
+/// That this is the same three rungs as `UPSTREAM_REFUSED` is not a
+/// coincidence: upstream emitted nothing *because* it refused.
+#[test]
+fn reviewed_empty_oracle_output_cohort_is_pinned() {
+    let empty: Vec<String> = ladder_fixtures()
+        .iter()
+        .filter(|dir| std::fs::metadata(dir.join("expected.stdout")).is_ok_and(|m| m.len() == 0))
+        .map(|dir| fixture_name(dir))
+        .collect();
+    assert_eq!(
+        empty, UPSTREAM_REFUSED,
+        "the set of rungs whose oracle output is empty changed. Blanking a fixture is how \
+         an arbitrary rung gets exempted from staleness detection, so it is a reviewed act \
+         - see the note on `UPSTREAM_REFUSED`"
     );
 }
 

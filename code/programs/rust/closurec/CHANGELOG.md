@@ -202,7 +202,32 @@ message for what is really a changed result. That arm now also requires the
 observed output to be empty, so a rung that produces output is judged on its
 output.
 
-The ladder's own test count is 13.
+*Round four — the exempt cohort.* `reviewed_upstream_refusal_count_is_pinned`
+asserted a count while its own doc comment claimed an identity ("the three
+`private_field` rungs"). A count is satisfied by any swap. Un-exempting one of
+the three costs nothing, because their recorded output is non-empty while
+`expected.stdout` is empty, so parity is false either way. Exempting some *other*
+rung in its place needs only that rung's `expected.stdout` blanked to match a
+blanked `upstream_stdout` — self-consistent, because the gate checks the two for
+equality and nothing checks either against a pin. Four coordinated edits, all 13
+tests green, and that rung is exempt from staleness detection forever.
+
+The enabling condition was that nothing asserted *which* fixtures have empty
+oracle output. The reviewed inventory counts fixtures; `expected.stdout` only has
+to exist. Both halves are now pinned by name against one `UPSTREAM_REFUSED`
+constant — the ledger entries claiming refusal, and the fixtures with empty
+bytes, which are the same three rungs because upstream emitted nothing *because*
+it refused. The full four-edit exploit was run and fails both pins independently.
+
+The symlink fix was also incomplete: it covered the rung directory but not its
+files. The argv assertion pins the `--js` path *string*, not the bytes at that
+path, so `input/a.js -> ../../ladder_t1_empty_simple/input/a.js` would re-point a
+hard rung at a trivial program while the manifest, the inventory and the argv
+check all stayed put. A rung's `flags.txt`, `expected.stdout` and `input/a.js`
+must now be regular files by `symlink_metadata`. Verified by committing that exact
+symlink and watching the gate reject it.
+
+The ladder's own test count is 14.
 
 Registered in `tests/oracle/manifest.json`; the reviewed fixture inventory
 tripwire moves from 707 to 782 and the ledger tripwire from 20 to 63.
