@@ -1,0 +1,1143 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 446,
+  "title": "Mirar Y Moverse",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:fe3e2e67286c8f7f",
+  "lessons": [
+    {
+      "id": "ES-C446-mirar",
+      "sequence": 11490,
+      "title": "mirar — pointing the eyes on purpose",
+      "headword": "mirar",
+      "romanization": "mirar",
+      "gloss": "to look at — the verb behind the mira you already use, and it began as wonder",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:b109739854990d11",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say mira, the little word that opens a sentence. Say ver and el ojo. Mira is an order from a verb you have never been given. Name it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: mirar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mirar — to look, to look at, to watch."
+            },
+            {
+              "kind": "speech",
+              "text": "Mírame — look at me. Estaba mirando por la ventana — I was looking out of the window. Mirar la tele is to watch television, though ver la tele is commoner in Spain."
+            },
+            {
+              "kind": "speech",
+              "text": "mira and mire — the forms you already use to mean look…, listen… — are this verb told to somebody, nothing more. You have been giving an order for chapters without knowing which verb it came from."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: ver and mirar are not interchangeable",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English has this split too and hides it, because see and look at feel like one idea. They are not."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "verb",
+                "what it describes"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "verb: ver. what it describes: the eyes receive — it happens to you.",
+                "verb: mirar. what it describes: the eyes are aimed — you do it."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Veo el mar desde aquí — I can see the sea from here, whether or not I meant to. Miro el mar — I am looking at it, deliberately."
+            },
+            {
+              "kind": "speech",
+              "text": "So ver belongs with oír (to hear) and mirar with escuchar (to listen). The test is whether you chose: if you could have not done it, the verb is mirar."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin mīrārī meant to wonder at, to be amazed — not to look at all. The looking came from the wondering: you stare at what astonishes you, and after enough centuries the staring is all that is left."
+            },
+            {
+              "kind": "speech",
+              "text": "The wonder survives in the relatives:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "the wonder in it"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: el milagro. the wonder in it: a miracle — a thing wondered at.",
+                "word: admirar. the wonder in it: to admire — to wonder at.",
+                "word: mirar. the wonder in it: to look."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "English took the same root for miracle, admire, marvel and mirage — a thing that astonishes you and is not there."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mirar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mirar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I can see the sea from here, and I am looking at it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I can see the sea from here, and I am looking at it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what mīrārī meant before it meant looking",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *mīrārī* meant before it meant looking]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To look at? (Mirar.) Which verb is it, when you say mira? (This one, as an order.) What did the Latin mean? (To wonder at.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C446-mover",
+      "sequence": 11500,
+      "title": "mover — and the phone that is named after it",
+      "headword": "mover",
+      "romanization": "mover",
+      "gloss": "to move something — the verb your phone is named after",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:754308a5fd4255cc",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el móvil and trasladar. Say mirar. Your phone is called móvil for a reason. Name the verb inside it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: mover",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mover — to move something. moverse — to move yourself."
+            },
+            {
+              "kind": "speech",
+              "text": "¿Me ayudas a mover la mesa? — will you help me move the table? No te muevas — do not move. El niño no para de moverse — the child will not sit still."
+            },
+            {
+              "kind": "speech",
+              "text": "The stem breaks under stress, like doler and dormir: muevo, mueves, mueve, but movemos."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin movēre, to move. El móvil is mōbilis — movable — from the same verb, so a mobile phone is literally the movable one."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "the movement in it"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: mover. the movement in it: to move it.",
+                "word: el móvil. the movement in it: the movable thing.",
+                "word: el automóvil. the movement in it: the self-moving thing."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "That last one is the whole of automobile explained: auto- from Greek autós, self, on a Latin stem. A car is a thing that moves without being pulled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Mover and trasladar are not the same act, and a notice picks carefully."
+            },
+            {
+              "kind": "speech",
+              "text": "Mover is physical and local: shift the table, shift your arm. Trasladar is institutional and from-somewhere-to-somewhere: the office was moved, the patient was transferred. You mueves a chair across a room; a company traslada its headquarters."
+            },
+            {
+              "kind": "speech",
+              "text": "Use mover for a thing you could push with your hands, and trasladar when an address changes. Getting it backwards is not a grammar mistake — it is a register mistake, and it is the kind a reader notices."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mover, then muevo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mover*, then *muevo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "will you help me move the table",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: will you help me move the table]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why a phone is called el móvil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why a phone is called *el móvil*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To move something? (Mover.) The yo form? (Muevo.) What does móvil mean literally? (Movable.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C446-acompanar",
+      "sequence": 11510,
+      "title": "acompañar — going as the one who shares bread",
+      "headword": "acompañar",
+      "romanization": "acompañar",
+      "gloss": "to go with somebody — built on the one you share bread with",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e0b9f5fbdb1abfe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el compañero and recall what it is made of. Say mover. Turn the companion into something you do."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: acompañar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "acompañar — to go with somebody, to accompany."
+            },
+            {
+              "kind": "speech",
+              "text": "Te acompaño — I will come with you, and also I am here with you at a funeral. ¿Me acompañas al médico? — will you come with me to the doctor? Acompañado de — accompanied by, on a form or a menu."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the ordinary way to offer to come along, and it is warmer than the English accompany, which sounds formal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a- plus compañ- plus -ar, and the middle is the word you already took apart."
+            },
+            {
+              "kind": "speech",
+              "text": "el compañero is com- together plus pānis, bread — the one you share bread with. So acompañar is to go along as that person, and a Spanish speaker offering te acompaño is, at root, offering to share a meal's worth of company."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "the bread in it"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: el compañero. the bread in it: the one you share it with.",
+                "word: acompañar. the bread in it: to be that person for somebody.",
+                "word: el pan. the bread in it: the bread itself."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "That is the third verb in these chapters built the same way — a- plus a word you own plus -ar, meaning to make it that: acercar from cerca, acompañar from compañero."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The warmth is not decoration; it decides where the word is used."
+            },
+            {
+              "kind": "speech",
+              "text": "At a Spanish funeral the standard thing to say is te acompaño en el sentimiento — I accompany you in the feeling. English has no comfortable equivalent and reaches for I'm sorry for your loss, which places the speaker outside the grief. The Spanish places them alongside it."
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth knowing before you need it, because it is a fixed phrase and improvising in its place is conspicuous."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "acompañar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *acompañar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "will you come with me to the doctor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: will you come with me to the doctor]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the bread is doing inside the word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the bread is doing inside the word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To go with somebody? (Acompañar.) Which word is inside it? (Compañero.) And what is inside that? (Pānis, bread.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C446-directo",
+      "sequence": 11520,
+      "title": "directo — straight through, and live",
+      "headword": "directo",
+      "romanization": "directo",
+      "gloss": "direct, straight through — and on a broadcast, live",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d7fa32a73e0282c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say recto and el tren. Say acompañar. Recto is the shape of a line. Name the word for a train that does not stop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: directo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "directo — direct, straight through."
+            },
+            {
+              "kind": "speech",
+              "text": "Un tren directo — a through train, no changes. Un vuelo directo — a direct flight. En directo — live, on radio or television, which is the use you will meet most."
+            },
+            {
+              "kind": "speech",
+              "text": "Directo also describes a person: es muy directo means blunt, and in Spain it is usually a compliment."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "di- apart, thoroughly, plus -recto, which you already have."
+            },
+            {
+              "kind": "speech",
+              "text": "Recto is Latin rectus, straightened, ruled — the participle of regere, to rule or guide. To dirigere was to set something straight, to aim it, and directo is the result of that aiming."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "the straightening in it"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: recto. the straightening in it: straight.",
+                "word: directo. the straightening in it: straightened towards.",
+                "word: dirigir. the straightening in it: to direct, to conduct."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "English keeps regere everywhere once you look: correct (straightened with), erect (straightened up), regular (by the rule), and rule itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "En directo is the one to fix, because it is not obvious from the parts."
+            },
+            {
+              "kind": "speech",
+              "text": "A broadcast en directo is going straight from the event to you with nothing in between — no recording, no editing. English calls that live, naming the event; Spanish names the path. Once you see that, en directo stops needing translation: the line is straight."
+            },
+            {
+              "kind": "speech",
+              "text": "The opposite is grabado, recorded. A Spanish television corner reading EN DIRECTO is telling you that what you are watching is happening now."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "directo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *directo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a direct train, no changes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a direct train, no changes]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what en directo means on a screen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *en directo* means on a screen]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Direct? (Directo.) Live, on television? (En directo.) Which word you already had is inside it? (Recto.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C446-partido",
+      "sequence": 11530,
+      "title": "el partido — a side split off",
+      "headword": "el partido",
+      "romanization": "el partido",
+      "gloss": "the match, and the political party — both of them a side split off",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b1ad54f98e228bd4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la parte, jugar and el deporte. Two teams are a whole divided in two. Name what they are about to play."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el partido",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el partido — the match, the game."
+            },
+            {
+              "kind": "speech",
+              "text": "El partido del domingo — Sunday's match. ¿Viste el partido? — did you see the match? Jugar un partido — to play a game."
+            },
+            {
+              "kind": "speech",
+              "text": "It is also the political party: el partido socialista. And sacar partido de algo is to make the most of something."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "partido is the past participle of partir, to divide — and partir is la parte, which you have."
+            },
+            {
+              "kind": "speech",
+              "text": "So partido means divided, and everything it names is something a whole was split into."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what it names",
+                "what was divided"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "what it names: el partido (match). what was divided: the players, into two sides.",
+                "what it names: el partido (party). what was divided: the electorate, into factions.",
+                "what it names: sacar partido. what was divided: the advantage, cut out of a situation."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "One word, no coincidence. A football match and a political party are both a side that a whole was split into, and English needs two unrelated words — match, from an old sense of equal, and party, which is the same Latin pars arriving through French."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Partir has a second life worth having, because it looks like a contradiction."
+            },
+            {
+              "kind": "speech",
+              "text": "Partir also means to leave, to set off — el tren parte a las ocho. How does divide become depart?"
+            },
+            {
+              "kind": "speech",
+              "text": "Because leaving is a division: you separate yourself from the place and the people. English does exactly the same thing and hides it in the Latin — depart is de- plus the same partire, and a parting is both a splitting and a goodbye."
+            },
+            {
+              "kind": "speech",
+              "text": "So a train that parte is cutting itself away from the platform, and a train that is directo does not divide the journey at all. The two words in this chapter that describe a train describe opposite things about it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el partido",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el partido*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "did you see Sunday's match",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: did you see Sunday's match]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why a political party is also un partido",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why a political party is also *un partido*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The match? (El partido.) What does the word mean literally? (Divided.) What else does partir mean? (To leave, to set off.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R446-repaso-mover",
+      "sequence": 11540,
+      "title": "(mirar, mover, acompañar, directo, partido) — from cold",
+      "headword": "(mirar, mover, acompañar, directo, partido)",
+      "romanization": "(mirar, mover, acompañar, directo, partido)",
+      "gloss": "cold retrieval of the five, and of the words you already half-owned",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:9d894fe4b3705731",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say all five: to look at, to move, to go with, direct, the match."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: you owned four of these already",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Not one of these five was learned from nothing."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "new word",
+                "what you already had"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "new word: mirar. what you already had: mira, the word that opens a sentence.",
+                "new word: acompañar. what you already had: el compañero, and the bread inside it.",
+                "new word: directo. what you already had: recto.",
+                "new word: el partido. what you already had: la parte."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Mirar is the sharpest case. You have been saying mira for chapters as a way of starting a sentence, without being told it is an order from a verb. Finding the verb behind a fixed phrase you already use is one of the cheapest kinds of vocabulary there is, and it has happened three times now — interesante gave interesar, el concierto gave concertar, and mira gives mirar."
+            },
+            {
+              "kind": "speech",
+              "text": "When a new word looks like something you say already, check before you learn it twice."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "will you help me move the table",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: will you help me move the table]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "did you see Sunday's match",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: did you see Sunday's match]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "will you come with me",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: will you come with me]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now arrange to go somewhere with somebody and talk about what you watched. That is most of what a short message between friends is for."
+            },
+            {
+              "kind": "speech",
+              "text": "You also have two distinctions a reader notices. Ver is the eyes receiving and mirar is the eyes aimed. Mover is a thing you could push with your hands and trasladar is an address changing. Both are register rather than grammar, and getting them backwards is the kind of mistake that is understood and still sounds wrong."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Live, on television? (En directo.) To look at, on purpose? (Mirar.) A match, and a political party? (Un partido, for both.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C446-sintesis-mover",
+      "sequence": 11550,
+      "title": "(quedar para el partido) — read it, then do it yourself",
+      "headword": "(quedar para el partido)",
+      "romanization": "(quedar para el partido)",
+      "gloss": "the payoff — read two messages arranging an evening, then arrange one yourself",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:559aae3dfbde99e6",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el partido and directo. Both are in the message below, and one of them is not about a train."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read both, then answer."
+            },
+            {
+              "kind": "speech",
+              "text": "1 — de Nacho."
+            },
+            {
+              "kind": "speech",
+              "text": "¿Vemos el partido en mi casa? Lo dan en directo a las nueve. Si quieres te acompaño desde la estación, que el bus de noche no pasa."
+            },
+            {
+              "kind": "speech",
+              "text": "2 — la respuesta."
+            },
+            {
+              "kind": "speech",
+              "text": "Vale. Llego sobre las ocho y media. Miro los horarios y te digo, pero creo que hay un tren directo."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "where they are watching, and at what time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: where they are watching, and at what time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what Nacho offers to do, and why",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what Nacho offers to do, and why]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the second person is going to check",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the second person is going to check]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Directo appears twice and means two different things, and nothing but the noun tells you which."
+            },
+            {
+              "kind": "speech",
+              "text": "En directo, about the match: nothing between the event and the screen — live. Un tren directo: nothing between the two stations — no changes. Both are the same picture, a straight line with nothing interrupting it, applied once to time and once to distance. Spanish did not need two words because it named the line rather than the thing."
+            },
+            {
+              "kind": "speech",
+              "text": "Then look at vemos and miro. ¿Vemos el partido? — the match arrives at their eyes, and ver is right. Miro los horarios — she is aiming her eyes at a timetable on purpose, and mirar is right. A Spanish speaker would not swap them, and the pair in one short exchange is the clearest test of the distinction you will get."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now your turn, out loud and then in writing. Five sentences arranging an evening: say you will watch the match, say it is live, offer to go with somebody, say there is a direct train, and say you will look at the times."
+            },
+            {
+              "kind": "speech",
+              "text": "Then check yourself: did you use ver for the match and mirar for the timetable?"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

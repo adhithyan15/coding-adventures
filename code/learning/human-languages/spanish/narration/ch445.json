@@ -1,0 +1,1093 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 445,
+  "title": "El Puesto",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:fa08ae7ad17571b1",
+  "lessons": [
+    {
+      "id": "ES-C445-jubilarse",
+      "sequence": 11420,
+      "title": "jubilarse — the shout at the end of the work",
+      "headword": "jubilarse",
+      "romanization": "jubilarse",
+      "gloss": "to retire — the verb behind a word you were given, and it names a shout of joy",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b2a6c980fed1abaa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say jubilado and el trabajo. You have the word for the person who has stopped. Name the act of stopping."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jubilarse",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jubilarse — to retire."
+            },
+            {
+              "kind": "speech",
+              "text": "Se jubila en marzo — he retires in March. Me jubilé hace dos años — I retired two years ago. la jubilación is both the act and the pension."
+            },
+            {
+              "kind": "speech",
+              "text": "It is reflexive: you retire yourself. Jubilar without the pronoun is what an employer does to somebody, and it can sound abrupt."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin iubilāre — to shout, to whoop for joy. It was a countryman's word for the noise you make across a field, not a word about work at all."
+            },
+            {
+              "kind": "speech",
+              "text": "The connection runs through the jubilee: in the older calendar a jubilee year cancelled debts and released people from service, and jubilar came to mean to release from service. The shout came first and the pension came after."
+            },
+            {
+              "kind": "speech",
+              "text": "So el jubilado is, underneath, the one who has been cheered off, and every Spanish retirement notice carries a faint sound of celebration nobody hears any more."
+            },
+            {
+              "kind": "speech",
+              "text": "English keeps the shout in jubilant and jubilation, and has no verb for the Spanish sense at all."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jubilarse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jubilarse*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "she retires in March after forty years of work",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: she retires in March after forty years of work]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what iubilāre meant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *iubilāre* meant]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To retire? (Jubilarse.) Is it reflexive? (Yes.) What did the Latin verb mean? (To shout for joy.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C445-responsabilidad",
+      "sequence": 11430,
+      "title": "la responsabilidad — answerable",
+      "headword": "la responsabilidad",
+      "romanization": "la responsabilidad",
+      "gloss": "responsibility — being answerable, from the same promise that makes a spouse",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:78b44822ec274cd5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el contrato and jubilarse. A contract lists what a job pays and what it asks. Name what it asks."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la responsabilidad",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la responsabilidad — responsibility."
+            },
+            {
+              "kind": "speech",
+              "text": "Es una responsabilidad grande — it is a big responsibility. Bajo mi responsabilidad — on my own responsibility. The adjective is responsable, which is both responsible and, in an advert, the person in charge: el responsable de compras."
+            },
+            {
+              "kind": "speech",
+              "text": "Six syllables, stress on the last: res-pon-sa-bi-li-DAD."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "re- back, plus spondēre, to promise, plus the ending -bilidad that turns an adjective into a quality."
+            },
+            {
+              "kind": "speech",
+              "text": "To be responsable is to be able to promise back — to answer for what you did. That is the same spondēre you already have in a place you would never look for it:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "the promise in it"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: el esposo. the promise in it: the one who was promised.",
+                "word: responder. the promise in it: to promise back, to answer.",
+                "word: la responsabilidad. the promise in it: being answerable."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "A spouse and a responsibility are the same verb. Latin spondēre was the formal word for pledging — a betrothal was a sponsalia — and English keeps it in sponsor, respond and despondent, which is what you are when the promise has gone out of you."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The long ending is worth a moment, because it is a machine."
+            },
+            {
+              "kind": "speech",
+              "text": "-idad (and -bilidad after -ble) turns an adjective into the abstract noun of its quality, and it is completely regular:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "adjective",
+                "quality"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "adjective: responsable. quality: responsabilidad.",
+                "adjective: posible. quality: posibilidad.",
+                "adjective: fácil. quality: facilidad."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "English does the same with -ity, and the two endings are the same Latin -itātem, which is why they line up so neatly. If you know a Spanish adjective in -ble, you can usually build its noun without being taught it."
+            },
+            {
+              "kind": "speech",
+              "text": "Note the stress: every one of these nouns ends stressed, on the -dad."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la responsabilidad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la responsabilidad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it is a big responsibility and he retires in March",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it is a big responsibility and he retires in March]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why esposo and responsabilidad share a root",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why *esposo* and *responsabilidad* share a root]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Responsibility? (La responsabilidad.) What does spondēre mean? (To promise.) Which syllable is stressed? (The last.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C445-exigente",
+      "sequence": 11440,
+      "title": "exigente — driving it out of you",
+      "headword": "exigente",
+      "romanization": "exigente",
+      "gloss": "demanding — a word that drives things out of you, from the verb behind agenda and actor",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bdb40e4e61e899a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say difícil and fácil. Say la responsabilidad. A job can be hard without anybody being hard on you. Name the word for a boss who is."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: exigente",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "exigente — demanding, exacting."
+            },
+            {
+              "kind": "speech",
+              "text": "Un jefe exigente — a demanding boss. Es muy exigente consigo mismo — he is very hard on himself. The verb is exigir, to demand: exigen dos años de experiencia — they require two years of experience, which is the line you meet in a job advert."
+            },
+            {
+              "kind": "speech",
+              "text": "It does not change for gender: un jefe exigente, una jefa exigente."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ex- out, plus -igente from Latin agere, to drive."
+            },
+            {
+              "kind": "speech",
+              "text": "Exigere was to drive something out — originally to drive out a payment, to collect what was owed. An exigente boss drives the work out of you, and the picture is the same one the Roman tax collector used."
+            },
+            {
+              "kind": "speech",
+              "text": "Agere is one of the great Latin roots, and the words it gave English all keep some sense of driving something forward:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "what is driven"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: agenda. what is driven: the things to be driven through.",
+                "word: actor. what is driven: the one who drives the action.",
+                "word: agile. what is driven: easily driven."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Difícil and exigente are not the same complaint, and a job advert uses them differently."
+            },
+            {
+              "kind": "speech",
+              "text": "Difícil is a property of the task: the work is hard. Exigente is a property of whoever is asking: the standard is high. A puzzle is difícil; a person is exigente. You can have an easy job with a demanding manager, and Spanish requires you to pick which you mean."
+            },
+            {
+              "kind": "speech",
+              "text": "The ending -ente is doing that work. It comes from a Latin present participle and marks the one doing the verb — exigente is the one demanding, the way estudiante is the one studying and cliente is the one leaning on you for service."
+            },
+            {
+              "kind": "speech",
+              "text": "So when you meet an unfamiliar word in -ante or -ente, look for a verb inside it and read the whole as the one who does that."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "exigente",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *exigente*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an easy job with a demanding boss",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an easy job with a demanding boss]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the two pieces of exigir mean",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the two pieces of *exigir* mean]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Demanding? (Exigente.) The verb? (Exigir.) What does agere mean? (To drive.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C445-ensenar",
+      "sequence": 11450,
+      "title": "enseñar — to put a sign into somebody",
+      "headword": "enseñar",
+      "romanization": "enseñar",
+      "gloss": "to teach, and to show — to put a sign into somebody, which is one act in Spanish",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9df102493fb477b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say aprender and la clase. Say exigente. You have the half of the class that receives. Name the half that gives."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: enseñar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "enseñar — to teach, and equally to show."
+            },
+            {
+              "kind": "speech",
+              "text": "Enseña matemáticas — she teaches maths. ¿Me enseñas la foto? — will you show me the photo? Me enseñó a conducir — he taught me to drive, with a before the second verb."
+            },
+            {
+              "kind": "speech",
+              "text": "One word for both jobs, where English keeps teach and show apart."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "en- in, plus señ- from Latin signum, a sign or mark."
+            },
+            {
+              "kind": "speech",
+              "text": "To enseñar is to mark something into somebody — to put a sign in them. The Latin was insignāre, and once you see it, teach and show stop being two meanings. Both are putting a mark where somebody can see it: on a wall, or in a head."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "the sign in it"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: la señal. the sign in it: the sign itself.",
+                "word: enseñar. the sign in it: to put the sign in.",
+                "word: diseñar. the sign in it: to mark it out — to design."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "English took the same signum through French into ensign, a banner, and into design, which is de- plus the mark."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "That one verb covering two English ones is not vagueness; it is a different cut of the same territory, and it goes the other way too."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish splits what English joins all the time — ser and estar for one to be, saber and conocer for one to know. Here it joins what English splits. Neither language is being imprecise; they have drawn the lines in different places, and the only reliable way through is to learn where the line is rather than to translate across it."
+            },
+            {
+              "kind": "speech",
+              "text": "A practical consequence: if you want show specifically and fear being misheard as teach, Spanish has mostrar — but in speech enseñar is far commoner for both, and the context does the work."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enseñar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enseñar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "she teaches maths, and I am learning",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: she teaches maths, and I am learning]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "will you show me the photo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: will you show me the photo]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To teach? (Enseñar.) And to show? (Enseñar — the same word.) What does signum mean? (A sign, a mark.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C445-repetir",
+      "sequence": 11460,
+      "title": "repetir — seeking it again",
+      "headword": "repetir",
+      "romanization": "repetir",
+      "gloss": "to repeat — to seek again, from the same petere that sits under el pedido",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:273239127e8e25af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say otra vez. Say enseñar. You did not catch what the teacher said. Name what you ask for."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: repetir",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "repetir — to repeat."
+            },
+            {
+              "kind": "speech",
+              "text": "¿Puede repetir, por favor? — could you repeat that, please. This is the single most useful sentence in a language you are still learning, and it is worth saying aloud until it arrives without thinking."
+            },
+            {
+              "kind": "speech",
+              "text": "It breaks its stem: repito, repites, repite, but repetimos — the e becomes i change, the one pedir makes too."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "re- again, plus petere, to seek or to ask for."
+            },
+            {
+              "kind": "speech",
+              "text": "And you have met petere before, under a word from a completely different part of life. El pedido — the order you place with a shop — is built on pedir, and pedir is petere."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "the seeking in it"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "word: pedir, el pedido. the seeking in it: to ask for a thing.",
+                "word: repetir. the seeking in it: to seek it again."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "That is why the two verbs break their stems the same way: pido, pides, pide; repito, repites, repite. They are not merely similar. They are one Latin verb, with and without a prefix, and the shared conjugation is the evidence rather than a coincidence you have to remember."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Notice what this chapter has quietly done. Responsabilidad shares a root with el esposo, a word from family; repetir shares one with el pedido, a word from shopping. Neither link is visible in modern Spanish, and neither is decoration — both times the shared root predicts something usable: the promise inside responsable, and the conjugation of repetir."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the return on etymology. Not that the stories are charming, but that a root you own tells you how an unfamiliar word will behave before anybody explains it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "¿Puede repetir, por favor?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *¿Puede repetir, por favor?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the teacher repeated it and then I understood",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the teacher repeated it and then I understood]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pido and repito, and why they change the same way",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pido* and *repito*, and why they change the same way]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To repeat? (Repetir.) The yo form? (Repito.) Which word you already had shares its root? (El pedido, through pedir.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R445-repaso-puesto",
+      "sequence": 11470,
+      "title": "(jubilarse, responsabilidad, exigente, enseñar, repetir) — from cold",
+      "headword": "(jubilarse, responsabilidad, exigente, enseñar, repetir)",
+      "romanization": "(jubilarse, responsabilidad, exigente, enseñar, repetir)",
+      "gloss": "cold retrieval of the five, and of two roots that turned up far from where you got them",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8627f80e019d5013",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say all five: to retire, responsibility, demanding, to teach, to repeat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: a root you own predicts how a new word behaves",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two of these words turned out to be built on roots you had already, from somewhere else entirely."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "new word",
+                "the word you already had",
+                "what the shared root buys"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "new word: responsabilidad. the word you already had: el esposo. what the shared root buys: the promise inside responsable.",
+                "new word: repetir. the word you already had: el pedido. what the shared root buys: the e becomes i stem change."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Repetir is the sharper of the two. Pedir changes pido, pides, pide; repetir changes repito, repites, repite. Nobody has to tell you that, because they are one Latin verb with a prefix on one of them."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the return on etymology here — not that the stories are pleasant, but that a root you own tells you how an unfamiliar word will behave before anybody explains it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "could you repeat that, please",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: could you repeat that, please]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "she teaches maths and she is very demanding",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: she teaches maths and she is very demanding]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "he retires in March",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: he retires in March]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now read a job advert and say what the work asks of you — what it demands, what you are answerable for, what you would be teaching or shown, and when the person you are replacing is leaving."
+            },
+            {
+              "kind": "speech",
+              "text": "You also have two endings that keep paying. -idad turns an adjective into its quality and is regular, so posible gives posibilidad. And -ente or -ante marks the one doing the verb, so an unfamiliar word in that shape has a verb inside it worth looking for."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Responsibility? (La responsabilidad.) To teach, and to show? (Enseñar, for both.) To retire? (Jubilarse.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C445-sintesis-puesto",
+      "sequence": 11480,
+      "title": "(una oferta y una despedida) — read it, then do it yourself",
+      "headword": "(una oferta y una despedida)",
+      "romanization": "(una oferta y una despedida)",
+      "gloss": "the payoff — read a job advert and a leaving note, then write your own answer",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0508e7ff53999b94",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la responsabilidad and jubilarse. The two texts below are about the same desk: one person is leaving it and somebody else is wanted for it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read both, then answer."
+            },
+            {
+              "kind": "speech",
+              "text": "1 — oferta de empleo."
+            },
+            {
+              "kind": "speech",
+              "text": "Se busca persona responsable para el turno de tarde. Se exige experiencia previa y se valorará saber enseñar a personal nuevo. Contrato fijo. Interesados, enviar currículum antes del día 30."
+            },
+            {
+              "kind": "speech",
+              "text": "2 — una nota en el tablón."
+            },
+            {
+              "kind": "speech",
+              "text": "Después de treinta y un años, me jubilo el viernes. Ha sido un placer. Dejo el turno en buenas manos. Os espero a todos a las seis en el bar de enfrente."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the job requires, and what it merely prefers",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the job requires, and what it merely prefers]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how long the second person has worked there",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how long the second person has worked there]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the two texts has a person in it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the two texts has a person in it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The advert separates two things English often blurs."
+            },
+            {
+              "kind": "speech",
+              "text": "Se exige experiencia — it is required, and without it you are not eligible. Se valorará saber enseñar — it will be valued, a point in your favour and nothing more. A reader who treats those as the same sentence either rules themselves out for no reason or applies for something they cannot do."
+            },
+            {
+              "kind": "speech",
+              "text": "That distinction is the single most useful thing on the page, and it is carried entirely by the verb."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice too that the advert has no people: se busca, se exige, se valorará, and even interesados is a plural adjective standing in for a noun. The leaving note is the opposite — me jubilo, dejo, os espero, first person throughout. One desk, two registers, and you can now read both."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now your turn, out loud and then in writing. Five sentences applying for that job: say you are responsible, say you have the experience they require, say you have taught new staff before, ask them to repeat the closing date, and say you are sorry the other person is retiring."
+            },
+            {
+              "kind": "speech",
+              "text": "Then check yourself: did you keep se exige and se valorará apart?"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

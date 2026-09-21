@@ -10,7 +10,7 @@ gloss: retired — a participle used as a noun, the same move that made el pedid
 concept_tag: ES-REF-JUBILADO
 prerequisites: [ES-C435-previo, ES-C431-pedido]
 sounds: []
-roots: []
+roots: [iubilare-latin]
 duration:
   max_seconds: 250
 requires:

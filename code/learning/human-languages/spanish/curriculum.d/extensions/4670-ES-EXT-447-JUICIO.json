@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-447-JUICIO",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can follow a clinic from the door to the results: which door when it is serious, what the doctor ordered, what somebody mentioned about it, and how to apologise for dropping the form.",
+  "prerequisites": [
+    "ES-EXT-446-MOVER"
+  ]
+}

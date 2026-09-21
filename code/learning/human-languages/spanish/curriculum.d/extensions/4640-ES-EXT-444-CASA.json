@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-444-CASA",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can report what is wrong with a home and say what I did about it: the heating, the material, the garden, the thing I covered, the trolley I took to the shop.",
+  "prerequisites": [
+    "ES-EXT-443-ANIMO"
+  ]
+}

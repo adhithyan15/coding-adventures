@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:db24a52d3a186020",
+  "lessonIds": [
+    "ES-C447-analisis",
+    "ES-C447-comentar",
+    "ES-C447-urgencia",
+    "ES-C447-torpe",
+    "ES-R447-repaso-juicio",
+    "ES-C447-sintesis-juicio"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch447.txt",
+  "json": "spanish/narration/ch447.json",
+  "textHash": "fnv1a64:89233d03c39ff6a4",
+  "jsonHash": "fnv1a64:b2e268f86bd5bd51",
+  "findings": []
+}

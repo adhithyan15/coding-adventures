@@ -1,0 +1,22 @@
+{
+  "chapter": 446,
+  "title": "Mirar Y Moverse",
+  "label": "ch:es-mover",
+  "canDo": "I can arrange to go somewhere with somebody and talk about what we watched, keeping ver apart from mirar and mover apart from trasladar.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "ES-C446-sintesis-mover",
+    "kind": "task",
+    "summary": "Read the message or notice this chapter's words exist for, then say the same thing back.",
+    "assesses": [
+      "ES-LEX-C446-MOVER-01",
+      "ES-LEX-C446-MOVER-02",
+      "ES-LEX-C446-MOVER-03",
+      "ES-LEX-C446-MOVER-04",
+      "ES-LEX-C446-MOVER-05"
+    ],
+    "note": "Wordlist derived by the solo-blocker rule (ch440). NOT ONE OF THE FIVE WAS LEARNED FROM NOTHING: mirar from mira, acompanar from compañero, directo from recto, partido from la parte. MIRA IS THE SHARPEST -- ES-C272-mira teaches it only as a discourse marker (ES-LEX-MIRA-DISCOURSE), so the learner has been giving an imperative for chapters without being told which verb it came from. THAT IS THE THIRD FREE CHAIN OF THIS KIND after interesante -> interesar (443) and el concierto -> concertar (442); check every candidate for a verb hiding behind an adjective, noun or fixed phrase the learner already says. Two distinctions the chapter fixes are REGISTER RATHER THAN GRAMMAR, the kind that is understood and still sounds wrong: ver is the eyes RECEIVING and mirar is the eyes AIMED (veo el mar whether or not I meant to; miro el mar on purpose), and mover is a thing you could push with your hands while trasladar is an address changing. The payoff puts the first pair in one short exchange -- ¿Vemos el partido? against Miro los horarios. EN DIRECTO is taught as the same picture as a direct train: a straight line with nothing interrupting it, applied once to TIME and once to DISTANCE, so Spanish named the line where English named the event. el partido is one word for match, political party and sacar partido -- all a side a whole was split into -- and partir also means to depart, because leaving is a division, which English hides in 'depart' and 'a parting'. mirar itself began as MIRARI, to wonder at; the looking came from the staring, and el milagro and admirar keep the wonder."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "language": "spanish",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:c62af00d27b40d8e",
+  "lessonIds": [
+    "ES-C444-calefaccion",
+    "ES-C444-madera",
+    "ES-C444-plantar",
+    "ES-C444-cubrir",
+    "ES-C444-carrito",
+    "ES-R444-repaso-casa",
+    "ES-C444-sintesis-casa"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch444.txt",
+  "json": "spanish/narration/ch444.json",
+  "textHash": "fnv1a64:288cb92553493376",
+  "jsonHash": "fnv1a64:148ac898e5393ec1",
+  "findings": []
+}

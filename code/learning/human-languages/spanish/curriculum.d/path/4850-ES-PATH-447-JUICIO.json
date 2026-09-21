@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-447-JUICIO",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "before": [],
+  "inline": [
+    "ES-EXT-447-JUICIO"
+  ],
+  "after": []
+}

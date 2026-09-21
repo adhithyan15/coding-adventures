@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-446-MOVER",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can arrange to go somewhere with somebody and talk about what we watched, keeping ver apart from mirar and mover apart from trasladar.",
+  "prerequisites": [
+    "ES-EXT-445-PUESTO"
+  ]
+}
