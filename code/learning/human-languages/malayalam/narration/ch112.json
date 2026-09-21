@@ -1,0 +1,543 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 112,
+  "title": "Where to Go",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:4f20c9a2898ce883",
+  "lessons": [
+    {
+      "id": "ML-C112-bank",
+      "sequence": 4140,
+      "title": "ബാങ്ക് (bāṅkŭ) — a bank",
+      "headword": "ബാങ്ക്",
+      "romanization": "bāṅkŭ",
+      "gloss": "a bank — the building where the money you can already name is kept",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:210e0162e96d362c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say money. Say a telephone. One of those two you learned as an English word wearing Malayalam letters. Hold on to that feeling — this chapter hands you two more of them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ബാങ്ക് (bāṅkŭ) — a bank."
+            },
+            {
+              "kind": "speech",
+              "text": "You have been able to say പണം for a while. Now you can say where it lives."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read it aloud and you can hear that nothing was done to it. English bank came into Malayalam whole, and the letters spell out the English sounds one for one."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the second time you have seen this. The word for a telephone arrived the same way, and for the same reason: the thing itself arrived from outside, and the name came along in the box with it. A language that meets a new object often takes the object's name rather than building a fresh one."
+            },
+            {
+              "kind": "speech",
+              "text": "Which means you can read ബാങ്ക് (bāṅkŭ) before anybody teaches it to you — and that is a real skill, not a trick. There are a great many words like these two."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāṅkŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāṅkŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the money, then the bank",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the money, then the bank]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the other English word you already read this way",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the other English word you already read this way]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A bank? (ബാങ്ക് (bāṅkŭ).) What is kept there? (പണം.) Did Malayalam build this word or borrow it? (Borrowed — you can hear the English in it.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C112-poleesu",
+      "sequence": 4150,
+      "title": "പോലീസ് (pōlīsŭ) — the police",
+      "headword": "പോലീസ്",
+      "romanization": "pōlīsŭ",
+      "gloss": "the police — the second borrowed word in this chapter, and the one you would call on for help",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e88376130a89aad2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say a bank. Say to help. You have had the verb for helping since long before this chapter; you have had the bank for about a minute."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പോലീസ് (pōlīsŭ) — the police."
+            },
+            {
+              "kind": "speech",
+              "text": "One word covers the force and its officers alike, so you do not need a second word to point at a person."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is the same story as the bank, one word later. English police came in whole, and the letters trace the English sounds."
+            },
+            {
+              "kind": "speech",
+              "text": "Two borrowings in two lessons is not a coincidence. Both name something that came to Kerala as an institution with paperwork and a building, and a thing that arrives already named tends to keep the name it came with."
+            },
+            {
+              "kind": "speech",
+              "text": "So the pattern now has two members you can point at, and you should expect more. When a word looks long and sounds oddly English as you sound it out, trust that ear before you reach for a dictionary."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōlīsŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōlīsŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the bank, then the police",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the bank, then the police]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the police, then the verb for helping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the police, then the verb for helping]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The police? (പോലീസ് (pōlīsŭ).) A bank? (ബാങ്ക് (bāṅkŭ).) What do these two words have in common? (Both were borrowed whole from English.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C112-aashupathri",
+      "sequence": 4160,
+      "title": "ആശുപത്രി (āśupatri) — a hospital",
+      "headword": "ആശുപത്രി",
+      "romanization": "āśupatri",
+      "gloss": "a hospital — the place that gathers the doctor and the medicine you can already name",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e3f23a108a0314ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say a doctor. Say medicine. You have had the person and the substance for some time. You have never had the building they are both in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആശുപത്രി (āśupatri) — a hospital."
+            },
+            {
+              "kind": "speech",
+              "text": "The doctor, the medicine, the building. The set is complete now."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sound this one out and notice what does not happen."
+            },
+            {
+              "kind": "speech",
+              "text": "The last two words handed themselves to you. You met ബാങ്ക് (bāṅkŭ), heard English bank, and were done. പോലീസ് (pōlīsŭ) did the same. Your English ear did the work."
+            },
+            {
+              "kind": "speech",
+              "text": "ആശുപത്രി (āśupatri) will not do that for you. Whatever its history, the word that reaches you today has Malayalam's own shape and gives your English ear nothing to catch. This lesson is not going to tell you where it came from, because that question has more than one answer in circulation and a guess dressed up as a fact would be worth less to you than the honest gap."
+            },
+            {
+              "kind": "speech",
+              "text": "What matters for reading is the part that is certain: some words you can decode from English and some you cannot, and you will not know which until you try. So try first, and learn the word properly when the ear comes back empty."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āśupatri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āśupatri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the doctor, the medicine, the hospital",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the doctor, the medicine, the hospital]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of this chapter's three words your English ear could not catch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of this chapter's three words your English ear could not catch]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A hospital? (ആശുപത്രി (āśupatri).) Who works there? (വൈദ്യൻ.) Could you have read this word off an English one? (No — this one had to be learned.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R112-places-recall",
+      "sequence": 4170,
+      "title": "(bank, police, hospital) (bāṅkŭ, pōlīsŭ, āśupatri) — from cold",
+      "headword": "(bank, police, hospital)",
+      "romanization": "bāṅkŭ, pōlīsŭ, āśupatri",
+      "gloss": "cold retrieval of the three places, and of which one your English ear could not reach",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d32526ef7ce3dc88",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say a bank, the police and a hospital."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: two your ear could read, one it could not",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "ബാങ്ക്, bāṅkŭ, English, audibly.",
+                "പോലീസ്, pōlīsŭ, English, audibly.",
+                "ആശുപത്രി, āśupatri, gives the English ear nothing."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Two of the three you could have decoded before anybody taught them. Do not read a rule into it — the count here is two against one, and the next three words you meet could fall the other way. What this chapter gives you is the habit, not a law: sound a long word out before you look it up, because sometimes the word answers back in a language you already have."
+            },
+            {
+              "kind": "speech",
+              "text": "And when it does not answer, that is information too. ആശുപത്രി (āśupatri) told you quickly that it was going to have to be learned."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You could already name what you needed; you could not name where to go for it. പണം was yours from the shopping words, വൈദ്യൻ from the words for what people do, മരുന്ന് from the chapter on falling ill, and the verb for helping from long before any of them."
+            },
+            {
+              "kind": "speech",
+              "text": "Every one of those was a thing or a person. This chapter adds the addresses. Money goes to a bank, illness goes to a hospital, and when you need help of the kind a neighbour cannot give, there is the police."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the difference between knowing words and being able to get through a day."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāṅkŭ, pōlīsŭ, āśupatri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāṅkŭ*, *pōlīsŭ*, *āśupatri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the three your English ear could not catch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the three your English ear could not catch]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the money and the place it goes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the money and the place it goes]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the doctor, the medicine, and the building that holds both",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the doctor, the medicine, and the building that holds both]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A bank, the police, a hospital? (ബാങ്ക് (bāṅkŭ), പോലീസ് (pōlīsŭ), ആശുപത്രി (āśupatri).) Which one had to be learned rather than decoded? (ആശുപത്രി (āśupatri).) What should you do with a long word before reaching for a dictionary? (Sound it out — it may answer in English.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

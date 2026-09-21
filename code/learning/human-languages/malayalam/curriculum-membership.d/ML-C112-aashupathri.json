@@ -1,0 +1,11 @@
+{
+  "id": "ML-C112-aashupathri",
+  "pathSegment": "ML-PATH-112-PLACES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-112-PLACES",
+      "order": 2
+    }
+  ]
+}
