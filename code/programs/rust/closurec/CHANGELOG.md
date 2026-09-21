@@ -4,6 +4,33 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - `debugger` survives SIMPLE and ADVANCED (CCR-053)
+
+Depends on `closure-pass-dce` 0.31.0, which stops stripping `debugger`
+statements. Upstream keeps them at SIMPLE wherever they are reachable; we
+deleted them, which silently changed what a program does under an attached
+debugger. (At ADVANCED the rule is narrower — upstream eliminates a call whose
+body is only a `debugger` — and we do not match that; see the pass changelog.)
+
+This was found by the CCR-081 sweep rather than by reading the flag surface:
+`simple-debugger` was one of 59 fixtures whose golden disagrees with the oracle,
+and reading the side-by-side named the cause outright.
+
+`tests/diff/simple-debugger` is corrected — golden and commentary. Its header
+claimed the strip "matched the upstream Closure Compiler"; it did not. The
+fixture still does **not** match upstream byte-for-byte, because upstream also
+renames the parameter (`function log(a)`) and we do not — that is CCR-022, and
+it is now the *only* remaining difference on that input.
+
+`simple_debugger_did_not_fall_back_to_whitespace_only` is a regression guard
+against the typed pipeline silently stopping, and it asserted two transforms a
+WHITESPACE_ONLY fallback would not perform: the `1 + 2` constant-fold, and the
+`debugger` strip. Losing the strip leaves the fold as the only positive signal
+on this input, so the second assertion is now its inverse — `debugger` must be
+**present** — which guards CCR-053 itself. A future pass that starts deleting
+them again fails there rather than quietly shipping.
+
+
 ### Added - five ladder rungs for CCR-078, and the fix it stopped me shipping
 
 **No behaviour change.** This is measurement, and the reason it is only

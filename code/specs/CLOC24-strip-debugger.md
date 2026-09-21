@@ -1,9 +1,23 @@
 # CLOC24 — strip `debugger` at SIMPLE/ADVANCED
 
-> **Status:** Shipped. The `closure-pass-dce` pass removes `debugger;`
-> statements from statement lists at the SIMPLE and ADVANCED compilation
-> levels, matching the upstream Closure Compiler. The `simple-debugger`
-> end-to-end fixture (CLOC21) is repurposed as the strip oracle.
+> **Status: SUPERSEDED by CCR-053 (2026-09-21).** This spec's central premise
+> is false and the transform it specifies has been reverted.
+>
+> It asserted that removing `debugger;` at SIMPLE/ADVANCED matches the upstream
+> Closure Compiler. Measured against the pinned oracle
+> (`closure-compiler-v20260915`), upstream **keeps** `debugger` at both levels
+> wherever it is reachable, and removes it only as collateral when the
+> enclosing statement is removed anyway — after a `return` or `throw`, or
+> inside `if (false) { … }`.
+>
+> The soundness argument below is also wrong on its own terms: `debugger` is
+> observable behaviour, since it breaks into an attached debugger. Removing it
+> changes what the program does, so it is not a free size win.
+>
+> Everything after this banner is retained as a record of what was specified
+> and shipped, **not** as a description of current behaviour. Do not implement
+> from it. See `closure-pass-dce`'s CHANGELOG for 0.31.0 and the
+> `simple-debugger` fixture.
 
 ## Why this spec exists
 

@@ -2,6 +2,89 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.31.0] - 2026-09-21
+
+### Fixed - `debugger` statements are no longer stripped (CCR-053)
+
+Two sweeps removed `debugger;` from block bodies and from the program body at
+SIMPLE and ADVANCED. Both were justified in-code as
+
+> a development-only breakpoint with no effect on a shipped program, so
+> removing it is a sound size win (this matches upstream Closure)
+
+**Neither half of that is true.** Measured against the pinned oracle
+(`closure-compiler-v20260915`, sha256 verified):
+
+| Input at SIMPLE | upstream | us, before |
+|---|---|---|
+| `debugger;` | `debugger;` | *(empty)* |
+| `function f(){debugger}f();` | `function f(){debugger}f();` | `function f(){}f();` |
+| `if(true){debugger;}console.log(1);` | `debugger;console.log(1);` | `console.log(1);` |
+| `debugger;console.log(1);` | `debugger;console.log(1);` | `console.log(1);` |
+
+Upstream keeps `debugger` **at SIMPLE wherever it is reachable**. And it is not
+effect-free: `debugger` breaks into an attached debugger, so removing it
+changes what the program does — not a size win to take unilaterally.
+
+What upstream *does* do is drop it as **collateral**, when the enclosing
+statement is removed for independent reasons. There are three such cases, not
+two: after a `return`, after a `throw`, and inside `if (false) { … }`. The
+first draft of this change probed only `return` and `if (false)`, asserted
+"both still work", and regressed the `throw` family — the surviving `debugger`
+blocked truncation of the whole dead tail, so live-looking dead code after it
+survived too. `DebuggerStatement` is now whitelisted in
+`tail_is_safe_to_truncate`: an *unreachable* `debugger` can never fire, so
+dropping it is a genuine no-op, which is the other side of the same line this
+change draws around reachable ones.
+
+**At ADVANCED the rule is narrower**, and the first draft over-generalised.
+Upstream eliminates a call whose body is *only* a `debugger`, treating it as
+pure for call-elimination:
+
+| Input at ADVANCED | upstream |
+|---|---|
+| `function f(){debugger}f();` | *(empty)* |
+| `(function(){debugger})();` | *(empty)* |
+| `debugger;console.log(1);` | `debugger;console.log(1);` |
+
+We do not do that, so `function f(){debugger}f();` no longer matches upstream at
+ADVANCED where it previously did — but it matched only because the strip
+emptied the body, not because our purity analysis was right. That is recorded
+rather than papered over.
+
+Probe results, over the enumerated set in `/tmp` at the time and reproduced in
+the tests below — **at SIMPLE**, the seven reachable shapes (`debugger;` bare;
+sole statement in a function; after `return`; inside `if(false)`; inside
+`if(true)`; before a use; in an unused function) go from **2 of 7** matching
+upstream to **7 of 7**. The five dead-tail shapes (`throw` then `debugger`,
+with and without a following statement, in a nested block, plus the `return`
+control) go from 1 of 5 to 4 of 5. The fifth is a dead tail after `continue`,
+which `closure-pass-dce` never truncates — a pre-existing gap, filed as
+CCR-082, and the one shape where this change loses a byte match `main` had by
+accident.
+
+### Tests
+
+The four stripping tests are **retargeted, not deleted** — the behaviour they
+covered still needs pinning, in the opposite direction:
+
+- `strips_debugger_statement_from_block` → `preserves_debugger_statement_in_block`
+- `strips_top_level_debugger_statement` → `preserves_top_level_debugger_statement`
+- `block_of_only_debuggers_becomes_empty` → `a_block_of_only_debuggers_is_not_emptied`
+- `preserves_braceless_if_consequent_debugger` kept, with its comment corrected:
+  it used to pin a *limitation* of the list-scoped sweep and now pins ordinary
+  correct behaviour.
+
+The two CV tombstone tests likewise assert the inverse: a surviving `debugger`
+must carry **no** deletion record. Provenance that reports a deletion which did
+not happen is the same defect class as CCR-041.
+
+`disabled_log_still_removes_code_without_panicking` keeps its subject — the
+disabled-CV-log path — and swaps its vehicle from a `debugger` statement to a
+stray `EmptyStatement`, which is still swept. The test was never about the
+statement kind.
+
+
 ## [0.30.0] - 2026-07-25
 
 ### Added - drop a `void` operator in statement position
