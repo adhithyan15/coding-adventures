@@ -1350,15 +1350,42 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
-    // MacroOct — an undefined name is 0, which is slice 1's ONLY possible
-    // answer: with no macro table, "undefined" is the only state a name can be
-    // in. Printing 42 (the `LED_PORT == 0` branch) is the observable proof;
-    // slice 2 replaces the rule with a real lookup and this row becomes a
-    // regression test for it.
+    // MacroOct — an undefined name is 0, which is C's rule too. Printing 42
+    // (the `LED_PORT == 0` branch) is the observable proof.
+    //
+    // This row is the NEGATIVE control for VM-068: a name that no macro
+    // defines must still read as 0 after expansion runs. Its partner below
+    // is the positive one.
     Prog {
         lang: Language::MacroOct,
         ext: "macrooct",
         src: "@if LED_PORT == 0\nfn main() { out(1, 42); }\n@else\nfn main() { out(1, 7); }\n@end\n",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+    // MacroOct — VM-068, the POSITIVE control: a DEFINED name drives the
+    // branch. Printing 42 requires `LED_PORT` to have been macro-expanded
+    // to `1` before the condition was evaluated.
+    //
+    // Found broken during slice 2 and fixed in the engine. Before the fix a
+    // defined name still read as 0, so this program took the `@else` branch
+    // and printed 7 — it compiled, and compiled to the wrong thing. PREP01
+    // §7's own worked example is this exact shape, so the spec's canonical
+    // illustration was silently wrong until the fix.
+    //
+    // The two rows together are what make this checkable: either alone can
+    // be satisfied by a broken implementation (always-0 passes the first,
+    // always-truthy passes the second).
+    Prog {
+        lang: Language::MacroOct,
+        ext: "macrooct",
+        src: "@define LED_PORT 1
+@if LED_PORT == 1
+fn main() { out(1, 42); }
+@else
+fn main() { out(1, 7); }
+@end
+",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
@@ -1409,6 +1436,91 @@ const PROGRAMS: &[Prog] = &[
         src: "static counter: u8 = 250;\n@if 1\nfn bump() { counter = counter + 10; }\n@end\n\
 fn main() { let i: u8 = 0; while i < 3 { bump(); i = i + 1; } out(1, counter); }\n",
         expect: Expect::Stdout("24"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+
+    // ── PREP01 slice 2: `@define` ──────────────────────────────────────────
+    //
+    // The rows above only ever asked the preprocessor to DELETE text. These
+    // ask it to synthesise text: every token below that Oct's parser sees came
+    // out of `macros::expand`, assembled from a macro body and a set of
+    // arguments. The failure modes are correspondingly different — a
+    // conditional bug drops a branch and is loud, while an expansion bug
+    // produces a program that still compiles and prints something plausible.
+    //
+    // So each row's *expected stdout* is chosen to be a value the unexpanded
+    // or mis-expanded program could not produce, and each is additionally
+    // paired in MACROOCT_EXPANSIONS with the textual hand-expansion a reader
+    // would perform (`21 + 21`, never `42`) so the identity oracle cannot be
+    // satisfied by a backend that folds constants.
+
+    // MacroOct — object-like `@define`, the shape PREP01's own worked example
+    // uses (`@define LED_PORT 1` / `out(LED_PORT, 200)`). Two macros, both
+    // used, one in each argument position, so a substitution that fired only
+    // in the first would print to the wrong port and produce no stdout at all.
+    Prog {
+        lang: Language::MacroOct,
+        ext: "macrooct",
+        src: "@define LED_PORT 1\n@define LEVEL 200\nfn main() { out(LED_PORT, LEVEL); }\n",
+        expect: Expect::Stdout("200"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+    // MacroOct — function-like `@define` with one parameter used TWICE in the
+    // body. Substitution is per-occurrence: an expander that substituted once
+    // and reused would print 21, and one that dropped the argument would not
+    // compile at all.
+    Prog {
+        lang: Language::MacroOct,
+        ext: "macrooct",
+        src: "@define DOUBLE(x) x + x\nfn main() { out(1, DOUBLE(21)); }\n",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+    // MacroOct — two parameters, with a macro invocation INSIDE one of the
+    // arguments. That is argument pre-expansion, the half of Prosser's
+    // algorithm that changes observable output rather than merely terminating:
+    // `ONE` must be expanded before it is substituted into `ADD`'s body, or
+    // `ONE` reaches Oct's parser as an undefined name.
+    Prog {
+        lang: Language::MacroOct,
+        ext: "macrooct",
+        src: "@define ONE 1\n@define ADD(a, b) a + b\nfn main() { out(1, ADD(41, ONE)); }\n",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+    // MacroOct — the two termination cases in one program, over Oct's u8 wrap.
+    //
+    //   `@define counter counter`  SELF-REFERENTIAL. A naive expander loops
+    //                              here forever; the hide sets expand it once
+    //                              and leave the Oct global standing.
+    //   `bump` used bare           a function-like name NOT followed by `(` is
+    //                              not an invocation, so `static bump` … would
+    //                              be untouched. (Here `bump(counter)` IS a
+    //                              call, and `counter` inside it is the
+    //                              self-referential macro being pre-expanded.)
+    //
+    // 250 + 10 wraps to 4, so a wrap that went missing prints 260 and a macro
+    // that failed to expand does not compile.
+    Prog {
+        lang: Language::MacroOct,
+        ext: "macrooct",
+        src: "@define counter counter\n@define bump(x) x + 10\nstatic counter: u8 = 250;\n\
+fn main() { counter = bump(counter); out(1, counter); }\n",
+        expect: Expect::Stdout("4"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+    // MacroOct — `@define` inside a conditional, which is where the two
+    // features meet. The engine must treat a definition in a SKIPPED group as
+    // inert: if it did not, `VALUE` would be 7 here, because the skipped
+    // definition comes second and the last one wins. `@if 0` is where hostile
+    // input hides, so a directive that acted inside one is the worst possible
+    // leak — and stdout distinguishes the two answers directly.
+    Prog {
+        lang: Language::MacroOct,
+        ext: "macrooct",
+        src: "@if 1\n@define VALUE 42\n@else\n@define VALUE 7\n@end\n\
+fn main() { out(1, VALUE); }\n",
+        expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
 
@@ -9911,11 +10023,15 @@ fn feature_coverage_doc_counts_match_programs_source() {
         (Language::Brainfuck, 6, 48),
         (Language::DartmouthBasic, 51, 408),
         (Language::Oct, 12, 96),
-        // MacroOct (PREP01 slice 1). Oct's own tuple above is deliberately
-        // unchanged: PREP01 holds Oct fixed as the reference MacroOct is
+        // MacroOct: 9 rows at PREP01 slice 1 (`@include`/`@if`/`@else`/`@end`),
+        // plus slice 2's five `@define` rows — object-like, function-like with
+        // an argument used twice, argument pre-expansion, the self-referential
+        // and bare-function-like-name termination pair, and a definition inside
+        // a conditional. Oct's own tuple above is deliberately unchanged, in
+        // both slices: PREP01 holds Oct fixed as the reference MacroOct is
         // checked against, so a slice that moved it would have invalidated its
         // own oracle.
-        (Language::MacroOct, 9, 72),
+        (Language::MacroOct, 15, 120),
         (Language::FlowMatic, 8, 64),
         (Language::Cobol60, 59, 472),
     ];
@@ -9953,6 +10069,21 @@ fn feature_coverage_doc_counts_match_programs_source() {
 /// right-hand side were produced by the code under test, the oracle below
 /// would be comparing the implementation against itself and could not fail.
 const MACROOCT_EXPANSIONS: &[(&str, &str)] = &[
+    // VM-068's positive control: the defined name must reach the condition.
+    // Its twin is the taken branch, so a regression that stopped expanding
+    // conditions would produce `out(1, 7)` and fail identity here as well as
+    // on the eight backends.
+    (
+        "@define LED_PORT 1
+@if LED_PORT == 1
+fn main() { out(1, 42); }
+@else
+fn main() { out(1, 7); }
+@end
+",
+        "fn main() { out(1, 42); }
+",
+    ),
     (
         "@if 1\nfn main() { out(1, 42); }\n@else\nfn main() { out(1, 7); }\n@end\n",
         "fn main() { out(1, 42); }\n",
@@ -9990,6 +10121,34 @@ const MACROOCT_EXPANSIONS: &[(&str, &str)] = &[
 fn main() { let i: u8 = 0; while i < 3 { bump(); i = i + 1; } out(1, counter); }\n",
         "static counter: u8 = 250;\nfn bump() { counter = counter + 10; }\n\
 fn main() { let i: u8 = 0; while i < 3 { bump(); i = i + 1; } out(1, counter); }\n",
+    ),
+
+    // PREP01 slice 2 — `@define`. Each right-hand side is the TEXTUAL
+    // expansion, deliberately: writing `42` where the expansion is `21 + 21`
+    // would let a constant-folding frontend satisfy the oracle no matter what
+    // the macro expander did, which is the one way this comparison could be
+    // made vacuous.
+    (
+        "@define LED_PORT 1\n@define LEVEL 200\nfn main() { out(LED_PORT, LEVEL); }\n",
+        "fn main() { out(1, 200); }\n",
+    ),
+    (
+        "@define DOUBLE(x) x + x\nfn main() { out(1, DOUBLE(21)); }\n",
+        "fn main() { out(1, 21 + 21); }\n",
+    ),
+    (
+        "@define ONE 1\n@define ADD(a, b) a + b\nfn main() { out(1, ADD(41, ONE)); }\n",
+        "fn main() { out(1, 41 + 1); }\n",
+    ),
+    (
+        "@define counter counter\n@define bump(x) x + 10\nstatic counter: u8 = 250;\n\
+fn main() { counter = bump(counter); out(1, counter); }\n",
+        "static counter: u8 = 250;\nfn main() { counter = counter + 10; out(1, counter); }\n",
+    ),
+    (
+        "@if 1\n@define VALUE 42\n@else\n@define VALUE 7\n@end\n\
+fn main() { out(1, VALUE); }\n",
+        "fn main() { out(1, 42); }\n",
     ),
 ];
 

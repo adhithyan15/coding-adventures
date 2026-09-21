@@ -328,9 +328,10 @@ grow the token count, and fan-out that is never a cycle.
 | **Maximum bytes per included file** | 16 MiB | Checked from the opened handle's metadata before reading. |
 | Path containment, regular-files-only, encoding | always on | See §5. Enforced in `RootedFs`. |
 | Macro expansion depth | 200 | Mutually recursive function-like macros. |
-| **Total tokens produced** | 64 M | Expansion bombs. Counts every token the expander *creates* — emitted, consumed by `eval_condition`, or discarded. Counting only *emitted* tokens leaves a hole: `#define A0 1` / `A1 A0 A0` / … / `A40 A39 A39` inside `#if A40` produces 2⁴⁰ tokens that are consumed by the condition and never emitted, against a depth of only 40. The counter is shared across directive evaluation and body expansion and is never reset mid-translation-unit. |
+| **Total tokens produced** | 2 M | Expansion bombs. Counts every token the expander *creates* — emitted, consumed by `eval_condition`, or discarded. Counting only *emitted* tokens leaves a hole: `#define A0 1` / `A1 A0 A0` / … / `A40 A39 A39` inside `#if A40` produces 2⁴⁰ tokens that are consumed by the condition and never emitted, against a depth of only 40. The counter is shared across directive evaluation and body expansion and is never reset mid-translation-unit. |
 | **Maximum token spelling length** | 64 KiB | `stringize` and `paste` grow *bytes* while holding the token count flat, so a token counter is structurally blind to them. Nested pasting via an indirection layer yields identifier text exponential in source length from ~1 token. |
-| **Total bytes of synthesised token text** | 64 MiB | Same class, aggregate. Both byte bounds are checked at the engine's `stringize`/`paste` call sites, not delegated to the dialect — a dialect's `paste` that allocates before returning is already past the bound. |
+| **Total bytes of synthesised token text** | 64 MiB | Same class, aggregate. Charged in `charge()` **before** each substitution is built, not after: a function-like body using its parameter N times, called with N argument tokens, produces N-squared tokens while the source costs 2N, so inspecting the finished vector charges honestly and far too late. Both byte bounds are also checked at the engine's `stringize`/`paste` call sites, not delegated to the dialect — a dialect's `paste` that allocates before returning is already past the bound. |
+| **Total expansion steps** | 1 M | Macro expansions over the whole translation unit. Its own field rather than `macro_depth` squared, which welded a STACK bound to a WORK bound: a host told to tighten `macro_depth` for a small stack lost over 99% of its expansion budget and ordinary programs began failing with a rounds diagnostic. Counted in `Spend`, so it is a unit total -- as a local inside `expand` it reset on every source line and every condition, and a 500-line file ran 1,023,500 rounds against a limit of 40,000. |
 | **Macro-argument grouping nesting depth** | 200 | `F(((((…10⁶ parens…)))))` during argument collection. |
 | **Controlling-expression nesting depth** | 200 | The same, inside `#if`. |
 | Conditional nesting depth | 200 | Pathological `#if` nesting. |
@@ -340,14 +341,32 @@ grow the token count, and fan-out that is never a cycle.
 Three further requirements, normative because they constrain the engine's core
 loop rather than adding a check to it:
 
-1. **No native recursion.** The include, expansion, argument-collection and
-   conditional traversals use explicit stacks. A recursive implementation turns
-   a depth bound into a stack overflow, which in Rust is an abort — not a
-   catchable panic, and not containable by any `catch_unwind` in an embedding
-   host. This constrains `Dialect::eval_condition` implementations too — and
+1. **No native recursion, except where it is bounded and said so.** The
+   include, argument-collection and conditional traversals use explicit
+   stacks. A recursive implementation turns a depth bound into a stack
+   overflow, which in Rust is an abort — not a catchable panic, and not
+   containable by any `catch_unwind` in an embedding host.
+
+   *Amended after implementation, because the original wording was absolute
+   and the code is not.* **Argument pre-expansion recurses natively.** Slice 2
+   shipped it unbounded while this spec and the module header both promised
+   there was no recursion at all, and a security review aborted the process
+   from a 21 KB source file: ~800 chained macros each placing the next
+   invocation inside an argument. Every other counter was blind to it,
+   because the nesting is *created by expansion* rather than present in the
+   text — each level has paren depth 1, and the token, byte and fuel counters
+   see only O(N) work for N levels of stack.
+
+   It is now bounded by `macro_depth`, documented as assuming ~1 MiB of
+   usable stack (measured: depth 100 overflows 256 KiB, depth 200 overflows
+   512 KiB). Converting it to an explicit stack remains worthwhile and is not
+   done; the bound is what makes it safe today, and this spec says so rather
+   than claiming a property the code lacks.
+
+   This also constrains `Dialect::eval_condition` implementations — and
    because the dialect does that parsing, **the engine pre-scans the
-   controlling-expression token slice for grouping depth before dispatching to
-   `eval_condition`**, rather than trusting each dialect to self-police.
+   controlling-expression token slice for grouping depth before dispatching
+   to `eval_condition`**, rather than trusting each dialect to self-police.
    Otherwise a dialect authored later quietly reintroduces the abort.
 2. **Hide-sets are shared/persistent** — interned set ids or an immutable
    linked structure, never cloned per token. A naive owned hide-set makes

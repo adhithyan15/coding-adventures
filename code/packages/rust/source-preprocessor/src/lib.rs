@@ -115,6 +115,8 @@ pub mod diag;
 pub mod dialect;
 pub mod engine;
 pub mod fs;
+pub mod hideset;
+pub mod macros;
 pub mod source_map;
 
 pub use bounds::Bounds;

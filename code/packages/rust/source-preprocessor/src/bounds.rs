@@ -81,12 +81,34 @@ pub struct Bounds {
     /// rather than read and then rejected.
     pub bytes_per_file: u64,
 
-    /// Maximum depth of macro expansion. (Unused until macros land, but
-    /// declared here so the budget surface is stable.)
+    /// Maximum depth of nested macro-argument pre-expansion.
+    ///
+    /// This is the one bound that stands between a small input file and an
+    /// uncatchable process abort: argument pre-expansion is the only place the
+    /// expander recurses natively, and a Rust stack overflow cannot be caught.
+    /// A security review reached it from a 21 KB source file before this was
+    /// enforced.
+    ///
+    /// **This bound assumes roughly 1 MiB of usable stack.** Measured: depth
+    /// 100 overflows a 256 KiB thread and depth 200 overflows a 512 KiB one,
+    /// so a frame costs at least ~2.6 KiB; budget ~5 KiB per level to be safe.
+    /// The default of 200 completes on a 1 MiB thread, and Rust's default
+    /// spawned thread gets 2 MiB, which leaves margin. A host on a smaller
+    /// stack must `tighten` this.
+    ///
+    /// Tightening it costs only stack depth. It used to also collapse the work
+    /// budget, because the round limit was derived from this field squared —
+    /// see [`Bounds::expansion_rounds`], which is now separate.
     pub macro_depth: u32,
 
     /// Maximum tokens **produced** — emitted, consumed by a conditional, or
     /// discarded. Not "emitted": see the module header.
+    ///
+    /// A token costs ~135 bytes all told, so this number is a memory budget in
+    /// disguise. It was 64,000,000 when reaching it required 64 million tokens
+    /// of real source; macro expansion made it reachable from a few kilobytes,
+    /// at which point the default allowed ~8.6 GB. Lowered to a figure whose
+    /// worst case (~270 MB) a CI runner can actually survive.
     pub tokens_produced: u64,
 
     /// Maximum length of a single token's spelling.
@@ -97,6 +119,31 @@ pub struct Bounds {
     /// Maximum total bytes of token text the engine synthesises (as opposed to
     /// copying from source).
     pub synthesised_text_bytes: u64,
+
+    /// Maximum total macro expansion steps over the whole translation unit.
+    ///
+    /// Its own field, deliberately. This was once derived as `macro_depth²`,
+    /// which silently welded a STACK bound to a WORK bound: a host told (by
+    /// this module) to tighten `macro_depth` for a small stack would land near
+    /// 25 and lose over 99% of its expansion budget, failing ordinary programs
+    /// with a rounds diagnostic. Two unrelated limits should not be one number.
+    pub expansion_rounds: u64,
+
+    /// Maximum number of DISTINCT macro names painted onto one token.
+    ///
+    /// A token's hide set is a chain, and membership walks it. Interning makes
+    /// that chain cheap in memory; it does nothing for the time cost, so a
+    /// chain of length n costs O(n) per token and O(n^2) over an expansion —
+    /// with fuel and rounds both linear and therefore blind to it. A security
+    /// review measured 838 KB of source at 1.59 s, quadrupling per doubling.
+    ///
+    /// A 64-bit Bloom summary on each node makes the common case free, but it
+    /// saturates after ~64 distinct names and then every query is a false
+    /// positive, so it cannot bound the pathological case. This does.
+    ///
+    /// 256 is far above anything real: it means 256 *distinct* macros nested
+    /// in a single expansion. C's own translation limits require nothing close.
+    pub hide_set_depth: u32,
 
     /// Maximum grouping nesting inside a macro argument list.
     pub arg_group_depth: u32,
@@ -141,9 +188,11 @@ impl Default for Bounds {
             total_source_bytes: 256 * 1024 * 1024,
             bytes_per_file: 16 * 1024 * 1024,
             macro_depth: 200,
-            tokens_produced: 64_000_000,
+            tokens_produced: 2_000_000,
             token_spelling_bytes: 64 * 1024,
             synthesised_text_bytes: 64 * 1024 * 1024,
+            hide_set_depth: 256,
+            expansion_rounds: 1_000_000,
             arg_group_depth: 200,
             condition_depth: 200,
             conditional_depth: 200,
@@ -171,6 +220,8 @@ impl Bounds {
             tokens_produced: self.tokens_produced.min(other.tokens_produced),
             token_spelling_bytes: self.token_spelling_bytes.min(other.token_spelling_bytes),
             synthesised_text_bytes: self.synthesised_text_bytes.min(other.synthesised_text_bytes),
+            hide_set_depth: self.hide_set_depth.min(other.hide_set_depth),
+            expansion_rounds: self.expansion_rounds.min(other.expansion_rounds),
             arg_group_depth: self.arg_group_depth.min(other.arg_group_depth),
             condition_depth: self.condition_depth.min(other.condition_depth),
             conditional_depth: self.conditional_depth.min(other.conditional_depth),
@@ -191,6 +242,11 @@ pub struct Spend {
     pub tokens_produced: u64,
     pub synthesised_text_bytes: u64,
     pub fuel_used: u64,
+    /// Expansion steps so far. Lives in `Spend` rather than as a local in
+    /// `expand` precisely so it is a TRANSLATION-UNIT total: `expand` is
+    /// called once per emitted line and once per condition, so a local reset
+    /// every line and the limit bounded nothing across a file.
+    pub expansion_rounds: u64,
 }
 
 #[cfg(test)]

@@ -36,6 +36,16 @@ impl PpError {
         self
     }
 
+    /// Attach a position only if one is known. Convenience for call sites
+    /// that may or may not have located the construct yet.
+    #[must_use]
+    pub fn at_opt(self, position: Option<Position>) -> PpError {
+        match position {
+            Some(p) => self.at(p),
+            None => self,
+        }
+    }
+
     #[must_use]
     pub fn position(&self) -> Option<Position> {
         self.position

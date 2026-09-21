@@ -93,11 +93,34 @@ much as for a dialect. A budget that *can* be set to infinity eventually is.
 
 ## Status
 
-**Slice 1** (this release): includes, conditionals, source mapping, bounds,
-`MemoryFs` and `RootedFs`. Macro expansion is refused with a diagnostic rather
-than silently ignored.
+**Slice 1**: includes, conditionals, source mapping, bounds, `MemoryFs` and
+`RootedFs`.
 
-**Slice 2**: macro expansion with hide-sets. **Slice 3**: MacroNib, a second
-dialect in a third syntax. **Slice 4**: C. **Slice 5**: COBOL `COPY`.
+**Slice 2** (this release): macro expansion. `MacroTable`, object-like and
+function-like macros, argument pre-expansion, and Prosser's per-token hide sets
+— which is what makes expansion terminate on the self-referential and mutually
+recursive cases rather than looping. Stringize and paste stay routed through the
+`Dialect` hooks and are **not** built in; MacroOct declines both while
+nevertheless having a full macro facility, which is a stronger genericity result
+than a dialect that quietly needed them.
+
+Controlling expressions are macro-expanded before `Dialect::eval_condition`
+sees them, so `@if LED_PORT == 1` takes the true branch after
+`@define LED_PORT 1`. A name that *survives* expansion is genuinely undefined
+and still reads as 0, which is C's rule.
+
+That was broken when `@define` first landed and is worth recording for where it
+had to be fixed: `eval_condition` receives a bare `&[Token]` with no table and
+no expansion applied, so *no dialect could have fixed it* — it was an engine
+defect surfacing in a dialect (VM-068).
+
+Two gaps remain, recorded rather than papered over. `Locus::expansion` is always
+`None`, so an expanded token carries the position of its *invocation* rather
+than a full "in expansion of FOO, defined at …" chain (VM-069). And argument
+pre-expansion is the one place the expander recurses natively; it is bounded by
+`macro_depth`, which assumes roughly 1 MiB of stack.
+
+**Slice 3**: MacroNib, a second dialect in a third syntax. **Slice 4**: C.
+**Slice 5**: COBOL `COPY`.
 
 See `code/specs/PREP01-generic-source-preprocessor.md`.

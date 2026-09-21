@@ -68,10 +68,58 @@ impl Dialect for FuzzDialect {
                 from: None,
                 system: false,
             }))),
-            "@define" => Some(Ok(Directive::Define {
-                name: line.get(1).map(|t| t.value.clone()).unwrap_or_default(),
-                body: line.get(2..).unwrap_or(&[]).to_vec(),
-            })),
+            "@define" => {
+                // Function-like when the token after the name is `(`, object-
+                // like otherwise.
+                //
+                // This used to hardcode `params: None`, and that hole was not
+                // cosmetic: the sweep could never generate a function-like
+                // macro, so the entire argument-pre-expansion path -- the one
+                // place the expander recurses natively, and the one a security
+                // review used to abort the process from a 21 KB file -- was
+                // outside the randomised oracle. A fuzz alphabet that cannot
+                // reach a code path is not fuzzing it.
+                let name = line.get(1).map(|t| t.value.clone()).unwrap_or_default();
+                let params = if line.get(2).is_some_and(|t| t.value == "(") {
+                    let mut ps = Vec::new();
+                    let mut i = 3;
+                    while let Some(t) = line.get(i) {
+                        if t.value == ")" {
+                            break;
+                        }
+                        if t.value != "," {
+                            ps.push(t.value.clone());
+                        }
+                        i += 1;
+                    }
+                    Some(ps)
+                } else {
+                    None
+                };
+                // `@define NAME ( p0 , p1 , ... , pk-1 ) body`
+                //   0       1    2  3    4  5  ...        2k+1  2k+2
+                // The `)` sits at 2k+2, so the body starts at 2k+3.
+                //
+                // This was `4 + 2k`, i.e. 2k+2 -- the index OF the `)`, not
+                // after it. Every function-like define in the sweep therefore
+                // lost its first body token: the arm `@define M ( x ) x N`
+                // installed a body of `N` with the parameter reference gone,
+                // and `@define N ( y ) M ( y )` lost the `M` that was supposed
+                // to drive nested expansion. Across 3,000 seeds the deepest
+                // argument pre-expansion reached was 2 and bodies repeating a
+                // parameter numbered 0 of 10,655 -- so the sweep still did not
+                // touch the shapes the stack-overflow and quadratic findings
+                // lived in, while the coverage assertion passed green.
+                let body_at = match &params {
+                    Some(ps) => 2 * ps.len() + 3,
+                    None => 2,
+                };
+                Some(Ok(Directive::Define {
+                    name,
+                    params,
+                    body: line.get(body_at..).unwrap_or(&[]).to_vec(),
+                }))
+            }
             _ => None,
         }
     }
@@ -103,28 +151,105 @@ impl Dialect for FuzzDialect {
     }
 }
 
-const ALPHABET: &[&str] = &[
-    "@if", "@else", "@end", "@include", "@define", // directives
-    "0", "1", "(", ")", "==", "&&", // condition fragments
-    "a.oct", "b.oct", "missing.oct", // include targets, some absent
-    "fn", "main", "{", "}", ";", "x", // ordinary source
-];
-
-fn generate(rng: &mut Rng, max_lines: usize) -> Vec<Token> {
-    let lines = 1 + rng.below(max_lines);
+/// Build a token stream from one source line per `&str`, as `engine.rs`'s
+/// helper does. Local to this file because the two suites are independent.
+fn program(lines: &[&str]) -> Vec<Token> {
     let mut out = Vec::new();
-    for line in 1..=lines {
-        let words = rng.below(5);
-        for _ in 0..words {
+    for (i, line) in lines.iter().enumerate() {
+        for word in line.split_whitespace() {
             out.push(Token {
                 type_: TokenType::Name,
-                value: ALPHABET[rng.below(ALPHABET.len())].to_string(),
-                line,
+                value: word.to_string(),
+                line: i + 1,
                 column: 1,
                 type_name: None,
                 flags: None,
                 cv: None,
             });
+        }
+    }
+    out
+}
+
+const ALPHABET: &[&str] = &[
+    "@if", "@else", "@end", "@include", "@define", // directives
+    "0", "1", "(", ")", ",", "==", "&&", // condition and argument fragments
+    "a.oct", "b.oct", "missing.oct", // include targets, some absent
+    "fn", "main", "{", "}", ";", "x", // ordinary source
+    // Macro names, deliberately few and deliberately overlapping with the
+    // names the sweep also DEFINES, so the generator keeps producing
+    // self-referential and mutually-recursive definitions by accident. Those
+    // are the shapes that make a naive expander loop forever, and a wide
+    // alphabet would almost never hit them.
+    "M", "N", "M", "N",
+];
+
+/// Emit one whole logical line from `words`.
+fn emit_line(out: &mut Vec<Token>, line: usize, words: &[&str]) {
+    for (i, w) in words.iter().enumerate() {
+        out.push(Token {
+            type_: TokenType::Name,
+            value: (*w).to_string(),
+            line,
+            column: i + 1,
+            type_name: None,
+            flags: None,
+            cv: None,
+        });
+    }
+}
+
+fn generate(rng: &mut Rng, max_lines: usize) -> Vec<Token> {
+    let lines = 1 + rng.below(max_lines);
+    let mut out = Vec::new();
+    for line in 1..=lines {
+        // One line in six is a PAIRED function-like define or its invocation.
+        //
+        // Without this the sweep could not reach function-like macros at all,
+        // and the alphabet change that was supposed to fix that was cosmetic:
+        // the shortest usable `@define M ( x ) body` is six tokens, while the
+        // random arm emits at most four per line. A census over these very
+        // seeds found 1001 `@define` lines, 22 function-like, and ZERO with a
+        // parameter and a non-empty body -- `pre_expand_args` was entered zero
+        // times across every sweep.
+        //
+        // That matters because argument pre-expansion is the only place the
+        // expander recurses, and it is where the stack-overflow finding and
+        // the quadratic-substitution finding both lived. A fuzz alphabet that
+        // cannot reach a code path is not fuzzing it.
+        match rng.below(8) {
+            0 => emit_line(&mut out, line, &["@define", "M", "(", "x", ")", "x", "N"]),
+            1 => emit_line(&mut out, line, &["@define", "N", "(", "y", ")", "M", "(", "y", ")"]),
+            2 => emit_line(&mut out, line, &["M", "(", "1", ")"]),
+            3 => emit_line(&mut out, line, &["N", "(", "M", "(", "1", ")", ")"]),
+            // A body that REPEATS its parameter. Nothing else here generates
+            // one, and it is the shape behind the quadratic-substitution
+            // finding: output is |occurrences| x |argument tokens| while the
+            // source costs their sum.
+            4 => emit_line(&mut out, line, &["@define", "M", "(", "x", ")", "x", "x", "x"]),
+            // A body that puts an invocation INSIDE AN ARGUMENT, which is the
+            // only thing that drives argument pre-expansion deeper than one
+            // level -- and pre-expansion is where the stack-overflow finding
+            // lived. Without this the sweep's deepest recursion was 2.
+            5 => emit_line(
+                &mut out,
+                line,
+                &["@define", "M", "(", "x", ")", "N", "(", "N", "(", "x", ")", ")"],
+            ),
+            _ => {
+                let words = rng.below(5);
+                for i in 0..words {
+                    out.push(Token {
+                        type_: TokenType::Name,
+                        value: ALPHABET[rng.below(ALPHABET.len())].to_string(),
+                        line,
+                        column: i + 1,
+                        type_name: None,
+                        flags: None,
+                        cv: None,
+                    });
+                }
+            }
         }
     }
     out
@@ -252,4 +377,226 @@ fn pathological_grouping_in_a_condition_terminates() {
 #[test]
 fn an_empty_program_is_fine() {
     check(Vec::new(), Bounds::default());
+}
+
+// ===========================================================================
+// Slice 2: the same oracle, extended over macro definition and expansion
+// ===========================================================================
+
+/// Randomised macro-dense programs terminate and never panic.
+///
+/// Required by PREP01 §7 rather than optional. Slice 1's sweep exercised an
+/// engine that had no macros at all, while the bounds most likely to be
+/// attacked — tokens produced, fuel, macro depth, hide-set cost — all guard
+/// subsystems that only come into existence in this slice.
+///
+/// The alphabet reuses two macro names (`M`, `N`) as both definition targets
+/// and body content, so the generator produces self-referential and mutually
+/// recursive definitions constantly. That is the point: those are exactly the
+/// shapes a naive expander loops on, and a realistic alphabet would almost
+/// never generate them.
+#[test]
+fn random_macro_dense_programs_terminate_and_never_panic() {
+    let bounds = Bounds {
+        fuel: 20_000,
+        tokens_produced: 5_000,
+        macro_depth: 16,
+        total_inclusions: 20,
+        include_depth: 8,
+        conditional_depth: 12,
+        arg_group_depth: 16,
+        ..Bounds::default()
+    };
+
+    for seed in 1..=3_000u64 {
+        let mut rng = Rng(seed.wrapping_mul(0x9E37_79B9_7F4A_7C15) | 1);
+        check(generate(&mut rng, 20), bounds);
+    }
+}
+
+/// A doubling chain is refused rather than exhausting memory.
+///
+/// Forty levels of `@define An A(n-1) A(n-1)` is 2^40 tokens from a few lines
+/// of source. This is the attack the "count tokens PRODUCED, not emitted"
+/// rule exists for, driven through the whole engine rather than the expander
+/// alone.
+#[test]
+fn a_doubling_macro_chain_is_bounded_end_to_end() {
+    let mut lines: Vec<String> = vec!["@define A0 x".to_string()];
+    for i in 1..40 {
+        lines.push(format!("@define A{i} A{} A{}", i - 1, i - 1));
+    }
+    lines.push("A39".to_string());
+    let refs: Vec<&str> = lines.iter().map(String::as_str).collect();
+
+    let mut fs = MemoryFs::new();
+    let main = fs.insert("<main>", "");
+    let bounds = Bounds { tokens_produced: 50_000, ..Bounds::default() };
+
+    let err = match preprocess(program(&refs), main, &FuzzDialect, &mut fs, bounds) {
+        Ok(_) => panic!("a 2^40 doubling chain must hit a bound, not run to completion"),
+        Err(e) => e,
+    };
+    let msg = err.to_string();
+    assert!(
+        msg.contains("tokens") || msg.contains("budget"),
+        "expected a resource diagnostic, got: {msg}"
+    );
+}
+
+/// A bomb hidden inside a skipped group is never built.
+///
+/// The group is skipped, so the definitions are never installed and the
+/// invocation never expands. If this ever starts failing on a bound, the
+/// skipped-group guard has regressed and every expansion attack is reachable
+/// from inside `@if 0`.
+#[test]
+fn a_doubling_chain_inside_a_skipped_group_costs_nothing() {
+    let mut lines: Vec<String> = vec!["@if 0".to_string(), "@define A0 x".to_string()];
+    for i in 1..40 {
+        lines.push(format!("@define A{i} A{} A{}", i - 1, i - 1));
+    }
+    lines.push("A39".to_string());
+    lines.push("@end".to_string());
+    lines.push("survivor".to_string());
+    let refs: Vec<&str> = lines.iter().map(String::as_str).collect();
+
+    let mut fs = MemoryFs::new();
+    let main = fs.insert("<main>", "");
+    // A budget far too small to build the bomb: it must never be touched.
+    let bounds = Bounds { tokens_produced: 200, ..Bounds::default() };
+
+    let out = match preprocess(program(&refs), main, &FuzzDialect, &mut fs, bounds) {
+        Ok(o) => o,
+        Err(e) => panic!("a skipped group must not expand anything, but: {e}"),
+    };
+    let values: Vec<&str> = out.tokens.iter().map(|t| t.value.as_str()).collect();
+    assert_eq!(values, ["survivor"]);
+}
+
+/// The sweep must actually REACH function-like macro expansion.
+///
+/// Three earlier attempts at this looked right and reached nothing, so the
+/// assertion is shaped by how each one failed.
+///
+/// 1. `FuzzDialect` learned to parse parameter lists while the generator still
+///    emitted at most four tokens per line, and the shortest usable
+///    `@define M ( x ) body` is six.
+/// 2. The generator was fixed but computed the body offset as `2k+2` -- the
+///    index *of* the `)` -- so every function-like define silently lost its
+///    first body token.
+/// 3. The assertion added to catch (2) counted *aggregate* properties
+///    (">100 bodies use a parameter"), and a later generator arm made those
+///    thresholds clear even with the off-by-one still present. Reverting the
+///    bug left all nine tests green.
+///
+/// So this asserts the EXACT parse of each known arm. An off-by-one shifts a
+/// body by one token and fails immediately; an aggregate count cannot.
+#[test]
+fn the_sweep_actually_generates_function_like_macro_invocations() {
+    use coding_adventures_source_preprocessor::dialect::Directive;
+
+    let d = FuzzDialect;
+
+    // Every function-like arm the generator can emit, with the body the
+    // dialect must produce for it.
+    /// One generator arm: its tokens, and the name, parameters and body the
+    /// dialect must produce for it.
+    type Arm = (&'static [&'static str], &'static str, &'static [&'static str], &'static [&'static str]);
+
+    let expected: &[Arm] = &[
+        (&["@define", "M", "(", "x", ")", "x", "N"], "M", &["x"], &["x", "N"]),
+        (
+            &["@define", "N", "(", "y", ")", "M", "(", "y", ")"],
+            "N",
+            &["y"],
+            &["M", "(", "y", ")"],
+        ),
+        (&["@define", "M", "(", "x", ")", "x", "x", "x"], "M", &["x"], &["x", "x", "x"]),
+        (
+            &["@define", "M", "(", "x", ")", "N", "(", "N", "(", "x", ")", ")"],
+            "M",
+            &["x"],
+            &["N", "(", "N", "(", "x", ")", ")"],
+        ),
+    ];
+
+    for (line, want_name, want_params, want_body) in expected {
+        let toks: Vec<Token> = line
+            .iter()
+            .enumerate()
+            .map(|(i, w)| Token {
+                type_: TokenType::Name,
+                value: (*w).to_string(),
+                line: 1,
+                column: i + 1,
+                type_name: None,
+                flags: None,
+                cv: None,
+            })
+            .collect();
+
+        match d.classify(&toks) {
+            Some(Ok(Directive::Define { name, params: Some(ps), body })) => {
+                assert_eq!(&name, want_name);
+                assert_eq!(ps, *want_params, "parameters for {line:?}");
+                let got: Vec<&str> = body.iter().map(|t| t.value.as_str()).collect();
+                assert_eq!(
+                    got, *want_body,
+                    "BODY MISMATCH for {line:?} — an off-by-one in the body offset \
+                     silently strips a token here, and every aggregate count still passes"
+                );
+            }
+            other => panic!("{line:?} did not classify as a function-like define: {other:?}"),
+        }
+    }
+
+    // And the generator must actually emit them, or the parse test above is
+    // checking arms nothing produces.
+    let mut with_param_in_body = 0usize;
+    let mut repeating_a_param = 0usize;
+    let mut nested_invocation = 0usize;
+    let mut invocations = 0usize;
+
+    for seed in 1..=3_000u64 {
+        let mut rng = Rng(seed.wrapping_mul(0x9E37_79B9_7F4A_7C15) | 1);
+        let toks = generate(&mut rng, 20);
+        let mut by_line: std::collections::BTreeMap<usize, Vec<Token>> = Default::default();
+        for t in &toks {
+            by_line.entry(t.line).or_default().push(t.clone());
+        }
+        for words in by_line.values() {
+            if let Some(Ok(Directive::Define { params: Some(ps), body, .. })) = d.classify(words) {
+                let uses = body.iter().filter(|t| ps.contains(&t.value)).count();
+                if uses >= 1 {
+                    with_param_in_body += 1;
+                }
+                if uses >= 2 {
+                    repeating_a_param += 1;
+                }
+                // An invocation inside the body is what drives pre-expansion
+                // past one level.
+                if body.windows(2).any(|w| {
+                    matches!(w[0].value.as_str(), "M" | "N") && w[1].value == "("
+                }) {
+                    nested_invocation += 1;
+                }
+            }
+            if matches!(words.first().map(|t| t.value.as_str()), Some("M") | Some("N"))
+                && words.get(1).map(|t| t.value.as_str()) == Some("(")
+            {
+                invocations += 1;
+            }
+        }
+    }
+
+    assert!(with_param_in_body > 100, "only {with_param_in_body} bodies use a parameter");
+    assert!(repeating_a_param > 50, "only {repeating_a_param} bodies repeat a parameter");
+    assert!(
+        nested_invocation > 50,
+        "only {nested_invocation} bodies contain a nested invocation — argument \
+         pre-expansion is the only place the expander recurses, and it is where \
+         the stack-overflow finding lived"
+    );
+    assert!(invocations > 100, "only {invocations} invocations");
 }

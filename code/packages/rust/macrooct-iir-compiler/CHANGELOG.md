@@ -1,5 +1,115 @@
 # Changelog — `coding-adventures-macrooct-iir-compiler`
 
+## 0.2.0 — 2026-09-21 (PREP01 slice 2)
+
+`@define` works. MacroOct gains a full macro facility — object-like and
+function-like, argument pre-expansion, hide-set termination — and gains it
+**without this crate learning how to expand anything**: every line of the
+expander lives in `source-preprocessor`, and what changed here is one function
+that answers "what did the author write".
+
+That division is the slice's result, not its implementation detail. The dialect
+grew ~180 lines; the backends grew none.
+
+### Added
+
+- `MacroOctDialect::classify` now returns a complete `Directive::Define`:
+  - `@define NAME body…` → object-like (`params: None`). The body may be empty,
+    which expands the name to nothing — the idiomatic way to compile a token
+    out.
+  - `@define NAME(a, b) body…` → function-like (`params: Some([…])`), including
+    the zero-parameter `NAME()` form, which is genuinely different from the
+    object-like `NAME`: a bare `NAME` does not expand.
+  - **C's adjacency rule decides between them.** The `(` must touch the name.
+    `@define X (1+2)` is an OBJECT-like macro whose body is `(1+2)`, which is
+    the case the rule exists for: a parenthesised body is the commonest macro
+    body there is, written precisely so `X + 1` cannot reassociate at the use
+    site. Measured on `Token::column`, the same mechanism the slice-1
+    misspelled-directive check already used.
+- Located `PpError` refusals — never a panic — for a missing name, a
+  non-identifier name, an unterminated parameter list, a non-identifier
+  parameter, two parameters with no `,` between them, and a **duplicate
+  parameter name**. The last is not merely redundant: substitution resolves a
+  parameter by position, so `@define F(x, x) x + x` would let the first `x` win
+  both slots and `F(1, 2)` would quietly mean `1 + 1`.
+- 14 new `@define` program pairs in `tests/iir_identity.rs` (25 total) and a
+  sixth `@include` pair covering a "header" of definitions used by its
+  includer. Every right-hand side is the **textual** expansion — `21 + 21`,
+  never `42` — so a constant-folding frontend cannot satisfy the oracle.
+- Six new `lang-aot` matrix rows (15 total, 120 declared cells), each with a
+  hand-expanded twin: object-like, an argument used twice, argument
+  pre-expansion, the self-referential / bare-function-like-name termination
+  pair over Oct's u8 wrap, and a definition inside a conditional.
+
+### Changed
+
+- `is_identifier` is now one shared predicate rather than an inline closure,
+  and deliberately checks the **spelling** rather than `TokenType`. MacroOct's
+  lexer promotes `in`, `out`, `loop` and friends from `NAME` to keywords; that
+  is Oct's business, not the preprocessor's, and C likewise accepts
+  `#define F(int) int`. A `TokenType` check would have refused
+  `@define WRAP(in) in`.
+- The grammar is unchanged. `macrooct.tokens` already had `AT_DEFINE`, and a
+  parameter list needs only the existing `LPAREN` / `RPAREN` / `COMMA` / `NAME`
+  rules — verified by regenerating `macrooct-lexer/src/_grammar.rs` and
+  confirming a byte-identical result, since CI has no Rust grammar
+  regeneration check (VM-067).
+
+### The refusal that moved, and one test that had gone quiet
+
+Slice 1 refused **every** `@define` with a located "not supported yet"
+diagnostic, and `iir_identity.rs`'s diagnostic-hygiene guard leaned on that: it
+drove `@define X 1` expecting a message. As of this slice that program compiles
+cleanly, so the case proved nothing — it would have failed loudly on the
+"expected to fail but compiled" arm rather than gone silently green, but it
+still had to be replaced rather than deleted, because `@define` gained *more*
+diagnostic surface here, not less. Four malformed shapes driven with hostile
+text took its place (a control character via a string literal, a 5 000-byte
+identifier), and **both limbs of the guard were re-verified by mutation**:
+disabling escaping in `PpError::quote` fires the control-character assertion on
+`define-param-not-identifier-esc`; disabling truncation fires the 2 048-byte
+ceiling on `define-unterminated-params-long`. The Display-not-Debug assertion
+and the 2 048 ceiling are unchanged.
+
+### VM-068: controlling expressions are macro-expanded (found here, fixed in the engine)
+
+After `@define LED_PORT 1`, the line `@if LED_PORT == 1` now takes the true
+branch. Until this slice it read `LED_PORT` as an *undefined* name, took the
+`@else` branch, and compiled to the wrong thing — silently, with no
+diagnostic. PREP01 §7's own worked example is exactly that shape, so the
+spec's canonical illustration of the feature was broken.
+
+Fixed in the engine rather than the dialect, because no dialect could fix it:
+`eval_condition` receives a bare token slice with neither the macro table nor
+any expansion applied. The grouping-depth pre-scan now runs twice — once on
+the raw tokens, once after expansion, since a macro body can introduce
+grouping the source text did not have.
+
+Proved by a matched *pair* of matrix rows, because either alone is satisfied
+by a broken implementation: an always-zero evaluator passes the undefined-name
+row, and an always-truthy one passes the defined-name row.
+
+### Tests
+
+57 unit tests plus 7 integration tests, all passing. New load-bearing ones:
+
+- `a_glued_paren_makes_a_function_like_macro_and_a_detached_one_does_not` —
+  written as a pair on purpose: an implementation that ignored adjacency
+  satisfies the first half, and one that never recognised a parameter list
+  satisfies the second.
+- `every_malformed_parameter_list_is_a_diagnostic_and_never_a_panic` — ten
+  shapes, each asserted against the *reason* it was refused, not merely that it
+  was.
+- `a_duplicate_parameter_is_refused_rather_than_silently_dropping_an_argument`.
+- `a_keyword_spelling_is_still_a_legal_parameter_name`.
+- `a_define_inside_a_skipped_group_never_becomes_visible` — the engine's guard,
+  which became load-bearing the moment the `Define` arm started installing a
+  definition instead of refusing one. Without it `@if 0` would define.
+- `a_macro_defined_in_an_included_file_is_visible_to_the_includer` — the table
+  is per translation unit, which is what makes a "header" of definitions work.
+- `a_definition_does_not_reach_back_up_its_own_line_or_the_lines_before_it`.
+
+
 ## 0.1.0 — 2026-09-21 (PREP01 slice 1)
 
 First release. The MacroOct frontend for the LANG VM AOT chain, and the

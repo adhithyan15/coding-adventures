@@ -91,7 +91,7 @@ const PAIRS: &[Pair] = &[
         oct: "fn main() { out(1, 200); }\n",
     },
     Pair {
-        what: "an undefined name compares equal to 0 (slice 1 has no macro table)",
+        what: "an undefined name compares equal to 0 — C's rule, and see VM-068",
         macrooct: "@if LED_PORT == 0\nfn main() { out(1, 42); }\n@else\nfn main() { out(1, 7); }\n@end\n",
         oct: "fn main() { out(1, 42); }\n",
     },
@@ -122,6 +122,127 @@ const PAIRS: &[Pair] = &[
         what: "a conditional wrapping nothing at all — the empty group",
         macrooct: "@if 1\n@end\nfn main() { out(1, 42); }\n",
         oct: "fn main() { out(1, 42); }\n",
+    },
+
+    // ───────────────────────────────────────────────────────────────────────
+    // @define — PREP01 slice 2.
+    // ───────────────────────────────────────────────────────────────────────
+    //
+    // The oracle is doing more work here than it did for `@if`. A conditional
+    // only ever *selects* text that the author already wrote, so "identical
+    // IIR" mostly means "the right branch survived". Expansion SYNTHESISES the
+    // stream: the tokens Oct's parser sees were assembled by `macros::expand`
+    // from a body and a set of arguments, and their positions, order and
+    // grouping are all things the expander could get subtly wrong while still
+    // producing a program that compiles and prints the expected number.
+    //
+    // Which is exactly why each pair below is written so that the hand-expanded
+    // Oct twin is the *textual* expansion a reader would perform — `21 + 21`,
+    // not `42`. Writing `42` on the right would make the pair pass for a
+    // constant-folding backend regardless of what the macro did.
+    Pair {
+        what: "@define, object-like — the name is replaced by its body",
+        macrooct: "@define LEVEL 42\nfn main() { out(1, LEVEL); }\n",
+        oct: "fn main() { out(1, 42); }\n",
+    },
+    Pair {
+        what: "@define, object-like with a multi-token body, used in an expression",
+        macrooct: "@define BASE 200 + 100\nfn main() { out(1, BASE); }\n",
+        oct: "fn main() { out(1, 200 + 100); }\n",
+    },
+    Pair {
+        what: "@define, object-like with an EMPTY body — the name expands to nothing",
+        // `TRACE` vanishes entirely, which is the idiomatic way to compile a
+        // debugging token out. If the expander substituted a placeholder token
+        // instead of nothing, Oct's parser would reject the result.
+        macrooct: "@define TRACE\nfn main() { TRACE out(1, 42); }\n",
+        oct: "fn main() { out(1, 42); }\n",
+    },
+    Pair {
+        what: "@define, function-like with one parameter",
+        macrooct: "@define ID(x) x\nfn main() { out(1, ID(42)); }\n",
+        oct: "fn main() { out(1, 42); }\n",
+    },
+    Pair {
+        what: "@define, function-like with two parameters",
+        macrooct: "@define ADD(a, b) a + b\nfn main() { out(1, ADD(40, 2)); }\n",
+        oct: "fn main() { out(1, 40 + 2); }\n",
+    },
+    Pair {
+        what: "@define, an argument used TWICE in the body",
+        // Substitution is per-occurrence, not once-and-reuse. The Oct twin says
+        // `21 + 21` rather than `42` deliberately: a twin that folded the
+        // constant would pass even if the expander dropped one occurrence.
+        macrooct: "@define DOUBLE(x) x + x\nfn main() { out(1, DOUBLE(21)); }\n",
+        oct: "fn main() { out(1, 21 + 21); }\n",
+    },
+    Pair {
+        what: "@define, a macro invoked INSIDE another macro's argument",
+        // Argument pre-expansion, which is the part of Prosser's algorithm that
+        // changes observable output rather than merely terminating. `ONE` is
+        // expanded before it is substituted into `ADD`'s body.
+        macrooct: "@define ONE 1\n@define ADD(a, b) a + b\nfn main() { out(1, ADD(41, ONE)); }\n",
+        oct: "fn main() { out(1, 41 + 1); }\n",
+    },
+    Pair {
+        what: "@define, a function-like macro whose argument is another INVOCATION",
+        macrooct: "@define ID(x) x\n@define DOUBLE(x) x + x\n\
+                   fn main() { out(1, DOUBLE(ID(21))); }\n",
+        oct: "fn main() { out(1, 21 + 21); }\n",
+    },
+    Pair {
+        what: "@define, SELF-REFERENTIAL — `counter` expands to `counter` exactly once",
+        // The canonical hide-set case, and C's own `#define errno errno` idiom.
+        // A naive expander loops here forever; an over-eager blue-paint rule
+        // deletes the token. The correct answer is that `counter` survives as
+        // the Oct global it names, so the program is byte-for-byte the
+        // unmacroed one.
+        macrooct: "static counter: u8 = 250;\n@define counter counter\n\
+                   fn bump() { counter = counter + 10; }\n\
+                   fn main() { bump(); out(1, counter); }\n",
+        oct: "static counter: u8 = 250;\nfn bump() { counter = counter + 10; }\n\
+              fn main() { bump(); out(1, counter); }\n",
+    },
+    Pair {
+        what: "@define, a function-like NAME used without parentheses is not an invocation",
+        // Required, not a nicety. `level` is both a function-like macro and an
+        // Oct global here; every use below lacks a following `(`, so none of
+        // them expands and the program is ordinary Oct. An expander that
+        // treated a bare name as a zero-argument call would delete the global.
+        macrooct: "@define level(x) x + 1\nstatic level: u8 = 42;\n\
+                   fn main() { out(1, level); }\n",
+        oct: "static level: u8 = 42;\nfn main() { out(1, level); }\n",
+    },
+    Pair {
+        what: "@define, the adjacency rule — a DETACHED `(` makes an object-like macro",
+        // `@define MASK (0xF0 | 1)` defines an object-like macro whose body is
+        // the parenthesised expression, NOT a macro named `MASK` taking a
+        // parameter named `0xF0`. One space is the entire difference from the
+        // function-like pairs above.
+        macrooct: "@define MASK (0xF0 | 1)\nfn main() { out(1, MASK); }\n",
+        oct: "fn main() { out(1, (0xF0 | 1)); }\n",
+    },
+    Pair {
+        what: "@define, a zero-parameter function-like macro — `F()` expands, `F` would not",
+        macrooct: "@define now() 42\nfn main() { out(1, now()); }\n",
+        oct: "fn main() { out(1, 42); }\n",
+    },
+    Pair {
+        what: "@define selected by a conditional — the skipped branch's definition is inert",
+        // `@if 0` must not install a definition. If it did, `VALUE` would be 7:
+        // the last definition wins, and the skipped one comes second.
+        macrooct: "@if 1\n@define VALUE 42\n@else\n@define VALUE 7\n@end\n\
+                   fn main() { out(1, VALUE); }\n",
+        oct: "fn main() { out(1, 42); }\n",
+    },
+    Pair {
+        what: "@define wrapping real structure — a macro used inside a while loop",
+        macrooct: "@define LIMIT 3\n@define STEP(v) v = v + 10\nstatic counter: u8 = 250;\n\
+                   fn main() { let i: u8 = 0; while i < LIMIT { STEP(counter); i = i + 1; } \
+                   out(1, counter); }\n",
+        oct: "static counter: u8 = 250;\n\
+              fn main() { let i: u8 = 0; while i < 3 { counter = counter + 10; i = i + 1; } \
+              out(1, counter); }\n",
     },
 ];
 
@@ -168,6 +289,18 @@ const INCLUDE_PAIRS: &[IncludePair] = &[
         ],
         oct: "fn one() -> u8 { return 1; }\nfn two() -> u8 { return 2; }\n\
               fn main() { out(1, one() + two()); }\n",
+    },
+    IncludePair {
+        what: "a `header` of macro definitions, included and then used",
+        // The shape a real MacroOct program would take, and the reason the
+        // macro table lives in the ENGINE rather than in a frame: a definition
+        // made in an included file has to outlive that file. If the table were
+        // per-frame, `LEVEL` and `TWICE` would be gone by the time `main` was
+        // reached and this would fail as an Oct name error, not as a
+        // preprocessor one.
+        macrooct: "@include \"ports.macrooct\"\nfn main() { out(1, TWICE(LEVEL)); }\n",
+        includes: &[("ports.macrooct", "@define LEVEL 21\n@define TWICE(x) x + x\n")],
+        oct: "fn main() { out(1, 21 + 21); }\n",
     },
     IncludePair {
         what: "an include selected by a conditional",
@@ -445,10 +578,39 @@ fn no_diagnostic_leaks_a_raw_control_character_or_runs_unbounded() {
         ("operand-esc-if", format!("@if \"{ESC}x\"\n@end\nfn main() {{ out(1, 0); }}\n")),
         ("operand-esc-define", format!("@define \"{ESC}x\" 1\nfn main() {{ out(1, 0); }}\n")),
         ("operand-long-end", format!("@if 1\n@end \"{long}\"\nfn main() {{ out(1, 0); }}\n")),
+        // -- @define's parameter-list refusals (slice 2) -------------------
+        //    Four distinct message sites, each reached with attacker text.
+        //    `describe` is the common escape/truncate path for three of them
+        //    and `PpError::quote` is called directly by the fourth, so a site
+        //    that forgot either shows up here rather than in a review round.
+        //
+        //    A string literal is again the only channel for a control
+        //    character into a token VALUE, so the ESC cases use one.
+        (
+            "define-param-not-identifier-esc",
+            format!("@define F(\"{ESC}x\") 1\nfn main() {{ out(1, 0); }}\n"),
+        ),
+        (
+            "define-param-junk-esc",
+            format!("@define F(a \"{ESC}x\") 1\nfn main() {{ out(1, 0); }}\n"),
+        ),
+        (
+            "define-duplicate-param-long",
+            format!("@define F({long}, {long}) 1\nfn main() {{ out(1, 0); }}\n"),
+        ),
+        (
+            "define-unterminated-params-long",
+            format!("@define {long}(a\nfn main() {{ out(1, 0); }}\n"),
+        ),
         // -- the engine's own structural messages --------------------------
         ("unterminated-if", "@if 1\nfn main() { out(1, 0); }\n".to_string()),
         ("stray-end", "@end\nfn main() { out(1, 0); }\n".to_string()),
-        ("define-refused", "@define X 1\nfn main() { out(1, 0); }\n".to_string()),
+        // `@define X 1` compiled cleanly as of slice 2, so the case that used
+        // to sit here (`define-refused`) no longer exercises any diagnostic at
+        // all. It was replaced by the four malformed shapes above rather than
+        // deleted: `@define` gained MORE diagnostic surface in this slice, not
+        // less, and the guard has to follow the surface.
+        ("define-no-name", "@define\nfn main() { out(1, 0); }\n".to_string()),
     ];
 
     let mut seen_messages = std::collections::BTreeSet::new();
