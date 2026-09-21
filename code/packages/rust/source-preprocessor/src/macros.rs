@@ -215,7 +215,7 @@ fn expand_at(
         }
 
         let produced = match &def.params {
-            None => substitute_object_like(def, cur.hide, name_id, hides),
+            None => substitute_object_like(def, &cur.token, cur.hide, name_id, hides),
             Some(params) => {
                 // A function-like macro's name not followed by `(` is an
                 // ordinary identifier. Leaving it alone is required, not a
@@ -234,7 +234,9 @@ fn expand_at(
                 // invocation. Using the name's set alone over-hides and
                 // silently drops expansions.
                 let base = hides.intersect(cur.hide, close_hide);
-                substitute_function_like(def, params, &expanded_args, base, name_id, hides)
+                substitute_function_like(
+                    def, &cur.token, params, &expanded_args, base, name_id, hides,
+                )
             }
         };
 
@@ -387,18 +389,47 @@ fn pre_expand_args(
     Ok(out)
 }
 
+/// Restamp a macro-body token with the position of the invocation it came from.
+///
+/// Without this, an expanded token carries the line and column it had in the
+/// macro BODY, while `emit` stamps it with the file currently being read. A
+/// body defined in an included header therefore surfaced as, say, `main:1:15`
+/// — a position inside the `@include` line, pointing at text that has nothing
+/// to do with the token. That is worse than missing provenance: it is
+/// confidently wrong provenance.
+///
+/// This is the honest interim, not the finished thing. Full fidelity needs an
+/// `ExpansionId` threaded through `MToken` and written into `Locus::expansion`,
+/// so a diagnostic can say "in expansion of FOO, defined at ports.oct:3". The
+/// interned expansion arena in `source_map` exists for exactly that and is
+/// currently unexercised. Tracked as VM-069; until then every expanded token
+/// at least points at real text in the file that really produced it — the
+/// invocation site.
+fn at_invocation(body: &Token, invocation: &Token) -> Token {
+    let mut t = body.clone();
+    t.line = invocation.line;
+    t.column = invocation.column;
+    t
+}
+
 fn substitute_object_like(
     def: &MacroDef,
+    invocation: &Token,
     invocation_hide: HideId,
     name: NameId,
     hides: &mut HideSets,
 ) -> Vec<MToken> {
     let hide = hides.insert(invocation_hide, name);
-    def.body.iter().cloned().map(|token| MToken { token, hide }).collect()
+    def.body
+        .iter()
+        .map(|token| MToken { token: at_invocation(token, invocation), hide })
+        .collect()
 }
 
+#[allow(clippy::too_many_arguments)]
 fn substitute_function_like(
     def: &MacroDef,
+    invocation: &Token,
     params: &[String],
     args: &[Vec<MToken>],
     base_hide: HideId,
@@ -422,7 +453,7 @@ fn substitute_function_like(
                 // nothing, which is how `F()` on a one-parameter macro yields
                 // an empty expansion rather than an error.
             }
-            None => out.push(MToken { token: token.clone(), hide }),
+            None => out.push(MToken { token: at_invocation(token, invocation), hide }),
         }
     }
     out

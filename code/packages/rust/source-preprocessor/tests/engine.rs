@@ -267,6 +267,48 @@ fn a_definition_inside_a_skipped_group_never_takes_effect() {
 }
 
 #[test]
+fn an_expanded_token_points_at_its_invocation_not_at_unrelated_text() {
+    // A macro defined in an included file used to surface with the BODY's
+    // line and the INCLUDING file's id — so a token from `defs.oct` was
+    // reported at a position inside `main`'s `@include` line, pointing at text
+    // that had nothing to do with it. Confidently wrong provenance is worse
+    // than none: a reader follows it and lands somewhere unrelated.
+    //
+    // The interim contract this pins: an expanded token carries the position
+    // of the INVOCATION, which is real text in the file that really produced
+    // it. Full fidelity ("in expansion of FOO, defined at defs.oct:1") needs
+    // the expansion arena wired through and is tracked as VM-069.
+    let mut fs = MemoryFs::new();
+    fs.insert("defs.oct", "@define ANSWER 42");
+    let main = fs.insert("<main>", "");
+
+    let out = preprocess(
+        program(&["@include defs.oct", "value = ANSWER ;"]),
+        main,
+        &TestDialect::default(),
+        &mut fs,
+        Bounds::default(),
+    )
+    .unwrap();
+
+    let values: Vec<&str> = out.tokens.iter().map(|t| t.value.as_str()).collect();
+    assert_eq!(values, ["value", "=", "42", ";"]);
+
+    // The `42` came from defs.oct's body but is reported where it was USED.
+    let expanded = out.map.locus(2).unwrap();
+    assert_eq!(expanded.position.file, main, "attributed to the file that used it");
+    assert_eq!(
+        expanded.position.line, 2,
+        "the invocation's line, not the macro body's line 1"
+    );
+
+    // And it agrees with its neighbours on that line, rather than pointing off
+    // into the `@include`.
+    assert_eq!(out.map.locus(0).unwrap().position.line, 2);
+    assert_eq!(out.map.locus(3).unwrap().position.line, 2);
+}
+
+#[test]
 fn a_macro_is_expanded_inside_a_controlling_expression() {
     // VM-068. Without expansion here, `LED_PORT` evaluates as an undefined
     // name (0), the `@else` branch is taken, and the program compiles — to the

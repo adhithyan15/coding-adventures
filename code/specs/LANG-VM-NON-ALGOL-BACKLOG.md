@@ -52,6 +52,38 @@ worked example (`@define LED_PORT 1` / `@if LED_PORT == 1`) is exactly the shape
 that silently takes the wrong branch, so this should not sit long. It is also a
 prerequisite for slice 4 — C's `#if defined(X)` is unimplementable without it.
 
+### VM-069 — expanded tokens have no expansion provenance (interim fix in slice 2)
+
+Slice 2's security review found that an expanded token carried the macro
+**body's** line and column while `emit` stamped it with the file currently
+being read. A macro defined in an included header therefore surfaced at a
+position inside the *including* file's `@include` line — pointing at text with
+no relationship to the token. Confidently wrong provenance, not merely absent:
+a reader follows it and lands somewhere unrelated.
+
+**Interim, shipped:** expanded tokens now carry the position of the
+**invocation**, which is real text in the file that genuinely produced them.
+Pinned by `an_expanded_token_points_at_its_invocation_not_at_unrelated_text`.
+
+**Still open:** `Locus::expansion` is always `None`, so the interned expansion
+arena in `source_map.rs` — `intern_expansion`, `expansion_parent`,
+`expansion_site` — is entirely unexercised. That arena is not incidental:
+`lib.rs` names "keeping a token's true origin across inclusion **and
+expansion**" as one of the three hard parts this crate exists to solve, and
+`source_map.rs` documents the interning design at length precisely so the map
+stays `O(tokens + expansions)` rather than `O(tokens × depth)`.
+
+Closing it needs an `Option<ExpansionId>` on `MToken` alongside `hide`,
+`intern_expansion` called at each substitution, and the macro body's defining
+`FileId` recorded in `MacroDef` so a chain can name it. Then a diagnostic can
+say "in expansion of `FOO`, defined at `ports.oct:3`, used at `main.oct:12`" —
+which is the whole reason the side-table design was chosen over widening
+`Token`.
+
+Worth doing before C (slice 4): C programs nest macros deeply enough that
+"which expansion produced this token" is the difference between a usable
+diagnostic and an unusable one.
+
 ### VM-068 — controlling expressions were not macro-expanded (found and fixed in slice 2)
 
 Found by the agent implementing MacroOct's `@define`, reported rather than
