@@ -1,0 +1,4 @@
+--compilation_level
+SIMPLE_OPTIMIZATIONS
+--js
+tests/diff/ladder_t6_destructure_obj_simple/input/a.js

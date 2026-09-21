@@ -1,0 +1,4 @@
+--compilation_level
+ADVANCED_OPTIMIZATIONS
+--js
+tests/diff/ladder_t6_for_of_advanced/input/a.js

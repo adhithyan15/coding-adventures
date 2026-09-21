@@ -1,0 +1,2 @@
+function* g(){ yield 1; }
+console.log([...g()]);

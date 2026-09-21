@@ -1,0 +1,1 @@
+function t(a){return a[0]}console.log(t`hi`);

@@ -1,0 +1,4 @@
+--compilation_level
+WHITESPACE_ONLY
+--js
+tests/diff/ladder_t6_destructure_arr_ws/input/a.js

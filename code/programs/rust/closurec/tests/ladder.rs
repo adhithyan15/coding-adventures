@@ -56,6 +56,16 @@ struct Divergence {
     /// cannot describe the wrong rung as the ledger grows.
     level: String,
     reason: String,
+    /// Upstream's exit status. Non-zero means upstream **refused this input** —
+    /// Closure does not implement the feature — so `expected.stdout` is empty
+    /// because there was nothing to emit, not because the program compiles to
+    /// nothing. Without this the parity predicate cannot tell those apart.
+    upstream_exit: i32,
+    /// For rungs where `closurec` itself produces no stdout, the stable prefix
+    /// of its first stderr line. Exit code alone says only "it failed"; this
+    /// pins *how*, so a regression that moves the failure from one stage to
+    /// another cannot stay green.
+    closurec_stderr_starts_with: Option<String>,
 }
 
 fn load_ledger() -> BTreeMap<String, Divergence> {
@@ -90,6 +100,18 @@ fn load_ledger() -> BTreeMap<String, Divergence> {
                     issue: s("issue"),
                     level: s("level"),
                     reason: s("reason"),
+                    upstream_exit: i32::try_from(
+                        body.get("upstream_exit")
+                            .and_then(|v| v.as_i64())
+                            .unwrap_or_else(|| {
+                                panic!("{fixture}: ledger entry missing `upstream_exit`")
+                            }),
+                    )
+                    .expect("upstream_exit fits in i32"),
+                    closurec_stderr_starts_with: body
+                        .get("closurec_stderr_starts_with")
+                        .and_then(|v| v.as_str())
+                        .map(str::to_string),
                 },
             )
         })
@@ -169,12 +191,16 @@ fn closurec_args(dir: &Path) -> Vec<String> {
 /// corpus carries `diff_charset` and `diff_control_chars` fixtures precisely
 /// because encoding fidelity is a live concern here. The sibling harness
 /// `tests/diff_minify.rs` is strict for the same reason.
-fn run_closurec(dir: &Path) -> (i32, Vec<u8>) {
+fn run_closurec(dir: &Path) -> (i32, Vec<u8>, String) {
     let out = Command::new(BINARY)
         .args(closurec_args(dir))
         .output()
         .expect("run closurec");
-    (out.status.code().unwrap_or(-1), out.stdout)
+    (
+        out.status.code().unwrap_or(-1),
+        out.stdout,
+        String::from_utf8_lossy(&out.stderr).to_string(),
+    )
 }
 
 /// What the gate concluded about one rung.
@@ -198,9 +224,18 @@ fn verdict(
     expected: &[u8],
     actual: &[u8],
     code: i32,
+    stderr: &str,
     known: Option<&Divergence>,
 ) -> Verdict {
-    let agrees = actual == expected && code == 0;
+    // Parity requires that BOTH compilers succeeded. Where upstream refused the
+    // input, `expected` is empty because there was nothing to emit — so an
+    // `actual` that is also empty is not agreement, it is two different
+    // outcomes that happen to share a byte string. Without this guard a
+    // regression to "emit nothing, exit 0" on such a rung would be reported as
+    // NOW MATCHES UPSTREAM, and a maintainer following that instruction would
+    // delete the entry and leave the rung passing vacuously forever.
+    let upstream_succeeded = known.is_none_or(|k| k.upstream_exit == 0);
+    let agrees = actual == expected && code == 0 && upstream_succeeded;
     match known {
         None if agrees => Verdict::Matches,
         None => Verdict::Fail(format!(
@@ -223,6 +258,24 @@ fn verdict(
              exists so the ledger cannot quietly keep stale entries.",
             k.issue
         )),
+        // A recorded gap that still produces no stdout must still fail for the
+        // same reason. Exit code alone cannot distinguish a parse-stage refusal
+        // from a bridge-stage one, so a regression that moves the failure
+        // between stages would otherwise stay green as a known divergence.
+        Some(k)
+            if k.closurec_stderr_starts_with
+                .as_deref()
+                .is_some_and(|want| !stderr.starts_with(want)) =>
+        {
+            Verdict::Fail(format!(
+                "{name}: still fails, but differently than recorded.\n    \
+                 ledger expected stderr to start: {:?}\n    actual stderr: {:?}\n    \
+                 Tracked in {}. Update the ledger only if this change was intended.",
+                k.closurec_stderr_starts_with.as_deref().unwrap_or(""),
+                stderr.lines().next().unwrap_or(""),
+                k.issue
+            ))
+        }
         Some(k) if actual != k.closurec_stdout.as_bytes() || code != k.closurec_exit => {
             Verdict::Fail(format!(
                 "{name}: our output changed but still does not match upstream.\n    \
@@ -249,8 +302,8 @@ fn ladder_matches_upstream_or_a_recorded_divergence() {
     for dir in ladder_fixtures() {
         let name = fixture_name(&dir);
         let expected = std::fs::read(dir.join("expected.stdout")).expect("read expected.stdout");
-        let (code, actual) = run_closurec(&dir);
-        match verdict(&name, &expected, &actual, code, ledger.get(&name)) {
+        let (code, actual, stderr) = run_closurec(&dir);
+        match verdict(&name, &expected, &actual, code, &stderr, ledger.get(&name)) {
             Verdict::Matches => matched += 1,
             Verdict::KnownDivergence => diverged += 1,
             Verdict::Fail(why) => failures.push(why),
@@ -325,7 +378,7 @@ fn every_divergence_is_well_formed() {
 fn reviewed_divergence_count_is_pinned() {
     assert_eq!(
         load_ledger().len(),
-        20,
+        63,
         "reviewed divergence ledger changed — see the note on this test"
     );
 }
@@ -342,13 +395,48 @@ fn fake_divergence() -> Divergence {
         issue: "https://github.com/adhithyan15/coding-adventures/issues/15837".into(),
         level: "SIMPLE".into(),
         reason: "fake, for exercising the gate".into(),
+        upstream_exit: 0,
+        closurec_stderr_starts_with: None,
+    }
+}
+
+/// A rung where upstream REFUSED the input, so `expected.stdout` is empty
+/// because nothing was emitted — not because the program compiles to nothing.
+fn fake_upstream_declined() -> Divergence {
+    Divergence {
+        upstream_stdout: String::new(),
+        // Deliberately empty: this models the state AFTER someone accepted a
+        // regression to "emit nothing, exit 0" into the ledger. That is the only
+        // arrangement in which the trap bites — while the ledger still recorded
+        // our old non-empty output, the output-changed branch catches it first.
+        closurec_stdout: String::new(),
+        closurec_exit: 0,
+        issue: "https://github.com/adhithyan15/coding-adventures/issues/15860".into(),
+        level: "SIMPLE".into(),
+        reason: "upstream declines this feature".into(),
+        upstream_exit: 2,
+        closurec_stderr_starts_with: None,
+    }
+}
+
+/// A rung where WE produce no stdout, pinned by the stage we fail at.
+fn fake_hard_failure() -> Divergence {
+    Divergence {
+        upstream_stdout: "UP".into(),
+        closurec_stdout: String::new(),
+        closurec_exit: 1,
+        issue: "https://github.com/adhithyan15/coding-adventures/issues/15837".into(),
+        level: "SIMPLE".into(),
+        reason: "closurec refuses valid JavaScript".into(),
+        upstream_exit: 0,
+        closurec_stderr_starts_with: Some("SIMPLE compilation failed at parse stage:".into()),
     }
 }
 
 /// (a) A rung that differs from upstream with nothing recorded must fail.
 #[test]
 fn gate_fires_on_an_unrecorded_divergence() {
-    let v = verdict("rung_simple", b"UP", b"OURS", 0, None);
+    let v = verdict("rung_simple", b"UP", b"OURS", 0, "", None);
     assert!(
         matches!(&v, Verdict::Fail(m) if m.contains("no ledger entry")),
         "expected an unrecorded-divergence failure, got {v:?}"
@@ -360,7 +448,7 @@ fn gate_fires_on_an_unrecorded_divergence() {
 /// itself.
 #[test]
 fn gate_fires_when_a_recorded_gap_starts_matching() {
-    let v = verdict("rung_simple", b"UP", b"UP", 0, Some(&fake_divergence()));
+    let v = verdict("rung_simple", b"UP", b"UP", 0, "", Some(&fake_divergence()));
     assert!(
         matches!(&v, Verdict::Fail(m) if m.contains("NOW MATCHES UPSTREAM")),
         "expected a now-matching failure, got {v:?}"
@@ -376,6 +464,7 @@ fn gate_fires_when_a_recorded_gap_shifts() {
         b"UP",
         b"SOMETHING ELSE",
         0,
+        "",
         Some(&fake_divergence()),
     );
     assert!(
@@ -383,7 +472,14 @@ fn gate_fires_when_a_recorded_gap_shifts() {
         "expected a shifted-divergence failure, got {v:?}"
     );
     // An unchanged stdout but a changed exit code is also a shift.
-    let v = verdict("rung_simple", b"UP", b"OURS", 1, Some(&fake_divergence()));
+    let v = verdict(
+        "rung_simple",
+        b"UP",
+        b"OURS",
+        1,
+        "",
+        Some(&fake_divergence()),
+    );
     assert!(
         matches!(&v, Verdict::Fail(m) if m.contains("output changed")),
         "expected an exit-code shift to fail, got {v:?}"
@@ -399,6 +495,7 @@ fn gate_fires_when_the_ledger_and_fixture_disagree_about_upstream() {
         b"DIFFERENT",
         b"OURS",
         0,
+        "",
         Some(&fake_divergence()),
     );
     assert!(
@@ -411,9 +508,81 @@ fn gate_fires_when_the_ledger_and_fixture_disagree_about_upstream() {
 /// satisfied by a `verdict` that only ever fails.
 #[test]
 fn gate_accepts_a_match_and_a_faithfully_recorded_divergence() {
-    assert_eq!(verdict("r_simple", b"UP", b"UP", 0, None), Verdict::Matches);
     assert_eq!(
-        verdict("r_simple", b"UP", b"OURS", 0, Some(&fake_divergence())),
+        verdict("r_simple", b"UP", b"UP", 0, "", None),
+        Verdict::Matches
+    );
+    assert_eq!(
+        verdict("r_simple", b"UP", b"OURS", 0, "", Some(&fake_divergence())),
         Verdict::KnownDivergence
+    );
+}
+
+/// (e) The trap this guard exists for. On a rung where upstream REFUSED the
+/// input, `expected.stdout` is empty. If `closurec` regressed to emitting
+/// nothing at exit 0, a predicate comparing only bytes and our exit code would
+/// call that a match and instruct a maintainer to delete the ledger entry —
+/// after which the rung would pass forever while comparing nothing. Empty
+/// output is not parity with a compiler that refused.
+#[test]
+fn gate_does_not_call_empty_output_a_match_when_upstream_refused() {
+    let v = verdict(
+        "rung_simple",
+        b"",
+        b"",
+        0,
+        "",
+        Some(&fake_upstream_declined()),
+    );
+    assert_eq!(
+        v,
+        Verdict::KnownDivergence,
+        "a rung upstream refused must stay a known divergence, not become a match"
+    );
+
+    // Prove the guard is what does the work. The same inputs with upstream
+    // recorded as having SUCCEEDED are exactly the case where an empty match is
+    // genuine, and there the gate must say so.
+    let succeeded = Divergence {
+        upstream_exit: 0,
+        ..fake_upstream_declined()
+    };
+    let v = verdict("rung_simple", b"", b"", 0, "", Some(&succeeded));
+    assert!(
+        matches!(&v, Verdict::Fail(m) if m.contains("NOW MATCHES UPSTREAM")),
+        "with upstream succeeding, an empty match IS a match and must demand the \
+         ledger entry be deleted, got {v:?}"
+    );
+}
+
+/// (f) A recorded hard failure that starts failing at a different stage must
+/// fail the gate. Exit code alone says only "it failed"; without the stderr
+/// fingerprint a parse-stage regression could hide behind a bridge-stage entry.
+#[test]
+fn gate_fires_when_a_recorded_failure_changes_stage() {
+    let k = fake_hard_failure();
+    assert_eq!(
+        verdict(
+            "rung_simple",
+            b"UP",
+            b"",
+            1,
+            "SIMPLE compilation failed at parse stage: unexpected token\n",
+            Some(&k),
+        ),
+        Verdict::KnownDivergence,
+        "the recorded failure stage should still be a known divergence"
+    );
+    let moved = verdict(
+        "rung_simple",
+        b"UP",
+        b"",
+        1,
+        "SIMPLE compilation failed at typed AST bridge stage: unsupported syntax\n",
+        Some(&k),
+    );
+    assert!(
+        matches!(&moved, Verdict::Fail(m) if m.contains("fails, but differently")),
+        "a failure that moved to another stage must fail the gate, got {moved:?}"
     );
 }

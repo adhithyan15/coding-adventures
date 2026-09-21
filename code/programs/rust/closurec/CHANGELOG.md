@@ -64,6 +64,80 @@ rewired to another rung's input, and keeps argv closed against write-capable
 flags. Output is compared as **bytes**, not via `from_utf8_lossy`, matching
 `tests/diff_minify.rs` — lossy decoding would let an encoding regression pass.
 
+### Added - ladder tiers 6 and 7; the ladder is complete (CCR-066)
+
+75 more rungs — 25 across tier 6 (ES6) and tier 7 (modern syntax), each at all
+three levels. **The ladder is now the full 52 rungs, 156 fixtures**, and
+reproduces the ad-hoc survey that motivated it exactly:
+
+| Level | Matching | |
+|-------|---------:|---|
+| `WHITESPACE_ONLY` | 49 / 52 | 94% |
+| `SIMPLE` | 31 / 52 | 59% |
+| `ADVANCED` | 13 / 52 | 25% |
+
+32 of the 75 agree. The 43 that do not split three ways, and the split matters
+more than the count:
+
+| Kind | Count | Meaning |
+|---|---:|---|
+| We exit non-zero, upstream compiles | 14 | front-end capability gaps |
+| Both exit 0, bytes differ | 26 | optimizer and emitter gaps |
+| **Upstream declines, we compile** | **3** | not a gap at all |
+
+**The 14 hard failures are seven rungs at two levels each** — `template`,
+`class` (a method after a constructor), `getter_setter`, `destructure_arr`,
+`destructure_obj`, `async_fn`, `for_await`. All pass at `WHITESPACE_ONLY`,
+because that path never parses. Four of the seven die in `bridge.rs`, which
+the ESTree migration (CCR-067) eliminates.
+
+**The 3 in the last row are the interesting ones.** Closure `v20260915` does
+not implement private class elements at any level and exits non-zero with
+`JSC_UNSUPPORTED_LANGUAGE_FEATURE`; `closurec` compiles them. That is not a
+parity gap — there is no upstream behaviour to converge on. Whether we should
+match the refusal is an open product decision, CCR-075.
+
+New issues filed from tiers 6-7 evidence:
+
+- **CCR-075** — policy for input Closure refuses (#15860)
+- **CCR-076** — emitter never drops braces around a single-statement body (#15861)
+- **CCR-077** — `function* g` spacing and a dropped class-field terminator (#15862)
+- **CCR-078** — we propagate a `const` at SIMPLE where upstream does not (#15863)
+
+CCR-078 is the only divergence found anywhere on the ladder where `closurec`
+optimizes **more** than the oracle at the same level. That direction carries
+different risk: being behind produces larger output, being ahead produces
+output nothing has validated. Worth settling before it is assumed to be a win.
+
+### Fixed - two gate weaknesses the new rung categories exposed
+
+Tiers 6-7 introduced two outcome shapes the harness could not distinguish, both
+found by the pre-push security review.
+
+**Parity now requires that upstream succeeded.** The predicate was
+`actual == expected && code == 0`, which has no notion of upstream's exit
+status. On the three `private_field` rungs `expected.stdout` is empty because
+upstream *refused the input*, not because the program compiles to nothing. Had
+`closurec` ever regressed to emitting nothing at exit 0, the harness would have
+reported **"NOW MATCHES UPSTREAM — delete its entry"** — and a maintainer
+following that instruction would have left the rung passing vacuously forever,
+comparing empty against empty. The ledger now carries `upstream_exit` and the
+verdict is gated on it. Verified by removing the guard and confirming the
+misleading message reappears.
+
+**A recorded failure must still fail the same way.** All 14 rungs where
+`closurec` refuses valid JavaScript pinned the identical pair
+`closurec_stdout: ""`, `closurec_exit: 1` — so the gate asserted only "it fails
+somehow". The underlying diagnostics genuinely differ: `class` fails at the
+parse stage, `async_fn` at the typed-AST bridge. A regression moving the
+failure between stages would have stayed green. Entries with empty stdout now
+pin `closurec_stderr_starts_with`, and a changed stage fails the gate.
+
+Both guards have negative tests, bringing the ladder's own test count to 11.
+
+Registered in `tests/oracle/manifest.json`; the reviewed fixture inventory
+tripwire moves from 707 to 782 and the ledger tripwire from 20 to 63.
+
 ### Added - ladder tiers 4 and 5 (CCR-066)
 
 36 more rungs — 12 rungs across tiers 4 (control flow) and 5 (data literals), each
