@@ -38,10 +38,26 @@ is the whole value of the number:
   non-ALGOL BEAM track required proof on real `erl`, and this probe is not that.
   Treat 252 as "worth attempting", not as "252 green cells".
 
-So the product question for the ALGOL owner is now concrete rather than
-open-ended: **is closing `array_len` (plus a small signature-type gap) worth
-~250 additional proven cells?** That is a different conversation from "should
-ALGOL support BEAM at all".
+**And `array_len` is not ALGOL's to fix — it is a BEAM backend parity gap.**
+Checked across every backend:
+
+| backend | `array_len` |
+|---|---|
+| `iir-to-llvm`, `iir-to-wasm`, `iir-to-cil-bytecode`, `iir-to-jvm-class-file`, `vm-core` | implemented |
+| `iir-to-beam` | **absent** |
+
+Every other backend has it. ALGOL is merely the only frontend that currently
+emits it, which is why the gap has stayed invisible — the non-ALGOL BEAM track
+completed without ever needing it.
+
+That splits VM-064 cleanly along the ownership boundary this document already
+draws. Implementing `array_len` in `iir-to-beam` is **shared-platform work this
+backlog owns**: rung 4, missing backend parity for a feature every other
+backend already implements. It requires no ALGOL change and touches no ALGOL
+semantics. Only the subsequent question — whether to promote ALGOL rows to
+declare `Beam` — belongs to the ALGOL owner, and it is much easier to answer
+once the op exists and the probe can be re-run against a backend that supports
+it.
 
 Sequencing note if it is taken up: implement `array_len` in `iir-to-beam`
 first, re-run this probe, and only then decide how many rows to promote — the
