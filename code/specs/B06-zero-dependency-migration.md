@@ -168,6 +168,36 @@ shipped stuff, but the shipped stuff is already fine. Starting with test
 tooling is both the cheapest work and the work that takes the alert count to
 zero.
 
+### Which declared dependency is actually responsible
+
+"Test tooling" is still too coarse. Walking each lockfile's graph backwards
+from every vulnerable node to the dependency the package actually *declares*
+narrows it much further:
+
+| Declared dependency | Alert nodes | Share | Manifests |
+|---|---:|---:|---:|
+| `vitest` | 1895 | 73.1% | 470 |
+| `@vitest/coverage-v8` | 490 | 18.9% | 461 |
+| `vite` | 114 | 4.4% | 28 |
+| `electron-builder` | 32 | 1.2% | 4 |
+| `jsdom` | 26 | 1.0% | 26 |
+| `tsx` | 12 | 0.5% | 12 |
+| `jest` + `ts-jest` | 20 | 0.8% | 5 |
+| `esbuild` | 2 | 0.1% | 2 |
+
+**92% is one pair.** `nanoid`, `postcss`, `brace-expansion`, `js-yaml` and
+`form-data` — the packages the advisories are actually *against* — appear in
+no manifest in this repository. They arrive underneath `vitest`.
+
+The surface this represents is easier to see in a single package.
+`document-html-sanitizer` declares exactly two dependencies, `vitest` and
+`@vitest/coverage-v8`, and installs **94 packages**. All 94 root at vitest.
+Roughly 450 packages each carrying ~90 third-party packages to run their
+tests is why an advisory lands every couple of weeks: it is arithmetic, not
+bad luck.
+
+TF00 specs the replacement in detail.
+
 ## The three tiers
 
 **Tier 1 — Tooling.** Test runners, coverage reporters, linters, type
