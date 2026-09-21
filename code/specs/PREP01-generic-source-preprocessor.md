@@ -59,8 +59,11 @@ both.
 
 **Explicitly not unified:** COBOL's `COPY … REPLACING` will use the include,
 source-map, dispatch and bounds layers and bring *its own* replacement matcher.
-That is the intended shape, not a shortfall. Slice 4 exists specifically to
-prove the trait boundary is not C-shaped.
+That is the intended shape, not a shortfall. Slices 1–3 and 5 exist
+specifically to prove the trait boundary is not C-shaped: the engine is built
+against Oct and Nib — two small real languages with deliberately non-C, and
+mutually different, directive syntaxes — before C is written at all, and COBOL
+follows with a genuinely different replacement algorithm. See §7.
 
 ## 3. Layer position, and a correction to an existing spec
 
@@ -340,49 +343,124 @@ diagnostic naming the construct and its source location.
 One slice per PR, following the discipline `AOT00-T2-exceptions.md` §12 uses.
 Each slice states an executable acceptance criterion.
 
-**Slice 1 — engine core, no macros.**
+### The proving ground: Oct and Nib, not a synthetic dialect, and not C first
+
+An earlier draft proved slice 1 against a synthetic dialect defined in the
+crate's own tests. That is weaker than it looks: a test-only dialect is written
+by the same author, in the same PR, against no prior requirements, so it can be
+unconsciously shaped to fit whatever the engine happens to do. It cannot fail
+in the way that matters.
+
+**Oct** (`OCT00`, a small Rust-shaped language targeting the Intel 8008) and
+**Nib** (`NIB00`, its 4-bit sibling on the 4004) are better on every axis:
+
+- They are **real languages with existing conformance corpora** — 12 and 26
+  rows in `lang_matrix.rs`, each already declaring all eight backends. Their
+  semantics predate this work and cannot be bent to suit it.
+- They are **small**, so a dialect is cheap to write and fast to iterate.
+- They give a far stronger oracle than "produces this expected token stream"
+  (see below).
+- Oct's own design principles argue *for* this rather than against it.
+  Principle 1 ("faithfulness to hardware — no hidden costs") is untouched,
+  because preprocessing is compile-time only and expanded source produces
+  byte-identical machine code; macro expansion is also precisely how tiny-
+  machine programmers avoided call overhead, so it suits an 8008 target rather
+  than fighting it. Principle 2 ("no silently-ignored constraints… reject with
+  a precise, actionable error message rather than silently truncating") is
+  already the discipline §6 demands of every bound.
+
+**The differential oracle.** A preprocessor is backend-agnostic by
+construction: it runs before the parser, so a preprocessed program must lower
+to *the same IIR* as its hand-expanded equivalent. Every directive-using row
+added to `lang_matrix.rs` therefore ships with a hand-expanded twin row, and
+the acceptance criterion is that the two produce **identical IIR** and identical
+observable results **on all eight backends**. That is a much tighter oracle
+than an expected token stream, and it costs zero backend work — no backend
+learns anything about preprocessing.
+
+**Deliberately non-C directive syntax, and two different spellings.** If Oct
+adopted `#define`/`#endif`, the engine would be proven only against a C-shaped
+dialect, which tests nothing about genericity. So Oct uses `@`-prefixed,
+line-oriented directives and — pointedly — `@end` rather than `@endif`, a
+divergence that breaks any engine which quietly hardcoded C's directive names:
+
+```oct
+@include "ports.oct"
+@define LED_PORT 1
+@if LED_PORT == 1
+    fn main() { out(LED_PORT, 200); }
+@else
+    fn main() { out(0, 200); }
+@end
+```
+
+Nib then takes a **third, different** spelling again (assembler-flavoured,
+e.g. `.include` / `.set` / `.ifdef`), so that by the time C arrives the engine
+has been shaped by two unrelated syntaxes. C becomes a *consumer* of a
+proven-generic engine rather than the thing that defined it.
+
+This costs one extra slice before C. That is the right trade: C is the
+motivating customer, and a customer is exactly what should not get to design
+the boundary.
+
+---
+
+**Slice 1 — engine core, no macros; Oct includes and conditionals.**
 `SourceFs`, `FileId`, `SourceMap`/`Locus`, line splicing, include resolution,
 the conditional stack, directive dispatch, and every §6 bound except macro
-depth. Proven against a deliberately non-C **synthetic dialect** defined in the
-crate's own tests, so nothing about the boundary can be quietly shaped by C.
-*Acceptance:* a synthetic-dialect program exercising nested includes,
-conditionals and every §6 bound preprocesses to an exact expected token stream;
-each bound has a test proving it yields a located diagnostic; `RootedFs` has a
+depth. An `OctDialect` supplying `@include` / `@if` / `@else` / `@end` only.
+*Acceptance:* new Oct matrix rows using `@include` and `@if` lower to IIR
+identical to their hand-expanded twins and agree on all eight backends; each
+§6 bound has a test proving it yields a located diagnostic; `RootedFs` has a
 test per rejected path form in §5, including the Windows set; and **the engine
 is fuzzed against arbitrary byte input with a no-panic / no-hang oracle**. The
 fuzz target is the highest-value item in this slice, because it covers the
-dimensions §6 did not manage to enumerate.
+dimensions §6 did not manage to enumerate. `LANG-VM-FEATURE-COVERAGE.md` counts
+are updated, which the pinned `feature_coverage_doc_counts_match_programs_source`
+test makes mandatory rather than optional.
 
-**Slice 2 — macro expansion.**
+**Slice 2 — macro expansion; Oct gains `@define`.**
 `MacroTable`, object-like then function-like macros, argument pre-expansion, and
-the hide-set algorithm that makes expansion non-recursive. `#`/`##` are routed
-through the dialect hooks, not built in.
+the hide-set algorithm that makes expansion non-recursive. Stringize and paste
+are routed through the dialect hooks, not built in; Oct declines both, which is
+itself a test that the engine does not assume them.
 *Acceptance:* the classic self-referential and mutually-recursive cases
 terminate with the standard-mandated output rather than looping; argument
 pre-expansion ordering matches the C rules on a table of cases drawn from the
-standard's own examples; and **slice 1's no-panic / no-hang fuzz oracle is
+standard's own examples; new `@define` Oct rows match their hand-expanded twins'
+IIR on all eight backends; and **slice 1's no-panic / no-hang fuzz oracle is
 extended over macro definition and expansion**. That extension is required
 here, not optional: slice 1 fuzzes an engine that has no macros, while the
 exponential-blowup bounds in §6 (tokens produced, synthesised token bytes,
 fuel, hide-set cost) all guard subsystems that only come into existence in this
 slice.
 
-**Slice 3 — the C dialect, and real C.**
+**Slice 3 — Nib, a second dialect in a third syntax.**
+A `NibDialect` with assembler-flavoured directive spelling, reusing the engine
+unchanged.
+*Acceptance:* Nib rows using its own directives match hand-expanded twins on all
+eight backends; **and the engine core is unchanged by this slice**, or any change
+it did require is called out in the PR as a genuine genericity defect that the
+second dialect found. This is the cheapest genericity proof available, because
+Nib already has full matrix coverage — the whole slice is a dialect plus rows.
+
+**Slice 4 — the C dialect, and real C.**
 `c.tokens` stops discarding `#…` lines; `c-lexer` surfaces directive tokens; a
 `CDialect` implements §5; `c-to-semantic-ir` runs the engine as its
 `post_tokenize` hook. `SIR27`'s preprocessor scope statement is updated.
 *Acceptance:* a C program using `#define` (object- and function-like), `#if`/
 `#ifdef`/`#else`/`#endif` and a real project-local `#include` compiles through
 `c-to-semantic-ir` and executes with the expected result — the first C program
-in this repo to depend on preprocessing.
+in this repo to depend on preprocessing. Stringize and paste get their first
+real implementation here, having been dialect hooks unused by Oct and Nib.
 
-**Slice 4 — COBOL `COPY … REPLACING`, the boundary proof.**
+**Slice 5 — COBOL `COPY … REPLACING`, the hardest boundary proof.**
 A `CobolDialect` that reuses the include, source-map, dispatch and bounds layers
-while supplying its own pseudo-text replacement matcher.
+while supplying its own pseudo-text replacement matcher — a different algorithm
+from macro expansion, which is why it is the strongest test of the split.
 *Acceptance:* a COBOL program using `COPY … REPLACING` compiles and runs; and
 the engine core is unchanged by this slice, or any change it did require is
-called out explicitly in the PR as a genuine genericity defect found by the
-second customer.
+called out explicitly in the PR as a genuine genericity defect.
 
 **Later slices (not scoped here):** `__LINE__`/`__FILE__`, `#pragma once`,
 variadic macros, `__has_include`, and a minimal in-VFS `stdint.h`/`stdio.h`.
