@@ -1,0 +1,21 @@
+{
+  "language": "spanish",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:cf2f8a4d288bf9ee",
+  "lessonIds": [
+    "ES-C436-companero",
+    "ES-C436-grupo",
+    "ES-C436-ofrecer",
+    "ES-C436-prestar",
+    "ES-C436-recoger",
+    "ES-R436-repaso-gente",
+    "ES-C436-sintesis-aviso-grupo"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "spanish/narration/ch436.txt",
+  "json": "spanish/narration/ch436.json",
+  "textHash": "fnv1a64:3c3ad4216486e2c1",
+  "jsonHash": "fnv1a64:94bcf2ec4ad0b179",
+  "findings": []
+}

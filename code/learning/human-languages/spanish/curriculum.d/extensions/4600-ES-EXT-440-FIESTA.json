@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-440-FIESTA",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can be invited to a wedding or a birthday, say I went, say what mood I was in, and tell a notice's \"is held\" apart from a friend's \"we're celebrating\".",
+  "prerequisites": [
+    "ES-EXT-439-VIA"
+  ]
+}

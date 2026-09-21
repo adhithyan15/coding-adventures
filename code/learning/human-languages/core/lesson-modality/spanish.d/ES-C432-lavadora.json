@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C432-lavadora",
+    "language": "spanish",
+    "chapter": 432,
+    "sequence": 10510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5918cc77f4a1a9d1"
+  },
+  "findings": []
+}

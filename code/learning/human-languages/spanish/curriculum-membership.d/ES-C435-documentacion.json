@@ -1,0 +1,11 @@
+{
+  "id": "ES-C435-documentacion",
+  "pathSegment": "ES-PATH-435-PAPELES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-435-PAPELES",
+      "order": 1
+    }
+  ]
+}

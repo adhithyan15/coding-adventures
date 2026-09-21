@@ -1,0 +1,4 @@
+--compilation_level
+SIMPLE_OPTIMIZATIONS
+--js
+tests/diff/ladder_t7_new_target_simple/input/a.js

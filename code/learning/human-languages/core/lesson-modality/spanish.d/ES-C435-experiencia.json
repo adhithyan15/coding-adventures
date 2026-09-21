@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C435-experiencia",
+    "language": "spanish",
+    "chapter": 435,
+    "sequence": 10740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69fc99e9e9d705b6"
+  },
+  "findings": []
+}

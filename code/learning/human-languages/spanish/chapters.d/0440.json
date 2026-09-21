@@ -1,0 +1,22 @@
+{
+  "chapter": 440,
+  "title": "La Fiesta Y El Año",
+  "label": "ch:es-fiesta",
+  "canDo": "I can be invited to a wedding or a birthday, say I went, say what mood I was in, and tell a notice's \"is held\" apart from a friend's \"we're celebrating\".",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "ES-C440-sintesis-fiesta",
+    "kind": "task",
+    "summary": "Read the message or notice this chapter's words exist for, then say the same thing back.",
+    "assesses": [
+      "ES-LEX-C440-FIESTA-01",
+      "ES-LEX-C440-FIESTA-02",
+      "ES-LEX-C440-FIESTA-03",
+      "ES-LEX-C440-FIESTA-04",
+      "ES-LEX-C440-FIESTA-05"
+    ],
+    "note": "Third A2 vocabulary tranche. THE SELECTION RULE CHANGED HERE. Tranches 1-2 taught the lexemes appearing in two or more failing items; after 45 headwords that rule was spent -- 145 of the 146 lexemes still missing appeared in exactly ONE item. The replacement comes from the pass condition: an item is red until EVERY lexeme in its row is taught, so rank by how close each item is to being unblocked. 41 of the 79 failing items were blocked by a single missing word; 39 of those words are teachable, and each clears a whole item by itself. THE CHAPTER'S SPINE IS A THIRD WAY A WORD HIDES ITS PIECES: boda is a Latin NEUTER PLURAL (vota, the vows) read as a feminine singular once Spanish lost the neuter -- same move as folia > la hoja and ligna > la lena -- so the pieces are invisible from modern Spanish alone; cumpleanos is a whole phrase fused (cumple + anos), recoverable by saying it slowly; and disfrutar comes apart cleanly and then LIES, because des- reverses in descansar while dis- INTENSIFIES here. That last point CORRECTS chapter 438 rather than repeating it: the piece-test tells you WHETHER there is a join, never what the join means. celebrarse on an official notice means IS HELD, not is enjoyed, and the payoff turns on exactly that -- the message has a 'we', the notice has a 'se', and the grammar rather than the tone is what separates them."
+  }
+}

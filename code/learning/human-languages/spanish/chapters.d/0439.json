@@ -1,0 +1,22 @@
+{
+  "chapter": 439,
+  "title": "Andenes Y Cierres",
+  "label": "ch:es-via",
+  "canDo": "I can read the signs that decide where I may walk: a platform number, a shop shut for now, a street severed, and an office that has moved.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "ES-C439-sintesis-via",
+    "kind": "task",
+    "summary": "Read the notice or message this chapter's words exist for, then say the same thing back.",
+    "assesses": [
+      "ES-LEX-C439-VIA-01",
+      "ES-LEX-C439-VIA-02",
+      "ES-LEX-C439-VIA-03",
+      "ES-LEX-C439-VIA-04",
+      "ES-LEX-C439-VIA-05"
+    ],
+    "note": "Wordlist derived from the A2 mock audit, as in 431-438. THE CHAPTER SEPARATES THREE SIGNS ENGLISH COLLAPSES INTO 'CLOSED': cerrado is shut for now and will reopen; cortada means the route is severed, so go round; trasladado means it is open somewhere else and there is an address underneath. Picking the wrong one costs a learner an afternoon on a pavement. cerrado also pairs the REGULAR participle against abrir's irregular abierto (ES-GRAMMAR-ABIERTO-03), which sits on the other side of the same shop door. IT ALSO TEACHES THE LIMIT OF ETYMOLOGY: anden and tirar both carry roots: [] because their origin is genuinely unsettled, and the lessons say so rather than inventing a derivation. Every other word in 431-439 comes apart; these two do not, and a course that produced an etymology for every word would be making some of them up. tirar also carries the door-sign reversal -- TIRAR means PULL, not throw -- which catches every English speaker once."
+  }
+}

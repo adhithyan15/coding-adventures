@@ -1,0 +1,11 @@
+{
+  "id": "ES-C437-equivocarse",
+  "pathSegment": "ES-PATH-437-PLAN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-437-PLAN",
+      "order": 2
+    }
+  ]
+}

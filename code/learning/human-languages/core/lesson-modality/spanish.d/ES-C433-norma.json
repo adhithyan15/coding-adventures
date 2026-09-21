@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C433-norma",
+    "language": "spanish",
+    "chapter": 433,
+    "sequence": 10610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0588942dc6c7e64"
+  },
+  "findings": []
+}

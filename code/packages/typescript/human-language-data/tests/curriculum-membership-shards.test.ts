@@ -71,12 +71,26 @@ describe("direct curriculum lesson owners", () => {
       .digest("hex");
     // The digest and count below are of the LIVE curriculum graph, so they move
     // whenever any track gains a lesson -- not only when the membership
-    // migration changes shape. 7196 -> 7200 and a new digest are Malayalam
-    // chapter 111's four lessons; the guard still does its job, which is to make
-    // any OTHER change to the public graph fail loudly rather than pass quietly.
-    expect(digest).toBe("ec22e32e392bd6799fba678d338fbb5187e189b623abfa9674eea7f4ebe4d825");
+    // migration changes shape. 7204 -> 7246 was the first Spanish A2 vocabulary
+    // tranche (chapters 431-436) and 7246 -> 7267 was the second (437-439) and
+    // 7267 -> 7295 is the third (440-443); the guard still does its job, which is to make any OTHER change to the public
+    // graph fail loudly rather than pass quietly.
+    //
+    // Attribution was checked by RECONSTRUCTION, not assumed. A clean worktree
+    // at the previous commit was loaded by this same function and reproduced the
+    // previous digest and count byte for byte, so nothing outside the new path
+    // segments moved. For 440-443 the control was origin/main, which reproduced
+    // ab6d34be... and 7267 exactly; ES-PATH-440-FIESTA, ES-PATH-441-TRATO,
+    // ES-PATH-442-GESTION and ES-PATH-443-ANIMO hold exactly 28 lessons between
+    // them, and the corpus-wide count moved by exactly 28.
+    //
+    // Filtering the loaded object is NOT a substitute for that control: dropping
+    // segments from an in-memory graph leaves the remaining records ordered and
+    // shaped as the larger load produced them, so it reproduces neither digest.
+    // Only re-loading a checkout that never had the files answers the question.
+    expect(digest).toBe("1787ed7f1d8395fbb34362798ee2c8feeb913bd88f0b1debf8b65e686c2f740a");
     expect(curricula.flatMap((curriculum) => curriculum.path).flatMap((path) => path.lessons))
-      .toHaveLength(7200);
+      .toHaveLength(7295);
   });
 
   it("keeps the canonical curriculum shards free of derived lesson arrays", () => {

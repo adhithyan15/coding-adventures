@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-433-EDIFICIO",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read the notices in a block of flats, say where to leave a key, and say where something is in relation to something else.",
+  "prerequisites": [
+    "ES-EXT-432-CASA"
+  ]
+}

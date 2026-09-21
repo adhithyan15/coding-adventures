@@ -73,21 +73,27 @@ describe("the committed Malayalam A1 inventory", () => {
     // 479 -> 480: ML-S148-letter-pha adds the first headword containing ഫ and
     // gives that same glyph a direct script owner. Both census totals rise by one,
     // while the nine-glyph open set below is unchanged.
+    // 484 -> 488: chapter 112's four lessons. THREE COUNTS BELOW MOVE, and the
+    // chapter's three headwords are exactly why: ശ 17/13 -> 18/14 from
+    // ആശുപത്രി, and ങ 14/12 -> 15/13 plus ബ 4/4 -> 5/5 from ബാങ്ക്. പോലീസ്
+    // moves nothing because its glyphs are all script-owned already. `shown`
+    // HOLDS AT 69 -- the chapter shows no glyph the track had not already
+    // shown, which was verified before drafting and is re-proved here.
     // 480 -> 484: chapter 111's four lessons. Every count below is UNCHANGED,
     // and that is the chapter in one line: it teaches a CONSTRUCTION out of a
     // past form and a word both long owned, so it introduces no headword
     // carrying a glyph the census had not already seen and owned.
-    expect(lessons).toHaveLength(484);
+    expect(lessons).toHaveLength(488);
     expect(shown.size).toBe(69);
     expect([...shown].filter((glyph) => directlyOwned.has(glyph))).toHaveLength(60);
     expect(open).toEqual([
       { glyph: "ള", fields: 24, tokens: 19 },
-      { glyph: "ശ", fields: 17, tokens: 13 },
-      { glyph: "ങ", fields: 14, tokens: 12 },
+      { glyph: "ശ", fields: 18, tokens: 14 },
+      { glyph: "ങ", fields: 15, tokens: 13 },
       { glyph: "ർ", fields: 12, tokens: 12 },
       { glyph: "ധ", fields: 8, tokens: 7 },
       { glyph: "ൈ", fields: 6, tokens: 6 },
-      { glyph: "ബ", fields: 4, tokens: 4 },
+      { glyph: "ബ", fields: 5, tokens: 5 },
       { glyph: "ഖ", fields: 3, tokens: 3 },
       { glyph: "ഛ", fields: 2, tokens: 2 },
     ]);
@@ -994,8 +1000,8 @@ describe("the committed Malayalam A1 inventory", () => {
     // FOUR SHAPES OFF ONE PAST FORM is the chapter's spine: vannu, then vanna
     // (a vowel sign taken OFF, per ML-C90), then vannittu (-ittu put ON), then
     // vannittundu. Each row is the row above with one change.
-    expect(coverage.covered).toBe(219);
-    expect(coverage.unmapped).toBe(24);
+    expect(coverage.covered).toBe(220);
+    expect(coverage.unmapped).toBe(23);
     expect(coverage.partial).toBe(0);
     // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
     // 67-68). It is the ONLY point that moved, and the numeral column below
@@ -1051,7 +1057,7 @@ describe("the committed Malayalam A1 inventory", () => {
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 219/243 points covered (90%)",
+      "malayalam A1 (partial inventory): 220/243 points covered (91%)",
     );
   }, 60_000);
 });

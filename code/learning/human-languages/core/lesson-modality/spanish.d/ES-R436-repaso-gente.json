@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R436-repaso-gente",
+    "language": "spanish",
+    "chapter": 436,
+    "sequence": 10840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:91f87346905ace18"
+  },
+  "findings": []
+}

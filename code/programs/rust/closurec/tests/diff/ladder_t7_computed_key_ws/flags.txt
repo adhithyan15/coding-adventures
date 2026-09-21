@@ -1,0 +1,4 @@
+--compilation_level
+WHITESPACE_ONLY
+--js
+tests/diff/ladder_t7_computed_key_ws/input/a.js

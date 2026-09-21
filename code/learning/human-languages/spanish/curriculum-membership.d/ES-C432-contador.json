@@ -1,0 +1,11 @@
+{
+  "id": "ES-C432-contador",
+  "pathSegment": "ES-PATH-432-CASA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-432-CASA",
+      "order": 1
+    }
+  ]
+}

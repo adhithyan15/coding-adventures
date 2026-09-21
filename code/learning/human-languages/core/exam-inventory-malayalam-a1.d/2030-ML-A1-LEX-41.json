@@ -2,7 +2,11 @@
   "id": "ML-A1-LEX-41",
   "category": "Padakosham (lexicon by domain)",
   "label": "banks, health services, the police",
-  "probe": null,
+  "probe": [
+    "ML-LEX-C112-BANK-01",
+    "ML-LEX-C112-POLICE-01",
+    "ML-LEX-C112-HOSPITAL-01"
+  ],
   "anchorIds": [
     "ES-A1-PROXY",
     "ML-CORPUS",
@@ -14,5 +18,5 @@
     "A1-NE11-04"
   ],
   "malayalamSpecific": false,
-  "note": "vaidyan ('a doctor') is the only word in this whole area."
+  "note": "CLOSED BY CHAPTER 112, AND THE OLD NOTE WAS STALE. It read 'vaidyan (a doctor) is the only word in this whole area', which was true when written and false when read. The health half had already arrived: marunnu (ML-C107-marunnu) and cikitsa (ML-C107-chikitsa) teach the medicine and the treatment, and panam (ML-C91-vila-panam, atom ML-LEX-C91-MONEY-02 -- MONEY-01 is vila, the price) covers the money. Only the BUILDINGS were missing. A census confirmed it: 'police' and 'pharmac' returned zero hits of any kind, and every hit for 'bank' and 'hospital' was English prose rather than a taught word (ML-C59-ember 'banked at night', ML-C01-athe 'Bank athe as the simple word', ML-C48-doctor and ML-C107-chikitsa on the English word for a hospital doctor, ML-C48-guest on hospitality). Control greps confirmed the search reached all 484 lessons. The chapter adds baanku, poleesu and aashupathri at no script cost: all three spellings sit inside the 69 glyphs the track's 75 script lessons already teach, and none is a new glyph in reading order. Its spine is a contrast the learner can test -- the first two hand themselves to an English ear and the third does not, which is why aashupathri is placed last. THE ORIGIN OF aashupathri IS DELIBERATELY NOT CLAIMED: its etymology has more than one account in circulation, the lesson says so in its own text, and its roots list is empty on purpose. Do not fill it in without a source."
 }

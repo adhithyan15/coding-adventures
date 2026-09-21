@@ -141,6 +141,80 @@ function Set-TaskAppWindowSize($proc, $width, $height) {
     return [System.Windows.Automation.AutomationElement]::FromHandle($proc.MainWindowHandle)
 }
 
+function Find-LiveByAutomationId($root, $automationIds, $controlType) {
+    # TaskApp swaps several of its composer inputs behind an `If`/`Else` on
+    # focus/validation slots (e.g. name-input / name-input-corrected /
+    # name-input-error, due-input / due-input-corrected / due-input-error --
+    # see TaskApp.mll). All of those branches can stay in the automation
+    # tree at once, collapsed rather than removed, so looking a control up
+    # by AutomationId once and reusing that reference is not enough: after
+    # the app swaps branches, the cached reference points at a collapsed
+    # element that raises "Target element cannot receive focus" from
+    # SetFocus(), not ElementNotAvailableException.
+    #
+    # IsOffscreen is not a reliable signal for which branch is actually
+    # live here: a collapsed HostInput can still report IsOffscreen=false,
+    # which let this function return the wrong (collapsed) candidate,
+    # SetValue() land on it unseen, and the visible one stay empty -- the
+    # add-task validation then reported an empty name rather than creating
+    # the persisted task. IsKeyboardFocusable is the property SetFocus()
+    # itself checks, so use that instead to find whichever candidate id
+    # can actually take focus right now.
+    foreach ($automationId in $automationIds) {
+        $element = Find-ByAutomationId $root $automationId $controlType
+        if ($element -and $element.Current.IsKeyboardFocusable) { return $element }
+    }
+    return $null
+}
+
+function Set-InputValue($root, $automationIds, $controlType, $value, $timeoutSeconds) {
+    # WinUI's generated onChange handler dispatches TextChanged only from a
+    # focused TextBox (mosaic-emit-xaml's emit_host_input), which real typing
+    # always satisfies but ValuePattern.SetValue does not by itself -- it
+    # writes the Text property directly without focusing the control.
+    # SetFocus() requests focus, but it is a request, not a guarantee: the
+    # app's own auto-focus Loaded handler races it during startup, and a
+    # packaged app's window can take longer to become the one WinUI's focus
+    # manager will actually hand focus to.
+    #
+    # Worse, per Find-LiveByAutomationId, no automation property found so
+    # far (IsOffscreen, IsKeyboardFocusable) reliably rules out a stale
+    # instance of a swapped-away branch that can still silently accept
+    # SetFocus()/SetValue() with no visible effect -- a value written there
+    # never reaches the control the app renders or the state its onChange
+    # handler updates. Reading the value back after writing it is the only
+    # check that actually confirms the write landed on the live control, so
+    # retry the whole resolve/focus/set/verify cycle (re-resolving each
+    # time, since which branch is on-screen can itself change) until the
+    # readback matches or the timeout elapses.
+    $deadline = (Get-Date).AddSeconds($timeoutSeconds)
+    $lastSeenId = '<not found>'
+    while ((Get-Date) -lt $deadline) {
+        $element = Find-LiveByAutomationId $root $automationIds $controlType
+        if ($element) {
+            $lastSeenId = $element.Current.AutomationId
+            try {
+                if (-not $element.Current.HasKeyboardFocus) { $element.SetFocus() }
+                $element.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue($value)
+                Start-Sleep -Milliseconds 150
+                $confirm = Find-LiveByAutomationId $root $automationIds $controlType
+                if ($confirm) {
+                    $confirmed = $confirm.GetCurrentPattern(
+                        [System.Windows.Automation.ValuePattern]::Pattern).Current.Value
+                    if ($confirmed -eq $value) { return $confirm }
+                }
+            } catch [System.Windows.Automation.ElementNotAvailableException] {
+            } catch [System.InvalidOperationException] {
+                # "Target element cannot receive focus": the branch this id
+                # resolved to became collapsed between resolving it and
+                # calling SetFocus(). Re-resolve on the next iteration.
+            }
+        }
+        Start-Sleep -Milliseconds 200
+    }
+    throw "Could not set '$value' on any of '$($automationIds -join "', '")' within $timeoutSeconds seconds (last seen: '$lastSeenId')."
+}
+
 function Wait-ForNamedOffscreenState($root, $name, $controlType, $expected, $timeoutSeconds) {
     $deadline = (Get-Date).AddSeconds($timeoutSeconds)
     while ((Get-Date) -lt $deadline) {
@@ -289,18 +363,21 @@ try {
     # the component object is not the same as the screen updating: with
     # x:Bind defaulting to OneTime, the object was correct and the window was
     # frozen.
-    $composer = Find-ByAutomationId $root 'name-input' ([System.Windows.Automation.ControlType]::Edit)
-    if (-not $composer) {
+    # TaskApp swaps the composer/due-date input behind name-input(-corrected|
+    # -error) / due-input(-corrected|-error) branches (see Find-LiveByAutomationId).
+    $nameInputIds = 'name-input', 'name-input-corrected', 'name-input-error'
+    $dueInputIds = 'due-input', 'due-input-corrected', 'due-input-error'
+    $editType = [System.Windows.Automation.ControlType]::Edit
+    if (-not (Find-LiveByAutomationId $root $nameInputIds $editType)) {
         throw "Could not find the task composer input. Buttons present: $((Get-ButtonNames $root) -join ', ')"
     }
     $taskName = 'CI smoke task'
-    $composer.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue($taskName)
+    $composer = Set-InputValue $root $nameInputIds $editType $taskName $TimeoutSeconds
     $due = '2026-01-09'
-    $dueInput = Find-ByAutomationId $root 'due-input' ([System.Windows.Automation.ControlType]::Edit)
-    if (-not $dueInput) {
+    if (-not (Find-LiveByAutomationId $root $dueInputIds $editType)) {
         throw "Could not find the due-date input."
     }
-    $dueInput.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue($due)
+    $dueInput = Set-InputValue $root $dueInputIds $editType $due $TimeoutSeconds
     Start-Sleep -Seconds 2
 
     $addButton = Find-ByAutomationId $root 'add-btn' ([System.Windows.Automation.ControlType]::Button)
@@ -397,9 +474,15 @@ try {
     }
 
     # ── 7. Persist a second task, restart, and prove it is restored ─────
+    #
+    # The composer and due-date inputs lost focus to the toggle/delete
+    # controls exercised above, and adding the first task above can also
+    # have swapped which name-input/due-input branch is on-screen (see
+    # Find-LiveByAutomationId and Set-InputValue), so re-resolve them
+    # rather than reusing the step 3 references.
     $persistedTask = 'Persisted native task'
-    $composer.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue($persistedTask)
-    $dueInput.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).SetValue($due)
+    $composer = Set-InputValue $root $nameInputIds $editType $persistedTask $TimeoutSeconds
+    $dueInput = Set-InputValue $root $dueInputIds $editType $due $TimeoutSeconds
     Start-Sleep -Seconds 1
     $addButton.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
     $deadline = (Get-Date).AddSeconds($TimeoutSeconds)

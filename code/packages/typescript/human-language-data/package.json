@@ -24,6 +24,8 @@
     "generate:spanish-prea1-mock-audit": "node dist/spanish-a1-mock-audit-cli.js --write --level pre-A1",
     "check:spanish-prea1-mock-audit": "node dist/spanish-a1-mock-audit-cli.js --check --level pre-A1",
     "check:spanish-a1-mock-audit": "node dist/spanish-a1-mock-audit-cli.js --check",
+    "generate:spanish-a2-mock-audit": "node dist/spanish-a1-mock-audit-cli.js --write --level A2",
+    "check:spanish-a2-mock-audit": "node dist/spanish-a1-mock-audit-cli.js --check --level A2",
     "report:spanish-a1-mock-audit": "node dist/spanish-a1-mock-audit-cli.js --report",
     "shard": "node dist/shard-cli.js --shard",
     "unshard": "node dist/shard-cli.js --unshard",

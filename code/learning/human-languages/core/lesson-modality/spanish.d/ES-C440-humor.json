@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C440-humor",
+    "language": "spanish",
+    "chapter": 440,
+    "sequence": 11110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:069da2181419e0d2"
+  },
+  "findings": []
+}

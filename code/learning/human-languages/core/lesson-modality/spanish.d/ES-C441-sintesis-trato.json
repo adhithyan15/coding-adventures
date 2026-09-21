@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C441-sintesis-trato",
+    "language": "spanish",
+    "chapter": 441,
+    "sequence": 11200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:58569e79d465fbfb"
+  },
+  "findings": []
+}

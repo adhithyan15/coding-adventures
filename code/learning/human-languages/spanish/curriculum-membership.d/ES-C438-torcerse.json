@@ -1,0 +1,11 @@
+{
+  "id": "ES-C438-torcerse",
+  "pathSegment": "ES-PATH-438-CUERPO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-438-CUERPO",
+      "order": 2
+    }
+  ]
+}

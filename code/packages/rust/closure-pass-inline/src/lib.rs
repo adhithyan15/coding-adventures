@@ -5114,7 +5114,7 @@ mod tests {
         // first would be guarded by the condition.
         assert_eq!(
             inline_source("function f() { a(); b(); } if (c) f();"),
-            "function f(){a();b()}if(c){a();b()}"
+            "function f(){a();b()}if(c){a();b()};"
         );
     }
 
@@ -5283,7 +5283,7 @@ mod tests {
         // so the splice is sound there too.
         assert_eq!(
             inline_source("const K = 5; function f() { sink(K); } { f(); }"),
-            "const K=5;function f(){sink(K)}{sink(K)}"
+            "const K=5;function f(){sink(K)}{sink(K)};"
         );
     }
 
@@ -5423,7 +5423,7 @@ mod tests {
         // A block branch of expression statements is spliced as a block.
         assert_eq!(
             inline_source("function f(x) { if (x) { a(x); b(x); } } f(v);"),
-            "function f(x){if(x){a(x);b(x)}}if(v){a(v);b(v)}"
+            "function f(x){if(x){a(x);b(x)}}if(v){a(v);b(v)};"
         );
     }
 

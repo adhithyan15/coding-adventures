@@ -1,0 +1,22 @@
+{
+  "chapter": 437,
+  "title": "Decidir, Coincidir, Equivocarse",
+  "label": "ch:es-plan",
+  "canDo": "I can decide between two dates, say that one clashes, admit a mistake, say how long something takes, and name the evening meal.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "ES-C437-sintesis-plan",
+    "kind": "task",
+    "summary": "Read the notice or message this chapter's words exist for, then say the same thing back.",
+    "assesses": [
+      "ES-LEX-C437-PLAN-01",
+      "ES-LEX-C437-PLAN-02",
+      "ES-LEX-C437-PLAN-03",
+      "ES-LEX-C437-PLAN-04",
+      "ES-LEX-C437-PLAN-05"
+    ],
+    "note": "Second A2 vocabulary tranche, wordlist DERIVED FROM THE EXAM as in 431-436: spanish/mocks/a2/book-bounded-audit.json named the lexemes the two DELE A2 mocks need and the corpus does not teach. THE CHAPTER'S SPINE IS THE REFLEXIVE: equivocarse is almost never plain, because a mistake is something that happens TO a person, and the same shape covers caerse, olvidarse and perderse; coincidir takes the INDIRECT pronoun instead (me coincide), which is a different construction wearing a similar face. tardar closes a debt chapter 431 opened -- the retraso lesson used the verb in passing without teaching it."
+  }
+}

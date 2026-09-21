@@ -8,6 +8,171 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## PREP01 slice 1 — the generic preprocessor engine, proven on MacroOct (2026-09-21)
+
+Owner-directed track. C is genuinely blocked without a preprocessor: `SIR27`
+scopes the frontend to ignoring two `#include` lines with no `#define`, no
+macros and no conditionals, and `c-lexer` does not merely ignore directives —
+`code/grammars/c/c.tokens:123` carries `PREPROC = /#[^
+]*/` in the grammar's
+`skip:` section, so a directive line never reaches the parser or any hook.
+
+Slice 1 lands `source-preprocessor`: includes, conditionals, source mapping and
+resource bounds, with per-language dialect plug-ins. Macro expansion is slice 2
+and is refused with a located diagnostic rather than silently ignored.
+
+**MacroOct** is the proving ground — a NEW language, a preprocessor dialect of
+Oct. Two owner constraints shaped it, both of which improved the design:
+
+1. *Use a small real language, not a synthetic dialect.* A test-only dialect is
+   written by the same author, in the same PR, against no prior requirements,
+   so it can be unconsciously shaped to fit whatever the engine does. It cannot
+   fail in the way that matters.
+2. *Do not modify Oct or Nib; create a new dialect instead.* This is the
+   stronger constraint. Oct becomes a **reference**, and a reference you may
+   edit is not a reference. It also sharpens the oracle: because MacroOct is a
+   dialect of Oct, a directive-using program's hand-expanded twin IS a valid
+   Oct program, so the differential runs against Oct's existing untouched
+   corpus rather than twins authored alongside.
+
+Evidence: 9 MacroOct rows x 8 backends (72 cells) in the non-ALGOL capstone
+(220 programs / 1540 cells exercised); `macrooct_rows_lower_to_iir_identical_to_hand_expanded_oct`;
+and `macrooct_compiles_every_oct_corpus_row_byte_identically`, which recompiles
+all 12 existing Oct rows through the MacroOct frontend and asserts byte-identical
+IIR — making MacroOct a verified strict superset of Oct on the whole corpus.
+Oct's own counts, specs, grammar and rows are unchanged.
+
+`oct-parser` gained exactly one additive entry point,
+`create_oct_parser_from_tokens`, and no other change. An earlier draft avoided
+even that by embedding a second compiled copy of `oct.grammar` plus a restated
+`MAX_RULE_DEPTH`; both were guarded by tests, but that is a fork with a
+tripwire rather than reuse. Reusing Oct's own builder removes both copies and
+makes "MacroOct reuses Oct's parser unchanged" literally true.
+
+### VM-065 — the pinned coverage test was itself never running in CI (found here)
+
+Third instance of VM-062's failure mode, and it revises VM-063's root cause.
+`feature_coverage_doc_counts_match_programs_source` is the test that supposedly
+pins `LANG-VM-FEATURE-COVERAGE.md` against `lang_matrix.rs`. On main it matched
+**none** of `lang-aot/BUILD`'s three `lang_matrix` filters, and the unfiltered
+`lang_matrix` target is deliberately excluded (ALGOL red cells, VM-D005) — so
+the test compiled and never executed.
+
+VM-063 recorded the ALGOL row drifting 233/1631 -> 292/2044 and attributed it to
+the test asserting only the seven non-ALGOL tuples. That is true but secondary:
+nothing was enforcing *any* tuple, so the non-ALGOL numbers matching source was
+discipline, not a gate. Fixed by giving the test its own BUILD line. VM-063's
+remaining question — whether to extend the assertion to ALGOL, which would make
+every ALGOL PR touch a shared doc and create a cross-campaign serialization
+point — is unchanged and still open.
+
+The general shape is now seen three times: **a filtered CI invocation silently
+stops covering a test that no longer matches its filter, exactly as an omitted
+`--test` target does.** An excluded-by-default target makes it worse, because
+the filters are then the only path and nothing reports a test that matches none
+of them.
+
+**Full audit of `lang_matrix.rs` against `BUILD`'s filters.** Every `#[test]`
+in that file was checked. Excluding the ~225 ALGOL rows (deliberately excluded,
+VM-025), six tests ran nowhere:
+
+| Test | Why it was missed | Now |
+|---|---|---|
+| `feature_coverage_doc_counts_match_programs_source` | matched no filter | protected |
+| `t7_differential_random_u8_expressions_agree` | the `t7_differential_random_basic_` filter has a trailing `_` and never matched the u8 sibling | protected |
+| `twig_beam_match_union` | matched no filter | protected |
+| `twig_beam_string_ops` | matched no filter | protected |
+| `twig_beam_dynamic_arith_list_ops_and_closures` | matched no filter | protected |
+| `every_backend_name_round_trips_through_the_single_cell_env_var` | matched no filter | protected |
+
+All five newly protected non-ALGOL tests were executed first and pass.
+
+### VM-066 — `proven_columns_do_not_silently_skip` is red, blocked on #12032
+
+The audit's most important find, and the one that cannot be fixed here.
+`proven_columns_do_not_silently_skip` is the guard against a backend column
+quietly skipping instead of running — **rung 1** of this document's own
+prioritization policy. It has never run in CI, and it **fails** when run:
+
+```
+Jvm Algol60: `java` execution of the emitted class failed — this is a REAL failure, not a skip.
+Error: Unable to initialize main class Main
+Caused by: java.lang.VerifyError: (class: Main, method: main signature: ()J) Stack size too large
+```
+
+on a nested-procedure multidimensional-array-capture program. That is issue
+**#12032**, separately owned, and the same defect that keeps the unfiltered
+`lang_matrix` target excluded. It is therefore deliberately NOT added to
+`BUILD`: listing it today would paint CI red for a pre-existing ALGOL defect
+this backlog does not own.
+
+**Turn it on the moment #12032 closes** — until then the repo has no executing
+guard against silent backend skips, which is worth stating plainly rather than
+leaving implied by an unlisted test.
+
+## VM-062 — four CLR test targets ran in no CI command (selected 2026-09-21)
+
+CLR16 landed in #15827. A fresh prioritization survey over
+`LANG-VM-FEATURE-COVERAGE.md`, `lang_matrix.rs`, `lang-aot/BUILD` and this
+backlog then found a rung-2 item ("missing CI protection for already-working
+conformance") outranking every rung-4/5 candidate, so it was selected ahead of
+them.
+
+`lang-aot/BUILD` runs its suites by naming each target explicitly. The
+CLR09-CLR16 campaign (2026-09-19..20) added `clr_long_branches`,
+`clr_source_typed`, `clr_strict_flow` and `clr_typed_scalars` and listed none of
+them; `BUILD` was last touched 2026-09-07. For the whole campaign those targets
+compiled in the check step and asserted nothing on any merge gate. All 19 tests
+pass when run by hand, so nothing is red — the defect is that nothing would have
+been reported if something had been. The BUILD header already warned about this
+exact failure mode and was still missed, because adding a `tests/*.rs` file is a
+complete, locally-green change and no tool reports an unprotected target.
+
+Fixed by listing the four targets, recording the mechanism in the BUILD header
+and in `lessons.d/`, and publishing a reusable `comm`-based diagnostic that
+diffs a crate's `tests/` directory against its BUILD list. Run before this fix
+it printed exactly those four names; after it, nothing.
+
+### Prioritization run, 2026-09-21
+
+Ranked by this document's own policy. VM-062 was taken first; the rest stay
+queued in this order.
+
+1. **VM-062 (rung 2, taken).** Four unprotected CLR test targets. Done here.
+2. **PREP01 generic source preprocessor (owner-directed).** A shared
+   preprocessor engine with per-language dialects. C is genuinely blocked on it:
+   `SIR27` scopes the frontend to ignoring two `#include` lines with no
+   `#define`, no macros and no conditionals, and `c.tokens` discards every `#…`
+   line in its `skip:` section. COBOL `COPY … REPLACING` is the second customer
+   and the proof the boundary is not C-shaped. Spec-first; see
+   `PREP01-generic-source-preprocessor.md`. This also corrects
+   `lexer-parser-hooks.md`, which places `#include` at `pre_tokenize` — not
+   faithful to C, where inclusion and conditionals interleave.
+3. **VM-058 publication (rung 2).** COBOL INSPECT region intersection is
+   implementation-complete locally with "publication/CI remains."
+4. **VM-063 ALGOL coverage-doc drift (rung 3, new).**
+   `LANG-VM-FEATURE-COVERAGE.md` states ALGOL 60 at 233 rows / 1631 cells;
+   `lang_matrix.rs` declares **292 rows / 2044 cells**. The pinned
+   `feature_coverage_doc_counts_match_programs_source` test asserts only the
+   seven non-ALGOL tuples, so the ALGOL row was free to drift and did. Rung 3
+   ("documentation that could send work down a dead path"), not rung 1: the
+   cells themselves are declared and run. ALGOL semantics remain separately
+   owned, but the *count* in a shared status document is this backlog's
+   business.
+5. **VM-064 ALGOL rows declare no BEAM backend (rung 4, new).** All 292 ALGOL
+   rows declare 7 backends, omitting `Beam`; every one of the 211 non-ALGOL rows
+   declares all 8. That is the only remaining systematic matrix hole — 292 cells.
+   Non-ALGOL BEAM is complete (BEAM08), so the substrate exists. Scope and
+   ownership need settling with the ALGOL owner before any work starts.
+6. **AOT00 T2 slice 2 (rung 5).** VM/JIT throw/catch reference oracle. The sole
+   unblocked rung of the only roadmap track with a written PR ladder; slice 1
+   landed in #15419. Its spec mandates one slice per PR.
+
+Also confirmed still open and unchanged, not re-ranked here: VM-059 (encoded
+CIL `call_builtin` lacks `input_i64`/`input_str`/`input_more`), VM-025 (full
+ALGOL CI exclusion, separately owned), the CLR carve-outs at lines 32-33 and
+86-105, and BEAM register allocation beyond 255 variables.
+
 ## Encoded CLR input prerequisites (selected 2026-09-19 after VM-058)
 
 ### CLR16 final carriage return repair (2026-09-20)

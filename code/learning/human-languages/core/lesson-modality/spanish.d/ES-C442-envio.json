@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C442-envio",
+    "language": "spanish",
+    "chapter": 442,
+    "sequence": 11220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d447a00a8b73c633"
+  },
+  "findings": []
+}

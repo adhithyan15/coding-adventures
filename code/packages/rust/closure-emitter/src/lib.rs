@@ -377,19 +377,53 @@ impl<'a> Emitter<'a> {
                 self.newline();
             }
         }
-        // Trailing normalization (compact only): when a program's LAST item is a
-        // function/class *declaration*, the reference compiler appends a `;`
-        // (`function f(){};` / `class C{};` at EOF). A declaration mid-program
-        // prints bare — see [`Self::emit_function_declaration`] — so this final
-        // `;` is added here exactly once, only for the last item. Pretty mode
-        // keeps the unparenthesized shape.
-        if !self.opts.pretty {
-            if let Some(ProgramItem::Declaration(
-                Declaration::FunctionDeclaration(_) | Declaration::ClassDeclaration(_),
-            )) = p.body.last()
-            {
-                self.write_str(";");
-            }
+        // Trailing normalization (compact only). The reference compiler
+        // terminates the program's LAST statement even where the terminator is
+        // syntactically unnecessary, and suppresses it mid-stream. Probing the
+        // pinned oracle (CCR-073) over the block-ended statement kinds shows
+        // the rule is POSITIONAL, not per-kind. Every one of these gains a `;`
+        // as the final statement and loses it when followed by another:
+        //
+        // | Program ends with                        | upstream emits |
+        // |------------------------------------------|----------------|
+        // | `switch(x){…}`                           | `…};`          |
+        // | `try{…}catch(e){…}` / `try{…}finally{…}` | `…};`          |
+        // | `while(x){…}`                            | `…};`          |
+        // | `for(…){…}`, for-in, for-of              | `…};`          |
+        // | `if(x){…}` braced                        | `…};`          |
+        // | `with(o){…}`                             | `…};`          |
+        // | `{…}` bare, `L:{…}` labeled              | `…};`          |
+        // | `function f(){…}`                        | `…};`          |
+        // | `class C{…}`                             | `…};`          |
+        //
+        // This used to special-case function and class declarations alone,
+        // which is the subset someone happened to observe; the other eight
+        // shapes silently lost the terminator.
+        //
+        // The test is on the emitted BYTES rather than the node kind, and that
+        // is exact here because every statement either self-terminates with `;`
+        // (expression — and `emit_expression_statement` writes the `;`
+        // unconditionally, so every expression form is covered — `return`,
+        // `throw`, `break`, `continue`, `debugger`, a variable declaration,
+        // `do…while(x);`, the empty statement, and every module form:
+        // `import`, `export` named/all/default-expression all write their own)
+        // or closes its own `}` (block, switch, try, function/class
+        // declaration, `export default` over a function or class). The
+        // compound statements (`if`, `while`, `for`, for-in/of, labeled,
+        // `with`) end with their body's terminal character, so they inherit one
+        // of the two. There is no third ending, so "ends with `}`" is precisely
+        // "did not terminate itself".
+        //
+        // A trailing `;` at top level is an EmptyStatement in both the script
+        // and module goal symbols, so appending one can never be a SyntaxError
+        // or change meaning.
+        //
+        // This reasoning is specific to the AST emitter. The token-only
+        // WHITESPACE_ONLY path builds no tree and needs its own fix — and it
+        // must NOT copy this byte test, because its `do…while` output ends in
+        // `)`, not `}`. That is CCR-080.
+        if !self.opts.pretty && self.out.ends_with('}') {
+            self.write_str(";");
         }
     }
 
@@ -858,6 +892,31 @@ impl<'a> Emitter<'a> {
             self.indent -= 1;
             self.newline();
             self.indent_str();
+        }
+        // gap-030 part A, applied to the switch body. The last statement of the
+        // LAST case clause sits immediately before the `}` we are about to
+        // write, so its terminator is redundant for exactly the reason it is
+        // redundant at the end of a block: ASI supplies it (ECMAScript §11.9),
+        // and upstream does not emit it — `switch(x){case 1:a()}`, not
+        // `switch(x){case 1:a();}`. `emit_block_statement` has done this since
+        // gap-030; the switch body is a statement list too, and was missed.
+        //
+        // Three things this must get right, all covered by tests:
+        //
+        //  * The gate is `last_stmt_uses_terminator_semi`, unchanged, so a `;`
+        //    that is structurally a BODY survives: `switch(x){case 1:if(y);}`
+        //    keeps its `;`, because the grammar requires a Statement there and
+        //    `}` cannot start one.
+        //  * It reads the last statement of the LAST clause — the one actually
+        //    adjacent to the `}`.
+        //  * An empty final clause yields `None` and pops nothing. That matters:
+        //    `switch(x){case 1:a();case 2:}` must keep its `;`, since ASI will
+        //    not insert one before `case` (it needs a line terminator, `}`, or
+        //    EOF), so popping would produce `a()case 2:` — a SyntaxError.
+        if let Some(last_stmt) = s.cases.last().and_then(|c| c.consequent.last()) {
+            if last_stmt_uses_terminator_semi(last_stmt) {
+                self.pop_trailing_semi_if_compact();
+            }
         }
         self.write_str("}");
     }
@@ -3268,14 +3327,27 @@ fn last_stmt_uses_terminator_semi(s: &Statement) -> bool {
         // A block-final `var x = 1;` carries a real terminator `;`
         // that the closing `}` makes redundant (ASI supplies it), so
         // pop it: `function(){var y=h();}` → `function(){var y=h()}`,
-        // byte-identical to the reference compiler. This gate feeds
-        // ONLY the block emitter (`emit_block_statement`); the
-        // top-level part-B `;` for a trailing function/class
-        // declaration is added separately in `emit_program` and is
-        // untouched here. Function/class declarations end in `}` (no
-        // `;` to pop, so `pop_trailing_semi_if_compact` no-ops on
-        // them); import/export declarations are illegal inside a
-        // block and never reach this point.
+        // byte-identical to the reference compiler.
+        //
+        // TWO callers, both asking the same question — "is the `;` now
+        // at the end of the buffer a terminator, or a body?":
+        // `emit_block_statement` (since gap-030) and `emit_switch`
+        // (added by CCR-073, for the last statement of the last case
+        // clause, which is likewise adjacent to a closing `}`). A
+        // third caller is fine provided the `;` it is about to pop is
+        // genuinely followed by `}`; do not reuse this gate anywhere
+        // the next token differs, because `case`/`default` in
+        // particular cannot take an ASI-supplied terminator.
+        //
+        // The program-final `;` in `emit_program` does NOT go through
+        // here: it appends rather than pops, and since CCR-073 it is
+        // driven by whether the emitted output ends in `}` rather than
+        // by the node kind.
+        //
+        // Function/class declarations end in `}` (no `;` to pop, so
+        // `pop_trailing_semi_if_compact` no-ops on them);
+        // import/export declarations are illegal inside a block and
+        // never reach this point.
         Statement::Declaration(Declaration::VariableDeclaration(_)) => true,
         Statement::Declaration(_) => false,
     }
@@ -5765,6 +5837,217 @@ mod tests {
         emit_default(program().with_body(vec![ProgramItem::Statement(s)])).code
     }
 
+    /// Two statements in program order, so the POSITIONAL half of the
+    /// program-terminator rule (CCR-073) is testable: the same construct that
+    /// gains a `;` at the end of a program must not gain one mid-stream.
+    fn emit_stmts(first: Statement, second: Statement) -> String {
+        emit_default(program().with_body(vec![
+            ProgramItem::Statement(first),
+            ProgramItem::Statement(second),
+        ]))
+        .code
+    }
+
+    fn block_of(body: Vec<Statement>) -> Statement {
+        Statement::block_statement(BlockStatement { cv: None, body })
+    }
+
+    /// The truth table above `emit_program`, asserting the program-final `;`.
+    /// Pinned against the upstream oracle, not against our own prior behaviour:
+    /// before CCR-073 only the function/class rows were emitted correctly and
+    /// the other eight silently lost the terminator.
+    ///
+    /// The `try` rows are pinned by the three `try_*` tests, and the
+    /// function/class rows by `emit_class_decl`/declaration tests, so they are
+    /// not repeated here.
+    ///
+    /// Reproducing these against the oracle needs two things that are easy to
+    /// trip over. `with` requires `--strict_mode_input=false`, or the jar
+    /// refuses the input outright with `JSC_USE_OF_WITH` and you conclude the
+    /// row is unverifiable. And at SIMPLE the optimizer rewrites away the
+    /// brace-terminated `while`/`if`/`for` shapes unless the body resists
+    /// fusion, so the bodies below are deliberately multi-statement.
+    #[test]
+    fn program_final_statement_is_terminated_whatever_kind_it_is() {
+        let a = || expr_stmt(ident("a"));
+
+        // A bare block, and a labeled block.
+        assert_eq!(emit_stmt(block_of(vec![a()])), "{a};");
+        assert_eq!(
+            emit_stmt(Statement::labeled_statement(LabeledStatement {
+                cv: None,
+                label: Identifier { cv: None, name: "L".to_string() },
+                body: Box::new(block_of(vec![a()])),
+            })),
+            "L:{a};"
+        );
+
+        // `switch`.
+        assert_eq!(
+            emit_stmt(Statement::switch_statement(SwitchStatement {
+                cv: None,
+                discriminant: ident("x"),
+                cases: vec![],
+            })),
+            "switch(x){};"
+        );
+
+        // A braced `while`, a braced `if`, and `with` — the three rows nothing
+        // else pinned. Two-statement bodies so the shape survives at SIMPLE.
+        let two = || block_of(vec![expr_stmt(ident("a")), expr_stmt(ident("b"))]);
+        assert_eq!(
+            emit_stmt(Statement::while_statement(WhileStatement {
+                cv: None,
+                test: ident("x"),
+                body: Box::new(two()),
+            })),
+            "while(x){a;b};"
+        );
+        assert_eq!(
+            emit_stmt(Statement::if_statement(IfStatement {
+                cv: None,
+                test: ident("x"),
+                consequent: Box::new(two()),
+                alternate: None,
+            })),
+            "if(x){a;b};"
+        );
+        assert_eq!(
+            emit_stmt(Statement::with_statement(WithStatement {
+                cv: None,
+                object: ident("o"),
+                body: Box::new(two()),
+            })),
+            "with(o){a;b};"
+        );
+
+        // A statement that terminates ITSELF gains nothing — the rule is
+        // "terminate the last statement", not "always append a semicolon".
+        assert_eq!(emit_stmt(a()), "a;");
+    }
+
+    /// The other half of the rule, and the half a naive implementation gets
+    /// wrong: mid-stream, a block-ended statement is NOT terminated. Upstream
+    /// emits `switch(x){case 1:a()}b();`, with no `;` after the `}`.
+    #[test]
+    fn a_block_ended_statement_is_not_terminated_mid_program() {
+        let sw = Statement::switch_statement(SwitchStatement {
+            cv: None,
+            discriminant: ident("x"),
+            cases: vec![],
+        });
+        // The `;` lands after `b`, the final statement — not after the switch.
+        assert_eq!(emit_stmts(sw, expr_stmt(ident("b"))), "switch(x){}b;");
+
+        // Same for a bare block.
+        assert_eq!(
+            emit_stmts(block_of(vec![expr_stmt(ident("a"))]), expr_stmt(ident("b"))),
+            "{a}b;"
+        );
+    }
+
+    /// The switch pop must target the LAST clause only. `a` and `b` keep their
+    /// terminators because `a;case 2:` and `b;default:` need them — ASI will
+    /// not insert one before `case`/`default`, which are neither a line
+    /// terminator, a `}`, nor EOF.
+    #[test]
+    fn switch_pop_targets_only_the_final_clause() {
+        let case = |test: Option<Expression>, name: &str| SwitchCase {
+            cv: None,
+            test,
+            consequent: vec![expr_stmt(ident(name))],
+        };
+        let s = Statement::switch_statement(SwitchStatement {
+            cv: None,
+            discriminant: ident("x"),
+            cases: vec![
+                case(Some(num(1.0)), "a"),
+                case(Some(num(2.0)), "b"),
+                case(None, "c"),
+            ],
+        });
+        assert_eq!(emit_stmt(s), "switch(x){case 1:a;case 2:b;default:c};");
+    }
+
+    /// An empty FINAL clause must pop nothing. Note this test DOCUMENTS the
+    /// `None` arm rather than discriminating it: with an empty last clause the
+    /// buffer ends in `:`, so `pop_trailing_semi_if_compact` no-ops anyway.
+    /// The tests that actually bind the gate are the two below.
+    #[test]
+    fn switch_with_empty_final_clause_keeps_the_previous_terminator() {
+        let s = Statement::switch_statement(SwitchStatement {
+            cv: None,
+            discriminant: ident("x"),
+            cases: vec![
+                SwitchCase {
+                    cv: None,
+                    test: Some(num(1.0)),
+                    consequent: vec![expr_stmt(ident("a"))],
+                },
+                SwitchCase { cv: None, test: Some(num(2.0)), consequent: vec![] },
+            ],
+        });
+        assert_eq!(emit_stmt(s), "switch(x){case 1:a;case 2:};");
+    }
+
+    /// The gate's whole purpose, and the one case where getting it wrong is a
+    /// MISCOMPILE rather than a cosmetic difference. In `case 1:if(y);` the `;`
+    /// is the `if`'s BODY, not a terminator. Popping it yields
+    /// `switch(x){case 1:if(y)}`, which is a SyntaxError: the grammar requires
+    /// a Statement after `if(y)` and `}` cannot start one.
+    #[test]
+    fn switch_does_not_pop_a_body_slot_semicolon() {
+        let s = Statement::switch_statement(SwitchStatement {
+            cv: None,
+            discriminant: ident("x"),
+            cases: vec![SwitchCase {
+                cv: None,
+                test: Some(num(1.0)),
+                consequent: vec![Statement::if_statement(IfStatement {
+                    cv: None,
+                    test: ident("y"),
+                    consequent: Box::new(Statement::empty_statement(EmptyStatement {
+                        cv: None,
+                    })),
+                    alternate: None,
+                })],
+            }],
+        });
+        assert_eq!(emit_stmt(s), "switch(x){case 1:if(y);};");
+    }
+
+    /// And the gate must consult the LAST clause, not any other. Here clause 1
+    /// ends in a poppable terminator while the final clause ends in a body
+    /// slot; deciding from the wrong clause pops the `;` off `if(y)` and
+    /// produces the same SyntaxError as above.
+    #[test]
+    fn switch_gate_reads_the_final_clause_not_an_earlier_one() {
+        let s = Statement::switch_statement(SwitchStatement {
+            cv: None,
+            discriminant: ident("x"),
+            cases: vec![
+                SwitchCase {
+                    cv: None,
+                    test: Some(num(1.0)),
+                    consequent: vec![expr_stmt(ident("a"))],
+                },
+                SwitchCase {
+                    cv: None,
+                    test: Some(num(2.0)),
+                    consequent: vec![Statement::if_statement(IfStatement {
+                        cv: None,
+                        test: ident("y"),
+                        consequent: Box::new(Statement::empty_statement(EmptyStatement {
+                            cv: None,
+                        })),
+                        alternate: None,
+                    })],
+                },
+            ],
+        });
+        assert_eq!(emit_stmt(s), "switch(x){case 1:a;case 2:if(y);};");
+    }
+
     #[test]
     fn labeled_call_statement_emits_label_colon_call() {
         // a: foo();
@@ -5918,7 +6201,7 @@ mod tests {
             discriminant: ident("x"),
             cases: vec![],
         });
-        assert_eq!(emit_stmt(s), "switch(x){}");
+        assert_eq!(emit_stmt(s), "switch(x){};");
     }
 
     #[test]
@@ -5937,7 +6220,7 @@ mod tests {
             }],
         });
         // `case 1:` then `y;` (the ExpressionStatement adds the `;`).
-        assert_eq!(emit_stmt(s), "switch(x){case 1:y;}");
+        assert_eq!(emit_stmt(s), "switch(x){case 1:y};");
     }
 
     #[test]
@@ -5955,7 +6238,7 @@ mod tests {
                 })],
             }],
         });
-        assert_eq!(emit_stmt(s), "switch(x){default:y;}");
+        assert_eq!(emit_stmt(s), "switch(x){default:y};");
     }
 
     #[test]
@@ -5970,7 +6253,7 @@ mod tests {
                 consequent: vec![],
             }],
         });
-        assert_eq!(emit_stmt(s), "switch(x){case 1:}");
+        assert_eq!(emit_stmt(s), "switch(x){case 1:};");
     }
 
     #[test]
@@ -6006,11 +6289,11 @@ mod tests {
                 },
             ],
         });
-        assert_eq!(emit_stmt(s), "switch(x){case 1:a;case 2:b;default:c;}");
+        assert_eq!(emit_stmt(s), "switch(x){case 1:a;case 2:b;default:c};");
     }
 
     #[test]
-    fn switch_with_break_in_consequent_emits_break_semicolon() {
+    fn switch_pops_the_terminator_after_a_final_break() {
         // switch (x) { case 1: break; }
         let s = Statement::switch_statement(SwitchStatement {
             cv: None,
@@ -6024,7 +6307,7 @@ mod tests {
                 })],
             }],
         });
-        assert_eq!(emit_stmt(s), "switch(x){case 1:break;}");
+        assert_eq!(emit_stmt(s), "switch(x){case 1:break};");
     }
 
     // ---- BigIntLiteral (gap-021, CLOC12.15) -----------------
@@ -6225,7 +6508,7 @@ mod tests {
         };
         let item = ProgramItem::Statement(Statement::block_statement(outer));
         let code = emit_default(program().with_body(vec![item])).code;
-        assert_eq!(code, "{do{a}while(b)}");
+        assert_eq!(code, "{do{a}while(b)};");
     }
 
     // ---- debugger (CLOC21) ------------------------------------
@@ -6249,7 +6532,7 @@ mod tests {
         };
         let item = ProgramItem::Statement(Statement::block_statement(outer));
         let code = emit_default(program().with_body(vec![item])).code;
-        assert_eq!(code, "{debugger}");
+        assert_eq!(code, "{debugger};");
     }
 
     #[test]
@@ -6268,7 +6551,7 @@ mod tests {
         };
         let item = ProgramItem::Statement(Statement::block_statement(outer));
         let code = emit_default(program().with_body(vec![item])).code;
-        assert_eq!(code, "{debugger;a}");
+        assert_eq!(code, "{debugger;a};");
     }
 
     // ---- for / in (CLOC22) ------------------------------------
@@ -6301,7 +6584,7 @@ mod tests {
         let item = ProgramItem::Statement(Statement::for_in_statement(f));
         assert_eq!(
             emit_default(program().with_body(vec![item])).code,
-            "for(var k in obj){a}"
+            "for(var k in obj){a};"
         );
     }
 
@@ -6316,7 +6599,7 @@ mod tests {
         let item = ProgramItem::Statement(Statement::for_in_statement(f));
         assert_eq!(
             emit_default(program().with_body(vec![item])).code,
-            "for(const k in obj){a}"
+            "for(const k in obj){a};"
         );
     }
 
@@ -6353,7 +6636,7 @@ mod tests {
         let item = ProgramItem::Statement(Statement::for_of_statement(f));
         assert_eq!(
             emit_default(program().with_body(vec![item])).code,
-            "for(var v of it){a}"
+            "for(var v of it){a};"
         );
     }
 
@@ -6395,7 +6678,7 @@ mod tests {
             }),
             finalizer: Some(block_with("c")),
         };
-        assert_eq!(emit_try_item(t), "try{a}catch(e){b}finally{c}");
+        assert_eq!(emit_try_item(t), "try{a}catch(e){b}finally{c};");
     }
 
     #[test]
@@ -6411,7 +6694,7 @@ mod tests {
             }),
             finalizer: None,
         };
-        assert_eq!(emit_try_item(t), "try{a}catch{b}");
+        assert_eq!(emit_try_item(t), "try{a}catch{b};");
     }
 
     #[test]
@@ -6423,7 +6706,7 @@ mod tests {
             handler: None,
             finalizer: Some(block_with("c")),
         };
-        assert_eq!(emit_try_item(t), "try{a}finally{c}");
+        assert_eq!(emit_try_item(t), "try{a}finally{c};");
     }
 
     #[test]

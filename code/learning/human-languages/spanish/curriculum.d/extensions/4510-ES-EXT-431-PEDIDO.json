@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-431-PEDIDO",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about an order that has arrived late, say who the shop blames, ask to return it and understand what I am being charged.",
+  "prerequisites": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C438-natacion",
+    "language": "spanish",
+    "chapter": 438,
+    "sequence": 10940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:86144cb75cc165d1"
+  },
+  "findings": []
+}

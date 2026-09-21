@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-438-CUERPO",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say where I exercise, report an injury the way a clinic expects to hear it, say I have to rest, and close the story by laughing about it.",
+  "prerequisites": [
+    "ES-EXT-437-PLAN"
+  ]
+}

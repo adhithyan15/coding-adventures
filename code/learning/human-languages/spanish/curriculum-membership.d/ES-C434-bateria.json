@@ -1,0 +1,11 @@
+{
+  "id": "ES-C434-bateria",
+  "pathSegment": "ES-PATH-434-MAQUINA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-434-MAQUINA",
+      "order": 3
+    }
+  ]
+}

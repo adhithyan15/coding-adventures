@@ -1,0 +1,11 @@
+{
+  "id": "ES-R441-repaso-trato",
+  "pathSegment": "ES-PATH-441-TRATO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-441-TRATO",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "language": "spanish",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:8a6bf336524f0526",
+  "lessonIds": [
+    "ES-C433-portal",
+    "ES-C433-portera",
+    "ES-C433-garaje",
+    "ES-C433-norma",
+    "ES-C433-junto",
+    "ES-R433-repaso-edificio",
+    "ES-C433-sintesis-llave"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "spanish/narration/ch433.txt",
+  "json": "spanish/narration/ch433.json",
+  "textHash": "fnv1a64:3ff1ba7b7a497533",
+  "jsonHash": "fnv1a64:781dc085f4c7109b",
+  "findings": []
+}

@@ -267,6 +267,19 @@ module GrammarToolsProgram
         compile_ruby_grammar("nib")
       end
 
+      # MacroOct (PREP01 slice 1) is a preprocessor dialect of Oct: it has its
+      # own .tokens file and nothing else. There is deliberately no
+      # macrooct.grammar and no macrooct-parser -- after preprocessing, what
+      # reaches the parser is a pure Oct token stream, so MacroOct reuses
+      # oct.grammar through oct-parser rather than restating it. Hence
+      # compile_rust_tokens with no matching compile_rust_grammar; a
+      # compile_rust_grammar("macrooct") here would be a no-op anyway (it
+      # returns early when the -parser package directory is absent), but the
+      # absence should read as a decision rather than an omission.
+      section("macrooct (rust)") do
+        compile_rust_tokens("macrooct")
+      end
+
       section("dartmouth_basic (ruby)") do
         compile_ruby_tokens("dartmouth_basic")
         compile_ruby_grammar("dartmouth_basic")

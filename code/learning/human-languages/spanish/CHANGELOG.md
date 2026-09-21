@@ -1,5 +1,199 @@
 # Changelog
 
+## Chapters 440-443 — the selection rule that replaces the exhausted one
+
+Twenty headwords, and for the first time **the item count moved as far as the
+word count**.
+
+```
+A2 objectiveFailed          79 -> 59
+A2 missingObjectiveLexemes 146 -> 126
+```
+
+Twenty words, twenty items cleared. The two tranches before this one bought 5
+items with 30 words and 9 items with 15. The difference is not effort; it is the
+ranking.
+
+### Why the old rule stopped working, and what replaced it
+
+Tranches 1-2 taught the lexemes appearing in **two or more** failing items, on
+the reasoning that each buys down more items per word. After 45 headwords that
+rule was spent: **145 of the 146 lexemes still missing appeared in exactly one
+item**, and the single exception was already taught above the A2 ceiling. Ranking
+by frequency had become ranking by nothing.
+
+The replacement comes from the pass condition. An item is red until **every**
+lexeme in its row is taught, so what matters is not how often a word appears but
+**how close its item already is to being unblocked**:
+
+| shape of the failing row | items |
+|---|---|
+| blocked by exactly ONE missing word | 41 of 79 |
+| blocked by exactly TWO | 16 |
+| three or more | 22 |
+
+Thirty-nine of the 41 were teachable, and each clears a whole item by itself.
+These four chapters take twenty of them. The movement was predicted from the
+audit before anything was wired, and the generator reproduced **59 and 126
+exactly**.
+
+### The four chapters
+
+**440 La fiesta** adds a third way a word hides its pieces. *boda* is a Latin
+**neuter plural** — *vōta*, the vows — read as a feminine singular once Spanish
+lost the neuter, the same move that gave *la hoja* from *folia*. The pieces are
+invisible from modern Spanish alone. *cumpleaños* is a whole phrase fused, and
+recoverable: say it slowly and *cumple* and *años* come apart in your mouth.
+
+Then *disfrutar* **corrects chapter 438 rather than repeating it**. 438 taught a
+piece-test: take the piece off and see whether the rest stands. *dis-* comes off
+*frutar* cleanly, so the join is real — and it does not mean what *des-* means in
+*descansar*. The test tells you **whether** there is a join. It never tells you
+what the join means.
+
+**441 El contrato** finds that paperwork is a set of physical acts. *contrato*
+pulls the two sides together (*trahere*), *firmar* makes the result solid
+(*firmus*), *fijo* drives it in (*fīgere*). Draw, harden, fasten. *fijo* answers
+439's *cerrado*: one is a participle you still feel as one, the other finished
+becoming a plain adjective centuries ago — and *fijar* was built backwards from
+it.
+
+**442 La gestión** is the institution half of A2 reading, and two of its words
+were already half-owned. *ES-C413-concierto* carries `concertare-latin`, so
+**concertar una cita and un concierto are the same word**: *con-* plus *certāre*,
+to fight it out, with the sense sliding from contending against to striving
+together. And *administración* takes the existing `magis-minus-latin`, because
+*minister* is built on *minus* — the lesser one, who serves — against *magister*
+on *magis*, behind *el maestro*. The learner already owns half that pair outright
+in **menos**.
+
+*pantalla* does not come apart and its origin is unsettled, so the chapter
+teaches the other route: follow the **meanings**. A shade in front of a flame,
+then a projector, then a lit device. One idea moved three times.
+
+**443 El ánimo** teaches no new grammar, and that is the design. Five words are
+handed to two machines the reader already owns — the thing-is-the-subject machine
+from *gustar* (*me duele la cabeza*, where the verb agrees with the head) and the
+reflexive from *equivocarse*. The fifth verb on a pattern costs almost nothing
+where the first cost a lesson.
+
+Its pivot, **arrepentirse**, is the sharpest trap in the tranche. It looks like
+*a-* + *re-* + *sentir* and is *a-* + *re-* + *paenitēre*, **and it conjugates
+like *sentir* too** — *me arrepiento*, *nos arrepentimos*. The form misleads and
+the behaviour agrees with the form, both by accident of shape. Harder than 438's
+*reír*, where taking the prefix off left nothing: here it leaves *pentir*, which
+stands on nothing, and the only reason to think otherwise is the resemblance. A
+resemblance is not evidence.
+
+### Two `roots: []` corrected
+
+`ES-C436-prestar` and `ES-C286-dolor` both carried an empty roots list, but
+neither origin is unsettled — *dolor*'s own etymology hook already named
+*dolēre*. They now carry `praestare-latin` and `dolere-latin`, joining
+*el préstamo* and *doler*. **An empty roots list has to mean "genuinely
+unrecoverable"** — which is what *andén*, *tirar* and *pantalla* carry — or the
+marker stops carrying information.
+
+### What the gates caught
+
+Twelve standalone-book offenders, all the phrase *"the course"* or *"this
+course"*. Some were genuine self-reference; the rest were the English gloss of
+*el curso*, which reads in a printed volume as a pointer to the book the reader
+is holding. The examples now use *la clase*.
+
+## Chapters 431-439 — the A2 vocabulary tranches, and the wordlist the exam chose
+
+Nine chapters, **forty-five headwords**, and none of them picked by theme. The
+A2 book-bounded audit names the lexemes the two DELE A2 mock papers need and the
+corpus does not teach; the list is the wordlist, and the audit number is the
+progress metric.
+
+```
+A2 objectiveFailed          93 -> 88 -> 79
+A2 missingObjectiveLexemes 191 -> 161 -> 146
+```
+
+Spanish now teaches **872 distinct headwords at or below A2**, against the
+1,200 the level asks for, and remains at **attained A1** — the tranches added
+vocabulary without regressing any coverage criterion.
+
+Both drops are exact: thirty headwords removed thirty lexemes, then fifteen
+removed fifteen. That arithmetic is the evidence. A word the corpus already
+taught under another name would have made the drop smaller, so a clean
+subtraction proves every word was genuinely absent.
+
+**Choosing by theme was tried first and discarded.** Thirty-five thematic
+candidates were drafted and **twenty-seven of them were already taught** — 77%
+waste, because at eight hundred headwords the obvious concrete domains are
+saturated. Deriving the list from the audit wastes nothing, and it is the only
+selection rule here that does not depend on anyone's judgement.
+
+### The chapters carry a morphology spine, not a wordlist
+
+| ch | what it adds | the word that does **not** come apart |
+|---|---|---|
+| 431-435 | -dor, -ería, -ero, -ción, -encia | sofá, garaje, batería, currículum |
+| 436-437 | the reflexive that marks what befalls you | grupo |
+| 438 | the prefix test | **reír** |
+| 439 | three signs English calls "closed" | **andén**, **tirar** |
+
+**438 is the mirror of 434.** *batería* wears an **ending** it never earned,
+because the derivation happened in French and the pieces never entered Spanish.
+*reír* wears a **prefix** it never had: it looks like *re-* plus *ír* and is
+neither — the whole word is Latin *rīdēre*, and the accent on the **í** is
+physical evidence of the **d** that fell out between the vowels. The test the
+chapter teaches is one second long: take the piece off and see whether the rest
+of the word still stands. *poli-* comes off *deportivo* and it stands. *des-*
+comes off *cansar* and it stands. *re-* comes off *reír* and nothing is left.
+
+**438 also adds a doublet.** *natāre* reached Spanish twice — worn down into
+**nadar** by a thousand years of mouths, and lifted off the page intact as
+**la natación** centuries later. Both are alive, and the learned twin is the one
+on the timetable.
+
+**439 separates three signs English collapses into one word.** *CERRADO* is shut
+for now and will reopen. *CORTADA* means the route is severed, so go round.
+*TRASLADADO* means it is open somewhere else and there is an address underneath.
+Reading the wrong one costs a learner an afternoon on a pavement. The chapter
+closes with *TIRAR* on a glass door, which means **pull**, not throw, and
+catches every English speaker exactly once.
+
+### It also teaches where etymology stops
+
+**el andén** and **tirar** carry `roots: []` because their origin is genuinely
+unsettled — the walking-verb guess for *andén* does not survive the endings, and
+*tirar*'s Germanic and onomatopoeic proposals are both unagreed. The lessons say
+so. Every other word in these nine chapters comes apart; two do not, and any
+book that produces an etymology for every word is inventing some of them.
+
+### Two findings the gates produced
+
+**Adding vocabulary can LOWER a track's attained level.** Tranche 1 dropped
+Spanish from attained **A1 to pre-A1** on the `reinforcement` criterion: two
+atoms were revisited fewer than twice, because a payoff built around one
+realistic scenario typically reaches four of five words and nothing warns you.
+The five-words-plus-repaso-plus-payoff template does not guarantee two revisits.
+Both were given a genuine second outing rather than padded metadata. Tranche 2
+was built with the revisit count verified **before** wiring, and every atom in
+437-439 has two or three.
+
+**A level is derived from the spine node, never authored.** An earlier note in
+these chapter shards claimed the extension's `stage` decides what level a lesson
+counts at. It does not, and the note has been corrected. `SPINE-READ-SIGNS-AND-NOTICES`
+is `stage: A1`, so these chapters are A1 regardless of their `stage: A2`. They
+still count toward the A2 audit, because `lessonsUpToLevel("A2")` includes
+everything at or below A2. Filed as `HL-C417`, which proposes an A2 TEXT-strand
+node to move them to.
+
+### The one high-value word deliberately not taught
+
+**explicar** now carries three failing items, more than anything else left — and
+it is **already a headword**, in `ES-C41-explicar`, whose path segment names
+`SPINE-GIVE-REASONS` at **B1**. The audit is book-bounded, so a reader who has
+finished the A2 book genuinely has not met it; teaching it again would be
+duplication that moved the number for the wrong reason. Same for *creer* and
+*problema*. Filed as `HL-C418`.
+
 ## Chapter 418 — connected composition, and the full writing ramp
 
 One lesson, and Spanish becomes the **first track in the corpus to prove every

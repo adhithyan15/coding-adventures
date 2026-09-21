@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C438-polideportivo",
+    "language": "spanish",
+    "chapter": 438,
+    "sequence": 10930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0326ee140b078889"
+  },
+  "findings": []
+}

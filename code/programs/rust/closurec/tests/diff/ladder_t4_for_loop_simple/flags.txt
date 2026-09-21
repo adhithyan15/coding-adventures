@@ -1,0 +1,4 @@
+--compilation_level
+SIMPLE_OPTIMIZATIONS
+--js
+tests/diff/ladder_t4_for_loop_simple/input/a.js

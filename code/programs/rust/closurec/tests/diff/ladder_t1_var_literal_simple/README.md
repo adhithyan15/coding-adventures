@@ -1,0 +1,32 @@
+# ladder_t1_var_literal_simple
+
+Rung 1.var_literal of the CCR-066 differential complexity ladder, at
+`SIMPLE`.
+
+## What this rung is for
+
+Exercises one variable bound to one number.
+
+The ladder is ordered by deliberate complexity: every rung is simpler than the
+rungs after it, so a failure is attributed to the simplest construct that
+produces it. Work the ladder bottom-up — a tier 3 failure is a reason to stop
+and fix tier 3, not to move on to tier 4.
+
+## Provenance
+
+Captured from Closure Compiler `v20260915` (commit `10ca677aff381d2c2e6e1b254ba32861e503173d`) using the
+`closure-flags-file-v1` command in `tests/oracle/manifest.json`. `expected.stdout`
+is **upstream's** output, not ours: this fixture measures parity, not
+regression.
+
+Reproduce:
+
+```bash
+java -Duser.language=en -Duser.country=US -Duser.timezone=UTC -Dfile.encoding=UTF-8 \
+  -jar <closure-compiler-v20260915.jar> \
+  --compilation_level SIMPLE_OPTIMIZATIONS --js tests/diff/ladder_t1_var_literal_simple/input/a.js
+```
+
+## Status
+
+Matches upstream byte for byte.

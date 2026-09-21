@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:06c17b24f22b50da",
+  "lessonIds": [
+    "ES-C441-contrato",
+    "ES-C441-firmar",
+    "ES-C441-fijo",
+    "ES-C441-factura",
+    "ES-C441-prestamo",
+    "ES-R441-repaso-trato",
+    "ES-C441-sintesis-trato"
+  ],
+  "tex": "spanish/book/chapters/ch441-trato.tex"
+}

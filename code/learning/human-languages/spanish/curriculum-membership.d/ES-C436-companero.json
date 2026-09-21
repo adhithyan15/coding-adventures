@@ -1,0 +1,11 @@
+{
+  "id": "ES-C436-companero",
+  "pathSegment": "ES-PATH-436-GENTE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-436-GENTE",
+      "order": 0
+    }
+  ]
+}

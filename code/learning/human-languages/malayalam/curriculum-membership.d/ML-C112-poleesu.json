@@ -1,0 +1,11 @@
+{
+  "id": "ML-C112-poleesu",
+  "pathSegment": "ML-PATH-112-PLACES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-112-PLACES",
+      "order": 1
+    }
+  ]
+}

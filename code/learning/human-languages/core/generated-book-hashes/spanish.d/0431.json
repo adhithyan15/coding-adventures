@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:8d5c06ceb58bf73c",
+  "lessonIds": [
+    "ES-C431-pedido",
+    "ES-C431-devolver",
+    "ES-C431-retraso",
+    "ES-C431-proveedor",
+    "ES-C431-cobrar",
+    "ES-R431-repaso-pedido",
+    "ES-C431-sintesis-reclamacion"
+  ],
+  "tex": "spanish/book/chapters/ch431-pedido.tex"
+}
