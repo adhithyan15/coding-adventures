@@ -1578,6 +1578,8 @@ internal static class SourceInputRegistryProjection
           "code/packages/typescript/forme-collect-by-tag",
           "code/packages/typescript/forme-collect-chronological",
           "code/packages/typescript/forme-deploy-runner-core",
+          "code/packages/typescript/forme-deploy-runner-fs-adapter",
+          "code/packages/typescript/forme-deploy-runner-github-pages-adapter",
           "code/packages/typescript/forme-dev-server",
           "code/packages/typescript/forme-doc-code-block-decorator",
           "code/packages/typescript/forme-doc-frontmatter",
