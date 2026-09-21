@@ -61,7 +61,7 @@ both.
 source-map, dispatch and bounds layers and bring *its own* replacement matcher.
 That is the intended shape, not a shortfall. Slices 1–3 and 5 exist
 specifically to prove the trait boundary is not C-shaped: the engine is built
-against Octet and Nibblet — two new macro-capable dialects of the small
+against MacroOct and MacroNib — two new macro-capable dialects of the small
 existing languages Oct and Nib, with deliberately non-C and mutually different
 directive syntaxes — before C is written at all, and COBOL follows with a
 genuinely different replacement algorithm. Oct and Nib themselves are never
@@ -358,8 +358,8 @@ dialect of an existing small one:
 
 | New dialect | Derived from | Directive style |
 |---|---|---|
-| **Octet** | Oct (`OCT00`, Rust-shaped, Intel 8008) | `@`-prefixed, line-oriented |
-| **Nibblet** | Nib (`NIB00`, 4-bit, Intel 4004) | assembler-flavoured (`.include`, `.set`, `.ifdef`) |
+| **MacroOct** | Oct (`OCT00`, Rust-shaped, Intel 8008) | `@`-prefixed, line-oriented |
+| **MacroNib** | Nib (`NIB00`, 4-bit, Intel 4004) | assembler-flavoured (`.include`, `.set`, `.ifdef`) |
 
 **Oct and Nib themselves are not modified.** Their specs, grammars, type
 checkers, compilers, matrix rows and pinned counts are untouched. That is a
@@ -380,35 +380,35 @@ directives. Verified against the current code:
   **token vector**, so a preprocessed stream can be parsed directly.
 - `oct_iir_compiler::compile_ast(&ast, module_name)` is already public.
 
-So `octet-iir-compiler` is, in full: lex with `octet.tokens`, run the PREP01
+So `macrooct-iir-compiler` is, in full: lex with `macrooct.tokens`, run the PREP01
 engine as the `post_tokenize` hook, then hand the result to **Oct's own parser
 grammar, type checker and `compile_ast`, unchanged**. After preprocessing the
 directive tokens are consumed, so what reaches Oct's parser is a pure Oct token
 stream. If that composition does not work, the engine is not a clean layer and
 we want to learn it here rather than in C.
 
-*Known risk:* `octet.tokens` restates Oct's lexical rules plus directives, so
+*Known risk:* `macrooct.tokens` restates Oct's lexical rules plus directives, so
 it can drift from `oct.tokens`. Slice 1 carries a test asserting the two
 agree on every non-directive rule, so drift fails loudly rather than silently
 forking the language.
 
 **The differential oracle, which this structure sharpens.** A preprocessor is
 backend-agnostic by construction, so a preprocessed program must lower to *the
-same IIR* as its hand-expanded equivalent — and because Octet is a dialect of
+same IIR* as its hand-expanded equivalent — and because MacroOct is a dialect of
 Oct, **that hand-expanded equivalent is a valid Oct program**. The oracle is
-therefore cross-language against Oct's existing, untouched corpus: an Octet
+therefore cross-language against Oct's existing, untouched corpus: an MacroOct
 program using directives must produce IIR identical to the corresponding Oct
 program, and agree with it on all eight backends. Oct is the reference; nothing
 in Oct moves. This costs zero backend work — no backend learns anything about
 preprocessing.
 
-**Deliberately non-C syntax, in two different spellings.** If Octet adopted
+**Deliberately non-C syntax, in two different spellings.** If MacroOct adopted
 `#define`/`#endif`, the engine would be proven only against a C-shaped dialect,
-which tests nothing about genericity. Octet therefore uses `@`-prefixed
+which tests nothing about genericity. MacroOct therefore uses `@`-prefixed
 directives and — pointedly — `@end` rather than `@endif`, a divergence that
 breaks any engine which quietly hardcoded C's directive names:
 
-```octet
+```macrooct
 @include "ports.oct"
 @define LED_PORT 1
 @if LED_PORT == 1
@@ -418,7 +418,7 @@ breaks any engine which quietly hardcoded C's directive names:
 @end
 ```
 
-Nibblet then takes a **third** spelling again, so that by the time C arrives
+MacroNib then takes a **third** spelling again, so that by the time C arrives
 the engine has been shaped by two unrelated syntaxes and C is a *consumer* of a
 proven-generic engine rather than the thing that defined it.
 
@@ -426,44 +426,52 @@ This costs one extra slice before C. That is the right trade: C is the
 motivating customer, and a customer is exactly what should not get to design
 the boundary.
 
-*On the names:* "octet" is eight bits and "nibblet" a diminutive of the
-four-bit nibble, matching the 8008 and 4004 heritage; both are free of
-collisions in `code/packages/rust/` and `code/specs/`. "Nibble" itself was
-rejected because the 4004 simulator spec already uses that word 32 times for
-the data unit, and a language name that collides with a unit name is a
-readability trap. These are cheap to rename while this is still spec-only.
+*On the names:* the obvious candidates are already spoken for by the base
+languages themselves. `oct.tokens` states "The name comes from *octet* — the
+networking/communications term for exactly 8 bits", and `nib.tokens` states
+"The name comes from *nibble* (4 bits)". So "Octet" and "Nibblet" would just
+re-derive their parents' own etymologies, and "nibble" additionally collides
+with the word the 4004 simulator spec uses 32 times for the data unit — a
+language name colliding with a unit name is a readability trap.
+
+`MacroOct` / `MacroNib` instead: unambiguous, obviously derived, and matching
+the real historical convention for macro dialects of a machine's assembler —
+DEC shipped MACRO-8 for the PDP-8 and MACRO-11 for the PDP-11 — which suits a
+repo whose small languages target period hardware. Both are collision-free in
+`code/packages/rust/` and `code/specs/`, and are cheap to rename while this
+remains spec-only.
 
 ---
 
-**Slice 1 — engine core, no macros; Octet includes and conditionals.**
+**Slice 1 — engine core, no macros; MacroOct includes and conditionals.**
 `SourceFs`, `FileId`, `SourceMap`/`Locus`, line splicing, include resolution,
 the conditional stack, directive dispatch, and every §6 bound except macro
-depth. A new **Octet** language: `octet.tokens`, an `OctetDialect` supplying
-`@include` / `@if` / `@else` / `@end` only, and an `octet-iir-compiler` that
+depth. A new **MacroOct** language: `macrooct.tokens`, an `MacroOctDialect` supplying
+`@include` / `@if` / `@else` / `@end` only, and an `macrooct-iir-compiler` that
 composes the engine with Oct's existing parser, type checker and `compile_ast`.
-A `Language::Octet` matrix variant with its own rows. **Nothing in Oct, Nib or
+A `Language::MacroOct` matrix variant with its own rows. **Nothing in Oct, Nib or
 their specs changes.**
-*Acceptance:* Octet rows using `@include` and `@if` lower to IIR **identical**
+*Acceptance:* MacroOct rows using `@include` and `@if` lower to IIR **identical**
 to the corresponding unmodified Oct programs and agree with them on all eight
-backends; `octet.tokens` is proven to agree with `oct.tokens` on every
+backends; `macrooct.tokens` is proven to agree with `oct.tokens` on every
 non-directive rule; each §6 bound has a test proving it yields a located
 diagnostic; `RootedFs` has a test per rejected path form in §5, including the
 Windows set; and **the engine is fuzzed against arbitrary byte input with a
 no-panic / no-hang oracle**. The fuzz target is the highest-value item in this
 slice, because it covers the dimensions §6 did not manage to enumerate.
-`LANG-VM-FEATURE-COVERAGE.md` gains an Octet row, which the pinned
+`LANG-VM-FEATURE-COVERAGE.md` gains an MacroOct row, which the pinned
 `feature_coverage_doc_counts_match_programs_source` test makes mandatory rather
 than optional — Oct's own pinned tuple is unchanged.
 
-**Slice 2 — macro expansion; Octet gains `@define`.**
+**Slice 2 — macro expansion; MacroOct gains `@define`.**
 `MacroTable`, object-like then function-like macros, argument pre-expansion, and
 the hide-set algorithm that makes expansion non-recursive. Stringize and paste
-are routed through the dialect hooks, not built in; Octet declines both, which
+are routed through the dialect hooks, not built in; MacroOct declines both, which
 is itself a test that the engine does not assume them.
 *Acceptance:* the classic self-referential and mutually-recursive cases
 terminate with the standard-mandated output rather than looping; argument
 pre-expansion ordering matches the C rules on a table of cases drawn from the
-standard's own examples; new `@define` Octet rows produce IIR identical to the
+standard's own examples; new `@define` MacroOct rows produce IIR identical to the
 corresponding hand-written Oct programs on all eight backends; and **slice 1's
 no-panic / no-hang fuzz oracle is extended over macro definition and
 expansion**. That extension is required here, not optional: slice 1 fuzzes an
@@ -471,11 +479,11 @@ engine that has no macros, while the exponential-blowup bounds in §6 (tokens
 produced, synthesised token bytes, fuel, hide-set cost) all guard subsystems
 that only come into existence in this slice.
 
-**Slice 3 — Nibblet, a second dialect in a third syntax.**
-A new **Nibblet** language standing to Nib exactly as Octet stands to Oct:
-`nibblet.tokens`, a `NibbletDialect` with assembler-flavoured directives, and a
+**Slice 3 — MacroNib, a second dialect in a third syntax.**
+A new **MacroNib** language standing to Nib exactly as MacroOct stands to Oct:
+`macronib.tokens`, a `MacroNibDialect` with assembler-flavoured directives, and a
 compiler composing the engine with Nib's existing frontend. Nib is untouched.
-*Acceptance:* Nibblet rows match the corresponding unmodified Nib programs' IIR
+*Acceptance:* MacroNib rows match the corresponding unmodified Nib programs' IIR
 on all eight backends; **and the engine core is unchanged by this slice**, or
 any change it did require is called out in the PR as a genuine genericity
 defect that the second dialect found. This is the cheapest genericity proof
