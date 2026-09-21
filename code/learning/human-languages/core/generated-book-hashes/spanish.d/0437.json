@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:af68a0c8983cc62f",
+  "lessonIds": [
+    "ES-C437-decidir",
+    "ES-C437-coincidir",
+    "ES-C437-equivocarse",
+    "ES-C437-tardar",
+    "ES-C437-cenar",
+    "ES-R437-repaso-planes",
+    "ES-C437-sintesis-plan"
+  ],
+  "tex": "spanish/book/chapters/ch437-plan.tex"
+}

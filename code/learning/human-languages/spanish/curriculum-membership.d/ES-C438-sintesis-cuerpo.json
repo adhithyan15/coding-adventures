@@ -1,0 +1,11 @@
+{
+  "id": "ES-C438-sintesis-cuerpo",
+  "pathSegment": "ES-PATH-438-CUERPO",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ES-EXT-438-CUERPO",
+      "order": 6
+    }
+  ]
+}

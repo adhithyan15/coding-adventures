@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-438-CUERPO",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "before": [],
+  "inline": [
+    "ES-EXT-438-CUERPO"
+  ],
+  "after": []
+}

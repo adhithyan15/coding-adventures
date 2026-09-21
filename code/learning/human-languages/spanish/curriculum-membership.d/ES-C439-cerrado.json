@@ -1,0 +1,11 @@
+{
+  "id": "ES-C439-cerrado",
+  "pathSegment": "ES-PATH-439-VIA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-439-VIA",
+      "order": 2
+    }
+  ]
+}

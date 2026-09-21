@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:6d48b01cd9c13b35",
+  "lessonIds": [
+    "ES-C438-polideportivo",
+    "ES-C438-natacion",
+    "ES-C438-torcerse",
+    "ES-C438-descansar",
+    "ES-C438-reir",
+    "ES-R438-repaso-cuerpo",
+    "ES-C438-sintesis-cuerpo"
+  ],
+  "tex": "spanish/book/chapters/ch438-cuerpo.tex"
+}

@@ -59,23 +59,16 @@
     ],
     "numericCredits": "0-100"
   },
-  "lessonCount": 1191,
-  "taughtForms": 1947,
-  "objectiveFailed": 88,
+  "lessonCount": 1212,
+  "taughtForms": 1980,
+  "objectiveFailed": 79,
   "mocks": [
     {
       "mock": 1,
-      "reading": 6,
+      "reading": 10,
       "listening": 2,
-      "objectiveFailed": 42,
+      "objectiveFailed": 38,
       "failed": [
-        {
-          "paper": 1,
-          "item": 1,
-          "missing": [
-            "decidir"
-          ]
-        },
         {
           "paper": 1,
           "item": 2,
@@ -100,13 +93,6 @@
         },
         {
           "paper": 1,
-          "item": 6,
-          "missing": [
-            "cortar"
-          ]
-        },
-        {
-          "paper": 1,
           "item": 7,
           "missing": [
             "tender",
@@ -122,14 +108,6 @@
         },
         {
           "paper": 1,
-          "item": 10,
-          "missing": [
-            "natación",
-            "trasladar"
-          ]
-        },
-        {
-          "paper": 1,
           "item": 11,
           "missing": [
             "análisis"
@@ -139,8 +117,7 @@
           "paper": 1,
           "item": 12,
           "missing": [
-            "celebrar",
-            "polideportivo"
+            "celebrar"
           ]
         },
         {
@@ -148,13 +125,6 @@
           "item": 14,
           "missing": [
             "mover"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 16,
-          "missing": [
-            "cenar"
           ]
         },
         {
@@ -168,9 +138,7 @@
           "paper": 1,
           "item": 19,
           "missing": [
-            "torpe",
-            "equivocarse",
-            "reír"
+            "torpe"
           ]
         },
         {
@@ -250,7 +218,6 @@
           "paper": 2,
           "item": 30,
           "missing": [
-            "tardar",
             "carrito"
           ]
         },
@@ -276,16 +243,14 @@
           "item": 33,
           "missing": [
             "obra",
-            "vía",
-            "andén"
+            "vía"
           ]
         },
         {
           "paper": 2,
           "item": 34,
           "missing": [
-            "concentrarse",
-            "cenar"
+            "concentrarse"
           ]
         },
         {
@@ -302,7 +267,6 @@
           "item": 36,
           "missing": [
             "sección",
-            "cerrado",
             "inventario",
             "habitual"
           ]
@@ -325,8 +289,7 @@
           "paper": 2,
           "item": 40,
           "missing": [
-            "comentar",
-            "decidir"
+            "comentar"
           ]
         },
         {
@@ -340,8 +303,7 @@
           "paper": 2,
           "item": 42,
           "missing": [
-            "mirar",
-            "coincidir"
+            "mirar"
           ]
         },
         {
@@ -363,7 +325,6 @@
           "paper": 2,
           "item": 45,
           "missing": [
-            "equivocarse",
             "ensalada",
             "cargo"
           ]
@@ -372,8 +333,7 @@
           "paper": 2,
           "item": 46,
           "missing": [
-            "reunión",
-            "cenar"
+            "reunión"
           ]
         },
         {
@@ -399,8 +359,7 @@
           "paper": 2,
           "item": 49,
           "missing": [
-            "madera",
-            "tirar"
+            "madera"
           ]
         },
         {
@@ -414,9 +373,9 @@
     },
     {
       "mock": 2,
-      "reading": 0,
-      "listening": 4,
-      "objectiveFailed": 46,
+      "reading": 1,
+      "listening": 8,
+      "objectiveFailed": 41,
       "failed": [
         {
           "paper": 1,
@@ -424,13 +383,6 @@
           "missing": [
             "mudarse",
             "duro"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 2,
-          "missing": [
-            "reír"
           ]
         },
         {
@@ -453,7 +405,6 @@
           "paper": 1,
           "item": 5,
           "missing": [
-            "tardar",
             "humor"
           ]
         },
@@ -461,8 +412,6 @@
           "paper": 1,
           "item": 6,
           "missing": [
-            "natación",
-            "trasladar",
             "calefacción"
           ]
         },
@@ -515,8 +464,6 @@
           "paper": 1,
           "item": 13,
           "missing": [
-            "torcerse",
-            "descansar",
             "doler"
           ]
         },
@@ -533,7 +480,6 @@
           "paper": 1,
           "item": 15,
           "missing": [
-            "decidir",
             "rotativo",
             "consultar"
           ]
@@ -637,13 +583,6 @@
         },
         {
           "paper": 2,
-          "item": 28,
-          "missing": [
-            "coincidir"
-          ]
-        },
-        {
-          "paper": 2,
           "item": 29,
           "missing": [
             "medicamento",
@@ -678,7 +617,6 @@
           "paper": 2,
           "item": 33,
           "missing": [
-            "cerrado",
             "limpieza",
             "instalación"
           ]
@@ -687,15 +625,7 @@
           "paper": 2,
           "item": 36,
           "missing": [
-            "andén",
             "pantalla"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 37,
-          "missing": [
-            "cortar"
           ]
         },
         {
@@ -711,7 +641,6 @@
           "paper": 2,
           "item": 40,
           "missing": [
-            "coincidir",
             "boda"
           ]
         },
@@ -743,8 +672,7 @@
           "item": 45,
           "missing": [
             "entrenamiento",
-            "césped",
-            "polideportivo"
+            "césped"
           ]
         },
         {
@@ -753,13 +681,6 @@
           "missing": [
             "taladro",
             "acercar"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 47,
-          "missing": [
-            "tirar"
           ]
         },
         {
@@ -775,16 +696,7 @@
           "paper": 2,
           "item": 49,
           "missing": [
-            "torcerse",
-            "descansar",
             "partido"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 50,
-          "missing": [
-            "cortar"
           ]
         }
       ]
@@ -802,7 +714,6 @@
     "agencia",
     "alimentar",
     "almacén",
-    "andén",
     "anotar",
     "análisis",
     "apuntar",
@@ -817,11 +728,8 @@
     "carné",
     "carrito",
     "celebrar",
-    "cenar",
-    "cerrado",
     "chaqueta",
     "claro",
-    "coincidir",
     "cola",
     "comentar",
     "comportamiento",
@@ -830,7 +738,6 @@
     "conectar",
     "consultar",
     "contrato",
-    "cortar",
     "coste",
     "creer",
     "cuaderno",
@@ -838,10 +745,8 @@
     "cumpleaños",
     "césped",
     "cómodo",
-    "decidir",
     "decidirse",
     "dentista",
-    "descansar",
     "descontar",
     "directo",
     "director",
@@ -859,7 +764,6 @@
     "entregar",
     "entrenamiento",
     "envío",
-    "equivocarse",
     "espera",
     "estado",
     "estropeado",
@@ -900,7 +804,6 @@
     "mover",
     "mudanza",
     "mudarse",
-    "natación",
     "objetivo",
     "obra",
     "organizar",
@@ -914,7 +817,6 @@
     "pintar",
     "plantar",
     "plazo",
-    "polideportivo",
     "principiante",
     "problema",
     "producir",
@@ -928,7 +830,6 @@
     "responsabilidad",
     "reunión",
     "revisar",
-    "reír",
     "rotativo",
     "roto",
     "rueda",
@@ -940,14 +841,10 @@
     "solicitar",
     "suficiente",
     "taladro",
-    "tardar",
     "temperatura",
     "tender",
     "ticket",
-    "tirar",
-    "torcerse",
     "torpe",
-    "trasladar",
     "urgencia",
     "usuario",
     "visible",
@@ -955,68 +852,8 @@
   ],
   "missingFrequency": [
     {
-      "lexeme": "cenar",
-      "count": 3
-    },
-    {
-      "lexeme": "coincidir",
-      "count": 3
-    },
-    {
-      "lexeme": "cortar",
-      "count": 3
-    },
-    {
-      "lexeme": "decidir",
-      "count": 3
-    },
-    {
       "lexeme": "explicar",
       "count": 3
-    },
-    {
-      "lexeme": "andén",
-      "count": 2
-    },
-    {
-      "lexeme": "cerrado",
-      "count": 2
-    },
-    {
-      "lexeme": "descansar",
-      "count": 2
-    },
-    {
-      "lexeme": "equivocarse",
-      "count": 2
-    },
-    {
-      "lexeme": "natación",
-      "count": 2
-    },
-    {
-      "lexeme": "polideportivo",
-      "count": 2
-    },
-    {
-      "lexeme": "reír",
-      "count": 2
-    },
-    {
-      "lexeme": "tardar",
-      "count": 2
-    },
-    {
-      "lexeme": "tirar",
-      "count": 2
-    },
-    {
-      "lexeme": "torcerse",
-      "count": 2
-    },
-    {
-      "lexeme": "trasladar",
-      "count": 2
     },
     {
       "lexeme": "abrigo",

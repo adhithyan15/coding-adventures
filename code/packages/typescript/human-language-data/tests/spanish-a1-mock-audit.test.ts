@@ -102,29 +102,36 @@ describe("Spanish A2 book-bounded mock audit", () => {
   it("pins the CURRENT DEBT: the exam names the vocabulary that is still missing", () => {
     const audit = buildSpanishA1MockAudit(defaultCurriculumRoot(), "A2");
     expect(audit.level).toBe("A2");
-    expect(audit.objectiveFailed).toBe(88);
+    expect(audit.objectiveFailed).toBe(79);
     expect(audit.mocks.map(({ reading, listening, objectiveFailed }) => ({
       reading,
       listening,
       objectiveFailed,
     }))).toEqual([
-      { reading: 6, listening: 2, objectiveFailed: 42 },
-      { reading: 0, listening: 4, objectiveFailed: 46 },
+      { reading: 10, listening: 2, objectiveFailed: 38 },
+      { reading: 1, listening: 8, objectiveFailed: 41 },
     ]);
     // THIS NUMBER MUST ONLY EVER FALL. A rise means a mock gained an item the
     // corpus cannot support.
     //
-    // 191 -> 161 is the first vocabulary tranche (chapters 431-436). It fell by
-    // EXACTLY 30, the number of headwords that tranche teaches, which is the
-    // proof that all 30 were genuinely missing and are now credited -- a word
-    // already taught under another name would have made the drop smaller.
+    // 191 -> 161 is the first vocabulary tranche (chapters 431-436) and
+    // 161 -> 146 is the second (437-439). BOTH drops are exact: 30 headwords
+    // removed 30 lexemes, then 15 removed 15. That arithmetic is the evidence a
+    // word was genuinely absent -- one already taught under another name would
+    // have made the drop smaller. The second drop was PREDICTED from the audit
+    // before the chapters were wired, and the generator reproduced 79 and 146
+    // exactly, so the selection rule is mechanical rather than a judgement call.
     //
-    // objectiveFailed fell only 93 -> 88 over the same 30 words, and that is
-    // expected rather than disappointing: an item passes only when EVERY lexeme
-    // in its `requires` row is taught, so the last missing word in a row holds
-    // the whole item red. The lexeme count is the leading indicator; the item
-    // count moves in steps as rows complete.
-    expect(audit.missingObjectiveLexemes).toHaveLength(161);
+    // objectiveFailed fell 93 -> 88 -> 79, more slowly than the lexeme count, and
+    // that is expected rather than disappointing: an item passes only when EVERY
+    // lexeme in its `requires` row is taught, so the last missing word in a row
+    // holds the whole item red. The lexeme count is the leading indicator; the
+    // item count moves in steps as rows complete.
+    //
+    // The per-mock split moved unevenly (mock 1's reading 6 -> 10, mock 2's
+    // listening 4 -> 8) because a tranche clears whole rows, not a fixed share
+    // of each paper. A uniform movement would be the surprising result.
+    expect(audit.missingObjectiveLexemes).toHaveLength(146);
   });
 
   it("measures a LARGER taught set than A1, which is what makes it a different gate", () => {

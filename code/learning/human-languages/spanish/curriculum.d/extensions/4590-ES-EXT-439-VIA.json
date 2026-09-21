@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-439-VIA",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read the signs that decide where I may walk: a platform number, a shop shut for now, a street severed, and an office that has moved.",
+  "prerequisites": [
+    "ES-EXT-438-CUERPO"
+  ]
+}

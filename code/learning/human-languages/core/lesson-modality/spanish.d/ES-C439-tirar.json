@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C439-tirar",
+    "language": "spanish",
+    "chapter": 439,
+    "sequence": 11040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cf05df4b7f91a0c4"
+  },
+  "findings": []
+}
