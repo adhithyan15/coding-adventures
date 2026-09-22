@@ -102,7 +102,7 @@ describe("Spanish A2 book-bounded mock audit", () => {
   it("pins the CURRENT DEBT: the exam names the vocabulary that is still missing", () => {
     const audit = buildSpanishA1MockAudit(defaultCurriculumRoot(), "A2");
     expect(audit.level).toBe("A2");
-    // 6 -> 15, AND THE RISE IS THE POINT. This is the one movement the note
+    // 6 -> 17, AND THE RISE IS THE POINT. This is the one movement the note
     // below forbids, taken deliberately, because the instrument was wrong in
     // the direction that flatters us. HL-C421 found that a `requires` row lists
     // the words of the AUDIO PASSAGE and never the words of the question stem
@@ -114,28 +114,46 @@ describe("Spanish A2 book-bounded mock audit", () => {
     // stems and options, 309 are not taught forms; removing closed-class
     // function words, exam apparatus and morphological relatives of taught
     // lemmas leaves 47; reading those 47 by hand leaves 21 that are not
-    // headwords, of which NINE have zero word-boundary occurrences anywhere in
-    // the Spanish corpus: multa, título, vigilar, adelantado, alumno, justo,
-    // afirmar, mejorar, utilizar.
+    // headwords. Thirteen of those were added to nine items' rows.
     //
-    // Eight were added to the rows of the ten items they appear in. Two were
-    // held back on purpose: `afirmar` because it is exam apparatus in a
-    // true/false stem ("Afirma que..."), and `mejor` in mock 2 item 5 because
-    // it IS a headword and only matched through `mejorar`'s stem. Each of the
-    // eight is load-bearing -- in an option a candidate must weigh, and for
-    // `alumnos` in mock 1 item 22 in the STEM, so the question itself is
-    // unreadable without it.
+    // THE NARROWING RULES PRODUCED FALSE CLEARS, and security review caught
+    // three. They are recorded because they bound how much this number can be
+    // trusted:
+    //
+    //   `espacio`   cleared by a 3-character prefix rule matching the taught
+    //               `esperar`. Unrelated words. Mock 2 item 5, option (a).
+    //   `ahorro`    cleared as a relative of a verb -- but `ahorrar` is not
+    //               taught either. Mock 1 item 23, option (c).
+    //   `mejor`     held back on the false claim that it "is a headword". The
+    //               only headword containing it is `pasar a mejor vida`, which
+    //               sits on SPINE-READ-CULTURAL-WEIGHT and derives to C2, so it
+    //               is outside this gate's own taught set. It belongs with
+    //               creer/explicar: taught, but above the ceiling.
+    //
+    // `afirmar` was also held back as exam apparatus. It IS apparatus in the
+    // two instruction lines, but mock 1 item 41 is a scored statement --
+    // "Afirma que sin el curso no le daran el puesto" -- and that row already
+    // lists curso, puesto and dar from the same stem, so the row does read the
+    // stem and singling out one word was inconsistent.
+    //
+    // Two exclusions DO stand, and for a reason the book itself supplies:
+    // `escolar` and `comedor`, because `la escuela` and `comer` are taught and
+    // chapter 431 onward teaches the -dor ending that derives the second.
+    //
+    // Every word added is load-bearing -- in an option a candidate must weigh,
+    // and for `alumnos` in mock 1 item 22 and `mejor` in mock 2 item 5 in the
+    // STEM, so the question itself is unreadable without it.
     //
     // The honest consequence: "the A2 vocabulary programme is complete" was
     // false. It was complete against an instrument that only read the passage.
-    expect(audit.objectiveFailed).toBe(15);
+    expect(audit.objectiveFailed).toBe(17);
     expect(audit.mocks.map(({ reading, listening, objectiveFailed }) => ({
       reading,
       listening,
       objectiveFailed,
     }))).toEqual([
-      { reading: 18, listening: 23, objectiveFailed: 9 },
-      { reading: 20, listening: 24, objectiveFailed: 6 },
+      { reading: 18, listening: 22, objectiveFailed: 10 },
+      { reading: 19, listening: 24, objectiveFailed: 7 },
     ]);
     // THIS NUMBER MUST ONLY EVER FALL, with one exception already spent above:
     // a rise is allowed when it is the MEASUREMENT being corrected to be
@@ -367,29 +385,46 @@ describe("Spanish A2 book-bounded mock audit", () => {
     // only because their spine node derives above A2. See BACKLOG.d HL-C418
     // and HL-C420; do not teach them a second time.
     //
-    // 4 -> 12, and the note above predicted exactly this: "Expect this to
+    // 4 -> 17, and the note above predicted exactly this: "Expect this to
     // recur: the exactness asserted above was always a property of the ROWS,
-    // not of the papers." HL-C421 has now been quantified and its eight
-    // verified stem-and-option lexemes added to the rows. The list is no
-    // longer four already-taught words blocked on a spine decision; it is
-    // those four plus EIGHT GENUINELY UNTAUGHT ONES:
+    // not of the papers." HL-C421 has now been quantified and its verified
+    // stem-and-option lexemes added to the rows. The list is no longer four
+    // already-taught words blocked on a spine decision; it is five such words
+    // plus TWELVE GENUINELY UNTAUGHT ONES:
     //
-    //     already taught, blocked by a level decision (HL-C418, HL-C420, HL-C422)
-    //       creer, explicar, problema, responder
-    //     never taught, newly visible because the rows now read the question
-    //       adelantado, alumno, justo, mejorar, multa, título, utilizar, vigilar
+    //     taught, but above this gate's ceiling (HL-C418, HL-C420, HL-C422)
+    //       creer, explicar, problema, responder, mejor
+    //     never taught anywhere, newly visible because the rows now read the
+    //     question rather than only the passage
+    //       adelantado, afirmar, ahorro, alquiler, alumno, espacio, justo,
+    //       mejora, multa, título, utilizar, vigilar
     //
     // The second group is authorable vocabulary work, and its existence
     // retracts the claim that the A2 programme had run out of words. It had
     // run out of words THE PASSAGE NEEDED.
-    expect(audit.missingObjectiveLexemes).toHaveLength(12);
+    //
+    // `mejora`, not `mejorar`: mock 1 item 23 reads "la mejora de las notas",
+    // a deverbal NOUN. The first draft listed the infinitive, which appears
+    // nowhere in the item -- lemmatising across a part-of-speech boundary,
+    // which would have let a future `mejorar` headword flip the item to
+    // passing while the option stayed unreadable.
+    //
+    // The list is a FLOOR, not a census. The narrowing from 47 to this set was
+    // done by reading, and three false clears have already been found in it by
+    // review; more may remain.
+    expect(audit.missingObjectiveLexemes).toHaveLength(17);
     expect(audit.missingObjectiveLexemes).toEqual([
       "adelantado",
+      "afirmar",
+      "ahorro",
+      "alquiler",
       "alumno",
       "creer",
+      "espacio",
       "explicar",
       "justo",
-      "mejorar",
+      "mejor",
+      "mejora",
       "multa",
       "problema",
       "responder",

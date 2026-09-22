@@ -61,13 +61,13 @@
   },
   "lessonCount": 1430,
   "taughtForms": 2378,
-  "objectiveFailed": 15,
+  "objectiveFailed": 17,
   "mocks": [
     {
       "mock": 1,
       "reading": 18,
-      "listening": 23,
-      "objectiveFailed": 9,
+      "listening": 22,
+      "objectiveFailed": 10,
       "failed": [
         {
           "paper": 1,
@@ -116,7 +116,8 @@
           "paper": 1,
           "item": 23,
           "missing": [
-            "mejorar"
+            "mejora",
+            "ahorro"
           ]
         },
         {
@@ -124,6 +125,13 @@
           "item": 39,
           "missing": [
             "problema"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 41,
+          "missing": [
+            "afirmar"
           ]
         },
         {
@@ -137,9 +145,9 @@
     },
     {
       "mock": 2,
-      "reading": 20,
+      "reading": 19,
       "listening": 24,
-      "objectiveFailed": 6,
+      "objectiveFailed": 7,
       "failed": [
         {
           "paper": 1,
@@ -153,6 +161,15 @@
           "item": 3,
           "missing": [
             "explicar"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 5,
+          "missing": [
+            "mejor",
+            "espacio",
+            "alquiler"
           ]
         },
         {
@@ -188,11 +205,16 @@
   ],
   "missingObjectiveLexemes": [
     "adelantado",
+    "afirmar",
+    "ahorro",
+    "alquiler",
     "alumno",
     "creer",
+    "espacio",
     "explicar",
     "justo",
-    "mejorar",
+    "mejor",
+    "mejora",
     "multa",
     "problema",
     "responder",
@@ -218,7 +240,23 @@
       "count": 1
     },
     {
+      "lexeme": "afirmar",
+      "count": 1
+    },
+    {
+      "lexeme": "ahorro",
+      "count": 1
+    },
+    {
+      "lexeme": "alquiler",
+      "count": 1
+    },
+    {
       "lexeme": "creer",
+      "count": 1
+    },
+    {
+      "lexeme": "espacio",
       "count": 1
     },
     {
@@ -226,7 +264,11 @@
       "count": 1
     },
     {
-      "lexeme": "mejorar",
+      "lexeme": "mejor",
+      "count": 1
+    },
+    {
+      "lexeme": "mejora",
       "count": 1
     },
     {

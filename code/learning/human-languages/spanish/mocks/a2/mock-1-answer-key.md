@@ -55,7 +55,7 @@ not checked against the vocabulary.
 | 20 | b | A2-NE20-03 | patio, usar, tierra, seco, hierba, piedra, utilizar |
 | 21 | b | A2-NE20-05 | vecino, jubilado, campo, plantar, cebolla, ajo, alumno |
 | 22 | a | A2-NE18-04 | mayor, cuaderno, anotar, temperatura, lluvia, recoger, alumno, vigilar |
-| 23 | b | A2-NE01-07 | director, cambio, visible, comportamiento, discutir, mejorar |
+| 23 | b | A2-NE01-07 | director, cambio, visible, comportamiento, discutir, mejora, ahorro |
 | 24 | a | A2-NE04-06 | kilo, producir, suficiente, alimentar, objetivo |
 | 25 | b | A2-F4-02 | consejo, empezar, pequeño, buscar, pueblo, saber |
 
@@ -92,7 +92,7 @@ not checked against the vocabulary.
 | 38 | A | A2-NE07-06 | apuntarse, plaza, administración, primero |
 | 39 | B | A2-NE10-08 | vivir, lejos, tren, minuto, problema |
 | 40 | B | A2-F3-05 | comentar, noche, decir, mañana, decidir |
-| 41 | A | A2-NE07-07 | curso, puesto, jubilarse, dar |
+| 41 | A | A2-NE07-07 | curso, puesto, jubilarse, dar, afirmar |
 | 42 | C | A2-NE08-04 | mirar, dejar, coincidir, gimnasio |
 | 43 | B | A2-NE13-05 | pagar, principio, descontar, entero, creer |
 

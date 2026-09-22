@@ -25,7 +25,7 @@ largely closes this one too.
 | 2 | a | A2-NE10-08 | ascensor, subir, lavadora, piso, reír |
 | 3 | b | A2-NE01-08 | vecino, jubilado, ofrecer, explicar, amable |
 | 4 | b | A2-NE20-06 | pintar, dormitorio, verde, claro, preferir |
-| 5 | b | A2-NE05-08 | oficina, andar, tardar, tren, humor |
+| 5 | b | A2-NE05-08 | oficina, andar, tardar, tren, humor, mejor, espacio, alquiler |
 
 ### Tarea 2 — textos breves independientes
 

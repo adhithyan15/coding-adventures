@@ -103,30 +103,62 @@ notably stem-changing verbs — `pide`/`pidió` from *pedir*, `sirve` from
 *servir*, `va`/`vaya` from *ir*. That is the same trap this entry recorded, and
 it is why the last narrowing is by reading rather than by rule.
 
-**The nine:** `multa`, `título`, `vigilar`, `adelantado`, `alumno`, `justo`,
-`afirmar`, `mejorar`, `utilizar`.
+**Thirteen lexemes** were added to the rows of **nine items**: `multa`,
+`título`, `vigilar`, `adelantado`, `alumno`, `justo`, `utilizar`, `mejora`,
+`afirmar`, `ahorro`, `espacio`, `alquiler`, `mejor`.
 
-**Eight were added to the `requires` rows** of the ten items they appear in.
-Two were held back deliberately: `afirmar`, because it is exam apparatus in a
-true/false stem (*"Afirma que…"*), and `mejor` in mock 2 item 5, which matched
-only through `mejorar`'s stem and **is** a headword.
+Every one is load-bearing. Most sit in an answer option a candidate has to
+weigh — *"tiene que pagar una multa"*, *"tener el título universitario"*,
+*"vigilar a los más pequeños"*, *"pague la reparación por adelantado"* — and
+`alumnos` and `mejor` sit in the STEM of mock 1 item 22 and mock 2 item 5, so
+those questions are unreadable without them.
 
-Every one of the eight is load-bearing. Seven sit in an answer option a
-candidate has to weigh — *"tiene que pagar una multa"*, *"tener el título
-universitario"*, *"vigilar a los más pequeños"*, *"pague la reparación por
-adelantado"* — and `alumnos` sits in the STEM of mock 1 item 22, *"Los alumnos
-mayores se ocupan de…"*, so the question itself is unreadable without it.
+### THE NARROWING RULES PRODUCED FALSE CLEARS, and review caught three
+
+This is the part worth keeping, because it bounds how much the number can be
+trusted. The first draft of this analysis added only nine words. Security
+review found three more that the rules had wrongly cleared or that were held
+back on a false justification:
+
+| word | why it was missed | where |
+|---|---|---|
+| `espacio` | cleared by a **3-character prefix rule** matching the taught `esperar` — unrelated words | mock 2 item 5, option (a) |
+| `ahorro` | cleared as a relative of a verb, but `ahorrar` is not taught either | mock 1 item 23, option (c) |
+| `mejor` | held back on the claim that it "is a headword" — **false** | mock 2 item 5, stem |
+
+The `mejor` claim is the one that matters most, because it was wrong in a way
+that is easy to repeat. The only headword containing `mejor` is
+`pasar a mejor vida`, and that lesson sits on `SPINE-READ-CULTURAL-WEIGHT`,
+which derives to **C2** — outside this gate's own taught set. So `mejor`
+belongs with `creer` and `explicar`: taught, but above the ceiling. Excluding
+it while counting those four was internally inconsistent.
+
+`afirmar` was also held back, as exam apparatus. It **is** apparatus in the two
+instruction lines, but mock 1 item 41 is a scored statement — *"Afirma que sin
+el curso no le darán el puesto"* — and that row already lists `curso`, `puesto`
+and `dar` from the same stem. The row does read the stem; singling out one word
+was inconsistent.
+
+**Two exclusions do stand**, for a reason the book itself supplies: `escolar`
+and `comedor`, because `la escuela` and `comer` are taught and chapter 431
+onward teaches the `-dor` ending that derives the second.
+
+One more correction of the same kind: the first draft listed `mejorar` for mock
+1 item 23, but the paper reads *"la **mejora** de las notas"* — a deverbal
+noun. Listing the infinitive lemmatised across a part-of-speech boundary and
+would have let a future `mejorar` headword flip the item to passing while the
+option stayed unreadable. The row lists `mejora`.
 
 ### What it cost the headline, and what that retracts
 
 ```
-objectiveFailed           6 -> 15
-missingObjectiveLexemes   4 -> 12
-mock 1 reading           24 -> 18
-mock 2 reading           22 -> 20
+objectiveFailed           6 -> 17
+missingObjectiveLexemes   4 -> 17
+mock 1 reading           24 -> 18      listening 23 -> 22
+mock 2 reading           22 -> 19      listening 25 -> 24
 ```
 
-The instrument was understating by **2.5×**. The pinned note in
+The instrument was understating by nearly **3×**. The pinned note in
 `spanish-a1-mock-audit.test.ts` says the count may only ever fall; this is the
 one rise that is legitimate, because it is the MEASUREMENT being corrected to
 be harsher, not the corpus losing ground.
@@ -135,16 +167,25 @@ be harsher, not the corpus losing ground.
 "the last authorable A2 vocabulary chapter" and the programme was declared
 finished, on the grounds that the four remaining lexemes were already taught
 and blocked only by `HL-C418`, `HL-C420` and `HL-C422`. That was true of the
-list the instrument produced. The list was wrong. **Eight genuinely untaught
+list the instrument produced. The list was wrong. **Twelve genuinely untaught
 words were invisible the entire time**, because nothing ever put option text on
 it — and the programme was not out of words, it was out of words *the passage
 needed*.
 
 ### What this does NOT fix
 
-The narrowing from 47 to 9 was done by hand, so it is a floor and not a
-census — a word I judged an inflection could be a genuine gap. And nothing
-stops the rows drifting again: `requires` is still hand-authored, and the only
-thing that now checks it against the paper is that somebody ran this analysis
-once. A report-only CLI that re-runs the 592 → 47 narrowing on demand would
-make it repeatable; the last step would still need a reader.
+**The list is a FLOOR, not a census.** The narrowing from 47 was done by
+reading, and review already found three false clears in it; the rules that
+produced them — a 3-character prefix, a guess at a verb relative — are still
+what filtered the other 545 forms. More gaps almost certainly remain, and every
+one of them makes the number kinder than the truth.
+
+The demonstration of that is in the table above: `espacio` was cleared because
+it shares three letters with `esperar`. Nothing about that rule is sound; it
+was a heuristic chosen to cut 309 candidates down to something readable, and
+its errors all point the same way.
+
+And nothing stops the rows drifting again. `requires` is still hand-authored,
+and the only thing that now checks it against the paper is that somebody ran
+this analysis once. A report-only CLI that re-runs the 592 → 47 narrowing on
+demand would make it repeatable; the last step would still need a reader.
