@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-468-ABRIGO",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can act on a cold-weather reading: take a temperature in degrees off a bus-stop screen, and choose between a jacket, a coat and a scarf on the strength of the number rather than a general impression.",
+  "prerequisites": [
+    "ES-EXT-467-ALIMENTO"
+  ]
+}

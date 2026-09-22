@@ -59,15 +59,15 @@
     ],
     "numericCredits": "0-100"
   },
-  "lessonCount": 1386,
-  "taughtForms": 2297,
-  "objectiveFailed": 10,
+  "lessonCount": 1392,
+  "taughtForms": 2310,
+  "objectiveFailed": 9,
   "mocks": [
     {
       "mock": 1,
       "reading": 24,
-      "listening": 19,
-      "objectiveFailed": 7,
+      "listening": 20,
+      "objectiveFailed": 6,
       "failed": [
         {
           "paper": 1,
@@ -75,16 +75,6 @@
           "missing": [
             "invitar",
             "explicar"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 27,
-          "missing": [
-            "chaqueta",
-            "grado",
-            "bufanda",
-            "abrigo"
           ]
         },
         {
@@ -170,11 +160,8 @@
     }
   ],
   "missingObjectiveLexemes": [
-    "abrigo",
     "avanzado",
     "avisar",
-    "bufanda",
-    "chaqueta",
     "conectar",
     "creer",
     "descontar",
@@ -182,7 +169,6 @@
     "encuesta",
     "estado",
     "explicar",
-    "grado",
     "impresora",
     "imprimir",
     "invitar",
@@ -204,23 +190,11 @@
       "count": 3
     },
     {
-      "lexeme": "abrigo",
-      "count": 1
-    },
-    {
       "lexeme": "avanzado",
       "count": 1
     },
     {
       "lexeme": "avisar",
-      "count": 1
-    },
-    {
-      "lexeme": "bufanda",
-      "count": 1
-    },
-    {
-      "lexeme": "chaqueta",
       "count": 1
     },
     {
@@ -245,10 +219,6 @@
     },
     {
       "lexeme": "estado",
-      "count": 1
-    },
-    {
-      "lexeme": "grado",
       "count": 1
     },
     {

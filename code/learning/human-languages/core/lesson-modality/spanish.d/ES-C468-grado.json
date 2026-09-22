@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C468-grado",
+    "language": "spanish",
+    "chapter": 468,
+    "sequence": 12820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98dabdd3e9960eda"
+  },
+  "findings": []
+}

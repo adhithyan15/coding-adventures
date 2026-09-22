@@ -1,0 +1,11 @@
+{
+  "id": "ES-C468-grado",
+  "pathSegment": "ES-PATH-468-ABRIGO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-468-ABRIGO",
+      "order": 1
+    }
+  ]
+}
