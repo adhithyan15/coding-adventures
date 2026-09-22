@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { lessonsUpToLevel } from "./levels.js";
 import { defaultCurriculumRoot, loadEverything } from "./loader.js";
-import { stripControlCharacters } from "./constants.js";
+import { reportableFilename } from "./constants.js";
 
 export const SPANISH_A1_MOCK_AUDIT = "spanish/mocks/a1/book-bounded-audit.json";
 
@@ -20,14 +20,22 @@ export const SPANISH_A1_MOCK_AUDIT = "spanish/mocks/a1/book-bounded-audit.json";
  */
 export type MockAuditLevel = "pre-A1" | "A1" | "A2";
 
-const AUDIT_DIR: Readonly<Record<MockAuditLevel, string>> = {
+// Frozen, because `Readonly<>` is erased at runtime and this table is the
+// single source of truth for every path this module builds.
+const AUDIT_DIR: Readonly<Record<MockAuditLevel, string>> = Object.freeze({
   "pre-A1": "spanish/mocks/pre-a1",
   A1: "spanish/mocks/a1",
   A2: "spanish/mocks/a2",
-};
+});
 
 export function spanishMockAuditPath(level: MockAuditLevel): string {
-  return `${AUDIT_DIR[level]}/book-bounded-audit.json`;
+  // Through the guard, not a bare lookup: `runSpanishA1MockAudit` feeds this
+  // straight into a `writeFileSync`, so an unchecked level here is a traversal
+  // WRITE rather than a failed read. Unreachable from either CLI, both of which
+  // validate `--level` first -- but `package.json` declares no `exports` map,
+  // so a consumer can deep-import this module, which is the same
+  // package-boundary argument that made the reporter's traversal real.
+  return `${spanishMockDir(level)}/book-bounded-audit.json`;
 }
 
 /**
@@ -44,7 +52,10 @@ export function spanishMockAuditPath(level: MockAuditLevel): string {
 export function spanishMockDir(level: MockAuditLevel): string {
   const dir = Object.hasOwn(AUDIT_DIR, level) ? AUDIT_DIR[level] : undefined;
   if (dir === undefined) {
-    throw new Error(`unknown mock level '${stripControlCharacters(String(level))}'`);
+    // `reportableFilename`, not a bare strip: `stripControlCharacters` keeps
+    // `\n` by design, and this is a ONE-LINE message, so a level carrying a
+    // newline would forge a second log line. constants.ts documents the pair.
+    throw new Error(`unknown mock level ${reportableFilename(String(level))}`);
   }
   return dir;
 }
@@ -136,7 +147,7 @@ export function buildSpanishA1MockAudit(
 
   const answerKeys = [1, 2].map((mock) => ({
     mock,
-    rows: parseAnswerKey(resolve(root, `${AUDIT_DIR[level]}/mock-${mock}-answer-key.md`)),
+    rows: parseAnswerKey(resolve(root, `${spanishMockDir(level)}/mock-${mock}-answer-key.md`)),
   }));
   const mocks = answerKeys.map(({ mock, rows }) => {
     const failed = rows

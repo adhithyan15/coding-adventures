@@ -18,6 +18,8 @@ import {
   type StemVocabulary,
 } from "../src/mock-stem-coverage.js";
 import { defaultCurriculumRoot } from "../src/loader.js";
+import { runMockStemCoverageCli } from "../src/mock-stem-coverage-cli.js";
+import { spanishMockAuditPath } from "../src/spanish-a1-mock-audit-cli.js";
 
 const VOCAB: StemVocabulary = {
   functionWords: ["el", "la", "de", "que"],
@@ -200,4 +202,37 @@ describe("the level is a closed set, not a path fragment", () => {
       ).toThrow(/unknown mock level/);
     },
   );
+});
+
+describe("runMockStemCoverageCli", () => {
+  it("refuses an unknown --level rather than building a path from it", () => {
+    // The CLI's own three-way string comparison is the last place a level is
+    // checked by open-coded equality rather than by the lookup table, and it is
+    // what keeps the traversal above unreachable from the command line.
+    // Nothing pinned it until review asked.
+    const lines: string[] = [];
+    expect(runMockStemCoverageCli(["--level", "../../etc"], defaultCurriculumRoot(), (t) => lines.push(t))).toBe(2);
+    expect(lines).toEqual([]);
+  });
+
+  it("refuses a --level flag with nothing after it", () => {
+    expect(runMockStemCoverageCli(["--level"], defaultCurriculumRoot(), () => {})).toBe(2);
+  });
+
+  it("reports both mocks on a valid level", () => {
+    const lines: string[] = [];
+    expect(runMockStemCoverageCli([], defaultCurriculumRoot(), (t) => lines.push(t))).toBe(0);
+    const text = lines.join("");
+    expect(text).toContain("A2 mock 1");
+    expect(text).toContain("A2 mock 2");
+    expect(text).toContain("unaccounted");
+  });
+});
+
+describe("spanishMockAuditPath", () => {
+  it("goes through the closed set too, because its result reaches a writeFileSync", () => {
+    expect(spanishMockAuditPath("A2")).toBe("spanish/mocks/a2/book-bounded-audit.json");
+    expect(() => spanishMockAuditPath("../../../etc" as never)).toThrow(/unknown mock level/);
+    expect(() => spanishMockAuditPath("__proto__" as never)).toThrow(/unknown mock level/);
+  });
 });

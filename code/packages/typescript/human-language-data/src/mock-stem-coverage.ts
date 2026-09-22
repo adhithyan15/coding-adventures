@@ -35,13 +35,22 @@
 //
 // The rules here strip declared SUFFIXES rather than comparing prefixes, so the
 // original false clear cannot even arise: `espacio` reduces to `espaci` and
-// `esperar` to `esper`, which never meet, and `espacio` is reported as
-// `unaccounted`. A test pins that, so adding a prefix rule later has to break
-// something that says why there isn't one.
+// `esperar` to `esper`, which never meet. A test pins that, so adding a prefix
+// rule later has to break something that says why there isn't one.
 //
-//     hablado → derivable, matched hablar         <- printed, and correct
-//     espacio → unaccounted                       <- printed, no match claimed
-//     espacio → (cleared by prefix rule)          <- what the hand pass did
+// Two lines of real output, copied from a run rather than imagined:
+//
+//     acepta          27 option  ~ aceptar     <- derivable, and the match shown
+//     ayuntamiento    21 option                <- unaccounted, no match claimed
+//
+// They are copied because the first two drafts of this block were not. One
+// asserted `espacio → derivable, matched esperar`, which the suffix rules make
+// impossible; the next asserted `espacio → unaccounted` and
+// `hablado → derivable`, and BOTH are wrong too — `espacio` now prints as
+// `in-requires`, because it was added to item 5's row, and `hablado` prints as
+// `taught`. Three drafts, in the one module whose whole thesis is that a
+// claimed match must be visible and checkable. Run the tool before editing
+// this comment.
 //
 // The reporter is therefore allowed to be noisy. A false `derivable` costs a
 // reader one glance; a false clear costs an exam item.
