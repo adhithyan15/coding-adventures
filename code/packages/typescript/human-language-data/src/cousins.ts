@@ -65,7 +65,17 @@ interface CousinEntry {
  * fixture can still carry one, and because failing open here would mean a panel
  * that quietly stops appearing rather than a test that fails.
  */
-function rootSlugs(lesson: ParsedLesson): string[] {
+/**
+ * EXPORTED for `root-slug-splits.ts`, which guards these very slugs.
+ *
+ * It must be this function and not a second reading of the frontmatter. The
+ * guard's first draft used `lesson.realization.roots` (i.e. `parse.ts`
+ * `arrayify`), which wraps an unbracketed `roots: a, b` as ONE string while
+ * this function splits it on the comma -- so a genuine split written without
+ * brackets produced two join keys here and one opaque slug there, and the gate
+ * reported nothing. One notion of a slug, owned by the joiner.
+ */
+export function rootSlugs(lesson: ParsedLesson): string[] {
   const raw = lesson.frontmatter.roots;
   const parts = Array.isArray(raw)
     ? raw.map((slug) => String(slug))

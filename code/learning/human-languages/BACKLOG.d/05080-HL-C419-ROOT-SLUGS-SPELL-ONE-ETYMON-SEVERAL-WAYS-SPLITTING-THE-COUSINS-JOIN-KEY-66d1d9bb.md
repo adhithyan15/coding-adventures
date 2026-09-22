@@ -119,3 +119,78 @@ as complete as the list, and the list is invisible in the result. Derive the
 categories from the data, write the list down beside the number, and say what
 one unit of the count is. Every fault in all four drafts was one of those three
 omissions.
+
+### UPDATE — the guard is in, the normalisation is not
+
+`check:root-slug-splits` now exists, with `core/root-tags.json` as the declared
+vocabulary this entry said it needed. **Nothing has been normalised.** The
+~700-lesson rename still wants its own PR and its own review, for the reason
+given above: a wrong merge asserts a shared etymology that is not there.
+
+`core/root-slug-split-baseline.json` pins **192 baseline entries** — 110
+*shape* (`stare-latin` against `latin-stare`) and 82 *bare-vs-tagged* (`bonus`
+against `bonus-latin`).
+
+**The unit is an ENTRY, not an etymon**, and this entry's own method note says
+to say so. Sixteen bare-vs-tagged entries strictly contain a shape entry for
+the same lemma — `adiutare|` holds
+`[adiutare, adiutare-latin, latin-adiutare]` while `adiutare|latin` holds the
+last two — so collapsing the overlaps gives **175 distinct etymon groups over
+372 slugs**. Calling it "192 splits" would double-count those sixteen.
+
+The file **may only shrink**: a new split fails the gate, a baseline entry that
+no longer splits also fails it, and `--write` refuses to grow the file without
+an explicit `--allow-new`. The last of those matters because `--write` is the
+command a contributor is told to run, so without it that is also the command
+that quietly launders a new split into the accepted set.
+
+The vocabulary is 99 tags. `pie` is declared an **alias** of
+`proto-indo-european`, which turns `pie-dwoh` / `proto-indo-european-dwoh` from
+an invisible pair into a reported split; it does real work on five lemmas.
+
+Matching is **case-insensitive**, which was not true of the first draft and
+should have been. The corpus carries exactly one case-only duplicate —
+`SANSKRIT-PA-DRINK` in two Marwadi lessons against `sanskrit-pa-drink` in four
+Gujarati, Punjabi and Marathi ones. One etymon, two spellings, six lessons,
+four tracks: precisely the defect this guard exists for, and the case-sensitive
+draft left the upper-case form opaque and the split invisible. A review found
+it; the fix was one `toLowerCase`.
+
+#### What the guard does NOT catch, stated plainly
+
+Two classes are out of scope, and neither is an oversight:
+
+- **One lemma under two different declared tags** — `bursa-greek` against
+  `bursa-latin`, `dravidian` against `proto-dravidian`. Folding these would
+  *assert* a shared etymology rather than reveal one, which is the failure mode
+  `cousins.ts` exists to prevent. Thirty-eight lemmas carry two or more
+  canonical tags; `dravidian`/`proto-dravidian` account for eight and
+  `frankish`/`germanic` for three, and in those the tags name genuinely
+  different languages. **The `bursa` pair is a real defect this guard will not
+  report**, because nothing distinguishes it from the legitimate cases without
+  reading the two lessons.
+- **Prefix families** — `permittere-latin` against `mittere-latin`. The lemmas
+  genuinely differ, so no normalisation of shape can see the relationship.
+
+That second one is not hypothetical. Writing `ES-C458-admitir` I claimed
+*admitir* was the **third** corpus word off *mittere*, after *meter* and *el
+permiso*. It is the fourth: `ES-C405-permitir` has taught *mittere* since
+chapter 405, and I missed it because a census keyed on the slug **cannot see
+it**. A review caught the wrong sentence before it merged.
+
+So the honest scope: this guard stops the corpus drifting *further* apart in
+the ways that are unambiguous, and stops an invented slug from silently
+creating a second spelling. It does not find every split that exists, and 175
+is a **floor**.
+
+#### One notion of a slug
+
+`liveRootSlugs` calls `cousins.ts`'s own exported `rootSlugs()` rather than
+reading the frontmatter a second time. The first draft used
+`lesson.realization.roots` — `parse.ts` `arrayify` — which wraps an unbracketed
+`roots: a, b` as ONE string where `cousins.ts` splits it on the comma. A
+genuine split written without brackets would then have produced two join keys
+in the joiner and one opaque slug in the guard, and the gate would have
+reported nothing. Every live `roots:` line is bracketed today, so this was
+latent rather than live; it is fixed because a guard reading different bytes
+from the thing it guards is not a guard.
