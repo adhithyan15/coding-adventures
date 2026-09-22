@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C467-sintesis-alimento",
+    "language": "spanish",
+    "chapter": 467,
+    "sequence": 12800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d4c067fc7088c7b"
+  },
+  "findings": []
+}

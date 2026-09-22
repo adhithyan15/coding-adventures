@@ -1,5 +1,77 @@
 # Changelog
 
+## Chapter 467 — the first chapter reviewed before it was pushed
+
+```
+A2 objectiveFailed          11 -> 10
+A2 missingObjectiveLexemes  31 -> 27
+```
+
+Four words, one item, 4.00. Eleventh consecutive exact prediction.
+
+| chapter | scene | words |
+|---|---|---|
+| 467 ALIMENTO | a community garden's monthly sheet | producir, suficiente, alimentar, objetivo |
+
+## The order changed, and it paid immediately
+
+Chapters 465 and 466 each pushed first and corrected after, which cancelled
+the 20-40 minute books build mid-flight and produced a spurious gate failure
+both times. This chapter ran the fact-check **before** committing. Twenty-two
+findings came back against six lessons, and none of them ever reached a
+branch.
+
+## Three of those were merge-blocking
+
+**`objetivo` had the contrast backwards, and the corpus said so beside the
+lesson it cited.** The draft taught that *el objeto* "sits in front of you"
+while *el objetivo* "is the thing you are throwing at" — but
+`ES-C345-repaso-persona-objeto`, sitting next to the owner the lesson cited,
+already says the object of a verb *is* "the thing the action is thrown at".
+The claim is independently false too: *obiectivus* is an adjective formed
+**on** *obiectum*, and `-ivo` names a habit rather than reversing a direction.
+The draft's own closing line disproved it — an **objective lens** is named for
+facing the object. Now: the throw does not turn round; what narrowed is *why*
+the thing is placed there.
+
+**`suficiente` handed back the misreading that `bastante`'s lesson exists to
+prevent.** The draft claimed *bastante* is ambiguous between "enough" and
+"quite a lot". `ES-C60-bastante` spends a whole lesson inoculating against
+exactly that: *"So bastante does not mean a lot. It means enough."* The real
+difference is that *bastante* has an adverbial second job — *bastante caro* is
+**fairly** expensive — while *suficiente* names a requirement and has no scale
+reading. And both can say there is not enough: *no hay bastante* is the
+everyday phrasing, *no hay suficiente* the formal one. The draft had made that
+a difference in meaning; it is a difference in register.
+
+**`producir` was called "the third `-ducir` verb".** It is the second — only
+*reducir* precedes it. That is the same miscount already written up in the
+`HL-C419` backlog note, where *admitir* was called the third word off
+*mittere* and was the fourth.
+
+## What else went
+
+The draft flattened `ES-C462-reducir`'s own warning that the `-zc-` class
+splits (*conocer* keeps the **z** and not the **j** past); said `-mento`
+"names the means" when `ES-C457-medicamento` makes a **register** point;
+claimed *alere* "did not mean to feed" when nourishing is its primary sense;
+put the noun-before-verb derivation in Spanish when it happened in Latin; and
+mis-cut *ali-mento* as *alimen-to*. The garden sheet used Peninsular *patata*
+unglossed, an untaught and tense-ambiguous *sembramos*, and *el parte* — a
+masculine homograph of the taught *la parte*, never explained.
+
+## One thing deliberately left undone
+
+*Altus* really is the old participle of *alere*, so *alto* belongs to this
+family. `ES-C365-alto` carries its own `altus-latin` slug, and asserting the
+link in prose would claim a family the slugs do not encode — the exact thing
+`cousins.ts` exists to prevent. It needs a slug decision, not a sentence.
+
+## Where the floor is
+
+Five authorable rows left, 20 words at four apiece. Five more turn on
+`explicar`, `creer` or `problema` and wait on `HL-C418`.
+
 ## Chapter 466 — a chapter whose endings were all already owned
 
 ```

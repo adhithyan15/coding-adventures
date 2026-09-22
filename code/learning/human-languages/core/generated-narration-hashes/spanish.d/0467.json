@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 467,
+  "sourceHash": "fnv1a64:0faab17fa1100e0f",
+  "lessonIds": [
+    "ES-C467-producir",
+    "ES-C467-suficiente",
+    "ES-C467-alimentar",
+    "ES-C467-objetivo",
+    "ES-R467-repaso-alimento",
+    "ES-C467-sintesis-alimento"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch467.txt",
+  "json": "spanish/narration/ch467.json",
+  "textHash": "fnv1a64:4249563c4817cc05",
+  "jsonHash": "fnv1a64:2a22d8b98b95d96d",
+  "findings": []
+}

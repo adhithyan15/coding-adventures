@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C467-alimentar",
+    "language": "spanish",
+    "chapter": 467,
+    "sequence": 12770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef6a9997bfeac14a"
+  },
+  "findings": []
+}

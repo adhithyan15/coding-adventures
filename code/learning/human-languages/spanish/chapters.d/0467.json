@@ -1,0 +1,21 @@
+{
+  "chapter": 467,
+  "title": "El huerto comunitario",
+  "label": "ch:es-alimento",
+  "canDo": "I can read a monthly production sheet on a community garden's door: understand what was produced, who it fed, what the target was, and why a notice writes 'no fue suficiente' where a person would say 'no fue bastante'.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "ES-C467-sintesis-alimento",
+    "kind": "task",
+    "summary": "Read a community garden's monthly figures, then say whether the target was met.",
+    "assesses": [
+      "ES-LEX-C467-ALIMENTO-01",
+      "ES-LEX-C467-ALIMENTO-02",
+      "ES-LEX-C467-ALIMENTO-03",
+      "ES-LEX-C467-ALIMENTO-04"
+    ],
+    "note": "THREE OF THE FOUR ARE ASSEMBLED FROM PARTS ALREADY HELD, and the repaso says so outright. producir is the SECOND -ducir verb (only reducir precedes it; conducir, traducir and introducir have no lessons) and the SAME VERB CLASS as ES-C462-reducir five chapters back -- the z before c (produzco) and the j past (produje) -- so it is CITED, never re-derived; learning reducir bought the -ducir CORNER of that class, not the whole class -- reducir's own lesson warns that conocer shares the -zc- and not the j past -- and the prefix does the rest: reducir leads back, producir leads forward, conducir leads along. el objetivo is ES-C345-objeto's throw (ob- plus IACERE, thrown before you) wearing ES-C453-rotativo's -ivo, and -ivo does NOT reverse the throw -- ES-C345-repaso-persona-objeto already says the object of a verb IS 'the thing the action is thrown at', so the objeto/objetivo difference is WHY the thing is placed there, not which way it flew: an objetivo is the one put in front to be REACHED. Joins iacere-latin. alimentar takes -mento from ES-C457-medicamento, whose actual point is REGISTER (-mento is the formal twin of -miento), so the 'means' reading is offered as what Latin -mentum often did rather than as that lesson's rule. The noun-before-verb order happened in LATIN (alimentum off alere, then alimentare); Spanish inherited both, which is why it is el alimento and not el alimentamento, and the cut is ali- plus -mento. ALERE was WIDER than to feed: nourishing and thereby REARING, which is why adult (finished growing), alumnus (one being nourished) and coalesce belong to it. Deliberately NOT claimed: that alto is alere's participle -- ES-C365-alto carries its own altus-latin slug and never makes that link, so asserting a family the slugs do not encode would mislead a reader who later checks cousins. SUFICIENTE IS THE ONLY GENUINELY NEW THING, and even that is a distinction rather than a word: ES-C60-bastante is already glossed as 'a word that means exactly sufficing' and sits in the middle of the poco/bastante/muy scale ES-C60-repaso-grado fixes. ES-C60-bastante spends a whole lesson INOCULATING against 'a lot' ('So bastante does not mean a lot. It means enough'), so this chapter must NOT hand that misreading back. The real difference: bastante has an adverbial second job (bastante caro is FAIRLY expensive, a reading on the scale) and suficiente has no scale reading -- it names a REQUIREMENT. Both can say there is not enough; no hay bastante is the everyday phrasing and no hay suficiente is the formal one a notice uses. The split is register plus what is being measured, NOT what the sentence can mean. Its root is sub- plus FACERE, to put enough UNDER a thing to hold it up: sufficiency is load-bearing, not abundance. Slug is the compound-specific sufficere-latin, matching the portare convention, because facere-latin and latin-facere are ALREADY a recorded HL-C419 shape split and this must not add to it. The payoff turns on the bastante/suficiente choice: a sheet reporting 380 kg against a 50-family target says NO FUE SUFICIENTE, and the word is doing the measuring."
+  }
+}
