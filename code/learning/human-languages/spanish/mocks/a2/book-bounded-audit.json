@@ -59,15 +59,15 @@
     ],
     "numericCredits": "0-100"
   },
-  "lessonCount": 1398,
-  "taughtForms": 2321,
-  "objectiveFailed": 8,
+  "lessonCount": 1404,
+  "taughtForms": 2331,
+  "objectiveFailed": 7,
   "mocks": [
     {
       "mock": 1,
       "reading": 24,
-      "listening": 21,
-      "objectiveFailed": 5,
+      "listening": 22,
+      "objectiveFailed": 4,
       "failed": [
         {
           "paper": 1,
@@ -100,16 +100,6 @@
           "missing": [
             "descontar",
             "creer"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 47,
-          "missing": [
-            "paraguas",
-            "mango",
-            "encontrar",
-            "avisar"
           ]
         }
       ]
@@ -151,17 +141,13 @@
   ],
   "missingObjectiveLexemes": [
     "avanzado",
-    "avisar",
     "creer",
     "descontar",
-    "encontrar",
     "encuesta",
     "estado",
     "explicar",
     "invitar",
     "lectura",
-    "mango",
-    "paraguas",
     "perderse",
     "principiante",
     "problema",
@@ -180,19 +166,11 @@
       "count": 1
     },
     {
-      "lexeme": "avisar",
-      "count": 1
-    },
-    {
       "lexeme": "creer",
       "count": 1
     },
     {
       "lexeme": "descontar",
-      "count": 1
-    },
-    {
-      "lexeme": "encontrar",
       "count": 1
     },
     {
@@ -209,14 +187,6 @@
     },
     {
       "lexeme": "lectura",
-      "count": 1
-    },
-    {
-      "lexeme": "mango",
-      "count": 1
-    },
-    {
-      "lexeme": "paraguas",
       "count": 1
     },
     {

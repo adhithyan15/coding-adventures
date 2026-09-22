@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-470-PARAGUAS",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "before": [],
+  "inline": [
+    "ES-EXT-470-PARAGUAS"
+  ],
+  "after": []
+}

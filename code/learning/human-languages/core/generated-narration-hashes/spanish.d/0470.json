@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:e5639acea805bc65",
+  "lessonIds": [
+    "ES-C470-paraguas",
+    "ES-C470-mango",
+    "ES-C470-encontrar",
+    "ES-C470-avisar",
+    "ES-R470-repaso-paraguas",
+    "ES-C470-sintesis-paraguas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch470.txt",
+  "json": "spanish/narration/ch470.json",
+  "textHash": "fnv1a64:ca8dc8b393808556",
+  "jsonHash": "fnv1a64:5bcb4559867f2d5f",
+  "findings": []
+}
