@@ -43,7 +43,8 @@ machines. The verb next covers both.
 *Me falló el coche* — the car let me down. *Ha fallado el sistema* — the system
 has gone down. *No me falles* — don't let me down.
 
-**El fallo** is the noun: a fault, a glitch, and in an exam a wrong answer.
+**El fallo** is the noun in Spain: a fault, a glitch, and in an exam a wrong
+answer. Much of Latin America says **la falla** for the same fault.
 
 ## Grammar Lens: fallar is not estropearse
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C464-CITA-03, ES-LEX-C448-MUDA-04] -->
@@ -65,13 +66,16 @@ reproach: they were not there when it counted.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C464-CITA-03, ES-LEX-C324-TRUE-02] -->
 
-Latin **fallere**, to deceive — and that is the same verb inside **falso**,
-which you already have.
+Latin **fallere** — the verb that **tripped you up**, as you had it under
+*falso*. That literal footing is what the rest grows out of: to trip somebody
+is to put the ground where they did not expect it, and from there to mislead
+them.
 
-The move from deceiving to failing runs through disappointment: something that
-*fails* you has, in effect, misled you about what it would do. Latin *fallere*
-already carried both, and Spanish kept the pair — *falso* for the lie, *fallar*
-for the letting-down.
+The move from tripping to failing runs through disappointment: something that
+*fails* you has, in effect, put the ground somewhere other than where it
+promised. Latin *fallere* carried the deceiving sense alongside the literal
+one, and Spanish kept the pair — *falso* for the lie, *fallar* for the
+letting-down.
 
 English took it twice as well: **false** from the participle, and **fail**
 through French. **Fault**, **fallacy** and **failure** are all here, and so is
@@ -92,4 +96,5 @@ short of time — from the same root by a different road.
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C464-CITA-03] -->
 
 [PAUSE 3s] To let somebody down? (**Fallar**.) The noun? (**El fallo**.)
-What did *fallere* mean? (**To deceive** — the same verb as *falso*.)
+What did *fallere* do to you? (**Tripped you up** — the same verb as
+*falso*.)

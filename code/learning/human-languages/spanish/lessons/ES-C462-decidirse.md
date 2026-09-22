@@ -32,8 +32,9 @@ reviews_of: [ES-C437-decidir, ES-C449-acercar]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C437-PLAN-01, ES-LEX-C449-TALLER-05] -->
 
-[PAUSE 2s] Say **decidir** and **acercar**. You already know what putting
-**-se** on the second one did. Do it to the first.
+[PAUSE 2s] Say **decidir** and **acercar**. You met *decidirse* in passing
+when you learned *decidir*; now take it properly, with what **-se** did to the
+second word in front of you.
 
 ## You'll want to know: decidirse
 <!-- hl-knowledge: introduces=[ES-LEX-C462-JEFE-02]; assesses=[ES-LEX-C437-PLAN-01] -->

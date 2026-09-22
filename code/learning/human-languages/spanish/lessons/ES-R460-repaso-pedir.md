@@ -62,8 +62,9 @@ and they are the ones the endings cannot help you with.
 | **solicitar** | *citare*, inside *la cita* |
 | **la espera** | *esperar*, and *la esperanza* beside it |
 
-*La espera* is the neat one: you have had **esperar** since early on and **la
-esperanza** since the moving chapter, and this is the third member — the plain
+*La espera* is the neat one: **esperar** and **la esperanza** arrived together
+with the verb itself, long ago, and the moving chapter showed you the *-anza*
+that builds the second from the first. This is the third member — the plain
 noun that sits between the verb and the abstract one.
 
 ## Guided Practice

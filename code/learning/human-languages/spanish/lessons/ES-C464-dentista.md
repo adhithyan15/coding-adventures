@@ -67,12 +67,16 @@ stops being a guess — the same bargain the noun-making suffixes offered.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C464-CITA-02, ES-LEX-C314-BODY-04] -->
 
-Latin **dens**, **dentem** — **tooth** — plus the Greek ending **-istēs**,
-which names somebody who does a thing.
+Latin **dens**, **dentem** — **tooth** — plus the job-ending you met at the
+very start of this book, when *-ista* first showed you *el artista* and *la
+artista*. Greek wrote it **-istēs**; Latin took it in as *-ista*, and that
+Latin *-a* is the one Spanish inherited.
 
-So *dentista* is a Latin body part with a Greek job-ending welded on, which is
-how most modern profession words were built: *el periodista*, *el electricista*,
-*el taxista*. The ending is productive, meaning Spanish still makes new ones.
+So *dentista* is a Latin body part with a borrowed job-ending welded on, which
+is how a large family of profession words was built: *el periodista*, *el
+electricista*, *el taxista*. The ending is still productive, so Spanish goes on
+making new ones. It is one of several — *-dor* gives *el conductor*, *-ero*
+gives *el camarero*.
 
 *Dentem* gives **el diente**, and English **dental**, **dentist** and
 **indent** — to cut a tooth-shaped notch. A **dandelion** is *dent de lion*,

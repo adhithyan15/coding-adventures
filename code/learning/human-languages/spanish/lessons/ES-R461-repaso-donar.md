@@ -46,7 +46,7 @@ reviews_of: [ES-C461-donar, ES-C461-peligroso, ES-C461-rechazar]
 Both are Latin *capere*, to take. The prefix does everything, exactly as it did
 for *meter*, *el permiso*, *permitir* and *admitir* off *mittere*.
 
-That is now two families in three chapters where the prefix carries the whole
+That is now two families in four chapters where the prefix carries the whole
 meaning. When a Spanish verb starts with *a-*, *re-*, *per-*, *ad-* or *des-*,
 the part after it is usually a word you can already find.
 
@@ -58,7 +58,7 @@ the part after it is usually a word you can already find.
 | **donar** | *perdón* — *per-donare*, to give thoroughly |
 | **peligroso** | *el peligro*, and *periculum* behind it |
 
-*Perdón* is the one to keep. You learned it in the first weeks as a thing you
+*Perdón* is the one to keep. You learned it in the courtesy chapter as a thing you
 say when you bump into somebody, and it turns out to be built on **giving** —
 forgiveness is handing the offence over rather than keeping it. English does
 the identical thing in *for-give*.

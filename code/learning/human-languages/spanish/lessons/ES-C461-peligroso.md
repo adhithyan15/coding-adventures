@@ -81,7 +81,9 @@ survived.
 From *periculum* to *peligro* the **r** and the **l** swapped places — the
 metathesis you met in *milagro* from *miraculum*. Both words came through
 speech, and both got their letters shuffled on the way; a word that arrived by
-book kept them, which is why *experiencia* looks so different.
+book was never shuffled: **periclitar**, to be in danger, keeps *periculum*'s
+letters in their Latin order, and stands beside the spoken *peligro* as the
+same word at two speeds.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C461-DONAR-02, ES-LEX-C449-TALLER-04] -->

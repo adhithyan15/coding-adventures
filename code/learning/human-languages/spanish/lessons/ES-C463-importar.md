@@ -72,14 +72,17 @@ whether a thing would matter to them, not asking permission.
 Latin **importare**: **in-**, in, plus **portare**, **to carry**. To carry
 something **in**.
 
-Both senses come straight off that. Importing goods is carrying them in.
-Mattering is carrying weight in — a thing that *imports* is a thing that brings
-something with it, and **importante** is the adjective for exactly that.
+Importing goods is carrying them in, and that is the whole of what Rome meant
+by it. **Mattering** is the later half, invented inside the Romance languages
+long after Latin — you met that split under *importante*, and this is the verb
+it was cut from. A thing that *imports* brings weight in with it.
 
-*Portare* is a wide family: **transportar**, **exportar**, **el pasaporte** —
-which carries you through a *porte*, a gate — and English **port**, **portable**
-and **porter**. The *puerta* in your flat and the *puerto* where ships dock are
-the same opening.
+*Portare* is a wide family: **transportar**, **exportar**, English **portable**
+and the **porter** who carries your bags. Keep it apart from its look-alike
+*porta*, a **gate** — the word inside *la puerta*, *el puerto* and **el
+pasaporte**, which carries you through a gate rather than carrying anything
+itself. You were warned about this pair at *la puerta*, where English's two
+*porter*s turned out to be two different words.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C463-GUIA-03, ES-LEX-C463-GUIA-02, ES-LEX-C443-ANIMO-02] -->

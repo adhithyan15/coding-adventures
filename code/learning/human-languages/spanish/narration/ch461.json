@@ -4,7 +4,7 @@
   "chapter": 461,
   "title": "El donativo",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:975ab44a5636da4b",
+  "sourceHash": "fnv1a64:516d29f498720bf6",
   "lessons": [
     {
       "id": "ES-C461-donar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3fd94f22f05900b1",
+      "sourceHash": "fnv1a64:ddc2bae982c57363",
       "notice": null,
       "blocks": [
         {
@@ -98,7 +98,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Latin donare, to give — and here is the payoff on a word you learned in your first weeks."
+              "text": "Latin donare, to give — and here is the payoff on a word you have had since the courtesy chapter, long before you could take it apart."
             },
             {
               "kind": "speech",
@@ -106,7 +106,7 @@
             },
             {
               "kind": "speech",
-              "text": "The family also gives el don, a gift or a talent, and la dosis, through Greek — a dose is what is given to you."
+              "text": "The family also gives el don, a gift or a talent. And off to one side sits la dosis — not from donare but from Greek's own word for a giving, off the same ancient root: a dose is what is given to you."
             }
           ]
         },
@@ -182,7 +182,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dddc79cdd75d7a72",
+      "sourceHash": "fnv1a64:f2979963054c43e2",
       "notice": null,
       "blocks": [
         {
@@ -273,7 +273,7 @@
             },
             {
               "kind": "speech",
-              "text": "From periculum to peligro the r and the l swapped places — the metathesis you met in milagro from miraculum. Both words came through speech, and both got their letters shuffled on the way; a word that arrived by book kept them, which is why experiencia looks so different."
+              "text": "From periculum to peligro the r and the l swapped places — the metathesis you met in milagro from miraculum. Both words came through speech, and both got their letters shuffled on the way; a word that arrived by book was never shuffled: periclitar, to be in danger, keeps periculum's letters in their Latin order, and stands beside the spoken peligro as the same word at two speeds."
             }
           ]
         },
@@ -349,7 +349,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d5dd96d432179162",
+      "sourceHash": "fnv1a64:cc621048617bc798",
       "notice": null,
       "blocks": [
         {
@@ -413,11 +413,11 @@
             },
             {
               "kind": "speech",
-              "text": "That is why the verb turns up so often in the passive-looking se form on notices — no se aceptan, no se admiten — and in the plain active when a person does it: rechacé la oferta."
+              "text": "Notices usually phrase a refusal by negating the other two — no se aceptan, no se admiten — but rechazar takes the same se form when the refusing itself is the point: se rechazan los rotos. In the plain active it is a person who does it: rechacé la oferta."
             },
             {
               "kind": "speech",
-              "text": "Note the spelling: rechacé, with a c. A z before e becomes c in Spanish, always, which is why empezar gives empecé."
+              "text": "Note the spelling: rechacé, with a c. Spanish spelling prefers c before e, so a stem z turns into a c right through the conjugation, which is why empezar gives empecé. A handful of borrowings keep the z — zen, zeta — but no verb ending does."
             }
           ]
         },
@@ -428,7 +428,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "re- plus an old Spanish verb chazar, to drive back — and behind that Vulgar Latin captiare, to chase, built on capere, to take."
+              "text": "re- plus chazar, to drive back — a verb Spanish took from Old French chacier, and behind that Vulgar Latin captiare, to chase, built on capere, to take. That French leg is why this word has ch: Spanish's own inherited form of captiare is cazar, to hunt."
             },
             {
               "kind": "speech",
@@ -512,7 +512,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e7ce2dba4ad25848",
+      "sourceHash": "fnv1a64:92dc039506dc57a4",
       "notice": null,
       "blocks": [
         {
@@ -556,7 +556,7 @@
             },
             {
               "kind": "speech",
-              "text": "That is now two families in three chapters where the prefix carries the whole meaning. When a Spanish verb starts with a-, re-, per-, ad- or des-, the part after it is usually a word you can already find."
+              "text": "That is now two families in four chapters where the prefix carries the whole meaning. When a Spanish verb starts with a-, re-, per-, ad- or des-, the part after it is usually a word you can already find."
             }
           ]
         },
@@ -580,7 +580,7 @@
             },
             {
               "kind": "speech",
-              "text": "Perdón is the one to keep. You learned it in the first weeks as a thing you say when you bump into somebody, and it turns out to be built on giving — forgiveness is handing the offence over rather than keeping it. English does the identical thing in for-give."
+              "text": "Perdón is the one to keep. You learned it in the courtesy chapter as a thing you say when you bump into somebody, and it turns out to be built on giving — forgiveness is handing the offence over rather than keeping it. English does the identical thing in for-give."
             }
           ]
         },
@@ -656,7 +656,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40c27464e79f636b",
+      "sourceHash": "fnv1a64:b57fe89cb9dba03f",
       "notice": null,
       "blocks": [
         {
@@ -743,7 +743,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Se rechazan los que estén rotos o sean peligrosos is the sentence to take apart, and the subjunctive is doing the same job it did on the swimming-course notice."
+              "text": "Se rechazan los que estén rotos o sean peligrosos is the sentence to take apart, and the subjunctive is back, doing a cousin of the job it did on the swimming-course notice. There it withheld agreement that places remained; here it withholds any claim about which toys will actually turn up."
             },
             {
               "kind": "speech",

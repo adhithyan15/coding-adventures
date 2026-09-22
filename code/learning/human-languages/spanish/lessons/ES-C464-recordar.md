@@ -18,7 +18,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-C464-CITA-01]
 practises:
-  knowledge: [ES-LEX-C464-CITA-01, ES-LEX-C463-GUIA-01, ES-LEX-C364-REF-30, ES-LEX-C356-CLOCK-22]
+  knowledge: [ES-LEX-C464-CITA-01, ES-LEX-C364-REF-30, ES-LEX-C356-CLOCK-22]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -48,7 +48,7 @@ One verb, both jobs. Which it is depends on whether somebody else is being
 told: *recuerdo* alone is remembering, *te recuerdo* is reminding.
 
 ## Grammar Lens: recordar is not acordarse
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C464-CITA-01, ES-LEX-C463-GUIA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C464-CITA-01] -->
 
 Spanish has a second verb for remembering and the two are near-twins:
 
@@ -62,8 +62,9 @@ thing. The difference is grammatical, not semantic: *recordar* takes the thing
 directly, *acordarse* needs its **de**, and dropping it is one of the commonest
 mistakes learners make.
 
-Both are **o → ue** verbs: *recuerdo*, *me acuerdo*. The same break you have
-been tracking since *la rueda*.
+Both are **o → ue** verbs: *recuerdo*, *me acuerdo*. That is the stressed-vowel
+break you have had since the stem-change chapter, and you have seen it on this
+exact root before: *de acuerdo* showed you *cor* opening into *cuerdo*.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C464-CITA-01, ES-LEX-C364-REF-30] -->

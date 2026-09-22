@@ -47,9 +47,10 @@ Both are Latin *caput*, head. The first went through centuries of mouths and
 came out as a body part; the second was picked up whole from a neighbour and
 came out as a person.
 
-You have watched this twice before — *rueda* against *rotativo*, *consejo*
-against *consultar* — but those pairs both came from Latin. This one arrived
-through a **third** language, which is why it looks like neither.
+You have watched this several times — *cosa* against *causa*, *razón* against
+*ración*, *rueda* against *rotativo*, *consejo* against *consultar*. Every one
+of those came out of Latin twice at two different speeds. This one took a
+detour through a **third** language, which is why it looks like neither.
 
 ## Grammar Lens: two verbs, two pictures of cutting and leading
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C462-JEFE-01, ES-LEX-C462-JEFE-02] -->

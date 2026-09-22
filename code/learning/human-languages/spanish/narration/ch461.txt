@@ -24,9 +24,9 @@ Te doy el taladro — I'm passing it to you. Te regalo el taladro — it is your
 Use donar about a person and it sounds like a charitable act rather than a kindness, which is sometimes exactly the joke a Spanish speaker is making.
 
 The word, taken apart.
-Latin donare, to give — and here is the payoff on a word you learned in your first weeks.
+Latin donare, to give — and here is the payoff on a word you have had since the courtesy chapter, long before you could take it apart.
 Perdón is per- plus donare: to give thoroughly, to give completely away. Forgiving somebody is giving the offence away rather than holding it, and the metaphor is the same in English — for-give is built the identical way, for- being an intensifier, so pardon and forgive are the same idea twice.
-The family also gives el don, a gift or a talent, and la dosis, through Greek — a dose is what is given to you.
+The family also gives el don, a gift or a talent. And off to one side sits la dosis — not from donare but from Greek's own word for a giving, off the same ancient root: a dose is what is given to you.
 
 Guided Practice.
 [pause 1 second]
@@ -67,7 +67,7 @@ It agrees like any adjective — peligrosa, peligrosos — and the noun keeps it
 The word, taken apart.
 Latin periculum, a trial or a risk — from a root meaning to try, the one also behind experiri, to test by going through.
 So a peligro is something you have to try your luck against, and English peril is the same word, kept closer to the Latin. Experience and experiment are relatives too: all of them are attempts, and only some are survived.
-From periculum to peligro the r and the l swapped places — the metathesis you met in milagro from miraculum. Both words came through speech, and both got their letters shuffled on the way; a word that arrived by book kept them, which is why experiencia looks so different.
+From periculum to peligro the r and the l swapped places — the metathesis you met in milagro from miraculum. Both words came through speech, and both got their letters shuffled on the way; a word that arrived by book was never shuffled: periclitar, to be in danger, keeps periculum's letters in their Latin order, and stands beside the spoken peligro as the same word at two speeds.
 
 Guided Practice.
 [pause 1 second]
@@ -101,11 +101,11 @@ the move: you agree to what is offered. the verb: aceptar.
 the move: the institution lets it through. the verb: admitir.
 the move: it is turned back. the verb: rechazar.
 Rechazar is the mirror of both of the others, and which one it mirrors depends on who is doing it. A shop rechaza your card where it might have aceptado it; an office rechaza your form where it might have admitido it.
-That is why the verb turns up so often in the passive-looking se form on notices — no se aceptan, no se admiten — and in the plain active when a person does it: rechacé la oferta.
-Note the spelling: rechacé, with a c. A z before e becomes c in Spanish, always, which is why empezar gives empecé.
+Notices usually phrase a refusal by negating the other two — no se aceptan, no se admiten — but rechazar takes the same se form when the refusing itself is the point: se rechazan los rotos. In the plain active it is a person who does it: rechacé la oferta.
+Note the spelling: rechacé, with a c. Spanish spelling prefers c before e, so a stem z turns into a c right through the conjugation, which is why empezar gives empecé. A handful of borrowings keep the z — zen, zeta — but no verb ending does.
 
 The word, taken apart.
-re- plus an old Spanish verb chazar, to drive back — and behind that Vulgar Latin captiare, to chase, built on capere, to take.
+re- plus chazar, to drive back — a verb Spanish took from Old French chacier, and behind that Vulgar Latin captiare, to chase, built on capere, to take. That French leg is why this word has ch: Spanish's own inherited form of captiare is cazar, to hunt.
 So rechazar and aceptar are cousins, and the pair is worth holding: ad- plus capere is taking a thing towards you, and re- plus captiare is driving it back. One Latin verb of taking, pointed two ways by two prefixes.
 The same captiare gave Spanish cazar, to hunt, and French chasser, which English borrowed as chase — and, through a second borrowing, as catch. To reject something is to chase it back the way it came.
 
@@ -135,13 +135,13 @@ Grammar Lens: one verb of taking, pointed two ways.
 word: aceptar. the prefix, and where it points: ad-, towards you — you take it.
 word: rechazar. the prefix, and where it points: re-, back — you drive it away.
 Both are Latin capere, to take. The prefix does everything, exactly as it did for meter, el permiso, permitir and admitir off mittere.
-That is now two families in three chapters where the prefix carries the whole meaning. When a Spanish verb starts with a-, re-, per-, ad- or des-, the part after it is usually a word you can already find.
+That is now two families in four chapters where the prefix carries the whole meaning. When a Spanish verb starts with a-, re-, per-, ad- or des-, the part after it is usually a word you can already find.
 
 Grammar Lens: two words hiding in your earliest vocabulary.
 [a table of 2 rows, read aloud]
 new word: donar. where it was already: perdón — per-donare, to give thoroughly.
 new word: peligroso. where it was already: el peligro, and periculum behind it.
-Perdón is the one to keep. You learned it in the first weeks as a thing you say when you bump into somebody, and it turns out to be built on giving — forgiveness is handing the offence over rather than keeping it. English does the identical thing in for-give.
+Perdón is the one to keep. You learned it in the courtesy chapter as a thing you say when you bump into somebody, and it turns out to be built on giving — forgiveness is handing the offence over rather than keeping it. English does the identical thing in for-give.
 
 Guided Practice.
 [pause 2 seconds]
@@ -179,7 +179,7 @@ Entréguelos en portería. Gracias por colaborar.
 [pause 8 seconds for the answer]
 
 Why it's said this way.
-Se rechazan los que estén rotos o sean peligrosos is the sentence to take apart, and the subjunctive is doing the same job it did on the swimming-course notice.
+Se rechazan los que estén rotos o sean peligrosos is the sentence to take apart, and the subjunctive is back, doing a cousin of the job it did on the swimming-course notice. There it withheld agreement that places remained; here it withholds any claim about which toys will actually turn up.
 Los que estén rotos, not están. The poster is not saying that some of the toys are broken; it is describing a category that may or may not turn up — whichever ones happen to be broken. The indicative would point at particular toys the writer had in mind, which on a poster addressed to a whole building would be an odd thing to imply.
 Note sean as well: ser for a lasting property, because a toy that is dangerous for a toddler is dangerous by design, not by circumstance. And estén for rotos, because being broken is a state a thing arrived at. One sentence, both verbs, each right for its own reason.
 

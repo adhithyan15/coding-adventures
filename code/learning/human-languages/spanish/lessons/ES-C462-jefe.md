@@ -70,9 +70,16 @@ that none of them started with.
 French **chef** is Latin **caput**, **head** — and *caput* is the same word
 inside **la cabeza**.
 
+That needs one correction to something you were told earlier. When you learned
+*la cabeza*, French was described as having dropped *caput* altogether for
+*testa*, a pot. That is true of the **body part** and only of it: *tête*
+replaced *caput* for the thing on your shoulders, while *caput* itself stayed
+on in French as *chef*, a head in the sense of a chief. It is that surviving
+branch Spanish later borrowed.
+
 So *el jefe* and *la cabeza* are one Latin noun arriving twice: once worn down
-through Spanish speech into the body part, once borrowed from French as the
-person in charge. A boss is literally **a head**, exactly as in English *head
+through Spanish speech into the body part, once borrowed back from French as
+the person in charge. A boss is literally **a head**, exactly as in English *head
 of department*.
 
 The family is large: **el capítulo** (a chapter, a little head), **la capital**

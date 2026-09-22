@@ -43,8 +43,9 @@ at a counter.
 > Para **solicitar** una plaza, entregue la ficha antes del día 20.
 
 *Solicitar una beca* — to apply for a grant. *Solicitar cita previa* — to book
-an appointment in advance, the phrase on every health-centre and town-hall
-page.
+an appointment in advance, the phrase on Spanish health-centre and town-hall
+pages; much of Latin America says *sacar turno* or *agendar una cita* for the
+same act.
 
 **La solicitud** is the application itself, and the piece of paper it is
 written on.

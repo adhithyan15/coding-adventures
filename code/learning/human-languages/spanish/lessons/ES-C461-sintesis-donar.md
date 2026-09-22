@@ -58,8 +58,9 @@ A poster in a stairwell. Read it, then answer.
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C461-DONAR-03, ES-LEX-C461-DONAR-02] -->
 
 **Se rechazan los que estén rotos o sean peligrosos** is the sentence to take
-apart, and the subjunctive is doing the same job it did on the swimming-course
-notice.
+apart, and the subjunctive is back, doing a cousin of the job it did on the
+swimming-course notice. There it withheld agreement that places remained; here
+it withholds any claim about which toys will actually turn up.
 
 *Los que **estén** rotos*, not *están*. The poster is not saying that some of
 the toys are broken; it is describing a **category that may or may not turn

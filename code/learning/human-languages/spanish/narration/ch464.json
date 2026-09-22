@@ -4,7 +4,7 @@
   "chapter": 464,
   "title": "La cita perdida",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5a289b76b860752c",
+  "sourceHash": "fnv1a64:dfdc74a305c338fa",
   "lessons": [
     {
       "id": "ES-C464-recordar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:350ec05b3852e3d8",
+      "sourceHash": "fnv1a64:72df34ae99775748",
       "notice": null,
       "blocks": [
         {
@@ -86,7 +86,7 @@
             },
             {
               "kind": "speech",
-              "text": "Both are o becomes ue verbs: recuerdo, me acuerdo. The same break you have been tracking since la rueda."
+              "text": "Both are o becomes ue verbs: recuerdo, me acuerdo. That is the stressed-vowel break you have had since the stem-change chapter, and you have seen it on this exact root before: de acuerdo showed you cor opening into cuerdo."
             }
           ]
         },
@@ -185,7 +185,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64840785e758d91b",
+      "sourceHash": "fnv1a64:b09ea93fa5b79c0b",
       "notice": null,
       "blocks": [
         {
@@ -265,11 +265,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Latin dens, dentem — tooth — plus the Greek ending -istēs, which names somebody who does a thing."
+              "text": "Latin dens, dentem — tooth — plus the job-ending you met at the very start of this book, when -ista first showed you el artista and la artista. Greek wrote it -istēs; Latin took it in as -ista, and that Latin -a is the one Spanish inherited."
             },
             {
               "kind": "speech",
-              "text": "So dentista is a Latin body part with a Greek job-ending welded on, which is how most modern profession words were built: el periodista, el electricista, el taxista. The ending is productive, meaning Spanish still makes new ones."
+              "text": "So dentista is a Latin body part with a borrowed job-ending welded on, which is how a large family of profession words was built: el periodista, el electricista, el taxista. The ending is still productive, so Spanish goes on making new ones. It is one of several — -dor gives el conductor, -ero gives el camarero."
             },
             {
               "kind": "speech",
@@ -349,7 +349,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:501ba3ea4e49b6d6",
+      "sourceHash": "fnv1a64:ebfafd7134aff2e8",
       "notice": null,
       "blocks": [
         {
@@ -384,7 +384,7 @@
             },
             {
               "kind": "speech",
-              "text": "El fallo is the noun: a fault, a glitch, and in an exam a wrong answer."
+              "text": "El fallo is the noun in Spain: a fault, a glitch, and in an exam a wrong answer. Much of Latin America says la falla for the same fault."
             }
           ]
         },
@@ -427,11 +427,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Latin fallere, to deceive — and that is the same verb inside falso, which you already have."
+              "text": "Latin fallere — the verb that tripped you up, as you had it under falso. That literal footing is what the rest grows out of: to trip somebody is to put the ground where they did not expect it, and from there to mislead them."
             },
             {
               "kind": "speech",
-              "text": "The move from deceiving to failing runs through disappointment: something that fails you has, in effect, misled you about what it would do. Latin fallere already carried both, and Spanish kept the pair — falso for the lie, fallar for the letting-down."
+              "text": "The move from tripping to failing runs through disappointment: something that fails you has, in effect, put the ground somewhere other than where it promised. Latin fallere carried the deceiving sense alongside the literal one, and Spanish kept the pair — falso for the lie, fallar for the letting-down."
             },
             {
               "kind": "speech",
@@ -496,7 +496,7 @@
             },
             {
               "kind": "speech",
-              "text": "To let somebody down? (Fallar.) The noun? (El fallo.) What did fallere mean? (To deceive — the same verb as falso.)"
+              "text": "To let somebody down? (Fallar.) The noun? (El fallo.) What did fallere do to you? (Tripped you up — the same verb as falso.)"
             }
           ]
         }
@@ -515,7 +515,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:14f2b1907c84a202",
+      "sourceHash": "fnv1a64:86287668ea9df614",
       "notice": null,
       "blocks": [
         {
@@ -556,7 +556,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two body parts and a lie, and all three were already in your vocabulary. By this stage that is the ordinary case rather than a happy accident: a corpus of nine hundred words contains most of the roots the next hundred will need."
+              "text": "Two body parts and a lie, and all three were already in your vocabulary. By this stage that is the ordinary case rather than a happy accident: a corpus of nearly a thousand words contains most of the roots the next hundred will need."
             },
             {
               "kind": "speech",
@@ -584,7 +584,7 @@
             },
             {
               "kind": "speech",
-              "text": "El dentista looks feminine and is not. That -a is Greek, not the Spanish feminine, which is why the noun stays put and the article does the work."
+              "text": "El dentista looks feminine and is not. That -a rides in on the borrowed job-ending -ista, which does not bend for gender at all — so the noun stays put and the article does the work. El guía and la guía, one chapter back, make the same move without a word of Greek in them."
             }
           ]
         },

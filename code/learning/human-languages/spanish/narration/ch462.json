@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 462,
   "title": "La reunión",
-  "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:838a015391a3d3dd",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:7f94a1426b16077f",
   "lessons": [
     {
       "id": "ES-C462-reducir",
@@ -14,13 +14,20 @@
       "romanization": "reducir",
       "gloss": "to cut back — to lead a thing back, and a shower is its cousin",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:cd6f86a1d66fbb08",
-      "notice": null,
+      "sourceHash": "fnv1a64:2784f27c57cac2ee",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -50,7 +57,7 @@
             },
             {
               "kind": "speech",
-              "text": "Reducir costes — to cut costs. Reducir la velocidad — to slow down, the wording on a road sign. Han reducido la plantilla — they've cut the staff."
+              "text": "Reducir costes — to cut costs, and reducir costos wherever you met el costo. Reducir la velocidad — to slow down, the wording on a road sign. Han reducido la plantilla — they've cut the staff."
             },
             {
               "kind": "speech",
@@ -65,7 +72,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Reducir belongs to a group whose first person gains a c:"
+              "text": "The c is already in reducir. What this group grows is a z in front of it:"
             },
             {
               "kind": "table",
@@ -83,11 +90,15 @@
             },
             {
               "kind": "speech",
-              "text": "Everything else is regular — reduces, reduce, reducimos. Only the form ending in -o takes the extra consonant, and it does so because a Latin sound sat there and survived in exactly that one slot."
+              "text": "It is not only the yo form. The whole subjunctive carries the z too — reduzca, reduzcas, reduzcamos — and that is where you will actually read it, because the polite command is the subjunctive: Reduzca la velocidad, the road sign from a moment ago. The rest of the present stays plain: reduces, reduce, reducimos."
             },
             {
               "kind": "speech",
-              "text": "If you have ever heard somebody say conozco and wondered where the z came from, this is the same group, and there are perhaps forty of them."
+              "text": "Watch the past, though, because the table above hides a split. Reducir and conducir go reduje and conduje — not reducí. Conocer shares the -zc- and not that past: it goes conocí. Two groups, one spelling."
+            },
+            {
+              "kind": "speech",
+              "text": "The z has two different stories as well. In conocer it is inherited: Latin cognoscere had the cluster and the yo form kept it. Latin reducere never had it, so reduzco got its z by copying the verbs that did — a pattern that spread rather than a sound that survived. The family it spread through is large, several hundred verbs once the -ecer verbs are counted in."
             }
           ]
         },
@@ -102,7 +113,7 @@
             },
             {
               "kind": "speech",
-              "text": "Ducere is everywhere once you see it. La ducha is the same root through French douche and Italian doccia: a pipe that leads water. English has conduct, produce, educate (to lead out), duke — a leader — and aqueduct, which leads water exactly as a shower does."
+              "text": "Ducere is everywhere once you see it. La ducha is the same root, and it travelled: Latin ductia gave Italian doccia, which gave French douche, which gave Spanish ducha — a pipe that leads water. English has conduct, produce, educate (to lead out), duke — a leader — and aqueduct, which leads water exactly as a shower does."
             },
             {
               "kind": "speech",
@@ -124,11 +135,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "we have to cut costs",
+              "instruction": "we have to cut costs, in the variety you use",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: we have to cut costs]"
+              "source": "[YOU SAY: we have to cut costs, in the variety you use]"
             },
             {
               "kind": "prompt",
@@ -182,7 +193,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b272174722f048d9",
+      "sourceHash": "fnv1a64:e26804cf5b7a4197",
       "notice": null,
       "blocks": [
         {
@@ -198,7 +209,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say decidir and acercar. You already know what putting -se on the second one did. Do it to the first."
+              "text": "Say decidir and acercar. You met decidirse in passing when you learned decidir; now take it properly, with what -se did to the second word in front of you."
             }
           ]
         },
@@ -344,7 +355,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:774949413b01fb75",
+      "sourceHash": "fnv1a64:678362d1ea376061",
       "notice": null,
       "blocks": [
         {
@@ -423,7 +434,11 @@
             },
             {
               "kind": "speech",
-              "text": "So el jefe and la cabeza are one Latin noun arriving twice: once worn down through Spanish speech into the body part, once borrowed from French as the person in charge. A boss is literally a head, exactly as in English head of department."
+              "text": "That needs one correction to something you were told earlier. When you learned la cabeza, French was described as having dropped caput altogether for testa, a pot. That is true of the body part and only of it: tête replaced caput for the thing on your shoulders, while caput itself stayed on in French as chef, a head in the sense of a chief. It is that surviving branch Spanish later borrowed."
+            },
+            {
+              "kind": "speech",
+              "text": "So el jefe and la cabeza are one Latin noun arriving twice: once worn down through Spanish speech into the body part, once borrowed back from French as the person in charge. A boss is literally a head, exactly as in English head of department."
             },
             {
               "kind": "speech",
@@ -512,7 +527,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3f60f274d5c14f9",
+      "sourceHash": "fnv1a64:916f60d9541e8031",
       "notice": null,
       "blocks": [
         {
@@ -556,7 +571,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have watched this twice before — rueda against rotativo, consejo against consultar — but those pairs both came from Latin. This one arrived through a third language, which is why it looks like neither."
+              "text": "You have watched this several times — cosa against causa, razón against ración, rueda against rotativo, consejo against consultar. Every one of those came out of Latin twice at two different speeds. This one took a detour through a third language, which is why it looks like neither."
             }
           ]
         },

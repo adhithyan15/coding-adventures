@@ -9,7 +9,7 @@ headword: el guía / la guía
 gloss: the guide and the guidebook — the article decides which
 concept_tag: ES-TRIP-GUIA
 prerequisites: [ES-C463-organizar, ES-C457-guardia, ES-C401-seguir]
-sounds: [g-soft-gw, accent-i, hiatus-ia, stress-penultimate]
+sounds: [g-hard, accent-i, hiatus-ia, stress-penultimate]
 roots: [witan-germanic]
 duration:
   max_seconds: 280
@@ -59,21 +59,25 @@ masculine names a person. Here is the set again, with the new one in place:
 | la guía — the guidebook | el guía — the guide |
 | la policía — the force | el policía — the officer |
 
-**La guía** is the one that complicates it, because a female guide is *la
-guía* as well — so the feminine covers both the object and a woman doing the
-job, and only context separates them. *Llamé a la guía* is almost certainly a
+**La guía** complicates it, because a female guide is *la guía* as well — so
+the feminine covers both the object and a woman doing the job, and only context
+separates them. *La policía* does the same: it is the force, and it is also a
+policewoman. *Llamé a la guía* is almost certainly a
 person; *compré la guía* is certainly a book.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C463-GUIA-02, ES-LEX-SEGUIR] -->
 
-Germanic **witan**, to know, to watch over — reaching Spanish through Occitan
-and French.
+A Germanic word — and nobody can tell you which one. The usual candidate is a
+reconstructed **\*witan**, to watch over, to show the way, which gave Occitan
+*guidar* and from there *guiar*. The asterisk is the warning you met on
+*tripaliare*: inferred, never written down. The Academy prefers a different
+Gothic form again. All the accounts agree on Germanic, and on **watching**.
 
-So a guide is **one who knows**, and the English cousin is **wit**, the old
-sense of knowing rather than humour: *to wit*, *unwitting*, *wise*. The same
-Germanic *w-* shows up in Spanish as **gu-**, exactly as it did for *guardar*
-and *guerra*.
+So not *one who knows*, tempting as English **wit** makes it — that is the
+neighbouring branch, knowing and watching being two limbs off one root for
+*seeing*. The Germanic *w-* does surface as **gu-**, as in *guardar* and
+*guerra*.
 
 Set it against **seguir**, which is Latin *sequi*, to follow. A *guía* knows
 the way and a follower *sigue*. Two words for the two ends of the same walk,
@@ -92,4 +96,5 @@ vocabulary rather than an oddity.
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C463-GUIA-02] -->
 
 [PAUSE 3s] The guidebook? (**La guía**.) A male guide? (**El guía**.) What
-does *witan* mean? (**To know** — the guide is the one who knows.)
+is the root of *guía*? (**A Germanic word for watching over** — reconstructed,
+so it carries an asterisk.)

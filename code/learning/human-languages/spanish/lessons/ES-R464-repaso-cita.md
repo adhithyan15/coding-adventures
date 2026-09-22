@@ -46,7 +46,7 @@ reviews_of: [ES-C464-recordar, ES-C464-dentista, ES-C464-fallar]
 
 Two body parts and a lie, and all three were already in your vocabulary. By
 this stage that is the ordinary case rather than a happy accident: a corpus
-of nine hundred words contains most of the roots the next hundred will need.
+of nearly a thousand words contains most of the roots the next hundred will need.
 
 **Recordar** is the one worth keeping. Latin put memory in the **heart**, not
 the head, so remembering is running a thing back past it — and English
@@ -60,8 +60,10 @@ the head, so remembering is running a thing back past it — and English
 | -ista | **nothing changes**; only the article moves |
 | -o / -a | the noun itself changes: *el médico*, *la médica* |
 
-*El dentista* looks feminine and is not. That **-a** is Greek, not the Spanish
-feminine, which is why the noun stays put and the article does the work.
+*El dentista* looks feminine and is not. That **-a** rides in on the borrowed
+job-ending *-ista*, which does not bend for gender at all — so the noun stays
+put and the article does the work. *El guía* and *la guía*, one chapter back,
+make the same move without a word of Greek in them.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C464-CITA-01, ES-LEX-C464-CITA-02, ES-LEX-C464-CITA-03] -->

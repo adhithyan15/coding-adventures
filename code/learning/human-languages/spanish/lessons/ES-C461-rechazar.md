@@ -60,18 +60,23 @@ transplant.
 depends on who is doing it. A shop *rechaza* your card where it might have
 *aceptado* it; an office *rechaza* your form where it might have *admitido* it.
 
-That is why the verb turns up so often in the passive-looking *se* form on
-notices — *no se aceptan*, *no se admiten* — and in the plain active when a
-person does it: *rechacé la oferta*.
+Notices usually phrase a refusal by negating the other two — *no se aceptan*,
+*no se admiten* — but *rechazar* takes the same *se* form when the refusing
+itself is the point: *se rechazan los rotos*. In the plain active it is a
+person who does it: *rechacé la oferta*.
 
-Note the spelling: **rechacé**, with a **c**. A *z* before *e* becomes *c* in
-Spanish, always, which is why *empezar* gives *empecé*.
+Note the spelling: **rechacé**, with a **c**. Spanish spelling prefers **c**
+before *e*, so a stem *z* turns into a *c* right through the conjugation, which
+is why *empezar* gives *empecé*. A handful of borrowings keep the *z* — *zen*,
+*zeta* — but no verb ending does.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C461-DONAR-03, ES-LEX-C461-DONAR-02] -->
 
-**re-** plus an old Spanish verb *chazar*, to drive back — and behind that
-Vulgar Latin **captiare**, to chase, built on **capere**, **to take**.
+**re-** plus *chazar*, to drive back — a verb Spanish took from Old French
+*chacier*, and behind that Vulgar Latin **captiare**, to chase, built on
+**capere**, **to take**. That French leg is why this word has **ch**: Spanish's
+own inherited form of *captiare* is **cazar**, to hunt.
 
 So *rechazar* and **aceptar** are cousins, and the pair is worth holding: *ad-*
 plus *capere* is taking a thing **towards** you, and *re-* plus *captiare* is

@@ -20,8 +20,8 @@ You met this with rechacé. Here it is as a rule you can apply everywhere:
 verb: organizar. I did it: organicé.
 verb: empezar. I did it: empecé.
 verb: rechazar. I did it: rechacé.
-Spanish does not write ze. Wherever an ending would put an e after the z, the z becomes a c — and the sound does not change at all, because z and c-before-e are the same sound already.
-It is a spelling rule and nothing more, which is why it applies without exception to every -zar verb in the language.
+Spanish almost never writes ze — outside a short list of oddities like zeta and zigzag — and in a verb ending it never does. Wherever an ending would put an e after the z, the z becomes a c, and the sound does not change at all, because z and c-before-e are the same sound already.
+It is a spelling rule and nothing more, which is why every -zar verb in the language obeys it.
 
 The word, taken apart.
 Greek órganon, a tool or an instrument — from érgon, work.
@@ -61,11 +61,11 @@ The duty-chemist lesson gave you this: the feminine names the thing, the masculi
 feminine: la guardia — the watch. masculine: el guardia — the officer.
 feminine: la guía — the guidebook. masculine: el guía — the guide.
 feminine: la policía — the force. masculine: el policía — the officer.
-La guía is the one that complicates it, because a female guide is la guía as well — so the feminine covers both the object and a woman doing the job, and only context separates them. Llamé a la guía is almost certainly a person; compré la guía is certainly a book.
+La guía complicates it, because a female guide is la guía as well — so the feminine covers both the object and a woman doing the job, and only context separates them. La policía does the same: it is the force, and it is also a policewoman. Llamé a la guía is almost certainly a person; compré la guía is certainly a book.
 
 The word, taken apart.
-Germanic witan, to know, to watch over — reaching Spanish through Occitan and French.
-So a guide is one who knows, and the English cousin is wit, the old sense of knowing rather than humour: to wit, unwitting, wise. The same Germanic w- shows up in Spanish as gu-, exactly as it did for guardar and guerra.
+A Germanic word — and nobody can tell you which one. The usual candidate is a reconstructed witan, to watch over, to show the way, which gave Occitan guidar and from there guiar. The asterisk is the warning you met on tripaliare: inferred, never written down. The Academy prefers a different Gothic form again. All the accounts agree on Germanic, and on watching.
+So not one who knows, tempting as English wit makes it — that is the neighbouring branch, knowing and watching being two limbs off one root for seeing. The Germanic w- does surface as gu-, as in guardar and guerra.
 Set it against seguir, which is Latin sequi, to follow. A guía knows the way and a follower sigue. Two words for the two ends of the same walk, one Germanic and one Latin — which is the ordinary condition of Spanish vocabulary rather than an oddity.
 
 Guided Practice.
@@ -79,7 +79,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-The guidebook? (La guía.) A male guide? (El guía.) What does witan mean? (To know — the guide is the one who knows.)
+The guidebook? (La guía.) A male guide? (El guía.) What is the root of guía? (A Germanic word for watching over — reconstructed, so it carries an asterisk.)
 
 
 Lesson 3 of 5.
@@ -105,8 +105,8 @@ That makes ¿te importa…? the standard polite request: you are asking whether 
 
 The word, taken apart.
 Latin importare: in-, in, plus portare, to carry. To carry something in.
-Both senses come straight off that. Importing goods is carrying them in. Mattering is carrying weight in — a thing that imports is a thing that brings something with it, and importante is the adjective for exactly that.
-Portare is a wide family: transportar, exportar, el pasaporte — which carries you through a porte, a gate — and English port, portable and porter. The puerta in your flat and the puerto where ships dock are the same opening.
+Importing goods is carrying them in, and that is the whole of what Rome meant by it. Mattering is the later half, invented inside the Romance languages long after Latin — you met that split under importante, and this is the verb it was cut from. A thing that imports brings weight in with it.
+Portare is a wide family: transportar, exportar, English portable and the porter who carries your bags. Keep it apart from its look-alike porta, a gate — the word inside la puerta, el puerto and el pasaporte, which carries you through a gate rather than carrying anything itself. You were warned about this pair at la puerta, where English's two porters turned out to be two different words.
 
 Guided Practice.
 [pause 1 second]
@@ -137,14 +137,14 @@ Spanish: me gusta el libro. what is the subject: the book.
 Spanish: me interesa el arte. what is the subject: art.
 Spanish: me importa el resultado. what is the subject: the result.
 Spanish: me duele la cabeza. what is the subject: the head.
-Four verbs, one shape, and you now have all of them. The person is never the subject; the thing is, and the verb agrees with it. Me importan los horarios takes the plural because the timetables are doing the mattering.
+Four verbs, one shape, and you now have the four this book has given you — the family is larger, and encantar, faltar and parecer all run on the same machine. The person is never the subject; the thing is, and the verb agrees with it. Me importan los horarios takes the plural because the timetables are doing the mattering.
 The useful consequence: ¿te importa…? is how Spanish asks a small favour, and it is not asking permission. It asks whether the thing would weigh on them.
 
 Grammar Lens: two spellings the ending forces.
 [a table of 2 rows, read aloud]
 verb: organizar. I did it: organicé.
 verb: rechazar. I did it: rechacé.
-Spanish does not write ze, so every -zar verb swaps to c before an e. The sound is unchanged; only the letter moves.
+Verb endings never put an e after a z, so every -zar verb swaps to c before an e. The sound is unchanged; only the letter moves.
 And la guía carries its accent for the reason la vía did — to keep the i from fusing with the a. Two syllables, not one.
 
 Guided Practice.

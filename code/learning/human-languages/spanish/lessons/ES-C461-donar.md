@@ -68,16 +68,17 @@ kindness, which is sometimes exactly the joke a Spanish speaker is making.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C461-DONAR-01, ES-PRAGMATICS-SORRY-03] -->
 
-Latin **donare**, to give — and here is the payoff on a word you learned in
-your first weeks.
+Latin **donare**, to give — and here is the payoff on a word you have had
+since the courtesy chapter, long before you could take it apart.
 
 **Perdón** is *per-* plus *donare*: to **give thoroughly**, to give completely
 away. Forgiving somebody is giving the offence away rather than holding it, and
 the metaphor is the same in English — *for-give* is built the identical way,
 *for-* being an intensifier, so *pardon* and *forgive* are the same idea twice.
 
-The family also gives *el don*, a gift or a talent, and **la dosis**, through
-Greek — a dose is what is *given* to you.
+The family also gives *el don*, a gift or a talent. And off to one side sits
+**la dosis** — not from *donare* but from Greek's own word for a giving, off
+the same ancient root: a dose is what is *given* to you.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C461-DONAR-01] -->

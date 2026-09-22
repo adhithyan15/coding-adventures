@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 462,
-  "sourceHash": "fnv1a64:838a015391a3d3dd",
+  "sourceHash": "fnv1a64:7f94a1426b16077f",
   "lessonIds": [
     "ES-C462-reducir",
     "ES-C462-decidirse",
@@ -9,11 +9,11 @@
     "ES-R462-repaso-jefe",
     "ES-C462-sintesis-jefe"
   ],
-  "voiceLessons": 5,
-  "drivablePrefix": 5,
+  "voiceLessons": 4,
+  "drivablePrefix": 0,
   "text": "spanish/narration/ch462.txt",
   "json": "spanish/narration/ch462.json",
-  "textHash": "fnv1a64:2893e73b95e6692c",
-  "jsonHash": "fnv1a64:2fe6b3ceab336b4f",
+  "textHash": "fnv1a64:6555bbd0d31056dc",
+  "jsonHash": "fnv1a64:35315a3636e4f24f",
   "findings": []
 }

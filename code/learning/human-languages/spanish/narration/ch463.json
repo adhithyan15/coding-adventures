@@ -4,7 +4,7 @@
   "chapter": 463,
   "title": "El viaje guiado",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b41e0fbcee09581e",
+  "sourceHash": "fnv1a64:a7cf45f7ae7af81b",
   "lessons": [
     {
       "id": "ES-C463-organizar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1bf0832d2ce34f73",
+      "sourceHash": "fnv1a64:6363e6262d3d6130",
       "notice": null,
       "blocks": [
         {
@@ -83,11 +83,11 @@
             },
             {
               "kind": "speech",
-              "text": "Spanish does not write ze. Wherever an ending would put an e after the z, the z becomes a c — and the sound does not change at all, because z and c-before-e are the same sound already."
+              "text": "Spanish almost never writes ze — outside a short list of oddities like zeta and zigzag — and in a verb ending it never does. Wherever an ending would put an e after the z, the z becomes a c, and the sound does not change at all, because z and c-before-e are the same sound already."
             },
             {
               "kind": "speech",
-              "text": "It is a spelling rule and nothing more, which is why it applies without exception to every -zar verb in the language."
+              "text": "It is a spelling rule and nothing more, which is why every -zar verb in the language obeys it."
             }
           ]
         },
@@ -186,7 +186,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:af89588bbd32f859",
+      "sourceHash": "fnv1a64:834e97483856f153",
       "notice": null,
       "blocks": [
         {
@@ -250,7 +250,7 @@
             },
             {
               "kind": "speech",
-              "text": "La guía is the one that complicates it, because a female guide is la guía as well — so the feminine covers both the object and a woman doing the job, and only context separates them. Llamé a la guía is almost certainly a person; compré la guía is certainly a book."
+              "text": "La guía complicates it, because a female guide is la guía as well — so the feminine covers both the object and a woman doing the job, and only context separates them. La policía does the same: it is the force, and it is also a policewoman. Llamé a la guía is almost certainly a person; compré la guía is certainly a book."
             }
           ]
         },
@@ -261,11 +261,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Germanic witan, to know, to watch over — reaching Spanish through Occitan and French."
+              "text": "A Germanic word — and nobody can tell you which one. The usual candidate is a reconstructed witan, to watch over, to show the way, which gave Occitan guidar and from there guiar. The asterisk is the warning you met on tripaliare: inferred, never written down. The Academy prefers a different Gothic form again. All the accounts agree on Germanic, and on watching."
             },
             {
               "kind": "speech",
-              "text": "So a guide is one who knows, and the English cousin is wit, the old sense of knowing rather than humour: to wit, unwitting, wise. The same Germanic w- shows up in Spanish as gu-, exactly as it did for guardar and guerra."
+              "text": "So not one who knows, tempting as English wit makes it — that is the neighbouring branch, knowing and watching being two limbs off one root for seeing. The Germanic w- does surface as gu-, as in guardar and guerra."
             },
             {
               "kind": "speech",
@@ -326,7 +326,7 @@
             },
             {
               "kind": "speech",
-              "text": "The guidebook? (La guía.) A male guide? (El guía.) What does witan mean? (To know — the guide is the one who knows.)"
+              "text": "The guidebook? (La guía.) A male guide? (El guía.) What is the root of guía? (A Germanic word for watching over — reconstructed, so it carries an asterisk.)"
             }
           ]
         }
@@ -345,7 +345,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4f8602219975cb6",
+      "sourceHash": "fnv1a64:ea9b84375c6e88d4",
       "notice": null,
       "blocks": [
         {
@@ -428,11 +428,11 @@
             },
             {
               "kind": "speech",
-              "text": "Both senses come straight off that. Importing goods is carrying them in. Mattering is carrying weight in — a thing that imports is a thing that brings something with it, and importante is the adjective for exactly that."
+              "text": "Importing goods is carrying them in, and that is the whole of what Rome meant by it. Mattering is the later half, invented inside the Romance languages long after Latin — you met that split under importante, and this is the verb it was cut from. A thing that imports brings weight in with it."
             },
             {
               "kind": "speech",
-              "text": "Portare is a wide family: transportar, exportar, el pasaporte — which carries you through a porte, a gate — and English port, portable and porter. The puerta in your flat and the puerto where ships dock are the same opening."
+              "text": "Portare is a wide family: transportar, exportar, English portable and the porter who carries your bags. Keep it apart from its look-alike porta, a gate — the word inside la puerta, el puerto and el pasaporte, which carries you through a gate rather than carrying anything itself. You were warned about this pair at la puerta, where English's two porters turned out to be two different words."
             }
           ]
         },
@@ -517,7 +517,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72e7bff76810e506",
+      "sourceHash": "fnv1a64:a2f6cc5aa76b2400",
       "notice": null,
       "blocks": [
         {
@@ -559,7 +559,7 @@
             },
             {
               "kind": "speech",
-              "text": "Four verbs, one shape, and you now have all of them. The person is never the subject; the thing is, and the verb agrees with it. Me importan los horarios takes the plural because the timetables are doing the mattering."
+              "text": "Four verbs, one shape, and you now have the four this book has given you — the family is larger, and encantar, faltar and parecer all run on the same machine. The person is never the subject; the thing is, and the verb agrees with it. Me importan los horarios takes the plural because the timetables are doing the mattering."
             },
             {
               "kind": "speech",
@@ -587,7 +587,7 @@
             },
             {
               "kind": "speech",
-              "text": "Spanish does not write ze, so every -zar verb swaps to c before an e. The sound is unchanged; only the letter moves."
+              "text": "Verb endings never put an e after a z, so every -zar verb swaps to c before an e. The sound is unchanged; only the letter moves."
             },
             {
               "kind": "speech",

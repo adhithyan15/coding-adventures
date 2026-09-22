@@ -51,34 +51,39 @@ The verb you already have; this is the noun that goes on the door.
 ## Grammar Lens: a noun made by cutting, not by adding
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C460-PEDIR-03, ES-LEX-C460-PEDIR-02] -->
 
-You have four suffix families that build a noun from a verb. This is the fifth
-move, and it is the opposite: **take the ending off**.
+You have four noun-making suffixes — three that work on verbs, and *-eza*,
+which works on adjectives. This is a fifth move, and it is the opposite of all
+of them: **take the ending off**.
 
 | verb | noun |
 |---|---|
 | esperar | la esper**a** |
-| buscar | la busc**a** |
+| entregar | la entreg**a** |
 | comprar | la compr**a** |
 | pagar | el pag**o** |
 
-Cut *-ar* and add a bare **-a** or **-o**. These are the shortest nouns in the
-language and among the commonest, and the gender is not predictable from the
-verb — *la compra* but *el pago* — so this is the one pattern where the article
-must be learned with the word.
+Cut *-ar* and put back a bare **-a** or **-o**. You already have one of these:
+*la entrega* arrived two chapters ago without being named as a pattern. These
+are the shortest nouns in the language and among the commonest. What you cannot
+predict is **which vowel** a given verb will take — *la compra* but *el pago*.
+Once you have the word, the ordinary *-o*/*-a* rule hands you the article as
+usual.
 
-Set beside *la solicitud*: one verb builds its noun by adding four letters, the
-other by removing two. Both are ordinary.
+Set beside *la solicitud*: one verb swaps its ending for *-ud*, the other drops
+its ending and puts back a single vowel. Both are ordinary.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C460-PEDIR-03, ES-LEX-ESPERAR-01] -->
 
-Latin **sperare**, to hope — and that is worth sitting with, because Spanish
-made one verb do both jobs.
+Latin **sperare**, from **spes**, hope — though already in Latin it leaned as
+much on *looking forward to* as on hoping, and a Roman could *sperare* bad news
+as readily as good.
 
-*Esperar* is **to wait** and **to hope**, and only context separates them:
-*espero el autobús* is waiting, *espero que sí* is hoping. Where English has
-two verbs, Spanish has one, on the reasoning that waiting for something is
-hoping it comes.
+That middle sense is the hinge. *Esperar* took over the work of Latin
+*exspectare*, **to expect**, and ended up covering all three English verbs you
+met when you learned it: *espero el autobús* is waiting, *espero el pan* is
+expecting, *espero que sí* is hoping. *La espera* names only the first of
+them.
 
 You met the same root in **la esperanza**, hope, which is *-anza* on this verb.
 So *la espera* and *la esperanza* are one word twice: the plain wait, and the
@@ -99,4 +104,4 @@ The **e-** at the front is Spanish's own, the same one that turned *stare* into
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C460-PEDIR-03] -->
 
 [PAUSE 3s] The wait? (**La espera**.) The waiting room? (**La sala de
-espera**.) What else does *esperar* mean? (**To hope**.)
+espera**.) What else does *esperar* cover? (**Hoping and expecting**.)

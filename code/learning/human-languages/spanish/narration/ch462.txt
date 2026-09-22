@@ -1,9 +1,11 @@
 Spanish, chapter 462: La reunión.
-5 lessons. All 5 can be done entirely by ear.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
 Lesson 1 of 5.
 reducir — to bring it down.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
@@ -11,26 +13,27 @@ Say la ducha and el coste. A shower is about to turn out to be a relative of the
 
 You'll want to know: reducir.
 reducir — to reduce, to cut back.
-Reducir costes — to cut costs. Reducir la velocidad — to slow down, the wording on a road sign. Han reducido la plantilla — they've cut the staff.
+Reducir costes — to cut costs, and reducir costos wherever you met el costo. Reducir la velocidad — to slow down, the wording on a road sign. Han reducido la plantilla — they've cut the staff.
 La reducción is the noun, and reducido on a price tag means marked down.
 
 Grammar Lens: the -zc- verbs.
-Reducir belongs to a group whose first person gains a c:
+The c is already in reducir. What this group grows is a z in front of it:
 [a table of 3 rows, read aloud]
 verb: reducir. I …: reduzco.
 verb: conducir. I …: conduzco.
 verb: conocer. I …: conozco.
-Everything else is regular — reduces, reduce, reducimos. Only the form ending in -o takes the extra consonant, and it does so because a Latin sound sat there and survived in exactly that one slot.
-If you have ever heard somebody say conozco and wondered where the z came from, this is the same group, and there are perhaps forty of them.
+It is not only the yo form. The whole subjunctive carries the z too — reduzca, reduzcas, reduzcamos — and that is where you will actually read it, because the polite command is the subjunctive: Reduzca la velocidad, the road sign from a moment ago. The rest of the present stays plain: reduces, reduce, reducimos.
+Watch the past, though, because the table above hides a split. Reducir and conducir go reduje and conduje — not reducí. Conocer shares the -zc- and not that past: it goes conocí. Two groups, one spelling.
+The z has two different stories as well. In conocer it is inherited: Latin cognoscere had the cluster and the yo form kept it. Latin reducere never had it, so reduzco got its z by copying the verbs that did — a pattern that spread rather than a sound that survived. The family it spread through is large, several hundred verbs once the -ecer verbs are counted in.
 
 The word, taken apart.
 Latin reducere: re-, back, plus ducere, to lead. To reduce something is to lead it back — to a smaller size, to where it was.
-Ducere is everywhere once you see it. La ducha is the same root through French douche and Italian doccia: a pipe that leads water. English has conduct, produce, educate (to lead out), duke — a leader — and aqueduct, which leads water exactly as a shower does.
+Ducere is everywhere once you see it. La ducha is the same root, and it travelled: Latin ductia gave Italian doccia, which gave French douche, which gave Spanish ducha — a pipe that leads water. English has conduct, produce, educate (to lead out), duke — a leader — and aqueduct, which leads water exactly as a shower does.
 Spanish keeps conducir, to drive, and el conductor. A driver leads the car; a shower leads the water; reducing leads the number back down.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: we have to cut costs]
+[your turn — say: we have to cut costs, in the variety you use]
 [pause 8 seconds for the answer]
 [your turn — say: I reduce, using the first-person form]
 [pause 8 seconds for the answer]
@@ -47,7 +50,7 @@ decidirse — to make your mind up.
 
 Warm-up.
 [pause 2 seconds]
-Say decidir and acercar. You already know what putting -se on the second one did. Do it to the first.
+Say decidir and acercar. You met decidirse in passing when you learned decidir; now take it properly, with what -se did to the second word in front of you.
 
 You'll want to know: decidirse.
 decidirse — to make up your mind.
@@ -103,7 +106,8 @@ The j is the jota, the sound at the back of the throat, and it is a latecomer: m
 
 The word, taken apart.
 French chef is Latin caput, head — and caput is the same word inside la cabeza.
-So el jefe and la cabeza are one Latin noun arriving twice: once worn down through Spanish speech into the body part, once borrowed from French as the person in charge. A boss is literally a head, exactly as in English head of department.
+That needs one correction to something you were told earlier. When you learned la cabeza, French was described as having dropped caput altogether for testa, a pot. That is true of the body part and only of it: tête replaced caput for the thing on your shoulders, while caput itself stayed on in French as chef, a head in the sense of a chief. It is that surviving branch Spanish later borrowed.
+So el jefe and la cabeza are one Latin noun arriving twice: once worn down through Spanish speech into the body part, once borrowed back from French as the person in charge. A boss is literally a head, exactly as in English head of department.
 The family is large: el capítulo (a chapter, a little head), la capital (the head city), acabar — to finish, to bring to a head — and English captain, chief, chef, capital and cape. A chef is the head of a kitchen, and chief and jefe are the same word in two languages.
 
 Guided Practice.
@@ -134,7 +138,7 @@ Grammar Lens: one word, two roads, four hundred years apart.
 the road: worn down through Spanish speech. the word: la cabeza.
 the road: borrowed from French, much later. the word: el jefe.
 Both are Latin caput, head. The first went through centuries of mouths and came out as a body part; the second was picked up whole from a neighbour and came out as a person.
-You have watched this twice before — rueda against rotativo, consejo against consultar — but those pairs both came from Latin. This one arrived through a third language, which is why it looks like neither.
+You have watched this several times — cosa against causa, razón against ración, rueda against rotativo, consejo against consultar. Every one of those came out of Latin twice at two different speeds. This one took a detour through a third language, which is why it looks like neither.
 
 Grammar Lens: two verbs, two pictures of cutting and leading.
 [a table of 2 rows, read aloud]

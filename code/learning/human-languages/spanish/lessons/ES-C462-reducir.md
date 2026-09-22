@@ -40,15 +40,16 @@ be a relative of the verb coming next.
 
 **reducir** — to reduce, to cut back.
 
-*Reducir costes* — to cut costs. *Reducir la velocidad* — to slow down, the
-wording on a road sign. *Han reducido la plantilla* — they've cut the staff.
+*Reducir costes* — to cut costs, and *reducir costos* wherever you met *el
+costo*. *Reducir la velocidad* — to slow down, the wording on a road sign. *Han reducido la plantilla* — they've cut the staff.
 
 **La reducción** is the noun, and *reducido* on a price tag means marked down.
 
 ## Grammar Lens: the -zc- verbs
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C462-JEFE-01, ES-LEX-C310-ASK-02] -->
 
-*Reducir* belongs to a group whose **first person** gains a **c**:
+The **c** is already in *reducir*. What this group grows is a **z** in front
+of it:
 
 | verb | I … |
 |---|---|
@@ -56,12 +57,21 @@ wording on a road sign. *Han reducido la plantilla* — they've cut the staff.
 | conducir | condu**zc**o |
 | conocer | cono**zc**o |
 
-Everything else is regular — *reduces*, *reduce*, *reducimos*. Only the form
-ending in **-o** takes the extra consonant, and it does so because a Latin
-sound sat there and survived in exactly that one slot.
+It is not only the *yo* form. The whole subjunctive carries the **z** too —
+*reduzca, reduzcas, reduzcamos* — and that is where you will actually read it,
+because the polite command is the subjunctive: **Reduzca la velocidad**, the
+road sign from a moment ago. The rest of the present stays plain:
+*reduces*, *reduce*, *reducimos*.
 
-If you have ever heard somebody say *conozco* and wondered where the **z** came
-from, this is the same group, and there are perhaps forty of them.
+Watch the past, though, because the table above hides a split. *Reducir* and
+*conducir* go *reduje* and *conduje* — not *reducí*. *Conocer* shares the
+**-zc-** and not that past: it goes *conocí*. Two groups, one spelling.
+
+The **z** has two different stories as well. In *conocer* it is inherited:
+Latin *cognoscere* had the cluster and the *yo* form kept it. Latin *reducere*
+never had it, so *reduzco* got its **z** by copying the verbs that did — a
+pattern that spread rather than a sound that survived. The family it spread
+through is large, several hundred verbs once the *-ecer* verbs are counted in.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C462-JEFE-01] -->
@@ -69,8 +79,9 @@ from, this is the same group, and there are perhaps forty of them.
 Latin **reducere**: **re-**, back, plus **ducere**, **to lead**. To reduce
 something is to **lead it back** — to a smaller size, to where it was.
 
-*Ducere* is everywhere once you see it. **La ducha** is the same root through
-French *douche* and Italian *doccia*: a pipe that **leads** water. English has
+*Ducere* is everywhere once you see it. **La ducha** is the same root, and it
+travelled: Latin *ductia* gave Italian *doccia*, which gave French *douche*,
+which gave Spanish *ducha* — a pipe that **leads** water. English has
 **conduct**, **produce**, **educate** (to lead out), **duke** — a leader — and
 **aqueduct**, which leads water exactly as a shower does.
 
@@ -81,7 +92,7 @@ a shower leads the water; reducing leads the number back down.
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C462-JEFE-01, ES-LEX-C456-CUENTA-04] -->
 
 [PAUSE 1s]
-- [YOU SAY: we have to cut costs]
+- [YOU SAY: we have to cut costs, in the variety you use]
 - [YOU SAY: I reduce, using the first-person form]
 - [YOU SAY: what a shower and a duke have in common]
 

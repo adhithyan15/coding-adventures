@@ -10,7 +10,7 @@ gloss: to organise — to fit the working parts together, from a Greek tool
 concept_tag: ES-TRIP-ORGANIZAR
 prerequisites: [ES-C462-sintesis-jefe, ES-C349-agenda, ES-C457-encargar]
 sounds: [g-hard, z-as-th-or-s, stress-final]
-roots: [organum-greek]
+roots: [organon-greek, organum-latin]
 duration:
   max_seconds: 275
 requires:
@@ -57,12 +57,13 @@ You met this with *rechacé*. Here it is as a rule you can apply everywhere:
 | empezar | empe**c**é |
 | rechazar | recha**c**é |
 
-Spanish does not write **ze**. Wherever an ending would put an *e* after the
-*z*, the *z* becomes a **c** — and the sound does not change at all, because
-*z* and *c*-before-*e* are the same sound already.
+Spanish almost never writes **ze** — outside a short list of oddities like
+*zeta* and *zigzag* — and in a verb ending it never does. Wherever an ending
+would put an *e* after the *z*, the *z* becomes a **c**, and the sound does not
+change at all, because *z* and *c*-before-*e* are the same sound already.
 
-It is a spelling rule and nothing more, which is why it applies without
-exception to every *-zar* verb in the language.
+It is a spelling rule and nothing more, which is why every *-zar* verb in the
+language obeys it.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C463-GUIA-01] -->

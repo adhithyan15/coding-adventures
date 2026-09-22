@@ -57,13 +57,17 @@ that it stands alone, and underneath it is the **ie** you have met before:
 | ferramenta | la h**e**rramienta |
 | ferrum | el h**ie**rro |
 
-*Hierro*, iron, has the broken vowel; *herramienta* does not, because the
-stress lands on the **-mien-** instead. Same word, same rule, and by now the
-rule needs no restating — a stressed **e** breaks and an unstressed one does
-not.
+One rule governs both vowels, and it is the one you already have: a stressed
+**e** breaks, an unstressed one stays flat. In *ferrum* the stress is on the
+**e**, so it breaks — *h**ie**rro*. In *ferramenta* the stress has moved onto
+the suffix, so the first **e** stays flat — *h**e**rra-* — and the break
+happens where the stress went instead: *-m**ie**nta*, the very same *-miento*
+you have in *el seguimiento*.
 
-The **h** was added by scribes to a word that began with **f** in Latin. That
-*f*-to-*h* shift is one of the loudest things Spanish did to Latin.
+The **h** is written because it was once spoken. Latin *f-* weakened to a
+breathy *h* in Castilian mouths, the breath faded, and the spelling stayed
+behind. That *f*-to-*h* shift is one of the loudest things Spanish did to
+Latin.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C460-PEDIR-01] -->

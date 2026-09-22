@@ -45,7 +45,7 @@ reviews_of: [ES-C463-organizar, ES-C463-guia, ES-C463-importar]
 | *me importa el resultado* | the result |
 | *me duele la cabeza* | the head |
 
-Four verbs, one shape, and you now have all of them. The person is never the
+Four verbs, one shape, and you now have the four this book has given you — the family is larger, and *encantar*, *faltar* and *parecer* all run on the same machine. The person is never the
 subject; the thing is, and the verb agrees with it. *Me importan los horarios*
 takes the plural because the timetables are doing the mattering.
 
@@ -60,7 +60,7 @@ and it is not asking permission. It asks whether the thing would weigh on them.
 | organizar | organi**c**é |
 | rechazar | recha**c**é |
 
-Spanish does not write **ze**, so every *-zar* verb swaps to **c** before an
+Verb endings never put an **e** after a *z*, so every *-zar* verb swaps to **c** before an
 *e*. The sound is unchanged; only the letter moves.
 
 And **la guía** carries its accent for the reason *la vía* did — to keep the

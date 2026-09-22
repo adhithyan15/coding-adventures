@@ -4,7 +4,7 @@
   "chapter": 460,
   "title": "La herramienta",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0a42d4a47989b486",
+  "sourceHash": "fnv1a64:ab684b4206a721cf",
   "lessons": [
     {
       "id": "ES-C460-herramienta",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:afb8f3ca7837b6cb",
+      "sourceHash": "fnv1a64:61ddb36864bf1df3",
       "notice": null,
       "blocks": [
         {
@@ -82,11 +82,11 @@
             },
             {
               "kind": "speech",
-              "text": "Hierro, iron, has the broken vowel; herramienta does not, because the stress lands on the -mien- instead. Same word, same rule, and by now the rule needs no restating — a stressed e breaks and an unstressed one does not."
+              "text": "One rule governs both vowels, and it is the one you already have: a stressed e breaks, an unstressed one stays flat. In ferrum the stress is on the e, so it breaks — hierro. In ferramenta the stress has moved onto the suffix, so the first e stays flat — herra- — and the break happens where the stress went instead: -mienta, the very same -miento you have in el seguimiento."
             },
             {
               "kind": "speech",
-              "text": "The h was added by scribes to a word that began with f in Latin. That f-to-h shift is one of the loudest things Spanish did to Latin."
+              "text": "The h is written because it was once spoken. Latin f- weakened to a breathy h in Castilian mouths, the breath faded, and the spelling stayed behind. That f-to-h shift is one of the loudest things Spanish did to Latin."
             }
           ]
         },
@@ -181,7 +181,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:501bcb11f1ec4c0f",
+      "sourceHash": "fnv1a64:1a79d1875944542f",
       "notice": null,
       "blocks": [
         {
@@ -216,7 +216,7 @@
             },
             {
               "kind": "speech",
-              "text": "Solicitar una beca — to apply for a grant. Solicitar cita previa — to book an appointment in advance, the phrase on every health-centre and town-hall page."
+              "text": "Solicitar una beca — to apply for a grant. Solicitar cita previa — to book an appointment in advance, the phrase on Spanish health-centre and town-hall pages; much of Latin America says sacar turno or agendar una cita for the same act."
             },
             {
               "kind": "speech",
@@ -343,7 +343,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:57d7f93c598e03d6",
+      "sourceHash": "fnv1a64:2c5b659f2153091e",
       "notice": null,
       "blocks": [
         {
@@ -393,7 +393,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "You have four suffix families that build a noun from a verb. This is the fifth move, and it is the opposite: take the ending off."
+              "text": "You have four noun-making suffixes — three that work on verbs, and -eza, which works on adjectives. This is a fifth move, and it is the opposite of all of them: take the ending off."
             },
             {
               "kind": "table",
@@ -405,18 +405,18 @@
               "rowCount": 4,
               "utterances": [
                 "verb: esperar. noun: la espera.",
-                "verb: buscar. noun: la busca.",
+                "verb: entregar. noun: la entrega.",
                 "verb: comprar. noun: la compra.",
                 "verb: pagar. noun: el pago."
               ]
             },
             {
               "kind": "speech",
-              "text": "Cut -ar and add a bare -a or -o. These are the shortest nouns in the language and among the commonest, and the gender is not predictable from the verb — la compra but el pago — so this is the one pattern where the article must be learned with the word."
+              "text": "Cut -ar and put back a bare -a or -o. You already have one of these: la entrega arrived two chapters ago without being named as a pattern. These are the shortest nouns in the language and among the commonest. What you cannot predict is which vowel a given verb will take — la compra but el pago. Once you have the word, the ordinary -o/-a rule hands you the article as usual."
             },
             {
               "kind": "speech",
-              "text": "Set beside la solicitud: one verb builds its noun by adding four letters, the other by removing two. Both are ordinary."
+              "text": "Set beside la solicitud: one verb swaps its ending for -ud, the other drops its ending and puts back a single vowel. Both are ordinary."
             }
           ]
         },
@@ -427,11 +427,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Latin sperare, to hope — and that is worth sitting with, because Spanish made one verb do both jobs."
+              "text": "Latin sperare, from spes, hope — though already in Latin it leaned as much on looking forward to as on hoping, and a Roman could sperare bad news as readily as good."
             },
             {
               "kind": "speech",
-              "text": "Esperar is to wait and to hope, and only context separates them: espero el autobús is waiting, espero que sí is hoping. Where English has two verbs, Spanish has one, on the reasoning that waiting for something is hoping it comes."
+              "text": "That middle sense is the hinge. Esperar took over the work of Latin exspectare, to expect, and ended up covering all three English verbs you met when you learned it: espero el autobús is waiting, espero el pan is expecting, espero que sí is hoping. La espera names only the first of them."
             },
             {
               "kind": "speech",
@@ -496,7 +496,7 @@
             },
             {
               "kind": "speech",
-              "text": "The wait? (La espera.) The waiting room? (La sala de espera.) What else does esperar mean? (To hope.)"
+              "text": "The wait? (La espera.) The waiting room? (La sala de espera.) What else does esperar cover? (Hoping and expecting.)"
             }
           ]
         }
@@ -515,7 +515,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4f100ae080045f04",
+      "sourceHash": "fnv1a64:b3ed66e5907f2242",
       "notice": null,
       "blocks": [
         {
@@ -588,7 +588,7 @@
             },
             {
               "kind": "speech",
-              "text": "La espera is the neat one: you have had esperar since early on and la esperanza since the moving chapter, and this is the third member — the plain noun that sits between the verb and the abstract one."
+              "text": "La espera is the neat one: esperar and la esperanza arrived together with the verb itself, long ago, and the moving chapter showed you the -anza that builds the second from the first. This is the third member — the plain noun that sits between the verb and the abstract one."
             }
           ]
         },
@@ -664,7 +664,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf35f5e85d092729",
+      "sourceHash": "fnv1a64:d7edb123610274b5",
       "notice": null,
       "blocks": [
         {
@@ -755,7 +755,7 @@
             },
             {
               "kind": "speech",
-              "text": "Hay lista de espera — no article before lista. After hay, Spanish drops it, because hay is introducing the thing's existence rather than pointing at a known one. Hay una lista is also correct and says something slightly different: there is a list, one of possibly several."
+              "text": "Hay lista de espera — bare, with no article at all. The firm rule is what hay refuses: never hay la lista, because hay introduces a thing's existence rather than pointing at one already known. Between hay lista and hay una lista both are correct, and the bare noun is what a notice board uses."
             },
             {
               "kind": "speech",

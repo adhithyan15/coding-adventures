@@ -61,10 +61,11 @@ two registers. The notice says *para solicitar una herramienta* because it is
 describing a procedure; the neighbour who walks in says *¿me dejas el taladro?*
 That pair is the whole of Spanish formality in one scene.
 
-**Hay lista de espera** — no article before *lista*. After *hay*, Spanish
-drops it, because *hay* is introducing the thing's existence rather than
-pointing at a known one. *Hay una lista* is also correct and says something
-slightly different: there is *a* list, one of possibly several.
+**Hay lista de espera** — bare, with no article at all. The firm rule is what
+*hay* refuses: never *hay la lista*, because *hay* introduces a thing's
+existence rather than pointing at one already known. Between *hay lista* and
+*hay una lista* both are correct, and the bare noun is what a notice board
+uses.
 
 And **por vecino** — "per neighbour" — is *por* doing distribution, the same
 *por* that gave a cause on the roadworks sign. One preposition, several jobs,
