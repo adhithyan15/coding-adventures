@@ -320,13 +320,18 @@ function looksLikeDataRow(line: string): boolean {
  */
 export function assertAnswerKeyParse(parse: AnswerKeyParse, name: string): void {
   const { rows, unscored, malformed, declared } = parse;
-  // Sanitised HERE, not at the call site. The one in-repo caller already passes
-  // a `reportableFilename`, but `spanishMockDir` two hundred lines up hardens
-  // against a deep import on the argument that `package.json` declares no
-  // `exports` map -- and that argument applies identically to this function,
-  // which is exported and takes a caller-supplied string straight into four
-  // one-line error messages. A `\r` or a `\u001b[2K` in it forges or erases a
-  // log line. Idempotent, so the existing caller loses nothing.
+  // Sanitised HERE, not at the call site. This function is exported and
+  // `package.json` declares no `exports` map, so a deep importer hands it a
+  // caller-supplied string that went straight into four one-line error
+  // messages; a `\r` or a `\u001b[2K` in it forges or erases a log line. That
+  // is the same argument `spanishMockDir` two hundred lines up already makes.
+  //
+  // CALLERS MUST PASS THE RAW NAME. `reportableFilename` QUOTES, so it is NOT
+  // idempotent -- `"key.md"` applied twice is `"\"key.md\""` -- and a draft of
+  // this comment claimed the opposite, which would have invited a future
+  // maintainer to re-add `reportableFilename(path)` at the call site and print
+  // double-quoted paths. `parseAnswerKey` was changed to pass `path` directly
+  // in the same commit that moved the sanitising here.
   const label = reportableFilename(name);
   if (malformed.length > 0) {
     // The rejected line is NAMED rather than counted. A message that says only
@@ -411,7 +416,14 @@ export function assertAnswerKeyParse(parse: AnswerKeyParse, name: string): void 
     // memory-capped CI runner the dangerous band starts far lower.
     //
     // The real keys declare 10 or 25.
-    if (count < 1 || count > MAX_DECLARED_ITEMS) {
+    // `Number.isInteger` FIRST, because both comparisons below are false for
+    // `NaN` -- so a non-numeric count would fall straight through to
+    // `Array.from({ length: NaN })`, an empty `want`, and the exact fail-open
+    // this bound exists to close. Unreachable from file content, where `count`
+    // comes from `(\d+)`; reachable from a caller that fabricates the parse,
+    // which is the same deep-import threat model this function's OTHER argument
+    // is hardened against ten lines up. Consistency costs one call.
+    if (!Number.isInteger(count) || count < 1 || count > MAX_DECLARED_ITEMS) {
       throw new Error(
         `${label}: Prueba ${paper} heading declares ${count} items, outside 1-${MAX_DECLARED_ITEMS}`,
       );

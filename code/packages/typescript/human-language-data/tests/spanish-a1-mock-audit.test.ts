@@ -851,10 +851,11 @@ describe("assertAnswerKeyParse", () => {
   });
 
   it("sanitises the name it was handed rather than trusting the caller", () => {
-    // The one in-repo caller passes a `reportableFilename` already, but this
-    // function is EXPORTED and `package.json` declares no `exports` map -- the
-    // same deep-import argument that `spanishMockDir` hardens against. A `\r`
-    // in the name would otherwise forge a second log line.
+    // This function is EXPORTED and `package.json` declares no `exports` map --
+    // the same deep-import argument `spanishMockDir` hardens against. A `\r`
+    // in the name would otherwise forge a second log line. The in-repo caller
+    // passes the RAW path, because `reportableFilename` quotes and so is not
+    // idempotent.
     expect(() => assertAnswerKeyParse(parse({ rows: [] }), "a\r\nFORGED"))
       .toThrow(/^"a\\nFORGED": parsed no answer-key rows$/);
   });
