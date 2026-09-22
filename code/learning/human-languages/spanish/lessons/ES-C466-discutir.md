@@ -73,9 +73,9 @@ only later of taking an argument apart.
 Which makes the two Spanish senses one sense. Discussing a topic and arguing
 with a person are the same act at two temperatures: something is being shaken
 until it comes apart. English kept the violent end elsewhere — **concussion**
-is *con-* plus the same *quatere*, a shaking-together of the head.
+is *con-* plus the same *quatere*, a violent shaking of the head.
 
-*Percusión* is the third member, the shaking-through of a struck drum.
+*Percusión* is a third member, a striking right through.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C466-INFORME-04, ES-LEX-C466-INFORME-03] -->

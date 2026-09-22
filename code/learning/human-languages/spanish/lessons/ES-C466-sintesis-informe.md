@@ -44,7 +44,7 @@ words in it is rarely good news, and rarely as bad as it looks.
 > clase ha mejorado de forma **visible** durante este trimestre.
 >
 > Me gustaría **discutir** con ustedes cómo mantener esa mejora. Pueden pedir
-> cita en secretaría.
+> una cita en secretaría.
 >
 > Atentamente,
 >
@@ -61,13 +61,14 @@ is not one, and two words tell you so.
 | *ha mejorado* | the news is good |
 | *discutir* **con ustedes** | a conversation, not a row |
 
-*Discutir con* was given as the arguing shape, and here it is doing the other
-job — because what is being discussed is an improvement. That is the limit of
-the rule: the preposition leans, the content decides.
+*Discutir con* leans towards arguing when nothing else is on the table. Here a
+topic follows it — *cómo mantener esa mejora* — which is exactly the mixed case
+you were warned about, and the good news settles it. The preposition leans; the
+content decides.
 
 Note also **de forma visible**. The letter does not say the child is visible;
-it says the improvement can be seen. *Visible* is passive, as its ending
-warned.
+it says the improvement can be seen. That reading comes from *videre* — seeing
+is done to a thing — rather than from the ending, which points either way.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C466-INFORME-01, ES-LEX-C466-INFORME-02, ES-LEX-C466-INFORME-03, ES-LEX-C466-INFORME-04] -->

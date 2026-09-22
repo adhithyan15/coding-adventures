@@ -48,18 +48,20 @@ stay, what the letter is about, and what the meeting will do with it.
 ## Grammar Lens: three endings you already had
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C466-INFORME-01, ES-LEX-C466-INFORME-02] -->
 
-Not one of this chapter's endings is new. What is new is which way each one
-bends.
+One piece of this chapter is new, and it is a spelling: **-ible**, beside the
+**-able** you already had. The endings themselves are all old news. What is
+worth holding is which way each one bends.
 
 | ending | does it change for a woman? |
 |---|---|
 | **-tor** | yes — *director*, *directora* |
 | **-ible** | no — *visible* for everyone |
 
-*El actor* gave you *-tor* and printed *director* in its own table. *Sociable*
-gave you the *-able* half of *-ible* and the rule that it has one form.
-*El aparcamiento* gave you *-miento*. The chapter is four words and nothing
-underneath them you had not already been handed.
+*El actor* gave you *-tor* and printed *director* in its own table — and *la
+actriz* gave you the exception in the same breath. *Amable* and *sociable* gave
+you *-able*, and the reading to take first: able to have it done to it.
+*El entrenamiento* gave you *-miento*. Four words, and almost nothing
+underneath them you had not been handed.
 
 ## The words, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C466-INFORME-03, ES-LEX-C466-INFORME-04] -->
@@ -82,7 +84,7 @@ all four is about a child in a classroom.
 [PAUSE 2s]
 - [YOU SAY: the headmistress wants to discuss his behaviour]
 - [YOU SAY: it must stay visible]
-- [YOU SAY: which two of the four change for a woman]
+- [YOU SAY: which one of the four changes for a woman, and why the other three cannot]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C466-INFORME-01, ES-LEX-C466-INFORME-02, ES-LEX-C466-INFORME-03, ES-LEX-C466-INFORME-04] -->

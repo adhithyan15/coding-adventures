@@ -45,8 +45,10 @@ gave you the ending. Put them together and you have this word already.
 *El director del colegio* — the head teacher. *La directora de la empresa* —
 the company director. *El director de cine* — the film director.
 
-Unlike *el guía*, this one **does** change: *director*, *directora*. It ends in
-a consonant, so the feminine adds **-a** rather than moving the article.
+Unlike *el guía*, this one **does** change: *director*, *directora* — the
+ordinary swap, the one *profesor / profesora* already showed you. It is a habit
+rather than a law, and this very family holds the exception: *actor* takes
+**actriz**, not *actora*, as you saw.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C466-INFORME-01, ES-LEX-C446-MOVER-04] -->
@@ -59,17 +61,20 @@ naming the doer: take a verb, add *-tor*, get the one who does it. The table
 there listed *agere → actor*, *docere → doctor* — and **dirigere → director**.
 The word was printed in front of you before you needed it.
 
-Then **directo** gave you *dirigere* itself: to set something straight, to aim
-it. So a *director* is the one who **aims the thing** — not the one who shouts,
-the one who points it where it is going.
+And *dirigere* came earlier still, under **la derecha** and again under
+**directo**: *dis-*, apart, plus *regere*, to rule — to set something straight,
+to aim it. So a *director* is the one who **aims the thing**, not the one who
+shouts.
 
 | the verb | the doer |
 |---|---|
 | dirigere, to aim | el director |
 
 *Dirigir* is the living Spanish verb: *dirigir una empresa*, to run a company.
-And *dirigirse a alguien* is to address somebody — to aim your words at a
-person, which is what the letter in this chapter does.
+And *dirigirse a alguien* is to address somebody — which is the point *derecha*
+made about English **address**, to set a letter straight towards a person. Here
+it is the same verb doing the same job in Spanish, and it is what the letter in
+this chapter does.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C466-INFORME-01, ES-LEX-C421-ARTS-01] -->

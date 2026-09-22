@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 466,
-  "sourceHash": "fnv1a64:81d4790c56798bc0",
+  "sourceHash": "fnv1a64:69e7fc2a0af1e126",
   "lessonIds": [
     "ES-C466-director",
     "ES-C466-visible",
@@ -10,11 +10,11 @@
     "ES-R466-repaso-informe",
     "ES-C466-sintesis-informe"
   ],
-  "voiceLessons": 5,
+  "voiceLessons": 4,
   "drivablePrefix": 0,
   "text": "spanish/narration/ch466.txt",
   "json": "spanish/narration/ch466.json",
-  "textHash": "fnv1a64:81f6e4f2a90fbed4",
-  "jsonHash": "fnv1a64:3f221ceb3b2d8d24",
+  "textHash": "fnv1a64:559ad6285998d3ba",
+  "jsonHash": "fnv1a64:2d287af7fede4847",
   "findings": []
 }

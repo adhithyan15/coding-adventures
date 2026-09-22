@@ -8,31 +8,31 @@ type: word
 headword: el comportamiento
 gloss: behaviour — carrying yourself, with the same portare that carries goods in and out
 concept_tag: ES-ASK-COMPORTAMIENTO
-prerequisites: [ES-C466-visible, ES-C463-importar, ES-C400-aparcamiento]
+prerequisites: [ES-C466-visible, ES-C463-importar, ES-C450-entrenamiento]
 sounds: [stress-penultimate, diphthong-ie]
 roots: [comportare-latin]
 duration:
   max_seconds: 275
 requires:
-  knowledge: [ES-LEX-C466-INFORME-02, ES-LEX-C463-GUIA-03, ES-LEX-APARCAMIENTO]
+  knowledge: [ES-LEX-C466-INFORME-02, ES-LEX-C463-GUIA-03, ES-LEX-C450-SUELO-05]
 introduces:
   knowledge: [ES-LEX-C466-INFORME-03]
 practises:
-  knowledge: [ES-LEX-C466-INFORME-03, ES-LEX-C466-INFORME-02, ES-LEX-C463-GUIA-03, ES-LEX-APARCAMIENTO]
+  knowledge: [ES-LEX-C466-INFORME-03, ES-LEX-C466-INFORME-02, ES-LEX-C463-GUIA-03, ES-LEX-C450-SUELO-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [ES-C463-importar, ES-C400-aparcamiento]
+reviews_of: [ES-C463-importar, ES-C450-entrenamiento]
 ---
 
 # el comportamiento — how somebody carries themselves
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C463-GUIA-03, ES-LEX-APARCAMIENTO] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C463-GUIA-03, ES-LEX-C450-SUELO-05] -->
 
-[PAUSE 2s] Say **importar** and **el aparcamiento**. One holds the root of the
+[PAUSE 2s] Say **importar** and **el entrenamiento**. One holds the root of the
 next word and the other holds its ending.
 
 ## You'll want to know: el comportamiento
@@ -64,24 +64,29 @@ are carrying about.
 |---|---|
 | comportarse, to carry oneself | to conduct oneself |
 
-Keep it away from *la puerta*. That is *porta*, a gate, and the warning came
-with *importar*: the two look alike and are not the same word.
+Keep it away from *la puerta*. That is *porta*, a gate — the warning came first
+at *la puerta*, where English's two *porter*s turned out to be different words,
+and again at *importar*.
 
 ## Grammar Lens: -miento on a reflexive verb
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C466-INFORME-03, ES-LEX-APARCAMIENTO] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C466-INFORME-03, ES-LEX-C450-SUELO-05] -->
 
-You have **-miento** from *el aparcamiento*: an ending that makes a noun out of
-a verb. This one is built on *comportarse*, which is reflexive, and the noun
-quietly drops the *se*.
+You have **-miento** from *el entrenamiento* and *el seguimiento*: it attaches
+to the calm form of the verb and hands back a masculine noun.
+
+*Comportarse* is pronominal, and the ending is unbothered by that — it takes
+the plain stem, *comporta-*, so the *se* never enters the noun at all. You saw
+the same thing without it being named: *entrenarse* gives *el entrenamiento*.
 
 | verb | noun |
 |---|---|
-| aparcar | el aparcamiento |
-| comportarse | el comportamiento |
+| entrenar(se) | el entrena**miento** |
+| comportar(se) | el comporta**miento** |
 
-So the noun names the carrying without saying whose. That is exactly what a
-school letter wants: *el comportamiento* is a fact about conduct, where *se
-porta mal* is an accusation about a child.
+What the noun buys is register, not anonymity — *su comportamiento* says whose
+perfectly well. It states conduct as a topic rather than as something a child
+is doing to you, which is why a school letter reaches for it and a parent says
+*se porta mal*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C466-INFORME-03, ES-LEX-C466-INFORME-02] -->

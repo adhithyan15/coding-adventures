@@ -40,32 +40,37 @@ other gave you the root. This word is the two of them stuck together.
 
 **visible** — visible, able to be seen.
 
-> El aviso debe quedar **visible** en el tablón.
+> El aviso debe quedar **visible** en el tablón de anuncios.
 
 *En un lugar visible* — somewhere it can be seen, the phrase notices use about
 themselves. *Una mejora visible* — a noticeable improvement.
 
-Like *sociable*, it has **one form for everyone**: *un cartel visible*, *una
-puerta visible*. Adjectives in this family do not take a feminine.
+Like *sociable*, it has one form for both genders: *un cartel visible*, *una
+puerta visible*. The plural still moves — *carteles visibles*.
 
 ## Grammar Lens: -able and -ible point two ways
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C466-INFORME-02, ES-LEX-C423-CHAR-06] -->
 
-They are one ending, Latin **-bilis**, wearing two spellings. Which vowel you
-get depends on the Latin verb it was built from, and there is no rule worth
-memorising — you learn each word.
+They are one ending, Latin **-bilis**, wearing two spellings, and which vowel
+you get follows the verb's family:
 
-What is worth noticing is the **direction**, because it is not fixed either:
-
-| adjective | who is doing what |
+| verb family | ending |
 |---|---|
-| sociable | the person **does** the mixing |
-| visible | somebody else **does** the seeing |
+| **-ar** — *lavar* | lav**able** |
+| **-er**, **-ir** — *vender*, *ver* | vend**ible**, vis**ible** |
 
-*Sociable* describes a person inclined to do something. *Visible* describes a
-thing that can have something done to it. The ending covers both, and only the
-sense of the verb tells you which way it points — *un niño sociable* mixes, *un
-cartel visible* is looked at.
+Older borrowings can sit outside that, so it is a lean rather than a law — but
+it predicts the new words, which is what a rule is for.
+
+The direction is steadier than the spelling. *Amable* told you what the ending
+does: **able to have this done to it**. That is the ordinary reading, and it is
+the one to reach for first — *lavable*, *visible*, *comestible* all describe a
+thing something is done **to**.
+
+A small group leans the other way and names a doer or a causer instead:
+*sociable*, *agradable*, *durable*. Note that *sociable* is not even built on a
+verb — *socius* is a noun, a companion — which is part of why it behaves
+oddly. Take the common reading first and learn the handful that do not fit.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C466-INFORME-02, ES-LEX-C332-WORD-22] -->
@@ -73,11 +78,14 @@ cartel visible* is looked at.
 Latin **videre**, to see — the root you met under *el aviso*, where *a-vis-o*
 turned out to be *ad visum*, "to what is seen".
 
-The same *videre* is under a great many English words, and they arrived by
-different doors: **vision** and **visible** and **evident** came through Latin,
-while **advice** came through French and **view** came through French from the
-same place. Spanish keeps *ver* as the everyday verb and saves *videre*'s own
-shape for the formal words: *visible*, *la visión*, *evidente*.
+Spanish did not set *videre* aside for the formal words. It kept it as the
+everyday **ver**, worn short through Old Spanish *veer*, which is what you were
+told when you learned the verb. What the formal words are built on is the
+verb's **other stem**, *vis-*: *visible*, *la visión*.
+
+The same root is under a great many English words — **vision**, **visible**,
+**evident**, **advice**, **view** — most of them arriving through French on
+their way out of Latin rather than straight from it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C466-INFORME-02, ES-LEX-C466-INFORME-01] -->
@@ -90,5 +98,6 @@ shape for the formal words: *visible*, *la visión*, *evidente*.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C466-INFORME-02] -->
 
-[PAUSE 3s] Visible? (**Visible** — one form for everyone.) Does it change for
-a feminine noun? (**No**.) The Latin verb? (***Videre***, to see.)
+[PAUSE 3s] Visible? (**Visible**.) Does it change for a feminine noun?
+(**No** — but the plural does: *visibles*.) Which way does *-ible* usually
+point? (**At the thing** — able to have it done to it.)

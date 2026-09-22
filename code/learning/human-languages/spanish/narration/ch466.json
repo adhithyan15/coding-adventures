@@ -4,7 +4,7 @@
   "chapter": 466,
   "title": "Una carta del colegio",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:81d4790c56798bc0",
+  "sourceHash": "fnv1a64:69e7fc2a0af1e126",
   "lessons": [
     {
       "id": "ES-C466-director",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:8d437e19b2eec341",
+      "sourceHash": "fnv1a64:f41f65865cb4f9cf",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -65,7 +65,7 @@
             },
             {
               "kind": "speech",
-              "text": "Unlike el guía, this one does change: director, directora. It ends in a consonant, so the feminine adds -a rather than moving the article."
+              "text": "Unlike el guía, this one does change: director, directora — the ordinary swap, the one profesor / profesora already showed you. It is a habit rather than a law, and this very family holds the exception: actor takes actriz, not actora, as you saw."
             }
           ]
         },
@@ -84,7 +84,7 @@
             },
             {
               "kind": "speech",
-              "text": "Then directo gave you dirigere itself: to set something straight, to aim it. So a director is the one who aims the thing — not the one who shouts, the one who points it where it is going."
+              "text": "And dirigere came earlier still, under la derecha and again under directo: dis-, apart, plus regere, to rule — to set something straight, to aim it. So a director is the one who aims the thing, not the one who shouts."
             },
             {
               "kind": "table",
@@ -100,7 +100,7 @@
             },
             {
               "kind": "speech",
-              "text": "Dirigir is the living Spanish verb: dirigir una empresa, to run a company. And dirigirse a alguien is to address somebody — to aim your words at a person, which is what the letter in this chapter does."
+              "text": "Dirigir is the living Spanish verb: dirigir una empresa, to run a company. And dirigirse a alguien is to address somebody — which is the point derecha made about English address, to set a letter straight towards a person. Here it is the same verb doing the same job in Spanish, and it is what the letter in this chapter does."
             }
           ]
         },
@@ -176,7 +176,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f706524ae4d5abe9",
+      "sourceHash": "fnv1a64:9f84e1e148e7860d",
       "notice": null,
       "blocks": [
         {
@@ -207,7 +207,7 @@
             },
             {
               "kind": "speech",
-              "text": "El aviso debe quedar visible en el tablón."
+              "text": "El aviso debe quedar visible en el tablón de anuncios."
             },
             {
               "kind": "speech",
@@ -215,7 +215,7 @@
             },
             {
               "kind": "speech",
-              "text": "Like sociable, it has one form for everyone: un cartel visible, una puerta visible. Adjectives in this family do not take a feminine."
+              "text": "Like sociable, it has one form for both genders: un cartel visible, una puerta visible. The plural still moves — carteles visibles."
             }
           ]
         },
@@ -226,28 +226,32 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "They are one ending, Latin -bilis, wearing two spellings. Which vowel you get depends on the Latin verb it was built from, and there is no rule worth memorising — you learn each word."
-            },
-            {
-              "kind": "speech",
-              "text": "What is worth noticing is the direction, because it is not fixed either:"
+              "text": "They are one ending, Latin -bilis, wearing two spellings, and which vowel you get follows the verb's family:"
             },
             {
               "kind": "table",
               "headers": [
-                "adjective",
-                "who is doing what"
+                "verb family",
+                "ending"
               ],
               "columns": 2,
               "rowCount": 2,
               "utterances": [
-                "adjective: sociable. who is doing what: the person does the mixing.",
-                "adjective: visible. who is doing what: somebody else does the seeing."
+                "verb family: -ar — lavar. ending: lavable.",
+                "verb family: -er, -ir — vender, ver. ending: vendible, visible."
               ]
             },
             {
               "kind": "speech",
-              "text": "Sociable describes a person inclined to do something. Visible describes a thing that can have something done to it. The ending covers both, and only the sense of the verb tells you which way it points — un niño sociable mixes, un cartel visible is looked at."
+              "text": "Older borrowings can sit outside that, so it is a lean rather than a law — but it predicts the new words, which is what a rule is for."
+            },
+            {
+              "kind": "speech",
+              "text": "The direction is steadier than the spelling. Amable told you what the ending does: able to have this done to it. That is the ordinary reading, and it is the one to reach for first — lavable, visible, comestible all describe a thing something is done to."
+            },
+            {
+              "kind": "speech",
+              "text": "A small group leans the other way and names a doer or a causer instead: sociable, agradable, durable. Note that sociable is not even built on a verb — socius is a noun, a companion — which is part of why it behaves oddly. Take the common reading first and learn the handful that do not fit."
             }
           ]
         },
@@ -262,7 +266,11 @@
             },
             {
               "kind": "speech",
-              "text": "The same videre is under a great many English words, and they arrived by different doors: vision and visible and evident came through Latin, while advice came through French and view came through French from the same place. Spanish keeps ver as the everyday verb and saves videre's own shape for the formal words: visible, la visión, evidente."
+              "text": "Spanish did not set videre aside for the formal words. It kept it as the everyday ver, worn short through Old Spanish veer, which is what you were told when you learned the verb. What the formal words are built on is the verb's other stem, vis-: visible, la visión."
+            },
+            {
+              "kind": "speech",
+              "text": "The same root is under a great many English words — vision, visible, evident, advice, view — most of them arriving through French on their way out of Latin rather than straight from it."
             }
           ]
         },
@@ -319,7 +327,7 @@
             },
             {
               "kind": "speech",
-              "text": "Visible? (Visible — one form for everyone.) Does it change for a feminine noun? (No.) The Latin verb? (Videre, to see.)"
+              "text": "Visible? (Visible.) Does it change for a feminine noun? (No — but the plural does: visibles.) Which way does -ible usually point? (At the thing — able to have it done to it.)"
             }
           ]
         }
@@ -338,7 +346,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4956843af046d91a",
+      "sourceHash": "fnv1a64:e689cbacec4a1a8e",
       "notice": null,
       "blocks": [
         {
@@ -354,7 +362,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say importar and el aparcamiento. One holds the root of the next word and the other holds its ending."
+              "text": "Say importar and el entrenamiento. One holds the root of the next word and the other holds its ending."
             }
           ]
         },
@@ -408,7 +416,7 @@
             },
             {
               "kind": "speech",
-              "text": "Keep it away from la puerta. That is porta, a gate, and the warning came with importar: the two look alike and are not the same word."
+              "text": "Keep it away from la puerta. That is porta, a gate — the warning came first at la puerta, where English's two porters turned out to be different words, and again at importar."
             }
           ]
         },
@@ -419,7 +427,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "You have -miento from el aparcamiento: an ending that makes a noun out of a verb. This one is built on comportarse, which is reflexive, and the noun quietly drops the se."
+              "text": "You have -miento from el entrenamiento and el seguimiento: it attaches to the calm form of the verb and hands back a masculine noun."
+            },
+            {
+              "kind": "speech",
+              "text": "Comportarse is pronominal, and the ending is unbothered by that — it takes the plain stem, comporta-, so the se never enters the noun at all. You saw the same thing without it being named: entrenarse gives el entrenamiento."
             },
             {
               "kind": "table",
@@ -430,13 +442,13 @@
               "columns": 2,
               "rowCount": 2,
               "utterances": [
-                "verb: aparcar. noun: el aparcamiento.",
-                "verb: comportarse. noun: el comportamiento."
+                "verb: entrenar(se). noun: el entrenamiento.",
+                "verb: comportar(se). noun: el comportamiento."
               ]
             },
             {
               "kind": "speech",
-              "text": "So the noun names the carrying without saying whose. That is exactly what a school letter wants: el comportamiento is a fact about conduct, where se porta mal is an accusation about a child."
+              "text": "What the noun buys is register, not anonymity — su comportamiento says whose perfectly well. It states conduct as a topic rather than as something a child is doing to you, which is why a school letter reaches for it and a parent says se porta mal."
             }
           ]
         },
@@ -512,7 +524,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4a6b03837c4d9c4d",
+      "sourceHash": "fnv1a64:1ba1f1f5388e03a3",
       "notice": null,
       "blocks": [
         {
@@ -594,11 +606,11 @@
             },
             {
               "kind": "speech",
-              "text": "Which makes the two Spanish senses one sense. Discussing a topic and arguing with a person are the same act at two temperatures: something is being shaken until it comes apart. English kept the violent end elsewhere — concussion is con- plus the same quatere, a shaking-together of the head."
+              "text": "Which makes the two Spanish senses one sense. Discussing a topic and arguing with a person are the same act at two temperatures: something is being shaken until it comes apart. English kept the violent end elsewhere — concussion is con- plus the same quatere, a violent shaking of the head."
             },
             {
               "kind": "speech",
-              "text": "Percusión is the third member, the shaking-through of a struck drum."
+              "text": "Percusión is a third member, a striking right through."
             }
           ]
         },
@@ -674,7 +686,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bcd8ddc8afb8527b",
+      "sourceHash": "fnv1a64:143cf98f66f6d33d",
       "notice": null,
       "blocks": [
         {
@@ -723,7 +735,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Not one of this chapter's endings is new. What is new is which way each one bends."
+              "text": "One piece of this chapter is new, and it is a spelling: -ible, beside the -able you already had. The endings themselves are all old news. What is worth holding is which way each one bends."
             },
             {
               "kind": "table",
@@ -740,7 +752,7 @@
             },
             {
               "kind": "speech",
-              "text": "El actor gave you -tor and printed director in its own table. Sociable gave you the -able half of -ible and the rule that it has one form. El aparcamiento gave you -miento. The chapter is four words and nothing underneath them you had not already been handed."
+              "text": "El actor gave you -tor and printed director in its own table — and la actriz gave you the exception in the same breath. Amable and sociable gave you -able, and the reading to take first: able to have it done to it. El entrenamiento gave you -miento. Four words, and almost nothing underneath them you had not been handed."
             }
           ]
         },
@@ -804,11 +816,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "which two of the four change for a woman",
+              "instruction": "which one of the four changes for a woman, and why the other three cannot",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: which two of the four change for a woman]"
+              "source": "[YOU SAY: which one of the four changes for a woman, and why the other three cannot]"
             }
           ]
         },
@@ -839,13 +851,20 @@
       "romanization": "(una carta del colegio)",
       "gloss": "the payoff — read a letter home from the head, then say what it is actually asking for",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:b6c26e7ebb8f28da",
-      "notice": null,
+      "sourceHash": "fnv1a64:191ea3d76dd049aa",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -871,7 +890,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Estimada familia: Les escribo para informarles de que el comportamiento de su hijo en clase ha mejorado de forma visible durante este trimestre. Me gustaría discutir con ustedes cómo mantener esa mejora. Pueden pedir cita en secretaría. Atentamente, La directora."
+              "text": "Estimada familia: Les escribo para informarles de que el comportamiento de su hijo en clase ha mejorado de forma visible durante este trimestre. Me gustaría discutir con ustedes cómo mantener esa mejora. Pueden pedir una cita en secretaría. Atentamente, La directora."
             }
           ]
         },
@@ -899,11 +918,11 @@
             },
             {
               "kind": "speech",
-              "text": "Discutir con was given as the arguing shape, and here it is doing the other job — because what is being discussed is an improvement. That is the limit of the rule: the preposition leans, the content decides."
+              "text": "Discutir con leans towards arguing when nothing else is on the table. Here a topic follows it — cómo mantener esa mejora — which is exactly the mixed case you were warned about, and the good news settles it. The preposition leans; the content decides."
             },
             {
               "kind": "speech",
-              "text": "Note also de forma visible. The letter does not say the child is visible; it says the improvement can be seen. Visible is passive, as its ending warned."
+              "text": "Note also de forma visible. The letter does not say the child is visible; it says the improvement can be seen. That reading comes from videre — seeing is done to a thing — rather than from the ending, which points either way."
             }
           ]
         },
