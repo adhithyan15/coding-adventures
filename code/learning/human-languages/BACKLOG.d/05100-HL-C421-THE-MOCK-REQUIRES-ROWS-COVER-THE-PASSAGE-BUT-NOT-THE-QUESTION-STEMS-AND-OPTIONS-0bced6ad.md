@@ -89,6 +89,10 @@ corpus. This one uses the audit's own taught set — the same
 `lessonsUpToLevel("A2")` headword expansion the gate uses, copied rather than
 re-derived — and then narrows by hand rather than by another heuristic:
 
+**This table describes the FIRST pass only.** Its bottom line was wrong by a
+factor of five; it is kept because the shape of the narrowing is what later
+rounds had to correct.
+
 | step | distinct forms |
 |---|---:|
 | in the two papers' stems and options | 592 |
@@ -103,7 +107,7 @@ notably stem-changing verbs — `pide`/`pidió` from *pedir*, `sirve` from
 *servir*, `va`/`vaya` from *ir*. That is the same trap this entry recorded, and
 it is why the last narrowing is by reading rather than by rule.
 
-**Thirty lexemes** were added, across **twenty-six of the fifty rows**.
+**Forty-seven lexemes** were added, across **forty-three of the hundred rows** the gate reads (fifty per mock).
 
 Every one is load-bearing. Most sit in an answer option a candidate has to
 weigh — *"tiene que pagar una multa"*, *"tener el título universitario"*,
@@ -112,11 +116,17 @@ seven sit in a STEM, so the question cannot be read at all: `alumno` (m1 22),
 `mejor` (m2 5), `practicar` and `infancia` (m1 18), `trescientos` (m1 24),
 `quejarse` (m2 17), `costumbre` (m2 19).
 
-### THE NARROWING RULES PRODUCED FALSE CLEARS — twenty of them, over two rounds
+### THE SEARCH DID NOT CONVERGE — thirty-eight corrections over three rounds
 
 This is the part worth keeping, because it bounds how much the number can be
-trusted. **The analysis was wrong twice before it settled**, and both times it
-was wrong in the same direction: too generous. 6 → 15 → 17 → 32.
+trusted. **The analysis was wrong three times, and never settled.** 6 → 15 → 17 → 32 → 48.
+Each round of adversarial review found more untaught words sitting in items
+that were passing — 3, then 17, then 18 — and *every one of the thirty-eight
+corrections ran in the same direction*: the narrowing had been too generous.
+
+A method wrong three times running in one direction is not nearly right. It is
+**biased**, and the bias flatters the corpus. **48 is where the search stopped,
+not where the truth is.**
 
 The first draft added nine words. Review found three more:
 
@@ -126,12 +136,34 @@ The first draft added nine words. Review found three more:
 | `ahorro` | cleared as a relative of a verb, but `ahorrar` is not taught either | mock 1 item 23, option (c) |
 | `mejor` | held back on the claim that it "is a headword" — **false** | mock 2 item 5, stem |
 
-A second round then found **seventeen more**, every one with zero
-word-boundary occurrences in the entire Spanish curriculum and every one
-sitting in an item that was *passing*: `aburrido`, `practicar`, `infancia`,
-`trescientos`, `finalidad`, `variedad`, `jardinero`, `cancelar`, `concreto`,
-`equipaje`, `recuperar`, `quejarse`, `costumbre`, `parecido`, `resolver`,
-`disponible`, `prometer`.
+A second round then found **seventeen more**, none of them a headword at or
+below A2 and every one sitting in an item that was *passing*: `aburrido`,
+`practicar`, `infancia`, `trescientos`, `finalidad`, `variedad`, `jardinero`,
+`cancelar`, `concreto`, `equipaje`, `recuperar`, `quejarse`, `costumbre`,
+`parecido`, `resolver`, `disponible`, `prometer`.
+
+(An earlier draft said all seventeen had *zero occurrences in the entire
+curriculum*. That is false for two: `aburrido` appears in `CHANGELOG.md` and
+`roadmap.md` prose — where it is itself named as untaught — and `resolver` in a
+`grammar-cells.json` overlay no lesson references. The absolute wording was
+wrong; the substance was not.)
+
+A **third** round then found eighteen more, and these are the ones that should
+worry a reader most, because several sit in the **keyed** option — the correct
+answer turns on a word the course never teaches:
+
+| where | words |
+|---|---|
+| stem, so the question is unreadable | `profesional` (m1 14), `inscribirse` (m1 38), `descartar` (m1 42), `iniciativa`/`ganar` (m2 14), `comprender` (m2 16), `calzado` (m2 41) |
+| the keyed option | `sitio` (m1 12, m2 6), `prever`, `sustituir`, `error` (m1 enunciados), `obligatorio` (m2 9), `inscribirse` (m2 12), `acudir` (m2 49), `comunicar`/`interrumpir` (m2 50) |
+| a distractor to weigh | `material` (m2 12), `rápido` (m1 30) |
+
+Three of that round's candidates were investigated and **cleared**, and they
+are recorded because they show the standard: `disculparse` (`la disculpa` is
+taught), `informar` (`el informe` is in a taught headword) and `pedir` (taught
+inside a parenthesised headword). `coger` was left out as well — it appears in
+a message body rather than a stem or option, so it is outside what this pass
+measures.
 
 Mock 1 item 36 is the pattern in one line. Its row reads *sección, cerrado,
 inventario, horario, habitual* — five passage words — and the option the
@@ -166,13 +198,13 @@ option stayed unreadable. The row lists `mejora`.
 ### What it cost the headline, and what that retracts
 
 ```
-objectiveFailed           6 -> 32
-missingObjectiveLexemes   4 -> 34
-mock 1 reading           24 -> 14      listening 23 -> 19
-mock 2 reading           22 -> 15      listening 25 -> 20
+objectiveFailed           6 -> 48
+missingObjectiveLexemes   4 -> 51
+mock 1 reading           24 -> 12      listening 23 -> 13
+mock 2 reading           22 -> 10      listening 25 -> 17
 ```
 
-The instrument was understating by **more than 5×**. The pinned note in
+The instrument was understating by **eight times over**. The pinned note in
 `spanish-a1-mock-audit.test.ts` says the count may only ever fall; this is the
 one rise that is legitimate, because it is the MEASUREMENT being corrected to
 be harsher, not the corpus losing ground.
@@ -181,7 +213,7 @@ be harsher, not the corpus losing ground.
 "the last authorable A2 vocabulary chapter" and the programme was declared
 finished, on the grounds that the four remaining lexemes were already taught
 and blocked only by `HL-C418`, `HL-C420` and `HL-C422`. That was true of the
-list the instrument produced. The list was wrong. **Twenty-nine words that are
+list the instrument produced. The list was wrong. **Forty-six words that are
 not headwords at or below A2 were invisible the entire time**, because nothing
 ever put option text on it — and the programme was not out of words, it was out
 of words *the passage needed*.
@@ -199,8 +231,7 @@ those three. `HL-C422` is where the headword-only rule itself is argued.
 ### What this does NOT fix
 
 **The list is a FLOOR, not a census.** The narrowing from 47 was done by
-reading, and review found **twenty** false clears in it over two rounds — three
-in the first, seventeen in the second; the rules that
+reading, and review found **thirty-eight** false clears in it over three rounds — 3, 17, 18 — and never stopped finding them; the rules that
 produced them — a 3-character prefix, a guess at a verb relative — are still
 what filtered the other 545 forms. More gaps almost certainly remain, and every
 one of them makes the number kinder than the truth.

@@ -61,13 +61,13 @@
   },
   "lessonCount": 1430,
   "taughtForms": 2378,
-  "objectiveFailed": 32,
+  "objectiveFailed": 48,
   "mocks": [
     {
       "mock": 1,
-      "reading": 14,
-      "listening": 19,
-      "objectiveFailed": 17,
+      "reading": 12,
+      "listening": 13,
+      "objectiveFailed": 25,
       "failed": [
         {
           "paper": 1,
@@ -94,7 +94,22 @@
           "paper": 1,
           "item": 9,
           "missing": [
-            "título"
+            "título",
+            "parecido"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 12,
+          "missing": [
+            "sitio"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 14,
+          "missing": [
+            "profesional"
           ]
         },
         {
@@ -153,6 +168,13 @@
         },
         {
           "paper": 2,
+          "item": 30,
+          "missing": [
+            "rápido"
+          ]
+        },
+        {
+          "paper": 2,
           "item": 33,
           "missing": [
             "cancelar"
@@ -174,6 +196,13 @@
         },
         {
           "paper": 2,
+          "item": 38,
+          "missing": [
+            "inscribirse"
+          ]
+        },
+        {
+          "paper": 2,
           "item": 39,
           "missing": [
             "problema"
@@ -188,18 +217,46 @@
         },
         {
           "paper": 2,
+          "item": 42,
+          "missing": [
+            "descartar"
+          ]
+        },
+        {
+          "paper": 2,
           "item": 43,
           "missing": [
             "creer"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 45,
+          "missing": [
+            "error"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 46,
+          "missing": [
+            "prever"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 50,
+          "missing": [
+            "sustituir"
           ]
         }
       ]
     },
     {
       "mock": 2,
-      "reading": 15,
-      "listening": 20,
-      "objectiveFailed": 15,
+      "reading": 10,
+      "listening": 17,
+      "objectiveFailed": 23,
       "failed": [
         {
           "paper": 1,
@@ -212,7 +269,8 @@
           "paper": 1,
           "item": 3,
           "missing": [
-            "explicar"
+            "explicar",
+            "quejarse"
           ]
         },
         {
@@ -226,6 +284,13 @@
         },
         {
           "paper": 1,
+          "item": 6,
+          "missing": [
+            "sitio"
+          ]
+        },
+        {
+          "paper": 1,
           "item": 7,
           "missing": [
             "recuperar"
@@ -233,9 +298,39 @@
         },
         {
           "paper": 1,
+          "item": 9,
+          "missing": [
+            "obligatorio"
+          ]
+        },
+        {
+          "paper": 1,
           "item": 11,
           "missing": [
             "multa"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 12,
+          "missing": [
+            "inscribirse",
+            "material"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 14,
+          "missing": [
+            "iniciativa",
+            "ganar"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 16,
+          "missing": [
+            "comprender"
           ]
         },
         {
@@ -307,40 +402,79 @@
           "missing": [
             "adelantado"
           ]
+        },
+        {
+          "paper": 2,
+          "item": 41,
+          "missing": [
+            "calzado"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 49,
+          "missing": [
+            "acudir"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 50,
+          "missing": [
+            "comunicar",
+            "interrumpir"
+          ]
         }
       ]
     }
   ],
   "missingObjectiveLexemes": [
     "aburrido",
+    "acudir",
     "adelantado",
     "afirmar",
     "ahorro",
     "alquiler",
     "alumno",
+    "calzado",
     "cancelar",
+    "comprender",
+    "comunicar",
     "concreto",
     "costumbre",
     "creer",
+    "descartar",
     "disponible",
     "equipaje",
+    "error",
     "espacio",
     "explicar",
     "finalidad",
+    "ganar",
     "infancia",
+    "iniciativa",
+    "inscribirse",
+    "interrumpir",
     "jardinero",
     "justo",
+    "material",
     "mejor",
     "mejora",
     "multa",
+    "obligatorio",
     "parecido",
     "practicar",
+    "prever",
     "problema",
+    "profesional",
     "prometer",
     "quejarse",
     "recuperar",
     "resolver",
     "responder",
+    "rápido",
+    "sitio",
+    "sustituir",
     "trescientos",
     "título",
     "utilizar",
@@ -361,11 +495,31 @@
       "count": 2
     },
     {
+      "lexeme": "inscribirse",
+      "count": 2
+    },
+    {
       "lexeme": "multa",
       "count": 2
     },
     {
+      "lexeme": "parecido",
+      "count": 2
+    },
+    {
+      "lexeme": "quejarse",
+      "count": 2
+    },
+    {
+      "lexeme": "sitio",
+      "count": 2
+    },
+    {
       "lexeme": "aburrido",
+      "count": 1
+    },
+    {
+      "lexeme": "acudir",
       "count": 1
     },
     {
@@ -385,7 +539,19 @@
       "count": 1
     },
     {
+      "lexeme": "calzado",
+      "count": 1
+    },
+    {
       "lexeme": "cancelar",
+      "count": 1
+    },
+    {
+      "lexeme": "comprender",
+      "count": 1
+    },
+    {
+      "lexeme": "comunicar",
       "count": 1
     },
     {
@@ -397,11 +563,19 @@
       "count": 1
     },
     {
+      "lexeme": "descartar",
+      "count": 1
+    },
+    {
       "lexeme": "disponible",
       "count": 1
     },
     {
       "lexeme": "equipaje",
+      "count": 1
+    },
+    {
+      "lexeme": "error",
       "count": 1
     },
     {
@@ -413,7 +587,19 @@
       "count": 1
     },
     {
+      "lexeme": "ganar",
+      "count": 1
+    },
+    {
       "lexeme": "infancia",
+      "count": 1
+    },
+    {
+      "lexeme": "iniciativa",
+      "count": 1
+    },
+    {
+      "lexeme": "interrumpir",
       "count": 1
     },
     {
@@ -425,6 +611,10 @@
       "count": 1
     },
     {
+      "lexeme": "material",
+      "count": 1
+    },
+    {
       "lexeme": "mejor",
       "count": 1
     },
@@ -433,7 +623,7 @@
       "count": 1
     },
     {
-      "lexeme": "parecido",
+      "lexeme": "obligatorio",
       "count": 1
     },
     {
@@ -441,7 +631,15 @@
       "count": 1
     },
     {
+      "lexeme": "prever",
+      "count": 1
+    },
+    {
       "lexeme": "problema",
+      "count": 1
+    },
+    {
+      "lexeme": "profesional",
       "count": 1
     },
     {
@@ -449,7 +647,7 @@
       "count": 1
     },
     {
-      "lexeme": "quejarse",
+      "lexeme": "rápido",
       "count": 1
     },
     {
@@ -462,6 +660,10 @@
     },
     {
       "lexeme": "responder",
+      "count": 1
+    },
+    {
+      "lexeme": "sustituir",
       "count": 1
     },
     {

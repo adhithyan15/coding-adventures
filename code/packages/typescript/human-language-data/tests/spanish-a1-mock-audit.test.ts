@@ -102,23 +102,32 @@ describe("Spanish A2 book-bounded mock audit", () => {
   it("pins the CURRENT DEBT: the exam names the vocabulary that is still missing", () => {
     const audit = buildSpanishA1MockAudit(defaultCurriculumRoot(), "A2");
     expect(audit.level).toBe("A2");
-    // 6 -> 17, AND THE RISE IS THE POINT. This is the one movement the note
+    // 6 -> 48, AND THE RISE IS THE POINT. This is the one movement the note
     // below forbids, taken deliberately, because the instrument was wrong in
     // the direction that flatters us. HL-C421 found that a `requires` row lists
     // the words of the AUDIO PASSAGE and never the words of the question stem
     // or the answer options, so an item could pass while a candidate could not
     // read the sentence they have to choose between.
     //
-    // Quantified here for the first time, which is what that entry asked for
-    // and could not supply. Of 592 distinct word forms in the two A2 papers'
-    // stems and options, 309 are not taught forms; removing closed-class
-    // function words, exam apparatus and morphological relatives of taught
-    // lemmas leaves 47 to read by hand. THIRTY lexemes were added, across
-    // TWENTY-SIX of the fifty rows.
+    // FORTY-SEVEN lexemes were added, across FORTY-THREE of the hundred rows
+    // the gate reads (fifty per mock).
     //
-    // THE NUMBER TOOK THREE PASSES TO SETTLE, 6 -> 15 -> 17 -> 32, and every
-    // correction came from review finding the narrowing rules too generous.
-    // They are recorded because they bound how far this number can be trusted:
+    // THE NUMBER DID NOT CONVERGE, AND THAT IS THE REAL FINDING.
+    // 6 -> 15 -> 17 -> 32 -> 48, across three rounds of adversarial review,
+    // each of which found MORE untaught words in items that were passing:
+    //
+    //     round 1   3 more    the count went 15 -> 17
+    //     round 2  17 more    the count went 17 -> 32
+    //     round 3  18 more    the count went 32 -> 48
+    //
+    // Three passes, thirty-eight corrections, and every single one in the same
+    // direction: the narrowing had been too generous. A method that is wrong
+    // three times running in one direction is not nearly right; it is BIASED,
+    // and the bias is toward flattering the corpus. 48 is where the search
+    // stopped, not where the truth is.
+    //
+    // The three false clears worth naming, because they show how the rules
+    // failed rather than that they did:
     //
     //   `espacio`   cleared by a 3-CHARACTER PREFIX rule matching the taught
     //               `esperar`. Unrelated words. Mock 2 item 5, option (a).
@@ -129,12 +138,13 @@ describe("Spanish A2 book-bounded mock audit", () => {
     //               sits on SPINE-READ-CULTURAL-WEIGHT and derives to C2, so it
     //               is outside this gate's own taught set. It belongs with
     //               creer/explicar: taught, but above the ceiling.
-    //   + 17 more   aburrido, practicar, infancia, trescientos, finalidad,
-    //               variedad, jardinero, cancelar, concreto, equipaje,
-    //               recuperar, quejarse, costumbre, parecido, resolver,
-    //               disponible, prometer. All have ZERO word-boundary
-    //               occurrences in the whole Spanish curriculum, and all sat
-    //               in items that were PASSING.
+    //
+    // Round 3's additions are the ones that should worry a reader most,
+    // because several sit in the KEYED option -- the correct answer turns on a
+    // word the course never teaches: `sitio` (m1 12, m2 6), `prever` (m1
+    // enunciado A), `sustituir` (m1 enunciado B), `obligatorio` (m2 9),
+    // `inscribirse` (m2 12), `acudir` (m2 49), `comunicar`/`interrumpir`
+    // (m2 50).
     //
     // `afirmar` was also held back as exam apparatus. It IS apparatus in the
     // two instruction lines, but mock 1 item 41 is a scored statement --
@@ -142,28 +152,28 @@ describe("Spanish A2 book-bounded mock audit", () => {
     // lists curso, puesto and dar from the same stem, so the row does read the
     // stem and singling out one word was inconsistent.
     //
-    // Two exclusions DO stand, and for a reason the book itself supplies:
-    // `escolar` from the taught `la escuela`, and `comedor` -- which
-    // ES-C297-tenedor does not merely make derivable but GLOSSES OUTRIGHT,
-    // "A comedor is where the eating is done", at chapter 297, pre-A1. An
-    // earlier draft of this comment credited chapter 431 with the -dor ending;
-    // 431 does teach it, but 297 got there first and with this very word.
+    // THREE EXCLUSIONS STAND, each because the book itself supplies the word:
+    // `escolar` from the taught `la escuela`; `comedor`, which ES-C297-tenedor
+    // does not merely make derivable but GLOSSES OUTRIGHT -- "A comedor is
+    // where the eating is done" -- at chapter 297, pre-A1; and `coger`, which
+    // appears in a message body rather than a stem or option and is therefore
+    // outside what this pass measures.
     //
     // Every word added is load-bearing. Most sit in an option a candidate must
-    // weigh; five sit in the STEM -- `alumno` (m1 22), `mejor` (m2 5),
-    // `practicar`/`infancia` (m1 18), `quejarse` (m2 17), `costumbre` (m2 19),
-    // `trescientos` (m1 24) -- so those questions cannot be read at all.
+    // weigh; SEVEN sit in the STEM -- `alumno` (m1 22), `mejor` (m2 5),
+    // `practicar` and `infancia` (m1 18), `trescientos` (m1 24), `quejarse`
+    // (m2 17), `costumbre` (m2 19) -- so those questions cannot be read at all.
     //
     // The honest consequence: "the A2 vocabulary programme is complete" was
     // false. It was complete against an instrument that only read the passage.
-    expect(audit.objectiveFailed).toBe(32);
+    expect(audit.objectiveFailed).toBe(48);
     expect(audit.mocks.map(({ reading, listening, objectiveFailed }) => ({
       reading,
       listening,
       objectiveFailed,
     }))).toEqual([
-      { reading: 14, listening: 19, objectiveFailed: 17 },
-      { reading: 15, listening: 20, objectiveFailed: 15 },
+      { reading: 12, listening: 13, objectiveFailed: 25 },
+      { reading: 10, listening: 17, objectiveFailed: 23 },
     ]);
     // THIS NUMBER MUST ONLY EVER FALL, with one exception already spent above:
     // a rise is allowed when it is the MEASUREMENT being corrected to be
@@ -395,78 +405,99 @@ describe("Spanish A2 book-bounded mock audit", () => {
     // only because their spine node derives above A2. See BACKLOG.d HL-C418
     // and HL-C420; do not teach them a second time.
     //
-    // 4 -> 34, and the note above predicted exactly this: "Expect this to
+    // 4 -> 51, and the note above predicted exactly this: "Expect this to
     // recur: the exactness asserted above was always a property of the ROWS,
     // not of the papers." The list is no longer four already-taught words
-    // blocked on a spine decision; it is five such words plus TWENTY-NINE
-    // never taught as headwords at or below A2:
+    // blocked on a spine decision; it is five such words plus 46 that are
+    // not headwords at or below A2:
     //
     //     taught, but above this gate's ceiling (HL-C418, HL-C420, HL-C422)
     //       creer, explicar, problema, responder, mejor
     //     not a headword at or below A2, newly visible because the rows now
     //     read the question rather than only the passage
-    //       aburrido, adelantado, afirmar, ahorro, alquiler, alumno, cancelar,
-    //       concreto, costumbre, disponible, equipaje, espacio, finalidad,
-    //       infancia, jardinero, justo, mejora, multa, parecido, practicar,
-    //       prometer, quejarse, recuperar, resolver, trescientos, título,
-    //       utilizar, variedad, vigilar
+    //       aburrido, acudir, adelantado, afirmar, ahorro, alquiler, alumno,
+    //       calzado, cancelar, comprender, comunicar, concreto, costumbre,
+    //       descartar, disponible, equipaje, error, espacio, finalidad, ganar,
+    //       infancia, iniciativa, inscribirse, interrumpir, jardinero, justo,
+    //       material, mejora, multa, obligatorio, parecido, practicar, prever,
+    //       profesional, prometer, quejarse, recuperar, resolver, rápido,
+    //       sitio, sustituir, trescientos, título, utilizar, variedad, vigilar
     //
     // The second group is authorable vocabulary work, and its existence
     // retracts the claim that the A2 programme had run out of words. It had
     // run out of words THE PASSAGE NEEDED.
     //
     // "NOT A HEADWORD AT OR BELOW A2", precisely -- not "never taught
-    // anywhere", which an earlier draft of this comment claimed and which is
-    // false for three of them. `alquiler` is glossed in ES-C441-contrato,
-    // `espacio` in ES-C57-es-inicial, `mejora` in ES-C466-visible -- the very
-    // lesson that supplies `visible` to the same row. All three lessons are
-    // inside the A2 set. Counting them missing is still right, because this
-    // gate is headword-only by construction and `glossed-not-taught.ts` treats
-    // body presence as a REVIEW QUEUE rather than a teaching claim; but the
-    // wording has to say what the measurement measures. HL-C422 is where the
-    // headword-only rule itself is argued.
+    // anywhere", and not "zero occurrences in the curriculum", both of which
+    // earlier drafts of this comment claimed and both of which are false.
+    // `alquiler` is glossed in ES-C441-contrato, `espacio` in
+    // ES-C57-es-inicial, `mejora` in ES-C466-visible -- the very lesson that
+    // supplies `visible` to the same row; `aburrido` appears in CHANGELOG.md
+    // and roadmap.md prose, where it is named as untaught; `resolver` appears
+    // in a grammar-cells.json overlay no lesson references. Counting all of
+    // them missing is still right, because this gate is headword-only by
+    // construction and `glossed-not-taught.ts` treats body presence as a
+    // REVIEW QUEUE rather than a teaching claim; but the wording has to say
+    // what the measurement measures. HL-C422 argues the rule itself.
     //
     // `mejora`, not `mejorar`: mock 1 item 23 reads "la mejora de las notas",
-    // a deverbal NOUN. The first draft listed the infinitive, which appears
+    // a deverbal NOUN. An earlier draft listed the infinitive, which appears
     // nowhere in the item -- lemmatising across a part-of-speech boundary,
     // which would have let a future `mejorar` headword flip the item to
     // passing while the option stayed unreadable.
     //
-    // THE LIST IS STILL A FLOOR. The narrowing was done by reading, review has
-    // now found twenty false clears in two rounds, and the rules that produced
-    // them are the same rules that filtered the other 545 forms. Every
-    // remaining error makes this number kinder than the truth.
-    expect(audit.missingObjectiveLexemes).toHaveLength(34);
+    // THIS LIST IS A FLOOR AND THE SEARCH FOR IT DID NOT CONVERGE. See the
+    // note above: three rounds of review found 3, then 17, then 18 more, every
+    // correction in the same direction. Do not read 51 as the answer; read it
+    // as the largest number anyone has yet demonstrated.
+    expect(audit.missingObjectiveLexemes).toHaveLength(51);
     expect(audit.missingObjectiveLexemes).toEqual([
       "aburrido",
+      "acudir",
       "adelantado",
       "afirmar",
       "ahorro",
       "alquiler",
       "alumno",
+      "calzado",
       "cancelar",
+      "comprender",
+      "comunicar",
       "concreto",
       "costumbre",
       "creer",
+      "descartar",
       "disponible",
       "equipaje",
+      "error",
       "espacio",
       "explicar",
       "finalidad",
+      "ganar",
       "infancia",
+      "iniciativa",
+      "inscribirse",
+      "interrumpir",
       "jardinero",
       "justo",
+      "material",
       "mejor",
       "mejora",
       "multa",
+      "obligatorio",
       "parecido",
       "practicar",
+      "prever",
       "problema",
+      "profesional",
       "prometer",
       "quejarse",
       "recuperar",
       "resolver",
       "responder",
+      "rápido",
+      "sitio",
+      "sustituir",
       "trescientos",
       "título",
       "utilizar",
