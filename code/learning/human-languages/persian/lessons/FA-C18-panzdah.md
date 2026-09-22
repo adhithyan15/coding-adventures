@@ -11,7 +11,7 @@ gloss: "fifteen — a nasal that appears out of nowhere, twice"
 concept_tag: FA-NUMBER-FIFTEEN
 prerequisites: [FA-C18-sizdah]
 sounds: [rtl, persian-pe, long-a]
-roots: [proto-indo-european-penkwe]
+roots: [pie-penkwe]
 etymology_hook: "panzdah and shanzdah both gain an n before the dah that panj and shesh do not have, which is the one irregularity in the whole run of teens."
 duration:
   max_seconds: 250

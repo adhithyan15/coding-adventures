@@ -4,7 +4,7 @@
   "chapter": 332,
   "title": "Permission, Notice, and the Word",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:aa46c6aac82158ee",
+  "sourceHash": "fnv1a64:6a93722131695fd5",
   "lessons": [
     {
       "id": "ES-C332-permiso",
@@ -175,7 +175,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0710faea139ed61c",
+      "sourceHash": "fnv1a64:8addb5ec9fed8a72",
       "notice": null,
       "blocks": [
         {

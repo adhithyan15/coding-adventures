@@ -10,7 +10,7 @@ gloss: "some, and also the plural of un — one word doing the last two jobs the
 concept_tag: FR-PARTITIVE-DES
 prerequisites: [FR-C35-de-la, FR-C06-un]
 sounds: [liaison-z]
-roots: [latin-de]
+roots: [de-latin]
 etymology_hook: "English has no plural of a: it says books where French must say des livres, so the word French cannot omit is the word English never built"
 duration:
   max_seconds: 240

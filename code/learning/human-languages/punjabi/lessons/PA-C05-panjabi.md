@@ -11,7 +11,7 @@ gloss: "Punjabi — the language, and the name of five rivers"
 concept_tag: PA-WORD-PUNJABI
 prerequisites: [PA-C05-bolna]
 sounds: [tippi-nasal, kanna-aa]
-roots: [panj-persian, aab-persian]
+roots: [persian-panj, aab-persian]
 duration:
   max_seconds: 190
 requires:

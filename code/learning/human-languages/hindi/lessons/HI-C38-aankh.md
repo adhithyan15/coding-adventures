@@ -14,7 +14,7 @@ romanization: "āṁkh"
 concept_tag: HI-BODY-EYE
 prerequisites: [HI-C37-kitaab, HI-C13-sir, HI-C07-haan]
 sounds: [chandrabindu-nasal, aspirated-kha]
-roots: [akshi-sanskrit, pie-hekw]
+roots: [sanskrit-akshi, pie-hekw]
 etymology_hook: "आँख (āṁkh) is Sanskrit अक्षि (akṣi), from PIE *h₃ekʷ- — the root behind Latin oculus (→ ocular, monocle), Lithuanian akìs and English eye itself; the Greek cognate to cite is ósse, not ophthalmós, whose first element is unexplained and which is often treated as pre-Greek; and the ँ on आ is the same chandrabindu you first met on हाँ"
 duration:
   max_seconds: 235

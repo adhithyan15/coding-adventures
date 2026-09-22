@@ -11,7 +11,7 @@ gloss: "two — two letters, and the same word as English two"
 concept_tag: UR-NUMBER-TWO
 prerequisites: [UR-C28-ek]
 sounds: [rtl, long-o]
-roots: [sanskrit-dvi, proto-indo-european-dwoh]
+roots: [sanskrit-dvi, pie-dwoh]
 etymology_hook: "do continues Sanskrit dvi from Proto-Indo-European *dwoh1 -- English two, Latin duo -- and it is already inside dost, the word for friend this book taught long ago, only by coincidence."
 duration:
   max_seconds: 265

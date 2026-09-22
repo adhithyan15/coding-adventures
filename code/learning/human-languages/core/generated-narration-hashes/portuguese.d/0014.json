@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 14,
-  "sourceHash": "fnv1a64:82a91b3b0c74708c",
+  "sourceHash": "fnv1a64:0e2c9df3870b49e2",
   "lessonIds": [
     "PT-C14-ter",
     "PT-C14-idade"
@@ -11,6 +11,6 @@
   "text": "portuguese/narration/ch14.txt",
   "json": "portuguese/narration/ch14.json",
   "textHash": "fnv1a64:e46873388d7afbf8",
-  "jsonHash": "fnv1a64:3e56aa752cb15e96",
+  "jsonHash": "fnv1a64:1e3ec8446be746fb",
   "findings": []
 }

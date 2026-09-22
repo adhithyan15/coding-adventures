@@ -10,7 +10,7 @@ gloss: to see — veo, ves, ve
 concept_tag: ES-VER
 prerequisites: [ES-C16-vivir-imperfecto, ES-C07-comer]
 sounds: [v-b-merger]
-roots: [latin-videre]
+roots: [videre-latin]
 etymology_hook: "ver continues Latin vidēre through Old Spanish veer; loss of intervocalic d helps explain the shorter modern infinitive"
 duration:
   max_seconds: 280

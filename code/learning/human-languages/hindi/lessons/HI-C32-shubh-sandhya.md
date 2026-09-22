@@ -14,7 +14,7 @@ romanization: "shubh sandhyā / sāñjh"
 concept_tag: GREETING-EVENING
 prerequisites: [HI-C29-shaam, HI-C31-suprabhat, HI-C27-shubh-raatri]
 sounds: [devanagari-anusvara, devanagari-conjunct-dhya]
-roots: [su-good, sandhya-junction-sanskrit]
+roots: [su-good, sanskrit-sandhya-junction]
 etymology_hook: "शुभ संध्या (shubh sandhyā, 'good evening') pairs शुभ ('good') with संध्या (sandhyā, native Sanskrit, from सम् + धा, 'to hold together' — literally 'the junction of day and night,' i.e. twilight); संध्या has its own Hindi tadbhava doublet, साँझ (sāñjh, evolved via Prakrit) — but unlike रात्रि/रात's tatsama/tadbhava split (HI-C26/27), साँझ isn't simply the eroded-casual counterpart: sources describe it as used across BOTH literary/poetic and everyday registers, not confined to one; शुभ संध्या itself, like सुप्रभात, shows up heavily in written/greeting-card and social-media culture, with नमस्ते — confirmed usable at any time of day, including evening — covering the casual spoken gap"
 duration:
   max_seconds: 222

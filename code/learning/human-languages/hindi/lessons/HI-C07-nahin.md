@@ -14,7 +14,7 @@ romanization: "nahīṃ / jāntā"
 concept_tag: RESPONSE-NO
 prerequisites: [HI-C07-haan]
 sounds: [anusvara-nasal, vowel-ii]
-roots: [na-sanskrit, pie-ne]
+roots: [sanskrit-na, pie-ne]
 etymology_hook: "नहीं nahīṃ holds Sanskrit na — the same PIE *ne that negates Latin nōn, German nein and English no"
 duration:
   max_seconds: 232

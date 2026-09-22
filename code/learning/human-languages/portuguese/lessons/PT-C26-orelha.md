@@ -10,7 +10,7 @@ gloss: ear — a second word built by the same -cl- to -lh- law, and the same PT
 concept_tag: PT-BODY-EAR
 prerequisites: [PT-C26-olho, PT-C05-trabalhar]
 sounds: [lh-palatal]
-roots: [latin-auricula]
+roots: [auricula-latin]
 etymology_hook: "orelha <- Latin auricula, 'little ear', the diminutive of auris -- same -c'l- to -lh- fold as olho, and Spanish did the identical thing to a different consonant, giving oreja, exactly the PT -lh- / ES -j- split Chapter 5's trabalhar/trabajar already showed; orelha names the outer ear, while ouvido covers hearing and the inner ear"
 duration:
   max_seconds: 236

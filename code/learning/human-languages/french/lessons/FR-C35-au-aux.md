@@ -10,7 +10,7 @@ gloss: "a plus le, a plus les — and the l that turned into a u, which is the s
 concept_tag: FR-CONTRACTION-AU
 prerequisites: [FR-C35-de, FR-C11-du]
 sounds: [o-eau, liaison-z]
-roots: [latin-ad]
+roots: [ad-latin]
 etymology_hook: "au is a + le with the l vocalised into a u, a change that ran through the whole language: cheval became chevaux, beau was bel, and journal becomes journaux by the identical step"
 duration:
   max_seconds: 240

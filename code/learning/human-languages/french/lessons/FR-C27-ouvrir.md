@@ -10,7 +10,7 @@ gloss: to open — an -ir verb that takes -er endings, from a Latin verb reshape
 concept_tag: VERB-OPEN
 prerequisites: [FR-C27-se-lever, FR-C17-main]
 sounds: [r-uvular, nasal-ain]
-roots: [latin-aperire]
+roots: [aperire-latin]
 etymology_hook: "ouvrir ← popular Latin operīre, a reshaping of Classical aperīre 'to open' — probably pulled into that shape by its own opposite cooperīre 'to cover' (→ couvrir) → aperture, aperitif ('the opener' of a meal), and through Old French ovrir the English words overt and overture"
 duration:
   max_seconds: 296

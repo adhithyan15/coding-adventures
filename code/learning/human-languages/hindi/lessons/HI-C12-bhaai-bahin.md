@@ -14,7 +14,7 @@ romanization: "bhāī bahin"
 concept_tag: HI-FAMILY-SIBLINGS
 prerequisites: [HI-C12-pitaa-maataa]
 sounds: [devanagari-long-ii, aspirated-bha]
-roots: [pie-bhrater, bhaga-sanskrit]
+roots: [pie-bhrater, sanskrit-bhaga]
 etymology_hook: "भाई bhāī IS the PIE cousin of English 'brother' — but बहन bahin is NOT the cousin of 'sister'; Sanskrit's PIE-cognate word for sister (svasṛ) faded, replaced by bhaginī, 'the one who shares,' the ancestor of bahin"
 duration:
   max_seconds: 235

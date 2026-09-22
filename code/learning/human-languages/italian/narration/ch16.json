@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Being, Going, and the Past with Essere",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f1cfcbc3670e86e6",
+  "sourceHash": "fnv1a64:051d6aa81d3d3891",
   "lessons": [
     {
       "id": "IT-C16-essere",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8b4c7c4e88ed6b3d",
+      "sourceHash": "fnv1a64:94c5c3531f4cc153",
       "notice": null,
       "blocks": [
         {
@@ -193,7 +193,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:68bfeaba1054c2e2",
+      "sourceHash": "fnv1a64:75af1ae1f3a06298",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -366,7 +366,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:04dd548d77d49253",
+      "sourceHash": "fnv1a64:eb348f25124f90c9",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -534,7 +534,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:82b659f73e3e94d5",
+      "sourceHash": "fnv1a64:e9c6745ede308d03",
       "notice": null,
       "blocks": [
         {

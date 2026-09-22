@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d8c8b5cff9f2016d",
+  "sourceHash": "fnv1a64:85c79b5911047449",
   "lessons": [
     {
       "id": "KA-C03-hege",
@@ -311,7 +311,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:809da424a186378c",
+      "sourceHash": "fnv1a64:4ca79abd019344a6",
       "notice": {
         "modality": "sight",
         "needs": [

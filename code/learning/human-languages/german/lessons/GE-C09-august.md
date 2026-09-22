@@ -10,7 +10,7 @@ gloss: August — the second and last month named for a man, and the last name t
 concept_tag: GE-MONTH-AUG
 prerequisites: [GE-C09-juli]
 sounds: [au-diphthong, st-initial-scht]
-roots: [latin-augustus]
+roots: [augustus-latin]
 etymology_hook: "August is the emperor Augustus, who took the month after Caesar's for himself — and after him the Roman calendar stopped naming months altogether"
 duration:
   max_seconds: 170

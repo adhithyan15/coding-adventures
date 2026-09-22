@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 451,
-  "sourceHash": "fnv1a64:f523dbab509ce419",
+  "sourceHash": "fnv1a64:cf4a8bb77d2fb94f",
   "lessonIds": [
     "ES-C451-cola",
     "ES-C451-apuntar",
@@ -17,6 +17,6 @@
   "text": "spanish/narration/ch451.txt",
   "json": "spanish/narration/ch451.json",
   "textHash": "fnv1a64:bd067ed281762765",
-  "jsonHash": "fnv1a64:adfd562632719a24",
+  "jsonHash": "fnv1a64:f9067ad98df4b8e8",
   "findings": []
 }

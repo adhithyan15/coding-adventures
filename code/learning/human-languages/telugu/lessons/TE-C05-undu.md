@@ -11,7 +11,7 @@ romanization: "uṇḍu"
 concept_tag: TE-VERB-UNDU
 prerequisites: [TE-C05-maatlaadu, TE-C03-miiru-elaa-unnaaru]
 sounds: [retroflex-nd]
-roots: [undu-be-dravidian]
+roots: [dravidian-undu-be]
 duration:
   max_seconds: 150
 requires:

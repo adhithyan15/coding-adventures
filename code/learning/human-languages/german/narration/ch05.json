@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 15,
-  "sourceHash": "fnv1a64:aead273c2e552706",
+  "sourceHash": "fnv1a64:6212f78d65355c08",
   "lessons": [
     {
       "id": "GE-C05-wohnen",
@@ -1147,7 +1147,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d1e9cb47b152df27",
+      "sourceHash": "fnv1a64:9602589b894521e1",
       "notice": null,
       "blocks": [
         {

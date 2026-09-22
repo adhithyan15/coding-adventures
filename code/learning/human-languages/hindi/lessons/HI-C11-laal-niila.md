@@ -14,7 +14,7 @@ romanization: "lāl nīlā"
 concept_tag: HI-COLOUR-RED-BLUE
 prerequisites: [HI-C11-kaalaa-safed]
 sounds: [devanagari-long-aa, retroflex-la-vs-dental]
-roots: [laal-persian, nila-sanskrit]
+roots: [laal-persian, sanskrit-nila]
 etymology_hook: "लाल laal 'red' comes from a Persian word for a RUBY; नीला niilaa 'blue' is Sanskrit for the indigo plant — and India's indigo trade is why English says 'indigo' at all"
 duration:
   max_seconds: 205

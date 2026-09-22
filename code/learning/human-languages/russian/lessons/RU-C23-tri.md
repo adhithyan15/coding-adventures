@@ -11,7 +11,7 @@ gloss: "three — three letters, and three of them shared with English"
 concept_tag: RU-NUMBER-THREE
 prerequisites: [RU-C23-dva]
 sounds: [stress-unmarked]
-roots: [proto-indo-european-treyes]
+roots: [pie-treyes]
 etymology_hook: "tri continues Proto-Indo-European *treyes -- English three, Latin tres -- and it is one of the very few words where the Cyrillic spelling and the English one line up sound for sound."
 duration:
   max_seconds: 260

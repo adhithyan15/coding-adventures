@@ -11,7 +11,7 @@ gloss: "four — where a kw became a ch, and English kept the k"
 concept_tag: FA-NUMBER-FOUR
 prerequisites: [FA-C16-se]
 sounds: [rtl, persian-che, long-a]
-roots: [proto-indo-european-kwetwores]
+roots: [pie-kwetwores]
 etymology_hook: "chahâr continues Old Persian chathwar, from Proto-Indo-European *kwetwores — Latin quattuor kept the kw, English four lost it, Persian turned it into ch."
 duration:
   max_seconds: 245

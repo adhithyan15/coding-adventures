@@ -11,7 +11,7 @@ gloss: "two — two letters, and the same word as English two"
 concept_tag: FA-NUMBER-TWO
 prerequisites: [FA-C16-yek]
 sounds: [rtl, short-vowels-unwritten, vav-o]
-roots: [proto-indo-european-dwoh]
+roots: [pie-dwoh]
 etymology_hook: "do continues Middle Persian do, from Proto-Indo-European *dwoh1 — English two, Latin duo, Sanskrit dva."
 duration:
   max_seconds: 235

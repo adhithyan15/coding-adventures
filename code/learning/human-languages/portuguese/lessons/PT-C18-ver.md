@@ -10,7 +10,7 @@ gloss: "to see — and the one form that belongs to two different verbs at once"
 concept_tag: VERB-SEE
 prerequisites: [PT-C18-dizer, PT-C18-vir]
 sounds: [open-e, final-r]
-roots: [latin-videre]
+roots: [videre-latin]
 etymology_hook: "ver ← vidēre, the -d- worn away: vision, visible, video, evident, provide and its worn-down twin prudent, survey, supervise, review, interview, advise, visit, envy (in-vidēre, to look on with ill will) — and NOT very, which is vērus 'true'"
 duration:
   max_seconds: 244

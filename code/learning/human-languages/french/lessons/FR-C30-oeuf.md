@@ -10,7 +10,7 @@ gloss: egg — masculine, a genuine cousin of English egg, and the one French no
 concept_tag: FR-FOOD-OEUF
 prerequisites: [FR-C30-sel, FR-C29-ami]
 sounds: [oe-ligature, final-f-plural-silent]
-roots: [latin-ovum]
+roots: [ovum-latin]
 etymology_hook: "œuf ← Latin ovum, from PIE *h₂ōwyóm — a genuine cousin of English egg (via Old Norse/Germanic *ajja-), not a borrowing either way, the same kind of relationship as sel/salt; un œuf is said with a clear final f, but les œufs drops the f entirely — the ONE French noun in this book whose final consonant survives in the singular and disappears in the plural"
 duration:
   max_seconds: 280

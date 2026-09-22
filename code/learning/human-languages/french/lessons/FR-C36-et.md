@@ -10,7 +10,7 @@ gloss: "and — Latin et unchanged, and a t that never joins to the next word"
 concept_tag: FR-CONNECT-ET
 prerequisites: [FR-C36-svo, FR-C03-practice]
 sounds: [silent-final-t, liaison]
-roots: [latin-et]
+roots: [et-latin]
 etymology_hook: "et is the one word in French where a written t never becomes a liaison, and the exception is old enough that nobody can say why -- every other final t in the language wakes up before a vowel"
 duration:
   max_seconds: 220

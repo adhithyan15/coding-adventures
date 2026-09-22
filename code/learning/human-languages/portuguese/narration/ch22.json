@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Answering, Meeting, and Three Ways to Play",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:cd709fd0e1900289",
+  "sourceHash": "fnv1a64:379d4d0865686ab4",
   "lessons": [
     {
       "id": "PT-C22-responder",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:33d1d4f37baae8dd",
+      "sourceHash": "fnv1a64:2c9764b2818b9f9b",
       "notice": null,
       "blocks": [
         {
@@ -181,7 +181,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d54069fe23131f3",
+      "sourceHash": "fnv1a64:60f4b9da93f25041",
       "notice": null,
       "blocks": [
         {
@@ -313,7 +313,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3ef563960a8707d2",
+      "sourceHash": "fnv1a64:7b2b07679c1224d4",
       "notice": null,
       "blocks": [
         {
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:17ca3fc2cc2dc615",
+      "sourceHash": "fnv1a64:37d798031e120e73",
       "notice": null,
       "blocks": [
         {

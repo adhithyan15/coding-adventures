@@ -10,7 +10,7 @@ gloss: "because — three words fused into two, par ce que, 'by this that'"
 concept_tag: CONNECTIVE-BECAUSE
 prerequisites: [FR-C36-mais, FR-C32-pourquoi, FR-C34-cest]
 sounds: [elision, soft-e]
-roots: [latin-per]
+roots: [per-latin]
 etymology_hook: "parce que is par + ce + que, 'by this that' -- and English built because the same way out of by + cause, so both languages made their reason-word by welding a preposition to a pointing word"
 duration:
   max_seconds: 230

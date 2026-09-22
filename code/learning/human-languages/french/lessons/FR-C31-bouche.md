@@ -10,7 +10,7 @@ gloss: mouth — feminine, and originally the Latin word for cheek, not mouth at
 concept_tag: FR-BODY-BOUCHE
 prerequisites: [FR-C31-nez, FR-C31-oeil]
 sounds: [vowel-ou]
-roots: [latin-bucca]
+roots: [bucca-latin]
 etymology_hook: "bouche ← Latin bucca, 'cheek' — Classical Latin's actual word for mouth was os, but as vowel length collapsed os 'mouth' fell together in sound with os 'bone', so speakers reached for bucca (originally slangy, like calling a mouth a 'cheek') instead; English buccal, a rare technical word, still keeps bucca's original 'cheek' sense"
 duration:
   max_seconds: 250

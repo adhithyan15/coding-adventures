@@ -10,7 +10,7 @@ gloss: coffee — the pan-European word Italy took from an Ottoman drink
 concept_tag: IT-FOOD-COFFEE
 prerequisites: [IT-C11-pane, IT-C19-prendere, IT-C19-mi-piace, IT-C05-parlo-italiano]
 sounds: [open-e, double-consonant]
-roots: [qahwa-arabic, kahve-turkish]
+roots: [arabic-qahwa, turkish-kahve]
 etymology_hook: "caffè ← Ottoman Turkish kahve ← Arabic qahwa — the same relay that gave nearly every European language its word for coffee, English included"
 duration:
   max_seconds: 268

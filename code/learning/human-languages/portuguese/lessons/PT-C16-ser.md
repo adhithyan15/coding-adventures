@@ -10,7 +10,7 @@ gloss: to be — present, imperfect, and preterite forms
 concept_tag: PT-VERB-BE
 prerequisites: [PT-C14-ter, PT-C15-preterito-perfeito]
 sounds: [nasal-ao, open-e]
-roots: [latin-esse]
+roots: [esse-latin]
 etymology_hook: "sou, era, and fui expose three historical stems inside the everyday verb ser"
 duration:
   max_seconds: 148

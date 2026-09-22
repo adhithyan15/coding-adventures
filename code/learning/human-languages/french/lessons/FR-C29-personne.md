@@ -10,7 +10,7 @@ gloss: person — feminine no matter who is meant, even a man, and secretly "nob
 concept_tag: FR-PERSON-PERSONNE
 prerequisites: [FR-C29-enfant, FR-C18-non]
 sounds: [double-n-blocks-nasal]
-roots: [latin-persona]
+roots: [persona-latin]
 etymology_hook: "personne ← Latin persona, 'a theatrical mask' — from Etruscan phersu, itself likely from Greek prosōpon 'face'; the popular story that persona means 'sound through' (per- + sonare, the mask the actor's voice resounded through) is doubted by scholars on phonetic grounds and is best treated as a folk etymology"
 duration:
   max_seconds: 280

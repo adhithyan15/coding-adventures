@@ -10,7 +10,7 @@ gloss: the singular present subjunctive of querer
 concept_tag: ES-SUBJUNCTIVE-QUERER-SINGULAR
 prerequisites: [ES-C18-vivir-subjuntivo, ES-C11-querer]
 sounds: [diphthong-ie, vowel-a]
-roots: [latin-quaerere]
+roots: [quaerere-latin]
 etymology_hook: "the stressed e-to-ie change already learned in quiero and quieres remains in singular quiera, quieras, quiera"
 duration:
   max_seconds: 290

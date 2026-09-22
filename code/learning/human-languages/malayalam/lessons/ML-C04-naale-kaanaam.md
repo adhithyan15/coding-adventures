@@ -11,7 +11,7 @@ romanization: "nāḷe kāṇāṁ"
 concept_tag: FAREWELL-TOMORROW
 prerequisites: [ML-C04-poyi-varaam]
 sounds: [long-aa, retroflex-l]
-roots: [naal-day-dravidian, kaan-see-dravidian]
+roots: [naal-day-dravidian, dravidian-kaan-see]
 duration:
   max_seconds: 240
 requires:

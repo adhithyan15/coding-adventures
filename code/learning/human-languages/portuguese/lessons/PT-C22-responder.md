@@ -10,7 +10,7 @@ gloss: "to answer — literally to pledge something back, and the other half of 
 concept_tag: VERB-ANSWER
 prerequisites: [PT-C21-comprar, PT-C20-perguntar, PT-C03-practice]
 sounds: [nasal-on, open-e]
-roots: [latin-respondere, latin-spondere]
+roots: [latin-respondere, spondere-latin]
 etymology_hook: "responder ← respondēre, re- 'back' + spondēre 'to pledge solemnly' → respond, response, responsible, correspond, despondent, sponsor (one who pledges) and spouse (spōnsus, 'the one promised')"
 duration:
   max_seconds: 283

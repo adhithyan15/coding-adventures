@@ -10,7 +10,7 @@ gloss: "what, standing on its own — the stressed twin of que, and the one that
 concept_tag: FR-PRONOUN-QUOI
 prerequisites: [FR-C39-que, FR-C35-de]
 sounds: [vowel-oi]
-roots: [latin-quid]
+roots: [quid-latin]
 etymology_hook: "que and quoi are the same Latin quid twice: one form wore down because it never carried stress and the other kept its weight because it stood alone, so a single word split in two by nothing but where it sat in a sentence"
 duration:
   max_seconds: 230

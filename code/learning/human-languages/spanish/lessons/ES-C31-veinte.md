@@ -10,7 +10,7 @@ gloss: twenty — the ceiling of the teens, and a word that was worn but never f
 concept_tag: ES-NUM-VEINTE
 prerequisites: [ES-C31-teens-latinos]
 sounds: [diphthong-ei, silent-none]
-roots: [latin-viginti]
+roots: [viginti-latin]
 etymology_hook: "veinte ← Latin vīgintī, worn down by ordinary sound change but never fused from two words the way once-quince were — it was always a single word for a single round number"
 duration:
   max_seconds: 210

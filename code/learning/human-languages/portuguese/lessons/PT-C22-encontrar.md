@@ -10,7 +10,7 @@ gloss: "to find"
 concept_tag: PT-VERB-FIND
 prerequisites: [PT-C22-responder, PT-C18-saber-conhecer]
 sounds: [nasal-en, nasal-on]
-roots: [latin-in-contra, latin-contra]
+roots: [latin-in-contra, contra-latin]
 etymology_hook: "encontrar ← in + contrā 'facing, opposite' → encounter"
 duration:
   max_seconds: 145

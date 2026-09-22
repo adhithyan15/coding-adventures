@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 37,
-  "sourceHash": "fnv1a64:74bd625025a2b3cd",
+  "sourceHash": "fnv1a64:1094d292df994599",
   "lessonIds": [
     "FR-C33-vouloir",
     "FR-C33-pouvoir",
@@ -13,6 +13,6 @@
   "text": "french/narration/ch37.txt",
   "json": "french/narration/ch37.json",
   "textHash": "fnv1a64:6cef1b505e642213",
-  "jsonHash": "fnv1a64:ea67501a47cb6239",
+  "jsonHash": "fnv1a64:011ce798cade0d17",
   "findings": []
 }

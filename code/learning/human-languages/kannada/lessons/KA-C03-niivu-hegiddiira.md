@@ -11,7 +11,7 @@ romanization: "nīvu hēgiddīrā"
 concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [KA-C03-hege, KA-C02-niinu-niivu]
 sounds: [double-dd, long-ii]
-roots: [iru-be-dravidian]
+roots: [dravidian-iru-be]
 duration:
   max_seconds: 270
 requires:

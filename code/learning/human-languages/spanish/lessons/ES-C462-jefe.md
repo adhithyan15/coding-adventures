@@ -10,7 +10,7 @@ gloss: the boss — a head, and the same head as *la cabeza*
 concept_tag: ES-WORK-JEFE
 prerequisites: [ES-C462-decidirse, ES-C24-cabeza, ES-C394-trabajo]
 sounds: [j-jota, stress-penultimate]
-roots: [latin-caput]
+roots: [caput-latin]
 duration:
   max_seconds: 275
 requires:

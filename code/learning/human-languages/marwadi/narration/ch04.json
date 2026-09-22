@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Paani: Hear Water, Then Write It Sign by Sign",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2fe132c0973eed19",
+  "sourceHash": "fnv1a64:f5c7337221d17637",
   "lessons": [
     {
       "id": "MW-C04-hear-paani",
@@ -468,7 +468,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:47326b8d928417b0",
+      "sourceHash": "fnv1a64:ca2719fd48403850",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -597,7 +597,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7132924a09257570",
+      "sourceHash": "fnv1a64:9179361a997c9e10",
       "notice": null,
       "blocks": [
         {

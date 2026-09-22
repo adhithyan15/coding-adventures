@@ -11,7 +11,7 @@ gloss: to ask — the verb English kept only for praying, and a p that stayed pu
 concept_tag: VERB-ASK
 prerequisites: [GU-C09-levun]
 sounds: [pa, long-u-sign, chha, u-nasal]
-roots: [sanskrit-prcchati, pie-prek-ask, latin-precari]
+roots: [sanskrit-prcchati, pie-prek-ask, precari-latin]
 etymology_hook: pūchhvũ from Sanskrit pṛcchati "asks", PIE *prek- "to ask" — Latin precārī gave English pray, prayer, deprecate and imprecation, and precārius gave precarious; German fragen and Persian porsīdan are everyday cousins, while English's own inherited cousin died out, so English asks with an unrelated word and prays with the related one
 duration:
   max_seconds: 280

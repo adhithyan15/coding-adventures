@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 42,
-  "sourceHash": "fnv1a64:895319f5430dd284",
+  "sourceHash": "fnv1a64:0ce0d2bea6d807f8",
   "lessonIds": [
     "GE-C29-freund",
     "GE-C29-freundin",
@@ -12,6 +12,6 @@
   "text": "german/narration/ch42.txt",
   "json": "german/narration/ch42.json",
   "textHash": "fnv1a64:dbdd80a34073863e",
-  "jsonHash": "fnv1a64:b0e271def217ef96",
+  "jsonHash": "fnv1a64:b088b76c8e5b9b32",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8c0e74fe35bf5f51",
+  "sourceHash": "fnv1a64:5dd013ccecb3ab3a",
   "lessons": [
     {
       "id": "TE-S142-digit-3",
@@ -293,7 +293,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3c34e531fc96a95e",
+      "sourceHash": "fnv1a64:6ac3bf7f69375e16",
       "notice": {
         "modality": "sight",
         "needs": [

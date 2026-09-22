@@ -10,7 +10,7 @@ gloss: eye — the same -cl- to -lh- sound law that gave Chapter 13 its "worm" r
 concept_tag: PT-BODY-EYE
 prerequisites: [PT-C25-mulher, PT-C13-vermelho-azul, PT-C17-mao]
 sounds: [lh-palatal]
-roots: [latin-oculus]
+roots: [oculus-latin]
 etymology_hook: "olho <- Latin oculus, worn down through Vulgar Latin oclus (the unstressed u dropped) -- and that -c- next to -l- is exactly the cluster that regularly becomes Portuguese -lh-, the same sound law Chapter 13 already showed you turning vermiculus into vermelho; oculus gives English ocular and oculist"
 duration:
   max_seconds: 248

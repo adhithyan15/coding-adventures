@@ -10,7 +10,7 @@ gloss: "what — the partner of qui, and the one that always elides"
 concept_tag: FR-PRONOUN-QUE
 prerequisites: [FR-C39-qui, FR-C36-parce-que]
 sounds: [elision, soft-e]
-roots: [latin-quid]
+roots: [quid-latin]
 etymology_hook: "qui and que are Latin quis and quid, the who and the what of the same pronoun; French kept both halves and English merged its own pair into who and what by a different road"
 duration:
   max_seconds: 220

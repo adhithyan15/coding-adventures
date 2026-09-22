@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c6f6bfea597097f1",
+  "sourceHash": "fnv1a64:1c3b31a8b5be138a",
   "lessons": [
     {
       "id": "GU-C04-malishun",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:11f63b490b4d634c",
+      "sourceHash": "fnv1a64:c056774b2c19272a",
       "notice": {
         "modality": "sight",
         "needs": [

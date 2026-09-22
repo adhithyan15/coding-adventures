@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Having and Telling Your Age",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:107eaa34576d12bc",
+  "sourceHash": "fnv1a64:cf4b53b18112d826",
   "lessons": [
     {
       "id": "IT-C14-avere",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:b5b7fec8dc8a290f",
+      "sourceHash": "fnv1a64:f74f675bfcecc02d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -203,7 +203,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3248c5eb89f0a4e",
+      "sourceHash": "fnv1a64:f7e49892d5756d46",
       "notice": null,
       "blocks": [
         {

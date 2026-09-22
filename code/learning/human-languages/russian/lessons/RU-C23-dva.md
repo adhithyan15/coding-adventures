@@ -11,7 +11,7 @@ gloss: "two — the second number in the book, twenty-two chapters after the fir
 concept_tag: RU-NUMBER-TWO
 prerequisites: [RU-C22-li]
 sounds: [stress-unmarked]
-roots: [proto-indo-european-dwoh]
+roots: [pie-dwoh]
 etymology_hook: "dva continues Proto-Indo-European *dwoh1 -- English two, Latin duo -- and it is the first number this track has taught AS a number: odin arrived as half of the odin ... drugoy pattern."
 duration:
   max_seconds: 265

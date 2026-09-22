@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "One to Five, and an Answer to Skolko",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:44cebb04602cae5a",
+  "sourceHash": "fnv1a64:b3cc82d1cfa4a096",
   "lessons": [
     {
       "id": "RU-C23-dva",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:30bff7057db4be0b",
+      "sourceHash": "fnv1a64:79bd4107da39314a",
       "notice": null,
       "blocks": [
         {
@@ -148,7 +148,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1d84e736f50b7d4e",
+      "sourceHash": "fnv1a64:20b4956a85c2fc8f",
       "notice": null,
       "blocks": [
         {
@@ -278,7 +278,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:53e820464cd4a63c",
+      "sourceHash": "fnv1a64:19eea366dd0c27c3",
       "notice": null,
       "blocks": [
         {
@@ -407,7 +407,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dcd1e0f07f106f2b",
+      "sourceHash": "fnv1a64:bab8208d578f0fa4",
       "notice": null,
       "blocks": [
         {

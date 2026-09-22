@@ -11,7 +11,7 @@ romanization: "pōy varugiṟēṉ"
 concept_tag: FAREWELL
 prerequisites: [TA-C04-po, TA-C03-naan]
 sounds: [poy-participle]
-roots: [po-go-dravidian, vaa-come-dravidian]
+roots: [po-go-dravidian, dravidian-vaa-come]
 reviews_of: [TA-C04-po]
 duration:
   max_seconds: 240

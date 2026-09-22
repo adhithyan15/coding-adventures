@@ -10,7 +10,7 @@ gloss: visible — the -able ending you know, spelled the other way, and pointin
 concept_tag: ES-ASK-VISIBLE
 prerequisites: [ES-C466-director, ES-C423-sociable, ES-C332-aviso]
 sounds: [stress-penultimate, v-b]
-roots: [latin-videre]
+roots: [videre-latin]
 duration:
   max_seconds: 275
 requires:

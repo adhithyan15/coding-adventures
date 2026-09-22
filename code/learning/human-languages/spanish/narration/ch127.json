@@ -4,7 +4,7 @@
   "chapter": 127,
   "title": "The Subjunctive, Regular",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:1c5c98c4dd39d301",
+  "sourceHash": "fnv1a64:1c0716b5d2c1d268",
   "lessons": [
     {
       "id": "ES-C18-subjuntivo",
@@ -184,7 +184,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5251778adc532628",
+      "sourceHash": "fnv1a64:de8477fef06bc9aa",
       "notice": null,
       "blocks": [
         {
@@ -341,7 +341,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fd916da49caeda30",
+      "sourceHash": "fnv1a64:46e214f68cbf67be",
       "notice": null,
       "blocks": [
         {

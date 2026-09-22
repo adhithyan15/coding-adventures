@@ -10,7 +10,7 @@ gloss: two Latin verbs and three stems inside ser
 concept_tag: PT-SER-SUPPLETION
 prerequisites: [PT-C16-ser]
 sounds: [open-e]
-roots: [latin-esse, latin-sedere, latin-fui]
+roots: [esse-latin, sedere-latin, fui-latin]
 etymology_hook: "ser uses esse for sou/era, sedere 'sit' for the infinitive, and esse's ancient fui perfect; ir later borrowed that whole perfect"
 duration:
   max_seconds: 173

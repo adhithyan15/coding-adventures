@@ -4,7 +4,7 @@
   "chapter": 142,
   "title": "The Seasons",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:904f8e495a94ce6c",
+  "sourceHash": "fnv1a64:deb07f2e47807634",
   "lessons": [
     {
       "id": "ES-C25-las-estaciones",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eed08b7a01f6472f",
+      "sourceHash": "fnv1a64:c5b9f43f46aed1af",
       "notice": null,
       "blocks": [
         {

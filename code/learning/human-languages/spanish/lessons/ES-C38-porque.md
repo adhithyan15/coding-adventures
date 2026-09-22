@@ -10,7 +10,7 @@ gloss: because — two tiny words fused into one, and the reason a sequence beco
 concept_tag: CONNECTIVE-BECAUSE
 prerequisites: [ES-C38-luego]
 sounds: [k-hard, r-tap]
-roots: [pro-latin, kwo-pie]
+roots: [pro-latin, pie-kwo]
 etymology_hook: "porque = por (← Latin prō, 'for, in front of') + que (← Latin quid, which then usurped the roles of quod without taking its form), fused into one word; the qu- of quid is the Latin form of PIE *kʷo-, the same interrogative root that surfaces in Germanic as the wh- of who, what, when, where and why — so Spanish que and English what are cousins, not borrowings"
 duration:
   max_seconds: 240

@@ -4,7 +4,7 @@
   "chapter": 462,
   "title": "La reunión",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2c63cd3bb8ddfe12",
+  "sourceHash": "fnv1a64:1d95a9a418a39224",
   "lessons": [
     {
       "id": "ES-C462-reducir",
@@ -355,7 +355,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ddee0471820c1a1",
+      "sourceHash": "fnv1a64:07c5383023ae0985",
       "notice": null,
       "blocks": [
         {

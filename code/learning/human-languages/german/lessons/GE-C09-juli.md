@@ -10,7 +10,7 @@ gloss: July — the first month in the year named after a man, and he named it h
 concept_tag: GE-MONTH-JUL
 prerequisites: [GE-C09-monate-praxis]
 sounds: [j-as-y, ie-long-ee]
-roots: [latin-julius]
+roots: [julius-latin]
 etymology_hook: "Juli is Latin Julius — not a god but Julius Caesar, who reformed the calendar and had the month of his birth renamed for him, which is the first time a living man's name went into the year"
 duration:
   max_seconds: 170

@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Bringing, Getting, Waiting, Buying",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:d1d37ca80e261bab",
+  "sourceHash": "fnv1a64:7ff5695d9db780ff",
   "lessons": [
     {
       "id": "PT-C21-trazer",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac9abf4e68b2cb2d",
+      "sourceHash": "fnv1a64:76b3f609815962ad",
       "notice": null,
       "blocks": [
         {
@@ -181,7 +181,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6394a2e9a2b3612b",
+      "sourceHash": "fnv1a64:e837fbd4b2dc12c9",
       "notice": null,
       "blocks": [
         {
@@ -351,7 +351,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cb7e654355ebff21",
+      "sourceHash": "fnv1a64:ed7563b8ec1c0301",
       "notice": null,
       "blocks": [
         {
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c9bec00139077ca6",
+      "sourceHash": "fnv1a64:1deca3aa1883f77e",
       "notice": null,
       "blocks": [
         {
@@ -580,7 +580,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3419d11a49edadca",
+      "sourceHash": "fnv1a64:d72b3279da911e82",
       "notice": null,
       "blocks": [
         {
@@ -694,7 +694,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:190a68953a575526",
+      "sourceHash": "fnv1a64:cb1389a5da264408",
       "notice": null,
       "blocks": [
         {

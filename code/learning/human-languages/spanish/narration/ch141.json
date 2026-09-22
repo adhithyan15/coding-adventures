@@ -4,7 +4,7 @@
   "chapter": 141,
   "title": "Head and Hand",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:cb97a9cf944272c8",
+  "sourceHash": "fnv1a64:d1fb6325e38daeb6",
   "lessons": [
     {
       "id": "ES-C24-cabeza",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d5aa3a594e750cd1",
+      "sourceHash": "fnv1a64:d4f12cb8005e8b75",
       "notice": null,
       "blocks": [
         {

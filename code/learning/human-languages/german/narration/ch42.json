@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "Friend and Family",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:895319f5430dd284",
+  "sourceHash": "fnv1a64:0ce0d2bea6d807f8",
   "lessons": [
     {
       "id": "GE-C29-freund",
@@ -290,7 +290,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f87578f3e545af5",
+      "sourceHash": "fnv1a64:82f145912569dcf9",
       "notice": null,
       "blocks": [
         {

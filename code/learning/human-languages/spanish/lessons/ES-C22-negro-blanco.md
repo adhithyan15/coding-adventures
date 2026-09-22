@@ -10,7 +10,7 @@ gloss: black and white — the two words, and the straight-line Latin history of
 concept_tag: ES-COLOUR-BLACK-WHITE
 prerequisites: [ES-C21-sabado-domingo]
 sounds: [r-tap, nasal-n]
-roots: [latin-niger]
+roots: [niger-latin]
 etymology_hook: "negro ← Latin niger, the same root as English denigrate and as French noir and Italian nero — the plainest possible inheritance, which is exactly what makes blanco's history worth a lesson of its own"
 duration:
   max_seconds: 200

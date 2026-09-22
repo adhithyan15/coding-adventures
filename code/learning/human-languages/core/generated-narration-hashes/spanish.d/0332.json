@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 332,
-  "sourceHash": "fnv1a64:aa46c6aac82158ee",
+  "sourceHash": "fnv1a64:6a93722131695fd5",
   "lessonIds": [
     "ES-C332-permiso",
     "ES-C332-aviso",
@@ -14,6 +14,6 @@
   "text": "spanish/narration/ch332.txt",
   "json": "spanish/narration/ch332.json",
   "textHash": "fnv1a64:dee31ad78a142b52",
-  "jsonHash": "fnv1a64:764e1341d465b723",
+  "jsonHash": "fnv1a64:0a6bf5eb110b464e",
   "findings": []
 }

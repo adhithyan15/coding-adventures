@@ -246,33 +246,94 @@ export function loadRootSlugBaseline(root = defaultCurriculumRoot()): RootSlugBa
   ) {
     throw new Error(`${ROOT_SLUG_BASELINE_PATH}: expected an object with a 'splits' array`);
   }
+  // EVERY ENTRY'S SHAPE IS CHECKED, not just the outer array, because
+  // `diffRootSlugSplits` INDEXES INTO `slugs` and a wrong type there fails OPEN.
+  // `isStrictSubset` calls `before.includes(slug)`; if `slugs` is a STRING that
+  // is `String.prototype.includes` -- a SUBSTRING test -- so a baseline holding
+  // `"bonus bonus-latin latin-bonus"` accepts a live entry containing
+  // `latin-bonus`, an entry the baseline never had, as a "shrink". `--write`
+  // only gates on `added`, so that regenerates the file with no `--allow-new`
+  // and `--check` is green afterwards: a one-character edit (`[` to `"`) in a
+  // generated JSON replaces the conspicuous flag the whole threat model rests
+  // on. Other wrong types fail closed -- a number or object has `undefined`
+  // `.length`, so the `<` comparison is false -- and only the string case
+  // fails open, which is exactly why the type is asserted rather than assumed.
+  for (const entry of (raw as { splits: unknown[] }).splits) {
+    const split = entry as { key?: unknown; slugs?: unknown };
+    if (
+      entry === null ||
+      typeof entry !== "object" ||
+      typeof split.key !== "string" ||
+      !Array.isArray(split.slugs) ||
+      !split.slugs.every((slug) => typeof slug === "string")
+    ) {
+      throw new Error(
+        `${ROOT_SLUG_BASELINE_PATH}: every split needs a string 'key' and a string[] 'slugs'`,
+      );
+    }
+  }
   return raw as RootSlugBaseline;
 }
 
 /**
  * Compare today's splits against the committed baseline.
  *
- * BOTH DIRECTIONS FAIL, and the second one is the point. A new split is a
- * regression. A baseline entry that no longer exists means somebody fixed a
- * split without pruning the baseline, and a baseline that is allowed to go
- * stale stops being evidence of anything -- the same reason the latex warning
- * baseline is exact rather than a ceiling.
+ * ALL THREE DIRECTIONS FAIL `--check`, and the last two are the point. A new
+ * split is a regression. A baseline entry that no longer exists, or one that
+ * lost a spelling, means somebody fixed a split without pruning the baseline,
+ * and a baseline that is allowed to go stale stops being evidence of anything
+ * -- the same reason the latex warning baseline is exact rather than a ceiling.
+ *
+ * `shrunk` IS REPORTED SEPARATELY FROM `added`, and that separation is not
+ * cosmetic. An entry whose live slugs are a strict subset of its baseline
+ * slugs has moved in the direction the file's own note demands -- "THIS FILE
+ * MAY ONLY SHRINK" -- so it must not be what `--write` refuses. Folding it into
+ * `added` made the tool contradict itself: `--check` told the author to run
+ * `generate:root-slug-splits`, and `generate:root-slug-splits` then refused,
+ * naming their fix a new split. The only way out was `--allow-new`, which is
+ * the flag that exists to launder a genuine regression -- so the tool pushed a
+ * correct normalisation onto the escape hatch built for the incorrect one.
+ *
+ * Found by the HL-C419 normalisation itself: resolving the 110 `shape` splits
+ * left 17 `bare-vs-tagged` entries each holding one spelling fewer, and every
+ * one of the 17 was a strict subset. Zero were new.
  */
 export function diffRootSlugSplits(
   live: readonly RootSlugSplit[],
   baseline: RootSlugBaseline,
-): { added: RootSlugSplit[]; resolved: string[] } {
+): { added: RootSlugSplit[]; shrunk: RootSlugSplit[]; resolved: string[] } {
   // `JSON.stringify`, not `slugs.join(" ")`: six live slugs contain spaces
   // (`ad de magis`, `qui sapit`, `sub ponere`, ...), and a space-joined string
   // makes `["a b", "c"]` and `["a", "b c"]` compare equal.
   const fingerprint = (slugs: readonly string[]) => JSON.stringify(slugs);
+  const baselineSlugs = new Map(baseline.splits.map((split) => [split.key, split.slugs]));
   const baselineKeys = new Map(baseline.splits.map((split) => [split.key, fingerprint(split.slugs)]));
   const liveKeys = new Map(live.map((split) => [split.key, fingerprint(split.slugs)]));
-  const added = live.filter((split) => baselineKeys.get(split.key) !== fingerprint(split.slugs));
+  const moved = live.filter((split) => baselineKeys.get(split.key) !== fingerprint(split.slugs));
+
+  // A STRICT SUBSET, not merely a shorter list. `["a","b"] -> ["a","c"]` is the
+  // same length and `["a","b","c"] -> ["a","x"]` is shorter, and both introduce
+  // a spelling the baseline never accepted. Either would be laundered by a
+  // length comparison, so membership is checked rather than size.
+  const isStrictSubset = (split: RootSlugSplit): boolean => {
+    const before = baselineSlugs.get(split.key);
+    // `Array.isArray` as well as the undefined check, though `loadRootSlugBaseline`
+    // now asserts the shape: this function is PUBLIC API via `index.ts`, so a
+    // downstream caller can hand it a hand-built baseline that never passed that
+    // loader. On a string, `.includes` is a SUBSTRING test and the subset check
+    // fails open. Defence in depth, one line.
+    if (before === undefined || !Array.isArray(before)) return false;
+    return split.slugs.length < before.length && split.slugs.every((slug) => before.includes(slug));
+  };
+
   const resolved = [...baselineKeys.keys()]
     .filter((key) => !liveKeys.has(key))
     .sort(compareCodeUnits);
-  return { added, resolved };
+  return {
+    added: moved.filter((split) => !isStrictSubset(split)),
+    shrunk: moved.filter(isStrictSubset),
+    resolved,
+  };
 }
 
 export function serialiseRootSlugBaseline(splits: readonly RootSlugSplit[]): string {

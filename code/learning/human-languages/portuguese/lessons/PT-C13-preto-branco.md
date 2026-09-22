@@ -10,7 +10,7 @@ gloss: black and white — Portuguese has TWO blacks, and its white is a Germani
 concept_tag: PT-COLOUR-BLACK-WHITE
 prerequisites: [PT-C12-numeros-16-20]
 sounds: [closed-e, nasal-an]
-roots: [latin-pressus, latin-niger, germanic-blank]
+roots: [latin-pressus, niger-latin, germanic-blank]
 etymology_hook: "Portuguese keeps TWO blacks — negro ← niger and everyday preto ← Latin pressus 'pressed, dense' (dense → dark); branco is Germanic *blank 'shining', and Latin albus survives in alvorada ('dawn')"
 duration:
   max_seconds: 203

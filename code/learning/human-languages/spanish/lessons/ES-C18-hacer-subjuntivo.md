@@ -10,7 +10,7 @@ gloss: the singular present subjunctive of hacer
 concept_tag: ES-SUBJUNCTIVE-HACER-SINGULAR
 prerequisites: [ES-C18-poder-subjuntivo, ES-C12-hacer]
 sounds: [consonant-g, vowel-a]
-roots: [latin-facere]
+roots: [facere-latin]
 etymology_hook: "the special present yo form hago supplies hag-, so the learned irregularity travels into haga, hagas, haga"
 duration:
   max_seconds: 290

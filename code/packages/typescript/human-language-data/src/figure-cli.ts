@@ -2,6 +2,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, normalize, relative as pathRelative, resolve } from "node:path";
 import { assertRelativeManifestPath } from "./manifest-path.js";
 import { readLedgerFile } from "./shard.js";
+import { loadRootTagVocabulary } from "./root-slug-splits.js";
 import { pathToFileURL } from "node:url";
 import { defaultCurriculumRoot, loadLessons } from "./loader.js";
 import { renderFigure, type FigureSources, type FigureTarget } from "./figure.js";
@@ -90,9 +91,19 @@ export function safeFigureOutput(root: string, relative: string): string {
  * than a missing-file stack trace.
  */
 function figureSources(root: string, targets: FigureTarget[]): FigureSources {
-  if (!targets.some((target) => target.kind === "script-filmstrip")) return {};
-  const ledger = readLedgerFile<FilmstripLedger>(join(root, FILMSTRIP_LEDGER_PATH));
-  return { filmstrips: indexFilmstripLedger(ledger) };
+  const sources: FigureSources = {};
+  if (targets.some((target) => target.kind === "script-filmstrip")) {
+    const ledger = readLedgerFile<FilmstripLedger>(join(root, FILMSTRIP_LEDGER_PATH));
+    sources.filmstrips = indexFilmstripLedger(ledger);
+  }
+  // Read from THIS root, not the package's own, and only when a target needs
+  // it -- the same conditional shape as the filmstrip ledger above, for the
+  // same reason: a curriculum that prints no etymology routes should not have
+  // to carry the file.
+  if (targets.some((target) => target.kind === "etymology-route")) {
+    sources.rootTags = loadRootTagVocabulary(root);
+  }
+  return sources;
 }
 
 export function generatedFigureOutputs(

@@ -11,7 +11,7 @@ romanization: "vīṇḍuṁ kāṇāṁ"
 concept_tag: FAREWELL-LATER
 prerequisites: [ML-C04-naale-kaanaam]
 sounds: [retroflex-nd]
-roots: [veendum-again-dravidian, kaan-see-dravidian]
+roots: [veendum-again-dravidian, dravidian-kaan-see]
 duration:
   max_seconds: 180
 requires:

@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 7,
-  "sourceHash": "fnv1a64:f25236a3a0ff454a",
+  "sourceHash": "fnv1a64:2d09f5a06cd3e0f1",
   "lessonIds": [
     "BN-C04-abar",
     "BN-C04-dekha-hobe",
@@ -14,6 +14,6 @@
   "text": "bengali/narration/ch07.txt",
   "json": "bengali/narration/ch07.json",
   "textHash": "fnv1a64:a63705716374427a",
-  "jsonHash": "fnv1a64:9ad87cfcd18d4a62",
+  "jsonHash": "fnv1a64:9ff60479b97e45c9",
   "findings": []
 }

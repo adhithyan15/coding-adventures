@@ -10,7 +10,7 @@ gloss: an asserted event beside a wanted, not-yet-real event
 concept_tag: ES-SUBJUNCTIVE-WANT-CONTRAST
 prerequisites: [ES-C17-practice, ES-C11-querer, ES-C07-que, ES-C06-hablar]
 sounds: [vowel-a, vowel-e]
-roots: [latin-quaerere]
+roots: [quaerere-latin]
 etymology_hook: "Spanish contrasts the indicative form hablas, which can assert an event, with subjunctive hables after quiero que, where the second event is wanted rather than asserted"
 duration:
   max_seconds: 290

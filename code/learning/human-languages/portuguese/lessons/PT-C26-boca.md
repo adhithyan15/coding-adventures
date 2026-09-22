@@ -10,7 +10,7 @@ gloss: mouth — Vulgar Latin's word for "cheek," promoted to cover the whole mo
 concept_tag: PT-BODY-MOUTH
 prerequisites: [PT-C26-orelha, PT-C02-mais-ou-menos]
 sounds: []
-roots: [latin-bucca]
+roots: [bucca-latin]
 etymology_hook: "boca <- Latin bucca, which in Classical Latin meant specifically 'cheek' (puffed out, as for blowing) -- Vulgar Latin generalised it to the whole mouth and pushed the old word for mouth, os/oris, into the background everywhere except learned compounds like oral; English buccal keeps bucca's original cheek sense"
 duration:
   max_seconds: 214

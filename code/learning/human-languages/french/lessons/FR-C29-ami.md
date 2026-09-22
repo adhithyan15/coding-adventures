@@ -10,7 +10,7 @@ gloss: friend — masculine or feminine by a regular swap, and the reason le/la 
 concept_tag: FR-PERSON-AMI
 prerequisites: [FR-C28-sucre]
 sounds: [elision]
-roots: [latin-amicus]
+roots: [amicus-latin]
 etymology_hook: "ami/amie ← Latin amicus/amica, an adjective built on amāre 'to love' — the direct root of English amicable, amiable and amity"
 duration:
   max_seconds: 275

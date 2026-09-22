@@ -11,7 +11,7 @@ romanization: "pō"
 concept_tag: TA-VERB-PO
 prerequisites: [TA-C03-naan]
 sounds: [long-o]
-roots: [po-go-dravidian, vaa-come-dravidian]
+roots: [po-go-dravidian, dravidian-vaa-come]
 reviews_of: []
 duration:
   max_seconds: 180

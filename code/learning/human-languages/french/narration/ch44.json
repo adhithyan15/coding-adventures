@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "How Much, and What to Call People",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:16f28e032dfc7994",
+  "sourceHash": "fnv1a64:2bc1723f3fce6010",
   "lessons": [
     {
       "id": "FR-C40-beaucoup",
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2ad4e12dee8f64d8",
+      "sourceHash": "fnv1a64:a289c499bc1903ba",
       "notice": null,
       "blocks": [
         {
@@ -285,7 +285,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ba05f6e75256411",
+      "sourceHash": "fnv1a64:703eef12eabd6431",
       "notice": null,
       "blocks": [
         {

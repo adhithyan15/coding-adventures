@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "The Roman Calendar",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:cb2fceb0b972b8ed",
+  "sourceHash": "fnv1a64:b8c3d74cb744960d",
   "lessons": [
     {
       "id": "GE-C09-monate",
@@ -724,7 +724,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c7fd64b0ec452dc",
+      "sourceHash": "fnv1a64:3f892f84be67fd60",
       "notice": null,
       "blocks": [
         {
@@ -859,7 +859,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c547828974c555d0",
+      "sourceHash": "fnv1a64:7edba5ac67ae5cf4",
       "notice": null,
       "blocks": [
         {

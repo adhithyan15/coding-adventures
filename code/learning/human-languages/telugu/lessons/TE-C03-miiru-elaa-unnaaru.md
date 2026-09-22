@@ -11,7 +11,7 @@ romanization: "mīru elā unnāru?"
 concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [TE-C03-elaa, TE-C02-nuvvu-miiru]
 sounds: [double-nn, retroflex]
-roots: [undu-be-dravidian]
+roots: [dravidian-undu-be]
 duration:
   max_seconds: 250
 requires:

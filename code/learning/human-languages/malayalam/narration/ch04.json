@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8027435691aa58f7",
+  "sourceHash": "fnv1a64:f86943b15f503b02",
   "lessons": [
     {
       "id": "ML-S110-letter-va",
@@ -759,7 +759,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:13f15c9e669f9ddd",
+      "sourceHash": "fnv1a64:88470047e379634b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -882,7 +882,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b75acbf226f4e655",
+      "sourceHash": "fnv1a64:0733571c17ee407f",
       "notice": {
         "modality": "sight",
         "needs": [

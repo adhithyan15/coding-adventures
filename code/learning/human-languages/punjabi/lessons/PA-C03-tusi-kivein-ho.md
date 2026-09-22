@@ -11,7 +11,7 @@ gloss: "how are you? — respectful"
 concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [PA-C03-kivein, PA-C02-tu-tusi, PA-S02-mamma-rara-lava, PA-S02-sassa-tatta-sihari, PA-S03-nanna-bihari-dulava]
 sounds: []
-roots: [asti-sanskrit]
+roots: [sanskrit-asti]
 duration:
   max_seconds: 220
 requires:

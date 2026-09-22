@@ -10,7 +10,7 @@ gloss: family — the whole group the Eltern and Geschwister already named the m
 concept_tag: GE-FAMILY-WHOLE
 prerequisites: [GE-C29-freundin, GE-C10-eltern, GE-C10-geschwister]
 sounds: [familie-three-syllables]
-roots: [latin-familia, latin-famulus]
+roots: [familia-latin, famulus-latin]
 etymology_hook: "Familie is a Latin loan, familia 'household', related to famulus 'servant' — the same Latin root English family also borrowed, by way of Old French, centuries earlier than German took the word directly from Latin"
 duration:
   max_seconds: 250

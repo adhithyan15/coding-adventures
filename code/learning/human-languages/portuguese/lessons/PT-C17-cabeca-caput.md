@@ -10,7 +10,7 @@ gloss: one inherited caput word and one learned re-borrowing
 concept_tag: PT-CAPUT-DOUBLETS
 prerequisites: [PT-C17-cabeca]
 sounds: [cedilla-s]
-roots: [latin-caput, latin-testa]
+roots: [caput-latin, latin-testa]
 etymology_hook: "cabeça inherited caput through everyday speech, while capital and capítulo later re-borrowed the same root from written Latin"
 duration:
   max_seconds: 180

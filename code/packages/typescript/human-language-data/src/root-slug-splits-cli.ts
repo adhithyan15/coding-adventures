@@ -66,6 +66,12 @@ export function runRootSlugSplitsCli(args: readonly string[], root = defaultCurr
     // launders a new split into the accepted set. Growing it takes an explicit
     // flag, which a reviewer can see in the diff of a package script or a
     // commit body.
+    //
+    // `shrunk` is deliberately NOT part of this test. An entry that lost a
+    // spelling is the file moving the way its own note demands, and refusing it
+    // here made `--write` reject the very normalisation `--check` had just told
+    // the author to record -- leaving `--allow-new`, the laundering flag, as
+    // the only way through. See `diffRootSlugSplits`.
     const { added } = diffRootSlugSplits(live, loadRootSlugBaseline(root));
     if (added.length > 0 && !allowNew) {
       throw new Error(
@@ -81,24 +87,24 @@ export function runRootSlugSplitsCli(args: readonly string[], root = defaultCurr
   }
 
   const baseline = loadRootSlugBaseline(root);
-  const { added, resolved } = diffRootSlugSplits(live, baseline);
-  if (added.length === 0 && resolved.length === 0) {
+  const { added, shrunk, resolved } = diffRootSlugSplits(live, baseline);
+  if (added.length === 0 && shrunk.length === 0 && resolved.length === 0) {
     process.stdout.write(`root slug splits: ${live.length} known entries, none new\n`);
     return 0;
   }
   const baselineSize = new Map(baseline.splits.map((split) => [split.key, split.slugs.length]));
   const lines: string[] = [];
   for (const split of added) {
-    const before = baselineSize.get(split.key);
-    // A split that LOST a spelling also lands here, because the baseline no
-    // longer matches -- and telling that author "stop adding spellings" points
-    // them at the opposite of what they did. Distinguish the two.
-    const shrank = before !== undefined && split.slugs.length < before;
+    lines.push(`NEW split on '${printable(split.key)}': ${printable(split.slugs.join(" / "))}`);
+  }
+  // A split that LOST a spelling is a stale baseline, not a regression, and
+  // telling that author "stop adding spellings" points them at the opposite of
+  // what they did. `--write` accepts these without `--allow-new`, so the
+  // instruction below is one a contributor can actually follow.
+  for (const split of shrunk) {
     lines.push(
-      shrank
-        ? `'${printable(split.key)}' now has ${split.slugs.length} spelling(s), was ${before}; ` +
-          `run generate:root-slug-splits to record it`
-        : `NEW split on '${printable(split.key)}': ${printable(split.slugs.join(" / "))}`,
+      `'${printable(split.key)}' now has ${split.slugs.length} spelling(s), was ` +
+        `${baselineSize.get(split.key)}; run generate:root-slug-splits to record it`,
     );
   }
   for (const key of resolved) {
