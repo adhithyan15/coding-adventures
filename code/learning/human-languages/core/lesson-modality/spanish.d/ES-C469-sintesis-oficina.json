@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C469-sintesis-oficina",
+    "language": "spanish",
+    "chapter": 469,
+    "sequence": 12920,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d9c7ceffce2200e9"
+  },
+  "findings": []
+}

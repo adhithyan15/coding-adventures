@@ -59,15 +59,15 @@
     ],
     "numericCredits": "0-100"
   },
-  "lessonCount": 1392,
-  "taughtForms": 2310,
-  "objectiveFailed": 9,
+  "lessonCount": 1398,
+  "taughtForms": 2321,
+  "objectiveFailed": 8,
   "mocks": [
     {
       "mock": 1,
       "reading": 24,
-      "listening": 20,
-      "objectiveFailed": 6,
+      "listening": 21,
+      "objectiveFailed": 5,
       "failed": [
         {
           "paper": 1,
@@ -75,16 +75,6 @@
           "missing": [
             "invitar",
             "explicar"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 28,
-          "missing": [
-            "impresora",
-            "imprimir",
-            "conectar",
-            "llamada"
           ]
         },
         {
@@ -162,18 +152,14 @@
   "missingObjectiveLexemes": [
     "avanzado",
     "avisar",
-    "conectar",
     "creer",
     "descontar",
     "encontrar",
     "encuesta",
     "estado",
     "explicar",
-    "impresora",
-    "imprimir",
     "invitar",
     "lectura",
-    "llamada",
     "mango",
     "paraguas",
     "perderse",
@@ -198,10 +184,6 @@
       "count": 1
     },
     {
-      "lexeme": "conectar",
-      "count": 1
-    },
-    {
       "lexeme": "creer",
       "count": 1
     },
@@ -222,23 +204,11 @@
       "count": 1
     },
     {
-      "lexeme": "impresora",
-      "count": 1
-    },
-    {
-      "lexeme": "imprimir",
-      "count": 1
-    },
-    {
       "lexeme": "invitar",
       "count": 1
     },
     {
       "lexeme": "lectura",
-      "count": 1
-    },
-    {
-      "lexeme": "llamada",
       "count": 1
     },
     {

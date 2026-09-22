@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 469,
+  "sourceHash": "fnv1a64:7b6cb74441b397f5",
+  "lessonIds": [
+    "ES-C469-imprimir",
+    "ES-C469-impresora",
+    "ES-C469-conectar",
+    "ES-C469-llamada",
+    "ES-R469-repaso-oficina",
+    "ES-C469-sintesis-oficina"
+  ],
+  "tex": "spanish/book/chapters/ch469-oficina.tex"
+}

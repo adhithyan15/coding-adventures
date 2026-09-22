@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-469-OFICINA",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "before": [],
+  "inline": [
+    "ES-EXT-469-OFICINA"
+  ],
+  "after": []
+}

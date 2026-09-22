@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C469-impresora",
+    "language": "spanish",
+    "chapter": 469,
+    "sequence": 12880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f779a5047b7ca8f0"
+  },
+  "findings": []
+}

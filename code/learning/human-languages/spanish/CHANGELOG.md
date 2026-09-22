@@ -1,5 +1,125 @@
 # Changelog
 
+## Chapter 469 — three words the corpus already owned, found before print
+
+```
+A2 objectiveFailed          9 -> 8
+A2 missingObjectiveLexemes  23 -> 19
+```
+
+Four words, one item, 4.00. Thirteenth consecutive exact prediction.
+
+| chapter | scene | words |
+|---|---|---|
+| 469 OFICINA | a printer out of service, and a colleague who cannot get online | imprimir, impresora, conectar, llamada |
+
+## The sibling check now has to run on the lessons you cite, not just your own
+
+That is this chapter's lesson, and it caught three separate duplications that
+a grep of the headwords alone would have missed. The headword grep found
+`ES-C432-lavadora`; running `ls ES-C432-*.md` on top of it found
+`ES-C432-contador`, which no headword in this chapter would ever have
+surfaced.
+
+**`ES-C432-lavadora` already owns `-dora` for machines** — with the exact
+`secadora` / `calculadora` table the `impresora` draft had rebuilt from
+scratch. It is now cited, and `impresora` teaches the thing `lavadora` cannot:
+*imprimir* yields both a person and a machine, so **el impresor** and **la
+impresora** are told apart by the article alone.
+
+**`ES-C432-contador` already owns "the ending does not decide the article"** —
+*"this one is masculine where the washing machine was feminine, and nothing
+about the ending decides that."* The draft was staging that as new. It is now
+treated as settled, and the chapter's claim narrowed to what is genuinely
+left: with *lavadora* and *contador* the article is a fact to memorise; here
+it is a **choice that carries the meaning**.
+
+**`ES-C431-pedido`'s table already prints `| llamar | la llamada |`**, and
+`ES-C439-cortar` already uses *se ha cortado la llamada*. So `la llamada` is
+handed over rather than introduced — the same move `imprimir` makes with *el
+impreso*, which `ES-C406-impreso` had glossed fourteen chapters earlier.
+
+## Untaught words presented as known
+
+Two drafts did this, and both were caught by word-boundary greps that returned
+only the draft file itself.
+
+`conectar` had a Grammar Lens contrasting **conectar / encender / enchufar**.
+None of *encender*, *enchufe* or *enchufar* is taught anywhere in the corpus.
+The lens was rebuilt on **conectar vs conectarse**, which is real, useful, and
+made of material the learner holds.
+
+`imprimir` opened with *pulse el botón verde*. The corpus does not teach
+*pulsar* — `ES-C388-empujar` mentions only Latin *pulsare* and English
+*pulse* — and it is an *usted* imperative besides. Also dropped: *el cable*,
+*la red* and *quedarse sin tinta*, none of them taught.
+
+## An invented atom id, and a lesson contradicting its own prerequisite
+
+`conectar` required `ES-LEX-C393-TECH-01`, which exists nowhere.
+`ES-C393-ordenador` introduces `ES-LEX-ORDENADOR`. The prerequisite moved to
+`ES-C393-internet` so that *internet* is genuinely reviewed by *conectarse a
+internet*; *ordenador* stays in the closure as *internet*'s own prerequisite.
+
+The `impresora` draft explained *el ordenador*'s masculine gender as a dropped
+Spanish noun. `ES-C393-ordenador` teaches that the computing sense came from
+**French *ordinateur***. The row was removed rather than patched.
+
+## Conectar is not an inherited word, and that is the better story
+
+The Academy's dictionary derives **conectar** from English *to connect*,
+itself built on Latin *conectere* (*con-* plus *nectere*, to tie). The draft
+had it sitting in Spanish since Rome, waiting for wires.
+
+Chapter 393 had already given the learner two other routes. So the repaso
+makes the three-way the chapter's point:
+
+| word | how it got here |
+|---|---|
+| el ordenador | an old Spanish word that borrowed a **meaning** from French |
+| internet | an English word borrowed **whole**, only the beat changed |
+| conectar | an English word borrowed as a **shape**, its pieces Latin |
+
+## Etymology ownership respected
+
+`ES-C03-llamar` (sequence 140) owns *clamare* **and** the *cl-* → *ll-* sound
+law, with *exclaim*, *proclaim*, *acclaim* and *clamor*. So `llamada` cites it
+and adds only what it did not say: a *llamada* is still literally a
+crying-out, which is why **una llamada de atención** is a warning and not a
+phone call at all. `roots: [clamare]`, the bare slug `ES-C03-llamar` holds, so
+the two are cousins.
+
+`imprimir` and `impresora` take `impressus-latin`, the slug `ES-C406-impreso`
+holds, keeping the verb and its participle joined.
+
+## Half a rule, stated as half a rule
+
+`ES-C49-participio` owns `-ado` / `-ido`, so `llamada` cites it rather than
+claiming it. What is new is the honest negative: **the vowel is predictable
+and the article is not.** *El pedido* is masculine, *la llamada* and *la
+entrada* feminine, and nothing in *pedir*, *llamar* or *entrar* says which.
+
+`ES-C49-participios-irregulares` does **not** list *impreso*, so `imprimir`
+adding it to *hecho* / *dicho* / *visto* / *puesto*, and to the later
+*cubierto* and *roto*, is new — and is cited to that lesson rather than
+presented as this chapter's discovery.
+
+## A pre-existing defect, logged rather than fixed here
+
+`ES-C432-lavadora`'s wrap-up asks where the `-dor` ending was first met and
+answers *"on the supplier"* — `ES-C431-proveedor`, sequence 10470.
+`ES-C297-tenedor`, sequence 3990, teaches `-dor` as *"the ending that names
+whoever or whatever does the thing"*, with *comedor* and *mirador*.
+*Proveedor* is the second teaching, not the first. Out of scope for this
+chapter; recorded so it is not lost.
+
+## Verification
+
+Preflight 6/6. Full suite green: 173 files, 2,225 tests. Digest control by
+reconstruction — a clean worktree at `origin/main` (4e5939c6db) reproduced
+`e1344996…` and 7447 byte for byte, and `ES-PATH-469-OFICINA` holds exactly
+the six lessons the count moved by (7447 → 7453).
+
 ## Chapter 468 — the wardrobe reopened, and a slang hazard caught before print
 
 ```
