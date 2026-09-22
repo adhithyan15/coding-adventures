@@ -227,5 +227,14 @@ describe("the corpus-wide super-gentle ramp", () => {
     expect(
       report.tracks.find((track) => track.language === "japanese")?.findings.map((f) => f.kind),
     ).toEqual(["reinforcement"]);
-  }, 30_000);
+    // This test loads and scans the WHOLE corpus, so its cost grows with every
+    // tranche -- it is not a fixed-size unit test wearing a generous budget.
+    // The 30s it carried was set when the corpus was smaller; at 7,435 graph
+    // lessons it runs ~18s locally and CI runners are roughly 1.7x slower,
+    // which put it over the line and failed a PR on a timeout rather than on
+    // anything it asserts. 180s matches `exam-inventory-census.test.ts`, the
+    // repo's other corpus-wide scan, and leaves room for the corpus to keep
+    // growing. Nothing here is skipped or weakened: the test still runs in
+    // full and still asserts every track.
+  }, 180_000);
 });
