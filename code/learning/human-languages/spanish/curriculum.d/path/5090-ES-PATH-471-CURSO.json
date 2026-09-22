@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-471-CURSO",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "before": [],
+  "inline": [
+    "ES-EXT-471-CURSO"
+  ],
+  "after": []
+}

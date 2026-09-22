@@ -1,5 +1,108 @@
 # Changelog
 
+## Chapter 471 — the first chapter to teach more words than its row names
+
+```
+A2 objectiveFailed          7 -> 6
+A2 missingObjectiveLexemes  15 -> 11
+```
+
+Six words, one item. Fifteenth consecutive exact prediction on the item, and
+the **first tranche where the lexeme arithmetic deliberately does not match**.
+
+| chapter | scene | words |
+|---|---|---|
+| 471 CURSO | a cooking class that was too advanced | demasiado, nivel, avanzado, principiante, sencillo, perderse |
+
+## Why six and not four
+
+The audit's row for mock 1 item 31 is `curso, grupo, avanzado, perderse,
+principiante, sencillo` — every one of them a word of the **audio passage**.
+The question's correct option reads:
+
+> b) el **nivel** era **demasiado** alto para ella.
+
+Both `nivel` and `demasiado` have **zero substring hits** anywhere in
+`spanish/lessons/` or `spanish/units/`. So the four ranked words clear the row
+while leaving the item unanswerable: a candidate who understood every word of
+the dialogue still cannot read option (b).
+
+Teaching six makes the item genuinely answerable. It moves
+`missingObjectiveLexemes` by the same four either way — the two extra words
+were never on that list, because nothing puts option text on it — so this is
+not number-chasing. It is the opposite: the number would have looked identical
+had the chapter done the lesser thing.
+
+Filed as `BACKLOG.d` **HL-C421**. This chapter acts on it for one item; fixing
+the rows corpus-wide moves the headline number and wants its own branch.
+
+**The finding grew while the chapter was being written.** HL-C421 was filed on
+`nivel` alone. `demasiado` was caught later, by the token sweep, **in my own
+draft prose** — `ES-C471-avanzado` had written *un nivel avanzado* and the
+synthesis had used *demasiado* as though both were already known. Two
+instances in one item, not one.
+
+## Five rules already owned, all cited rather than re-taught
+
+- **`ES-C437-equivocarse`** *and* `ES-R437-repaso-planes` both name `perderse`
+  outright, in the reflexive-of-misfortune family with *caerse* and
+  *olvidarse*. So only the **sense** is new: in a class you lose the *thread*,
+  not the way.
+- **`ES-C09-estudiante`** owns `-ante` — *"Verb plus -ante = the person doing
+  it"* — so `principiante` is built in the lesson from *principio* via
+  *principiar*.
+- **`ES-C282-invitado`** owns the participle-used-as-adjective move, which
+  `avanzado` cites.
+- **`ES-C60-bastante`** introduces `ES-GRAMMAR-DEGREE-SCALE`, so `demasiado`
+  arrives as the missing member *above* a scale the corpus already had: *poco*
+  below the point, *bastante* at it, **demasiado** past it.
+- **`ES-C359-litro`** already owns `libra-latin`, with *lb*, *Libra*,
+  *deliberate* and *equilibrium*. So `nivel` takes the same slug and is a
+  **cousin of *el litro***: *libella* is a little *libra*, and the *l* → *n*
+  swap through French is named rather than glossed over.
+
+## Cousin links chosen so the join key earns its keep
+
+| word | roots | cousin of |
+|---|---|---|
+| demasiado | `magis` | *más* |
+| nivel | `libra-latin` | *litro* |
+| avanzado | `ante-latin` | *antes* |
+
+`principiante` takes `principium-latin` from *el principio*, `perderse` keeps
+`perdere-latin` from *perder*. Only `singulus-latin` is newly minted.
+
+## Sencillo is not fácil
+
+*Sencillo* measures how few **parts** a thing has; *fácil* how little
+**effort** it costs. Climbing a staircase is *sencillo* and not remotely
+*fácil*. This matters for the item: *hacemos cosas sencillas, pero las hacemos
+bien* is not modesty about effort — it says the things have few parts and then
+insists the execution is good.
+
+The `-illo` is **not** a diminutive here. It was fused in Latin *singellus*
+and there is no *senci* underneath, and the lesson says so rather than letting
+the ending mislead.
+
+## Two preflight failures fixed properly rather than by deletion
+
+`sencillo` and `perderse` each named an atom in `practises` that no body block
+assessed. `sencillo`'s prerequisite moved from `ES-C417-curso` to
+`ES-C398-facil`, whose atom the Grammar Lens genuinely assesses and whose
+lesson it links to. `perderse` keeps `ES-C471-sencillo` as an **ordering**
+prerequisite without requiring its atom — prerequisites establish sequence,
+`requires` establishes atom dependency.
+
+The synthesis then tripped the duration ceiling at 302s, and the **prose was
+tightened rather than the budget raised**.
+
+## Verification
+
+Preflight 8/8. Both suites. Digest control by reconstruction — a clean
+worktree at `origin/main` (2eac85f55a) reproduced `ac4c49e1…` and 7459 byte
+for byte, and `ES-PATH-471-CURSO` holds exactly the eight lessons the count
+moved by (7459 → 7467).
+
 ## Chapter 470 — five rules the corpus already owned, and one that improved the chapter
 
 ```

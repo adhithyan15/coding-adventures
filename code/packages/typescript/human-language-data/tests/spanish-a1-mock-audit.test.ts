@@ -102,24 +102,27 @@ describe("Spanish A2 book-bounded mock audit", () => {
   it("pins the CURRENT DEBT: the exam names the vocabulary that is still missing", () => {
     const audit = buildSpanishA1MockAudit(defaultCurriculumRoot(), "A2");
     expect(audit.level).toBe("A2");
-    expect(audit.objectiveFailed).toBe(7);
+    expect(audit.objectiveFailed).toBe(6);
     expect(audit.mocks.map(({ reading, listening, objectiveFailed }) => ({
       reading,
       listening,
       objectiveFailed,
     }))).toEqual([
-      { reading: 24, listening: 22, objectiveFailed: 4 },
+      { reading: 24, listening: 23, objectiveFailed: 3 },
       { reading: 22, listening: 25, objectiveFailed: 3 },
     ]);
     // THIS NUMBER MUST ONLY EVER FALL. A rise means a mock gained an item the
     // corpus cannot support.
     //
     // 191 -> 161 -> 146 -> 126 -> 107 -> 85 -> 68 -> 54 -> 39 -> 35 -> 31 ->
-    // 27 -> 23 -> 19 -> 15 are the fourteen vocabulary tranches: 431-436,
+    // 27 -> 23 -> 19 -> 15 -> 11 are the fifteen vocabulary tranches: 431-436,
     // 437-439, 440-443, 444-447, 448-451, 452-455, 456-459, 460-464, 465, 466,
-    // 467, 468, 469 and 470.
-    // EVERY drop is exact -- 30 headwords removed 30 lexemes, then 15, 20, 19,
-    // 22, 17, 14, 15, 4, 4, 4, 4, 4, 4. That
+    // 467, 468, 469, 470 and 471.
+    // The drop was exact for the first fourteen -- 30 headwords removed 30
+    // lexemes, then 15, 20, 19, 22, 17, 14, 15, 4, 4, 4, 4, 4, 4. THE
+    // FIFTEENTH IS THE FIRST THAT IS NOT: chapter 471 teaches SIX headwords
+    // and this list falls by FOUR, because two of the six were never on it.
+    // That is deliberate and is explained below. That
     // arithmetic is the evidence a word was genuinely absent; one already taught
     // under another name would have made the drop smaller. Each was PREDICTED
     // from the audit before the chapters were wired and reproduced exactly by
@@ -133,7 +136,7 @@ describe("Spanish A2 book-bounded mock audit", () => {
     // honest reading, since the adjective is the form on the lift door.
     //
     // THE ITEM COUNT IS WHERE THE SELECTION RULE SHOWS, and it is the whole
-    // point. objectiveFailed went 93 -> 88 -> 79 -> 59 -> 40 -> 31 -> 23 -> 18 -> 13 -> 12 -> 11 -> 10 -> 9 -> 8 -> 7:
+    // point. objectiveFailed went 93 -> 88 -> 79 -> 59 -> 40 -> 31 -> 23 -> 18 -> 13 -> 12 -> 11 -> 10 -> 9 -> 8 -> 7 -> 6:
     //
     //     tranche 1  (431-436)  30 words   5 items
     //     tranche 2  (437-439)  15 words   9 items
@@ -149,6 +152,7 @@ describe("Spanish A2 book-bounded mock audit", () => {
     //     tranche 4h (468)         4 words   1 item
     //     tranche 4i (469)         4 words   1 item
     //     tranche 4j (470)         4 words   1 item
+    //     tranche 4k (471)         6 words   1 item
     //
     // An item passes only when EVERY lexeme in its `requires` row is taught, so
     // a word helps in proportion to how close its rows already are. Tranches
@@ -265,13 +269,27 @@ describe("Spanish A2 book-bounded mock audit", () => {
     // row, so 4.00 is what the ranking now yields per chapter until the
     // B1-mapped rows are reconsidered.
     //
+    // 471 IS THE FIRST TRANCHE TO TEACH MORE WORDS THAN ITS ROW NAMES, AND
+    // THE ARITHMETIC ABOVE BREAKS HERE ON PURPOSE. Its row (mock 1 / paper 2 /
+    // item 31) is `curso, grupo, avanzado, perderse, principiante, sencillo`,
+    // every one of them a word of the AUDIO PASSAGE. The question's correct
+    // option reads `el nivel era demasiado alto para ella`, and BOTH `nivel`
+    // and `demasiado` have zero substring hits anywhere in the corpus. So the
+    // four ranked words clear the row while leaving the item unanswerable: a
+    // candidate who understood every word of the dialogue still cannot read
+    // option (b). The chapter teaches six, which makes the item genuinely
+    // answerable and moves this count by the same four either way -- the two
+    // extra words were never on the list, because nothing puts option text on
+    // it. See BACKLOG.d HL-C421. Expect this to recur: the exactness asserted
+    // above was always a property of the ROWS, not of the papers.
+    //
     // 470 is the fifth such tranche and took mock 1 / paper 2 / item 47
     // (listening 21 -> 22). TWO clean four-word rows remain -- mock 1 / p2 /
     // item 31 and mock 2 / p1 / item 21 -- and the other five all turn on
     // `explicar`, `creer` or `problema`, which are ALREADY TAUGHT and excluded
     // only because their spine node derives above A2. See BACKLOG.d HL-C418
     // and HL-C420; do not teach them a second time.
-    expect(audit.missingObjectiveLexemes).toHaveLength(15);
+    expect(audit.missingObjectiveLexemes).toHaveLength(11);
   });
 
   it("measures a LARGER taught set than A1, which is what makes it a different gate", () => {

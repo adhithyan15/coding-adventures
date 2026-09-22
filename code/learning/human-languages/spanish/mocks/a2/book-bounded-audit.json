@@ -59,15 +59,15 @@
     ],
     "numericCredits": "0-100"
   },
-  "lessonCount": 1404,
-  "taughtForms": 2331,
-  "objectiveFailed": 7,
+  "lessonCount": 1412,
+  "taughtForms": 2343,
+  "objectiveFailed": 6,
   "mocks": [
     {
       "mock": 1,
       "reading": 24,
-      "listening": 22,
-      "objectiveFailed": 4,
+      "listening": 23,
+      "objectiveFailed": 3,
       "failed": [
         {
           "paper": 1,
@@ -75,16 +75,6 @@
           "missing": [
             "invitar",
             "explicar"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 31,
-          "missing": [
-            "avanzado",
-            "perderse",
-            "principiante",
-            "sencillo"
           ]
         },
         {
@@ -140,7 +130,6 @@
     }
   ],
   "missingObjectiveLexemes": [
-    "avanzado",
     "creer",
     "descontar",
     "encuesta",
@@ -148,22 +137,15 @@
     "explicar",
     "invitar",
     "lectura",
-    "perderse",
-    "principiante",
     "problema",
     "recomendar",
     "responder",
-    "sencillo",
     "usuario"
   ],
   "missingFrequency": [
     {
       "lexeme": "explicar",
       "count": 3
-    },
-    {
-      "lexeme": "avanzado",
-      "count": 1
     },
     {
       "lexeme": "creer",
@@ -190,14 +172,6 @@
       "count": 1
     },
     {
-      "lexeme": "perderse",
-      "count": 1
-    },
-    {
-      "lexeme": "principiante",
-      "count": 1
-    },
-    {
       "lexeme": "problema",
       "count": 1
     },
@@ -207,10 +181,6 @@
     },
     {
       "lexeme": "responder",
-      "count": 1
-    },
-    {
-      "lexeme": "sencillo",
       "count": 1
     },
     {

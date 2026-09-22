@@ -1,0 +1,11 @@
+{
+  "id": "ES-C471-principiante",
+  "pathSegment": "ES-PATH-471-CURSO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-471-CURSO",
+      "order": 3
+    }
+  ]
+}

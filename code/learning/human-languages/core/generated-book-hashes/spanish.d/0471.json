@@ -1,0 +1,16 @@
+{
+  "language": "spanish",
+  "chapter": 471,
+  "sourceHash": "fnv1a64:6a809c9f78a6d4ad",
+  "lessonIds": [
+    "ES-C471-demasiado",
+    "ES-C471-nivel",
+    "ES-C471-avanzado",
+    "ES-C471-principiante",
+    "ES-C471-sencillo",
+    "ES-C471-perderse",
+    "ES-R471-repaso-curso",
+    "ES-C471-sintesis-curso"
+  ],
+  "tex": "spanish/book/chapters/ch471-curso.tex"
+}
