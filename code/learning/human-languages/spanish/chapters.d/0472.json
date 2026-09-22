@@ -4,7 +4,7 @@
   "label": "ch:es-encuesta",
   "canDo": "I can read a report about a service that changed: follow that the idea arose from a survey of its users, that the place is no longer only for reading, and that other places have copied it rather than the other way round.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C472-sintesis-encuesta",

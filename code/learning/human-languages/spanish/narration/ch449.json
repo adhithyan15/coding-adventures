@@ -4,7 +4,7 @@
   "chapter": 449,
   "title": "El taller",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:722bad6a20b7b8e1",
+  "sourceHash": "fnv1a64:c4f7787ce489f4ab",
   "lessons": [
     {
       "id": "ES-C449-arreglar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f51e42796865f7dc",
+      "sourceHash": "fnv1a64:8a20e49b914a02f4",
       "notice": null,
       "blocks": [
         {
@@ -181,7 +181,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d2feb39c955ae184",
+      "sourceHash": "fnv1a64:6619ee864c61dfd0",
       "notice": null,
       "blocks": [
         {
@@ -340,7 +340,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c94ea1f53a661e2a",
+      "sourceHash": "fnv1a64:03dfc8f44346b65e",
       "notice": null,
       "blocks": [
         {
@@ -503,7 +503,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:03f3c0dc499923f3",
+      "sourceHash": "fnv1a64:279efcf7ef3b6497",
       "notice": null,
       "blocks": [
         {
@@ -665,7 +665,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5cab483c93f3a8bf",
+      "sourceHash": "fnv1a64:b47856f45fdecb6b",
       "notice": null,
       "blocks": [
         {
@@ -823,7 +823,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:1da4730e40ae733e",
+      "sourceHash": "fnv1a64:ef26b4e8d9b44806",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -984,7 +984,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:565d9117ffe3f0c6",
+      "sourceHash": "fnv1a64:2c267759fdceb85e",
       "notice": {
         "modality": "sight",
         "needs": [

@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C465-sintesis-apunte
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12680
 chapter: 465
 type: practice

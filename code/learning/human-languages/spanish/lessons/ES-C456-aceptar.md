@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C456-aceptar
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12180
 chapter: 456
 type: word

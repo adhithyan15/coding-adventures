@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C450-hierba
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 11770
 chapter: 450
 type: word

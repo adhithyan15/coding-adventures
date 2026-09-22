@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C451-revisar
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 11880
 chapter: 451
 type: word

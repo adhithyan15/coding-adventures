@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C449-sintesis-taller
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 11750
 chapter: 449
 type: practice

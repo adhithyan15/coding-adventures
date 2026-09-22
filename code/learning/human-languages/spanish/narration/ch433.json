@@ -4,7 +4,7 @@
   "chapter": 433,
   "title": "El Edificio Y Sus Normas",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:8a6bf336524f0526",
+  "sourceHash": "fnv1a64:042431835812bbda",
   "lessons": [
     {
       "id": "ES-C433-portal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:42d34b7498b89cf1",
+      "sourceHash": "fnv1a64:dc9ae4d2d231e11d",
       "notice": null,
       "blocks": [
         {
@@ -155,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1785c5a3499edad9",
+      "sourceHash": "fnv1a64:4e90fed028672391",
       "notice": null,
       "blocks": [
         {
@@ -295,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:035a15f736edc57c",
+      "sourceHash": "fnv1a64:ce22185c9cad4a6c",
       "notice": null,
       "blocks": [
         {
@@ -430,7 +430,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0588942dc6c7e64",
+      "sourceHash": "fnv1a64:dfb05786514ca2f8",
       "notice": null,
       "blocks": [
         {
@@ -570,7 +570,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:482c1bfae21b833b",
+      "sourceHash": "fnv1a64:32b8f6fcfe2409af",
       "notice": null,
       "blocks": [
         {
@@ -705,7 +705,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea50c61d4cd10b61",
+      "sourceHash": "fnv1a64:6f61741a865d8f95",
       "notice": null,
       "blocks": [
         {
@@ -850,7 +850,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7a44b23a2dfa6861",
+      "sourceHash": "fnv1a64:38d9a256ee5cd341",
       "notice": null,
       "blocks": [
         {

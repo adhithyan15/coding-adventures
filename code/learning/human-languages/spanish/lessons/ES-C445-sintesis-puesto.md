@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C445-sintesis-puesto
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 11480
 chapter: 445
 type: practice

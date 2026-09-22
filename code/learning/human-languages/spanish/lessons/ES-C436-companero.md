@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C436-companero
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 10790
 chapter: 436
 type: word

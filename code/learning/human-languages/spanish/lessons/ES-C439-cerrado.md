@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C439-cerrado
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 11020
 chapter: 439
 type: word

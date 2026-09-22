@@ -4,7 +4,7 @@
   "chapter": 459,
   "title": "El inventario",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:188834decc911829",
+  "sourceHash": "fnv1a64:568d5beb2cb3abeb",
   "lessons": [
     {
       "id": "ES-C459-seccion",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1140926b9b3825c",
+      "sourceHash": "fnv1a64:e574e1a4159e9448",
       "notice": null,
       "blocks": [
         {
@@ -190,7 +190,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6468d737e45baf69",
+      "sourceHash": "fnv1a64:17017451b7825939",
       "notice": null,
       "blocks": [
         {
@@ -357,7 +357,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e46d18531390e2c4",
+      "sourceHash": "fnv1a64:5b9fdfa77e47ff9c",
       "notice": null,
       "blocks": [
         {
@@ -532,7 +532,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:db5b102b6f7e6d22",
+      "sourceHash": "fnv1a64:6a7a111e903a7206",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -684,7 +684,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bb855e07d8bbc710",
+      "sourceHash": "fnv1a64:e6d041f593bcb388",
       "notice": null,
       "blocks": [
         {

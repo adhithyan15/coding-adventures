@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 431,
-  "sourceHash": "fnv1a64:64a8bb4d869ae75c",
+  "sourceHash": "fnv1a64:aef67048d3858d5e",
   "lessonIds": [
     "ES-C431-pedido",
     "ES-C431-devolver",
@@ -16,6 +16,6 @@
   "text": "spanish/narration/ch431.txt",
   "json": "spanish/narration/ch431.json",
   "textHash": "fnv1a64:693883a0c1e655db",
-  "jsonHash": "fnv1a64:fdab6215d678dc84",
+  "jsonHash": "fnv1a64:4cb949200659c528",
   "findings": []
 }

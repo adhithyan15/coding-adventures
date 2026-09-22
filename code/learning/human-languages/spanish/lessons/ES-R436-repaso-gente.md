@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-R436-repaso-gente
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 10840
 chapter: 436
 type: review

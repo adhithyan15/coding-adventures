@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C466-sintesis-informe
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12740
 chapter: 466
 type: practice

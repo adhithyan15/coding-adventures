@@ -4,7 +4,7 @@
   "chapter": 439,
   "title": "Andenes Y Cierres",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:2fad30a984be5ff5",
+  "sourceHash": "fnv1a64:2332cdbab3ca16ca",
   "lessons": [
     {
       "id": "ES-C439-anden",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b0eed19d47cc2cf0",
+      "sourceHash": "fnv1a64:31056b30df4a2f64",
       "notice": null,
       "blocks": [
         {
@@ -149,7 +149,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37bd9f5cc42bce8d",
+      "sourceHash": "fnv1a64:9a569a1811dacfc5",
       "notice": null,
       "blocks": [
         {
@@ -307,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4ae44b943db1b47d",
+      "sourceHash": "fnv1a64:28918ed9358a067d",
       "notice": null,
       "blocks": [
         {
@@ -461,7 +461,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41f4b17cf5cd8cdf",
+      "sourceHash": "fnv1a64:dad6abcebaaea6eb",
       "notice": null,
       "blocks": [
         {
@@ -619,7 +619,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cf05df4b7f91a0c4",
+      "sourceHash": "fnv1a64:9e9d05271fa993f8",
       "notice": null,
       "blocks": [
         {
@@ -781,7 +781,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8a2f65a762f7fa1",
+      "sourceHash": "fnv1a64:4f0679e08a63d215",
       "notice": null,
       "blocks": [
         {
@@ -917,7 +917,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba93e2bae7657214",
+      "sourceHash": "fnv1a64:1dd41fe57787d358",
       "notice": null,
       "blocks": [
         {

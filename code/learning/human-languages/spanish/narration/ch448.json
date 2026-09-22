@@ -4,7 +4,7 @@
   "chapter": 448,
   "title": "La mudanza",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:934175152a47067d",
+  "sourceHash": "fnv1a64:a63a9d794d5a7ebc",
   "lessons": [
     {
       "id": "ES-C448-mudarse",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f26d6e98737c1714",
+      "sourceHash": "fnv1a64:e041d2fdcde2188c",
       "notice": null,
       "blocks": [
         {
@@ -177,7 +177,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45dc3bd7868bbb85",
+      "sourceHash": "fnv1a64:369f5c94596093b1",
       "notice": null,
       "blocks": [
         {
@@ -337,7 +337,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b544fa8fbebe1e77",
+      "sourceHash": "fnv1a64:fea78c5365a77d07",
       "notice": null,
       "blocks": [
         {
@@ -499,7 +499,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e8bfe6890959ac84",
+      "sourceHash": "fnv1a64:29513979780be2fc",
       "notice": null,
       "blocks": [
         {
@@ -673,7 +673,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d59eced480c54141",
+      "sourceHash": "fnv1a64:c69a9b6e21231171",
       "notice": null,
       "blocks": [
         {
@@ -837,7 +837,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b83993641a0ee0a7",
+      "sourceHash": "fnv1a64:bdc383103531f76b",
       "notice": null,
       "blocks": [
         {
@@ -989,7 +989,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:b6506dd6e3304f8c",
+      "sourceHash": "fnv1a64:82a49ca2cb2fedd4",
       "notice": {
         "modality": "sight",
         "needs": [

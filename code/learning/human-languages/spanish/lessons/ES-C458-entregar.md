@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C458-entregar
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12290
 chapter: 458
 type: word

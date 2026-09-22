@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C452-almacen
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 11910
 chapter: 452
 type: word

@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C474-invitar
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 13190
 chapter: 474
 type: word

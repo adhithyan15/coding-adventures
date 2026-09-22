@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C445-ensenar
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 11450
 chapter: 445
 type: word

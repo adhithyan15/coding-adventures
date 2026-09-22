@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C468-sintesis-abrigo
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12860
 chapter: 468
 type: practice

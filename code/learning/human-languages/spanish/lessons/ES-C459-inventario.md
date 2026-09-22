@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C459-inventario
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12340
 chapter: 459
 type: word

@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C447-comentar
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 11570
 chapter: 447
 type: word

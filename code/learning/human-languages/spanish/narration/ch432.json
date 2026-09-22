@@ -4,7 +4,7 @@
   "chapter": 432,
   "title": "La Casa Por Dentro",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:1541bb05f6610ae7",
+  "sourceHash": "fnv1a64:03bc21ab7133386e",
   "lessons": [
     {
       "id": "ES-C432-lavadora",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5918cc77f4a1a9d1",
+      "sourceHash": "fnv1a64:6e14e9a3b88ff6d1",
       "notice": null,
       "blocks": [
         {
@@ -155,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a494262c03960eab",
+      "sourceHash": "fnv1a64:b6b8136e50698e33",
       "notice": null,
       "blocks": [
         {
@@ -290,7 +290,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f37139960805c1e",
+      "sourceHash": "fnv1a64:9d8187428d2a0b0e",
       "notice": null,
       "blocks": [
         {
@@ -430,7 +430,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f34ca1d77b4d10c",
+      "sourceHash": "fnv1a64:3612c718207521ec",
       "notice": null,
       "blocks": [
         {
@@ -569,7 +569,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bdbb4c59e07d65d3",
+      "sourceHash": "fnv1a64:e3abdd832666977f",
       "notice": null,
       "blocks": [
         {
@@ -711,7 +711,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c9d2539c12366324",
+      "sourceHash": "fnv1a64:d6438d92a8d46b98",
       "notice": null,
       "blocks": [
         {
@@ -858,7 +858,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:94ead0579afd5ccc",
+      "sourceHash": "fnv1a64:a1560346fa3e8ea8",
       "notice": null,
       "blocks": [
         {

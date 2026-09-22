@@ -4,7 +4,7 @@
   "label": "ch:es-juicio",
   "canDo": "I can follow a clinic from the door to the results: which door when it is serious, what the doctor ordered, what somebody mentioned about it, and how to apologise for dropping the form.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C447-sintesis-juicio",

@@ -278,7 +278,19 @@ describe("the committed corpus", () => {
     // every track owes its learners, so the claim on all 23 is the honest one --
     // and the 22 tracks that now write `omits: [CONNECTED-READING]` in their own
     // ledger are stating a real gap out loud rather than being silent about it.
-    expect(summary.totalNodes).toBe(40);
+    // 40 -> 41. HL-C417 mints SPINE-READ-PRACTICAL-TEXTS (TEXT, A2) -- "I can find
+    // what I need in everyday written material ... and act on what it asks of me."
+    // It is the A2 counterpart the TEXT strand did not have: the strand ran A1 ->
+    // B1 with nothing between, so 44 Spanish chapters whose wordlists were DERIVED
+    // FROM A DELE A2 PAPER had to stand on the A1 reading node, and the A1 gate's
+    // taught set filled up with A2 vocabulary.
+    //
+    // Its `concepts` list is EMPTY, following SPINE-DESCRIBE-QUALITIES rather than
+    // SPINE-READ-SIGNS-AND-NOTICES. A canonical concept is a claim on all 23 tracks,
+    // and today this rung is justified by one track's exam evidence; CONNECTED-READING
+    // is also already owned by the A1 node, and a concept may own exactly one node.
+    // When a second track reaches A2 reading, the concept is the thing to add.
+    expect(summary.totalNodes).toBe(41);
 
     const byStrand = Object.fromEntries(summary.strands.map((s) => [s.strand, s.nodes]));
     expect(byStrand).toEqual({
@@ -290,7 +302,9 @@ describe("the committed corpus", () => {
       CULTURE: 3,
       IDIOM: 0,
       // 7 -> 8: SPINE-READ-SIGNS-AND-NOTICES, and the first TEXT node below B1.
-      TEXT: 8,
+      // 8 -> 9: SPINE-READ-PRACTICAL-TEXTS (HL-C417) fills the A2 gap between them,
+      // so TEXT is the ONLY strand with a rung at every stage from A1 to C2.
+      TEXT: 9,
     });
 
     // The measurement HL10 was written to make visible. SOUND, ETYMOLOGY and IDIOM

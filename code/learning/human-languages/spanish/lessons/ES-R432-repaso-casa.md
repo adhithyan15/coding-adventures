@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-R432-repaso-casa
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 10560
 chapter: 432
 type: review

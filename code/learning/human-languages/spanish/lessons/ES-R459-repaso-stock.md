@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-R459-repaso-stock
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12360
 chapter: 459
 type: review

@@ -4,7 +4,7 @@
   "chapter": 470,
   "title": "Un paraguas azul",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e5639acea805bc65",
+  "sourceHash": "fnv1a64:db143f37fb9acdcb",
   "lessons": [
     {
       "id": "ES-C470-paraguas",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:20c39a4a45872926",
+      "sourceHash": "fnv1a64:e393fe6ad43e30c2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -204,7 +204,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd20b4f0acc9b9e7",
+      "sourceHash": "fnv1a64:e0a77f76eabb0717",
       "notice": null,
       "blocks": [
         {
@@ -370,7 +370,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:75d93beeb4049ead",
+      "sourceHash": "fnv1a64:e40aa41415d47f31",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:78fc1ceb15871511",
+      "sourceHash": "fnv1a64:da12804e8bf53681",
       "notice": null,
       "blocks": [
         {
@@ -727,7 +727,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b01706d3c061f9d",
+      "sourceHash": "fnv1a64:2b0ac331b6ab2101",
       "notice": null,
       "blocks": [
         {
@@ -902,7 +902,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a4aa9095d42c2a9b",
+      "sourceHash": "fnv1a64:8381749f84ad0907",
       "notice": null,
       "blocks": [
         {

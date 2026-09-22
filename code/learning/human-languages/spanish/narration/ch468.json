@@ -4,7 +4,7 @@
   "chapter": 468,
   "title": "Dos grados",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6c20957e29756359",
+  "sourceHash": "fnv1a64:f354dc86376c202b",
   "lessons": [
     {
       "id": "ES-C468-chaqueta",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:3233ef594cb1337c",
+      "sourceHash": "fnv1a64:93a8edcb503f49bc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -194,7 +194,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:98dabdd3e9960eda",
+      "sourceHash": "fnv1a64:0ba194dc69afcac2",
       "notice": null,
       "blocks": [
         {
@@ -356,7 +356,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7c543b7c61a02e48",
+      "sourceHash": "fnv1a64:4c2c8368ac29d184",
       "notice": null,
       "blocks": [
         {
@@ -515,7 +515,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7475e149121b4490",
+      "sourceHash": "fnv1a64:b6b70c6ce222451c",
       "notice": null,
       "blocks": [
         {
@@ -653,7 +653,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2e80657d79345303",
+      "sourceHash": "fnv1a64:5980fe83df789ff7",
       "notice": null,
       "blocks": [
         {
@@ -827,7 +827,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:10a627b2b31b355c",
+      "sourceHash": "fnv1a64:ff59dc4ec34f2aac",
       "notice": null,
       "blocks": [
         {

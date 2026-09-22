@@ -4,7 +4,7 @@
   "chapter": 447,
   "title": "Juzgar",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:db24a52d3a186020",
+  "sourceHash": "fnv1a64:20783ff4b661461d",
   "lessons": [
     {
       "id": "ES-C447-analisis",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c0f3be05371523f",
+      "sourceHash": "fnv1a64:c62186577879b61f",
       "notice": null,
       "blocks": [
         {
@@ -186,7 +186,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a58f01ac3b210ec",
+      "sourceHash": "fnv1a64:093bb3bbe0d82edc",
       "notice": null,
       "blocks": [
         {
@@ -330,7 +330,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:27594e14b7f68977",
+      "sourceHash": "fnv1a64:68622d933d496853",
       "notice": null,
       "blocks": [
         {
@@ -502,7 +502,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:29ccea5457eb48e7",
+      "sourceHash": "fnv1a64:e682fa026984e7fb",
       "notice": null,
       "blocks": [
         {
@@ -664,7 +664,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea12b17123607b0e",
+      "sourceHash": "fnv1a64:22eba17268af57ce",
       "notice": null,
       "blocks": [
         {
@@ -808,7 +808,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d7c157f34fb108d",
+      "sourceHash": "fnv1a64:b8c901900de48d0d",
       "notice": null,
       "blocks": [
         {

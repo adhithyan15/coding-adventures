@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C441-fijo
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 11160
 chapter: 441
 type: word

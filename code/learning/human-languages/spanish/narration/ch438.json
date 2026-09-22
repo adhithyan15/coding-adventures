@@ -4,7 +4,7 @@
   "chapter": 438,
   "title": "El Cuerpo Y El Descanso",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:b0101e7f8363487e",
+  "sourceHash": "fnv1a64:ac9e5efe6825ea59",
   "lessons": [
     {
       "id": "ES-C438-polideportivo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0326ee140b078889",
+      "sourceHash": "fnv1a64:52501637a7fbc2a1",
       "notice": null,
       "blocks": [
         {
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:86144cb75cc165d1",
+      "sourceHash": "fnv1a64:93db700d632be1d5",
       "notice": null,
       "blocks": [
         {
@@ -313,7 +313,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b7337b3f5b47cb2d",
+      "sourceHash": "fnv1a64:9620cc8b8d344081",
       "notice": null,
       "blocks": [
         {
@@ -481,7 +481,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a5473f3884932923",
+      "sourceHash": "fnv1a64:3cab75544de727c7",
       "notice": null,
       "blocks": [
         {
@@ -639,7 +639,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:726a2486331828c9",
+      "sourceHash": "fnv1a64:f85b2332ae87f5e1",
       "notice": null,
       "blocks": [
         {
@@ -788,7 +788,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31a526b975c39e44",
+      "sourceHash": "fnv1a64:b0f3fd75e96c60b4",
       "notice": null,
       "blocks": [
         {
@@ -928,7 +928,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:48c9accda16a10e3",
+      "sourceHash": "fnv1a64:8e198a1706d83c0f",
       "notice": null,
       "blocks": [
         {

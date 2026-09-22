@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-R438-repaso-cuerpo
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 10980
 chapter: 438
 type: review

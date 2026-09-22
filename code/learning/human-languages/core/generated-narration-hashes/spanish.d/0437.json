@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 437,
-  "sourceHash": "fnv1a64:e608dbd341cffc24",
+  "sourceHash": "fnv1a64:60376217d32a9b49",
   "lessonIds": [
     "ES-C437-decidir",
     "ES-C437-coincidir",
@@ -16,6 +16,6 @@
   "text": "spanish/narration/ch437.txt",
   "json": "spanish/narration/ch437.json",
   "textHash": "fnv1a64:a7cf0e1c2bc992d7",
-  "jsonHash": "fnv1a64:8550c6132da24f34",
+  "jsonHash": "fnv1a64:daa32621e97ea76a",
   "findings": []
 }

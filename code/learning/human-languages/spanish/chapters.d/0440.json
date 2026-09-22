@@ -4,7 +4,7 @@
   "label": "ch:es-fiesta",
   "canDo": "I can be invited to a wedding or a birthday, say I went, say what mood I was in, and tell a notice's \"is held\" apart from a friend's \"we're celebrating\".",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C440-sintesis-fiesta",

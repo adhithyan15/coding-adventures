@@ -4,7 +4,7 @@
   "label": "ch:es-puesto",
   "canDo": "I can read a job advert and say what the work asks of me: what it demands, what I am answerable for, what I would be teaching, and when the person I am replacing leaves.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C445-sintesis-puesto",

@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 448,
-  "sourceHash": "fnv1a64:934175152a47067d",
+  "sourceHash": "fnv1a64:a63a9d794d5a7ebc",
   "lessonIds": [
     "ES-C448-mudarse",
     "ES-C448-mudanza",
@@ -16,6 +16,6 @@
   "text": "spanish/narration/ch448.txt",
   "json": "spanish/narration/ch448.json",
   "textHash": "fnv1a64:fa200d822bfb936a",
-  "jsonHash": "fnv1a64:2e02ec59140365ce",
+  "jsonHash": "fnv1a64:c955d4aec8aa2904",
   "findings": []
 }

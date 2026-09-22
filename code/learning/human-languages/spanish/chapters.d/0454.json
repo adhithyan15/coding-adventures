@@ -4,7 +4,7 @@
   "label": "ch:es-corte",
   "canDo": "I can follow a road or rail closure: read the barrier notice, understand a delay announcement, say what caused it and what is running instead.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C454-sintesis-corte",

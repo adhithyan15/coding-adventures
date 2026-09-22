@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C469-imprimir
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12870
 chapter: 469
 type: word

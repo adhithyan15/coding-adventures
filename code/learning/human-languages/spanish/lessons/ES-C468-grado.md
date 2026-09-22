@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C468-grado
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12820
 chapter: 468
 type: word

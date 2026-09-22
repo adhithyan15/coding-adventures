@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C454-via
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12040
 chapter: 454
 type: word

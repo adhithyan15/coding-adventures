@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 473,
-  "sourceHash": "fnv1a64:97f966c3150976b6",
+  "sourceHash": "fnv1a64:00344e962be6e703",
   "lessonIds": [
     "ES-C473-aconsejar",
     "ES-C473-recomendar",
@@ -14,6 +14,6 @@
   "text": "spanish/narration/ch473.txt",
   "json": "spanish/narration/ch473.json",
   "textHash": "fnv1a64:390a14233ff8b485",
-  "jsonHash": "fnv1a64:2510a468cc15b264",
+  "jsonHash": "fnv1a64:9e4af259185bd68f",
   "findings": []
 }

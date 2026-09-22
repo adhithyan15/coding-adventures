@@ -4,7 +4,7 @@
   "label": "ch:es-plan",
   "canDo": "I can decide between two dates, say that one clashes, admit a mistake, say how long something takes, and name the evening meal.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C437-sintesis-plan",

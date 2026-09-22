@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C433-sintesis-llave
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 10640
 chapter: 433
 type: practice

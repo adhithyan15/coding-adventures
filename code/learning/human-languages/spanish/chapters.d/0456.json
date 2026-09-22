@@ -4,7 +4,7 @@
   "label": "ch:es-cuenta",
   "canDo": "I can order from a set menu and then read the bill: name a first course, tell a price from a charge, query something that was added, and ask whether they take cards.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C456-sintesis-cuenta",

@@ -4,7 +4,7 @@
   "label": "ch:es-mover",
   "canDo": "I can arrange to go somewhere with somebody and talk about what we watched, keeping ver apart from mirar and mover apart from trasladar.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C446-sintesis-mover",

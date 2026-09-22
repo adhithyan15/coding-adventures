@@ -1,6 +1,6 @@
 {
   "id": "ES-PATH-466-INFORME",
-  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
   "before": [],
   "inline": [
     "ES-EXT-466-INFORME"

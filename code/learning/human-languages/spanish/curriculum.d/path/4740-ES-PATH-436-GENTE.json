@@ -1,6 +1,6 @@
 {
   "id": "ES-PATH-436-GENTE",
-  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
   "before": [],
   "inline": [
     "ES-EXT-436-GENTE"

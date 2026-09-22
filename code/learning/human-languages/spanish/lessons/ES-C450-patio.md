@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C450-patio
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 11760
 chapter: 450
 type: word

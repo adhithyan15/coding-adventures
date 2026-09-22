@@ -4,7 +4,7 @@
   "chapter": 472,
   "title": "La biblioteca que presta cosas",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:e75344efab75c57c",
+  "sourceHash": "fnv1a64:d6b41c9ab99af2fd",
   "lessons": [
     {
       "id": "ES-C472-usuario",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:81426818cc770a38",
+      "sourceHash": "fnv1a64:9ea0a2a62ede22b0",
       "notice": null,
       "blocks": [
         {
@@ -181,7 +181,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e0a71c16265cc845",
+      "sourceHash": "fnv1a64:2a3fdc3efc468a65",
       "notice": null,
       "blocks": [
         {
@@ -339,7 +339,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:94d0cba78d258911",
+      "sourceHash": "fnv1a64:ce7385bf44d68c01",
       "notice": null,
       "blocks": [
         {
@@ -505,7 +505,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45dcb9867b5e727e",
+      "sourceHash": "fnv1a64:4b26727200eee0c2",
       "notice": null,
       "blocks": [
         {
@@ -672,7 +672,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:330372b35e87c52c",
+      "sourceHash": "fnv1a64:4862a0fb39de4608",
       "notice": null,
       "blocks": [
         {
@@ -838,7 +838,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41168457569aaaa7",
+      "sourceHash": "fnv1a64:a26cb96496fa1fb7",
       "notice": null,
       "blocks": [
         {
@@ -1010,7 +1010,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ad7690e46958a14",
+      "sourceHash": "fnv1a64:57e93facb4847d14",
       "notice": null,
       "blocks": [
         {

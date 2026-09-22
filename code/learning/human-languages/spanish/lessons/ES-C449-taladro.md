@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C449-taladro
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 11720
 chapter: 449
 type: word

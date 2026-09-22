@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-R463-repaso-guia
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12560
 chapter: 463
 type: review

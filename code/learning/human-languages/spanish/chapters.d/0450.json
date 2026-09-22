@@ -4,7 +4,7 @@
   "label": "ch:es-suelo",
   "canDo": "I can read a notice pinned to the gate of a sports ground: say where training has moved to, tell a maintained pitch from grass that is merely growing, and warn somebody about stones on a path.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C450-sintesis-suelo",

@@ -1,6 +1,7 @@
 ## HL-C417-a8d61e11 — A2 vocabulary chapters sit on an A1 spine node, so the A1 gate counts A2 words
 
-**Status: OPEN.** Raised by the security review of the first Spanish A2
+**Status: CLOSED (2026-09-22).** Option 1 was taken. See RESOLVED below.
+Raised by the security review of the first Spanish A2
 vocabulary tranche (chapters 431-436), and confirmed by measurement.
 
 A lesson's CEFR level is **derived, never authored**: `lessonsUpToLevel` reads
@@ -47,3 +48,55 @@ Worth deciding before tranche 2 lands, because each tranche makes option 1 a
 larger migration. Note also that `levels.ts` observes "today it is A1 or pre-A1
 for every track in the corpus — nothing has reached A2", which remains true and
 is the same gap seen from the other end.
+
+### RESOLVED
+
+Option 1, the honest fix, on 2026-09-22 — after the vocabulary programme had run
+to its end at chapter 474, which is the worst time to do it and exactly what the
+entry above warned would happen: *"each tranche makes option 1 a larger
+migration."* Six chapters when this was filed; forty-four when it was fixed.
+
+`SPINE-READ-PRACTICAL-TEXTS` was minted — TEXT strand, stage **A2**, prerequisite
+`SPINE-READ-SIGNS-AND-NOTICES`, `core: false` like the A1 node it follows. Spanish
+chapters **431-474** moved onto it: 44 path segments, 44 chapter shards and 281
+lesson frontmatters. Chapters 424-430 did **not** move — 424-426 teach reading
+mechanics and 428-430 close enumerated **A1** syllabus points (`A1-NE07-04`,
+`A1-NE12-02`), so they are A1 material and stay there.
+
+**The A1 gate returned to the exact numbers this entry recorded before the
+tranches landed**, which is the measurement that the fix did what it claimed:
+
+| | filed as | now |
+|---|---:|---:|
+| A1 audit `lessonCount` | 1022 | 1022 |
+| A1 audit `taughtForms` | 1721 | 1721 |
+
+`objectiveFailed` stayed **0** across the move, so no A1 criterion was resting on
+the A2 material that has now been taken away from it. The A2 audit did not move
+at all — `lessonsUpToLevel("A2")` includes everything at or below A2, so the
+chapters the A2 book needs are still in it.
+
+Its `concepts` list is **empty**, following `SPINE-DESCRIBE-QUALITIES` rather
+than `SPINE-READ-SIGNS-AND-NOTICES`. Two reasons, and the second is a hard
+constraint: a canonical concept is a claim on all 23 tracks and this rung is
+justified today by one track's exam evidence; and `CONNECTED-READING` is already
+owned by the A1 node, where a concept may own exactly one node. When a second
+track reaches A2 reading, the concept is the thing to add.
+
+Option 3 stayed rejected and was never reconsidered. Nothing here reads authored
+intent — the level is still derived from the spine node, and the fix was to give
+the material an honest node rather than to teach the audit to ignore where it
+sits.
+
+**One claim in the entry above was already wrong when it was written.** It says
+`levels.ts` observes *"today it is A1 or pre-A1 for every track in the corpus —
+nothing has reached A2"*, "which remains true". Measured while closing this
+entry: **21 of 23 tracks already reach A2, and Spanish reaches C2** — 39 B1, 17
+B2, 10 C1 and 18 C2 lessons. The module's own header warns that a fact copied
+into prose goes stale where a derived one cannot, and this is that failure
+happening inside the warning. The comment is corrected rather than deleted, so
+the next reader sees what it used to claim.
+
+**What this does not fix.** `HL-C418` (creer, explicar), `HL-C420` (problema) and
+`HL-C422` (responder) are untouched: those four lexemes are taught and still
+invisible to the A2 audit, for reasons that have nothing to do with this node.

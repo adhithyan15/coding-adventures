@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C461-sintesis-donar
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12470
 chapter: 461
 type: practice

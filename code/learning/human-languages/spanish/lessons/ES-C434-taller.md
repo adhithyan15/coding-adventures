@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C434-taller
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 10650
 chapter: 434
 type: word

@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 432,
-  "sourceHash": "fnv1a64:1541bb05f6610ae7",
+  "sourceHash": "fnv1a64:03bc21ab7133386e",
   "lessonIds": [
     "ES-C432-lavadora",
     "ES-C432-contador",
@@ -16,6 +16,6 @@
   "text": "spanish/narration/ch432.txt",
   "json": "spanish/narration/ch432.json",
   "textHash": "fnv1a64:18611818b168e58a",
-  "jsonHash": "fnv1a64:e93e1384d0eca937",
+  "jsonHash": "fnv1a64:6ffd3ddca4067bf4",
   "findings": []
 }

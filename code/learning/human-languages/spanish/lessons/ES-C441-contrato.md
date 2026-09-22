@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C441-contrato
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 11140
 chapter: 441
 type: word

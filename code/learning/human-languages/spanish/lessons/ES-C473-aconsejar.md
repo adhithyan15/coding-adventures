@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C473-aconsejar
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 13140
 chapter: 473
 type: word

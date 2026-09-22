@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-R447-repaso-juicio
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 11600
 chapter: 447
 type: review

@@ -4,7 +4,7 @@
   "chapter": 440,
   "title": "La Fiesta Y El Año",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:e602891e72bb4a23",
+  "sourceHash": "fnv1a64:baa9db3c16babda0",
   "lessons": [
     {
       "id": "ES-C440-boda",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:48118a93269bcf74",
+      "sourceHash": "fnv1a64:9c2cb2005c6092f4",
       "notice": null,
       "blocks": [
         {
@@ -182,7 +182,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:83d495b921e4b9ae",
+      "sourceHash": "fnv1a64:5afcaf3aba0fef9e",
       "notice": null,
       "blocks": [
         {
@@ -344,7 +344,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d13054d901b98ab",
+      "sourceHash": "fnv1a64:441036c289b8c3c3",
       "notice": null,
       "blocks": [
         {
@@ -506,7 +506,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:14a510676dda825a",
+      "sourceHash": "fnv1a64:b1009a5248deb25e",
       "notice": null,
       "blocks": [
         {
@@ -668,7 +668,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:069da2181419e0d2",
+      "sourceHash": "fnv1a64:27c4004a55fc6722",
       "notice": null,
       "blocks": [
         {
@@ -826,7 +826,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f5055d95064eeff",
+      "sourceHash": "fnv1a64:4580c70b02966fcb",
       "notice": null,
       "blocks": [
         {
@@ -966,7 +966,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c420a4500d9f1674",
+      "sourceHash": "fnv1a64:267a6f48c5bdd250",
       "notice": null,
       "blocks": [
         {

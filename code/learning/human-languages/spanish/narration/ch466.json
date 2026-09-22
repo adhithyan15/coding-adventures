@@ -4,7 +4,7 @@
   "chapter": 466,
   "title": "Una carta del colegio",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:69e7fc2a0af1e126",
+  "sourceHash": "fnv1a64:6b532d6f90d8407e",
   "lessons": [
     {
       "id": "ES-C466-director",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:f41f65865cb4f9cf",
+      "sourceHash": "fnv1a64:51f3d21a9316dae7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -176,7 +176,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f84e1e148e7860d",
+      "sourceHash": "fnv1a64:e7feff4a13bdada9",
       "notice": null,
       "blocks": [
         {
@@ -346,7 +346,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e689cbacec4a1a8e",
+      "sourceHash": "fnv1a64:5742ab8cd100f1c2",
       "notice": null,
       "blocks": [
         {
@@ -524,7 +524,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1ba1f1f5388e03a3",
+      "sourceHash": "fnv1a64:5cfc3ba54a6b2617",
       "notice": null,
       "blocks": [
         {
@@ -686,7 +686,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:143cf98f66f6d33d",
+      "sourceHash": "fnv1a64:86ffc88d233d6421",
       "notice": null,
       "blocks": [
         {
@@ -856,7 +856,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:191ea3d76dd049aa",
+      "sourceHash": "fnv1a64:ba46d2c2302b43ce",
       "notice": {
         "modality": "sight",
         "needs": [

@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C451-sintesis-turno
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 11900
 chapter: 451
 type: practice

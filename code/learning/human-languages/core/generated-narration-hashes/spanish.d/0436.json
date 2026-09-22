@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 436,
-  "sourceHash": "fnv1a64:cf2f8a4d288bf9ee",
+  "sourceHash": "fnv1a64:970406c3ec821263",
   "lessonIds": [
     "ES-C436-companero",
     "ES-C436-grupo",
@@ -16,6 +16,6 @@
   "text": "spanish/narration/ch436.txt",
   "json": "spanish/narration/ch436.json",
   "textHash": "fnv1a64:3c3ad4216486e2c1",
-  "jsonHash": "fnv1a64:94bcf2ec4ad0b179",
+  "jsonHash": "fnv1a64:b740e764775e306f",
   "findings": []
 }

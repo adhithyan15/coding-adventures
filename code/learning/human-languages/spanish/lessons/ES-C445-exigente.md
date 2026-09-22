@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C445-exigente
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 11440
 chapter: 445
 type: word

@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C435-sintesis-anuncio
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 10780
 chapter: 435
 type: practice

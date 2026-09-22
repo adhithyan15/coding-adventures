@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-R456-repaso-cuenta
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12210
 chapter: 456
 type: review

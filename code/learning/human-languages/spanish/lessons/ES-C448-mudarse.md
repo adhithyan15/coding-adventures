@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C448-mudarse
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 11620
 chapter: 448
 type: word

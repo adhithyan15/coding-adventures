@@ -4,7 +4,7 @@
   "chapter": 455,
   "title": "La habitación",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:e630faf96e66fac4",
+  "sourceHash": "fnv1a64:aa56fa986fc5b013",
   "lessons": [
     {
       "id": "ES-C455-pintar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:67ddea66fb2d54c8",
+      "sourceHash": "fnv1a64:4db25b9c703921a4",
       "notice": null,
       "blocks": [
         {
@@ -190,7 +190,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e6ba6184a87a92ee",
+      "sourceHash": "fnv1a64:4aadde0d7bd42f02",
       "notice": null,
       "blocks": [
         {
@@ -367,7 +367,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f9704de1dbe9ece",
+      "sourceHash": "fnv1a64:8f03cece93e717e6",
       "notice": null,
       "blocks": [
         {
@@ -543,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96b69dbd59877dfb",
+      "sourceHash": "fnv1a64:2ade1561e038745b",
       "notice": null,
       "blocks": [
         {
@@ -705,7 +705,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:4be8aad35a6eb6fe",
+      "sourceHash": "fnv1a64:ac2ea2767e9fe1f2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -878,7 +878,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:84b166e89ab38d6a",
+      "sourceHash": "fnv1a64:d5d98500b65d351e",
       "notice": null,
       "blocks": [
         {
@@ -1032,7 +1032,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:350a3f55fd1afac3",
+      "sourceHash": "fnv1a64:f7a30f68a7152503",
       "notice": null,
       "blocks": [
         {

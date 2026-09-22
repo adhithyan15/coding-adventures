@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-R471-repaso-curso
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 13050
 chapter: 471
 type: review

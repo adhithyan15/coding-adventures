@@ -4,7 +4,7 @@
   "chapter": 471,
   "title": "El curso de cocina",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:88c10f37e1dcf72f",
+  "sourceHash": "fnv1a64:38b513f93e2b62ad",
   "lessons": [
     {
       "id": "ES-C471-demasiado",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:56db1acb835d5623",
+      "sourceHash": "fnv1a64:f99baf46d5ebfeb7",
       "notice": null,
       "blocks": [
         {
@@ -182,7 +182,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c7b085141639879",
+      "sourceHash": "fnv1a64:4dfd6e5346b5fc85",
       "notice": null,
       "blocks": [
         {
@@ -351,7 +351,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:60a8af4481240606",
+      "sourceHash": "fnv1a64:f757eed2a841a98e",
       "notice": null,
       "blocks": [
         {
@@ -517,7 +517,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b73b45d2db43e4a",
+      "sourceHash": "fnv1a64:d7261dabcb7626ce",
       "notice": null,
       "blocks": [
         {
@@ -682,7 +682,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c5703d06dcb9811",
+      "sourceHash": "fnv1a64:a89d8ae62244bc41",
       "notice": null,
       "blocks": [
         {
@@ -844,7 +844,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:edec6ec64ef37fe7",
+      "sourceHash": "fnv1a64:c0340801548d934b",
       "notice": null,
       "blocks": [
         {
@@ -1010,7 +1010,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3d60df302fc5b318",
+      "sourceHash": "fnv1a64:d3c2ee620eb94054",
       "notice": null,
       "blocks": [
         {
@@ -1188,7 +1188,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9cec7401bc45503f",
+      "sourceHash": "fnv1a64:05955340fff0ae07",
       "notice": null,
       "blocks": [
         {

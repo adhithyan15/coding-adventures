@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C462-decidirse
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12490
 chapter: 462
 type: word

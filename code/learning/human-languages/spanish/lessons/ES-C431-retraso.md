@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C431-retraso
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 10460
 chapter: 431
 type: word

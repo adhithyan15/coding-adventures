@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 446,
-  "sourceHash": "fnv1a64:fe3e2e67286c8f7f",
+  "sourceHash": "fnv1a64:676513caf618498c",
   "lessonIds": [
     "ES-C446-mirar",
     "ES-C446-mover",
@@ -16,6 +16,6 @@
   "text": "spanish/narration/ch446.txt",
   "json": "spanish/narration/ch446.json",
   "textHash": "fnv1a64:7744728746a3b9a7",
-  "jsonHash": "fnv1a64:db796776a03598b1",
+  "jsonHash": "fnv1a64:868e838b29fd1210",
   "findings": []
 }

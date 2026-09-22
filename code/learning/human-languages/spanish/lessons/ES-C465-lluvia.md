@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C465-lluvia
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12660
 chapter: 465
 type: word

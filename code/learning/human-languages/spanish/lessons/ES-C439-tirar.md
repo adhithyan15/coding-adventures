@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C439-tirar
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 11040
 chapter: 439
 type: word

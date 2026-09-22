@@ -4,7 +4,7 @@
   "chapter": 435,
   "title": "Los Papeles Del Trabajo",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:25393610fa5b4c26",
+  "sourceHash": "fnv1a64:c255020790c27a23",
   "lessons": [
     {
       "id": "ES-C435-curriculum",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1fb8e5713d9aa87",
+      "sourceHash": "fnv1a64:a5cd95769999c953",
       "notice": null,
       "blocks": [
         {
@@ -162,7 +162,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a456c79549d61021",
+      "sourceHash": "fnv1a64:431afacd07065bdd",
       "notice": null,
       "blocks": [
         {
@@ -302,7 +302,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:69fc99e9e9d705b6",
+      "sourceHash": "fnv1a64:a21484b46a1b81a6",
       "notice": null,
       "blocks": [
         {
@@ -446,7 +446,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3cda4a6ba7050eb3",
+      "sourceHash": "fnv1a64:28ef83cb7c9b8c3b",
       "notice": null,
       "blocks": [
         {
@@ -585,7 +585,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c2324c966b5b1199",
+      "sourceHash": "fnv1a64:694a8bb1a9abcae1",
       "notice": null,
       "blocks": [
         {
@@ -738,7 +738,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:452c4a538d9e356d",
+      "sourceHash": "fnv1a64:2e702de15bd516c5",
       "notice": null,
       "blocks": [
         {
@@ -884,7 +884,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c9d2da637ff9516",
+      "sourceHash": "fnv1a64:9801927e9604271e",
       "notice": null,
       "blocks": [
         {

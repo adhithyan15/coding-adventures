@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C467-sintesis-alimento
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12800
 chapter: 467
 type: practice

@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C437-equivocarse
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 10880
 chapter: 437
 type: word

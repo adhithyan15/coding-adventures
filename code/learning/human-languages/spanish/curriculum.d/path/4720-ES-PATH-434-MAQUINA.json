@@ -1,6 +1,6 @@
 {
   "id": "ES-PATH-434-MAQUINA",
-  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
   "before": [],
   "inline": [
     "ES-EXT-434-MAQUINA"

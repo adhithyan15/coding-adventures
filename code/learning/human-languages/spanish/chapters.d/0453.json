@@ -4,7 +4,7 @@
   "label": "ch:es-limpieza",
   "canDo": "I can read the rota taped up in a stairwell: say whose week it is, say what is and is not included, and check the sheet before changing anything.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C453-sintesis-limpieza",

@@ -4,7 +4,7 @@
   "chapter": 436,
   "title": "Gente Y Trato",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:cf2f8a4d288bf9ee",
+  "sourceHash": "fnv1a64:970406c3ec821263",
   "lessons": [
     {
       "id": "ES-C436-companero",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:714bfaf7b839b541",
+      "sourceHash": "fnv1a64:0a84d5a67ff02f21",
       "notice": null,
       "blocks": [
         {
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:85041f940cc6150f",
+      "sourceHash": "fnv1a64:1c9aa7d829dbf71b",
       "notice": null,
       "blocks": [
         {
@@ -302,7 +302,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:05b233c4ac11ed73",
+      "sourceHash": "fnv1a64:f76f378bd9e98d9b",
       "notice": null,
       "blocks": [
         {
@@ -442,7 +442,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4dcc407bba4d60cd",
+      "sourceHash": "fnv1a64:5bec54951e4d0d51",
       "notice": null,
       "blocks": [
         {
@@ -590,7 +590,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e557fa365f501e1",
+      "sourceHash": "fnv1a64:d2f6df7fc1052755",
       "notice": null,
       "blocks": [
         {
@@ -744,7 +744,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:91f87346905ace18",
+      "sourceHash": "fnv1a64:f8d281a158931e34",
       "notice": null,
       "blocks": [
         {
@@ -889,7 +889,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:478fe76e7d07a0ab",
+      "sourceHash": "fnv1a64:0562e3ccdb08c0cb",
       "notice": null,
       "blocks": [
         {

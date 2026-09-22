@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-R448-repaso-mudanza
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 11670
 chapter: 448
 type: review

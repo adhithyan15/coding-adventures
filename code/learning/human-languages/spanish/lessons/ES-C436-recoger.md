@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C436-recoger
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 10830
 chapter: 436
 type: word

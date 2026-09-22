@@ -4,7 +4,7 @@
   "label": "ch:es-plazo",
   "canDo": "I can deal with a deadline: read the window of dates, hand a form in the right way, and understand that nothing is accepted once the window shuts.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C458-sintesis-plazo",

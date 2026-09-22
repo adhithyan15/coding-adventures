@@ -1,6 +1,6 @@
 {
   "id": "ES-PATH-459-STOCK",
-  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
   "before": [],
   "inline": [
     "ES-EXT-459-STOCK"

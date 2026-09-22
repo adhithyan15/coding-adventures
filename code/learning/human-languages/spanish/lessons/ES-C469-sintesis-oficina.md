@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C469-sintesis-oficina
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12920
 chapter: 469
 type: practice

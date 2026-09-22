@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C464-recordar
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12580
 chapter: 464
 type: word

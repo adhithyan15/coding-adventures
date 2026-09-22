@@ -4,7 +4,7 @@
   "label": "ch:es-alimento",
   "canDo": "I can read a monthly production sheet on a community garden's door: understand what was produced, who it fed, what the target was, and why a notice writes 'no fue suficiente' where a person would say 'no fue bastante'.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C467-sintesis-alimento",

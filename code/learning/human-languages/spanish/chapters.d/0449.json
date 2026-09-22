@@ -4,7 +4,7 @@
   "label": "ch:es-taller",
   "canDo": "I can leave a bike at a repair shop and understand the slip that comes back: say which part has failed, ask whether it can be fixed by a given day, and ask somebody to pass me a tool.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C449-sintesis-taller",

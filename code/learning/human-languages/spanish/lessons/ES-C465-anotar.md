@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C465-anotar
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12640
 chapter: 465
 type: word

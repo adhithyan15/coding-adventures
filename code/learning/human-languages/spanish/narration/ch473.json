@@ -4,7 +4,7 @@
   "chapter": 473,
   "title": "El consejo a otras bibliotecas",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:97f966c3150976b6",
+  "sourceHash": "fnv1a64:00344e962be6e703",
   "lessons": [
     {
       "id": "ES-C473-aconsejar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3cc022a83c7440aa",
+      "sourceHash": "fnv1a64:8e809514ace82136",
       "notice": null,
       "blocks": [
         {
@@ -185,7 +185,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9271e63401e07ba2",
+      "sourceHash": "fnv1a64:8063ac0d4733e5aa",
       "notice": null,
       "blocks": [
         {
@@ -364,7 +364,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:35ce500031e45ad5",
+      "sourceHash": "fnv1a64:d2a01176c9ee65c5",
       "notice": null,
       "blocks": [
         {
@@ -534,7 +534,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:92d4c19031a63dd2",
+      "sourceHash": "fnv1a64:eb00980892436486",
       "notice": null,
       "blocks": [
         {
@@ -711,7 +711,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:847f86c5eed23fd8",
+      "sourceHash": "fnv1a64:c47a5fc38131602c",
       "notice": null,
       "blocks": [
         {

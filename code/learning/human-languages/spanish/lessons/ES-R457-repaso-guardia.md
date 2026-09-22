@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-R457-repaso-guardia
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12260
 chapter: 457
 type: review

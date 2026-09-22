@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-R466-repaso-informe
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12730
 chapter: 466
 type: review

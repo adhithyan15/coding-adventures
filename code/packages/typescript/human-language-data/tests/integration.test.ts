@@ -112,6 +112,12 @@ describe("real curriculum", () => {
     const a2 = spine.nodes.filter((node) => node.stage === "A2");
     expect(a2.map((node) => node.id).sort()).toEqual([
       "SPINE-NEGATE-AND-ASK",
+      // HL-C417 adds the fifth: the A2 tranche above was four GRAMMAR nodes and
+      // nothing else, so an A2 READING chapter had no rung to stand on and 44
+      // Spanish vocabulary chapters -- whose wordlists came off a DELE A2 paper --
+      // were parked on the A1 `SPINE-READ-SIGNS-AND-NOTICES` instead. That put A2
+      // words inside the A1 cut-off, which is the defect, not the bookkeeping.
+      "SPINE-READ-PRACTICAL-TEXTS",
       "SPINE-SAY-WHAT-I-DO",
       "SPINE-TALK-ABOUT-FUTURE",
       "SPINE-TALK-ABOUT-PAST",

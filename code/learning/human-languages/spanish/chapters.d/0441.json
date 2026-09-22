@@ -4,7 +4,7 @@
   "label": "ch:es-trato",
   "canDo": "I can read the four pieces of paper that decide where my money goes: what I agreed to, that I agreed to it, what I owe, and what I owe it on.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C441-sintesis-trato",

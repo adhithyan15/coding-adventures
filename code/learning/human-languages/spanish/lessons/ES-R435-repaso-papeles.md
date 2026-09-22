@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-R435-repaso-papeles
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 10770
 chapter: 435
 type: review

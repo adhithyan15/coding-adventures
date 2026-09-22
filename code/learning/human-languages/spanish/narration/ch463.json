@@ -4,7 +4,7 @@
   "chapter": 463,
   "title": "El viaje guiado",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d97bc7b09b58fa61",
+  "sourceHash": "fnv1a64:1eafe77a0f149a2b",
   "lessons": [
     {
       "id": "ES-C463-organizar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6363e6262d3d6130",
+      "sourceHash": "fnv1a64:e698ce9b2b43a41c",
       "notice": null,
       "blocks": [
         {
@@ -186,7 +186,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:834e97483856f153",
+      "sourceHash": "fnv1a64:258183e4b910048f",
       "notice": null,
       "blocks": [
         {
@@ -345,7 +345,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea9b84375c6e88d4",
+      "sourceHash": "fnv1a64:af5dafc0381219bc",
       "notice": null,
       "blocks": [
         {
@@ -517,7 +517,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ae22d6bd3cc17462",
+      "sourceHash": "fnv1a64:0e1e768738d55b9a",
       "notice": null,
       "blocks": [
         {
@@ -667,7 +667,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fb3bfa4518802eef",
+      "sourceHash": "fnv1a64:b564cdd80b0d8a7b",
       "notice": null,
       "blocks": [
         {

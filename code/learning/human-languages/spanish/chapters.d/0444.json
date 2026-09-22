@@ -4,7 +4,7 @@
   "label": "ch:es-casa-fuera",
   "canDo": "I can report what is wrong with a home and say what I did about it: the heating, the material, the garden, the thing I covered, the trolley I took to the shop.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C444-sintesis-casa",

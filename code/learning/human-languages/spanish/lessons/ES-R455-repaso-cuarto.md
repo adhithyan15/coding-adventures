@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-R455-repaso-cuarto
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12140
 chapter: 455
 type: review

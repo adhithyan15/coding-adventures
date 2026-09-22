@@ -4,7 +4,7 @@
   "label": "ch:es-informe",
   "canDo": "I can read a formal letter home from a school: understand who signed it, what it reports about behaviour, that the change can be seen, and that being asked to discuss something is an invitation rather than a summons.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C466-sintesis-informe",

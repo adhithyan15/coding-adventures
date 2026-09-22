@@ -4,7 +4,7 @@
   "chapter": 437,
   "title": "Decidir, Coincidir, Equivocarse",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:e608dbd341cffc24",
+  "sourceHash": "fnv1a64:60376217d32a9b49",
   "lessons": [
     {
       "id": "ES-C437-decidir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c815cd70339c8a66",
+      "sourceHash": "fnv1a64:d87d39b5c5a6dbb6",
       "notice": null,
       "blocks": [
         {
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c63f4008dc4346fe",
+      "sourceHash": "fnv1a64:8583b277fb4c837a",
       "notice": null,
       "blocks": [
         {
@@ -299,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:806111a0ab3caa4f",
+      "sourceHash": "fnv1a64:5020379274e82f57",
       "notice": null,
       "blocks": [
         {
@@ -447,7 +447,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6649f672a2fc5462",
+      "sourceHash": "fnv1a64:00ea265a8ba13b6e",
       "notice": null,
       "blocks": [
         {
@@ -586,7 +586,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d7105d3c9d4cfb59",
+      "sourceHash": "fnv1a64:cc0ee7c90e7ce31d",
       "notice": null,
       "blocks": [
         {
@@ -735,7 +735,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c8086395fbf0594",
+      "sourceHash": "fnv1a64:b2571e1716a07a58",
       "notice": null,
       "blocks": [
         {
@@ -880,7 +880,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3033ed88cea1e82",
+      "sourceHash": "fnv1a64:60ec3022c84698ae",
       "notice": null,
       "blocks": [
         {
