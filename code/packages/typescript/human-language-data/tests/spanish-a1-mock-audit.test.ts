@@ -529,11 +529,13 @@ describe("parseAnswerKeyRows", () => {
   // the gate never scores is an item it reports as fine. Every case below is a
   // FAIL-OPEN shape: the audit comes back cleaner than the corpus is.
   const key = (body: string) => `## Prueba 1\n\n| # | Clave | Requiere |\n|---|---|---|\n${body}`;
+  const clean = { unscored: [], malformed: [] };
 
   it("reads a well-formed row", () => {
-    expect(parseAnswerKeyRows(key("| 1 | b | casa, perro |"))).toEqual([
-      { paper: 1, item: 1, requires: ["casa", "perro"] },
-    ]);
+    expect(parseAnswerKeyRows(key("| 1 | b | casa, perro |"))).toEqual({
+      rows: [{ paper: 1, item: 1, requires: ["casa", "perro"] }],
+      ...clean,
+    });
   });
 
   it.each([
@@ -542,40 +544,70 @@ describe("parseAnswerKeyRows", () => {
     ["U+2029", "\u2029"],
   ])("does not lose every row to %s endings", (_label, terminator) => {
     // `.` cannot match any of these, so under `/\r?\n/` the whole file
-    // collapsed to ONE line, `$` was unreachable, and the parser returned []
-    // -- from which the audit reports `objectiveFailed: 0`, `reading: 0`,
-    // `listening: 0`. A clean bill of health for items it never read, and
-    // `--write` would persist it. This is why the terminator is shared with
-    // `mock-stem-coverage.ts` rather than spelled out twice.
+    // collapsed to ONE line, `$` was unreachable, and the parser returned
+    // nothing -- from which the audit reports `objectiveFailed: 0`,
+    // `reading: 0`, `listening: 0`. A clean bill of health for items it never
+    // read, and `--write` would persist it. This is why the terminator is
+    // shared with `mock-stem-coverage.ts` rather than spelled out twice.
     const text = ["## Prueba 1", "| 1 | b | casa |", "| 2 | a | perro |"].join(terminator);
-    expect(parseAnswerKeyRows(text)).toEqual([
-      { paper: 1, item: 1, requires: ["casa"] },
-      { paper: 1, item: 2, requires: ["perro"] },
-    ]);
+    expect(parseAnswerKeyRows(text)).toEqual({
+      rows: [
+        { paper: 1, item: 1, requires: ["casa"] },
+        { paper: 1, item: 2, requires: ["perro"] },
+      ],
+      ...clean,
+    });
   });
 
   it("keeps CRLF as one terminator rather than two", () => {
     // The alternation puts `\r\n` first for this. Splitting it as two would
     // insert an empty line between every row -- harmless here, but the same
     // ordering bug in a parser that counts lines is not.
-    expect(parseAnswerKeyRows("## Prueba 1\r\n| 1 | b | casa |")).toEqual([
+    expect(parseAnswerKeyRows("## Prueba 1\r\n| 1 | b | casa |").rows).toEqual([
       { paper: 1, item: 1, requires: ["casa"] },
     ]);
   });
 
-  it("does not invent a requirement from an empty last column", () => {
-    // `([^|]+)` -> `([^|]*)`, made to kill a cubic backtrack, also made
-    // `| 7 | b |  |` MATCH for the first time, capturing "". `taught` never
-    // contains "", so the item would have failed on a requirement nobody
-    // wrote. The sibling module calls this widening inert, and there it is;
-    // this copy feeds the number the whole programme steers by.
-    expect(parseAnswerKeyRows(key("| 7 | b |  |"))).toEqual([
-      { paper: 1, item: 7, requires: [] },
-    ]);
+  it("scores an empty requirement column as NEITHER a pass nor a failure", () => {
+    // Both obvious answers hide something, which is why this row is reported
+    // instead of scored:
+    //   `[""]`  -- the item FAILS on a requirement nobody wrote (what `+` ->
+    //             `*` produced before any filter);
+    //   `[]`    -- `[].every(...)` is `true`, so the item PASSES
+    //             unconditionally and counts toward `reading` (what filtering
+    //             alone produced, and the FAIL-OPEN direction).
+    expect(parseAnswerKeyRows(key("| 7 | b |  |"))).toEqual({
+      rows: [],
+      unscored: [{ paper: 1, item: 7 }],
+      malformed: [],
+    });
   });
 
-  it("drops the empty entry a trailing comma leaves behind", () => {
-    expect(parseAnswerKeyRows(key("| 7 | b | casa, |"))[0]?.requires).toEqual(["casa"]);
+  it("drops the empty entry a trailing comma leaves behind, and still scores the row", () => {
+    expect(parseAnswerKeyRows(key("| 7 | b | casa, |"))).toEqual({
+      rows: [{ paper: 1, item: 7, requires: ["casa"] }],
+      ...clean,
+    });
+  });
+
+  it("reports a numbered row the pattern rejected instead of losing it", () => {
+    // ONE TRAILING SPACE after the closing pipe. That is the whole defect: the
+    // row vanishes, and a vanished row is an item the gate never scores, which
+    // downstream is indistinguishable from an item that passed. A guard that
+    // only fires when EVERY row is lost never sees this.
+    const text = ["## Prueba 1", "| 1 | b | casa |", "| 2 | a | perro | "].join("\n");
+    expect(parseAnswerKeyRows(text)).toEqual({
+      rows: [{ paper: 1, item: 1, requires: ["casa"] }],
+      unscored: [],
+      malformed: ["| 2 | a | perro | "],
+    });
+  });
+
+  it("does not mistake a table header or separator for a malformed row", () => {
+    // `malformed` only collects lines that open `| <digits> |`. A header or a
+    // `|---|` separator must not trip the guard, or the gate refuses every
+    // real key.
+    expect(parseAnswerKeyRows(key("| 1 | b | casa |")).malformed).toEqual([]);
   });
 
   it("scores Prueba 1 and 2 and ignores rows under any other heading", () => {
@@ -584,28 +616,32 @@ describe("parseAnswerKeyRows", () => {
       "## Prueba 2", "| 2 | a | perro |",
       "## Prueba 3", "| 3 | c | gato |",
     ].join("\n");
-    expect(parseAnswerKeyRows(text)).toEqual([
-      { paper: 1, item: 1, requires: ["casa"] },
-      { paper: 2, item: 2, requires: ["perro"] },
-    ]);
+    expect(parseAnswerKeyRows(text)).toEqual({
+      rows: [
+        { paper: 1, item: 1, requires: ["casa"] },
+        { paper: 2, item: 2, requires: ["perro"] },
+      ],
+      ...clean,
+    });
   });
 
   it("returns nothing for text with no rows, which the file reader turns into a throw", () => {
-    // The pure parser is allowed to return []; "" is a legitimate input to a
-    // parser. `parseAnswerKey` is the one that refuses, because "" is not a
-    // legitimate answer key and a gate that read nothing must not report
+    // The pure parser is allowed to come back empty; "" is a legitimate input
+    // to a parser. `parseAnswerKey` is the one that refuses, because "" is not
+    // a legitimate answer key and a gate that read nothing must not report
     // success.
-    expect(parseAnswerKeyRows("")).toEqual([]);
-    expect(parseAnswerKeyRows("## Prueba 1\n\nno table here")).toEqual([]);
+    expect(parseAnswerKeyRows("")).toEqual({ rows: [], ...clean });
+    expect(parseAnswerKeyRows("## Prueba 1\n\nno table here")).toEqual({ rows: [], ...clean });
   });
 
   it("stays flat on a long line rather than backtracking", () => {
     // The old `\s*([^|]+)\s*\|$` measured CUBIC on this shape: 1.1s at
-    // n=2000, 8.7s at n=4000. It is reachable because `buildSpanishA1MockAudit`
-    // is exported and takes a caller-supplied `root`. A generous ceiling, so
-    // the test pins the complexity class rather than a machine's speed.
+    // n=2000, 8.7s at n=4000, 29s at n=6000. It is reachable because
+    // `buildSpanishA1MockAudit` is exported and takes a caller-supplied
+    // `root`. A generous ceiling, so the test pins the complexity class rather
+    // than a machine's speed.
     const started = Date.now();
-    expect(parseAnswerKeyRows(`|1||${" ".repeat(8000)}`)).toEqual([]);
+    expect(parseAnswerKeyRows(`|1||${" ".repeat(8000)}`).rows).toEqual([]);
     expect(Date.now() - started).toBeLessThan(1000);
   });
 });

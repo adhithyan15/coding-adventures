@@ -79,16 +79,43 @@ const clean = (value: string): string =>
 export type AnswerKeyRow = { paper: number; item: number; requires: string[] };
 
 /**
+ * What a parse of an answer key found, INCLUDING what it could not use.
+ *
+ * `rows` alone was the wrong return type, and the reason is the whole subject
+ * of this module. Every way this parse can go wrong is silent: a line
+ * terminator the split misses, a heading whose numbering changes, a table that
+ * grew a trailing space. Each one removes a row, and a removed row is an item
+ * the gate never scores -- which reads downstream as an item that is fine.
+ * Anything the parse REJECTED has to come back with it, or the caller cannot
+ * tell "nothing was wrong" from "I could not see it".
+ */
+export interface AnswerKeyParse {
+  /** Rows under Prueba 1 or 2 that carry at least one requirement. */
+  readonly rows: readonly AnswerKeyRow[];
+  /** Items whose requirement column parsed to nothing. Never scored -- see below. */
+  readonly unscored: readonly { paper: number; item: number }[];
+  /** Lines that open like a numbered table row but that the row pattern rejected. */
+  readonly malformed: readonly string[];
+}
+
+/**
  * The answer key's scored rows, from its TEXT.
  *
  * Split from `parseAnswerKey` so the parse can be tested the way
  * `parseMockPaper` is -- on strings, without a whole synthetic curriculum
- * behind it. Both this gate's silent-drop bugs (a line terminator the split
- * misses, an empty last column) were found by reading, not by a failing test,
- * because the only way in was a 20-minute run over the real corpus.
+ * behind it. All three of this gate's silent drops (a line terminator the split
+ * misses, an empty last column, a row the pattern rejects) were found by
+ * READING, in two rounds of security review, because the only way into the
+ * parser was a 20-minute run over the real corpus.
+ *
+ * It returns rather than throws: "" is a legitimate input to a parser and is
+ * not a legitimate answer key, and that judgement belongs to `parseAnswerKey`,
+ * which knows which file it opened.
  */
-export function parseAnswerKeyRows(text: string): AnswerKeyRow[] {
+export function parseAnswerKeyRows(text: string): AnswerKeyParse {
   const rows: AnswerKeyRow[] = [];
+  const unscored: { paper: number; item: number }[] = [];
+  const malformed: string[] = [];
   let paper = 0;
   // `LINE_TERMINATORS`, not `/\r?\n/`, and this is the FAIL-OPEN copy of that
   // omission. `.` cannot match a lone CR or U+2028, so a key using either
@@ -109,48 +136,78 @@ export function parseAnswerKeyRows(text: string): AnswerKeyRow[] {
     // leaving this one was the wrong call. `clean` already trims, so every row
     // in the corpus parses identically.
     const row = /^\|\s*(\d+)\s*\|.*\|([^|]*)\|$/.exec(line);
-    if (row && (paper === 1 || paper === 2)) {
-      rows.push({
-        paper,
-        item: Number(row[1]),
-        // `.filter(Boolean)`, because `+` -> `*` is NOT inert here. The sibling
-        // module says the widening is harmless, and in the reporter it is: an
-        // entry of "" matches no form and prints nothing. This copy feeds the
-        // GATE. A row whose last column is empty (`| 7 | b | |`) did not match
-        // under `([^|]+)` and now matches with a capture of "", which `taught`
-        // never contains -- so the item would fail on a requirement nobody
-        // wrote, inflating `objectiveFailed` and putting "" in
-        // `missingObjectiveLexemes`. Fail-closed rather than fail-open, and no
-        // such row exists in any of the 24 keys, but the steering number of the
-        // whole programme is not the place to carry a phantom. A trailing comma
-        // in a hand-written row (`casa, perro,`) reaches the same filter.
-        requires: row[2].split(",").map(clean).filter(Boolean),
-      });
+    if (row === null) {
+      // A line that OPENS like a numbered data row and then fails the full
+      // pattern is the silent drop, caught. One trailing space after the
+      // closing pipe is enough to do it, and the result -- an item nobody
+      // scored -- is indistinguishable downstream from an item that passed.
+      // Deliberately not restricted to Prueba 1 and 2: a malformed row
+      // anywhere means the table shape moved, and the paper it landed under is
+      // itself decided by a heading pattern that may be what broke.
+      if (/^\|\s*\d+\s*\|/.test(line)) malformed.push(line);
+      continue;
     }
+    if (paper !== 1 && paper !== 2) continue;
+    const requires = row[2].split(",").map(clean).filter(Boolean);
+    if (requires.length === 0) {
+      // NOT A PASS, AND NOT A FAILURE EITHER. This row is unusable, and both
+      // ways of scoring it are wrong in a way that hides something:
+      //
+      //   requires: [""]  -- what `+` -> `*` produced before the filter. `taught`
+      //                      never contains "", so the item FAILS on a
+      //                      requirement nobody wrote, inflating
+      //                      `objectiveFailed` and putting "" in
+      //                      `missingObjectiveLexemes`.
+      //   requires: []    -- what the filter alone produced. `[].every(...)` is
+      //                      `true`, so the item PASSES unconditionally and
+      //                      counts toward `reading`/`listening`. Round two of
+      //                      security review caught this: the fix for the
+      //                      phantom failure had landed on a phantom pass,
+      //                      which is the FAIL-OPEN direction.
+      //
+      // So it is neither. It is reported, and `parseAnswerKey` refuses the file.
+      unscored.push({ paper, item: Number(row[1]) });
+      continue;
+    }
+    rows.push({ paper, item: Number(row[1]), requires });
   }
-  return rows;
+  return { rows, unscored, malformed };
 }
 
-function parseAnswerKey(path: string): AnswerKeyRow[] {
-  const rows = parseAnswerKeyRows(readFileSync(path, "utf8"));
-  // A GATE THAT READ NOTHING MUST NOT REPORT SUCCESS.
+function parseAnswerKey(path: string): readonly AnswerKeyRow[] {
+  const { rows, unscored, malformed } = parseAnswerKeyRows(readFileSync(path, "utf8"));
+  const name = reportableFilename(path);
+  // A GATE THAT READ NOTHING MUST NOT REPORT SUCCESS -- and "nothing" has four
+  // shapes, not one.
   //
-  // Every failure mode in the parser is silent by construction: a line
-  // terminator the split misses, a heading whose numbering changes, a table
-  // rewritten with a different pipe shape. Each leaves `rows` empty, and an
-  // empty `rows` makes every downstream number zero -- `objectiveFailed: 0`,
-  // which reads as a clean bill of health and is the exact opposite of what
-  // happened. `--write` would then persist it.
+  // The first version of this guard checked only `rows.length === 0`, which is
+  // reached only when EVERY row is lost. One trailing space after a closing
+  // pipe drops a single row and sails past it, and a single dropped row is an
+  // item this gate never scores -- which is what a passing item looks like from
+  // the outside. An all-or-nothing check on an all-or-nothing failure mode is
+  // the one case that was never the risk.
   //
-  // The check lives on the FILE side rather than inside `parseAnswerKeyRows`
-  // because "" is a legitimate input to a parser and is not a legitimate
-  // answer key, and it is unconditional rather than gated on having seen a
-  // `## Prueba` heading: a heading-gated version goes quiet in the very case
-  // where the heading pattern is what stopped matching. Both keys the audit
-  // opens have Prueba 1 and Prueba 2 sections full of rows, so zero rows
-  // always means the parse broke.
+  // Each `throw` below is unconditional rather than gated on having seen a
+  // `## Prueba` heading: a heading-gated check goes quiet in exactly the case
+  // where the heading pattern is what stopped matching.
+  if (malformed.length > 0) {
+    throw new Error(`${name}: ${malformed.length} table row(s) the row pattern rejected`);
+  }
+  if (unscored.length > 0) {
+    const items = unscored.map(({ paper, item }) => `${paper}.${item}`).join(", ");
+    throw new Error(`${name}: item(s) ${items} state no requirements`);
+  }
   if (rows.length === 0) {
-    throw new Error(`${reportableFilename(path)}: parsed no answer-key rows`);
+    throw new Error(`${name}: parsed no answer-key rows`);
+  }
+  // The comment on the previous guard asserted this -- "both keys the audit
+  // opens have Prueba 1 and Prueba 2 sections full of rows" -- without the code
+  // checking it. A claim in a comment that the code does not enforce is how
+  // this module's header got three drafts wrong; here it is as a check.
+  for (const paper of [1, 2]) {
+    if (!rows.some((row) => row.paper === paper)) {
+      throw new Error(`${name}: parsed no Prueba ${paper} rows`);
+    }
   }
   return rows;
 }

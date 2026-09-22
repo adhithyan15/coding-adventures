@@ -27,7 +27,17 @@ import type { Script } from "./types.js";
  * CRLF is the leading alternative so the pair is consumed as one terminator
  * rather than as two, which would insert an empty line between every row.
  */
-export const LINE_TERMINATORS = /\r\n|[\r\n\u2028\u2029]/;
+// `Object.freeze`, for the reason `AUDIT_DIR` one module over is frozen: a
+// `const` binding is immutable, the object it names is not. `constants.ts` is
+// re-exported wholesale by `index.ts`, so this regex is public, and a
+// `LINE_TERMINATORS[Symbol.split] = () => [...]` from anywhere in the realm
+// makes all three parsers see one line and return zero rows -- including the
+// gate, whose zero reads as a clean bill of health. Same-realm code could
+// equally patch `RegExp.prototype`, so this is depth rather than a boundary,
+// but it costs nothing: `split` works on a frozen regex (`String.prototype
+// .split` builds its own sticky clone and never writes `lastIndex` on this
+// object), and the hijack becomes a `TypeError`.
+export const LINE_TERMINATORS: RegExp = Object.freeze(/\r\n|[\r\n\u2028\u2029]/);
 
 /**
  * Which script each track is written in. HL01 imagines each track eventually

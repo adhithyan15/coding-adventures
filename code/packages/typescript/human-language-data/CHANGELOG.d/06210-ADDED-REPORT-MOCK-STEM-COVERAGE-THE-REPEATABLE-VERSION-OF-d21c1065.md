@@ -101,19 +101,48 @@ exists to prevent.
   regex also made `| 7 | b |  |` match for the first time, capturing `""` —
   which `taught` never contains, so the item would have failed on a requirement
   nobody wrote. Inert in the reporter, as its comment says; the comment was
-  copied to a file where it was not true. The gate now filters empty entries, so
-  a trailing comma in a hand-written row is dropped too.
+  copied to a file where it was not true.
+- **The fix for that landed on the opposite error.** Filtering the empty entry
+  left `requires: []`, and `[].every(...)` is `true` — so the unusable row
+  stopped failing and started *passing unconditionally*, counting toward
+  `reading`/`listening`. Round two of review caught it. Both scorings hide
+  something, so the row is now neither: it is reported as `unscored` and the
+  gate refuses the file.
 
 All three Spanish mock audits regenerate byte-identically and the reporter's
 output is unchanged — `unaccounted (39)` / `derivable (76)` and `(39)` / `(58)`,
 as above. The row parse is now flat where it measured **cubic**: 1.1 s at a
 2000-character line, 8.7 s at 4000, 67 s at 8000.
 
-#### Changed — the answer-key parse is testable on strings
+#### Changed — the answer-key parse returns what it REJECTED, not just what it read
 
-`parseAnswerKeyRows(text)` is split out of `parseAnswerKey(path)`, so it can be
-tested the way `parseMockPaper` already was. Both of the silent drops above were
-found by *reading*, not by a failing test, because the only way into that parser
-was a run over the real corpus. Eight tests now pin the terminators, the CRLF
-pair, the empty column, the trailing comma, the heading scope and the
-complexity class.
+`parseAnswerKeyRows(text)` is split out of `parseAnswerKey(path)` so it can be
+tested the way `parseMockPaper` already was — every drop above was found by
+*reading*, in two rounds of review, because the only way into that parser was a
+run over the real corpus.
+
+It returns `{ rows, unscored, malformed }` rather than an array, and that is the
+substantive change. Every way this parse goes wrong is silent, each one removes
+a row, and a removed row is an item the gate never scores — which downstream is
+indistinguishable from an item that passed. So `parseAnswerKey` refuses a file
+with any malformed row, any unscored item, no rows at all, or no rows under
+Prueba 1 or Prueba 2.
+
+The first version of that guard checked only "zero rows", which fires only when
+*every* row is lost. One trailing space after a closing pipe drops exactly one
+row and sails past it — an all-or-nothing check on the one failure shape that
+was never the risk. All six Spanish answer keys pass all four guards unchanged.
+
+Eleven tests pin the three terminators, the CRLF pair, the empty column, the
+trailing comma, the rejected row, the header/separator non-match, the heading
+scope, the empty input and the complexity class.
+
+#### Changed — `LINE_TERMINATORS` is frozen
+
+`constants.ts` is re-exported wholesale by `index.ts`, so the shared regex is
+public, and a `LINE_TERMINATORS[Symbol.split] = …` from anywhere in the realm
+makes all three parsers see one line and return nothing — including the gate,
+whose nothing reads as a clean bill of health. Same-realm code could patch
+`RegExp.prototype` just as easily, so this is depth rather than a boundary, but
+it is free: `split` works on a frozen regex and the hijack becomes a
+`TypeError`. `AUDIT_DIR` one module over is frozen for the same reason.
