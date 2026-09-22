@@ -10,7 +10,7 @@ gloss: the singular present subjunctive of vivir
 concept_tag: ES-SUBJUNCTIVE-IR-SINGULAR
 prerequisites: [ES-C18-comer-subjuntivo, ES-C07-vivir]
 sounds: [vowel-a, stress-default-vowel-ns]
-roots: [latin-vivere]
+roots: [vivere-latin]
 etymology_hook: "regular -ir joins regular -er in the same singular subjunctive row: -a, -as, -a"
 duration:
   max_seconds: 290

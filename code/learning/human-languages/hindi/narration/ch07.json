@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Yes and No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:5cac2ad07c86c60c",
+  "sourceHash": "fnv1a64:ea32edb2b900916a",
   "lessons": [
     {
       "id": "HI-C07-haan",
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23117f1728ad244f",
+      "sourceHash": "fnv1a64:e3003d27edb3430f",
       "notice": null,
       "blocks": [
         {

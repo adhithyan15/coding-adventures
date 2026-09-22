@@ -10,7 +10,7 @@ romanization: pāṇī
 gloss: water
 prerequisites: [MW-C04-paani]
 sounds: [unaspirated-p, long-aa, retroflex-n, long-ii]
-roots: [SANSKRIT-PA-DRINK]
+roots: [sanskrit-pa-drink]
 duration:
   max_seconds: 210
 requires:

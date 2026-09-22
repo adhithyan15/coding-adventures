@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Head and Hand",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:39d4a15371d772bc",
+  "sourceHash": "fnv1a64:6cf94d3b577f9afd",
   "lessons": [
     {
       "id": "HI-C13-sir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7233ddf764b43161",
+      "sourceHash": "fnv1a64:cf93823b0d4e84cb",
       "notice": null,
       "blocks": [
         {

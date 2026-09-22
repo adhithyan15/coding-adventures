@@ -10,7 +10,7 @@ gloss: to stand — French has no single verb for it, so the movement is se leve
 concept_tag: VERB-STAND
 prerequisites: [FR-C27-sasseoir, FR-C25-penser]
 sounds: [vowel-e-grave, er-ending]
-roots: [latin-levare, frankish-botan]
+roots: [levare-latin, frankish-botan]
 etymology_hook: "lever ← Latin levāre 'to raise, to lighten' ← levis 'light in weight' → elevate, elevator, lever, levity, levitate, alleviate, relieve, relief, relevant, leaven, levy; debout is de + bout, 'on end', and bout comes from bouter 'to strike, to push' ← Frankish *bōtan, whose English cousin by descent is beat"
 duration:
   max_seconds: 298

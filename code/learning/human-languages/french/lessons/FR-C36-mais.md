@@ -10,7 +10,7 @@ gloss: "but — Latin magis, more, which stayed more in Spanish and became but o
 concept_tag: FR-CONNECT-MAIS
 prerequisites: [FR-C36-ou-conj]
 sounds: [nasal-ain, silent-final]
-roots: [latin-magis]
+roots: [magis-latin]
 etymology_hook: "mais is Latin magis, 'more' -- Spanish kept the meaning and says mas for more, French kept the word and turned it into but, so one Latin adverb split into two different parts of speech in two daughters"
 duration:
   max_seconds: 230

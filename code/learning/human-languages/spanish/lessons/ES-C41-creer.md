@@ -10,7 +10,7 @@ gloss: to believe, to think — putting your heart somewhere, where pensar weigh
 concept_tag: OPINION-I-THINK
 prerequisites: [ES-C34-pensar, ES-C38-contar]
 sounds: [hiatus-ee, r-tap]
-roots: [credere-latin, kerd-pie]
+roots: [credere-latin, pie-kerd]
 etymology_hook: "creer ← Latin crēdere 'to entrust, believe', from PIE *ḱred-dʰeh₁-, 'to put *ḱred-' — traditionally read as 'to put HEART', tying *ḱred- to Latin cor, cordis and English heart, though that step is disputed on vocalism; the compound itself is secure, and creer sits in one family with credit, creed, credential and incredible"
 duration:
   max_seconds: 260

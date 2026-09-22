@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "Five Ways to Point",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:c16dd10d17bfd151",
+  "sourceHash": "fnv1a64:ba246cbef9e1cd38",
   "lessons": [
     {
       "id": "FR-C34-il-y-a",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1b3b1dff4aff64c9",
+      "sourceHash": "fnv1a64:88eb43e9e88bb14d",
       "notice": null,
       "blocks": [
         {
@@ -167,7 +167,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:373476bcd951f51f",
+      "sourceHash": "fnv1a64:8a45f23988521c99",
       "notice": null,
       "blocks": [
         {

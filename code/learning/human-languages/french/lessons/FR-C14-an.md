@@ -10,7 +10,7 @@ gloss: a year — and the annual, the anniversary and the annals inside it
 concept_tag: FR-TIME-YEAR
 prerequisites: [FR-C14-practice-avoir]
 sounds: [nasal-an, silent-final]
-roots: [latin-annus]
+roots: [annus-latin]
 etymology_hook: "an ← annus — and English annual, anniversary, annals and per annum all still carry it whole"
 duration:
   max_seconds: 190

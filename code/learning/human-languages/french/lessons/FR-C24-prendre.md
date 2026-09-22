@@ -10,7 +10,7 @@ gloss: to take — the grasping verb English borrowed a dozen times over, from p
 concept_tag: VERB-TAKE
 prerequisites: [FR-C17-main]
 sounds: [nasal-an, silent-final]
-roots: [latin-prehendere]
+roots: [prehendere-latin]
 etymology_hook: "prendre ← Latin prehendere (shortened to prendere) 'to grasp, to seize' → prehensile, apprehend, reprehensible, prison ('a seizing'), surprise ('an over-taking'), enterprise, apprentice, impregnable ('not takeable')"
 duration:
   max_seconds: 270

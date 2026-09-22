@@ -10,7 +10,7 @@ gloss: cheese — the word English and Portuguese still share, though French and
 concept_tag: PT-FOOD-CHEESE
 prerequisites: [PT-C23-leite]
 sounds: [diphthong-ei, j-as-zh]
-roots: [latin-caseus]
+roots: [caseus-latin]
 etymology_hook: "queijo ← Latin caseus, the same root that gave English cheese (via a West Germanic borrowing of caseus) — so queijo and cheese are true cousins, while French fromage and Italian formaggio abandoned caseus for formaticum, 'something shaped in a mold'"
 duration:
   max_seconds: 214

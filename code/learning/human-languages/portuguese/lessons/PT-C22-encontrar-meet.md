@@ -10,7 +10,7 @@ gloss: "to meet up"
 concept_tag: VERB-MEET
 prerequisites: [PT-C22-encontrar, PT-C18-saber-conhecer, PT-C07-dias-2, PT-C08-meio-dia-meia-noite]
 sounds: [nasal-en, nasal-on]
-roots: [latin-in-contra, latin-contra]
+roots: [latin-in-contra, contra-latin]
 etymology_hook: "the face-to-face image in encontrar extends from finding to meeting"
 duration:
   max_seconds: 150

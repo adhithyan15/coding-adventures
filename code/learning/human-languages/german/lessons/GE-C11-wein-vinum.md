@@ -10,7 +10,7 @@ gloss: not three cousins but one loan — the vine came north and its name came 
 concept_tag: GE-ETYMON-WEIN
 prerequisites: [GE-C11-wein]
 sounds: []
-roots: [latin-vinum]
+roots: [vinum-latin]
 etymology_hook: "Wein, wine and vinum match too well to be cousins: cousins drift apart under a sound law, and these did not, because the Germanic tribes took the drink and its name together"
 duration:
   max_seconds: 195

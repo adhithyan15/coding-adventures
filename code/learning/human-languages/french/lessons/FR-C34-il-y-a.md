@@ -10,7 +10,7 @@ gloss: "there is, there are — literally it has there, and the y is a Latin wor
 concept_tag: FR-EXISTENCE-ILYA
 prerequisites: [FR-C33-practice, FR-C14-a, FR-C16-est, FR-C16-sont, FR-C11-du, FR-C11-pain, FR-C11-eau, FR-C11-vin, FR-C28-cafe, FR-C06-deux, FR-C08-heure, FR-C08-il-est, FR-C08-midi, FR-C08-minuit, FR-W01-accents, FR-C02-enchante, FR-C02-comment-vous-appelez-vous]
 sounds: [liaison, elision]
-roots: [latin-ibi]
+roots: [ibi-latin]
 etymology_hook: "the y of il y a is Latin ibi, there — the same ibi that Spanish welded onto ha to make hay, so two languages built their existence-word from the identical two pieces and only French still writes them apart"
 duration:
   max_seconds: 230

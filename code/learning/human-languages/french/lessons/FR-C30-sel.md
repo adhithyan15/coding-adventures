@@ -10,7 +10,7 @@ gloss: salt — masculine, cousin of English salt by common descent, and the sou
 concept_tag: FR-FOOD-SEL
 prerequisites: [FR-C30-beurre, FR-C30-fromage]
 sounds: [silent-final]
-roots: [latin-sal]
+roots: [sal-latin]
 etymology_hook: "sel ← Latin sal, salis — inherited like lait, not borrowed like café or sucre; English salt is a genuine COGNATE, both descending from PIE *sal-, not a borrowing either way; salarium ('salary') is built on sal, but the popular story that Roman soldiers were literally paid in salt appears in no ancient source and is best treated as a later legend attached to a real word"
 duration:
   max_seconds: 265

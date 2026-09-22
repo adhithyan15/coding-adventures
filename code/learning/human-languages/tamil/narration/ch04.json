@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:b6eedc611f6dc4e3",
+  "sourceHash": "fnv1a64:8e8008635b84d6c8",
   "lessons": [
     {
       "id": "TA-C04-po",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0137acadcdb3661b",
+      "sourceHash": "fnv1a64:aa9645867ddf55d5",
       "notice": null,
       "blocks": [
         {
@@ -113,7 +113,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bbf9adc9cb362553",
+      "sourceHash": "fnv1a64:e8705570e1770b8d",
       "notice": null,
       "blocks": [
         {

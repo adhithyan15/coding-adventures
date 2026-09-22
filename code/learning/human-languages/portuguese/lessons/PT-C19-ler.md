@@ -10,7 +10,7 @@ gloss: "to read — three letters, irregular, and the same broken row as ver"
 concept_tag: VERB-READ
 prerequisites: [PT-C19-entender-compreender, PT-C18-ver]
 sounds: [circumflex-le, open-e]
-roots: [latin-legere]
+roots: [legere-latin]
 etymology_hook: "ler ← legere, which meant 'to gather, pick, choose' before it meant 'to read'; the -g- dissolved between vowels (legere → leer → ler) → collect, select, elect, intellect, diligent, neglect, elegant, legible, lecture, legend — and lesson itself"
 duration:
   max_seconds: 264

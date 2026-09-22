@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "Standing Alone",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:a13ad1aca8f21b59",
+  "sourceHash": "fnv1a64:1d4dd120a761df3a",
   "lessons": [
     {
       "id": "FR-C39-qui",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:78dcc9a80ecb94ed",
+      "sourceHash": "fnv1a64:0155e53c22ca78db",
       "notice": null,
       "blocks": [
         {
@@ -168,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fed146d915ffdea5",
+      "sourceHash": "fnv1a64:239d8370240499d3",
       "notice": null,
       "blocks": [
         {
@@ -295,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f5c60c067f8a6fcf",
+      "sourceHash": "fnv1a64:a82a1ae11a1a0461",
       "notice": null,
       "blocks": [
         {

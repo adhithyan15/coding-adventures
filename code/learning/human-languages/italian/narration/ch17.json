@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Head and Hand",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:34a887be239573b3",
+  "sourceHash": "fnv1a64:82d80faea8ac3c64",
   "lessons": [
     {
       "id": "IT-C17-testa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96707b206b55c083",
+      "sourceHash": "fnv1a64:37888f7c1e20345f",
       "notice": null,
       "blocks": [
         {

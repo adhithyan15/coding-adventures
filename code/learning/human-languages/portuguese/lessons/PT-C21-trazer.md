@@ -10,7 +10,7 @@ gloss: "to bring — carrying a thing toward the person speaking, from a Latin v
 concept_tag: VERB-BRING
 prerequisites: [PT-C20-tomar-pegar, PT-C20-gostar]
 sounds: [open-a, final-r]
-roots: [latin-trahere]
+roots: [trahere-latin]
 etymology_hook: "trazer ← trahere 'to drag, pull', through a worn Vulgar Latin tragere → tract, tractor, traction, attract, contract, subtract, abstract, extract, distract, portray"
 duration:
   max_seconds: 279

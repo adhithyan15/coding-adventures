@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 108,
-  "sourceHash": "fnv1a64:0827412e236cde46",
+  "sourceHash": "fnv1a64:eb88c34c116e640c",
   "lessonIds": [
     "ES-C16-ver"
   ],
@@ -10,6 +10,6 @@
   "text": "spanish/narration/ch108.txt",
   "json": "spanish/narration/ch108.json",
   "textHash": "fnv1a64:ce1adb119df9e6ae",
-  "jsonHash": "fnv1a64:dced434da1a14ef7",
+  "jsonHash": "fnv1a64:f78f172032713bb1",
   "findings": []
 }

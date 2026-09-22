@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Cheese, Butter, Salt, Egg",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:385f0be077071618",
+  "sourceHash": "fnv1a64:77f41485b39e87b4",
   "lessons": [
     {
       "id": "FR-C30-fromage",
@@ -300,7 +300,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9145f0b709378219",
+      "sourceHash": "fnv1a64:e32a7a123248ee69",
       "notice": null,
       "blocks": [
         {
@@ -431,7 +431,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:46ea7ffdf7ea547c",
+      "sourceHash": "fnv1a64:98cadc791d54261e",
       "notice": null,
       "blocks": [
         {

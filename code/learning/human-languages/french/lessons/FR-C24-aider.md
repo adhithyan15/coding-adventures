@@ -10,7 +10,7 @@ gloss: to help — English aid arriving by the Latin road, while English help ca
 concept_tag: VERB-HELP
 prerequisites: [FR-C24-demander, FR-C19-sil-vous-plait]
 sounds: [vowel-e-acute, er-ending]
-roots: [latin-adiutare, latin-iuvare]
+roots: [adiutare-latin, iuvare-latin]
 etymology_hook: "aider ← Latin adiūtāre, a repeated-action form of adiuvāre (ad- + iuvāre 'to help') → aid, aide, aide-de-camp, adjutant, adjuvant — and English HELP is Germanic, no relation at all"
 duration:
   max_seconds: 255

@@ -10,7 +10,7 @@ gloss: the head — the pot-word, kept in its original shape
 concept_tag: IT-BODY-HEAD
 prerequisites: [IT-C01-il-la-lo]
 sounds: [double-consonant, open-e]
-roots: [latin-testa, latin-caput]
+roots: [latin-testa, caput-latin]
 etymology_hook: "Italian keeps the pot-word ALMOST UNCHANGED — Latin testa 'earthenware pot' is still testa — where French wore the same word down to tête; and unlike French, Italian ALSO kept caput as capo, so both the old head-word and its slang replacement are alive side by side"
 duration:
   max_seconds: 257

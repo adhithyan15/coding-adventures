@@ -252,27 +252,57 @@ export function loadRootSlugBaseline(root = defaultCurriculumRoot()): RootSlugBa
 /**
  * Compare today's splits against the committed baseline.
  *
- * BOTH DIRECTIONS FAIL, and the second one is the point. A new split is a
- * regression. A baseline entry that no longer exists means somebody fixed a
- * split without pruning the baseline, and a baseline that is allowed to go
- * stale stops being evidence of anything -- the same reason the latex warning
- * baseline is exact rather than a ceiling.
+ * ALL THREE DIRECTIONS FAIL `--check`, and the last two are the point. A new
+ * split is a regression. A baseline entry that no longer exists, or one that
+ * lost a spelling, means somebody fixed a split without pruning the baseline,
+ * and a baseline that is allowed to go stale stops being evidence of anything
+ * -- the same reason the latex warning baseline is exact rather than a ceiling.
+ *
+ * `shrunk` IS REPORTED SEPARATELY FROM `added`, and that separation is not
+ * cosmetic. An entry whose live slugs are a strict subset of its baseline
+ * slugs has moved in the direction the file's own note demands -- "THIS FILE
+ * MAY ONLY SHRINK" -- so it must not be what `--write` refuses. Folding it into
+ * `added` made the tool contradict itself: `--check` told the author to run
+ * `generate:root-slug-splits`, and `generate:root-slug-splits` then refused,
+ * naming their fix a new split. The only way out was `--allow-new`, which is
+ * the flag that exists to launder a genuine regression -- so the tool pushed a
+ * correct normalisation onto the escape hatch built for the incorrect one.
+ *
+ * Found by the HL-C419 normalisation itself: resolving the 110 `shape` splits
+ * left 17 `bare-vs-tagged` entries each holding one spelling fewer, and every
+ * one of the 17 was a strict subset. Zero were new.
  */
 export function diffRootSlugSplits(
   live: readonly RootSlugSplit[],
   baseline: RootSlugBaseline,
-): { added: RootSlugSplit[]; resolved: string[] } {
+): { added: RootSlugSplit[]; shrunk: RootSlugSplit[]; resolved: string[] } {
   // `JSON.stringify`, not `slugs.join(" ")`: six live slugs contain spaces
   // (`ad de magis`, `qui sapit`, `sub ponere`, ...), and a space-joined string
   // makes `["a b", "c"]` and `["a", "b c"]` compare equal.
   const fingerprint = (slugs: readonly string[]) => JSON.stringify(slugs);
+  const baselineSlugs = new Map(baseline.splits.map((split) => [split.key, split.slugs]));
   const baselineKeys = new Map(baseline.splits.map((split) => [split.key, fingerprint(split.slugs)]));
   const liveKeys = new Map(live.map((split) => [split.key, fingerprint(split.slugs)]));
-  const added = live.filter((split) => baselineKeys.get(split.key) !== fingerprint(split.slugs));
+  const moved = live.filter((split) => baselineKeys.get(split.key) !== fingerprint(split.slugs));
+
+  // A STRICT SUBSET, not merely a shorter list. `["a","b"] -> ["a","c"]` is the
+  // same length and `["a","b","c"] -> ["a","x"]` is shorter, and both introduce
+  // a spelling the baseline never accepted. Either would be laundered by a
+  // length comparison, so membership is checked rather than size.
+  const isStrictSubset = (split: RootSlugSplit): boolean => {
+    const before = baselineSlugs.get(split.key);
+    if (before === undefined) return false;
+    return split.slugs.length < before.length && split.slugs.every((slug) => before.includes(slug));
+  };
+
   const resolved = [...baselineKeys.keys()]
     .filter((key) => !liveKeys.has(key))
     .sort(compareCodeUnits);
-  return { added, resolved };
+  return {
+    added: moved.filter((split) => !isStrictSubset(split)),
+    shrunk: moved.filter(isStrictSubset),
+    resolved,
+  };
 }
 
 export function serialiseRootSlugBaseline(splits: readonly RootSlugSplit[]): string {

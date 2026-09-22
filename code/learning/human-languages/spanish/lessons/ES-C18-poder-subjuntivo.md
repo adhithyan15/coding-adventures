@@ -10,7 +10,7 @@ gloss: the singular present subjunctive of poder
 concept_tag: ES-SUBJUNCTIVE-PODER-SINGULAR
 prerequisites: [ES-C18-querer-subjuntivo, ES-C11-poder]
 sounds: [diphthong-ue, vowel-a]
-roots: [latin-potere]
+roots: [potere-latin]
 etymology_hook: "the stressed o-to-ue change already learned in puedo and puedes remains in singular pueda, puedas, pueda"
 duration:
   max_seconds: 290

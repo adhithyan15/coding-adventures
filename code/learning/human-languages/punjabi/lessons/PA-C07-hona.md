@@ -11,7 +11,7 @@ gloss: to be — the infinitive that sounds nothing like ਹੈ, because two anc
 concept_tag: VERB-BE
 prerequisites: [PA-C06-panj-convergence, PA-S05-babba-lalla-hora]
 sounds: [hora-o, retroflex-na, kanna-aa]
-roots: [sanskrit-bhavati, pie-bhuh, asti-sanskrit]
+roots: [sanskrit-bhavati, pie-bhuh, sanskrit-asti]
 etymology_hook: hoṇā comes from Sanskrit bhavati (PIE *bʰuH-, English be); its own present hai comes from asti (English is) — one verb, two roots.
 duration:
   max_seconds: 270

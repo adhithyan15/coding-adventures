@@ -10,7 +10,7 @@ gloss: "age — Italian HAS its years, and the last lesson's silent h finally ea
 concept_tag: IT-AGE
 prerequisites: [IT-C14-avere, IT-C12-numeri-17-20]
 sounds: [double-n, final-stress-a]
-roots: [latin-annus, latin-aetas]
+roots: [annus-latin, aetas-latin]
 etymology_hook: "ho venti anni = 'I HAVE twenty years' like French/Spanish/Portuguese, against German/English 'I AM'; anno ← annus → annual/anniversary — and here hanno ('they have') vs anno ('year') stops being a curiosity and becomes a sentence you must spell right"
 duration:
   max_seconds: 252

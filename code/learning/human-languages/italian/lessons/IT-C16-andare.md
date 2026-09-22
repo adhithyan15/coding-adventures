@@ -10,7 +10,7 @@ gloss: to go — one verb built from two historical stems
 concept_tag: VERB-GO
 prerequisites: [IT-C16-essere-stato, IT-C02-come-va]
 sounds: [double-consonant, open-a]
-roots: [latin-vadere, disputed-ambitare]
+roots: [vadere-latin, disputed-ambitare]
 etymology_hook: "vado/vai/va/vanno continue Latin vadere, while andare/andiamo/andate/andato probably continue a different root"
 duration:
   max_seconds: 194

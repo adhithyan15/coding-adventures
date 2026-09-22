@@ -10,7 +10,7 @@ gloss: "three years ago"
 concept_tag: PT-TIME-AGO
 prerequisites: [PT-C18-ter-haver, PT-C06-numeros-1-5]
 sounds: [open-a]
-roots: [latin-habere]
+roots: [habere-latin]
 etymology_hook: "the fixed há that marks existence also looks back across elapsed time"
 duration:
   max_seconds: 135

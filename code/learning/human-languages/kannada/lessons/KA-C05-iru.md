@@ -11,7 +11,7 @@ romanization: "iru"
 concept_tag: KA-VERB-IRU
 prerequisites: [KA-C05-maatanaadu, KA-C03-niivu-hegiddiira, KA-C04-hoogu]
 sounds: [independent-i]
-roots: [iru-be-dravidian]
+roots: [dravidian-iru-be]
 duration:
   max_seconds: 240
 requires:

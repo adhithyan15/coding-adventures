@@ -10,7 +10,7 @@ gloss: the head — feminine, with cedilla ç pronounced s
 concept_tag: PT-BODY-HEAD
 prerequisites: [PT-C01-o-a]
 sounds: [cedilla-s]
-roots: [latin-caput]
+roots: [caput-latin]
 etymology_hook: "cabeça continues Late Latin capitia from caput, so Portuguese kept the older head-word"
 duration:
   max_seconds: 161

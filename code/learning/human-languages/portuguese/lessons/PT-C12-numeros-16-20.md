@@ -10,7 +10,7 @@ gloss: 16–20 — Portuguese breaks earliest, and rebuilds numbers as "ten AND 
 concept_tag: PT-NUM-16-20
 prerequisites: [PT-C12-numeros-11-15]
 sounds: [double-ss, nasal-in]
-roots: [latin-decem, viginti-latin]
+roots: [decem-latin, viginti-latin]
 etymology_hook: "dezesseis = dez + e + seis, literally 'TEN AND SIX' — Portuguese rebuilt its upper teens from live words, keeping the 'and' (e) visible; it breaks at 16, earlier than any sister"
 duration:
   max_seconds: 213

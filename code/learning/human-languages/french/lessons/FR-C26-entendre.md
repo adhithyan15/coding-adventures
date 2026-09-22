@@ -10,7 +10,7 @@ gloss: to hear — from a Latin verb meaning "to stretch toward," so English's i
 concept_tag: VERB-HEAR
 prerequisites: [FR-C25-ecrire, FR-C25-comprendre]
 sounds: [nasal-an, silent-final]
-roots: [latin-intendere]
+roots: [intendere-latin]
 etymology_hook: "entendre ← Latin intendere, in- 'toward' + tendere 'to stretch' → intend, intent, intense, intention, tension, tent, extend, pretend, tendency — French narrowed the verb onto hearing as ouïr (← audīre) wore away, leaving the older sense in entendu 'agreed', s'entendre 'to get along' and l'entente"
 duration:
   max_seconds: 298

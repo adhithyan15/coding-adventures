@@ -10,7 +10,7 @@ gloss: nose — masculine, a silent final z, and another genuine cousin of its E
 concept_tag: FR-BODY-NEZ
 prerequisites: [FR-C31-oeil]
 sounds: [silent-final]
-roots: [latin-nasus]
+roots: [nasus-latin]
 etymology_hook: "nez ← Latin nasus, from PIE *nas- — the SAME root as English nose, inherited down the Germanic branch, the same relationship as sel/salt and œuf/egg; English nasal is instead a LEARNED borrowing of the Latin word itself, sitting beside native nose the way lactic sits beside milk"
 duration:
   max_seconds: 240

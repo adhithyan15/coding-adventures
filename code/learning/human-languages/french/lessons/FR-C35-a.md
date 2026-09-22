@@ -10,7 +10,7 @@ gloss: "to, at — one letter, Latin ad, and the accent that keeps it apart from
 concept_tag: FR-PREP-A
 prerequisites: [FR-R34-voici-tout, FR-C14-a, FR-C08-heure]
 sounds: [accent-marks]
-roots: [latin-ad]
+roots: [ad-latin]
 etymology_hook: "a and à are the same letter doing two jobs, one a verb and one a preposition, and the grave accent exists for no other reason than to tell them apart on the page"
 duration:
   max_seconds: 220

@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:02f09d2c50f7857a",
+  "sourceHash": "fnv1a64:69db3aa5067dd55a",
   "lessons": [
     {
       "id": "TE-S01-letter-ta",
@@ -1159,7 +1159,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:464718962afe7af7",
+      "sourceHash": "fnv1a64:cd8ae71a8ebc67ef",
       "notice": {
         "modality": "sight",
         "needs": [

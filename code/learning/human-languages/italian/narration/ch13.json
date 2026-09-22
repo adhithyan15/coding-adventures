@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Colours",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:64d43dd9fc525346",
+  "sourceHash": "fnv1a64:26d7949cc934cf86",
   "lessons": [
     {
       "id": "IT-C13-nero-bianco",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bbacb9501b6d4ac6",
+      "sourceHash": "fnv1a64:3c94069beab92baa",
       "notice": null,
       "blocks": [
         {

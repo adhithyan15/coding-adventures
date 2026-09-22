@@ -169,7 +169,7 @@ describe("baseline diffing", () => {
 
   it("passes when live matches baseline exactly", () => {
     const live = [{ key: "stare|latin", slugs: ["latin-stare", "stare-latin"], kind: "shape" as const }];
-    expect(diffRootSlugSplits(live, baseline)).toEqual({ added: [], resolved: [] });
+    expect(diffRootSlugSplits(live, baseline)).toEqual({ added: [], shrunk: [], resolved: [] });
   });
 
   it("flags a NEW split", () => {
@@ -192,6 +192,43 @@ describe("baseline diffing", () => {
 
   it("flags a STALE baseline entry, so the file may only shrink honestly", () => {
     expect(diffRootSlugSplits([], baseline).resolved).toEqual(["stare|latin"]);
+  });
+
+  it("reports an entry that LOST a spelling as shrunk, never as added", () => {
+    // The direction the file's own note demands. Folding this into `added` made
+    // the tool contradict itself: `--check` said "run generate:root-slug-splits"
+    // and that command then refused, calling the fix a new split -- leaving
+    // `--allow-new`, the laundering flag, as the only way through. Found by the
+    // HL-C419 normalisation, where all 17 affected entries were strict subsets.
+    const live = [{ key: "stare|latin", slugs: ["stare-latin"], kind: "shape" as const }];
+    const diff = diffRootSlugSplits(live, baseline);
+    expect(diff.added).toEqual([]);
+    expect(diff.shrunk.map((split) => split.key)).toEqual(["stare|latin"]);
+  });
+
+  it("does NOT call a same-length swap a shrink", () => {
+    // `["latin-stare","stare-latin"] -> ["latin-stare","stare-latin-2"]` keeps
+    // the count and introduces a spelling the baseline never accepted. A
+    // length-only comparison would pass it straight into the accepted set.
+    const live = [
+      { key: "stare|latin", slugs: ["latin-stare", "stare-latin-2"], kind: "shape" as const },
+    ];
+    const diff = diffRootSlugSplits(live, baseline);
+    expect(diff.shrunk).toEqual([]);
+    expect(diff.added.map((split) => split.key)).toEqual(["stare|latin"]);
+  });
+
+  it("does NOT call a SHORTER list carrying a new spelling a shrink", () => {
+    // Three spellings down to two still LOOKS like progress by count, but one
+    // of the two was never in the baseline. Membership is what is checked.
+    const three = {
+      version: 1,
+      splits: [{ key: "stare|latin", slugs: ["latin-stare", "stare-latin", "stare-latin-2"] }],
+    };
+    const live = [{ key: "stare|latin", slugs: ["latin-stare", "stare-latin-3"], kind: "shape" as const }];
+    const diff = diffRootSlugSplits(live, three);
+    expect(diff.shrunk).toEqual([]);
+    expect(diff.added.map((split) => split.key)).toEqual(["stare|latin"]);
   });
 
   it("compares slug lists element-wise, not space-joined", () => {
@@ -251,8 +288,29 @@ describe("the live corpus", () => {
     //
     // This is the worklist for the normalisation PR the shard describes; the
     // guard exists so it cannot grow while that PR is waiting to be written.
+    //
+    // 192 -> 82. That PR is now written: ALL 110 SHAPE ENTRIES ARE GONE. Each
+    // was two slugs differing only in arrangement -- same lemma, same declared
+    // tag -- which `findRootSlugSplits` calls "defects with no argument
+    // available", so merging them asserts nothing the guard had not already
+    // established. 184 `roots:` uses were rewritten across 169 lessons in 18
+    // tracks.
+    //
+    // The 82 that remain are ALL `bare-vs-tagged` (`bonus` against
+    // `bonus-latin`). They are deliberately left: a bare slug could in
+    // principle be a different word that happens to share a spelling, so
+    // merging one asserts an etymology rather than revealing it -- the failure
+    // mode `cousins.ts` exists to prevent. Each needs its two lessons read.
+    //
+    // The overlap caveat above no longer applies: entries and etymon groups now
+    // coincide at 82, because the 16 containments it described were exactly
+    // bare-vs-tagged entries wrapping a shape entry, and the shape entries are
+    // what went away.
+    //
+    // THIS NUMBER MAY ONLY FALL.
     const baselineFile = loadRootSlugBaseline(defaultCurriculumRoot());
-    expect(baselineFile.splits).toHaveLength(192);
-    expect(findRootSlugSplits()).toHaveLength(192);
+    expect(baselineFile.splits).toHaveLength(82);
+    expect(findRootSlugSplits()).toHaveLength(82);
+    expect(findRootSlugSplits().every((split) => split.kind === "bare-vs-tagged")).toBe(true);
   });
 });

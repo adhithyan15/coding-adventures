@@ -10,7 +10,7 @@ gloss: "a little — the opposite end of the same scale, and the same bare de af
 concept_tag: FR-ADVERB-UN-PEU
 prerequisites: [FR-C40-beaucoup, FR-C06-un]
 sounds: [vowel-eu]
-roots: [latin-paucus]
+roots: [paucus-latin]
 etymology_hook: "peu is Latin paucus, 'few', which English borrowed twice over as paucity and as the pauc- of paucal -- so the French word for a little and the English word for scarcity are the same Latin adjective"
 duration:
   max_seconds: 220

@@ -10,7 +10,7 @@ gloss: the clock, and o'clock — the first everyday German word in this book th
 concept_tag: GE-TIME-HOUR
 prerequisites: [GE-C07-wochentage-2, GE-C01-der-die-das]
 sounds: [u-long, r-final]
-roots: [latin-hora]
+roots: [hora-latin]
 etymology_hook: "Uhr came in with the clocks themselves — Roman and monastic timekeeping arrived carrying its own word, and German took it rather than building one"
 duration:
   max_seconds: 150

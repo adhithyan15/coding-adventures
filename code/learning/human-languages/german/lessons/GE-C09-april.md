@@ -10,7 +10,7 @@ gloss: April — the one month whose Roman name nobody can be sure about
 concept_tag: GE-MONTH-APR
 prerequisites: [GE-C09-maerz-mars]
 sounds: [r-uvular, i-short]
-roots: [latin-aprilis]
+roots: [aprilis-latin]
 etymology_hook: "April is Latin Aprilis, and the Romans themselves were not sure why — the usual guess is aperire, to open, for the month when the buds do"
 duration:
   max_seconds: 160

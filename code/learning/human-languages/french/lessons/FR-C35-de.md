@@ -10,7 +10,7 @@ gloss: "of, from — the word already inside du, and the one that does what Engl
 concept_tag: FR-PREP-DE
 prerequisites: [FR-C35-a, FR-C11-du]
 sounds: [soft-e, elision]
-roots: [latin-de]
+roots: [de-latin]
 etymology_hook: "French marks possession with de where English uses an apostrophe, and the apostrophe is the younger invention: le livre de Marie is the older European shape and Marie's book is the outlier"
 duration:
   max_seconds: 230

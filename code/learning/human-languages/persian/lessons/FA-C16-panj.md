@@ -11,7 +11,7 @@ gloss: "five — the number hiding inside Punjab and inside a fruit drink"
 concept_tag: NUMBER-ONE-TO-FIVE
 prerequisites: [FA-C16-chahar]
 sounds: [rtl, persian-pe, short-vowels-unwritten]
-roots: [proto-indo-european-penkwe]
+roots: [pie-penkwe]
 etymology_hook: "panj continues Middle Persian panj, from Proto-Indo-European *penkwe — Greek pente, Latin quinque, English five — and it is the panj of Punjab, the five rivers."
 duration:
   max_seconds: 250

@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Taking, Asking, Helping, Liking",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6794288737c5357e",
+  "sourceHash": "fnv1a64:3c63c8a7c4813ab8",
   "lessons": [
     {
       "id": "GU-C09-levun",
@@ -201,7 +201,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:901d0e01c0899290",
+      "sourceHash": "fnv1a64:e550f5f6385447a4",
       "notice": {
         "modality": "sight",
         "needs": [

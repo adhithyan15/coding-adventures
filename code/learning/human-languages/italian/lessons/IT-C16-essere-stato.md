@@ -10,7 +10,7 @@ gloss: why essere and stare share the past participle stato
 concept_tag: IT-ESSERE-STATO
 prerequisites: [IT-C16-essere]
 sounds: [double-consonant]
-roots: [latin-esse, latin-stare]
+roots: [esse-latin, stare-latin]
 etymology_hook: "essere borrowed stare's participle, so sono stato can mean both 'I have been' and 'I have stayed'"
 duration:
   max_seconds: 197

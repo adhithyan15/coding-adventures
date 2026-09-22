@@ -10,7 +10,7 @@ gloss: "who — Latin quis, unchanged in twenty centuries, and the shortest ques
 concept_tag: FR-PRONOUN-QUI
 prerequisites: [FR-R38-ce-quon-nentend-pas, FR-C32-quand, FR-C34-cest]
 sounds: [vowel-i, silent-h]
-roots: [latin-quis]
+roots: [quis-latin]
 etymology_hook: "qui is Latin quis with almost nothing worn off, which is rare: most French words are half the length of their Latin parents, and this one lost a single letter in two thousand years"
 duration:
   max_seconds: 220

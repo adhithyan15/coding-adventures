@@ -10,7 +10,7 @@ gloss: the four seasons — three straightforward, and one whose MEANING quietly
 concept_tag: ES-SEASONS
 prerequisites: [ES-C24-mano, ES-C24-cabeza]
 sounds: [r-tap, diphthong-ie]
-roots: [latin-prima-vera, latin-autumnus, latin-hibernum, latin-veranum]
+roots: [latin-prima-vera, autumnus-latin, hibernum-latin, latin-veranum]
 etymology_hook: "primavera = prima vera 'first spring' (Italian keeps the same word); otoño ← autumnus; invierno ← hibernum ('wintry') — but verano did NOT come from aestas like French été; it's veranum, 'of spring,' whose MEANING drifted to summer once primavera took over spring's job"
 duration:
   max_seconds: 240

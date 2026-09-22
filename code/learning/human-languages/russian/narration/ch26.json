@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Which One: the Ordinals, Said and Written",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b546a2e14a408405",
+  "sourceHash": "fnv1a64:738cb66ece5052ff",
   "lessons": [
     {
       "id": "RU-C26-pervyy",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:78c915339c6d78cc",
+      "sourceHash": "fnv1a64:b8449dc5349c89d3",
       "notice": null,
       "blocks": [
         {

@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Where Two Words Melt Into One",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:c46497941ce35fa1",
+  "sourceHash": "fnv1a64:5ea03babc81c44ab",
   "lessons": [
     {
       "id": "FR-C35-a",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31e30a802fb522c8",
+      "sourceHash": "fnv1a64:12630c9a40a532ca",
       "notice": null,
       "blocks": [
         {
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:94ac9aa4f963b109",
+      "sourceHash": "fnv1a64:29cc67876de0a07f",
       "notice": null,
       "blocks": [
         {
@@ -285,7 +285,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8735e3479702bcb1",
+      "sourceHash": "fnv1a64:cc30ecbdb28d80bf",
       "notice": null,
       "blocks": [
         {
@@ -429,7 +429,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:9eb36cbccd644bb3",
+      "sourceHash": "fnv1a64:736c61c9b7da2a99",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -581,7 +581,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2687b0929f2f50b2",
+      "sourceHash": "fnv1a64:23a081de39f68f40",
       "notice": null,
       "blocks": [
         {

@@ -11,7 +11,7 @@ romanization: iru
 concept_tag: VERB-BE
 prerequisites: [KA-C31-shubha-madhyahna]
 sounds: [independent-i, kannada-geminate-dda]
-roots: [iru-be-dravidian]
+roots: [dravidian-iru-be]
 etymology_hook: "ಇರು is native Dravidian *iru- 'be, remain, stay', kept unchanged by Tamil as இரு while Telugu went its own way with ఉండు; ಇರುತ್ತೇನೆ is literally be + present + I, three pieces glued in that order, and the last piece already means 'I'"
 reviews_of: []
 duration:

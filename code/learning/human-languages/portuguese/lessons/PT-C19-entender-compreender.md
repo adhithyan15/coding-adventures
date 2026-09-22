@@ -10,7 +10,7 @@ gloss: "to understand — one verb that stretches toward the thing, one that sei
 concept_tag: VERB-UNDERSTAND
 prerequisites: [PT-C19-pensar]
 sounds: [nasal-en, final-r]
-roots: [latin-intendere, latin-comprehendere]
+roots: [intendere-latin, latin-comprehendere]
 etymology_hook: "entender ← intendere 'to stretch toward' → intend, intense, extend, pretend, tension, tent, tendon; compreender ← comprehendere 'to seize together' → comprehend, apprehend, prehensile, prison, prize, surprise — and English understand is in neither family"
 duration:
   max_seconds: 282

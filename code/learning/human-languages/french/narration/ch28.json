@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Taking, Asking, Helping, Loving",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:7162857ddf3ba262",
+  "sourceHash": "fnv1a64:b185704b2c2fa478",
   "lessons": [
     {
       "id": "FR-C24-prendre",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:30cd9f8a293e9a57",
+      "sourceHash": "fnv1a64:57f2a309062c4071",
       "notice": null,
       "blocks": [
         {
@@ -213,7 +213,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9fd5c8a237871ef0",
+      "sourceHash": "fnv1a64:ec0d83ebafce61f6",
       "notice": null,
       "blocks": [
         {
@@ -375,7 +375,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63d3523c390c1b55",
+      "sourceHash": "fnv1a64:85185fb2ee99d711",
       "notice": null,
       "blocks": [
         {
@@ -546,7 +546,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4cc5cea1c5584cd2",
+      "sourceHash": "fnv1a64:6ca6ceb5af9ab336",
       "notice": null,
       "blocks": [
         {

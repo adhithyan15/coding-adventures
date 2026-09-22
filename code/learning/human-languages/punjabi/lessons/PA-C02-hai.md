@@ -11,7 +11,7 @@ gloss: "is"
 concept_tag: WORD-IS
 prerequisites: [PA-C02-naam, PA-C02-mera]
 sounds: [dulavan-ai]
-roots: [asti-sanskrit]
+roots: [sanskrit-asti]
 duration:
   max_seconds: 180
 requires:

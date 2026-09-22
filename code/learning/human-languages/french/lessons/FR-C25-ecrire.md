@@ -10,7 +10,7 @@ gloss: to write — Latin scrībere, "to scratch," with a propped-up é- that Fr
 concept_tag: VERB-WRITE
 prerequisites: [FR-C25-lire, FR-C17-main]
 sounds: [vowel-e-acute, r-uvular]
-roots: [latin-scribere, latin-manus]
+roots: [scribere-latin, latin-manus]
 etymology_hook: "écrire ← Latin scrībere 'to scratch, to incise' → scribe, script, scripture, describe, prescribe, subscribe, inscribe, scribble — and manuscript is manus + scrībere, 'scratched by hand', so this verb and la main meet inside one English word"
 duration:
   max_seconds: 280

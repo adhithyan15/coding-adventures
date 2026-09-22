@@ -1,6 +1,9 @@
 ## HL-C419-66d1d9bb — Root slugs spell one etymon several ways, splitting the cousins join key
 
-**Status: OPEN.** Found while pinning etymology anchors for a Spanish A2
+**Status: PARTLY CLOSED (2026-09-22).** The 110 `shape` splits are normalised
+and gone; the 82 `bare-vs-tagged` remain and are still OPEN. See SHAPE
+NORMALISATION below.
+Found while pinning etymology anchors for a Spanish A2
 vocabulary chapter, and confirmed by census.
 
 `roots:` is the cousins join key, and the join is **exact string equality** on
@@ -194,3 +197,97 @@ in the joiner and one opaque slug in the guard, and the gate would have
 reported nothing. Every live `roots:` line is bracketed today, so this was
 latent rather than live; it is fixed because a guard reading different bytes
 from the thing it guards is not a guard.
+
+### SHAPE NORMALISATION — done, 192 entries down to 82
+
+All 110 `shape` entries are resolved. 184 `roots:` uses rewritten across **169
+lessons in 18 tracks** — Portuguese 41, French 40, Spanish 23, German 12,
+Italian 9, Hindi 9, Persian 6, Russian 5, and ten more tracks in ones and twos.
+Every lesson diff is exactly one `roots:` line: 169 removed, 169 added, nothing
+else in any lesson file.
+
+**The bare-vs-tagged 82 were deliberately not touched.** `findRootSlugSplits`
+calls the shape kind "defects with no argument available" — same lemma, same
+declared tag, different arrangement — so merging one asserts nothing the guard
+had not already established. A bare slug is the opposite case: it could be a
+different word that happens to share a spelling, so each of the 82 needs its
+two lessons read. That is a separate pass.
+
+#### The canonical form is PER TAG, and the entry above guessed wrong
+
+This entry proposed normalising "to the majority `lemma-latin` form". Measured
+by lesson-slug incidence, there is **no corpus-wide majority to normalise to** —
+the global count is nearly even (prefix 1671, suffix 1507) because it sums two
+opposite conventions:
+
+| tag | prefix `tag-lemma` | suffix `lemma-tag` |
+|---|---:|---:|
+| latin | 257 | **1121** |
+| greek | 12 | **56** |
+| sanskrit | **405** | 54 |
+| pie | **289** | 5 |
+| dravidian | **144** | 102 |
+| germanic | **131** | 54 |
+
+So `lemma-latin` is right for Latin and Greek and **wrong for everything else**.
+A single global shape would have rewritten either ~1100 Latin uses or ~800
+Indic and Iranian ones, neither of which this work justifies. Each entry was
+resolved to the shape its own tag already prefers, which moved 184 uses instead.
+
+Two choices in that rule are worth stating because they are not forced:
+
+- **`pie`, not `proto-indo-european`.** The vocabulary declares them aliases, so
+  the guard sees one tag — but the join is exact string equality, so the slug
+  still has to pick one spelling. `pie` has 289 uses against 39.
+- **`turkish` had no independent evidence.** The tag's entire corpus presence is
+  the one split, one slug on each side, so the choice rests only on incidence
+  (3 uses against 2). Every other tag had slugs outside its splits to vote.
+
+The case-only duplicate this entry predicted resolved as expected:
+`SANSKRIT-PA-DRINK` folded into `sanskrit-pa-drink`. It needed a deliberate
+tie-break — ranking by code unit alone picks the upper-case form, because
+capitals sort first.
+
+#### The guard refused the fix it asked for
+
+`--check` reported the 17 `bare-vs-tagged` entries that lost a spelling and told
+the author to run `generate:root-slug-splits`. That command then **refused**,
+counting each shrunken entry among "new split(s)" and pointing at `--allow-new`
+— the flag that exists to launder a genuine regression. The only route through
+a correct normalisation was the escape hatch built for the incorrect one.
+
+`diffRootSlugSplits` now separates `shrunk` from `added`. An entry whose live
+slugs are a **strict subset** of its baseline slugs is a shrink; `--write`
+accepts it without a flag and `--check` still fails until the baseline records
+it, so the file cannot go stale in either direction. Subset membership is
+checked rather than list length, because `[a,b] -> [a,c]` is the same length and
+`[a,b,c] -> [a,x]` is shorter, and both smuggle in a spelling the baseline never
+accepted. All 17 were strict subsets; none was new.
+
+#### Measured payoff, and the honest limit on it
+
+The joiner gains a lot:
+
+| | before | after |
+|---|---:|---:|
+| lessons with a cousin panel | 365 | **492** |
+| cousin pairs joined | 575 | **857** |
+
+Spanish 154 -> 206, French 63 -> 93, Italian 43 -> 60, Portuguese 51 -> 60,
+Latin 44 -> 54, German 7 -> 15. The three concrete panels this entry named as
+silently empty now join: `ES-C280-queso` gains `portuguese:o queijo`, four
+`dormire` lessons gain `french:dormir`, and every `scribere` lesson but one
+gains a cousin it did not have.
+
+Two read `(none)` in the reverse direction — `PT-C24-queijo` and
+`FR-C26-dormir` — and that is a **different** limit, not this one falling short:
+`cousinsFor` defaults to `ROMANCE_COUSINS` and excludes the lesson's own
+language, so a Portuguese lesson whose only cousin is Spanish has nowhere to
+show it.
+
+**Nothing renders those panels yet.** `cousinsFor` is exported and tested but
+has no production consumer: `book.ts` builds its `cousinweb` from an authored
+`etymology` block, not from the joiner. So the 127 are a latent gain in the join
+layer, realised whenever a surface consumes it — and not a line of book text
+changed here. Worth knowing that the layer HL-C419 exists to protect is one
+nothing reads today.

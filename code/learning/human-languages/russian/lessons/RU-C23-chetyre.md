@@ -11,7 +11,7 @@ gloss: "four — where a kw became a ch, as it did in every Slavic language"
 concept_tag: RU-NUMBER-FOUR
 prerequisites: [RU-C23-tri]
 sounds: [stress-unmarked, yery-vowel]
-roots: [proto-indo-european-kwetwores]
+roots: [pie-kwetwores]
 etymology_hook: "chetyre continues Proto-Indo-European *kwetwores: Latin quattuor kept the kw whole, English four lost it, and Slavic pushed it forward to ch -- the same three fates the Indo-Aryan and Iranian branches show."
 duration:
   max_seconds: 275

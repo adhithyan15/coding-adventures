@@ -10,7 +10,7 @@ gloss: "very — Latin trans, 'across', which crossed over into an intensifier a
 concept_tag: FR-ADVERB-TRES
 prerequisites: [FR-C40-un-peu, FR-C01-bien]
 sounds: [vowel-e-grave, liaison-z]
-roots: [latin-trans]
+roots: [trans-latin]
 etymology_hook: "tres is Latin trans, 'across, beyond' -- the same trans inside transport and translate -- so saying something is very good is saying it has gone across a line"
 duration:
   max_seconds: 230

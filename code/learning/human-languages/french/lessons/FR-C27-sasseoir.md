@@ -10,7 +10,7 @@ gloss: to sit down — a verb you do to yourself, from Latin sedēre, and the on
 concept_tag: VERB-SIT
 prerequisites: [FR-C26-courir]
 sounds: [r-uvular, silent-final]
-roots: [latin-sedere]
+roots: [sedere-latin]
 etymology_hook: "s'asseoir ← Vulgar Latin adsedēre, a remaking of Classical adsidēre (ad- 'at' + sedēre 'to sit') → sedentary, session ('a sitting'), sediment, reside, preside, president, assiduous, siege, possess, obsess, subsidy, supersede, dissident, insidious, and a bishop's see (← sedēs 'a seat') — and English sit, seat and settle are genuine Germanic cousins from the same ancient root"
 duration:
   max_seconds: 298

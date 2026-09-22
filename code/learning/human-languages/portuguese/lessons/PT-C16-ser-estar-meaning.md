@@ -10,7 +10,7 @@ gloss: how changing ser to estar changes the adjective's meaning
 concept_tag: PT-BE-MEANING-SHIFT
 prerequisites: [PT-C16-ser-vs-estar]
 sounds: []
-roots: [latin-esse, latin-stare]
+roots: [esse-latin, stare-latin]
 etymology_hook: "the Iberian ser/estar split turns one adjective into a defining quality or a current impression"
 duration:
   max_seconds: 198

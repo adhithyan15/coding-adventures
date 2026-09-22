@@ -10,7 +10,7 @@ gloss: "some, of a feminine noun — the half of the partitive the food chapter 
 concept_tag: FR-PARTITIVE-DE-LA
 prerequisites: [FR-C35-au-aux, FR-C11-du, FR-C28-lait]
 sounds: []
-roots: [latin-de]
+roots: [de-latin]
 etymology_hook: "the partitive has four shapes and only two of them contract, which is not a rule about the partitive at all -- it is the same le-and-les-only contraction that made du and au"
 duration:
   max_seconds: 230

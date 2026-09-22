@@ -10,7 +10,7 @@ gloss: to check over — looking at something a second time, on purpose
 concept_tag: ES-TURN-REVISAR
 prerequisites: [ES-C451-ticket, ES-C16-ver, ES-C332-aviso]
 sounds: [v-b, s-clear, stress-final]
-roots: [latin-videre]
+roots: [videre-latin]
 duration:
   max_seconds: 280
 requires:

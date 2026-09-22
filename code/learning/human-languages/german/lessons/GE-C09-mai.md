@@ -10,7 +10,7 @@ gloss: May — Maia, a goddess of growth, and the shortest month name German has
 concept_tag: GE-MONTH-MAY
 prerequisites: [GE-C09-april]
 sounds: [ai-as-eye]
-roots: [latin-maius]
+roots: [maius-latin]
 etymology_hook: "Mai is Latin Maius, the month of Maia, a goddess of growth and increase — and in German the ai is the eye sound, exactly as ei is"
 duration:
   max_seconds: 155

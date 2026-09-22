@@ -10,7 +10,7 @@ gloss: "this is, that is — ce plus est, with the elision you have been hearing
 concept_tag: FR-IDENTIFY-CEST
 prerequisites: [FR-C34-il-y-a, FR-C29-ami, FR-C16-sont, FR-C30-fromage, FR-C10-frere, FR-C10-soeur]
 sounds: [elision]
-roots: [latin-ecce-hoc]
+roots: [ecce-hoc-latin]
 etymology_hook: "ce is Latin ecce hoc, 'behold this' — a whole pointing phrase worn down to two letters, and the ecce half also gave voici, voila and Spanish he aqui"
 duration:
   max_seconds: 230

@@ -10,7 +10,7 @@ gloss: the singular -ir imperfect — vivía, vivías, vivía
 concept_tag: ES-IMPERFECT-IR
 prerequisites: [ES-C16-comer-imperfecto, ES-C15-comer-vivir-preterite]
 sounds: [accent-acute, hiatus-ia]
-roots: [latin-vivere]
+roots: [vivere-latin]
 etymology_hook: "vivir continues Latin vīvere and reuses the same Spanish imperfect endings as comer"
 duration:
   max_seconds: 280

@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 22,
-  "sourceHash": "fnv1a64:e63e009b52422e59",
+  "sourceHash": "fnv1a64:cd7d1bc70c3e1f9d",
   "lessonIds": [
     "IT-C22-caffe",
     "IT-C22-te",
@@ -13,6 +13,6 @@
   "text": "italian/narration/ch22.txt",
   "json": "italian/narration/ch22.json",
   "textHash": "fnv1a64:3c328d60decec1f5",
-  "jsonHash": "fnv1a64:c38416c9edc3c8dc",
+  "jsonHash": "fnv1a64:d4e6e6bea9178580",
   "findings": []
 }

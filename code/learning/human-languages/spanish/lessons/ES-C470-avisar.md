@@ -10,7 +10,7 @@ gloss: to let know — the verb el aviso was named from, handed over now, and it
 concept_tag: ES-ASK-AVISAR
 prerequisites: [ES-C470-encontrar, ES-C332-aviso, ES-C383-dejar]
 sounds: [v-b, s-clear, stress-final]
-roots: [latin-videre]
+roots: [videre-latin]
 duration:
   max_seconds: 270
 requires:

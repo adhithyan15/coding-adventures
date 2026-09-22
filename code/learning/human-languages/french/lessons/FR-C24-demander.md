@@ -10,7 +10,7 @@ gloss: to ask — an ordinary, polite, everyday word, and one of the sharpest fa
 concept_tag: VERB-ASK
 prerequisites: [FR-C24-prendre, FR-C17-main]
 sounds: [nasal-an, er-ending]
-roots: [latin-demandare, latin-manus, latin-dare]
+roots: [latin-demandare, latin-manus, dare-latin]
 etymology_hook: "demander ← Latin dēmandāre 'to hand over, to entrust' ← de- + mandāre, itself manus 'hand' + dare 'to give' → mandate, command, commandment, mandatory, remand — so a demand was once literally something placed in your hand"
 duration:
   max_seconds: 250

@@ -10,7 +10,7 @@ gloss: to be — the other Italian “to be”
 concept_tag: VERB-BE
 prerequisites: [IT-C02-stare, IT-C14-avere, IT-C15-passato-prossimo]
 sounds: [double-consonant, open-e]
-roots: [latin-esse]
+roots: [esse-latin]
 etymology_hook: "essere continues Latin esse; its six present forms also teach the crucial è/e accent contrast"
 duration:
   max_seconds: 180
