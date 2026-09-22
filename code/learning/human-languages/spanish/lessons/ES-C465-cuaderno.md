@@ -8,32 +8,32 @@ type: word
 headword: el cuaderno
 gloss: the notebook — a counting word underneath, because the oldest notebook was four sheets folded once
 concept_tag: ES-ASK-CUADERNO
-prerequisites: [ES-C464-sintesis-cita, ES-C43-libro, ES-C301-papel]
+prerequisites: [ES-C464-sintesis-cita, ES-C451-carne, ES-C43-libro, ES-C301-papel]
 sounds: [diphthong-ua, stress-penultimate]
-roots: [quattuor-latin]
+roots: [quaternum-latin, quattuor-latin]
 duration:
   max_seconds: 270
 requires:
-  knowledge: [ES-LEX-LIBRO, ES-LEX-C301-ASK-05]
+  knowledge: [ES-LEX-C451-TURNO-03, ES-LEX-LIBRO, ES-LEX-C301-ASK-05]
 introduces:
   knowledge: [ES-LEX-C465-APUNTE-01]
 practises:
-  knowledge: [ES-LEX-C465-APUNTE-01, ES-LEX-LIBRO, ES-LEX-C301-ASK-05]
+  knowledge: [ES-LEX-C465-APUNTE-01, ES-LEX-C451-TURNO-03, ES-LEX-LIBRO, ES-LEX-C301-ASK-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [ES-C43-libro, ES-C301-papel]
+reviews_of: [ES-C451-carne, ES-C43-libro, ES-C301-papel]
 ---
 
 # el cuaderno — the notebook
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-LIBRO, ES-LEX-C301-ASK-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-LIBRO, ES-LEX-C301-ASK-05, ES-LEX-C451-TURNO-03] -->
 
-[PAUSE 2s] Say **el libro** and **el papel**. One is bound and finished; the
-other is loose and blank. The word coming next sits between them.
+[PAUSE 2s] Say **el libro**, **el papel** and **el carné**. One is bound, one
+is loose, and the third already told you which number it counts to.
 
 ## You'll want to know: el cuaderno
 <!-- hl-knowledge: introduces=[ES-LEX-C465-APUNTE-01]; assesses=[ES-LEX-C301-ASK-05] -->
@@ -46,29 +46,31 @@ other is loose and blank. The word coming next sits between them.
 field notebook, the one a person carries to write down what they see outside.
 
 A *libro* is written for you. A *cuaderno* is waiting for you to write in it.
-That is the whole difference, and it is why a school gives out *cuadernos* and
-a library lends *libros*.
+That is the difference that matters, and it is why a school hands out
+*cuadernos* and a library lends *libros*.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C465-APUNTE-01] -->
 
-There is a number hiding in this word, and it is **four**.
-
-Latin **quaterni** meant *four at a time*, off **quattuor**, four — the same
-four you can already count to. A **quaternus** was a sheet of parchment folded
-once to make four pages, and a stack of those was the cheapest book anybody
-could make. The object was named after how many pages one fold produced.
+You have had this number already. *El carné* was Latin **quaternum**, a set of
+four — four sheets of paper folded together, which is how a small notebook was
+made — and that lesson named *el cuaderno* while it was there. This is the
+object the card shrank from.
 
 | Latin | Spanish |
 |---|---|
-| quattuor | cuatro |
-| quaternus | el cuaderno |
+| quaternum | el carné, el cuaderno |
+| quattuor | cuatro, cuarto |
 
-English took the same object and kept the count plainer: a **quire** is still a
-gathering of folded sheets, and it is *quaternus* worn down through French.
+So *quaternum* counts **sheets gathered into a fold**, not pages produced by
+one. Four leaves folded together was the cheapest book anybody could make, and
+the thing was named after how many went in.
 
-So the notebook in a bag and the number four are the same word, separated by
-the one thing nobody thinks about when buying one — how it was folded.
+English kept the count plainer still: a **quire** is a gathering of folded
+sheets, and it is the same *quaternum* worn down through French.
+
+The notebook in a bag and the number four are one word, separated by the thing
+rarely thought about when buying one — how many sheets went into the fold.
 
 ## Grammar Lens: the ua that does not move
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C465-APUNTE-01] -->
@@ -84,8 +86,11 @@ that break. This family shows the other half of that rule.
 The *ua* sits still in both. It is not a broken vowel waiting to happen — it
 came straight from the Latin *qua-* and stayed. The lesson is that the stress
 test tells you where to *look*, and looking sometimes tells you nothing is
-happening. A vowel is only a candidate for breaking if it is stressed and
-came from a short Latin **e** or **o**; this one is neither.
+happening. Breaking needs two things, not one: the vowel must be stressed
+**and** must have been a short Latin **e** or **o** (or the *ae* that fell in
+with short *e*, which is why *quaerere* gave *quiero*). In *cuatro* the *ua* is
+stressed, so it passes the first test and fails the second. In *cuaderno* it
+fails both.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C465-APUNTE-01, ES-LEX-LIBRO] -->
@@ -98,5 +103,5 @@ came from a short Latin **e** or **o**; this one is neither.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C465-APUNTE-01] -->
 
-[PAUSE 3s] The notebook? (**El cuaderno**.) What number is inside it?
-(**Four** — *quattuor*, through *quaternus*, four pages from one fold.)
+[PAUSE 3s] The notebook? (**El cuaderno**.) Which word did you meet its number
+under? (***El carné*** — the same *quaternum*, four sheets in one fold.)

@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 465,
-  "sourceHash": "fnv1a64:007fc46e15d6d24d",
+  "sourceHash": "fnv1a64:507175cb283a6a6c",
   "lessonIds": [
     "ES-C465-cuaderno",
     "ES-C465-anotar",
@@ -14,7 +14,7 @@
   "drivablePrefix": 3,
   "text": "spanish/narration/ch465.txt",
   "json": "spanish/narration/ch465.json",
-  "textHash": "fnv1a64:1b942a7024fe8936",
-  "jsonHash": "fnv1a64:8b22314dbc613d3c",
+  "textHash": "fnv1a64:41bc1295f15e8dd1",
+  "jsonHash": "fnv1a64:c7243c859b1e19c0",
   "findings": []
 }

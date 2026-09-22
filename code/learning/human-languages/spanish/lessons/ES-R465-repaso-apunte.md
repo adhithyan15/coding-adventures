@@ -64,16 +64,17 @@ whoever reads the book next.
 ## The words, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C465-APUNTE-01, ES-LEX-C465-APUNTE-03] -->
 
-Three of the four hide something that is not about writing or weather at all.
+Two of the four hide something that is not about writing or weather at all.
 
 | word | what is underneath |
 |---|---|
-| el cuaderno | **four** — *quattuor*, four pages from one fold |
+| el cuaderno | **four** — *quaternum*, four sheets in one fold |
 | la temperatura | **mixing** — *temperare*, to hold in proportion |
 
-*Anotar* is the plain one: *nota*, a mark, with *a-* in front. And *la lluvia*
-you were given twice before you needed it — once as *pluere* under *llueve*,
-once as the worked example under *el llanto*.
+The other two say what they are. *Anotar* is *nota*, a mark, with a prefix
+aiming it. And *la lluvia* is *pluvia*, which had been passed under your nose
+several times — under *llueve*, *el llanto*, *lleno* and *planta* — before you
+needed it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C465-APUNTE-01, ES-LEX-C465-APUNTE-02, ES-LEX-C465-APUNTE-03, ES-LEX-C465-APUNTE-04] -->

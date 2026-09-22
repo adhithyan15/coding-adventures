@@ -71,15 +71,18 @@ from memory.
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C465-APUNTE-02] -->
 
 Every instruction here is **usted**: *anote*, *escriba*, *deje*, *siga*. A
-notice does not know who will read it, so it takes the polite form by default.
+notice usually takes the polite form, because it does not know who will read
+it — though plenty of Spanish notices use a bare infinitive instead, as in *no
+fumar*.
 
 | to one person you know | on a notice |
 |---|---|
 | *anota* | **anote** |
 
-The notices in this book have been doing it all along. What is worth adding is that
-*anote* is the same form as the subjunctive — the polite command borrows it —
-which is why *reduzca* on a road sign looked the way it did.
+You have had the mechanism since *hable usted*: an *usted* command **is** the
+subjunctive, because *usted* is a third-person title. Not a borrowing — the
+same form doing its own job. (The *tú* negative is subjunctive too: *no
+anotes*.) It is why *reduzca* on the road sign looked the way it did.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C465-APUNTE-01, ES-LEX-C465-APUNTE-02, ES-LEX-C465-APUNTE-03, ES-LEX-C465-APUNTE-04] -->

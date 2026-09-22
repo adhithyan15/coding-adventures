@@ -64,12 +64,14 @@ the rainfall column is headed *lluvia* and never *llueve*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C465-APUNTE-04, ES-LEX-C316-ANSW-11] -->
 
-This one you have been handed twice already, and it is worth saying so.
+This word's Latin has been passed under your nose several times already, and
+it is worth saying so.
 
-When you learned *llueve*, you were told it comes from Latin **pluere**, and
-that Latin's *cl-*, *fl-* and *pl-* all became Spanish **ll-**. Then, under *el
-llanto*, the rule was put to work on a list — and *la lluvia* was on that list,
-sitting there as the example beside *lleno* and *llorar*.
+The rule came to you under *llamar*, back at the beginning: Latin *cl-*, *fl-*
+and *pl-* arrive as Spanish **ll-** in words that came down by mouth. *Llueve*
+put it on rain, from *pluere*. And under *el llanto* it was run out over a
+list — where *la lluvia* was already sitting, as the example beside *lleno* and
+*llorar*.
 
 | Latin | Spanish |
 |---|---|
@@ -77,14 +79,18 @@ sitting there as the example beside *lleno* and *llorar*.
 | plenus | lleno |
 
 So nothing here is new except the use. Latin **pluvia** is the rain itself,
-*pluere* is the raining, and Spanish kept both with the same opening
-consonant shifted the same way. English borrowed the Latin form untouched and
-so kept the *pl-*: **pluvial**, and the **pluviometer** that measures exactly
-what this chapter's notebook is for.
+*pluere* is the raining, and both came down by mouth with the cluster shifted.
 
-That is what a corpus is for. A rule you were given at the start turns up
-later holding a word you now need, and the word costs you nothing because the
-rule already paid for it.
+The shift is not a law, and you have seen it fail. Words lifted later out of
+writing keep their *pl-* — which is why *planta* still has one, and why Spanish
+owns **la lluvia** and **pluvial** at the same time, the same word at two
+speeds. A *pluviómetro* measures exactly what this chapter's notebook is for,
+and it kept the cluster because it was built by scholars, not worn down by
+mouths.
+
+That is what the earlier lessons were for. A rule you were given at the start
+turns up later holding a word you now need, and the word costs you nothing
+because the rule already paid for it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C465-APUNTE-04, ES-LEX-C465-APUNTE-03] -->

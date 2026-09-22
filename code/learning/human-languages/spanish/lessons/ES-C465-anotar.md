@@ -33,8 +33,8 @@ reviews_of: [ES-C451-apuntar, ES-C429-nota]
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C451-TURNO-02, ES-LEX-C429-EDU-02] -->
 
 [PAUSE 2s] Say **apuntar** and **la nota**. You already have a verb for
-writing something down. A second one is about to arrive, and the two are not
-interchangeable.
+writing something down. A second one is about to arrive, and the two lean in
+different directions.
 
 ## You'll want to know: anotar
 <!-- hl-knowledge: introduces=[ES-LEX-C465-APUNTE-02]; assesses=[ES-LEX-C465-APUNTE-01] -->
@@ -59,28 +59,26 @@ Both put words on paper, and the difference is what the writing is *for*.
 *Apunta mi número* is a scrap of paper in a pocket. *Anote su número en el
 registro* is a line in a book that will be read later by somebody else.
 
-The etymologies say the same thing, which is rare enough to be worth noticing.
-*Apuntar* is **punctum**, a point — the tip of a pen touching down, one dot,
-gone. *Anotar* is **nota**, a mark that was made to be read. One is the act of
-writing; the other is the thing written.
+The etymologies lean the same way, which is rare enough to be worth noticing.
+*Apuntar* is **punctum**, the dot a point leaves behind — you had it from
+*pungere*, to pierce. *Anotar* is **nota**, a mark made so that somebody could
+read it. Both name marks; the difference is who each mark is for.
 
-So a doctor *apunta* while you talk and *anota* in your file afterwards. Where
-Spanish gives you two verbs, it is usually because Spanish thinks the two acts
-are different.
+So a doctor *apunta* while you talk and *anota* in your file afterwards.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C465-APUNTE-02, ES-LEX-C429-EDU-02] -->
 
-**a-** plus **nota**, the mark you already have from *la nota*.
+Latin **adnotare**: **ad-**, towards, plus **nota**, the mark you have from
+*la nota*. The writing is all in the noun.
 
 Latin *nota* was a sign that stood for something — a letter, a brand, a mark
-in the margin. From there it went two ways in English at once: a **note** you
-write, and to **notice**, which is to take a mark of something without writing
-it at all.
+in the margin. English took it both ways: a **note** you write, and to
+**notice**, which marks a thing without writing anything.
 
 You were given **notar** alongside *la nota* — to notice, to catch the mark.
 That is Spanish having taken the second road. *Anotar* is the first road, with
-*a-* on the front to put it back on paper.
+the prefix aiming the mark at something.
 
 | Spanish | what it does |
 |---|---|

@@ -40,10 +40,11 @@ the word for the scale that runs between them.
 
 **la temperatura** — the temperature.
 
-> Anote la **temperatura** a las ocho y a las ocho de la tarde.
+> Anote la **temperatura** a las ocho de la mañana y a las ocho de la tarde.
 
-*Tomar la temperatura* — to take somebody's temperature. *Tener temperatura*
-is to be running a fever, with no number said out loud.
+*Tomar la temperatura* — to take somebody's temperature. In Spain, *tener
+temperatura* is to be running a fever with no number said out loud; *tener
+fiebre* is the safer phrase everywhere.
 
 Note what *calor* and *frío* cannot do: they tell you which way, never how
 much. *Hace calor* is a judgement. *La temperatura* is a measurement, and the
@@ -71,7 +72,7 @@ between hot and cold.
 Spanish keeps the verb as **templar**, to temper or to tune an instrument, and
 *templado* is the word for weather that is neither one thing nor the other.
 
-## Grammar Lens: -ura on an adjective
+## Grammar Lens: -ura has two jobs
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C465-APUNTE-03, ES-LEX-C465-APUNTE-02] -->
 
 *La factura* gave you **-ura** as the thing an action produces, with a verb
@@ -87,9 +88,9 @@ The ending has a second family, though, and it does not take verbs at all:
 | ancho | la anch**ura** |
 
 Those sit on adjectives, and they name how much of the quality there is —
-*altura* is how tall, *anchura* is how wide. So when you meet a new **-ura**
-noun, look for a verb first, as *factura* told you to, and look for an
-adjective second.
+*altura* is how tall, *anchura* is how wide, and *la verdura* is the one you
+already own. So when you meet a new **-ura** noun, look for a verb first, as
+*factura* told you to, and look for an adjective second.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C465-APUNTE-03, ES-LEX-C465-APUNTE-02] -->
@@ -103,5 +104,6 @@ adjective second.
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C465-APUNTE-03] -->
 
 [PAUSE 3s] The temperature? (**La temperatura**.) What did *temperare* mean?
-(**To mix in the right proportion**.) What does *-ura* build? (**A noun of
-measure** — *altura*, *anchura*.)
+(**To mix in the right proportion**.) What does *-ura* build? (**The thing an
+action produces** — *factura*, *temperatura* — and on an adjective, **how much
+of a quality** — *altura*.)
