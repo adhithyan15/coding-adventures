@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-469-OFICINA",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can deal with a workplace machine that is not working: read a notice saying a printer is out of service, say what I want to print and what I cannot connect, and offer to make or return a phone call.",
+  "prerequisites": [
+    "ES-EXT-468-ABRIGO"
+  ]
+}

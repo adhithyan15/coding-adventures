@@ -1,0 +1,11 @@
+{
+  "id": "ES-C469-conectar",
+  "pathSegment": "ES-PATH-469-OFICINA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-469-OFICINA",
+      "order": 2
+    }
+  ]
+}
