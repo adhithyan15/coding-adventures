@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { defaultCurriculumRoot } from "../src/loader.js";
 import {
+  assertAnswerKeyParse,
   buildSpanishA1MockAudit,
   parseAnswerKeyRows,
   runSpanishA1MockAudit,
@@ -529,7 +530,7 @@ describe("parseAnswerKeyRows", () => {
   // the gate never scores is an item it reports as fine. Every case below is a
   // FAIL-OPEN shape: the audit comes back cleaner than the corpus is.
   const key = (body: string) => `## Prueba 1\n\n| # | Clave | Requiere |\n|---|---|---|\n${body}`;
-  const clean = { unscored: [], malformed: [] };
+  const clean = { unscored: [], malformed: [], declared: new Map() };
 
   it("reads a well-formed row", () => {
     expect(parseAnswerKeyRows(key("| 1 | b | casa, perro |"))).toEqual({
@@ -580,6 +581,7 @@ describe("parseAnswerKeyRows", () => {
       rows: [],
       unscored: [{ paper: 1, item: 7 }],
       malformed: [],
+      declared: new Map(),
     });
   });
 
@@ -600,6 +602,7 @@ describe("parseAnswerKeyRows", () => {
       rows: [{ paper: 1, item: 1, requires: ["casa"] }],
       unscored: [],
       malformed: ["| 2 | a | perro | "],
+      declared: new Map(),
     });
   });
 
@@ -643,5 +646,135 @@ describe("parseAnswerKeyRows", () => {
     const started = Date.now();
     expect(parseAnswerKeyRows(`|1||${" ".repeat(8000)}`).rows).toEqual([]);
     expect(Date.now() - started).toBeLessThan(1000);
+  });
+});
+
+describe("answer-key headings", () => {
+  it("resets the paper on a heading that is not `## Prueba <digit>`", () => {
+    // LIVE IN THE CORPUS, not hypothetical: `a2/mock-{1,2}-answer-key.md` write
+    // `## Pruebas 3 and 4` -- PLURAL, so `(\d)` cannot follow the `s` -- above a
+    // section whose own text says it is "not read by the audit". The old
+    // `if (heading) paper = ...` could only SET, never clear, so `paper` stayed
+    // 2 and any numbered table there was scored as listening. The A1 keys were
+    // safe only by luck: they spell `## Prueba 3` and `## Prueba 4`, which
+    // match and reset.
+    const text = [
+      "## Prueba 2", "| 26 | a | perro |",
+      "## Pruebas 3 and 4", "| 51 | b | ayuntamiento |",
+    ].join("\n");
+    expect(parseAnswerKeyRows(text).rows).toEqual([
+      { paper: 2, item: 26, requires: ["perro"] },
+    ]);
+  });
+
+  it("reads the item count the heading states about itself", () => {
+    // The file says how big it is. That is the one invariant here that does not
+    // depend on anticipating the shape of the damage.
+    const text = "## Prueba 1 · Comprensión de lectura (25 items)\n| 1 | b | casa |";
+    expect(parseAnswerKeyRows(text).declared).toEqual(new Map([[1, 25]]));
+  });
+
+  it("tolerates a heading that states no count", () => {
+    expect(parseAnswerKeyRows("## Prueba 1\n| 1 | b | casa |").declared).toEqual(new Map());
+  });
+});
+
+describe("looksLikeDataRow, via the malformed bucket", () => {
+  const under = (row: string) => parseAnswerKeyRows(`## Prueba 1\n${row}`).malformed;
+
+  it.each([
+    ["one trailing space", "| 2 | a | perro | "],
+    ["one leading space", " | 2 | a | perro |"],
+    ["a bolded item number", "| **2** | a | perro |"],
+    ["an item label with a suffix", "| 2a | a | perro |"],
+  ])("flags a row broken by %s", (_label, row) => {
+    // The first detector was a PREFIX test, `/^\|\s*\d+\s*\|/`, which needed the
+    // pipe at index 0 and a bare ASCII digit right after it -- blind to every
+    // edit but the trailing space it was written for. Bold inside these tables
+    // is already house style: `pre-a1/mock-1-answer-key.md` writes
+    // `| 21 | **gracias** | *gracias* |`.
+    expect(under(row)).toEqual([row]);
+  });
+
+  it.each([
+    ["a table header", "| # | Clave | Requiere |"],
+    ["a separator", "|---|---|---|"],
+    ["prose", "Not objectively keyed."],
+    ["a two-column numbered table", "| 1 | ***onru*** |"],
+  ])("does not flag %s", (_label, line) => {
+    // The digit in the first cell is what separates a data row from the
+    // furniture; the pipe ARITY is what separates this table from another one.
+    // Flagging the header or the separator would make the gate refuse every
+    // real key. Measured rather than assumed: a `cells.length >= 4` draft
+    // flagged a line in 177 of the 8670 markdown files under
+    // `human-languages/`, and requiring this table's three columns brings that
+    // to 100 -- none of them among the six keys `parseAnswerKey` opens, all of
+    // which flag zero lines.
+    expect(under(line)).toEqual([]);
+  });
+});
+
+describe("assertAnswerKeyParse", () => {
+  // Exported and taking a parse rather than a path for the same reason
+  // `parseAnswerKeyRows` is: every hole in these guards was found by reading,
+  // across three rounds of review, because the only way in was a run over the
+  // real corpus.
+  const parse = (over: Partial<Parameters<typeof assertAnswerKeyParse>[0]> = {}) => ({
+    rows: [
+      { paper: 1, item: 1, requires: ["casa"] },
+      { paper: 2, item: 2, requires: ["perro"] },
+    ],
+    unscored: [],
+    malformed: [],
+    declared: new Map<number, number>(),
+    ...over,
+  });
+
+  it("accepts a complete parse", () => {
+    expect(() => assertAnswerKeyParse(parse(), "key.md")).not.toThrow();
+  });
+
+  it("names the rejected line rather than only counting it", () => {
+    // "1 table row rejected" tells a maintainer that something is wrong and
+    // nothing about where, in a file of 160 lines.
+    expect(() => assertAnswerKeyParse(parse({ malformed: ["| 2 | a | perro | "] }), "key.md"))
+      .toThrow(/first "\| 2 \| a \| perro \| "/);
+  });
+
+  it("refuses an item that states no requirements", () => {
+    expect(() => assertAnswerKeyParse(parse({ unscored: [{ paper: 1, item: 7 }] }), "key.md"))
+      .toThrow(/item\(s\) 1\.7 state no requirements/);
+  });
+
+  it("refuses an empty parse", () => {
+    expect(() => assertAnswerKeyParse(parse({ rows: [] }), "key.md"))
+      .toThrow(/parsed no answer-key rows/);
+  });
+
+  it("refuses a parse with no rows under one of the two scored papers", () => {
+    expect(() => assertAnswerKeyParse(parse({ rows: [{ paper: 1, item: 1, requires: ["casa"] }] }), "key.md"))
+      .toThrow(/parsed no Prueba 2 rows/);
+  });
+
+  it("refuses a hole in the item numbers, however the row went missing", () => {
+    // THE GUARD THAT DOES NOT DEPEND ON GUESSING. A leading tab, an omitted
+    // leading pipe, a deleted row, or a `\v`/`\f`/U+0085 joining two rows all
+    // slipped past every shape-based check; none of them can survive this one.
+    const rows = [
+      { paper: 1, item: 1, requires: ["casa"] },
+      { paper: 1, item: 3, requires: ["gato"] },
+      { paper: 2, item: 4, requires: ["perro"] },
+    ];
+    expect(() => assertAnswerKeyParse(parse({ rows }), "key.md"))
+      .toThrow(/Prueba 1 item numbers jump from 1 to 3/);
+  });
+
+  it("refuses a parse shorter than the count its own heading declares", () => {
+    expect(() => assertAnswerKeyParse(parse({ declared: new Map([[1, 25]]) }), "key.md"))
+      .toThrow(/Prueba 1 declares 25 items, parsed 1/);
+  });
+
+  it("does not require a declared count", () => {
+    expect(() => assertAnswerKeyParse(parse({ declared: new Map([[2, 1]]) }), "key.md")).not.toThrow();
   });
 });

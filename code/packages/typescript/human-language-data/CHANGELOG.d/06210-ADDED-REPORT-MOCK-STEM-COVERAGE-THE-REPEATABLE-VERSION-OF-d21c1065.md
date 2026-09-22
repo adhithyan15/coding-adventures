@@ -146,3 +146,45 @@ whose nothing reads as a clean bill of health. Same-realm code could patch
 `RegExp.prototype` just as easily, so this is depth rather than a boundary, but
 it is free: `split` works on a frozen regex and the hijack becomes a
 `TypeError`. `AUDIT_DIR` one module over is frozen for the same reason.
+
+#### Fixed — the guards only caught the damage somebody had anticipated
+
+Round three of review pointed the same class at the guards themselves. Every
+check so far tested a *shape*, and a shape check is only as good as the list of
+mutations whoever wrote it thought of. Measured against the real A1 key, these
+each dropped a row into no bucket while every guard reported success:
+
+| edit to one row | before |
+|---|---|
+| one trailing space | caught — the only one it was written for |
+| one **leading** space (legal in GFM) | silently dropped |
+| a bolded item number, already house style in `pre-a1/mock-1` | silently dropped |
+| an item label with a suffix (`2a`) | silently dropped |
+| `\v`, `\f` or U+0085 joining two rows | **item 3 scored against item 4's requirements** |
+
+Two changes close all of them.
+
+- **The heading now resets the paper.** `if (heading) paper = …` could only ever
+  *set*, never clear — and that was live: `a2/mock-{1,2}-answer-key.md` write
+  `## Pruebas 3 and 4`, **plural**, so `(\d)` cannot follow the `s`. `paper`
+  stayed `2` through a section whose own text says it is "not read by the
+  audit", and any numbered table added there would have been scored as
+  listening. The A1 keys were safe only by luck — they spell `## Prueba 3`,
+  which matches and resets.
+- **The headings already declare their own size,** and now the parse is checked
+  against it: `## Prueba 1 · Comprensión de lectura (25 items)`. Together with a
+  contiguity check on the item numbers, this does not care *how* a row went
+  missing. All ten mutations above are caught; all six real keys pass untouched.
+
+The `malformed` detector is also shape-matched now rather than prefix-matched,
+and it names the offending line instead of counting it — "1 table row rejected"
+tells a maintainer that something is wrong and nothing about where, in a file of
+160 lines.
+
+`assertAnswerKeyParse` is exported and takes a parse rather than a path, for the
+reason `parseAnswerKeyRows` is: every hole in these guards, across three review
+rounds, was found by *reading*, because the only way in was a run over the real
+corpus. Nineteen more tests.
+
+All three mock audits still regenerate byte-identically and the reporter's
+output is unchanged.

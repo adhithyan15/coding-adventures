@@ -96,6 +96,14 @@ export interface AnswerKeyParse {
   readonly unscored: readonly { paper: number; item: number }[];
   /** Lines that open like a numbered table row but that the row pattern rejected. */
   readonly malformed: readonly string[];
+  /**
+   * Item counts the `## Prueba N` headings state for themselves.
+   *
+   * The file says how many items it has. Checking the parse against that is
+   * the only guard here that does not depend on anticipating the shape of the
+   * damage -- every silent drop, however it happened, is a shortfall.
+   */
+  readonly declared: ReadonlyMap<number, number>;
 }
 
 /**
@@ -116,6 +124,7 @@ export function parseAnswerKeyRows(text: string): AnswerKeyParse {
   const rows: AnswerKeyRow[] = [];
   const unscored: { paper: number; item: number }[] = [];
   const malformed: string[] = [];
+  const declared = new Map<number, number>();
   let paper = 0;
   // `LINE_TERMINATORS`, not `/\r?\n/`, and this is the FAIL-OPEN copy of that
   // omission. `.` cannot match a lone CR or U+2028, so a key using either
@@ -126,8 +135,30 @@ export function parseAnswerKeyRows(text: string): AnswerKeyParse {
   // adds noise; the hardening went to the harmless copy first because the two
   // were written out separately instead of shared.
   for (const line of text.split(LINE_TERMINATORS)) {
-    const heading = /^## Prueba (\d)/.exec(line);
-    if (heading) paper = Number(heading[1]);
+    // EVERY level-2 heading resets the paper; only `## Prueba <digit>` sets it.
+    //
+    // The old `if (heading) paper = ...` could only ever SET, never clear, and
+    // that is live in this corpus rather than hypothetical: `a2/mock-1` and
+    // `a2/mock-2` write `## Pruebas 3 and 4` -- PLURAL, so `(\d)` cannot follow
+    // the `s` -- above a section whose own text says it is "not read by the
+    // audit". `paper` stayed 2 through it, so any numbered table added there
+    // would be scored as listening. The A1 keys were safe only by luck: they
+    // happen to spell `## Prueba 3` and `## Prueba 4`, which match and reset.
+    //
+    // Resetting to 0 rather than leaving it is the fail-CLOSED choice: an
+    // unrecognised heading means "I do not know what section this is", and the
+    // count check below then catches a Prueba whose rows went missing.
+    if (/^##\s/.test(line)) {
+      const heading = /^## Prueba (\d)/.exec(line);
+      paper = heading ? Number(heading[1]) : 0;
+      // The heading declares its own size -- `## Prueba 1 · Comprensión de
+      // lectura (25 items)`. That is the invariant the guards were missing: a
+      // count the FILE states, against a count the parse produced. Every silent
+      // drop below shows up as a shortfall here, including the shapes the
+      // `malformed` detector cannot see.
+      const count = /^## Prueba \d[^(]*\((\d+) items?\)/.exec(line);
+      if (heading && count) declared.set(Number(heading[1]), Number(count[1]));
+    }
     // `([^|]*)` rather than `\s*([^|]+)\s*`. The old shape measured CUBIC --
     // 1.1s at a 2000-character line, 8.7s at 4000 -- which is strictly worse
     // than the two quadratic patterns CodeQL flagged in the sibling module, and
@@ -137,14 +168,7 @@ export function parseAnswerKeyRows(text: string): AnswerKeyParse {
     // in the corpus parses identically.
     const row = /^\|\s*(\d+)\s*\|.*\|([^|]*)\|$/.exec(line);
     if (row === null) {
-      // A line that OPENS like a numbered data row and then fails the full
-      // pattern is the silent drop, caught. One trailing space after the
-      // closing pipe is enough to do it, and the result -- an item nobody
-      // scored -- is indistinguishable downstream from an item that passed.
-      // Deliberately not restricted to Prueba 1 and 2: a malformed row
-      // anywhere means the table shape moved, and the paper it landed under is
-      // itself decided by a heading pattern that may be what broke.
-      if (/^\|\s*\d+\s*\|/.test(line)) malformed.push(line);
+      if (looksLikeDataRow(line)) malformed.push(line);
       continue;
     }
     if (paper !== 1 && paper !== 2) continue;
@@ -171,27 +195,76 @@ export function parseAnswerKeyRows(text: string): AnswerKeyParse {
     }
     rows.push({ paper, item: Number(row[1]), requires });
   }
-  return { rows, unscored, malformed };
+  return { rows, unscored, malformed, declared };
 }
 
-function parseAnswerKey(path: string): readonly AnswerKeyRow[] {
-  const { rows, unscored, malformed } = parseAnswerKeyRows(readFileSync(path, "utf8"));
-  const name = reportableFilename(path);
-  // A GATE THAT READ NOTHING MUST NOT REPORT SUCCESS -- and "nothing" has four
-  // shapes, not one.
-  //
-  // The first version of this guard checked only `rows.length === 0`, which is
-  // reached only when EVERY row is lost. One trailing space after a closing
-  // pipe drops a single row and sails past it, and a single dropped row is an
-  // item this gate never scores -- which is what a passing item looks like from
-  // the outside. An all-or-nothing check on an all-or-nothing failure mode is
-  // the one case that was never the risk.
-  //
-  // Each `throw` below is unconditional rather than gated on having seen a
-  // `## Prueba` heading: a heading-gated check goes quiet in exactly the case
-  // where the heading pattern is what stopped matching.
+/**
+ * Does this line CLAIM to be one of the table's data rows?
+ *
+ * By SHAPE rather than by a prefix, because the first version -- a prefix test,
+ * `/^\|\s*\d+\s*\|/` -- required the pipe at index 0 and a bare ASCII digit
+ * immediately after it, which round three showed is blind to every edit but the
+ * one it was written for. All of these dropped their row into no bucket at all
+ * while the gate reported success:
+ *
+ *     | 2 | a | perro |     one trailing space   <- the only one it caught
+ *    " | 2 | a | perro |"   one leading space, legal in GFM
+ *     | **2** | a | perro | a bolded item number, already house style in
+ *                           `pre-a1/mock-1-answer-key.md`
+ *     | 2a | a | perro |    an item label with a suffix
+ *
+ * So: up to three leading spaces (GFM's own allowance), a pipe, and at least
+ * three cells, of which the FIRST contains a digit. The digit is what separates
+ * a data row from the furniture -- `| # | Clave | Requiere |` and `|---|---|---|`
+ * carry none, and flagging those would make the gate refuse every real key.
+ *
+ * It is deliberately generous, and that is safe because it only ever runs on
+ * the six keys the audit opens, which flag zero lines between them. Measured
+ * across the wider corpus for scale: a line somewhere in 100 of the 8670
+ * markdown files under `human-languages/` would trip it, mostly numbered
+ * two-column tables that the arity check above already excludes from a
+ * stricter draft's 177.
+ *
+ * This is the cheap half. The count check in `assertAnswerKeyParse` is the half
+ * that does not depend on guessing which mutations a human might make.
+ */
+function looksLikeDataRow(line: string): boolean {
+  if (!/^ {0,3}\|/.test(line)) return false;
+  // FIVE, not four. A data row of this table has THREE columns, so splitting on
+  // the pipe yields five pieces -- the two empty edges plus the three cells.
+  // Four is what a TWO-column numbered table yields (`| 1 | ***onru*** |`), and
+  // those exist all over the corpus. A test pins it, because the first draft of
+  // this used four and the test is what caught it.
+  const cells = line.split("|");
+  return cells.length >= 5 && /\d/.test(cells[1] ?? "");
+}
+
+/**
+ * Refuse a parse that lost something, and say what.
+ *
+ * Exported and taking a PARSE rather than a path, for the reason
+ * `parseAnswerKeyRows` is: the only way into this logic used to be a
+ * twenty-minute run over the real corpus, which is why three rounds of review
+ * found its holes by reading instead of by a failing test.
+ *
+ * A GATE THAT READ NOTHING MUST NOT REPORT SUCCESS -- and "nothing" has six
+ * shapes, not one. The first version of this checked `rows.length === 0`,
+ * which fires only when EVERY row is lost; one trailing space drops a single
+ * row and sails past it, and a single dropped row is an item this gate never
+ * scores, which downstream is indistinguishable from an item that passed.
+ */
+export function assertAnswerKeyParse(parse: AnswerKeyParse, name: string): void {
+  const { rows, unscored, malformed, declared } = parse;
   if (malformed.length > 0) {
-    throw new Error(`${name}: ${malformed.length} table row(s) the row pattern rejected`);
+    // The rejected line is NAMED rather than counted. A message that says only
+    // "1 table row rejected" tells a maintainer that something is wrong and
+    // nothing about where, in a file of 160 lines. Through
+    // `reportableFilename`, because this line is file content: it strips C0/C1
+    // and quotes, so a row carrying a newline cannot forge a second log line.
+    const first = reportableFilename(malformed[0] ?? "");
+    throw new Error(
+      `${name}: ${malformed.length} table row(s) the row pattern rejected, first ${first}`,
+    );
   }
   if (unscored.length > 0) {
     const items = unscored.map(({ paper, item }) => `${paper}.${item}`).join(", ");
@@ -200,16 +273,43 @@ function parseAnswerKey(path: string): readonly AnswerKeyRow[] {
   if (rows.length === 0) {
     throw new Error(`${name}: parsed no answer-key rows`);
   }
-  // The comment on the previous guard asserted this -- "both keys the audit
-  // opens have Prueba 1 and Prueba 2 sections full of rows" -- without the code
-  // checking it. A claim in a comment that the code does not enforce is how
-  // this module's header got three drafts wrong; here it is as a check.
   for (const paper of [1, 2]) {
-    if (!rows.some((row) => row.paper === paper)) {
+    const items = rows.filter((row) => row.paper === paper).map((row) => row.item);
+    if (items.length === 0) {
       throw new Error(`${name}: parsed no Prueba ${paper} rows`);
     }
+    // THE TWO GUARDS THAT DO NOT DEPEND ON GUESSING THE DAMAGE.
+    //
+    // Everything above catches a shape somebody anticipated, and round three
+    // showed how thin that is: one leading space, a bolded item number, an item
+    // label with a suffix, or a `\v` joining two rows all dropped a row into no
+    // bucket while every guard reported success. On the real A1 key, joining
+    // rows 3 and 4 scored item 3 against item 4's requirements and nothing
+    // objected.
+    //
+    // These two do not care HOW a row went missing. The heading states the
+    // count and the numbers run consecutively, so a parse that lost a row is
+    // short or has a hole, whatever removed it. Measured against the real A1
+    // key: all ten mutations round three raised are caught, and all six real
+    // keys pass untouched.
+    const sorted = [...items].sort((left, right) => left - right);
+    const gap = sorted.findIndex((item, index) => index > 0 && item !== (sorted[index - 1] ?? 0) + 1);
+    if (gap > 0) {
+      throw new Error(
+        `${name}: Prueba ${paper} item numbers jump from ${sorted[gap - 1]} to ${sorted[gap]}`,
+      );
+    }
+    const count = declared.get(paper);
+    if (count !== undefined && items.length !== count) {
+      throw new Error(`${name}: Prueba ${paper} declares ${count} items, parsed ${items.length}`);
+    }
   }
-  return rows;
+}
+
+function parseAnswerKey(path: string): readonly AnswerKeyRow[] {
+  const parse = parseAnswerKeyRows(readFileSync(path, "utf8"));
+  assertAnswerKeyParse(parse, reportableFilename(path));
+  return parse.rows;
 }
 
 /**

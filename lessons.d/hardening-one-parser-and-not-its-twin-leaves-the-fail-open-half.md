@@ -67,3 +67,16 @@ drops a single row, sails past that check, and leaves one item unscored — whic
 downstream looks exactly like an item that passed. Guard the per-unit invariant,
 not just the aggregate: the parser now returns what it rejected, and the caller
 refuses the file if anything was.
+
+**A shape check is only as good as the list of mutations you thought of.** Round
+three turned the same class on the guards. The `malformed` detector was a prefix
+test written against the one failure that had actually occurred — a trailing
+space — and was blind to a leading space, a bolded item number, a suffixed item
+label, and a `\v` joining two rows, the last of which scored one item against
+another's requirements with every guard reporting success.
+
+The fix was not a longer list of shapes. It was to find the invariant the DATA
+already states: the heading says `(25 items)` and the numbers run consecutively,
+so a parse that lost a row is short or has a hole, whatever removed it. When a
+guard needs you to enumerate the ways input can be wrong, look for a count the
+input declares about itself instead.
