@@ -10,7 +10,7 @@ gloss: friend — from the verb "to love," and the word you close an introductio
 concept_tag: PT-PEOPLE-FRIEND
 prerequisites: [PT-C24-acucar, PT-C03-prazer]
 sounds: []
-roots: [latin-amicus-amare]
+roots: [amicus-latin, amare-latin]
 etymology_hook: "amigo/amiga ← Latin amicus/amica, built on amare 'to love' -- so a friend is literally 'one who is loved,' and the word closes the loop this book opened in Chapter 3 with prazer, itself from placere 'to please'"
 duration:
   max_seconds: 208
