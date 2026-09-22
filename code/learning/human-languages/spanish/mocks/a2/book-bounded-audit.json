@@ -59,15 +59,15 @@
     ],
     "numericCredits": "0-100"
   },
-  "lessonCount": 1380,
-  "taughtForms": 2285,
-  "objectiveFailed": 11,
+  "lessonCount": 1386,
+  "taughtForms": 2297,
+  "objectiveFailed": 10,
   "mocks": [
     {
       "mock": 1,
-      "reading": 23,
+      "reading": 24,
       "listening": 19,
-      "objectiveFailed": 8,
+      "objectiveFailed": 7,
       "failed": [
         {
           "paper": 1,
@@ -75,16 +75,6 @@
           "missing": [
             "invitar",
             "explicar"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 24,
-          "missing": [
-            "producir",
-            "suficiente",
-            "alimentar",
-            "objetivo"
           ]
         },
         {
@@ -181,7 +171,6 @@
   ],
   "missingObjectiveLexemes": [
     "abrigo",
-    "alimentar",
     "avanzado",
     "avisar",
     "bufanda",
@@ -200,16 +189,13 @@
     "lectura",
     "llamada",
     "mango",
-    "objetivo",
     "paraguas",
     "perderse",
     "principiante",
     "problema",
-    "producir",
     "recomendar",
     "responder",
     "sencillo",
-    "suficiente",
     "usuario"
   ],
   "missingFrequency": [
@@ -219,10 +205,6 @@
     },
     {
       "lexeme": "abrigo",
-      "count": 1
-    },
-    {
-      "lexeme": "alimentar",
       "count": 1
     },
     {
@@ -294,10 +276,6 @@
       "count": 1
     },
     {
-      "lexeme": "objetivo",
-      "count": 1
-    },
-    {
       "lexeme": "paraguas",
       "count": 1
     },
@@ -314,10 +292,6 @@
       "count": 1
     },
     {
-      "lexeme": "producir",
-      "count": 1
-    },
-    {
       "lexeme": "recomendar",
       "count": 1
     },
@@ -327,10 +301,6 @@
     },
     {
       "lexeme": "sencillo",
-      "count": 1
-    },
-    {
-      "lexeme": "suficiente",
       "count": 1
     },
     {

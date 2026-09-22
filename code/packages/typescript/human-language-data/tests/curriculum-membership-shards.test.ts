@@ -80,7 +80,8 @@ describe("direct curriculum lesson owners", () => {
     // 7376 -> 7398 was the seventh (456-459) and
     // 7398 -> 7423 was the eighth (460-464) and
     // 7423 -> 7429 was the ninth (465, on its own) and
-    // 7429 -> 7435 is the tenth (466); the guard still does its job, which is to make any OTHER change to the public
+    // 7429 -> 7435 was the tenth (466) and
+    // 7435 -> 7441 is the eleventh (467); the guard still does its job, which is to make any OTHER change to the public
     // graph fail loudly rather than pass quietly.
     //
     // Attribution was checked by RECONSTRUCTION, not assumed. A clean worktree
@@ -100,10 +101,11 @@ describe("direct curriculum lesson owners", () => {
     // exactly 6 lessons and the corpus-wide count moved by exactly 6. For 466
     // the control was origin/main at e34a62aa9f, which reproduced 4fdc1ab5...
     // and 7429 exactly; ES-PATH-466-INFORME holds exactly 6 lessons and the
-    // count again moved by exactly 6.
-    expect(digest).toBe("954755fd4bf6fce32f50ed1593fdcee600faf58bd4da86e11f4f718aafe4770b");
+    // count again moved by exactly 6. For 467 the control reproduced
+    // 954755fd... and 7435 exactly, and ES-PATH-467-ALIMENTO holds 6.
+    expect(digest).toBe("5ef6e70899d6a85120d3755bb5381809615305f364438d95196a1908d6331313");
     expect(curricula.flatMap((curriculum) => curriculum.path).flatMap((path) => path.lessons))
-      .toHaveLength(7435);
+      .toHaveLength(7441);
   });
 
   it("keeps the canonical curriculum shards free of derived lesson arrays", () => {

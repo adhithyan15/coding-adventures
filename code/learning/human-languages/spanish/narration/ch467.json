@@ -1,0 +1,1002 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 467,
+  "title": "El huerto comunitario",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:0faab17fa1100e0f",
+  "lessons": [
+    {
+      "id": "ES-C467-producir",
+      "sequence": 12750,
+      "title": "producir — to produce",
+      "headword": "producir",
+      "romanization": "producir",
+      "gloss": "to produce — the second -ducir verb, and it conjugates exactly like the one you already have",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e34a07215c7f3e0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say reducir and la ducha. The verb coming next is their close relative, and it will not make you learn anything twice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: producir",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "producir — to produce, to make."
+            },
+            {
+              "kind": "speech",
+              "text": "El huerto produce unos cien kilos al mes."
+            },
+            {
+              "kind": "speech",
+              "text": "Producir comida — to produce food. La producción is the noun, and el producto is the thing that comes out."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: nothing new here, which is the point",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Reducir taught you this whole verb, five chapters ago. Producir is the same class and takes the same two irregularities:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "where",
+                "reducir",
+                "producir"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "where: the z before c. reducir: reduzco. producir: produzco.",
+                "where: the j past. reducir: reduje. producir: produje."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So the subjunctive is produzca — the form on a notice, as reduzca was on the road sign — and the past is produjo, never producí."
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth stopping on. Learning reducir bought you the whole -ducir corner of that class — producir, and traducir and introducir when you meet them — the verbs that take the j past as well as the z."
+            },
+            {
+              "kind": "speech",
+              "text": "Not the whole class, though. Reducir's own lesson warned you: conocer shares the -zc- and not the past, going conocí. Two groups, one spelling, and the -ducir verbs are the half that also changes its past."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pro-, forward, plus ducere, to lead — the ducere already under reducir and under la ducha."
+            },
+            {
+              "kind": "speech",
+              "text": "To produce is to lead something forward, out where it can be seen. A farmer leads a crop forward out of the ground; a factory leads goods forward out of a door. English keeps the picture in produce as a noun, the stuff itself, and in a theatre producer, who leads the show out in front of an audience."
+            },
+            {
+              "kind": "speech",
+              "text": "Set them side by side and the prefix does all the work: reducir leads back, producir leads forward, and conducir — which reducir's table already showed you — leads along."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the garden produces about a hundred kilos a month",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the garden produces about a hundred kilos a month]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I produce, using the first-person form",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I produce, using the first-person form]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the past of producir, the one that is not producí",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the past of producir, the one that is not producí]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To produce? (Producir.) I produce? (Produzco.) It produced? (Produjo.) Which way does pro- lead? (Forward.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C467-suficiente",
+      "sequence": 12760,
+      "title": "suficiente — enough, and only enough",
+      "headword": "suficiente",
+      "romanization": "suficiente",
+      "gloss": "enough — the formal partner of bastante, naming a requirement where bastante names a place on a scale",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00b635eedfc985ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say bastante and escaso. You already own both ends of this. The word coming next overlaps one of them, and the overlap is the lesson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: suficiente",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "suficiente — enough, sufficient."
+            },
+            {
+              "kind": "speech",
+              "text": "No producimos comida suficiente para todos."
+            },
+            {
+              "kind": "speech",
+              "text": "Comida suficiente — enough food. Lo suficiente — enough of it, as a noun. Suficientemente — sufficiently."
+            },
+            {
+              "kind": "speech",
+              "text": "Like bastante, it has one form for both genders: un plato suficiente, una cantidad suficiente."
+            },
+            {
+              "kind": "speech",
+              "text": "Said of a person it turns unkind — un tono suficiente is a smug one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: bastante already means this, and that is the problem",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Bastante was given to you as the middle of a scale — poco, bastante, muy — and its lesson was firm that it does not mean a lot. So what is suficiente for?"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "what else it does"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "word: bastante. what else it does: quite, fairly — bastante caro.",
+                "word: suficiente. what else it does: names a requirement, not a place on a scale."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Bastante has that second, adverbial job: bastante caro is fairly expensive, a reading on the scale. Suficiente has no scale reading at all. It measures a thing against what was needed, and reports whether the need was met."
+            },
+            {
+              "kind": "speech",
+              "text": "Both can say there is not enough — no hay bastante is the everyday phrasing. A notice reaches for no hay suficiente because it names the requirement rather than the quantity, and because it is the formal choice."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin sufficere: sub-, up from under, plus facere, to make or do — the facere that la factura called one of the hardest-working roots in the language."
+            },
+            {
+              "kind": "speech",
+              "text": "To sufficere was to put something under a thing: supply it from below, prop it, make it stand. Adequacy came out of that, which is why sufficiency is load-bearing rather than abundant — the amount that keeps the thing up."
+            },
+            {
+              "kind": "speech",
+              "text": "Suficiente wears the -ente of exigente; bastante wears -ante. They are the same ending choosing its vowel by verb family — -ar verbs take -ante, -er and -ir verbs take -ente."
+            },
+            {
+              "kind": "speech",
+              "text": "And the two words are one language at two speeds, the pattern you have from rueda against rotativo. Suficiente is a real Latin present participle, sufficientem, lifted off the page. Bastante was built inside Spanish on the inherited verb bastar — there was never a Latin bastans."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "we do not produce enough food for everybody",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: we do not produce enough food for everybody]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the two can also mean \"fairly\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the two can also mean \"fairly\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what sub- plus facere does under a thing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what sub- plus facere does under a thing]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Enough, on a notice? (Suficiente.) Which word also means fairly? (Bastante.) What does sufficere do? (Props a thing from underneath — adequacy is load-bearing.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C467-alimentar",
+      "sequence": 12770,
+      "title": "alimentar — to feed",
+      "headword": "alimentar",
+      "romanization": "alimentar",
+      "gloss": "to feed — from a Latin verb wider than feeding, which is why the same root is inside adult and alumnus",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ef6a9997bfeac14a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el medicamento and producir. One lends its ending to this chapter's noun; the other is what has to happen before you can do the verb."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: alimentar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "alimentar — to feed, to nourish."
+            },
+            {
+              "kind": "speech",
+              "text": "Lo que producimos alimenta a unas cuarenta familias."
+            },
+            {
+              "kind": "speech",
+              "text": "Alimentar a un niño — to feed a child; the a is there because the thing being fed is a person. El alimento is the food itself, and la alimentación is the feeding, or a person's diet."
+            },
+            {
+              "kind": "speech",
+              "text": "Alimentarse de algo is what an animal or a person lives on: se alimentan de fruta."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin alere was wider than to feed. It meant to nourish, and by that to rear — to bring a thing on, to make it bigger. Feeding is the sense that stuck in Spanish; the others are worth having:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "English",
+                "how the root shows"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "English: adult. how the root shows: somebody who has finished growing.",
+                "English: alumnus. how the root shows: somebody being brought up."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "An alumnus is literally one being nourished — a foster-child, then a pupil, then a graduate. Coalesce is co- plus alescere, to grow together."
+            },
+            {
+              "kind": "speech",
+              "text": "So alimentar is not about hunger. It is about making something bigger, and food is the means."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: -mento, and the noun it builds here",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "El medicamento gave you -mento, the formal twin of -miento, arriving by the other road. Latin -mentum often named the means of a thing, and both of these are that kind:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "noun",
+                "the means of"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "noun: el medicamento. the means of: healing.",
+                "noun: el alimento. the means of: growing."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Watch the cut: it is ali- plus -mento, exactly as medica- plus -mento. And the noun is older than the verb — Latin built alimentum off alere first, and alimentare came afterwards. Spanish inherited both, which is why the noun is alimento and not alimentamento."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what we produce feeds about forty families",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what we produce feeds about forty families]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the food itself, then the diet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the food itself, then the diet]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what alere meant before it meant feeding",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what alere meant before it meant feeding]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To feed? (Alimentar.) The food? (El alimento.) What did alere cover? (Nourishing, and rearing — making a thing bigger.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C467-objetivo",
+      "sequence": 12780,
+      "title": "el objetivo — the target",
+      "headword": "el objetivo",
+      "romanization": "el objetivo",
+      "gloss": "the target, the objective — el objeto wearing -ivo, narrowed to the thing placed in front to be reached",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:845764178c925baa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el objeto and rotativo. One is the word underneath the next; the other is its ending."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el objetivo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el objetivo — the target, the aim, the objective."
+            },
+            {
+              "kind": "speech",
+              "text": "Objetivo del mes: alimentar a cincuenta familias."
+            },
+            {
+              "kind": "speech",
+              "text": "Cumplir el objetivo — to meet the target. Nuestro objetivo es… — our aim is… As an adjective it means objective: un informe objetivo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have the whole of this already. El objeto was ob-, before or against, plus iacere, to throw — a thing thrown before you, put in your way. That lesson listed the family: object, project, inject, eject, subject, all of them throws."
+            },
+            {
+              "kind": "speech",
+              "text": "Objetivo is that same thrown thing wearing -ivo: to do with the thing placed in front. The throw does not turn round — the grammatical object is already what an action is thrown at, as el objeto's own chapter said. What narrowed is why the thing is there."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "the thing placed before you"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "word: el objeto. the thing placed before you: whatever is there.",
+                "word: el objetivo. the thing placed before you: the one put there to be reached."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "English kept both jobs on the same word: an objective is an aim, and an objective lens is the one that faces the object."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: -ivo makes an adjective that can stand alone",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Rotativo gave you -ivo: an ending that names a habit or a capacity — of the kind that does this."
+            },
+            {
+              "kind": "speech",
+              "text": "What objetivo adds is that such an adjective can harden into a noun and keep both jobs:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "use",
+                "example"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "use: adjective. example: un informe objetivo.",
+                "use: noun. example: el objetivo del mes."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish does this often and English follows it here, which makes the pair easy to trust: an objective report, the month's objective."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "this month's target: to feed fifty families",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: this month's target: to feed fifty families]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an objective report",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an objective report]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the difference between an objeto and an objetivo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the difference between an objeto and an objetivo]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The target? (El objetivo.) What is inside it? (Iacere, to throw.) What does -ivo add? (Not a new direction — the sense of a thing placed there to be reached.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R467-repaso-alimento",
+      "sequence": 12790,
+      "title": "(producir, suficiente, alimentar, el objetivo) — from cold",
+      "headword": "(producir, suficiente, alimentar, el objetivo)",
+      "romanization": "(producir, suficiente, alimentar, el objetivo)",
+      "gloss": "cold retrieval of the four, and a chapter that taught almost no new machinery",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:df782e2fe0c6e2c3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four words, no prompts. What the garden does, whether it is enough, who it keeps going, and the number written at the top of the sheet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the four, cold",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "English",
+                "Spanish"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "English: to produce. Spanish: producir.",
+                "English: enough. Spanish: suficiente.",
+                "English: to feed. Spanish: alimentar.",
+                "English: the target. Spanish: el objetivo."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: what this chapter actually cost you",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three of the four are assembled out of parts you already held."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "where the parts came from"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "word: producir. where the parts came from: reducir's verb class, ducere's prefix trick.",
+                "word: objetivo. where the parts came from: el objeto's throw, rotativo's -ivo."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Neither needed a new rule — only a new arrangement of rules you had."
+            },
+            {
+              "kind": "speech",
+              "text": "Alimentar borrowed -mento from el medicamento. Only suficiente asked for something genuinely new, and even that was a distinction rather than a word: you already had bastante."
+            },
+            {
+              "kind": "speech",
+              "text": "That is what the earlier chapters bought. New words stop being new machinery and start being new arrangements of it, and each one costs less than the last."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The words, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two of the four hide a physical action."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "what is underneath"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "word: suficiente. what is underneath: sub- + facere — putting enough underneath to hold it up.",
+                "word: alimentar. what is underneath: alere — growing a thing, with food as the means."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Producir leads forward; objetivo is the thing placed in front to be reached. Four words off a garden shed, four Latin verbs of handling and growing underneath them — the pattern this book keeps finding."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "we do not produce enough to feed everybody",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: we do not produce enough to feed everybody]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the month's target",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the month's target]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the four came with its irregular forms already learned",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the four came with its irregular forms already learned]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To produce? (Producir.) Enough? (Suficiente.) To feed? (Alimentar.) The target? (El objetivo.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C467-sintesis-alimento",
+      "sequence": 12800,
+      "title": "(el informe mensual del huerto) — read the figures, then judge them",
+      "headword": "(el informe mensual del huerto)",
+      "romanization": "(el informe mensual del huerto)",
+      "gloss": "the payoff — read a community garden's monthly figures, then say whether the target was met",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7d4c067fc7088c7b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say producir and el objetivo. A sheet with both on it is asking one question: did the first reach the second?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading: the sheet on the shed door",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "HUERTO COMUNITARIO — MARZO Objetivo del mes: alimentar a 50 familias. Producido: 380 kg. Familias atendidas: 41. No fue suficiente. En abril vamos a plantar más patata (papa), que produce más kilos por metro cuadrado."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the sheet answers its own question",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four numbers and one verdict, and the verdict is the word this chapter was for."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what the sheet gives",
+                "what it settles"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "what the sheet gives: 50 against 41. what it settles: the target was missed.",
+                "what the sheet gives: no fue suficiente. what it settles: and by how the garden judges it."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "It says suficiente, not bastante, and that is deliberate — though both would be understood. No fue bastante is what you would say out loud. No fue suficiente is what a sheet writes, because it names the requirement rather than the quantity, and the 380 kg is being measured against the 50 families."
+            },
+            {
+              "kind": "speech",
+              "text": "Note producido too: the participle, used as a plain label for the amount. A sheet does not need a whole sentence to report a quantity."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say in one sentence what the target was and whether it was met."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say what April is meant to change, and why the potato is the chosen crop."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The month's target? (Alimentar a 50 familias.) Was it enough? (No fue suficiente.) Why that word on a sheet? (Because it names the requirement, where bastante names a quantity.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
