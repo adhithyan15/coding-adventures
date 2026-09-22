@@ -317,7 +317,12 @@ export function diffRootSlugSplits(
   // length comparison, so membership is checked rather than size.
   const isStrictSubset = (split: RootSlugSplit): boolean => {
     const before = baselineSlugs.get(split.key);
-    if (before === undefined) return false;
+    // `Array.isArray` as well as the undefined check, though `loadRootSlugBaseline`
+    // now asserts the shape: this function is PUBLIC API via `index.ts`, so a
+    // downstream caller can hand it a hand-built baseline that never passed that
+    // loader. On a string, `.includes` is a SUBSTRING test and the subset check
+    // fails open. Defence in depth, one line.
+    if (before === undefined || !Array.isArray(before)) return false;
     return split.slugs.length < before.length && split.slugs.every((slug) => before.includes(slug));
   };
 

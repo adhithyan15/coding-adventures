@@ -6,6 +6,29 @@ import {
   renderEtymologyRouteFigure,
 } from "../src/figure.js";
 
+/**
+ * A LITERAL vocabulary, not `loadRootTagVocabulary()`.
+ *
+ * `figure.ts` documents that it stays free of the filesystem so every figure is
+ * a pure function of its inputs — which is what makes `check:figures` a byte
+ * comparison rather than a re-run. A test that reached for the real
+ * `core/root-tags.json` would quietly re-introduce the dependency the module
+ * forbids, and would also couple these assertions to a corpus data file.
+ */
+const TAGS = {
+  tags: [
+    "arabic",
+    "italian",
+    "latin",
+    "proto-dravidian",
+    "proto-indo-european",
+    "sanskrit",
+    "tamil",
+    "turkish",
+  ],
+  aliases: { pie: "proto-indo-european" },
+};
+
 function lesson(roots = "[qahwah-arabic, kahve-turkish, caffè-italian]") {
   return parseLesson(`---
 schema_version: 2
@@ -43,9 +66,9 @@ Arabic qahwah became Turkish kahve, then Italian caffè, then Spanish café.
 
 describe("canonical figure rendering", () => {
   it("parses printable root nodes without inventing data", () => {
-    expect(etymologyRootNode("qahwah-arabic")).toEqual({ term: "qahwah", language: "Arabic" });
-    expect(etymologyRootNode("a-dios-latin")).toEqual({ term: "a dios", language: "Latin" });
-    expect(() => etymologyRootNode("orphan")).toThrow(/language tag/);
+    expect(etymologyRootNode("qahwah-arabic", TAGS)).toEqual({ term: "qahwah", language: "Arabic" });
+    expect(etymologyRootNode("a-dios-latin", TAGS)).toEqual({ term: "a dios", language: "Latin" });
+    expect(() => etymologyRootNode("orphan", TAGS)).toThrow(/language tag/);
   });
 
   it("finds the tag by vocabulary, not by position, so a PREFIX slug is not read backwards", () => {
@@ -55,15 +78,15 @@ describe("canonical figure rendering", () => {
     // convention prefers -- and the published SVG for ES-C06-cafe went out
     // claiming Arabic qahwah became **Kahve "turkish"**. Nothing threw, because
     // the slug still had two pieces.
-    expect(etymologyRootNode("turkish-kahve")).toEqual({ term: "kahve", language: "Turkish" });
-    expect(etymologyRootNode("sanskrit-kaala-time")).toEqual({
+    expect(etymologyRootNode("turkish-kahve", TAGS)).toEqual({ term: "kahve", language: "Turkish" });
+    expect(etymologyRootNode("sanskrit-kaala-time", TAGS)).toEqual({
       term: "kaala time",
       language: "Sanskrit",
     });
     // Positional reading was ALREADY wrong here before that pass; the
     // normalisation only made a prefix slug reachable from a figure. `pop()`
     // gave the term "proto indo european" in the language "Dwoh".
-    expect(etymologyRootNode("proto-indo-european-dwoh")).toEqual({
+    expect(etymologyRootNode("proto-indo-european-dwoh", TAGS)).toEqual({
       term: "dwoh",
       language: "Proto-indo-european",
     });
@@ -71,19 +94,31 @@ describe("canonical figure rendering", () => {
 
   it("prints the term as the author wrote it, not case-folded", () => {
     // `parseRootSlug` folds, because a join key must. A caption must not.
-    expect(etymologyRootNode("SANSKRIT-PA-DRINK")).toEqual({
+    expect(etymologyRootNode("SANSKRIT-PA-DRINK", TAGS)).toEqual({
       term: "PA DRINK",
       language: "Sanskrit",
     });
   });
 
   it("refuses a slug that is a bare language tag with no term", () => {
-    expect(() => etymologyRootNode("latin-")).toThrow(/no term/);
+    expect(() => etymologyRootNode("latin-", TAGS)).toThrow(/no term/);
+    expect(() => etymologyRootNode("-latin", TAGS)).toThrow(/no term/);
+  });
+
+  it("guards the PRINTED term, not the raw slice, so a doubled hyphen cannot render blank", () => {
+    // `latin--` slices to `-`, which is non-empty, and then joins to "". The
+    // first draft of this guard tested the slice and let that through: a
+    // published box with a language under it and no word in it, nothing thrown,
+    // hash ledger regenerated to match. That is the same silent-wrong-artifact
+    // failure the vocabulary fix was for, so the check follows the value to its
+    // last transformation. Found by security review.
+    expect(() => etymologyRootNode("latin--", TAGS)).toThrow(/no term/);
+    expect(() => etymologyRootNode("--latin", TAGS)).toThrow(/no term/);
   });
 
   it("renders the ordered route through paint-vm-svg and hashes its canonical fields", () => {
     const parsed = lesson();
-    const generated = renderEtymologyRouteFigure(parsed);
+    const generated = renderEtymologyRouteFigure(parsed, TAGS);
     expect(generated.svg).toContain('<svg xmlns="http://www.w3.org/2000/svg"');
     expect(generated.svg).toContain("qahwah");
     expect(generated.svg).toContain("kahve");
