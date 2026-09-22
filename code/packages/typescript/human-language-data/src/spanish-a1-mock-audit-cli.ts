@@ -204,11 +204,17 @@ export function parseAnswerKeyRows(text: string): AnswerKeyParse {
     // ARITY catches a pipe that SPLITS a cell (`` `a|b` ``): the row gets one
     // more cell than the first row of its paper.
     //
-    // ESCAPE catches a pipe that HIDES one (`casa \| ayuntamiento`): there the
-    // split and the regex disagree in opposite directions, so the counts come
-    // out equal and arity sees nothing -- while `([^|]*)` still stops at the
-    // escaped pipe's `|` and drops `casa`. A requirement is a Spanish lexeme;
-    // a pipe has no business inside one, escaped or not.
+    // ESCAPE runs FIRST, and the reason is not the one an earlier draft of this
+    // comment gave. That draft said arity could not see `casa \| ayuntamiento`
+    // because the split and the regex disagree in opposite directions; measured
+    // on the real A1 key, that row splits into 7 pieces against an expected 6,
+    // so arity catches it perfectly well. The claim was false.
+    //
+    // The check is still load-bearing, for a different reason: arity is seeded
+    // from the FIRST scored row of each paper. An escaped pipe in THAT row
+    // would seed a wrong arity and then reject all 24 of its honest siblings.
+    // Running the escape test before `arityByPaper.set` is what prevents it.
+    // A requirement is a Spanish lexeme; a pipe has no business inside one.
     if (/\\\|/.test(line)) {
       malformed.push(line);
       continue;
@@ -322,61 +328,60 @@ export function assertAnswerKeyParse(parse: AnswerKeyParse, name: string): void 
   if (rows.length === 0) {
     throw new Error(`${name}: parsed no answer-key rows`);
   }
-  for (const paper of [1, 2]) {
-    const items = rows.filter((row) => row.paper === paper).map((row) => row.item);
-    if (items.length === 0) {
-      throw new Error(`${name}: parsed no Prueba ${paper} rows`);
-    }
-    // THE TWO GUARDS THAT DO NOT DEPEND ON GUESSING THE DAMAGE.
-    //
-    // Everything above catches a shape somebody anticipated, and round three
-    // showed how thin that is: one leading space, a bolded item number, an item
-    // label with a suffix, or a `\v` joining two rows all dropped a row into no
-    // bucket while every guard reported success. On the real A1 key, joining
-    // rows 3 and 4 scored item 3 against item 4's requirements and nothing
-    // objected.
-    //
-    // These two do not care HOW a row went missing. The heading states the
-    // count and the numbers run consecutively, so a parse that lost a row is
-    // short or has a hole, whatever removed it. Measured against the real A1
-    // key: all ten mutations round three raised are caught, and all six real
-    // keys pass untouched.
-    const sorted = [...items].sort((left, right) => left - right);
-    // SPAN, not adjacency. `findIndex((item, index) => index > 0 && ...)` never
-    // examines index 0, so a paper whose FIRST row was lost read as perfectly
-    // contiguous -- `[2,3,...,25]` has no jump in it. Comparing the span to the
-    // length has no such blind spot, and it catches duplicates too.
-    const span = (sorted[sorted.length - 1] ?? 0) - (sorted[0] ?? 0) + 1;
-    if (span !== sorted.length) {
-      const gap = sorted.findIndex((item, index) => index > 0 && item !== (sorted[index - 1] ?? 0) + 1);
-      throw new Error(
-        gap > 0
-          ? `${name}: Prueba ${paper} item numbers jump from ${sorted[gap - 1]} to ${sorted[gap]}`
-          : `${name}: Prueba ${paper} has ${sorted.length} rows spanning ${sorted[0]}-${sorted[sorted.length - 1]}`,
-      );
-    }
-    // UNCONDITIONAL. This was `count !== undefined && ...`, which means the one
-    // guard here that does NOT depend on anticipating the shape of the damage
-    // switched itself off whenever the heading stopped saying `(25 items)` --
-    // and said nothing when it did.
-    //
-    // Both edits that disable it are ordinary editorial changes, not attacks.
-    // `## Prueba 3 · Expresión e interacción escritas` in the SAME FILE already
-    // carries no count, so normalising the headings is a plausible tidy-up; and
-    // `items` -> `ítems` is the correct Spanish spelling in a file that already
-    // writes `Comprensión` and `auditiva`. Either one, plus the loss of the
-    // paper's first row by any mechanism, produced a clean bill of health for
-    // 24 of 25 scored items. The two holes lined up exactly.
-    //
-    // A guard that switches itself off when the file it guards changes is not a
-    // guard. All six real keys declare a count for both scored papers today.
+  // ONE CHECK, AND IT IS AN EQUALITY.
+  //
+  // Five rounds of review found five fail-open holes here, each one in the fix
+  // for the last, because each fix added another PARTIAL check:
+  //
+  //   zero rows          missed a single dropped row
+  //   adjacency          blind at index 0, so a lost FIRST row read as contiguous
+  //   span, replacing it STRICTLY WEAKER -- `[1,1,3]` has span 3 and length 3, so a
+  //                      duplicated row plus a dropped one passed, which the
+  //                      adjacency check it replaced had caught
+  //   declared count     switched itself off when a heading lost `(25 items)`
+  //
+  // The lesson is not that the sixth partial check will be the right one. It is
+  // that a set of partial checks has holes at the joins, and the only way to
+  // stop finding them one round at a time is to stop enumerating what can go
+  // wrong and state what RIGHT looks like.
+  //
+  // The file says how many items each scored paper has, and the papers number
+  // straight through: Prueba 1 is 1..n, Prueba 2 is n+1..n+m. That is a
+  // complete specification, so it can be compared as a SET. A drop, a
+  // duplicate, a lost first or last row, a renumbering, a merge -- all of them
+  // are the same failure now, which is "the items are not the items".
+  const expected = (paper: number, first: number): Set<number> => {
     const count = declared.get(paper);
+    // UNCONDITIONAL. This was `count !== undefined && ...`, so the one guard
+    // that did not depend on anticipating the damage switched itself off
+    // whenever a heading stopped saying `(25 items)` -- silently. Both edits
+    // that do that are ordinary: `## Prueba 3 · Expresión e interacción
+    // escritas` in the SAME FILE already carries no count, and `ítems` is the
+    // correct Spanish spelling in a file that writes `Comprensión`.
     if (count === undefined) {
       throw new Error(`${name}: Prueba ${paper} heading declares no item count`);
     }
-    if (items.length !== count) {
-      throw new Error(`${name}: Prueba ${paper} declares ${count} items, parsed ${items.length}`);
-    }
+    return new Set(Array.from({ length: count }, (_, index) => first + index));
+  };
+  let first = 1;
+  for (const paper of [1, 2]) {
+    const want = expected(paper, first);
+    first += want.size;
+    const got = rows.filter((row) => row.paper === paper).map((row) => row.item);
+    const missing = [...want].filter((item) => !got.includes(item));
+    const extra = got.filter((item) => !want.has(item));
+    const duplicated = got.filter((item, index) => got.indexOf(item) !== index);
+    if (missing.length === 0 && extra.length === 0 && duplicated.length === 0) continue;
+    // Every part is named, because "the items are not the items" is true of a
+    // renumbered table and of a single lost row alike, and a maintainer needs
+    // to know which. The counts are capped in the message; the numbers
+    // themselves are the file's own item labels, not free text.
+    const say = (label: string, list: number[]) =>
+      list.length === 0 ? "" : ` ${label} ${list.slice(0, 5).join(", ")}${list.length > 5 ? ", ..." : ""}`;
+    throw new Error(
+      `${name}: Prueba ${paper} declares ${want.size} items ${[...want][0]}-${[...want][want.size - 1]}, but parsed` +
+        `${say("is missing", missing)}${say("has unexpected", extra)}${say("duplicates", duplicated)}`.trimEnd(),
+    );
   }
 }
 

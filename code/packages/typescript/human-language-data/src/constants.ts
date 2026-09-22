@@ -212,10 +212,26 @@ export function stripControlCharacters(value: string): string {
     // cannot break onto a second line, so this is presentation spoofing rather
     // than log forgery, and the same Trojan-Source class that CVE-2021-42574
     // named for source code. The isolates and embeddings (U+2066-U+2069,
-    // U+202A-U+202D) and the zero-width joiners and marks (U+200B-U+200F) go
-    // with it: all are invisible, and none belongs in a filename or a corpus
-    // line that is about to be printed.
-    /[\u0000-\u0008\u000b-\u001f\u007f-\u009f\u200b-\u200f\u202a-\u202e\u2066-\u2069]/g,
+    // U+202A-U+202E), the bidi marks (U+200E, U+200F, U+061C), and the
+    // invisible spaces (U+200B, U+00AD, U+180E, U+FEFF) go with it.
+    //
+    // U+2028 and U+2029 are here too, and they are the reason a first draft of
+    // this was incomplete. `JSON.stringify` does NOT escape them -- verified,
+    // `JSON.stringify("\u2028").includes("\\u2028")` is false -- so the quoting
+    // layer that this function's docstring leans on to stop a forged second log
+    // line does not stop these two, which ARE line terminators. That is the
+    // exact failure the docstring claims to close.
+    //
+    // U+200C and U+200D are deliberately NOT here. ZWNJ is ORTHOGRAPHICALLY
+    // REQUIRED in Persian and Urdu -- `می‌رود` strips to `میرود`, a different
+    // word -- and ZWJ likewise in Devanagari conjuncts. This repo has persian,
+    // urdu, hindi, marathi, marwadi and sanskrit tracks. Every caller of this
+    // function is display-only today, so stripping them would corrupt no data,
+    // but it would print two distinct lexemes identically in
+    // `mock-stem-coverage-cli` and `root-ledger` -- and a strip that makes
+    // different words look the same is the same class of harm as a bidi
+    // override, pointed the other way.
+    /[\u0000-\u0008\u000b-\u001f\u007f-\u009f\u00ad\u061c\u180e\u200b\u200e\u200f\u2028\u2029\u202a-\u202e\u2066-\u2069\ufeff]/g,
     "",
   );
 }

@@ -225,3 +225,50 @@ Two more, both latent and both fail-open:
 
 Fourteen mutation shapes verified caught against the real A1 key; all six keys
 pass untouched and the three audits stay byte-identical.
+
+#### Fixed — six partial checks became one equality
+
+Round five found that the span check was a **strict regression**: `[1, 1, 3]` has
+span 3 and length 3, so a duplicated row filling the gap a dropped row left
+passed clean — and the adjacency check it replaced had caught exactly that. The
+comment claiming it had "no blind spot at either end" was also simply false;
+`[2, …, 25]` has span 24 and length 24.
+
+That is five rounds and five fail-open holes, each one in the fix for the last:
+
+| check | hole |
+|---|---|
+| zero rows | missed a single dropped row |
+| adjacency | blind at index 0 — a lost first row read as contiguous |
+| span, replacing it | strictly weaker; missed duplicate-plus-gap |
+| declared count | switched itself off when a heading lost `(25 items)` |
+
+The sixth partial check would not have been the right one either. A set of
+partial checks has holes *at the joins*, and the way out is to stop enumerating
+what can go wrong and state what right looks like.
+
+**The file already specifies itself completely.** Each scored heading declares
+its size, and the papers number straight through — Prueba 1 is `1..n`, Prueba 2
+is `n+1..n+m`. So the expected item set is derivable, and the check is one set
+equality. A drop, a duplicate, a lost first or last row, a renumbering, a merge
+are now all the same failure: *the items are not the items*. The message names
+which items are missing, unexpected or duplicated.
+
+Eighteen mutation shapes verified caught against the real A1 key. All six keys
+pass untouched; the three audits stay byte-identical.
+
+#### Fixed — the character strip no longer corrupts Perso-Arabic and Devanagari
+
+The previous entry's widening stripped U+200B–U+200F wholesale, which includes
+**ZWNJ and ZWJ** — orthographically required in Persian and Urdu (`می‌رود`
+strips to `میرود`, a different word) and in Devanagari conjuncts. This repo has
+`persian`, `urdu`, `hindi`, `marathi`, `marwadi` and `sanskrit` tracks. Every
+caller is display-only and the corpus contains none of these characters today,
+so nothing was corrupted — but a strip that renders two distinct lexemes
+identically is the same class of harm as a bidi override, pointed the other way.
+Both are excluded now.
+
+Added in their place: U+2028 and U+2029, which are **line terminators** that
+`JSON.stringify` does not escape — so the quoting layer this function's
+docstring leans on to prevent a forged second log line did not stop the two
+characters most able to forge one. Also U+061C, U+00AD, U+180E and U+FEFF.

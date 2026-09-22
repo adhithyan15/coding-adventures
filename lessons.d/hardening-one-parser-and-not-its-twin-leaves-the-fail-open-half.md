@@ -99,3 +99,25 @@ middle drop. The index-0 blind spot alone was recoverable, because the count
 still caught a first-row drop. Together they passed a key with 24 of 25 items.
 When reviewing a set of guards, ask what a pair of them misses, not only what
 each one misses.
+
+**After the third hole at a join, stop adding checks and write the
+specification.** This file accumulated five partial checks — zero rows,
+adjacency, span, a conditional count, a shape detector — and five rounds of
+review each found a hole where two of them met. The span check was even a
+strict regression on the one it replaced. Each fix was locally reasonable and
+the sequence was not.
+
+The way out was to notice that the data specifies itself: the heading declares
+the item count and the papers number straight through, so the expected item set
+is derivable and the check is one set equality. Eighteen distinct mutations
+collapse into one failure — *the items are not the items*. When the third
+round of review finds the third variant of the same class, the problem is the
+approach, not the coverage.
+
+**A strip is not automatically safer than no strip.** Widening
+`stripControlCharacters` to the whole U+200B–U+200F block to stop a bidi
+override also removed ZWNJ and ZWJ, which are orthographically required in
+Persian, Urdu and Devanagari — all tracks this repo has. Rendering two distinct
+lexemes identically is the same harm as a spoofed one, pointed the other way.
+Enumerate what a sanitizer removes, and check it against the scripts the project
+actually handles.

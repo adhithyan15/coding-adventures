@@ -715,10 +715,15 @@ describe("looksLikeDataRow, via the malformed bucket", () => {
 });
 
 describe("assertAnswerKeyParse", () => {
-  // Exported and taking a parse rather than a path for the same reason
-  // `parseAnswerKeyRows` is: every hole in these guards was found by reading,
-  // across three rounds of review, because the only way in was a run over the
-  // real corpus.
+  // Exported and taking a parse rather than a path because every hole in these
+  // guards, across FIVE rounds of review, was found by reading -- the only way
+  // in was a run over the real corpus.
+  //
+  // The checks used to be a pile of partial ones (zero rows, then adjacency,
+  // then span, then a conditional count) and each round found a hole at the
+  // join between two of them. They are now ONE set equality against what the
+  // headings declare, so every test below is the same failure seen from a
+  // different side.
   const parse = (over: Partial<Parameters<typeof assertAnswerKeyParse>[0]> = {}) => ({
     rows: [
       { paper: 1, item: 1, requires: ["casa"] },
@@ -726,15 +731,23 @@ describe("assertAnswerKeyParse", () => {
     ],
     unscored: [],
     malformed: [],
-    // A count for BOTH scored papers, because the guard now requires one. The
-    // fixture defaulting to an empty map is what made two of these tests fail
-    // when the check became mandatory -- which is the check working.
     declared: new Map<number, number>([[1, 1], [2, 1]]),
     ...over,
   });
+  // Prueba 1 is 1..2 and Prueba 2 is 3..4, so a test can move one item without
+  // also tripping the count.
+  const two = (rows: { paper: number; item: number; requires: string[] }[]) =>
+    parse({ rows, declared: new Map([[1, 2], [2, 2]]) });
+  const full = [
+    { paper: 1, item: 1, requires: ["casa"] },
+    { paper: 1, item: 2, requires: ["gato"] },
+    { paper: 2, item: 3, requires: ["perro"] },
+    { paper: 2, item: 4, requires: ["sol"] },
+  ];
 
   it("accepts a complete parse", () => {
     expect(() => assertAnswerKeyParse(parse(), "key.md")).not.toThrow();
+    expect(() => assertAnswerKeyParse(two(full), "key.md")).not.toThrow();
   });
 
   it("names the rejected line rather than only counting it", () => {
@@ -754,62 +767,67 @@ describe("assertAnswerKeyParse", () => {
       .toThrow(/parsed no answer-key rows/);
   });
 
-  it("refuses a parse with no rows under one of the two scored papers", () => {
-    expect(() => assertAnswerKeyParse(parse({ rows: [{ paper: 1, item: 1, requires: ["casa"] }] }), "key.md"))
-      .toThrow(/parsed no Prueba 2 rows/);
-  });
-
-  it("refuses a hole in the item numbers, however the row went missing", () => {
-    // THE GUARD THAT DOES NOT DEPEND ON GUESSING. A leading tab, an omitted
-    // leading pipe, a deleted row, or a `\v`/`\f`/U+0085 joining two rows all
-    // slipped past every shape-based check; none of them can survive this one.
-    const rows = [
-      { paper: 1, item: 1, requires: ["casa"] },
-      { paper: 1, item: 3, requires: ["gato"] },
-      { paper: 2, item: 4, requires: ["perro"] },
-    ];
-    expect(() => assertAnswerKeyParse(parse({ rows }), "key.md"))
-      .toThrow(/Prueba 1 item numbers jump from 1 to 3/);
-  });
-
-  it("refuses a parse shorter than the count its own heading declares", () => {
-    expect(() => assertAnswerKeyParse(parse({ declared: new Map([[1, 1], [2, 25]]) }), "key.md"))
-      .toThrow(/Prueba 2 declares 25 items, parsed 1/);
-  });
-
   it("REQUIRES a declared count rather than skipping the check without one", () => {
-    // This guard used to read `count !== undefined && ...`, so the one check
-    // here that does NOT depend on anticipating the shape of the damage
-    // switched itself off whenever a heading stopped saying `(25 items)` --
-    // silently. Both edits that do that are ordinary: `## Prueba 3 · Expresión
-    // e interacción escritas` in the same file already carries no count, and
-    // `ítems` is the correct Spanish spelling. Either one, plus a lost first
-    // row, gave a clean bill of health for 24 of 25 scored items.
+    // This read `count !== undefined && ...`, so the one guard that does not
+    // depend on anticipating the damage switched itself off whenever a heading
+    // stopped saying `(25 items)` -- silently. Both edits that do that are
+    // ordinary: `## Prueba 3 · Expresión e interacción escritas` in the same
+    // file already carries no count, and `ítems` is the correct Spanish
+    // spelling. Either one, plus a lost row, gave a clean bill of health.
     expect(() => assertAnswerKeyParse(parse({ declared: new Map() }), "key.md"))
       .toThrow(/Prueba 1 heading declares no item count/);
   });
 
-  it("catches a lost FIRST row, which adjacency alone cannot see", () => {
+  // Each of these pins a hole that a PARTIAL check let through, and the
+  // declared counts are set so that a count comparison alone cannot fire --
+  // the point is that the set equality catches them, not the arithmetic.
+  it("catches a lost FIRST row", () => {
     // `findIndex((item, index) => index > 0 && ...)` never examines index 0, so
-    // `[2, 3, ..., 25]` has no jump in it and read as perfectly contiguous.
-    // Comparing the span to the length has no blind spot at either end.
-    const rows = [
-      { paper: 1, item: 2, requires: ["casa"] },
-      { paper: 1, item: 3, requires: ["gato"] },
-      { paper: 2, item: 4, requires: ["perro"] },
-    ];
-    expect(() => assertAnswerKeyParse(parse({ rows, declared: new Map([[1, 3], [2, 1]]) }), "key.md"))
-      .toThrow(/Prueba 1 declares 3 items, parsed 2/);
+    // `[2, 3, ..., 25]` read as perfectly contiguous. The span check that
+    // replaced it is blind here too: `[2,3]` has span 2 and length 2.
+    expect(() => assertAnswerKeyParse(two(full.filter((row) => row.item !== 1)), "key.md"))
+      .toThrow(/Prueba 1 declares 2 items 1-2, but parsed is missing 1/);
   });
 
-  it("catches a duplicated item number", () => {
+  it("catches a lost LAST row", () => {
+    expect(() => assertAnswerKeyParse(two(full.filter((row) => row.item !== 4)), "key.md"))
+      .toThrow(/Prueba 2 declares 2 items 3-4, but parsed is missing 4/);
+  });
+
+  it("catches a duplicate that fills the gap a drop left", () => {
+    // `[1, 1, 3]` -- span 3, length 3. The SPAN check passed this, and the
+    // adjacency check it replaced had caught it, so that round was a strict
+    // regression. An ordinary copy-paste over the next row does exactly this.
     const rows = [
       { paper: 1, item: 1, requires: ["casa"] },
       { paper: 1, item: 1, requires: ["gato"] },
-      { paper: 2, item: 2, requires: ["perro"] },
+      ...full.filter((row) => row.paper === 2),
     ];
-    expect(() => assertAnswerKeyParse(parse({ rows, declared: new Map([[1, 2], [2, 1]]) }), "key.md"))
-      .toThrow(/Prueba 1 item numbers jump from 1 to 1/);
+    expect(() => assertAnswerKeyParse(two(rows), "key.md"))
+      .toThrow(/Prueba 1 declares 2 items 1-2, but parsed is missing 2 duplicates 1/);
+  });
+
+  it("catches a renumbered paper whose count is still right", () => {
+    // Every count is correct and the numbers are contiguous; they are simply
+    // the wrong numbers. No aggregate check can see this.
+    const rows = full.map((row) => (row.paper === 2 ? { ...row, item: row.item + 1 } : row));
+    expect(() => assertAnswerKeyParse(two(rows), "key.md"))
+      .toThrow(/Prueba 2 declares 2 items 3-4, but parsed is missing 3 has unexpected 5/);
+  });
+
+  it("anchors Prueba 2 to the end of Prueba 1 rather than to 1", () => {
+    // The papers number straight through -- 1..25 then 26..50 -- so the second
+    // paper's expected run depends on the first's declared size. A key whose
+    // Prueba 2 restarted at 1 would otherwise look fine.
+    const rows = full.map((row) => (row.paper === 2 ? { ...row, item: row.item - 2 } : row));
+    expect(() => assertAnswerKeyParse(two(rows), "key.md"))
+      .toThrow(/Prueba 2 declares 2 items 3-4/);
+  });
+
+  it("truncates a long list of missing items rather than printing all of them", () => {
+    const rows = [{ paper: 1, item: 1, requires: ["casa"] }, { paper: 2, item: 21, requires: ["sol"] }];
+    expect(() => assertAnswerKeyParse(parse({ rows, declared: new Map([[1, 20], [2, 1]]) }), "key.md"))
+      .toThrow(/is missing 2, 3, 4, 5, 6, \.\.\./);
   });
 });
 
