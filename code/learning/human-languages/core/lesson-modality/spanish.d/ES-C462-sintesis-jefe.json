@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C462-sintesis-jefe",
+    "language": "spanish",
+    "chapter": 462,
+    "sequence": 12520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1e51cf03bc9793f2"
+  },
+  "findings": []
+}

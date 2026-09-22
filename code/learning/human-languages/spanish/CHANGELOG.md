@@ -1,5 +1,156 @@
 # Changelog
 
+## Chapters 460-464 — the floor holds, and then rises
+
+Fifteen headwords across five chapters, every one teaching exactly three words.
+
+```
+A2 objectiveFailed          18 -> 13
+A2 missingObjectiveLexemes  54 -> 39
+```
+
+Predicted from the audit before anything was wired and reproduced exactly.
+**Eight tranches, eight exact predictions.**
+
+| tranche | words | items | words per item |
+|---|---|---|---|
+| 4b (452-455) | 17 | 8 | 2.12 |
+| 4c (456-459) | 14 | 5 | 2.80 |
+| **4d (460-464)** | **15** | **5** | **3.00** |
+
+Every scene still available was measured before authoring, and the five chosen
+all came out at **exactly 3.00**. There was no cheaper grouping to find, and
+saying so is the whole point of measuring first.
+
+## The floor has now risen to 4.00
+
+This is the finding, and it changes what the next tranche costs.
+
+Thirteen rows remain. **Five touch `explicar`, `creer` or `problema`.** The
+other eight each need **four** words — and they share none, so the remaining
+authorable work is exactly **32 words for 8 items, flat at 4.00**.
+
+| what is left | rows | words | rate |
+|---|---|---|---|
+| waiting on the three B1-mapped words | 5 | 7 | — |
+| everything else | 8 | 32 | **4.00** |
+
+Tranche 4e would therefore be a third more expensive per item than this one,
+and the gap to the mapping decision widens again. Crediting all three takes 13
+→ **11**, for zero lessons. Taken one at a time the three are not equal:
+`problema` clears a row by itself, and so does `explicar` — each is the sole
+blocker on one item. `creer` clears nothing alone; its only row also wants
+`descontar`. So the decision buys two rows outright and leaves the third
+waiting on a word nobody has written yet. `HL-C418`.
+
+(An earlier draft of this entry had that backwards, saying `explicar` could not
+move by itself. It can; `creer` is the immobile one. The 5 / 8 / 32 / 4.00
+figures above are unaffected.)
+
+## The five chapters
+
+| chapter | scene | words |
+|---|---|---|
+| 460 | the tool library | la herramienta, solicitar, la espera |
+| 461 | the collection appeal | donar, peligroso, rechazar |
+| 462 | the workplace | reducir, decidirse, el jefe |
+| 463 | the organised outing | organizar, el guía, importar |
+| 464 | the missed appointment | recordar, el dentista, fallar |
+
+## Two prefix families, three chapters apart
+
+`rechazar` joins `capere-latin` with **`aceptar`**, taught five chapters
+earlier. *Ad-* + *capere* takes a thing **towards** you; *re-* + *captiare*
+drives it **back**. One Latin verb of taking, pointed two ways.
+
+That is the second such family in three chapters, after *meter* / *el permiso*
+/ *permitir* / *admitir* off *mittere* — and it is now a rule a reader can use:
+**when a Spanish verb starts with `a-`, `re-`, `per-`, `ad-` or `des-`, the
+part after it is usually a word you can already find.**
+
+The same *captiare* gave *cazar*, French *chasser*, and English **chase** and
+**catch**. Rejecting something is chasing it back the way it came.
+
+## El jefe and la cabeza are one Latin noun, by way of France
+
+The two-roads pattern again, but through a **third** language this time.
+*Caput* wore down through Spanish speech into **la cabeza**; it was borrowed
+from French *chef*, centuries later, as **el jefe**. *Rueda*/*rotativo* and
+*consejo*/*consultar* were both Latin-to-Spanish — this one detoured, which is
+why it resembles neither. A boss is literally a head, and *chief*, *chef* and
+*jefe* are one word in three languages.
+
+### The join key forced a choice, and the new guard watched it
+
+`caput` is one of the 31 etymons the corpus spells more than one way:
+`caput-latin` (on *acabar*) against `latin-caput` (on *la cabeza* and three
+others). Nothing in CI catches a wrong pick — the guard shipped last night only
+refuses a **new** spelling.
+
+The rule applied was **match the etymon's existing majority**, because that is
+what actually joins: `latin-caput` puts *el jefe* next to *la cabeza*, which is
+the cousin a reader wants. `check:root-slug-splits` confirms no new split.
+
+## Perdón turns out to be about giving
+
+`donar` is the verb inside **perdón**, learned in the first weeks as the thing
+you say when you bump into someone. *Per-* + *donare* is **to give
+thoroughly** — forgiving is handing the offence over rather than keeping it —
+and English *for-give* is built identically, so *pardon* and *forgive* are the
+same idea twice.
+
+`recordar` does the same trick with the body: *re-* + **cor**, the **heart**,
+because Latin located memory there rather than in the head. Remembering is
+running a thing back past your heart, and English *record* is a thing committed
+to memory.
+
+All three of chapter 464's words were already in the reader's vocabulary as
+roots — *cor* in *el corazón*, *dentem* in *el diente*, *fallere* in *falso*.
+At nine hundred headwords that is the ordinary case rather than a happy
+accident.
+
+## A fourth roots: [] corrected
+
+`ES-C437-decidir` carried `roots: []` while its own gloss already read *"to cut
+a question off"*. The etymology was known and the list was simply never filled,
+so `caedere-latin` is a **correction rather than a guess** — the fourth of
+these after *prestar*, *dolor* and *jubilado*, and found the same way: by
+needing the join for a new word, here `decidirse`.
+
+## Numbers
+
+| metric | before → after |
+|---|---|
+| A2 `objectiveFailed` | 18 → 13 |
+| A2 `missingObjectiveLexemes` | 54 → 39 |
+| mock 1 reading / listening | 21 / 18 → 21 / 19 |
+| mock 2 reading / listening | 19 / 24 → 22 / 25 |
+| curriculum graph lessons | 7398 → 7423 |
+| new lessons | 25 |
+| new headwords | 15 |
+
+**Mock 2 is down to three failing items.** It lost four rows to mock 1's one,
+and the two papers are now diverging sharply — what remains is concentrated in
+mock 1, which is itself information for whoever writes the next mock pair.
+
+## Verification
+
+`human-language-data` full suite; all **fourteen** `check:*` gates, including
+`check:root-slug-splits` running for the first time against new authoring — it
+passes, so the five new root slugs introduced no split and the two split-etymon
+choices used spellings already in the corpus.
+
+Digest attributed by **reconstruction**: `origin/main` was loaded in a clean
+`git worktree` and reproduced `d9c5f163…` and 7398 byte for byte. Five segments
+of five lessons each: 25, and the count moved by exactly 25.
+
+## What this does not claim
+
+Five more exam items are now supported by the book's own vocabulary. No item
+has been graded against a reader. **Thirteen objective items still fail**, and
+until that reaches zero the A2 book cannot be said to prepare anybody to sit
+the paper.
+
 ## Chapters 456-459 — the last cheap row, and the floor underneath
 
 Fourteen headwords across four chapters.

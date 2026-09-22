@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:efce700aba96283a",
+  "lessonIds": [
+    "ES-C462-reducir",
+    "ES-C462-decidirse",
+    "ES-C462-jefe",
+    "ES-R462-repaso-jefe",
+    "ES-C462-sintesis-jefe"
+  ],
+  "tex": "spanish/book/chapters/ch462-jefe.tex"
+}

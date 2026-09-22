@@ -1,0 +1,802 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 462,
+  "title": "La reunión",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:7f94a1426b16077f",
+  "lessons": [
+    {
+      "id": "ES-C462-reducir",
+      "sequence": 12480,
+      "title": "reducir — to bring it down",
+      "headword": "reducir",
+      "romanization": "reducir",
+      "gloss": "to cut back — to lead a thing back, and a shower is its cousin",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:2784f27c57cac2ee",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la ducha and el coste. A shower is about to turn out to be a relative of the verb coming next."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: reducir",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "reducir — to reduce, to cut back."
+            },
+            {
+              "kind": "speech",
+              "text": "Reducir costes — to cut costs, and reducir costos wherever you met el costo. Reducir la velocidad — to slow down, the wording on a road sign. Han reducido la plantilla — they've cut the staff."
+            },
+            {
+              "kind": "speech",
+              "text": "La reducción is the noun, and reducido on a price tag means marked down."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the -zc- verbs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The c is already in reducir. What this group grows is a z in front of it:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "verb",
+                "I …"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "verb: reducir. I …: reduzco.",
+                "verb: conducir. I …: conduzco.",
+                "verb: conocer. I …: conozco."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "It is not only the yo form. The whole subjunctive carries the z too — reduzca, reduzcas, reduzcamos — and that is where you will actually read it, because the polite command is the subjunctive: Reduzca la velocidad, the road sign from a moment ago. The rest of the present stays plain: reduces, reduce, reducimos."
+            },
+            {
+              "kind": "speech",
+              "text": "Watch the past, though, because the table above hides a split. Reducir and conducir go reduje and conduje — not reducí. Conocer shares the -zc- and not that past: it goes conocí. Two groups, one spelling."
+            },
+            {
+              "kind": "speech",
+              "text": "The z has two different stories as well. In conocer it is inherited: Latin cognoscere had the cluster and the yo form kept it. Latin reducere never had it, so reduzco got its z by copying the verbs that did — a pattern that spread rather than a sound that survived. The family it spread through is large, several hundred verbs once the -ecer verbs are counted in."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin reducere: re-, back, plus ducere, to lead. To reduce something is to lead it back — to a smaller size, to where it was."
+            },
+            {
+              "kind": "speech",
+              "text": "Ducere is everywhere once you see it. La ducha is the same root, and it travelled: Latin ductia gave Italian doccia, which gave French douche, which gave Spanish ducha — a pipe that leads water. English has conduct, produce, educate (to lead out), duke — a leader — and aqueduct, which leads water exactly as a shower does."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish keeps conducir, to drive, and el conductor. A driver leads the car; a shower leads the water; reducing leads the number back down."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "we have to cut costs, in the variety you use",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: we have to cut costs, in the variety you use]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I reduce, using the first-person form",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I reduce, using the first-person form]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what a shower and a duke have in common",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what a shower and a duke have in common]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To cut back? (Reducir.) I reduce? (Reduzco.) What does ducere mean? (To lead.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C462-decidirse",
+      "sequence": 12490,
+      "title": "decidirse — to make your mind up",
+      "headword": "decidirse",
+      "romanization": "decidirse",
+      "gloss": "to make up your mind — decidir with the -se, and a cut underneath",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e26804cf5b7a4197",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say decidir and acercar. You met decidirse in passing when you learned decidir; now take it properly, with what -se did to the second word in front of you."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: decidirse",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "decidirse — to make up your mind."
+            },
+            {
+              "kind": "speech",
+              "text": "No me decido — I can't decide. Decídete — make your mind up. Se decidió por el azul — she went for the blue one."
+            },
+            {
+              "kind": "speech",
+              "text": "The -se version takes por for the thing chosen: me decidí por el piso pequeño."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: what the -se adds here",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have met the -se switch three times, and this is a fourth use of it — not a new meaning, but a new shade:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "without -se",
+                "with -se"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "without -se: acercar — bring it closer. with -se: acercarse — come closer.",
+                "without -se: decidir — settle a matter. with -se: decidirse — settle yourself."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "He decidido vender el coche states the decision. Me he decidido a vender el coche says you struggled and got there. The reflexive adds the effort, the sense of having had to bring yourself to it."
+            },
+            {
+              "kind": "speech",
+              "text": "That is why no me decido is the natural way to say you are dithering, and no decido would sound like a job description."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin decidere: de-, off, plus caedere, to cut. To decide is to cut off — the other options, the deliberating, the retreat."
+            },
+            {
+              "kind": "speech",
+              "text": "That picture explains the English family exactly. A decision cuts things off. Something decisive cuts cleanly. And caedere is also in concise (cut short), precise (cut in front, trimmed to the edge), and — through the same cutting — homicide and suicide."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish has decidir, la decisión, conciso and preciso off the same root. When you make your mind up, a Latin speaker heard you reaching for a blade."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I can't make my mind up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I can't make my mind up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "she went for the blue one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: she went for the blue one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which preposition follows decidirse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which preposition follows *decidirse*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To make your mind up? (Decidirse.) What does the -se add? (The effort of getting there.) What does caedere mean? (To cut.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C462-jefe",
+      "sequence": 12500,
+      "title": "el jefe — the one at the head",
+      "headword": "el jefe",
+      "romanization": "el jefe",
+      "gloss": "the boss — a head, and the same head as la cabeza",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:678362d1ea376061",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la cabeza and el trabajo. Put the first at the top of the second and you have named somebody."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el jefe",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el jefe — the boss, the head of something."
+            },
+            {
+              "kind": "speech",
+              "text": "Hablar con el jefe — to speak to the boss. La jefa de personal — the head of HR. El jefe de estación — the stationmaster."
+            },
+            {
+              "kind": "speech",
+              "text": "The feminine is la jefa, formed normally, and both are ordinary words at work — not slang and not deferential."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the j that used to be something else",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Jefe came from French chef, and the ch became a j. Spanish did that to a whole shelf of borrowings:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "French",
+                "Spanish"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "French: chef. Spanish: el jefe.",
+                "French: jardin. Spanish: el jardín.",
+                "French: jamais. Spanish: —."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The j is the jota, the sound at the back of the throat, and it is a latecomer: medieval Spanish did not have it. Words spelled with j or with g before e and i all shifted to it at roughly the same time, a few hundred years ago, which is why jefe, mujer and gente now share a sound that none of them started with."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "French chef is Latin caput, head — and caput is the same word inside la cabeza."
+            },
+            {
+              "kind": "speech",
+              "text": "That needs one correction to something you were told earlier. When you learned la cabeza, French was described as having dropped caput altogether for testa, a pot. That is true of the body part and only of it: tête replaced caput for the thing on your shoulders, while caput itself stayed on in French as chef, a head in the sense of a chief. It is that surviving branch Spanish later borrowed."
+            },
+            {
+              "kind": "speech",
+              "text": "So el jefe and la cabeza are one Latin noun arriving twice: once worn down through Spanish speech into the body part, once borrowed back from French as the person in charge. A boss is literally a head, exactly as in English head of department."
+            },
+            {
+              "kind": "speech",
+              "text": "The family is large: el capítulo (a chapter, a little head), la capital (the head city), acabar — to finish, to bring to a head — and English captain, chief, chef, capital and cape. A chef is the head of a kitchen, and chief and jefe are the same word in two languages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I have to speak to the boss",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I have to speak to the boss]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the head of HR, using the feminine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the head of HR, using the feminine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "that you cannot make your mind up about asking her",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: that you cannot make your mind up about asking her]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what jefe and cabeza have in common",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *jefe* and *cabeza* have in common]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The boss? (El jefe.) The feminine? (La jefa.) What does caput mean? (Head — the same one inside la cabeza.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R462-repaso-jefe",
+      "sequence": 12510,
+      "title": "(reducir, decidirse, el jefe) — from cold",
+      "headword": "(reducir, decidirse, el jefe)",
+      "romanization": "(reducir, decidirse, el jefe)",
+      "gloss": "cold retrieval of the three, and a Latin head arriving twice",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:916f60d9541e8031",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say all three: to cut back, to make your mind up, the boss."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one word, two roads, four hundred years apart",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "the road",
+                "the word"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "the road: worn down through Spanish speech. the word: la cabeza.",
+                "the road: borrowed from French, much later. the word: el jefe."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Both are Latin caput, head. The first went through centuries of mouths and came out as a body part; the second was picked up whole from a neighbour and came out as a person."
+            },
+            {
+              "kind": "speech",
+              "text": "You have watched this several times — cosa against causa, razón against ración, rueda against rotativo, consejo against consultar. Every one of those came out of Latin twice at two different speeds. This one took a detour through a third language, which is why it looks like neither."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: two verbs, two pictures of cutting and leading",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "verb",
+                "the picture inside it"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "verb: reducir. the picture inside it: re-ducere, to lead back.",
+                "verb: decidirse. the picture inside it: de-caedere, to cut off."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Deciding cuts the other options away; reducing leads the number back down. Both are physical, and both are still doing the work: la ducha leads water, preciso is cut to the edge."
+            },
+            {
+              "kind": "speech",
+              "text": "And decidirse is the fourth -se pair you have met, after mudarse, acercarse and arreglarse. Here the -se adds effort — no me decido is dithering, where no decido would be a job description."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the boss wants to cut costs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the boss wants to cut costs]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I can't make my mind up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I can't make my mind up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which two Spanish words are both Latin caput",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which two Spanish words are both Latin *caput*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "All three again, in Spanish, without looking. Then one sentence about a decision somebody is putting off."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C462-sintesis-jefe",
+      "sequence": 12520,
+      "title": "(el correo del jefe) — read it, then do it yourself",
+      "headword": "(el correo del jefe)",
+      "romanization": "(el correo del jefe)",
+      "gloss": "the payoff — read a message announcing cuts, then write the reply",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1e51cf03bc9793f2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el jefe and reducir. The message below is from one about the other."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "An internal message, and one reply. Read both, then answer."
+            },
+            {
+              "kind": "speech",
+              "text": "1 — de la jefa."
+            },
+            {
+              "kind": "speech",
+              "text": "Buenos días. Tenemos que reducir el gasto de material este trimestre. Antes del viernes, decidme qué se puede dejar de comprar en vuestra sección."
+            },
+            {
+              "kind": "speech",
+              "text": "2 — la respuesta."
+            },
+            {
+              "kind": "speech",
+              "text": "Lo miro hoy. Todavía no me decido entre quitar el papel de color o bajar los pedidos de tinta, así que te digo mañana."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what has to be cut, and by when",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what has to be cut, and by when]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two things the second person is choosing between",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two things the second person is choosing between]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "when the answer is coming",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: when the answer is coming]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "No me decido entre is the phrase to keep whole. With entre you name the options you are stuck between; with por you name the one you finally take. No me decido entre A y B, then me decidí por A."
+            },
+            {
+              "kind": "speech",
+              "text": "Decidme is vosotros, plural and informal — a boss writing to her own team in Spain. A Latin American writer would say díganme, and a formal Spanish notice to the public would too. The verb ending places the writer, the reader and the register in one word."
+            },
+            {
+              "kind": "speech",
+              "text": "And tenemos que reducir: nosotros, although the decision is hers. Spanish management writing does this constantly, and it is doing the same softening as the se on a shop notice — spreading the action out so nobody is singled out as its author."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now your turn, out loud and then in writing. Four lines: as a boss, say spending has to be cut and ask for suggestions by Friday; then as the reply, say you are torn between two options and will answer tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "Then check yourself: did you use entre for the options and por for the choice?"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

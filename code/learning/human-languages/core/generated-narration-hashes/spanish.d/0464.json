@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 464,
+  "sourceHash": "fnv1a64:dfdc74a305c338fa",
+  "lessonIds": [
+    "ES-C464-recordar",
+    "ES-C464-dentista",
+    "ES-C464-fallar",
+    "ES-R464-repaso-cita",
+    "ES-C464-sintesis-cita"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch464.txt",
+  "json": "spanish/narration/ch464.json",
+  "textHash": "fnv1a64:2d699a405337b19d",
+  "jsonHash": "fnv1a64:2ba242cc656c6346",
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 463,
+  "title": "El viaje guiado",
+  "label": "ch:es-guia",
+  "canDo": "I can arrange or join an organised outing: say who is putting it on, that a guide is coming, and ask whether an early start matters to anyone.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "ES-C463-sintesis-guia",
+    "kind": "task",
+    "summary": "Read the message or notice this chapter's words exist for, then say the same thing back.",
+    "assesses": [
+      "ES-LEX-C463-GUIA-01",
+      "ES-LEX-C463-GUIA-02",
+      "ES-LEX-C463-GUIA-03"
+    ],
+    "note": "IMPORTAR COMPLETES THE SET OF VERBS WHOSE SUBJECT IS THE THING: gustar, interesar, doler and now importar, all four now taught, all with the person as an indirect object and the verb agreeing with the thing (me importan los horarios, plural). The consequence worth having is that ¿TE IMPORTA...? is how Spanish asks a small favour and is NOT asking permission -- it asks whether the thing would weigh on them. importar is in- + PORTARE, to carry IN, which gives both senses at once: importing goods carries them in, and mattering is carrying weight in, so importante is the adjective for exactly that; el pasaporte carries you through a gate, and la puerta and el puerto are the same opening. EL GUÍA / LA GUÍA extends the guardia pattern -- feminine for the thing, masculine for the person -- but COMPLICATES it honestly, because a female guide is also la guía, so the feminine covers both the book and a woman doing the job and only context separates them (llamé a la guía is a person, compré la guía is a book). guía is Germanic WITAN, to know, so a guide is ONE WHO KNOWS, with English WIT as the cousin and the same Germanic w- appearing as Spanish gu- seen in guardar and guerra; set against SEGUIR, Latin sequi, the two words name the two ends of one walk, one Germanic and one Latin. organizar is Greek ORGANON, a tool, from ergon, WORK -- so an organ is a working part, the body's organos are tools doing jobs, and energy, surgery and ergonomic are relatives. Every -zar verb swaps z to c before e (organicé, rechacé, empecé): a spelling rule only, since the sound is already identical. The payoff also teaches OBJECT FRONTING with a resumptive pronoun -- 'la excursión la organiza el centro' -- where English reaches for a passive."
+  }
+}

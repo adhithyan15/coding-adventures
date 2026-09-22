@@ -10,7 +10,7 @@ gloss: agreed — from cor, the heart: an agreement is two hearts brought togeth
 concept_tag: ES-REPLY-AGREED
 prerequisites: [ES-C283-no-hay-de-que]
 sounds: [diphthong-ue, r-tap]
-roots: []
+roots: [cor-latin]
 etymology_hook: "acuerdo holds Latin cor, heart: accord, concord and record are the same organ"
 duration:
   max_seconds: 240

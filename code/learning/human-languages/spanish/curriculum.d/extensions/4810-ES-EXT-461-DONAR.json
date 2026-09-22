@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-461-DONAR",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read a collection appeal: what may be donated, what will be turned away and why, and where to hand it in.",
+  "prerequisites": [
+    "ES-EXT-460-PEDIR"
+  ]
+}

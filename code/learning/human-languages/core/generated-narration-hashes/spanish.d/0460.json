@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:622621b50e7d455c",
+  "lessonIds": [
+    "ES-C460-herramienta",
+    "ES-C460-solicitar",
+    "ES-C460-espera",
+    "ES-R460-repaso-pedir",
+    "ES-C460-sintesis-pedir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch460.txt",
+  "json": "spanish/narration/ch460.json",
+  "textHash": "fnv1a64:2d9e794e483258b8",
+  "jsonHash": "fnv1a64:ce1d8265ada57e95",
+  "findings": []
+}

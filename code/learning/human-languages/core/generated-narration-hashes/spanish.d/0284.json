@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 284,
-  "sourceHash": "fnv1a64:d38359628a3e71bd",
+  "sourceHash": "fnv1a64:53cf7434f2722ded",
   "lessonIds": [
     "ES-C284-de-acuerdo",
     "ES-C284-seguro",
@@ -14,6 +14,6 @@
   "text": "spanish/narration/ch284.txt",
   "json": "spanish/narration/ch284.json",
   "textHash": "fnv1a64:c72d2d518d6fb3bc",
-  "jsonHash": "fnv1a64:990568d5b92ac29c",
+  "jsonHash": "fnv1a64:9aad6238cbfe1914",
   "findings": []
 }

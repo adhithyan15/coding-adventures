@@ -1,0 +1,20 @@
+{
+  "chapter": 461,
+  "title": "El donativo",
+  "label": "ch:es-donar",
+  "canDo": "I can read a collection appeal: what may be donated, what will be turned away and why, and where to hand it in.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "ES-C461-sintesis-donar",
+    "kind": "task",
+    "summary": "Read the message or notice this chapter's words exist for, then say the same thing back.",
+    "assesses": [
+      "ES-LEX-C461-DONAR-01",
+      "ES-LEX-C461-DONAR-02",
+      "ES-LEX-C461-DONAR-03"
+    ],
+    "note": "RECHAZAR JOINS capere-latin WITH ACEPTAR, taught five chapters earlier, and the pair is the chapter: ad- + capere is taking a thing TOWARDS you, re- + captiare is driving it BACK. One Latin verb of taking, pointed two ways by two prefixes -- the second such family in three chapters after meter/permiso/permitir/admitir off mittere, which is why a Spanish verb beginning a-, re-, per-, ad- or des- usually has a word you already know after it. The same captiare gave CAZAR, French chasser, and English CHASE and CATCH, so rejecting something is chasing it back the way it came. DONAR IS THE GIVING INSIDE PERDÓN: per- + donare, to give THOROUGHLY, so forgiving is handing the offence over rather than keeping it -- and English FOR-GIVE is built identically, making pardon and forgive the same idea twice. donar is not dar and not regalar: dar hands anything to anyone, regalar makes a present, donar gives to a cause, so using donar about a person sounds charitable rather than kind. peligroso is PERICULUM, a trial you try your luck against (English PERIL, and experience/experiment from the same trying), with the r and l METATHESISED exactly as in milagro from miraculum -- both arrived through speech, while experiencia came by book and kept its letters. -oso means 'full of' and maps straight onto English -ous. THE SINTESIS TURNS ON THE SUBJUNCTIVE AND ON SER AGAINST ESTAR IN ONE SENTENCE: 'los que estén rotos o sean peligrosos' -- estén because the poster describes a category that MAY OR MAY NOT TURN UP rather than particular toys, and ser for dangerous (a lasting property) against estar for broken (a state arrived at)."
+  }
+}

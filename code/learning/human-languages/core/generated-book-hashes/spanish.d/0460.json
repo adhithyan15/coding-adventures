@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:89a212d9f03aa53e",
+  "lessonIds": [
+    "ES-C460-herramienta",
+    "ES-C460-solicitar",
+    "ES-C460-espera",
+    "ES-R460-repaso-pedir",
+    "ES-C460-sintesis-pedir"
+  ],
+  "tex": "spanish/book/chapters/ch460-pedir.tex"
+}

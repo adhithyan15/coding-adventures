@@ -1,0 +1,787 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 464,
+  "title": "La cita perdida",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:dfdc74a305c338fa",
+  "lessons": [
+    {
+      "id": "ES-C464-recordar",
+      "sequence": 12580,
+      "title": "recordar — to remember, and to remind",
+      "headword": "recordar",
+      "romanization": "recordar",
+      "gloss": "to remember, to remind — to pass a thing back through the heart",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:72df34ae99775748",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el corazón and la cita. The heart is inside the verb that keeps the appointment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: recordar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "recordar — to remember, and also to remind."
+            },
+            {
+              "kind": "speech",
+              "text": "No recuerdo su nombre — I don't remember his name. Recuérdame la cita — remind me about the appointment. Te recuerdo que mañana es fiesta — I remind you that tomorrow is a holiday."
+            },
+            {
+              "kind": "speech",
+              "text": "One verb, both jobs. Which it is depends on whether somebody else is being told: recuerdo alone is remembering, te recuerdo is reminding."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: recordar is not acordarse",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Spanish has a second verb for remembering and the two are near-twins:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Spanish",
+                "what it takes"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "Spanish: recordar algo. what it takes: a plain object.",
+                "Spanish: acordarse de algo. what it takes: de, always."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "No recuerdo la dirección and no me acuerdo de la dirección mean the same thing. The difference is grammatical, not semantic: recordar takes the thing directly, acordarse needs its de, and dropping it is one of the commonest mistakes learners make."
+            },
+            {
+              "kind": "speech",
+              "text": "Both are o becomes ue verbs: recuerdo, me acuerdo. That is the stressed-vowel break you have had since the stem-change chapter, and you have seen it on this exact root before: de acuerdo showed you cor opening into cuerdo."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin recordari: re-, back, plus cor, cordis — the heart."
+            },
+            {
+              "kind": "speech",
+              "text": "To remember is to bring back through the heart, because Latin located memory and thought there rather than in the head. That is the same cor inside el corazón, which you have had for many chapters."
+            },
+            {
+              "kind": "speech",
+              "text": "The family is everywhere once seen: el acuerdo, an agreement — hearts brought together — and recordar's English cousin record, which is literally a thing committed to memory. Courage is cor too, by way of French, and so is concordance."
+            },
+            {
+              "kind": "speech",
+              "text": "So a Spanish speaker asking you to remember something is asking you to run it back past your heart."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I don't remember the appointment",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I don't remember the appointment]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "remind me tomorrow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: remind me tomorrow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which preposition acordarse needs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which preposition *acordarse* needs]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To remember? (Recordar.) I remember? (Recuerdo.) What is cor? (The heart — the same one in corazón.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C464-dentista",
+      "sequence": 12590,
+      "title": "el dentista / la dentista — the dentist",
+      "headword": "el dentista / la dentista",
+      "romanization": "el dentista / la dentista",
+      "gloss": "the dentist — an -ista noun, where only the article changes",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b09ea93fa5b79c0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el diente and el médico. Put them together and name the person."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el dentista",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el dentista, la dentista — the dentist."
+            },
+            {
+              "kind": "speech",
+              "text": "Tengo cita con el dentista — I've got a dentist's appointment. Voy al dentista — I'm going to the dentist's."
+            },
+            {
+              "kind": "speech",
+              "text": "Note al dentista for the place as well as the person: Spanish sends you to the professional, not to the surgery, where English says \"to the dentist's\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: -ista does not change for gender",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "-ista nouns have one form for both, and only the article moves:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the person",
+                "masculine",
+                "feminine"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "the person: dentist. masculine: el dentista. feminine: la dentista.",
+                "the person: artist. masculine: el artista. feminine: la artista.",
+                "the person: tourist. masculine: el turista. feminine: la turista."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The -a ending misleads, because it looks feminine and is not. El dentista is correct and el dentisto does not exist."
+            },
+            {
+              "kind": "speech",
+              "text": "Compare el médico / la médica, which does change. The difference is the ending: -ista is invariable, -o is not. Learn the ending and the article stops being a guess — the same bargain the noun-making suffixes offered."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin dens, dentem — tooth — plus the job-ending you met at the very start of this book, when -ista first showed you el artista and la artista. Greek wrote it -istēs; Latin took it in as -ista, and that Latin -a is the one Spanish inherited."
+            },
+            {
+              "kind": "speech",
+              "text": "So dentista is a Latin body part with a borrowed job-ending welded on, which is how a large family of profession words was built: el periodista, el electricista, el taxista. The ending is still productive, so Spanish goes on making new ones. It is one of several — -dor gives el conductor, -ero gives el camarero."
+            },
+            {
+              "kind": "speech",
+              "text": "Dentem gives el diente, and English dental, dentist and indent — to cut a tooth-shaped notch. A dandelion is dent de lion, a lion's tooth, named for its leaves."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I've got a dentist's appointment",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I've got a dentist's appointment]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a female dentist, with the right article",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a female dentist, with the right article]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why el dentista is not a mistake",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why *el dentista* is not a mistake]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The dentist? (El dentista or la dentista.) Does the noun change? (No — only the article.) What is dentem? (A tooth.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C464-fallar",
+      "sequence": 12600,
+      "title": "fallar — to fail somebody",
+      "headword": "fallar",
+      "romanization": "fallar",
+      "gloss": "to fail, to let somebody down — the deceiving inside falso",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ebfafd7134aff2e8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say falso and estropeado. One is about truth, one about machines. The verb next covers both."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fallar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fallar — to fail, to go wrong, to let somebody down."
+            },
+            {
+              "kind": "speech",
+              "text": "Me falló el coche — the car let me down. Ha fallado el sistema — the system has gone down. No me falles — don't let me down."
+            },
+            {
+              "kind": "speech",
+              "text": "El fallo is the noun in Spain: a fault, a glitch, and in an exam a wrong answer. Much of Latin America says la falla for the same fault."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: fallar is not estropearse",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Both are about things going wrong, and they are not the same:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what happened",
+                "the verb"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "what happened: it stopped working, and stayed that way. the verb: estropearse.",
+                "what happened: it did not do its job at the moment needed. the verb: fallar."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Se ha estropeado el coche — it is broken, in the garage. Me falló el coche — it let me down, this morning, when I needed it. A car can fallar once and be fine afterwards."
+            },
+            {
+              "kind": "speech",
+              "text": "That is why fallar is the verb for people too. Me falló about a friend is a reproach: they were not there when it counted."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin fallere — the verb that tripped you up, as you had it under falso. That literal footing is what the rest grows out of: to trip somebody is to put the ground where they did not expect it, and from there to mislead them."
+            },
+            {
+              "kind": "speech",
+              "text": "The move from tripping to failing runs through disappointment: something that fails you has, in effect, put the ground somewhere other than where it promised. Latin fallere carried the deceiving sense alongside the literal one, and Spanish kept the pair — falso for the lie, fallar for the letting-down."
+            },
+            {
+              "kind": "speech",
+              "text": "English took it twice as well: false from the participle, and fail through French. Fault, fallacy and failure are all here, and so is default, which is a failing to act."
+            },
+            {
+              "kind": "speech",
+              "text": "A second Spanish branch is faltar, to be lacking — me falta tiempo, I'm short of time — from the same root by a different road."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the car let me down this morning",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the car let me down this morning]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "don't let me down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: don't let me down]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which verb fits a washing machine that has stopped for good",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which verb fits a washing machine that has stopped for good]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To let somebody down? (Fallar.) The noun? (El fallo.) What did fallere do to you? (Tripped you up — the same verb as falso.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R464-repaso-cita",
+      "sequence": 12610,
+      "title": "(recordar, el dentista, fallar) — from cold",
+      "headword": "(recordar, el dentista, fallar)",
+      "romanization": "(recordar, el dentista, fallar)",
+      "gloss": "cold retrieval of the three, and two words that were already in your vocabulary",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:86287668ea9df614",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say all three: to remember, the dentist, to let down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: two bodies and a lie",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "new word",
+                "what it was built on"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "new word: recordar. what it was built on: cor, the heart — the one in el corazón.",
+                "new word: el dentista. what it was built on: dentem, a tooth — the one in el diente.",
+                "new word: fallar. what it was built on: fallere, to deceive — the one in falso."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Two body parts and a lie, and all three were already in your vocabulary. By this stage that is the ordinary case rather than a happy accident: a corpus of nearly a thousand words contains most of the roots the next hundred will need."
+            },
+            {
+              "kind": "speech",
+              "text": "Recordar is the one worth keeping. Latin put memory in the heart, not the head, so remembering is running a thing back past it — and English record is the same word, a thing committed to memory."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: endings that fix the article, and one that does not",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "ending",
+                "what it settles"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "ending: -ista. what it settles: nothing changes; only the article moves.",
+                "ending: -o / -a. what it settles: the noun itself changes: el médico, la médica."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "El dentista looks feminine and is not. That -a rides in on the borrowed job-ending -ista, which does not bend for gender at all — so the noun stays put and the article does the work. El guía and la guía, one chapter back, make the same move without a word of Greek in them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "remind me about the dentist",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: remind me about the dentist]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the car let me down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the car let me down]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the three words has a heart inside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the three words has a heart inside it]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "All three again, in Spanish, without looking. Then one sentence about an appointment you nearly missed."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C464-sintesis-cita",
+      "sequence": 12620,
+      "title": "(perder la cita) — read it, then do it yourself",
+      "headword": "(perder la cita)",
+      "romanization": "(perder la cita)",
+      "gloss": "the payoff — read a reminder and the apology for missing it, then write both",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a18a2def829b6400",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say recordar and fallar. The first message does one; the second admits the other."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two messages, a day apart. Read both, then answer."
+            },
+            {
+              "kind": "speech",
+              "text": "1 — de la clínica."
+            },
+            {
+              "kind": "speech",
+              "text": "Le recordamos su cita con la dentista el jueves a las 10:15. Para anular, llame con 24 horas de antelación."
+            },
+            {
+              "kind": "speech",
+              "text": "2 — el jueves por la tarde."
+            },
+            {
+              "kind": "speech",
+              "text": "Buenas tardes. Siento no haber ido esta mañana; me falló el despertador y no me acordé hasta las once. ¿Puedo pedir otra cita?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "when the appointment was, and who with",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: when the appointment was, and who with]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what you must do to cancel, and how far ahead",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what you must do to cancel, and how far ahead]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two things that went wrong",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two things that went wrong]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The apology uses both verbs for remembering and they are doing different work. Me falló el despertador — the alarm clock is the subject; it let the writer down. Then no me acordé — acordarse, the reflexive one, for the person's own failure to recall. Spanish separates the thing that failed from the person who forgot, and the apology is more honest for it."
+            },
+            {
+              "kind": "speech",
+              "text": "La dentista, feminine, so the clinic is naming a particular woman. And con la dentista, not con el dentista — had the message said el, you would know it was a man, since the noun itself never tells you."
+            },
+            {
+              "kind": "speech",
+              "text": "Siento no haber ido is the standard apology frame: sentir plus a perfect infinitive. Not siento que no fui, which a learner reaches for and a Spanish speaker does not."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now your turn, out loud and then in writing. Four lines: as the clinic, remind somebody of a dental appointment and say how to cancel; then as the patient, apologise for missing it, say what let you down, and ask for another."
+            },
+            {
+              "kind": "speech",
+              "text": "Then check yourself: did fallar go to the thing and acordarse to the person, and did acordarse keep its de?"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

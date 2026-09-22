@@ -1,0 +1,20 @@
+{
+  "chapter": 462,
+  "title": "La reunión",
+  "label": "ch:es-jefe",
+  "canDo": "I can follow a message from a manager about cutting spending, and reply that I am still choosing between two options.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "ES-C462-sintesis-jefe",
+    "kind": "task",
+    "summary": "Read the message or notice this chapter's words exist for, then say the same thing back.",
+    "assesses": [
+      "ES-LEX-C462-JEFE-01",
+      "ES-LEX-C462-JEFE-02",
+      "ES-LEX-C462-JEFE-03"
+    ],
+    "note": "EL JEFE AND LA CABEZA ARE ONE LATIN NOUN ARRIVING TWICE, and this is the two-roads point seen through a THIRD language: caput wore down through Spanish speech into the body part, and was borrowed from French chef, much later, as the person in charge. rueda/rotativo and consejo/consultar were both Latin-to-Spanish; this one detoured through France, which is why it resembles neither. A boss is literally A HEAD, as in English head of department, and chief/chef/jefe are one word in three languages. The slug is latin-caput and NOT caput-latin: the corpus spells that etymon both ways (HL-C419) and latin-caput carries four lessons including la cabeza, the obvious cousin, where caput-latin carries only acabar -- nothing in CI catches a wrong choice here, so the rule applied was MATCH THE ETYMON'S EXISTING MAJORITY, since that is what actually joins. DECIDIRSE IS A FREE CHAIN off ES-C437-decidir and the FOURTH -se pair after mudarse, acercarse and arreglarse; here the -se adds EFFORT -- 'no me decido' is dithering where 'no decido' would be a job description -- and it takes ENTRE for the options and POR for the choice. decidir is de- + CAEDERE, to cut OFF the other options, which is why decision, decisive, concise and precise are all cutting; ES-C437-decidir carried roots: [] although its own gloss already said 'to cut a question off', so the backfill is a correction rather than a guess. reducir is re- + DUCERE, to lead back, and LA DUCHA is the same root through French -- a pipe that leads water, as an aqueduct does -- alongside conducir, el conductor, and English duke, educate and conduct. The -zc- first person (reduzco, conozco) is one Latin sound surviving in exactly one slot."
+  }
+}
