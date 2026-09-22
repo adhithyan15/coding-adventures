@@ -59,8 +59,8 @@
     ],
     "numericCredits": "0-100"
   },
-  "lessonCount": 1424,
-  "taughtForms": 2366,
+  "lessonCount": 1430,
+  "taughtForms": 2378,
   "objectiveFailed": 6,
   "mocks": [
     {
@@ -73,7 +73,6 @@
           "paper": 1,
           "item": 3,
           "missing": [
-            "invitar",
             "explicar"
           ]
         },
@@ -88,7 +87,6 @@
           "paper": 2,
           "item": 43,
           "missing": [
-            "descontar",
             "creer"
           ]
         }
@@ -126,9 +124,7 @@
   ],
   "missingObjectiveLexemes": [
     "creer",
-    "descontar",
     "explicar",
-    "invitar",
     "problema",
     "responder"
   ],
@@ -139,14 +135,6 @@
     },
     {
       "lexeme": "creer",
-      "count": 1
-    },
-    {
-      "lexeme": "descontar",
-      "count": 1
-    },
-    {
-      "lexeme": "invitar",
       "count": 1
     },
     {

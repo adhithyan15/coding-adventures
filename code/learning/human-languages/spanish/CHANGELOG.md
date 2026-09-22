@@ -1,5 +1,116 @@
 # Changelog
 
+## Chapter 474 — the last authorable A2 vocabulary chapter
+
+```
+A2 objectiveFailed          6 -> 6   (unchanged, third chapter running)
+A2 missingObjectiveLexemes  6 -> 4
+```
+
+Four words, two lexemes, **zero items** — and after this one there is nothing
+left to author.
+
+| chapter | scene | words |
+|---|---|---|
+| 474 PAGO | a training course the employer part-pays | invitar, el importe, descontar, el golpe |
+
+## The programme stops here
+
+Every lexeme still on the missing list is **already taught**:
+
+| lexeme | taught at | blocked by |
+|---|---|---|
+| creer | `ES-C41-creer` | B1 via `SPINE-GIVE-REASONS` — `HL-C418` |
+| explicar | `ES-C41-explicar` | B1 via `SPINE-GIVE-REASONS` — `HL-C418` |
+| problema | `ES-C268-problema` | misfiled on a B1 travel node — `HL-C420` |
+| responder | `ES-C40-contestar` | taught but never a headword — `HL-C422` |
+
+Writing a lesson for any of them is the duplication `HL-C418` forbids. These
+four are **decisions, not vocabulary work**, and the programme stops rather
+than moving the number dishonestly.
+
+## The HL-C421 check found two more — its fifth consecutive hit
+
+Item 43 is a **matching** task, so the *statement* is the text to read, not an
+option set:
+
+> Pensaba que había que pagar el **importe** completo de una vez.
+
+against a passage reading *"te lo descuentan en doce meses, no **de golpe**."*
+
+Neither `importe` nor `golpe` is in the requires row, and both had zero hits
+corpus-wide — *importe*'s three greps were the **English** word *imported*.
+
+**`de golpe` is load-bearing.** It is what the statement's *de una vez* has to
+be matched against, so without it the item is closed even to a reader who
+understood every sentence. The synthesis teaches that pairing and names the
+general rule: a matching task rewards **paraphrase**, so the words worth
+learning are the ones that come in pairs.
+
+## Three of the four came out of words the book already held
+
+- **`invitar`** — `ES-C282-invitado` already names it outright. Hand-over, the
+  move used for *lectura*, *avisar* and *llamada*.
+- **`el importe`** — `ES-C463-importar` teaches *importar* as *to matter* and
+  notes the literal import sense, so this is its **third** job. All three are
+  shown together, joined by *in-* + *portare*: goods carried in are imports, a
+  thing that carries weight matters, and what a bill carries in is its
+  *importe*.
+- **`descontar`** — *contar* with *des-*.
+
+**The `des-` nuance is already owned.** `ES-C315-descanso` owns *des-* as an
+undoing; `ES-C444-cubrir` owns the harder half — *"Compare disfrutar, where the
+prefix did not reverse at all. Same shape, two behaviours."* So *descontar*
+cites cubrir's table and places itself in the reversing camp explicitly.
+
+## Cousin links
+
+`importe` takes `importare-latin`, already held by **both** `ES-C398-importante`
+and `ES-C463-importar`; `descontar` takes `computare-latin` from
+`ES-C38-contar`. Only `invitare-latin` and `colaphus-latin` are newly minted.
+
+*Golpe* is the one outsider and earns it: Latin *colaphus* from Greek
+*kólaphos*, a box on the ear, worn down by losing its middle syllable and
+softening c to g. English kept the same blow intact in **coup** — so *golpe de
+estado* and *coup d'état* are the same two words said twice, and *estado* was
+taught one chapter earlier.
+
+## The root-slug guard caught a cousin I had missed
+
+`golpe` was drafted with a newly minted `colaphus-latin`. `generate:root-slug-splits`
+rejected it:
+
+```
+colaphus-latin / latin-colaphus
+```
+
+The corpus already held the etymon — in the **French** track. `FR-C40-beaucoup`
+carries `latin-colaphus`, because *beaucoup* is *beau* + *coup*, "a beautiful
+blow". My grep had looked for *colpus*, not *colaphus*, so I missed it.
+
+Corrected to `latin-colaphus`, which makes Spanish *golpe* a genuine cousin of
+French *beaucoup* — and the lesson now says so, because it is a better fact
+than the one it replaced: the same punch gives Spanish its *golpe* and French
+its word for plenty.
+
+Worth recording that **preflight's `--new-roots` is an assertion, not a
+verification**. It accepted `colaphus-latin` because I told it the slug was
+new. Only the corpus-wide split check knows whether it actually is.
+
+## Caught in my own draft, fourth consecutive chapter
+
+The token sweep found *el importe de la **matrícula***. `matrícula` has zero
+corpus hits. Replaced with *el importe del curso* — and that first replacement
+tripped the standalone-book check on the phrase *"the course"*, the same rule
+chapter 471 hit, so the gloss became *the fee for a class*.
+
+## Verification
+
+Preflight 6/6. Both suites. Digest control by reconstruction — a clean worktree
+at `origin/main` (2245f54d77) reproduced `6d6ea3c0…` and 7479 byte for byte,
+and `ES-PATH-474-PAGO` holds exactly the six lessons the count moved by
+(7479 → 7485).
+
 ## Chapter 473 — the question's verb is not the passage's verb
 
 ```

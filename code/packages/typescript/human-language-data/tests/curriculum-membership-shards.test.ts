@@ -88,9 +88,10 @@ describe("direct curriculum lesson owners", () => {
     // 7459 -> 7467 was the fifteenth (471), which is EIGHT rather than six because that chapter teaches six
     // headwords instead of four, and
     // 7467 -> 7474 was the sixteenth (472), SEVEN for five headwords, and
-    // 7474 -> 7479 is the seventeenth (473), FIVE for three headwords -- see the mock-audit test for all
-    // three; the guard still does its job, which is to make any OTHER change to the public graph fail loudly
-    // rather than pass quietly.
+    // 7474 -> 7479 was the seventeenth (473), FIVE for three headwords, and
+    // 7479 -> 7485 is the eighteenth (474) and the LAST of the A2 vocabulary programme -- see the mock-audit
+    // test for why it stops there; the guard still does its job, which is to make any OTHER change to the
+    // public graph fail loudly rather than pass quietly.
     //
     // Attribution was checked by RECONSTRUCTION, not assumed. A clean worktree
     // at the previous commit was loaded by this same function and reproduced the
@@ -125,9 +126,12 @@ describe("direct curriculum lesson owners", () => {
     // lessons and the count moved by 7. For 473 the control was origin/main at
     // f83309736e, which reproduced dc9be5f8... and 7474 exactly;
     // ES-PATH-473-CONSEJO holds exactly 5 lessons and the count moved by 5.
-    expect(digest).toBe("6d6ea3c0aef7c0db9166e6a6312d4cd5c3b19aa56ef926ccb787641610da2fff");
+    // For 474 the control was origin/main at 2245f54d77, which reproduced
+    // 6d6ea3c0... and 7479 exactly; ES-PATH-474-PAGO holds exactly 6 lessons
+    // and the count moved by 6.
+    expect(digest).toBe("7b1879e48145aed0b1ddcc209e9995cbebb40748aab5dcafaffec589809c43fe");
     expect(curricula.flatMap((curriculum) => curriculum.path).flatMap((path) => path.lessons))
-      .toHaveLength(7479);
+      .toHaveLength(7485);
   });
 
   it("keeps the canonical curriculum shards free of derived lesson arrays", () => {

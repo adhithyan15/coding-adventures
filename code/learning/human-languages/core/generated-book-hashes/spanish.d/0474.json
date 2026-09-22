@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 474,
+  "sourceHash": "fnv1a64:13ab5b3394e0abc0",
+  "lessonIds": [
+    "ES-C474-invitar",
+    "ES-C474-importe",
+    "ES-C474-descontar",
+    "ES-C474-golpe",
+    "ES-R474-repaso-pago",
+    "ES-C474-sintesis-pago"
+  ],
+  "tex": "spanish/book/chapters/ch474-pago.tex"
+}

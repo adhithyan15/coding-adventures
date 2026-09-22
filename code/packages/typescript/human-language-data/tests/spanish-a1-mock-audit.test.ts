@@ -115,9 +115,9 @@ describe("Spanish A2 book-bounded mock audit", () => {
     // corpus cannot support.
     //
     // 191 -> 161 -> 146 -> 126 -> 107 -> 85 -> 68 -> 54 -> 39 -> 35 -> 31 ->
-    // 27 -> 23 -> 19 -> 15 -> 11 -> 8 -> 6 are the seventeen vocabulary tranches: 431-436,
+    // 27 -> 23 -> 19 -> 15 -> 11 -> 8 -> 6 -> 4 are the eighteen vocabulary tranches: 431-436,
     // 437-439, 440-443, 444-447, 448-451, 452-455, 456-459, 460-464, 465, 466,
-    // 467, 468, 469, 470, 471, 472 and 473.
+    // 467, 468, 469, 470, 471, 472, 473 and 474.
     // The drop was exact for the first fourteen -- 30 headwords removed 30
     // lexemes, then 15, 20, 19, 22, 17, 14, 15, 4, 4, 4, 4, 4, 4. THE
     // FIFTEENTH IS THE FIRST THAT IS NOT: chapter 471 teaches SIX headwords
@@ -157,6 +157,7 @@ describe("Spanish A2 book-bounded mock audit", () => {
     //     tranche 4k (471)         6 words   1 item
     //     tranche 4l (472)         5 words   0 items
     //     tranche 4m (473)         3 words   0 items
+    //     tranche 4n (474)         4 words   0 items   <- LAST
     //
     // An item passes only when EVERY lexeme in its `requires` row is taught, so
     // a word helps in proportion to how close its rows already are. Tranches
@@ -282,7 +283,22 @@ describe("Spanish A2 book-bounded mock audit", () => {
     // the book does not teach, after `surgir` in 472. That check is now the
     // most productive step in the pre-check.
     //
-    // WHAT IS LEFT AFTER 473: six lexemes, of which FOUR are already taught and
+    // AFTER 474 THE AUTHORABLE A2 VOCABULARY GAP IS EXHAUSTED. Every one of the
+    // four lexemes still on this list is ALREADY TAUGHT and blocked only by how
+    // this audit measures:
+    //
+    //     creer     ES-C41-creer       B1 via SPINE-GIVE-REASONS   HL-C418
+    //     explicar  ES-C41-explicar    B1 via SPINE-GIVE-REASONS   HL-C418
+    //     problema  ES-C268-problema   misfiled on a B1 travel node HL-C420
+    //     responder ES-C40-contestar   taught but never a headword  HL-C422
+    //
+    // Writing a lesson for any of them is the duplication HL-C418 forbids, so
+    // the programme STOPS here rather than moving this number dishonestly. The
+    // four entries are decisions, not vocabulary work. 474's own HL-C421 check
+    // found `importe` and `golpe`, neither in its row, in a MATCHING item where
+    // the statement -- not an option set -- is the text to read.
+    //
+    // WHAT WAS LEFT AFTER 473: six lexemes, of which FOUR are already taught and
     // blocked only by how this audit measures -- creer, explicar and problema
     // (HL-C418, HL-C420) and responder (HL-C422). Only `descontar` and
     // `invitar` are genuinely untaught, so one more vocabulary chapter exhausts
@@ -322,7 +338,7 @@ describe("Spanish A2 book-bounded mock audit", () => {
     // `explicar`, `creer` or `problema`, which are ALREADY TAUGHT and excluded
     // only because their spine node derives above A2. See BACKLOG.d HL-C418
     // and HL-C420; do not teach them a second time.
-    expect(audit.missingObjectiveLexemes).toHaveLength(6);
+    expect(audit.missingObjectiveLexemes).toHaveLength(4);
   });
 
   it("measures a LARGER taught set than A1, which is what makes it a different gate", () => {

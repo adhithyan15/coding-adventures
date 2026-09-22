@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-474-PAGO",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can follow a conversation about who pays for something: hear that an amount is deducted over months rather than taken all at once, and match that to a statement saying the opposite in different words.",
+  "prerequisites": [
+    "ES-EXT-473-CONSEJO"
+  ]
+}
