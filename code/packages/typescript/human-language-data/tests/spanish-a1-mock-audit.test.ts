@@ -726,7 +726,10 @@ describe("assertAnswerKeyParse", () => {
     ],
     unscored: [],
     malformed: [],
-    declared: new Map<number, number>(),
+    // A count for BOTH scored papers, because the guard now requires one. The
+    // fixture defaulting to an empty map is what made two of these tests fail
+    // when the check became mandatory -- which is the check working.
+    declared: new Map<number, number>([[1, 1], [2, 1]]),
     ...over,
   });
 
@@ -770,11 +773,72 @@ describe("assertAnswerKeyParse", () => {
   });
 
   it("refuses a parse shorter than the count its own heading declares", () => {
-    expect(() => assertAnswerKeyParse(parse({ declared: new Map([[1, 25]]) }), "key.md"))
-      .toThrow(/Prueba 1 declares 25 items, parsed 1/);
+    expect(() => assertAnswerKeyParse(parse({ declared: new Map([[1, 1], [2, 25]]) }), "key.md"))
+      .toThrow(/Prueba 2 declares 25 items, parsed 1/);
   });
 
-  it("does not require a declared count", () => {
-    expect(() => assertAnswerKeyParse(parse({ declared: new Map([[2, 1]]) }), "key.md")).not.toThrow();
+  it("REQUIRES a declared count rather than skipping the check without one", () => {
+    // This guard used to read `count !== undefined && ...`, so the one check
+    // here that does NOT depend on anticipating the shape of the damage
+    // switched itself off whenever a heading stopped saying `(25 items)` --
+    // silently. Both edits that do that are ordinary: `## Prueba 3 · Expresión
+    // e interacción escritas` in the same file already carries no count, and
+    // `ítems` is the correct Spanish spelling. Either one, plus a lost first
+    // row, gave a clean bill of health for 24 of 25 scored items.
+    expect(() => assertAnswerKeyParse(parse({ declared: new Map() }), "key.md"))
+      .toThrow(/Prueba 1 heading declares no item count/);
+  });
+
+  it("catches a lost FIRST row, which adjacency alone cannot see", () => {
+    // `findIndex((item, index) => index > 0 && ...)` never examines index 0, so
+    // `[2, 3, ..., 25]` has no jump in it and read as perfectly contiguous.
+    // Comparing the span to the length has no blind spot at either end.
+    const rows = [
+      { paper: 1, item: 2, requires: ["casa"] },
+      { paper: 1, item: 3, requires: ["gato"] },
+      { paper: 2, item: 4, requires: ["perro"] },
+    ];
+    expect(() => assertAnswerKeyParse(parse({ rows, declared: new Map([[1, 3], [2, 1]]) }), "key.md"))
+      .toThrow(/Prueba 1 declares 3 items, parsed 2/);
+  });
+
+  it("catches a duplicated item number", () => {
+    const rows = [
+      { paper: 1, item: 1, requires: ["casa"] },
+      { paper: 1, item: 1, requires: ["gato"] },
+      { paper: 2, item: 2, requires: ["perro"] },
+    ];
+    expect(() => assertAnswerKeyParse(parse({ rows, declared: new Map([[1, 2], [2, 1]]) }), "key.md"))
+      .toThrow(/Prueba 1 item numbers jump from 1 to 1/);
+  });
+});
+
+describe("a pipe inside the requirement cell", () => {
+  // `([^|]*)` takes the LAST pipe-delimited run, so a stray pipe silently
+  // TRUNCATES the requirement list -- and a shorter list is the fail-open
+  // direction, because there is less for `taught` to miss.
+  //
+  // Two checks, because neither sees the other's case. A first version used
+  // one (comparing the regex capture to the last split piece) and was
+  // worthless: both take the last run, so they agree by construction. My own
+  // attack matrix caught that, not review.
+  const rows = (row: string) =>
+    parseAnswerKeyRows(`## Prueba 1 (2 items)\n| 1 | a | casa | perro |\n${row}`);
+
+  it("rejects a row split by an inline-code pipe, on cell count", () => {
+    const row = "| 2 | b | casa | `a|b`, gato |";
+    expect(rows(row).malformed).toEqual([row]);
+  });
+
+  it("rejects a row hiding a pipe behind a backslash escape", () => {
+    // Here the split and the regex disagree in OPPOSITE directions, so the
+    // cell counts come out equal and the arity check sees nothing -- while
+    // `([^|]*)` still stops at the escaped pipe and drops `casa`.
+    const row = "| 2 | b | casa | casa \\| gato |";
+    expect(rows(row).malformed).toEqual([row]);
+  });
+
+  it("keeps a row whose cell count matches its table", () => {
+    expect(rows("| 2 | b | casa | gato |").rows).toHaveLength(2);
   });
 });

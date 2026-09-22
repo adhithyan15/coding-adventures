@@ -80,3 +80,22 @@ already states: the heading says `(25 items)` and the numbers run consecutively,
 so a parse that lost a row is short or has a hole, whatever removed it. When a
 guard needs you to enumerate the ways input can be wrong, look for a count the
 input declares about itself instead.
+
+**A guard that switches itself off is not a guard.** The count check was written
+`if (count !== undefined && items.length !== count)`, so it ran only when the
+heading happened to state a count — and stated nothing when it did not. The
+invariant "the data declares its own size" is only as strong as "the data is
+required to declare its own size". If a check has a precondition, assert the
+precondition.
+
+**Check the span, not the neighbours.** `findIndex((item, index) => index > 0 &&
+…)` never examines index 0, so a sequence missing its *first* element is
+perfectly adjacent. Comparing `last - first + 1` to `length` has no blind spot at
+either end, and catches duplicates for free.
+
+**Two holes that are each survivable can compose into a silent failure.** The
+conditional count check alone was recoverable, because contiguity still caught a
+middle drop. The index-0 blind spot alone was recoverable, because the count
+still caught a first-row drop. Together they passed a key with 24 of 25 items.
+When reviewing a set of guards, ask what a pair of them misses, not only what
+each one misses.

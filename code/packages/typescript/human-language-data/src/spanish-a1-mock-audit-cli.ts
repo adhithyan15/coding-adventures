@@ -125,6 +125,9 @@ export function parseAnswerKeyRows(text: string): AnswerKeyParse {
   const unscored: { paper: number; item: number }[] = [];
   const malformed: string[] = [];
   const declared = new Map<number, number>();
+  // The cell count of the FIRST scored row of each paper, which every later row
+  // of that paper has to match. See the arity check below.
+  const arityByPaper = new Map<number, number>();
   let paper = 0;
   // `LINE_TERMINATORS`, not `/\r?\n/`, and this is the FAIL-OPEN copy of that
   // omission. `.` cannot match a lone CR or U+2028, so a key using either
@@ -172,7 +175,53 @@ export function parseAnswerKeyRows(text: string): AnswerKeyParse {
       continue;
     }
     if (paper !== 1 && paper !== 2) continue;
-    const requires = row[2].split(",").map(clean).filter(Boolean);
+    // REJECT a row whose CELL COUNT disagrees with its table, rather than
+    // taking the tail of a cell a stray pipe split.
+    //
+    // `([^|]*)` takes the LAST pipe-delimited run, so a pipe inside the
+    // requirement cell silently truncates the list:
+    //
+    //     | 1 | a | casa \| ayuntamiento |   ->  ["ayuntamiento"]   `casa` gone
+    //     | 1 | a | `a|b`, casa |            ->  ["b`", "casa"]
+    //
+    // A SHORTER requirement list is the fail-open direction: fewer things for
+    // `taught` to miss, so the item is likelier to be credited as answerable
+    // from the book.
+    //
+    // A first attempt compared the regex's capture against the last split
+    // piece, which is WORTHLESS -- both take the last run, so they agree by
+    // construction and the inline-code case sailed through. My own attack
+    // matrix caught that, not review.
+    //
+    // The invariant that does work is the table's own: every row in a markdown
+    // table has the same number of cells. A stray pipe gives the row one more;
+    // an escaped `\|` gives it one fewer than the row pattern saw. Either way
+    // it disagrees with the first row of its paper, and disagreement is all we
+    // need -- we do not have to know which cell was meant.
+    // TWO checks, because neither catches the other's case -- which I found by
+    // running the matrix, after a single-check version passed one of them.
+    //
+    // ARITY catches a pipe that SPLITS a cell (`` `a|b` ``): the row gets one
+    // more cell than the first row of its paper.
+    //
+    // ESCAPE catches a pipe that HIDES one (`casa \| ayuntamiento`): there the
+    // split and the regex disagree in opposite directions, so the counts come
+    // out equal and arity sees nothing -- while `([^|]*)` still stops at the
+    // escaped pipe's `|` and drops `casa`. A requirement is a Spanish lexeme;
+    // a pipe has no business inside one, escaped or not.
+    if (/\\\|/.test(line)) {
+      malformed.push(line);
+      continue;
+    }
+    const arity = line.split("|").length;
+    const expected = arityByPaper.get(paper);
+    if (expected === undefined) {
+      arityByPaper.set(paper, arity);
+    } else if (arity !== expected) {
+      malformed.push(line);
+      continue;
+    }
+    const requires = (row[2] ?? "").split(",").map(clean).filter(Boolean);
     if (requires.length === 0) {
       // NOT A PASS, AND NOT A FAILURE EITHER. This row is unusable, and both
       // ways of scoring it are wrong in a way that hides something:
@@ -293,14 +342,39 @@ export function assertAnswerKeyParse(parse: AnswerKeyParse, name: string): void 
     // key: all ten mutations round three raised are caught, and all six real
     // keys pass untouched.
     const sorted = [...items].sort((left, right) => left - right);
-    const gap = sorted.findIndex((item, index) => index > 0 && item !== (sorted[index - 1] ?? 0) + 1);
-    if (gap > 0) {
+    // SPAN, not adjacency. `findIndex((item, index) => index > 0 && ...)` never
+    // examines index 0, so a paper whose FIRST row was lost read as perfectly
+    // contiguous -- `[2,3,...,25]` has no jump in it. Comparing the span to the
+    // length has no such blind spot, and it catches duplicates too.
+    const span = (sorted[sorted.length - 1] ?? 0) - (sorted[0] ?? 0) + 1;
+    if (span !== sorted.length) {
+      const gap = sorted.findIndex((item, index) => index > 0 && item !== (sorted[index - 1] ?? 0) + 1);
       throw new Error(
-        `${name}: Prueba ${paper} item numbers jump from ${sorted[gap - 1]} to ${sorted[gap]}`,
+        gap > 0
+          ? `${name}: Prueba ${paper} item numbers jump from ${sorted[gap - 1]} to ${sorted[gap]}`
+          : `${name}: Prueba ${paper} has ${sorted.length} rows spanning ${sorted[0]}-${sorted[sorted.length - 1]}`,
       );
     }
+    // UNCONDITIONAL. This was `count !== undefined && ...`, which means the one
+    // guard here that does NOT depend on anticipating the shape of the damage
+    // switched itself off whenever the heading stopped saying `(25 items)` --
+    // and said nothing when it did.
+    //
+    // Both edits that disable it are ordinary editorial changes, not attacks.
+    // `## Prueba 3 · Expresión e interacción escritas` in the SAME FILE already
+    // carries no count, so normalising the headings is a plausible tidy-up; and
+    // `items` -> `ítems` is the correct Spanish spelling in a file that already
+    // writes `Comprensión` and `auditiva`. Either one, plus the loss of the
+    // paper's first row by any mechanism, produced a clean bill of health for
+    // 24 of 25 scored items. The two holes lined up exactly.
+    //
+    // A guard that switches itself off when the file it guards changes is not a
+    // guard. All six real keys declare a count for both scored papers today.
     const count = declared.get(paper);
-    if (count !== undefined && items.length !== count) {
+    if (count === undefined) {
+      throw new Error(`${name}: Prueba ${paper} heading declares no item count`);
+    }
+    if (items.length !== count) {
       throw new Error(`${name}: Prueba ${paper} declares ${count} items, parsed ${items.length}`);
     }
   }

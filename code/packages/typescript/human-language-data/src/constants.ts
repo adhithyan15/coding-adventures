@@ -197,7 +197,25 @@ export const MAX_ETYMOLOGY_HOOK = 120;
  */
 export function stripControlCharacters(value: string): string {
   return value.replace(
-    /[\u0000-\u0008\u000b-\u001f\u007f-\u009f]/g,
+    // C0, C1 -- and the INVISIBLE FORMATTING characters, which are neither.
+    //
+    // The C0/C1 ranges were enough while every caller passed a filename. They
+    // stopped being enough when `assertAnswerKeyParse` began printing a line of
+    // FILE CONTENT into a CI message, which is a far wider door: U+202E
+    // (RIGHT-TO-LEFT OVERRIDE) reverses the rendering of everything after it in
+    // most terminals and log viewers, so a crafted table row can make the tail
+    // of the gate's own failure message read as something else --
+    //
+    //     first "| 1 | a | b | <U+202E>detcejer swor elbat 0"
+    //
+    // -- which renders as though the message said no rows were rejected. It
+    // cannot break onto a second line, so this is presentation spoofing rather
+    // than log forgery, and the same Trojan-Source class that CVE-2021-42574
+    // named for source code. The isolates and embeddings (U+2066-U+2069,
+    // U+202A-U+202D) and the zero-width joiners and marks (U+200B-U+200F) go
+    // with it: all are invisible, and none belongs in a filename or a corpus
+    // line that is about to be printed.
+    /[\u0000-\u0008\u000b-\u001f\u007f-\u009f\u200b-\u200f\u202a-\u202e\u2066-\u2069]/g,
     "",
   );
 }

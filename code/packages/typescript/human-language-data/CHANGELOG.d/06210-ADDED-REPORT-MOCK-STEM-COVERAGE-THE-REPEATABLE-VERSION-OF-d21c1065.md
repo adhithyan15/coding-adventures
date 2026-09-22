@@ -188,3 +188,40 @@ corpus. Nineteen more tests.
 
 All three mock audits still regenerate byte-identically and the reporter's
 output is unchanged.
+
+#### Fixed — the shape-independent guard was itself conditional
+
+Round four found the round-four version of the same bug. The declared-count
+check — the one described above as not depending on anticipating the damage —
+read `count !== undefined && …`, so it **switched itself off** whenever a
+heading stopped saying `(25 items)`, silently. And the contiguity fallback used
+`findIndex((item, index) => index > 0 && …)`, which never examines index 0, so a
+paper whose **first** row was lost read as perfectly contiguous.
+
+The two holes line up. Either heading edit is ordinary rather than exotic —
+`## Prueba 3 · Expresión e interacción escritas` in the same file already
+carries no count, and `ítems` is the correct Spanish spelling — and after it,
+losing the first row by any mechanism gave a clean bill of health for 24 of 25
+scored items.
+
+The count is mandatory now, and contiguity compares the **span** to the length,
+which has no blind spot at either end and catches duplicates as well.
+
+Two more, both latent and both fail-open:
+
+- **A pipe inside the requirement cell truncated the list.** `([^|]*)` takes
+  the last pipe-delimited run, so `` `a|b`, casa `` parsed as `["b`", "casa"]`
+  and `casa \| ayuntamiento` as `["ayuntamiento"]` — a *shorter* requirement
+  list, which is less for `taught` to miss. Rejected now, by two checks:
+  cell-count arity against the first row of the same paper, and a flat refusal
+  of escaped pipes. Neither catches the other's case — a single-check version
+  compared the regex capture to the last split piece, which is worthless since
+  both take the last run.
+- **Bidi overrides survived into the error message.** This commit series was the
+  first to print a line of *file content* through `reportableFilename`, and
+  U+202E reverses the rendering of everything after it, so a crafted row could
+  make the gate's own failure message read as though nothing had failed.
+  `stripControlCharacters` now removes the invisible formatting ranges too.
+
+Fourteen mutation shapes verified caught against the real A1 key; all six keys
+pass untouched and the three audits stay byte-identical.
