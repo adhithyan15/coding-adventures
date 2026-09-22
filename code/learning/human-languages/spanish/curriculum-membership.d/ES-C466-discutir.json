@@ -1,0 +1,11 @@
+{
+  "id": "ES-C466-discutir",
+  "pathSegment": "ES-PATH-466-INFORME",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-466-INFORME",
+      "order": 3
+    }
+  ]
+}

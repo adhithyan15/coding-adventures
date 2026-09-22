@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:81d4790c56798bc0",
+  "lessonIds": [
+    "ES-C466-director",
+    "ES-C466-visible",
+    "ES-C466-comportamiento",
+    "ES-C466-discutir",
+    "ES-R466-repaso-informe",
+    "ES-C466-sintesis-informe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch466.txt",
+  "json": "spanish/narration/ch466.json",
+  "textHash": "fnv1a64:81f6e4f2a90fbed4",
+  "jsonHash": "fnv1a64:3f221ceb3b2d8d24",
+  "findings": []
+}

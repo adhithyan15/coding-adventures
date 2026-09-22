@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C466-visible",
+    "language": "spanish",
+    "chapter": 466,
+    "sequence": 12700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f706524ae4d5abe9"
+  },
+  "findings": []
+}

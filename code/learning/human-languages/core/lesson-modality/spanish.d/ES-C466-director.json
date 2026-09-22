@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C466-director",
+    "language": "spanish",
+    "chapter": 466,
+    "sequence": 12690,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8d437e19b2eec341"
+  },
+  "findings": []
+}
