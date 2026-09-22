@@ -160,15 +160,40 @@ export interface PaperItem {
 export function parseMockPaper(text: string): PaperItem[] {
   const items: PaperItem[] = [];
   let current: { item: number; stem: string; options: string[] } | undefined;
-  for (const line of text.split(/\r?\n/)) {
-    const stem = /^\*\*(\d+)\.\*\*\s*(.*)$/.exec(line);
+  // EVERY line terminator, not just CRLF/LF. `.` cannot match U+000D, U+2028
+  // or U+2029, so once the patterns below stopped using `\s*` a lone CR or a
+  // Unicode line separator made `$` unreachable and DROPPED THE WHOLE ITEM --
+  // its words never reached the report at all. That is the precise failure this
+  // module exists to prevent, arriving through the fix for a different one.
+  // Splitting them off first means a line can never contain one.
+  for (const line of text.split(/\r\n|[\r\n\u2028\u2029]/)) {
+    // NO `\s*` BEFORE THE `(.*)` CAPTURE, in either of these.
+    //
+    // `\s*(.*)$` is ambiguous: both halves match a tab, so on a failing match
+    // the engine tries every split point and the cost is quadratic in the run
+    // of whitespace. CodeQL flagged both as high, and it was right where my own
+    // review was not -- I had called them "polynomial at worst, not
+    // exploitable" on the grounds that this loop splits on newlines first, so a
+    // line can never contain one. That is true of THIS caller. `parseMockPaper`
+    // is exported from `index.ts`, and a consumer handing it a whole document
+    // gives `.` something it cannot match and `$` something it cannot reach --
+    // which is exactly the backtracking. Same package-boundary argument as the
+    // traversal two commits ago, and I made the same mistake twice.
+    //
+    // Trimming the capture afterwards is equivalent for well-formed input and
+    // leaves the pattern unambiguous.
+    const stem = /^\*\*(\d+)\.\*\*(.*)$/.exec(line);
     if (stem) {
-      current = { item: Number(stem[1]), stem: stem[2] ?? "", options: [] };
+      current = { item: Number(stem[1]), stem: (stem[2] ?? "").trim(), options: [] };
       items.push(current);
       continue;
     }
-    const option = /^-\s*[a-z]\)\s*(.*)$/i.exec(line);
-    if (option && current !== undefined) current.options.push(option[1] ?? "");
+    // `[^\S\r\n]*` -- whitespace EXCEPT line terminators. Disjoint from `[a-z]`,
+    // so it still cannot backtrack, but unlike `[ \t]*` it keeps NBSP and the
+    // other Unicode spaces that a paste from a PDF leaves behind. Narrowing to
+    // `[ \t]*` silently dropped an option whose marker was preceded by U+00A0.
+    const option = /^-[^\S\r\n]*[a-z]\)(.*)$/i.exec(line);
+    if (option && current !== undefined) current.options.push((option[1] ?? "").trim());
   }
   return items;
 }
@@ -335,7 +360,17 @@ export function reportSpanishMockStemCoverage(
     const key = readFileSync(resolve(root, `${dir}/mock-${mock}-answer-key.md`), "utf8");
     const requiresByItem = new Map<number, ReadonlySet<string>>();
     for (const line of key.split(/\r?\n/)) {
-      const row = /^\|\s*(\d+)\s*\|.*\|\s*([^|]+)\s*\|$/.exec(line);
+      // `([^|]*)` with no `\s*` beside it, for the reason given in
+      // `parseMockPaper`: `\s*([^|]+)\s*\|$` is the same ambiguity CodeQL
+      // flagged there, and measured CUBIC -- 1.1s at n=2000, 8.7s at n=4000.
+      //
+      // `+` to `*` does WIDEN the match set, which an earlier draft of this
+      // comment denied: a row whose last column is EMPTY (`|1|x||`) did not
+      // match before and does now, capturing "". Which column is captured never
+      // changes, because the greedy `.*` scans pipes right to left either way.
+      // The widening is inert -- `"".split(",")` is `[""]`, and an entry of ""
+      // matches no form -- and no such row exists in either paper.
+      const row = /^\|\s*(\d+)\s*\|.*\|([^|]*)\|$/.exec(line);
       if (!row) continue;
       requiresByItem.set(
         Number(row[1]),

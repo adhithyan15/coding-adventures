@@ -84,7 +84,14 @@ function parseAnswerKey(path: string): Item[] {
   for (const line of readFileSync(path, "utf8").split(/\r?\n/)) {
     const heading = /^## Prueba (\d)/.exec(line);
     if (heading) paper = Number(heading[1]);
-    const row = /^\|\s*(\d+)\s*\|.*\|\s*([^|]+)\s*\|$/.exec(line);
+    // `([^|]*)` rather than `\s*([^|]+)\s*`. The old shape measured CUBIC --
+    // 1.1s at a 2000-character line, 8.7s at 4000 -- which is strictly worse
+    // than the two quadratic patterns CodeQL flagged in the sibling module, and
+    // it is reachable by the same argument: `buildSpanishA1MockAudit` is
+    // exported and takes a caller-supplied `root`. Fixing only the new copy and
+    // leaving this one was the wrong call. `clean` already trims, so every row
+    // in the corpus parses identically.
+    const row = /^\|\s*(\d+)\s*\|.*\|([^|]*)\|$/.exec(line);
     if (row && (paper === 1 || paper === 2)) {
       rows.push({
         paper,

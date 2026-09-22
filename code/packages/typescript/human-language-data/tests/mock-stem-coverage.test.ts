@@ -44,6 +44,42 @@ describe("parseMockPaper", () => {
     ]);
   });
 
+  it("trims the capture rather than letting the pattern eat the whitespace", () => {
+    // The `\s*` that used to sit before each `(.*)` capture is what CodeQL
+    // flagged: both halves match a tab, so a failing match explores every split
+    // point. Measured on the stem pattern, 40k tabs went from 743ms to 0ms.
+    // Trimming afterwards has to give the same answer, which is what this pins.
+    const items = parseMockPaper(
+      ["**7.**\t  ¿Quién practica?  ", "- a)\t el vecino. ", "-   b)  la portera."].join("\n"),
+    );
+    expect(items).toEqual([
+      { item: 7, stem: "¿Quién practica?", options: ["el vecino.", "la portera."] },
+    ]);
+  });
+
+  it.each([
+    ["a lone CR", "\r"],
+    ["U+2028", "\u2028"],
+    ["U+2029", "\u2029"],
+  ])("does not lose an item to %s", (_label, terminator) => {
+    // `.` cannot match these, so once `\s*` left the pattern they made `$`
+    // unreachable and the WHOLE ITEM was dropped -- its words never reached the
+    // report. That is the failure this module exists to prevent, arriving
+    // through the fix for a different one. They are split off as line
+    // terminators now, which is what they are.
+    const items = parseMockPaper(`**7.**${terminator}¿Quién?\n- a) el vecino`);
+    expect(items).toHaveLength(1);
+    expect(items[0]?.options).toEqual(["el vecino"]);
+  });
+
+  it("keeps an option whose marker is preceded by a non-breaking space", () => {
+    // A paste from a PDF leaves U+00A0 behind. Narrowing `\s*` to `[ \t]*`
+    // silently dropped the option; `[^\S\r\n]*` keeps it and is still
+    // disjoint from `[a-z]`, so it cannot backtrack.
+    const items = parseMockPaper("**7.** ¿Quién?\n-\u00a0a) el vecino\n- b) la portera");
+    expect(items[0]?.options).toEqual(["el vecino", "la portera"]);
+  });
+
   it("keeps an item that has no options of its own", () => {
     // Tarea 4 matches items against a shared Enunciados block, so an item
     // there legitimately carries none. Dropping it would hide its stem.
