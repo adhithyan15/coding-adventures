@@ -246,6 +246,32 @@ export function loadRootSlugBaseline(root = defaultCurriculumRoot()): RootSlugBa
   ) {
     throw new Error(`${ROOT_SLUG_BASELINE_PATH}: expected an object with a 'splits' array`);
   }
+  // EVERY ENTRY'S SHAPE IS CHECKED, not just the outer array, because
+  // `diffRootSlugSplits` INDEXES INTO `slugs` and a wrong type there fails OPEN.
+  // `isStrictSubset` calls `before.includes(slug)`; if `slugs` is a STRING that
+  // is `String.prototype.includes` -- a SUBSTRING test -- so a baseline holding
+  // `"bonus bonus-latin latin-bonus"` accepts a live entry containing
+  // `latin-bonus`, an entry the baseline never had, as a "shrink". `--write`
+  // only gates on `added`, so that regenerates the file with no `--allow-new`
+  // and `--check` is green afterwards: a one-character edit (`[` to `"`) in a
+  // generated JSON replaces the conspicuous flag the whole threat model rests
+  // on. Other wrong types fail closed -- a number or object has `undefined`
+  // `.length`, so the `<` comparison is false -- and only the string case
+  // fails open, which is exactly why the type is asserted rather than assumed.
+  for (const entry of (raw as { splits: unknown[] }).splits) {
+    const split = entry as { key?: unknown; slugs?: unknown };
+    if (
+      entry === null ||
+      typeof entry !== "object" ||
+      typeof split.key !== "string" ||
+      !Array.isArray(split.slugs) ||
+      !split.slugs.every((slug) => typeof slug === "string")
+    ) {
+      throw new Error(
+        `${ROOT_SLUG_BASELINE_PATH}: every split needs a string 'key' and a string[] 'slugs'`,
+      );
+    }
+  }
   return raw as RootSlugBaseline;
 }
 

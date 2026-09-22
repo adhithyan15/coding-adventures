@@ -13,6 +13,11 @@ import {
   type FilmstripEntry,
 } from "./figure-filmstrip.js";
 import type { ParsedLesson } from "./parse.js";
+import {
+  loadRootTagVocabulary,
+  parseRootSlug,
+  type RootTagVocabulary,
+} from "./root-slug-splits.js";
 
 /**
  * The deterministic vector figures this curriculum generates.
@@ -67,16 +72,50 @@ function titleCase(value: string): string {
   return value.length === 0 ? value : `${value[0]?.toUpperCase()}${value.slice(1)}`;
 }
 
-/** Turn an authored root id such as `qahwah-arabic` into a printable node. */
-export function etymologyRootNode(root: string): FigureNode {
-  const pieces = root.split("-").filter(Boolean);
-  if (pieces.length < 2) {
-    throw new Error(`etymology root '${root}' must end in a language tag`);
+/**
+ * Turn an authored root id such as `qahwah-arabic` into a printable node.
+ *
+ * THE TAG IS FOUND BY VOCABULARY, NOT BY POSITION, and that is the whole point
+ * of this function taking a `RootTagVocabulary`. It used to be
+ * `pieces.pop()` — take the last hyphen-separated token and call it the
+ * language — which is correct for exactly one of the three slug shapes the
+ * corpus uses.
+ *
+ * HL-C419's normalisation is what exposed it. That pass established the
+ * canonical shape is PER TAG: Latin and Greek write `lemma-latin`, but
+ * Sanskrit, Dravidian, PIE, Persian and Arabic write `sanskrit-lemma`. When
+ * `kahve-turkish` became `turkish-kahve`, this function read the term as
+ * "turkish" and the language as "Kahve", and the published SVG for
+ * `ES-C06-cafe` went out claiming Arabic *qahwah* became **Kahve "turkish"**.
+ * Nothing threw: the slug still had two pieces, so the figure was silently
+ * wrong and its hash ledger was regenerated to match.
+ *
+ * The positional reading was already wrong for a prefix slug before that pass;
+ * the normalisation only made one reachable from a figure. `proto-indo-european-dwoh`
+ * would have rendered the term "proto indo european" in the language "Dwoh".
+ *
+ * The lemma is sliced from the ORIGINAL string rather than taken from
+ * `parseRootSlug`, which case-folds. A folded lemma is right for a join key and
+ * wrong for a caption: the figure prints what the author wrote.
+ */
+export function etymologyRootNode(
+  root: string,
+  vocabulary: RootTagVocabulary = loadRootTagVocabulary(),
+): FigureNode {
+  const parsed = parseRootSlug(root, vocabulary);
+  if (parsed.tag === undefined) {
+    throw new Error(`etymology root '${root}' must carry a language tag`);
   }
-  const language = pieces.pop() ?? "";
+  const lemma =
+    parsed.shape === "suffix"
+      ? root.slice(0, -(parsed.tag.length + 1))
+      : root.slice(parsed.tag.length + 1);
+  if (lemma === "") {
+    throw new Error(`etymology root '${root}' is a bare language tag with no term`);
+  }
   return {
-    term: pieces.join(" "),
-    language: titleCase(language),
+    term: lemma.split("-").filter(Boolean).join(" "),
+    language: titleCase(parsed.tag),
   };
 }
 
@@ -120,8 +159,12 @@ export function renderEtymologyRouteFigure(lesson: ParsedLesson): GeneratedFigur
     throw new Error(`${realization.lessonId}: etymology-route requires at least two roots`);
   }
 
+  // Loaded ONCE rather than per root: `etymologyRootNode`'s default reads the
+  // vocabulary off disk, and `.map(etymologyRootNode)` would also hand it the
+  // array index as its second argument.
+  const vocabulary = loadRootTagVocabulary();
   const nodes: FigureNode[] = [
-    ...realization.roots.map(etymologyRootNode),
+    ...realization.roots.map((root) => etymologyRootNode(root, vocabulary)),
     { term: realization.headword, language: titleCase(realization.language) },
   ];
   const nodeWidth = 170;

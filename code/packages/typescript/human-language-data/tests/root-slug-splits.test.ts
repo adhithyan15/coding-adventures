@@ -231,6 +231,34 @@ describe("baseline diffing", () => {
     expect(diff.added.map((split) => split.key)).toEqual(["stare|latin"]);
   });
 
+  it("refuses a baseline whose slugs are a STRING, which would make the subset test a substring test", () => {
+    // `isStrictSubset` calls `before.includes(slug)`. On a string that is
+    // `String.prototype.includes`, so `"bonus bonus-latin latin-bonus"` would
+    // accept a live entry carrying `latin-bonus` -- never in the baseline -- as
+    // a shrink, and `--write` takes a shrink with no `--allow-new`. A one-byte
+    // edit in a generated JSON would replace the flag the threat model rests
+    // on. Caught by security review of the HL-C419 normalisation.
+    const root = fixture({ "TOY-1": ["stare-latin"], "TOY-2": ["latin-stare"] });
+    writeFileSync(
+      join(root, "core", "root-slug-split-baseline.json"),
+      `${JSON.stringify(
+        { version: 1, splits: [{ key: "stare|latin", slugs: "latin-stare stare-latin" }] },
+        null,
+        2,
+      )}\n`,
+    );
+    expect(() => loadRootSlugBaseline(root)).toThrow(/string\[\] 'slugs'/);
+  });
+
+  it("refuses a baseline split with a non-string key", () => {
+    const root = fixture({ "TOY-1": ["stare-latin"], "TOY-2": ["latin-stare"] });
+    writeFileSync(
+      join(root, "core", "root-slug-split-baseline.json"),
+      `${JSON.stringify({ version: 1, splits: [{ key: 7, slugs: ["a", "b"] }] }, null, 2)}\n`,
+    );
+    expect(() => loadRootSlugBaseline(root)).toThrow(/string 'key'/);
+  });
+
   it("compares slug lists element-wise, not space-joined", () => {
     // Six live slugs contain spaces (`ad de magis`, `qui sapit`, `sub ponere`,
     // ...). Joined on a space, ["a b","c"] and ["a","b c"] are the same string
