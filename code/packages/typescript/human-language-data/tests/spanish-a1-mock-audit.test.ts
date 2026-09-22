@@ -115,14 +115,16 @@ describe("Spanish A2 book-bounded mock audit", () => {
     // corpus cannot support.
     //
     // 191 -> 161 -> 146 -> 126 -> 107 -> 85 -> 68 -> 54 -> 39 -> 35 -> 31 ->
-    // 27 -> 23 -> 19 -> 15 -> 11 are the fifteen vocabulary tranches: 431-436,
+    // 27 -> 23 -> 19 -> 15 -> 11 -> 8 are the sixteen vocabulary tranches: 431-436,
     // 437-439, 440-443, 444-447, 448-451, 452-455, 456-459, 460-464, 465, 466,
-    // 467, 468, 469, 470 and 471.
+    // 467, 468, 469, 470, 471 and 472.
     // The drop was exact for the first fourteen -- 30 headwords removed 30
     // lexemes, then 15, 20, 19, 22, 17, 14, 15, 4, 4, 4, 4, 4, 4. THE
     // FIFTEENTH IS THE FIRST THAT IS NOT: chapter 471 teaches SIX headwords
     // and this list falls by FOUR, because two of the six were never on it.
-    // That is deliberate and is explained below. That
+    // The SIXTEENTH breaks it the other way: chapter 472 teaches FIVE and
+    // this list falls by THREE, and objectiveFailed does not move AT ALL.
+    // Both are deliberate and are explained below. That
     // arithmetic is the evidence a word was genuinely absent; one already taught
     // under another name would have made the drop smaller. Each was PREDICTED
     // from the audit before the chapters were wired and reproduced exactly by
@@ -153,6 +155,7 @@ describe("Spanish A2 book-bounded mock audit", () => {
     //     tranche 4i (469)         4 words   1 item
     //     tranche 4j (470)         4 words   1 item
     //     tranche 4k (471)         6 words   1 item
+    //     tranche 4l (472)         5 words   0 items
     //
     // An item passes only when EVERY lexeme in its `requires` row is taught, so
     // a word helps in proportion to how close its rows already are. Tranches
@@ -269,6 +272,20 @@ describe("Spanish A2 book-bounded mock audit", () => {
     // row, so 4.00 is what the ranking now yields per chapter until the
     // B1-mapped rows are reconsidered.
     //
+    // 472 IS THE FIRST TRANCHE TO CLEAR NO ITEM AT ALL, ON PURPOSE. Its row
+    // (mock 2 / paper 1 / item 21) is `encuesta, preguntar, usuario,
+    // responder, lectura`, and after this chapter the item is blocked by
+    // `responder` ALONE -- a word ES-C40-contestar already teaches, as
+    // ES-LEX-RESPONDER-06, with a Grammar Lens, the re- plus spondere
+    // derivation and la respuesta. The audit cannot see it because the taught
+    // set is built from lesson.realization.headword only and never reads
+    // introduces.knowledge. Writing a second `responder` lesson would clear
+    // the row and would be the duplication HL-C418 forbids, so it was not
+    // written. See BACKLOG.d HL-C422: the repair is a citationFormCredits
+    // entry or teaching the audit to read introduces, both of which move this
+    // number and want their own branch. A tranche that closes real gaps and
+    // moves no item is the honest reading of that situation.
+    //
     // 471 IS THE FIRST TRANCHE TO TEACH MORE WORDS THAN ITS ROW NAMES, AND
     // THE ARITHMETIC ABOVE BREAKS HERE ON PURPOSE. Its row (mock 1 / paper 2 /
     // item 31) is `curso, grupo, avanzado, perderse, principiante, sencillo`,
@@ -289,7 +306,7 @@ describe("Spanish A2 book-bounded mock audit", () => {
     // `explicar`, `creer` or `problema`, which are ALREADY TAUGHT and excluded
     // only because their spine node derives above A2. See BACKLOG.d HL-C418
     // and HL-C420; do not teach them a second time.
-    expect(audit.missingObjectiveLexemes).toHaveLength(11);
+    expect(audit.missingObjectiveLexemes).toHaveLength(8);
   });
 
   it("measures a LARGER taught set than A1, which is what makes it a different gate", () => {

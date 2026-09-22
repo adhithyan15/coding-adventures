@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-472-ENCUESTA",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "before": [],
+  "inline": [
+    "ES-EXT-472-ENCUESTA"
+  ],
+  "after": []
+}

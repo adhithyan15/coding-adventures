@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:e6a9a0a03f2f3718",
+  "lessonIds": [
+    "ES-C472-usuario",
+    "ES-C472-encuesta",
+    "ES-C472-surgir",
+    "ES-C472-lectura",
+    "ES-C472-copiar",
+    "ES-R472-repaso-encuesta",
+    "ES-C472-sintesis-encuesta"
+  ],
+  "tex": "spanish/book/chapters/ch472-encuesta.tex"
+}

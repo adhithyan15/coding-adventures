@@ -59,8 +59,8 @@
     ],
     "numericCredits": "0-100"
   },
-  "lessonCount": 1412,
-  "taughtForms": 2343,
+  "lessonCount": 1419,
+  "taughtForms": 2356,
   "objectiveFailed": 6,
   "mocks": [
     {
@@ -111,10 +111,7 @@
           "paper": 1,
           "item": 21,
           "missing": [
-            "encuesta",
-            "usuario",
-            "responder",
-            "lectura"
+            "responder"
           ]
         },
         {
@@ -132,15 +129,12 @@
   "missingObjectiveLexemes": [
     "creer",
     "descontar",
-    "encuesta",
     "estado",
     "explicar",
     "invitar",
-    "lectura",
     "problema",
     "recomendar",
-    "responder",
-    "usuario"
+    "responder"
   ],
   "missingFrequency": [
     {
@@ -156,19 +150,11 @@
       "count": 1
     },
     {
-      "lexeme": "encuesta",
-      "count": 1
-    },
-    {
       "lexeme": "estado",
       "count": 1
     },
     {
       "lexeme": "invitar",
-      "count": 1
-    },
-    {
-      "lexeme": "lectura",
       "count": 1
     },
     {
@@ -181,10 +167,6 @@
     },
     {
       "lexeme": "responder",
-      "count": 1
-    },
-    {
-      "lexeme": "usuario",
       "count": 1
     }
   ]
