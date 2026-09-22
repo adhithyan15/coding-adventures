@@ -4,7 +4,7 @@
   "label": "ch:es-guia",
   "canDo": "I can arrange or join an organised outing: say who is putting it on, that a guide is coming, and ask whether an early start matters to anyone.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C463-sintesis-guia",

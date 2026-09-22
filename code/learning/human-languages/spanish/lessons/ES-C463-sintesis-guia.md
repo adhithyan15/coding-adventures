@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C463-sintesis-guia
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12570
 chapter: 463
 type: practice

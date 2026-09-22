@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C461-peligroso
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12440
 chapter: 461
 type: word

@@ -4,7 +4,7 @@
   "chapter": 446,
   "title": "Mirar Y Moverse",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:fe3e2e67286c8f7f",
+  "sourceHash": "fnv1a64:676513caf618498c",
   "lessons": [
     {
       "id": "ES-C446-mirar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:b109739854990d11",
+      "sourceHash": "fnv1a64:109a7ee54f43bb0d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -202,7 +202,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:754308a5fd4255cc",
+      "sourceHash": "fnv1a64:a9290df19fad5b0c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -368,7 +368,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e0b9f5fbdb1abfe",
+      "sourceHash": "fnv1a64:a16cc5eee13b4e6e",
       "notice": null,
       "blocks": [
         {
@@ -531,7 +531,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d7fa32a73e0282c",
+      "sourceHash": "fnv1a64:9faaaa726a87bb80",
       "notice": null,
       "blocks": [
         {
@@ -694,7 +694,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1ad54f98e228bd4",
+      "sourceHash": "fnv1a64:8e5357f309593e64",
       "notice": null,
       "blocks": [
         {
@@ -861,7 +861,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:9d894fe4b3705731",
+      "sourceHash": "fnv1a64:4ecf4a506fc63e8d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1009,7 +1009,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:559aae3dfbde99e6",
+      "sourceHash": "fnv1a64:ec3853b1e721676e",
       "notice": {
         "modality": "sight",
         "needs": [

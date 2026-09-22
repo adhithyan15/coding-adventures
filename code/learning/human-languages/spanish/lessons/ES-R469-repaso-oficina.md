@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-R469-repaso-oficina
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12910
 chapter: 469
 type: review

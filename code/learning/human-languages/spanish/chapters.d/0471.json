@@ -4,7 +4,7 @@
   "label": "ch:es-curso",
   "canDo": "I can follow somebody explaining that a class did not suit them: hear that the level was too high, that they kept losing the thread, and that they moved to a beginners' group, and say the same about something of my own without criticising anyone.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C471-sintesis-curso",

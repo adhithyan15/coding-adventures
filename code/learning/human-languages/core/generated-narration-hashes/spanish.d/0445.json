@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 445,
-  "sourceHash": "fnv1a64:fa08ae7ad17571b1",
+  "sourceHash": "fnv1a64:bf9028169886a54c",
   "lessonIds": [
     "ES-C445-jubilarse",
     "ES-C445-responsabilidad",
@@ -16,6 +16,6 @@
   "text": "spanish/narration/ch445.txt",
   "json": "spanish/narration/ch445.json",
   "textHash": "fnv1a64:0a4aa9dc7a56a0b7",
-  "jsonHash": "fnv1a64:de115116a95f8ad8",
+  "jsonHash": "fnv1a64:2c7c15f1b0983578",
   "findings": []
 }

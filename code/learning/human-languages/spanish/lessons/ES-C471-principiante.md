@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C471-principiante
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 13020
 chapter: 471
 type: word

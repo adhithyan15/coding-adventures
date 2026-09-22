@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C443-interesar
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 11290
 chapter: 443
 type: word

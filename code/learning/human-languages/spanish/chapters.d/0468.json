@@ -4,7 +4,7 @@
   "label": "ch:es-abrigo",
   "canDo": "I can act on a cold-weather reading: take a temperature in degrees off a bus-stop screen, and choose between a jacket, a coat and a scarf on the strength of the number rather than a general impression.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C468-sintesis-abrigo",

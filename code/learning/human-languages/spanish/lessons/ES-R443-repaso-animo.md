@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-R443-repaso-animo
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 11330
 chapter: 443
 type: review

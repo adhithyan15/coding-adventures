@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C444-cubrir
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 11380
 chapter: 444
 type: word

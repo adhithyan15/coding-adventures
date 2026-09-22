@@ -4,7 +4,7 @@
   "label": "ch:es-pago",
   "canDo": "I can follow a conversation about who pays for something: hear that an amount is deducted over months rather than taken all at once, and match that to a statement saying the opposite in different words.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C474-sintesis-pago",

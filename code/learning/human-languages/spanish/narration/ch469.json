@@ -4,7 +4,7 @@
   "chapter": 469,
   "title": "La impresora de la sala 2",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3d2d432ba2ee8441",
+  "sourceHash": "fnv1a64:293a5c83296ab709",
   "lessons": [
     {
       "id": "ES-C469-imprimir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d47f351c919740ef",
+      "sourceHash": "fnv1a64:ec9ff59393a612ab",
       "notice": null,
       "blocks": [
         {
@@ -189,7 +189,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f779a5047b7ca8f0",
+      "sourceHash": "fnv1a64:b7a0cc91bb989d24",
       "notice": null,
       "blocks": [
         {
@@ -355,7 +355,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d839f85393265330",
+      "sourceHash": "fnv1a64:7f7058be420d16e4",
       "notice": null,
       "blocks": [
         {
@@ -529,7 +529,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0fb7979d059154e9",
+      "sourceHash": "fnv1a64:fee23cbe03527a69",
       "notice": null,
       "blocks": [
         {
@@ -710,7 +710,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:98f4436b136dd844",
+      "sourceHash": "fnv1a64:1681e293aa24c8ec",
       "notice": null,
       "blocks": [
         {
@@ -881,7 +881,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:d9c7ceffce2200e9",
+      "sourceHash": "fnv1a64:84c0a1d879521fb1",
       "notice": {
         "modality": "sight",
         "needs": [

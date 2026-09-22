@@ -4,7 +4,7 @@
   "label": "ch:es-oficina",
   "canDo": "I can deal with a workplace machine that is not working: read a notice saying a printer is out of service, say what I want to print and what I cannot connect, and offer to make or return a phone call.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C469-sintesis-oficina",

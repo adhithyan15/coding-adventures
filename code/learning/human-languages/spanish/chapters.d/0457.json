@@ -4,7 +4,7 @@
   "label": "ch:es-guardia",
   "canDo": "I can get a medicine that is not in stock: ask for it by the word on the box, ask them to order it in, find out when it arrives, and find the chemist that is open tonight.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C457-sintesis-guardia",

@@ -1,6 +1,6 @@
 {
   "id": "ES-PATH-462-JEFE",
-  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
   "before": [],
   "inline": [
     "ES-EXT-462-JEFE"

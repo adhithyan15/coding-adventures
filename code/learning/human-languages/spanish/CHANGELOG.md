@@ -1,5 +1,57 @@
 # Changelog
 
+## HL-C417 — the A2 chapters now stand on an A2 rung
+
+```
+A1 audit lessonCount   1303 -> 1022
+A1 audit taughtForms   2232 -> 1721
+A1 audit objectiveFailed  0 -> 0
+A2 audit                     unchanged
+```
+
+Forty-four chapters whose wordlists were **derived from a DELE A2 paper** were
+being counted inside the A1 cut-off, because the only reading rung the ladder
+had was `SPINE-READ-SIGNS-AND-NOTICES`, stage **A1**. The TEXT strand ran A1 ->
+B1 with nothing in between, so an A2 reading chapter had nowhere to stand.
+
+`SPINE-READ-PRACTICAL-TEXTS` fills that gap — TEXT, **A2**, prerequisite
+`SPINE-READ-SIGNS-AND-NOTICES`, `core: false`. Chapters **431-474** moved onto
+it; **424-430** did not, because 424-426 teach reading mechanics and 428-430
+close enumerated A1 syllabus points.
+
+## The two numbers that make this a fix rather than a rearrangement
+
+The A1 gate returned to **exactly** the counts `HL-C417` recorded before the
+first tranche landed — 1022 lessons and 1721 forms — and `objectiveFailed`
+stayed **0** throughout. No A1 criterion was resting on the A2 material that
+has now been taken away from it.
+
+The A2 audit did not move at all. `lessonsUpToLevel("A2")` includes everything
+at or below A2, so the A2 book still holds every one of these chapters. Only
+the A1 book lost them, which is the point.
+
+## No learner-facing text changed
+
+The 44 regenerated chapter `.tex` files differ by one line each — the
+canonical-source hash — because the lessons' `spine_node` frontmatter changed.
+The chapters read exactly as before.
+
+## An empty concepts list, deliberately
+
+The new node follows `SPINE-DESCRIBE-QUALITIES` in carrying no canonical
+concepts. A concept is a claim on all 23 tracks and this rung is justified
+today by one track's exam evidence; `CONNECTED-READING` is also already owned
+by the A1 node, and a concept may own exactly one. Twenty-two tracks therefore
+write `{"omits": [], "relocates": {}}` and are asked for nothing.
+
+## A stale comment, corrected rather than swapped
+
+`levels.ts` said "today it is A1 or pre-A1 for every track in the corpus —
+nothing has reached A2". Measured: **21 of 23 tracks reach A2 and Spanish
+reaches C2**. That sentence sits in the module whose header warns that a fact
+copied into prose goes stale where a derived one cannot, so it is corrected in
+place with what it used to claim left visible.
+
 ## Chapter 474 — the last authorable A2 vocabulary chapter
 
 ```

@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C450-entrenamiento
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 11800
 chapter: 450
 type: word

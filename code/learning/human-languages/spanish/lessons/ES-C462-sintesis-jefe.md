@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C462-sintesis-jefe
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12520
 chapter: 462
 type: practice

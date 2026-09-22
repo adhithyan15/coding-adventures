@@ -4,7 +4,7 @@
   "chapter": 453,
   "title": "El turno",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:ab3cf746d3a279f9",
+  "sourceHash": "fnv1a64:0a01d8b7002cdb9f",
   "lessons": [
     {
       "id": "ES-C453-limpieza",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5409ebeeaa138de3",
+      "sourceHash": "fnv1a64:f15251c1fae2be67",
       "notice": null,
       "blocks": [
         {
@@ -188,7 +188,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d3768c500da35727",
+      "sourceHash": "fnv1a64:7982c8322c1c75f7",
       "notice": null,
       "blocks": [
         {
@@ -352,7 +352,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c00b91e2b713afc4",
+      "sourceHash": "fnv1a64:8c37cc2ac15f4c98",
       "notice": null,
       "blocks": [
         {
@@ -529,7 +529,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e6fe72fca36afe64",
+      "sourceHash": "fnv1a64:66ccf65534d6ff0c",
       "notice": null,
       "blocks": [
         {
@@ -692,7 +692,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:eadfcaff00bef02d",
+      "sourceHash": "fnv1a64:daa3a62111763b3d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -850,7 +850,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:88c06e2cb77b0893",
+      "sourceHash": "fnv1a64:9d88aae62badb2d3",
       "notice": null,
       "blocks": [
         {

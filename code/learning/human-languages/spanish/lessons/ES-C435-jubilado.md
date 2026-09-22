@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C435-jubilado
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 10760
 chapter: 435
 type: word

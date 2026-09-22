@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-R445-repaso-puesto
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 11470
 chapter: 445
 type: review

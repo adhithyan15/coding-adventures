@@ -4,7 +4,7 @@
   "chapter": 457,
   "title": "La farmacia de guardia",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4c4848e7bc8b0067",
+  "sourceHash": "fnv1a64:42585d386ae7a5a1",
   "lessons": [
     {
       "id": "ES-C457-medicamento",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9b747d47b2b4977f",
+      "sourceHash": "fnv1a64:4c4a31cf889174fb",
       "notice": null,
       "blocks": [
         {
@@ -177,7 +177,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:79be64c51cdfccdc",
+      "sourceHash": "fnv1a64:8c0c4582ba227124",
       "notice": null,
       "blocks": [
         {
@@ -335,7 +335,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fa4ff14149753e55",
+      "sourceHash": "fnv1a64:9381363e92781765",
       "notice": null,
       "blocks": [
         {
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:873929350d4e7059",
+      "sourceHash": "fnv1a64:127dd5db32cae069",
       "notice": null,
       "blocks": [
         {
@@ -657,7 +657,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4bc04136c0f8b109",
+      "sourceHash": "fnv1a64:74f69e643214fbf5",
       "notice": null,
       "blocks": [
         {

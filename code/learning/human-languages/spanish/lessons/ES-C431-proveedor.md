@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C431-proveedor
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 10470
 chapter: 431
 type: word

@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C435-documentacion
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 10730
 chapter: 435
 type: word

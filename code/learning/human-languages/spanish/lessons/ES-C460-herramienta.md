@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C460-herramienta
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12380
 chapter: 460
 type: word

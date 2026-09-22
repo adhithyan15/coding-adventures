@@ -4,7 +4,7 @@
   "chapter": 460,
   "title": "La herramienta",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:622621b50e7d455c",
+  "sourceHash": "fnv1a64:98310057bf21cc47",
   "lessons": [
     {
       "id": "ES-C460-herramienta",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:61ddb36864bf1df3",
+      "sourceHash": "fnv1a64:788ef69a247a9bb3",
       "notice": null,
       "blocks": [
         {
@@ -181,7 +181,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1a79d1875944542f",
+      "sourceHash": "fnv1a64:8c7386ffc872c0af",
       "notice": null,
       "blocks": [
         {
@@ -343,7 +343,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2c5b659f2153091e",
+      "sourceHash": "fnv1a64:3680e634685a4412",
       "notice": null,
       "blocks": [
         {
@@ -515,7 +515,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7fc54bafb1785ae8",
+      "sourceHash": "fnv1a64:1b0b767a04b9110c",
       "notice": null,
       "blocks": [
         {
@@ -664,7 +664,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d7edb123610274b5",
+      "sourceHash": "fnv1a64:1096dbd7c8fcdcd9",
       "notice": null,
       "blocks": [
         {

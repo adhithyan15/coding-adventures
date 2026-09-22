@@ -4,7 +4,7 @@
   "label": "ch:es-mudanza",
   "canDo": "I can hand a flat over and take one on: say when I am moving, call the day hard, and tell somebody which things are out of order and which are actually in pieces.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C448-sintesis-mudanza",

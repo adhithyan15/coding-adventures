@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-R458-repaso-plazo
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12310
 chapter: 458
 type: review

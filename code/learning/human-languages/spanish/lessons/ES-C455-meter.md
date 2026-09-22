@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C455-meter
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12130
 chapter: 455
 type: word

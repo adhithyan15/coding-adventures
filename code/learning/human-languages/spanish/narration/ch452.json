@@ -4,7 +4,7 @@
   "chapter": 452,
   "title": "El reparto",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:287dafd2eae52568",
+  "sourceHash": "fnv1a64:5fc20ab21df0af4e",
   "lessons": [
     {
       "id": "ES-C452-almacen",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1bff9e7c4277c21b",
+      "sourceHash": "fnv1a64:ebf783a6bbf6071f",
       "notice": null,
       "blocks": [
         {
@@ -181,7 +181,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:abe1b10e82f77523",
+      "sourceHash": "fnv1a64:1d40ced1f96f9c2f",
       "notice": null,
       "blocks": [
         {
@@ -344,7 +344,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:79b5a8919d109da1",
+      "sourceHash": "fnv1a64:40681ee2e67ca511",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b05176d5d034e59a",
+      "sourceHash": "fnv1a64:94eda3e92d9cf40e",
       "notice": null,
       "blocks": [
         {
@@ -666,7 +666,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b4e1b3628c134959",
+      "sourceHash": "fnv1a64:8e083aeddecbb545",
       "notice": null,
       "blocks": [
         {
@@ -819,7 +819,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:846c379bd856b0bf",
+      "sourceHash": "fnv1a64:64ecbec09e845fcf",
       "notice": null,
       "blocks": [
         {

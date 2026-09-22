@@ -4,7 +4,7 @@
   "label": "ch:es-pedir",
   "canDo": "I can borrow a tool from a shared store: read the notice, apply the way the form wants, and understand that there is a waiting list.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C460-sintesis-pedir",

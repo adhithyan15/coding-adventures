@@ -4,7 +4,7 @@
   "chapter": 465,
   "title": "El cuaderno de campo",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:507175cb283a6a6c",
+  "sourceHash": "fnv1a64:43e5ede668f2d01a",
   "lessons": [
     {
       "id": "ES-C465-cuaderno",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2c3b3aa39c08b9d6",
+      "sourceHash": "fnv1a64:dd4473d00a51669e",
       "notice": null,
       "blocks": [
         {
@@ -198,7 +198,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:799c1fb112ac3f80",
+      "sourceHash": "fnv1a64:677d61032c2f6834",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9ef1dfcaf51c0529",
+      "sourceHash": "fnv1a64:ad4581af34ad43f9",
       "notice": null,
       "blocks": [
         {
@@ -568,7 +568,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:304a5d426aab1ff5",
+      "sourceHash": "fnv1a64:8ed4fdb458072371",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -754,7 +754,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3374b403f9fedfe4",
+      "sourceHash": "fnv1a64:9b44f154b4293c20",
       "notice": null,
       "blocks": [
         {
@@ -924,7 +924,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d245eb0e0b03985",
+      "sourceHash": "fnv1a64:2645aeddacb33b95",
       "notice": null,
       "blocks": [
         {

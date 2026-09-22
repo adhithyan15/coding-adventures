@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C442-sintesis-gestion
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 11270
 chapter: 442
 type: practice

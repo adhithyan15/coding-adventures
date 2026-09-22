@@ -4,7 +4,7 @@
   "label": "ch:es-jefe",
   "canDo": "I can follow a message from a manager about cutting spending, and reply that I am still choosing between two options.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C462-sintesis-jefe",

@@ -4,7 +4,7 @@
   "chapter": 451,
   "title": "La cola y el carné",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:927f4d637e4965fc",
+  "sourceHash": "fnv1a64:f523dbab509ce419",
   "lessons": [
     {
       "id": "ES-C451-cola",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fc538365f9b9e0ec",
+      "sourceHash": "fnv1a64:0e06cacc71836bf8",
       "notice": null,
       "blocks": [
         {
@@ -182,7 +182,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:86b1cbccce4f700c",
+      "sourceHash": "fnv1a64:76b0f351f758d8e0",
       "notice": null,
       "blocks": [
         {
@@ -344,7 +344,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:88d552e71897ad5c",
+      "sourceHash": "fnv1a64:e76c6f8359f706f4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -513,7 +513,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d6da835ac47b6242",
+      "sourceHash": "fnv1a64:a93c236f020e187e",
       "notice": null,
       "blocks": [
         {
@@ -679,7 +679,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19f8196d1acb7d94",
+      "sourceHash": "fnv1a64:3996d2c19112b9e8",
       "notice": null,
       "blocks": [
         {
@@ -846,7 +846,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:a154a5f9865c2fd9",
+      "sourceHash": "fnv1a64:80e0189f4265ee09",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1016,7 +1016,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:a0dc27bdfae89fed",
+      "sourceHash": "fnv1a64:aea7548dd3a357b1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1170,7 +1170,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:ce5813c96c5560a6",
+      "sourceHash": "fnv1a64:49c6d095126710be",
       "notice": {
         "modality": "sight",
         "needs": [

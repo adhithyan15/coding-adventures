@@ -4,7 +4,7 @@
   "label": "ch:es-gestion",
   "canDo": "I can deal with an institution rather than a person: book the appointment, read what the office wants, track what it sent me, and do it on a screen.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C442-sintesis-gestion",

@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C441-factura
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 11170
 chapter: 441
 type: word

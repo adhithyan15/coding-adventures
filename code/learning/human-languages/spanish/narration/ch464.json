@@ -4,7 +4,7 @@
   "chapter": 464,
   "title": "La cita perdida",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:dfdc74a305c338fa",
+  "sourceHash": "fnv1a64:a06625428586cbd3",
   "lessons": [
     {
       "id": "ES-C464-recordar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72df34ae99775748",
+      "sourceHash": "fnv1a64:bc434c7ac940c490",
       "notice": null,
       "blocks": [
         {
@@ -185,7 +185,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b09ea93fa5b79c0b",
+      "sourceHash": "fnv1a64:bac9e5bbfc24d70b",
       "notice": null,
       "blocks": [
         {
@@ -349,7 +349,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ebfafd7134aff2e8",
+      "sourceHash": "fnv1a64:f62a689347b9dc2c",
       "notice": null,
       "blocks": [
         {
@@ -515,7 +515,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:86287668ea9df614",
+      "sourceHash": "fnv1a64:c23dfe03fa67a318",
       "notice": null,
       "blocks": [
         {
@@ -660,7 +660,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a18a2def829b6400",
+      "sourceHash": "fnv1a64:c3ca5cb276658914",
       "notice": null,
       "blocks": [
         {

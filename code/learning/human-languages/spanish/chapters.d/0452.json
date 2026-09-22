@@ -4,7 +4,7 @@
   "label": "ch:es-reparto",
   "canDo": "I can deal with a delivery: read the card left through the door, say where the parcel has gone, quote a tracking number, and ask for a time that suits me.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C452-sintesis-reparto",

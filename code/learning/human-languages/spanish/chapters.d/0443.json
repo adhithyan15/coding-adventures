@@ -4,7 +4,7 @@
   "label": "ch:es-animo",
   "canDo": "I can say what is going on inside me: what hurts, what I care about, what I am struggling to do, and what I wish I had not done.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C443-sintesis-animo",

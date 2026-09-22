@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C453-instalacion
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 11980
 chapter: 453
 type: word

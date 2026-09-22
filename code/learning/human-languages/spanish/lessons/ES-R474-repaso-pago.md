@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-R474-repaso-pago
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 13230
 chapter: 474
 type: review

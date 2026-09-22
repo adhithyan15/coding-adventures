@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C456-ensalada
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12160
 chapter: 456
 type: word

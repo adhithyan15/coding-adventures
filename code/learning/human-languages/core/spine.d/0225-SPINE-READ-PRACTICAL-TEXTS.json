@@ -1,0 +1,11 @@
+{
+  "id": "SPINE-READ-PRACTICAL-TEXTS",
+  "stage": "A2",
+  "strand": "TEXT",
+  "canDo": "I can find what I need in everyday written material — an advert, a timetable, a notice at work, a short message about an appointment or a repair — and act on what it asks of me.",
+  "prerequisites": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "core": false,
+  "concepts": []
+}

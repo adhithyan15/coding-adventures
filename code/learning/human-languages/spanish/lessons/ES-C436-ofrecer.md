@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C436-ofrecer
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 10810
 chapter: 436
 type: word

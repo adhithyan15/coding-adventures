@@ -4,7 +4,7 @@
   "chapter": 462,
   "title": "La reunión",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7f94a1426b16077f",
+  "sourceHash": "fnv1a64:2c63cd3bb8ddfe12",
   "lessons": [
     {
       "id": "ES-C462-reducir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:2784f27c57cac2ee",
+      "sourceHash": "fnv1a64:7798262e31c58ae6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -193,7 +193,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e26804cf5b7a4197",
+      "sourceHash": "fnv1a64:e0ec9296f48ec5c7",
       "notice": null,
       "blocks": [
         {
@@ -355,7 +355,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:678362d1ea376061",
+      "sourceHash": "fnv1a64:8ddee0471820c1a1",
       "notice": null,
       "blocks": [
         {
@@ -527,7 +527,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:916f60d9541e8031",
+      "sourceHash": "fnv1a64:cc4bf898215de205",
       "notice": null,
       "blocks": [
         {
@@ -675,7 +675,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1e51cf03bc9793f2",
+      "sourceHash": "fnv1a64:5cd7eb54abc8a75a",
       "notice": null,
       "blocks": [
         {

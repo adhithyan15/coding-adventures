@@ -4,7 +4,7 @@
   "label": "ch:es-cita",
   "canDo": "I can handle a missed appointment: read the reminder, apologise for not going, say what let me down, and ask for another.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C464-sintesis-cita",

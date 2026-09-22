@@ -129,7 +129,23 @@ describe("direct curriculum lesson owners", () => {
     // For 474 the control was origin/main at 2245f54d77, which reproduced
     // 6d6ea3c0... and 7479 exactly; ES-PATH-474-PAGO holds exactly 6 lessons
     // and the count moved by 6.
-    expect(digest).toBe("7b1879e48145aed0b1ddcc209e9995cbebb40748aab5dcafaffec589809c43fe");
+    //
+    // HL-C417 is the FIRST change to move this digest WITHOUT moving the count.
+    // No lesson was added: 44 Spanish path segments (431-474) were repointed from
+    // the A1 `SPINE-READ-SIGNS-AND-NOTICES` to the new A2
+    // `SPINE-READ-PRACTICAL-TEXTS`, and all 23 tracks gained that node's
+    // realization ledger. The count staying at 7485 across a digest move is the
+    // evidence that the migration RELOCATED membership rather than creating it.
+    //
+    // Attribution was again by reconstruction, and this time by a full structural
+    // diff as well. A clean worktree at d647c889e6 reproduced 7b1879e4... and 7485
+    // byte for byte; dumping the loaded graph from both trees and diffing them
+    // gives 294 changed lines and NOTHING that is not the migration: 44
+    // `spine_node` values flipped, 23 `SPINE-READ-PRACTICAL-TEXTS` ledgers added
+    // (22 of them with empty `segments`, because only Spanish realizes the rung
+    // today), and the 44 `ES-PATH-4xx` ids moving from one node's derived
+    // `segments` list to the other's.
+    expect(digest).toBe("5a445a654557fa8b1577fd8f36f82b75b8f6b3ce17b6853faf07a80fa5756932");
     expect(curricula.flatMap((curriculum) => curriculum.path).flatMap((path) => path.lessons))
       .toHaveLength(7485);
   });

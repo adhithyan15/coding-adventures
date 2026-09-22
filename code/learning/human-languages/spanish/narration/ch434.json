@@ -4,7 +4,7 @@
   "chapter": 434,
   "title": "El Taller Y La Máquina",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:7b009a5ce3903345",
+  "sourceHash": "fnv1a64:13ff0583c0607bdf",
   "lessons": [
     {
       "id": "ES-C434-taller",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f39eeddc224db2f5",
+      "sourceHash": "fnv1a64:ad1be20ae90fd331",
       "notice": null,
       "blocks": [
         {
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ee8403047538f5cf",
+      "sourceHash": "fnv1a64:55b2ac82b2580d6b",
       "notice": null,
       "blocks": [
         {
@@ -289,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:49dae368f32057ee",
+      "sourceHash": "fnv1a64:5d102e42762a7672",
       "notice": null,
       "blocks": [
         {
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:264174f5b3647036",
+      "sourceHash": "fnv1a64:83bbc6fe66018a56",
       "notice": null,
       "blocks": [
         {
@@ -568,7 +568,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a7ff66fbc9348a6",
+      "sourceHash": "fnv1a64:ee4532babaad89a6",
       "notice": null,
       "blocks": [
         {
@@ -718,7 +718,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cb5866f3880c611d",
+      "sourceHash": "fnv1a64:bbe02bac75c49269",
       "notice": null,
       "blocks": [
         {
@@ -862,7 +862,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a35179b81e01a19",
+      "sourceHash": "fnv1a64:99bd444c3e75073d",
       "notice": null,
       "blocks": [
         {

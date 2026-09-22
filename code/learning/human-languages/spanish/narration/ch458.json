@@ -4,7 +4,7 @@
   "chapter": 458,
   "title": "El plazo",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c567b9b8249f2bd1",
+  "sourceHash": "fnv1a64:8a0c1ab90405b2fd",
   "lessons": [
     {
       "id": "ES-C458-plazo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:3dfc3a6dea19144f",
+      "sourceHash": "fnv1a64:29b448bc8af5718f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -188,7 +188,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:533281e49d07541e",
+      "sourceHash": "fnv1a64:88ad6b837740f0d2",
       "notice": null,
       "blocks": [
         {
@@ -346,7 +346,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:389e50120a78a20e",
+      "sourceHash": "fnv1a64:f915f497040fa636",
       "notice": null,
       "blocks": [
         {
@@ -532,7 +532,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f8e0fb8016f4e2a",
+      "sourceHash": "fnv1a64:6cbdf911e843bf26",
       "notice": null,
       "blocks": [
         {
@@ -676,7 +676,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f257bc0085be0e07",
+      "sourceHash": "fnv1a64:de69e09f001ab25b",
       "notice": null,
       "blocks": [
         {

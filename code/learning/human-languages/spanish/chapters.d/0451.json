@@ -4,7 +4,7 @@
   "label": "ch:es-turno",
   "canDo": "I can get through a counter: queue, put my name on a list, show the right card, keep the right slip of paper, and follow a notice that says what will be checked and when.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C451-sintesis-turno",

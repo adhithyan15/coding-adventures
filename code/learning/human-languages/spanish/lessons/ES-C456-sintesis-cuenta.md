@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C456-sintesis-cuenta
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12220
 chapter: 456
 type: practice

@@ -4,7 +4,7 @@
   "label": "ch:es-donar",
   "canDo": "I can read a collection appeal: what may be donated, what will be turned away and why, and where to hand it in.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C461-sintesis-donar",

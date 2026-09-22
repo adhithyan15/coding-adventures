@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 474,
-  "sourceHash": "fnv1a64:6a3bb972be3b5c96",
+  "sourceHash": "fnv1a64:3d038ded074e3eea",
   "lessonIds": [
     "ES-C474-invitar",
     "ES-C474-importe",
@@ -15,6 +15,6 @@
   "text": "spanish/narration/ch474.txt",
   "json": "spanish/narration/ch474.json",
   "textHash": "fnv1a64:9c9a6d15df35fff5",
-  "jsonHash": "fnv1a64:f4934242f049ba4e",
+  "jsonHash": "fnv1a64:de4f851c2a0eb532",
   "findings": []
 }

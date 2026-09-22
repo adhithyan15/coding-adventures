@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-R460-repaso-pedir
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12410
 chapter: 460
 type: review

@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C444-carrito
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 11390
 chapter: 444
 type: word

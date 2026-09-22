@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 455,
-  "sourceHash": "fnv1a64:e630faf96e66fac4",
+  "sourceHash": "fnv1a64:aa56fa986fc5b013",
   "lessonIds": [
     "ES-C455-pintar",
     "ES-C455-dormitorio",
@@ -16,6 +16,6 @@
   "text": "spanish/narration/ch455.txt",
   "json": "spanish/narration/ch455.json",
   "textHash": "fnv1a64:301f60f9bcf3a472",
-  "jsonHash": "fnv1a64:e6e091073fe39dd5",
+  "jsonHash": "fnv1a64:aac1a2652f985e32",
   "findings": []
 }

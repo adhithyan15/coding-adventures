@@ -4,7 +4,7 @@
   "label": "ch:es-apunte",
   "canDo": "I can keep a shared written record: read the instructions inside a weather notebook, note down a temperature and a rainfall, and understand why a zero is not the same as a blank.",
   "spineNodes": [
-    "SPINE-READ-SIGNS-AND-NOTICES"
+    "SPINE-READ-PRACTICAL-TEXTS"
   ],
   "payoff": {
     "lesson": "ES-C465-sintesis-apunte",

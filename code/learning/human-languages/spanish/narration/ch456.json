@@ -4,7 +4,7 @@
   "chapter": 456,
   "title": "La cuenta",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:63c0373c5084ffbe",
+  "sourceHash": "fnv1a64:8d5aceaaaf449633",
   "lessons": [
     {
       "id": "ES-C456-ensalada",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:e7013d17040acf47",
+      "sourceHash": "fnv1a64:206bb684eeccd8ab",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -185,7 +185,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59ae22e77b7c1f4c",
+      "sourceHash": "fnv1a64:ebda4e581d426a10",
       "notice": null,
       "blocks": [
         {
@@ -343,7 +343,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96531c070b5bc26b",
+      "sourceHash": "fnv1a64:4d8c2545ab7c017f",
       "notice": null,
       "blocks": [
         {
@@ -513,7 +513,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:973503fab728965e",
+      "sourceHash": "fnv1a64:94aa5865a4ce7b92",
       "notice": null,
       "blocks": [
         {
@@ -676,7 +676,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:8972b28b0237cc58",
+      "sourceHash": "fnv1a64:affe9f25d7dc28dc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -854,7 +854,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:362ae5b6e3fe709a",
+      "sourceHash": "fnv1a64:223d1d7b074ecaa6",
       "notice": null,
       "blocks": [
         {
@@ -1002,7 +1002,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:02d296aaa87d43d9",
+      "sourceHash": "fnv1a64:49d63feb14cb97ad",
       "notice": {
         "modality": "sight",
         "needs": [

@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C452-comodo
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 11940
 chapter: 452
 type: word

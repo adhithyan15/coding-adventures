@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C440-sintesis-fiesta
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 11130
 chapter: 440
 type: practice

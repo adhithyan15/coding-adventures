@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-R461-repaso-donar
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12460
 chapter: 461
 type: review

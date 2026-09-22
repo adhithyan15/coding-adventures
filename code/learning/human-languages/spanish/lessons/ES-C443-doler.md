@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C443-doler
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 11280
 chapter: 443
 type: word

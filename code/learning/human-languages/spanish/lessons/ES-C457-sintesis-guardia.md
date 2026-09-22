@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: ES-C457-sintesis-guardia
-spine_node: SPINE-READ-SIGNS-AND-NOTICES
+spine_node: SPINE-READ-PRACTICAL-TEXTS
 sequence: 12270
 chapter: 457
 type: practice
