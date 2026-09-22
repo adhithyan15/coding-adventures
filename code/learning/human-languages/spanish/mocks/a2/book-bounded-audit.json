@@ -59,8 +59,8 @@
     ],
     "numericCredits": "0-100"
   },
-  "lessonCount": 1419,
-  "taughtForms": 2356,
+  "lessonCount": 1424,
+  "taughtForms": 2366,
   "objectiveFailed": 6,
   "mocks": [
     {
@@ -118,8 +118,6 @@
           "paper": 1,
           "item": 25,
           "missing": [
-            "recomendar",
-            "estado",
             "explicar"
           ]
         }
@@ -129,11 +127,9 @@
   "missingObjectiveLexemes": [
     "creer",
     "descontar",
-    "estado",
     "explicar",
     "invitar",
     "problema",
-    "recomendar",
     "responder"
   ],
   "missingFrequency": [
@@ -150,19 +146,11 @@
       "count": 1
     },
     {
-      "lexeme": "estado",
-      "count": 1
-    },
-    {
       "lexeme": "invitar",
       "count": 1
     },
     {
       "lexeme": "problema",
-      "count": 1
-    },
-    {
-      "lexeme": "recomendar",
       "count": 1
     },
     {
