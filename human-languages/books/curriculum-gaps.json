@@ -144934,11 +144934,11 @@
     "taughtPercent": 8
   },
   "rootLedger": {
-    "roots": 4246,
-    "underspent": 3793,
-    "neverSpent": 2594,
+    "roots": 4248,
+    "underspent": 3795,
+    "neverSpent": 2596,
     "payoffDistribution": {
-      "0": 2594,
+      "0": 2596,
       "1": 705,
       "2": 494,
       "3": 249,
