@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 474,
+  "sourceHash": "fnv1a64:6a3bb972be3b5c96",
+  "lessonIds": [
+    "ES-C474-invitar",
+    "ES-C474-importe",
+    "ES-C474-descontar",
+    "ES-C474-golpe",
+    "ES-R474-repaso-pago",
+    "ES-C474-sintesis-pago"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch474.txt",
+  "json": "spanish/narration/ch474.json",
+  "textHash": "fnv1a64:9c9a6d15df35fff5",
+  "jsonHash": "fnv1a64:f4934242f049ba4e",
+  "findings": []
+}

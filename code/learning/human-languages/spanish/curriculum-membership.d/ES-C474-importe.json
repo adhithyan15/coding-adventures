@@ -1,0 +1,11 @@
+{
+  "id": "ES-C474-importe",
+  "pathSegment": "ES-PATH-474-PAGO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-474-PAGO",
+      "order": 1
+    }
+  ]
+}
