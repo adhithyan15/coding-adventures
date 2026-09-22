@@ -1,0 +1,11 @@
+{
+  "id": "ES-C468-bufanda",
+  "pathSegment": "ES-PATH-468-ABRIGO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-468-ABRIGO",
+      "order": 3
+    }
+  ]
+}

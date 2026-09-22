@@ -1,5 +1,89 @@
 # Changelog
 
+## Chapter 468 — the wardrobe reopened, and a slang hazard caught before print
+
+```
+A2 objectiveFailed          10 -> 9
+A2 missingObjectiveLexemes  27 -> 23
+```
+
+Four words, one item, 4.00. Twelfth consecutive exact prediction.
+
+| chapter | scene | words |
+|---|---|---|
+| 468 ABRIGO | a bus-stop screen at two degrees | chaqueta, grado, abrigo, bufanda |
+
+## The sibling check, run properly, gave the chapter its premise
+
+Chapter 467's lesson was that a rule written in a plan file is a note, not a
+step — the sibling read has to produce output. Run that way here, `ls
+ES-C430-*.md` and opening each turned up two things invisible from
+`ES-C430-jersey` alone:
+
+**`ES-C430-repaso-piezas` declares the wardrobe closed** — *"the wardrobe,
+complete… the list an exam works from is now covered end to end."* Rather than
+quietly reopening it, that became the chapter's premise: the A1 list was
+complete for A1, which asks you to **describe** what you are wearing. A2 asks
+you to **decide**, and deciding needs a number.
+
+**A header error not to inherit.** `ES-C430-jersey` heads a table *"clothing
+words that name a place"* and puts `la chaqueta | a French peasant named
+Jacques` in it. Jacques is a person.
+
+## What the fact-check then caught, before anything was committed
+
+Twenty-seven findings. The three that mattered most:
+
+**`ES-C60-` is a legacy module id, not a chapter number.** The draft said *"the
+scale you have had since chapter sixty"*; `ES-C60-repaso-grado` is
+`chapter: 229`. Filed in `lessons.d/` — a chapter number is only ever read from
+the `chapter:` field, never off an id.
+
+**The word *grado* had never appeared in corpus prose at all.** Every prior hit
+is inside an identifier. So "the word you already had under another job" was
+false; the lesson now says the review carries this word in its filename and
+never once showed it.
+
+**`roots: []` does not mean what the draft claimed.** It taught the empty root
+list as a positive signal meaning "somebody looked and the answer is unknown".
+526 of 1,476 Spanish lessons carry `roots: []`, and 332 of those give a settled
+etymology in the prose anyway — including this chapter's own prerequisite
+`ES-C300-piel`. `lessons.d/` had already recorded that the ledger is opt-in
+metadata and a lower bound. The rule about leaving an origin *open* belongs to
+`ES-C450-patio`, which is now the prerequisite and the citation, with
+`el gorro` — winter headwear, origin also uncertain — as the nearest precedent.
+
+## A safety fix that matters more than any of them
+
+The draft put bare **coger** in the learner's mouth twice, in `variety:
+general` lessons. `ES-C35-tomar` exists partly to warn that *coger* is coarse
+slang across much of Latin America. These would have been the first sentences
+in the corpus to teach it unmarked. Now *llévate*.
+
+The same hazard applies to the headword: **chaqueta** carries a vulgar second
+sense in Mexico and much of Central America. A `variety: general` lesson
+teaching it bare repeats the *coger* mistake on the word the chapter is named
+after. It now carries a regional table — *saco*, *campera*, *chamarra* — and
+the wrap-up drills it.
+
+## Smaller corrections
+
+*Al abrigo de* means *in the shelter of* — the draft's gloss inverted it
+against its own table. *Un abrigo de rocas* became *un abrigo rocoso*, since
+`de` + material reads as what a garment is made of. *Apricus* means open to the
+sun; the shelter sense is the **Spanish** development, which is the etymology's
+best observation and the draft had smuggled it into the Latin. *Ir de grado*
+became *de buen grado*. English took *jack* and *jacket*, not "jacket and
+jaquette". *Estuviste malo* became *estuviste enfermo* — the corpus teaches
+*malo* as **bad** only, so a learner would have decoded "you were bad last
+week". The causal *que* is genuinely new and is now introduced where it first
+appears rather than called "the same *que*".
+
+## Where the floor is
+
+Four authorable rows left, 16 words. Five more turn on `explicar`, `creer` or
+`problema` and wait on `HL-C418`.
+
 ## Chapter 467 — the first chapter reviewed before it was pushed
 
 ```

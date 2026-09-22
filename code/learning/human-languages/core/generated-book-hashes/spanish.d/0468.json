@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:f956e008192b2491",
+  "lessonIds": [
+    "ES-C468-chaqueta",
+    "ES-C468-grado",
+    "ES-C468-abrigo",
+    "ES-C468-bufanda",
+    "ES-R468-repaso-abrigo",
+    "ES-C468-sintesis-abrigo"
+  ],
+  "tex": "spanish/book/chapters/ch468-abrigo.tex"
+}

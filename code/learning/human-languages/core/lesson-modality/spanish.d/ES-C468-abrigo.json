@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C468-abrigo",
+    "language": "spanish",
+    "chapter": 468,
+    "sequence": 12830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c543b7c61a02e48"
+  },
+  "findings": []
+}
