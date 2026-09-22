@@ -1,0 +1,11 @@
+{
+  "id": "ES-R472-repaso-encuesta",
+  "pathSegment": "ES-PATH-472-ENCUESTA",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-472-ENCUESTA",
+      "order": 5
+    }
+  ]
+}

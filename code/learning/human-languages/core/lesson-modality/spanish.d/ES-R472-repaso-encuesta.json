@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R472-repaso-encuesta",
+    "language": "spanish",
+    "chapter": 472,
+    "sequence": 13120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41168457569aaaa7"
+  },
+  "findings": []
+}

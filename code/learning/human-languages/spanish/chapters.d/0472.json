@@ -1,0 +1,22 @@
+{
+  "chapter": 472,
+  "title": "La biblioteca que presta cosas",
+  "label": "ch:es-encuesta",
+  "canDo": "I can read a report about a service that changed: follow that the idea arose from a survey of its users, that the place is no longer only for reading, and that other places have copied it rather than the other way round.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "ES-C472-sintesis-encuesta",
+    "kind": "task",
+    "summary": "Read a report about a library that lends objects, then say where the idea came from and who copied whom.",
+    "assesses": [
+      "ES-LEX-C472-ENCUESTA-01",
+      "ES-LEX-C472-ENCUESTA-02",
+      "ES-LEX-C472-ENCUESTA-03",
+      "ES-LEX-C472-ENCUESTA-04",
+      "ES-LEX-C472-ENCUESTA-05"
+    ],
+    "note": "THIS CHAPTER DELIBERATELY DOES NOT CLEAR ITS ROW, AND THAT IS THE HONEST OUTCOME. The row for mock 2 item 21 is `encuesta, preguntar, usuario, responder, lectura`. RESPONDER IS ALREADY TAUGHT: ES-C40-contestar introduces ES-LEX-RESPONDER-06 with a section headed \"Grammar Lens: contestar and responder\", the re- plus spondere derivation, a contrast table and la respuesta. The audit cannot see it because the taught set is built from lesson.realization.headword ONLY and never reads introduces.knowledge -- filed as BACKLOG.d HL-C422, with the fix (a citationFormCredits entry, or teaching the audit to read introduces) left for its own branch because both move the headline number. Writing a second responder lesson WOULD clear the row and would be exactly the duplication HL-C418 forbids, so it was not done. Expect 5 words taught, 3 lexemes removed, 0 items cleared. HL-C421 CHECK ON THE STEM AND OPTIONS, WHICH IS NOW STANDARD. The row covers only the passage, so the question stem and all three options were read and every content word grepped as a substring. `surgir` is THE STEM'S OWN VERB (\"La idea surgio...\") and had ZERO hits corpus-wide -- without it the question cannot be parsed at all. `propuesta` (option a) and `copiar` (option c) were also absent. copiar is taught here because it is in the passage too (\"han copiado el sistema\"); propuesta is option-a-only and is left, noted, because ayuntamiento in the same option is itself only glossed once in ES-C463-organizar, so that option needs two words and is a distractor. THE SIBLING CHECK CAUGHT LECTURA. ES-C441-factura (seq 11170) already PRINTS the row `| leer, to read | lectura, a reading |` in its own -ura table, and its gloss names lectura outright. So lectura is handed over, not introduced -- the same move imprimir made with impreso and avisar with aviso -- and the -ura rule is cited rather than re-taught. ES-C465-temperatura already cites factura for the same ending and adds the adjective job, so that chain was left intact. ES-C423-inteligente also lists lectura among legere derivatives. A SECOND SENSE WORTH NAMING: the book has been using lectura to mean an INTERPRETATION since ES-C66-hablo-dos-lecturas (\"the two readings of como\") and ES-C67-primera/segunda/tercera-lectura, but only inside ids and activity metadata, never in prose -- the same situation as `grado` in chapter 468. So the lesson must NOT say \"the word you already had\"; it says the learner has been DOING lecturas without the word. COUSIN LINKS: usuario takes usare-latin from ES-C385-usar; lectura takes legere-latin from ES-C34-leer; and ENCUESTA TAKES quaerere-latin FROM ES-C11-querer, which is the find worth keeping -- inquisita from inquirere, in- plus quaerere, and Spanish querer IS that quaerere, so wanting and asking are one Latin verb. Only surgere-latin and copia-latin are newly minted. USUARIO VERSUS CLIENTE is taught as the real distinction a notice encodes: a shop has clientes because something is sold, a service has usuarios because something is accessed. ES-C406-cliente is taught, so the contrast is built on held material. COPIAR'S PREPOSITION carries the synthesis: copiar EL SISTEMA reproduces a thing, copiar A otra biblioteca imitates the one who did it -- and the exam's own distractor for this item is `de copiar otra biblioteca`, which reverses the direction the text states. The synthesis names that trap explicitly. CAUGHT IN MY OWN DRAFT BY THE TOKEN SWEEP: `copiar un archivo` used `archivo`, which has zero corpus hits. Replaced with `copiar un documento`, taught in ES-C406-documento -- the same chapter as ES-C406-cliente, which this chapter already leans on. That is the third consecutive chapter in which the sweep caught an untaught word in my own prose."
+  }
+}

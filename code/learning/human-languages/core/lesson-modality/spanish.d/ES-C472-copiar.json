@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C472-copiar",
+    "language": "spanish",
+    "chapter": 472,
+    "sequence": 13110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:330372b35e87c52c"
+  },
+  "findings": []
+}

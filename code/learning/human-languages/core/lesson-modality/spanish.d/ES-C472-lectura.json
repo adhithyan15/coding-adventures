@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C472-lectura",
+    "language": "spanish",
+    "chapter": 472,
+    "sequence": 13100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:45dcb9867b5e727e"
+  },
+  "findings": []
+}

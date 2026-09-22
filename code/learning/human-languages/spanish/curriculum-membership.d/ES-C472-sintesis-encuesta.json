@@ -1,0 +1,11 @@
+{
+  "id": "ES-C472-sintesis-encuesta",
+  "pathSegment": "ES-PATH-472-ENCUESTA",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ES-EXT-472-ENCUESTA",
+      "order": 6
+    }
+  ]
+}

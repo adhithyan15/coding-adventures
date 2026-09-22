@@ -1,5 +1,103 @@
 # Changelog
 
+## Chapter 472 — the first chapter that clears no item, on purpose
+
+```
+A2 objectiveFailed          6 -> 6   (unchanged)
+A2 missingObjectiveLexemes  11 -> 8
+```
+
+Five words, three lexemes, **zero items**.
+
+| chapter | scene | words |
+|---|---|---|
+| 472 ENCUESTA | a library that lends objects, not only books | usuario, encuesta, surgir, lectura, copiar |
+
+## Why it clears nothing
+
+The row for mock 2 item 21 is `encuesta, preguntar, usuario, responder,
+lectura`. After this chapter the item is blocked by **`responder` alone** — and
+`responder` is already taught.
+
+`ES-C40-contestar` introduces **`ES-LEX-RESPONDER-06`**, with a section headed
+*"Grammar Lens: contestar and responder"*, the *re-* + *spondēre* derivation, a
+contrast table, and the note that *la respuesta* comes from *responder*. The
+audit cannot see it, because the taught set is built from
+`lesson.realization.headword` only and never reads `introduces.knowledge`.
+
+Writing a second `responder` lesson would clear the row and would be exactly
+the duplication `HL-C418` forbids. So it was not written. Filed as **HL-C422**;
+the repair is a `citationFormCredits` entry or teaching the audit to read
+`introduces`, and both move the headline number, so both want their own branch.
+
+**A tranche that closes real gaps and moves no item is the honest reading of
+that situation**, and it is recorded in the test pin rather than smoothed over.
+
+## The HL-C421 check is now standard, and it found the stem verb
+
+The row covers only the passage, so the stem and all three options were read
+and grepped. **`surgir` is the stem's own verb** — *"La idea **surgió**…"* —
+with zero hits corpus-wide. Without it the question cannot be parsed at all.
+
+`copiar` (option c) was also absent, and is taught here because the passage
+uses it too (*han copiado el sistema*). `propuesta` (option a) is absent and is
+**left**, noted: *ayuntamiento* in the same option is itself only glossed once,
+so that option needs two words and is a distractor.
+
+## The sibling check caught lectura
+
+`ES-C441-factura` already **prints the row** `| leer, to read | lectura, a
+reading |` in its own `-ura` table, and its gloss names *lectura* outright. So
+*lectura* is handed over rather than introduced — the move *imprimir* made with
+*impreso* and *avisar* with *aviso* — and the `-ura` rule is cited, not
+re-taught. `ES-C465-temperatura` already cites *factura* for the same ending, so
+that chain was left intact.
+
+**A second sense worth naming.** The book has been using *lectura* to mean an
+**interpretation** since `ES-C66-hablo-dos-lecturas` (*"the two readings of
+como"*) — but only inside ids and activity metadata, never in prose. Same
+situation as `grado` in chapter 468. So the lesson does not say *"the word you
+already had"*; it says the learner has been **doing** *lecturas* without having
+the word.
+
+## Cousin links
+
+| word | roots | cousin of |
+|---|---|---|
+| usuario | `usare-latin` | *usar* |
+| lectura | `legere-latin` | *leer* |
+| encuesta | `quaerere-latin` | **querer** |
+
+That last is the find worth keeping: *encuesta* is *inquisita* from
+*inquirere*, **in-** plus *quaerere*, to seek — and Spanish *querer* **is** that
+*quaerere*. Wanting and asking are one Latin verb.
+
+Only `surgere-latin` and `copia-latin` are newly minted.
+
+## Two distinctions the item turns on
+
+**Usuario is not cliente.** A shop has *clientes* because something is sold; a
+service has *usuarios* because something is accessed. `ES-C406-cliente` is
+taught, so the contrast is built on held material.
+
+**Copiar changes meaning with *a*.** *Copiar el sistema* reproduces a thing;
+*copiar **a** otra biblioteca* imitates whoever did it. The exam's own
+distractor for this item is *de copiar otra biblioteca* — which reverses the
+direction the text states — and the synthesis names that trap.
+
+## Caught in my own draft, for the third consecutive chapter
+
+The token sweep found *copiar un **archivo***. `archivo` has zero corpus hits.
+Replaced with *copiar un documento*, taught in `ES-C406-documento` — the same
+chapter as `ES-C406-cliente`, which this chapter already leans on.
+
+## Verification
+
+Preflight 7/7. Both suites. Digest control by reconstruction — a clean worktree
+at `origin/main` (524d393136) reproduced `1218403f…` and 7467 byte for byte,
+and `ES-PATH-472-ENCUESTA` holds exactly the seven lessons the count moved by
+(7467 → 7474).
+
 ## Chapter 471 — the first chapter to teach more words than its row names
 
 ```

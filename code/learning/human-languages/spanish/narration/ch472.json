@@ -1,0 +1,1124 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 472,
+  "title": "La biblioteca que presta cosas",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:e75344efab75c57c",
+  "lessons": [
+    {
+      "id": "ES-C472-usuario",
+      "sequence": 13070,
+      "title": "el usuario — the user",
+      "headword": "el usuario",
+      "romanization": "el usuario",
+      "gloss": "the user — usar plus the -ario ending, and the word a service uses for the people it serves",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:81426818cc770a38",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say usar and la biblioteca. Today's word is what the second calls the people who do the first."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el usuario",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el usuario — the user."
+            },
+            {
+              "kind": "speech",
+              "text": "Preguntaron a los usuarios qué necesitaban."
+            },
+            {
+              "kind": "speech",
+              "text": "La usuaria for a woman. This is the word a library, a transport system or a health service uses for the people it serves, and you will meet it on notices far more often than in speech."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the word a service reaches for",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Spanish picks a different noun depending on what the relationship is, and the choice tells you what kind of place you are in."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the place",
+                "what it calls you"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "the place: a shop. what it calls you: el cliente — you pay.",
+                "the place: a service. what it calls you: el usuario — you use."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "A biblioteca has usuarios, not clientes, because nothing is being sold. A cliente implies a transaction; a usuario implies access."
+            },
+            {
+              "kind": "speech",
+              "text": "So when a notice addresses los usuarios, it is telling you something beyond the word: this is a thing you are entitled to use, and the notice expects you to behave accordingly."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "usar plus -ario, an ending that names the person connected with the thing. Latin usus, a use, from uti, to use."
+            },
+            {
+              "kind": "speech",
+              "text": "The same usus is inside English use, usual — what is used — and utensil, a thing for using. And -ario is the ending in el bibliotecario, the librarian, and el funcionario, the official."
+            },
+            {
+              "kind": "speech",
+              "text": "So usuario is transparent once you see it: the one who uses. You could have built it from usar the way you built principiante from principio."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "they asked the users what they needed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: they asked the users what they needed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why a library has usuarios and a shop has clientes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why a library has *usuarios* and a shop has *clientes*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the verb this word was built from",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the verb this word was built from]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The user? (El usuario.) Built from? (Usar.) Would a shop use it? (No — a shop has clientes.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C472-encuesta",
+      "sequence": 13080,
+      "title": "la encuesta — the survey",
+      "headword": "la encuesta",
+      "romanization": "la encuesta",
+      "gloss": "the survey — a cousin of querer, because asking and wanting are one Latin verb",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e0a71c16265cc845",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say preguntar and el usuario. Do both at once, to a hundred people, and you have today's word."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la encuesta",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la encuesta — the survey, the poll."
+            },
+            {
+              "kind": "speech",
+              "text": "Hicieron una encuesta entre los usuarios."
+            },
+            {
+              "kind": "speech",
+              "text": "Hacer una encuesta is the verb it goes with — you make a survey, not do one. Según la encuesta — according to the survey."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: asking one person and asking a population",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You already have preguntar. An encuesta is not more of it — it is a different act."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what you do",
+                "what you get"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "what you do: preguntar. what you get: an answer from somebody.",
+                "what you do: una encuesta. what you get: a picture of what a group thinks."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Preguntar wants one reply and stops. An encuesta is built to be counted, which is why Spanish treats it as a thing you make rather than something you say. That is also why a notice will report lo que dice la encuesta — the survey speaks, not the people in it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin inquisita, things sought out, from inquirere: in- plus quaerere, to seek."
+            },
+            {
+              "kind": "speech",
+              "text": "Now look at what you already hold. Querer is that same quaerere. The verb that means to want in Spanish meant to seek in Latin, and encuesta is its other child — so wanting and asking are one word underneath, which is truer of people than either word admits on its own."
+            },
+            {
+              "kind": "speech",
+              "text": "English took the same root repeatedly: an inquest, an inquiry, a question, a quest, and require — all seekings."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "they made a survey among the users",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: they made a survey among the users]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which taught verb encuesta is a cousin of",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which taught verb *encuesta* is a cousin of]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the difference between preguntar and una encuesta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the difference between *preguntar* and *una encuesta*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The survey? (La encuesta.) Which verb goes with it? (Hacer.) Which everyday verb is its cousin? (Querer — both are quaerere, to seek.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C472-surgir",
+      "sequence": 13090,
+      "title": "surgir — to arise",
+      "headword": "surgir",
+      "romanization": "surgir",
+      "gloss": "to arise, to come up — Latin surgere, to rise, and the verb a question reaches for when it asks where an idea came from",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:94d0cba78d258911",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la encuesta and la biblioteca. An idea came out of the first and changed the second. Today's word is came out of."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: surgir",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "surgir — to arise, to come up, to emerge."
+            },
+            {
+              "kind": "speech",
+              "text": "La idea surgió de una encuesta."
+            },
+            {
+              "kind": "speech",
+              "text": "Ha surgido un problema — a problem has come up. Surgir de — to arise from something, which is the shape you will meet most."
+            },
+            {
+              "kind": "speech",
+              "text": "The g is the throaty one before i: sur-JIR. Before a or o it is written j — surjo, I arise — so the sound stays put while the spelling moves."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the verb that reports an origin",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Surgir says something appeared without anyone deciding it would. That is its whole job, and it is why a question about where an idea came from uses it."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what you say",
+                "what it implies"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "what you say: la idea surgió de. what it implies: it emerged, nobody planned it.",
+                "what you say: alguien tuvo la idea. what it implies: a person had it."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So ¿de dónde surgió la idea? is not asking who is responsible. It is asking what the idea came out of — a conversation, a complaint, a survey."
+            },
+            {
+              "kind": "speech",
+              "text": "Answer it with de and a source, the way the question is built."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin surgere, to rise — itself sub- plus regere, to direct: to straighten oneself up from below."
+            },
+            {
+              "kind": "speech",
+              "text": "The picture is physical and the word has kept it. English took the same verb for a surge, a rising of water, and for resurgent and insurgent, things that rise again or rise against."
+            },
+            {
+              "kind": "speech",
+              "text": "So surgir is not appear. It is rise, and what rises came from somewhere underneath — which is exactly why it wants de."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the idea arose from a survey",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the idea arose from a survey]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a problem has come up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a problem has come up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why the word wants de after it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why the word wants *de* after it]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To arise? (Surgir.) The idea arose from a survey? (La idea surgió de una encuesta.) What does surgere literally mean? (To rise.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C472-lectura",
+      "sequence": 13100,
+      "title": "la lectura — the reading",
+      "headword": "la lectura",
+      "romanization": "la lectura",
+      "gloss": "the reading — the word la factura already printed in its own table, handed over now, and a thing you have been doing since chapter sixty-six",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:45dcb9867b5e727e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say leer and la factura. One is this word's verb; the other printed this word in a table and moved on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la lectura",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la lectura — the reading."
+            },
+            {
+              "kind": "speech",
+              "text": "El servicio ya no es solo de lectura."
+            },
+            {
+              "kind": "speech",
+              "text": "You have met this word once without being given it. La factura put it in its own table — leer, to read | lectura, a reading — as an example of the -ura ending, then went back to invoices. Here it is as yours."
+            },
+            {
+              "kind": "speech",
+              "text": "Un club de lectura — a book club. La lectura del contador — the meter reading."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: three things one word covers",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English splits these with different words. Spanish keeps one."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what is meant",
+                "English reaches for"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "what is meant: the activity. English reaches for: reading.",
+                "what is meant: the thing read. English reaches for: a text, a book.",
+                "what is meant: the interpretation. English reaches for: a reading of."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "All three are la lectura, and you have already used the third without noticing. When this book asked you for the two readings of como, it was asking for two lecturas — two ways the sentence can be taken."
+            },
+            {
+              "kind": "speech",
+              "text": "So the word is not only about books. Anything you can take a meaning from has a lectura, including a meter and an argument."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Leer is Latin legere, and -ura is the ending la factura gave you: the thing an action produces. A lectura is what reading makes."
+            },
+            {
+              "kind": "speech",
+              "text": "Legere first meant to gather, and the reading sense came later — you gather letters the way you gather grain. That gathering is still visible in English collect, select and elect, all of them picking things out, and in legible, able to be gathered, and lecture, a reading aloud."
+            },
+            {
+              "kind": "speech",
+              "text": "So the ending was predictable and the root was already yours. The only new thing here is permission to use the word."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the service is no longer only for reading",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the service is no longer only for reading]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a book club, using today's word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a book club, using today's word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what legere first meant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *legere* first meant]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The reading? (La lectura.) Which ending built it? (-ura — the thing an action produces.) What did legere first mean? (To gather.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C472-copiar",
+      "sequence": 13110,
+      "title": "copiar — to copy",
+      "headword": "copiar",
+      "romanization": "copiar",
+      "gloss": "to copy — from Latin copia, abundance, because the first copies were made to have plenty",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:330372b35e87c52c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la lectura and la biblioteca. If one library's idea works, what do the others do?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: copiar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "copiar — to copy."
+            },
+            {
+              "kind": "speech",
+              "text": "Tres bibliotecas han copiado el sistema."
+            },
+            {
+              "kind": "speech",
+              "text": "Copiar un documento, copiar a alguien. The noun is la copia, a copy — and note that it is feminine, where English has no gender to keep track of."
+            },
+            {
+              "kind": "speech",
+              "text": "Copiar en un examen is to cheat, so the verb is not always neutral; context does the work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: copying a thing and copying a person",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The preposition changes what you are claiming."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what you say",
+                "what it means"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "copiar el sistema means reproduce the thing.",
+                "copiar a otra biblioteca means imitate the one who did it."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Han copiado el sistema is a compliment about a method. Han copiado a otra biblioteca puts another institution in the sentence and can sound like a charge of unoriginality."
+            },
+            {
+              "kind": "speech",
+              "text": "Three libraries copying a system is a success story. The same three copying a somebody is a different report altogether, and a reading question will sometimes turn on which one the text said."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin copia — abundance, plenty. Not a duplicate: the word for plenty."
+            },
+            {
+              "kind": "speech",
+              "text": "The sense travelled because to copy a manuscript was to make there be more of it. A medieval scribe producing a second manuscript was making copia, abundance, and the name of the result eventually became the name of the act."
+            },
+            {
+              "kind": "speech",
+              "text": "The old meaning is still in English copious, meaning plentiful, and in cornucopia, the horn of plenty. Set those beside una copia and the journey is visible: from having a lot, to having another one."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "three libraries have copied the system",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: three libraries have copied the system]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the difference a makes after this verb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the difference *a* makes after this verb]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what copia meant in Latin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *copia* meant in Latin]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To copy? (Copiar.) The noun? (La copia — feminine.) What did copia mean first? (Abundance.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R472-repaso-encuesta",
+      "sequence": 13120,
+      "title": "(el usuario, la encuesta, surgir, la lectura, copiar) — from cold",
+      "headword": "(el usuario, la encuesta, surgir, la lectura, copiar)",
+      "romanization": "(el usuario, la encuesta, surgir, la lectura, copiar)",
+      "gloss": "cold retrieval of the five, and two of them were already inside words you hold",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:41168457569aaaa7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Five words, no prompts. Who the library serves, what it asked them, what came out of it, what the place used to be only for, and what the neighbours did next."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the five, cold",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "English",
+                "Spanish"
+              ],
+              "columns": 2,
+              "rowCount": 5,
+              "utterances": [
+                "English: the user. Spanish: el usuario.",
+                "English: the survey. Spanish: la encuesta.",
+                "English: to arise. Spanish: surgir.",
+                "English: the reading. Spanish: la lectura.",
+                "English: to copy. Spanish: copiar."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: three of the five were already inside words you hold",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This chapter minted very little. Most of it was recombination."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "what it is made of"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: usuario. what it is made of: usar plus -ario.",
+                "word: lectura. what it is made of: leer plus -ura.",
+                "word: encuesta. what it is made of: the same Latin verb as querer."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "La factura had even printed lectura in a table already, as its own example of the -ura ending, and moved on. So the work here was less learning words than being handed ones the book had been using in front of you."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The words, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The two that were genuinely new both hide a picture."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "underneath"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "word: surgir. underneath: surgere, to rise — so it wants de.",
+                "word: copiar. underneath: copia, abundance — a copy made there be more."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "And the one worth keeping: encuesta is inquirere, in- plus quaerere, to seek — and quaerere is querer. Wanting and asking are the same Latin verb, which is a better joke than either language intended."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the idea arose from a survey among the users",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the idea arose from a survey among the users]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "three libraries have copied the system",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: three libraries have copied the system]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which two of the five you could have built yourself",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which two of the five you could have built yourself]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The user? (El usuario.) The survey? (La encuesta.) To arise? (Surgir.) The reading? (La lectura.) To copy? (Copiar.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C472-sintesis-encuesta",
+      "sequence": 13130,
+      "title": "(la biblioteca que presta cosas) — read it, then answer",
+      "headword": "(la biblioteca que presta cosas)",
+      "romanization": "(la biblioteca que presta cosas)",
+      "gloss": "the payoff — read a report about a library that lends objects, then answer where the idea came from",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ad7690e46958a14",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la encuesta and surgir. The question below joins those two words, and it is the only question in this chapter you have to answer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading: the report",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "La biblioteca ya no presta solo libros. Desde hace dos años presta también objetos: herramientas, maletas, máquinas de cocina. La idea surgió de una encuesta: preguntaron a los usuarios qué necesitaban y qué no querían comprar. El servicio dejó de ser solo de lectura y tres bibliotecas de la provincia ya lo han copiado."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the question is about the source, not the author",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "An exam will ask ¿de dónde surgió la idea? and offer three answers. Two of them will be plausible-sounding origins the text does not claim."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what the text says",
+                "what it does not say"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "what the text says: surgió de una encuesta. what it does not say: that somebody proposed it.",
+                "what the text says: otras bibliotecas lo han copiado. what it does not say: that this one copied another."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "That second row is the trap worth naming. The text says other libraries copied this one. A distractor will offer the reverse — de copiar otra biblioteca — and it uses the chapter's own word to do it."
+            },
+            {
+              "kind": "speech",
+              "text": "Surgir de points backwards to a source. Read the direction as carefully as the words."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say where the idea came from, using surgir de."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say who copied whom, in that order, and then say it the wrong way round so you can hear the difference."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where did the idea come from? (De una encuesta.) Who was asked? (Los usuarios.) Who copied whom? (Otras bibliotecas copiaron a esta.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
