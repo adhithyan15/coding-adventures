@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C470-avisar",
+    "language": "spanish",
+    "chapter": 470,
+    "sequence": 12960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:78fc1ceb15871511"
+  },
+  "findings": []
+}

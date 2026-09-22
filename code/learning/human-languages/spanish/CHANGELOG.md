@@ -1,5 +1,110 @@
 # Changelog
 
+## Chapter 470 — five rules the corpus already owned, and one that improved the chapter
+
+```
+A2 objectiveFailed          8 -> 7
+A2 missingObjectiveLexemes  19 -> 15
+```
+
+Four words, one item, 4.00. Fourteenth consecutive exact prediction.
+
+| chapter | scene | words |
+|---|---|---|
+| 470 PARAGUAS | a message to the building group about a mislaid umbrella | paraguas, mango, encontrar, avisar |
+
+## The rule filed in 469 is what this chapter was written for
+
+Run `ls ES-C<ch>-*.md` on every chapter you cite, not only your own. It caught
+**five** duplications here before anything was committed.
+
+**`ES-C330-parada` already owns the whole `para-` family.** Its text reads:
+*"A **parasol** is made ready against the sun, and a **parachute** ready
+against a fall — that para- is the Romance parare, and not the Greek para-
+meaning beside that sits in parallel and parable."* The draft gloss for
+*paraguas* was *para* ("stops") plus *aguas* — which would have contradicted a
+merged lesson outright, because *parare* is **to make ready**. Cited, and
+`roots: [parare-latin]` makes the two cousins.
+
+**`ES-C440-cumpleanos` owns the compound** that looks plural and is singular —
+*"the -s you can hear is the plural of años trapped inside a word that is now
+singular… not an exception to be memorised; it is a sentence that hardened."*
+
+**`ES-C447-analisis` already names *el paraguas*** as its worked example of the
+invariable plural.
+
+**`ES-C451-cola` owns the homonym table**, which is the shape *mango* (handle,
+from *manus*) against *mango* (the fruit, through Portuguese *manga*) needs.
+
+**`ES-C267-no-nada` owns double negation in full**, including the rule that a
+negative word after the verb still requires *no* in front. The synthesis was
+restating it for *por ninguna parte*. Now cited, with the claim narrowed to
+what is genuinely new: *ninguna parte* joins *nada*, *nadie* and *nunca*, it is
+two words rather than one, and the trap is that English renders it with the
+**positive-looking** *anywhere*, pulling a learner toward *en cualquier parte*.
+
+## The same pass improved the chapter rather than only correcting it
+
+`ls ES-C383-*.md` turned up **`ES-C383-dejar`** beside `ES-C383-buscar`, and
+the exam message opens *"me he **dejado** un paraguas."* So the chapter has a
+four-verb arc with three verbs already held:
+
+| step | verb | state |
+|---|---|---|
+| left it behind | dejar | taught |
+| looking for it | buscar | taught |
+| cannot find it | **encontrar** | new |
+| let me know | **avisar** | new |
+
+*Encontrar* therefore arrives as the missing piece of a sequence rather than as
+a bare word, and *buscar* / *encontrar* is taught as the effort-versus-result
+split English collapses into one verb.
+
+`ES-C451-mostrar`, not the far-off `ES-C11-stem-changes`, is the `o` → `ue`
+owner to cite: it is recent, prints the full stress table, and already names
+*la rueda* as the earlier sighting.
+
+## Avisar is handed over, not introduced
+
+`ES-C332-aviso` already glosses it — *"behind it is the verb avisar, to
+notify"* — and `ES-C459-habitual` uses it again. Same move *imprimir* made with
+*el impreso* in 469. `roots: [latin-videre]`, the **prefix-form** slug aviso
+holds, which is the thing chapter 466 got wrong.
+
+The *ad visum* derivation belongs to *aviso* and is not repeated. What this
+lesson adds is what that derivation predicts: *avisar* is the weakest of the
+telling verbs because it makes visible rather than orders — which is exactly
+why the message says *si lo habéis visto, avisadme* and not *buscadlo*. It asks
+for information, not labour.
+
+## Safety, and one loose claim tightened
+
+The exam message contains *o lo ha cogido alguien*. `ES-C35-tomar` warns that
+*coger* is coarse slang across much of Latin America, so that clause is
+**dropped** from the synthesis quote rather than put in a `variety: general`
+learner's mouth. Verified by grep that no lesson here contains *coger* in any
+form.
+
+A draft said the Italians named the umbrella *"for sunshine"*. *Umbra* is a
+**shadow**, so the contrast is shade against water, and the sentence now says
+so.
+
+## What is left
+
+Two clean four-word rows remain. The other five all turn on `explicar`, `creer`
+or `problema` — all three **already taught**, and excluded only because their
+spine node derives above A2. See `BACKLOG.d` `HL-C418` and `HL-C420`; do not
+teach them a second time.
+
+## Verification
+
+Preflight 6/6. **Both** suites this time: vitest green, and the Python metadata
+contracts (`lessons.py validate`, `test_lessons.py`) that chapter 469 shipped
+without running. Digest control by reconstruction — a clean worktree at
+`origin/main` (f3a7bed89d) reproduced `7248b982…` and 7453 byte for byte, and
+`ES-PATH-470-PARAGUAS` holds exactly the six lessons the count moved by
+(7453 → 7459).
+
 ## Chapter 469 — three words the corpus already owned, found before print
 
 ```

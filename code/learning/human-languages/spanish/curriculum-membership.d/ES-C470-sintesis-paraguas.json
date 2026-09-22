@@ -1,0 +1,11 @@
+{
+  "id": "ES-C470-sintesis-paraguas",
+  "pathSegment": "ES-PATH-470-PARAGUAS",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-470-PARAGUAS",
+      "order": 5
+    }
+  ]
+}
