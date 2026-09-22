@@ -11,6 +11,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
   loadStemVocabulary,
+  reportSpanishMockStemCoverage,
   parseMockPaper,
   reportStemCoverage,
   wordForms,
@@ -143,6 +144,11 @@ describe("the committed vocabulary", () => {
 
   it.each([
     ["functionWords is a string", { functionWords: "el" }],
+    ["auxiliaryForms is a string", { auxiliaryForms: "es" }],
+    ["properNouns is a string", { properNouns: "ana" }],
+    ["verbEndings is a string", { derivation: { minStemLength: 3, verbEndings: "ar", nominalSuffixes: [], stemChanges: [] } }],
+    ["nominalSuffixes is a string", { derivation: { minStemLength: 3, verbEndings: [], nominalSuffixes: "s", stemChanges: [] } }],
+    ["derivation is missing", { derivation: undefined }],
     ["examApparatus holds a number", { examApparatus: [1] }],
     ["stemChanges is not pairs", { derivation: { minStemLength: 3, verbEndings: [], nominalSuffixes: [], stemChanges: ["ie"] } }],
     ["minStemLength is zero", { derivation: { minStemLength: 0, verbEndings: [], nominalSuffixes: [], stemChanges: [] } }],
@@ -166,4 +172,32 @@ describe("the committed vocabulary", () => {
     );
     expect(() => loadStemVocabulary(root)).toThrow(/spanish-mock-stem-vocabulary/);
   });
+});
+
+describe("the level is a closed set, not a path fragment", () => {
+  it("refuses a level that would escape the curriculum root", () => {
+    // `reportSpanishMockStemCoverage` is exported from `index.ts`, and a
+    // TypeScript union does not survive the package boundary. A first draft
+    // built its directory as `spanish/mocks/${level.toLowerCase()}`, so a
+    // JavaScript caller passing this read `/home/user/etc/mock-1-paper.md` --
+    // outside `code/learning/human-languages` entirely. It now goes through
+    // `spanishMockDir`, which is a lookup and cannot build a path out of what
+    // it is handed. Found by security review.
+    expect(() =>
+      reportSpanishMockStemCoverage(defaultCurriculumRoot(), "../../../../../../etc" as never),
+    ).toThrow(/unknown mock level/);
+  });
+
+  it.each(["__proto__", "constructor", "toString"])(
+    "refuses the prototype-shaped level %s rather than reading through it",
+    (level) => {
+      // `AUDIT_DIR[level]` on a plain object would find an inherited member for
+      // each of these and hand back something that is not a directory at all.
+      // `Object.hasOwn` is what closes that, and it is cheaper than proving the
+      // lookup table can never gain a prototype.
+      expect(() =>
+        reportSpanishMockStemCoverage(defaultCurriculumRoot(), level as never),
+      ).toThrow(/unknown mock level/);
+    },
+  );
 });

@@ -20,7 +20,7 @@
 //
 // THE DESIGN RULE THAT MATTERS: NOTHING IS SILENTLY DROPPED
 // ---------------------------------------------------------
-// The hand passes failed by CLEARING words. A 3-character prefix matched
+// The hand passes failed by CLEARING words. A 3-character PREFIX matched
 // `espacio` to the taught `esperar` — unrelated words — and `espacio` vanished
 // from the working list, so nobody looked at it again until review found it in
 // the stem of an item that was passing.
@@ -33,7 +33,14 @@
 // taught form, a closed-class function word or auxiliary, exam apparatus, or a
 // proper noun.
 //
-//     espacio → derivable, matched esperar        <- printed, obviously wrong
+// The rules here strip declared SUFFIXES rather than comparing prefixes, so the
+// original false clear cannot even arise: `espacio` reduces to `espaci` and
+// `esperar` to `esper`, which never meet, and `espacio` is reported as
+// `unaccounted`. A test pins that, so adding a prefix rule later has to break
+// something that says why there isn't one.
+//
+//     hablado → derivable, matched hablar         <- printed, and correct
+//     espacio → unaccounted                       <- printed, no match claimed
 //     espacio → (cleared by prefix rule)          <- what the hand pass did
 //
 // The reporter is therefore allowed to be noisy. A false `derivable` costs a
@@ -43,7 +50,11 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { defaultCurriculumRoot } from "./loader.js";
 import { readLedgerFile } from "./shard.js";
-import { spanishTaughtForms, type MockAuditLevel } from "./spanish-a1-mock-audit-cli.js";
+import {
+  spanishMockDir,
+  spanishTaughtForms,
+  type MockAuditLevel,
+} from "./spanish-a1-mock-audit-cli.js";
 
 export const STEM_VOCABULARY_PATH = "core/spanish-mock-stem-vocabulary.json";
 
@@ -304,7 +315,12 @@ export function reportSpanishMockStemCoverage(
 ): { mock: number; forms: FormReport[] }[] {
   const vocabulary = loadStemVocabulary(root);
   const { taught } = spanishTaughtForms(root, level);
-  const dir = `spanish/mocks/${level.toLowerCase()}`;
+  // By LOOKUP, never interpolation. This function is exported from `index.ts`,
+  // so its `level` is constrained only by a TypeScript type that does not
+  // survive the package boundary: a JavaScript caller passing
+  // `"../../../../../../etc"` read outside the curriculum root entirely before
+  // this call went through `spanishMockDir`. Found by security review.
+  const dir = spanishMockDir(level);
   return [1, 2].map((mock) => {
     const paper = readFileSync(resolve(root, `${dir}/mock-${mock}-paper.md`), "utf8");
     const key = readFileSync(resolve(root, `${dir}/mock-${mock}-answer-key.md`), "utf8");

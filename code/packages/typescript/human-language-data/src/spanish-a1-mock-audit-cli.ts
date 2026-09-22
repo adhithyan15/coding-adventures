@@ -3,6 +3,7 @@ import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { lessonsUpToLevel } from "./levels.js";
 import { defaultCurriculumRoot, loadEverything } from "./loader.js";
+import { stripControlCharacters } from "./constants.js";
 
 export const SPANISH_A1_MOCK_AUDIT = "spanish/mocks/a1/book-bounded-audit.json";
 
@@ -27,6 +28,25 @@ const AUDIT_DIR: Readonly<Record<MockAuditLevel, string>> = {
 
 export function spanishMockAuditPath(level: MockAuditLevel): string {
   return `${AUDIT_DIR[level]}/book-bounded-audit.json`;
+}
+
+/**
+ * The directory a level's papers live in, by LOOKUP rather than interpolation.
+ *
+ * `AUDIT_DIR` is traversal-proof by construction: an unrecognised level yields
+ * `undefined` and throws here, where a template string would have built a path
+ * out of whatever it was handed. That is not hypothetical -- `mock-stem-coverage`
+ * first wrote `spanish/mocks/${level.toLowerCase()}`, and because it is exported
+ * from `index.ts`, a JavaScript caller passing `"../../../../../../etc"` read
+ * outside the curriculum root entirely. TypeScript's union type does not
+ * survive the package boundary; this check does.
+ */
+export function spanishMockDir(level: MockAuditLevel): string {
+  const dir = Object.hasOwn(AUDIT_DIR, level) ? AUDIT_DIR[level] : undefined;
+  if (dir === undefined) {
+    throw new Error(`unknown mock level '${stripControlCharacters(String(level))}'`);
+  }
+  return dir;
 }
 
 const citationFormCredits = [
