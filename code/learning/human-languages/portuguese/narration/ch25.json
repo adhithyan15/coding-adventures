@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "The People You Introduce",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:7a4893bcf16b0647",
+  "sourceHash": "fnv1a64:37d2c7a4edcd018e",
   "lessons": [
     {
       "id": "PT-C25-amigo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0d9c0df34554276",
+      "sourceHash": "fnv1a64:711ade0a193dc196",
       "notice": null,
       "blocks": [
         {
