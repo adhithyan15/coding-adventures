@@ -1,5 +1,89 @@
 # Changelog
 
+## Chapter 465 — the floor arrives exactly where it was predicted
+
+```
+A2 objectiveFailed          13 -> 12
+A2 missingObjectiveLexemes  39 -> 35
+```
+
+Four words, one item, **4.00 per item**. Set against 2.44 / 2.12 / 2.80 / 3.00
+for tranches 4a-4d, that looks like a collapse, and it is not. Chapter 464's
+entry predicted this number: the eight authorable rows left each needed four
+words and shared none of them, so 4.00 is simply the rate now, and no scene
+grouping or tie-break beats it. Predicting a worse number and then hitting it
+is the ninth exact prediction in a row.
+
+| chapter | scene | words |
+|---|---|---|
+| 465 APUNTE | a shared weather notebook | cuaderno, anotar, temperatura, lluvia |
+
+## One chapter, not four
+
+4d ran twenty-five lessons and its review found **twenty authoring errors** in
+them. The unit of work is now sized to what a review pass can actually check,
+so 465 ships alone and 466-468 follow separately.
+
+That review also produced the change that shaped this chapter. For three
+tranches every error had been found in a file listed in the new lesson's own
+`prerequisites:`, so the check was bounded to those three to five files. 4d
+broke it: the stem-change rule is owned by chapter 11, `-ista` by chapter 9,
+the *porta*/*portāre* split by chapter 279, and none is a prerequisite of the
+lesson that got it wrong. Claims about a **word** live in the prerequisite
+closure; claims about a **rule** live wherever the rule was introduced.
+
+So before writing a line of 465, all sixteen words of 465-468 were grepped
+against the corpus. Five turned out to be sitting inside somebody else's rule
+already:
+
+| word | already appears in | as |
+|---|---|---|
+| lluvia | `ES-C316-llanto` | the worked example: *"Latin pluvia is la lluvia"* |
+| director | `ES-C421-actor` | a row in the `-tor` agent table |
+| chaqueta | `ES-C430-jersey` | a row giving its Jacques etymology |
+
+`ES-C30-llueve` owns the whole `cl-`/`fl-`/`pl-` → `ll-` rule. So *la lluvia*
+does not teach that rule and does not pretend the word is new. It says out loud
+that the learner was handed it twice before needing it — once as *pluere* under
+*llueve*, once as the example under *el llanto* — and joins `pluere-latin`
+rather than minting `pluvia-latin`. A 4d-style lesson would have introduced the
+sound change as a discovery, 435 chapters after it was taught.
+
+## The other three
+
+**el cuaderno** has a number inside it. Latin *quaternus*, off *quattuor*, is a
+sheet folded once into four pages, and a stack of those was the cheapest book
+anybody could make — the object named for how it was folded. Joins
+`quattuor-latin` with *cuatro* and *cuarto*; English kept the count plainer in
+*quire*. Its *ua* does **not** break, and the lesson uses that: a vowel is only
+a candidate for breaking if it is stressed *and* came from a short Latin **e**
+or **o**, so this is the counter-case to the stem-change rule rather than an
+instance of it.
+
+**anotar** is the chapter's real grammar. It is not *apuntar*, and the
+difference is what the writing is for — *apuntar* is *punctum*, the pen
+touching down once, a scrap in a pocket; *anotar* is *nota*, a mark made to be
+read, a line somebody else will open later. A doctor *apunta* while you talk
+and *anota* in your file afterwards. The etymologies say the same thing as the
+usage, which is rare enough to point out. `ES-C429-nota`, a prerequisite,
+already gave *notar* — so the lesson cites it rather than re-deriving it.
+
+**la temperatura** is not about heat. Latin *temperare* is *to mix in the right
+proportion*, which is why tempered steel, a temperate climate, a person's
+temper and tempera paint are one family. Its `-ura` is the deverbal kind
+`ES-C441-factura` already taught — the thing an action produces, verb hiding
+inside — and the adjective family (*alto*/*altura*) is introduced as the ending's
+**second** job, not its first, because *factura* set that order.
+
+## What is left
+
+Seven authorable rows, six of them in mock 1. Twenty-eight words at four
+apiece, no overlap. Five further rows turn on `explicar`, `creer` or `problema`
+and are blocked on the `HL-C418` mapping decision, which is a shared-ladder
+change across twenty-three tracks. Taken singly those three are not equal:
+`problema` clears a row alone and so does `explicar`; `creer` clears nothing,
+because its only row also wants `descontar`.
+
 ## Chapters 460-464 — the floor holds, and then rises
 
 Fifteen headwords across five chapters, every one teaching exactly three words.

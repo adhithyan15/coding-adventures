@@ -1,0 +1,11 @@
+{
+  "id": "ES-C465-anotar",
+  "pathSegment": "ES-PATH-465-APUNTE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-465-APUNTE",
+      "order": 1
+    }
+  ]
+}

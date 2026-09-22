@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C465-sintesis-apunte",
+    "language": "spanish",
+    "chapter": 465,
+    "sequence": 12680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7583dc1f3a0570e5"
+  },
+  "findings": []
+}

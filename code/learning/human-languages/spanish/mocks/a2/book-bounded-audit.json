@@ -59,15 +59,15 @@
     ],
     "numericCredits": "0-100"
   },
-  "lessonCount": 1368,
-  "taughtForms": 2261,
-  "objectiveFailed": 13,
+  "lessonCount": 1374,
+  "taughtForms": 2273,
+  "objectiveFailed": 12,
   "mocks": [
     {
       "mock": 1,
-      "reading": 21,
+      "reading": 22,
       "listening": 19,
-      "objectiveFailed": 10,
+      "objectiveFailed": 9,
       "failed": [
         {
           "paper": 1,
@@ -75,16 +75,6 @@
           "missing": [
             "invitar",
             "explicar"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 22,
-          "missing": [
-            "cuaderno",
-            "anotar",
-            "temperatura",
-            "lluvia"
           ]
         },
         {
@@ -202,7 +192,6 @@
   "missingObjectiveLexemes": [
     "abrigo",
     "alimentar",
-    "anotar",
     "avanzado",
     "avisar",
     "bufanda",
@@ -210,7 +199,6 @@
     "comportamiento",
     "conectar",
     "creer",
-    "cuaderno",
     "descontar",
     "director",
     "discutir",
@@ -224,7 +212,6 @@
     "invitar",
     "lectura",
     "llamada",
-    "lluvia",
     "mango",
     "objetivo",
     "paraguas",
@@ -236,7 +223,6 @@
     "responder",
     "sencillo",
     "suficiente",
-    "temperatura",
     "usuario",
     "visible"
   ],
@@ -251,10 +237,6 @@
     },
     {
       "lexeme": "alimentar",
-      "count": 1
-    },
-    {
-      "lexeme": "anotar",
       "count": 1
     },
     {
@@ -283,10 +265,6 @@
     },
     {
       "lexeme": "creer",
-      "count": 1
-    },
-    {
-      "lexeme": "cuaderno",
       "count": 1
     },
     {
@@ -338,10 +316,6 @@
       "count": 1
     },
     {
-      "lexeme": "lluvia",
-      "count": 1
-    },
-    {
       "lexeme": "mango",
       "count": 1
     },
@@ -383,10 +357,6 @@
     },
     {
       "lexeme": "suficiente",
-      "count": 1
-    },
-    {
-      "lexeme": "temperatura",
       "count": 1
     },
     {

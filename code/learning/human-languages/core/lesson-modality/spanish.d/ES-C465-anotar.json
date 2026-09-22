@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C465-anotar",
+    "language": "spanish",
+    "chapter": 465,
+    "sequence": 12640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b25c9828ae663d6e"
+  },
+  "findings": []
+}
