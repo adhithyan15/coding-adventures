@@ -1,0 +1,1065 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 465,
+  "title": "El cuaderno de campo",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:507175cb283a6a6c",
+  "lessons": [
+    {
+      "id": "ES-C465-cuaderno",
+      "sequence": 12630,
+      "title": "el cuaderno — the notebook",
+      "headword": "el cuaderno",
+      "romanization": "el cuaderno",
+      "gloss": "the notebook — a counting word underneath, because the oldest notebook was four sheets folded once",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2c3b3aa39c08b9d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el libro, el papel and el carné. One is bound, one is loose, and the third already told you which number it counts to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el cuaderno",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el cuaderno — the notebook, the exercise book."
+            },
+            {
+              "kind": "speech",
+              "text": "Traiga un cuaderno y un bolígrafo."
+            },
+            {
+              "kind": "speech",
+              "text": "Un cuaderno de espiral — a spiral notebook. El cuaderno de campo — the field notebook, the one a person carries to write down what they see outside."
+            },
+            {
+              "kind": "speech",
+              "text": "A libro is written for you. A cuaderno is waiting for you to write in it. That is the difference that matters, and it is why a school hands out cuadernos and a library lends libros."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have had this number already. El carné was Latin quaternum, a set of four — four sheets of paper folded together, which is how a small notebook was made — and that lesson named el cuaderno while it was there. This is the object the card shrank from."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Latin",
+                "Spanish"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "Latin: quaternum. Spanish: el carné, el cuaderno.",
+                "Latin: quattuor. Spanish: cuatro, cuarto."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So quaternum counts sheets gathered into a fold, not pages produced by one. Four leaves folded together was the cheapest book anybody could make, and the thing was named after how many went in."
+            },
+            {
+              "kind": "speech",
+              "text": "English kept the count plainer still: a quire is a gathering of folded sheets, and it is the same quaternum worn down through French."
+            },
+            {
+              "kind": "speech",
+              "text": "The notebook in a bag and the number four are one word, separated by the thing rarely thought about when buying one — how many sheets went into the fold."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the ua that does not move",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Spanish has taught you to watch stressed vowels, because those are the ones that break. This family shows the other half of that rule."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "stress falls on"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "word: cua-tro. stress falls on: the ua.",
+                "word: cua-der-no. stress falls on: the -der-."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The ua sits still in both. It is not a broken vowel waiting to happen — it came straight from the Latin qua- and stayed. The lesson is that the stress test tells you where to look, and looking sometimes tells you nothing is happening. Breaking needs two things, not one: the vowel must be stressed and must have been a short Latin e or o (or the ae that fell in with short e, which is why quaerere gave quiero). In cuatro the ua is stressed, so it passes the first test and fails the second. In cuaderno it fails both."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bring a notebook",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: bring a notebook]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the difference between a libro and a cuaderno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the difference between a libro and a cuaderno]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which number is hiding in cuaderno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which number is hiding in cuaderno]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The notebook? (El cuaderno.) Which word did you meet its number under? (El carné — the same quaternum, four sheets in one fold.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C465-anotar",
+      "sequence": 12640,
+      "title": "anotar — to write it down",
+      "headword": "anotar",
+      "romanization": "anotar",
+      "gloss": "to note down — Latin nota on a verb, and the quieter twin of apuntar",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:799c1fb112ac3f80",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say apuntar and la nota. You already have a verb for writing something down. A second one is about to arrive, and the two lean in different directions."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: anotar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "anotar — to note down, to record in writing."
+            },
+            {
+              "kind": "speech",
+              "text": "Anote la temperatura cada mañana en el cuaderno."
+            },
+            {
+              "kind": "speech",
+              "text": "Anotar los datos — to record the figures. Anotar un gol — to score a goal, because the scoreboard is a record too."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: anotar is not apuntar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Both put words on paper, and the difference is what the writing is for."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what you are doing",
+                "the verb"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "what you are doing: jotting so you do not forget. the verb: apuntar.",
+                "what you are doing: entering it into a record. the verb: anotar."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Apunta mi número is a scrap of paper in a pocket. Anote su número en el registro is a line in a book that will be read later by somebody else."
+            },
+            {
+              "kind": "speech",
+              "text": "The etymologies lean the same way, which is rare enough to be worth noticing. Apuntar is punctum, the dot a point leaves behind — you had it from pungere, to pierce. Anotar is nota, a mark made so that somebody could read it. Both name marks; the difference is who each mark is for."
+            },
+            {
+              "kind": "speech",
+              "text": "So a doctor apunta while you talk and anota in your file afterwards."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin adnotare: ad-, towards, plus nota, the mark you have from la nota. The writing is all in the noun."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin nota was a sign that stood for something — a letter, a brand, a mark in the margin. English took it both ways: a note you write, and to notice, which marks a thing without writing anything."
+            },
+            {
+              "kind": "speech",
+              "text": "You were given notar alongside la nota — to notice, to catch the mark. That is Spanish having taken the second road. Anotar is the first road, with the prefix aiming the mark at something."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Spanish",
+                "what it does"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "Spanish: notar. what it does: to notice it.",
+                "Spanish: anotar. what it does: to write it down."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "One root, one prefix, and the prefix is the whole difference between seeing something and keeping it."
+            },
+            {
+              "kind": "speech",
+              "text": "Anotado is the participle, and las anotaciones are the notes themselves — the -ción ending doing the job it has done since you first met it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "note the temperature down in the notebook",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: note the temperature down in the notebook]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which verb you use for a scrap of paper",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which verb you use for a scrap of paper]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what notar means without the a-",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what notar means without the a-]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To write it into a record? (Anotar.) And to notice, without writing? (Notar.) Which Latin word is inside both? (Nota.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C465-temperatura",
+      "sequence": 12650,
+      "title": "la temperatura — the temperature",
+      "headword": "la temperatura",
+      "romanization": "la temperatura",
+      "gloss": "the temperature — from a verb meaning to mix in the right proportion, which is also why steel is tempered and a person has a temper",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ef1dfcaf51c0529",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el calor and el frío. You have the two ends. Here is the word for the scale that runs between them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la temperatura",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la temperatura — the temperature."
+            },
+            {
+              "kind": "speech",
+              "text": "Anote la temperatura a las ocho de la mañana y a las ocho de la tarde."
+            },
+            {
+              "kind": "speech",
+              "text": "Tomar la temperatura — to take somebody's temperature. In Spain, tener temperatura is to be running a fever with no number said out loud; tener fiebre is the safer phrase everywhere."
+            },
+            {
+              "kind": "speech",
+              "text": "Note what calor and frío cannot do: they tell you which way, never how much. Hace calor is a judgement. La temperatura is a measurement, and the whole reason a notebook wants one is that a measurement can be compared with yesterday's."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin temperare did not mean heat at all. It meant to mix in the right proportion — to hold two things in balance so that neither wins."
+            },
+            {
+              "kind": "speech",
+              "text": "Follow that one idea and a very odd family falls into line:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "English",
+                "what is being balanced"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "English: to temper steel. what is being balanced: heat against hardness.",
+                "English: a temperate climate. what is being balanced: summer against winter."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "A person's temper is the mix of their humours, and losing it is the mix coming apart. Tempera paint is pigment held in the right proportion of egg. And a temperature is the point a mixture has reached on the scale between hot and cold."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish keeps the verb as templar, to temper or to tune an instrument, and templado is the word for weather that is neither one thing nor the other."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: -ura has two jobs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "La factura gave you -ura as the thing an action produces, with a verb hiding inside the noun. Temperatura is built the same way and on the same instruction: the verb inside it is temperare, and what the action produces is a reading."
+            },
+            {
+              "kind": "speech",
+              "text": "The ending has a second family, though, and it does not take verbs at all:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "base",
+                "noun"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "base: alto. noun: la altura.",
+                "base: ancho. noun: la anchura."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Those sit on adjectives, and they name how much of the quality there is — altura is how tall, anchura is how wide, and la verdura is the one you already own. So when you meet a new -ura noun, look for a verb first, as factura told you to, and look for an adjective second."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "note down the temperature",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: note down the temperature]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what temperare meant before it meant heat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what temperare meant before it meant heat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how tall, using the -ura noun",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how tall, using the -ura noun]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The temperature? (La temperatura.) What did temperare mean? (To mix in the right proportion.) What does -ura build? (The thing an action produces — factura, temperatura — and on an adjective, how much of a quality — altura.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C465-lluvia",
+      "sequence": 12660,
+      "title": "la lluvia — the rain",
+      "headword": "la lluvia",
+      "romanization": "la lluvia",
+      "gloss": "the rain — the noun to a verb you have had since the weather chapter, and a word you were once shown as somebody else's example",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:304a5d426aab1ff5",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say llueve and el llanto. Both begin with the sound this word begins with, and both have already told you why."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la lluvia",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la lluvia — the rain."
+            },
+            {
+              "kind": "speech",
+              "text": "Lluvia en los últimos tres días: 12 mm."
+            },
+            {
+              "kind": "speech",
+              "text": "Lluvia fuerte — heavy rain. Un día de lluvia — a rainy day. La lluvia ácida — acid rain."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the verb and the noun do different work",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You already have llueve, and it refuses a subject: there is nobody raining. La lluvia is what you reach for the moment rain has to be counted, described or put in a column."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what you are saying",
+                "the word"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "what you are saying: it is raining now. the word: llueve.",
+                "what you are saying: how much rain there was. the word: la lluvia."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Llueve mucho is a report from the window. Hubo mucha lluvia is a line in a notebook. A verb with no subject cannot be measured; a noun can, which is why the rainfall column is headed lluvia and never llueve."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This word's Latin has been passed under your nose several times already, and it is worth saying so."
+            },
+            {
+              "kind": "speech",
+              "text": "The rule came to you under llamar, back at the beginning: Latin cl-, fl- and pl- arrive as Spanish ll- in words that came down by mouth. Llueve put it on rain, from pluere. And under el llanto it was run out over a list — where la lluvia was already sitting, as the example beside lleno and llorar."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Latin",
+                "Spanish"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "Latin: pluvia. Spanish: la lluvia.",
+                "Latin: plenus. Spanish: lleno."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So nothing here is new except the use. Latin pluvia is the rain itself, pluere is the raining, and both came down by mouth with the cluster shifted."
+            },
+            {
+              "kind": "speech",
+              "text": "The shift is not a law, and you have seen it fail. Words lifted later out of writing keep their pl- — which is why planta still has one, and why Spanish owns la lluvia and pluvial at the same time, the same word at two speeds. A pluviómetro measures exactly what this chapter's notebook is for, and it kept the cluster because it was built by scholars, not worn down by mouths."
+            },
+            {
+              "kind": "speech",
+              "text": "That is what the earlier lessons were for. A rule you were given at the start turns up later holding a word you now need, and the word costs you nothing because the rule already paid for it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "heavy rain, and a rainy day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: heavy rain, and a rainy day]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which one goes in a column, llueve or la lluvia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which one goes in a column, llueve or la lluvia]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what Latin pl- turns into",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what Latin pl- turns into]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The rain? (La lluvia.) Its Latin form? (Pluvia.) And why does it start with ll? (Because Latin pl- became Spanish ll-.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R465-repaso-apunte",
+      "sequence": 12670,
+      "title": "(el cuaderno, anotar, la temperatura, la lluvia) — from cold",
+      "headword": "(el cuaderno, anotar, la temperatura, la lluvia)",
+      "romanization": "(el cuaderno, anotar, la temperatura, la lluvia)",
+      "gloss": "cold retrieval of the four, and the difference between judging a thing and measuring it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3374b403f9fedfe4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four words, no prompts. The book you write in, the verb for writing into it, the number you write, and the weather you write it about."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the four, cold",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "English",
+                "Spanish"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "English: the notebook. Spanish: el cuaderno.",
+                "English: to note down. Spanish: anotar.",
+                "English: the temperature. Spanish: la temperatura.",
+                "English: the rain. Spanish: la lluvia."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: an impression is not a record",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This chapter is about the moment a thing stops being an impression and becomes a record."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "impression",
+                "record"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "impression: hace calor. record: la temperatura: 24.",
+                "impression: llueve. record: lluvia: 12 mm."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Hace calor and llueve are both true and neither can be compared with yesterday. The nouns can. That is why the chapter's verb is anotar rather than apuntar: a note you jot is for you, and a note you enter is for whoever reads the book next."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The words, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two of the four hide something that is not about writing or weather at all."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "what is underneath"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "word: el cuaderno. what is underneath: four — quaternum, four sheets in one fold.",
+                "word: la temperatura. what is underneath: mixing — temperare, to hold in proportion."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The other two say what they are. Anotar is nota, a mark, with a prefix aiming it. And la lluvia is pluvia, which had been passed under your nose several times — under llueve, el llanto, lleno and planta — before you needed it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "note the temperature down in the notebook",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: note the temperature down in the notebook]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the rain, and then it is raining",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the rain, and then it is raining]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the four counts to four",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the four counts to four]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The notebook? (El cuaderno.) To enter it in the record? (Anotar.) The temperature? (La temperatura.) The rain? (La lluvia.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C465-sintesis-apunte",
+      "sequence": 12680,
+      "title": "(el cuaderno de campo) — read it, then fill in a day",
+      "headword": "(el cuaderno de campo)",
+      "romanization": "(el cuaderno de campo)",
+      "gloss": "the payoff — read the instructions taped inside a shared weather notebook, then fill in a day",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7d245eb0e0b03985",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el cuaderno and anotar. Somebody else will read what you write in it, which is the whole reason the instructions exist."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading: the notebook",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Taped inside the front cover of a shared notebook in a community garden:"
+            },
+            {
+              "kind": "speech",
+              "text": "CUADERNO DE CAMPO — CÓMO USARLO Anote la temperatura dos veces al día: a las ocho de la mañana y a las ocho de la tarde. Si ha llovido, anote también la lluvia en milímetros. Si no ha llovido, escriba un cero. No deje la casilla en blanco. Una línea por día. Si olvida un día, déjelo vacío y siga: es peor anotar de memoria que no anotar nada."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: a zero is not a blank",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four instructions, and the last one is the interesting one."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the instruction",
+                "what it wants"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "the instruction: anote la temperatura. what it wants: twice a day, at fixed hours.",
+                "the instruction: escriba un cero. what it wants: a zero, not an empty box."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The notice draws a line between un cero and la casilla en blanco. A zero says it did not rain. A blank says nobody looked. Those are different facts, and a record that cannot tell them apart is worth less than one that can — which is why the last line would rather you left a gap than filled it in from memory."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: anote, not anota",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every instruction here is usted: anote, escriba, deje, siga. A notice usually takes the polite form, because it does not know who will read it — though plenty of Spanish notices use a bare infinitive instead, as in no fumar."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "to one person you know",
+                "on a notice"
+              ],
+              "columns": 2,
+              "rowCount": 1,
+              "utterances": [
+                "to one person you know: anota. on a notice: anote."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "You have had the mechanism since hable usted: an usted command is the subjunctive, because usted is a third-person title. Not a borrowing — the same form doing its own job. (The tú negative is subjunctive too: no anotes.) It is why reduzca on the road sign looked the way it did."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Yesterday it rained in the morning and the afternoon was warm. Fill in the line out loud: say the date, the two temperatures, and the rain."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say what you would write if it had not rained at all — and say why that is not the same as leaving it blank."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The field notebook? (El cuaderno de campo.) The polite command to note something? (Anote.) What goes in the box on a dry day? (Un cero — never a blank.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

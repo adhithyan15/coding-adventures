@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C465-lluvia",
+    "language": "spanish",
+    "chapter": 465,
+    "sequence": 12660,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:304a5d426aab1ff5"
+  },
+  "findings": []
+}

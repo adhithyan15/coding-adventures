@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:507175cb283a6a6c",
+  "lessonIds": [
+    "ES-C465-cuaderno",
+    "ES-C465-anotar",
+    "ES-C465-temperatura",
+    "ES-C465-lluvia",
+    "ES-R465-repaso-apunte",
+    "ES-C465-sintesis-apunte"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 3,
+  "text": "spanish/narration/ch465.txt",
+  "json": "spanish/narration/ch465.json",
+  "textHash": "fnv1a64:41bc1295f15e8dd1",
+  "jsonHash": "fnv1a64:c7243c859b1e19c0",
+  "findings": []
+}

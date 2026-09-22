@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:10415e7b52ee1cbc",
+  "lessonIds": [
+    "ES-C465-cuaderno",
+    "ES-C465-anotar",
+    "ES-C465-temperatura",
+    "ES-C465-lluvia",
+    "ES-R465-repaso-apunte",
+    "ES-C465-sintesis-apunte"
+  ],
+  "tex": "spanish/book/chapters/ch465-apunte.tex"
+}

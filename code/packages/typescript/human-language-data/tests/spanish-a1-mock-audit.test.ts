@@ -102,22 +102,22 @@ describe("Spanish A2 book-bounded mock audit", () => {
   it("pins the CURRENT DEBT: the exam names the vocabulary that is still missing", () => {
     const audit = buildSpanishA1MockAudit(defaultCurriculumRoot(), "A2");
     expect(audit.level).toBe("A2");
-    expect(audit.objectiveFailed).toBe(13);
+    expect(audit.objectiveFailed).toBe(12);
     expect(audit.mocks.map(({ reading, listening, objectiveFailed }) => ({
       reading,
       listening,
       objectiveFailed,
     }))).toEqual([
-      { reading: 21, listening: 19, objectiveFailed: 10 },
+      { reading: 22, listening: 19, objectiveFailed: 9 },
       { reading: 22, listening: 25, objectiveFailed: 3 },
     ]);
     // THIS NUMBER MUST ONLY EVER FALL. A rise means a mock gained an item the
     // corpus cannot support.
     //
-    // 191 -> 161 -> 146 -> 126 -> 107 -> 85 -> 68 -> 54 -> 39 are the eight
-    // vocabulary tranches: 431-436, 437-439, 440-443, 444-447, 448-451,
-    // 452-455, 456-459 and 460-464. EVERY drop is exact -- 30 headwords removed
-    // 30 lexemes, then 15, 20, 19, 22, 17, 14, 15. That
+    // 191 -> 161 -> 146 -> 126 -> 107 -> 85 -> 68 -> 54 -> 39 -> 35 are the
+    // nine vocabulary tranches: 431-436, 437-439, 440-443, 444-447, 448-451,
+    // 452-455, 456-459, 460-464 and 465. EVERY drop is exact -- 30 headwords
+    // removed 30 lexemes, then 15, 20, 19, 22, 17, 14, 15, 4. That
     // arithmetic is the evidence a word was genuinely absent; one already taught
     // under another name would have made the drop smaller. Each was PREDICTED
     // from the audit before the chapters were wired and reproduced exactly by
@@ -131,7 +131,7 @@ describe("Spanish A2 book-bounded mock audit", () => {
     // honest reading, since the adjective is the form on the lift door.
     //
     // THE ITEM COUNT IS WHERE THE SELECTION RULE SHOWS, and it is the whole
-    // point. objectiveFailed went 93 -> 88 -> 79 -> 59 -> 40 -> 31 -> 23 -> 18 -> 13:
+    // point. objectiveFailed went 93 -> 88 -> 79 -> 59 -> 40 -> 31 -> 23 -> 18 -> 13 -> 12:
     //
     //     tranche 1  (431-436)  30 words   5 items
     //     tranche 2  (437-439)  15 words   9 items
@@ -141,6 +141,7 @@ describe("Spanish A2 book-bounded mock audit", () => {
     //     tranche 4b (452-455)  17 words   8 items
     //     tranche 4c (456-459)  14 words   5 items
     //     tranche 4d (460-464)  15 words   5 items
+    //     tranche 4e (465)         4 words   1 item
     //
     // An item passes only when EVERY lexeme in its `requires` row is taught, so
     // a word helps in proportion to how close its rows already are. Tranches
@@ -199,8 +200,25 @@ describe("Spanish A2 book-bounded mock audit", () => {
     // authoring work: both are already headwords whose spine nodes put them at
     // B1, so a reader of the A2 book has not met them. See the HL-C418 shard in
     // BACKLOG.d, and note that its first version recommended re-mapping all
-    // three candidates and was wrong -- `explicar` requires atoms from three B1
-    // lessons and cannot move.
+    // three candidates and was wrong -- `explicar` cannot be MAPPED on its own,
+    // because it requires atoms from three B1 lessons and introduces a grammar
+    // atom of its own.
+    //
+    // Read that carefully, because an earlier changelog entry got it backwards.
+    // `explicar` cannot be re-mapped alone. What it CAN do, once mapped, is
+    // clear a row alone: it is the sole blocker on mock 2 / paper 1 / item 3.
+    // The lexeme that clears nothing by itself is `creer`, whose only row also
+    // wants `descontar`. Crediting `problema` alone takes 12 -> 11, `explicar`
+    // alone 12 -> 11, and all three 12 -> 10.
+    //
+    // TRANCHE 4e (465) IS THE FLOOR ARRIVING, exactly where 4d predicted it.
+    // 4 words for 1 item is 4.00, against 2.44 / 2.12 / 2.80 / 3.00 for
+    // 4a-4d. Nothing went wrong: the eight remaining authorable rows each need
+    // four words and share none of them, so 4.00 is the rate for all of them
+    // and there is no scene grouping or tie-break left that beats it. 4e is one
+    // chapter rather than four deliberately -- 4d ran 25 lessons and its review
+    // found twenty authoring errors, so the unit of work is now sized to what a
+    // review pass can actually check.
     //
     // The per-mock split moves unevenly because a tranche clears whole rows,
     // not a fixed share of each paper. A uniform movement would be the
@@ -225,7 +243,14 @@ describe("Spanish A2 book-bounded mock audit", () => {
     // (listening 24 -> 25); mock 1 cleared one paper-2 row. The two papers are
     // now diverging sharply, which is itself information: what remains is
     // concentrated in mock 1.
-    expect(audit.missingObjectiveLexemes).toHaveLength(39);
+    //
+    // 4e fell 1 and 0: its single row is mock 1 / paper 1 / item 22 (reading
+    // 21 -> 22), so mock 1 is down to nine and mock 2 has not moved. SEVEN
+    // authorable rows are left, not eight -- 465 took one -- and six of the
+    // seven are mock 1's, which is the divergence above having run to its
+    // conclusion. 7 rows x 4 words = 28, plus the 7 distinct words behind the
+    // five B1-mapped rows, is the 35 asserted here.
+    expect(audit.missingObjectiveLexemes).toHaveLength(35);
   });
 
   it("measures a LARGER taught set than A1, which is what makes it a different gate", () => {
