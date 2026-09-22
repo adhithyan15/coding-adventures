@@ -101,19 +101,31 @@ describe("canonical figure rendering", () => {
   });
 
   it("refuses a slug that is a bare language tag with no term", () => {
-    expect(() => etymologyRootNode("latin-", TAGS)).toThrow(/no term/);
-    expect(() => etymologyRootNode("-latin", TAGS)).toThrow(/no term/);
+    expect(() => etymologyRootNode("latin-", TAGS)).toThrow(/no printable term/);
+    expect(() => etymologyRootNode("-latin", TAGS)).toThrow(/no printable term/);
   });
 
-  it("guards the PRINTED term, not the raw slice, so a doubled hyphen cannot render blank", () => {
-    // `latin--` slices to `-`, which is non-empty, and then joins to "". The
-    // first draft of this guard tested the slice and let that through: a
-    // published box with a language under it and no word in it, nothing thrown,
-    // hash ledger regenerated to match. That is the same silent-wrong-artifact
-    // failure the vocabulary fix was for, so the check follows the value to its
-    // last transformation. Found by security review.
-    expect(() => etymologyRootNode("latin--", TAGS)).toThrow(/no term/);
-    expect(() => etymologyRootNode("--latin", TAGS)).toThrow(/no term/);
+  it("guards PRINTABILITY, not emptiness, so a blank caption cannot be published", () => {
+    // Three drafts of this guard, each stopping one step short of where the
+    // value actually goes, and each one publishing the same artifact: a box
+    // with a language under it and no word in it, nothing thrown, hash ledger
+    // regenerated to match.
+    //
+    //   `lemma === ""` let `latin--` through -- it slices to "-", then joins to ""
+    //   `term === ""`  let `latin- -` through -- it joins to " "
+    //
+    // `latin- -` is PURE ASCII and survives the frontmatter list parser, which
+    // trims only an item's outer edges. Both misses were found by security
+    // review, on consecutive rounds.
+    expect(() => etymologyRootNode("latin--", TAGS)).toThrow(/no printable term/);
+    expect(() => etymologyRootNode("--latin", TAGS)).toThrow(/no printable term/);
+    expect(() => etymologyRootNode("latin- -", TAGS)).toThrow(/no printable term/);
+    expect(() => etymologyRootNode("latin-\u00a0", TAGS)).toThrow(/no printable term/);
+    // U+200B is category Cf, not whitespace, so `.trim()` never touches it.
+    expect(() => etymologyRootNode("latin-\u200b", TAGS)).toThrow(/no printable term/);
+    expect(() => etymologyRootNode("\u200b-latin", TAGS)).toThrow(/no printable term/);
+    // Control: a term that merely CONTAINS a space still renders.
+    expect(etymologyRootNode("a-dios-latin", TAGS)).toEqual({ term: "a dios", language: "Latin" });
   });
 
   it("renders the ordered route through paint-vm-svg and hashes its canonical fields", () => {
@@ -131,7 +143,7 @@ describe("canonical figure rendering", () => {
   });
 
   it("rejects a route that has no meaningful chain", () => {
-    expect(() => renderEtymologyRouteFigure(lesson("[qahwah-arabic]"))).toThrow(
+    expect(() => renderEtymologyRouteFigure(lesson("[qahwah-arabic]"), TAGS)).toThrow(
       /at least two roots/,
     );
   });

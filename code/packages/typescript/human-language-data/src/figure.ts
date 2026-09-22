@@ -110,15 +110,21 @@ export function etymologyRootNode(root: string, vocabulary: RootTagVocabulary): 
     parsed.shape === "suffix"
       ? root.slice(0, -(parsed.tag.length + 1))
       : root.slice(parsed.tag.length + 1);
-  // The PRINTED term is what is guarded, not the raw slice. `latin--` slices to
-  // `-`, which is non-empty, and then renders as the empty string: a published
-  // box with a language under it and no word in it, nothing thrown, hash ledger
-  // regenerated to match. That is the same silent-wrong-artifact failure this
-  // function was just fixed for, so the check follows the value to its last
-  // transformation rather than stopping at the first.
+  // The guard is on PRINTABILITY, and it took three tries to get there, each
+  // one stopping a step short of where the value actually goes:
+  //
+  //   `lemma === ""`      -- `latin--` slices to `-`, non-empty, then joins to ""
+  //   `term === ""`       -- `latin- -` joins to " ", non-empty, prints nothing
+  //   this one            -- follows the value to what a reader can SEE
+  //
+  // Every miss published the same artifact: a box with a language under it and
+  // no word in it, nothing thrown, hash ledger regenerated to match. `latin- -`
+  // is pure ASCII and survives the frontmatter list parser, which trims only an
+  // item's outer edges. The `Cf` class is there because U+200B and friends are
+  // format characters, not whitespace, so `.trim()` never touches them.
   const term = lemma.split("-").filter(Boolean).join(" ");
-  if (term === "") {
-    throw new Error(`etymology root '${safe}' is a bare language tag with no term`);
+  if (term.replace(/[\p{White_Space}\p{Cf}]/gu, "") === "") {
+    throw new Error(`etymology root '${safe}' has no printable term`);
   }
   return { term, language: titleCase(parsed.tag) };
 }
@@ -245,10 +251,18 @@ export interface FigureSources {
   /**
    * The declared language tags, for reading an etymology slug's shape.
    *
-   * Carried here for the reason in this block's header: `core/root-tags.json`
-   * read inside the renderer would be a file OUTSIDE the caller's curriculum
-   * root and outside `etymologyFigureSource`, so `sourceHash` would stop
-   * covering everything that can change the SVG.
+   * Carried here for the reason in this block's header: read inside the
+   * renderer, `core/root-tags.json` resolved from the PACKAGE's install
+   * location rather than the caller's curriculum root, so a figure generated
+   * for root R depended on a file that was not under R. Two `figure-cli`
+   * fixtures were silently consuming the real repository's copy.
+   *
+   * It does NOT put the vocabulary inside `sourceHash`, and an earlier draft of
+   * this comment claimed it did. `etymologyFigureSource` still covers lesson
+   * fields only, so editing `root-tags.json` can still change an SVG without
+   * moving its source hash. What catches that is `check:figures`, which
+   * compares the rendered BYTES -- the byte comparison this module stays pure
+   * in order to keep honest.
    */
   rootTags?: RootTagVocabulary;
 }
