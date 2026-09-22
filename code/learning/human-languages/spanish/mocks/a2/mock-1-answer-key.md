@@ -19,7 +19,7 @@ not checked against the vocabulary.
 | # | key | PCIC points | requires |
 |---|---|---|---|
 | 1 | b | A2-NE07-01, A2-NG5-03 | ofrecer, puesto, decidir, semana, !preterito-indefinido |
-| 2 | a | A2-NE07-02 | exigente, esperar, empezar, salir, cansado |
+| 2 | a | A2-NE07-02 | exigente, esperar, empezar, salir, cansado, aburrido |
 | 3 | b | A2-NE01-04 | compañero, amable, invitar, explicar, funcionar |
 | 4 | c | A2-NE10-03 | hotel, barato, estación, ruido, tren, dormir |
 | 5 | b | A2-F1-05 | venir, primavera, sofá, enseñar, !perifrasis-tener-ganas |
@@ -45,7 +45,7 @@ not checked against the vocabulary.
 | 15 | B | A2-NE08-03 | solo, nadie, silencio, agua, tranquilo |
 | 16 | A | A2-NE01-06 | gente, cenar, junto, mes, conocer |
 | 17 | C | A2-F2-04 | compañero, querer, solo, acompañar, clase |
-| 18 | B | A2-NE08-01 | piscina, pequeño, padre, sábado, seguir, año |
+| 18 | B | A2-NE08-01 | piscina, pequeño, padre, sábado, seguir, año, practicar, infancia |
 | 19 | C | A2-NE18-05 | torpe, equivocarse, principio, reír, seguir |
 
 ### Tarea 4 — texto informativo largo
@@ -56,8 +56,8 @@ not checked against the vocabulary.
 | 21 | b | A2-NE20-05 | vecino, jubilado, campo, plantar, cebolla, ajo, alumno |
 | 22 | a | A2-NE18-04 | mayor, cuaderno, anotar, temperatura, lluvia, recoger, alumno, vigilar |
 | 23 | b | A2-NE01-07 | director, cambio, visible, comportamiento, discutir, mejora, ahorro |
-| 24 | a | A2-NE04-06 | kilo, producir, suficiente, alimentar, objetivo |
-| 25 | b | A2-F4-02 | consejo, empezar, pequeño, buscar, pueblo, saber |
+| 24 | a | A2-NE04-06 | kilo, producir, suficiente, alimentar, objetivo, trescientos, finalidad |
+| 25 | b | A2-F4-02 | consejo, empezar, pequeño, buscar, pueblo, saber, variedad, jardinero |
 
 ---
 
@@ -79,11 +79,11 @@ not checked against the vocabulary.
 | # | key | PCIC points | requires |
 |---|---|---|---|
 | 32 | b | A2-NE21-04 | taller, batería, recoger, documentación, factura |
-| 33 | a | A2-NE05-06 | tren, destino, retraso, obra, vía, andén |
+| 33 | a | A2-NE05-06 | tren, destino, retraso, obra, vía, andén, cancelar |
 | 34 | a | A2-NE18-07 | estudiar, examen, concentrarse, cenar, esperar |
 | 35 | b | A2-NE05-07 | agencia, vuelo, coste, hotel, aceptar, noche, perder |
-| 36 | b | A2-NE12-03 | sección, cerrado, inventario, horario, habitual |
-| 37 | a | A2-NE10-07 | vecino, paquete, viaje, subir, portera |
+| 36 | b | A2-NE12-03 | sección, cerrado, inventario, horario, habitual, concreto |
+| 37 | a | A2-NE10-07 | vecino, paquete, viaje, subir, portera, equipaje |
 
 ### Tarea 3 — conversación larga, atribución
 

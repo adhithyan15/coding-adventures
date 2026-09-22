@@ -61,14 +61,21 @@
   },
   "lessonCount": 1430,
   "taughtForms": 2378,
-  "objectiveFailed": 17,
+  "objectiveFailed": 32,
   "mocks": [
     {
       "mock": 1,
-      "reading": 18,
-      "listening": 22,
-      "objectiveFailed": 10,
+      "reading": 14,
+      "listening": 19,
+      "objectiveFailed": 17,
       "failed": [
+        {
+          "paper": 1,
+          "item": 2,
+          "missing": [
+            "aburrido"
+          ]
+        },
         {
           "paper": 1,
           "item": 3,
@@ -88,6 +95,14 @@
           "item": 9,
           "missing": [
             "título"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 18,
+          "missing": [
+            "practicar",
+            "infancia"
           ]
         },
         {
@@ -121,6 +136,43 @@
           ]
         },
         {
+          "paper": 1,
+          "item": 24,
+          "missing": [
+            "trescientos",
+            "finalidad"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 25,
+          "missing": [
+            "variedad",
+            "jardinero"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 33,
+          "missing": [
+            "cancelar"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 36,
+          "missing": [
+            "concreto"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 37,
+          "missing": [
+            "equipaje"
+          ]
+        },
+        {
           "paper": 2,
           "item": 39,
           "missing": [
@@ -145,9 +197,9 @@
     },
     {
       "mock": 2,
-      "reading": 19,
-      "listening": 24,
-      "objectiveFailed": 7,
+      "reading": 15,
+      "listening": 20,
+      "objectiveFailed": 15,
       "failed": [
         {
           "paper": 1,
@@ -174,9 +226,37 @@
         },
         {
           "paper": 1,
+          "item": 7,
+          "missing": [
+            "recuperar"
+          ]
+        },
+        {
+          "paper": 1,
           "item": 11,
           "missing": [
             "multa"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 17,
+          "missing": [
+            "quejarse"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 19,
+          "missing": [
+            "costumbre"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 20,
+          "missing": [
+            "parecido"
           ]
         },
         {
@@ -195,6 +275,34 @@
         },
         {
           "paper": 2,
+          "item": 27,
+          "missing": [
+            "resolver"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 29,
+          "missing": [
+            "disponible"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 32,
+          "missing": [
+            "prometer"
+          ]
+        },
+        {
+          "paper": 2,
+          "item": 33,
+          "missing": [
+            "concreto"
+          ]
+        },
+        {
+          "paper": 2,
           "item": 34,
           "missing": [
             "adelantado"
@@ -204,22 +312,39 @@
     }
   ],
   "missingObjectiveLexemes": [
+    "aburrido",
     "adelantado",
     "afirmar",
     "ahorro",
     "alquiler",
     "alumno",
+    "cancelar",
+    "concreto",
+    "costumbre",
     "creer",
+    "disponible",
+    "equipaje",
     "espacio",
     "explicar",
+    "finalidad",
+    "infancia",
+    "jardinero",
     "justo",
     "mejor",
     "mejora",
     "multa",
+    "parecido",
+    "practicar",
     "problema",
+    "prometer",
+    "quejarse",
+    "recuperar",
+    "resolver",
     "responder",
+    "trescientos",
     "título",
     "utilizar",
+    "variedad",
     "vigilar"
   ],
   "missingFrequency": [
@@ -232,8 +357,16 @@
       "count": 2
     },
     {
+      "lexeme": "concreto",
+      "count": 2
+    },
+    {
       "lexeme": "multa",
       "count": 2
+    },
+    {
+      "lexeme": "aburrido",
+      "count": 1
     },
     {
       "lexeme": "adelantado",
@@ -252,11 +385,39 @@
       "count": 1
     },
     {
+      "lexeme": "cancelar",
+      "count": 1
+    },
+    {
+      "lexeme": "costumbre",
+      "count": 1
+    },
+    {
       "lexeme": "creer",
       "count": 1
     },
     {
+      "lexeme": "disponible",
+      "count": 1
+    },
+    {
+      "lexeme": "equipaje",
+      "count": 1
+    },
+    {
       "lexeme": "espacio",
+      "count": 1
+    },
+    {
+      "lexeme": "finalidad",
+      "count": 1
+    },
+    {
+      "lexeme": "infancia",
+      "count": 1
+    },
+    {
+      "lexeme": "jardinero",
       "count": 1
     },
     {
@@ -272,7 +433,31 @@
       "count": 1
     },
     {
+      "lexeme": "parecido",
+      "count": 1
+    },
+    {
+      "lexeme": "practicar",
+      "count": 1
+    },
+    {
       "lexeme": "problema",
+      "count": 1
+    },
+    {
+      "lexeme": "prometer",
+      "count": 1
+    },
+    {
+      "lexeme": "quejarse",
+      "count": 1
+    },
+    {
+      "lexeme": "recuperar",
+      "count": 1
+    },
+    {
+      "lexeme": "resolver",
       "count": 1
     },
     {
@@ -284,7 +469,15 @@
       "count": 1
     },
     {
+      "lexeme": "trescientos",
+      "count": 1
+    },
+    {
       "lexeme": "utilizar",
+      "count": 1
+    },
+    {
+      "lexeme": "variedad",
       "count": 1
     },
     {

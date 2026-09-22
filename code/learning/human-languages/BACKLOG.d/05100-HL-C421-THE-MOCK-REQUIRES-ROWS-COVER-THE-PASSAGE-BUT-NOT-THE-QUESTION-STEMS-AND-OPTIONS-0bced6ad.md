@@ -103,28 +103,39 @@ notably stem-changing verbs — `pide`/`pidió` from *pedir*, `sirve` from
 *servir*, `va`/`vaya` from *ir*. That is the same trap this entry recorded, and
 it is why the last narrowing is by reading rather than by rule.
 
-**Thirteen lexemes** were added to the rows of **nine items**: `multa`,
-`título`, `vigilar`, `adelantado`, `alumno`, `justo`, `utilizar`, `mejora`,
-`afirmar`, `ahorro`, `espacio`, `alquiler`, `mejor`.
+**Thirty lexemes** were added, across **twenty-six of the fifty rows**.
 
 Every one is load-bearing. Most sit in an answer option a candidate has to
 weigh — *"tiene que pagar una multa"*, *"tener el título universitario"*,
 *"vigilar a los más pequeños"*, *"pague la reparación por adelantado"* — and
-`alumnos` and `mejor` sit in the STEM of mock 1 item 22 and mock 2 item 5, so
-those questions are unreadable without them.
+seven sit in a STEM, so the question cannot be read at all: `alumno` (m1 22),
+`mejor` (m2 5), `practicar` and `infancia` (m1 18), `trescientos` (m1 24),
+`quejarse` (m2 17), `costumbre` (m2 19).
 
-### THE NARROWING RULES PRODUCED FALSE CLEARS, and review caught three
+### THE NARROWING RULES PRODUCED FALSE CLEARS — twenty of them, over two rounds
 
 This is the part worth keeping, because it bounds how much the number can be
-trusted. The first draft of this analysis added only nine words. Security
-review found three more that the rules had wrongly cleared or that were held
-back on a false justification:
+trusted. **The analysis was wrong twice before it settled**, and both times it
+was wrong in the same direction: too generous. 6 → 15 → 17 → 32.
+
+The first draft added nine words. Review found three more:
 
 | word | why it was missed | where |
 |---|---|---|
 | `espacio` | cleared by a **3-character prefix rule** matching the taught `esperar` — unrelated words | mock 2 item 5, option (a) |
 | `ahorro` | cleared as a relative of a verb, but `ahorrar` is not taught either | mock 1 item 23, option (c) |
 | `mejor` | held back on the claim that it "is a headword" — **false** | mock 2 item 5, stem |
+
+A second round then found **seventeen more**, every one with zero
+word-boundary occurrences in the entire Spanish curriculum and every one
+sitting in an item that was *passing*: `aburrido`, `practicar`, `infancia`,
+`trescientos`, `finalidad`, `variedad`, `jardinero`, `cancelar`, `concreto`,
+`equipaje`, `recuperar`, `quejarse`, `costumbre`, `parecido`, `resolver`,
+`disponible`, `prometer`.
+
+Mock 1 item 36 is the pattern in one line. Its row reads *sección, cerrado,
+inventario, horario, habitual* — five passage words — and the option the
+candidate must choose reads *"comprar en una sección **concreta**"*.
 
 The `mejor` claim is the one that matters most, because it was wrong in a way
 that is easy to repeat. The only headword containing `mejor` is
@@ -140,8 +151,11 @@ and `dar` from the same stem. The row does read the stem; singling out one word
 was inconsistent.
 
 **Two exclusions do stand**, for a reason the book itself supplies: `escolar`
-and `comedor`, because `la escuela` and `comer` are taught and chapter 431
-onward teaches the `-dor` ending that derives the second.
+from the taught `la escuela`, and `comedor` — which `ES-C297-tenedor` does not
+merely make derivable but **glosses outright**, *"A comedor is where the eating
+is done"*, at chapter 297, **pre-A1**. An earlier draft of this entry credited
+chapter 431 with the `-dor` ending; 431 does teach it, but 297 got there first
+and with this very word.
 
 One more correction of the same kind: the first draft listed `mejorar` for mock
 1 item 23, but the paper reads *"la **mejora** de las notas"* — a deverbal
@@ -152,13 +166,13 @@ option stayed unreadable. The row lists `mejora`.
 ### What it cost the headline, and what that retracts
 
 ```
-objectiveFailed           6 -> 17
-missingObjectiveLexemes   4 -> 17
-mock 1 reading           24 -> 18      listening 23 -> 22
-mock 2 reading           22 -> 19      listening 25 -> 24
+objectiveFailed           6 -> 32
+missingObjectiveLexemes   4 -> 34
+mock 1 reading           24 -> 14      listening 23 -> 19
+mock 2 reading           22 -> 15      listening 25 -> 20
 ```
 
-The instrument was understating by nearly **3×**. The pinned note in
+The instrument was understating by **more than 5×**. The pinned note in
 `spanish-a1-mock-audit.test.ts` says the count may only ever fall; this is the
 one rise that is legitimate, because it is the MEASUREMENT being corrected to
 be harsher, not the corpus losing ground.
@@ -167,15 +181,26 @@ be harsher, not the corpus losing ground.
 "the last authorable A2 vocabulary chapter" and the programme was declared
 finished, on the grounds that the four remaining lexemes were already taught
 and blocked only by `HL-C418`, `HL-C420` and `HL-C422`. That was true of the
-list the instrument produced. The list was wrong. **Twelve genuinely untaught
-words were invisible the entire time**, because nothing ever put option text on
-it — and the programme was not out of words, it was out of words *the passage
-needed*.
+list the instrument produced. The list was wrong. **Twenty-nine words that are
+not headwords at or below A2 were invisible the entire time**, because nothing
+ever put option text on it — and the programme was not out of words, it was out
+of words *the passage needed*.
+
+Three of the twenty-nine are glossed inside lesson bodies that are themselves
+inside the A2 set — `alquiler` in `ES-C441-contrato`, `espacio` in
+`ES-C57-es-inicial`, `mejora` in `ES-C466-visible`, which is the very lesson
+supplying `visible` to the same row. Counting them missing is still right,
+because this gate is headword-only by construction and `glossed-not-taught.ts`
+treats body presence as a review queue rather than a teaching claim. But the
+wording has to say *"not a headword at or below A2"* rather than *"never taught
+anywhere"*, which an earlier draft of this entry claimed and which is false for
+those three. `HL-C422` is where the headword-only rule itself is argued.
 
 ### What this does NOT fix
 
 **The list is a FLOOR, not a census.** The narrowing from 47 was done by
-reading, and review already found three false clears in it; the rules that
+reading, and review found **twenty** false clears in it over two rounds — three
+in the first, seventeen in the second; the rules that
 produced them — a 3-character prefix, a guess at a verb relative — are still
 what filtered the other 545 forms. More gaps almost certainly remain, and every
 one of them makes the number kinder than the truth.
