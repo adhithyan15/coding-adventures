@@ -1,5 +1,101 @@
 # Changelog
 
+## Chapter 473 — the question's verb is not the passage's verb
+
+```
+A2 objectiveFailed          6 -> 6   (unchanged, as in 472)
+A2 missingObjectiveLexemes  8 -> 6
+```
+
+Three words, two lexemes, **zero items** — blocked the same way 472 was.
+
+| chapter | scene | words |
+|---|---|---|
+| 473 CONSEJO | the librarian's advice to anyone copying the scheme | aconsejar, recomendar, el estado |
+
+## Why it clears nothing
+
+The row for mock 2 item 25 is `recomendar, empezar, estado, explicar, norma`.
+After this chapter the item is blocked by **`explicar` alone** — taught at
+`ES-C41-explicar`, but deriving to B1 through `SPINE-GIVE-REASONS`
+(`HL-C418`). Teaching it again is the duplication that entry forbids.
+
+## The HL-C421 check found the stem verb again
+
+The stem reads *"¿Qué **aconseja** Pardo a otras bibliotecas?"* — and
+`aconsejar` had **zero hits corpus-wide**. That is the **second consecutive
+item** whose question verb the book does not teach, after `surgir` in 472. The
+stem-and-options check is now the most productive step in the pre-check.
+
+The same sweep confirmed *compañero*, *todavía*, *simpático*, *ayudar*, *traer*
+and *poco* are all taught, so nothing else in those stems is missing.
+
+## The chapter's own point is the verb swap
+
+The passage says *le **recomienda** empezar…*; the question asks *¿qué
+**aconseja**…?* An exam does that deliberately — it tests the **meaning**
+rather than the word. So the synthesis teaches the swap itself, and the two
+verbs are taught as one idea with two surfaces, with the lean named:
+*aconsejar* toward what would be wise for you, *recomendar* toward what is good
+of its kind.
+
+## Three rules already owned, all cited
+
+**`ES-C443-acercarse` owns the `a-` + word + `-ar` formation** in as many
+words — *"the pattern is a- plus a word plus -ar, meaning to make it that"* —
+with *acercar*, *alejar*, *aclarar*. The draft was re-teaching it with its own
+table. It now cites acercarse and adds what is genuinely new: those examples
+are all built on **prepositions or adjectives**, while *aconsejar* and
+*acompañar* are built on **nouns**, and with a noun the sense shifts from *make
+it that* to *supply that*.
+
+`ES-C34-pensar` owns e→ie, so *recomendar* cites it and notes that only the
+**second** e breaks. `ES-C431-pedido` owns the participle-noun.
+
+## An overclaim caught by the fact-check, in my own draft
+
+*Estado* was filed beside *el pedido* and *la llamada* as a participle hardened
+into a noun. **That is wrong.** *El estado* was borrowed from Latin *status* as
+a noun already, and only *looks* like *estar*'s participle because both descend
+from *stare*. The lesson now says so — *"the shape coincides; the route does
+not"* — and tells the learner to file it with the family for memory while not
+believing they derived it. The repaso carried the same error and was corrected
+with it.
+
+## A method flaw found and filed
+
+This container starts with **`LC_ALL` and `LANG` unset**, so grep runs in the C
+locale and `.` matches **one byte**. In UTF-8 the ñ in *acompañar* is two, so
+
+```sh
+grep -rln "^headword:.*acompa.ar" *.md   # 0 hits
+```
+
+returned zero for a word the corpus teaches with a full lesson
+(`ES-C446-acompanar`). A false zero in the pre-check is expensive — it is
+exactly how a duplicate lesson gets written.
+
+Worse, the failure is inconsistent: `compa.ero` returned four files because
+lesson **ids** use ASCII spellings, so the pattern matched `companero` in an id
+while missing *compañero* in prose. Filed in `lessons.d/`: type the accented
+character, and confirm any zero a second way. Verified afterwards that **no**
+word declared absent in chapters 468–472 is accented, so no earlier conclusion
+rests on the flaw.
+
+## What is left
+
+Six lexemes, of which **four are already taught** and blocked only by how the
+audit measures — *creer*, *explicar*, *problema* (`HL-C418`, `HL-C420`) and
+*responder* (`HL-C422`). Only **`descontar`** and **`invitar`** are genuinely
+untaught, so one more chapter exhausts the authorable A2 gap entirely.
+
+## Verification
+
+Preflight 5/5. Both suites. Digest control by reconstruction — a clean worktree
+at `origin/main` (f83309736e) reproduced `dc9be5f8…` and 7474 byte for byte,
+and `ES-PATH-473-CONSEJO` holds exactly the five lessons the count moved by
+(7474 → 7479).
+
 ## Chapter 472 — the first chapter that clears no item, on purpose
 
 ```

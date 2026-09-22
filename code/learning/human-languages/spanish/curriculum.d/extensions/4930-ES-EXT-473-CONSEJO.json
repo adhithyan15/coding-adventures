@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-473-CONSEJO",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can follow advice given to somebody else: hear what a person recommends doing, answer a question that asks the same thing with a different verb, and say that something has to be in good condition.",
+  "prerequisites": [
+    "ES-EXT-472-ENCUESTA"
+  ]
+}

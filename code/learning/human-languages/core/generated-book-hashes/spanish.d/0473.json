@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:7e0aef7b2cb791d0",
+  "lessonIds": [
+    "ES-C473-aconsejar",
+    "ES-C473-recomendar",
+    "ES-C473-estado",
+    "ES-R473-repaso-consejo",
+    "ES-C473-sintesis-consejo"
+  ],
+  "tex": "spanish/book/chapters/ch473-consejo.tex"
+}

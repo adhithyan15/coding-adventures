@@ -1,0 +1,11 @@
+{
+  "id": "ES-C473-recomendar",
+  "pathSegment": "ES-PATH-473-CONSEJO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-473-CONSEJO",
+      "order": 1
+    }
+  ]
+}

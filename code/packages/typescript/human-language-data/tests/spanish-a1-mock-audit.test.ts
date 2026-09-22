@@ -115,9 +115,9 @@ describe("Spanish A2 book-bounded mock audit", () => {
     // corpus cannot support.
     //
     // 191 -> 161 -> 146 -> 126 -> 107 -> 85 -> 68 -> 54 -> 39 -> 35 -> 31 ->
-    // 27 -> 23 -> 19 -> 15 -> 11 -> 8 are the sixteen vocabulary tranches: 431-436,
+    // 27 -> 23 -> 19 -> 15 -> 11 -> 8 -> 6 are the seventeen vocabulary tranches: 431-436,
     // 437-439, 440-443, 444-447, 448-451, 452-455, 456-459, 460-464, 465, 466,
-    // 467, 468, 469, 470, 471 and 472.
+    // 467, 468, 469, 470, 471, 472 and 473.
     // The drop was exact for the first fourteen -- 30 headwords removed 30
     // lexemes, then 15, 20, 19, 22, 17, 14, 15, 4, 4, 4, 4, 4, 4. THE
     // FIFTEENTH IS THE FIRST THAT IS NOT: chapter 471 teaches SIX headwords
@@ -156,6 +156,7 @@ describe("Spanish A2 book-bounded mock audit", () => {
     //     tranche 4j (470)         4 words   1 item
     //     tranche 4k (471)         6 words   1 item
     //     tranche 4l (472)         5 words   0 items
+    //     tranche 4m (473)         3 words   0 items
     //
     // An item passes only when EVERY lexeme in its `requires` row is taught, so
     // a word helps in proportion to how close its rows already are. Tranches
@@ -272,6 +273,21 @@ describe("Spanish A2 book-bounded mock audit", () => {
     // row, so 4.00 is what the ranking now yields per chapter until the
     // B1-mapped rows are reconsidered.
     //
+    // 473 IS THE SECOND SUCH TRANCHE, blocked the same way: its row (mock 2 /
+    // paper 1 / item 25) is `recomendar, empezar, estado, explicar, norma`, and
+    // after it the item is blocked by `explicar` alone -- taught at
+    // ES-C41-explicar but deriving to B1 through SPINE-GIVE-REASONS, per
+    // HL-C418. Its HL-C421 check found `aconsejar`, the QUESTION STEM'S OWN
+    // VERB, absent corpus-wide -- the second consecutive item whose stem verb
+    // the book does not teach, after `surgir` in 472. That check is now the
+    // most productive step in the pre-check.
+    //
+    // WHAT IS LEFT AFTER 473: six lexemes, of which FOUR are already taught and
+    // blocked only by how this audit measures -- creer, explicar and problema
+    // (HL-C418, HL-C420) and responder (HL-C422). Only `descontar` and
+    // `invitar` are genuinely untaught, so one more vocabulary chapter exhausts
+    // the authorable A2 gap entirely.
+    //
     // 472 IS THE FIRST TRANCHE TO CLEAR NO ITEM AT ALL, ON PURPOSE. Its row
     // (mock 2 / paper 1 / item 21) is `encuesta, preguntar, usuario,
     // responder, lectura`, and after this chapter the item is blocked by
@@ -306,7 +322,7 @@ describe("Spanish A2 book-bounded mock audit", () => {
     // `explicar`, `creer` or `problema`, which are ALREADY TAUGHT and excluded
     // only because their spine node derives above A2. See BACKLOG.d HL-C418
     // and HL-C420; do not teach them a second time.
-    expect(audit.missingObjectiveLexemes).toHaveLength(8);
+    expect(audit.missingObjectiveLexemes).toHaveLength(6);
   });
 
   it("measures a LARGER taught set than A1, which is what makes it a different gate", () => {

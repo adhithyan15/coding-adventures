@@ -1,0 +1,836 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 473,
+  "title": "El consejo a otras bibliotecas",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:97f966c3150976b6",
+  "lessons": [
+    {
+      "id": "ES-C473-aconsejar",
+      "sequence": 13140,
+      "title": "aconsejar — to advise",
+      "headword": "aconsejar",
+      "romanization": "aconsejar",
+      "gloss": "to advise — el consejo with a verb built on it, and the verb a question reaches for when it asks what somebody recommends",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3cc022a83c7440aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el consejo and la biblioteca. You have the noun. Today you get the verb that goes with it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: aconsejar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aconsejar — to advise."
+            },
+            {
+              "kind": "speech",
+              "text": "¿Qué aconseja a otras bibliotecas?"
+            },
+            {
+              "kind": "speech",
+              "text": "Aconsejar a alguien — to advise somebody. Aconsejar hacer algo — to advise doing something. Te aconsejo esperar — I advise you to wait."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the same machine, a different part fed into it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Acercarse gave you this pattern outright — a- plus a word plus -ar, to make it that — with acercar from cerca, alejar from lejos, aclarar from claro."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at what those three have in common. Every one is built on a preposition or an adjective. This word is not:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "built on",
+                "example"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "built on: an adjective or preposition. example: aclarar, acercar.",
+                "built on: a noun. example: aconsejar, acompañar."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Same machine, different raw material. Acercar makes something near; aconsejar does not make anything consejo — it gives one. So with a noun the sense shifts from make it that to supply that, which is worth knowing before you try to build your own."
+            },
+            {
+              "kind": "speech",
+              "text": "Note the person goes in with a: aconsejar a otras bibliotecas. The advice itself follows with no preposition at all."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "El consejo already traced it: Latin consilium, a deliberation — from con-, together, and a root about calling or taking counsel."
+            },
+            {
+              "kind": "speech",
+              "text": "So advising is, underneath, a sitting together: the word does not mean telling somebody what to do. English keeps the same sense in counsel and council, which are the same Latin word split into two spellings, one for the advice and one for the people giving it."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a distinction English had to invent twice. Spanish does it with one noun and one verb."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what does he advise other libraries",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what does he advise other libraries]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I advise you to wait",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I advise you to wait]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the noun this verb was built from",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the noun this verb was built from]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To advise? (Aconsejar.) Built from? (El consejo, with a- on the front.) What does consilium mean underneath? (A sitting together.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C473-recomendar",
+      "sequence": 13150,
+      "title": "recomendar — to recommend",
+      "headword": "recomendar",
+      "romanization": "recomendar",
+      "gloss": "to recommend — aconsejar's near twin, an e that breaks to ie like pensar's, and a root about entrusting",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9271e63401e07ba2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say aconsejar and pensar. The first gives today's meaning, the second gives today's spelling problem."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: recomendar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "recomendar — to recommend."
+            },
+            {
+              "kind": "speech",
+              "text": "Les recomienda empezar con pocos objetos."
+            },
+            {
+              "kind": "speech",
+              "text": "Te recomiendo este — I recommend this one. ¿Qué me recomienda? — what do you recommend? That last one is what you say to a waiter, and it is the most useful sentence in the lesson."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the e that breaks, and the twin it works beside",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You said recomienda, not recomenda. That is pensar's rule: under stress the e breaks open into ie."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "stress on the stem",
+                "stress on the ending"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "stress on the stem: recomiendo, recomiendas. stress on the ending: recomendamos.",
+                "stress on the stem: recomienda, recomiendan. stress on the ending: recomendáis."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Only the second e breaks — the one that carries the stress. The first stays put, which is why the infinitive keeps both."
+            },
+            {
+              "kind": "speech",
+              "text": "And the twin. Aconsejar and recomendar overlap almost completely, with one lean:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "verb",
+                "what it leans toward"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "verb: aconsejar. what it leans toward: what would be wise for you.",
+                "verb: recomendar. what it leans toward: what is good, of its kind."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "You recomiendas a restaurant. You aconsejas somebody to rest. Either verb will be understood in either sentence, and a careful speaker picks."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "re- plus commendare: com-, wholly, plus mandare, to entrust — to put a thing into somebody's hand."
+            },
+            {
+              "kind": "speech",
+              "text": "So recommending is not praising. It is handing over: you put the thing in the other person's care and let them judge it."
+            },
+            {
+              "kind": "speech",
+              "text": "That mandare is busy in English — command, mandate, demand, commend — and the hand inside it is manus, the same hand you met in el mango."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what do you recommend?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what do you recommend?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "he recommends starting with few objects",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: he recommends starting with few objects]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the two verbs you would use about a restaurant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the two verbs you would use about a restaurant]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To recommend? (Recomendar.) I recommend? (Recomiendo — the second e breaks.) What does mandare mean? (To entrust — to put in the hand.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C473-estado",
+      "sequence": 13160,
+      "title": "el estado — the condition",
+      "headword": "el estado",
+      "romanization": "el estado",
+      "gloss": "the state, the condition — Latin status, which only looks like estar's participle, and the phrase a donation notice already used on you",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:35ce500031e45ad5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say estar and recomendar. What somebody recommends often depends on the thing's condition — and the word for that is hiding inside estar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el estado",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el estado — the state, the condition."
+            },
+            {
+              "kind": "speech",
+              "text": "Aceptar solo lo que esté en buen estado."
+            },
+            {
+              "kind": "speech",
+              "text": "En buen estado — in good condition. En mal estado — in bad condition, and of food it means gone off. These two phrases are the word's everyday work."
+            },
+            {
+              "kind": "speech",
+              "text": "You have read one of them already, on a donation notice: juguetes en buen estado."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: a participle hardened into a noun, again",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Estado is also the past participle of estar — he estado aquí — and that is worth being exact about, because the two are not quite the same story."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "where the noun came from"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "word: el pedido. where the noun came from: the participle of pedir, hardened.",
+                "word: el estado. where the noun came from: Latin status, borrowed as a noun."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "El pedido really is its verb's participle put to work. El estado arrived as a noun already, from Latin, and only looks like the participle because both descend from the same verb. The shape coincides; the route does not."
+            },
+            {
+              "kind": "speech",
+              "text": "File it with them anyway — the family is the easiest place to remember it — but do not tell yourself you derived it."
+            },
+            {
+              "kind": "speech",
+              "text": "Which is why it is estar and never ser underneath. A condition is temporary by definition, and the word carries that in its bones."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin status, from stare, to stand — the root estar itself came from."
+            },
+            {
+              "kind": "speech",
+              "text": "English took status whole, and took the rest of the family too: statue, something made to stand; station, a standing-place; stable, able to stand; estate and state, which is the same word arriving twice by different roads."
+            },
+            {
+              "kind": "speech",
+              "text": "So el estado is a standing — and the political State is that word again, meaning the way a country stands. Spanish uses one noun for both, and a capital letter does the separating."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "accept only what is in good condition",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: accept only what is in good condition]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "this milk is off, using estado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: this milk is off, using *estado*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which verb estado is the participle of",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which verb *estado* is the participle of]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The condition? (El estado.) In good condition? (En buen estado.) Which verb is it the participle of? (Estar — Latin stare, to stand.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R473-repaso-consejo",
+      "sequence": 13170,
+      "title": "(aconsejar, recomendar, el estado) — from cold",
+      "headword": "(aconsejar, recomendar, el estado)",
+      "romanization": "(aconsejar, recomendar, el estado)",
+      "gloss": "cold retrieval of the three, and all three were built out of things you held",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:92d4c19031a63dd2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three words, no prompts. What somebody does when asked, what they do about a restaurant, and the thing an object has to be in before anyone will take it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the three, cold",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "English",
+                "Spanish"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "English: to advise. Spanish: aconsejar.",
+                "English: to recommend. Spanish: recomendar.",
+                "English: the condition. Spanish: el estado."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: none of the three was really new",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Each one is a word you held, put through a machine you had already been shown."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the word you had",
+                "what happened to it"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "the word you had: el consejo. what happened to it: a- on the front, -ar on the end.",
+                "the word you had: estar. what happened to it: its Latin root borrowed back as a noun."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Acercarse gave the first machine. El estado is the subtler case: it looks like estar's participle and is not derived from it — both come down from Latin stare, and the noun was borrowed from status directly."
+            },
+            {
+              "kind": "speech",
+              "text": "Recomendar is the odd one out: its pieces are Latin rather than Spanish, and what you already held was the rule for its stem — pensar's e breaking into ie."
+            },
+            {
+              "kind": "speech",
+              "text": "So the chapter asked you to recognise three shapes rather than memorise three words."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The words, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two of the three carry a picture that is still readable."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "underneath"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "word: recomendar. underneath: mandare, to entrust — to put in the hand.",
+                "word: el estado. underneath: stare, to stand — how a thing is standing."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "And aconsejar is consilium, a sitting together — so none of the three is really about giving orders. Advice hands a thing over, or sits down beside you, and neither pushes."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what do you recommend?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what do you recommend?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "he advises accepting only what is in good condition",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: he advises accepting only what is in good condition]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the three is a participle turned into a noun",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the three is a participle turned into a noun]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To advise? (Aconsejar.) To recommend? (Recomendar.) The condition? (El estado.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C473-sintesis-consejo",
+      "sequence": 13180,
+      "title": "(el consejo a otras bibliotecas) — read it, then answer",
+      "headword": "(el consejo a otras bibliotecas)",
+      "romanization": "(el consejo a otras bibliotecas)",
+      "gloss": "the payoff — the librarian's advice to anyone copying the scheme, and the question that asks for it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:847f86c5eed23fd8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say aconsejar and en buen estado. The question below uses the first and the answer uses the second."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading: the last paragraph",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The library that lends objects, asked what others should do:"
+            },
+            {
+              "kind": "speech",
+              "text": "A quien pregunta, le recomienda empezar con pocos objetos, aceptar solo lo que esté en buen estado y explicar muy bien las normas desde el primer día."
+            },
+            {
+              "kind": "speech",
+              "text": "Three pieces of advice, joined by commas and a final y. Spanish lists like this without repeating the verb, so recomienda governs all three infinitives: empezar, aceptar, explicar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the question will not use the paragraph's verb",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is the thing to carry away. The text says recomienda. The question says:"
+            },
+            {
+              "kind": "speech",
+              "text": "¿Qué aconseja a otras bibliotecas?"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the text",
+                "the question"
+              ],
+              "columns": 2,
+              "rowCount": 1,
+              "utterances": [
+                "the text: recomienda empezar. the question: ¿qué aconseja?"
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing has changed except the verb, and an exam does this on purpose: it checks that you hold the meaning rather than the word. If you learned recomendar and not aconsejar, the question looks like it is about something else."
+            },
+            {
+              "kind": "speech",
+              "text": "So treat the two as one idea with two surfaces, and read past the swap."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say all three pieces of advice, keeping one verb and three infinitives the way the text does."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now answer the question as asked — starting Les aconseja… — and notice you are saying the same thing with the other verb."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the text's verb say? (Recomienda.) What does the question's verb say? (Aconseja.) What must the objects be? (En buen estado.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

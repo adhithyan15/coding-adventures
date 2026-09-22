@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R473-repaso-consejo",
+    "language": "spanish",
+    "chapter": 473,
+    "sequence": 13170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:92d4c19031a63dd2"
+  },
+  "findings": []
+}
