@@ -241,7 +241,39 @@ it shares three letters with `esperar`. Nothing about that rule is sound; it
 was a heuristic chosen to cut 309 candidates down to something readable, and
 its errors all point the same way.
 
-And nothing stops the rows drifting again. `requires` is still hand-authored,
-and the only thing that now checks it against the paper is that somebody ran
-this analysis once. A report-only CLI that re-runs the 592 → 47 narrowing on
-demand would make it repeatable; the last step would still need a reader.
+### The report-only CLI now exists, and it says 48 is still a floor
+
+`npm run report:mock-stem-coverage` is the repeatable version of this pass,
+with its vocabulary declared in `core/spanish-mock-stem-vocabulary.json` rather
+than living in a script. It sorts every form of every stem and option into
+buckets and prints the two a reader must adjudicate. **It never clears a word
+on a morphological guess** — a form with a plausible taught relative goes to
+`derivable`, which is still printed, beside the word it matched.
+
+It found two bugs in the old method immediately:
+
+- **The prefix rule never belonged.** `espacio` was cleared against `esperar`
+  on a 3-character prefix. The reporter strips declared *suffixes*: `espacio`
+  reduces to `espaci`, `esperar` to `esper`, so they never meet. A test pins it.
+- **A `minStemLength` of 4 was too tight**, silently breaking `dice` from the
+  taught `decir`. Because matches are printed, a loose rule costs a glance and
+  a tight one costs an exam item. It is 3.
+
+And on its first run it caught a flaw in itself: rows are written in *citation*
+forms while papers carry *inflected* ones, so `alumnos` was re-flagged in the
+very item whose row had just been repaired with `alumno`.
+
+**What it reports today, after all 47 repairs: 39 unaccounted forms in each
+mock.** `ayuntamiento`, `cuota`, `decisión`, `participar`, `presentarse`,
+`reparación`, `propuesta`, `condiciones`, `universitario`, `huerto` — each in a
+stem or an option, with no taught relative, no declared exemption, and no
+mention in its item's row.
+
+**Those 78 were deliberately not added by hand.** Doing so would be the fourth
+biased pass, and the finding of this entry is that the fourth pass is the
+problem. `48` stands as the committed number, with the reporter beside it
+saying plainly how far short of the truth it is.
+
+`requires` is still hand-authored, so the rows can still drift — but the drift
+is now something a command surfaces rather than something that waits for
+somebody to think of checking.

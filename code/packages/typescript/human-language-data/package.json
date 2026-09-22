@@ -42,6 +42,7 @@
     "report": "node dist/report-cli.js",
     "report:gentle-ramp": "node dist/gentle-ramp-cli.js",
     "report:reading-reach": "node dist/reading-reach-cli.js",
+    "report:mock-stem-coverage": "node dist/mock-stem-coverage-cli.js",
     "plan": "node dist/plan-cli.js",
     "validate": "vitest run tests/integration.test.ts",
     "test": "vitest run",

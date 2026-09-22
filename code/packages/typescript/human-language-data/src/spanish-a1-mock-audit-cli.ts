@@ -65,10 +65,25 @@ function parseAnswerKey(path: string): Item[] {
   return rows;
 }
 
-export function buildSpanishA1MockAudit(
+/**
+ * The taught set this gate measures against, and the ONLY copy of it.
+ *
+ * Exported rather than left local because a second consumer now exists --
+ * `mock-stem-coverage.ts`, which reports the words a paper's STEMS and OPTIONS
+ * use -- and a reporter that rebuilds the taught set from its own reading of
+ * the corpus is measuring a different thing from the gate it reports on.
+ * `root-slug-splits.ts` records the same lesson under "one notion of a slug":
+ * a guard reading different bytes from the thing it guards is not a guard.
+ *
+ * HEADWORDS ONLY, deliberately, and that is a live argument rather than an
+ * oversight -- see HL-C422. A lexeme taught inside another lesson's body reads
+ * as untaught here, which is why `glossed-not-taught.ts` exists to queue those
+ * for review instead of silently crediting them.
+ */
+export function spanishTaughtForms(
   root = defaultCurriculumRoot(),
   level: MockAuditLevel = "A1",
-) {
+): { taught: Set<string>; lessonCount: number } {
   const everything = loadEverything(root);
   const lessons = lessonsUpToLevel(
     everything.lessons.filter((lesson) => lesson.language === "spanish"),
@@ -90,6 +105,14 @@ export function buildSpanishA1MockAudit(
   for (const credit of citationFormCredits) taught.add(credit);
   for (const credit of numberWordCredits) taught.add(credit);
   for (let number = 0; number <= 100; number += 1) taught.add(String(number));
+  return { taught, lessonCount: lessons.length };
+}
+
+export function buildSpanishA1MockAudit(
+  root = defaultCurriculumRoot(),
+  level: MockAuditLevel = "A1",
+) {
+  const { taught, lessonCount } = spanishTaughtForms(root, level);
 
   const answerKeys = [1, 2].map((mock) => ({
     mock,
@@ -131,7 +154,7 @@ export function buildSpanishA1MockAudit(
       numberWordCredits,
       numericCredits: "0-100",
     },
-    lessonCount: lessons.length,
+    lessonCount,
     taughtForms: taught.size,
     objectiveFailed: mocks.reduce((sum, mock) => sum + mock.objectiveFailed, 0),
     mocks,
