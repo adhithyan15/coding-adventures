@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { defaultCurriculumRoot } from "../src/loader.js";
 import {
   buildSpanishA1MockAudit,
+  parseAnswerKeyRows,
   runSpanishA1MockAudit,
 } from "../src/spanish-a1-mock-audit-cli.js";
 
@@ -520,5 +521,91 @@ describe("Spanish A2 book-bounded mock audit", () => {
 
   it("keeps the committed report canonical and current", () => {
     expect(runSpanishA1MockAudit(["--check", "--level", "A2"], defaultCurriculumRoot())).toBe(0);
+  });
+});
+
+describe("parseAnswerKeyRows", () => {
+  // The rows this parser drops are the rows the gate never scores, and a row
+  // the gate never scores is an item it reports as fine. Every case below is a
+  // FAIL-OPEN shape: the audit comes back cleaner than the corpus is.
+  const key = (body: string) => `## Prueba 1\n\n| # | Clave | Requiere |\n|---|---|---|\n${body}`;
+
+  it("reads a well-formed row", () => {
+    expect(parseAnswerKeyRows(key("| 1 | b | casa, perro |"))).toEqual([
+      { paper: 1, item: 1, requires: ["casa", "perro"] },
+    ]);
+  });
+
+  it.each([
+    ["a lone CR", "\r"],
+    ["U+2028", "\u2028"],
+    ["U+2029", "\u2029"],
+  ])("does not lose every row to %s endings", (_label, terminator) => {
+    // `.` cannot match any of these, so under `/\r?\n/` the whole file
+    // collapsed to ONE line, `$` was unreachable, and the parser returned []
+    // -- from which the audit reports `objectiveFailed: 0`, `reading: 0`,
+    // `listening: 0`. A clean bill of health for items it never read, and
+    // `--write` would persist it. This is why the terminator is shared with
+    // `mock-stem-coverage.ts` rather than spelled out twice.
+    const text = ["## Prueba 1", "| 1 | b | casa |", "| 2 | a | perro |"].join(terminator);
+    expect(parseAnswerKeyRows(text)).toEqual([
+      { paper: 1, item: 1, requires: ["casa"] },
+      { paper: 1, item: 2, requires: ["perro"] },
+    ]);
+  });
+
+  it("keeps CRLF as one terminator rather than two", () => {
+    // The alternation puts `\r\n` first for this. Splitting it as two would
+    // insert an empty line between every row -- harmless here, but the same
+    // ordering bug in a parser that counts lines is not.
+    expect(parseAnswerKeyRows("## Prueba 1\r\n| 1 | b | casa |")).toEqual([
+      { paper: 1, item: 1, requires: ["casa"] },
+    ]);
+  });
+
+  it("does not invent a requirement from an empty last column", () => {
+    // `([^|]+)` -> `([^|]*)`, made to kill a cubic backtrack, also made
+    // `| 7 | b |  |` MATCH for the first time, capturing "". `taught` never
+    // contains "", so the item would have failed on a requirement nobody
+    // wrote. The sibling module calls this widening inert, and there it is;
+    // this copy feeds the number the whole programme steers by.
+    expect(parseAnswerKeyRows(key("| 7 | b |  |"))).toEqual([
+      { paper: 1, item: 7, requires: [] },
+    ]);
+  });
+
+  it("drops the empty entry a trailing comma leaves behind", () => {
+    expect(parseAnswerKeyRows(key("| 7 | b | casa, |"))[0]?.requires).toEqual(["casa"]);
+  });
+
+  it("scores Prueba 1 and 2 and ignores rows under any other heading", () => {
+    const text = [
+      "## Prueba 1", "| 1 | b | casa |",
+      "## Prueba 2", "| 2 | a | perro |",
+      "## Prueba 3", "| 3 | c | gato |",
+    ].join("\n");
+    expect(parseAnswerKeyRows(text)).toEqual([
+      { paper: 1, item: 1, requires: ["casa"] },
+      { paper: 2, item: 2, requires: ["perro"] },
+    ]);
+  });
+
+  it("returns nothing for text with no rows, which the file reader turns into a throw", () => {
+    // The pure parser is allowed to return []; "" is a legitimate input to a
+    // parser. `parseAnswerKey` is the one that refuses, because "" is not a
+    // legitimate answer key and a gate that read nothing must not report
+    // success.
+    expect(parseAnswerKeyRows("")).toEqual([]);
+    expect(parseAnswerKeyRows("## Prueba 1\n\nno table here")).toEqual([]);
+  });
+
+  it("stays flat on a long line rather than backtracking", () => {
+    // The old `\s*([^|]+)\s*\|$` measured CUBIC on this shape: 1.1s at
+    // n=2000, 8.7s at n=4000. It is reachable because `buildSpanishA1MockAudit`
+    // is exported and takes a caller-supplied `root`. A generous ceiling, so
+    // the test pins the complexity class rather than a machine's speed.
+    const started = Date.now();
+    expect(parseAnswerKeyRows(`|1||${" ".repeat(8000)}`)).toEqual([]);
+    expect(Date.now() - started).toBeLessThan(1000);
   });
 });

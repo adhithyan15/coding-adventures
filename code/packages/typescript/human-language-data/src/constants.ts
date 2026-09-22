@@ -2,6 +2,34 @@
 import type { Script } from "./types.js";
 
 /**
+ * Every ECMAScript line terminator, in ONE place because three parsers need it.
+ *
+ * `.` cannot match LF, CR, U+2028 or U+2029 — those four code points are
+ * exactly the set `.` excludes — so a pattern ending in `$` can never reach the
+ * end of a chunk that still contains one. Split them off first and a line can
+ * never contain one, which is what lets a line pattern drop the `\s*` that
+ * makes it backtrack.
+ *
+ * It lives here, rather than beside the parser that first needed it, because
+ * `mock-stem-coverage.ts` imports from `spanish-a1-mock-audit-cli.ts` and both
+ * need this — exporting it from either would close an import cycle around a
+ * value used at module scope. `constants.ts` imports only `types.js`.
+ *
+ * It is shared rather than written out three times because it was NOT shared,
+ * and the asymmetry was the bug: `parseMockPaper` was hardened to split on all
+ * four while the two answer-key readers stayed on `/\r?\n/`. A key with lone-CR
+ * endings then collapsed to a single line, matched no rows, and the audit
+ * reported `objectiveFailed: 0` for items it had never read — a gate that reads
+ * nothing must not report success. `\v`, `\f` and U+0085 are deliberately
+ * absent: `.` matches all three, so they cannot make `$` unreachable, and
+ * splitting on them would break a line that legitimately contains one.
+ *
+ * CRLF is the leading alternative so the pair is consumed as one terminator
+ * rather than as two, which would insert an empty line between every row.
+ */
+export const LINE_TERMINATORS = /\r\n|[\r\n\u2028\u2029]/;
+
+/**
  * Which script each track is written in. HL01 imagines each track eventually
  * declaring this itself (a `track.json`); until then this map is the single
  * source of truth, kept here where it's easy to find and easy to extend when a

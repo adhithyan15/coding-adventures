@@ -58,6 +58,7 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { defaultCurriculumRoot } from "./loader.js";
+import { LINE_TERMINATORS } from "./constants.js";
 import { readLedgerFile } from "./shard.js";
 import {
   spanishMockDir,
@@ -160,13 +161,24 @@ export interface PaperItem {
 export function parseMockPaper(text: string): PaperItem[] {
   const items: PaperItem[] = [];
   let current: { item: number; stem: string; options: string[] } | undefined;
-  // EVERY line terminator, not just CRLF/LF. `.` cannot match U+000D, U+2028
-  // or U+2029, so once the patterns below stopped using `\s*` a lone CR or a
-  // Unicode line separator made `$` unreachable and DROPPED THE WHOLE ITEM --
-  // its words never reached the report at all. That is the precise failure this
-  // module exists to prevent, arriving through the fix for a different one.
-  // Splitting them off first means a line can never contain one.
-  for (const line of text.split(/\r\n|[\r\n\u2028\u2029]/)) {
+  // EVERY line terminator, not just CRLF/LF. Once the patterns below stopped
+  // using `\s*`, a lone CR or a Unicode line separator made `$` unreachable and
+  // DROPPED THE WHOLE ITEM -- item number, stem and options together. That is
+  // the precise failure this module exists to prevent, arriving through the fix
+  // for a different one.
+  //
+  // WHAT SPLITTING RECOVERS, EXACTLY: the item record and every part of it that
+  // sits on a line of its own. It does NOT reassemble a stem that a terminator
+  // cut in half -- `**7.**\r\u00bfQui\u00e9n?` yields item 7 with an EMPTY stem, and
+  // `\u00bfQui\u00e9n?` becomes a bare line that matches neither pattern. A first draft of
+  // this comment claimed the words were recovered; they are not, and the tests
+  // below now pin both halves of that so the claim cannot drift back.
+  //
+  // That tail is dropped the same way passage prose is: this reporter reads
+  // stems and options, and a line that is neither has never been in scope. The
+  // design rule in the header is about not CLEARING a word the reporter read,
+  // not about reading every word on the page.
+  for (const line of text.split(LINE_TERMINATORS)) {
     // NO `\s*` BEFORE THE `(.*)` CAPTURE, in either of these.
     //
     // `\s*(.*)$` is ambiguous: both halves match a tab, so on a failing match
@@ -359,7 +371,13 @@ export function reportSpanishMockStemCoverage(
     const paper = readFileSync(resolve(root, `${dir}/mock-${mock}-paper.md`), "utf8");
     const key = readFileSync(resolve(root, `${dir}/mock-${mock}-answer-key.md`), "utf8");
     const requiresByItem = new Map<number, ReadonlySet<string>>();
-    for (const line of key.split(/\r?\n/)) {
+    // `LINE_TERMINATORS`, not `/\r?\n/`: see the constant. A key using lone-CR
+    // endings collapsed to a single line here and matched NO rows, leaving
+    // `requiresByItem` empty so every word printed as `unaccounted`. That
+    // direction is merely noisy -- the same omission in `parseAnswerKey` was
+    // fail-open -- but two parsers in one file disagreeing about what a line is
+    // is how the fail-open one got missed.
+    for (const line of key.split(LINE_TERMINATORS)) {
       // `([^|]*)` with no `\s*` beside it, for the reason given in
       // `parseMockPaper`: `\s*([^|]+)\s*\|$` is the same ambiguity CodeQL
       // flagged there, and measured CUBIC -- 1.1s at n=2000, 8.7s at n=4000.
@@ -368,8 +386,12 @@ export function reportSpanishMockStemCoverage(
       // comment denied: a row whose last column is EMPTY (`|1|x||`) did not
       // match before and does now, capturing "". Which column is captured never
       // changes, because the greedy `.*` scans pipes right to left either way.
-      // The widening is inert -- `"".split(",")` is `[""]`, and an entry of ""
-      // matches no form -- and no such row exists in either paper.
+      // The widening is inert HERE -- `"".split(",")` is `[""]`, and an entry
+      // of "" matches no form -- and no such row exists in either paper. It is
+      // NOT inert in `parseAnswerKey`, which feeds the same capture to the
+      // audit's missing-lexeme tally; that copy filters the empties, and the
+      // comment there says why. Sharing the sentence without re-checking it
+      // against the second caller is how that nearly shipped.
       const row = /^\|\s*(\d+)\s*\|.*\|([^|]*)\|$/.exec(line);
       if (!row) continue;
       requiresByItem.set(

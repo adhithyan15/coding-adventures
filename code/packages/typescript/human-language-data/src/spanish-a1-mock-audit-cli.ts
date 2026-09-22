@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { lessonsUpToLevel } from "./levels.js";
 import { defaultCurriculumRoot, loadEverything } from "./loader.js";
-import { reportableFilename } from "./constants.js";
+import { LINE_TERMINATORS, reportableFilename } from "./constants.js";
 
 export const SPANISH_A1_MOCK_AUDIT = "spanish/mocks/a1/book-bounded-audit.json";
 
@@ -76,12 +76,29 @@ const numberWordCredits = [
 const clean = (value: string): string =>
   value.toLowerCase().normalize("NFC").replace(/^\*+|\*+$/g, "").trim();
 
-type Item = { paper: number; item: number; requires: string[] };
+export type AnswerKeyRow = { paper: number; item: number; requires: string[] };
 
-function parseAnswerKey(path: string): Item[] {
-  const rows: Item[] = [];
+/**
+ * The answer key's scored rows, from its TEXT.
+ *
+ * Split from `parseAnswerKey` so the parse can be tested the way
+ * `parseMockPaper` is -- on strings, without a whole synthetic curriculum
+ * behind it. Both this gate's silent-drop bugs (a line terminator the split
+ * misses, an empty last column) were found by reading, not by a failing test,
+ * because the only way in was a 20-minute run over the real corpus.
+ */
+export function parseAnswerKeyRows(text: string): AnswerKeyRow[] {
+  const rows: AnswerKeyRow[] = [];
   let paper = 0;
-  for (const line of readFileSync(path, "utf8").split(/\r?\n/)) {
+  // `LINE_TERMINATORS`, not `/\r?\n/`, and this is the FAIL-OPEN copy of that
+  // omission. `.` cannot match a lone CR or U+2028, so a key using either
+  // collapsed to one line, matched no rows, and this gate reported
+  // `objectiveFailed: 0` with `reading: 0` and `listening: 0` -- a clean bill
+  // of health for items it never read, which `--write` would then persist.
+  // `mock-stem-coverage.ts` had the same omission in the direction that only
+  // adds noise; the hardening went to the harmless copy first because the two
+  // were written out separately instead of shared.
+  for (const line of text.split(LINE_TERMINATORS)) {
     const heading = /^## Prueba (\d)/.exec(line);
     if (heading) paper = Number(heading[1]);
     // `([^|]*)` rather than `\s*([^|]+)\s*`. The old shape measured CUBIC --
@@ -96,9 +113,44 @@ function parseAnswerKey(path: string): Item[] {
       rows.push({
         paper,
         item: Number(row[1]),
-        requires: row[2].split(",").map(clean),
+        // `.filter(Boolean)`, because `+` -> `*` is NOT inert here. The sibling
+        // module says the widening is harmless, and in the reporter it is: an
+        // entry of "" matches no form and prints nothing. This copy feeds the
+        // GATE. A row whose last column is empty (`| 7 | b | |`) did not match
+        // under `([^|]+)` and now matches with a capture of "", which `taught`
+        // never contains -- so the item would fail on a requirement nobody
+        // wrote, inflating `objectiveFailed` and putting "" in
+        // `missingObjectiveLexemes`. Fail-closed rather than fail-open, and no
+        // such row exists in any of the 24 keys, but the steering number of the
+        // whole programme is not the place to carry a phantom. A trailing comma
+        // in a hand-written row (`casa, perro,`) reaches the same filter.
+        requires: row[2].split(",").map(clean).filter(Boolean),
       });
     }
+  }
+  return rows;
+}
+
+function parseAnswerKey(path: string): AnswerKeyRow[] {
+  const rows = parseAnswerKeyRows(readFileSync(path, "utf8"));
+  // A GATE THAT READ NOTHING MUST NOT REPORT SUCCESS.
+  //
+  // Every failure mode in the parser is silent by construction: a line
+  // terminator the split misses, a heading whose numbering changes, a table
+  // rewritten with a different pipe shape. Each leaves `rows` empty, and an
+  // empty `rows` makes every downstream number zero -- `objectiveFailed: 0`,
+  // which reads as a clean bill of health and is the exact opposite of what
+  // happened. `--write` would then persist it.
+  //
+  // The check lives on the FILE side rather than inside `parseAnswerKeyRows`
+  // because "" is a legitimate input to a parser and is not a legitimate
+  // answer key, and it is unconditional rather than gated on having seen a
+  // `## Prueba` heading: a heading-gated version goes quiet in the very case
+  // where the heading pattern is what stopped matching. Both keys the audit
+  // opens have Prueba 1 and Prueba 2 sections full of rows, so zero rows
+  // always means the parse broke.
+  if (rows.length === 0) {
+    throw new Error(`${reportableFilename(path)}: parsed no answer-key rows`);
   }
   return rows;
 }
@@ -164,7 +216,7 @@ export function buildSpanishA1MockAudit(
         missing: row.requires.filter((entry) => !entry.startsWith("!") && !taught.has(entry)),
       }))
       .filter((row) => row.missing.length > 0);
-    const passes = (row: Item) => row.requires.every((entry) => entry.startsWith("!") || taught.has(entry));
+    const passes = (row: AnswerKeyRow) => row.requires.every((entry) => entry.startsWith("!") || taught.has(entry));
     return {
       mock,
       reading: rows.filter((row) => row.paper === 1 && passes(row)).length,

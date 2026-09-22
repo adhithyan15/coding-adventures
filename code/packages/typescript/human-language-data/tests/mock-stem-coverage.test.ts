@@ -61,15 +61,43 @@ describe("parseMockPaper", () => {
     ["a lone CR", "\r"],
     ["U+2028", "\u2028"],
     ["U+2029", "\u2029"],
-  ])("does not lose an item to %s", (_label, terminator) => {
+  ])("keeps stem and options when lines are separated by %s", (_label, terminator) => {
     // `.` cannot match these, so once `\s*` left the pattern they made `$`
-    // unreachable and the WHOLE ITEM was dropped -- its words never reached the
-    // report. That is the failure this module exists to prevent, arriving
+    // unreachable and the WHOLE ITEM was dropped -- number, stem and options
+    // together. That is the failure this module exists to prevent, arriving
     // through the fix for a different one. They are split off as line
     // terminators now, which is what they are.
+    //
+    // The STEM is asserted, not just the item count. A first version of this
+    // test put the terminator INSIDE the stem and checked only
+    // `toHaveLength(1)` and the option, so it passed green against a stem of
+    // "". It pinned a weaker property than the comment beside the code claimed,
+    // which in this module is the whole failure mode.
+    const items = parseMockPaper(`**7.** ¿Quién practica?${terminator}- a) el vecino`);
+    expect(items).toEqual([
+      { item: 7, stem: "¿Quién practica?", options: ["el vecino"] },
+    ]);
+  });
+
+  it.each([
+    ["a lone CR", "\r"],
+    ["U+2028", "\u2028"],
+    ["U+2029", "\u2029"],
+  ])("splits a stem that %s cuts in half, and does not reassemble it", (_l, terminator) => {
+    // THE HONEST LIMIT, pinned so nobody re-asserts otherwise. Splitting
+    // rescues the item record; it does not glue the tail back on.
+    // `¿Quién?` becomes a bare line that matches neither pattern and is
+    // dropped -- the same way passage prose is dropped, because this reporter
+    // reads stems and options, and a line that is neither has never been in
+    // scope.
+    //
+    // Reassembling it would mean appending every unmatched line to the current
+    // stem, which would sweep the whole audio passage into the report and
+    // change every number in it. So the behaviour stays and the claim shrinks
+    // to fit: the design rule is that a word the reporter READ is never
+    // silently cleared, not that every word on the page is read.
     const items = parseMockPaper(`**7.**${terminator}¿Quién?\n- a) el vecino`);
-    expect(items).toHaveLength(1);
-    expect(items[0]?.options).toEqual(["el vecino"]);
+    expect(items).toEqual([{ item: 7, stem: "", options: ["el vecino"] }]);
   });
 
   it("keeps an option whose marker is preceded by a non-breaking space", () => {

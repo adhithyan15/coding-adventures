@@ -71,3 +71,49 @@ exemption, and no mention in the item's row. `ayuntamiento`, `cuota`,
 So `objectiveFailed: 48` is a floor, and now demonstrably rather than as a
 disclaimer. **Those 78 were deliberately not added by hand** — doing so would
 be the fourth biased pass this tool exists to retire.
+
+#### Fixed — three silent drops that security review found in the parsers
+
+CodeQL flagged two high-severity ReDoS patterns in the new `parseMockPaper`,
+and it was right where my own review round was not: I had cleared them as
+"polynomial at worst, not exploitable" because this loop splits on newlines
+first. That is true of *this* caller, and `parseMockPaper` is exported.
+
+Fixing them removed the `\s*` that was doing the backtracking — and removing
+`\s*` is what introduced the next three bugs, each in the direction this module
+exists to prevent.
+
+- **Line terminators, now shared.** `.` cannot match CR, U+2028 or U+2029, so
+  once `\s*` was gone a chunk containing one made `$` unreachable and the match
+  simply failed. `parseMockPaper` was hardened to split on all four; the two
+  answer-key readers were left on `/\r?\n/`. The asymmetry was the bug, and the
+  half left behind was the **fail-open** one: a key with lone-CR endings parses
+  to zero rows, from which the audit reports `objectiveFailed: 0`, `reading: 0`,
+  `listening: 0` — a clean bill of health for items it never read, which
+  `--write` would persist. One `LINE_TERMINATORS` in `constants.ts` now, used by
+  all three. It lives there rather than beside its first caller because
+  `mock-stem-coverage` already imports from `spanish-a1-mock-audit-cli`, so
+  exporting it from either would close an import cycle.
+- **A gate that read nothing must not report success.** `parseAnswerKey` throws
+  on zero rows. Every failure mode in that parser is silent by construction, and
+  each of them lands on the same zero.
+- **`+` → `*` is not inert in the gate.** The widening that killed the cubic row
+  regex also made `| 7 | b |  |` match for the first time, capturing `""` —
+  which `taught` never contains, so the item would have failed on a requirement
+  nobody wrote. Inert in the reporter, as its comment says; the comment was
+  copied to a file where it was not true. The gate now filters empty entries, so
+  a trailing comma in a hand-written row is dropped too.
+
+All three Spanish mock audits regenerate byte-identically and the reporter's
+output is unchanged — `unaccounted (39)` / `derivable (76)` and `(39)` / `(58)`,
+as above. The row parse is now flat where it measured **cubic**: 1.1 s at a
+2000-character line, 8.7 s at 4000, 67 s at 8000.
+
+#### Changed — the answer-key parse is testable on strings
+
+`parseAnswerKeyRows(text)` is split out of `parseAnswerKey(path)`, so it can be
+tested the way `parseMockPaper` already was. Both of the silent drops above were
+found by *reading*, not by a failing test, because the only way into that parser
+was a run over the real corpus. Eight tests now pin the terminators, the CRLF
+pair, the empty column, the trailing comma, the heading scope and the
+complexity class.
