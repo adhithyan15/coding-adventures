@@ -78,3 +78,73 @@ the number is the programme's steering signal — it wants its own branch, its
 own review, and a statement of how much of the apparent gap was real. A
 vocabulary chapter is the wrong place to change the instrument it is measured
 by.
+
+### MEASURED, and the rows repaired — 2026-09-22
+
+**Status: the scale is no longer unmeasured.** Done on its own branch, as this
+entry asked, and with the statement of how much of the apparent gap was real.
+
+The two earlier attempts failed because they compared word FORMS against the
+corpus. This one uses the audit's own taught set — the same
+`lessonsUpToLevel("A2")` headword expansion the gate uses, copied rather than
+re-derived — and then narrows by hand rather than by another heuristic:
+
+| step | distinct forms |
+|---|---:|
+| in the two papers' stems and options | 592 |
+| not a taught form (the overstated figure, as before) | 309 |
+| after removing closed-class function words, exam apparatus and morphological relatives of taught lemmas | **47** |
+| of those, not a headword | 21 |
+| of those, **zero word-boundary hits anywhere in the corpus** | **9** |
+
+The 47 were read individually; 15 of them are proper names (*Alberto*,
+*Zaragoza*, *Nuria*…) and most of the rest are inflections the filter missed,
+notably stem-changing verbs — `pide`/`pidió` from *pedir*, `sirve` from
+*servir*, `va`/`vaya` from *ir*. That is the same trap this entry recorded, and
+it is why the last narrowing is by reading rather than by rule.
+
+**The nine:** `multa`, `título`, `vigilar`, `adelantado`, `alumno`, `justo`,
+`afirmar`, `mejorar`, `utilizar`.
+
+**Eight were added to the `requires` rows** of the ten items they appear in.
+Two were held back deliberately: `afirmar`, because it is exam apparatus in a
+true/false stem (*"Afirma que…"*), and `mejor` in mock 2 item 5, which matched
+only through `mejorar`'s stem and **is** a headword.
+
+Every one of the eight is load-bearing. Seven sit in an answer option a
+candidate has to weigh — *"tiene que pagar una multa"*, *"tener el título
+universitario"*, *"vigilar a los más pequeños"*, *"pague la reparación por
+adelantado"* — and `alumnos` sits in the STEM of mock 1 item 22, *"Los alumnos
+mayores se ocupan de…"*, so the question itself is unreadable without it.
+
+### What it cost the headline, and what that retracts
+
+```
+objectiveFailed           6 -> 15
+missingObjectiveLexemes   4 -> 12
+mock 1 reading           24 -> 18
+mock 2 reading           22 -> 20
+```
+
+The instrument was understating by **2.5×**. The pinned note in
+`spanish-a1-mock-audit.test.ts` says the count may only ever fall; this is the
+one rise that is legitimate, because it is the MEASUREMENT being corrected to
+be harsher, not the corpus losing ground.
+
+**It also retracts a claim made three PRs running.** Chapter 474 was landed as
+"the last authorable A2 vocabulary chapter" and the programme was declared
+finished, on the grounds that the four remaining lexemes were already taught
+and blocked only by `HL-C418`, `HL-C420` and `HL-C422`. That was true of the
+list the instrument produced. The list was wrong. **Eight genuinely untaught
+words were invisible the entire time**, because nothing ever put option text on
+it — and the programme was not out of words, it was out of words *the passage
+needed*.
+
+### What this does NOT fix
+
+The narrowing from 47 to 9 was done by hand, so it is a floor and not a
+census — a word I judged an inflection could be a genuine gap. And nothing
+stops the rows drifting again: `requires` is still hand-authored, and the only
+thing that now checks it against the paper is that somebody ran this analysis
+once. A report-only CLI that re-runs the 592 → 47 narrowing on demand would
+make it repeatable; the last step would still need a reader.

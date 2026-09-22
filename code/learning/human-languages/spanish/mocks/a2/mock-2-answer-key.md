@@ -21,7 +21,7 @@ largely closes this one too.
 
 | # | key | PCIC points | requires |
 |---|---|---|---|
-| 1 | b | A2-NE10-10 | mudarse, caja, sofá, sábado, duro |
+| 1 | b | A2-NE10-10 | mudarse, caja, sofá, sábado, duro, justo |
 | 2 | a | A2-NE10-08 | ascensor, subir, lavadora, piso, reír |
 | 3 | b | A2-NE01-08 | vecino, jubilado, ofrecer, explicar, amable |
 | 4 | b | A2-NE20-06 | pintar, dormitorio, verde, claro, preferir |
@@ -36,7 +36,7 @@ largely closes this one too.
 | 8 | b | A2-NE18-08 | sala, examen, madrugada, carné, mostrar |
 | 9 | a | A2-NE07-09 | camarero, turno, experiencia, previo, aprender, contrato |
 | 10 | b | A2-NE13-06 | pedido, retraso, proveedor, devolver, envío, cuenta |
-| 11 | b | A2-NE10-11 | contador, agua, llave, portera, concertar, fecha |
+| 11 | b | A2-NE10-11 | contador, agua, llave, portera, concertar, fecha, multa |
 | 12 | b | A2-NE08-06 | taller, bicicleta, arreglar, freno, rueda, apuntarse |
 | 13 | a | A2-NE16-05 | torcerse, tobillo, caja, médico, descansar, doler |
 
@@ -83,7 +83,7 @@ largely closes this one too.
 |---|---|---|---|
 | 32 | a | A2-NE05-09 | turno, aeropuerto, cambiar, autobús, directo |
 | 33 | b | A2-NE12-04 | sala, cerrado, limpieza, contador, instalación |
-| 34 | b | A2-NE21-09 | lavadora, reparar, pieza, miércoles, casa |
+| 34 | b | A2-NE21-09 | lavadora, reparar, pieza, miércoles, casa, adelantado |
 | 35 | b | A2-NE18-12 | biblioteca, perder, autobús, dormir, temprano |
 | 36 | a | A2-NE05-10 | tren, llegada, andén, pantalla, cambio |
 | 37 | a | A2-NE10-13 | tubería, garaje, cortar, agua, botella |

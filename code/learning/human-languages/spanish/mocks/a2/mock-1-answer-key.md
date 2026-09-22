@@ -30,8 +30,8 @@ not checked against the vocabulary.
 |---|---|---|---|
 | 6 | a | A2-NE10-05 | agua, cortar, tubería, reparar, garaje |
 | 7 | b | A2-NE10-06 | ropa, lavadora, tender, terraza, llover, meter |
-| 8 | b | A2-NE18-03 | libro, préstamo, devolver, retraso, semana, día |
-| 9 | a | A2-NE07-05 | experiencia, previo, necesario, idioma, currículum |
+| 8 | b | A2-NE18-03 | libro, préstamo, devolver, retraso, semana, día, multa |
+| 9 | a | A2-NE07-05 | experiencia, previo, necesario, idioma, currículum, título |
 | 10 | b | A2-NE08-02 | clase, natación, sábado, jueves, trasladar, hora |
 | 11 | b | A2-NE16-01 | cita, doctor, traer, análisis, mayo |
 | 12 | b | A2-NE20-02 | mercado, plaza, tiempo, celebrar, polideportivo |
@@ -52,10 +52,10 @@ not checked against the vocabulary.
 
 | # | key | PCIC points | requires |
 |---|---|---|---|
-| 20 | b | A2-NE20-03 | patio, usar, tierra, seco, hierba, piedra |
-| 21 | b | A2-NE20-05 | vecino, jubilado, campo, plantar, cebolla, ajo |
-| 22 | a | A2-NE18-04 | mayor, cuaderno, anotar, temperatura, lluvia, recoger |
-| 23 | b | A2-NE01-07 | director, cambio, visible, comportamiento, discutir |
+| 20 | b | A2-NE20-03 | patio, usar, tierra, seco, hierba, piedra, utilizar |
+| 21 | b | A2-NE20-05 | vecino, jubilado, campo, plantar, cebolla, ajo, alumno |
+| 22 | a | A2-NE18-04 | mayor, cuaderno, anotar, temperatura, lluvia, recoger, alumno, vigilar |
+| 23 | b | A2-NE01-07 | director, cambio, visible, comportamiento, discutir, mejorar |
 | 24 | a | A2-NE04-06 | kilo, producir, suficiente, alimentar, objetivo |
 | 25 | b | A2-F4-02 | consejo, empezar, pequeño, buscar, pueblo, saber |
 

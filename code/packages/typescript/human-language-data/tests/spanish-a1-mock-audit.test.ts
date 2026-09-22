@@ -102,17 +102,45 @@ describe("Spanish A2 book-bounded mock audit", () => {
   it("pins the CURRENT DEBT: the exam names the vocabulary that is still missing", () => {
     const audit = buildSpanishA1MockAudit(defaultCurriculumRoot(), "A2");
     expect(audit.level).toBe("A2");
-    expect(audit.objectiveFailed).toBe(6);
+    // 6 -> 15, AND THE RISE IS THE POINT. This is the one movement the note
+    // below forbids, taken deliberately, because the instrument was wrong in
+    // the direction that flatters us. HL-C421 found that a `requires` row lists
+    // the words of the AUDIO PASSAGE and never the words of the question stem
+    // or the answer options, so an item could pass while a candidate could not
+    // read the sentence they have to choose between.
+    //
+    // Quantified here for the first time, which is what that entry asked for
+    // and could not supply. Of 592 distinct word forms in the two A2 papers'
+    // stems and options, 309 are not taught forms; removing closed-class
+    // function words, exam apparatus and morphological relatives of taught
+    // lemmas leaves 47; reading those 47 by hand leaves 21 that are not
+    // headwords, of which NINE have zero word-boundary occurrences anywhere in
+    // the Spanish corpus: multa, título, vigilar, adelantado, alumno, justo,
+    // afirmar, mejorar, utilizar.
+    //
+    // Eight were added to the rows of the ten items they appear in. Two were
+    // held back on purpose: `afirmar` because it is exam apparatus in a
+    // true/false stem ("Afirma que..."), and `mejor` in mock 2 item 5 because
+    // it IS a headword and only matched through `mejorar`'s stem. Each of the
+    // eight is load-bearing -- in an option a candidate must weigh, and for
+    // `alumnos` in mock 1 item 22 in the STEM, so the question itself is
+    // unreadable without it.
+    //
+    // The honest consequence: "the A2 vocabulary programme is complete" was
+    // false. It was complete against an instrument that only read the passage.
+    expect(audit.objectiveFailed).toBe(15);
     expect(audit.mocks.map(({ reading, listening, objectiveFailed }) => ({
       reading,
       listening,
       objectiveFailed,
     }))).toEqual([
-      { reading: 24, listening: 23, objectiveFailed: 3 },
-      { reading: 22, listening: 25, objectiveFailed: 3 },
+      { reading: 18, listening: 23, objectiveFailed: 9 },
+      { reading: 20, listening: 24, objectiveFailed: 6 },
     ]);
-    // THIS NUMBER MUST ONLY EVER FALL. A rise means a mock gained an item the
-    // corpus cannot support.
+    // THIS NUMBER MUST ONLY EVER FALL, with one exception already spent above:
+    // a rise is allowed when it is the MEASUREMENT being corrected to be
+    // harsher, never when it is the corpus losing ground. A rise means a mock
+    // gained an item the corpus cannot support.
     //
     // 191 -> 161 -> 146 -> 126 -> 107 -> 85 -> 68 -> 54 -> 39 -> 35 -> 31 ->
     // 27 -> 23 -> 19 -> 15 -> 11 -> 8 -> 6 -> 4 are the eighteen vocabulary tranches: 431-436,
@@ -338,7 +366,37 @@ describe("Spanish A2 book-bounded mock audit", () => {
     // `explicar`, `creer` or `problema`, which are ALREADY TAUGHT and excluded
     // only because their spine node derives above A2. See BACKLOG.d HL-C418
     // and HL-C420; do not teach them a second time.
-    expect(audit.missingObjectiveLexemes).toHaveLength(4);
+    //
+    // 4 -> 12, and the note above predicted exactly this: "Expect this to
+    // recur: the exactness asserted above was always a property of the ROWS,
+    // not of the papers." HL-C421 has now been quantified and its eight
+    // verified stem-and-option lexemes added to the rows. The list is no
+    // longer four already-taught words blocked on a spine decision; it is
+    // those four plus EIGHT GENUINELY UNTAUGHT ONES:
+    //
+    //     already taught, blocked by a level decision (HL-C418, HL-C420, HL-C422)
+    //       creer, explicar, problema, responder
+    //     never taught, newly visible because the rows now read the question
+    //       adelantado, alumno, justo, mejorar, multa, título, utilizar, vigilar
+    //
+    // The second group is authorable vocabulary work, and its existence
+    // retracts the claim that the A2 programme had run out of words. It had
+    // run out of words THE PASSAGE NEEDED.
+    expect(audit.missingObjectiveLexemes).toHaveLength(12);
+    expect(audit.missingObjectiveLexemes).toEqual([
+      "adelantado",
+      "alumno",
+      "creer",
+      "explicar",
+      "justo",
+      "mejorar",
+      "multa",
+      "problema",
+      "responder",
+      "título",
+      "utilizar",
+      "vigilar",
+    ]);
   });
 
   it("measures a LARGER taught set than A1, which is what makes it a different gate", () => {

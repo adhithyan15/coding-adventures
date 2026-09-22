@@ -61,19 +61,62 @@
   },
   "lessonCount": 1430,
   "taughtForms": 2378,
-  "objectiveFailed": 6,
+  "objectiveFailed": 15,
   "mocks": [
     {
       "mock": 1,
-      "reading": 24,
+      "reading": 18,
       "listening": 23,
-      "objectiveFailed": 3,
+      "objectiveFailed": 9,
       "failed": [
         {
           "paper": 1,
           "item": 3,
           "missing": [
             "explicar"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 8,
+          "missing": [
+            "multa"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 9,
+          "missing": [
+            "título"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 20,
+          "missing": [
+            "utilizar"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 21,
+          "missing": [
+            "alumno"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 22,
+          "missing": [
+            "alumno",
+            "vigilar"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 23,
+          "missing": [
+            "mejorar"
           ]
         },
         {
@@ -94,15 +137,29 @@
     },
     {
       "mock": 2,
-      "reading": 22,
-      "listening": 25,
-      "objectiveFailed": 3,
+      "reading": 20,
+      "listening": 24,
+      "objectiveFailed": 6,
       "failed": [
+        {
+          "paper": 1,
+          "item": 1,
+          "missing": [
+            "justo"
+          ]
+        },
         {
           "paper": 1,
           "item": 3,
           "missing": [
             "explicar"
+          ]
+        },
+        {
+          "paper": 1,
+          "item": 11,
+          "missing": [
+            "multa"
           ]
         },
         {
@@ -118,15 +175,30 @@
           "missing": [
             "explicar"
           ]
+        },
+        {
+          "paper": 2,
+          "item": 34,
+          "missing": [
+            "adelantado"
+          ]
         }
       ]
     }
   ],
   "missingObjectiveLexemes": [
+    "adelantado",
+    "alumno",
     "creer",
     "explicar",
+    "justo",
+    "mejorar",
+    "multa",
     "problema",
-    "responder"
+    "responder",
+    "título",
+    "utilizar",
+    "vigilar"
   ],
   "missingFrequency": [
     {
@@ -134,7 +206,27 @@
       "count": 3
     },
     {
+      "lexeme": "alumno",
+      "count": 2
+    },
+    {
+      "lexeme": "multa",
+      "count": 2
+    },
+    {
+      "lexeme": "adelantado",
+      "count": 1
+    },
+    {
       "lexeme": "creer",
+      "count": 1
+    },
+    {
+      "lexeme": "justo",
+      "count": 1
+    },
+    {
+      "lexeme": "mejorar",
       "count": 1
     },
     {
@@ -143,6 +235,18 @@
     },
     {
       "lexeme": "responder",
+      "count": 1
+    },
+    {
+      "lexeme": "título",
+      "count": 1
+    },
+    {
+      "lexeme": "utilizar",
+      "count": 1
+    },
+    {
+      "lexeme": "vigilar",
       "count": 1
     }
   ]
