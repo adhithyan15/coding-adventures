@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C466-sintesis-informe",
+    "language": "spanish",
+    "chapter": 466,
+    "sequence": 12740,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:191ea3d76dd049aa"
+  },
+  "findings": []
+}

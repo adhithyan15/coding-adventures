@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-466-INFORME",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read a formal letter home from a school: understand who signed it, what it reports about behaviour, that the change can be seen, and that being asked to discuss something is an invitation rather than a summons.",
+  "prerequisites": [
+    "ES-EXT-465-APUNTE"
+  ]
+}

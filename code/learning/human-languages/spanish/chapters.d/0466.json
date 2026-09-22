@@ -1,0 +1,21 @@
+{
+  "chapter": 466,
+  "title": "Una carta del colegio",
+  "label": "ch:es-informe",
+  "canDo": "I can read a formal letter home from a school: understand who signed it, what it reports about behaviour, that the change can be seen, and that being asked to discuss something is an invitation rather than a summons.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "ES-C466-sintesis-informe",
+    "kind": "task",
+    "summary": "Read a letter home from the head, then say what it actually asks for.",
+    "assesses": [
+      "ES-LEX-C466-INFORME-01",
+      "ES-LEX-C466-INFORME-02",
+      "ES-LEX-C466-INFORME-03",
+      "ES-LEX-C466-INFORME-04"
+    ],
+    "note": "NOT ONE OF THIS CHAPTER'S ENDINGS IS NEW, and the chapter says so. ES-C421-actor owns -tor AND ALREADY PRINTS 'dirigere | to direct | director' in its own table, so el director must be CITED, never introduced; ES-C446-directo (twenty chapters back) already carries dirigere-latin and glosses it 'to set something straight, to aim it', so a director is THE ONE WHO AIMS THE THING. VISIBLE'S ENDING IS ALSO OWNED: -able and -ible are one Latin -bilis, ES-C283-amable introduces it and ES-C423-sociable teaches it with a shape table and the wrap-up 'does -able change for a woman? No'. The genuinely new content is the -ible SPELLING and the PASSIVE DIRECTION: sociable describes a person who does the mixing, visible describes a thing that has the seeing done to it, and only the verb's sense tells you which way the ending points. Root slug is latin-videre (PREFIX FORM, the slug ES-C332-aviso already carries) and NOT videre-latin -- writing the suffix form would split the cousins family silently. el comportamiento is com- plus PORTARE, carrying yourself, exactly as English conduct is con- plus ducere, leading yourself; keep it away from PORTA, a gate, which is the separation ES-C463-importar draws. Its -miento sits on a reflexive verb and quietly drops the se, which is why a school letter prefers el comportamiento (a fact about conduct) to se porta mal (an accusation about a child). discutir is DIS- plus QUATERE, to shake apart: discussing a topic and arguing with a person are one act at two temperatures, and English keeps the violent end in CONCUSSION. The preposition leans -- a thing after the verb is a topic, a person after CON is an opponent -- but the payoff deliberately breaks that lean, because 'me gustaria discutir con ustedes' about an IMPROVEMENT is an invitation, and a reader who knows discutir only as argue will misread the letter as a summons. That misreading is the comprehension the payoff tests."
+  }
+}

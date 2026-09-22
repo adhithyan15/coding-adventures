@@ -1,5 +1,85 @@
 # Changelog
 
+## Chapter 466 — a chapter whose endings were all already owned
+
+```
+A2 objectiveFailed          12 -> 11
+A2 missingObjectiveLexemes  35 -> 31
+```
+
+Four words, one item, 4.00 again — the floor holding exactly where 464
+predicted it. Tenth consecutive exact prediction.
+
+| chapter | scene | words |
+|---|---|---|
+| 466 INFORME | a letter home from the head | director, visible, comportamiento, discutir |
+
+## The pre-check, run the way 465 said to
+
+Chapter 465's lesson was that a non-zero grep hit is a **file to open**, not a
+number to weigh, and that follow-up should run **ascending** by hit count —
+because many hits are usually incidental prose while one or two hits on a
+content word are usually the lesson that taught it. Applied here, that rule
+paid three times, and the smallest number on the list was again the most
+important:
+
+| word | hits | what opening it found |
+|---|---|---|
+| director | 2 | `ES-C421-actor` owns `-tor` **and prints `dirigere → director` in its own table** |
+| visible | 78 | all English prose — but its ending is owned twice over |
+| comportamiento | 0 | clean |
+| discutir | 0 | clean |
+
+**The plan for this chapter was wrong about `visible`.** It recorded that
+`-ible` had no owner and could be introduced as new. That came from grepping
+only the bolded form `**-ible**`. In fact `-able` and `-ible` are one Latin
+`-bilis`: `ES-C283-amable` introduces it and `ES-C423-sociable` teaches it with
+a shape table and the wrap-up *"Does -able change for a woman? No."* So the
+genuinely new content is much narrower than planned — the `-ible` **spelling**,
+and the **direction** the ending points.
+
+That turned out to be the better lesson anyway. *Sociable* describes a person
+who **does** the mixing; *visible* describes a thing that has the seeing **done
+to it**. One ending, two directions, and only the verb's sense tells you which.
+
+**A root-slug trap, caught by reading rather than by the guard.** The family
+slug is `latin-videre` — the prefix form, which `ES-C332-aviso` already
+carries. Writing the instinctive `videre-latin` would have split the cousins
+family silently, since that join is exact string equality. This is the same
+shape split `HL-C419`'s guard exists to catch, avoided before it was made.
+
+## The four
+
+**el director** is the chapter's clearest case of citing rather than teaching.
+Both halves were handed over in earlier chapters: `ES-C421-actor` gave the
+`-tor` ending and printed this very word in its table, and `ES-C446-directo`
+gave *dirigere*, to set straight. So a *director* is the one who **aims** the
+thing — not the one who shouts.
+
+**el comportamiento** is *com-* plus *portare*: carrying yourself, exactly as
+English *conduct* is *con-* plus *ducere*, leading yourself. It keeps clear of
+*porta*, a gate — the separation `ES-C463-importar` had to be corrected into
+last tranche. Its `-miento` sits on a reflexive verb and quietly drops the
+*se*, which is why a school letter says *el comportamiento*, a fact about
+conduct, where a parent says *se porta mal*, an accusation about a child.
+
+**discutir** is *dis-* plus *quatere*, to shake apart. Discussing a topic and
+arguing with a person are one act at two temperatures. English kept the violent
+end in *concussion*.
+
+## What the payoff tests
+
+The letter home says *me gustaría discutir con ustedes* — and the news in it is
+**good**. A reader who has only the rule "a person after *con* means argue"
+will read an invitation as a summons. The preposition leans; the content
+decides. That misreading is the comprehension the chapter is for.
+
+## What is left
+
+Six authorable rows, all but one in mock 1 — 24 words at four apiece, no
+overlap. Five rows still turn on `explicar`, `creer` or `problema` and wait on
+the `HL-C418` mapping decision.
+
 ## Chapter 465 — the floor arrives exactly where it was predicted
 
 ```

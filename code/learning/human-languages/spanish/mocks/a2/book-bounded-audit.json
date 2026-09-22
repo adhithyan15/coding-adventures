@@ -59,15 +59,15 @@
     ],
     "numericCredits": "0-100"
   },
-  "lessonCount": 1374,
-  "taughtForms": 2273,
-  "objectiveFailed": 12,
+  "lessonCount": 1380,
+  "taughtForms": 2285,
+  "objectiveFailed": 11,
   "mocks": [
     {
       "mock": 1,
-      "reading": 22,
+      "reading": 23,
       "listening": 19,
-      "objectiveFailed": 9,
+      "objectiveFailed": 8,
       "failed": [
         {
           "paper": 1,
@@ -75,16 +75,6 @@
           "missing": [
             "invitar",
             "explicar"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 23,
-          "missing": [
-            "director",
-            "visible",
-            "comportamiento",
-            "discutir"
           ]
         },
         {
@@ -196,12 +186,9 @@
     "avisar",
     "bufanda",
     "chaqueta",
-    "comportamiento",
     "conectar",
     "creer",
     "descontar",
-    "director",
-    "discutir",
     "encontrar",
     "encuesta",
     "estado",
@@ -223,8 +210,7 @@
     "responder",
     "sencillo",
     "suficiente",
-    "usuario",
-    "visible"
+    "usuario"
   ],
   "missingFrequency": [
     {
@@ -256,10 +242,6 @@
       "count": 1
     },
     {
-      "lexeme": "comportamiento",
-      "count": 1
-    },
-    {
       "lexeme": "conectar",
       "count": 1
     },
@@ -269,14 +251,6 @@
     },
     {
       "lexeme": "descontar",
-      "count": 1
-    },
-    {
-      "lexeme": "director",
-      "count": 1
-    },
-    {
-      "lexeme": "discutir",
       "count": 1
     },
     {
@@ -361,10 +335,6 @@
     },
     {
       "lexeme": "usuario",
-      "count": 1
-    },
-    {
-      "lexeme": "visible",
       "count": 1
     }
   ]

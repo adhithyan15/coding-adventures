@@ -102,22 +102,23 @@ describe("Spanish A2 book-bounded mock audit", () => {
   it("pins the CURRENT DEBT: the exam names the vocabulary that is still missing", () => {
     const audit = buildSpanishA1MockAudit(defaultCurriculumRoot(), "A2");
     expect(audit.level).toBe("A2");
-    expect(audit.objectiveFailed).toBe(12);
+    expect(audit.objectiveFailed).toBe(11);
     expect(audit.mocks.map(({ reading, listening, objectiveFailed }) => ({
       reading,
       listening,
       objectiveFailed,
     }))).toEqual([
-      { reading: 22, listening: 19, objectiveFailed: 9 },
+      { reading: 23, listening: 19, objectiveFailed: 8 },
       { reading: 22, listening: 25, objectiveFailed: 3 },
     ]);
     // THIS NUMBER MUST ONLY EVER FALL. A rise means a mock gained an item the
     // corpus cannot support.
     //
-    // 191 -> 161 -> 146 -> 126 -> 107 -> 85 -> 68 -> 54 -> 39 -> 35 are the
-    // nine vocabulary tranches: 431-436, 437-439, 440-443, 444-447, 448-451,
-    // 452-455, 456-459, 460-464 and 465. EVERY drop is exact -- 30 headwords
-    // removed 30 lexemes, then 15, 20, 19, 22, 17, 14, 15, 4. That
+    // 191 -> 161 -> 146 -> 126 -> 107 -> 85 -> 68 -> 54 -> 39 -> 35 -> 31 are
+    // the ten vocabulary tranches: 431-436, 437-439, 440-443, 444-447,
+    // 448-451, 452-455, 456-459, 460-464, 465 and 466. EVERY drop is exact --
+    // 30 headwords removed 30 lexemes, then 15, 20, 19, 22, 17, 14, 15, 4, 4.
+    // That
     // arithmetic is the evidence a word was genuinely absent; one already taught
     // under another name would have made the drop smaller. Each was PREDICTED
     // from the audit before the chapters were wired and reproduced exactly by
@@ -131,7 +132,7 @@ describe("Spanish A2 book-bounded mock audit", () => {
     // honest reading, since the adjective is the form on the lift door.
     //
     // THE ITEM COUNT IS WHERE THE SELECTION RULE SHOWS, and it is the whole
-    // point. objectiveFailed went 93 -> 88 -> 79 -> 59 -> 40 -> 31 -> 23 -> 18 -> 13 -> 12:
+    // point. objectiveFailed went 93 -> 88 -> 79 -> 59 -> 40 -> 31 -> 23 -> 18 -> 13 -> 12 -> 11:
     //
     //     tranche 1  (431-436)  30 words   5 items
     //     tranche 2  (437-439)  15 words   9 items
@@ -142,6 +143,7 @@ describe("Spanish A2 book-bounded mock audit", () => {
     //     tranche 4c (456-459)  14 words   5 items
     //     tranche 4d (460-464)  15 words   5 items
     //     tranche 4e (465)         4 words   1 item
+    //     tranche 4f (466)         4 words   1 item
     //
     // An item passes only when EVERY lexeme in its `requires` row is taught, so
     // a word helps in proportion to how close its rows already are. Tranches
@@ -250,7 +252,7 @@ describe("Spanish A2 book-bounded mock audit", () => {
     // seven are mock 1's, which is the divergence above having run to its
     // conclusion. 7 rows x 4 words = 28, plus the 7 distinct words behind the
     // five B1-mapped rows, is the 35 asserted here.
-    expect(audit.missingObjectiveLexemes).toHaveLength(35);
+    expect(audit.missingObjectiveLexemes).toHaveLength(31);
   });
 
   it("measures a LARGER taught set than A1, which is what makes it a different gate", () => {
