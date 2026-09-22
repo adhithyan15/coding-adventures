@@ -121,3 +121,18 @@ Persian, Urdu and Devanagari — all tracks this repo has. Rendering two distinc
 lexemes identically is the same harm as a spoofed one, pointed the other way.
 Enumerate what a sanitizer removes, and check it against the scripts the project
 actually handles.
+
+**Replacing N checks with one better check deletes N-1 checks.** Collapsing the
+partial guards into a single set equality was the right move, and it still
+dropped a case the old pile covered: a paper declaring zero items produced an
+empty expectation, which matched an empty parse. The per-paper "parsed no rows"
+check had caught that unconditionally. When a refactor replaces several guards
+with one, enumerate what each old guard caught and confirm the new one covers
+it — the improvement is not a proof of coverage.
+
+**A bound is usually two bounds.** The same missing `count < 1` that opened the
+fail-open hole sat beside a missing `count > N` that let a heading abort the
+process: `Array.from({length: 999999999})` is a fatal, uncatchable OOM, while
+`{length: 99999999999}` is a clean `RangeError`, because `ArrayCreate` rejects
+lengths at or above 2^32. The merely enormous input is more dangerous than the
+absurd one, and the absurd one is what a test would have used.

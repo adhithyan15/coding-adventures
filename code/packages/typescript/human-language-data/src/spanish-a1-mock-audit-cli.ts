@@ -73,6 +73,16 @@ const numberWordCredits = [
   "cincuenta", "sesenta", "setenta", "ochenta", "noventa", "cien",
 ];
 
+/**
+ * The largest item count a `## Prueba N` heading may declare.
+ *
+ * Both a floor and a ceiling on the same guard: below 1 a paper disappears from
+ * the gate entirely, and above this the expected-set construction does enough
+ * work to abort the process before any message is printed. The real keys
+ * declare 10 or 25.
+ */
+const MAX_DECLARED_ITEMS = 1000;
+
 const clean = (value: string): string =>
   value.toLowerCase().normalize("NFC").replace(/^\*+|\*+$/g, "").trim();
 
@@ -310,6 +320,14 @@ function looksLikeDataRow(line: string): boolean {
  */
 export function assertAnswerKeyParse(parse: AnswerKeyParse, name: string): void {
   const { rows, unscored, malformed, declared } = parse;
+  // Sanitised HERE, not at the call site. The one in-repo caller already passes
+  // a `reportableFilename`, but `spanishMockDir` two hundred lines up hardens
+  // against a deep import on the argument that `package.json` declares no
+  // `exports` map -- and that argument applies identically to this function,
+  // which is exported and takes a caller-supplied string straight into four
+  // one-line error messages. A `\r` or a `\u001b[2K` in it forges or erases a
+  // log line. Idempotent, so the existing caller loses nothing.
+  const label = reportableFilename(name);
   if (malformed.length > 0) {
     // The rejected line is NAMED rather than counted. A message that says only
     // "1 table row rejected" tells a maintainer that something is wrong and
@@ -318,15 +336,15 @@ export function assertAnswerKeyParse(parse: AnswerKeyParse, name: string): void 
     // and quotes, so a row carrying a newline cannot forge a second log line.
     const first = reportableFilename(malformed[0] ?? "");
     throw new Error(
-      `${name}: ${malformed.length} table row(s) the row pattern rejected, first ${first}`,
+      `${label}: ${malformed.length} table row(s) the row pattern rejected, first ${first}`,
     );
   }
   if (unscored.length > 0) {
     const items = unscored.map(({ paper, item }) => `${paper}.${item}`).join(", ");
-    throw new Error(`${name}: item(s) ${items} state no requirements`);
+    throw new Error(`${label}: item(s) ${items} state no requirements`);
   }
   if (rows.length === 0) {
-    throw new Error(`${name}: parsed no answer-key rows`);
+    throw new Error(`${label}: parsed no answer-key rows`);
   }
   // ONE CHECK, AND IT IS AN EQUALITY.
   //
@@ -346,10 +364,19 @@ export function assertAnswerKeyParse(parse: AnswerKeyParse, name: string): void 
   // wrong and state what RIGHT looks like.
   //
   // The file says how many items each scored paper has, and the papers number
-  // straight through: Prueba 1 is 1..n, Prueba 2 is n+1..n+m. That is a
-  // complete specification, so it can be compared as a SET. A drop, a
-  // duplicate, a lost first or last row, a renumbering, a merge -- all of them
-  // are the same failure now, which is "the items are not the items".
+  // straight through: Prueba 1 is 1..n, Prueba 2 is n+1..n+m. So the expected
+  // item SET is derivable, and the check is one equality against it. A drop, a
+  // duplicate, a lost first or last row, a renumbering, a merge are all the
+  // same failure now: "the items are not the items".
+  //
+  // COMPLETE FOR THE ITEM SET, AND THAT IS ALL. A draft of this comment called
+  // it "a complete specification", which it is not -- transposing the
+  // requirement cells of items 3 and 4 while leaving their numbers alone still
+  // passes, and item 3 is then scored against item 4's requirements. No
+  // invariant over item NUMBERS can see that, and there is no second source to
+  // check the requirements against; `report:mock-stem-coverage` exists because
+  // the rows themselves are the thing nobody can verify mechanically. Overclaim
+  // it here and the next reader trusts a guarantee that was never made.
   const expected = (paper: number, first: number): Set<number> => {
     const count = declared.get(paper);
     // UNCONDITIONAL. This was `count !== undefined && ...`, so the one guard
@@ -359,7 +386,35 @@ export function assertAnswerKeyParse(parse: AnswerKeyParse, name: string): void 
     // escritas` in the SAME FILE already carries no count, and `ítems` is the
     // correct Spanish spelling in a file that writes `Comprensión`.
     if (count === undefined) {
-      throw new Error(`${name}: Prueba ${paper} heading declares no item count`);
+      throw new Error(`${label}: Prueba ${paper} heading declares no item count`);
+    }
+    // A SCORED PAPER WITH NO ITEMS IS NOT A PAPER, and the equality cannot say
+    // so on its own: `(0 items)` makes `want` empty, an empty `want` matches an
+    // empty `got`, and the paper is skipped. The per-paper
+    // `parsed no Prueba N rows` check this replaced caught that
+    // unconditionally, and deleting it alongside the others reopened the hole
+    // -- the same mistake as replacing adjacency with span one commit earlier.
+    //
+    // Worse, it is asymmetric. `(0 items)` on Prueba 1 is caught incidentally,
+    // because `first` never advances and Prueba 2's expected run then starts at
+    // 1 while the file numbers from 26. Only the LAST paper fails open, and
+    // stubbing out a not-yet-authored paper as `(0 items)` is ordinary
+    // editorial work.
+    //
+    // The upper bound is the same guard doing a second job.
+    // `Array.from({ length: count })` does the work BEFORE anything caps the
+    // message: `(999999999 items)` aborts the process outright --
+    // `FATAL ERROR: invalid table size - JavaScript heap out of memory`,
+    // exit 134, uncatchable, no gate message at all. `(99999999999 items)` is
+    // SAFER, because `ArrayCreate` rejects a length at or above 2^32 with a
+    // plain `RangeError`; the merely enormous number is the dangerous one. On a
+    // memory-capped CI runner the dangerous band starts far lower.
+    //
+    // The real keys declare 10 or 25.
+    if (count < 1 || count > MAX_DECLARED_ITEMS) {
+      throw new Error(
+        `${label}: Prueba ${paper} heading declares ${count} items, outside 1-${MAX_DECLARED_ITEMS}`,
+      );
     }
     return new Set(Array.from({ length: count }, (_, index) => first + index));
   };
@@ -368,9 +423,17 @@ export function assertAnswerKeyParse(parse: AnswerKeyParse, name: string): void 
     const want = expected(paper, first);
     first += want.size;
     const got = rows.filter((row) => row.paper === paper).map((row) => row.item);
-    const missing = [...want].filter((item) => !got.includes(item));
+    // Sets, not `includes`/`indexOf`. Those made this quadratic in the row
+    // count -- measured 10.1s at n=100000 -- on the PASSING path as well as the
+    // failing one.
+    const seen = new Set<number>();
+    const duplicated: number[] = [];
+    for (const item of got) {
+      if (seen.has(item)) duplicated.push(item);
+      else seen.add(item);
+    }
+    const missing = [...want].filter((item) => !seen.has(item));
     const extra = got.filter((item) => !want.has(item));
-    const duplicated = got.filter((item, index) => got.indexOf(item) !== index);
     if (missing.length === 0 && extra.length === 0 && duplicated.length === 0) continue;
     // Every part is named, because "the items are not the items" is true of a
     // renumbered table and of a single lost row alike, and a maintainer needs
@@ -379,7 +442,7 @@ export function assertAnswerKeyParse(parse: AnswerKeyParse, name: string): void 
     const say = (label: string, list: number[]) =>
       list.length === 0 ? "" : ` ${label} ${list.slice(0, 5).join(", ")}${list.length > 5 ? ", ..." : ""}`;
     throw new Error(
-      `${name}: Prueba ${paper} declares ${want.size} items ${[...want][0]}-${[...want][want.size - 1]}, but parsed` +
+      `${label}: Prueba ${paper} declares ${want.size} items ${[...want][0]}-${[...want][want.size - 1]}, but parsed` +
         `${say("is missing", missing)}${say("has unexpected", extra)}${say("duplicates", duplicated)}`.trimEnd(),
     );
   }
@@ -387,7 +450,7 @@ export function assertAnswerKeyParse(parse: AnswerKeyParse, name: string): void 
 
 function parseAnswerKey(path: string): readonly AnswerKeyRow[] {
   const parse = parseAnswerKeyRows(readFileSync(path, "utf8"));
-  assertAnswerKeyParse(parse, reportableFilename(path));
+  assertAnswerKeyParse(parse, path);
   return parse.rows;
 }
 

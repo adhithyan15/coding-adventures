@@ -824,6 +824,41 @@ describe("assertAnswerKeyParse", () => {
       .toThrow(/Prueba 2 declares 2 items 3-4/);
   });
 
+  it("refuses a scored paper whose heading declares ZERO items", () => {
+    // `(0 items)` makes the expected set EMPTY, and an empty expectation
+    // matches an empty parse -- so the paper is skipped entirely and its items
+    // are never scored. The per-paper `parsed no Prueba N rows` check that the
+    // set equality replaced caught this unconditionally; deleting it alongside
+    // the others reopened the hole.
+    //
+    // It was asymmetric, too: `(0 items)` on Prueba 1 is caught incidentally,
+    // because the anchor never advances and Prueba 2's run then starts at the
+    // wrong place. Only the LAST paper failed open -- and stubbing out a
+    // not-yet-authored paper as `(0 items)` is ordinary editorial work.
+    const rows = [{ paper: 1, item: 1, requires: ["casa"] }];
+    expect(() => assertAnswerKeyParse(parse({ rows, declared: new Map([[1, 1], [2, 0]]) }), "key.md"))
+      .toThrow(/Prueba 2 heading declares 0 items, outside 1-1000/);
+  });
+
+  it("refuses a declared count large enough to abort the process", () => {
+    // `Array.from({ length: count })` does the work BEFORE anything caps the
+    // message. `(999999999 items)` aborted outright -- FATAL ERROR, exit 134,
+    // uncatchable, no gate message at all -- while `(99999999999 items)` was
+    // SAFE, because `ArrayCreate` rejects a length at or above 2^32 with a
+    // plain RangeError. The merely enormous number was the dangerous one.
+    expect(() => assertAnswerKeyParse(parse({ declared: new Map([[1, 999999999], [2, 1]]) }), "key.md"))
+      .toThrow(/Prueba 1 heading declares 999999999 items, outside 1-1000/);
+  });
+
+  it("sanitises the name it was handed rather than trusting the caller", () => {
+    // The one in-repo caller passes a `reportableFilename` already, but this
+    // function is EXPORTED and `package.json` declares no `exports` map -- the
+    // same deep-import argument that `spanishMockDir` hardens against. A `\r`
+    // in the name would otherwise forge a second log line.
+    expect(() => assertAnswerKeyParse(parse({ rows: [] }), "a\r\nFORGED"))
+      .toThrow(/^"a\\nFORGED": parsed no answer-key rows$/);
+  });
+
   it("truncates a long list of missing items rather than printing all of them", () => {
     const rows = [{ paper: 1, item: 1, requires: ["casa"] }, { paper: 2, item: 21, requires: ["sol"] }];
     expect(() => assertAnswerKeyParse(parse({ rows, declared: new Map([[1, 20], [2, 1]]) }), "key.md"))

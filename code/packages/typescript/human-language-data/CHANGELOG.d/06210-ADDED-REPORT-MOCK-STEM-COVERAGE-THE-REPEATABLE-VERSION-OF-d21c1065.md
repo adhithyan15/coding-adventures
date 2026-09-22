@@ -272,3 +272,33 @@ Added in their place: U+2028 and U+2029, which are **line terminators** that
 `JSON.stringify` does not escape — so the quoting layer this function's
 docstring leans on to prevent a forged second log line did not stop the two
 characters most able to forge one. Also U+061C, U+00AD, U+180E and U+FEFF.
+
+#### Fixed — the equality needed a floor and a ceiling
+
+Round six found that replacing the per-paper checks had deleted one the set
+equality does not cover. A heading declaring `(0 items)` makes the expected set
+**empty**, an empty expectation matches an empty parse, and the paper is skipped
+entirely — its items never scored, `--write` persisting the result. Asymmetric,
+too: `(0 items)` on Prueba 1 is caught incidentally because the anchor never
+advances, so only the **last** paper failed open, which is the one an author
+would stub out.
+
+The same bound closes a second problem. `Array.from({ length: count })` does its
+work before anything caps the message, so `(999999999 items)` aborted the
+process outright — `FATAL ERROR … heap out of memory`, exit 134, uncatchable, no
+gate message at all. `(99999999999 items)` was *safe*, because `ArrayCreate`
+rejects a length at or above 2³² with a plain `RangeError`; the merely enormous
+number was the dangerous one. Counts must now be 1–1000; the real keys declare
+10 or 25.
+
+Also: the set difference used `includes`/`indexOf`, quadratic in the row count
+(10.1 s at n=100 000) on the passing path as well as the failing one — Sets now.
+And `assertAnswerKeyParse` sanitises the name it is handed rather than trusting
+the caller, on the same deep-import argument `spanishMockDir` already carries.
+
+**One claim narrowed rather than defended.** The comment called the item-set
+equality "a complete specification". It is not: transposing the requirement
+cells of two items while leaving their numbers alone still passes, and item 3 is
+then scored against item 4's requirements. No invariant over item *numbers* can
+see that, and there is no second source to check the requirements against —
+which is why `report:mock-stem-coverage` exists at all.
