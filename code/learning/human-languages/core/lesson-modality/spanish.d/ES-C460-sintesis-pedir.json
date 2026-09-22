@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C460-sintesis-pedir",
+    "language": "spanish",
+    "chapter": 460,
+    "sequence": 12420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf35f5e85d092729"
+  },
+  "findings": []
+}

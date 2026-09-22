@@ -1,0 +1,791 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 460,
+  "title": "La herramienta",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0a42d4a47989b486",
+  "lessons": [
+    {
+      "id": "ES-C460-herramienta",
+      "sequence": 12380,
+      "title": "la herramienta — the tool",
+      "headword": "la herramienta",
+      "romanization": "la herramienta",
+      "gloss": "the tool — a thing of iron, with the iron still in the word",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:afb8f3ca7837b6cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el taladro and arreglar. The drill is one of these; name the category it belongs to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la herramienta",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la herramienta — the tool."
+            },
+            {
+              "kind": "speech",
+              "text": "Una caja de herramientas — a toolbox. No tengo las herramientas — I haven't got the tools. La herramienta adecuada — the right tool for the job."
+            },
+            {
+              "kind": "speech",
+              "text": "It covers the abstract sense as well: una herramienta muy útil about an app or a method, exactly as English uses \"tool\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the h that hides a diphthong",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say it: e-rra-MIEN-ta. The h is silent, as it is anywhere in Spanish that it stands alone, and underneath it is the ie you have met before:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Latin",
+                "Spanish"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "Latin: ferramenta. Spanish: la herramienta.",
+                "Latin: ferrum. Spanish: el hierro."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Hierro, iron, has the broken vowel; herramienta does not, because the stress lands on the -mien- instead. Same word, same rule, and by now the rule needs no restating — a stressed e breaks and an unstressed one does not."
+            },
+            {
+              "kind": "speech",
+              "text": "The h was added by scribes to a word that began with f in Latin. That f-to-h shift is one of the loudest things Spanish did to Latin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin ferramenta, \"things made of iron\" — the plural of ferramentum, from ferrum, iron."
+            },
+            {
+              "kind": "speech",
+              "text": "So a herramienta is an iron thing, and the name is older than any of the tools you own. The same ferrum is the Fe on the periodic table, and it gives Spanish el hierro, el herrero — the blacksmith — and la herradura, a horseshoe."
+            },
+            {
+              "kind": "speech",
+              "text": "That f to h is the signature of Spanish among the Romance languages. Latin facere gave hacer, filius gave hijo, ferrum gave hierro — while Italian kept ferro and French kept fer. The letter is silent now, but it marks where an f used to be."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a toolbox, and the right tool",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a toolbox, and the right tool]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the drill is a tool",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the drill is a tool]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which letter hierro and hacer both used to start with",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which letter *hierro* and *hacer* both used to start with]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The tool? (La herramienta.) What is ferrum? (Iron.) What does a silent Spanish h often mark? (Where a Latin f used to be.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C460-solicitar",
+      "sequence": 12390,
+      "title": "solicitar — the word the form uses",
+      "headword": "solicitar",
+      "romanization": "solicitar",
+      "gloss": "to apply for, to request — the formal verb on the form",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:501bcb11f1ec4c0f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la cita and entregar. Both belong to the same morning at a counter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: solicitar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "solicitar — to apply for, to request, formally."
+            },
+            {
+              "kind": "speech",
+              "text": "Para solicitar una plaza, entregue la ficha antes del día 20."
+            },
+            {
+              "kind": "speech",
+              "text": "Solicitar una beca — to apply for a grant. Solicitar cita previa — to book an appointment in advance, the phrase on every health-centre and town-hall page."
+            },
+            {
+              "kind": "speech",
+              "text": "La solicitud is the application itself, and the piece of paper it is written on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: solicitar is not pedir",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "what you are doing",
+                "the verb"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "what you are doing: asking a person for a thing. the verb: pedir.",
+                "what you are doing: asking an institution, on a form. the verb: solicitar."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Le pido un café al camarero. Solicito una beca al ministerio. Using solicitar with a friend would sound as though you had filled in a form to borrow their drill."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole difference and it is register, not meaning: solicitar is the bookish arrival, worn nowhere down, and it belongs to writing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin sollicitare: sollus, whole, plus citare, to set in motion — so to stir something entirely, to shake it up."
+            },
+            {
+              "kind": "speech",
+              "text": "The oldest sense is agitation, and Spanish keeps that branch too: estar solícito is to be attentive, and English solicitous means anxiously caring, while solicitude is worry. To apply for something is to set the machinery in motion on your behalf."
+            },
+            {
+              "kind": "speech",
+              "text": "That citare is the one inside la cita — an appointment is a summoning — and English cite, excite, recite and incite are all the same setting-in-motion."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to apply for a place, hand the form in",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to apply for a place, hand the form in]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "book an appointment in advance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: book an appointment in advance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which verb you use with a waiter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which verb you use with a waiter]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To apply for? (Solicitar.) The application? (La solicitud.) What does citare mean? (To set in motion, to summon.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C460-espera",
+      "sequence": 12400,
+      "title": "la espera — the wait",
+      "headword": "la espera",
+      "romanization": "la espera",
+      "gloss": "the wait — the noun of esperar, and the sign above the chairs",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:57d7f93c598e03d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say esperar and el plazo. One is the doing, one is the window. The noun between them is next."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la espera",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la espera — the wait."
+            },
+            {
+              "kind": "speech",
+              "text": "Sala de espera."
+            },
+            {
+              "kind": "speech",
+              "text": "La lista de espera — the waiting list. Una espera de dos horas — a two-hour wait. En espera de su respuesta — awaiting your reply, the closing line of a formal letter."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb you already have; this is the noun that goes on the door."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: a noun made by cutting, not by adding",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have four suffix families that build a noun from a verb. This is the fifth move, and it is the opposite: take the ending off."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "verb",
+                "noun"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "verb: esperar. noun: la espera.",
+                "verb: buscar. noun: la busca.",
+                "verb: comprar. noun: la compra.",
+                "verb: pagar. noun: el pago."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Cut -ar and add a bare -a or -o. These are the shortest nouns in the language and among the commonest, and the gender is not predictable from the verb — la compra but el pago — so this is the one pattern where the article must be learned with the word."
+            },
+            {
+              "kind": "speech",
+              "text": "Set beside la solicitud: one verb builds its noun by adding four letters, the other by removing two. Both are ordinary."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin sperare, to hope — and that is worth sitting with, because Spanish made one verb do both jobs."
+            },
+            {
+              "kind": "speech",
+              "text": "Esperar is to wait and to hope, and only context separates them: espero el autobús is waiting, espero que sí is hoping. Where English has two verbs, Spanish has one, on the reasoning that waiting for something is hoping it comes."
+            },
+            {
+              "kind": "speech",
+              "text": "You met the same root in la esperanza, hope, which is -anza on this verb. So la espera and la esperanza are one word twice: the plain wait, and the hope that grew out of it."
+            },
+            {
+              "kind": "speech",
+              "text": "The e- at the front is Spanish's own, the same one that turned stare into estar and stroppiare into estropear."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the waiting room and the waiting list",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the waiting room and the waiting list]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I'm waiting for the bus, then I hope so",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I'm waiting for the bus, then I hope so]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what la espera and la esperanza share",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *la espera* and *la esperanza* share]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The wait? (La espera.) The waiting room? (La sala de espera.) What else does esperar mean? (To hope.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R460-repaso-pedir",
+      "sequence": 12410,
+      "title": "(la herramienta, solicitar, la espera) — from cold",
+      "headword": "(la herramienta, solicitar, la espera)",
+      "romanization": "(la herramienta, solicitar, la espera)",
+      "gloss": "cold retrieval of the three, and the fifth way Spanish turns a verb into a noun",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4f100ae080045f04",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say all three: the tool, to apply for, the wait."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: five ways to a noun, now complete",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "how",
+                "example",
+                "gender"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "how: -anza. example: la mudanza. gender: feminine.",
+                "how: -miento. example: el seguimiento. gender: masculine.",
+                "how: -eza. example: la limpieza. gender: feminine.",
+                "how: -ción. example: la instalación. gender: feminine.",
+                "how: cut the ending. example: la espera. gender: either."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The first four hand you the article. The fifth does not — la espera, la compra, but el pago and el gasto — so a cut-ending noun is the one kind where the gender has to be learned with the word."
+            },
+            {
+              "kind": "speech",
+              "text": "Note what that costs: these are the shortest and commonest nouns in Spanish, and they are the ones the endings cannot help you with."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: two of the three were relatives",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "new word",
+                "what it was built on"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "new word: la herramienta. what it was built on: ferrum, iron — and el hierro.",
+                "new word: solicitar. what it was built on: citare, inside la cita.",
+                "new word: la espera. what it was built on: esperar, and la esperanza beside it."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "La espera is the neat one: you have had esperar since early on and la esperanza since the moving chapter, and this is the third member — the plain noun that sits between the verb and the abstract one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the waiting room is that way",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the waiting room is that way]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to apply for a place you hand in the form",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to apply for a place you hand in the form]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the five noun-makers leaves the gender open",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the five noun-makers leaves the gender open]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "All three again, in Spanish, without looking. Then one sentence asking for something at a counter."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C460-sintesis-pedir",
+      "sequence": 12420,
+      "title": "(pedir prestada una herramienta) — read it, then do it yourself",
+      "headword": "(pedir prestada una herramienta)",
+      "romanization": "(pedir prestada una herramienta)",
+      "gloss": "the payoff — read a noticeboard offering a tool library, then ask for one",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf35f5e85d092729",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la herramienta and solicitar. The notice below uses one for the things and one for the paperwork."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A notice in a neighbourhood centre. Read it, then answer."
+            },
+            {
+              "kind": "speech",
+              "text": "PRÉSTAMO DE HERRAMIENTAS."
+            },
+            {
+              "kind": "speech",
+              "text": "Taladros, escaleras y carritos. Dos días por vecino."
+            },
+            {
+              "kind": "speech",
+              "text": "Para solicitar una herramienta, rellene la ficha en conserjería."
+            },
+            {
+              "kind": "speech",
+              "text": "Hay lista de espera para el taladro grande."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what you can borrow, and for how long",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what you can borrow, and for how long]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what you have to do to ask for one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what you have to do to ask for one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which item you may not get straight away",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which item you may not get straight away]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Solicitar on a noticeboard and pedir at the counter are the same act in two registers. The notice says para solicitar una herramienta because it is describing a procedure; the neighbour who walks in says ¿me dejas el taladro? That pair is the whole of Spanish formality in one scene."
+            },
+            {
+              "kind": "speech",
+              "text": "Hay lista de espera — no article before lista. After hay, Spanish drops it, because hay is introducing the thing's existence rather than pointing at a known one. Hay una lista is also correct and says something slightly different: there is a list, one of possibly several."
+            },
+            {
+              "kind": "speech",
+              "text": "And por vecino — \"per neighbour\" — is por doing distribution, the same por that gave a cause on the roadworks sign. One preposition, several jobs, and the noun after it stays bare."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now your turn, out loud and then in writing. Four lines for a tool library: say what is lent and for how long, say how to apply, say there is a waiting list, and then ask a neighbour informally for the same thing."
+            },
+            {
+              "kind": "speech",
+              "text": "Then check yourself: did the notice use solicitar and the neighbour pedir?"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

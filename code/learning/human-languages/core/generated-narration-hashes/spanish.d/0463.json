@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:b41e0fbcee09581e",
+  "lessonIds": [
+    "ES-C463-organizar",
+    "ES-C463-guia",
+    "ES-C463-importar",
+    "ES-R463-repaso-guia",
+    "ES-C463-sintesis-guia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch463.txt",
+  "json": "spanish/narration/ch463.json",
+  "textHash": "fnv1a64:3f893956c9b80fd5",
+  "jsonHash": "fnv1a64:80032016073db155",
+  "findings": []
+}

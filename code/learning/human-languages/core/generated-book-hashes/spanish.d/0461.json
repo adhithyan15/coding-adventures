@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 461,
+  "sourceHash": "fnv1a64:8d108efdb834d642",
+  "lessonIds": [
+    "ES-C461-donar",
+    "ES-C461-peligroso",
+    "ES-C461-rechazar",
+    "ES-R461-repaso-donar",
+    "ES-C461-sintesis-donar"
+  ],
+  "tex": "spanish/book/chapters/ch461-donar.tex"
+}

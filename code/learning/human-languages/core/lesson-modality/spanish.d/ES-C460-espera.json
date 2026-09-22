@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C460-espera",
+    "language": "spanish",
+    "chapter": 460,
+    "sequence": 12400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57d7f93c598e03d6"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C460-espera",
+  "pathSegment": "ES-PATH-460-PEDIR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-460-PEDIR",
+      "order": 2
+    }
+  ]
+}

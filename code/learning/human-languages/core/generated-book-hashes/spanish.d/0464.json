@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 464,
+  "sourceHash": "fnv1a64:7901e61a9981dece",
+  "lessonIds": [
+    "ES-C464-recordar",
+    "ES-C464-dentista",
+    "ES-C464-fallar",
+    "ES-R464-repaso-cita",
+    "ES-C464-sintesis-cita"
+  ],
+  "tex": "spanish/book/chapters/ch464-cita.tex"
+}

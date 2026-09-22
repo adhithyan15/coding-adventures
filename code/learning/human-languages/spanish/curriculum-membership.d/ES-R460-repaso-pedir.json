@@ -1,0 +1,11 @@
+{
+  "id": "ES-R460-repaso-pedir",
+  "pathSegment": "ES-PATH-460-PEDIR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-460-PEDIR",
+      "order": 3
+    }
+  ]
+}

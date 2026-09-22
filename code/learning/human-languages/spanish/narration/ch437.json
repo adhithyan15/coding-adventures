@@ -4,7 +4,7 @@
   "chapter": 437,
   "title": "Decidir, Coincidir, Equivocarse",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:51096f3af2b9b262",
+  "sourceHash": "fnv1a64:e608dbd341cffc24",
   "lessons": [
     {
       "id": "ES-C437-decidir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a72cfb54b990162c",
+      "sourceHash": "fnv1a64:c815cd70339c8a66",
       "notice": null,
       "blocks": [
         {

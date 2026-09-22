@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-464-CITA",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can handle a missed appointment: read the reminder, apologise for not going, say what let me down, and ask for another.",
+  "prerequisites": [
+    "ES-EXT-463-GUIA"
+  ]
+}

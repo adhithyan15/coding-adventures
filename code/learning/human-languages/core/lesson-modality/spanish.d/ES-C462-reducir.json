@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C462-reducir",
+    "language": "spanish",
+    "chapter": 462,
+    "sequence": 12480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd6f86a1d66fbb08"
+  },
+  "findings": []
+}

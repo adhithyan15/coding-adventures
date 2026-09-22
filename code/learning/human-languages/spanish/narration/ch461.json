@@ -1,0 +1,783 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 461,
+  "title": "El donativo",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:975ab44a5636da4b",
+  "lessons": [
+    {
+      "id": "ES-C461-donar",
+      "sequence": 12430,
+      "title": "donar — to give it away",
+      "headword": "donar",
+      "romanization": "donar",
+      "gloss": "to donate — the giving inside perdón, said plainly",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3fd94f22f05900b1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say perdón and la sangre. There is a verb of giving hiding in the first, and the second is the commonest thing it is used about."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: donar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "donar — to donate."
+            },
+            {
+              "kind": "speech",
+              "text": "Donar sangre — to give blood, the sign outside every mobile clinic. Donar ropa — to donate clothes. La donación is the donation and el donante the donor."
+            },
+            {
+              "kind": "speech",
+              "text": "It is not the everyday verb for giving. Dar is that. Donar is giving to an institution or a cause, and it carries no expectation of return."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: donar is not regalar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three verbs of giving, and the difference is who receives:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what is happening",
+                "the verb"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "what is happening: handing anything to anyone. the verb: dar.",
+                "what is happening: making somebody a present. the verb: regalar.",
+                "what is happening: giving to a cause or a body. the verb: donar."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Te doy el taladro — I'm passing it to you. Te regalo el taladro — it is yours, a gift. Dono el taladro al centro — the neighbourhood centre has it now."
+            },
+            {
+              "kind": "speech",
+              "text": "Use donar about a person and it sounds like a charitable act rather than a kindness, which is sometimes exactly the joke a Spanish speaker is making."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin donare, to give — and here is the payoff on a word you learned in your first weeks."
+            },
+            {
+              "kind": "speech",
+              "text": "Perdón is per- plus donare: to give thoroughly, to give completely away. Forgiving somebody is giving the offence away rather than holding it, and the metaphor is the same in English — for-give is built the identical way, for- being an intensifier, so pardon and forgive are the same idea twice."
+            },
+            {
+              "kind": "speech",
+              "text": "The family also gives el don, a gift or a talent, and la dosis, through Greek — a dose is what is given to you."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to give blood",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to give blood]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I'm donating the tools to the centre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I'm donating the tools to the centre]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what perdón is made of",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *perdón* is made of]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To donate? (Donar.) The donor? (El donante.) What does perdón literally say? (To give thoroughly — to give it away.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C461-peligroso",
+      "sequence": 12440,
+      "title": "peligroso — dangerous",
+      "headword": "peligroso",
+      "romanization": "peligroso",
+      "gloss": "dangerous — a trial you might not survive, with its letters swapped",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dddc79cdd75d7a72",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el taladro and el accidente. One can lead to the other, and the sign warning you sits between them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: peligroso",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "peligroso — dangerous."
+            },
+            {
+              "kind": "speech",
+              "text": "Peligro. No pasar."
+            },
+            {
+              "kind": "speech",
+              "text": "El peligro is the noun and the single word on the sign; peligroso is the adjective. Una zona peligrosa — a dangerous area. Es peligroso dejarlo ahí — it's dangerous to leave it there."
+            },
+            {
+              "kind": "speech",
+              "text": "Estar en peligro is to be in danger, and fuera de peligro — out of danger — uses the frame you already have from fuera de servicio."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: -oso makes an adjective of a noun",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "-oso means \"full of\" or \"given to\", and it turns nouns into adjectives all over the language:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "noun",
+                "adjective"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "noun: el peligro. adjective: peligroso.",
+                "noun: el cuidado. adjective: cuidadoso — careful.",
+                "noun: la fama. adjective: famoso — famous."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "English has the same ending in dangerous, famous and curious, from the same Latin -osus, so the pair usually translates straight across."
+            },
+            {
+              "kind": "speech",
+              "text": "It agrees like any adjective — peligrosa, peligrosos — and the noun keeps its own gender: el peligro is masculine, una zona peligrosa feminine."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin periculum, a trial or a risk — from a root meaning to try, the one also behind experiri, to test by going through."
+            },
+            {
+              "kind": "speech",
+              "text": "So a peligro is something you have to try your luck against, and English peril is the same word, kept closer to the Latin. Experience and experiment are relatives too: all of them are attempts, and only some are survived."
+            },
+            {
+              "kind": "speech",
+              "text": "From periculum to peligro the r and the l swapped places — the metathesis you met in milagro from miraculum. Both words came through speech, and both got their letters shuffled on the way; a word that arrived by book kept them, which is why experiencia looks so different."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "danger, do not enter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: danger, do not enter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the drill is dangerous for a child",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the drill is dangerous for a child]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which other word swapped its r and l the same way",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which other word swapped its r and l the same way]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Dangerous? (Peligroso.) The noun? (El peligro.) What did periculum mean? (A trial, a risk — something you try your luck against.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C461-rechazar",
+      "sequence": 12450,
+      "title": "rechazar — to turn it down",
+      "headword": "rechazar",
+      "romanization": "rechazar",
+      "gloss": "to turn down — the opposite of aceptar, and its cousin",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d5dd96d432179162",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say aceptar and admitir. The word coming next undoes the first, and it is made of the same Latin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: rechazar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rechazar — to turn down, to reject, to refuse."
+            },
+            {
+              "kind": "speech",
+              "text": "Rechazar una oferta — to turn down an offer. Han rechazado la solicitud — the application has been rejected. El banco rechazó la tarjeta — the card was declined."
+            },
+            {
+              "kind": "speech",
+              "text": "El rechazo is the noun: a refusal, and in medicine the rejection of a transplant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the three verbs of the counter, completed",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "the move",
+                "the verb"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "the move: you agree to what is offered. the verb: aceptar.",
+                "the move: the institution lets it through. the verb: admitir.",
+                "the move: it is turned back. the verb: rechazar."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Rechazar is the mirror of both of the others, and which one it mirrors depends on who is doing it. A shop rechaza your card where it might have aceptado it; an office rechaza your form where it might have admitido it."
+            },
+            {
+              "kind": "speech",
+              "text": "That is why the verb turns up so often in the passive-looking se form on notices — no se aceptan, no se admiten — and in the plain active when a person does it: rechacé la oferta."
+            },
+            {
+              "kind": "speech",
+              "text": "Note the spelling: rechacé, with a c. A z before e becomes c in Spanish, always, which is why empezar gives empecé."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "re- plus an old Spanish verb chazar, to drive back — and behind that Vulgar Latin captiare, to chase, built on capere, to take."
+            },
+            {
+              "kind": "speech",
+              "text": "So rechazar and aceptar are cousins, and the pair is worth holding: ad- plus capere is taking a thing towards you, and re- plus captiare is driving it back. One Latin verb of taking, pointed two ways by two prefixes."
+            },
+            {
+              "kind": "speech",
+              "text": "The same captiare gave Spanish cazar, to hunt, and French chasser, which English borrowed as chase — and, through a second borrowing, as catch. To reject something is to chase it back the way it came."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "they have rejected the application",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: they have rejected the application]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I turned the offer down, in the past",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I turned the offer down, in the past]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what rechazar and aceptar have in common",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *rechazar* and *aceptar* have in common]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To turn down? (Rechazar.) I turned down? (Rechacé — z becomes c before e.) Which verb is its cousin? (Aceptar — both from capere.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R461-repaso-donar",
+      "sequence": 12460,
+      "title": "(donar, peligroso, rechazar) — from cold",
+      "headword": "(donar, peligroso, rechazar)",
+      "romanization": "(donar, peligroso, rechazar)",
+      "gloss": "cold retrieval of the three, and two prefixes pointing one Latin verb two ways",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e7ce2dba4ad25848",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say all three: to donate, dangerous, to turn down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one verb of taking, pointed two ways",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "the prefix, and where it points"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "word: aceptar. the prefix, and where it points: ad-, towards you — you take it.",
+                "word: rechazar. the prefix, and where it points: re-, back — you drive it away."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Both are Latin capere, to take. The prefix does everything, exactly as it did for meter, el permiso, permitir and admitir off mittere."
+            },
+            {
+              "kind": "speech",
+              "text": "That is now two families in three chapters where the prefix carries the whole meaning. When a Spanish verb starts with a-, re-, per-, ad- or des-, the part after it is usually a word you can already find."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: two words hiding in your earliest vocabulary",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "new word",
+                "where it was already"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "new word: donar. where it was already: perdón — per-donare, to give thoroughly.",
+                "new word: peligroso. where it was already: el peligro, and periculum behind it."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Perdón is the one to keep. You learned it in the first weeks as a thing you say when you bump into somebody, and it turns out to be built on giving — forgiveness is handing the offence over rather than keeping it. English does the identical thing in for-give."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "they turned down the application",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: they turned down the application]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "giving blood is not dangerous",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: giving blood is not dangerous]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which everyday word has donar inside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which everyday word has *donar* inside it]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "All three again, in Spanish, without looking. Then one sentence about something offered and refused."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C461-sintesis-donar",
+      "sequence": 12470,
+      "title": "(la campaña de donación) — read it, then do it yourself",
+      "headword": "(la campaña de donación)",
+      "romanization": "(la campaña de donación)",
+      "gloss": "the payoff — read a donation appeal and the rules under it, then write one",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:40c27464e79f636b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say donar and rechazar. The notice below does the first and warns about the second."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A poster in a stairwell. Read it, then answer."
+            },
+            {
+              "kind": "speech",
+              "text": "RECOGIDA DE JUGUETES."
+            },
+            {
+              "kind": "speech",
+              "text": "Puede donar juguetes en buen estado hasta el día 30."
+            },
+            {
+              "kind": "speech",
+              "text": "Se rechazan los que estén rotos o sean peligrosos para menores de tres años."
+            },
+            {
+              "kind": "speech",
+              "text": "Entréguelos en portería. Gracias por colaborar."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what is being collected, and until when",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what is being collected, and until when]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two reasons something would be turned away",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two reasons something would be turned away]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "where to hand things in",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: where to hand things in]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Se rechazan los que estén rotos o sean peligrosos is the sentence to take apart, and the subjunctive is doing the same job it did on the swimming-course notice."
+            },
+            {
+              "kind": "speech",
+              "text": "Los que estén rotos, not están. The poster is not saying that some of the toys are broken; it is describing a category that may or may not turn up — whichever ones happen to be broken. The indicative would point at particular toys the writer had in mind, which on a poster addressed to a whole building would be an odd thing to imply."
+            },
+            {
+              "kind": "speech",
+              "text": "Note sean as well: ser for a lasting property, because a toy that is dangerous for a toddler is dangerous by design, not by circumstance. And estén for rotos, because being broken is a state a thing arrived at. One sentence, both verbs, each right for its own reason."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now your turn, out loud and then in writing. Four lines for a collection poster: say what can be donated and until when, say what will be turned away and why, and say where to hand it in."
+            },
+            {
+              "kind": "speech",
+              "text": "Then check yourself: did you use the subjunctive for the things that might turn up, and ser against estar for the two reasons?"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

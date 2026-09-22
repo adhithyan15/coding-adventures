@@ -10,7 +10,7 @@ gloss: to decide — to cut a question off, and the verb every notice uses when 
 concept_tag: ES-ACT-DECIDIR
 prerequisites: [ES-C436-recoger, ES-C436-ofrecer]
 sounds: []
-roots: []
+roots: [caedere-latin]
 duration:
   max_seconds: 240
 requires:

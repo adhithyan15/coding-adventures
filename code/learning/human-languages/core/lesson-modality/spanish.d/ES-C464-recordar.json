@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C464-recordar",
+    "language": "spanish",
+    "chapter": 464,
+    "sequence": 12580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:350ec05b3852e3d8"
+  },
+  "findings": []
+}

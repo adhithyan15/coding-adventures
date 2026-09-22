@@ -59,15 +59,15 @@
     ],
     "numericCredits": "0-100"
   },
-  "lessonCount": 1343,
-  "taughtForms": 2213,
-  "objectiveFailed": 18,
+  "lessonCount": 1368,
+  "taughtForms": 2261,
+  "objectiveFailed": 13,
   "mocks": [
     {
       "mock": 1,
       "reading": 21,
-      "listening": 18,
-      "objectiveFailed": 11,
+      "listening": 19,
+      "objectiveFailed": 10,
       "failed": [
         {
           "paper": 1,
@@ -161,38 +161,20 @@
             "encontrar",
             "avisar"
           ]
-        },
-        {
-          "paper": 2,
-          "item": 48,
-          "missing": [
-            "recordar",
-            "dentista",
-            "fallar"
-          ]
         }
       ]
     },
     {
       "mock": 2,
-      "reading": 19,
-      "listening": 24,
-      "objectiveFailed": 7,
+      "reading": 22,
+      "listening": 25,
+      "objectiveFailed": 3,
       "failed": [
         {
           "paper": 1,
           "item": 3,
           "missing": [
             "explicar"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 14,
-          "missing": [
-            "reducir",
-            "decidirse",
-            "jefe"
           ]
         },
         {
@@ -207,38 +189,11 @@
         },
         {
           "paper": 1,
-          "item": 22,
-          "missing": [
-            "donar",
-            "peligroso",
-            "rechazar"
-          ]
-        },
-        {
-          "paper": 1,
-          "item": 23,
-          "missing": [
-            "herramienta",
-            "solicitar",
-            "espera"
-          ]
-        },
-        {
-          "paper": 1,
           "item": 25,
           "missing": [
             "recomendar",
             "estado",
             "explicar"
-          ]
-        },
-        {
-          "paper": 2,
-          "item": 39,
-          "missing": [
-            "organizar",
-            "guía",
-            "importar"
           ]
         }
       ]
@@ -256,45 +211,30 @@
     "conectar",
     "creer",
     "cuaderno",
-    "decidirse",
-    "dentista",
     "descontar",
     "director",
     "discutir",
-    "donar",
     "encontrar",
     "encuesta",
-    "espera",
     "estado",
     "explicar",
-    "fallar",
     "grado",
-    "guía",
-    "herramienta",
-    "importar",
     "impresora",
     "imprimir",
     "invitar",
-    "jefe",
     "lectura",
     "llamada",
     "lluvia",
     "mango",
     "objetivo",
-    "organizar",
     "paraguas",
-    "peligroso",
     "perderse",
     "principiante",
     "problema",
     "producir",
-    "rechazar",
     "recomendar",
-    "recordar",
-    "reducir",
     "responder",
     "sencillo",
-    "solicitar",
     "suficiente",
     "temperatura",
     "usuario",
@@ -350,14 +290,6 @@
       "count": 1
     },
     {
-      "lexeme": "decidirse",
-      "count": 1
-    },
-    {
-      "lexeme": "dentista",
-      "count": 1
-    },
-    {
       "lexeme": "descontar",
       "count": 1
     },
@@ -370,10 +302,6 @@
       "count": 1
     },
     {
-      "lexeme": "donar",
-      "count": 1
-    },
-    {
       "lexeme": "encontrar",
       "count": 1
     },
@@ -382,31 +310,11 @@
       "count": 1
     },
     {
-      "lexeme": "espera",
-      "count": 1
-    },
-    {
       "lexeme": "estado",
       "count": 1
     },
     {
-      "lexeme": "fallar",
-      "count": 1
-    },
-    {
       "lexeme": "grado",
-      "count": 1
-    },
-    {
-      "lexeme": "guía",
-      "count": 1
-    },
-    {
-      "lexeme": "herramienta",
-      "count": 1
-    },
-    {
-      "lexeme": "importar",
       "count": 1
     },
     {
@@ -419,10 +327,6 @@
     },
     {
       "lexeme": "invitar",
-      "count": 1
-    },
-    {
-      "lexeme": "jefe",
       "count": 1
     },
     {
@@ -446,15 +350,7 @@
       "count": 1
     },
     {
-      "lexeme": "organizar",
-      "count": 1
-    },
-    {
       "lexeme": "paraguas",
-      "count": 1
-    },
-    {
-      "lexeme": "peligroso",
       "count": 1
     },
     {
@@ -474,19 +370,7 @@
       "count": 1
     },
     {
-      "lexeme": "rechazar",
-      "count": 1
-    },
-    {
       "lexeme": "recomendar",
-      "count": 1
-    },
-    {
-      "lexeme": "recordar",
-      "count": 1
-    },
-    {
-      "lexeme": "reducir",
       "count": 1
     },
     {
@@ -495,10 +379,6 @@
     },
     {
       "lexeme": "sencillo",
-      "count": 1
-    },
-    {
-      "lexeme": "solicitar",
       "count": 1
     },
     {

@@ -1,0 +1,20 @@
+{
+  "chapter": 460,
+  "title": "La herramienta",
+  "label": "ch:es-pedir",
+  "canDo": "I can borrow a tool from a shared store: read the notice, apply the way the form wants, and understand that there is a waiting list.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "ES-C460-sintesis-pedir",
+    "kind": "task",
+    "summary": "Read the message or notice this chapter's words exist for, then say the same thing back.",
+    "assesses": [
+      "ES-LEX-C460-PEDIR-01",
+      "ES-LEX-C460-PEDIR-02",
+      "ES-LEX-C460-PEDIR-03"
+    ],
+    "note": "THE FIFTH WAY SPANISH TURNS A VERB INTO A NOUN, and it is the opposite of the other four: CUT THE ENDING OFF rather than add one (esperar/la espera, comprar/la compra, pagar/el pago). The four suffix families hand you the article; THIS ONE DOES NOT -- la espera and la compra but el pago and el gasto -- so a cut-ending noun is the one kind where the gender must be learned with the word, and those are the shortest and commonest nouns in the language. SOLICITAR IS NOT PEDIR and the difference is register, not meaning: you pedir a person and solicitar an institution on a form, so using solicitar with a friend sounds like filling in a form to borrow their drill; the payoff sets a noticeboard's 'para solicitar una herramienta' against a neighbour's '¿me dejas el taladro?' in one scene. la herramienta is FERRAMENTA on ferrum, iron, so a tool is an IRON THING older than any tool the reader owns, and its silent h marks where a Latin F used to be -- facere/hacer, filius/hijo, ferrum/hierro -- which is the signature of Spanish among the Romance languages, while Italian kept ferro and French fer. hierro has the broken ie and herramienta does not, because the stress moved. solicitar is sollus + CITARE, to set in motion entirely, so the oldest sense is agitation (English solicitous, solicitude) and citare is the verb inside LA CITA, an appointment being a summoning. la espera joins sperare-latin with esperar and LA ESPERANZA -- one Spanish verb does both waiting and hoping, on the reasoning that waiting for a thing is hoping it comes. Grammar in the payoff: hay + bare noun drops the article, and por + bare noun distributes (por vecino)."
+  }
+}
