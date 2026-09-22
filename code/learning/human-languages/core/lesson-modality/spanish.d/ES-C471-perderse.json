@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C471-perderse",
+    "language": "spanish",
+    "chapter": 471,
+    "sequence": 13040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:edec6ec64ef37fe7"
+  },
+  "findings": []
+}
