@@ -4,7 +4,7 @@
   "chapter": 460,
   "title": "La herramienta",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ab684b4206a721cf",
+  "sourceHash": "fnv1a64:622621b50e7d455c",
   "lessons": [
     {
       "id": "ES-C460-herramienta",
@@ -515,7 +515,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3ed66e5907f2242",
+      "sourceHash": "fnv1a64:7fc54bafb1785ae8",
       "notice": null,
       "blocks": [
         {
@@ -559,7 +559,7 @@
             },
             {
               "kind": "speech",
-              "text": "The first four hand you the article. The fifth does not — la espera, la compra, but el pago and el gasto — so a cut-ending noun is the one kind where the gender has to be learned with the word."
+              "text": "The first four hand you the article. The fifth does not — la espera, la compra, but el pago and el gasto. The ending is no help in guessing which vowel a given verb takes; once you have the word, the ordinary -o/-a rule gives you the article as usual."
             },
             {
               "kind": "speech",

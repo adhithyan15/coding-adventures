@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 463,
-  "sourceHash": "fnv1a64:a7cf45f7ae7af81b",
+  "sourceHash": "fnv1a64:d97bc7b09b58fa61",
   "lessonIds": [
     "ES-C463-organizar",
     "ES-C463-guia",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch463.txt",
   "json": "spanish/narration/ch463.json",
-  "textHash": "fnv1a64:e6491e2eb3c233af",
-  "jsonHash": "fnv1a64:1b6198d74f163f33",
+  "textHash": "fnv1a64:5a5ba6cc483d88ae",
+  "jsonHash": "fnv1a64:55bcac25ea038c6e",
   "findings": []
 }

@@ -47,8 +47,9 @@ apply for*, *the wait*.
 | **cut the ending** | la espera | either |
 
 The first four hand you the article. **The fifth does not** — *la espera*, *la
-compra*, but *el pago* and *el gasto* — so a cut-ending noun is the one kind
-where the gender has to be learned with the word.
+compra*, but *el pago* and *el gasto*. The ending is no help in guessing which
+vowel a given verb takes; once you have the word, the ordinary *-o*/*-a* rule
+gives you the article as usual.
 
 Note what that costs: these are the shortest and commonest nouns in Spanish,
 and they are the ones the endings cannot help you with.

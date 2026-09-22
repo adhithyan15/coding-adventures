@@ -58,7 +58,8 @@ the part after it is usually a word you can already find.
 | **donar** | *perdón* — *per-donare*, to give thoroughly |
 | **peligroso** | *el peligro*, and *periculum* behind it |
 
-*Perdón* is the one to keep. You learned it in the courtesy chapter as a thing you
+*Perdón* is the one to keep. You learned it in the courtesy chapter as a thing
+you
 say when you bump into somebody, and it turns out to be built on **giving** —
 forgiveness is handing the offence over rather than keeping it. English does
 the identical thing in *for-give*.

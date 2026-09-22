@@ -4,7 +4,7 @@
   "chapter": 463,
   "title": "El viaje guiado",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a7cf45f7ae7af81b",
+  "sourceHash": "fnv1a64:d97bc7b09b58fa61",
   "lessons": [
     {
       "id": "ES-C463-organizar",
@@ -517,7 +517,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a2f6cc5aa76b2400",
+      "sourceHash": "fnv1a64:ae22d6bd3cc17462",
       "notice": null,
       "blocks": [
         {
@@ -559,7 +559,7 @@
             },
             {
               "kind": "speech",
-              "text": "Four verbs, one shape, and you now have the four this book has given you — the family is larger, and encantar, faltar and parecer all run on the same machine. The person is never the subject; the thing is, and the verb agrees with it. Me importan los horarios takes the plural because the timetables are doing the mattering."
+              "text": "Four verbs, one shape, and you now have the four this book has given you. The family is larger — encantar, faltar and parecer all run on the same machine. The person is never the subject; the thing is, and the verb agrees with it. Me importan los horarios takes the plural because the timetables are doing the mattering."
             },
             {
               "kind": "speech",

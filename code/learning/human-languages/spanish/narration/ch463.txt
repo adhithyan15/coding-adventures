@@ -137,7 +137,7 @@ Spanish: me gusta el libro. what is the subject: the book.
 Spanish: me interesa el arte. what is the subject: art.
 Spanish: me importa el resultado. what is the subject: the result.
 Spanish: me duele la cabeza. what is the subject: the head.
-Four verbs, one shape, and you now have the four this book has given you — the family is larger, and encantar, faltar and parecer all run on the same machine. The person is never the subject; the thing is, and the verb agrees with it. Me importan los horarios takes the plural because the timetables are doing the mattering.
+Four verbs, one shape, and you now have the four this book has given you. The family is larger — encantar, faltar and parecer all run on the same machine. The person is never the subject; the thing is, and the verb agrees with it. Me importan los horarios takes the plural because the timetables are doing the mattering.
 The useful consequence: ¿te importa…? is how Spanish asks a small favour, and it is not asking permission. It asks whether the thing would weigh on them.
 
 Grammar Lens: two spellings the ending forces.
