@@ -31,24 +31,25 @@ explained `el ordenador`'s masculine gender as a dropped Spanish noun, which
 contradicts `ES-C393-ordenador` — the direct prerequisite — where the
 computing sense is a loan from French *ordinateur*.
 
-## The rule
+**The rule.** A citation is a claim that you have read the lesson. Reading the
+lesson means reading its chapter. So: collect every lesson id you cite, link
+to, or name in prose, including the ones reached through `prerequisites:`; for
+each, take the chapter number from its `chapter:` field, never off the id; run
+`ls ES-C<ch>-*.md`; and open every file in that listing, pasting the list into
+the plan file. That last step is the part that costs time and the part that
+pays. The cost scales with how many chapters you cite, which is a reason to
+cite fewer and more deliberately, not a reason to skip the check.
 
-A citation is a claim that you have read the lesson. Reading the lesson means
-reading its **chapter**. So:
+**Why a headword grep cannot replace it.** A grep answers "has this word been
+used before". It cannot answer "has this *rule* been taught before", because a
+rule is owned by a lesson whose headword may share nothing with yours. The
+`-dora` gender rule is owned by a lesson about a water meter. Rules travel by
+chapter, not by vocabulary.
 
-1. Collect every lesson id you cite, link to, or name in prose — including the
-   ones you reach through `prerequisites:`.
-2. For each, take the chapter number **from its `chapter:` field**, and run
-   `ls ES-C<ch>-*.md`.
-3. Open every file in that listing and paste the list into the plan file.
-
-Step 3 is the part that costs time and the part that pays. The cost scales
-with how many chapters you cite, which is a reason to cite fewer and more
-deliberately, not a reason to skip the check.
-
-## Why a headword grep cannot replace it
-
-A grep answers "has this word been used before". It cannot answer "has this
-*rule* been taught before", because a rule is owned by a lesson whose headword
-may share nothing with yours. `-dora` gender is owned by a lesson about a
-water meter. Rules travel by chapter, not by vocabulary.
+The chapter after this one confirmed it twice more before a line was written.
+`ES-C330-parada` turned out to own the whole `para-` family — *parasol*,
+*parachute*, and the Romance-versus-Greek `para-` distinction — and to derive
+`para-` from *parare*, "to make ready against". The planned gloss for
+`paraguas` was *para* ("stops") plus *aguas*, which would have contradicted a
+merged lesson outright. The same listing turned up `ES-C383-dejar` beside
+`buscar`, which improved the chapter rather than only correcting it.
