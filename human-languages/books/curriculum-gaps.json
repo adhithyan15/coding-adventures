@@ -5210,8 +5210,8 @@
     "totalLessons": 7485,
     "byLevel": {
       "pre-A1": 3968,
-      "A1": 2773,
-      "A2": 660,
+      "A1": 2492,
+      "A2": 941,
       "B1": 39,
       "B2": 17,
       "C1": 10,
@@ -5510,8 +5510,8 @@
         "lessonCount": 1514,
         "byLevel": {
           "pre-A1": 354,
-          "A1": 949,
-          "A2": 127,
+          "A1": 668,
+          "A2": 408,
           "B1": 39,
           "B2": 17,
           "C1": 10,
@@ -144595,19 +144595,18 @@
       },
       {
         "strand": "TEXT",
-        "nodes": 8,
+        "nodes": 9,
         "byStage": {
           "pre-A1": 0,
           "A1": 1,
-          "A2": 0,
+          "A2": 1,
           "B1": 1,
           "B2": 2,
           "C1": 2,
           "C2": 2
         },
         "missingStages": [
-          "pre-A1",
-          "A2"
+          "pre-A1"
         ]
       }
     ],
@@ -144655,7 +144654,7 @@
         "severity": "over-target"
       }
     ],
-    "totalNodes": 40,
+    "totalNodes": 41,
     "largestNode": {
       "nodeId": "SPINE-SAY-WHAT-I-DO",
       "concepts": 24
