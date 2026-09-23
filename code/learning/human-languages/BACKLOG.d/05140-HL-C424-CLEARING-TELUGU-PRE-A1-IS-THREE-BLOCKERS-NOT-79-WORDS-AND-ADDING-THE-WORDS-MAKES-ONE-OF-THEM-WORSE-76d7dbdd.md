@@ -75,3 +75,60 @@ Tamil's blockers have the same three criteria in the same order
 
 **Do not open this as a 79-word tranche.** The reinforcement arithmetic above is
 the reason, and it is measured rather than argued.
+
+---
+
+### The atom-budget blocker, attempted and costed (2026-09-23)
+
+`TE-C08-dayachesi` introduces **four** atoms against a budget of three:
+`TE-LEX-…-01`, `TE-ETYMON-…-02`, `TE-PRAGMATICS-…-03`, `TE-SCRIPT-…-04`.
+
+It is the **only** Telugu content lesson that introduces four, and `SCRIPT` is
+the rarest kind in the track by an order of magnitude — 272 LEX, 80 ETYMON, 44
+GRAMMAR, 14 PRAGMATICS, 2 SCRIPT across all `TE-C*` lessons. Telugu keeps script
+knowledge in a dedicated `TE-S*` track owning `TE-SCRIPT-RECOG-*`.
+
+**So the obvious fix is to stop introducing the script atom and practise the
+already-taught vowel-sign atoms instead. Tried it; the validator refused it, on
+two counts, and both are worth writing down.**
+
+1. **The atom is load-bearing, not redundant.** `TE-C09-kshaminchandi`,
+   `TE-C39-tii` and `TE-C74-and` all require and assess
+   `TE-SCRIPT-C08-DAYACHESI-04` — which is why it already carries 3 revisits.
+   Deleting it raised 14 errors across those three lessons
+   (`schema-v2-knowledge-not-closed`, `schema-v2-unknown-practised-knowledge`,
+   `schema-v2-block-knowledge-not-closed`). It is the "a Telugu vowel's length
+   and quality ride on the consonant" idea, and three later lessons build on it.
+2. **Availability is by PREREQUISITE CLOSURE, not sequence.**
+   `TE-S120-vowel-sign-ee` (seq 55) and `TE-S08-vowel-sign-i` (seq 125) both
+   precede `dayachesi` (seq 350), and practising them still failed with
+   `schema-v2-practice-before-introduction`, because `dayachesi`'s prerequisites
+   are `[TE-C01-avunu]` and the script lessons are not in that closure. A lower
+   sequence number does not make an atom available.
+
+#### What the fix actually is, and why it is cheap
+
+The lesson is over budget because it does **two** jobs: teach దయచేసి, and teach
+the vowel-sign mechanic. Splitting it is the honest fix, and the track's shape
+makes it unusually clean:
+
+- **Chapter 8 contains exactly one lesson**, so a sibling can be inserted
+  without disturbing a chapter's internal order.
+- **All three dependents name `TE-C08-dayachesi` directly** in their
+  prerequisites, so if the new lesson is a prerequisite of `dayachesi`, every
+  dependent still reaches the script atom transitively — no dependent needs its
+  prerequisites changed.
+
+Shape of the change: a new `writing`-type lesson in chapter 8 (sequence ~345,
+prerequisites `[TE-C01-avunu]`) that introduces the script atom, carrying the
+prose already written in `dayachesi`'s *"Script you'll notice"* block;
+`dayachesi` gains it as a prerequisite, drops to three introduced atoms, and
+**practises** the script atom. A `writing` lesson is exempt from
+`CONTENT_TYPES`, so it adds no headword and does not move the vocabulary
+blocker. Renaming the atom to match its new owner touches the three dependents;
+keeping the old id avoids that at the cost of a misleading name.
+
+**Not done here** because it is a lesson-authoring task — new prose, a
+membership shard, path wiring, then regeneration — and it clears one blocker of
+three on its own. Costed rather than guessed, so the next attempt starts from
+the shape above instead of rediscovering the two validator refusals.
