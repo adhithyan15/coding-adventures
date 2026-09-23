@@ -3287,6 +3287,7 @@ fn emit_qml_tree(
         if let Some(line) = build_text_attribute(node) {
             writeln!(out, "{pad}    {line}").unwrap();
         }
+        writeln!(out, "{pad}    {QML_PLAIN_TEXT}").unwrap();
         if let Some(line) = build_text_accessible_name_attribute(node) {
             writeln!(out, "{pad}    {line}").unwrap();
         }
@@ -3440,6 +3441,22 @@ struct QmlElement {
     /// from the `source` moslayout prop.
     is_image: bool,
 }
+
+/// Every `Text` that shows application data renders it as **plain text**.
+///
+/// A QtQuick `Text` defaults to `textFormat: Text.AutoText`: if the first line
+/// "might be rich text" (`Qt::mightBeRichText` finds something tag-like), Qt
+/// switches to `Text.StyledText` and *interprets* it. StyledText honours
+/// `<font>`, `<b>`, `<br>`, `<a href>` and `<img src>` — so a task name, journal
+/// title or search snippet containing `<img src="https://…">` would make the
+/// QML engine fetch that URL when the row renders (a tracking beacon), and
+/// `<font size=7 color=…>` could restyle or hide the text around it.
+///
+/// Every other backend already treats slot text as text (React/HTML escape,
+/// SwiftUI uses `Text(verbatim:)`, Compose/Flutter/XAML take plain strings);
+/// this line makes Qt agree. The one deliberate exception is `HostLink`, which
+/// builds its own entity-escaped `<a>` payload and sets `Text.RichText`.
+const QML_PLAIN_TEXT: &str = "textFormat: Text.PlainText";
 
 /// Map a moslayout primitive tag to its QML element decomposition.
 ///
@@ -5241,6 +5258,7 @@ fn emit_host_dialog_qml(
     if let Some(title_line) = build_dialog_title_text_line(node) {
         writeln!(out, "{content_pad}Text {{").unwrap();
         writeln!(out, "{content_pad}    {title_line}").unwrap();
+        writeln!(out, "{content_pad}    {QML_PLAIN_TEXT}").unwrap();
         writeln!(out, "{content_pad}    font.bold: true").unwrap();
         writeln!(out, "{content_pad}}}").unwrap();
     }
@@ -7103,6 +7121,7 @@ fn emit_table_section_rows(
                 if let Some(line) = build_text_attribute(cell) {
                     writeln!(out, "{cell_pad}    {line}").unwrap();
                 }
+                writeln!(out, "{cell_pad}    {QML_PLAIN_TEXT}").unwrap();
                 if bold {
                     writeln!(out, "{cell_pad}    font.bold: true").unwrap();
                 }
@@ -8890,6 +8909,37 @@ mod tests {
             !result.output.contains("text: \"displayName\""),
             "slot ref must be bare identifier, not string"
         );
+    }
+
+    /// Slot text is application data, so it must render as plain text. Qt's
+    /// default `Text.AutoText` would *interpret* a value like
+    /// `<img src="https://…">` as StyledText and fetch the URL (a tracking
+    /// beacon), or restyle the row with `<font>`. See [`QML_PLAIN_TEXT`].
+    #[test]
+    fn text_bound_to_a_slot_renders_as_plain_text() {
+        let m = component(
+            "Label",
+            vec![slot("display-name", SlotType::Text, true)],
+            vec![],
+        );
+        let l = LayoutDef {
+            component_name: "Label".to_string(),
+            root: LayoutNode {
+                tag: "Text".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::SlotRef("display-name".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let out = from_pipeline(&m, &l, &empty_style("Label")).unwrap().output;
+        assert!(
+            out.contains("textFormat: Text.PlainText"),
+            "slot text must not be interpreted as markup:\n{out}"
+        );
+        assert_eq!(out.matches("textFormat:").count(), 1, "exactly one format:\n{out}");
     }
 
     // -------- Test 9: Text content from string literal --------
@@ -12815,6 +12865,11 @@ mod tests {
             out.contains("Qt.openUrlExternally(link)"),
             "expected open-external handler, got:\n{out}"
         );
+        // HostLink is the one deliberate rich-text Text; the plain-text rule
+        // for data Text must not reach it (two textFormat lines would leave
+        // the winner up to QML's last-assignment order).
+        assert!(!out.contains("Text.PlainText"), "HostLink stays rich text:\n{out}");
+        assert_eq!(out.matches("textFormat:").count(), 1);
     }
 
     /// #13052: a `HostLink.href` literal using a disallowed URI scheme
