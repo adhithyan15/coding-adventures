@@ -1,19 +1,20 @@
 {
   "language": "bengali",
   "chapter": 7,
-  "sourceHash": "fnv1a64:2d09f5a06cd3e0f1",
+  "sourceHash": "fnv1a64:417ae23117990be4",
   "lessonIds": [
     "BN-C04-abar",
     "BN-C04-dekha-hobe",
     "BN-C04-abar-dekha-hobe",
     "BN-C04-kal-dekha-hobe",
-    "BN-C04-practice"
+    "BN-C04-practice",
+    "BN-R08-second-pass-four-exchanges"
   ],
-  "voiceLessons": 2,
+  "voiceLessons": 3,
   "drivablePrefix": 0,
   "text": "bengali/narration/ch07.txt",
   "json": "bengali/narration/ch07.json",
-  "textHash": "fnv1a64:a63705716374427a",
-  "jsonHash": "fnv1a64:9ff60479b97e45c9",
+  "textHash": "fnv1a64:9c248fa1c326d2fc",
+  "jsonHash": "fnv1a64:1807bded447a9300",
   "findings": []
 }

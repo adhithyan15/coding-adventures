@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "The Face on the Page",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1884de7318dc7a7d",
+  "sourceHash": "fnv1a64:08e64f3aa8c897ef",
   "lessons": [
     {
       "id": "BN-W04-chokh-read",
@@ -731,6 +731,115 @@
             {
               "kind": "speech",
               "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R21-second-pass-reading-what-you-say",
+      "sequence": 1105,
+      "title": "Six words, read cold",
+      "headword": "(reading)",
+      "romanization": "",
+      "gloss": "second pass over the six words the script lessons taught you to read, and the sign that came last",
+      "script": "bengali",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:e0267d4465735a9c",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script: the sign that came last"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: the sign that came last until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The verb for what you are doing this second, in Bengali script. Say it before you look."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading: the six, with nothing beside them",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পড়া, দুধ, ভাই, পরিবার, হওয়া, হৃদয় (hridoy)."
+            },
+            {
+              "kind": "speech",
+              "text": "Read down the line and say each one aloud before checking:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: পড়া, দুধ, to read, milk.",
+                "word: ভাই, পরিবার, brother, family.",
+                "word: হওয়া, হৃদয় (hridoy), to be, heart."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Each was taught with its own point attached. পরিবার is where the inherent vowel is finally heard rather than explained. ভাই is an independent vowel sitting in the middle of a word, where nothing prepares you for it. দুধ is the plain-against-breathy pair inside one short word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script: the sign that came last",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ৃ (-ri)."
+            },
+            {
+              "kind": "speech",
+              "text": "হৃদয় (hridoy) needed a sign nothing before it had needed: ৃ (-ri), for a vowel that was once an r and is no longer one. It is the last piece of the reading ladder, and it exists for a sound that has moved away from the letter that records it — the same drift you meet in every script old enough to have one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the six is the longest, and what does it let you hear? (পরিবার — the inherent vowel.) Where does ভাই put an independent vowel? (In the middle of the word.) Which word needed ৃ (-ri)? (হৃদয় (hridoy).) And what was that sign once? (An r — it is not one now.)"
             }
           ]
         }

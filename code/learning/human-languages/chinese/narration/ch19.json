@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Asking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:27b0118b3806ff32",
+  "sourceHash": "fnv1a64:d131bb4b8acc8d1b",
   "lessons": [
     {
       "id": "ZH-C19-hear-ma",
@@ -1566,6 +1566,162 @@
                 "correct": "Recorded. Repair the lowest skill on its own.",
                 "incorrect": "Four numbers, not an average - the point is to see which skill lags."
               }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C19-second-pass-from-cold",
+      "sequence": 1975,
+      "title": "From cold, eight chapters on",
+      "headword": "(practice)",
+      "romanization": "",
+      "gloss": "the first six exchanges and the two characters under them, retrieved cold a long way downstream",
+      "script": "chinese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:17c01cbf45602df9",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script and tone, the two that were taught once",
+          "Guided Practice — four skills, on old material"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and tone, the two that were taught once and Guided Practice — four skills, on old material until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close everything. The opening exchange of this book, both voices, from memory. If it came back without effort, that is the point of this page; if it did not, that is the point of this page."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: what a second pass is for",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first four exchanges were practised once, in the chapter that taught them, and not since. That is long enough ago to be a real test rather than a rehearsal:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "greet, both voices, 你好.",
+                "negate, answering that it is not so.",
+                "identify, answering that it is.",
+                "part, 再见."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieval after a gap is what makes something stay. Running them again the week you learned them proves only that you had not yet forgotten."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script and tone, the two that were taught once",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "女 + 子 becomes 好."
+            },
+            {
+              "kind": "speech",
+              "text": "Build 好 from its two halves without looking, then say it in both tones — hǎo, good, and hào, to be fond of. Two words, one set of six strokes, and the only thing separating them is the tone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — four skills, on old material",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LISTEN",
+              "instruction": "to a greeting and an answer, and say which of the two answers came back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LISTEN: to a greeting and an answer, and say which of the two answers came back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the greeting exchange, both voices",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the greeting exchange, both voices]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "你好 and 再见, aloud, with nothing beside them",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 你好 and 再见, aloud, with nothing beside them]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "好, from its two halves, with the page covered",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 好, from its two halves, with the page covered]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two halves build 好? (女 and 子.) What separates hǎo from hào? (The tone alone.) Which exchange closes a meeting? (再见.) And why is this page eight chapters after the material rather than beside it? (Because retrieval after a gap is what makes it stay.)"
             }
           ]
         }

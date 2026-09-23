@@ -1,11 +1,13 @@
 {
   "language": "chinese",
   "chapter": 11,
-  "sourceHash": "fnv1a64:efeb50daae8dbbb0",
+  "sourceHash": "fnv1a64:d3eaf2dabbf26219",
   "lessonIds": [
     "ZH-W11-qing",
     "ZH-C11-qing",
-    "ZH-C11-practice"
+    "ZH-C11-practice",
+    "ZH-C11-second-pass-eight-exchanges",
+    "ZH-C11-second-pass-character-and-word"
   ],
   "tex": "chinese/book/chapters/ch11-qing.tex"
 }

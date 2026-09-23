@@ -1,8 +1,8 @@
 Mandarin Chinese, chapter 11: After You.
-3 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 3.
+Lesson 1 of 5.
 请 (qǐng) — a half that tells you the sound.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -36,7 +36,7 @@ Source: Unicode CJK Unified Ideographs chart; stroke order per the PRC standard 
 One half of this character tells you the meaning. What does the other half tell you?
 
 
-Lesson 2 of 3.
+Lesson 2 of 5.
 请 (qǐng) — please, and after you.
 
 Warm-up.
@@ -67,7 +67,7 @@ Source: Unicode CJK Unified Ideographs chart.
 You hold a door open for someone and say this one word. What are you telling them?
 
 
-Lesson 3 of 3.
+Lesson 3 of 5.
 Practice — after you.
 
 Warm-up.
@@ -98,3 +98,76 @@ Which half of 请 (qǐng) would help you guess its pronunciation? (The right.)
 Source: Unicode CJK Unified Ideographs chart.
 [question — say your answer, then pause 14 seconds]
 A character can give you two different kinds of hint at once. What are they?
+
+
+Lesson 4 of 5.
+Eight exchanges, one meeting — second pass over the eight two-voice exchanges, run in the order a real meeting would use them.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 3 seconds]
+Every chapter so far has ended on a two-voice exchange, and you have practised each one on its own. From memory: the one that opens a meeting, and the one that closes it.
+
+You'll want to know: they were always one conversation.
+Eight exchanges arrived one per chapter. Put them in the order a meeting uses them and this book's whole first act is there:
+[a table of 5 rows, read aloud]
+the move: greet. what it added: 你好, both voices.
+the move: introduce, ask. what it added: a name given, a name asked for.
+the move: identify, negate. what it added: saying it is so, and saying it is not.
+the move: thank, be polite. what it added: 谢谢, and the reply that follows it.
+the move: part. what it added: 再见.
+Nothing in that column is new. What is new is that no chapter ever asked you to run them one after another, and a meeting is exactly that: eight small moves with no pause between them for looking anything up.
+
+Guided Practice: the whole meeting, no stops.
+[pause 1 second]
+[your turn — say: both voices of the greeting]
+[pause 8 seconds for the answer]
+[your turn — say: give your name, then ask for theirs]
+[pause 8 seconds for the answer]
+[your turn — say: answer a yes-or-no question, once affirming and once denying]
+[pause 8 seconds for the answer]
+[your turn — say: thank them, then give the reply you would receive]
+[pause 8 seconds for the answer]
+[your turn — say: take your leave]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which exchange opens a meeting, and which closes it? (你好 and 再见.) Which pair is a yes against a no? (Identify and negate.) What did the thanks exchange add beyond the word itself? (The reply that comes back.) And what is new here, when every piece is old? (Running them together, with no stop.)
+
+
+Lesson 5 of 5.
+好 (hǎo, hào) — one character, and three things it is not.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: the component that carries a sound until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 3 seconds]
+Say 好 (hǎo, hào) twice, once in each tone you have met, and say what each one means. One character, two words.
+
+You'll want to know: four cautions, and 好 carries three of them.
+These chapters have warned you four separate times about reading too much into what you see. 好 (hǎo, hào) is where three of the four meet:
+A character is not a word. 你好 is two characters and one word. A character writes a syllable and usually a meaningful piece — not a word.
+A component is not always a meaning. 好 (hǎo, hào) is 女 beside 子, woman beside child, and the lesson that built it warned you against reading a story into that. The pieces are how the character is assembled, not what it argues.
+A tone is not a decoration. hǎo is good; hào is to be fond of. Same character, same strokes, different word.
+
+Script: the component that carries a sound.
+尔.
+The fourth caution is the other way round. 尔 is in 你 to say how it sounds, not what it means — a component doing phonetic work. Once you expect that, a great many characters stop looking arbitrary.
+Against it, 口 kǒu (mouth) and 日 rì (sun, and also day) are components that do mean what they draw. Both kinds exist, and the character does not announce which you are looking at. That is the caution worth carrying forward.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: 你好 — then say how many characters and how many words]
+[pause 8 seconds for the answer]
+[your turn — say: 好 (hǎo, hào) in both tones, with both meanings]
+[pause 8 seconds for the answer]
+[your turn — look: at 你 and name the component that is there for its sound]
+[pause 8 seconds for the answer]
+[your turn — say: 口 and 日, and what each one draws]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How many words is 你好, and how many characters? (One word, two characters.) What are the two halves of 好 (hǎo, hào), and what do they tell you about its meaning? (女 and 子 — and nothing you should rely on.) What does 尔 contribute to 你? (Its sound, not its meaning.) And which of 口 and 日 means what it draws? (Both — which is why the two kinds have to be told apart.)
