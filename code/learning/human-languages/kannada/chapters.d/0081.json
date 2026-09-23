@@ -1,0 +1,24 @@
+{
+  "chapter": 81,
+  "title": "The Ones That Never Came Back",
+  "label": "ch:ka-ulidavu",
+  "canDo": "I can recognise every Kannada character this book taught early and then never asked for again, sorted by what kind of thing it is.",
+  "payoff": {
+    "lesson": "KA-R81-ten-consonants",
+    "kind": "production",
+    "summary": "From cold: name all ten consonants, place each in the row of the mouth that makes it, and identify the palatal nasal the book has not printed since the chapter that taught it.",
+    "assesses": [
+      "KA-SCRIPT-RECOG-112",
+      "KA-SCRIPT-RECOG-116",
+      "KA-SCRIPT-RECOG-117",
+      "KA-SCRIPT-RECOG-120",
+      "KA-SCRIPT-RECOG-121",
+      "KA-SCRIPT-RECOG-122",
+      "KA-SCRIPT-RECOG-124",
+      "KA-SCRIPT-RECOG-128",
+      "KA-SCRIPT-RECOG-129",
+      "KA-SCRIPT-RECOG-133"
+    ],
+    "note": "The chapter introduces NO atom. It exists because twenty-three script atoms were taught one per chapter between chapters 2 and 42 and never gathered, so the level gate counted them as revisited fewer than twice. Three lessons sort them by kind — signs that hang, vowels that stand, consonants — which is the same grouping-by-kind the four chapters before this one use."
+  }
+}
