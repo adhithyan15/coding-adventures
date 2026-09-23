@@ -1,0 +1,17 @@
+{
+  "language": "kannada",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:9eaa8f401b2e38d9",
+  "lessonIds": [
+    "KA-R81-signs-that-hang",
+    "KA-R81-vowels-that-stand",
+    "KA-R81-ten-consonants"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "kannada/narration/ch81.txt",
+  "json": "kannada/narration/ch81.json",
+  "textHash": "fnv1a64:261bbd1cd06e78ff",
+  "jsonHash": "fnv1a64:492ef54f2f34e552",
+  "findings": []
+}

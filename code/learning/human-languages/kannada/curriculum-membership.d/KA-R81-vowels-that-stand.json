@@ -1,0 +1,11 @@
+{
+  "id": "KA-R81-vowels-that-stand",
+  "pathSegment": "KA-PATH-81-LEFTOVERS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-81-LEFTOVERS",
+      "order": 1
+    }
+  ]
+}

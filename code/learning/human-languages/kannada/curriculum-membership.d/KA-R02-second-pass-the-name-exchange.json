@@ -1,0 +1,11 @@
+{
+  "id": "KA-R02-second-pass-the-name-exchange",
+  "pathSegment": "KA-PATH-004",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "KA-EXT-004-CONSOLIDATION",
+      "order": 1
+    }
+  ]
+}

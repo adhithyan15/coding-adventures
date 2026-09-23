@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:bc900007c42d34b4",
+  "sourceHash": "fnv1a64:32e37ab7217eb118",
   "lessons": [
     {
       "id": "KA-C02-hesaru",
@@ -1312,6 +1312,144 @@
             {
               "kind": "speech",
               "text": "Next chapter: hēgiddīra? (\"how are you?\") and answering with chennāgiddēne — the responding cycle."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R02-second-pass-the-name-exchange",
+      "sequence": 141,
+      "title": "ನಿಮ್ಮ ಹೆಸರು ಏನು? (nimma hesaru ēnu?) — the exchange, with nothing left out",
+      "headword": "ನಿಮ್ಮ ಹೆಸರು ಏನು?",
+      "romanization": "nimma hesaru ēnu?",
+      "gloss": "second pass over the whole name exchange — two words for you, a question with no verb in it, and the two ways to agree",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a7bc278e7b441338",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two ways to agree. Say the one that answers a question, then the one that accepts what someone has said."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: the whole exchange",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask a stranger their name — nimma hesaru ēnu?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask a stranger their name — *nimma hesaru ēnu?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "answer with your own — nanna hesaru …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: answer with your own — *nanna hesaru … *]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "that meeting them is a pleasure — santōṣa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: that meeting them is a pleasure — *santōṣa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agree that you followed it — haudu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: agree that you followed it — *haudu*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two things about this exchange that no translation of it carries."
+            },
+            {
+              "kind": "speech",
+              "text": "There is no verb in either sentence. Nimma hesaru ēnu? is your name what? and nanna hesaru … is my name … — Kannada puts nothing where English insists on is. The question word alone finishes the question, and the naming alone finishes the answer."
+            },
+            {
+              "kind": "speech",
+              "text": "And the word for you chose the register before you opened your mouth:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "familiar",
+                "respectful"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "you. familiar: ನೀನು nīnu. respectful: ನೀವು nīvu.",
+                "your. familiar: ninna. respectful: ನಿಮ್ಮ nimma."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The question above uses nimma, and that is not an accident — a stranger gets the respectful form, and the possessive follows the pronoun rather than being chosen separately."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many verbs are in nimma hesaru ēnu? (None.) Which of the two agreements accepts a statement rather than answering a question? (Sari.) Which form of you would you use with someone you are meeting for the first time? (Nīvu.)"
             }
           ]
         }

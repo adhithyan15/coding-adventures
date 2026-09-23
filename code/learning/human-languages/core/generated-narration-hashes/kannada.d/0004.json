@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 4,
-  "sourceHash": "fnv1a64:64c70aec7976ccad",
+  "sourceHash": "fnv1a64:c095e624ee7172af",
   "lessonIds": [
     "KA-C04-hoogu",
     "KA-S04-vowel-sign-i",
@@ -10,13 +10,14 @@
     "KA-C04-matte-sigona",
     "KA-S113-letter-lla",
     "KA-S110-letter-ba",
-    "KA-C04-practice"
+    "KA-C04-practice",
+    "KA-R04-second-pass-going-and-coming-back"
   ],
-  "voiceLessons": 1,
+  "voiceLessons": 2,
   "drivablePrefix": 0,
   "text": "kannada/narration/ch04.txt",
   "json": "kannada/narration/ch04.json",
-  "textHash": "fnv1a64:dce0ce138cf0793e",
-  "jsonHash": "fnv1a64:b465e711b97918dd",
+  "textHash": "fnv1a64:5b4ba9d1bf7e47a9",
+  "jsonHash": "fnv1a64:8efcf6c79a41152c",
   "findings": []
 }

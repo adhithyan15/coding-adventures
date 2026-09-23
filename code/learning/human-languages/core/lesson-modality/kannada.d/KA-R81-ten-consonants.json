@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "KA-R81-ten-consonants",
+    "language": "kannada",
+    "chapter": 81,
+    "sequence": 2980,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aef31802bcd76fad",
+    "detachableSegments": [
+      "Script: ten, sorted by where they are made"
+    ]
+  },
+  "findings": []
+}
