@@ -11,10 +11,15 @@
 #
 # A fixture set's disposition is a claim about where its expected output came
 # from.  `upstream_golden` says "upstream produced these bytes".  For twelve
-# fixtures that claim was false in a specific and unfixable way: the pinned
+# fixtures that claim was false in a specific way: the pinned
 # oracle does not merely disagree with the golden, it REFUSES THE INPUT —
 # nonzero exit, empty stdout, a named diagnostic.  There is no upstream output
 # for those goldens to have come from.
+#
+# (One of the twelve, `simple-importmeta`, refuses only because its flags.txt
+# is missing `--chunk_output_type=ES_MODULES`; with that flag upstream compiles
+# it.  It is still captured here because it refuses AS INVOKED, which is what
+# this artifact records.  See "WHAT IS CAPTURED" below.)
 #
 # The honest disposition for them is `upstream_refuses`, and the manifest
 # validator demands an evidence file for it.  That file must be CAPTURED, not
@@ -51,6 +56,12 @@
 #     export CLOSURE_ORACLE_JAR=/path/to/closure-compiler-v20260915.jar
 #     code/scripts/capture-upstream-refusals.sh
 #
+# CLOSURE_ORACLE_JAR is resolved to an absolute path before it is hashed.  That
+# is load-bearing, not tidiness: the script `cd`s to the package root before
+# running Java, so a RELATIVE path would be hashed against the invocation
+# directory and executed from the package root - two different files, with the
+# "verified" banner printed over the wrong one.
+#
 # The JAR's sha256 is checked against the pin before anything runs.  The script
 # fails loudly if any listed fixture has started SUCCEEDING — that is good news
 # and means the fixture should leave the set, but it must be a deliberate edit
@@ -62,6 +73,10 @@ set -euo pipefail
 
 RELEASE="v20260915"
 JAR_SHA256="9c8af06056aa06f968b5a457540a85869c7ba2861c211c56d8d4ef6c35ddf36d"
+# Must match `capture_environment.java_version` in the manifest, which
+# `oracle_manifest` hard-asserts. A capture on a different JVM is permitted but
+# must declare the deviation; see the Python half.
+PINNED_JAVA="21.0.12"
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 PKG_ROOT="$REPO_ROOT/code/programs/rust/closurec"
@@ -76,6 +91,21 @@ if [[ ! -f "$CLOSURE_ORACLE_JAR" ]]; then
   exit 2
 fi
 
+# Resolve BEFORE hashing. See the note in USAGE above: this script changes
+# directory before invoking Java, so an unresolved relative path would be
+# hashed here and executed somewhere else.
+if ! CLOSURE_ORACLE_JAR="$(realpath -e -- "$CLOSURE_ORACLE_JAR")"; then
+  echo "error: cannot resolve CLOSURE_ORACLE_JAR to an absolute path" >&2
+  exit 2
+fi
+export CLOSURE_ORACLE_JAR
+
+# The JVM launcher silently honours these, so an option set in the environment
+# would enter every captured run without appearing in the recorded invocation.
+# The artifact claims to record a pinned, reproducible invocation; it cannot do
+# that while an env var can inject -D flags or an agent behind its back.
+unset JAVA_TOOL_OPTIONS _JAVA_OPTIONS JDK_JAVA_OPTIONS
+
 actual_sha="$(sha256sum "$CLOSURE_ORACLE_JAR" | cut -d' ' -f1)"
 if [[ "$actual_sha" != "$JAR_SHA256" ]]; then
   echo "error: oracle JAR sha256 mismatch" >&2
@@ -86,8 +116,9 @@ fi
 echo "oracle JAR sha256 verified against the $RELEASE pin"
 
 cd "$PKG_ROOT"
-CLOSURE_ORACLE_JAR="$CLOSURE_ORACLE_JAR" RELEASE="$RELEASE" OUT="$OUT" python3 - <<'PY'
-import json, os, re, subprocess, hashlib
+CLOSURE_ORACLE_JAR="$CLOSURE_ORACLE_JAR" RELEASE="$RELEASE" OUT="$OUT" \
+  PINNED_JAVA="$PINNED_JAVA" python3 - <<'PY'
+import hashlib, json, os, re, subprocess, tempfile
 
 # The fixtures this set covers.  Sorted, because the manifest validator
 # requires fixture lists to be strictly sorted and this file should match.
@@ -109,9 +140,37 @@ FIXTURES = [
 jar = os.environ["CLOSURE_ORACLE_JAR"]
 release = os.environ["RELEASE"]
 out_path = os.environ["OUT"]
+pinned_java = os.environ["PINNED_JAVA"]
 
+# Re-hash here, after the `cd`, so the recorded hash is of the file this process
+# actually executes rather than of whatever the bash half resolved. With an
+# absolute path those are the same file; recording the one we run makes the
+# artifact self-consistent even if that ever stops being true.
 sha = hashlib.sha256(open(jar, "rb").read()).hexdigest()
-java_version = subprocess.run(["java", "-version"], capture_output=True, text=True).stderr.split('"')[1]
+
+version_stderr = subprocess.run(["java", "-version"], capture_output=True, text=True).stderr
+version_match = re.search(r'version "([^"]+)"', version_stderr)
+if version_match is None:
+    raise SystemExit(
+        "error: could not parse a version from `java -version`:\n" + version_stderr
+    )
+java_version = version_match.group(1)
+
+# The manifest pins the capture JVM and `oracle_manifest` hard-asserts it. A
+# capture on any other JVM is allowed, because a maintainer may not have the
+# pinned build to hand, but it must be DECLARED: the validator requires a
+# non-empty deviation note whenever these differ, so the mismatch reaches a
+# reviewer instead of sitting silently in a trusted artifact.
+if java_version == pinned_java:
+    deviation = None
+else:
+    deviation = (
+        f"Captured on OpenJDK {java_version}; the manifest pins {pinned_java}. "
+        "All twelve entries are parse-, policy- or module-resolution refusals, which are "
+        "front-end decisions rather than codegen, so they are not expected to vary by JDK "
+        "patch level - but that is a judgement, not a measurement, and this artifact should "
+        "be recaptured on the pinned JVM. Tracked as CCR-089 (#15935)."
+    )
 
 # The manifest's `closure-flags-file-v1` command: one argv element per nonblank,
 # noncomment line of the fixture's flags.txt, run from the package root with
@@ -135,6 +194,7 @@ report = {
     "release": release,
     "oracle_jar_sha256": sha,
     "java_version": java_version,
+    "java_version_deviation": deviation,
     "command": "closure-flags-file-v1",
     "refusals": {},
 }
@@ -179,9 +239,20 @@ if unexpected:
           "shrink silently."
     )
 
-with open(out_path, "w") as handle:
-    json.dump(report, handle, indent=2)
-    handle.write("\n")
+# Write via a same-directory temp file and rename: no symlink is followed (the
+# temp is created O_EXCL by mkstemp), and a mid-write failure leaves the prior
+# evidence intact rather than a truncated file the gate would reject.
+out_dir = os.path.dirname(out_path)
+fd, tmp_path = tempfile.mkstemp(dir=out_dir, prefix=".upstream-refusals-", suffix=".json")
+try:
+    with os.fdopen(fd, "w") as handle:
+        json.dump(report, handle, indent=2)
+        handle.write("\n")
+    os.chmod(tmp_path, 0o644)
+    os.replace(tmp_path, out_path)
+except BaseException:
+    os.unlink(tmp_path)
+    raise
 
 print(f"wrote {len(report['refusals'])} refusals to {out_path}")
 for name, entry in report["refusals"].items():

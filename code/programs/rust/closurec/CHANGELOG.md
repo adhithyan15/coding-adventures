@@ -60,8 +60,40 @@ emptied `local_boundary` — and asserts each is caught. It mutates the manifest
 rather than the report on purpose: the report is a capture, and a test that
 rewrote it would defeat the point. `refusal_evidence_on_disk_is_a_genuine_capture`
 guards the artifact itself and pins the two `JSC_PARSE_ERROR` fixtures by name.
-Both were checked for vacuity by neutering `validate_refusal_evidence`, which
-turns the first red and nothing else.
+A third, `refusal_report_checks_reject_a_doctored_report`, feeds synthetic
+reports to `check_refusal_report` — a pure function the report-side checks were
+split into precisely so a test could reach them.
+
+That split came out of review. The first version of this change checked vacuity
+at function granularity: neutering `validate_refusal_evidence` wholesale turned
+exactly one test red, which is true and which the entry claimed. But deleting
+only the report-side branches — release, JAR hash, command, exit status, stdout
+bytes, diagnostic prefix — left the suite **green**. Five of the six checks
+advertised in that function's own doc-comment table were unprotected. The
+enforcement was real, but it was coming from
+`refusal_evidence_on_disk_is_a_genuine_capture` asserting against the committed
+artifact, which catches a hand-edited file and would not catch a refactor.
+
+Each branch is now individually load-bearing: deleting any one of the six turns
+tests red. That was verified by deleting them one at a time, not by reasoning
+about it.
+
+### The capture JVM deviates from the pin, and says so
+
+The manifest pins `capture_environment.java_version` at 21.0.12 and
+`oracle_manifest` hard-asserts it. This artifact was captured on **21.0.10** —
+the only JVM available where the work was done. Rather than ship a silent
+mismatch, the report carries a `java_version_deviation` note, and the validator
+**requires** that note to be non-empty whenever the captured JVM differs from
+the pin, and **rejects a stale note** left behind once it no longer does. So the
+deviation cannot go unremarked in either direction.
+
+All twelve entries are parse, policy or module-resolution refusals — front-end
+decisions, not codegen — so they are not expected to move with a JDK patch
+level. That is a judgement, not a measurement, which is why it is declared
+rather than assumed. Recapture on the pinned JVM is CCR-089 (#15935). One real
+consequence in the meantime: the artifact reproduces byte-for-byte only on a
+21.0.10 host, because `java_version` is a recorded field.
 
 ### The recorded predicate is deliberately narrow
 

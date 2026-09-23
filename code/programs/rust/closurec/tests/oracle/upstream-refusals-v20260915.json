@@ -4,6 +4,7 @@
   "release": "v20260915",
   "oracle_jar_sha256": "9c8af06056aa06f968b5a457540a85869c7ba2861c211c56d8d4ef6c35ddf36d",
   "java_version": "21.0.10",
+  "java_version_deviation": "Captured on OpenJDK 21.0.10; the manifest pins 21.0.12. All twelve entries are parse-, policy- or module-resolution refusals, which are front-end decisions rather than codegen, so they are not expected to vary by JDK patch level - but that is a judgement, not a measurement, and this artifact should be recaptured on the pinned JVM. Tracked as CCR-089 (#15935).",
   "command": "closure-flags-file-v1",
   "refusals": {
     "simple-export": {
