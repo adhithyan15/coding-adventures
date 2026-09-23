@@ -4,6 +4,118 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - the `advanced-try-catch-rename` fixture claimed a soundness rule upstream contradicts (CCR-022)
+
+The fixture's input comment opened "ADVANCED-level renaming SOUNDNESS across a
+catch binding" and said the crux of try/catch support is that the renamer **must**
+treat the catch parameter as reserved, listing two rules:
+
+> 1. It must never itself be renamed (catch params are not in the local-rename set), and
+> 2. No other local may be renamed to a name that collides with it
+
+Its README went further: "If either guard were missing, `err` would collide with
+a generated short name and miscompile the handler." The CLOC19 spec said the same
+in a **MUST** list.
+
+**Only (2) is a soundness requirement.** Measured against the pinned oracle
+(`closure-compiler-v20260915`, sha256 verified before use), with externs for the
+free globals and a value use to stop the inliner:
+
+```js
+function process(value) {
+  var temp = value + 1;
+  try { compute(temp); } catch (err) { report(err, temp); }
+  return temp;
+}
+sink(process);
+```
+
+```
+SIMPLE   : function process(a){a+=1;try{compute(a)}catch(b){report(b,a)}return a}sink(process);
+ADVANCED : sink(function(a){a+=1;try{compute(a)}catch(b){report(b,a)}return a});
+```
+
+`err` becomes `b`. Upstream renames catch parameters at both levels, and does not
+miscompile. Two further probes show why (1) and (2) are different rules rather
+than two halves of one:
+
+```
+in           : function f(a1,a2,a3){var x=a1+a2+a3;try{compute(x)}catch(err){report(err,x,a1,a2,a3)}return x}sink(f);
+out (SIMPLE) : function f(b,c,d){var a=b+c+d;try{compute(a)}catch(e){report(e,a,b,c,d)}return a}sink(f);
+
+in           : var err=1;function f(v){try{compute(v)}catch(err){report(err)}return err}sink(f);
+out (SIMPLE) : var err=1;function f(a){try{compute(a)}catch(b){report(b)}return err}sink(f);
+```
+
+With `a` through `d` taken the catch binding gets `e` — upstream satisfies (2) by
+**choosing a non-colliding fresh name**, not by reserving the original. And the
+rename stays correct when the catch binding shadows an outer `err`.
+
+Two limits on that evidence, since "upstream does it" is not "it is always
+safe". With `eval` in the handler upstream renames anyway and ships a
+miscompile — `catch(err){eval("report(err)")}` becomes `catch(b){eval("report(err)")}`,
+and the string still names a binding that no longer exists. And upstream
+*refuses* `with (o) { report(err) }` (`JSC_USE_OF_WITH`) and a handler that
+redeclares its own binding (`JSC_REDECLARED_VARIABLE_ERROR`) rather than
+renaming them. So the probes show reserving is not required; they do not show
+renaming is safe under `eval`.
+
+**No behaviour change.** `closurec` still reserves catch parameters, the golden
+is unchanged, and no existing test changed. What changed is the justification: reserving
+is now described as the conservative choice it is rather than as a law, in the
+fixture input, the fixture README, `code/specs/CLOC19-try-catch.md`, and the
+`closure-pass-rename` test-section header that grouped both rules under
+"soundness". The retracted claims are quoted in place rather than deleted, since
+the spec is where someone would look before changing this.
+
+One test was **added**, in `closure-pass-rename`. An earlier draft of this entry
+said `fresh_name_avoids_colliding_with_catch_param` pins the avoid-set guard.
+Review showed it does not: its handler body is `use(a, longName)`, so the catch
+binding reaches the avoid set through the body walk whether or not the explicit
+insertion exists, and before the new test existed deleting
+`out.insert(param.name)` left every running test in that crate green. `fresh_name_avoids_catch_param_unused_in_its_own_body` closes
+the gap with a handler that never mentions its own binding
+(`catch (a) { use(longName); }`), where only the explicit insertion can keep
+`longName` off `a`. Verified by deleting the guard: that test, and only that
+test, goes red. Retracting a vague overclaim and replacing it with a sharper
+false one is a failure mode this series has hit more than once, which is why
+the fix here is a test rather than softer wording.
+
+**Under its own `flags.txt` upstream produces nothing on this fixture.** It
+passes no externs and `compute`/`report` are free globals, so the oracle exits 2
+with two `JSC_UNDEFINED_VARIABLE` errors and zero bytes of stdout. The
+"inlines `process` away entirely" result above needs externs added. That also
+means it satisfies the predicate of the `upstream_refuses` disposition added in
+CCR-081 while still being dispositioned `upstream_golden` — and so do four more.
+Running all 126 fixtures of `non-minify-unverified-stdout` under their own
+`flags.txt`, exactly five refuse: this one plus `advanced-bigpass`,
+`advanced-class-constructor`, `advanced-optimizes` and
+`advanced-rename-globals`, all `JSC_UNDEFINED_VARIABLE` with zero bytes of
+stdout. They are absent from that cohort by a deliberate decision recorded on
+#15868: their refusal is harness incompleteness, fixable by adding `--externs`,
+which is a different thing from a fixture upstream will not compile however it
+is invoked. That distinction is real. What is missing is any trace of it in the
+recorded predicate, which says only "refuses as invoked" — and
+`simple-importmeta`, which is in the cohort, has the same kind of flag-fixable
+refusal. So the cohort and its stated criterion disagree. Raised on #15868
+rather than re-cut here.
+
+The ladder fixtures had already recorded this divergence — `ladder_t4_try_catch_simple`'s
+README says "upstream renames the catch parameter `e` to `a`, which closurec
+skips (CCR-022)", and the `_advanced` one says the same in different words — so
+this correction is catching up with evidence the repo already had rather than
+reporting a new discovery.
+
+The parity cost is real: upstream emits shorter output wherever a catch binding
+has a long name. That belongs to CCR-022 (#15856), which currently frames catch
+params as a binding kind our renamer *skips* — incompleteness. The probes say it
+is a **divergence**, and at SIMPLE as well as ADVANCED, so closing it means
+changing this fixture's golden rather than only adding a code path. The fixture
+is also now labelled for what it is: a regression test for our rule, not an
+oracle for upstream's, which does not produce this output at all — it inlines
+`process` away entirely.
+
+
 ### Changed - twelve fixtures are dispositioned `upstream_refuses`, not `upstream_golden` (CCR-081)
 
 The `non-minify-unverified-stdout` set carried 138 fixtures under
