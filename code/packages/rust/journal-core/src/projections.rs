@@ -161,6 +161,11 @@ pub fn on_this_day(state: &JournalState, today: Date, filter: &EntryFilter) -> V
 
 // ── search ───────────────────────────────────────────────────────────────────
 
+/// Most distinct terms a query is searched for; later terms are ignored.
+pub const MAX_QUERY_TERMS: usize = 16;
+/// Longest query, in characters, that is read; the rest is ignored.
+pub const MAX_QUERY_CHARS: usize = 1024;
+
 /// Longest snippet, in characters, including any ellipses.
 pub const SNIPPET_CHARS: usize = 160;
 /// Characters of context kept before the first match in a snippet.
@@ -196,9 +201,27 @@ pub struct SearchHit {
 /// | body | 1 |
 ///
 /// Results are ordered by score, then by the canonical list order.
+///
+/// ## Bounding the work
+///
+/// Each term is a scan of every body, so the cost is terms × text. A pasted
+/// paragraph as a query would multiply that by hundreds, on a single-threaded
+/// WebAssembly host that freezes while it runs. So the query is read up to
+/// [`MAX_QUERY_CHARS`], repeated terms are searched once, and at most
+/// [`MAX_QUERY_TERMS`] distinct terms are used — in the order typed, so the
+/// words a person actually meant come first.
 pub fn search(state: &JournalState, query: &str, filter: &EntryFilter) -> Vec<SearchHit> {
-    let folded_query = text::fold(query);
-    let terms: Vec<&str> = folded_query.split_whitespace().collect();
+    let head: String = query.chars().take(MAX_QUERY_CHARS).collect();
+    let folded_query = text::fold(&head);
+    let mut terms: Vec<&str> = Vec::new();
+    for t in folded_query.split_whitespace() {
+        if terms.len() == MAX_QUERY_TERMS {
+            break;
+        }
+        if !terms.contains(&t) {
+            terms.push(t);
+        }
+    }
     if terms.is_empty() {
         return Vec::new();
     }
@@ -360,7 +383,7 @@ mod tests {
     /// Build a state from `(id, journal, date, created_ms, title, body, tags, starred)`.
     #[allow(clippy::type_complexity)]
     fn state(rows: &[(&str, &str, &str, u64, &str, &str, &[&str], bool)]) -> JournalState {
-        let mut s = JournalState::new(JournalId::from("p"), "Personal", 0);
+        let mut s = JournalState::new(JournalId::from("p"), "Personal", 0).unwrap();
         apply(
             &mut s,
             Command::CreateJournal {
@@ -528,6 +551,24 @@ mod tests {
     }
 
     #[test]
+    fn repeated_and_excess_terms_are_bounded() {
+        let s = state(&[("e", "p", "2026-01-01", 1, "", "rain rain", &[], false)]);
+        let f = EntryFilter::default();
+        // "rain" typed three times is one term, scored once.
+        assert_eq!(search(&s, "rain RAIN rain", &f)[0].score, 1);
+        // Terms past the cap are ignored, so a trailing miss does not matter…
+        let words: Vec<String> = (0..MAX_QUERY_TERMS).map(|i| format!("w{i}")).collect();
+        let s = state(&[("e", "p", "2026-01-01", 1, "", &words.join(" "), &[], false)]);
+        let padded = format!("{} zebra", words.join(" "));
+        assert_eq!(search(&s, &padded, &f).len(), 1);
+        // …but the same miss within the first sixteen distinct terms does.
+        assert!(search(&s, "w0 zebra", &f).is_empty());
+        // Characters past MAX_QUERY_CHARS are not read.
+        let long = format!("{}zebra", " ".repeat(MAX_QUERY_CHARS));
+        assert!(search(&s, &long, &f).is_empty());
+    }
+
+    #[test]
     fn search_ties_fall_back_to_list_order() {
         let s = state(&[
             ("old", "p", "2026-01-01", 1, "", "rain", &[], false),
@@ -640,5 +681,8 @@ mod tests {
         assert!(month_activity(&s, 2024, 13, &f).is_empty());
         assert!(month_activity(&s, 2024, 0, &f).is_empty());
         assert!(month_activity(&s, 2023, 2, &f).is_empty());
+        // Out-of-range years are empty, not an arithmetic overflow.
+        assert!(month_activity(&s, i32::MAX, 1, &f).is_empty());
+        assert!(month_activity(&s, i32::MIN, 1, &f).is_empty());
     }
 }

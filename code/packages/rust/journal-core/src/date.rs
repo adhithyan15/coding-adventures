@@ -23,14 +23,27 @@
 //! the stored JSON readable, and it is byte-for-byte what the TypeScript app
 //! already stores, so its entries import with no conversion.
 
+/// Earliest year a [`Date`] can be built for.
+pub const MIN_YEAR: i32 = 0;
+/// Latest year a [`Date`] can be built for.
+pub const MAX_YEAR: i32 = 9999;
+
 /// A civil calendar date, stored as days since the Unix epoch.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Date(pub i32);
 
 impl Date {
     /// Construct from a civil year/month/day, or `None` if no such day exists
-    /// (month 13, 30 February, …).
+    /// (month 13, 30 February, …) or the year is outside [`MIN_YEAR`]`..=`[`MAX_YEAR`].
+    ///
+    /// The year bound is a safety limit, not a calendar opinion: the civil-date
+    /// arithmetic underneath uses plain `i32` maths, and a year near `i32::MAX`
+    /// would overflow it. Four-digit years are also exactly what the ISO wire form
+    /// can carry, so every `Date` this returns can be written and read back.
     pub fn from_ymd(year: i32, month: u32, day: u32) -> Option<Date> {
+        if !(MIN_YEAR..=MAX_YEAR).contains(&year) {
+            return None;
+        }
         datetime_core::Date::from_ymd(year, month, day)
             .ok()
             .map(|d| Date(d.0))
@@ -158,6 +171,16 @@ mod tests {
         assert!(Date::parse_iso("2025-02-29").is_none());
         assert_eq!(days_in_month(2024, 2), 29);
         assert_eq!(days_in_month(2100, 2), 28);
+    }
+
+    #[test]
+    fn years_outside_the_safe_range_are_refused() {
+        assert!(Date::from_ymd(i32::MAX, 1, 1).is_none());
+        assert!(Date::from_ymd(i32::MIN, 1, 1).is_none());
+        assert!(Date::from_ymd(10_000, 1, 1).is_none());
+        assert!(Date::from_ymd(-1, 1, 1).is_none());
+        assert!(Date::from_ymd(0, 1, 1).is_some());
+        assert!(Date::from_ymd(9999, 12, 31).is_some());
     }
 
     #[test]

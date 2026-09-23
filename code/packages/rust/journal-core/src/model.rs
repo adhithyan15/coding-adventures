@@ -23,6 +23,10 @@ use crate::{Date, EntryId, JournalId, Tag};
 pub const MAX_JOURNAL_NAME_CHARS: usize = 128;
 /// Longest entry title, in characters.
 pub const MAX_TITLE_CHARS: usize = 512;
+/// Most journals one state may hold. Day One users keep a handful; a thousand is
+/// far past any real use, and the cap bounds what an imported file can make
+/// `validate` and the journal pickers do.
+pub const MAX_JOURNALS: usize = 1000;
 /// Largest entry body, in **bytes** (1 MiB). Bytes, not characters, because this
 /// limit exists to bound storage and the work a projection does per entry.
 pub const MAX_BODY_BYTES: usize = 1024 * 1024;
@@ -88,18 +92,32 @@ pub struct JournalState {
 impl JournalState {
     /// A fresh state with one journal — the smallest *valid* state, because a
     /// journal app with no journal has nowhere to put the first entry.
-    pub fn new(first: JournalId, name: impl Into<String>, now_ms: u64) -> JournalState {
+    ///
+    /// The id and name are checked exactly as `CreateJournal` checks them, so the
+    /// very first journal cannot be one that a later command would have refused.
+    pub fn new(
+        first: JournalId,
+        name: impl Into<String>,
+        now_ms: u64,
+    ) -> Result<JournalState, crate::OpError> {
+        crate::ops::check_id(first.as_str())?;
+        let raw = name.into();
+        if crate::text::has_control(raw.trim()) {
+            return Err(crate::OpError::InvalidJournalName);
+        }
+        let name = crate::text::tidy(&raw);
+        crate::ops::check_journal_name(&name)?;
         let journal = Journal {
             id: first.clone(),
-            name: crate::text::tidy(&name.into()),
+            name,
             created_at_ms: now_ms,
         };
         let mut journals = BTreeMap::new();
         journals.insert(first, journal);
-        JournalState {
+        Ok(JournalState {
             journals,
             entries: BTreeMap::new(),
-        }
+        })
     }
 
     /// Look up an entry.
@@ -128,19 +146,25 @@ impl JournalState {
         if self.journals.is_empty() {
             return Err(OpError::LastJournal);
         }
-        let mut names: Vec<String> = Vec::with_capacity(self.journals.len());
+        if self.journals.len() > MAX_JOURNALS {
+            return Err(OpError::TooManyJournals);
+        }
+        // A set, not a list: checking each name against a list is quadratic in
+        // the journal count, and this runs on files nobody has checked yet.
+        let mut names = std::collections::BTreeSet::new();
         for (id, j) in &self.journals {
+            // Validate the id before echoing it into any error.
+            crate::ops::check_id(id.as_str())?;
             if &j.id != id {
                 return Err(OpError::IdMismatch(id.to_string()));
             }
             crate::ops::check_journal_name(&j.name)?;
-            let key = crate::text::fold(&j.name);
-            if names.contains(&key) {
+            if !names.insert(crate::text::fold(&j.name)) {
                 return Err(OpError::DuplicateJournalName(j.name.clone()));
             }
-            names.push(key);
         }
         for (id, e) in &self.entries {
+            crate::ops::check_id(id.as_str())?;
             if &e.id != id {
                 return Err(OpError::IdMismatch(id.to_string()));
             }
@@ -174,7 +198,7 @@ mod tests {
 
     #[test]
     fn a_new_state_has_exactly_one_journal_and_no_entries() {
-        let s = JournalState::new(JournalId::from("j1"), "  My   Journal ", 5);
+        let s = JournalState::new(JournalId::from("j1"), "  My   Journal ", 5).unwrap();
         assert_eq!(s.journals.len(), 1);
         assert!(s.entries.is_empty());
         let j = s.journal(&JournalId::from("j1")).unwrap();
@@ -185,9 +209,19 @@ mod tests {
     }
 
     #[test]
+    fn new_checks_its_first_journal_like_create_journal_does() {
+        use crate::OpError;
+        let n = |id: &str, name: &str| JournalState::new(JournalId::from(id), name, 0);
+        assert_eq!(n("", "Ok"), Err(OpError::InvalidId));
+        assert_eq!(n("j", "   "), Err(OpError::EmptyJournalName));
+        assert_eq!(n("j", "a\nb"), Err(OpError::InvalidJournalName));
+        assert_eq!(n("j", "Wo\u{200B}rk"), Err(OpError::InvalidJournalName));
+    }
+
+    #[test]
     fn validate_catches_what_only_outside_state_can_break() {
         use crate::{OpError, TagError};
-        let base = JournalState::new(JournalId::from("j1"), "One", 0);
+        let base = JournalState::new(JournalId::from("j1"), "One", 0).unwrap();
 
         let mut empty = base.clone();
         empty.journals.clear();
@@ -200,6 +234,26 @@ mod tests {
             .unwrap()
             .id = JournalId::from("x");
         assert_eq!(mismatch.validate(), Err(OpError::IdMismatch("j1".into())));
+
+        let mut bad_key = base.clone();
+        let mut j = bad_key.journals.values().next().unwrap().clone();
+        j.id = JournalId::from("bad key");
+        bad_key.journals.insert(j.id.clone(), j);
+        assert_eq!(bad_key.validate(), Err(OpError::InvalidId));
+
+        let mut crowded = base.clone();
+        for i in 0..MAX_JOURNALS {
+            let id = JournalId::from(format!("x{i}").as_str());
+            crowded.journals.insert(
+                id.clone(),
+                Journal {
+                    id,
+                    name: format!("X{i}"),
+                    created_at_ms: 0,
+                },
+            );
+        }
+        assert_eq!(crowded.validate(), Err(OpError::TooManyJournals));
 
         let mut dup_name = base.clone();
         dup_name.journals.insert(

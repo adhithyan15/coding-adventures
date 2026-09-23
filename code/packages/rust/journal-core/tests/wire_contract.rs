@@ -11,7 +11,7 @@ use journal_core::{apply, Command, Date, EntryFilter, EntryId, JournalId, Journa
 use serde_json::json;
 
 fn sample() -> JournalState {
-    let mut s = JournalState::new(JournalId::from("p"), "Personal", 7);
+    let mut s = JournalState::new(JournalId::from("p"), "Personal", 7).unwrap();
     apply(
         &mut s,
         Command::CreateEntry {

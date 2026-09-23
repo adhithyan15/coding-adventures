@@ -16,7 +16,7 @@
 //! Commands are plain data, so a host can log, replay, or send them across the
 //! WebAssembly boundary as JSON (with the `serde` feature).
 
-use crate::model::{MAX_BODY_BYTES, MAX_JOURNAL_NAME_CHARS, MAX_TITLE_CHARS};
+use crate::model::{MAX_BODY_BYTES, MAX_JOURNALS, MAX_JOURNAL_NAME_CHARS, MAX_TITLE_CHARS};
 use crate::tag::{normalize_tags, TagError};
 use crate::{text, Date, Entry, EntryId, Journal, JournalId, JournalState};
 
@@ -120,6 +120,12 @@ pub enum OpError {
     EntryNotFound(EntryId),
     /// The host tried to create something with an id already in use.
     DuplicateId(String),
+    /// An id was empty, longer than [`crate::MAX_ID_BYTES`], or not printable
+    /// ASCII. The id itself is deliberately *not* carried, so a hostile id cannot
+    /// ride an error message into a host's log.
+    InvalidId,
+    /// Creating another journal would exceed [`MAX_JOURNALS`].
+    TooManyJournals,
     /// A map key and the id stored under it disagree (loaded state only).
     IdMismatch(String),
     /// Another journal already has this name (case-insensitively).
@@ -152,6 +158,12 @@ impl core::fmt::Display for OpError {
             OpError::JournalNotFound(id) => write!(f, "journal {id} not found"),
             OpError::EntryNotFound(id) => write!(f, "entry {id} not found"),
             OpError::DuplicateId(id) => write!(f, "id {id} is already in use"),
+            OpError::InvalidId => write!(
+                f,
+                "an id must be 1 to {} printable ASCII bytes",
+                crate::MAX_ID_BYTES
+            ),
+            OpError::TooManyJournals => write!(f, "at most {MAX_JOURNALS} journals are allowed"),
             OpError::IdMismatch(id) => write!(f, "record stored under {id} carries a different id"),
             OpError::DuplicateJournalName(n) => write!(f, "a journal named {n:?} already exists"),
             OpError::EmptyJournalName => f.write_str("a journal name cannot be empty"),
@@ -188,6 +200,14 @@ pub(crate) fn check_journal_name(name: &str) -> Result<(), OpError> {
         return Err(OpError::InvalidJournalName);
     }
     Ok(())
+}
+
+pub(crate) fn check_id(id: &str) -> Result<(), OpError> {
+    if crate::is_valid_id(id) {
+        Ok(())
+    } else {
+        Err(OpError::InvalidId)
+    }
 }
 
 pub(crate) fn check_title(title: &str) -> Result<(), OpError> {
@@ -256,6 +276,10 @@ fn require_entry(state: &JournalState, id: &EntryId) -> Result<(), OpError> {
 pub fn apply(state: &mut JournalState, cmd: Command, now_ms: u64) -> Result<(), OpError> {
     match cmd {
         Command::CreateJournal { id, name } => {
+            check_id(id.as_str())?;
+            if state.journals.len() >= MAX_JOURNALS {
+                return Err(OpError::TooManyJournals);
+            }
             if state.journals.contains_key(&id) {
                 return Err(OpError::DuplicateId(id.to_string()));
             }
@@ -309,6 +333,7 @@ pub fn apply(state: &mut JournalState, cmd: Command, now_ms: u64) -> Result<(), 
             title,
             body,
         } => {
+            check_id(id.as_str())?;
             if state.entries.contains_key(&id) {
                 return Err(OpError::DuplicateId(id.to_string()));
             }
@@ -396,7 +421,7 @@ mod tests {
     }
 
     fn state() -> JournalState {
-        JournalState::new(j("personal"), "Personal", 1)
+        JournalState::new(j("personal"), "Personal", 1).unwrap()
     }
 
     fn with_entry() -> JournalState {
@@ -654,6 +679,57 @@ mod tests {
     }
 
     #[test]
+    fn unusable_ids_are_refused_without_echoing_them() {
+        let mut s = state();
+        for bad in ["", "two words", "\u{1b}[31mred", &"x".repeat(65)] {
+            rejects(
+                &mut s,
+                Command::CreateJournal {
+                    id: j(bad),
+                    name: "N".into(),
+                },
+                OpError::InvalidId,
+            );
+            rejects(
+                &mut s,
+                Command::CreateEntry {
+                    id: e(bad),
+                    journal: j("personal"),
+                    date: day("2026-01-01"),
+                    title: String::new(),
+                    body: String::new(),
+                },
+                OpError::InvalidId,
+            );
+        }
+    }
+
+    #[test]
+    fn the_journal_count_is_capped() {
+        let mut s = state();
+        for i in 1..MAX_JOURNALS {
+            apply(
+                &mut s,
+                Command::CreateJournal {
+                    id: j(&format!("j{i}")),
+                    name: format!("J{i}"),
+                },
+                1,
+            )
+            .unwrap();
+        }
+        assert_eq!(s.journals.len(), MAX_JOURNALS);
+        rejects(
+            &mut s,
+            Command::CreateJournal {
+                id: j("one-more"),
+                name: "One more".into(),
+            },
+            OpError::TooManyJournals,
+        );
+    }
+
+    #[test]
     fn delete_entry_removes_it() {
         let mut s = with_entry();
         apply(&mut s, Command::DeleteEntry { id: e("e1") }, 20).unwrap();
@@ -860,6 +936,8 @@ mod tests {
             OpError::JournalNotFound(j("a")).to_string(),
             OpError::EntryNotFound(e("a")).to_string(),
             OpError::DuplicateId("a".into()).to_string(),
+            OpError::InvalidId.to_string(),
+            OpError::TooManyJournals.to_string(),
             OpError::IdMismatch("a".into()).to_string(),
             OpError::DuplicateJournalName("A".into()).to_string(),
             OpError::EmptyJournalName.to_string(),

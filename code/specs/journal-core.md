@@ -44,7 +44,9 @@ one journal** ("Personal", "Work", "Travel").
 | `name` | `String` | trimmed, 1–128 chars, unique case-insensitively |
 | `created_at_ms` | `u64` | |
 
-`JournalState` always holds **at least one** journal. The last journal cannot be
+`JournalState` always holds **at least one** journal and at most 1,000.
+`JournalState::new` checks its first journal exactly as `CreateJournal` would,
+so it returns a `Result`. The last journal cannot be
 deleted — a journal app with nowhere to write is a broken state, not an empty one.
 
 ### Entry
@@ -69,12 +71,25 @@ to another day (`SetEntryDate`) is a first-class edit, not a timestamp rewrite.
 `task_core::Date`. Its wire form is an ISO `YYYY-MM-DD` string so the TypeScript
 app's stored entries map across with no conversion.
 
+### Ids
+
+Ids are minted by the host, but the core still checks them: 1–64 bytes of
+printable ASCII (a UUID v7 is 36). Ids are echoed into errors and host logs and
+used as map keys, so an id carrying a newline or a terminal escape, or one
+megabytes long, is refused (`InvalidId`, which deliberately does not echo it).
+
 ### Tag
 
 A tag is a name, not an entity: Day One has no tag objects with their own ids.
 A `Tag` keeps its **display form** (trimmed, inner whitespace collapsed to one
 space) and compares by a **case-folded key**, so `Travel` and `travel` are the
 same tag and the first spelling wins. 1–64 chars; no control characters.
+
+"Control characters" here, and in journal names, also covers the invisible
+formatting characters — zero-width spaces and joiners (U+200B–U+200F,
+U+2060–U+2069), bidirectional overrides (U+202A–U+202E), and the byte-order
+mark. They draw as nothing, so without this rule `Work` and `Wo​rk` would look
+identical and still count as different names.
 
 ## Commands
 
@@ -112,13 +127,19 @@ starred-only) so "Work journal, tagged #travel" is one query everywhere.
   non-leap years, so it is not silently invisible three years in four.
 - **`search(state, query, filter)`** → case-insensitive, all-terms-must-match
   search over title, body and tags. Ranked by where terms matched (title and tag
-  hits outrank body hits), then newest first. Each hit carries a snippet of at
+  hits outrank body hits), then newest first. The query is read up to 1,024
+  characters, repeated terms count once, and at most 16 distinct terms are
+  used, since each term is a scan of every body. Each hit carries a snippet of at
   most 160 characters around the first body match, cut on character
   boundaries, never mid-codepoint.
 - **`tag_counts(state, filter)`** → every tag with its entry count, most used
   first, then alphabetical.
 - **`month_activity(state, year, month, filter)`** → `(day, count)` for each day
   of the month with entries — the data a calendar heat-map needs.
+
+Dates are limited to the years 0–9999: exactly what the ISO wire form carries,
+and far enough from `i32` limits that the civil-date arithmetic underneath
+cannot overflow (`month_activity(i32::MAX, …)` returns an empty list).
 
 Case folding uses Unicode `char::to_lowercase`, which can change a string's byte
 length (`İ` folds to two chars). Search therefore keeps a folded-offset → original
@@ -134,6 +155,9 @@ cannot make a projection allocate proportionally to its size per hit.
 ## Out of scope for J2a
 
 - **Persistence and import/export** — J2b's facade serialises `JournalState`
-  and imports the TypeScript app's `Entry[]`.
+  and imports the TypeScript app's `Entry[]`. Deserialising does **not**
+  validate by itself, so the facade must call `JournalState::validate` on
+  everything it loads, and hosts must escape titles, snippets and tags when
+  they render them (they are plain text, not markup).
 - **Photos** — needs the `image` slot J1 found has no consumer; J4.
 - **Encryption** — J4, at the storage layer, not in the model.

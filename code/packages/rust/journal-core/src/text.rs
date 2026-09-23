@@ -54,11 +54,26 @@ pub(crate) fn fold_with_map(s: &str) -> (String, Vec<usize>) {
     (folded, map)
 }
 
-/// True if `s` contains a control character (newline, tab, NUL, …). Labels are
-/// single-line display strings; a control character in one is either a paste
-/// accident or an attempt to break a host's rendering.
+/// True if `s` contains a control character (newline, tab, NUL, …) or an
+/// invisible formatting character. Labels are single-line display strings; a
+/// control character in one is either a paste accident or an attempt to break a
+/// host's rendering.
+///
+/// The formatting characters matter for a subtler reason. A zero-width space or
+/// a right-to-left override draws as nothing (or reorders what is drawn), so
+/// `"Work"` and `"Wo\u{200B}rk"` look identical on screen yet are different names
+/// — which would defeat the rule that journal names and tags are unique.
 pub(crate) fn has_control(s: &str) -> bool {
-    s.chars().any(char::is_control)
+    s.chars().any(|c| c.is_control() || is_invisible_format(c))
+}
+
+/// Zero-width and bidirectional-override characters (Unicode category Cf in the
+/// ranges that can make two labels render identically), plus the byte-order mark.
+fn is_invisible_format(c: char) -> bool {
+    matches!(
+        c,
+        '\u{200B}'..='\u{200F}' | '\u{202A}'..='\u{202E}' | '\u{2060}'..='\u{2069}' | '\u{FEFF}'
+    )
 }
 
 #[cfg(test)]
@@ -97,5 +112,10 @@ mod tests {
         assert!(has_control("a\nb"));
         assert!(has_control("\u{0}"));
         assert!(!has_control("plain label"));
+        // Invisible characters that would let two names look identical.
+        assert!(has_control("Wo\u{200B}rk"));
+        assert!(has_control("\u{202E}kroW"));
+        assert!(has_control("\u{FEFF}Work"));
+        assert!(has_control("a\u{2066}b"));
     }
 }

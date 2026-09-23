@@ -31,7 +31,7 @@
 //! use journal_core::{apply, Command, Date, EntryFilter, EntryId, JournalId, JournalState};
 //! use journal_core::projections::{search, timeline};
 //!
-//! let mut state = JournalState::new(JournalId::from("personal"), "Personal", 0);
+//! let mut state = JournalState::new(JournalId::from("personal"), "Personal", 0).unwrap();
 //! apply(&mut state, Command::CreateEntry {
 //!     id: EntryId::from("e1"),
 //!     journal: JournalId::from("personal"),
@@ -66,7 +66,7 @@ pub mod projections;
 pub mod tag;
 mod text;
 
-pub use date::Date;
+pub use date::{Date, MAX_YEAR, MIN_YEAR};
 pub use ids::*;
 pub use model::*;
 pub use ops::{apply, Command, OpError};

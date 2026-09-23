@@ -52,6 +52,20 @@ macro_rules! id_type {
     };
 }
 
+/// Longest id, in bytes. A canonical UUID v7 is 36; the slack allows other
+/// schemes without letting an id grow into a storage or log problem.
+pub const MAX_ID_BYTES: usize = 64;
+
+/// True if `s` is a usable id: 1..=[`MAX_ID_BYTES`] bytes of printable ASCII.
+///
+/// Ids are echoed into error messages and host logs, used as map keys, and
+/// repeated in every record that points at them. Printable ASCII keeps them from
+/// carrying newlines or terminal escape sequences into a log, and the length cap
+/// keeps a hostile import from making every lookup compare megabytes.
+pub fn is_valid_id(s: &str) -> bool {
+    !s.is_empty() && s.len() <= MAX_ID_BYTES && s.bytes().all(|b| b.is_ascii_graphic())
+}
+
 id_type!(
     /// Identifies one journal ("Personal", "Work", "Travel").
     JournalId
@@ -71,6 +85,17 @@ mod tests {
         assert_eq!(id.as_str(), "018f-abc");
         assert_eq!(id.to_string(), "018f-abc");
         assert_eq!(EntryId::from("018f-abc"), id);
+    }
+
+    #[test]
+    fn id_validity() {
+        assert!(is_valid_id("018f7c2e-8b1a-7c3d-9e4f-0a1b2c3d4e5f"));
+        assert!(!is_valid_id(""));
+        assert!(!is_valid_id(&"a".repeat(MAX_ID_BYTES + 1)));
+        assert!(!is_valid_id("has space"));
+        assert!(!is_valid_id("line\nbreak"));
+        assert!(!is_valid_id("\u{1b}[31m"));
+        assert!(!is_valid_id("é"));
     }
 
     #[test]

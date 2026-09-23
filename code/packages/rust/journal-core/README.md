@@ -28,7 +28,7 @@ It is **pure**: no I/O, no clock (time arrives as `now_ms`), no id generation
 use journal_core::projections::{on_this_day, search, timeline};
 use journal_core::{apply, Command, Date, EntryFilter, EntryId, JournalId, JournalState};
 
-let mut state = JournalState::new(JournalId::from("personal"), "Personal", 0);
+let mut state = JournalState::new(JournalId::from("personal"), "Personal", 0)?;
 apply(&mut state, Command::CreateEntry {
     id: EntryId::from("e1"),
     journal: JournalId::from("personal"),
