@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing yourself",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:ef20656608cb3f20",
+  "sourceHash": "fnv1a64:7e9d83f0ac2854c4",
   "lessons": [
     {
       "id": "RU-C02-ya",
@@ -1517,6 +1517,151 @@
             {
               "kind": "speech",
               "text": "Which sentence demonstrates the zero copula? (Очень приятно.) Why do the naming sentences not count? (They contain зовут.) Does Russian lack a present form of \"be\" entirely? (No: есть exists; the linking use is normally omitted here.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-R02-second-pass-four-letters-and-what-is-left-out",
+      "sequence": 135,
+      "title": "с н б д (s n b d) — four letters, two kinds of trouble",
+      "headword": "с н б д",
+      "romanization": "s n b d",
+      "gloss": "second pass over the four letters a Latin eye misreads, the polite greeting, and the verb Russian does not say",
+      "script": "cyrillic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:8027b800bf412102",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script: two that lie, two that are only new"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: two that lie, two that are only new until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The long polite greeting, from memory, and who you would say it to. Then say who you would not."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script: two that lie, two that are only new",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "letter",
+                "the trouble"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "letter: с. the trouble: looks like a Latin c, says s.",
+                "letter: н. the trouble: looks like a Latin n, says n — but the shape is not the one you expect.",
+                "letter: б. the trouble: a genuinely new shape, says b.",
+                "letter: д. the trouble: a genuinely new shape, says d."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Two kinds of difficulty, needing different handling. с and н are false friends: your eye reads those shapes already, and reads them wrong, so the work is unlearning. б and д arrive with nothing attached, so the work is only learning. The second kind is easier, and mixing the two up is why the first kind keeps catching people out."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the verb that is not there",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Russian leaves out the present tense of to be. Where English needs am, is or are, Russian sets the two halves of the sentence side by side and stops."
+            },
+            {
+              "kind": "speech",
+              "text": "The person words are the other half of that. Subject and object forms differ, and with no verb to carry the person, the pronoun is doing more work than its English counterpart — which is why the shapes are worth drilling rather than recognising."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the polite greeting, then the courtesy exchange that follows it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the polite greeting, then the courtesy exchange that follows it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at с and н, and say which Latin letter each one is pretending to be",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at с and н, and say which Latin letter each one is pretending to be]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "б and д, and note that neither is pretending anything",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: б and д, and note that neither is pretending anything]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence with no verb in it, and say what English would have added",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence with no verb in it, and say what English would have added]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two of the four are false friends, and why is that harder? (с and н — you have to unlearn a reading, not only learn one.) What does Russian leave out of a present-tense sentence? (The verb to be.) And what does that put on the pronoun? (More work — it carries the person alone.)"
             }
           ]
         }

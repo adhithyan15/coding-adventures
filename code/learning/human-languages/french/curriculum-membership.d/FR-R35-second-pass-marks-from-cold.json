@@ -1,0 +1,11 @@
+{
+  "id": "FR-R35-second-pass-marks-from-cold",
+  "pathSegment": "FR-PATH-028",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-048-CONSOLIDATION",
+      "order": 0
+    }
+  ]
+}

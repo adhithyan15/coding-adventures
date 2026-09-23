@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e4f53e791a6f334a",
+  "sourceHash": "fnv1a64:911257360416620c",
   "lessons": [
     {
       "id": "FR-C04-au-revoir",
@@ -1247,6 +1247,255 @@
             {
               "kind": "speech",
               "text": "What does the tréma tell you to do? (Pronounce the two vowels separately, not blended.) How is it different from a German umlaut? (Tréma separates vowels; umlaut changes a vowel's sound.) That's the French writing kit: é è ê, ç, and ï ë."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-R05-second-pass-courtesy-and-farewells",
+      "sequence": 178,
+      "title": "à — one word, three goodbyes",
+      "headword": "à",
+      "romanization": "à",
+      "gloss": "second pass over thanks, the shrug, and the three goodbyes that all open on à",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9436f4a33cf0f27f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three soft goodbyes, from memory. Say all three, then say the one word every one of them begins with."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the soft goodbyes are all à plus a time",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "à plus tard, to more late — later, the default.",
+                "à bientôt, to well-soon — soon.",
+                "à demain, to tomorrow."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "One preposition and a word for when. Choosing between them is choosing a distance in time, and nothing else about the sentence moves."
+            },
+            {
+              "kind": "speech",
+              "text": "bonne nuit is not in that family and is worth keeping apart: it is for someone going to bed, not for someone leaving a room. Said on the way out of an afternoon meeting it lands oddly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: tu and vous, and where the choice actually shows",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tu is the familiar you, for a friend or a peer; vous is the formal or plural one, for a stranger, an elder, a group. The climb is visible in the question: Comment vas-tu? against Comment allez-vous?"
+            },
+            {
+              "kind": "speech",
+              "text": "The verb changes with the pronoun, so the choice is not a single word you can swap late — it is decided before the sentence starts."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built — thanks, and the shrug",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "merci and its reply de rien, \"of nothing\" — the same modesty Spanish reaches for with de nada."
+            },
+            {
+              "kind": "speech",
+              "text": "And the shrug: comme ci, comme ça, \"like this, like that\". Every language paints that gesture differently — Spanish weighs it (más o menos, more or less), Italian doubles a word (così così), French points twice. One gesture, three pictures."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What do the three soft goodbyes share? (à, plus a word for when.) Who is bonne nuit for? (Someone going to bed.) Where does the tu-vous choice show itself? (In the verb — vas-tu against allez-vous.) And what does de rien say literally? (Of nothing.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-R05-second-pass-three-marks",
+      "sequence": 179,
+      "title": "ê ç ï — three marks, three different jobs",
+      "headword": "ê ç ï",
+      "romanization": "ê ç ï",
+      "gloss": "second pass over the three marks — one remembers a lost letter, one changes a sound, one separates two vowels",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:50fab74eb2ae4bfa",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script: what each mark is actually for",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: what each mark is actually for and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "forêt, hôpital, île. One letter is missing from each, and English still has it. Say which letter, before reading on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script: what each mark is actually for",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The three arrived a page apart and do three unrelated jobs. Sorted by what they change, they stop looking like a single topic called accents:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "mark",
+                "what it changes"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "mark: ê the circumflex. what it changes: nothing you say — it records an s that fell out.",
+                "mark: ç the cédille. what it changes: the sound — it keeps c soft before a, o, u.",
+                "mark: ï the tréma. what it changes: the grouping — read this vowel on its own."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The circumflex is the odd one and the useful one. French dropped an s before certain consonants and left a hat where it stood; English borrowed the older spelling and kept the s. So forêt is forest, hôpital is hospital, île is isle. A hat is a decoder ring, not a pronunciation instruction."
+            },
+            {
+              "kind": "speech",
+              "text": "The other two are instructions. ç exists because c would otherwise go hard before those three vowels; ï exists because two vowels side by side would otherwise be read as one sound."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at a word with a hat and say the English word that kept the s",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at a word with a hat and say the English word that kept the *s*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a c before a with the hook and without it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a **c** before **a** with the hook and without it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "two vowels with the tréma and without, and hear them split",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: two vowels with the tréma and without, and hear them split]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "each of the three marks once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: each of the three marks once]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the three changes nothing you say? (The circumflex.) What does it record? (A lost s, which English usually still has.) What does the cédille stop happening? (A hard c before a, o, u.) And what does the tréma ask you to do? (Read the vowel separately.)"
             }
           ]
         }

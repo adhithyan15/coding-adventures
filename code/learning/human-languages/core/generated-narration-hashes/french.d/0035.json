@@ -1,18 +1,19 @@
 {
   "language": "french",
   "chapter": 35,
-  "sourceHash": "fnv1a64:c85d0960b36d5a97",
+  "sourceHash": "fnv1a64:8461320dbb6910dd",
   "lessonIds": [
     "FR-C31-oeil",
     "FR-C31-nez",
     "FR-C31-bouche",
-    "FR-C31-ventre"
+    "FR-C31-ventre",
+    "FR-R35-second-pass-marks-from-cold"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 4,
   "text": "french/narration/ch35.txt",
   "json": "french/narration/ch35.json",
-  "textHash": "fnv1a64:06a66306147f6439",
-  "jsonHash": "fnv1a64:ff5ae636b3844f2b",
+  "textHash": "fnv1a64:6fd9d33b05172600",
+  "jsonHash": "fnv1a64:b6e379a250dce0c2",
   "findings": []
 }

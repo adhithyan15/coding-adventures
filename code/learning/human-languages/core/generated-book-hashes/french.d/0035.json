@@ -1,12 +1,13 @@
 {
   "language": "french",
   "chapter": 35,
-  "sourceHash": "fnv1a64:3d9df8c801fa7de0",
+  "sourceHash": "fnv1a64:5b1d4c344e80e248",
   "lessonIds": [
     "FR-C31-oeil",
     "FR-C31-nez",
     "FR-C31-bouche",
-    "FR-C31-ventre"
+    "FR-C31-ventre",
+    "FR-R35-second-pass-marks-from-cold"
   ],
   "tex": "french/book/chapters/ch35-eyes-nose-mouth-stomach.tex"
 }

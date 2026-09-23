@@ -6,6 +6,7 @@
     "FR-EXT-013-LANGUAGE-SPECIFIC"
   ],
   "after": [
-    "FR-EXT-013-ACCENT-MARKS"
+    "FR-EXT-013-ACCENT-MARKS",
+    "FR-EXT-047-CONSOLIDATION"
   ]
 }

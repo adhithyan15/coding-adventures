@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 2,
-  "sourceHash": "fnv1a64:3ddabaef514b7038",
+  "sourceHash": "fnv1a64:f497c37d58e6de7c",
   "lessonIds": [
     "RU-C02-ya",
     "RU-C02-ty-vy",
@@ -12,7 +12,8 @@
     "RU-C02-ochen-priyatno",
     "RU-C02-practice",
     "RU-C02-practice-cases",
-    "RU-C02-practice-zero-copula"
+    "RU-C02-practice-zero-copula",
+    "RU-R02-second-pass-four-letters-and-what-is-left-out"
   ],
   "tex": "russian/book/chapters/ch02-introducing-yourself.tex"
 }

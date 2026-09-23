@@ -1,0 +1,11 @@
+{
+  "id": "RU-R26-second-pass-li-from-cold",
+  "pathSegment": "RU-PATH-024",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "RU-EXT-035-CONSOLIDATION",
+      "order": 1
+    }
+  ]
+}

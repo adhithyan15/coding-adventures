@@ -5,5 +5,7 @@
   "inline": [
     "RU-EXT-029-QUESTION-FAMILY"
   ],
-  "after": []
+  "after": [
+    "RU-EXT-035-CONSOLIDATION"
+  ]
 }

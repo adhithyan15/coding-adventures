@@ -1,13 +1,14 @@
 {
   "language": "russian",
   "chapter": 22,
-  "sourceHash": "fnv1a64:af6a3e02fd960d2f",
+  "sourceHash": "fnv1a64:51e60dfcc89a068f",
   "lessonIds": [
     "RU-C22-kto",
     "RU-C22-kakoy",
     "RU-C22-skolko",
     "RU-C22-kotoryy",
-    "RU-C22-li"
+    "RU-C22-li",
+    "RU-R22-second-pass-the-question-family"
   ],
   "tex": "russian/book/chapters/ch22-question-family.tex"
 }
