@@ -1,12 +1,13 @@
 {
   "language": "sanskrit",
   "chapter": 12,
-  "sourceHash": "fnv1a64:64418bb2afaf3b85",
+  "sourceHash": "fnv1a64:73ab93330b75e716",
   "lessonIds": [
     "SA-C12-akshi",
     "SA-C12-karnah",
     "SA-S117-letter-ttha",
-    "SA-C12-mukham"
+    "SA-C12-mukham",
+    "SA-R12-second-pass-what-sanskrit-leaves-out"
   ],
   "tex": "sanskrit/book/chapters/ch12-face-nouns-1.tex"
 }

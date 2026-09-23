@@ -1,0 +1,11 @@
+{
+  "id": "SA-R13-second-pass-five-parts-three-kinds-of-ancestry",
+  "pathSegment": "SA-PATH-016",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-016-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

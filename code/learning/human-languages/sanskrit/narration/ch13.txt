@@ -1,8 +1,8 @@
 Sanskrit, chapter 13: The Face, Part Two.
-3 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 3.
+Lesson 1 of 4.
 नासिका (nāsikā) — "nose," kin to two words but parent of neither.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -38,7 +38,7 @@ Wrap-up Recall.
 What PIE root is नासिका (nāsikā)'s family from, and name two of its Western cousins. (nehas-; nose, nasus/nasal.) Is नासिका (nāsikā) the ancestor of Bengali nāk, or its relative? (Relative — both descend from नस्, neither from the other.) What did you learn just before this? (Mukham, mouth.)
 
 
-Lesson 2 of 3.
+Lesson 2 of 4.
 ध (dha) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ध and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -83,7 +83,7 @@ Wrap-up Recall.
 Which character is this — ध? What sound does it carry? (dha.) Name one word you already say that contains it.
 
 
-Lesson 3 of 3.
+Lesson 3 of 4.
 हृदयम् (hṛdayam) — "heart," a root barely disguised anywhere.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -120,3 +120,29 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Name three languages, besides English, whose word for heart shares हृदयम् (hṛdayam)'s root. (Any three of Latin, Greek, Italian, Portuguese, Russian.) Which Bengali form of "heart" is everyday, and which survives only in poetry? (hridoy, everyday; hiya, poetry.) What gender has run through nearly this entire chapter's nouns? (Neuter.) And what was the very first word of this chapter? (Pānīyam, water.)
+
+
+Lesson 4 of 4.
+Five parts, and three different kinds of ancestry — second pass over the five body words, sorted by how secure their ancestry is rather than by where they sit on a body.
+
+Warm-up.
+[pause 3 seconds]
+Ear, nose, heart. Say all three before you read on.
+
+Across the family.
+Five words, and they do not sort into one story. Sorted by how much anyone can actually claim about where they came from:
+[a table of 5 rows, read aloud]
+word: हृदयम् hṛdayam. part: heart. how secure the ancestry is: the most secure the book has shown.
+word: अक्षि akṣi. part: eye. how secure the ancestry is: unbroken, and visible in English eye.
+word: नासिका nāsikā. part: nose. how secure the ancestry is: kin to two modern words, parent of neither.
+word: मुखम् mukham. part: mouth, face. how secure the ancestry is: two families claim it, unsettled.
+word: कर्णः karṇaḥ. part: ear. how secure the ancestry is: never settled, even by Sanskrit itself.
+The list runs from a word whose descent is traceable step by step to a word nobody has been able to place at all. Both ends of it are ordinary vocabulary a learner has to know; the difference between them is entirely a matter of what the evidence supports.
+
+Why it's said this way.
+Kin is not descent. Nāsikā has relatives in living languages and is the ancestor of none of them — they and it come from the same older word. A family tree is not a chain, and cousin is the commonest relation in it.
+The endings sort the five a second way, cutting across the first. Three are neuter; karṇaḥ takes the masculine visarga; nāsikā ends in a long -ā, the shape most feminine nouns in this book take. Gender here is a property of the word and not of the thing — a heart is neuter, an ear is masculine, and no fact about bodies explains it.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which of the five has the securest ancestry, and which has none anyone agrees on? (हृदयम् (hṛdayam); कर्णः.) Is nāsikā the parent of its modern look-alikes, or their cousin? (Cousin.)

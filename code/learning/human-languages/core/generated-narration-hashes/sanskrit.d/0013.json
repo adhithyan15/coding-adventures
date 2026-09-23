@@ -1,17 +1,18 @@
 {
   "language": "sanskrit",
   "chapter": 13,
-  "sourceHash": "fnv1a64:81fc1e9404252ceb",
+  "sourceHash": "fnv1a64:f8e99dc31bdf76b9",
   "lessonIds": [
     "SA-C13-nasika",
     "SA-S212-letter-dha",
-    "SA-C13-hridayam"
+    "SA-C13-hridayam",
+    "SA-R13-second-pass-five-parts-three-kinds-of-ancestry"
   ],
-  "voiceLessons": 0,
+  "voiceLessons": 1,
   "drivablePrefix": 0,
   "text": "sanskrit/narration/ch13.txt",
   "json": "sanskrit/narration/ch13.json",
-  "textHash": "fnv1a64:e3d25f51e57e08c3",
-  "jsonHash": "fnv1a64:7c94f2a266b8e077",
+  "textHash": "fnv1a64:b2fbd54cbe378562",
+  "jsonHash": "fnv1a64:bc946b69c1456c97",
   "findings": []
 }

@@ -228,9 +228,26 @@ describe("direct curriculum lesson owners", () => {
     // nothing that is not this change: the three lessons joining their
     // segments' derived `lessons` lists, two new `-CONSOLIDATION` extension
     // nodes, and those ids in their segments' `inline` lists.
-    expect(digest).toBe("87df31a5d69602d7071d673a3cb69b2d158d3490ac6bbc36733e275ba0dd588e");
+    //
+    // 7520 -> 7526 is HL-C433: SIX `review` lessons taking sanskrit to zero
+    // pre-A1 reinforcement debt. Six rather than three because sanskrit is the
+    // first track in this programme where one revisit per atom was not enough:
+    // 17 of its 28 thin atoms had ZERO revisits and the criterion asks for two,
+    // so 28 atoms cost 45 retrieval slots. None introduces an atom or a
+    // headword.
+    //
+    // Attribution by reconstruction AND structural diff. A clean worktree at
+    // ef987b60d6 reproduced 87df31a5... and 7520 byte for byte. Dumping the
+    // loaded graph from both trees and diffing gives 36 changed lines and
+    // nothing that is not this change: the six lessons joining their segments'
+    // and extensions' derived `lessons` lists, twice each, with the previous
+    // last element gaining a trailing comma. It is the FIRST entry here with no
+    // new extension node at all -- every one of the six reuses the extension
+    // its path segment already carried -- which is why 36 lines buys six
+    // lessons where HL-C431 needed 63 for the same count.
+    expect(digest).toBe("aa7d82354b0f2f8409c207785b3b892480999c62c8e19cc58be063a7ccb41dd2");
     expect(curricula.flatMap((curriculum) => curriculum.path).flatMap((path) => path.lessons))
-      .toHaveLength(7520);
+      .toHaveLength(7526);
   });
 
   it("keeps the canonical curriculum shards free of derived lesson arrays", () => {

@@ -1,0 +1,11 @@
+{
+  "id": "SA-R06-second-pass-where-the-words-came-from",
+  "pathSegment": "SA-PATH-009",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-009-ETYMOLOGY",
+      "order": 2
+    }
+  ]
+}

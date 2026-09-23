@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R06-second-pass-where-the-words-came-from",
+    "language": "sanskrit",
+    "chapter": 6,
+    "sequence": 335,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3f22fed70fd4d479"
+  },
+  "findings": []
+}

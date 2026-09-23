@@ -1,8 +1,8 @@
 Sanskrit, chapter 6: Numbers One to Five.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 4.
+Lesson 1 of 5.
 एक, द्व, त्रि, चतुर्, पञ्च (pañca) — one to five.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called You'll want to know: the five until you have stopped, and I will say so again when we reach it.
@@ -35,7 +35,7 @@ Wrap-up Recall.
 Give one to five in Sanskrit. (Eka, dva, tri, catur, pañca.) Why does "two" look unusual? (Sanskrit has a dual — a form for exactly two.) Which column will the modern languages mostly descend from? (The neuter — trī́ṇi, catvā́ri.) Which number barely changes across gender in this table? (Pañca.) Next: connect the Sanskrit forms west to Latin and English.
 
 
-Lesson 2 of 4.
+Lesson 2 of 5.
 The Sanskrit numbers are English cousins — the Sanskrit, Latin, and English number family and the sound laws between them.
 
 Warm-up.
@@ -82,7 +82,7 @@ Are the Latin and Sanskrit forms borrowed from one another? (No: they are inheri
 Were the Latin and Sanskrit number forms borrowed from one another?
 
 
-Lesson 3 of 4.
+Lesson 3 of 5.
 ञ (ña) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ञ and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -128,7 +128,7 @@ Wrap-up Recall.
 Which character is this — ञ? What sound does it carry? (ña.) Name one word you already say that contains it.
 
 
-Lesson 4 of 4.
+Lesson 4 of 5.
 Pañca hiding in familiar words — five inside Punjab, pentagon, and the debated history of punch.
 
 Warm-up.
@@ -158,3 +158,30 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What does Punjab mean? (“Five waters.”) Is Persian panj borrowed from Sanskrit? (No: it is an Iranian cousin.) Which Greek form hides in pentagon? (Pente.) What caution belongs with the drink punch? (The five-ingredients derivation is common, but puncheon is a rival account.)
+
+
+Lesson 5 of 5.
+नमस्कारः (namaskāraḥ) — the ending you can hear, and four claims you were told once.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 3 seconds]
+Say the longer of the two greetings. Then say what its last breath — the soft -ḥ — is telling you about the word.
+
+Why it's said this way.
+Namaskāraḥ ends on a visarga, and a visarga on a noun like this one is not decoration: it marks the masculine singular. You have been hearing it since your first pair of greetings without being asked to notice it twice.
+The numbers in front of you now make the point differently. Pañca has no visarga; namaskāraḥ does. One is a bare stem, the other is a word doing a job in a sentence. Sanskrit tells you which by the ending, not by the position.
+
+Across the family.
+Four historical claims have gone past you, one at a time, each at the end of a chapter. Set against each other they stop being trivia and become one argument:
+[a table of 4 rows, read aloud]
+the claim: a judge in Calcutta announced in 1786 that Sanskrit, Greek and Latin came from a common source. what it rests on: he was comparing verbs and grammar, not lists of similar-sounding words.
+the claim: the words of the naming exchange are traceable to that same source. what it rests on: nāma, mama, tvam, kim all have cousins west of India.
+the claim: the wellbeing words have roots reaching east and west alike. what it rests on: the root is the unit that travels, not the finished word.
+the claim: the leave-taking words are built from roots you can already name. what it rests on: punar-darśanāya is again plus for seeing.
+Read the right-hand column downward. Every one of the four is an argument from roots and endings, which is the same evidence the numbers in this chapter rest on. That is why the claim about Sanskrit and Latin is a claim about grammar and not about vocabulary.
+
+Wrap-up Recall.
+[pause 3 seconds]
+What kind of evidence did the 1786 announcement rest on — matching words, or matching grammar? (Grammar.) What does the visarga on namaskāraḥ mark? (Masculine singular.)

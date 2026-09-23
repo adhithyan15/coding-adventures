@@ -1,13 +1,14 @@
 {
   "language": "sanskrit",
   "chapter": 29,
-  "sourceHash": "fnv1a64:d968382791e891e1",
+  "sourceHash": "fnv1a64:9dff982c2f87c0f6",
   "lessonIds": [
     "SA-C29-please",
     "SA-C29-pardon",
     "SA-C29-bow",
     "SA-C29-favour",
-    "SA-C29-fortunate"
+    "SA-C29-fortunate",
+    "SA-R29-second-pass-how-this-book-argues"
   ],
   "tex": "sanskrit/book/chapters/ch29-courtesy.tex"
 }

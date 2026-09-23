@@ -1,19 +1,20 @@
 {
   "language": "sanskrit",
   "chapter": 30,
-  "sourceHash": "fnv1a64:60f34dfc3c5541af",
+  "sourceHash": "fnv1a64:2db807cb4be3066a",
   "lessonIds": [
     "SA-C30-door",
     "SA-C30-seat",
     "SA-C30-flower",
     "SA-C30-garland",
-    "SA-C30-anjali"
+    "SA-C30-anjali",
+    "SA-R30-second-pass-from-the-door-to-the-promise"
   ],
   "voiceLessons": 5,
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch30.txt",
   "json": "sanskrit/narration/ch30.json",
-  "textHash": "fnv1a64:ff2931464782bb3d",
-  "jsonHash": "fnv1a64:85e26da04f64b1c3",
+  "textHash": "fnv1a64:9379e65e8490c806",
+  "jsonHash": "fnv1a64:330d66931b2fa54f",
   "findings": []
 }

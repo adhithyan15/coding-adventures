@@ -67,7 +67,16 @@ it("pins Sanskrit lesson-content budgets", () =>
     // and a dictation -- while the existing letter lesson's trace block gained
     // the observe-trace marker it had always earned. No new atoms: all three
     // practise SA-SCRIPT-RECOG-02, which the letter lesson already introduced.
-    lessons: 353,
+    //
+    // 353 -> 359: HL-C433, six `review` lessons closing the track's pre-A1
+    // reinforcement debt. Sanskrit is the first track in that programme where
+    // one review lesson per thin atom was NOT enough: 17 of its 28 thin atoms
+    // had ZERO revisits, and the criterion asks for two, so those seventeen
+    // each needed a second retrieval in a second lesson. 28 atoms cost 45
+    // retrieval slots, and 45 slots at the observed ~10-per-lesson ceiling is
+    // six lessons rather than three. None of them introduces an atom or carries
+    // a headword, so every other number in this object is unchanged.
+    lessons: 359,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

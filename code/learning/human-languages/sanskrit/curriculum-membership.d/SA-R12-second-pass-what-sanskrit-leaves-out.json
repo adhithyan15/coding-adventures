@@ -1,0 +1,11 @@
+{
+  "id": "SA-R12-second-pass-what-sanskrit-leaves-out",
+  "pathSegment": "SA-PATH-015",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-015-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}
