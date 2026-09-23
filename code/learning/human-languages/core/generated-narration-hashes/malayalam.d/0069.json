@@ -1,17 +1,18 @@
 {
   "language": "malayalam",
   "chapter": 69,
-  "sourceHash": "fnv1a64:8c2bb4efb4ce5ac6",
+  "sourceHash": "fnv1a64:6e19228e5fca7b16",
   "lessonIds": [
     "ML-C69-words",
     "ML-C69-lines",
-    "ML-C69-adyathe-vaayana"
+    "ML-C69-adyathe-vaayana",
+    "ML-R69-script-recall-first-nine"
   ],
   "voiceLessons": 3,
   "drivablePrefix": 3,
   "text": "malayalam/narration/ch69.txt",
   "json": "malayalam/narration/ch69.json",
-  "textHash": "fnv1a64:e2b573e8936e5523",
-  "jsonHash": "fnv1a64:13132d61ae1f1e05",
+  "textHash": "fnv1a64:7b3fe5c8fe244314",
+  "jsonHash": "fnv1a64:8cb771cb66e94118",
   "findings": []
 }

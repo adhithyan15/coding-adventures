@@ -4,7 +4,7 @@
   "chapter": 69,
   "title": "Reading — Words, Lines, and a First Passage",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:8c2bb4efb4ce5ac6",
+  "sourceHash": "fnv1a64:6e19228e5fca7b16",
   "lessons": [
     {
       "id": "ML-C69-words",
@@ -599,6 +599,146 @@
             {
               "kind": "speech",
               "text": "Which line speaks to the reader rather than describing? (The last one — ഇവിടെ നോക്കൂ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R69-script-recall-first-nine",
+      "sequence": 2381,
+      "title": "(ക ര ന മ ത ഴ ് ി ാ) (onnaam onpath) — nine, and three kinds of thing",
+      "headword": "(ക ര ന മ ത ഴ ് ി ാ)",
+      "romanization": "onnaam onpath",
+      "gloss": "cold retrieval of the first nine pieces this book taught one per chapter, sorted into letters, a killer, and two hangers",
+      "script": "malayalam",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:b572b35d3fb39f70",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script: six letters, one killer, two hangers"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script: six letters, one killer, two hangers until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two consonants you have been reading since the book's opening pages. Read ക, then ന, and say each one's name."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script: six letters, one killer, two hangers",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "These arrived one per chapter, and no page has put them side by side. Sorted by what kind of thing each one is rather than by when you met it:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "kind",
+                "pieces"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "kind: letters — each carries a built-in a. pieces: ക ka, ര ra, ന na, മ ma, ത ta, ഴ ḻa.",
+                "kind: the killer. pieces: ് — takes the built-in a away.",
+                "kind: hangers. pieces: ി i, ാ ā — replace the built-in a with another vowel."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "ഴ is the one to look at twice. It is the sound Malayalam is named for and that almost no other language has; a reader who has not seen it since the chapter that taught it will not place it at all."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The three marks, cold, and what each does to the letter it touches."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "് — say what it removes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **്** — say what it removes]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ി — say what it replaces",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ി** — say what it replaces]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ാ — say the same, and say how it differs from the one above",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ാ** — say the same, and say how it differs from the one above]"
+            },
+            {
+              "kind": "speech",
+              "text": "A letter on its own already has a vowel in it. That is the fact all three of these depend on: the killer takes it away, and the hangers swap it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What vowel is inside a bare Malayalam letter? (A short a.) Which of the nine takes it away? (്, the virama.) And which one is the sound the language is named for? (ഴ.)"
             }
           ]
         }

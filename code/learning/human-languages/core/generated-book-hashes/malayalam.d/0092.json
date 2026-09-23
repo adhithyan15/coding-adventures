@@ -1,12 +1,13 @@
 {
   "language": "malayalam",
   "chapter": 92,
-  "sourceHash": "fnv1a64:3732a44edd5024e7",
+  "sourceHash": "fnv1a64:f0103425cb541417",
   "lessonIds": [
     "ML-C92-bhakshanam",
     "ML-C92-hottal",
     "ML-C92-bill",
-    "ML-R92-eating-out-recall"
+    "ML-R92-eating-out-recall",
+    "ML-R92-the-last-seven"
   ],
   "tex": "malayalam/book/chapters/ch92-eating-out.tex"
 }

@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Joining Things Together",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:1071e41911beb0df",
+  "sourceHash": "fnv1a64:4b33dbe18dacd22d",
   "lessons": [
     {
       "id": "ML-C70-um",
@@ -665,6 +665,142 @@
             {
               "kind": "speech",
               "text": "Where does a joining ending go? (On every item.) What sits between the items? (Nothing.) Which ending asks somebody to pick one? (-ഓ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R70-script-recall-last-nine",
+      "sequence": 2421,
+      "title": "(ഷ ദ സ ഭ ഥ ഗ ോ ം ൃ) (randaam onpath) — the thin nine",
+      "headword": "(ഷ ദ സ ഭ ഥ ഗ ോ ം ൃ)",
+      "romanization": "randaam onpath",
+      "gloss": "cold retrieval of the nine pieces that arrived late and thinly, including the two that only ever appear in borrowed words",
+      "script": "malayalam",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:1be7b3abe4bc3474",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script: six letters, and three marks"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script: six letters, and three marks until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read സ. Then read ം and say why it is not a letter at all."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script: six letters, and three marks",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "piece",
+                "sound",
+                "where you meet it"
+              ],
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "piece: ഷ. sound: ṣa. where you meet it: almost only in words Malayalam took from Sanskrit.",
+                "piece: ദ. sound: da. where you meet it: the voiced dental.",
+                "piece: സ. sound: sa. where you meet it: the plain sibilant.",
+                "piece: ഭ. sound: bha. where you meet it: voiced, with breath behind it.",
+                "piece: ഥ. sound: tha. where you meet it: voiceless, with breath behind it.",
+                "piece: ഗ. sound: ga. where you meet it: the voiced velar."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Read the right-hand column and a pattern surfaces that the chapters could not show one at a time: ഷ, ഭ and ഥ are Sanskrit-borrowing letters. A Malayalam word built from Dravidian roots rarely needs them, which is exactly why they arrived late and were never asked for again."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three marks, and each attaches differently."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ോ — a hanger, replacing the built-in vowel with a long ō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ോ** — a hanger, replacing the built-in vowel with a long *ō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ം — a mark that rides after the syllable rather than reshaping it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ം** — a mark that rides *after* the syllable rather than reshaping it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ൃ — a hanger for a vowel that behaves like a consonant, inherited with the Sanskrit words that carry it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ൃ** — a hanger for a vowel that behaves like a consonant, inherited with the Sanskrit words that carry it]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which three of these six letters belong mostly to borrowed words? (ഷ, ഭ, ഥ.) Which mark follows a syllable instead of reshaping it? (ം.) Read ഗ and name it."
             }
           ]
         }
