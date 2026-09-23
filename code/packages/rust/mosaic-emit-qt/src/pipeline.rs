@@ -5013,6 +5013,10 @@ fn emit_host_button_qml(
     if let Some(line) = build_label_attribute(node) {
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
+    // …drawn as plain text when it is application data.
+    for line in plain_label_content_item(node, PlainLabelKind::Button).unwrap_or_default() {
+        writeln!(out, "{inner_pad}{line}").unwrap();
+    }
 
     // Keep the authored accessible name independent from the compact visual
     // label. TaskApp uses an expression here so each repeated completion
@@ -5320,6 +5324,10 @@ fn emit_host_checkbox_qml(
     if let Some(line) = build_label_attribute(node) {
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
+    // …drawn as plain text when it is application data.
+    for line in plain_label_content_item(node, PlainLabelKind::Checkable).unwrap_or_default() {
+        writeln!(out, "{inner_pad}{line}").unwrap();
+    }
 
     // checked: <slot or literal> — sourced from the `checked` prop.
     if let Some(line) = build_checked_attribute(node) {
@@ -5468,6 +5476,10 @@ fn emit_host_radio_qml(
 
     // text: <label>.
     if let Some(line) = build_label_attribute(node) {
+        writeln!(out, "{inner_pad}{line}").unwrap();
+    }
+    // …drawn as plain text when it is application data.
+    for line in plain_label_content_item(node, PlainLabelKind::Checkable).unwrap_or_default() {
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
 
@@ -7551,6 +7563,69 @@ fn build_placeholder_text_attribute(node: &LayoutNode) -> Option<String> {
 }
 
 /// Build the `text: ...` attribute for a `HostButton` from its `label` prop.
+/// Which Controls label a plain-text `contentItem` stands in for.
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum PlainLabelKind {
+    /// `Button` — its Basic-style label is an `IconLabel`.
+    Button,
+    /// `CheckBox` / `RadioButton` — a `CheckLabel` beside the indicator.
+    Checkable,
+}
+
+/// A `contentItem` that draws a control's **data-bound** label as plain text.
+///
+/// [`QML_PLAIN_TEXT`] covers `Text`, but a Controls label is not a `Text` we
+/// emit: `Button`'s default `contentItem` is an `IconLabel`, and `CheckBox` /
+/// `RadioButton` use a `CheckLabel`. Both are `QQuickText` subclasses left at
+/// `AutoText` (qtdeclarative `quickcontrols/basic/*.qml`; `QQuickIconLabel`
+/// never calls `setTextFormat`). So a slot-bound label — `RecordList`'s row
+/// title, a task name on a button — would be interpreted as StyledText, and
+/// `<img src="https://…">` would fetch on render.
+///
+/// The replacement mirrors the Basic style's own label (the style the emitted
+/// shell forces): the control's `text`, `font`, and palette colour, centred on
+/// a Button, and padded past the indicator on a check control. The control's
+/// `text` and `Accessible.*` are untouched, so the accessibility tree and the
+/// runtime probes that read `text` see exactly what they did before.
+///
+/// Literal labels are written by the component author and keep the default
+/// label; only `slot:`, keyword and expression labels — application data — get
+/// the override. `parent` is the control (Controls reparents `contentItem`),
+/// guarded for the moment before that happens.
+fn plain_label_content_item(node: &LayoutNode, kind: PlainLabelKind) -> Option<Vec<String>> {
+    let prop = node.props.iter().find(|p| p.name == "label")?;
+    if !matches!(
+        prop.value,
+        LayoutPropValue::SlotRef(_) | LayoutPropValue::Keyword(_) | LayoutPropValue::Expr(_)
+    ) {
+        return None;
+    }
+    let mut lines = vec![
+        "contentItem: Text {".to_string(),
+        "    text: parent ? parent.text : \"\"".to_string(),
+        format!("    {QML_PLAIN_TEXT}"),
+        "    font: parent ? parent.font : Qt.application.font".to_string(),
+    ];
+    match kind {
+        PlainLabelKind::Button => lines.extend([
+            "    color: parent ? parent.palette.buttonText : \"black\"".to_string(),
+            "    horizontalAlignment: Text.AlignHCenter".to_string(),
+            "    verticalAlignment: Text.AlignVCenter".to_string(),
+            "    elide: Text.ElideRight".to_string(),
+        ]),
+        PlainLabelKind::Checkable => lines.extend([
+            "    color: parent ? parent.palette.windowText : \"black\"".to_string(),
+            "    leftPadding: parent && parent.indicator && !parent.mirrored ? parent.indicator.width + parent.spacing : 0"
+                .to_string(),
+            "    rightPadding: parent && parent.indicator && parent.mirrored ? parent.indicator.width + parent.spacing : 0"
+                .to_string(),
+            "    verticalAlignment: Text.AlignVCenter".to_string(),
+        ]),
+    }
+    lines.push("}".to_string());
+    Some(lines)
+}
+
 fn build_label_attribute(node: &LayoutNode) -> Option<String> {
     let prop = node.props.iter().find(|p| p.name == "label")?;
     Some(match &prop.value {
@@ -8940,6 +9015,46 @@ mod tests {
             "slot text must not be interpreted as markup:\n{out}"
         );
         assert_eq!(out.matches("textFormat:").count(), 1, "exactly one format:\n{out}");
+    }
+
+    /// A Controls label is a `QQuickText` at `AutoText` too (Button's
+    /// `IconLabel`, CheckBox/RadioButton's `CheckLabel`), so a *data-bound*
+    /// label gets a plain-text `contentItem`; an author-written literal keeps
+    /// the default label. See [`plain_label_content_item`].
+    #[test]
+    fn data_bound_control_labels_render_as_plain_text_and_literals_do_not_change() {
+        fn one(tag: &str, label: LayoutPropValue) -> String {
+            let m = component("X", vec![slot("name", SlotType::Text, true)], vec![]);
+            let l = LayoutDef {
+                component_name: "X".to_string(),
+                root: LayoutNode {
+                    tag: tag.to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "label".to_string(),
+                        value: label,
+                    }],
+                    children: Vec::new(),
+                },
+            };
+            from_pipeline(&m, &l, &empty_style("X")).unwrap().output
+        }
+        for tag in ["HostButton", "HostCheckbox", "HostRadio"] {
+            let bound = one(tag, LayoutPropValue::SlotRef("name".to_string()));
+            assert!(bound.contains("text: name"), "{tag} keeps its text:\n{bound}");
+            assert!(bound.contains("contentItem: Text {"), "{tag} overrides its label:\n{bound}");
+            assert!(bound.contains("textFormat: Text.PlainText"), "{tag}:\n{bound}");
+            assert!(bound.contains("text: parent ? parent.text"), "{tag}:\n{bound}");
+
+            let expr = one(tag, LayoutPropValue::Expr("( row [ 2 ] )".to_string()));
+            assert!(expr.contains("textFormat: Text.PlainText"), "{tag} expr:\n{expr}");
+
+            let literal = one(tag, LayoutPropValue::String("Save".to_string()));
+            assert!(literal.contains("text: \"Save\""));
+            assert!(!literal.contains("contentItem: Text"), "{tag} literal unchanged:\n{literal}");
+        }
+        let check = one("HostCheckbox", LayoutPropValue::SlotRef("name".to_string()));
+        assert!(check.contains("parent.indicator.width + parent.spacing"), "clears the indicator");
     }
 
     // -------- Test 9: Text content from string literal --------

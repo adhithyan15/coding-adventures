@@ -12,6 +12,19 @@
   `Text.RichText`, and a test pins that it carries exactly one `textFormat`.
   This came from the pre-push security review of the toolkit's `RecordList`
   (J3a of #14416), the first component built to carry user-written text.
+- **Security: data-bound control labels render as plain text.** A Controls
+  label is also a `QQuickText` left at `AutoText`: Button's `IconLabel`, and
+  CheckBox/RadioButton's `CheckLabel`. So a `HostButton`, `HostCheckbox` or
+  `HostRadio` whose `label` is a slot, keyword or expression now gets a
+  `contentItem: Text { …; textFormat: Text.PlainText }`. It mirrors the Basic
+  style's label: the control's `text`, `font` and palette colour, centred on a
+  button and padded past the indicator on a check control. The control's own
+  `text` and `Accessible.*` are unchanged. Literal labels are written by the
+  author, so they keep Qt's default label.
+- **Known, not fixed:** a slot-bound `HostInput` `placeholderText` still reaches
+  Qt's `PlaceholderText` at `AutoText`. Placeholders are author-written hints in
+  every current consumer. Treat a data-bound placeholder as trusted text until
+  this is lowered too.
 
 ## 2026-09-13
 
