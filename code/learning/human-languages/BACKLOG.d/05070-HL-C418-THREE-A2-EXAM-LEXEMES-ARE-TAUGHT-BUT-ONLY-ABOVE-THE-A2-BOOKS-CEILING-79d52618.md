@@ -1,6 +1,6 @@
 ## HL-C418-79d52618 — Three A2 exam lexemes are taught, but only above the A2 book's ceiling
 
-**Status: OPEN.** Found while picking the wordlist for the second Spanish A2
+**Status: CLOSED (2026-09-23).** Found while picking the wordlist for the second Spanish A2
 vocabulary tranche, by checking every candidate against the corpus before
 drafting rather than after.
 
@@ -111,3 +111,26 @@ entry* rather than from the lesson. The list said "vocabulary item"; the
 frontmatter said "capstone with three prerequisites and its own grammar atom".
 One `cat` of the file was the difference, and the shard had already named
 `ES-PATH-037`'s four members without anyone reading what the fourth one does.
+
+---
+
+### RESOLVED (2026-09-23) — closed as "leave it", option 3
+
+All three lexemes stay where they are, and the reasoning is now measured rather
+than argued.
+
+| lexeme | verdict |
+|---|---|
+| `explicar` | **Cannot move.** The CORRECTION above establishes it: capstone of the reason-chain unit, three B1 prerequisites, its own grammar atom. Reaching it means staging `SPINE-GIVE-REASONS` at A2, which is a curriculum judgement about the ladder. |
+| `creer` | **Clears nothing.** Its row also misses `descontar`. |
+| `problema` | **Attempted via HL-C420 and reverted.** Worth exactly one item, and the honest fix turned out to require re-owning three concepts on the shared 23-language spine. See that entry's measured post-mortem. |
+
+The A2 gate was re-measured with the `problema` fix applied: `objectiveFailed`
+48 → 47, and the A1 gate held at 0. So the entry's arithmetic was right and its
+cost estimate was not — and the cost is what decided it.
+
+**Both routes out of this entry are the same question**, which is the reason to
+close it rather than keep it open as a task: whether `SPINE-GIVE-REASONS` belongs
+at A2, and whether `SPINE-HANDLE-TRAVEL`'s concepts belong to it at all. Neither
+should be settled by how many exam items it moves. Re-open under a spine-staging
+heading if that argument is ever taken up.
