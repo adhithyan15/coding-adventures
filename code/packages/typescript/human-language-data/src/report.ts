@@ -815,6 +815,52 @@ export function renderCurriculumGapReport(report: CurriculumGapReport): string {
           `  ^ these five criteria measure the CORPUS — headwords, verbs, spine nodes, ` +
             `reinforcement windows, writing stages. None measures a learner. No track has had a ` +
             `single exam item scored against it, so no line above claims a reader can pass anything.`,
+          // EVERY TRACK, NEAREST THE NEXT RUNG FIRST — and the reason it is a
+          // table rather than another summary line is that the summary above is
+          // true and useless for deciding what to do next. "23 track(s) touch a
+          // level whose coverage is not complete" names no track, no criterion
+          // and no distance, so the only way to act on it was to write a script.
+          //
+          // This is the whole backlog, derived. The gate already computes a
+          // blocker per track with a shortfall in the criterion's own units; all
+          // that was missing was printing it. Sorting by shortfall ASCENDING
+          // makes the row order the priority order: the track nearest a rung it
+          // has not yet cleared is the cheapest real progress available.
+          //
+          // That ordering is not decoration. When this was first printed it
+          // showed telugu 79 and tamil 92 short of pre-A1 — the two tracks
+          // nearest the first structurally complete level any non-pilot track
+          // would reach — while recent effort had gone to malayalam (128) and
+          // hindi (101). A count that hides which track is closest is how that
+          // happens.
+          "",
+          "per-track ladder (HL09 §3.1), nearest the next rung first:",
+          ...[...report.levelGate.tracks]
+            .map((track) => {
+              const next = track.inProgressAt ?? "C2";
+              const target = report.levelGate!.vocabularyTargets[next];
+              const vocabulary = track.blockers.find((b) => b.criterion === "vocabulary");
+              // The AT-OR-BELOW count, not the track total, for the reason the
+              // vocabulary line above already gives: the total is context and
+              // the scoped number is the one to author against. A track with no
+              // vocabulary blocker is not short, so its scoped count is its
+              // target.
+              const scoped = vocabulary ? target - vocabulary.shortfall : target;
+              const worst = [...track.blockers].sort((a, b) => b.shortfall - a.shortfall)[0];
+              return { track, next, target, scoped, worst, rank: worst?.shortfall ?? -1 };
+            })
+            .sort((a, b) => a.rank - b.rank || a.track.language.localeCompare(b.track.language))
+            .map(({ track, next, target, scoped, worst }) => {
+              const complete = track.attained ?? "none";
+              const blocker = worst
+                ? `${worst.criterion} short ${worst.shortfall}`
+                : "no blocker — ladder complete";
+              return (
+                `  ${track.language.padEnd(11)} touches ${String(track.touches ?? "-").padEnd(6)} ` +
+                `complete ${complete.padEnd(6)} working ${next.padEnd(6)} ` +
+                `vocabulary ${scoped}/${target} — ${blocker}`
+              );
+            }),
         ]
       : []),
     ...(report.chapters

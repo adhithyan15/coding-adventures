@@ -304,6 +304,61 @@ describe("the first rung anybody actually climbed", () => {
     expect(line).not.toContain("1 tracks");
   });
 
+  it("prints a row per track, ordered nearest-rung-first so the order IS the priority", () => {
+    // The summary line above is true and useless for deciding what to do next:
+    // "23 track(s) touch a level whose coverage is not complete" names no
+    // track, no criterion and no distance. Every track now gets a row, and the
+    // rows are sorted by shortfall ascending, so reading down the list is
+    // reading the backlog in priority order.
+    const gate = realReport().levelGate!;
+    const rendered = renderCurriculumGapReport(realReport());
+    const lines = rendered.split(/\r?\n/);
+    const start = lines.findIndex((l) => l.startsWith("per-track ladder"));
+    expect(start).toBeGreaterThan(-1);
+    const rows = lines.slice(start + 1).filter((l) => l.startsWith("  ") && l.includes("touches "));
+
+    // EVERY track, not a top-5 slice. The vocabulary line two above this one
+    // prints only five, which is what made a script necessary to see the rest.
+    expect(rows).toHaveLength(gate.tracks.length);
+    for (const track of gate.tracks) {
+      expect(rows.some((r) => r.trimStart().startsWith(`${track.language} `))).toBe(true);
+    }
+
+    // The ordering is the claim. Parsing the shortfall back out of the rendered
+    // text checks the renderer rather than re-deriving it from the gate, which
+    // would pass even if the sort were dropped.
+    const shortfalls = rows.map((r) => Number(/short (\d+)$/.exec(r)?.[1] ?? "-1"));
+    expect(shortfalls.every((n) => n >= 0)).toBe(true);
+    expect([...shortfalls].sort((a, b) => a - b)).toEqual(shortfalls);
+
+    // Anti-vacuity: a single-track corpus, or an already-sorted one by
+    // accident, would satisfy the assertion above having checked nothing.
+    expect(rows.length).toBeGreaterThan(1);
+    expect(new Set(shortfalls).size).toBeGreaterThan(1);
+  });
+
+  it("scopes each row's vocabulary to at-or-below the level in progress", () => {
+    // The two-numbers lesson (HL-C195), applied to the new rows. `vocabulary`
+    // on the track is the TOTAL headword count; the criterion counts only
+    // headwords at or below the level being worked on. Printing the total here
+    // would show a track as nearly done while its blocker said otherwise --
+    // Spanish read "227/300" while the blocker said 48.
+    const gate = realReport().levelGate!;
+    const spanish = gate.tracks.find((t) => t.language === "spanish")!;
+    const blocker = spanish.blockers.find((b) => b.criterion === "vocabulary");
+    const rendered = renderCurriculumGapReport(realReport());
+    const row = rendered
+      .split(/\r?\n/)
+      .find((l) => l.trimStart().startsWith("spanish ") && l.includes("touches "))!;
+    expect(row).toBeDefined();
+    if (blocker) {
+      const target = gate.vocabularyTargets[spanish.inProgressAt ?? "C2"];
+      expect(row).toContain(`vocabulary ${target - blocker.shortfall}/${target}`);
+      // And it is NOT the track total, which is the number that misled before.
+      expect(row).not.toContain(`vocabulary ${spanish.vocabulary}/${target}`);
+    }
+  });
+
   it("does not print the word ATTAINED, because §3.1 measures a corpus", () => {
     // The vocabulary-of-attainment fix. Every §3.1 criterion counts something
     // about the BOOK — headwords, verbs, spine nodes, reinforcement windows,
