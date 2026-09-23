@@ -277,9 +277,27 @@ describe("direct curriculum lesson owners", () => {
     // plus its extension (`KA-PATH-81-LEFTOVERS` / `KA-EXT-81-LEFTOVERS`),
     // which follow the chapter 77-80 script-recall pattern this track already
     // uses rather than inventing a shape.
-    expect(digest).toBe("8fe09909a2ccac895d32aebd98af70916fb3e90289380f330fae20d22427cc9f");
+    //
+    // 7539 -> 7545 is HL-C437: SIX `review` lessons taking punjabi to zero pre-A1
+    // reinforcement debt. Punjabi is the opposite shape to kannada: its forty
+    // thin atoms sit on SEVENTEEN path segments, with no concentration any one
+    // earlier chapter could reach, so the tranche is a new chapter 48 appended at
+    // the end in three strands -- the form-field ladder, the Gurmukhi pieces, and
+    // the courtesy and parting words -- rather than lessons placed among the
+    // material they retrieve.
+    //
+    // Attribution by reconstruction AND structural diff. A clean worktree at
+    // 08f6a81a44 reproduced 8fe09909... and 7539 byte for byte. Dumping the
+    // loaded graph from both trees and diffing gives 84 changed lines and nothing
+    // that is not this change: the six lessons joining their segments' and
+    // extensions' derived `lessons` lists, THREE new segments and THREE new
+    // extensions for chapter 48, and those segment ids joining their spine nodes'
+    // derived lists. Three segments rather than one because a lesson's
+    // `spine_node` must equal its segment's, and the three strands serve three
+    // different nodes.
+    expect(digest).toBe("b22345f34456a41e97c293f9ec49b5968d00e2544df49958a764f2855935a8ef");
     expect(curricula.flatMap((curriculum) => curriculum.path).flatMap((path) => path.lessons))
-      .toHaveLength(7539);
+      .toHaveLength(7545);
   });
 
   it("keeps the canonical curriculum shards free of derived lesson arrays", () => {

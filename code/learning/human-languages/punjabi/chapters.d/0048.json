@@ -1,0 +1,24 @@
+{
+  "chapter": 48,
+  "title": "Second Pass --- What Was Met Once",
+  "label": "ch:pa-doosra-gera",
+  "canDo": "I can fill every A1 form field at each level of support, read every Gurmukhi piece this book taught once, and place each courtesy and parting word in its register.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES",
+    "SPINE-READ-SIGNS-AND-NOTICES",
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "PA-R48-courtesy-and-parting",
+    "kind": "production",
+    "summary": "From cold: say please, sorry and welcome, name the verb or case ending inside each, and place the three partings in their registers.",
+    "assesses": [
+      "PA-LEX-MIHARBANI",
+      "PA-LEX-MAAF",
+      "PA-GRAM-NU-DATIVE",
+      "PA-PHRASE-RABB-RAKHA-04",
+      "PA-LEX-SHUBH-RAAT"
+    ],
+    "note": "The chapter introduces NO atom. It exists because forty pre-A1 atoms were taught once and never asked for again, spread across seventeen path segments -- too scattered for any one earlier chapter to reach. Six lessons in three strands: the form-field ladder, the Gurmukhi pieces, and the courtesy and parting words."
+  }
+}

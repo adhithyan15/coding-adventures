@@ -1,0 +1,772 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 48,
+  "title": "Second Pass --- What Was Met Once",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:b16ac77497d53200",
+  "lessons": [
+    {
+      "id": "PA-R48-forms-name-and-language",
+      "sequence": 2630,
+      "title": "ਨਾਂ and ਭਾਸ਼ਾ — the same two fields, three times over",
+      "headword": "ਨਾਂ · ਭਾਸ਼ਾ",
+      "romanization": "nāṁ · bhāshā",
+      "gloss": "second pass over the name and language fields at all three levels of support, and the one practice name the book supplies",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f92746b7204d65f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The practice name this book gave you to write. Say it, then say what label stands to the left of it on a form."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Each field in this book was taught three times, and the three are not repetition. They are three different amounts of help:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "stage",
+                "what is on the page",
+                "what it proves"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "stage: supported. what is on the page: a visible bank of values to copy from. what it proves: you can place a value in a field.",
+                "stage: delayed. what is on the page: the bank is shown, then covered. what it proves: you can hold it while you write.",
+                "stage: no model. what is on the page: a label, a blank, and nothing else. what it proves: you can produce it."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Only the third is evidence that you can write the thing. The first two are evidence that you can copy and remember — which are real skills, and different ones. A form you can only fill with the answer visible is a form you cannot fill."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cold, with nothing in front of you."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the name label, then a name you know",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the name label, then a name you know]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the language label, then the language this book is in",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the language label, then the language this book is in]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three field labels the book asks you to join in one pass",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three field labels the book asks you to join in one pass]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the three stages is the only one that proves you can write a field? (The one with no model.) What is on the page at that stage? (A label and a blank.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R48-forms-residence-and-work",
+      "sequence": 2640,
+      "title": "ਰਿਹਾਇਸ਼ and ਕੰਮ — and the move for when a field is already wrong",
+      "headword": "ਰਿਹਾਇਸ਼ · ਕੰਮ",
+      "romanization": "rihāish · kamm",
+      "gloss": "second pass over the residence and work fields, and the repair move that fixes one dimension of a field already filled",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a07377038b61080",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two more labels. Say the one that asks where you live, then the one that asks what you do."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: the same ladder, two more fields",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the residence label and a value, with nothing to copy",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the residence label and a value, with nothing to copy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the work label and a value, with nothing to copy",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the work label and a value, with nothing to copy]"
+            },
+            {
+              "kind": "speech",
+              "text": "Both fields climbed the same three rungs the name and language fields did. What changes between fields is the vocabulary, not the ladder."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Repair is its own skill, and only the residence field teaches it. The move is not fill the field — it is one dimension of a completed field is wrong, change that dimension and leave the rest standing."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a harder thing than it sounds, and it is the thing a real form actually demands: a clerk points at one line, you correct one line. A learner who can only write a field from scratch will rewrite the whole row and introduce two new errors doing it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "When you repair a field, how much of it do you rewrite? (Only the dimension that is wrong.) Which field in this book taught repair? (Residence.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R48-forms-cold-all-nine",
+      "sequence": 2650,
+      "title": "Nine moves, sorted by how much the page is helping",
+      "headword": "ਨਾਂ · ਭਾਸ਼ਾ · ਰਿਹਾਇਸ਼",
+      "romanization": "nāṁ · bhāshā · rihāish",
+      "gloss": "nine field-entry moves run cold in one pass, sorted by how much help the page is giving rather than by which field they belong to",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2a126622025e59f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two fields, no model, nothing on the page but a label and a blank. Write both before reading on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: across the three fields, one rung at a time",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The book taught these field by field. Take them rung by rung instead."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three fields with a bank in front of you — the supported rung",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three fields with a bank in front of you — the **supported** rung]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three after the bank is covered — the delayed rung",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three after the bank is covered — the **delayed** rung]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three from a label alone — the no-model rung",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three from a label alone — the **no-model** rung]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read across rather than down and the ladder stops being about forms at all. It is about what is in the room when you produce something: a page that shows you the answer, a page that showed you and stopped, and a page that never did."
+            },
+            {
+              "kind": "speech",
+              "text": "Three fields multiplied by three rungs is nine separate things you can now do, and the only three that count as writing evidence are the bottom row. The other six are the scaffolding that got you there, and scaffolding is worth naming rather than mistaking for the building."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Of the nine moves, how many are writing evidence? (Three — the no-model row.) What is the difference between the supported and delayed rungs? (The bank is visible, then covered.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R48-gurmukhi-met-once",
+      "sequence": 2660,
+      "title": "ਈ ਇ ਉ ਠ (īṛī · iṛī · ūṛā · ṭhaṭṭhā) — the pieces that were met once",
+      "headword": "ਈ ਇ ਉ ਠ",
+      "romanization": "īṛī · iṛī · ūṛā · ṭhaṭṭhā",
+      "gloss": "cold retrieval of the Gurmukhi pieces this book taught once — four letters, and the words they were met inside",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:ce1808ff4434d675",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script: four standing shapes and one mark"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script: four standing shapes and one mark until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two standing vowels. Read ਇ, then ਉ, and say which vowel each one carries when nothing precedes it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script: four standing shapes and one mark",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "shape",
+                "name",
+                "what it is"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "shape: ਈ. name: īṛī. what it is: a standing long ī.",
+                "shape: ਇ. name: iṛī. what it is: a standing short i.",
+                "shape: ਉ. name: ūṛā. what it is: a standing u.",
+                "shape: ਠ. name: ṭhaṭṭhā. what it is: a consonant — the curled retroflex.",
+                "shape: ੋ. name: horā. what it is: a mark, not a letter: long o, written above."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The first three are the ones that sit at the front of a word with no consonant to lean on. The last is the opposite kind of thing entirely — it cannot stand anywhere, and it goes above the letter it belongs to."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice: read them where you met them",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Whole words this time, each read cold."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਨਮਸਤੇ — the greeting, five pieces, all of them yours",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਨਮਸਤੇ** — the greeting, five pieces, all of them yours]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਚੰਗਾ — the everyday sign-off word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਚੰਗਾ** — the everyday sign-off word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਠੀਕ-ਠਾਕ — and find the ਠ twice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਠੀਕ-ਠਾਕ** — and find the **ਠ** twice]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਜੀ ਆਇਆਂ ਨੂੰ — the welcome",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਜੀ ਆਇਆਂ ਨੂੰ** — the welcome]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਸ਼ੁਭ ਰਾਤ — the formal good night",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਸ਼ੁਭ ਰਾਤ** — the formal good night]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the five shapes above cannot stand on its own? (ੋ, the horā — it is a mark.) Which word in the practice carries ਠ twice? (ਠੀਕ-ਠਾਕ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R48-marks-above-and-below",
+      "sequence": 2670,
+      "title": "ਆ ੈ ੁ (āṛā · dulāvāṁ · auṅkaṛ) — one that stands, two that ride",
+      "headword": "ਆ ੈ ੁ",
+      "romanization": "āṛā · dulāvāṁ · auṅkaṛ",
+      "gloss": "cold retrieval of a standing long-a and the marks that ride above and below — and the good night that needed all of them",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:07f10854167fb540",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script: where a mark sits is what it means"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: where a mark sits is what it means until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The standing long ā. Read it, and say which plain letter it is built on before the mark was added."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script: where a mark sits is what it means",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "shape",
+                "name",
+                "where it sits"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "shape: ਆ. name: āṛā. where it sits: nowhere — it is the letter.",
+                "shape: ੈ. name: dulāvāṁ. where it sits: above, two strokes: ai.",
+                "shape: ੁ. name: auṅkaṛ. where it sits: below, a hook: short u."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Gurmukhi puts vowel marks above, below, before and after the consonant they attach to, and the position is not decoration — it is how you tell one mark from another at a glance. Two strokes above is ai; a hook below is u. Change the position and you have changed the vowel."
+            },
+            {
+              "kind": "speech",
+              "text": "ਆ is the counter-example that makes the rule visible: it is a full letter wearing a mark that has fused into it, so it stands where a consonant would rather than hanging off one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਮੈਨੂੰ — and find the two strokes above",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਮੈਨੂੰ** — and find the two strokes above]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਜੀ ਆਇਆਂ ਨੂੰ — the welcome, opening on the standing ਆ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਜੀ ਆਇਆਂ ਨੂੰ** — the welcome, opening on the standing **ਆ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the formal good night, and say which parting it stands beside",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the formal good night, and say which parting it stands beside]"
+            },
+            {
+              "kind": "speech",
+              "text": "ਸ਼ੁਭ ਰਾਤ is the Sanskritic one. It is not the everyday sign-off; reaching for it among friends sounds like reading from a card."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which mark sits above, and which below? (Dulāvāṁ above, ai; auṅkaṛ below, short u.) Is ਸ਼ੁਭ ਰਾਤ the formal parting or the everyday one? (Formal.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R48-courtesy-and-parting",
+      "sequence": 2680,
+      "title": "ਮਿਹਰਬਾਨੀ ਕਰਕੇ — the politeness words, and what is inside them",
+      "headword": "ਮਿਹਰਬਾਨੀ ਕਰਕੇ · ਮਾਫ਼ ਕਰੋ · ਰੱਬ ਰਾਖਾ",
+      "romanization": "miharbānī karke · māf karo · rabb rākhā",
+      "gloss": "second pass over the courtesy words and the partings — which register each belongs to, and the two that are verbs pretending to be politeness",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:914248ddfe229a73",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say please. Then say sorry. Both are longer than the English and both have a verb inside — say which verb."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Punjabi's two commonest courtesies are not words for please and sorry at all. They are things done:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what you say",
+                "what it is built from"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "what you say: ਮਿਹਰਬਾਨੀ ਕਰਕੇ. what it is built from: having done a kindness.",
+                "what you say: ਮਾਫ਼ ਕਰੋ. what it is built from: make pardoned.",
+                "what you say: ਜੀ ਆਇਆਂ ਨੂੰ. what it is built from: to those who have come — life."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "All three run on the same verb of doing or a case ending, and none of them is a fixed politeness particle you could swap for another. The ਨੂੰ on the third is the same dative ending the book uses elsewhere: the welcome is grammatically addressed to the arrivals rather than describing them."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice: leaving, and the registers",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "we will meet — and say what the -ਾਂਗੇ ending is doing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: we will meet — and say what the **-ਾਂਗੇ** ending is doing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the parting that hands someone to God's keeping — rabb rākhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the parting that hands someone to God's keeping — *rabb rākhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the formal, Sanskritic good night — shubh rāt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the formal, Sanskritic good night — *shubh rāt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the bare negative — nā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the bare negative — *nā*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three partings, three registers. Rabb rākhā carries a blessing and belongs to people who know each other; shubh rāt is the formal one; and the everyday sign-off is neither."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is literally inside the word for please? (Having done a kindness.) What does the echo in ਠੀਕ-ਠਾਕ add — a new meaning, or a shade of one? (A shade — the echo softens it toward getting by.) And which body part is a cousin of English horn rather than head? (ਸਿਰ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
