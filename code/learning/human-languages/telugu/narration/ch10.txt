@@ -1,8 +1,8 @@
 Telugu, chapter 10: Days of the Week.
-4 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+5 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 4.
+Lesson 1 of 5.
 సోమవారం to ఆదివారం — Telugu's week, with a twist on Sunday.
 
 Warm-up.
@@ -36,7 +36,7 @@ Wrap-up Recall.
 What does ఆదివారం literally mean, and is it a planet-name? ("The first day" — ādi "beginning" — not a planet-name, unlike the other six.) What ending do the other six Telugu weekdays share? (‑వారం -vāram, Sanskrit "day," each paired with a planet-deity.)
 
 
-Lesson 2 of 4.
+Lesson 2 of 5.
 శ (śa) — the third s, and the last one.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: శ and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -78,7 +78,7 @@ Wrap-up Recall.
 Which character is this — శ? What sound does it carry? (śa.) Which two days of the week begin with it? (శుక్రవారం and శనివారం.) How many separate s letters does Telugu print? (Three — స, ష, శ.)
 
 
-Lesson 3 of 4.
+Lesson 3 of 5.
 ల (la) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ల and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -117,7 +117,7 @@ Which character is this — ల? What sound does it carry? (la.) Name one word y
 One more, from much earlier: ప — what does it do?
 
 
-Lesson 4 of 4.
+Lesson 4 of 5.
 ఐదు అచ్చులు (aidu acchulu) — five vowel letters, from cold.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script: the five, and the one question behind them and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -152,3 +152,38 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which of the five opens the number one? (ఒ.) Which opens the number five? (ఐ.) Which pair differs only in length? (అ and ఆ.) And what has to be true of a vowel before Telugu writes it as a letter? (Nothing is carrying it — no consonant in front.)
+
+
+Lesson 5 of 5.
+The three goodbyes again, now that you can name the day — second pass over the farewells — the goodbye that promises to come back, now that you can name the day.
+
+Warm-up.
+[pause 3 seconds]
+From memory: the ordinary Telugu goodbye. Then say what it means word for word, which is not "goodbye" at all.
+
+You'll want to know: none of the three says "goodbye".
+You have three ways to leave, and every one of them promises a return:
+[a table of 3 rows, read aloud]
+what you say: వెళ్ళి వస్తాను veḷḷi vastānu. what it says: having gone, I come.
+what you say: రేపు కలుద్దాం rēpu kaluddām. what it says: tomorrow, let us meet.
+what you say: మళ్ళీ కలుద్దాం maḷḷī kaluddām. what it says: again, let us meet.
+Telugu has no comfortable word for a plain, final parting. The polite thing is to name the return, and the three above are three sizes of it — the next hour, the next day, some day.
+
+Grammar Lens: the "having …ed" link.
+వెళ్ళి is not a finished verb — it is having gone, waiting for a second verb to complete it. Telugu chains actions this way: every verb but the last takes the having …ed shape, and the last one carries the person and the time.
+వెళ్ళి వస్తాను = having gone + I come. The ‑తాను at the end is the same "I" ending you met on మాట్లాడతాను.
+
+Guided Practice: pick the right size of return.
+[pause 2 seconds after each]
+[your turn — say: leaving a shop you will pass again this week]
+[pause 8 seconds for the answer]
+[your turn — say: leaving a class that meets again tomorrow]
+[pause 8 seconds for the answer]
+[your turn — say: leaving someone you may not see for a year]
+[pause 8 seconds for the answer]
+[your turn — say: the plain verb for to go, then the having gone form]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What do all three farewells have in common? (Each one promises a return.) What does వెళ్ళి వస్తాను say literally? (Having gone, I come.) Which part of it carries the "I"? (The ‑తాను ending.) And which of the three would you use with someone you see tomorrow? (రేపు కలుద్దాం.)

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C12-second-pass-verbs",
+    "language": "telugu",
+    "chapter": 12,
+    "sequence": 397,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5a057038c942eae3"
+  },
+  "findings": []
+}

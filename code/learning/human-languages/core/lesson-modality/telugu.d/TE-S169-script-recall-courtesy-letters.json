@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "TE-S169-script-recall-courtesy-letters",
+    "language": "telugu",
+    "chapter": 51,
+    "sequence": 1412,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c3554bb113ce3b5",
+    "detachableSegments": [
+      "Script: a letter you rarely see alone, and a sign that replaces what it lands on"
+    ]
+  },
+  "findings": []
+}

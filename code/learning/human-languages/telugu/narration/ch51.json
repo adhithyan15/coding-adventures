@@ -4,7 +4,7 @@
   "chapter": 51,
   "title": "Courtesy Words",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:534b286c17eac215",
+  "sourceHash": "fnv1a64:28baf8b9b3fdf597",
   "lessons": [
     {
       "id": "TE-C51-gratitude",
@@ -869,6 +869,153 @@
       ]
     },
     {
+      "id": "TE-S169-script-recall-courtesy-letters",
+      "sequence": 1412,
+      "title": "ఞ (ña), ◌ౌ (au) — the two you were saying before you could see them",
+      "headword": "ఞ · ◌ౌ",
+      "romanization": "ña · au",
+      "gloss": "cold retrieval of the two characters hiding inside this chapter's courtesy words",
+      "script": "telugu",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:5c3554bb113ce3b5",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script: a letter you rarely see alone, and a sign that replaces what it lands on",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: a letter you rarely see alone, and a sign that replaces what it lands on and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cover the two words this chapter taught for gratitude and for respect. From memory, say which character sits inside each one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script: a letter you rarely see alone, and a sign that replaces what it lands on",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఞ (ña), ◌ౌ (au)."
+            },
+            {
+              "kind": "speech",
+              "text": "These two are opposites in how they behave, which is the thing worth holding:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "character",
+                "how it behaves"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "character: ఞ ña. how it behaves: a consonant, almost never standing alone — it lives stacked under జ.",
+                "character: ◌ౌ au. how it behaves: a vowel sign, never standing alone — it replaces the a inside a consonant."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "In కృతజ్ఞత (kṛtajñata) the stack జ్ఞ is spelled jña and comes out of the mouth closer to gnya. In గౌరవం (gauravaṁ) the గ stops being ga the moment the sign lands on it and becomes gau."
+            },
+            {
+              "kind": "speech",
+              "text": "One is a shape you will hardly ever see by itself; the other changes a shape you see constantly. Neither adds a sound beside the letter — one hides inside a block, the other overwrites what was already there."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at కృతజ్ఞత (kṛtajñata) and find the two-letter stack",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at కృతజ్ఞత and find the two-letter stack]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at గౌరవం (gauravaṁ) and name the letter underneath the sign",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at గౌరవం and name the letter underneath the sign]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ga, then gau — one sound sliding, not two sounds in a row",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ga*, then *gau* — one sound sliding, not two sounds in a row]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "the stack once, and the sign once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: the stack once, and the sign once]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does ఞ live in modern Telugu? (Stacked under జ, as జ్ఞ.) How is that stack spelled, and how is it said? (Spelled jña, said closer to gnya.) What does ◌ౌ do to the letter it lands on? (Replaces the a inside it with au.) And which word of this chapter carries each? (కృతజ్ఞత (kṛtajñata) and గౌరవం (gauravaṁ).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "TE-C51-salutation",
       "sequence": 1420,
       "title": "దండం (daṇḍaṁ) — a salutation, \"my respects\"",
@@ -998,6 +1145,69 @@
             {
               "kind": "speech",
               "text": "What does దండం (daṇḍaṁ) mean? (\"a salutation, \"my respects\"\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-S170-script-dictation-courtesy-letters",
+      "sequence": 1422,
+      "title": "ఞ (ña), ◌ౌ (au) — from the sound, with nothing to copy",
+      "headword": "ఞ · ◌ౌ",
+      "romanization": "ña · au",
+      "gloss": "write the stack and the sign from the sound alone, a chapter after meeting them",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:186a57de2bf131c4",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover both courtesy words and the page before this one. Nothing to copy and nothing to uncover."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — dictation",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say gau aloud and write it: the letter గ, then the sign that makes it gau. Once."
+            },
+            {
+              "kind": "speech",
+              "text": "Then say gnya aloud and write the block it is spelled with. This is the harder of the two, because your ear is being asked for one thing and your hand for another — the mouth says gnya and the page wants జ్ఞ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Uncover the two words and compare. Then notice what each of the two asked of you. The sign was a matter of hearing one sliding vowel and putting one mark in the right place. The stack was not a matter of hearing at all — the sound your mouth makes and the letters the page keeps have drifted apart, and only the spelling remembers where the word came from."
             }
           ]
         }

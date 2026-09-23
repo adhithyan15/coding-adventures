@@ -1,8 +1,8 @@
 Telugu, chapter 9: Sorry.
-2 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+3 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 2.
+Lesson 1 of 3.
 క్షమించండి (kṣamin̄caṇḍi) — sorry.
 
 Warm-up.
@@ -38,7 +38,7 @@ Wrap-up Recall.
 What is క్షమించండి (kṣamin̄caṇḍi) built from? (Sanskrit kṣamā + the verb-making suffix ‑in̄cu + the respectful ending ‑aṇḍi, which you already met on kūrcōṇḍi.) Which cousins also verb-ify kṣamā, and which doesn't? (Kannada and Malayalam do too; Tamil uses its own root maṉṉi.) What's the casual alternative? (Borrowed English "sorry.")
 
 
-Lesson 2 of 2.
+Lesson 2 of 3.
 ఇ — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ఇ and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -74,3 +74,44 @@ Wrap-up Recall.
 [pause 3 seconds]
 Which character is this — ఇ? When does Telugu write the letter ఇ rather than the sign ◌ి? (When the vowel has no consonant in front of it.)
 One more, from much earlier: ౬ — what amount does it stand for?
+
+
+Lesson 3 of 3.
+How are you, again — and the word that answers క్షమించండి (kṣamin̄caṇḍi).
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script: బ, the letter your answer starts with until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 3 seconds]
+Someone has said క్షమించండి (kṣamin̄caṇḍi) to you. One word back — the one that tells them it does not matter. You have had it since the greetings.
+
+You'll want to know: పరవాలేదు does three jobs at once.
+పరవాలేదు paravālēdu covers all of these in ordinary speech:
+[a table of 3 rows, read aloud]
+what English says: it's okay, after an apology.
+what English says: no problem, after a request.
+what English says: you're welcome, after thanks.
+Look at its tail. ‑లేదు is the lēdu you already carry, the negative of existence, and paravā is the bother — so the word is "there is no bother." That is why one word answers an apology, a request and a thank-you alike.
+
+Grammar Lens: the ending is already carrying the person.
+That question and its answer hide the same point:
+మీరు ఎలా ఉన్నారు? — ‑ారు already means you, respectful, so ఎలా ఉన్నారు? is a whole question on its own.
+నేను బాగున్నాను — ‑ాను already means I, so నేను can drop too.
+To someone close the ending moves with the pronoun: నువ్వు ఎలా ఉన్నావు?
+
+Script: బ, the letter your answer starts with.
+బ.
+బాగా and బాగున్నాను both open on బ ba under the long‑ā sign. Telugu keeps b apart from its p letter; Tamil writes one shape for both and lets the position decide.
+
+Guided Practice: the whole small exchange.
+[pause 2 seconds after each]
+[your turn — say: ask a stranger how they are, then drop the pronoun and ask again]
+[pause 8 seconds for the answer]
+[your turn — say: answer that you are well]
+[pause 8 seconds for the answer]
+[your turn — say: apologise, then thank someone — and give the same one-word reply to both]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What hides inside పరవాలేదు? (లేదు — "no bother.") Which three English replies does it cover? (It's okay, no problem, you're welcome.) Why can మీరు and నేను drop out? (The ending already names the person.) Which letter opens your answer? (బ.)

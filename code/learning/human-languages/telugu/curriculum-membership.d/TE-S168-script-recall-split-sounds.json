@@ -1,0 +1,11 @@
+{
+  "id": "TE-S168-script-recall-split-sounds",
+  "pathSegment": "TE-PATH-100",
+  "pathOrder": 70,
+  "extensions": [
+    {
+      "id": "TE-EXT-100-SCRIPT-RECOGNITION",
+      "order": 70
+    }
+  ]
+}

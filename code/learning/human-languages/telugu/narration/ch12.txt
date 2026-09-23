@@ -1,8 +1,8 @@
 Telugu, chapter 12: Family.
-2 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+3 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 2.
+Lesson 1 of 3.
 నాన్న, అమ్మ, and four sibling words — Telugu's own twist.
 
 Warm-up.
@@ -35,7 +35,7 @@ Wrap-up Recall.
 Which two Telugu family words are its own, rather than matching Tamil/Kannada? (నాన్న nānna, "father," and చెల్లి celli, "younger sister.") Does Telugu still split siblings by age the same way? (Yes — the four-way age-before-gender system is shared across the whole Dravidian family, even where the exact words differ.)
 
 
-Lesson 2 of 2.
+Lesson 2 of 3.
 ద (da) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ద and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -72,3 +72,43 @@ Wrap-up Recall.
 [pause 3 seconds]
 Which character is this — ద? What sound does it carry? (da.) Name one word you already say that contains it.
 One more, from much earlier: త — what does it do?
+
+
+Lesson 3 of 3.
+The first three verbs again — one engine, and its negative.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 3 seconds]
+The first three plain verbs, in any order: to speak, to stay, to work. Say them before reading on.
+
+You'll want to know: the three verbs, side by side.
+[a table of 3 rows, read aloud]
+plain verb: మాట్లాడు māṭlāḍu — speak. the "I" form: మాట్లాడతాను māṭlāḍatānu.
+plain verb: ఉండు uṇḍu — be, stay, live. the "I" form: ఉంటాను uṇṭānu.
+plain verb: పని చేయు pani cēyu — work. the "I" form: పని చేస్తాను pani cēstānu.
+Read the right-hand column downwards and listen to the last three sounds of each. ‑ాను every time. Three different verbs, one ending, and it is the ending that means I.
+
+Grammar Lens: stem, then time, then person.
+Every Telugu verb you meet from here is built in that order: the stem says what happens, the next piece says when, the last piece says who. It is the same gluing-on you met on the end of ధన్యవాదములు, applied to actions rather than nouns.
+Because the who sits at the end, నేను is optional — and because the when sits in the middle, changing the time never disturbs the person.
+
+What you've built — ఉండు and its negative.
+ఉండు is the verb of being there, and Telugu keeps a dedicated word for its denial: లేదు, there is not. Learn the two as a pair rather than as a verb and a stray word.
+That pairing is what makes పరవాలేదు readable rather than memorised: paravā is the bother, ‑లేదు says there is none. A word you took whole when you learned to answer how are you turns out to be a sentence built on this verb.
+
+Guided Practice.
+[pause 2 seconds after each]
+[your turn — say: I speak Telugu — then drop the pronoun and say it again]
+[pause 8 seconds for the answer]
+[your turn — say: where you live, using the stay verb]
+[pause 8 seconds for the answer]
+[your turn — say: that you work]
+[pause 8 seconds for the answer]
+[your turn — say: someone apologises for being late — give the one-word reply]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What ending do all three "I" forms share? (‑ాను.) In what order does a Telugu verb stack its pieces? (Stem, then time, then person.) Which word denies ఉండు? (లేదు.) And what is పరవాలేదు made of? (Paravā, the bother, plus ‑లేదు — there is none.)

@@ -1,16 +1,17 @@
 {
   "language": "telugu",
   "chapter": 12,
-  "sourceHash": "fnv1a64:7e2e4978489c68c0",
+  "sourceHash": "fnv1a64:a6ef90070ce4b493",
   "lessonIds": [
     "TE-C12-kutumbam",
-    "TE-S116-letter-da"
+    "TE-S116-letter-da",
+    "TE-C12-second-pass-verbs"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "telugu/narration/ch12.txt",
   "json": "telugu/narration/ch12.json",
-  "textHash": "fnv1a64:02b9ab20a173770a",
-  "jsonHash": "fnv1a64:04f575161ab8880c",
+  "textHash": "fnv1a64:b0e5709e361cc42b",
+  "jsonHash": "fnv1a64:be639c521f7bd06e",
   "findings": []
 }

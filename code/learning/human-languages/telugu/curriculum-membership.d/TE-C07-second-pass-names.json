@@ -1,0 +1,11 @@
+{
+  "id": "TE-C07-second-pass-names",
+  "pathSegment": "TE-PATH-012",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-012-CONSOLIDATION",
+      "order": 0
+    }
+  ]
+}

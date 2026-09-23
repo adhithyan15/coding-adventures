@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 51,
-  "sourceHash": "fnv1a64:78560cc24a957eba",
+  "sourceHash": "fnv1a64:332d7698dd33f3dc",
   "lessonIds": [
     "TE-C51-gratitude",
     "TE-S132-letter-nya",
@@ -9,7 +9,9 @@
     "TE-C51-respect",
     "TE-S133-vowel-sign-au",
     "TE-C51-blessing",
-    "TE-C51-salutation"
+    "TE-S169-script-recall-courtesy-letters",
+    "TE-C51-salutation",
+    "TE-S170-script-dictation-courtesy-letters"
   ],
   "tex": "telugu/book/chapters/ch51-courtesy.tex"
 }

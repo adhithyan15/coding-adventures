@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1926604c17030dfd",
+  "sourceHash": "fnv1a64:af39a23d7bf68b83",
   "lessons": [
     {
       "id": "TE-C18-ganta",
@@ -472,6 +472,140 @@
             {
               "kind": "speech",
               "text": "One more, from much earlier: చ — what does it do?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-S168-script-recall-split-sounds",
+      "sequence": 455,
+      "title": "శ, ఫ — two letters, one reason",
+      "headword": "శ · ఫ",
+      "romanization": "śa · pha",
+      "gloss": "cold retrieval of the two letters that exist to split a sound its neighbour could not carry",
+      "script": "telugu",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:2f27031eb88097a0",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script: both are here to keep a difference visible",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: both are here to keep a difference visible and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Without looking back: name the two days of the week that open on the same letter, and say which letter it is."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script: both are here to keep a difference visible",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "శ, ఫ."
+            },
+            {
+              "kind": "speech",
+              "text": "These two arrived chapters apart and for the same reason. Each is the shape Telugu spends so that a difference you can hear is a difference you can see."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "letter",
+                "what it splits off"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "letter: శ śa. what it splits off: a third s, beside స and its curled neighbour.",
+                "letter: ఫ pha. what it splits off: ప with the breath let out after it."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "A script that skipped either one would still be readable — the reader would work the sound out from the word. Telugu declines to make the reader do that."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at శుక్రవారం and శనివారం, and put a finger on the shared letter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at శుక్రవారం and శనివారం, and put a finger on the shared letter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ప, then ఫ, with a hand in front of your mouth — feel which one moves it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ప, then ఫ, with a hand in front of your mouth — feel which one moves it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "each of the two once, saying its sound",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: each of the two once, saying its sound]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter opens both Friday and Saturday? (శ.) What does ఫ do to ప? (Lets the breath out after it.) And what do the two letters have in common? (Each exists so a heard difference is also a written one.)"
             }
           ]
         }

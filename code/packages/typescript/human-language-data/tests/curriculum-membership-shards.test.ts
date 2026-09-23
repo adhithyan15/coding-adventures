@@ -160,9 +160,25 @@ describe("direct curriculum lesson owners", () => {
     // lesson. `TE-C09-kshaminchandi` moving from pathOrder 1 to 2 does not
     // appear, because order is positional in the derived list and both lessons
     // are in it.
-    expect(digest).toBe("40c1fd079fd5859811fdbd0ae2c510c4230076281dd73f2e71d0f928ec94f722");
+    //
+    // 7486 -> 7495 is HL-C426: NINE Telugu review lessons, the second-pass arc
+    // that closes the track's reinforcement blocker. Fifty atoms at or below
+    // pre-A1 had been revisited exactly once -- their own chapter recap and
+    // nothing after it -- and the level gate wants two. None of the nine
+    // introduces an atom or a headword, which is the whole design: a `review`
+    // lesson is outside `CONTENT_TYPES`, so it discharges reinforcement debt
+    // without moving the vocabulary shortfall or the chapter atom budget.
+    //
+    // Attribution by reconstruction AND structural diff, as for HL-C417 and
+    // HL-C424. A clean worktree at 0fc9d29a5a reproduced 40c1fd07... and 7486
+    // byte for byte. Dumping the loaded graph from both trees and diffing gives
+    // NINETY changed lines and nothing that is not this change: the nine lessons
+    // joining their segments' derived `lessons` lists, four new
+    // `TE-EXT-0xx-CONSOLIDATION` extension nodes, and those four ids appearing
+    // in their segments' `inline` lists. No existing lesson moved node.
+    expect(digest).toBe("0a3858424ed10a1a6c5bd9e6cc6775e812b72ee469cb90921107bbb8db98a20c");
     expect(curricula.flatMap((curriculum) => curriculum.path).flatMap((path) => path.lessons))
-      .toHaveLength(7486);
+      .toHaveLength(7495);
   });
 
   it("keeps the canonical curriculum shards free of derived lesson arrays", () => {
