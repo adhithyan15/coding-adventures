@@ -39,8 +39,29 @@ over-trigger converts an ordinary supersession into a **red check on a
 documentation commit** — three times here, each needing a log read to confirm it
 was not a defect.
 
-That is the real cost, and it is larger than the CI minutes: a gate that goes
-red for a reason unrelated to the diff is a gate people learn to skim past.
+**Correction, measured after writing the paragraph above.** That paragraph
+credited the over-trigger with manufacturing the red checks. It is true of the
+books gate and **false in general**. Reading the other two reds on the same
+superseded head:
+
+```
+CI gate:       detect=success contracts=cancelled … build=cancelled
+CI push gate:  detect=success contracts=cancelled … build=success
+```
+
+`build` and `Repo-wide metadata contracts` run on **every** PR, book-relevant or
+not, so `CI gate` and `CI push gate` go red on any supersession whatever this
+entry's fix does. Of the five reds observed today across #15904 and #15905, only
+the two `Human Languages Books gate` ones are attributable here.
+
+So the honest cost of the over-trigger is: ~24 CI minutes per documentation PR,
+plus **one** of the three red gates a supersession produces. The other two are a
+separate and more general question — whether an aggregate gate should report
+`cancelled` as failure on a run its own successor replaced — and that belongs in
+its own entry if anyone takes it up, not folded in here.
+
+A gate that goes red for a reason unrelated to the diff is still a gate people
+learn to skim past; this entry simply cannot claim to fix most of it.
 
 ### The bias is the right way round, which is why this is low priority
 
