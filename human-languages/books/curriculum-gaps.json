@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 7526,
+    "totalLessons": 7533,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -32,15 +32,15 @@
     "headwordsWithoutRomanization": 46,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
-    "atomsNeverRevisited": 450,
-    "forwardReferences": 915,
+    "atomsNeverRevisited": 431,
+    "forwardReferences": 916,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 87,
     "chapterGateCleanTracks": 10,
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 243,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 5985,
+    "drivableLessons": 5991,
     "drivablePercent": 80,
     "chaptersWithoutDrivablePrefix": 241,
     "unexplainedModalityOverrides": 0
@@ -4236,9 +4236,9 @@
       {
         "language": "german",
         "status": "version-2",
-        "lessonCount": 347,
+        "lessonCount": 354,
         "versions": {
-          "2": 347
+          "2": 354
         }
       },
       {
@@ -5207,10 +5207,10 @@
     }
   },
   "levels": {
-    "totalLessons": 7526,
+    "totalLessons": 7533,
     "byLevel": {
-      "pre-A1": 4002,
-      "A1": 2499,
+      "pre-A1": 4007,
+      "A1": 2501,
       "A2": 941,
       "B1": 39,
       "B2": 17,
@@ -5282,10 +5282,10 @@
       },
       {
         "language": "german",
-        "lessonCount": 347,
+        "lessonCount": 354,
         "byLevel": {
-          "pre-A1": 133,
-          "A1": 120,
+          "pre-A1": 138,
+          "A1": 122,
           "A2": 94,
           "B1": 0,
           "B2": 0,
@@ -6318,8 +6318,8 @@
       },
       {
         "language": "german",
-        "lessonCount": 347,
-        "measurable": 344,
+        "lessonCount": 354,
+        "measurable": 351,
         "unmeasurable": 3,
         "lessonViolations": 8,
         "chapterViolations": 5
@@ -6863,7 +6863,7 @@
           "language": "german",
           "script": "latin",
           "latinScript": true,
-          "lessonCount": 347,
+          "lessonCount": 354,
           "totalGlyphs": 0,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -9738,32 +9738,6 @@
         "revisits": 1
       },
       {
-        "atom": "GE-COMPOUND-KOPFSCHMERZEN-04",
-        "language": "german",
-        "introducedBy": "GE-C17-kopf",
-        "introducedAt": 259,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "GE-CULTURE-HEAD-CONTAINERS-05",
-        "language": "german",
-        "introducedBy": "GE-C17-kopf-haupt",
-        "introducedAt": 260,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "GE-ETYMON-ABEND-03",
         "language": "german",
         "introducedBy": "GE-C01-abend",
@@ -9793,7 +9767,7 @@
         "atom": "GE-ETYMON-BITTE-04",
         "language": "german",
         "introducedBy": "GE-C19-bitte-requests",
-        "introducedAt": 264,
+        "introducedAt": 267,
         "missed": [
           "R1",
           "R2",
@@ -9858,7 +9832,7 @@
         "atom": "GE-ETYMON-ENTSCHULDIGUNG-03",
         "language": "german",
         "introducedBy": "GE-C20-entschuldigung",
-        "introducedAt": 265,
+        "introducedAt": 268,
         "missed": [
           "R1",
           "R2",
@@ -9894,10 +9868,23 @@
         "revisits": 1
       },
       {
+        "atom": "GE-ETYMON-GELB-05",
+        "language": "german",
+        "introducedBy": "GE-C23-gruen-gelb",
+        "introducedAt": 272,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
         "atom": "GE-ETYMON-HAND-04",
         "language": "german",
         "introducedBy": "GE-C17-hand",
-        "introducedAt": 261,
+        "introducedAt": 263,
         "missed": [
           "R1",
           "R2",
@@ -9910,7 +9897,7 @@
         "atom": "GE-ETYMON-HAUPT-03",
         "language": "german",
         "introducedBy": "GE-C17-kopf-haupt",
-        "introducedAt": 260,
+        "introducedAt": 262,
         "missed": [
           "R1",
           "R2",
@@ -9936,7 +9923,7 @@
         "atom": "GE-ETYMON-JA-04",
         "language": "german",
         "introducedBy": "GE-C18-ja",
-        "introducedAt": 262,
+        "introducedAt": 265,
         "missed": [
           "R1",
           "R2",
@@ -9949,7 +9936,7 @@
         "atom": "GE-ETYMON-JAHR-ALT-01",
         "language": "german",
         "introducedBy": "GE-C14-jahr-alt",
-        "introducedAt": 237,
+        "introducedAt": 238,
         "missed": [
           "R1",
           "R2",
@@ -9957,6 +9944,19 @@
           "R4"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "GE-ETYMON-KOPF-05",
+        "language": "german",
+        "introducedBy": "GE-C17-kopf",
+        "introducedAt": 261,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "GE-ETYMON-MACHEN-MAKE-02",
@@ -9975,7 +9975,7 @@
         "atom": "GE-ETYMON-MAERZ-MARS-01",
         "language": "german",
         "introducedBy": "GE-C09-maerz-mars",
-        "introducedAt": 120,
+        "introducedAt": 121,
         "missed": [
           "R1",
           "R2",
@@ -10014,7 +10014,7 @@
         "atom": "GE-ETYMON-NEGATION-05",
         "language": "german",
         "introducedBy": "GE-C18-nein",
-        "introducedAt": 263,
+        "introducedAt": 266,
         "missed": [
           "R1",
           "R2",
@@ -10027,7 +10027,7 @@
         "atom": "GE-ETYMON-NEIN-04",
         "language": "german",
         "introducedBy": "GE-C18-nein",
-        "introducedAt": 263,
+        "introducedAt": 266,
         "missed": [
           "R1",
           "R2",
@@ -10066,7 +10066,7 @@
         "atom": "GE-ETYMON-REGNET-06",
         "language": "german",
         "introducedBy": "GE-C21-das-wetter",
-        "introducedAt": 266,
+        "introducedAt": 270,
         "missed": [
           "R1",
           "R2",
@@ -10183,7 +10183,7 @@
         "atom": "GE-ETYMON-WETTER-03",
         "language": "german",
         "introducedBy": "GE-C21-das-wetter",
-        "introducedAt": 266,
+        "introducedAt": 270,
         "missed": [
           "R1",
           "R2",
@@ -10219,6 +10219,19 @@
         "revisits": 0
       },
       {
+        "atom": "GE-ETYMON-WOHNEN-WONT-02",
+        "language": "german",
+        "introducedBy": "GE-C05-wohnen",
+        "introducedAt": 60,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "GE-ETYMON-ZWEI-TWO-02",
         "language": "german",
         "introducedBy": "GE-C06-zwei",
@@ -10232,10 +10245,23 @@
         "revisits": 0
       },
       {
-        "atom": "GE-GRAMMAR-CAPITAL-IS-PART-OF-SPEECH-02",
+        "atom": "GE-EVIDENCE-CAT-WORDS-06",
         "language": "german",
-        "introducedBy": "GE-W03-capitalization",
-        "introducedAt": 58,
+        "introducedBy": "GE-C22-hund-katze",
+        "introducedAt": 271,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "GE-EVIDENCE-GELB-JAUNE-06",
+        "language": "german",
+        "introducedBy": "GE-C23-gruen-gelb",
+        "introducedAt": 272,
         "missed": [
           "R1",
           "R2",
@@ -10248,7 +10274,7 @@
         "atom": "GE-GRAMMAR-PERFEKT-WIR-01",
         "language": "german",
         "introducedBy": "GE-C15-wir-haben-gesagt",
-        "introducedAt": 211,
+        "introducedAt": 212,
         "missed": [
           "R1",
           "R2",
@@ -10261,7 +10287,7 @@
         "atom": "GE-GRAMMAR-SEIN-WIR-WAREN-01",
         "language": "german",
         "introducedBy": "GE-C16-wir-waren",
-        "introducedAt": 245,
+        "introducedAt": 247,
         "missed": [
           "R1",
           "R2",
@@ -10269,71 +10295,6 @@
           "R4"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "GE-GRAMMAR-UMLAUT-MARKS-GRAMMAR-03",
-        "language": "german",
-        "introducedBy": "GE-W02-umlauts",
-        "introducedAt": 57,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "GE-LEX-BIS-MORGEN-01",
-        "language": "german",
-        "introducedBy": "GE-C04-bis-morgen",
-        "introducedAt": 55,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "GE-LEX-DANK-NOUN-01",
-        "language": "german",
-        "introducedBy": "GE-C03-vielen-dank",
-        "introducedAt": 28,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "GE-LEX-DANKE-SCHOEN-02",
-        "language": "german",
-        "introducedBy": "GE-C03-schoen",
-        "introducedAt": 27,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "GE-LEX-ENTSCHULDIGUNG-02",
-        "language": "german",
-        "introducedBy": "GE-C20-entschuldigung",
-        "introducedAt": 265,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
       },
       {
         "atom": "GE-LEX-GUTEN-ABEND-01",
@@ -10349,23 +10310,10 @@
         "revisits": 1
       },
       {
-        "atom": "GE-LEX-HAUPT-02",
-        "language": "german",
-        "introducedBy": "GE-C17-kopf-haupt",
-        "introducedAt": 260,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "GE-LEX-JAHRE-PLURAL-01",
         "language": "german",
         "introducedBy": "GE-C14-jahr",
-        "introducedAt": 236,
+        "introducedAt": 237,
         "missed": [
           "R1",
           "R2",
@@ -10388,75 +10336,10 @@
         "revisits": 2
       },
       {
-        "atom": "GE-LEX-SPAET-01",
-        "language": "german",
-        "introducedBy": "GE-C04-spaet",
-        "introducedAt": 52,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "GE-LEX-TAGESZEITEN-PLURAL-03",
         "language": "german",
         "introducedBy": "GE-C01-die-plural",
         "introducedAt": 14,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "GE-LEX-VIELEN-DANK-02",
-        "language": "german",
-        "introducedBy": "GE-C03-vielen-dank",
-        "introducedAt": 28,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "GE-PRAGMATICS-ES-GEHT-SHRUG-02",
-        "language": "german",
-        "introducedBy": "GE-C03-es-geht",
-        "introducedAt": 40,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "GE-PRAGMATICS-GUTE-NACHT-03",
-        "language": "german",
-        "introducedBy": "GE-C01-gute-nacht",
-        "introducedAt": 13,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "GE-PRAGMATICS-SORRY-04",
-        "language": "german",
-        "introducedBy": "GE-C20-entschuldigung",
-        "introducedAt": 265,
         "missed": [
           "R1",
           "R2",
@@ -10492,58 +10375,6 @@
         "revisits": 0
       },
       {
-        "atom": "GE-SOUND-AUF-01",
-        "language": "german",
-        "introducedBy": "GE-C04-auf",
-        "introducedAt": 46,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "GE-SOUND-BITTE-01",
-        "language": "german",
-        "introducedBy": "GE-C03-bitte",
-        "introducedAt": 29,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "GE-SOUND-DANKE-01",
-        "language": "german",
-        "introducedBy": "GE-C03-danke",
-        "introducedAt": 26,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "GE-SOUND-DU-SIE-01",
-        "language": "german",
-        "introducedBy": "GE-C02-du-sie",
-        "introducedAt": 17,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "GE-SOUND-FREUT-MICH-01",
         "language": "german",
         "introducedBy": "GE-C02-freut-mich",
@@ -10554,7 +10385,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 0
+        "revisits": 2
       },
       {
         "atom": "GE-SOUND-GUT-01",
@@ -10567,7 +10398,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 0
+        "revisits": 2
       },
       {
         "atom": "GE-SOUND-MORGEN-01",
@@ -10606,7 +10437,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 0
+        "revisits": 2
       },
       {
         "atom": "GE-SOUND-TAG-01",
@@ -28615,6 +28446,18 @@
         "revisits": 2
       },
       {
+        "atom": "GE-CULTURE-HEAD-CONTAINERS-05",
+        "language": "german",
+        "introducedBy": "GE-C17-kopf-haupt",
+        "introducedAt": 262,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "GE-CULTURE-ROMAN-YEAR-BEGAN-IN-MARCH-01",
         "language": "german",
         "introducedBy": "GE-C06-monate-latein",
@@ -28630,7 +28473,7 @@
         "atom": "GE-ETYMON-AREALE-VERAENDERUNG-01",
         "language": "german",
         "introducedBy": "GE-C15-praeteritum-map",
-        "introducedAt": 224,
+        "introducedAt": 225,
         "missed": [
           "R2",
           "R3",
@@ -28747,22 +28590,22 @@
         "revisits": 1
       },
       {
-        "atom": "GE-ETYMON-GELB-05",
+        "atom": "GE-ETYMON-GRUEN-03",
         "language": "german",
         "introducedBy": "GE-C23-gruen-gelb",
-        "introducedAt": 268,
+        "introducedAt": 272,
         "missed": [
-          "R1",
           "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
-        "revisits": 0
+        "revisits": 2
       },
       {
         "atom": "GE-ETYMON-HABEN-HABERE-01",
         "language": "german",
         "introducedBy": "GE-C14-habere",
-        "introducedAt": 197,
+        "introducedAt": 198,
         "missed": [
           "R2",
           "R3",
@@ -28786,7 +28629,7 @@
         "atom": "GE-ETYMON-HAND-MANUS-05",
         "language": "german",
         "introducedBy": "GE-C17-hand",
-        "introducedAt": 261,
+        "introducedAt": 263,
         "missed": [
           "R1",
           "R3",
@@ -28819,16 +28662,16 @@
         "revisits": 1
       },
       {
-        "atom": "GE-ETYMON-KOPF-05",
+        "atom": "GE-ETYMON-KATZE-05",
         "language": "german",
-        "introducedBy": "GE-C17-kopf",
-        "introducedAt": 259,
+        "introducedBy": "GE-C22-hund-katze",
+        "introducedAt": 271,
         "missed": [
           "R1",
           "R2",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "GE-ETYMON-LERNEN-LORE-02",
@@ -28858,7 +28701,7 @@
         "atom": "GE-ETYMON-MITTAG-MIDI-01",
         "language": "german",
         "introducedBy": "GE-C08-mittag-midi",
-        "introducedAt": 113,
+        "introducedAt": 114,
         "missed": [
           "R2",
           "R3",
@@ -28870,11 +28713,23 @@
         "atom": "GE-ETYMON-MITTE-MEDIUS-01",
         "language": "german",
         "introducedBy": "GE-C08-mitte",
-        "introducedAt": 111,
+        "introducedAt": 112,
         "missed": [
           "R2",
           "R3",
           "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "GE-ETYMON-MOEGEN-LIEBEN-10",
+        "language": "german",
+        "introducedBy": "GE-C25-moegen-lieben",
+        "introducedAt": 280,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
         ],
         "revisits": 2
       },
@@ -28915,18 +28770,6 @@
         "revisits": 1
       },
       {
-        "atom": "GE-ETYMON-WOHNEN-WONT-02",
-        "language": "german",
-        "introducedBy": "GE-C05-wohnen",
-        "introducedAt": 60,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "GE-ETYMON-ZEHN-TEN-02",
         "language": "german",
         "introducedBy": "GE-C06-zehn",
@@ -28942,37 +28785,13 @@
         "atom": "GE-ETYMON-ZWANZIG-ZWEI-ZEHN-01",
         "language": "german",
         "introducedBy": "GE-C12-zwanzig-zwei-zehn",
-        "introducedAt": 177,
+        "introducedAt": 178,
         "missed": [
           "R2",
           "R3",
           "R4"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "GE-EVIDENCE-CAT-WORDS-06",
-        "language": "german",
-        "introducedBy": "GE-C22-hund-katze",
-        "introducedAt": 267,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "GE-EVIDENCE-GELB-JAUNE-06",
-        "language": "german",
-        "introducedBy": "GE-C23-gruen-gelb",
-        "introducedAt": 268,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 0
       },
       {
         "atom": "GE-GRAMMAR-ADJ-ACC-FEM-02",
@@ -28990,13 +28809,25 @@
         "atom": "GE-GRAMMAR-ALTER-MIT-SEIN-01",
         "language": "german",
         "introducedBy": "GE-C14-alter-sein-haben",
-        "introducedAt": 240,
+        "introducedAt": 241,
         "missed": [
           "R2",
           "R3",
           "R4"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "GE-GRAMMAR-CAPITAL-IS-PART-OF-SPEECH-02",
+        "language": "german",
+        "introducedBy": "GE-W03-capitalization",
+        "introducedAt": 58,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
       },
       {
         "atom": "GE-GRAMMAR-CAPITAL-SPLITS-SENSE-02",
@@ -29035,34 +28866,10 @@
         "revisits": 2
       },
       {
-        "atom": "GE-GRAMMAR-ESZETT-VOWEL-LENGTH-02",
-        "language": "german",
-        "introducedBy": "GE-W01-eszett",
-        "introducedAt": 56,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "GE-GRAMMAR-GE-KOLLEKTIV-01",
-        "language": "german",
-        "introducedBy": "GE-C10-ge-kollektiv",
-        "introducedAt": 154,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "GE-GRAMMAR-HABEN-B-DROP-01",
         "language": "german",
         "introducedBy": "GE-C14-b-verlust",
-        "introducedAt": 195,
+        "introducedAt": 196,
         "missed": [
           "R2",
           "R3",
@@ -29074,7 +28881,7 @@
         "atom": "GE-GRAMMAR-PARTIZIP-ATTRIBUTIV-01",
         "language": "german",
         "introducedBy": "GE-C16-partizip-attributiv",
-        "introducedAt": 257,
+        "introducedAt": 259,
         "missed": [
           "R2",
           "R3",
@@ -29086,7 +28893,7 @@
         "atom": "GE-GRAMMAR-PERFEKT-ALS-VERGANGENHEIT-01",
         "language": "german",
         "introducedBy": "GE-C15-perfekt-als-vergangenheit",
-        "introducedAt": 214,
+        "introducedAt": 215,
         "missed": [
           "R2",
           "R3",
@@ -29098,7 +28905,7 @@
         "atom": "GE-GRAMMAR-PERFEKT-KEINE-KONGRUENZ-01",
         "language": "german",
         "introducedBy": "GE-C16-perfekt-sein-agreement",
-        "introducedAt": 256,
+        "introducedAt": 258,
         "missed": [
           "R2",
           "R3",
@@ -29110,7 +28917,7 @@
         "atom": "GE-GRAMMAR-PERFEKT-SEIN-AUSNAHMEN-01",
         "language": "german",
         "introducedBy": "GE-C16-perfekt-sein-ausnahmen",
-        "introducedAt": 255,
+        "introducedAt": 257,
         "missed": [
           "R2",
           "R3",
@@ -29134,7 +28941,7 @@
         "atom": "GE-GRAMMAR-PRAETERITUM-GESPROCHEN-01",
         "language": "german",
         "introducedBy": "GE-C15-hochfrequent",
-        "introducedAt": 223,
+        "introducedAt": 224,
         "missed": [
           "R2",
           "R3",
@@ -29146,7 +28953,7 @@
         "atom": "GE-GRAMMAR-PRAETERITUM-SCHRIFTSPRACHE-01",
         "language": "german",
         "introducedBy": "GE-C15-register",
-        "introducedAt": 221,
+        "introducedAt": 222,
         "missed": [
           "R2",
           "R3",
@@ -29158,7 +28965,7 @@
         "atom": "GE-GRAMMAR-SEIN-IHR-SEID-01",
         "language": "german",
         "introducedBy": "GE-C16-ihr-seid",
-        "introducedAt": 231,
+        "introducedAt": 232,
         "missed": [
           "R2",
           "R3",
@@ -29170,7 +28977,7 @@
         "atom": "GE-GRAMMAR-SUPPLETION-01",
         "language": "german",
         "introducedBy": "GE-C16-suppletion",
-        "introducedAt": 247,
+        "introducedAt": 249,
         "missed": [
           "R2",
           "R3",
@@ -29179,22 +28986,22 @@
         "revisits": 2
       },
       {
-        "atom": "GE-GRAMMAR-UHR-NO-PLURAL-01",
+        "atom": "GE-GRAMMAR-UMLAUT-MARKS-GRAMMAR-03",
         "language": "german",
-        "introducedBy": "GE-C08-uhr-ohne-plural",
-        "introducedAt": 110,
+        "introducedBy": "GE-W02-umlauts",
+        "introducedAt": 57,
         "missed": [
           "R1",
-          "R3",
+          "R2",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "GE-LEX-ACHTZEHN-01",
         "language": "german",
         "introducedBy": "GE-C12-achtzehn",
-        "introducedAt": 174,
+        "introducedAt": 175,
         "missed": [
           "R2",
           "R3",
@@ -29206,7 +29013,7 @@
         "atom": "GE-LEX-APRIL-01",
         "language": "german",
         "introducedBy": "GE-C09-april",
-        "introducedAt": 121,
+        "introducedAt": 122,
         "missed": [
           "R2",
           "R3",
@@ -29227,10 +29034,22 @@
         "revisits": 2
       },
       {
+        "atom": "GE-LEX-BIS-MORGEN-01",
+        "language": "german",
+        "introducedBy": "GE-C04-bis-morgen",
+        "introducedAt": 55,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "GE-LEX-BLANK-01",
         "language": "german",
         "introducedBy": "GE-C13-blank",
-        "introducedAt": 183,
+        "introducedAt": 184,
         "missed": [
           "R2",
           "R3",
@@ -29242,11 +29061,35 @@
         "atom": "GE-LEX-BLEIBEN-01",
         "language": "german",
         "introducedBy": "GE-C16-bleiben",
-        "introducedAt": 254,
+        "introducedAt": 256,
         "missed": [
           "R2",
           "R3",
           "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "GE-LEX-DANK-NOUN-01",
+        "language": "german",
+        "introducedBy": "GE-C03-vielen-dank",
+        "introducedAt": 28,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "GE-LEX-DANKE-SCHOEN-02",
+        "language": "german",
+        "introducedBy": "GE-C03-schoen",
+        "introducedAt": 27,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
         ],
         "revisits": 2
       },
@@ -29275,16 +29118,40 @@
         "revisits": 2
       },
       {
+        "atom": "GE-LEX-GELB-04",
+        "language": "german",
+        "introducedBy": "GE-C23-gruen-gelb",
+        "introducedAt": 272,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "GE-LEX-GEWOHNT-01",
         "language": "german",
         "introducedBy": "GE-C15-gewohnt",
-        "introducedAt": 204,
+        "introducedAt": 205,
         "missed": [
           "R2",
           "R3",
           "R4"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "GE-LEX-GRUEN-02",
+        "language": "german",
+        "introducedBy": "GE-C23-gruen-gelb",
+        "introducedAt": 272,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
       },
       {
         "atom": "GE-LEX-GUTE-NACHT-01",
@@ -29299,10 +29166,22 @@
         "revisits": 2
       },
       {
+        "atom": "GE-LEX-HAUPT-02",
+        "language": "german",
+        "introducedBy": "GE-C17-kopf-haupt",
+        "introducedAt": 262,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "GE-LEX-ICH-BIN-JAHRE-ALT-01",
         "language": "german",
         "introducedBy": "GE-C14-alter",
-        "introducedAt": 239,
+        "introducedAt": 240,
         "missed": [
           "R2",
           "R3",
@@ -29338,7 +29217,7 @@
         "atom": "GE-LEX-JUNI-01",
         "language": "german",
         "introducedBy": "GE-C09-juni",
-        "introducedAt": 123,
+        "introducedAt": 124,
         "missed": [
           "R2",
           "R3",
@@ -29347,22 +29226,10 @@
         "revisits": 2
       },
       {
-        "atom": "GE-LEX-LENZ-01",
-        "language": "german",
-        "introducedBy": "GE-C09-lenz",
-        "introducedAt": 141,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "GE-LEX-MAI-01",
         "language": "german",
         "introducedBy": "GE-C09-mai",
-        "introducedAt": 122,
+        "introducedAt": 123,
         "missed": [
           "R2",
           "R3",
@@ -29386,7 +29253,7 @@
         "atom": "GE-LEX-MITTAG-01",
         "language": "german",
         "introducedBy": "GE-C08-mittag",
-        "introducedAt": 112,
+        "introducedAt": 113,
         "missed": [
           "R2",
           "R3",
@@ -29398,7 +29265,7 @@
         "atom": "GE-LEX-MITTE-01",
         "language": "german",
         "introducedBy": "GE-C08-mitte",
-        "introducedAt": 111,
+        "introducedAt": 112,
         "missed": [
           "R2",
           "R3",
@@ -29407,22 +29274,10 @@
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-MITTERNACHT-01",
-        "language": "german",
-        "introducedBy": "GE-C08-mitternacht",
-        "introducedAt": 114,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "GE-LEX-NEUNZEHN-01",
         "language": "german",
         "introducedBy": "GE-C12-neunzehn",
-        "introducedAt": 175,
+        "introducedAt": 176,
         "missed": [
           "R2",
           "R3",
@@ -29446,7 +29301,7 @@
         "atom": "GE-LEX-NOVEMBER-01",
         "language": "german",
         "introducedBy": "GE-C09-november",
-        "introducedAt": 129,
+        "introducedAt": 130,
         "missed": [
           "R2",
           "R3",
@@ -29458,7 +29313,7 @@
         "atom": "GE-LEX-OKTOBER-01",
         "language": "german",
         "introducedBy": "GE-C09-oktober",
-        "introducedAt": 128,
+        "introducedAt": 129,
         "missed": [
           "R2",
           "R3",
@@ -29470,7 +29325,7 @@
         "atom": "GE-LEX-REGNET-05",
         "language": "german",
         "introducedBy": "GE-C21-das-wetter",
-        "introducedAt": 266,
+        "introducedAt": 270,
         "missed": [
           "R1",
           "R3",
@@ -29506,7 +29361,7 @@
         "atom": "GE-LEX-SEPTEMBER-01",
         "language": "german",
         "introducedBy": "GE-C09-september",
-        "introducedAt": 127,
+        "introducedAt": 128,
         "missed": [
           "R2",
           "R3",
@@ -29527,34 +29382,10 @@
         "revisits": 6
       },
       {
-        "atom": "GE-LEX-SO-LALA-01",
-        "language": "german",
-        "introducedBy": "GE-C03-so-lala",
-        "introducedAt": 39,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "GE-LEX-SONNABEND-01",
         "language": "german",
         "introducedBy": "GE-C07-sonnabend",
         "introducedAt": 104,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "GE-LEX-SPAETER-02",
-        "language": "german",
-        "introducedBy": "GE-C04-spaet",
-        "introducedAt": 52,
         "missed": [
           "R2",
           "R3",
@@ -29575,6 +29406,18 @@
         "revisits": 2
       },
       {
+        "atom": "GE-LEX-VIELEN-DANK-02",
+        "language": "german",
+        "introducedBy": "GE-C03-vielen-dank",
+        "introducedAt": 28,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "GE-LEX-WAS-MACHST-DU-02",
         "language": "german",
         "introducedBy": "GE-C05-was",
@@ -29590,25 +29433,13 @@
         "atom": "GE-LEX-WIE-ALT-BIST-DU-01",
         "language": "german",
         "introducedBy": "GE-C14-wie-alt-bist-du",
-        "introducedAt": 238,
+        "introducedAt": 239,
         "missed": [
           "R2",
           "R3",
           "R4"
         ],
         "revisits": 2
-      },
-      {
-        "atom": "GE-LEX-WIE-GEHT-ES-DIR-01",
-        "language": "german",
-        "introducedBy": "GE-C03-wie-geht-es",
-        "introducedAt": 34,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
       },
       {
         "atom": "GE-LEX-WIEDER-01",
@@ -29638,7 +29469,7 @@
         "atom": "GE-PHRASE-WASSER-BITTE-03",
         "language": "german",
         "introducedBy": "GE-C19-bitte-requests",
-        "introducedAt": 264,
+        "introducedAt": 267,
         "missed": [
           "R1",
           "R2",
@@ -29647,22 +29478,58 @@
         "revisits": 2
       },
       {
-        "atom": "GE-PRAGMATICS-WELLBEING-REGISTER-02",
+        "atom": "GE-PRAGMATICS-ES-GEHT-SHRUG-02",
         "language": "german",
-        "introducedBy": "GE-C03-wie-geht-register",
-        "introducedAt": 36,
+        "introducedBy": "GE-C03-es-geht",
+        "introducedAt": 40,
         "missed": [
           "R1",
-          "R3",
-          "R4"
+          "R2",
+          "R3"
         ],
-        "revisits": 1
+        "revisits": 2
+      },
+      {
+        "atom": "GE-PRAGMATICS-GUTE-NACHT-03",
+        "language": "german",
+        "introducedBy": "GE-C01-gute-nacht",
+        "introducedAt": 13,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "GE-SOUND-AUF-01",
+        "language": "german",
+        "introducedBy": "GE-C04-auf",
+        "introducedAt": 46,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "GE-SOUND-BITTE-01",
+        "language": "german",
+        "introducedBy": "GE-C03-bitte",
+        "introducedAt": 29,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
       },
       {
         "atom": "GE-SOUND-BLAU-01",
         "language": "german",
         "introducedBy": "GE-C13-blau",
-        "introducedAt": 188,
+        "introducedAt": 189,
         "missed": [
           "R2",
           "R3",
@@ -29683,6 +29550,18 @@
         "revisits": 1
       },
       {
+        "atom": "GE-SOUND-DANKE-01",
+        "language": "german",
+        "introducedBy": "GE-C03-danke",
+        "introducedAt": 26,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "GE-SOUND-DEUTSCH-01",
         "language": "german",
         "introducedBy": "GE-C05-deutsch",
@@ -29695,10 +29574,22 @@
         "revisits": 1
       },
       {
+        "atom": "GE-SOUND-DU-SIE-01",
+        "language": "german",
+        "introducedBy": "GE-C02-du-sie",
+        "introducedAt": 17,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "GE-SOUND-HABEN-01",
         "language": "german",
         "introducedBy": "GE-C14-haben",
-        "introducedAt": 191,
+        "introducedAt": 192,
         "missed": [
           "R1",
           "R3",
@@ -29722,7 +29613,7 @@
         "atom": "GE-SOUND-HAND-03",
         "language": "german",
         "introducedBy": "GE-C17-hand",
-        "introducedAt": 261,
+        "introducedAt": 263,
         "missed": [
           "R1",
           "R2",
@@ -29740,31 +29631,31 @@
           "R2",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "GE-SOUND-JA-03",
         "language": "german",
         "introducedBy": "GE-C18-ja",
-        "introducedAt": 262,
+        "introducedAt": 265,
         "missed": [
           "R1",
           "R2",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "GE-SOUND-KOPF-03",
         "language": "german",
         "introducedBy": "GE-C17-kopf",
-        "introducedAt": 259,
+        "introducedAt": 261,
         "missed": [
-          "R1",
           "R2",
+          "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "GE-SOUND-LERNEN-01",
@@ -29791,40 +29682,16 @@
         "revisits": 2
       },
       {
-        "atom": "GE-SOUND-NEIN-03",
-        "language": "german",
-        "introducedBy": "GE-C18-nein",
-        "introducedAt": 263,
-        "missed": [
-          "R1",
-          "R2",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "GE-SOUND-ROT-01",
         "language": "german",
         "introducedBy": "GE-C13-rot",
-        "introducedAt": 186,
+        "introducedAt": 187,
         "missed": [
           "R2",
           "R3",
           "R4"
         ],
         "revisits": 2
-      },
-      {
-        "atom": "GE-SOUND-SPAET-01",
-        "language": "german",
-        "introducedBy": "GE-C04-spaet",
-        "introducedAt": 52,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
       },
       {
         "atom": "GE-SOUND-UMLAUT-AE-02",
@@ -29842,7 +29709,7 @@
         "atom": "GE-SOUND-WEISS-01",
         "language": "german",
         "introducedBy": "GE-C13-weiss",
-        "introducedAt": 181,
+        "introducedAt": 182,
         "missed": [
           "R2",
           "R3",
@@ -48497,6 +48364,17 @@
         "revisits": 3
       },
       {
+        "atom": "GE-COMPOUND-KOPFSCHMERZEN-04",
+        "language": "german",
+        "introducedBy": "GE-C17-kopf",
+        "introducedAt": 261,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "GE-ETYMON-ACHT-EIGHT-02",
         "language": "german",
         "introducedBy": "GE-C06-acht",
@@ -48511,7 +48389,7 @@
         "atom": "GE-ETYMON-BLANK-BLANC-01",
         "language": "german",
         "introducedBy": "GE-C13-blank-blanc",
-        "introducedAt": 184,
+        "introducedAt": 185,
         "missed": [
           "R3",
           "R4"
@@ -48522,7 +48400,7 @@
         "atom": "GE-ETYMON-BLAU-BLEU-01",
         "language": "german",
         "introducedBy": "GE-C13-blau-bleu",
-        "introducedAt": 189,
+        "introducedAt": 190,
         "missed": [
           "R2",
           "R3"
@@ -48533,7 +48411,7 @@
         "atom": "GE-ETYMON-BROT-BREAD-01",
         "language": "german",
         "introducedBy": "GE-C11-brot-bread",
-        "introducedAt": 157,
+        "introducedAt": 158,
         "missed": [
           "R1",
           "R3"
@@ -48541,10 +48419,21 @@
         "revisits": 3
       },
       {
+        "atom": "GE-ETYMON-DENKEN-03",
+        "language": "german",
+        "introducedBy": "GE-C24-denken",
+        "introducedAt": 273,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "GE-ETYMON-DENTALES-PRAETERITUM-01",
         "language": "german",
         "introducedBy": "GE-C15-dentales-praeteritum",
-        "introducedAt": 219,
+        "introducedAt": 220,
         "missed": [
           "R3",
           "R4"
@@ -48563,10 +48452,32 @@
         "revisits": 2
       },
       {
+        "atom": "GE-ETYMON-FAMILIE-04",
+        "language": "german",
+        "introducedBy": "GE-C29-familie",
+        "introducedAt": 294,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-ETYMON-FRAGEN-06",
+        "language": "german",
+        "introducedBy": "GE-C25-fragen",
+        "introducedAt": 278,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "GE-ETYMON-GE-PRAEFIX-01",
         "language": "german",
         "introducedBy": "GE-C15-ge-praefix",
-        "introducedAt": 205,
+        "introducedAt": 206,
         "missed": [
           "R2",
           "R3"
@@ -48580,17 +48491,6 @@
         "introducedAt": 78,
         "missed": [
           "R1",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "GE-ETYMON-GRUEN-03",
-        "language": "german",
-        "introducedBy": "GE-C23-gruen-gelb",
-        "introducedAt": 268,
-        "missed": [
-          "R2",
           "R3"
         ],
         "revisits": 2
@@ -48610,7 +48510,7 @@
         "atom": "GE-ETYMON-HERBST-HARVEST-01",
         "language": "german",
         "introducedBy": "GE-C09-herbst-harvest",
-        "introducedAt": 139,
+        "introducedAt": 140,
         "missed": [
           "R2",
           "R3"
@@ -48618,21 +48518,21 @@
         "revisits": 2
       },
       {
-        "atom": "GE-ETYMON-KATZE-05",
+        "atom": "GE-ETYMON-HUND-03",
         "language": "german",
         "introducedBy": "GE-C22-hund-katze",
-        "introducedAt": 267,
+        "introducedAt": 271,
         "missed": [
           "R1",
-          "R2"
+          "R4"
         ],
-        "revisits": 3
+        "revisits": 5
       },
       {
         "atom": "GE-ETYMON-LIF-LEFTOVER-01",
         "language": "german",
         "introducedBy": "GE-C12-lif",
-        "introducedAt": 165,
+        "introducedAt": 166,
         "missed": [
           "R3",
           "R4"
@@ -48640,21 +48540,10 @@
         "revisits": 3
       },
       {
-        "atom": "GE-ETYMON-MOEGEN-LIEBEN-10",
-        "language": "german",
-        "introducedBy": "GE-C25-moegen-lieben",
-        "introducedAt": 276,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "GE-ETYMON-MUTTER-MATER-01",
         "language": "german",
         "introducedBy": "GE-C10-mutter-mater",
-        "introducedAt": 146,
+        "introducedAt": 147,
         "missed": [
           "R1",
           "R3"
@@ -48665,7 +48554,7 @@
         "atom": "GE-ETYMON-NASE-04",
         "language": "german",
         "introducedBy": "GE-C30-nase",
-        "introducedAt": 294,
+        "introducedAt": 299,
         "missed": [
           "R1",
           "R3"
@@ -48676,7 +48565,7 @@
         "atom": "GE-ETYMON-ROT-RUBER-01",
         "language": "german",
         "introducedBy": "GE-C13-rot-ruber",
-        "introducedAt": 187,
+        "introducedAt": 188,
         "missed": [
           "R2",
           "R3"
@@ -48687,7 +48576,7 @@
         "atom": "GE-ETYMON-SCHWARZ-SWARTHY-01",
         "language": "german",
         "introducedBy": "GE-C13-schwarz-swarthy",
-        "introducedAt": 180,
+        "introducedAt": 181,
         "missed": [
           "R3",
           "R4"
@@ -48698,23 +48587,12 @@
         "atom": "GE-ETYMON-SCHWESTER-SOROR-01",
         "language": "german",
         "introducedBy": "GE-C10-schwester-soror",
-        "introducedAt": 152,
+        "introducedAt": 153,
         "missed": [
           "R2",
           "R3"
         ],
         "revisits": 3
-      },
-      {
-        "atom": "GE-ETYMON-SEIN-DREI-WURZELN-01",
-        "language": "german",
-        "introducedBy": "GE-C16-drei-wurzeln",
-        "introducedAt": 246,
-        "missed": [
-          "R3",
-          "R4"
-        ],
-        "revisits": 4
       },
       {
         "atom": "GE-ETYMON-TAG-03",
@@ -48731,7 +48609,7 @@
         "atom": "GE-ETYMON-WASSER-WATER-01",
         "language": "german",
         "introducedBy": "GE-C11-wasser-water",
-        "introducedAt": 159,
+        "introducedAt": 160,
         "missed": [
           "R2",
           "R3"
@@ -48742,7 +48620,7 @@
         "atom": "GE-ETYMON-WEIN-VINUM-01",
         "language": "german",
         "introducedBy": "GE-C11-wein-vinum",
-        "introducedAt": 161,
+        "introducedAt": 162,
         "missed": [
           "R2",
           "R3"
@@ -48753,7 +48631,7 @@
         "atom": "GE-ETYMON-WEISS-WHITE-01",
         "language": "german",
         "introducedBy": "GE-C13-weiss-white",
-        "introducedAt": 182,
+        "introducedAt": 183,
         "missed": [
           "R3",
           "R4"
@@ -48761,10 +48639,21 @@
         "revisits": 4
       },
       {
+        "atom": "GE-FALSEFRIEND-ALSO-04",
+        "language": "german",
+        "introducedBy": "GE-C24-denken",
+        "introducedAt": 273,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "GE-FALSEFRIEND-BEKOMMEN-04",
         "language": "german",
         "introducedBy": "GE-C25-nehmen",
-        "introducedAt": 273,
+        "introducedAt": 277,
         "missed": [
           "R2",
           "R3"
@@ -48775,7 +48664,7 @@
         "atom": "GE-FALSEFRIEND-GEHOEREN-11",
         "language": "german",
         "introducedBy": "GE-C26-hoeren",
-        "introducedAt": 280,
+        "introducedAt": 284,
         "missed": [
           "R2",
           "R3"
@@ -48805,6 +48694,39 @@
         "revisits": 4
       },
       {
+        "atom": "GE-GRAMMAR-ESZETT-VOWEL-LENGTH-02",
+        "language": "german",
+        "introducedBy": "GE-W01-eszett",
+        "introducedAt": 56,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "GE-GRAMMAR-GE-KOLLEKTIV-01",
+        "language": "german",
+        "introducedBy": "GE-C10-ge-kollektiv",
+        "introducedAt": 155,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "GE-GRAMMAR-GERN-11",
+        "language": "german",
+        "introducedBy": "GE-C25-moegen-lieben",
+        "introducedAt": 280,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "GE-GRAMMAR-GOTT-PLUS-TAG-01",
         "language": "german",
         "introducedBy": "GE-C07-tag-muster",
@@ -48830,7 +48752,7 @@
         "atom": "GE-GRAMMAR-HABEN-ER-HAT-01",
         "language": "german",
         "introducedBy": "GE-C14-er-hat",
-        "introducedAt": 194,
+        "introducedAt": 195,
         "missed": [
           "R2",
           "R3"
@@ -48841,7 +48763,7 @@
         "atom": "GE-GRAMMAR-HAEUFIG-UNREGELMAESSIG-01",
         "language": "german",
         "introducedBy": "GE-C16-haeufig-unregelmaessig",
-        "introducedAt": 248,
+        "introducedAt": 250,
         "missed": [
           "R2",
           "R3"
@@ -48874,7 +48796,7 @@
         "atom": "GE-GRAMMAR-PARTIZIP-FINAL-01",
         "language": "german",
         "introducedBy": "GE-C15-partizip-am-ende",
-        "introducedAt": 212,
+        "introducedAt": 213,
         "missed": [
           "R2",
           "R3"
@@ -48885,7 +48807,7 @@
         "atom": "GE-GRAMMAR-PERFEKT-DU-01",
         "language": "german",
         "introducedBy": "GE-C15-du-hast-gesagt",
-        "introducedAt": 209,
+        "introducedAt": 210,
         "missed": [
           "R3",
           "R4"
@@ -48896,7 +48818,7 @@
         "atom": "GE-GRAMMAR-PERFEKT-ER-01",
         "language": "german",
         "introducedBy": "GE-C15-er-hat-gemacht",
-        "introducedAt": 210,
+        "introducedAt": 211,
         "missed": [
           "R3",
           "R4"
@@ -48907,7 +48829,7 @@
         "atom": "GE-GRAMMAR-PRAETERITUM-TE-01",
         "language": "german",
         "introducedBy": "GE-C15-praeteritum",
-        "introducedAt": 216,
+        "introducedAt": 217,
         "missed": [
           "R3",
           "R4"
@@ -48918,7 +48840,7 @@
         "atom": "GE-GRAMMAR-SEIN-DU-WARST-01",
         "language": "german",
         "introducedBy": "GE-C16-du-warst",
-        "introducedAt": 243,
+        "introducedAt": 245,
         "missed": [
           "R3",
           "R4"
@@ -48929,7 +48851,7 @@
         "atom": "GE-GRAMMAR-SEIN-ER-WAR-01",
         "language": "german",
         "introducedBy": "GE-C16-er-war",
-        "introducedAt": 244,
+        "introducedAt": 246,
         "missed": [
           "R3",
           "R4"
@@ -48940,7 +48862,7 @@
         "atom": "GE-GRAMMAR-SEIN-ICH-WAR-01",
         "language": "german",
         "introducedBy": "GE-C16-ich-war",
-        "introducedAt": 242,
+        "introducedAt": 244,
         "missed": [
           "R3",
           "R4"
@@ -48951,7 +48873,7 @@
         "atom": "GE-GRAMMAR-SEIN-SIE-SIND-01",
         "language": "german",
         "introducedBy": "GE-C16-sie-sind",
-        "introducedAt": 232,
+        "introducedAt": 233,
         "missed": [
           "R3",
           "R4"
@@ -48959,10 +48881,32 @@
         "revisits": 3
       },
       {
+        "atom": "GE-GRAMMAR-SEIN-WIR-SIND-01",
+        "language": "german",
+        "introducedBy": "GE-C16-wir-sind",
+        "introducedAt": 231,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 6
+      },
+      {
+        "atom": "GE-GRAMMAR-UHR-NO-PLURAL-01",
+        "language": "german",
+        "introducedBy": "GE-C08-uhr-ohne-plural",
+        "introducedAt": 111,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "GE-GRAMMAR-UMLAUT-BREAK-08",
         "language": "german",
         "introducedBy": "GE-C26-schlafen",
-        "introducedAt": 279,
+        "introducedAt": 283,
         "missed": [
           "R2",
           "R3"
@@ -49006,7 +48950,7 @@
         "atom": "GE-GRAMMAR-WEATHER-SEIN-04",
         "language": "german",
         "introducedBy": "GE-C21-das-wetter",
-        "introducedAt": 266,
+        "introducedAt": 270,
         "missed": [
           "R2",
           "R4"
@@ -49028,7 +48972,7 @@
         "atom": "GE-GRAMMAR-ZAHL-KLIPPUNG-01",
         "language": "german",
         "introducedBy": "GE-C12-klippung",
-        "introducedAt": 171,
+        "introducedAt": 172,
         "missed": [
           "R3",
           "R4"
@@ -49039,7 +48983,7 @@
         "atom": "GE-LEX-ALT-01",
         "language": "german",
         "introducedBy": "GE-C14-alt",
-        "introducedAt": 235,
+        "introducedAt": 236,
         "missed": [
           "R3",
           "R4"
@@ -49061,7 +49005,7 @@
         "atom": "GE-LEX-AUGUST-01",
         "language": "german",
         "introducedBy": "GE-C09-august",
-        "introducedAt": 126,
+        "introducedAt": 127,
         "missed": [
           "R3",
           "R4"
@@ -49116,7 +49060,7 @@
         "atom": "GE-LEX-BITTE-PLEASE-02",
         "language": "german",
         "introducedBy": "GE-C19-bitte-requests",
-        "introducedAt": 264,
+        "introducedAt": 267,
         "missed": [
           "R1",
           "R4"
@@ -49127,7 +49071,7 @@
         "atom": "GE-LEX-BLAU-01",
         "language": "german",
         "introducedBy": "GE-C13-blau",
-        "introducedAt": 188,
+        "introducedAt": 189,
         "missed": [
           "R2",
           "R3"
@@ -49135,10 +49079,21 @@
         "revisits": 5
       },
       {
+        "atom": "GE-LEX-DENKEN-02",
+        "language": "german",
+        "introducedBy": "GE-C24-denken",
+        "introducedAt": 273,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "GE-LEX-DEZEMBER-01",
         "language": "german",
         "introducedBy": "GE-C09-dezember",
-        "introducedAt": 130,
+        "introducedAt": 131,
         "missed": [
           "R2",
           "R3"
@@ -49182,7 +49137,7 @@
         "atom": "GE-LEX-DREIZEHN-01",
         "language": "german",
         "introducedBy": "GE-C12-dreizehn",
-        "introducedAt": 168,
+        "introducedAt": 169,
         "missed": [
           "R3",
           "R4"
@@ -49204,7 +49159,7 @@
         "atom": "GE-LEX-EINEN-01",
         "language": "german",
         "introducedBy": "GE-C14-einen",
-        "introducedAt": 196,
+        "introducedAt": 197,
         "missed": [
           "R2",
           "R3"
@@ -49215,12 +49170,23 @@
         "atom": "GE-LEX-ELF-01",
         "language": "german",
         "introducedBy": "GE-C12-elf",
-        "introducedAt": 163,
+        "introducedAt": 164,
         "missed": [
           "R3",
           "R4"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "GE-LEX-ENTSCHULDIGUNG-02",
+        "language": "german",
+        "introducedBy": "GE-C20-entschuldigung",
+        "introducedAt": 268,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "GE-LEX-ER-01",
@@ -49248,7 +49214,7 @@
         "atom": "GE-LEX-FAHREN-01",
         "language": "german",
         "introducedBy": "GE-C16-fahren",
-        "introducedAt": 252,
+        "introducedAt": 254,
         "missed": [
           "R3",
           "R4"
@@ -49259,7 +49225,7 @@
         "atom": "GE-LEX-FEBRUAR-01",
         "language": "german",
         "introducedBy": "GE-C09-februar",
-        "introducedAt": 118,
+        "introducedAt": 119,
         "missed": [
           "R3",
           "R4"
@@ -49292,7 +49258,7 @@
         "atom": "GE-LEX-FRUEH-01",
         "language": "german",
         "introducedBy": "GE-C09-frueh",
-        "introducedAt": 135,
+        "introducedAt": 136,
         "missed": [
           "R3",
           "R4"
@@ -49314,7 +49280,7 @@
         "atom": "GE-LEX-FUENFZEHN-01",
         "language": "german",
         "introducedBy": "GE-C12-fuenfzehn",
-        "introducedAt": 170,
+        "introducedAt": 171,
         "missed": [
           "R3",
           "R4"
@@ -49322,21 +49288,10 @@
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-GELB-04",
-        "language": "german",
-        "introducedBy": "GE-C23-gruen-gelb",
-        "introducedAt": 268,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "GE-LEX-GESCHWISTER-01",
         "language": "german",
         "introducedBy": "GE-C10-geschwister-wort",
-        "introducedAt": 153,
+        "introducedAt": 154,
         "missed": [
           "R2",
           "R3"
@@ -49347,21 +49302,10 @@
         "atom": "GE-LEX-GESTERN-01",
         "language": "german",
         "introducedBy": "GE-C15-gestern",
-        "introducedAt": 213,
+        "introducedAt": 214,
         "missed": [
           "R2",
           "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "GE-LEX-GRUEN-02",
-        "language": "german",
-        "introducedBy": "GE-C23-gruen-gelb",
-        "introducedAt": 268,
-        "missed": [
-          "R1",
-          "R2"
         ],
         "revisits": 3
       },
@@ -49380,7 +49324,7 @@
         "atom": "GE-LEX-HAND-02",
         "language": "german",
         "introducedBy": "GE-C17-hand",
-        "introducedAt": 261,
+        "introducedAt": 263,
         "missed": [
           "R1",
           "R4"
@@ -49391,7 +49335,7 @@
         "atom": "GE-LEX-HATTE-01",
         "language": "german",
         "introducedBy": "GE-C15-hatte",
-        "introducedAt": 220,
+        "introducedAt": 221,
         "missed": [
           "R3",
           "R4"
@@ -49399,15 +49343,37 @@
         "revisits": 4
       },
       {
+        "atom": "GE-LEX-HELFEN-07",
+        "language": "german",
+        "introducedBy": "GE-C25-helfen",
+        "introducedAt": 279,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 5
+      },
+      {
         "atom": "GE-LEX-HERBST-01",
         "language": "german",
         "introducedBy": "GE-C09-herbst",
-        "introducedAt": 138,
+        "introducedAt": 139,
         "missed": [
           "R2",
           "R3"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "GE-LEX-HUND-02",
+        "language": "german",
+        "introducedBy": "GE-C22-hund-katze",
+        "introducedAt": 271,
+        "missed": [
+          "R1",
+          "R4"
+        ],
+        "revisits": 21
       },
       {
         "atom": "GE-LEX-ICH-LERNE-DEUTSCH-01",
@@ -49435,7 +49401,7 @@
         "atom": "GE-LEX-JAHRESZEIT-01",
         "language": "german",
         "introducedBy": "GE-C09-jahreszeit",
-        "introducedAt": 134,
+        "introducedAt": 135,
         "missed": [
           "R3",
           "R4"
@@ -49446,7 +49412,7 @@
         "atom": "GE-LEX-JULI-01",
         "language": "german",
         "introducedBy": "GE-C09-juli",
-        "introducedAt": 125,
+        "introducedAt": 126,
         "missed": [
           "R3",
           "R4"
@@ -49454,10 +49420,21 @@
         "revisits": 2
       },
       {
+        "atom": "GE-LEX-KATZE-04",
+        "language": "german",
+        "introducedBy": "GE-C22-hund-katze",
+        "introducedAt": 271,
+        "missed": [
+          "R1",
+          "R4"
+        ],
+        "revisits": 16
+      },
+      {
         "atom": "GE-LEX-KONNTE-01",
         "language": "german",
         "introducedBy": "GE-C15-konnte",
-        "introducedAt": 222,
+        "introducedAt": 223,
         "missed": [
           "R2",
           "R3"
@@ -49465,15 +49442,15 @@
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-KOPF-02",
+        "atom": "GE-LEX-LENZ-01",
         "language": "german",
-        "introducedBy": "GE-C17-kopf",
-        "introducedAt": 259,
+        "introducedBy": "GE-C09-lenz",
+        "introducedAt": 142,
         "missed": [
-          "R1",
-          "R4"
+          "R2",
+          "R3"
         ],
-        "revisits": 6
+        "revisits": 2
       },
       {
         "atom": "GE-LEX-LERNEN-01",
@@ -49490,7 +49467,7 @@
         "atom": "GE-LEX-MACHTE-01",
         "language": "german",
         "introducedBy": "GE-C15-machte",
-        "introducedAt": 218,
+        "introducedAt": 219,
         "missed": [
           "R3",
           "R4"
@@ -49501,7 +49478,7 @@
         "atom": "GE-LEX-MAERZ-01",
         "language": "german",
         "introducedBy": "GE-C09-maerz",
-        "introducedAt": 119,
+        "introducedAt": 120,
         "missed": [
           "R3",
           "R4"
@@ -49520,6 +49497,17 @@
         "revisits": 9
       },
       {
+        "atom": "GE-LEX-MITTERNACHT-01",
+        "language": "german",
+        "introducedBy": "GE-C08-mitternacht",
+        "introducedAt": 115,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "GE-LEX-MITTWOCH-01",
         "language": "german",
         "introducedBy": "GE-C07-mittwoch",
@@ -49527,6 +49515,17 @@
         "missed": [
           "R3",
           "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-MOEGEN-LIEBEN-09",
+        "language": "german",
+        "introducedBy": "GE-C25-moegen-lieben",
+        "introducedAt": 280,
+        "missed": [
+          "R2",
+          "R3"
         ],
         "revisits": 3
       },
@@ -49556,7 +49555,7 @@
         "atom": "GE-LEX-NEIN-02",
         "language": "german",
         "introducedBy": "GE-C18-nein",
-        "introducedAt": 263,
+        "introducedAt": 266,
         "missed": [
           "R1",
           "R4"
@@ -49567,7 +49566,7 @@
         "atom": "GE-LEX-ROT-01",
         "language": "german",
         "introducedBy": "GE-C13-rot",
-        "introducedAt": 186,
+        "introducedAt": 187,
         "missed": [
           "R2",
           "R3"
@@ -49578,7 +49577,7 @@
         "atom": "GE-LEX-SAGTE-01",
         "language": "german",
         "introducedBy": "GE-C15-sagte",
-        "introducedAt": 217,
+        "introducedAt": 218,
         "missed": [
           "R3",
           "R4"
@@ -49600,7 +49599,7 @@
         "atom": "GE-LEX-SCHWESTER-01",
         "language": "german",
         "introducedBy": "GE-C10-schwester",
-        "introducedAt": 151,
+        "introducedAt": 152,
         "missed": [
           "R2",
           "R3"
@@ -49611,7 +49610,7 @@
         "atom": "GE-LEX-SECHZEHN-01",
         "language": "german",
         "introducedBy": "GE-C12-sechzehn",
-        "introducedAt": 172,
+        "introducedAt": 173,
         "missed": [
           "R3",
           "R4"
@@ -49644,10 +49643,21 @@
         "atom": "GE-LEX-SIEBZEHN-01",
         "language": "german",
         "introducedBy": "GE-C12-siebzehn",
-        "introducedAt": 173,
+        "introducedAt": 174,
         "missed": [
           "R3",
           "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "GE-LEX-SO-LALA-01",
+        "language": "german",
+        "introducedBy": "GE-C03-so-lala",
+        "introducedAt": 39,
+        "missed": [
+          "R2",
+          "R3"
         ],
         "revisits": 2
       },
@@ -49674,10 +49684,32 @@
         "revisits": 4
       },
       {
+        "atom": "GE-LEX-SPAET-01",
+        "language": "german",
+        "introducedBy": "GE-C04-spaet",
+        "introducedAt": 52,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "GE-LEX-SPAETER-02",
+        "language": "german",
+        "introducedBy": "GE-C04-spaet",
+        "introducedAt": 52,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "GE-LEX-STUNDE-01",
         "language": "german",
         "introducedBy": "GE-C08-stunde",
-        "introducedAt": 108,
+        "introducedAt": 109,
         "missed": [
           "R1",
           "R4"
@@ -49721,7 +49753,7 @@
         "atom": "GE-LEX-VIERZEHN-01",
         "language": "german",
         "introducedBy": "GE-C12-vierzehn",
-        "introducedAt": 169,
+        "introducedAt": 170,
         "missed": [
           "R3",
           "R4"
@@ -49743,7 +49775,7 @@
         "atom": "GE-LEX-WASSER-01",
         "language": "german",
         "introducedBy": "GE-C11-wasser",
-        "introducedAt": 158,
+        "introducedAt": 159,
         "missed": [
           "R2",
           "R3"
@@ -49754,7 +49786,7 @@
         "atom": "GE-LEX-WEIN-01",
         "language": "german",
         "introducedBy": "GE-C11-wein",
-        "introducedAt": 160,
+        "introducedAt": 161,
         "missed": [
           "R2",
           "R3"
@@ -49765,10 +49797,21 @@
         "atom": "GE-LEX-WERDEN-01",
         "language": "german",
         "introducedBy": "GE-C16-werden",
-        "introducedAt": 253,
+        "introducedAt": 255,
         "missed": [
           "R3",
           "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "GE-LEX-WIE-GEHT-ES-DIR-01",
+        "language": "german",
+        "introducedBy": "GE-C03-wie-geht-es",
+        "introducedAt": 34,
+        "missed": [
+          "R2",
+          "R3"
         ],
         "revisits": 2
       },
@@ -49809,7 +49852,7 @@
         "atom": "GE-LEX-WINTER-01",
         "language": "german",
         "introducedBy": "GE-C09-winter",
-        "introducedAt": 140,
+        "introducedAt": 141,
         "missed": [
           "R2",
           "R3"
@@ -49842,7 +49885,7 @@
         "atom": "GE-LEX-ZWANZIG-01",
         "language": "german",
         "introducedBy": "GE-C12-zwanzig",
-        "introducedAt": 176,
+        "introducedAt": 177,
         "missed": [
           "R2",
           "R3"
@@ -49853,12 +49896,45 @@
         "atom": "GE-PRAGMATICS-DOCH-05",
         "language": "german",
         "introducedBy": "GE-C18-ja",
-        "introducedAt": 262,
+        "introducedAt": 265,
         "missed": [
           "R1",
           "R4"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "GE-PRAGMATICS-SORRY-04",
+        "language": "german",
+        "introducedBy": "GE-C20-entschuldigung",
+        "introducedAt": 268,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "GE-PRAGMATICS-WELLBEING-REGISTER-02",
+        "language": "german",
+        "introducedBy": "GE-C03-wie-geht-register",
+        "introducedAt": 36,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "GE-SOUND-FAMILIE-03",
+        "language": "german",
+        "introducedBy": "GE-C29-familie",
+        "introducedAt": 294,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 2
       },
       {
         "atom": "GE-SOUND-FINAL-DEVOICING-D-01",
@@ -49883,21 +49959,10 @@
         "revisits": 2
       },
       {
-        "atom": "GE-SOUND-FUSS-03",
-        "language": "german",
-        "introducedBy": "GE-C31-fuss",
-        "introducedAt": 297,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "GE-SOUND-GRIMMS-LAW-04",
         "language": "german",
         "introducedBy": "GE-C17-kopf-haupt",
-        "introducedAt": 260,
+        "introducedAt": 262,
         "missed": [
           "R1",
           "R4"
@@ -49908,12 +49973,23 @@
         "atom": "GE-SOUND-HERZ-03",
         "language": "german",
         "introducedBy": "GE-C31-herz",
-        "introducedAt": 298,
+        "introducedAt": 304,
         "missed": [
           "R2",
           "R3"
         ],
-        "revisits": 1
+        "revisits": 2
+      },
+      {
+        "atom": "GE-SOUND-MILCH-03",
+        "language": "german",
+        "introducedBy": "GE-C28-milch",
+        "introducedAt": 291,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 3
       },
       {
         "atom": "GE-SOUND-NACHT-CH-01",
@@ -49927,21 +50003,21 @@
         "revisits": 4
       },
       {
-        "atom": "GE-SOUND-NASE-03",
+        "atom": "GE-SOUND-NEIN-03",
         "language": "german",
-        "introducedBy": "GE-C30-nase",
-        "introducedAt": 294,
+        "introducedBy": "GE-C18-nein",
+        "introducedAt": 266,
         "missed": [
-          "R1",
-          "R3"
+          "R2",
+          "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "GE-SOUND-SCHW-01",
         "language": "german",
         "introducedBy": "GE-C10-schw",
-        "introducedAt": 150,
+        "introducedAt": 151,
         "missed": [
           "R3",
           "R4"
@@ -49952,7 +50028,7 @@
         "atom": "GE-SOUND-SCHWARZ-01",
         "language": "german",
         "introducedBy": "GE-C13-schwarz",
-        "introducedAt": 179,
+        "introducedAt": 180,
         "missed": [
           "R3",
           "R4"
@@ -49963,12 +50039,23 @@
         "atom": "GE-SOUND-SEIN-01",
         "language": "german",
         "introducedBy": "GE-C16-sein",
-        "introducedAt": 226,
+        "introducedAt": 227,
         "missed": [
           "R1",
           "R4"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "GE-SOUND-SPAET-01",
+        "language": "german",
+        "introducedBy": "GE-C04-spaet",
+        "introducedAt": 52,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "GE-SOUND-TSCHUESS-01",
@@ -49985,7 +50072,7 @@
         "atom": "GE-SOUND-UHR-01",
         "language": "german",
         "introducedBy": "GE-C08-uhr",
-        "introducedAt": 106,
+        "introducedAt": 107,
         "missed": [
           "R1",
           "R3"
@@ -74438,7 +74525,7 @@
         "atom": "GE-ETYMON-ARM-04",
         "language": "german",
         "introducedBy": "GE-C31-arm",
-        "introducedAt": 295,
+        "introducedAt": 301,
         "missed": [
           "R2"
         ],
@@ -74448,7 +74535,7 @@
         "atom": "GE-ETYMON-AUGE-04",
         "language": "german",
         "introducedBy": "GE-C30-auge",
-        "introducedAt": 291,
+        "introducedAt": 296,
         "missed": [
           "R3"
         ],
@@ -74458,57 +74545,27 @@
         "atom": "GE-ETYMON-BRUDER-FRATER-01",
         "language": "german",
         "introducedBy": "GE-C10-bruder-frater",
-        "introducedAt": 149,
+        "introducedAt": 150,
         "missed": [
           "R3"
         ],
         "revisits": 5
       },
       {
-        "atom": "GE-ETYMON-DENKEN-03",
-        "language": "german",
-        "introducedBy": "GE-C24-denken",
-        "introducedAt": 269,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "GE-ETYMON-FAMILIE-04",
-        "language": "german",
-        "introducedBy": "GE-C29-familie",
-        "introducedAt": 290,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "GE-ETYMON-FINGER-03",
         "language": "german",
         "introducedBy": "GE-C31-finger",
-        "introducedAt": 296,
+        "introducedAt": 302,
         "missed": [
           "R2"
         ],
         "revisits": 2
-      },
-      {
-        "atom": "GE-ETYMON-FRAGEN-06",
-        "language": "german",
-        "introducedBy": "GE-C25-fragen",
-        "introducedAt": 274,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 4
       },
       {
         "atom": "GE-ETYMON-FREUND-04",
         "language": "german",
         "introducedBy": "GE-C29-freund",
-        "introducedAt": 288,
+        "introducedAt": 292,
         "missed": [
           "R2"
         ],
@@ -74518,9 +74575,9 @@
         "atom": "GE-ETYMON-FUSS-04",
         "language": "german",
         "introducedBy": "GE-C31-fuss",
-        "introducedAt": 297,
+        "introducedAt": 303,
         "missed": [
-          "R3"
+          "R2"
         ],
         "revisits": 4
       },
@@ -74528,37 +74585,37 @@
         "atom": "GE-ETYMON-GEHEN-03",
         "language": "german",
         "introducedBy": "GE-C27-gehen",
-        "introducedAt": 281,
+        "introducedAt": 285,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
+        "atom": "GE-ETYMON-HELFEN-08",
+        "language": "german",
+        "introducedBy": "GE-C25-helfen",
+        "introducedAt": 279,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 8
+      },
+      {
         "atom": "GE-ETYMON-HERZ-04",
         "language": "german",
         "introducedBy": "GE-C31-herz",
-        "introducedAt": 298,
+        "introducedAt": 304,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "GE-ETYMON-HUND-03",
-        "language": "german",
-        "introducedBy": "GE-C22-hund-katze",
-        "introducedAt": 267,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 5
-      },
-      {
         "atom": "GE-ETYMON-KAFFEE-04",
         "language": "german",
         "introducedBy": "GE-C28-kaffee",
-        "introducedAt": 285,
+        "introducedAt": 289,
         "missed": [
           "R2"
         ],
@@ -74568,7 +74625,17 @@
         "atom": "GE-ETYMON-LAUFEN-05",
         "language": "german",
         "introducedBy": "GE-C27-laufen",
-        "introducedAt": 282,
+        "introducedAt": 286,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-ETYMON-MILCH-04",
+        "language": "german",
+        "introducedBy": "GE-C28-milch",
+        "introducedAt": 291,
         "missed": [
           "R2"
         ],
@@ -74578,7 +74645,7 @@
         "atom": "GE-ETYMON-NEHMEN-03",
         "language": "german",
         "introducedBy": "GE-C25-nehmen",
-        "introducedAt": 273,
+        "introducedAt": 277,
         "missed": [
           "R3"
         ],
@@ -74588,7 +74655,7 @@
         "atom": "GE-ETYMON-OFFEN-08",
         "language": "german",
         "introducedBy": "GE-C27-oeffnen",
-        "introducedAt": 283,
+        "introducedAt": 287,
         "missed": [
           "R2"
         ],
@@ -74598,7 +74665,7 @@
         "atom": "GE-ETYMON-OHR-04",
         "language": "german",
         "introducedBy": "GE-C30-ohr",
-        "introducedAt": 292,
+        "introducedAt": 297,
         "missed": [
           "R3"
         ],
@@ -74608,7 +74675,7 @@
         "atom": "GE-ETYMON-SCHLAFEN-07",
         "language": "german",
         "introducedBy": "GE-C26-schlafen",
-        "introducedAt": 279,
+        "introducedAt": 283,
         "missed": [
           "R2"
         ],
@@ -74618,7 +74685,7 @@
         "atom": "GE-ETYMON-SCHLIESSEN-11",
         "language": "german",
         "introducedBy": "GE-C27-schliessen",
-        "introducedAt": 284,
+        "introducedAt": 288,
         "missed": [
           "R2"
         ],
@@ -74628,17 +74695,27 @@
         "atom": "GE-ETYMON-SCHREIBEN-11",
         "language": "german",
         "introducedBy": "GE-C24-schreiben",
-        "introducedAt": 272,
+        "introducedAt": 276,
         "missed": [
           "R2"
         ],
         "revisits": 5
       },
       {
+        "atom": "GE-ETYMON-SEIN-DREI-WURZELN-01",
+        "language": "german",
+        "introducedBy": "GE-C16-drei-wurzeln",
+        "introducedAt": 248,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "GE-ETYMON-SITZEN-03",
         "language": "german",
         "introducedBy": "GE-C26-sitzen",
-        "introducedAt": 277,
+        "introducedAt": 281,
         "missed": [
           "R2"
         ],
@@ -74648,17 +74725,27 @@
         "atom": "GE-ETYMON-STEHEN-05",
         "language": "german",
         "introducedBy": "GE-C26-stehen",
-        "introducedAt": 278,
+        "introducedAt": 282,
         "missed": [
           "R2"
         ],
         "revisits": 5
       },
       {
+        "atom": "GE-ETYMON-SUFFIX-IN-04",
+        "language": "german",
+        "introducedBy": "GE-C29-freundin",
+        "introducedAt": 293,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "GE-ETYMON-TEE-04",
         "language": "german",
         "introducedBy": "GE-C28-tee",
-        "introducedAt": 286,
+        "introducedAt": 290,
         "missed": [
           "R2"
         ],
@@ -74668,7 +74755,7 @@
         "atom": "GE-ETYMON-UHR-HORA-01",
         "language": "german",
         "introducedBy": "GE-C08-uhr-hora",
-        "introducedAt": 107,
+        "introducedAt": 108,
         "missed": [
           "R3"
         ],
@@ -74678,7 +74765,7 @@
         "atom": "GE-ETYMON-VATER-PATER-01",
         "language": "german",
         "introducedBy": "GE-C10-vater-pater",
-        "introducedAt": 144,
+        "introducedAt": 145,
         "missed": [
           "R3"
         ],
@@ -74688,19 +74775,9 @@
         "atom": "GE-EVIDENCE-FINGER-FUENF-04",
         "language": "german",
         "introducedBy": "GE-C31-finger",
-        "introducedAt": 296,
+        "introducedAt": 302,
         "missed": [
           "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "GE-FALSEFRIEND-ALSO-04",
-        "language": "german",
-        "introducedBy": "GE-C24-denken",
-        "introducedAt": 269,
-        "missed": [
-          "R3"
         ],
         "revisits": 2
       },
@@ -74708,7 +74785,7 @@
         "atom": "GE-GRAMMAR-EIN-WOERTER-01",
         "language": "german",
         "introducedBy": "GE-C36-mein",
-        "introducedAt": 323,
+        "introducedAt": 330,
         "missed": [
           "R3"
         ],
@@ -74718,27 +74795,17 @@
         "atom": "GE-GRAMMAR-ES-IST-UHR-01",
         "language": "german",
         "introducedBy": "GE-C08-es-ist-uhr",
-        "introducedAt": 109,
+        "introducedAt": 110,
         "missed": [
           "R3"
         ],
         "revisits": 5
       },
       {
-        "atom": "GE-GRAMMAR-GERN-11",
-        "language": "german",
-        "introducedBy": "GE-C25-moegen-lieben",
-        "introducedAt": 276,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "GE-GRAMMAR-HABEN-DU-HAST-01",
         "language": "german",
         "introducedBy": "GE-C14-du-hast",
-        "introducedAt": 193,
+        "introducedAt": 194,
         "missed": [
           "R3"
         ],
@@ -74758,7 +74825,7 @@
         "atom": "GE-GRAMMAR-PARTIZIP-GE-EN-01",
         "language": "german",
         "introducedBy": "GE-C38-partizip-en",
-        "introducedAt": 339,
+        "introducedAt": 346,
         "missed": [
           "R2"
         ],
@@ -74768,7 +74835,7 @@
         "atom": "GE-GRAMMAR-PARTIZIP-GE-T-01",
         "language": "german",
         "introducedBy": "GE-C15-partizip",
-        "introducedAt": 201,
+        "introducedAt": 202,
         "missed": [
           "R3"
         ],
@@ -74778,7 +74845,7 @@
         "atom": "GE-GRAMMAR-PERFEKT-HABEN-01",
         "language": "german",
         "introducedBy": "GE-C15-perfekt",
-        "introducedAt": 207,
+        "introducedAt": 208,
         "missed": [
           "R3"
         ],
@@ -74788,7 +74855,7 @@
         "atom": "GE-GRAMMAR-PERFEKT-ICH-01",
         "language": "german",
         "introducedBy": "GE-C15-ich-habe-gesagt",
-        "introducedAt": 208,
+        "introducedAt": 209,
         "missed": [
           "R3"
         ],
@@ -74798,7 +74865,7 @@
         "atom": "GE-GRAMMAR-PERFEKT-SEIN-01",
         "language": "german",
         "introducedBy": "GE-C16-perfekt-sein",
-        "introducedAt": 250,
+        "introducedAt": 252,
         "missed": [
           "R3"
         ],
@@ -74808,7 +74875,7 @@
         "atom": "GE-GRAMMAR-SEIN-DU-BIST-01",
         "language": "german",
         "introducedBy": "GE-C16-du-bist",
-        "introducedAt": 228,
+        "introducedAt": 229,
         "missed": [
           "R4"
         ],
@@ -74818,31 +74885,31 @@
         "atom": "GE-GRAMMAR-SEIN-ICH-BIN-01",
         "language": "german",
         "introducedBy": "GE-C16-ich-bin",
-        "introducedAt": 227,
+        "introducedAt": 228,
         "missed": [
           "R4"
         ],
         "revisits": 14
       },
       {
-        "atom": "GE-GRAMMAR-SEIN-WIR-SIND-01",
-        "language": "german",
-        "introducedBy": "GE-C16-wir-sind",
-        "introducedAt": 230,
-        "missed": [
-          "R4"
-        ],
-        "revisits": 6
-      },
-      {
         "atom": "GE-GRAMMAR-SEPARABLE-09",
         "language": "german",
         "introducedBy": "GE-C27-oeffnen",
-        "introducedAt": 283,
+        "introducedAt": 287,
         "missed": [
           "R2"
         ],
         "revisits": 6
+      },
+      {
+        "atom": "GE-GRAMMAR-SUFFIX-IN-03",
+        "language": "german",
+        "introducedBy": "GE-C29-freundin",
+        "introducedAt": 293,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 4
       },
       {
         "atom": "GE-GRAMMAR-THIRD-PERSON-T-03",
@@ -74868,7 +74935,7 @@
         "atom": "GE-GRAMMAR-VERBKLAMMER-01",
         "language": "german",
         "introducedBy": "GE-C38-klammer",
-        "introducedAt": 338,
+        "introducedAt": 345,
         "missed": [
           "R2"
         ],
@@ -74878,7 +74945,7 @@
         "atom": "GE-GRAMMAR-ZIFFER-PLUS-ZEHN-01",
         "language": "german",
         "introducedBy": "GE-C12-ziffer-plus-zehn",
-        "introducedAt": 167,
+        "introducedAt": 168,
         "missed": [
           "R3"
         ],
@@ -74905,16 +74972,6 @@
         "revisits": 6
       },
       {
-        "atom": "GE-LEX-ARM-02",
-        "language": "german",
-        "introducedBy": "GE-C31-arm",
-        "introducedAt": 295,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 6
-      },
-      {
         "atom": "GE-LEX-AUF-WIEDERSEHEN-01",
         "language": "german",
         "introducedBy": "GE-C04-auf-wiedersehen",
@@ -74928,7 +74985,7 @@
         "atom": "GE-LEX-BROT-01",
         "language": "german",
         "introducedBy": "GE-C11-brot",
-        "introducedAt": 156,
+        "introducedAt": 157,
         "missed": [
           "R3"
         ],
@@ -74938,7 +74995,7 @@
         "atom": "GE-LEX-BRUDER-01",
         "language": "german",
         "introducedBy": "GE-C10-bruder",
-        "introducedAt": 148,
+        "introducedAt": 149,
         "missed": [
           "R3"
         ],
@@ -74948,21 +75005,11 @@
         "atom": "GE-LEX-DEIN-01",
         "language": "german",
         "introducedBy": "GE-C36-dein",
-        "introducedAt": 324,
+        "introducedAt": 331,
         "missed": [
           "R3"
         ],
         "revisits": 6
-      },
-      {
-        "atom": "GE-LEX-DENKEN-02",
-        "language": "german",
-        "introducedBy": "GE-C24-denken",
-        "introducedAt": 269,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 4
       },
       {
         "atom": "GE-LEX-DEUTSCH-01",
@@ -74988,9 +75035,19 @@
         "atom": "GE-LEX-ELTERN-01",
         "language": "german",
         "introducedBy": "GE-C10-eltern",
-        "introducedAt": 147,
+        "introducedAt": 148,
         "missed": [
           "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "GE-LEX-FAMILIE-02",
+        "language": "german",
+        "introducedBy": "GE-C29-familie",
+        "introducedAt": 294,
+        "missed": [
+          "R2"
         ],
         "revisits": 4
       },
@@ -74998,7 +75055,7 @@
         "atom": "GE-LEX-FINGER-02",
         "language": "german",
         "introducedBy": "GE-C31-finger",
-        "introducedAt": 296,
+        "introducedAt": 302,
         "missed": [
           "R2"
         ],
@@ -75008,7 +75065,7 @@
         "atom": "GE-LEX-FRAGEN-05",
         "language": "german",
         "introducedBy": "GE-C25-fragen",
-        "introducedAt": 274,
+        "introducedAt": 278,
         "missed": [
           "R2"
         ],
@@ -75018,21 +75075,41 @@
         "atom": "GE-LEX-FREUND-02",
         "language": "german",
         "introducedBy": "GE-C29-freund",
-        "introducedAt": 288,
+        "introducedAt": 292,
         "missed": [
           "R2"
         ],
         "revisits": 10
       },
       {
+        "atom": "GE-LEX-FREUNDIN-02",
+        "language": "german",
+        "introducedBy": "GE-C29-freundin",
+        "introducedAt": 293,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 7
+      },
+      {
         "atom": "GE-LEX-FRUEHLING-01",
         "language": "german",
         "introducedBy": "GE-C09-fruehling",
-        "introducedAt": 136,
+        "introducedAt": 137,
         "missed": [
           "R3"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "GE-LEX-FUSS-02",
+        "language": "german",
+        "introducedBy": "GE-C31-fuss",
+        "introducedAt": 303,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 6
       },
       {
         "atom": "GE-LEX-GEHEN-01",
@@ -75048,7 +75125,7 @@
         "atom": "GE-LEX-GEHEN-02",
         "language": "german",
         "introducedBy": "GE-C27-gehen",
-        "introducedAt": 281,
+        "introducedAt": 285,
         "missed": [
           "R2"
         ],
@@ -75058,7 +75135,7 @@
         "atom": "GE-LEX-GELERNT-01",
         "language": "german",
         "introducedBy": "GE-C15-gelernt",
-        "introducedAt": 203,
+        "introducedAt": 204,
         "missed": [
           "R3"
         ],
@@ -75068,7 +75145,7 @@
         "atom": "GE-LEX-GEMACHT-01",
         "language": "german",
         "introducedBy": "GE-C15-gemacht",
-        "introducedAt": 202,
+        "introducedAt": 203,
         "missed": [
           "R3"
         ],
@@ -75078,7 +75155,7 @@
         "atom": "GE-LEX-GESAGT-01",
         "language": "german",
         "introducedBy": "GE-C15-gesagt",
-        "introducedAt": 200,
+        "introducedAt": 201,
         "missed": [
           "R3"
         ],
@@ -75115,34 +75192,14 @@
         "revisits": 4
       },
       {
-        "atom": "GE-LEX-HELFEN-07",
-        "language": "german",
-        "introducedBy": "GE-C25-helfen",
-        "introducedAt": 275,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 5
-      },
-      {
         "atom": "GE-LEX-HERZ-02",
         "language": "german",
         "introducedBy": "GE-C31-herz",
-        "introducedAt": 298,
+        "introducedAt": 304,
         "missed": [
           "R2"
         ],
         "revisits": 2
-      },
-      {
-        "atom": "GE-LEX-HUND-02",
-        "language": "german",
-        "introducedBy": "GE-C22-hund-katze",
-        "introducedAt": 267,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 21
       },
       {
         "atom": "GE-LEX-ICH-HEISSE-01",
@@ -75168,7 +75225,7 @@
         "atom": "GE-LEX-IHR-HER-01",
         "language": "german",
         "introducedBy": "GE-C36-ihr-her",
-        "introducedAt": 326,
+        "introducedAt": 333,
         "missed": [
           "R3"
         ],
@@ -75178,7 +75235,7 @@
         "atom": "GE-LEX-JA-02",
         "language": "german",
         "introducedBy": "GE-C18-ja",
-        "introducedAt": 262,
+        "introducedAt": 265,
         "missed": [
           "R4"
         ],
@@ -75188,7 +75245,7 @@
         "atom": "GE-LEX-JAHR-01",
         "language": "german",
         "introducedBy": "GE-C09-jahr",
-        "introducedAt": 132,
+        "introducedAt": 133,
         "missed": [
           "R3"
         ],
@@ -75198,7 +75255,7 @@
         "atom": "GE-LEX-JANUAR-01",
         "language": "german",
         "introducedBy": "GE-C09-januar",
-        "introducedAt": 117,
+        "introducedAt": 118,
         "missed": [
           "R3"
         ],
@@ -75208,37 +75265,37 @@
         "atom": "GE-LEX-KAFFEE-02",
         "language": "german",
         "introducedBy": "GE-C28-kaffee",
-        "introducedAt": 285,
+        "introducedAt": 289,
         "missed": [
           "R2"
         ],
         "revisits": 23
       },
       {
-        "atom": "GE-LEX-KATZE-04",
-        "language": "german",
-        "introducedBy": "GE-C22-hund-katze",
-        "introducedAt": 267,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 16
-      },
-      {
         "atom": "GE-LEX-KOMMEN-01",
         "language": "german",
         "introducedBy": "GE-C16-kommen",
-        "introducedAt": 251,
+        "introducedAt": 253,
         "missed": [
           "R4"
         ],
         "revisits": 4
       },
       {
+        "atom": "GE-LEX-KOPF-02",
+        "language": "german",
+        "introducedBy": "GE-C17-kopf",
+        "introducedAt": 261,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 6
+      },
+      {
         "atom": "GE-LEX-LAUFEN-04",
         "language": "german",
         "introducedBy": "GE-C27-laufen",
-        "introducedAt": 282,
+        "introducedAt": 286,
         "missed": [
           "R2"
         ],
@@ -75255,20 +75312,20 @@
         "revisits": 4
       },
       {
-        "atom": "GE-LEX-MOEGEN-LIEBEN-09",
+        "atom": "GE-LEX-MILCH-02",
         "language": "german",
-        "introducedBy": "GE-C25-moegen-lieben",
-        "introducedAt": 276,
+        "introducedBy": "GE-C28-milch",
+        "introducedAt": 291,
         "missed": [
           "R2"
         ],
-        "revisits": 3
+        "revisits": 14
       },
       {
         "atom": "GE-LEX-MONAT-01",
         "language": "german",
         "introducedBy": "GE-C09-monate",
-        "introducedAt": 116,
+        "introducedAt": 117,
         "missed": [
           "R4"
         ],
@@ -75308,7 +75365,7 @@
         "atom": "GE-LEX-MUEDE-01",
         "language": "german",
         "introducedBy": "GE-C16-muede",
-        "introducedAt": 233,
+        "introducedAt": 234,
         "missed": [
           "R2"
         ],
@@ -75318,7 +75375,7 @@
         "atom": "GE-LEX-MUTTER-01",
         "language": "german",
         "introducedBy": "GE-C10-mutter",
-        "introducedAt": 145,
+        "introducedAt": 146,
         "missed": [
           "R3"
         ],
@@ -75328,7 +75385,7 @@
         "atom": "GE-LEX-NEHMEN-02",
         "language": "german",
         "introducedBy": "GE-C25-nehmen",
-        "introducedAt": 273,
+        "introducedAt": 277,
         "missed": [
           "R3"
         ],
@@ -75348,7 +75405,7 @@
         "atom": "GE-LEX-OEFFNEN-07",
         "language": "german",
         "introducedBy": "GE-C27-oeffnen",
-        "introducedAt": 283,
+        "introducedAt": 287,
         "missed": [
           "R2"
         ],
@@ -75358,7 +75415,7 @@
         "atom": "GE-LEX-RENNEN-06",
         "language": "german",
         "introducedBy": "GE-C27-laufen",
-        "introducedAt": 282,
+        "introducedAt": 286,
         "missed": [
           "R2"
         ],
@@ -75368,7 +75425,7 @@
         "atom": "GE-LEX-SAGEN-01",
         "language": "german",
         "introducedBy": "GE-C15-sagen",
-        "introducedAt": 199,
+        "introducedAt": 200,
         "missed": [
           "R3"
         ],
@@ -75378,7 +75435,7 @@
         "atom": "GE-LEX-SCHLAFEN-06",
         "language": "german",
         "introducedBy": "GE-C26-schlafen",
-        "introducedAt": 279,
+        "introducedAt": 283,
         "missed": [
           "R2"
         ],
@@ -75388,7 +75445,7 @@
         "atom": "GE-LEX-SCHLIESSEN-10",
         "language": "german",
         "introducedBy": "GE-C27-schliessen",
-        "introducedAt": 284,
+        "introducedAt": 288,
         "missed": [
           "R2"
         ],
@@ -75398,7 +75455,7 @@
         "atom": "GE-LEX-SCHREIBEN-10",
         "language": "german",
         "introducedBy": "GE-C24-schreiben",
-        "introducedAt": 272,
+        "introducedAt": 276,
         "missed": [
           "R2"
         ],
@@ -75408,7 +75465,7 @@
         "atom": "GE-LEX-SCHWARZ-01",
         "language": "german",
         "introducedBy": "GE-C13-schwarz",
-        "introducedAt": 179,
+        "introducedAt": 180,
         "missed": [
           "R3"
         ],
@@ -75428,7 +75485,7 @@
         "atom": "GE-LEX-SEIN-HIS-01",
         "language": "german",
         "introducedBy": "GE-C36-sein-his",
-        "introducedAt": 325,
+        "introducedAt": 332,
         "missed": [
           "R3"
         ],
@@ -75438,17 +75495,27 @@
         "atom": "GE-LEX-SOMMER-01",
         "language": "german",
         "introducedBy": "GE-C09-sommer",
-        "introducedAt": 137,
+        "introducedAt": 138,
         "missed": [
           "R3"
         ],
         "revisits": 4
       },
       {
+        "atom": "GE-LEX-TEE-02",
+        "language": "german",
+        "introducedBy": "GE-C28-tee",
+        "introducedAt": 290,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 15
+      },
+      {
         "atom": "GE-LEX-VATER-01",
         "language": "german",
         "introducedBy": "GE-C10-vater",
-        "introducedAt": 143,
+        "introducedAt": 144,
         "missed": [
           "R3"
         ],
@@ -75458,7 +75525,7 @@
         "atom": "GE-LEX-WEISS-01",
         "language": "german",
         "introducedBy": "GE-C13-weiss",
-        "introducedAt": 181,
+        "introducedAt": 182,
         "missed": [
           "R3"
         ],
@@ -75468,7 +75535,7 @@
         "atom": "GE-LEX-WETTER-02",
         "language": "german",
         "introducedBy": "GE-C21-das-wetter",
-        "introducedAt": 266,
+        "introducedAt": 270,
         "missed": [
           "R4"
         ],
@@ -75508,7 +75575,7 @@
         "atom": "GE-LEX-ZEIT-01",
         "language": "german",
         "introducedBy": "GE-C09-zeit",
-        "introducedAt": 133,
+        "introducedAt": 134,
         "missed": [
           "R3"
         ],
@@ -75518,7 +75585,7 @@
         "atom": "GE-LEX-ZWOELF-01",
         "language": "german",
         "introducedBy": "GE-C12-zwoelf",
-        "introducedAt": 164,
+        "introducedAt": 165,
         "missed": [
           "R3"
         ],
@@ -75528,7 +75595,7 @@
         "atom": "GE-SKILL-CONNECTED-READING",
         "language": "german",
         "introducedBy": "GE-C52-erste-lesung",
-        "introducedAt": 343,
+        "introducedAt": 350,
         "missed": [
           "R1"
         ],
@@ -75538,39 +75605,19 @@
         "atom": "GE-SKILL-READ-WORDS",
         "language": "german",
         "introducedBy": "GE-C52-words",
-        "introducedAt": 341,
+        "introducedAt": 348,
         "missed": [
           "R2"
         ],
         "revisits": 1
       },
       {
-        "atom": "GE-SOUND-ARM-03",
-        "language": "german",
-        "introducedBy": "GE-C31-arm",
-        "introducedAt": 295,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "GE-SOUND-AUGE-03",
         "language": "german",
         "introducedBy": "GE-C30-auge",
-        "introducedAt": 291,
+        "introducedAt": 296,
         "missed": [
           "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "GE-SOUND-FAMILIE-03",
-        "language": "german",
-        "introducedBy": "GE-C29-familie",
-        "introducedAt": 290,
-        "missed": [
-          "R1"
         ],
         "revisits": 2
       },
@@ -75578,11 +75625,21 @@
         "atom": "GE-SOUND-FREUND-03",
         "language": "german",
         "introducedBy": "GE-C29-freund",
-        "introducedAt": 288,
+        "introducedAt": 292,
         "missed": [
           "R2"
         ],
         "revisits": 5
+      },
+      {
+        "atom": "GE-SOUND-FUSS-03",
+        "language": "german",
+        "introducedBy": "GE-C31-fuss",
+        "introducedAt": 303,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
       },
       {
         "atom": "GE-SOUND-H-LENGTHEN-01",
@@ -75608,31 +75665,41 @@
         "atom": "GE-SOUND-KAFFEE-03",
         "language": "german",
         "introducedBy": "GE-C28-kaffee",
-        "introducedAt": 285,
+        "introducedAt": 289,
         "missed": [
           "R2"
         ],
         "revisits": 5
       },
       {
-        "atom": "GE-SOUND-MILCH-03",
+        "atom": "GE-SOUND-NASE-03",
         "language": "german",
-        "introducedBy": "GE-C28-milch",
-        "introducedAt": 287,
+        "introducedBy": "GE-C30-nase",
+        "introducedAt": 299,
         "missed": [
-          "R1"
+          "R3"
         ],
-        "revisits": 3
+        "revisits": 2
       },
       {
         "atom": "GE-SOUND-OHR-03",
         "language": "german",
         "introducedBy": "GE-C30-ohr",
-        "introducedAt": 292,
+        "introducedAt": 297,
         "missed": [
           "R3"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "GE-SOUND-TEE-03",
+        "language": "german",
+        "introducedBy": "GE-C28-tee",
+        "introducedAt": 290,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 4
       },
       {
         "atom": "GE-SOUND-V-AS-F-01",
@@ -75648,7 +75715,7 @@
         "atom": "GE-SOUND-W-AS-V-01",
         "language": "german",
         "introducedBy": "GE-C09-winter",
-        "introducedAt": 140,
+        "introducedAt": 141,
         "missed": [
           "R1"
         ],
@@ -91421,6 +91488,14 @@
         "lessonsEarly": 323
       },
       {
+        "lessonId": "GE-C02-ich-heisse",
+        "language": "german",
+        "position": 20,
+        "word": "mein",
+        "taughtBy": "GE-C36-mein",
+        "lessonsEarly": 310
+      },
+      {
         "lessonId": "ES-C401-cambiar",
         "language": "spanish",
         "position": 1073,
@@ -91474,14 +91549,6 @@
         "position": 1038,
         "word": "directo",
         "taughtBy": "ES-C446-directo",
-        "lessonsEarly": 303
-      },
-      {
-        "lessonId": "GE-C02-ich-heisse",
-        "language": "german",
-        "position": 20,
-        "word": "mein",
-        "taughtBy": "GE-C36-mein",
         "lessonsEarly": 303
       },
       {
@@ -91837,6 +91904,14 @@
         "lessonsEarly": 248
       },
       {
+        "lessonId": "GE-C05-wo",
+        "language": "german",
+        "position": 67,
+        "word": "wann",
+        "taughtBy": "GE-C33-wann",
+        "lessonsEarly": 248
+      },
+      {
         "lessonId": "ES-C40-repaso-un-sabado-de-octubre",
         "language": "spanish",
         "position": 296,
@@ -91851,6 +91926,30 @@
         "word": "cielo",
         "taughtBy": "ES-C289-cielo",
         "lessonsEarly": 247
+      },
+      {
+        "lessonId": "GE-C03-danke",
+        "language": "german",
+        "position": 26,
+        "word": "denken",
+        "taughtBy": "GE-C24-denken",
+        "lessonsEarly": 247
+      },
+      {
+        "lessonId": "GE-W01-eszett",
+        "language": "german",
+        "position": 56,
+        "word": "fuß",
+        "taughtBy": "GE-C31-fuss",
+        "lessonsEarly": 247
+      },
+      {
+        "lessonId": "GE-C03-vielen-dank",
+        "language": "german",
+        "position": 28,
+        "word": "denken",
+        "taughtBy": "GE-C24-denken",
+        "lessonsEarly": 245
       },
       {
         "lessonId": "ES-C06-practice",
@@ -91885,14 +91984,6 @@
         "lessonsEarly": 243
       },
       {
-        "lessonId": "GE-C03-danke",
-        "language": "german",
-        "position": 26,
-        "word": "denken",
-        "taughtBy": "GE-C24-denken",
-        "lessonsEarly": 243
-      },
-      {
         "lessonId": "ES-C267-no-nada",
         "language": "spanish",
         "position": 442,
@@ -91922,30 +92013,6 @@
         "position": 8,
         "word": "ou",
         "taughtBy": "FR-C36-ou-conj",
-        "lessonsEarly": 241
-      },
-      {
-        "lessonId": "GE-C03-vielen-dank",
-        "language": "german",
-        "position": 28,
-        "word": "denken",
-        "taughtBy": "GE-C24-denken",
-        "lessonsEarly": 241
-      },
-      {
-        "lessonId": "GE-C05-wo",
-        "language": "german",
-        "position": 67,
-        "word": "wann",
-        "taughtBy": "GE-C33-wann",
-        "lessonsEarly": 241
-      },
-      {
-        "lessonId": "GE-W01-eszett",
-        "language": "german",
-        "position": 56,
-        "word": "fuß",
-        "taughtBy": "GE-C31-fuss",
         "lessonsEarly": 241
       },
       {
@@ -92069,6 +92136,14 @@
         "lessonsEarly": 215
       },
       {
+        "lessonId": "GE-W02-umlauts",
+        "language": "german",
+        "position": 57,
+        "word": "hund",
+        "taughtBy": "GE-C22-hund-katze",
+        "lessonsEarly": 214
+      },
+      {
         "lessonId": "ES-R437-repaso-planes",
         "language": "spanish",
         "position": 1280,
@@ -92082,6 +92157,14 @@
         "position": 36,
         "word": "ou",
         "taughtBy": "FR-C36-ou-conj",
+        "lessonsEarly": 213
+      },
+      {
+        "lessonId": "GE-W03-capitalization",
+        "language": "german",
+        "position": 58,
+        "word": "hund",
+        "taughtBy": "GE-C22-hund-katze",
         "lessonsEarly": 213
       },
       {
@@ -92117,22 +92200,6 @@
         "lessonsEarly": 211
       },
       {
-        "lessonId": "GE-W02-umlauts",
-        "language": "german",
-        "position": 57,
-        "word": "hund",
-        "taughtBy": "GE-C22-hund-katze",
-        "lessonsEarly": 210
-      },
-      {
-        "lessonId": "GE-W03-capitalization",
-        "language": "german",
-        "position": 58,
-        "word": "hund",
-        "taughtBy": "GE-C22-hund-katze",
-        "lessonsEarly": 209
-      },
-      {
         "lessonId": "FR-C04-a-demain",
         "language": "french",
         "position": 34,
@@ -92155,6 +92222,14 @@
         "word": "de",
         "taughtBy": "FR-C35-de",
         "lessonsEarly": 203
+      },
+      {
+        "lessonId": "GE-R07-spaet-und-was-drin-steckt",
+        "language": "german",
+        "position": 106,
+        "word": "fuß",
+        "taughtBy": "GE-C31-fuss",
+        "lessonsEarly": 197
       },
       {
         "lessonId": "ES-C277-en-resumen",
@@ -92778,7 +92853,7 @@
         "position": 56,
         "word": "weiß",
         "taughtBy": "GE-C13-weiss",
-        "lessonsEarly": 125
+        "lessonsEarly": 126
       },
       {
         "lessonId": "ES-C445-repetir",
@@ -92877,6 +92952,14 @@
         "lessonsEarly": 103
       },
       {
+        "lessonId": "GE-C03-gehen",
+        "language": "german",
+        "position": 30,
+        "word": "jahr",
+        "taughtBy": "GE-C09-jahr",
+        "lessonsEarly": 103
+      },
+      {
         "lessonId": "LA-C35-meridies",
         "language": "latin",
         "position": 57,
@@ -92898,14 +92981,6 @@
         "position": 153,
         "word": "finir",
         "taughtBy": "FR-C37-finir",
-        "lessonsEarly": 102
-      },
-      {
-        "lessonId": "GE-C03-gehen",
-        "language": "german",
-        "position": 30,
-        "word": "jahr",
-        "taughtBy": "GE-C09-jahr",
         "lessonsEarly": 102
       },
       {
@@ -93077,6 +93152,14 @@
         "lessonsEarly": 90
       },
       {
+        "lessonId": "GE-C16-praesens-practice",
+        "language": "german",
+        "position": 235,
+        "word": "aber",
+        "taughtBy": "GE-C35-aber",
+        "lessonsEarly": 90
+      },
+      {
         "lessonId": "FR-C08-minuit",
         "language": "french",
         "position": 71,
@@ -93093,6 +93176,14 @@
         "lessonsEarly": 89
       },
       {
+        "lessonId": "GE-W02-umlauts",
+        "language": "german",
+        "position": 57,
+        "word": "mutter",
+        "taughtBy": "GE-C10-mutter",
+        "lessonsEarly": 89
+      },
+      {
         "lessonId": "LA-C23-nihil-est",
         "language": "latin",
         "position": 43,
@@ -93106,14 +93197,6 @@
         "position": 72,
         "word": "il est",
         "taughtBy": "FR-C16-est",
-        "lessonsEarly": 88
-      },
-      {
-        "lessonId": "GE-W02-umlauts",
-        "language": "german",
-        "position": 57,
-        "word": "mutter",
-        "taughtBy": "GE-C10-mutter",
         "lessonsEarly": 88
       },
       {
@@ -93197,14 +93280,6 @@
         "lessonsEarly": 84
       },
       {
-        "lessonId": "GE-C16-praesens-practice",
-        "language": "german",
-        "position": 234,
-        "word": "aber",
-        "taughtBy": "GE-C35-aber",
-        "lessonsEarly": 84
-      },
-      {
         "lessonId": "ES-C303-no-se",
         "language": "spanish",
         "position": 615,
@@ -93218,6 +93293,14 @@
         "position": 148,
         "word": "vouloir",
         "taughtBy": "FR-C33-vouloir",
+        "lessonsEarly": 83
+      },
+      {
+        "lessonId": "GE-C14-alter-practice",
+        "language": "german",
+        "position": 242,
+        "word": "aber",
+        "taughtBy": "GE-C35-aber",
         "lessonsEarly": 83
       },
       {
@@ -93309,14 +93392,6 @@
         "lessonsEarly": 77
       },
       {
-        "lessonId": "GE-C14-alter-practice",
-        "language": "german",
-        "position": 241,
-        "word": "aber",
-        "taughtBy": "GE-C35-aber",
-        "lessonsEarly": 77
-      },
-      {
         "lessonId": "ES-C305-nombre",
         "language": "spanish",
         "position": 622,
@@ -93370,6 +93445,14 @@
         "position": 624,
         "word": "favor",
         "taughtBy": "ES-C320-favor",
+        "lessonsEarly": 74
+      },
+      {
+        "lessonId": "GE-C16-war-practice",
+        "language": "german",
+        "position": 251,
+        "word": "aber",
+        "taughtBy": "GE-C35-aber",
         "lessonsEarly": 74
       },
       {
@@ -93538,14 +93621,6 @@
         "position": 34,
         "word": "pain",
         "taughtBy": "FR-C11-pain",
-        "lessonsEarly": 69
-      },
-      {
-        "lessonId": "GE-C16-war-practice",
-        "language": "german",
-        "position": 249,
-        "word": "aber",
-        "taughtBy": "GE-C35-aber",
         "lessonsEarly": 69
       },
       {
@@ -93989,6 +94064,14 @@
         "lessonsEarly": 41
       },
       {
+        "lessonId": "GE-C17-hand",
+        "language": "german",
+        "position": 263,
+        "word": "herz",
+        "taughtBy": "GE-C31-herz",
+        "lessonsEarly": 41
+      },
+      {
         "lessonId": "IT-C06-numeri-1-5",
         "language": "italian",
         "position": 40,
@@ -94021,6 +94104,14 @@
         "lessonsEarly": 40
       },
       {
+        "lessonId": "GE-C17-hand",
+        "language": "german",
+        "position": 263,
+        "word": "fuß",
+        "taughtBy": "GE-C31-fuss",
+        "lessonsEarly": 40
+      },
+      {
         "lessonId": "ES-C312-maleta",
         "language": "spanish",
         "position": 659,
@@ -94042,6 +94133,14 @@
         "position": 228,
         "word": "quoi",
         "taughtBy": "FR-C39-quoi",
+        "lessonsEarly": 39
+      },
+      {
+        "lessonId": "GE-C17-hand",
+        "language": "german",
+        "position": 263,
+        "word": "finger",
+        "taughtBy": "GE-C31-finger",
         "lessonsEarly": 39
       },
       {
@@ -94085,6 +94184,14 @@
         "lessonsEarly": 38
       },
       {
+        "lessonId": "GE-C17-hand",
+        "language": "german",
+        "position": 263,
+        "word": "arm",
+        "taughtBy": "GE-C31-arm",
+        "lessonsEarly": 38
+      },
+      {
         "lessonId": "ES-C312-carta",
         "language": "spanish",
         "position": 661,
@@ -94098,14 +94205,6 @@
         "position": 229,
         "word": "que",
         "taughtBy": "FR-C39-que",
-        "lessonsEarly": 37
-      },
-      {
-        "lessonId": "GE-C17-hand",
-        "language": "german",
-        "position": 261,
-        "word": "herz",
-        "taughtBy": "GE-C31-herz",
         "lessonsEarly": 37
       },
       {
@@ -94141,14 +94240,6 @@
         "lessonsEarly": 36
       },
       {
-        "lessonId": "GE-C17-hand",
-        "language": "german",
-        "position": 261,
-        "word": "fuß",
-        "taughtBy": "GE-C31-fuss",
-        "lessonsEarly": 36
-      },
-      {
         "lessonId": "ES-C313-moneda",
         "language": "spanish",
         "position": 663,
@@ -94162,14 +94253,6 @@
         "position": 231,
         "word": "que",
         "taughtBy": "FR-C39-que",
-        "lessonsEarly": 35
-      },
-      {
-        "lessonId": "GE-C17-hand",
-        "language": "german",
-        "position": 261,
-        "word": "finger",
-        "taughtBy": "GE-C31-finger",
         "lessonsEarly": 35
       },
       {
@@ -94194,14 +94277,6 @@
         "position": 208,
         "word": "de",
         "taughtBy": "FR-C35-de",
-        "lessonsEarly": 34
-      },
-      {
-        "lessonId": "GE-C17-hand",
-        "language": "german",
-        "position": 261,
-        "word": "arm",
-        "taughtBy": "GE-C31-arm",
         "lessonsEarly": 34
       },
       {
@@ -94925,6 +95000,14 @@
         "lessonsEarly": 12
       },
       {
+        "lessonId": "GE-C16-partizip-attributiv",
+        "language": "german",
+        "position": 259,
+        "word": "katze",
+        "taughtBy": "GE-C22-hund-katze",
+        "lessonsEarly": 12
+      },
+      {
         "lessonId": "KA-S125-letter-oo",
         "language": "kannada",
         "position": 107,
@@ -94971,14 +95054,6 @@
         "word": "café",
         "taughtBy": "PT-C23-cafe",
         "lessonsEarly": 11
-      },
-      {
-        "lessonId": "GE-C16-partizip-attributiv",
-        "language": "german",
-        "position": 257,
-        "word": "katze",
-        "taughtBy": "GE-C22-hund-katze",
-        "lessonsEarly": 10
       },
       {
         "lessonId": "HI-C25-din",
@@ -95079,7 +95154,7 @@
       {
         "lessonId": "GE-C24-verstehen",
         "language": "german",
-        "position": 270,
+        "position": 274,
         "word": "stehen",
         "taughtBy": "GE-C26-stehen",
         "lessonsEarly": 8
@@ -95559,7 +95634,7 @@
       {
         "lessonId": "GE-C31-arm",
         "language": "german",
-        "position": 295,
+        "position": 301,
         "word": "herz",
         "taughtBy": "GE-C31-herz",
         "lessonsEarly": 3
@@ -95767,7 +95842,7 @@
       {
         "lessonId": "GE-C31-arm",
         "language": "german",
-        "position": 295,
+        "position": 301,
         "word": "fuß",
         "taughtBy": "GE-C31-fuss",
         "lessonsEarly": 2
@@ -96263,7 +96338,7 @@
       {
         "lessonId": "GE-C31-arm",
         "language": "german",
-        "position": 295,
+        "position": 301,
         "word": "finger",
         "taughtBy": "GE-C31-finger",
         "lessonsEarly": 1
@@ -96960,13 +97035,13 @@
       },
       {
         "language": "german",
-        "lessonCount": 347,
+        "lessonCount": 354,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "atomsTaught": 515,
-        "atomsNeverRevisited": 52,
-        "forwardReferences": 30
+        "atomsNeverRevisited": 33,
+        "forwardReferences": 31
       },
       {
         "language": "gujarati",
@@ -97155,15 +97230,15 @@
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
       "atomsTaught": 9049,
-      "atomsNeverRevisited": 450,
+      "atomsNeverRevisited": 431,
       "neverRevisitedPercent": 5,
       "missedByWindow": {
-        "R1": 1745,
-        "R2": 4173,
-        "R3": 5875,
-        "R4": 4432
+        "R1": 1739,
+        "R2": 4185,
+        "R3": 5870,
+        "R4": 4426
       },
-      "forwardReferences": 915
+      "forwardReferences": 916
     }
   },
   "scriptClosure": {
@@ -117383,8 +117458,8 @@
       },
       {
         "language": "german",
-        "lessonCount": 347,
-        "atomMeasurableLessons": 344,
+        "lessonCount": 354,
+        "atomMeasurableLessons": 351,
         "atomMeasurementBlindLessons": 3,
         "durationViolations": 0,
         "atomLessonSpikes": 8,
@@ -117398,15 +117473,15 @@
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 30,
+        "forwardReferences": 31,
         "atomsTaught": 515,
-        "atomsNeverRevisited": 52,
-        "reinforcementWindowMisses": 984,
+        "atomsNeverRevisited": 33,
+        "reinforcementWindowMisses": 979,
         "reinforcementMissesByWindow": {
-          "R1": 153,
-          "R2": 261,
-          "R3": 323,
-          "R4": 247
+          "R1": 147,
+          "R2": 273,
+          "R3": 318,
+          "R4": 241
         },
         "payoffSurprises": 1,
         "writingPracticeLessons": 10,
@@ -117416,7 +117491,7 @@
           {
             "language": "german",
             "kind": "forward-language",
-            "count": 30,
+            "count": 31,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
           },
@@ -117430,7 +117505,7 @@
           {
             "language": "german",
             "kind": "reinforcement",
-            "count": 984,
+            "count": 979,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -117452,7 +117527,7 @@
         "next": {
           "language": "german",
           "kind": "forward-language",
-          "count": 30,
+          "count": 31,
           "unit": "use(s)",
           "detail": "teach target-language material before load-bearing use"
         }
@@ -118858,7 +118933,7 @@
       {
         "language": "german",
         "kind": "forward-language",
-        "count": 30,
+        "count": 31,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
@@ -119292,7 +119367,7 @@
       {
         "language": "german",
         "kind": "reinforcement",
-        "count": 984,
+        "count": 979,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -119759,11 +119834,6 @@
             "criterion": "atom-budget",
             "detail": "5 lesson(s) at or below pre-A1 exceed the new-atom budget",
             "shortfall": 5
-          },
-          {
-            "criterion": "reinforcement",
-            "detail": "37 atom(s) at or below pre-A1 are revisited fewer than twice (54 etymology hook(s) waived)",
-            "shortfall": 37
           }
         ],
         "vocabulary": 232
@@ -120157,11 +120227,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 7526,
-    "voice": 5429,
-    "sight": 847,
+    "totalLessons": 7533,
+    "voice": 5435,
+    "sight": 848,
     "pen": 1250,
-    "coreVoice": 5985,
+    "coreVoice": 5991,
     "lessonsWithWritingSegments": 767,
     "drivablePercent": 80,
     "tracks": [
@@ -122599,13 +122669,13 @@
       },
       {
         "language": "german",
-        "lessonCount": 347,
-        "voice": 331,
-        "sight": 6,
+        "lessonCount": 354,
+        "voice": 337,
+        "sight": 7,
         "pen": 10,
-        "coreVoice": 332,
-        "drivablePercent": 96,
-        "drivablePrefixTotal": 300,
+        "coreVoice": 338,
+        "drivablePercent": 95,
+        "drivablePrefixTotal": 306,
         "chapters": [
           {
             "language": "german",
@@ -122755,16 +122825,17 @@
           {
             "language": "german",
             "chapter": 11,
-            "lessonCount": 6,
+            "lessonCount": 7,
             "voice": 6,
-            "sight": 0,
+            "sight": 1,
             "pen": 0,
             "coreVoice": 6,
             "modalities": [
-              "voice"
+              "voice",
+              "sight"
             ],
             "drivablePrefix": 6,
-            "firstNonVoiceLesson": null
+            "firstNonVoiceLesson": "GE-R07-spaet-und-was-drin-steckt"
           },
           {
             "language": "german",
@@ -122980,15 +123051,15 @@
           {
             "language": "german",
             "chapter": 27,
-            "lessonCount": 7,
-            "voice": 7,
+            "lessonCount": 8,
+            "voice": 8,
             "sight": 0,
             "pen": 0,
-            "coreVoice": 7,
+            "coreVoice": 8,
             "modalities": [
               "voice"
             ],
-            "drivablePrefix": 7,
+            "drivablePrefix": 8,
             "firstNonVoiceLesson": null
           },
           {
@@ -123023,15 +123094,15 @@
           {
             "language": "german",
             "chapter": 30,
-            "lessonCount": 3,
-            "voice": 3,
+            "lessonCount": 4,
+            "voice": 4,
             "sight": 0,
             "pen": 0,
-            "coreVoice": 3,
+            "coreVoice": 4,
             "modalities": [
               "voice"
             ],
-            "drivablePrefix": 3,
+            "drivablePrefix": 4,
             "firstNonVoiceLesson": null
           },
           {
@@ -123065,15 +123136,15 @@
           {
             "language": "german",
             "chapter": 33,
-            "lessonCount": 1,
-            "voice": 1,
+            "lessonCount": 2,
+            "voice": 2,
             "sight": 0,
             "pen": 0,
-            "coreVoice": 1,
+            "coreVoice": 2,
             "modalities": [
               "voice"
             ],
-            "drivablePrefix": 1,
+            "drivablePrefix": 2,
             "firstNonVoiceLesson": null
           },
           {
@@ -123191,43 +123262,43 @@
           {
             "language": "german",
             "chapter": 42,
-            "lessonCount": 3,
-            "voice": 3,
+            "lessonCount": 4,
+            "voice": 4,
             "sight": 0,
             "pen": 0,
-            "coreVoice": 3,
+            "coreVoice": 4,
             "modalities": [
               "voice"
             ],
-            "drivablePrefix": 3,
+            "drivablePrefix": 4,
             "firstNonVoiceLesson": null
           },
           {
             "language": "german",
             "chapter": 43,
-            "lessonCount": 4,
-            "voice": 4,
+            "lessonCount": 5,
+            "voice": 5,
             "sight": 0,
             "pen": 0,
-            "coreVoice": 4,
+            "coreVoice": 5,
             "modalities": [
               "voice"
             ],
-            "drivablePrefix": 4,
+            "drivablePrefix": 5,
             "firstNonVoiceLesson": null
           },
           {
             "language": "german",
             "chapter": 44,
-            "lessonCount": 4,
-            "voice": 4,
+            "lessonCount": 5,
+            "voice": 5,
             "sight": 0,
             "pen": 0,
-            "coreVoice": 4,
+            "coreVoice": 5,
             "modalities": [
               "voice"
             ],
-            "drivablePrefix": 4,
+            "drivablePrefix": 5,
             "firstNonVoiceLesson": null
           },
           {
@@ -145004,7 +145075,7 @@
     "underspentPercent": 89
   },
   "infoDump": {
-    "lessons": 7526,
+    "lessons": 7533,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -145012,11 +145083,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 7526,
-    "measuredLessons": 3840,
-    "idiomMeasuredLessons": 3840,
-    "senseMeasuredLessons": 3841,
-    "cultureClaimMeasuredLessons": 3840,
+    "lessons": 7533,
+    "measuredLessons": 3847,
+    "idiomMeasuredLessons": 3847,
+    "senseMeasuredLessons": 3848,
+    "cultureClaimMeasuredLessons": 3847,
     "idioms": 101,
     "senses": 103,
     "cultureClaims": 208,
@@ -145025,22 +145096,22 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 7075,
-    "usesBeforeIntroduction": 23880,
-    "technicalUsesBeforeIntroduction": 6109,
-    "technicalLessons": 3377,
+    "lessonsUsingTerms": 7082,
+    "usesBeforeIntroduction": 23913,
+    "technicalUsesBeforeIntroduction": 6123,
+    "technicalLessons": 3383,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 1926
+        "lessons": 1928
       },
       {
         "term": "noun",
-        "lessons": 1163
+        "lessons": 1166
       },
       {
         "term": "adjective",
-        "lessons": 357
+        "lessons": 361
       },
       {
         "term": "pronoun",
@@ -145057,7 +145128,7 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 7526,
+    "lessonsScanned": 7533,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
