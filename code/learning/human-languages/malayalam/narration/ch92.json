@@ -3,8 +3,8 @@
   "language": "malayalam",
   "chapter": 92,
   "title": "Eating Out",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:a856b68f291ec379",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3ad0e6eb0f2c7e80",
   "lessons": [
     {
       "id": "ML-C92-bhakshanam",
@@ -558,6 +558,117 @@
             {
               "kind": "speech",
               "text": "What do you find at a hōṭṭal? (Food.) What is bhakṣaṇaṁ? (Food, the category.) And what should you do with a borrowed word's original meaning? (Check it rather than assume it.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R92-the-last-seven",
+      "sequence": 3281,
+      "title": "ചേച്ചി, ഹോട്ടൽ (hōṭṭal), ബിൽ (bil) — the last seven, run cold",
+      "headword": "ചേച്ചി · ഹോട്ടൽ · ബിൽ",
+      "romanization": "chēchi · hōṭṭal · bil",
+      "gloss": "second pass over the last seven things taught once — how to address someone, where stress falls, and two borrowed words that do not mean what they look like",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00817cdf324a4762",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word you call an older woman you do not know. Then the word you ask for at the end of a meal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഹോട്ടൽ (hōṭṭal) is the trap in this chapter, and it is worth a second look precisely because it looks like a word you already know. In Malayalam it is an eating place. Walking into one expecting a bed is the kind of mistake a borrowed word sets up for you, and no amount of English helps."
+            },
+            {
+              "kind": "speech",
+              "text": "ബിൽ (bil) is borrowed too and means what you expect — so the pair together is the lesson: a loanword may keep its sense or take a new one, and the shape tells you nothing about which."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "address an older woman you do not know — chēchi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: address an older woman you do not know — *chēchi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "choose a greeting for a stranger, and say why that one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: choose a greeting for a stranger, and say why that one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an opinion, assembled from pieces you already own",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an opinion, assembled from pieces you already own]"
+            },
+            {
+              "kind": "speech",
+              "text": "The address word is not a title you attach to a name — it stands on its own as the way you call to someone, and picking the wrong one is heard immediately."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does Malayalam stress ever tell two words apart? (No — it is regular and weak, and carries no meaning.) What does ഹോട്ടൽ (hōṭṭal) mean? (An eating place.) And the verb for buying?"
             }
           ]
         }
