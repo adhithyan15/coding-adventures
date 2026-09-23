@@ -7,18 +7,20 @@ All notable changes to the `coding-adventures-closure-pass-rename` crate will be
 ### Fixed — the catch-param test section called two different things "soundness" — CCR-022
 
 The `catch-param soundness (CLOC19)` heading over this crate's catch tests
-covered two rules without separating them: that nothing may be renamed *onto* a
-catch binding, and that the binding itself is never renamed. Only the first is a
-soundness requirement. The second is a conservative choice we made.
+covered two rules without separating them. Numbered as in
+`code/specs/CLOC19-try-catch.md`: **(1)** the binding itself is never renamed,
+and **(2)** nothing else may be renamed *onto* it. Only (2) is a soundness
+requirement; (1) is a conservative choice we made.
 
 ### Added — a test that actually pins the avoid-set guard
 
 Review found that `fresh_name_avoids_colliding_with_catch_param`, which reads as
-though it pins the first rule, does not: its handler body is `use(a, longName)`,
+though it pins (2), does not: its handler body is `use(a, longName)`,
 so the catch binding `a` reaches the avoid set through
 `collect_all_idents_block(&h.body, …)` whether or not the explicit
-`out.insert(param.name)` exists. Deleting that insertion left all 48 tests in
-this crate green. The same blind spot applies to the upstream port
+`out.insert(param.name)` exists. Deleting that insertion left every running test
+in this crate green — 48 of them, the crate's 52 `#[test]`s less four
+`#[ignore]`d. The same blind spot applies to the upstream port
 `fresh_name_avoids_catch_binding`, which uses the identical input.
 
 `fresh_name_avoids_catch_param_unused_in_its_own_body` closes it with a handler
@@ -29,16 +31,19 @@ exception. Verified by deleting the guard: that test, and only that test, goes
 red.
 
 Measured against the pinned oracle, upstream Closure renames catch parameters at
-both SIMPLE and ADVANCED, and satisfies the first rule by choosing a
+both SIMPLE and ADVANCED, and satisfies (2) by choosing a
 non-colliding fresh name rather than by reserving the original; with `a` through
 `d` already taken it hands the catch binding `e`. Renaming stays correct across
 shadowing too. So reserving is sound but not required, and it costs us output
 size wherever a catch binding has a long name — part of CCR-022 (#15856).
 
-No behaviour change and no test changed: the code already did the right thing
-and the individual test comments were already accurate. Only the section header
-overclaimed, and it now says which rule is which and points at the probes in
-`code/specs/CLOC19-try-catch.md`. Comment only; PATCH.
+No behaviour change: the code already did the right thing. The section header
+was not the only thing that overclaimed, though — an earlier draft of this entry
+said "the individual test comments were already accurate", and
+`fresh_name_avoids_colliding_with_catch_param`'s own comment credited the
+avoid-set guard for an outcome the guard does not produce on that input. Both
+that comment and the header are corrected, and both now point at the probes in
+`code/specs/CLOC19-try-catch.md`. Comments and one added test; PATCH.
 
 ## [0.22.1] - 2026-07-19
 

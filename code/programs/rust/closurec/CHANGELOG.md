@@ -40,11 +40,11 @@ miscompile. Two further probes show why (1) and (2) are different rules rather
 than two halves of one:
 
 ```
-in : function f(a1,a2,a3){var x=a1+a2+a3;try{compute(x)}catch(err){report(err,x,a1,a2,a3)}return x}sink(f);
-out: function f(b,c,d){var a=b+c+d;try{compute(a)}catch(e){report(e,a,b,c,d)}return a}sink(f);
+in           : function f(a1,a2,a3){var x=a1+a2+a3;try{compute(x)}catch(err){report(err,x,a1,a2,a3)}return x}sink(f);
+out (SIMPLE) : function f(b,c,d){var a=b+c+d;try{compute(a)}catch(e){report(e,a,b,c,d)}return a}sink(f);
 
-in : var err=1;function f(v){try{compute(v)}catch(err){report(err)}return err}sink(f);
-out: var err=1;function f(a){try{compute(a)}catch(b){report(b)}return err}sink(f);
+in           : var err=1;function f(v){try{compute(v)}catch(err){report(err)}return err}sink(f);
+out (SIMPLE) : var err=1;function f(a){try{compute(a)}catch(b){report(b)}return err}sink(f);
 ```
 
 With `a` through `d` taken the catch binding gets `e` — upstream satisfies (2) by
@@ -78,23 +78,28 @@ the gap with a handler that never mentions its own binding
 (`catch (a) { use(longName); }`), where only the explicit insertion can keep
 `longName` off `a`. Verified by deleting the guard: that test, and only that
 test, goes red. Retracting a vague overclaim and replacing it with a sharper
-false one is the failure mode this series keeps hitting; this is the third
-instance, and the fix is the test rather than softer wording.
+false one is a failure mode this series has hit more than once, which is why
+the fix here is a test rather than softer wording.
 
 **Under its own `flags.txt` upstream produces nothing on this fixture.** It
 passes no externs and `compute`/`report` are free globals, so the oracle exits 2
 with two `JSC_UNDEFINED_VARIABLE` errors and zero bytes of stdout. The
 "inlines `process` away entirely" result above needs externs added. That also
-means this fixture satisfies the predicate of the `upstream_refuses`
-disposition added in CCR-081 while still sitting in
-`non-minify-unverified-stdout` as `upstream_golden` — it was excluded because
-its refusal is harness incompleteness, but the recorded predicate does not draw
-that distinction. Raised on #15868 rather than changed here.
+means it satisfies the predicate of the `upstream_refuses` disposition added in
+CCR-081 while still being dispositioned `upstream_golden` — and so do four more.
+Running all 126 fixtures of `non-minify-unverified-stdout` under their own
+`flags.txt`, exactly five refuse: this one plus `advanced-bigpass`,
+`advanced-class-constructor`, `advanced-optimizes` and
+`advanced-rename-globals`, all `JSC_UNDEFINED_VARIABLE` with zero bytes of
+stdout. They are absent from that cohort because the class was never scanned
+for it — the twelve were taken from an earlier partition rather than by applying
+the predicate to all 138. Raised on #15868 rather than re-cut here.
 
-The `ladder_t4_try_catch_{simple,advanced}` fixture READMEs had already recorded
-this divergence ("upstream renames the catch parameter `e` to `a`, which
-closurec skips"), so this correction is catching up with evidence the repo
-already had rather than reporting a new discovery.
+The ladder fixtures had already recorded this divergence — `ladder_t4_try_catch_simple`'s
+README says "upstream renames the catch parameter `e` to `a`, which closurec
+skips (CCR-022)", and the `_advanced` one says the same in different words — so
+this correction is catching up with evidence the repo already had rather than
+reporting a new discovery.
 
 The parity cost is real: upstream emits shorter output wherever a catch binding
 has a long name. That belongs to CCR-022 (#15856), which currently frames catch

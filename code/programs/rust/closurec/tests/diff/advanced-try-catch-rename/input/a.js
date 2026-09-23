@@ -25,9 +25,12 @@
 // `eval` reading the name, no `with`); reserving it is one conservative
 // way to satisfy (2), and it is the way we chose.
 //
-// So this fixture pins OUR rule, not upstream's. Upstream does not
-// produce this output at all: it inlines `process` away entirely, and
-// what survives has the catch binding renamed. The parity cost of (1)
+// So this fixture pins OUR rule, not upstream's. Under this file's own
+// flags.txt upstream produces nothing at all — no externs are passed,
+// so `compute` and `report` are undefined and it exits 2 with zero
+// bytes of stdout. With externs added it compiles and inlines
+// `process` away entirely, and what survives has the catch binding
+// renamed. Either way it does not emit these bytes. The parity cost of (1)
 // is tracked as CCR-022 (#15856), and closing it means changing this
 // fixture's golden, not just adding a code path. Full probes are in
 // code/specs/CLOC19-try-catch.md under "(1) is ours, not a law".

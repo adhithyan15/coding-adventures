@@ -30,7 +30,11 @@ This fixture pins how `closurec` renames in the presence of `try`/`catch`:
 **Only the second guard is a soundness requirement.** Without it, a
 generated short name could alias the caught value and miscompile the
 handler — that is the case
-`fresh_name_avoids_colliding_with_catch_param` pins. The first guard is
+`fresh_name_avoids_catch_param_unused_in_its_own_body` pins. (Its
+older sibling `fresh_name_avoids_colliding_with_catch_param` reads as
+though it pins the same thing and does not: its handler mentions its
+own binding, so the name reaches the avoid set regardless.) The first
+guard is
 a conservative choice. An earlier revision of this file claimed that
 dropping *either* would miscompile; that is false for the first, and
 upstream Closure is the counterexample: measured against the pinned
@@ -50,20 +54,32 @@ added* it compiles and inlines `process` away entirely — ADVANCED gives
 function, and renaming the catch binding. Either way, the bytes in
 `expected.stdout` are ours.
 
-That refusal also means this fixture satisfies the predicate of the
-`upstream_refuses` disposition added in CCR-081
-([#15868](https://github.com/adhithyan15/coding-adventures/issues/15868)),
-while still sitting in `non-minify-unverified-stdout` as `upstream_golden`.
-It was left out of that cohort because its refusal is harness
-incompleteness — adding externs fixes it — but the recorded predicate does
-not draw that distinction. See #15868 for the follow-up.
+That refusal is not unique to this fixture. Running all 126 fixtures of
+`non-minify-unverified-stdout` under their own `flags.txt` against the
+pinned oracle, **five** satisfy the predicate of the `upstream_refuses`
+disposition added in CCR-081
+([#15868](https://github.com/adhithyan15/coding-adventures/issues/15868))
+while still being dispositioned `upstream_golden` — this one and the other
+four `advanced-*` fixtures (`advanced-bigpass`,
+`advanced-class-constructor`, `advanced-optimizes`,
+`advanced-rename-globals`), all `JSC_UNDEFINED_VARIABLE`, all zero bytes of
+stdout.
+
+They are not in that cohort because the class was never scanned for it: the
+twelve were taken from an earlier partition rather than by applying the
+predicate to all 138. Their refusals *are* fixable by adding externs, which
+is a real distinction from a fixture upstream will not compile however it is
+invoked — but that distinction appears nowhere in the recorded predicate,
+and `simple-importmeta`, which is in the cohort, has the same kind of
+flag-fixable refusal. See #15868 for the follow-up.
 
 The parity cost of reserving the catch binding is tracked as CCR-022
 ([#15856](https://github.com/adhithyan15/coding-adventures/issues/15856)).
-The `ladder_t4_try_catch_{simple,advanced}` fixtures had already recorded
-the same divergence ("upstream renames the catch parameter `e` to `a`, which
-closurec skips"), so this is a correction catching up with evidence the repo
-already had, not a new discovery. Full probes are in
+The ladder fixtures had already recorded the same divergence —
+`ladder_t4_try_catch_simple`'s README says "upstream renames the catch
+parameter `e` to `a`, which closurec skips (CCR-022)", and the `_advanced`
+one says the same in different words — so this is a correction catching up
+with evidence the repo already had, not a new discovery. Full probes are in
 `code/specs/CLOC19-try-catch.md`.
 
 Regenerate the expected file after an intentional behavior change:

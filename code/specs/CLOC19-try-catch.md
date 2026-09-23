@@ -102,8 +102,9 @@ the explicit avoid-set insertion can keep `longName` off `a`.
 
 Note which test that is. `fresh_name_avoids_colliding_with_catch_param` reads as
 though it pins the same guard and does not — its handler is `use(a, longName)`,
-so `a` reaches the avoid set through the body walk regardless, and deleting
-`out.insert(param.name)` left the whole crate green. The upstream port
+so `a` reaches the avoid set through the body walk regardless. Before the test
+above existed, deleting `out.insert(param.name)` left every test in the crate
+green; now it fails that one and nothing else. The upstream port
 `fresh_name_avoids_catch_binding` shares the blind spot. Both are still useful
 as end-to-end cover; neither discriminates the guard.
 
@@ -173,9 +174,10 @@ same as "it is always safe":
   `with (o) { report(err) }` is `JSC_USE_OF_WITH`, and a handler that
   redeclares its binding (`catch (err) { var err = err + 1; }`) is
   `JSC_REDECLARED_VARIABLE_ERROR`, at both levels. Its evidence therefore covers
-  only the subset of JavaScript it accepts. It has a cost:
-upstream emits shorter output than we do wherever a catch binding has a long
-name, which is part of **CCR-022**
+  only the subset of JavaScript it accepts.
+
+Reserving has a cost: upstream emits shorter output than we do wherever a catch
+binding has a long name, which is part of **CCR-022**
 ([#15856](https://github.com/adhithyan15/coding-adventures/issues/15856)).
 That issue currently frames catch params as a binding kind our renamer *skips* —
 incompleteness. The probes above say it is a **divergence**, and at SIMPLE as
