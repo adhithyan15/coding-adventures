@@ -1,0 +1,23 @@
+[package]
+name = "journal-core"
+version = "0.1.0"
+edition = "2021"
+description = "Headless journaling engine (entries, multiple journals, tags, timeline, on-this-day, search) for the Mosaic journal-app."
+
+# `serde` is optional (task-core / engram-core house style): the pure model has
+# zero external dependencies by default; JSON (de)serialisation is opt-in for the
+# host facade (journal-wasm, J2b).
+[features]
+default = []
+serde = ["dep:serde"]
+
+[dependencies]
+# Reused, not rebuilt: civil-date arithmetic (days since the epoch, leap years,
+# days in a month) comes from datetime-core, exactly as task-core does it.
+datetime-core = { path = "../datetime-core" }
+serde = { version = "1", features = ["derive"], optional = true }
+
+# `serde_json` is a dev-only oracle: the JSON round-trip tests (gated on the
+# `serde` feature) prove the wire contract (camelCase, ISO dates, bare-string ids).
+[dev-dependencies]
+serde_json = "1"
