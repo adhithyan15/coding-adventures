@@ -23,30 +23,30 @@ VOCABULARY vs HL09 §3.1 targets: spanish 1020/1200 at-or-below A2 (1069 total),
 levels with STRUCTURAL COVERAGE COMPLETE (HL09 §3.1 — coverage complete, performance UNVERIFIED): 1 track at A1 (spanish); 23 track(s) touch a level whose coverage is not complete
   ^ these five criteria measure the CORPUS — headwords, verbs, spine nodes, reinforcement windows, writing stages. None measures a learner. No track has had a single exam item scored against it, so no line above claims a reader can pass anything.
 
-per-track ladder (HL09 §3.1), grouped by blocking criterion, nearest the next rung first within each group (shortfalls are in each criterion's own units, so they do not compare across groups):
-  telugu      touches A2     complete none   working pre-A1 vocabulary 221/300 — vocabulary short 79
-  tamil       touches A2     complete none   working pre-A1 vocabulary 208/300 — vocabulary short 92
-  hindi       touches A2     complete none   working pre-A1 vocabulary 199/300 — vocabulary short 101
-  sanskrit    touches A2     complete none   working pre-A1 vocabulary 184/300 — vocabulary short 116
-  kannada     touches A2     complete none   working pre-A1 vocabulary 179/300 — vocabulary short 121
-  malayalam   touches A2     complete none   working pre-A1 vocabulary 172/300 — vocabulary short 128
-  spanish     touches C2     complete A1     working A2     vocabulary 1020/1200 — vocabulary short 180
-  german      touches A2     complete none   working pre-A1 vocabulary 99/300 — vocabulary short 201
-  latin       touches A2     complete none   working pre-A1 vocabulary 79/300 — vocabulary short 221
-  marwadi     touches A1     complete none   working pre-A1 vocabulary 76/300 — vocabulary short 224
-  gujarati    touches A2     complete none   working pre-A1 vocabulary 75/300 — vocabulary short 225
-  bengali     touches A2     complete none   working pre-A1 vocabulary 64/300 — vocabulary short 236
-  italian     touches A2     complete none   working pre-A1 vocabulary 63/300 — vocabulary short 237
-  urdu        touches A2     complete none   working pre-A1 vocabulary 60/300 — vocabulary short 240
-  arabic      touches A2     complete none   working pre-A1 vocabulary 53/300 — vocabulary short 247
-  punjabi     touches A2     complete none   working pre-A1 vocabulary 53/300 — vocabulary short 247
-  marathi     touches A2     complete none   working pre-A1 vocabulary 49/300 — vocabulary short 251
-  russian     touches A2     complete none   working pre-A1 vocabulary 49/300 — vocabulary short 251
-  chinese     touches A2     complete none   working pre-A1 vocabulary 48/300 — vocabulary short 252
-  french      touches A2     complete none   working pre-A1 vocabulary 47/300 — vocabulary short 253
-  portuguese  touches A2     complete none   working pre-A1 vocabulary 47/300 — vocabulary short 253
-  japanese    touches A1     complete none   working pre-A1 vocabulary 44/300 — vocabulary short 256
-  persian     touches A2     complete none   working pre-A1 vocabulary 43/300 — vocabulary short 257
+per-track ladder (HL09 §3.1), fewest criteria left first, every blocker listed because §3.1 is a conjunction (shortfalls are in each criterion's own units and never compare across criteria):
+  marwadi     touches A1     complete none   working pre-A1 vocabulary 76/300 — 1 blocker: vocabulary 224
+  telugu      touches A2     complete none   working pre-A1 vocabulary 221/300 — 1 blocker: vocabulary 79
+  hindi       touches A2     complete none   working pre-A1 vocabulary 199/300 — 2 blockers: reinforcement 44, vocabulary 101
+  japanese    touches A1     complete none   working pre-A1 vocabulary 44/300 — 2 blockers: verb-vocabulary 5, vocabulary 256
+  latin       touches A2     complete none   working pre-A1 vocabulary 79/300 — 2 blockers: verb-vocabulary 5, vocabulary 221
+  marathi     touches A2     complete none   working pre-A1 vocabulary 49/300 — 2 blockers: reinforcement 14, vocabulary 251
+  arabic      touches A2     complete none   working pre-A1 vocabulary 53/300 — 3 blockers: reinforcement 78, verb-vocabulary 5, vocabulary 247
+  bengali     touches A2     complete none   working pre-A1 vocabulary 64/300 — 3 blockers: reinforcement 14, verb-vocabulary 4, vocabulary 236
+  gujarati    touches A2     complete none   working pre-A1 vocabulary 75/300 — 3 blockers: reinforcement 13, verb-vocabulary 4, vocabulary 225
+  italian     touches A2     complete none   working pre-A1 vocabulary 63/300 — 3 blockers: atom-budget 2, verb-vocabulary 3, vocabulary 237
+  kannada     touches A2     complete none   working pre-A1 vocabulary 179/300 — 3 blockers: atom-budget 1, reinforcement 41, vocabulary 121
+  malayalam   touches A2     complete none   working pre-A1 vocabulary 172/300 — 3 blockers: atom-budget 1, reinforcement 44, vocabulary 128
+  persian     touches A2     complete none   working pre-A1 vocabulary 43/300 — 3 blockers: atom-budget 2, verb-vocabulary 5, vocabulary 257
+  portuguese  touches A2     complete none   working pre-A1 vocabulary 47/300 — 3 blockers: spine-nodes 1, verb-vocabulary 1, vocabulary 253
+  punjabi     touches A2     complete none   working pre-A1 vocabulary 53/300 — 3 blockers: reinforcement 40, verb-vocabulary 4, vocabulary 247
+  russian     touches A2     complete none   working pre-A1 vocabulary 49/300 — 3 blockers: reinforcement 13, verb-vocabulary 5, vocabulary 251
+  sanskrit    touches A2     complete none   working pre-A1 vocabulary 184/300 — 3 blockers: reinforcement 28, verb-vocabulary 5, vocabulary 116
+  spanish     touches C2     complete A1     working A2     vocabulary 1020/1200 — 3 blockers: reinforcement 32, verb-vocabulary 29, vocabulary 180
+  tamil       touches A2     complete none   working pre-A1 vocabulary 208/300 — 3 blockers: atom-budget 1, reinforcement 73, vocabulary 92
+  urdu        touches A2     complete none   working pre-A1 vocabulary 60/300 — 3 blockers: atom-budget 3, verb-vocabulary 4, vocabulary 240
+  chinese     touches A2     complete none   working pre-A1 vocabulary 48/300 — 4 blockers: reinforcement 16, spine-nodes 1, verb-vocabulary 4, vocabulary 252
+  french      touches A2     complete none   working pre-A1 vocabulary 47/300 — 4 blockers: atom-budget 3, reinforcement 14, verb-vocabulary 4, vocabulary 253
+  german      touches A2     complete none   working pre-A1 vocabulary 99/300 — 4 blockers: atom-budget 5, reinforcement 37, verb-vocabulary 2, vocabulary 201
 0 of 1650 book chapters without an HL05 capability; 87 payoffs below the 0.5 representativeness floor; 10 tracks already clean
 
 Longest effective lessons:
