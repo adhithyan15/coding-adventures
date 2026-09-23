@@ -74,9 +74,13 @@ enforcement was real, but it was coming from
 `refusal_evidence_on_disk_is_a_genuine_capture` asserting against the committed
 artifact, which catches a hand-edited file and would not catch a refactor.
 
-Each branch is now individually load-bearing: deleting any one of the six turns
+Each branch is now individually load-bearing: deleting any one of them turns
 tests red. That was verified by deleting them one at a time, not by reasoning
-about it.
+about it. The report-side checks have since grown past the original six — the
+JVM-deviation pair and a `schema_version` check joined them, the latter for the
+same reason `oracle_refresh_report` checks its own: `RefusalReport` tolerates
+unknown fields, so a future v2 artifact reusing these field names with different
+meaning would otherwise be accepted silently.
 
 ### The capture JVM deviates from the pin, and says so
 

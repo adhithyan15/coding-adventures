@@ -15,6 +15,7 @@ const MINIFY_REPORT_PATH: &str = "tests/oracle/minify-v20260915-report.json";
 const MINIFY_VERIFIED_SET_ID: &str = "minify-verified-v20260915";
 const REFUSALS_REPORT_PATH: &str = "tests/oracle/upstream-refusals-v20260915.json";
 const REFUSALS_SET_ID: &str = "non-minify-upstream-refuses-v20260915";
+const REFUSALS_SCHEMA_VERSION: u32 = 1;
 const SCHEMA_VERSION: u32 = 1;
 const RELEASE: &str = "v20260915";
 const RELEASE_TAG_OBJECT: &str = "72421c28d352e5dda9a111bec39c3d41af46f3a3";
@@ -188,6 +189,7 @@ enum ProvenanceStatus {
 /// `java_version`) that should be free to grow without breaking the gate.
 #[derive(Clone, Debug, Deserialize)]
 struct RefusalReport {
+    schema_version: u32,
     release: String,
     oracle_jar_sha256: String,
     java_version: String,
@@ -755,6 +757,16 @@ fn check_refusal_report(
 ) -> Vec<String> {
     let mut errors = Vec::new();
 
+    // Checked for the same reason `oracle_refresh_report` checks its own: a
+    // future v2 artifact could reuse these field names with different meaning,
+    // and `RefusalReport` deliberately tolerates unknown fields, so nothing
+    // else would notice.
+    if report.schema_version != REFUSALS_SCHEMA_VERSION {
+        errors.push(format!(
+            "refusal evidence declares schema_version {} but this validator understands {REFUSALS_SCHEMA_VERSION}",
+            report.schema_version
+        ));
+    }
     if report.release != RELEASE {
         errors.push(format!(
             "refusal evidence pins release {} but the manifest pins {RELEASE}",
@@ -1527,6 +1539,14 @@ fn refusal_report_checks_reject_a_doctored_report() {
     // assertion below could be firing on some unrelated pre-existing error.
     let clean = check_refusal_report(&set, &healthy_refusal_report(), &pinned);
     assert!(clean.is_empty(), "healthy report should pass: {clean:?}");
+
+    // An artifact from a future schema this validator does not understand.
+    let mut report = healthy_refusal_report();
+    report.schema_version = 2;
+    assert_error(
+        &check_refusal_report(&set, &report, &pinned),
+        "declares schema_version 2",
+    );
 
     // Evidence captured against a different Closure release.
     let mut report = healthy_refusal_report();

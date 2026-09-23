@@ -118,7 +118,7 @@ echo "oracle JAR sha256 verified against the $RELEASE pin"
 cd "$PKG_ROOT"
 CLOSURE_ORACLE_JAR="$CLOSURE_ORACLE_JAR" RELEASE="$RELEASE" OUT="$OUT" \
   PINNED_JAVA="$PINNED_JAVA" python3 - <<'PY'
-import hashlib, json, os, re, subprocess, tempfile
+import contextlib, hashlib, json, os, re, subprocess, tempfile
 
 # The fixtures this set covers.  Sorted, because the manifest validator
 # requires fixture lists to be strictly sorted and this file should match.
@@ -148,8 +148,19 @@ pinned_java = os.environ["PINNED_JAVA"]
 # artifact self-consistent even if that ever stops being true.
 sha = hashlib.sha256(open(jar, "rb").read()).hexdigest()
 
-version_stderr = subprocess.run(["java", "-version"], capture_output=True, text=True).stderr
-version_match = re.search(r'version "([^"]+)"', version_stderr)
+try:
+    version_stderr = subprocess.run(
+        ["java", "-version"], capture_output=True, text=True
+    ).stderr
+except FileNotFoundError:
+    raise SystemExit("error: `java` is not on PATH") from None
+
+# Anchored to the start of a line, because `java -version` prints the version as
+# `<name> version "x.y.z"` on its own first line. An unanchored first-match
+# search reads the wrong version out of any preamble that happens to contain a
+# quoted `version "..."` — the `unset` above removes the realistic source of
+# such a preamble, but the parse should not depend on that.
+version_match = re.search(r'^\S+ version "([^"]+)"', version_stderr, re.MULTILINE)
 if version_match is None:
     raise SystemExit(
         "error: could not parse a version from `java -version`:\n" + version_stderr
@@ -251,7 +262,9 @@ try:
     os.chmod(tmp_path, 0o644)
     os.replace(tmp_path, out_path)
 except BaseException:
-    os.unlink(tmp_path)
+    # `finally` + suppress, so a failing unlink cannot mask the real error.
+    with contextlib.suppress(OSError):
+        os.unlink(tmp_path)
     raise
 
 print(f"wrote {len(report['refusals'])} refusals to {out_path}")
