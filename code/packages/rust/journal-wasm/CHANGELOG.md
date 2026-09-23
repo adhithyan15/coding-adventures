@@ -13,6 +13,9 @@ All notable changes to `journal-wasm` are documented here.
   and `reset`.
 - Every export answers with a JSON envelope carrying a stable camelCase `code`
   on failure; nothing traps the boundary, including calls before `init`.
+- Error text never repeats untrusted input: ids are checked before any
+  "not found" error, and parse failures report category and position only
+  (found by the pre-push security review).
 - `load` runs `JournalState::validate` and keeps the current state unless the
   snapshot both parses and validates — the loader obligation from the
   journal-core spec.

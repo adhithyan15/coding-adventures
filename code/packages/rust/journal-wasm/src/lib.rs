@@ -36,7 +36,9 @@ use std::alloc::{alloc as raw_alloc, dealloc as raw_dealloc, Layout};
 use std::cell::RefCell;
 
 use journal_core::projections::{month_activity, on_this_day, search, tag_counts, timeline};
-use journal_core::{apply, Command, Date, EntryFilter, EntryId, JournalId, JournalState, OpError};
+use journal_core::{
+    apply, is_valid_id, Command, Date, EntryFilter, EntryId, JournalId, JournalState, OpError,
+};
 use serde::{Deserialize, Serialize};
 
 thread_local! {
@@ -159,11 +161,33 @@ fn uninitialised() -> String {
     fail("uninitialised", "call init or load first")
 }
 
+/// A parse-failure envelope that says *where* the input broke, never *what* it
+/// said. serde_json's own message quotes the offending value — unbounded in
+/// length, and unescaped for an unknown enum tag — so repeating it would let a
+/// hostile snapshot put a megabyte, or a newline and a terminal escape, into a
+/// host's log. The category and position are enough to debug a file.
+fn parse_fail(e: &serde_json::Error) -> String {
+    let kind = match e.classify() {
+        serde_json::error::Category::Io => "io",
+        serde_json::error::Category::Syntax => "syntax",
+        serde_json::error::Category::Data => "data",
+        serde_json::error::Category::Eof => "eof",
+    };
+    fail(
+        "parse",
+        &format!(
+            "parse error ({kind}) at line {} column {}",
+            e.line(),
+            e.column()
+        ),
+    )
+}
+
 /// Parse `json` as `A`. An empty argument parses as `{}` so optional-only inputs
 /// (a filter with nothing set) can be sent as nothing at all.
 fn parse<A: for<'de> Deserialize<'de>>(json: &str) -> Result<A, String> {
     let text = if json.trim().is_empty() { "{}" } else { json };
-    serde_json::from_str(text).map_err(|e| fail("parse", &format!("parse error: {e}")))
+    serde_json::from_str(text).map_err(|e| parse_fail(&e))
 }
 
 /// Run a read-only query against the state.
@@ -305,7 +329,7 @@ pub unsafe extern "C" fn load(ptr: *const u8, len: usize) -> *mut u8 {
 fn load_json(json: &str) -> String {
     let state: JournalState = match serde_json::from_str(json) {
         Ok(s) => s,
-        Err(e) => return fail("parse", &format!("parse error: {e}")),
+        Err(e) => return parse_fail(&e),
     };
     if let Err(e) = state.validate() {
         return op_fail(&e);
@@ -373,6 +397,11 @@ fn import_json(json: &str) -> String {
         let Some(state) = guard.as_mut() else {
             return uninitialised();
         };
+        // Check the id before an error can echo it (journal-core's rule for every
+        // lookup: an id that was never validated must not reach a "not found").
+        if !is_valid_id(args.journal.as_str()) {
+            return op_fail(&OpError::InvalidId);
+        }
         if state.journal(&args.journal).is_none() {
             return op_fail(&OpError::JournalNotFound(args.journal));
         }
@@ -437,6 +466,7 @@ pub unsafe extern "C" fn entry(ptr: *const u8, len: usize) -> *mut u8 {
 
 fn entry_json(json: &str) -> String {
     query(json, |state, args: IdArgs| match state.entry(&args.id) {
+        _ if !is_valid_id(args.id.as_str()) => op_fail(&OpError::InvalidId),
         Some(e) => ok_data(e),
         None => op_fail(&OpError::EntryNotFound(args.id)),
     })
@@ -730,6 +760,28 @@ mod tests {
             ))["code"],
             "parse"
         );
+    }
+
+    #[test]
+    fn errors_never_echo_unchecked_input() {
+        fresh();
+        let evil = "x\n\u{1b}[31mFAKE\u{202e}";
+        let r = v(entry_json(&json!({ "id": evil }).to_string()));
+        assert_eq!(r["code"], "invalidId");
+        let r = v(import_json(
+            &json!({ "journal": evil, "entries": [] }).to_string(),
+        ));
+        assert_eq!(r["code"], "invalidId");
+
+        // A parse error reports a position, not the offending text.
+        let huge = "d".repeat(100_000);
+        let snap = json!({ "journals": {}, "entries": { "e": { "date": huge } } }).to_string();
+        let r = v(load_json(&snap));
+        assert_eq!(r["code"], "parse");
+        assert!(r["error"].as_str().unwrap().len() < 100, "{r}");
+        let r = cmd(json!({ "type": "a\n\u{1b}[31mb" }));
+        let msg = r["error"].as_str().unwrap();
+        assert!(!msg.contains('\n') && !msg.contains('\u{1b}'), "{msg}");
     }
 
     #[test]

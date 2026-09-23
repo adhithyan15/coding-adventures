@@ -33,6 +33,11 @@ commands, and calls before initialisation are all envelopes.
 `moveTargetIsDeleted`), or `parse` / `uninitialised` for boundary failures. Hosts
 branch on `code`; `error` is for people.
 
+`error` never repeats untrusted input. Ids are checked (`invalidId`) before any
+"not found" error could echo them, and a parse failure reports only its category
+and line/column — serde's own message quotes the offending value, unbounded and
+sometimes unescaped, which would carry a hostile file's text into a host's log.
+
 ## Exports
 
 | export | input | data |
