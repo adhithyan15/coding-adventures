@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "The Word for Not, and the Word for Sorry",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:c0788d641ca28c46",
+  "sourceHash": "fnv1a64:a342791d0f349c93",
   "lessons": [
     {
       "id": "GU-C31-nathi",
@@ -645,6 +645,128 @@
             {
               "kind": "speech",
               "text": "You are lost in a conversation. Say the two sentences that get you out, in the order you would really use them. (Māf karo to stop them, then samajto nathī.) Next chapter: the word for and, which this book has also never had."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R35-second-pass-read-it-or-repair-it",
+      "sequence": 1825,
+      "title": "Read it, or repair it",
+      "headword": "માફ કરો",
+      "romanization": "māf karo",
+      "gloss": "second pass over the words you can now read unaided, and the kit for the ones you cannot",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:bed6ec24d418a875",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script: the letters that stand alone, and the two with breath"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: the letters that stand alone, and the two with breath until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You did not follow what was said. Two words, from memory, that buy you a second attempt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: four words you can now read unaided",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "word: નમસ્તે, namaste, the greeting.",
+                "word: કાગળ, kāgaḷ, paper.",
+                "word: માફ કરો, māf karo, forgive me.",
+                "word: નાક, nāk, nose."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Not one of them needed a new letter when it was read. Every piece was already yours, taught pages or chapters earlier and waiting — which is the whole reason the script came in a drizzle rather than a block."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script: the letters that stand alone, and the two with breath",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "એ ઉ ઈ and ખ ઢ."
+            },
+            {
+              "kind": "speech",
+              "text": "Two groups, and the difference is worth naming. એ, ઉ and ઈ are vowels standing on their own, needed only where no consonant is carrying them. ખ and ઢ are consonants with the breath let out after them — the same step that separates a plain letter from its aspirated partner all the way down the row."
+            },
+            {
+              "kind": "speech",
+              "text": "Standing alone is a question of position. Aspiration is a question of sound. Neither tells you anything about the other."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built — courtesy, farewells, and the kit",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સારું — good, okay, fine — is the small word that keeps a conversation moving when you have nothing else to add. Beside it sit the courtesy exchange and the farewells, each practised once in its own chapter and not since."
+            },
+            {
+              "kind": "speech",
+              "text": "And behind all of them, the repair kit this chapter finished: the way to say you did not understand, and the way to ask forgiveness for it. A beginner uses the repair kit more than any single word in the book, which is the argument for running it cold rather than only where it was taught."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "When does a Gujarati vowel need a letter of its own? (When no consonant is carrying it.) What separates ખ from its plain partner? (The breath after it.) Which small word keeps a conversation moving? (સારું.) And what do you say when you did not follow? (માફ કરો (māf karo), with the words for not understanding.)"
             }
           ]
         }

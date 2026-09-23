@@ -35,7 +35,12 @@ it("pins Gujarati lesson-content budgets", () =>
     // the track had only ever said aloud, and a 35-word meeting. No new word:
     // every Gujarati token was checked to occur in a lesson with a lower
     // sequence number.
-    lessons: 280,
+    //
+    // 280 -> 281: HL-C432, one `review` lesson closing the track's
+    // reinforcement debt -- the words readable unaided, set against the repair
+    // kit for the ones that are not. No new atoms and no new headwords.
+    //
+    lessons: 281,
     idioms: 12,
     senses: 6,
     cultureClaims: 16,

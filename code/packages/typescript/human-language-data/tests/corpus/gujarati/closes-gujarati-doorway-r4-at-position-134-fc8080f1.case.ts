@@ -97,7 +97,20 @@ it("closes Gujarati doorway R4 at position 134", () => {
   // its three lessons retrieve signboard words and the opening greetings at a
   // long interval, and the three reading skills they introduce sit at the end of
   // the track where only their R1 is judgeable yet.
-  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(359);
+  // 359 -> 350. HL-C432's second-pass lesson, decomposed against the corpus
+  // measured without it, because a bare fall here says nothing about whose debt
+  // it closed:
+  //   -10  closed outright by the lesson's thirteen retrievals -- nine R4 and
+  //        one R2. The R4s are the opening greeting read, saarun, the chapter-2
+  //        and chapter-6 recaps, the three standing vowels, kha and ddha; the R2
+  //        is GU-SCRIPT-KAAGAL-01, whose window was still open at distance ~6.
+  //    +1  PRE-EXISTING and created by the track growing 280 -> 281:
+  //        GU-LEX-KERI-01's R4 (distance 80-250) did not exist at 280 lessons
+  //        and does at 281. Nothing about that lesson changed.
+  // The lesson sits at sequence 1825, which is index 220 -- far past the
+  // checkpoint at 134 -- so every position assertion above is untouched, and
+  // that is why it was placed there rather than beside the atoms it retrieves.
+  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(350);
   expect(
     afterCheckpoint.reinforcement.filter(
       (defect) => doorway.includes(defect.atom) && defect.missed.includes("R4"),

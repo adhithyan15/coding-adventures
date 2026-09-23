@@ -1,8 +1,8 @@
 Gujarati, chapter 35: The Word for Not, and the Word for Sorry.
-5 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
+6 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 5.
+Lesson 1 of 6.
 નથી (nathī) — is not.
 
 Warm-up.
@@ -32,7 +32,7 @@ Wrap-up Recall.
 How does Gujarati say is not? (નથી (nathī) — it replaces chhe rather than joining it.) What two old words are hiding inside it? (na, "not", and asti, "is".) Next: the sentence a learner needs more than any other.
 
 
-Lesson 2 of 5.
+Lesson 2 of 6.
 સમજતો નથી (samajto nathī) — I do not understand.
 
 Warm-up.
@@ -64,7 +64,7 @@ Wrap-up Recall.
 Say that you do not understand, in the form that matches you. Which letter changes between the two forms, and what does it mark? (-તો against -તી — the speaker's own gender.)
 
 
-Lesson 3 of 5.
+Lesson 3 of 6.
 ફ — the consonant pha.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
@@ -91,7 +91,7 @@ Which of પ and ફ (pha) carries the extra breath, and how does the written sh
 Source: Unicode Gujarati chart.
 
 
-Lesson 4 of 5.
+Lesson 4 of 6.
 માફ કરો (māf karo) — excuse me.
 
 Warm-up.
@@ -123,7 +123,7 @@ Wrap-up Recall.
 Say excuse me to a stranger. What does કરો contribute, literally? (Do — you are asking them to do the forgiving.) Which sign in માફ did you learn one lesson ago? (ફ (pha).)
 
 
-Lesson 5 of 5.
+Lesson 5 of 6.
 The repair kit, all together — the repair kit, scored as one performance.
 
 Warm-up.
@@ -151,3 +151,34 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 You are lost in a conversation. Say the two sentences that get you out, in the order you would really use them. (Māf karo to stop them, then samajto nathī.) Next chapter: the word for and, which this book has also never had.
+
+
+Lesson 6 of 6.
+Read it, or repair it — second pass over the words you can now read unaided, and the kit for the ones you cannot.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: the letters that stand alone, and the two with breath until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 3 seconds]
+You did not follow what was said. Two words, from memory, that buy you a second attempt.
+
+You'll want to know: four words you can now read unaided.
+[a table of 4 rows, read aloud]
+word: નમસ્તે, namaste, the greeting.
+word: કાગળ, kāgaḷ, paper.
+word: માફ કરો, māf karo, forgive me.
+word: નાક, nāk, nose.
+Not one of them needed a new letter when it was read. Every piece was already yours, taught pages or chapters earlier and waiting — which is the whole reason the script came in a drizzle rather than a block.
+
+Script: the letters that stand alone, and the two with breath.
+એ ઉ ઈ and ખ ઢ.
+Two groups, and the difference is worth naming. એ, ઉ and ઈ are vowels standing on their own, needed only where no consonant is carrying them. ખ and ઢ are consonants with the breath let out after them — the same step that separates a plain letter from its aspirated partner all the way down the row.
+Standing alone is a question of position. Aspiration is a question of sound. Neither tells you anything about the other.
+
+What you've built — courtesy, farewells, and the kit.
+સારું — good, okay, fine — is the small word that keeps a conversation moving when you have nothing else to add. Beside it sit the courtesy exchange and the farewells, each practised once in its own chapter and not since.
+And behind all of them, the repair kit this chapter finished: the way to say you did not understand, and the way to ask forgiveness for it. A beginner uses the repair kit more than any single word in the book, which is the argument for running it cold rather than only where it was taught.
+
+Wrap-up Recall.
+[pause 3 seconds]
+When does a Gujarati vowel need a letter of its own? (When no consonant is carrying it.) What separates ખ from its plain partner? (The breath after it.) Which small word keeps a conversation moving? (સારું.) And what do you say when you did not follow? (માફ કરો (māf karo), with the words for not understanding.)

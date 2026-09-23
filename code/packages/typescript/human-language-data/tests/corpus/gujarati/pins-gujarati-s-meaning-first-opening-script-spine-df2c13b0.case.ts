@@ -107,7 +107,10 @@ it("pins Gujarati's meaning-first opening script spine", () => {
     ["32", 8],
     ["33", 8],
     ["34", 8],
-    ["35", 5],
+    // 5 -> 6. HL-C432 adds one `review` lesson to chapter 35. This map counts
+    // LESSONS, not atoms, and that lesson introduces none, so the script spine
+    // this test is named for is unchanged.
+    ["35", 6],
     ["36", 5],
     ["37", 5],
     ["38", 5],
