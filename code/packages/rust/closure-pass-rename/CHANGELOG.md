@@ -18,9 +18,11 @@ Review found that `fresh_name_avoids_colliding_with_catch_param`, which reads as
 though it pins (2), does not: its handler body is `use(a, longName)`,
 so the catch binding `a` reaches the avoid set through
 `collect_all_idents_block(&h.body, …)` whether or not the explicit
-`out.insert(param.name)` exists. Deleting that insertion left every running test
-in this crate green — 48 of them, the crate's 52 `#[test]`s less four
-`#[ignore]`d. The same blind spot applies to the upstream port
+`out.insert(param.name)` exists. Before the test below existed, deleting that
+insertion left every running test in the crate green — 48 at the time, the
+crate's then-52 `#[test]`s less the four `#[ignore]`d. (With the new test the
+crate has 53 and runs 49, and the deletion fails exactly one of them.) The same blind spot applies
+to the upstream port
 `fresh_name_avoids_catch_binding`, which uses the identical input.
 
 `fresh_name_avoids_catch_param_unused_in_its_own_body` closes it with a handler

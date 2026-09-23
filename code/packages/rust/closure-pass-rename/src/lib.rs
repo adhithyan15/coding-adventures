@@ -2095,8 +2095,9 @@ mod tests {
         // does, and a review found it does not: its handler body is
         // `use(a, longName)`, so the catch param `a` reaches the avoid set via
         // `collect_all_idents_block(&h.body, …)` whether or not the explicit
-        // insertion exists. Deleting `out.insert(param.name)` leaves all 48
-        // tests in this crate green.
+        // insertion exists. Before this test existed, deleting
+        // `out.insert(param.name)` left every running test in the crate
+        // green.
         //
         // Here the handler never mentions its own binding, so the body walk
         // cannot see `a` and only the explicit insertion can. Without it the

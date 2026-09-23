@@ -65,13 +65,13 @@ four `advanced-*` fixtures (`advanced-bigpass`,
 `advanced-rename-globals`), all `JSC_UNDEFINED_VARIABLE`, all zero bytes of
 stdout.
 
-They are not in that cohort because the class was never scanned for it: the
-twelve were taken from an earlier partition rather than by applying the
-predicate to all 138. Their refusals *are* fixable by adding externs, which
-is a real distinction from a fixture upstream will not compile however it is
-invoked — but that distinction appears nowhere in the recorded predicate,
-and `simple-importmeta`, which is in the cohort, has the same kind of
-flag-fixable refusal. See #15868 for the follow-up.
+They are not in that cohort by a deliberate decision recorded on #15868:
+their refusals *are* fixable by adding externs, which is a real distinction
+from a fixture upstream will not compile however it is invoked. What is
+missing is any trace of that distinction in the recorded predicate, which
+says only "refuses as invoked" — and `simple-importmeta`, which is in the
+cohort, has the same kind of flag-fixable refusal. So the cohort and its
+stated criterion disagree. See #15868 for the follow-up.
 
 The parity cost of reserving the catch binding is tracked as CCR-022
 ([#15856](https://github.com/adhithyan15/coding-adventures/issues/15856)).

@@ -72,8 +72,8 @@ One test was **added**, in `closure-pass-rename`. An earlier draft of this entry
 said `fresh_name_avoids_colliding_with_catch_param` pins the avoid-set guard.
 Review showed it does not: its handler body is `use(a, longName)`, so the catch
 binding reaches the avoid set through the body walk whether or not the explicit
-insertion exists, and deleting `out.insert(param.name)` left all 48 tests in
-that crate green. `fresh_name_avoids_catch_param_unused_in_its_own_body` closes
+insertion exists, and before the new test existed deleting
+`out.insert(param.name)` left every running test in that crate green. `fresh_name_avoids_catch_param_unused_in_its_own_body` closes
 the gap with a handler that never mentions its own binding
 (`catch (a) { use(longName); }`), where only the explicit insertion can keep
 `longName` off `a`. Verified by deleting the guard: that test, and only that
@@ -91,9 +91,14 @@ Running all 126 fixtures of `non-minify-unverified-stdout` under their own
 `flags.txt`, exactly five refuse: this one plus `advanced-bigpass`,
 `advanced-class-constructor`, `advanced-optimizes` and
 `advanced-rename-globals`, all `JSC_UNDEFINED_VARIABLE` with zero bytes of
-stdout. They are absent from that cohort because the class was never scanned
-for it — the twelve were taken from an earlier partition rather than by applying
-the predicate to all 138. Raised on #15868 rather than re-cut here.
+stdout. They are absent from that cohort by a deliberate decision recorded on
+#15868: their refusal is harness incompleteness, fixable by adding `--externs`,
+which is a different thing from a fixture upstream will not compile however it
+is invoked. That distinction is real. What is missing is any trace of it in the
+recorded predicate, which says only "refuses as invoked" — and
+`simple-importmeta`, which is in the cohort, has the same kind of flag-fixable
+refusal. So the cohort and its stated criterion disagree. Raised on #15868
+rather than re-cut here.
 
 The ladder fixtures had already recorded this divergence — `ladder_t4_try_catch_simple`'s
 README says "upstream renames the catch parameter `e` to `a`, which closurec
