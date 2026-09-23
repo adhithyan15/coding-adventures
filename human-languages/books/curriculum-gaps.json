@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 7505,
+    "totalLessons": 7511,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -26,21 +26,21 @@
     "rampOverBudgetLessons": 40,
     "scriptRampOverBudgetLessons": 31,
     "lessonsOpeningMultipleScripts": 0,
-    "scriptClosureViolations": 255,
+    "scriptClosureViolations": 256,
     "scriptExposureExemptedGlyphs": 1420,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 46,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
-    "atomsNeverRevisited": 479,
-    "forwardReferences": 913,
+    "atomsNeverRevisited": 471,
+    "forwardReferences": 914,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 87,
     "chapterGateCleanTracks": 10,
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 243,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 5966,
+    "drivableLessons": 5971,
     "drivablePercent": 79,
     "chaptersWithoutDrivablePrefix": 241,
     "unexplainedModalityOverrides": 0
@@ -4332,9 +4332,9 @@
       {
         "language": "bengali",
         "status": "version-2",
-        "lessonCount": 219,
+        "lessonCount": 222,
         "versions": {
-          "2": 219
+          "2": 222
         }
       },
       {
@@ -4380,9 +4380,9 @@
       {
         "language": "chinese",
         "status": "version-2",
-        "lessonCount": 247,
+        "lessonCount": 250,
         "versions": {
-          "2": 247
+          "2": 250
         }
       },
       {
@@ -5207,9 +5207,9 @@
     }
   },
   "levels": {
-    "totalLessons": 7505,
+    "totalLessons": 7511,
     "byLevel": {
-      "pre-A1": 3982,
+      "pre-A1": 3988,
       "A1": 2498,
       "A2": 941,
       "B1": 39,
@@ -5237,9 +5237,9 @@
       },
       {
         "language": "bengali",
-        "lessonCount": 219,
+        "lessonCount": 222,
         "byLevel": {
-          "pre-A1": 148,
+          "pre-A1": 151,
           "A1": 52,
           "A2": 19,
           "B1": 0,
@@ -5252,9 +5252,9 @@
       },
       {
         "language": "chinese",
-        "lessonCount": 247,
+        "lessonCount": 250,
         "byLevel": {
-          "pre-A1": 175,
+          "pre-A1": 178,
           "A1": 57,
           "A2": 15,
           "B1": 0,
@@ -6294,16 +6294,16 @@
       },
       {
         "language": "bengali",
-        "lessonCount": 219,
-        "measurable": 218,
+        "lessonCount": 222,
+        "measurable": 221,
         "unmeasurable": 1,
         "lessonViolations": 1,
         "chapterViolations": 0
       },
       {
         "language": "chinese",
-        "lessonCount": 247,
-        "measurable": 227,
+        "lessonCount": 250,
+        "measurable": 230,
         "unmeasurable": 20,
         "lessonViolations": 0,
         "chapterViolations": 0
@@ -6833,7 +6833,7 @@
           "language": "bengali",
           "script": "bengali",
           "latinScript": false,
-          "lessonCount": 219,
+          "lessonCount": 222,
           "totalGlyphs": 55,
           "lessonViolations": 3,
           "systemViolations": 0,
@@ -6843,7 +6843,7 @@
           "language": "chinese",
           "script": "chinese",
           "latinScript": false,
-          "lessonCount": 247,
+          "lessonCount": 250,
           "totalGlyphs": 84,
           "lessonViolations": 1,
           "systemViolations": 0,
@@ -7960,20 +7960,7 @@
         "atom": "BN-CONCEPT-C05-PRACTICE-01",
         "language": "bengali",
         "introducedBy": "BN-C05-practice",
-        "introducedAt": 74,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "BN-SCRIPT-HRIDOY-READ-01",
-        "language": "bengali",
-        "introducedBy": "BN-W04-hridoy-read",
-        "introducedAt": 113,
+        "introducedAt": 75,
         "missed": [
           "R1",
           "R2",
@@ -7986,14 +7973,14 @@
         "atom": "BN-SCRIPT-PORA-READ-01",
         "language": "bengali",
         "introducedBy": "BN-W04-pora-read",
-        "introducedAt": 98,
+        "introducedAt": 99,
         "missed": [
           "R1",
           "R2",
           "R3",
           "R4"
         ],
-        "revisits": 0
+        "revisits": 2
       },
       {
         "atom": "ES-CULTURE-COMMAND-REGISTER",
@@ -14223,32 +14210,6 @@
         "revisits": 0
       },
       {
-        "atom": "ZH-DIALOGUE-GREET",
-        "language": "chinese",
-        "introducedBy": "ZH-C01-practice",
-        "introducedAt": 6,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ZH-DIALOGUE-IDENTIFY",
-        "language": "chinese",
-        "introducedBy": "ZH-C05-practice",
-        "introducedAt": 35,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "ZH-DIALOGUE-MORNING",
         "language": "chinese",
         "introducedBy": "ZH-C07-practice",
@@ -14260,71 +14221,6 @@
           "R4"
         ],
         "revisits": 0
-      },
-      {
-        "atom": "ZH-DIALOGUE-NEGATE",
-        "language": "chinese",
-        "introducedBy": "ZH-C04-practice",
-        "introducedAt": 31,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ZH-DIALOGUE-PART",
-        "language": "chinese",
-        "introducedBy": "ZH-C06-practice",
-        "introducedAt": 39,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ZH-LEX-HAO-FOND",
-        "language": "chinese",
-        "introducedBy": "ZH-C01-hao-fond",
-        "introducedAt": 5,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ZH-SCRIPT-HAO-BUILD-01",
-        "language": "chinese",
-        "introducedBy": "ZH-W01-hao-build",
-        "introducedAt": 13,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ZH-SCRIPT-SHANG",
-        "language": "chinese",
-        "introducedBy": "ZH-W07-shang",
-        "introducedAt": 41,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 3
       },
       {
         "atom": "AR-CONCEPT-C02-ISMII-01",
@@ -15083,18 +14979,6 @@
         "revisits": 1
       },
       {
-        "atom": "BN-CONCEPT-C01-PRACTICE-01",
-        "language": "bengali",
-        "introducedBy": "BN-C01-practice",
-        "introducedAt": 5,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "BN-CONCEPT-C02-ALAAP-01",
         "language": "bengali",
         "introducedBy": "BN-C02-alaap",
@@ -15107,30 +14991,6 @@
         "revisits": 2
       },
       {
-        "atom": "BN-CONCEPT-C02-PRACTICE-01",
-        "language": "bengali",
-        "introducedBy": "BN-C02-practice",
-        "introducedAt": 27,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "BN-CONCEPT-C03-PRACTICE-01",
-        "language": "bengali",
-        "introducedBy": "BN-C03-practice",
-        "introducedAt": 42,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "BN-CONCEPT-C04-ABARDEKHAHOBE-01",
         "language": "bengali",
         "introducedBy": "BN-C04-abar-dekha-hobe",
@@ -15140,7 +15000,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "BN-CONCEPT-C04-DEKHAHOBE-01",
@@ -15164,25 +15024,13 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
-      },
-      {
-        "atom": "BN-CONCEPT-C04-PRACTICE-01",
-        "language": "bengali",
-        "introducedBy": "BN-C04-practice",
-        "introducedAt": 53,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "BN-CONCEPT-C05-AMIBANGLABOLI-01",
         "language": "bengali",
         "introducedBy": "BN-C05-ami-bangla-boli",
-        "introducedAt": 71,
+        "introducedAt": 72,
         "missed": [
           "R2",
           "R3",
@@ -15194,7 +15042,7 @@
         "atom": "BN-GRAMMAR-C07-HOWA-02",
         "language": "bengali",
         "introducedBy": "BN-C07-howa",
-        "introducedAt": 76,
+        "introducedAt": 77,
         "missed": [
           "R1",
           "R3",
@@ -15206,7 +15054,7 @@
         "atom": "BN-GRAMMAR-C07-JAOWA-02",
         "language": "bengali",
         "introducedBy": "BN-C07-jaowa",
-        "introducedAt": 77,
+        "introducedAt": 78,
         "missed": [
           "R1",
           "R3",
@@ -15218,7 +15066,7 @@
         "atom": "BN-GRAMMAR-C07-KHAOWA-02",
         "language": "bengali",
         "introducedBy": "BN-C07-khaowa",
-        "introducedAt": 79,
+        "introducedAt": 80,
         "missed": [
           "R1",
           "R3",
@@ -15230,7 +15078,7 @@
         "atom": "BN-LEX-C07-HOWA-01",
         "language": "bengali",
         "introducedBy": "BN-C07-howa",
-        "introducedAt": 76,
+        "introducedAt": 77,
         "missed": [
           "R1",
           "R3",
@@ -15242,7 +15090,7 @@
         "atom": "BN-LEX-C12-HRIDOY-01",
         "language": "bengali",
         "introducedBy": "BN-C12-hridoy",
-        "introducedAt": 108,
+        "introducedAt": 109,
         "missed": [
           "R1",
           "R3",
@@ -15254,19 +15102,19 @@
         "atom": "BN-SCRIPT-BHAI-READ-01",
         "language": "bengali",
         "introducedBy": "BN-W04-bhai-read",
-        "introducedAt": 104,
+        "introducedAt": 105,
         "missed": [
           "R1",
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "BN-SCRIPT-CHOKH-READ-01",
         "language": "bengali",
         "introducedBy": "BN-W04-chokh-read",
-        "introducedAt": 109,
+        "introducedAt": 110,
         "missed": [
           "R2",
           "R3",
@@ -15278,7 +15126,7 @@
         "atom": "BN-SCRIPT-DDA-01",
         "language": "bengali",
         "introducedBy": "BN-W04-dda",
-        "introducedAt": 97,
+        "introducedAt": 98,
         "missed": [
           "R2",
           "R3",
@@ -15290,43 +15138,31 @@
         "atom": "BN-SCRIPT-DUDH-READ-01",
         "language": "bengali",
         "introducedBy": "BN-W03-dudh-read",
-        "introducedAt": 96,
+        "introducedAt": 97,
         "missed": [
           "R2",
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "BN-SCRIPT-HOWA-READ-01",
         "language": "bengali",
         "introducedBy": "BN-W04-howa-read",
-        "introducedAt": 69,
+        "introducedAt": 70,
         "missed": [
           "R1",
           "R2",
           "R4"
         ],
-        "revisits": 1
-      },
-      {
-        "atom": "BN-SCRIPT-KEMON-READ-01",
-        "language": "bengali",
-        "introducedBy": "BN-W02-kemon-read",
-        "introducedAt": 48,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
+        "revisits": 2
       },
       {
         "atom": "BN-SCRIPT-MUKH-READ-01",
         "language": "bengali",
         "introducedBy": "BN-W03-mukh-read",
-        "introducedAt": 111,
+        "introducedAt": 112,
         "missed": [
           "R2",
           "R3",
@@ -15338,7 +15174,7 @@
         "atom": "BN-SCRIPT-NAK-READ-01",
         "language": "bengali",
         "introducedBy": "BN-W04-nak-read",
-        "introducedAt": 110,
+        "introducedAt": 111,
         "missed": [
           "R2",
           "R3",
@@ -15347,34 +15183,22 @@
         "revisits": 3
       },
       {
-        "atom": "BN-SCRIPT-PORIBAR-READ-01",
-        "language": "bengali",
-        "introducedBy": "BN-W04-poribar-read",
-        "introducedAt": 103,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "BN-SCRIPT-RI-MATRA-01",
         "language": "bengali",
         "introducedBy": "BN-W04-ri-matra",
-        "introducedAt": 112,
+        "introducedAt": 113,
         "missed": [
           "R2",
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "BN-SOUND-C09-SAHAJJO-02",
         "language": "bengali",
         "introducedBy": "BN-C09-sahajjo-kora",
-        "introducedAt": 88,
+        "introducedAt": 89,
         "missed": [
           "R1",
           "R3",
@@ -15386,7 +15210,7 @@
         "atom": "BN-SOUND-INHERENT-O-NOT-IN-NUMBERS",
         "language": "bengali",
         "introducedBy": "BN-C06-numbers-1-5",
-        "introducedAt": 75,
+        "introducedAt": 76,
         "missed": [
           "R1",
           "R3",
@@ -41867,42 +41691,6 @@
         "revisits": 2
       },
       {
-        "atom": "ZH-DIALOGUE-ASK",
-        "language": "chinese",
-        "introducedBy": "ZH-C09-practice",
-        "introducedAt": 54,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "ZH-DIALOGUE-INTRODUCE",
-        "language": "chinese",
-        "introducedBy": "ZH-C08-practice",
-        "introducedAt": 50,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "ZH-DIALOGUE-POLITE",
-        "language": "chinese",
-        "introducedBy": "ZH-C11-practice",
-        "introducedAt": 62,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "ZH-DIALOGUE-THANK",
         "language": "chinese",
         "introducedBy": "ZH-C10-practice",
@@ -41912,7 +41700,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "ZH-GRAMMAR-COMPOUND-WORD",
@@ -41924,31 +41712,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
-      },
-      {
-        "atom": "ZH-LEX-KOU",
-        "language": "chinese",
-        "introducedBy": "ZH-C04-kou",
-        "introducedAt": 26,
-        "missed": [
-          "R1",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "ZH-LEX-RI",
-        "language": "chinese",
-        "introducedBy": "ZH-C04-ri",
-        "introducedAt": 28,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "ZH-LEX-ZAOSHANG",
@@ -41987,18 +41751,6 @@
         "revisits": 2
       },
       {
-        "atom": "ZH-SCRIPT-ER-01",
-        "language": "chinese",
-        "introducedBy": "ZH-W01-er",
-        "introducedAt": 9,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "ZH-SCRIPT-NI-BUILD-01",
         "language": "chinese",
         "introducedBy": "ZH-W01-ni-build",
@@ -42020,7 +41772,19 @@
           "R2",
           "R3"
         ],
-        "revisits": 1
+        "revisits": 2
+      },
+      {
+        "atom": "ZH-SCRIPT-SHANG",
+        "language": "chinese",
+        "introducedBy": "ZH-W07-shang",
+        "introducedAt": 41,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
       },
       {
         "atom": "ZH-SCRIPT-ZAI",
@@ -42497,6 +42261,28 @@
         "revisits": 5
       },
       {
+        "atom": "BN-CONCEPT-C01-PRACTICE-01",
+        "language": "bengali",
+        "introducedBy": "BN-C01-practice",
+        "introducedAt": 5,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "BN-CONCEPT-C02-PRACTICE-01",
+        "language": "bengali",
+        "introducedBy": "BN-C02-practice",
+        "introducedAt": 27,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "BN-CONCEPT-C02-TOMARNAAMKI-01",
         "language": "bengali",
         "introducedBy": "BN-C02-tomar-naam-ki",
@@ -42519,6 +42305,17 @@
         "revisits": 3
       },
       {
+        "atom": "BN-CONCEPT-C03-PRACTICE-01",
+        "language": "bengali",
+        "introducedBy": "BN-C03-practice",
+        "introducedAt": 42,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "BN-CONCEPT-C04-ABAR-01",
         "language": "bengali",
         "introducedBy": "BN-C04-abar",
@@ -42530,10 +42327,21 @@
         "revisits": 4
       },
       {
+        "atom": "BN-CONCEPT-C04-PRACTICE-01",
+        "language": "bengali",
+        "introducedBy": "BN-C04-practice",
+        "introducedAt": 53,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "BN-CONCEPT-C05-KAJKORA-01",
         "language": "bengali",
         "introducedBy": "BN-C05-kaj-kora",
-        "introducedAt": 72,
+        "introducedAt": 73,
         "missed": [
           "R3",
           "R4"
@@ -42544,7 +42352,7 @@
         "atom": "BN-CONCEPT-C05-THAKA-01",
         "language": "bengali",
         "introducedBy": "BN-C05-thaka",
-        "introducedAt": 73,
+        "introducedAt": 74,
         "missed": [
           "R3",
           "R4"
@@ -42555,7 +42363,7 @@
         "atom": "BN-FUNC-C19-ABAR-BOLBEN-01",
         "language": "bengali",
         "introducedBy": "BN-C19-abar-bolben",
-        "introducedAt": 159,
+        "introducedAt": 161,
         "missed": [
           "R2",
           "R3"
@@ -42566,7 +42374,7 @@
         "atom": "BN-GRAMMAR-C07-ASHA-02",
         "language": "bengali",
         "introducedBy": "BN-C07-asha",
-        "introducedAt": 78,
+        "introducedAt": 79,
         "missed": [
           "R1",
           "R4"
@@ -42577,7 +42385,7 @@
         "atom": "BN-GRAMMAR-C07-DEKHA-02",
         "language": "bengali",
         "introducedBy": "BN-C07-dekha",
-        "introducedAt": 80,
+        "introducedAt": 81,
         "missed": [
           "R3",
           "R4"
@@ -42588,7 +42396,7 @@
         "atom": "BN-GRAMMAR-C07-JANA-02",
         "language": "bengali",
         "introducedBy": "BN-C07-jana",
-        "introducedAt": 81,
+        "introducedAt": 82,
         "missed": [
           "R3",
           "R4"
@@ -42599,7 +42407,7 @@
         "atom": "BN-GRAMMAR-C08-BHABA-02",
         "language": "bengali",
         "introducedBy": "BN-C08-bhaba",
-        "introducedAt": 82,
+        "introducedAt": 83,
         "missed": [
           "R2",
           "R4"
@@ -42610,7 +42418,7 @@
         "atom": "BN-GRAMMAR-C08-BOJHA-02",
         "language": "bengali",
         "introducedBy": "BN-C08-bojha",
-        "introducedAt": 83,
+        "introducedAt": 84,
         "missed": [
           "R3",
           "R4"
@@ -42621,7 +42429,7 @@
         "atom": "BN-GRAMMAR-C08-LEKHA-02",
         "language": "bengali",
         "introducedBy": "BN-C08-lekha",
-        "introducedAt": 85,
+        "introducedAt": 86,
         "missed": [
           "R3",
           "R4"
@@ -42632,7 +42440,7 @@
         "atom": "BN-GRAMMAR-C09-NEOWA-02",
         "language": "bengali",
         "introducedBy": "BN-C09-neowa",
-        "introducedAt": 86,
+        "introducedAt": 87,
         "missed": [
           "R3",
           "R4"
@@ -42643,7 +42451,7 @@
         "atom": "BN-GRAMMAR-C13-KORE-02",
         "language": "bengali",
         "introducedBy": "BN-C13-doya-kore",
-        "introducedAt": 114,
+        "introducedAt": 116,
         "missed": [
           "R3",
           "R4"
@@ -42654,7 +42462,7 @@
         "atom": "BN-HISTORY-DUI-AREAL-COMPANY",
         "language": "bengali",
         "introducedBy": "BN-C06-numbers-1-5",
-        "introducedAt": 75,
+        "introducedAt": 76,
         "missed": [
           "R1",
           "R4"
@@ -42665,7 +42473,7 @@
         "atom": "BN-LEX-C07-JANA-01",
         "language": "bengali",
         "introducedBy": "BN-C07-jana",
-        "introducedAt": 81,
+        "introducedAt": 82,
         "missed": [
           "R3",
           "R4"
@@ -42676,7 +42484,7 @@
         "atom": "BN-LEX-C07-JAOWA-01",
         "language": "bengali",
         "introducedBy": "BN-C07-jaowa",
-        "introducedAt": 77,
+        "introducedAt": 78,
         "missed": [
           "R1",
           "R3"
@@ -42687,18 +42495,7 @@
         "atom": "BN-LEX-C07-KHAOWA-01",
         "language": "bengali",
         "introducedBy": "BN-C07-khaowa",
-        "introducedAt": 79,
-        "missed": [
-          "R3",
-          "R4"
-        ],
-        "revisits": 6
-      },
-      {
-        "atom": "BN-LEX-C08-BHABA-01",
-        "language": "bengali",
-        "introducedBy": "BN-C08-bhaba",
-        "introducedAt": 82,
+        "introducedAt": 80,
         "missed": [
           "R3",
           "R4"
@@ -42709,7 +42506,7 @@
         "atom": "BN-LEX-C08-BOJHA-01",
         "language": "bengali",
         "introducedBy": "BN-C08-bojha",
-        "introducedAt": 83,
+        "introducedAt": 84,
         "missed": [
           "R3",
           "R4"
@@ -42720,7 +42517,7 @@
         "atom": "BN-LEX-C08-LEKHA-01",
         "language": "bengali",
         "introducedBy": "BN-C08-lekha",
-        "introducedAt": 85,
+        "introducedAt": 86,
         "missed": [
           "R3",
           "R4"
@@ -42731,7 +42528,7 @@
         "atom": "BN-LEX-C08-PORA-01",
         "language": "bengali",
         "introducedBy": "BN-C08-pora",
-        "introducedAt": 84,
+        "introducedAt": 85,
         "missed": [
           "R3",
           "R4"
@@ -42742,7 +42539,7 @@
         "atom": "BN-LEX-C09-BHALOBASA-03",
         "language": "bengali",
         "introducedBy": "BN-C09-bhalo-laga",
-        "introducedAt": 89,
+        "introducedAt": 90,
         "missed": [
           "R1",
           "R4"
@@ -42753,7 +42550,7 @@
         "atom": "BN-LEX-C09-JIJNASA-01",
         "language": "bengali",
         "introducedBy": "BN-C09-jijnasa-kora",
-        "introducedAt": 87,
+        "introducedAt": 88,
         "missed": [
           "R3",
           "R4"
@@ -42764,7 +42561,7 @@
         "atom": "BN-LEX-C09-NEOWA-01",
         "language": "bengali",
         "introducedBy": "BN-C09-neowa",
-        "introducedAt": 86,
+        "introducedAt": 87,
         "missed": [
           "R3",
           "R4"
@@ -42775,7 +42572,7 @@
         "atom": "BN-LEX-C09-SAHAJJO-01",
         "language": "bengali",
         "introducedBy": "BN-C09-sahajjo-kora",
-        "introducedAt": 88,
+        "introducedAt": 89,
         "missed": [
           "R3",
           "R4"
@@ -42783,10 +42580,21 @@
         "revisits": 2
       },
       {
+        "atom": "BN-LEX-C12-MUKH-01",
+        "language": "bengali",
+        "introducedBy": "BN-C12-mukh",
+        "introducedAt": 107,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 7
+      },
+      {
         "atom": "BN-LEX-C13-DUKKHITO-01",
         "language": "bengali",
         "introducedBy": "BN-C13-dukkhito",
-        "introducedAt": 115,
+        "introducedAt": 117,
         "missed": [
           "R3",
           "R4"
@@ -42797,7 +42605,7 @@
         "atom": "BN-LEX-C15-CHOSHMA-01",
         "language": "bengali",
         "introducedBy": "BN-C15-choshma",
-        "introducedAt": 133,
+        "introducedAt": 135,
         "missed": [
           "R1",
           "R3"
@@ -42808,18 +42616,18 @@
         "atom": "BN-LEX-C19-DHIRE-01",
         "language": "bengali",
         "introducedBy": "BN-C19-dhire",
-        "introducedAt": 160,
+        "introducedAt": 162,
         "missed": [
           "R2",
           "R3"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "BN-SCRIPT-ABAR-READ-01",
         "language": "bengali",
         "introducedBy": "BN-W03-abar-read",
-        "introducedAt": 55,
+        "introducedAt": 56,
         "missed": [
           "R3",
           "R4"
@@ -42830,7 +42638,7 @@
         "atom": "BN-SCRIPT-ACHHI-READ-01",
         "language": "bengali",
         "introducedBy": "BN-W04-achhi-read",
-        "introducedAt": 65,
+        "introducedAt": 66,
         "missed": [
           "R2",
           "R3"
@@ -42841,7 +42649,7 @@
         "atom": "BN-SCRIPT-CHAA-READ-01",
         "language": "bengali",
         "introducedBy": "BN-W04-chaa-read",
-        "introducedAt": 94,
+        "introducedAt": 95,
         "missed": [
           "R3",
           "R4"
@@ -42863,7 +42671,7 @@
         "atom": "BN-SCRIPT-EK-READ-01",
         "language": "bengali",
         "introducedBy": "BN-W04-ek-read",
-        "introducedAt": 129,
+        "introducedAt": 131,
         "missed": [
           "R1",
           "R2"
@@ -42874,7 +42682,7 @@
         "atom": "BN-SCRIPT-GA-01",
         "language": "bengali",
         "introducedBy": "BN-W03-ga",
-        "introducedAt": 59,
+        "introducedAt": 60,
         "missed": [
           "R1",
           "R4"
@@ -42893,10 +42701,21 @@
         "revisits": 6
       },
       {
+        "atom": "BN-SCRIPT-HRIDOY-READ-01",
+        "language": "bengali",
+        "introducedBy": "BN-W04-hridoy-read",
+        "introducedAt": 114,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "BN-SCRIPT-JA-01",
         "language": "bengali",
         "introducedBy": "BN-W04-ja",
-        "introducedAt": 66,
+        "introducedAt": 67,
         "missed": [
           "R1",
           "R2"
@@ -42907,7 +42726,7 @@
         "atom": "BN-SCRIPT-JOL-READ-01",
         "language": "bengali",
         "introducedBy": "BN-W04-jol-read",
-        "introducedAt": 95,
+        "introducedAt": 96,
         "missed": [
           "R2",
           "R4"
@@ -42915,10 +42734,21 @@
         "revisits": 3
       },
       {
+        "atom": "BN-SCRIPT-KEMON-READ-01",
+        "language": "bengali",
+        "introducedBy": "BN-W02-kemon-read",
+        "introducedAt": 48,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "BN-SCRIPT-NIL-READ-01",
         "language": "bengali",
         "introducedBy": "BN-W04-nil-read",
-        "introducedAt": 127,
+        "introducedAt": 129,
         "missed": [
           "R2",
           "R3"
@@ -42929,7 +42759,7 @@
         "atom": "BN-SCRIPT-NUKTA-01",
         "language": "bengali",
         "introducedBy": "BN-W04-nukta",
-        "introducedAt": 68,
+        "introducedAt": 69,
         "missed": [
           "R2",
           "R4"
@@ -42940,7 +42770,7 @@
         "atom": "BN-SCRIPT-O-INDEP-01",
         "language": "bengali",
         "introducedBy": "BN-W04-o-indep",
-        "introducedAt": 67,
+        "introducedAt": 68,
         "missed": [
           "R2",
           "R3"
@@ -42962,7 +42792,7 @@
         "atom": "BN-SCRIPT-PA-01",
         "language": "bengali",
         "introducedBy": "BN-W04-pa",
-        "introducedAt": 60,
+        "introducedAt": 61,
         "missed": [
           "R1",
           "R4"
@@ -42970,10 +42800,21 @@
         "revisits": 3
       },
       {
+        "atom": "BN-SCRIPT-PORIBAR-READ-01",
+        "language": "bengali",
+        "introducedBy": "BN-W04-poribar-read",
+        "introducedAt": 104,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "BN-SCRIPT-SHADA-READ-01",
         "language": "bengali",
         "introducedBy": "BN-W03-shada-read",
-        "introducedAt": 125,
+        "introducedAt": 127,
         "missed": [
           "R2",
           "R3"
@@ -42984,7 +42825,7 @@
         "atom": "BN-SCRIPT-TIN-READ-01",
         "language": "bengali",
         "introducedBy": "BN-W02-tin-read",
-        "introducedAt": 128,
+        "introducedAt": 130,
         "missed": [
           "R2",
           "R3"
@@ -42995,7 +42836,7 @@
         "atom": "BN-SOUND-C10-DUDH-02",
         "language": "bengali",
         "introducedBy": "BN-C10-dudh",
-        "introducedAt": 92,
+        "introducedAt": 93,
         "missed": [
           "R3",
           "R4"
@@ -70965,6 +70806,83 @@
         "revisits": 2
       },
       {
+        "atom": "ZH-DIALOGUE-ASK",
+        "language": "chinese",
+        "introducedBy": "ZH-C09-practice",
+        "introducedAt": 54,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ZH-DIALOGUE-GREET",
+        "language": "chinese",
+        "introducedBy": "ZH-C01-practice",
+        "introducedAt": 6,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ZH-DIALOGUE-IDENTIFY",
+        "language": "chinese",
+        "introducedBy": "ZH-C05-practice",
+        "introducedAt": 35,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ZH-DIALOGUE-INTRODUCE",
+        "language": "chinese",
+        "introducedBy": "ZH-C08-practice",
+        "introducedAt": 50,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ZH-DIALOGUE-NEGATE",
+        "language": "chinese",
+        "introducedBy": "ZH-C04-practice",
+        "introducedAt": 31,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ZH-DIALOGUE-PART",
+        "language": "chinese",
+        "introducedBy": "ZH-C06-practice",
+        "introducedAt": 39,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ZH-DIALOGUE-POLITE",
+        "language": "chinese",
+        "introducedBy": "ZH-C11-practice",
+        "introducedAt": 62,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ZH-LEX-BU",
         "language": "chinese",
         "introducedBy": "ZH-C04-bu",
@@ -70998,15 +70916,37 @@
         "revisits": 3
       },
       {
+        "atom": "ZH-LEX-HAO-FOND",
+        "language": "chinese",
+        "introducedBy": "ZH-C01-hao-fond",
+        "introducedAt": 5,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ZH-LEX-JIAREN-01",
         "language": "chinese",
         "introducedBy": "ZH-C12-hear-jiaren",
-        "introducedAt": 73,
+        "introducedAt": 75,
         "missed": [
           "R2",
           "R3"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "ZH-LEX-KOU",
+        "language": "chinese",
+        "introducedBy": "ZH-C04-kou",
+        "introducedAt": 26,
+        "missed": [
+          "R1",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ZH-LEX-NI",
@@ -71075,6 +71015,17 @@
         "revisits": 2
       },
       {
+        "atom": "ZH-LEX-RI",
+        "language": "chinese",
+        "introducedBy": "ZH-C04-ri",
+        "introducedAt": 28,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ZH-LEX-SHENME",
         "language": "chinese",
         "introducedBy": "ZH-C09-shenme",
@@ -71100,7 +71051,7 @@
         "atom": "ZH-LEX-XIAOXUESHENG-01",
         "language": "chinese",
         "introducedBy": "ZH-C14-hear-xiaoxuesheng",
-        "introducedAt": 99,
+        "introducedAt": 101,
         "missed": [
           "R2",
           "R3"
@@ -71111,7 +71062,7 @@
         "atom": "ZH-ORTHO-ZHONGXUESHENG-01",
         "language": "chinese",
         "introducedBy": "ZH-C15-zhongxuesheng",
-        "introducedAt": 110,
+        "introducedAt": 112,
         "missed": [
           "R1",
           "R3"
@@ -71119,21 +71070,10 @@
         "revisits": 5
       },
       {
-        "atom": "ZH-PERFORMANCE-ASKING-FOUR-FOUR-SKILL-01",
-        "language": "chinese",
-        "introducedBy": "ZH-C19-practice",
-        "introducedAt": 190,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "ZH-PERFORMANCE-FAMILY-SIX-FOUR-SKILL-01",
         "language": "chinese",
         "introducedBy": "ZH-C12-practice",
-        "introducedAt": 76,
+        "introducedAt": 78,
         "missed": [
           "R2",
           "R3"
@@ -71144,7 +71084,7 @@
         "atom": "ZH-PERFORMANCE-PRIMARY-THREE-FOUR-SKILL-01",
         "language": "chinese",
         "introducedBy": "ZH-C14-practice",
-        "introducedAt": 102,
+        "introducedAt": 104,
         "missed": [
           "R2",
           "R3"
@@ -71155,7 +71095,7 @@
         "atom": "ZH-PERFORMANCE-SCHOOL-SIX-FOUR-SKILL-01",
         "language": "chinese",
         "introducedBy": "ZH-C13-practice",
-        "introducedAt": 93,
+        "introducedAt": 95,
         "missed": [
           "R2",
           "R3"
@@ -71174,6 +71114,17 @@
         "revisits": 4
       },
       {
+        "atom": "ZH-SCRIPT-ER-01",
+        "language": "chinese",
+        "introducedBy": "ZH-W01-er",
+        "introducedAt": 9,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ZH-SCRIPT-HAO",
         "language": "chinese",
         "introducedBy": "ZH-C01-hao",
@@ -71183,6 +71134,17 @@
           "R3"
         ],
         "revisits": 7
+      },
+      {
+        "atom": "ZH-SCRIPT-HAO-BUILD-01",
+        "language": "chinese",
+        "introducedBy": "ZH-W01-hao-build",
+        "introducedAt": 13,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ZH-SCRIPT-JIAN",
@@ -71771,7 +71733,7 @@
         "atom": "BN-CONCEPT-C05-BOLA-01",
         "language": "bengali",
         "introducedBy": "BN-C05-bola",
-        "introducedAt": 70,
+        "introducedAt": 71,
         "missed": [
           "R3"
         ],
@@ -71781,7 +71743,7 @@
         "atom": "BN-ETYMON-DUI-COMPARISON",
         "language": "bengali",
         "introducedBy": "BN-C06-numbers-1-5",
-        "introducedAt": 75,
+        "introducedAt": 76,
         "missed": [
           "R1"
         ],
@@ -71791,7 +71753,7 @@
         "atom": "BN-GRAMMAR-C09-DATIVE-02",
         "language": "bengali",
         "introducedBy": "BN-C09-bhalo-laga",
-        "introducedAt": 89,
+        "introducedAt": 90,
         "missed": [
           "R1"
         ],
@@ -71801,7 +71763,7 @@
         "atom": "BN-GRAMMAR-C09-KORA-02",
         "language": "bengali",
         "introducedBy": "BN-C09-jijnasa-kora",
-        "introducedAt": 87,
+        "introducedAt": 88,
         "missed": [
           "R4"
         ],
@@ -71811,7 +71773,7 @@
         "atom": "BN-GRAMMAR-C10-KHAN-REQUEST-02",
         "language": "bengali",
         "introducedBy": "BN-C10-cha",
-        "introducedAt": 90,
+        "introducedAt": 91,
         "missed": [
           "R4"
         ],
@@ -71821,7 +71783,7 @@
         "atom": "BN-GRAMMAR-C13-FUTURE-POLITE-02",
         "language": "bengali",
         "introducedBy": "BN-C13-maf-korben",
-        "introducedAt": 116,
+        "introducedAt": 118,
         "missed": [
           "R4"
         ],
@@ -71831,7 +71793,7 @@
         "atom": "BN-GRAMMAR-C16-NA-VERB-01",
         "language": "bengali",
         "introducedBy": "BN-C16-na-verb",
-        "introducedAt": 143,
+        "introducedAt": 145,
         "missed": [
           "R3"
         ],
@@ -71841,7 +71803,7 @@
         "atom": "BN-GRAMMAR-C16-POLAR-01",
         "language": "bengali",
         "introducedBy": "BN-C16-polar",
-        "introducedAt": 146,
+        "introducedAt": 148,
         "missed": [
           "R3"
         ],
@@ -71851,7 +71813,7 @@
         "atom": "BN-GRAMMAR-C17-NA-NA-01",
         "language": "bengali",
         "introducedBy": "BN-C17-na-na",
-        "introducedAt": 151,
+        "introducedAt": 153,
         "missed": [
           "R3"
         ],
@@ -71861,7 +71823,7 @@
         "atom": "BN-GRAMMAR-C19-JE-01",
         "language": "bengali",
         "introducedBy": "BN-C19-je",
-        "introducedAt": 157,
+        "introducedAt": 159,
         "missed": [
           "R3"
         ],
@@ -71871,7 +71833,7 @@
         "atom": "BN-GRAMMAR-C27-ORDINAL-TATSAMA-01",
         "language": "bengali",
         "introducedBy": "BN-C27-ditiyo",
-        "introducedAt": 197,
+        "introducedAt": 200,
         "missed": [
           "R3"
         ],
@@ -71881,7 +71843,7 @@
         "atom": "BN-GRAMMAR-C27-ORDINAL-TIYO-01",
         "language": "bengali",
         "introducedBy": "BN-C27-tritiyo",
-        "introducedAt": 198,
+        "introducedAt": 201,
         "missed": [
           "R3"
         ],
@@ -71891,7 +71853,7 @@
         "atom": "BN-HISTORY-DV-NUMERAL-SIMPLIFICATION",
         "language": "bengali",
         "introducedBy": "BN-C06-numbers-1-5",
-        "introducedAt": 75,
+        "introducedAt": 76,
         "missed": [
           "R1"
         ],
@@ -71901,17 +71863,27 @@
         "atom": "BN-LEX-C07-DEKHA-01",
         "language": "bengali",
         "introducedBy": "BN-C07-dekha",
-        "introducedAt": 80,
+        "introducedAt": 81,
         "missed": [
           "R4"
         ],
         "revisits": 7
       },
       {
+        "atom": "BN-LEX-C08-BHABA-01",
+        "language": "bengali",
+        "introducedBy": "BN-C08-bhaba",
+        "introducedAt": 83,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 6
+      },
+      {
         "atom": "BN-LEX-C09-BHALOLAGA-01",
         "language": "bengali",
         "introducedBy": "BN-C09-bhalo-laga",
-        "introducedAt": 89,
+        "introducedAt": 90,
         "missed": [
           "R3"
         ],
@@ -71921,7 +71893,7 @@
         "atom": "BN-LEX-C10-BHAT-01",
         "language": "bengali",
         "introducedBy": "BN-C10-bhat",
-        "introducedAt": 93,
+        "introducedAt": 94,
         "missed": [
           "R1"
         ],
@@ -71931,7 +71903,7 @@
         "atom": "BN-LEX-C11-BON-01",
         "language": "bengali",
         "introducedBy": "BN-C11-bon",
-        "introducedAt": 102,
+        "introducedAt": 103,
         "missed": [
           "R2"
         ],
@@ -71941,7 +71913,7 @@
         "atom": "BN-LEX-C11-BONDHU-01",
         "language": "bengali",
         "introducedBy": "BN-C11-bondhu",
-        "introducedAt": 99,
+        "introducedAt": 100,
         "missed": [
           "R3"
         ],
@@ -71951,27 +71923,27 @@
         "atom": "BN-LEX-C11-PORIBAR-01",
         "language": "bengali",
         "introducedBy": "BN-C11-poribar",
-        "introducedAt": 100,
+        "introducedAt": 101,
         "missed": [
           "R3"
         ],
         "revisits": 12
       },
       {
-        "atom": "BN-LEX-C12-MUKH-01",
+        "atom": "BN-LEX-C12-NAK-01",
         "language": "bengali",
-        "introducedBy": "BN-C12-mukh",
-        "introducedAt": 106,
+        "introducedBy": "BN-C12-nak",
+        "introducedAt": 108,
         "missed": [
-          "R4"
+          "R3"
         ],
-        "revisits": 7
+        "revisits": 6
       },
       {
         "atom": "BN-LEX-C13-MAFKORBEN-01",
         "language": "bengali",
         "introducedBy": "BN-C13-maf-korben",
-        "introducedAt": 116,
+        "introducedAt": 118,
         "missed": [
           "R4"
         ],
@@ -71981,7 +71953,7 @@
         "atom": "BN-LEX-C13-SBAGOTOM-01",
         "language": "bengali",
         "introducedBy": "BN-C13-sbagotom",
-        "introducedAt": 117,
+        "introducedAt": 119,
         "missed": [
           "R3"
         ],
@@ -71991,7 +71963,7 @@
         "atom": "BN-LEX-C14-SHOBUJ-01",
         "language": "bengali",
         "introducedBy": "BN-C14-shobuj",
-        "introducedAt": 122,
+        "introducedAt": 124,
         "missed": [
           "R1"
         ],
@@ -72001,7 +71973,7 @@
         "atom": "BN-LEX-C15-SHARI-01",
         "language": "bengali",
         "introducedBy": "BN-C15-shari",
-        "introducedAt": 132,
+        "introducedAt": 134,
         "missed": [
           "R3"
         ],
@@ -72011,7 +71983,7 @@
         "atom": "BN-LEX-C17-AR-01",
         "language": "bengali",
         "introducedBy": "BN-C17-ar",
-        "introducedAt": 148,
+        "introducedAt": 150,
         "missed": [
           "R3"
         ],
@@ -72021,7 +71993,7 @@
         "atom": "BN-LEX-C17-BA-01",
         "language": "bengali",
         "introducedBy": "BN-C17-ba",
-        "introducedAt": 150,
+        "introducedAt": 152,
         "missed": [
           "R3"
         ],
@@ -72031,7 +72003,7 @@
         "atom": "BN-LEX-C18-EKMOT-01",
         "language": "bengali",
         "introducedBy": "BN-C18-ekmot",
-        "introducedAt": 154,
+        "introducedAt": 156,
         "missed": [
           "R3"
         ],
@@ -72041,7 +72013,7 @@
         "atom": "BN-LEX-C18-KENONA-01",
         "language": "bengali",
         "introducedBy": "BN-C18-kenona",
-        "introducedAt": 155,
+        "introducedAt": 157,
         "missed": [
           "R3"
         ],
@@ -72051,17 +72023,27 @@
         "atom": "BN-LEX-C18-KINTU-01",
         "language": "bengali",
         "introducedBy": "BN-C18-kintu",
-        "introducedAt": 153,
+        "introducedAt": 155,
         "missed": [
           "R3"
         ],
         "revisits": 6
       },
       {
+        "atom": "BN-LEX-C19-JOKHON-01",
+        "language": "bengali",
+        "introducedBy": "BN-C19-jokhon",
+        "introducedAt": 160,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 7
+      },
+      {
         "atom": "BN-LEX-C27-DITIYO-01",
         "language": "bengali",
         "introducedBy": "BN-C27-ditiyo",
-        "introducedAt": 197,
+        "introducedAt": 200,
         "missed": [
           "R3"
         ],
@@ -72071,7 +72053,7 @@
         "atom": "BN-LEX-C27-TRITIYO-01",
         "language": "bengali",
         "introducedBy": "BN-C27-tritiyo",
-        "introducedAt": 198,
+        "introducedAt": 201,
         "missed": [
           "R3"
         ],
@@ -72081,7 +72063,7 @@
         "atom": "BN-LEX-NUMBERS-ONE-TO-FIVE",
         "language": "bengali",
         "introducedBy": "BN-C06-numbers-1-5",
-        "introducedAt": 75,
+        "introducedAt": 76,
         "missed": [
           "R1"
         ],
@@ -72091,7 +72073,7 @@
         "atom": "BN-SCRIPT-BA-01",
         "language": "bengali",
         "introducedBy": "BN-W03-ba",
-        "introducedAt": 54,
+        "introducedAt": 55,
         "missed": [
           "R4"
         ],
@@ -72101,7 +72083,7 @@
         "atom": "BN-SCRIPT-BHA-01",
         "language": "bengali",
         "introducedBy": "BN-W03-bha",
-        "introducedAt": 56,
+        "introducedAt": 57,
         "missed": [
           "R4"
         ],
@@ -72111,7 +72093,7 @@
         "atom": "BN-SCRIPT-CHA-01",
         "language": "bengali",
         "introducedBy": "BN-W04-cha",
-        "introducedAt": 63,
+        "introducedAt": 64,
         "missed": [
           "R2"
         ],
@@ -72121,7 +72103,7 @@
         "atom": "BN-SCRIPT-CHANDRABINDU-NASAL",
         "language": "bengali",
         "introducedBy": "BN-C06-numbers-1-5",
-        "introducedAt": 75,
+        "introducedAt": 76,
         "missed": [
           "R1"
         ],
@@ -72131,7 +72113,7 @@
         "atom": "BN-SCRIPT-CHHA-01",
         "language": "bengali",
         "introducedBy": "BN-W04-chha",
-        "introducedAt": 64,
+        "introducedAt": 65,
         "missed": [
           "R2"
         ],
@@ -72141,7 +72123,7 @@
         "atom": "BN-SCRIPT-DHA-01",
         "language": "bengali",
         "introducedBy": "BN-W03-dha",
-        "introducedAt": 62,
+        "introducedAt": 63,
         "missed": [
           "R2"
         ],
@@ -72151,7 +72133,7 @@
         "atom": "BN-SCRIPT-DIGIT-FOUR-01",
         "language": "bengali",
         "introducedBy": "BN-W07-digit-four",
-        "introducedAt": 211,
+        "introducedAt": 214,
         "missed": [
           "R2"
         ],
@@ -72161,7 +72143,7 @@
         "atom": "BN-SCRIPT-DIGIT-NINE-01",
         "language": "bengali",
         "introducedBy": "BN-W07-digit-nine",
-        "introducedAt": 212,
+        "introducedAt": 215,
         "missed": [
           "R2"
         ],
@@ -72171,7 +72153,7 @@
         "atom": "BN-SCRIPT-DIGIT-SEVEN-01",
         "language": "bengali",
         "introducedBy": "BN-W07-digit-seven",
-        "introducedAt": 213,
+        "introducedAt": 216,
         "missed": [
           "R2"
         ],
@@ -72211,7 +72193,7 @@
         "atom": "BN-SCRIPT-II-MATRA-01",
         "language": "bengali",
         "introducedBy": "BN-W04-ii-matra",
-        "introducedAt": 126,
+        "introducedAt": 128,
         "missed": [
           "R2"
         ],
@@ -72221,7 +72203,7 @@
         "atom": "BN-SCRIPT-KALO-READ-01",
         "language": "bengali",
         "introducedBy": "BN-W03-kalo-read",
-        "introducedAt": 124,
+        "introducedAt": 126,
         "missed": [
           "R3"
         ],
@@ -72241,7 +72223,7 @@
         "atom": "BN-SCRIPT-LAL-READ-01",
         "language": "bengali",
         "introducedBy": "BN-W02-lal-read",
-        "introducedAt": 123,
+        "introducedAt": 125,
         "missed": [
           "R3"
         ],
@@ -72311,7 +72293,7 @@
         "atom": "BN-SOUND-C08-PORA-02",
         "language": "bengali",
         "introducedBy": "BN-C08-pora",
-        "introducedAt": 84,
+        "introducedAt": 85,
         "missed": [
           "R4"
         ],
@@ -89041,7 +89023,7 @@
         "atom": "ZH-GRAMMAR-LE-CHANGED-STATE-01",
         "language": "chinese",
         "introducedBy": "ZH-C25-le-juwei",
-        "introducedAt": 226,
+        "introducedAt": 229,
         "missed": [
           "R3"
         ],
@@ -89051,7 +89033,7 @@
         "atom": "ZH-GRAMMAR-LE-COMPLETION-01",
         "language": "chinese",
         "introducedBy": "ZH-C25-le-dongci",
-        "introducedAt": 225,
+        "introducedAt": 228,
         "missed": [
           "R3"
         ],
@@ -89061,7 +89043,7 @@
         "atom": "ZH-GRAMMAR-V-NOT-V-01",
         "language": "chinese",
         "introducedBy": "ZH-C19-haobuhao",
-        "introducedAt": 186,
+        "introducedAt": 188,
         "missed": [
           "R2"
         ],
@@ -89071,7 +89053,7 @@
         "atom": "ZH-GRAMMAR-XIHUAN-TRANSITIVE-01",
         "language": "chinese",
         "introducedBy": "ZH-C28-xihuan",
-        "introducedAt": 241,
+        "introducedAt": 244,
         "missed": [
           "R2"
         ],
@@ -89081,7 +89063,7 @@
         "atom": "ZH-LEX-DA-01",
         "language": "chinese",
         "introducedBy": "ZH-C13-hear-da",
-        "introducedAt": 77,
+        "introducedAt": 79,
         "missed": [
           "R3"
         ],
@@ -89091,7 +89073,7 @@
         "atom": "ZH-LEX-DAJIA-01",
         "language": "chinese",
         "introducedBy": "ZH-C13-hear-dajia",
-        "introducedAt": 80,
+        "introducedAt": 82,
         "missed": [
           "R3"
         ],
@@ -89101,7 +89083,7 @@
         "atom": "ZH-LEX-ERZI-01",
         "language": "chinese",
         "introducedBy": "ZH-C12-hear-erzi",
-        "introducedAt": 65,
+        "introducedAt": 67,
         "missed": [
           "R3"
         ],
@@ -89118,10 +89100,20 @@
         "revisits": 11
       },
       {
+        "atom": "ZH-LEX-KANSHU-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C18-hear-kanshu",
+        "introducedAt": 169,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 11
+      },
+      {
         "atom": "ZH-LEX-LE-01",
         "language": "chinese",
         "introducedBy": "ZH-C25-le-dongci",
-        "introducedAt": 225,
+        "introducedAt": 228,
         "missed": [
           "R3"
         ],
@@ -89151,7 +89143,7 @@
         "atom": "ZH-LEX-NU-01",
         "language": "chinese",
         "introducedBy": "ZH-C12-nu",
-        "introducedAt": 64,
+        "introducedAt": 66,
         "missed": [
           "R3"
         ],
@@ -89161,7 +89153,7 @@
         "atom": "ZH-LEX-NUER-01",
         "language": "chinese",
         "introducedBy": "ZH-C12-hear-nuer",
-        "introducedAt": 68,
+        "introducedAt": 70,
         "missed": [
           "R3"
         ],
@@ -89181,7 +89173,7 @@
         "atom": "ZH-LEX-REN-01",
         "language": "chinese",
         "introducedBy": "ZH-C12-ren",
-        "introducedAt": 63,
+        "introducedAt": 65,
         "missed": [
           "R3"
         ],
@@ -89191,7 +89183,7 @@
         "atom": "ZH-LEX-SHANGXUE-01",
         "language": "chinese",
         "introducedBy": "ZH-C15-hear-shangxue",
-        "introducedAt": 115,
+        "introducedAt": 117,
         "missed": [
           "R2"
         ],
@@ -89211,7 +89203,7 @@
         "atom": "ZH-LEX-TONGXUE-01",
         "language": "chinese",
         "introducedBy": "ZH-C15-hear-tongxue",
-        "introducedAt": 111,
+        "introducedAt": 113,
         "missed": [
           "R3"
         ],
@@ -89221,7 +89213,7 @@
         "atom": "ZH-LEX-XIAO-01",
         "language": "chinese",
         "introducedBy": "ZH-C14-hear-xiao",
-        "introducedAt": 94,
+        "introducedAt": 96,
         "missed": [
           "R3"
         ],
@@ -89241,7 +89233,7 @@
         "atom": "ZH-LEX-XIHUAN-01",
         "language": "chinese",
         "introducedBy": "ZH-C28-xihuan",
-        "introducedAt": 241,
+        "introducedAt": 244,
         "missed": [
           "R2"
         ],
@@ -89251,7 +89243,7 @@
         "atom": "ZH-LEX-ZHONG-01",
         "language": "chinese",
         "introducedBy": "ZH-C15-hear-zhong",
-        "introducedAt": 103,
+        "introducedAt": 105,
         "missed": [
           "R3"
         ],
@@ -89261,7 +89253,7 @@
         "atom": "ZH-LEX-ZHONGGUO-01",
         "language": "chinese",
         "introducedBy": "ZH-C17-hear-zhongguo",
-        "introducedAt": 141,
+        "introducedAt": 143,
         "missed": [
           "R3"
         ],
@@ -89271,7 +89263,7 @@
         "atom": "ZH-LEX-ZHONGWEN-01",
         "language": "chinese",
         "introducedBy": "ZH-C17-hear-zhongwen",
-        "introducedAt": 135,
+        "introducedAt": 137,
         "missed": [
           "R3"
         ],
@@ -89281,7 +89273,7 @@
         "atom": "ZH-LEX-ZHONGXUE-01",
         "language": "chinese",
         "introducedBy": "ZH-C15-hear-zhongxue",
-        "introducedAt": 106,
+        "introducedAt": 108,
         "missed": [
           "R3"
         ],
@@ -89291,7 +89283,7 @@
         "atom": "ZH-LEX-ZHONGXUESHENG-01",
         "language": "chinese",
         "introducedBy": "ZH-C15-hear-zhongxuesheng",
-        "introducedAt": 109,
+        "introducedAt": 111,
         "missed": [
           "R3"
         ],
@@ -89311,7 +89303,7 @@
         "atom": "ZH-ORTHO-HANYU-01",
         "language": "chinese",
         "introducedBy": "ZH-C16-hanyu",
-        "introducedAt": 132,
+        "introducedAt": 134,
         "missed": [
           "R3"
         ],
@@ -89321,7 +89313,7 @@
         "atom": "ZH-ORTHO-SHANGXUE-01",
         "language": "chinese",
         "introducedBy": "ZH-C15-shangxue",
-        "introducedAt": 116,
+        "introducedAt": 118,
         "missed": [
           "R2"
         ],
@@ -89331,7 +89323,7 @@
         "atom": "ZH-ORTHO-TONGXUE-01",
         "language": "chinese",
         "introducedBy": "ZH-C15-tongxue",
-        "introducedAt": 113,
+        "introducedAt": 115,
         "missed": [
           "R3"
         ],
@@ -89341,7 +89333,7 @@
         "atom": "ZH-ORTHO-ZHONGGUO-01",
         "language": "chinese",
         "introducedBy": "ZH-C17-zhongguo",
-        "introducedAt": 145,
+        "introducedAt": 147,
         "missed": [
           "R3"
         ],
@@ -89351,7 +89343,7 @@
         "atom": "ZH-ORTHO-ZHONGWEN-01",
         "language": "chinese",
         "introducedBy": "ZH-C17-zhongwen",
-        "introducedAt": 139,
+        "introducedAt": 141,
         "missed": [
           "R3"
         ],
@@ -89361,17 +89353,27 @@
         "atom": "ZH-ORTHO-ZHONGXUE-01",
         "language": "chinese",
         "introducedBy": "ZH-C15-zhongxue",
-        "introducedAt": 107,
+        "introducedAt": 109,
         "missed": [
           "R3"
         ],
         "revisits": 6
       },
       {
+        "atom": "ZH-PERFORMANCE-ASKING-FOUR-FOUR-SKILL-01",
+        "language": "chinese",
+        "introducedBy": "ZH-C19-practice",
+        "introducedAt": 192,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ZH-PERFORMANCE-LANGUAGE-IDENTITY-FIVE-FOUR-SKILL-01",
         "language": "chinese",
         "introducedBy": "ZH-C17-practice",
-        "introducedAt": 151,
+        "introducedAt": 153,
         "missed": [
           "R2"
         ],
@@ -89381,7 +89383,7 @@
         "atom": "ZH-PERFORMANCE-LANGUAGE-IDENTITY-THREE-FOUR-SKILL-01",
         "language": "chinese",
         "introducedBy": "ZH-C16-practice",
-        "introducedAt": 134,
+        "introducedAt": 136,
         "missed": [
           "R3"
         ],
@@ -89391,7 +89393,7 @@
         "atom": "ZH-PERFORMANCE-SCHOOL-COMPOUNDS-FOUR-SKILL-01",
         "language": "chinese",
         "introducedBy": "ZH-C15-practice",
-        "introducedAt": 119,
+        "introducedAt": 121,
         "missed": [
           "R2"
         ],
@@ -89401,7 +89403,7 @@
         "atom": "ZH-PERFORMANCE-XIHUAN-FOUR-SKILL-01",
         "language": "chinese",
         "introducedBy": "ZH-C28-practice",
-        "introducedAt": 243,
+        "introducedAt": 246,
         "missed": [
           "R1"
         ],
@@ -89411,7 +89413,7 @@
         "atom": "ZH-SCRIPT-ER-CHAR-01",
         "language": "chinese",
         "introducedBy": "ZH-W12-er",
-        "introducedAt": 66,
+        "introducedAt": 68,
         "missed": [
           "R3"
         ],
@@ -89421,7 +89423,7 @@
         "atom": "ZH-SCRIPT-GUO-01",
         "language": "chinese",
         "introducedBy": "ZH-W17-guo-observe",
-        "introducedAt": 142,
+        "introducedAt": 144,
         "missed": [
           "R3"
         ],
@@ -89431,7 +89433,7 @@
         "atom": "ZH-SCRIPT-HUAN-01",
         "language": "chinese",
         "introducedBy": "ZH-W28-huan",
-        "introducedAt": 240,
+        "introducedAt": 243,
         "missed": [
           "R2"
         ],
@@ -89441,7 +89443,7 @@
         "atom": "ZH-SCRIPT-JIA-01",
         "language": "chinese",
         "introducedBy": "ZH-W12-jia",
-        "introducedAt": 71,
+        "introducedAt": 73,
         "missed": [
           "R3"
         ],
@@ -89451,7 +89453,7 @@
         "atom": "ZH-SCRIPT-LE-01",
         "language": "chinese",
         "introducedBy": "ZH-W25-le",
-        "introducedAt": 224,
+        "introducedAt": 227,
         "missed": [
           "R3"
         ],
@@ -89521,7 +89523,7 @@
         "atom": "ZH-SCRIPT-TONG-01",
         "language": "chinese",
         "introducedBy": "ZH-W15-tong",
-        "introducedAt": 112,
+        "introducedAt": 114,
         "missed": [
           "R3"
         ],
@@ -89531,7 +89533,7 @@
         "atom": "ZH-SCRIPT-WEN-01",
         "language": "chinese",
         "introducedBy": "ZH-W17-wen-observe",
-        "introducedAt": 136,
+        "introducedAt": 138,
         "missed": [
           "R3"
         ],
@@ -89551,7 +89553,7 @@
         "atom": "ZH-SCRIPT-XI-01",
         "language": "chinese",
         "introducedBy": "ZH-W28-xi",
-        "introducedAt": 239,
+        "introducedAt": 242,
         "missed": [
           "R2"
         ],
@@ -92874,12 +92876,28 @@
         "lessonsEarly": 105
       },
       {
+        "lessonId": "BN-C07-jaowa",
+        "language": "bengali",
+        "position": 78,
+        "word": "তিনি",
+        "taughtBy": "BN-C23-tini",
+        "lessonsEarly": 103
+      },
+      {
         "lessonId": "LA-C35-meridies",
         "language": "latin",
         "position": 57,
         "word": "post",
         "taughtBy": "LA-C57-post",
         "lessonsEarly": 103
+      },
+      {
+        "lessonId": "BN-C09-sahajjo-kora",
+        "language": "bengali",
+        "position": 89,
+        "word": "আমাকে",
+        "taughtBy": "BN-C25-amake",
+        "lessonsEarly": 102
       },
       {
         "lessonId": "GE-C03-gehen",
@@ -92904,14 +92922,6 @@
         "word": "post",
         "taughtBy": "LA-C57-post",
         "lessonsEarly": 102
-      },
-      {
-        "lessonId": "BN-C07-jaowa",
-        "language": "bengali",
-        "position": 77,
-        "word": "তিনি",
-        "taughtBy": "BN-C23-tini",
-        "lessonsEarly": 101
       },
       {
         "lessonId": "ES-C300-sed",
@@ -92952,14 +92962,6 @@
         "word": "finir",
         "taughtBy": "FR-C37-finir",
         "lessonsEarly": 101
-      },
-      {
-        "lessonId": "BN-C09-sahajjo-kora",
-        "language": "bengali",
-        "position": 88,
-        "word": "আমাকে",
-        "taughtBy": "BN-C25-amake",
-        "lessonsEarly": 100
       },
       {
         "lessonId": "HI-C72-price",
@@ -93506,6 +93508,14 @@
         "lessonsEarly": 70
       },
       {
+        "lessonId": "BN-C13-sbagotom",
+        "language": "bengali",
+        "position": 119,
+        "word": "আমাদের",
+        "taughtBy": "BN-C24-amader",
+        "lessonsEarly": 69
+      },
+      {
         "lessonId": "ES-C03-familia-qu",
         "language": "spanish",
         "position": 32,
@@ -93536,14 +93546,6 @@
         "word": "aber",
         "taughtBy": "GE-C35-aber",
         "lessonsEarly": 69
-      },
-      {
-        "lessonId": "BN-C13-sbagotom",
-        "language": "bengali",
-        "position": 117,
-        "word": "আমাদের",
-        "taughtBy": "BN-C24-amader",
-        "lessonsEarly": 68
       },
       {
         "lessonId": "ES-C395-volver",
@@ -93671,7 +93673,7 @@
         "position": 48,
         "word": "নাক",
         "taughtBy": "BN-C12-nak",
-        "lessonsEarly": 59
+        "lessonsEarly": 60
       },
       {
         "lessonId": "ES-C308-chico",
@@ -93890,6 +93892,14 @@
         "lessonsEarly": 46
       },
       {
+        "lessonId": "BN-C15-jama",
+        "language": "bengali",
+        "position": 133,
+        "word": "লাল জামা",
+        "taughtBy": "BN-C22-adj-order",
+        "lessonsEarly": 45
+      },
+      {
         "lessonId": "ES-C311-cuenta",
         "language": "spanish",
         "position": 653,
@@ -93911,14 +93921,6 @@
         "position": 2,
         "word": "لا",
         "taughtBy": "AR-C05-la",
-        "lessonsEarly": 44
-      },
-      {
-        "lessonId": "BN-C15-jama",
-        "language": "bengali",
-        "position": 131,
-        "word": "লাল জামা",
-        "taughtBy": "BN-C22-adj-order",
         "lessonsEarly": 44
       },
       {
@@ -94360,6 +94362,14 @@
         "word": "ఉండు",
         "taughtBy": "TE-C05-undu",
         "lessonsEarly": 28
+      },
+      {
+        "lessonId": "BN-R08-second-pass-four-exchanges",
+        "language": "bengali",
+        "position": 54,
+        "word": "দেখা",
+        "taughtBy": "BN-C07-dekha",
+        "lessonsEarly": 27
       },
       {
         "lessonId": "ES-C298-puede-ser",
@@ -94884,7 +94894,7 @@
       {
         "lessonId": "BN-C07-khaowa",
         "language": "bengali",
-        "position": 79,
+        "position": 80,
         "word": "জল",
         "taughtBy": "BN-C10-jol",
         "lessonsEarly": 12
@@ -95492,7 +95502,7 @@
       {
         "lessonId": "BN-C07-howa",
         "language": "bengali",
-        "position": 76,
+        "position": 77,
         "word": "খাওয়া",
         "taughtBy": "BN-C07-khaowa",
         "lessonsEarly": 3
@@ -95860,7 +95870,7 @@
       {
         "lessonId": "BN-C07-howa",
         "language": "bengali",
-        "position": 76,
+        "position": 77,
         "word": "যাওয়া",
         "taughtBy": "BN-C07-jaowa",
         "lessonsEarly": 1
@@ -96927,22 +96937,22 @@
       },
       {
         "language": "bengali",
-        "lessonCount": 219,
+        "lessonCount": 222,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "atomsTaught": 220,
-        "atomsNeverRevisited": 4,
-        "forwardReferences": 8
+        "atomsNeverRevisited": 2,
+        "forwardReferences": 9
       },
       {
         "language": "chinese",
-        "lessonCount": 247,
+        "lessonCount": 250,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "atomsTaught": 215,
-        "atomsNeverRevisited": 10,
+        "atomsNeverRevisited": 4,
         "forwardReferences": 0
       },
       {
@@ -97152,15 +97162,15 @@
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
       "atomsTaught": 9049,
-      "atomsNeverRevisited": 479,
+      "atomsNeverRevisited": 471,
       "neverRevisitedPercent": 5,
       "missedByWindow": {
-        "R1": 1751,
-        "R2": 4195,
-        "R3": 5899,
-        "R4": 4456
+        "R1": 1748,
+        "R2": 4191,
+        "R3": 5888,
+        "R4": 4449
       },
-      "forwardReferences": 913
+      "forwardReferences": 914
     }
   },
   "scriptClosure": {
@@ -97181,12 +97191,12 @@
       {
         "language": "bengali",
         "script": "bengali",
-        "lessonCount": 219,
+        "lessonCount": 222,
         "scriptLessons": 78,
         "taughtGlyphs": 47,
         "shownGlyphs": 55,
         "neverTaughtGlyphs": 8,
-        "violations": 21,
+        "violations": 22,
         "exposureOnly": 19,
         "exposureExemptedGlyphs": 68,
         "headwordsWithoutRomanization": 0
@@ -97194,7 +97204,7 @@
       {
         "language": "chinese",
         "script": "chinese",
-        "lessonCount": 247,
+        "lessonCount": 250,
         "scriptLessons": 74,
         "taughtGlyphs": 84,
         "shownGlyphs": 84,
@@ -98229,6 +98239,13 @@
         "count": 3
       },
       {
+        "lessonId": "BN-R08-second-pass-four-exchanges",
+        "language": "bengali",
+        "chapter": 7,
+        "glyphs": "খদব",
+        "count": 3
+      },
+      {
         "lessonId": "FA-C04-chetor",
         "language": "persian",
         "chapter": 4,
@@ -99177,7 +99194,7 @@
     "summary": {
       "tracksWithScript": 17,
       "tracksTeachingNothing": 0,
-      "violations": 255,
+      "violations": 256,
       "exposureOnly": 391,
       "exposureExemptedGlyphs": 1420,
       "headwordsWithoutRomanization": 46,
@@ -117152,40 +117169,40 @@
       },
       {
         "language": "bengali",
-        "lessonCount": 219,
-        "atomMeasurableLessons": 218,
+        "lessonCount": 222,
+        "atomMeasurableLessons": 221,
         "atomMeasurementBlindLessons": 1,
         "durationViolations": 0,
         "atomLessonSpikes": 1,
         "atomChapterSpikes": 0,
         "glyphLessonSpikes": 3,
         "scriptSystemSpikes": 0,
-        "scriptClosureViolations": 21,
+        "scriptClosureViolations": 22,
         "neverTaughtGlyphs": 8,
         "orderDefects": 0,
         "lessonsWithoutSequence": 0,
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 8,
+        "forwardReferences": 9,
         "atomsTaught": 220,
-        "atomsNeverRevisited": 4,
-        "reinforcementWindowMisses": 251,
+        "atomsNeverRevisited": 2,
+        "reinforcementWindowMisses": 245,
         "reinforcementMissesByWindow": {
-          "R1": 38,
-          "R2": 56,
-          "R3": 94,
-          "R4": 63
+          "R1": 37,
+          "R2": 54,
+          "R3": 92,
+          "R4": 62
         },
         "payoffSurprises": 0,
-        "writingPracticeLessons": 142,
+        "writingPracticeLessons": 143,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
           {
             "language": "bengali",
             "kind": "forward-language",
-            "count": 8,
+            "count": 9,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
           },
@@ -117213,7 +117230,7 @@
           {
             "language": "bengali",
             "kind": "reinforcement",
-            "count": 251,
+            "count": 245,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -117228,15 +117245,15 @@
         "next": {
           "language": "bengali",
           "kind": "forward-language",
-          "count": 8,
+          "count": 9,
           "unit": "use(s)",
           "detail": "teach target-language material before load-bearing use"
         }
       },
       {
         "language": "chinese",
-        "lessonCount": 247,
-        "atomMeasurableLessons": 227,
+        "lessonCount": 250,
+        "atomMeasurableLessons": 230,
         "atomMeasurementBlindLessons": 20,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
@@ -117252,16 +117269,16 @@
         "forwardReviews": 0,
         "forwardReferences": 0,
         "atomsTaught": 215,
-        "atomsNeverRevisited": 10,
-        "reinforcementWindowMisses": 201,
+        "atomsNeverRevisited": 4,
+        "reinforcementWindowMisses": 182,
         "reinforcementMissesByWindow": {
-          "R1": 22,
-          "R2": 61,
-          "R3": 91,
-          "R4": 27
+          "R1": 20,
+          "R2": 59,
+          "R3": 82,
+          "R4": 21
         },
         "payoffSurprises": 0,
-        "writingPracticeLessons": 78,
+        "writingPracticeLessons": 80,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
@@ -117275,7 +117292,7 @@
           {
             "language": "chinese",
             "kind": "reinforcement",
-            "count": 201,
+            "count": 182,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -118904,7 +118921,7 @@
       {
         "language": "bengali",
         "kind": "forward-language",
-        "count": 8,
+        "count": 9,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
@@ -119380,7 +119397,7 @@
       {
         "language": "bengali",
         "kind": "reinforcement",
-        "count": 251,
+        "count": 245,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -119394,7 +119411,7 @@
       {
         "language": "chinese",
         "kind": "reinforcement",
-        "count": 201,
+        "count": 182,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -119677,11 +119694,6 @@
             "criterion": "verb-vocabulary",
             "detail": "teaches 1 distinct verb headwords at or below pre-A1, against 5",
             "shortfall": 4
-          },
-          {
-            "criterion": "reinforcement",
-            "detail": "14 atom(s) at or below pre-A1 are revisited fewer than twice",
-            "shortfall": 14
           }
         ],
         "vocabulary": 108
@@ -119706,11 +119718,6 @@
             "criterion": "verb-vocabulary",
             "detail": "teaches 1 distinct verb headwords at or below pre-A1, against 5",
             "shortfall": 4
-          },
-          {
-            "criterion": "reinforcement",
-            "detail": "16 atom(s) at or below pre-A1 are revisited fewer than twice",
-            "shortfall": 16
           }
         ],
         "vocabulary": 75
@@ -120182,11 +120189,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 7505,
-    "voice": 5420,
-    "sight": 835,
+    "totalLessons": 7511,
+    "voice": 5422,
+    "sight": 839,
     "pen": 1250,
-    "coreVoice": 5966,
+    "coreVoice": 5971,
     "lessonsWithWritingSegments": 767,
     "drivablePercent": 79,
     "tracks": [
@@ -120849,13 +120856,13 @@
       },
       {
         "language": "bengali",
-        "lessonCount": 219,
-        "voice": 64,
-        "sight": 68,
+        "lessonCount": 222,
+        "voice": 66,
+        "sight": 69,
         "pen": 87,
-        "coreVoice": 128,
-        "drivablePercent": 58,
-        "drivablePrefixTotal": 109,
+        "coreVoice": 131,
+        "drivablePercent": 59,
+        "drivablePrefixTotal": 111,
         "chapters": [
           {
             "language": "bengali",
@@ -120950,16 +120957,16 @@
           {
             "language": "bengali",
             "chapter": 7,
-            "lessonCount": 5,
-            "voice": 2,
+            "lessonCount": 6,
+            "voice": 3,
             "sight": 3,
             "pen": 0,
-            "coreVoice": 5,
+            "coreVoice": 6,
             "modalities": [
               "voice",
               "sight"
             ],
-            "drivablePrefix": 5,
+            "drivablePrefix": 6,
             "firstNonVoiceLesson": null
           },
           {
@@ -121153,11 +121160,11 @@
           {
             "language": "bengali",
             "chapter": 21,
-            "lessonCount": 5,
+            "lessonCount": 6,
             "voice": 0,
-            "sight": 0,
+            "sight": 1,
             "pen": 5,
-            "coreVoice": 0,
+            "coreVoice": 1,
             "modalities": [
               "sight",
               "pen"
@@ -121283,15 +121290,15 @@
           {
             "language": "bengali",
             "chapter": 30,
-            "lessonCount": 5,
-            "voice": 5,
+            "lessonCount": 6,
+            "voice": 6,
             "sight": 0,
             "pen": 0,
-            "coreVoice": 5,
+            "coreVoice": 6,
             "modalities": [
               "voice"
             ],
-            "drivablePrefix": 5,
+            "drivablePrefix": 6,
             "firstNonVoiceLesson": null
           },
           {
@@ -121450,11 +121457,11 @@
       },
       {
         "language": "chinese",
-        "lessonCount": 247,
+        "lessonCount": 250,
         "voice": 145,
-        "sight": 27,
+        "sight": 30,
         "pen": 75,
-        "coreVoice": 149,
+        "coreVoice": 151,
         "drivablePercent": 60,
         "drivablePrefixTotal": 23,
         "chapters": [
@@ -121620,11 +121627,11 @@
           {
             "language": "chinese",
             "chapter": 11,
-            "lessonCount": 3,
+            "lessonCount": 5,
             "voice": 2,
-            "sight": 0,
+            "sight": 2,
             "pen": 1,
-            "coreVoice": 2,
+            "coreVoice": 3,
             "modalities": [
               "voice",
               "sight",
@@ -121748,11 +121755,11 @@
           {
             "language": "chinese",
             "chapter": 19,
-            "lessonCount": 16,
+            "lessonCount": 17,
             "voice": 12,
-            "sight": 1,
+            "sight": 2,
             "pen": 3,
-            "coreVoice": 12,
+            "coreVoice": 13,
             "modalities": [
               "voice",
               "sight",
@@ -145023,7 +145030,7 @@
     "underspentPercent": 89
   },
   "infoDump": {
-    "lessons": 7505,
+    "lessons": 7511,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -145031,11 +145038,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 7505,
-    "measuredLessons": 3819,
-    "idiomMeasuredLessons": 3819,
-    "senseMeasuredLessons": 3820,
-    "cultureClaimMeasuredLessons": 3819,
+    "lessons": 7511,
+    "measuredLessons": 3825,
+    "idiomMeasuredLessons": 3825,
+    "senseMeasuredLessons": 3826,
+    "cultureClaimMeasuredLessons": 3825,
     "idioms": 101,
     "senses": 103,
     "cultureClaims": 208,
@@ -145044,14 +145051,14 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 7054,
-    "usesBeforeIntroduction": 23780,
-    "technicalUsesBeforeIntroduction": 6078,
-    "technicalLessons": 3361,
+    "lessonsUsingTerms": 7060,
+    "usesBeforeIntroduction": 23795,
+    "technicalUsesBeforeIntroduction": 6083,
+    "technicalLessons": 3365,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 1917
+        "lessons": 1919
       },
       {
         "term": "noun",
@@ -145076,7 +145083,7 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 7505,
+    "lessonsScanned": 7511,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
