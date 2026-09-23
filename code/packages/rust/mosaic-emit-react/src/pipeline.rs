@@ -1830,6 +1830,40 @@ fn emit_branch_jsx(
 ///   (it's the canonical Input case). A general `connects: onX(p: text) -> emit onY(p: p)`
 ///   syntax in moslayout would let other emits carry payloads; that is
 ///   tracked as a separate grammar change.
+/// Append `aria-label` for a text field's portable `a11y-label` (UI29: an
+/// authored name must reach the native naming surface on every backend).
+/// Shared by `HostInput` and the legacy `Input` — including its `<textarea>`
+/// form, which used to drop the name entirely (J3b-pre, #14416).
+fn push_text_field_aria_label(
+    node: &LayoutNode,
+    attrs: &mut String,
+) -> Result<(), PipelineEmitError> {
+    if let Some(prop) = node.props.iter().find(|p| p.name == "a11y-label") {
+        match &prop.value {
+            LayoutPropValue::String(value) => {
+                attrs.push_str(&jsx_string_attr("aria-label", value));
+            }
+            LayoutPropValue::SlotRef(slot) => {
+                let camel = to_camel_case_first_lower(slot);
+                validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+                attrs.push_str(&format!(" aria-label={{{camel}}}"));
+            }
+            LayoutPropValue::Keyword(value) => {
+                validate_slot_or_field_name(value).map_err(PipelineEmitError::UnsafeSlotName)?;
+                attrs.push_str(&format!(" aria-label={{{value}}}"));
+            }
+            LayoutPropValue::Expr(value) => {
+                attrs.push_str(&format!(" aria-label={{{value}}}"));
+            }
+            LayoutPropValue::Number(value) => {
+                attrs.push_str(&format!(" aria-label={{{value}}}"));
+            }
+            LayoutPropValue::EmitRef(_) => {}
+        }
+    }
+    Ok(())
+}
+
 fn emit_input_jsx(
     node: &LayoutNode,
     indent: usize,
@@ -1910,6 +1944,10 @@ fn emit_input_jsx(
     if let Some(s) = find_string_prop(node, "placeholder") {
         attrs.push_str(&jsx_string_attr("placeholder", s));
     }
+
+    // aria-label — the authored accessible name (UI29), which this path
+    // dropped while HostInput carried it.
+    push_text_field_aria_label(node, &mut attrs)?;
 
     // maxLength={N}
     if let Some(n) = find_number_prop(node, "max-length") {
@@ -2009,29 +2047,7 @@ fn emit_host_input_jsx(
     }
 
     // Preserve the portable accessible name on the native text field.
-    if let Some(prop) = node.props.iter().find(|p| p.name == "a11y-label") {
-        match &prop.value {
-            LayoutPropValue::String(value) => {
-                attrs.push_str(&jsx_string_attr("aria-label", value));
-            }
-            LayoutPropValue::SlotRef(slot) => {
-                let camel = to_camel_case_first_lower(slot);
-                validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
-                attrs.push_str(&format!(" aria-label={{{camel}}}"));
-            }
-            LayoutPropValue::Keyword(value) => {
-                validate_slot_or_field_name(value).map_err(PipelineEmitError::UnsafeSlotName)?;
-                attrs.push_str(&format!(" aria-label={{{value}}}"));
-            }
-            LayoutPropValue::Expr(value) => {
-                attrs.push_str(&format!(" aria-label={{{value}}}"));
-            }
-            LayoutPropValue::Number(value) => {
-                attrs.push_str(&format!(" aria-label={{{value}}}"));
-            }
-            LayoutPropValue::EmitRef(_) => {}
-        }
-    }
+    push_text_field_aria_label(node, &mut attrs)?;
 
     // value={slotName} OR value={<expr>} (parenthesised For-bound
     // identifiers like `value: ( v )`, used by mosaic-pkg-grid v0.2.0
@@ -7735,6 +7751,31 @@ mod tests {
         );
         // textarea must NOT carry a type="text" attribute.
         assert!(!result.output.contains("type=\"text\""));
+    }
+
+    #[test]
+    fn a_multiline_input_keeps_its_accessible_name() {
+        // J3b-pre (#14416): the legacy Input path dropped `a11y-label`, so a
+        // labelled <textarea> was announced with no name on React.
+        let m = component("X", vec![slot("body-label", SlotType::Text, true)], vec![]);
+        for (value, expected) in [
+            (LayoutPropValue::String("Entry body".to_string()), "aria-label=\"Entry body\""),
+            (LayoutPropValue::SlotRef("body-label".to_string()), "aria-label={bodyLabel}"),
+        ] {
+            let l = input_layout(vec![
+                LayoutProp {
+                    name: "multiline".to_string(),
+                    value: LayoutPropValue::Keyword("true".to_string()),
+                },
+                LayoutProp {
+                    name: "a11y-label".to_string(),
+                    value,
+                },
+            ]);
+            let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+            assert!(out.contains("<textarea"), "got:\n{out}");
+            assert!(out.contains(expected), "expected `{expected}` in:\n{out}");
+        }
     }
 
     #[test]

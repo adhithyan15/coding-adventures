@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-23
+
+- A multiline `Input` with both an `a11y-label` and a `placeholder` wrote `Accessible.name` twice: the authored name, then the placeholder fallback. A duplicate property assignment is a hard `qmlcachegen` error. The placeholder is now only the default name for an unlabelled text area (J3b-pre, #14416).
+
 ## 2026-09-13
 
 - Project numeric typography on Text, HostInput, HostButton and HostTable through conditional native font bindings. Round to integer pixels and restore authored/inherited or platform defaults when live values are invalid. Include a generated-QML conformance fixture.

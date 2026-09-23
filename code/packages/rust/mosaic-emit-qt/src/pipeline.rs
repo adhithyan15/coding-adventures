@@ -4580,7 +4580,7 @@ fn emit_text_input_qml(
         writeln!(out, "{inner_pad}enabled: false").unwrap();
     }
 
-    match node
+    let named = match node
         .props
         .iter()
         .find(|prop| prop.name == "a11y-label")
@@ -4593,17 +4593,20 @@ fn emit_text_input_qml(
                 escape_qml_string(label)
             )
             .unwrap();
+            true
         }
         Some(LayoutPropValue::SlotRef(slot)) => {
             let camel = to_camel_case_first_lower(slot);
             validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
             writeln!(out, "{inner_pad}Accessible.name: {camel}").unwrap();
+            true
         }
         Some(LayoutPropValue::Expr(expr)) => {
             writeln!(out, "{inner_pad}Accessible.name: {expr}").unwrap();
+            true
         }
-        _ => {}
-    }
+        _ => false,
+    };
 
     if find_keyword_prop(node, "auto-focus") == Some("true") {
         writeln!(out, "{inner_pad}Component.onCompleted: forceActiveFocus()").unwrap();
@@ -4612,7 +4615,12 @@ fn emit_text_input_qml(
     // Qt exposes TextArea's native editable-text role. Use its placeholder as
     // the default accessible name too, matching SwiftUI's legacy Input lowering
     // and ensuring the unlabeled legacy primitive is still announced usefully.
-    if multiline {
+    //
+    // Only as a *default*: an authored `a11y-label` already wrote
+    // `Accessible.name` above, and a second assignment to the same property
+    // is a hard `qmlcachegen` error — a multiline input with both a label and
+    // a placeholder failed the build (J3b-pre, #14416).
+    if multiline && !named {
         if let Some(value) = placeholder_line
             .as_deref()
             .and_then(|line| line.strip_prefix("placeholderText: "))
@@ -9783,6 +9791,44 @@ mod tests {
             "TextArea Enter must insert a newline rather than commit:\n{}",
             result.output
         );
+    }
+
+    #[test]
+    fn a_labelled_multiline_input_names_itself_once() {
+        // J3b-pre (#14416): with both `a11y-label` and a `placeholder`, the
+        // placeholder fallback wrote a second `Accessible.name` — a duplicate
+        // property assignment, which qmlcachegen rejects.
+        let m = component("Draft", vec![slot("body", SlotType::Text, true)], vec![]);
+        let l = LayoutDef {
+            component_name: "Draft".to_string(),
+            root: LayoutNode {
+                tag: "Input".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "value".to_string(),
+                        value: LayoutPropValue::SlotRef("body".to_string()),
+                    },
+                    LayoutProp {
+                        name: "placeholder".to_string(),
+                        value: LayoutPropValue::String("Write…".to_string()),
+                    },
+                    LayoutProp {
+                        name: "a11y-label".to_string(),
+                        value: LayoutPropValue::String("Entry body".to_string()),
+                    },
+                    LayoutProp {
+                        name: "multiline".to_string(),
+                        value: LayoutPropValue::Keyword("true".to_string()),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        };
+        let out = from_pipeline(&m, &l, &empty_style("Draft")).unwrap().output;
+        assert_eq!(out.matches("Accessible.name:").count(), 1, "one name:\n{out}");
+        assert!(out.contains("Accessible.name: \"Entry body\""), "the authored name wins:\n{out}");
+        assert!(out.contains("placeholderText: \"Write…\""));
     }
 
     #[test]
