@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "TE-C09-second-pass-wellbeing",
+    "language": "telugu",
+    "chapter": 9,
+    "sequence": 367,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b53b54be95dd2659",
+    "detachableSegments": [
+      "Script: బ, the letter your answer starts with"
+    ]
+  },
+  "findings": []
+}

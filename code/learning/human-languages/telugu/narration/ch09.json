@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Sorry",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:05bd920225440169",
+  "sourceHash": "fnv1a64:ae23abacaf970a59",
   "lessons": [
     {
       "id": "TE-C09-kshaminchandi",
@@ -319,6 +319,176 @@
             {
               "kind": "speech",
               "text": "One more, from much earlier: ౬ — what amount does it stand for?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C09-second-pass-wellbeing",
+      "sequence": 367,
+      "title": "How are you, again — and the word that answers క్షమించండి (kṣamin̄caṇḍi)",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over how-are-you — the question, its answer, and the word that answers an apology",
+      "script": "telugu",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:b53b54be95dd2659",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script: బ, the letter your answer starts with"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script: బ, the letter your answer starts with until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Someone has said క్షమించండి (kṣamin̄caṇḍi) to you. One word back — the one that tells them it does not matter. You have had it since the greetings."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పరవాలేదు does three jobs at once",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పరవాలేదు paravālēdu covers all of these in ordinary speech:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what English says",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "what English says: it's okay, after an apology.",
+                "what English says: no problem, after a request.",
+                "what English says: you're welcome, after thanks."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Look at its tail. ‑లేదు is the lēdu you already carry, the negative of existence, and paravā is the bother — so the word is \"there is no bother.\" That is why one word answers an apology, a request and a thank-you alike."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the ending is already carrying the person",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "That question and its answer hide the same point:"
+            },
+            {
+              "kind": "speech",
+              "text": "మీరు ఎలా ఉన్నారు? — ‑ారు already means you, respectful, so ఎలా ఉన్నారు? is a whole question on its own."
+            },
+            {
+              "kind": "speech",
+              "text": "నేను బాగున్నాను — ‑ాను already means I, so నేను can drop too."
+            },
+            {
+              "kind": "speech",
+              "text": "To someone close the ending moves with the pronoun: నువ్వు ఎలా ఉన్నావు?"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "script",
+          "title": "Script: బ, the letter your answer starts with",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బ."
+            },
+            {
+              "kind": "speech",
+              "text": "బాగా and బాగున్నాను both open on బ ba under the long‑ā sign. Telugu keeps b apart from its p letter; Tamil writes one shape for both and lets the position decide."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice: the whole small exchange",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask a stranger how they are, then drop the pronoun and ask again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask a stranger how they are, then drop the pronoun and ask again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "answer that you are well",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: answer that you are well]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apologise, then thank someone — and give the same one-word reply to both",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: apologise, then thank someone — and give the same one-word reply to both]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What hides inside పరవాలేదు? (లేదు — \"no bother.\") Which three English replies does it cover? (It's okay, no problem, you're welcome.) Why can మీరు and నేను drop out? (The ending already names the person.) Which letter opens your answer? (బ.)"
             }
           ]
         }

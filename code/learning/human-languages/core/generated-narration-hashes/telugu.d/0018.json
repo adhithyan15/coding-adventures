@@ -1,17 +1,18 @@
 {
   "language": "telugu",
   "chapter": 18,
-  "sourceHash": "fnv1a64:1926604c17030dfd",
+  "sourceHash": "fnv1a64:af39a23d7bf68b83",
   "lessonIds": [
     "TE-C18-ganta",
     "TE-S121-letter-lla",
-    "TE-S139-letter-ddha"
+    "TE-S139-letter-ddha",
+    "TE-S168-script-recall-split-sounds"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "telugu/narration/ch18.txt",
   "json": "telugu/narration/ch18.json",
-  "textHash": "fnv1a64:8317fc41e76a206e",
-  "jsonHash": "fnv1a64:3310778bdd0fe8ec",
+  "textHash": "fnv1a64:aa49513708eb986d",
+  "jsonHash": "fnv1a64:2785764356a96c58",
   "findings": []
 }

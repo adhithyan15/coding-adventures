@@ -1,10 +1,11 @@
 {
   "language": "telugu",
   "chapter": 9,
-  "sourceHash": "fnv1a64:096afb0d29531996",
+  "sourceHash": "fnv1a64:f8fa98fb267d6ab9",
   "lessonIds": [
     "TE-C09-kshaminchandi",
-    "TE-S135-letter-i"
+    "TE-S135-letter-i",
+    "TE-C09-second-pass-wellbeing"
   ],
   "tex": "telugu/book/chapters/ch09-sorry.tex"
 }

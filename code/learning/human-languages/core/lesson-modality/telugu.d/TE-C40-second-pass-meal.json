@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C40-second-pass-meal",
+    "language": "telugu",
+    "chapter": 40,
+    "sequence": 875,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2c7d8700d5d19ebc"
+  },
+  "findings": []
+}

@@ -1,8 +1,8 @@
 Telugu, chapter 6: Case Endings and Dative Subjects.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 4.
+Lesson 1 of 5.
 ౦ — the Telugu numeral for 0.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ౦ and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -37,7 +37,7 @@ Which numeral is this — ౦? What amount does it stand for? (౦ is 0, and ౧
 One more, from much earlier: ౪ — what amount does it stand for?
 
 
-Lesson 2 of 4.
+Lesson 2 of 5.
 -కు (-ku) — "to, for".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -80,7 +80,7 @@ Wrap-up Recall.
 What does -కు (-ku) mean? ("To" or "for.") Where does it go? (On the end of the noun.) What is "to me"? (నాకు nāku — nēnu shrinks to nā- first.) Why does it sometimes appear as -కి? (It adjusts to the preceding vowel — same suffix.) How does that differ from Latin? (Latin fuses case+number+declension into one ending — and -īs doesn't even fix which case; Telugu's carries one meaning, unambiguously, with the seam visible.) Next: the sentence where Telugu leaves out the subject entirely.
 
 
-Lesson 3 of 4.
+Lesson 3 of 5.
 య (ya) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: య and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -117,7 +117,7 @@ Which character is this — య? What sound does it carry? (ya.) Name one word y
 One more, from much earlier: ర — what does it do?
 
 
-Lesson 4 of 4.
+Lesson 4 of 5.
 నాకు తెలుగు వచ్చు (nāku telugu vaccu) — "I know Telugu".
 
 Warm-up.
@@ -162,3 +162,42 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What does నాకు తెలుగు వచ్చు (nāku telugu vaccu) literally say? ("To-me Telugu comes.") Which verb is doing the work, and where did you meet it? (వచ్చు "to come" — Chapter 4.) What has English got that Telugu hasn't? (A nominative "I" — nēnu is replaced by the dative nāku.) Why the dative? (Knowing happens to you.) Which English word keeps the same idea? (Methinks.)
+
+
+Lesson 5 of 5.
+The opening five, again — three jobs.
+
+Warm-up.
+[pause 3 seconds]
+Close the book on everything so far. From memory: the word that opens a conversation, and the word that closes a piece of business.
+
+You'll want to know: sort them by the job, not by the order they arrived.
+This far on, the question is no longer what does each word mean but which one do I reach for. Three jobs cover all five:
+[a table of 3 rows, read aloud]
+job: open or close the whole exchange. the word: నమస్కారం namaskāram.
+job: answer a question. the word: అవును avunu, లేదు lēdu.
+job: close one turn and move on. the word: సరే sarē, ధన్యవాదములు dhanyavādamulu.
+The second row is the one to feel: అవును and లేదు are the two ways a Telugu answer can go.
+
+What you've built — what each word was carrying.
+Each of the five arrived with a point attached. Recall the point, not the sentence it came in:
+నమస్కారం — hello and goodbye in one word, respectful without being stiff.
+ధన్యవాదములు — its -mulu is an ending glued to a stem, which is how Telugu does most of its grammar.
+అవును — a small statement of being, "it is so," not a bare particle.
+లేదు — one of two negatives: lēdu denies that a thing is there, కాదు kādu that it is the thing you named.
+సరే — one Dravidian word wearing three scripts.
+
+Guided Practice: choose, then say.
+[pause 2 seconds after each]
+[your turn — say: someone asks whether you speak Telugu — one word back]
+[pause 8 seconds for the answer]
+[your turn — say: someone asks whether the tea is there — deny that it is]
+[pause 8 seconds for the answer]
+[your turn — say: the word for thanks, all five syllables, unhurried]
+[pause 8 seconds for the answer]
+[your turn — say: hello, then goodbye — the same word both times]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which word does both hello and goodbye? (నమస్కారం.) Which two negatives does Telugu keep apart? (లేదు, not there; కాదు, not that.) What is the -mulu an example of? (An ending glued onto a stem.) Which of the five would a Kannada speaker know on sight? (సరే.)

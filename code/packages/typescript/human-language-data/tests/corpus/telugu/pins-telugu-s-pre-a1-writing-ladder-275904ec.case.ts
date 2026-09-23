@@ -28,11 +28,19 @@ it("pins Telugu's pre-A1 writing ladder", () => {
   // makes a delayed copy invalid unless the tracing and the guided copy come
   // earlier IN SEQUENCE, so a set-equality assertion would pass on a ladder
   // whose rungs are in the wrong order and therefore prove nothing.
+  //
+  // The fifth rung is a SECOND dictation, roughly 1,150 sequence steps after the
+  // first. It is here because the ladder proves the stages are reachable, not
+  // that each is practised once: `TE-S170` asks the hand to turn *gau* and
+  // *gnya* into shapes with nothing on the page to copy, which is the same
+  // stage exercised on a harder pair. A rung may repeat; the ORDER assertion
+  // below still forbids one arriving before its prerequisite stages.
   expect(track.validEvidence.map((entry) => [entry.lessonId, entry.stage])).toEqual([
     ["TE-S01-letter-ta", "observe-trace"],
     ["TE-S01-copy-in-a-word", "guided-copy"],
     ["TE-S01-delayed-copy", "delayed-copy"],
     ["TE-S01-dictation", "dictation-transcription"],
+    ["TE-S170-script-dictation-courtesy-letters", "dictation-transcription"],
   ]);
   expect(track.defects).toEqual([]);
   expect(track.levels[0]).toMatchObject({

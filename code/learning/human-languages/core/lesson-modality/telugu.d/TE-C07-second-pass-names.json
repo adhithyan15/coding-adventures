@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "TE-C07-second-pass-names",
+    "language": "telugu",
+    "chapter": 7,
+    "sequence": 345,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4836463439e40f92",
+    "detachableSegments": [
+      "Script: three letters that open numbers"
+    ]
+  },
+  "findings": []
+}

@@ -3,7 +3,8 @@
   "spine_node": "SPINE-EXCHANGE-NAMES",
   "before": [],
   "inline": [
-    "TE-EXT-016-LANGUAGE-SPECIFIC"
+    "TE-EXT-016-LANGUAGE-SPECIFIC",
+    "TE-EXT-016-CONSOLIDATION"
   ],
   "after": []
 }

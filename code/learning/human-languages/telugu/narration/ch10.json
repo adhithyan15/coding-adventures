@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Days of the Week",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:48b83cf25ba31d08",
+  "sourceHash": "fnv1a64:21acd4e315400685",
   "lessons": [
     {
       "id": "TE-C10-vaaram",
@@ -644,6 +644,151 @@
             {
               "kind": "speech",
               "text": "Which of the five opens the number one? (ఒ.) Which opens the number five? (ఐ.) Which pair differs only in length? (అ and ఆ.) And what has to be true of a vowel before Telugu writes it as a letter? (Nothing is carrying it — no consonant in front.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C10-second-pass-farewells",
+      "sequence": 377,
+      "title": "The three goodbyes again, now that you can name the day",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over the farewells — the goodbye that promises to come back, now that you can name the day",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:59f165d85ebdfd33",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "From memory: the ordinary Telugu goodbye. Then say what it means word for word, which is not \"goodbye\" at all."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: none of the three says \"goodbye\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have three ways to leave, and every one of them promises a return:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what you say",
+                "what it says"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "what you say: వెళ్ళి వస్తాను veḷḷi vastānu. what it says: having gone, I come.",
+                "what you say: రేపు కలుద్దాం rēpu kaluddām. what it says: tomorrow, let us meet.",
+                "what you say: మళ్ళీ కలుద్దాం maḷḷī kaluddām. what it says: again, let us meet."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Telugu has no comfortable word for a plain, final parting. The polite thing is to name the return, and the three above are three sizes of it — the next hour, the next day, some day."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the \"having …ed\" link",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వెళ్ళి is not a finished verb — it is having gone, waiting for a second verb to complete it. Telugu chains actions this way: every verb but the last takes the having …ed shape, and the last one carries the person and the time."
+            },
+            {
+              "kind": "speech",
+              "text": "వెళ్ళి వస్తాను = having gone + I come. The ‑తాను at the end is the same \"I\" ending you met on మాట్లాడతాను."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice: pick the right size of return",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "leaving a shop you will pass again this week",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: leaving a shop you will pass again this week]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "leaving a class that meets again tomorrow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: leaving a class that meets again tomorrow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "leaving someone you may not see for a year",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: leaving someone you may not see for a year]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the plain verb for to go, then the having gone form",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the plain verb for *to go*, then the *having gone* form]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What do all three farewells have in common? (Each one promises a return.) What does వెళ్ళి వస్తాను say literally? (Having gone, I come.) Which part of it carries the \"I\"? (The ‑తాను ending.) And which of the three would you use with someone you see tomorrow? (రేపు కలుద్దాం.)"
             }
           ]
         }

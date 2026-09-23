@@ -1,10 +1,11 @@
 {
   "language": "telugu",
   "chapter": 12,
-  "sourceHash": "fnv1a64:7412c1270828f6b7",
+  "sourceHash": "fnv1a64:d31a159e61c2cc95",
   "lessonIds": [
     "TE-C12-kutumbam",
-    "TE-S116-letter-da"
+    "TE-S116-letter-da",
+    "TE-C12-second-pass-verbs"
   ],
   "tex": "telugu/book/chapters/ch12-family.tex"
 }

@@ -1,15 +1,16 @@
 {
   "language": "telugu",
   "chapter": 40,
-  "sourceHash": "fnv1a64:7173f8d45e9dfe1c",
+  "sourceHash": "fnv1a64:285c4bf76bf4588f",
   "lessonIds": [
-    "TE-C40-bhojanam"
+    "TE-C40-bhojanam",
+    "TE-C40-second-pass-meal"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "telugu/narration/ch40.txt",
   "json": "telugu/narration/ch40.json",
-  "textHash": "fnv1a64:36b06e906966a50f",
-  "jsonHash": "fnv1a64:d3079fc3b7fa3eff",
+  "textHash": "fnv1a64:f764320b782d59d8",
+  "jsonHash": "fnv1a64:426c4e67a1f22dc7",
   "findings": []
 }
