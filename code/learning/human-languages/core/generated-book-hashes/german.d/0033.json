@@ -1,9 +1,10 @@
 {
   "language": "german",
   "chapter": 33,
-  "sourceHash": "fnv1a64:5dc6e88300ac1876",
+  "sourceHash": "fnv1a64:26831423004dd34f",
   "lessonIds": [
-    "GE-C20-entschuldigung"
+    "GE-C20-entschuldigung",
+    "GE-R20-danke-bitte-entschuldigung"
   ],
   "tex": "german/book/chapters/ch33-sorry.tex"
 }

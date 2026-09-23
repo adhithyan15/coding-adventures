@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R14-was-der-kalender-liegen-liess",
+    "language": "german",
+    "chapter": 27,
+    "sequence": 548,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:af2eedfe9c2e841a"
+  },
+  "findings": []
+}

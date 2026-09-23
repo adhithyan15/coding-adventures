@@ -22,7 +22,15 @@ it("pins German lesson-content budgets", () =>
     // three -- they practise the joiners and the possessive the track already
     // teaches, and add only what the stages themselves are: a choice with no
     // model, a clock, and a join.
-    lessons: 347,
+    //
+    // 347 -> 354: HL-C434, seven `practice` lessons closing the track's pre-A1
+    // reinforcement debt. `practice` and not `review` because german has no
+    // `review` lesson anywhere; both types sit outside `CONTENT_TYPES`, so
+    // neither adds a headword. 19 of the 37 thin atoms had zero revisits and the
+    // criterion asks for two, so the true cost was 56 retrieval slots rather
+    // than 37. None of the seven introduces an atom, so every other number in
+    // this object is unchanged.
+    lessons: 354,
     idioms: 1,
     senses: 5,
     cultureClaims: 32,

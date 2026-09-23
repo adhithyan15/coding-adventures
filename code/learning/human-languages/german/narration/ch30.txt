@@ -1,8 +1,8 @@
 German, chapter 30: Head and Hand.
-3 lessons. All 3 can be done entirely by ear.
+4 lessons. All 4 can be done entirely by ear.
 
 
-Lesson 1 of 3.
+Lesson 1 of 4.
 Der Kopf — “the head”.
 
 Warm-up.
@@ -42,7 +42,7 @@ Wrap-up Recall.
 Say “the head.” (Der Kopf.) Give its gender. (Masculine.) Why the capital? (It is a noun.) What did Kopf first mean? (A cup or bowl.) Name the related English word. (Cup.) Next: find the inherited word Haupt.
 
 
-Lesson 2 of 3.
+Lesson 2 of 4.
 Kopf / Haupt — two head-words.
 
 Warm-up.
@@ -84,7 +84,7 @@ Which word is everyday “head”? (Kopf.) Which inherited word survives in comp
 Which inherited German head-word survives in compounds such as Hauptstadt?
 
 
-Lesson 3 of 3.
+Lesson 3 of 4.
 die Hand — "the hand".
 
 Warm-up.
@@ -131,3 +131,40 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Say "the hand." (Die Hand — feminine.) How is the final d pronounced, and why? (As a t — German devoices final consonants; the d returns in Hände.) Is Hand related to French main? (No — Germanic handuz against Latin manus; the families differ here.) How did manus reach German anyway? (As borrowed learned words — Manuskript, manuell.) Next: the rest of the body.
+
+
+Lesson 4 of 4.
+Wie geht es dir? — and the whole ladder of answers.
+
+Warm-up.
+[pause 3 seconds]
+Ask a friend how they are. Then ask a stranger. One word moves, and the capital letter moves with it — say which.
+
+Guided Practice: four rungs, top to bottom.
+[pause 1 second]
+[your turn — say: the question, informally — Wie geht es dir?]
+[pause 8 seconds for the answer]
+[your turn — say: the good answer — gut]
+[pause 8 seconds for the answer]
+[your turn — say: the middle, sing-song — so lala]
+[pause 8 seconds for the answer]
+[your turn — say: the shrug — es geht]
+[pause 8 seconds for the answer]
+[your turn — say: the question, formally — Wie geht es Ihnen?]
+[pause 8 seconds for the answer]
+
+Why it's said this way.
+es geht says it goes and nothing more, and the nothing more is the point. German does not treat how are you as a greeting to be waved past, so an answer that adds no adjective is heard as an answer, not as politeness. It means something between I'm managing and don't ask — and the person who hears it may well follow up.
+That is the same fact the register pair makes from the other side. dir becomes Ihnen is one word, and it does not soften or intensify the question; it changes who you are allowed to be to the person. The metaphor underneath — how does it go with you — is untouched by either.
+
+Guided Practice: and the first thing that can be wrong.
+[pause 1 second]
+[your turn — say: the head — Kopf, and hold that final pf as one sound]
+[pause 8 seconds for the answer]
+[your turn — say: what you have when it hurts — Kopfschmerzen]
+[pause 8 seconds for the answer]
+A compound built the ordinary German way: the part of you, then the pains, run together into a single word. Say the seam out loud once, then stop hearing it.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which answer invites a follow-up question — gut, so lala, or es geht? (Es geht.) What two words are inside Kopfschmerzen? (Kopf and Schmerzen.)

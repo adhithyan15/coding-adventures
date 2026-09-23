@@ -1,11 +1,12 @@
 {
   "language": "german",
   "chapter": 30,
-  "sourceHash": "fnv1a64:c9b3f9c718ce3078",
+  "sourceHash": "fnv1a64:fa5122d01f495823",
   "lessonIds": [
     "GE-C17-kopf",
     "GE-C17-kopf-haupt",
-    "GE-C17-hand"
+    "GE-C17-hand",
+    "GE-R17-wie-geht-es-wirklich"
   ],
   "tex": "german/book/chapters/ch30-head-and-hand.tex"
 }

@@ -3,8 +3,8 @@
   "language": "german",
   "chapter": 27,
   "title": "Being Your Years",
-  "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:f3109457079b86a6",
+  "drivablePrefix": 8,
+  "sourceHash": "fnv1a64:0d8baf5df24f6662",
   "lessons": [
     {
       "id": "GE-C14-alt",
@@ -977,6 +977,155 @@
             {
               "kind": "speech",
               "text": "Ask someone's age. (Wie alt bist du?) Answer with your own, both long and short. Which verb does German use, and which does it refuse? (Sein; not haben.) Which English word shares a root with alt? (Adult.) Which four languages say \"I have twenty years\"? (French, Spanish, Italian, Portuguese.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-R14-was-der-kalender-liegen-liess",
+      "sequence": 548,
+      "title": "Uhr, Mitternacht, Lenz, Ge- — four the calendar left lying there",
+      "headword": "Uhr · Mitternacht · Lenz · Ge-",
+      "romanization": "Uhr · Mitternacht · Lenz · Ge-",
+      "gloss": "four things the clock and the calendar taught once and never asked for again, and the capital letter they all wear",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:af2eedfe9c2e841a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The hour at which one day becomes the next. Say it. Then say the adjective for anything happening near it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: four, cold",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "two o'clock — and say why it is not zwei Uhren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: two o'clock — and say why it is **not** *zwei Uhren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "midnight — Mitternacht",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: midnight — *Mitternacht*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the old poetic word for spring — Lenz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the old poetic word for spring — *Lenz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the prefix Ge- does to a single thing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the prefix **Ge-** does to a single thing]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: a word can be a counter without being countable",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two of these four are about number, and they pull in opposite directions:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "what it does",
+                "example shape"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "Uhr, telling the time. what it does: refuses a plural — it is a unit, like English o'clock. example shape: zwei Uhr, never zwei Uhren.",
+                "Ge-. what it does: manufactures a collective from a single thing. example shape: one thing becomes the set of them."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Uhr meaning clock pluralises perfectly well. It is only Uhr meaning o'clock that will not, and that is the distinction to hold: the same noun behaves differently depending on the job it is doing in the sentence."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every one of the four words above is written with a capital, and that is not decoration or emphasis. German capitalises nouns as a part of speech, so the capital is a piece of grammatical information printed on the page: it tells a reader which word in a long sentence is the thing being talked about, before they have parsed anything else."
+            },
+            {
+              "kind": "speech",
+              "text": "Which makes Ge- worth a second look. A prefix that manufactures a noun also manufactures a capital letter — the two are the same event."
+            },
+            {
+              "kind": "speech",
+              "text": "And Lenz is the one here you should recognise rather than reach for. It is the old, poetic word for spring; meeting it in a song or a poem should not stop you, and using it to tell someone the season would sound like reciting verse. Gute Nacht has the reverse property — ordinary to say, and only at parting."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why is it zwei Uhr and not zwei Uhren? (Uhr meaning o'clock is a unit, not a countable thing.) Is Lenz a word to use, or to recognise? (To recognise.) What does a capital letter tell a German reader? (That the word is a noun.)"
             }
           ]
         }

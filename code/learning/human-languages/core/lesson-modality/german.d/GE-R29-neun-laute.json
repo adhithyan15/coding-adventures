@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R29-neun-laute",
+    "language": "german",
+    "chapter": 42,
+    "sequence": 971,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6d546d8d5f2c4f05"
+  },
+  "findings": []
+}

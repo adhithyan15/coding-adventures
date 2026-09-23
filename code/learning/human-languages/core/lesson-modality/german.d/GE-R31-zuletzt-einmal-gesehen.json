@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R31-zuletzt-einmal-gesehen",
+    "language": "german",
+    "chapter": 44,
+    "sequence": 1051,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:205415ae780b045d"
+  },
+  "findings": []
+}

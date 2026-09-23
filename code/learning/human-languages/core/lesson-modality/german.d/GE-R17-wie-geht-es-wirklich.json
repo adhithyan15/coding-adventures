@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R17-wie-geht-es-wirklich",
+    "language": "german",
+    "chapter": 30,
+    "sequence": 681,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fea4b03ba54f62ce"
+  },
+  "findings": []
+}

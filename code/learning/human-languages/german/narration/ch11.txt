@@ -1,8 +1,8 @@
 German, chapter 11: The German Weekend.
-6 lessons. All 6 can be done entirely by ear.
+7 lessons. You can do the first 6 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 6.
+Lesson 1 of 7.
 die Sonne — "the sun".
 
 Warm-up.
@@ -33,7 +33,7 @@ Wrap-up Recall.
 Say "the sun." (Die Sonne.) Which article does the moon take? (Der.) Which way round is French? (The opposite — le soleil, la lune.) Can you work a German noun's gender out from the thing? (No.) Next: the day named for it.
 
 
-Lesson 2 of 6.
+Lesson 2 of 7.
 Sonntag — "Sunday".
 
 Warm-up.
@@ -67,7 +67,7 @@ Wrap-up Recall.
 Say "Sunday." (Sonntag.) What are its two pieces? (Sonne and Tag.) What did Spanish name the day for instead? (The Lord — domingo.) Which German day did the Church rewrite? (Mittwoch.) Next: a word that is not German at all.
 
 
-Lesson 3 of 6.
+Lesson 3 of 7.
 der Sabbat — "the Sabbath".
 
 Warm-up.
@@ -95,7 +95,7 @@ Wrap-up Recall.
 Say "the Sabbath." (Der Sabbat.) What does the Hebrew root mean? (To rest.) Which language carried it north? (Greek.) Is it Germanic or Latin? (Neither.) Next: the day it became.
 
 
-Lesson 4 of 6.
+Lesson 4 of 7.
 Samstag — the day that is not Saturn's.
 
 Warm-up.
@@ -135,7 +135,7 @@ Wrap-up Recall.
 Say "Saturday." (Samstag.) Is it Saturn's day? (No — the Sabbath's.) Which language did it reach German through? (Greek, from Hebrew.) Which Spanish day is the same word? (Sábado.) Which kind of word is it — kept or bought? (Bought, like the month names.) Next: the day the Church left alone.
 
 
-Lesson 5 of 6.
+Lesson 5 of 7.
 Sonnabend — Saturday, in the north.
 
 Warm-up.
@@ -167,7 +167,7 @@ Wrap-up Recall.
 Say the northern word for Saturday. (Sonnabend.) What are its two halves? (Sonne and Abend.) What does it literally mean? (Sun-eve.) Which word is used more widely? (Samstag.) Next: the whole week, said through.
 
 
-Lesson 6 of 6.
+Lesson 6 of 7.
 Practice — all seven.
 
 Warm-up.
@@ -201,3 +201,38 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Run all seven without prompting. Which day has no god? (Mittwoch.) Which is not a Germanic word at all? (Samstag — the Sabbath.) Which day did the Church rename in Romance but leave alone here? (Sonntag.) Which day has two names? (Saturday — Samstag and Sonnabend.)
+
+
+Lesson 7 of 7.
+spät — one short word with two spelling rules inside it.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 3 seconds]
+Say spät. Listen to how it starts — the sp is not the sp of English spade. Say what your mouth does instead.
+
+Guided Practice: the end of a day, in four moves.
+[pause 1 second]
+The week is in your mouth now. These four are what you say when one of its days is running out.
+[your turn — say: it is late — es ist spät]
+[pause 8 seconds for the answer]
+[your turn — say: later, not now — später]
+[pause 8 seconds for the answer]
+[your turn — say: until tomorrow — bis morgen]
+[pause 8 seconds for the answer]
+[your turn — say: the last thing, at the door — Gute Nacht]
+[pause 8 seconds for the answer]
+Gute Nacht is not the night-time Guten Abend. It is spoken on parting, not on arriving — you say it to someone who is leaving or going to bed, and saying it on entering a room at ten at night is the kind of mistake that gets you a puzzled look rather than a correction.
+
+Grammar Lens: two marks, two different jobs.
+Both marks are in words you have been saying for weeks, and they do opposite kinds of work:
+[a table of 2 rows, read aloud]
+mark: ä in spät. what it is: two dots that were once an e. what it tells you: grammar — a changed vowel, marking a form.
+mark: ß in Fuß. what it is: two s's written as one letter. what it tells you: sound — the vowel in front of it is long.
+The umlaut is a grammatical signal: it marks that something has happened to the word. The eszett is a phonetic one: it tells you how long to hold the vowel before it. One points backwards at the word's history, the other forwards at your mouth.
+That is why spät becomes später changes nothing about the ä. The comparative is built by adding -er, and the vowel was already what it was.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which of the two marks tells you about a sound, and which about grammar? (ß is sound — a long vowel before it; umlaut is grammar.) What were the two dots, originally? (An e.) Say goodbye to someone you will see the next day. (Bis morgen.)

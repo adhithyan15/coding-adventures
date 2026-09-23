@@ -3,8 +3,8 @@
   "language": "german",
   "chapter": 43,
   "title": "Eyes, Ears, Mouth, Nose",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:16475a10d6e3a397",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:250f0fc1ece4d8df",
   "lessons": [
     {
       "id": "GE-C30-auge",
@@ -558,6 +558,144 @@
             {
               "kind": "speech",
               "text": "Give \"nose\" with its article and plural. (Die Nase, die Nasen.) Which Latin word is its distant cousin, and what English word does that Latin word give? (Nasus, giving nasal.) Name all five face and head words from Chapters 17 and 30. (Kopf, Auge, Ohr, Mund, Nase.) Which of the four words of this chapter does not trace past Proto-Germanic? (Mund.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-R30-kopf-und-haupt",
+      "sequence": 1011,
+      "title": "Kopf und Haupt — two words for one head, and only one of them survived",
+      "headword": "Kopf · Haupt · Nase",
+      "romanization": "Kopf · Haupt · Nase",
+      "gloss": "two words for one head, the face they sit on, and why the cup-word won",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2b008d8d5aa7859f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The nose. Say it — long a, and the s buzzes like a z. Then say the verb for what the eyes above it do."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "cognates",
+          "title": "Across the family",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "German has two words for a head, and the one it uses every day is the one that did not start out meaning a head at all."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "where it came from",
+                "where it is now"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "word: Haupt. where it came from: the inherited Germanic head-word, cousin of English head. where it is now: formal, poetic, and alive mainly in compounds.",
+                "word: Kopf. where it came from: a word for a cup or bowl. where it is now: the ordinary, everyday head."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "A container word pushed the inherited word aside — the same move that gave French tête from Latin testa, a pot. Bodies get named after the things they resemble, and the joke outlives the people who made it."
+            },
+            {
+              "kind": "speech",
+              "text": "Which is why the pains go on Kopf and not on Haupt: Kopfschmerzen is built from the everyday word, because that is the word you reach for when something hurts."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four you have not been asked for in a long while."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "auf — au as ow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *auf* — **au** as *ow*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "freut mich — eu as oy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *freut mich* — **eu** as *oy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the noun inside the warm thank-you — Dank",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the noun inside the warm thank-you — *Dank*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the shrug that answers how are you — es geht",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the shrug that answers *how are you* — *es geht*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the two head-words is the inherited one, and which is the one you actually use? (Haupt inherited; Kopf everyday.) What did Kopf mean first? (A cup or bowl.) Say the nose, and keep the s buzzing."
             }
           ]
         }

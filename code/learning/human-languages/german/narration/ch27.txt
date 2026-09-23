@@ -1,8 +1,8 @@
 German, chapter 27: Being Your Years.
-7 lessons. All 7 can be done entirely by ear.
+8 lessons. All 8 can be done entirely by ear.
 
 
-Lesson 1 of 7.
+Lesson 1 of 8.
 alt — "old".
 
 Warm-up.
@@ -34,7 +34,7 @@ Wrap-up Recall.
 Say "old." (Alt.) Does it take an ending after bin? (No.) Which English word is it? (Old.) Next: the noun that goes with it.
 
 
-Lesson 2 of 7.
+Lesson 2 of 8.
 die Jahre — the form the age sentence uses.
 
 Warm-up.
@@ -67,7 +67,7 @@ Wrap-up Recall.
 Say "the year." (Das Jahr.) And the plural. (Die Jahre.) Which of the two does an age sentence use? (The plural — you are counted.) What does the plural add? (An -e, and die.) Next: where Jahr and alt both come from.
 
 
-Lesson 3 of 7.
+Lesson 3 of 8.
 Jahr and alt, taken apart — both words are English wearing German spelling, and alt has a Latin cousin hiding in adult.
 
 Warm-up.
@@ -98,7 +98,7 @@ Wrap-up Recall.
 Which English word is Jahr? (Year.) And alt? (Old.) Which English word comes from alt's Latin cousin? (Adult.) What did that cousin mean? ("To nourish, to grow.") Next: the question you will be asked with these two words.
 
 
-Lesson 4 of 7.
+Lesson 4 of 8.
 Wie alt bist du? — how old are you — word for word the English question, built from four words you own.
 
 Warm-up.
@@ -128,7 +128,7 @@ Wrap-up Recall.
 Ask how old someone is, informally. (Wie alt bist du?) And formally. (Wie alt sind Sie?) Which word sits second? (Bist.) How many of the four words were new? (None.) Next: how to answer it.
 
 
-Lesson 5 of 7.
+Lesson 5 of 8.
 ich bin zwanzig Jahre alt — I am twenty years old — the answer, word for word the English sentence.
 
 Warm-up.
@@ -159,7 +159,7 @@ Wrap-up Recall.
 Say "I am twenty years old." (Ich bin zwanzig Jahre alt.) Shorten it. (Ich bin zwanzig.) Which verb does it use? (Bin.) Which does it not use? (Habe.) Next: why that choice puts German and English on one side and every Romance language on the other.
 
 
-Lesson 6 of 7.
+Lesson 6 of 8.
 sein, not haben — Germanic IS its years where Romance HAS them — the one place German refuses haben.
 
 Warm-up.
@@ -200,7 +200,7 @@ Wrap-up Recall.
 Which verb does German use for age? (Sein.) Which does French use? (Avoir — "to have".) Which two languages sit together here? (German and English.) Did German borrow its month names from Latin? (Yes — which is what makes keeping this sentence its own worth noticing.) Next: the chapter said through.
 
 
-Lesson 7 of 7.
+Lesson 7 of 8.
 Practice — asking and answering an age.
 
 Warm-up.
@@ -234,3 +234,38 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Ask someone's age. (Wie alt bist du?) Answer with your own, both long and short. Which verb does German use, and which does it refuse? (Sein; not haben.) Which English word shares a root with alt? (Adult.) Which four languages say "I have twenty years"? (French, Spanish, Italian, Portuguese.)
+
+
+Lesson 8 of 8.
+Uhr, Mitternacht, Lenz, Ge- — four the calendar left lying there.
+
+Warm-up.
+[pause 3 seconds]
+The hour at which one day becomes the next. Say it. Then say the adjective for anything happening near it.
+
+Guided Practice: four, cold.
+[pause 1 second]
+[your turn — say: two o'clock — and say why it is not zwei Uhren]
+[pause 8 seconds for the answer]
+[your turn — say: midnight — Mitternacht]
+[pause 8 seconds for the answer]
+[your turn — say: the old poetic word for spring — Lenz]
+[pause 8 seconds for the answer]
+[your turn — say: what the prefix Ge- does to a single thing]
+[pause 8 seconds for the answer]
+
+Grammar Lens: a word can be a counter without being countable.
+Two of these four are about number, and they pull in opposite directions:
+[a table of 2 rows, read aloud]
+Uhr, telling the time. what it does: refuses a plural — it is a unit, like English o'clock. example shape: zwei Uhr, never zwei Uhren.
+Ge-. what it does: manufactures a collective from a single thing. example shape: one thing becomes the set of them.
+Uhr meaning clock pluralises perfectly well. It is only Uhr meaning o'clock that will not, and that is the distinction to hold: the same noun behaves differently depending on the job it is doing in the sentence.
+
+Why it's said this way.
+Every one of the four words above is written with a capital, and that is not decoration or emphasis. German capitalises nouns as a part of speech, so the capital is a piece of grammatical information printed on the page: it tells a reader which word in a long sentence is the thing being talked about, before they have parsed anything else.
+Which makes Ge- worth a second look. A prefix that manufactures a noun also manufactures a capital letter — the two are the same event.
+And Lenz is the one here you should recognise rather than reach for. It is the old, poetic word for spring; meeting it in a song or a poem should not stop you, and using it to tell someone the season would sound like reciting verse. Gute Nacht has the reverse property — ordinary to say, and only at parting.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Why is it zwei Uhr and not zwei Uhren? (Uhr meaning o'clock is a unit, not a countable thing.) Is Lenz a word to use, or to recognise? (To recognise.) What does a capital letter tell a German reader? (That the word is a noun.)

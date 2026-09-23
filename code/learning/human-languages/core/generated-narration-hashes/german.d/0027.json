@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 27,
-  "sourceHash": "fnv1a64:f3109457079b86a6",
+  "sourceHash": "fnv1a64:0d8baf5df24f6662",
   "lessonIds": [
     "GE-C14-alt",
     "GE-C14-jahr",
@@ -9,13 +9,14 @@
     "GE-C14-wie-alt-bist-du",
     "GE-C14-alter",
     "GE-C14-alter-sein-haben",
-    "GE-C14-alter-practice"
+    "GE-C14-alter-practice",
+    "GE-R14-was-der-kalender-liegen-liess"
   ],
-  "voiceLessons": 7,
-  "drivablePrefix": 7,
+  "voiceLessons": 8,
+  "drivablePrefix": 8,
   "text": "german/narration/ch27.txt",
   "json": "german/narration/ch27.json",
-  "textHash": "fnv1a64:b0142e735dfc66df",
-  "jsonHash": "fnv1a64:cd66335f9544e93f",
+  "textHash": "fnv1a64:6d8362112a9f26c5",
+  "jsonHash": "fnv1a64:ba34044ae408014a",
   "findings": []
 }
