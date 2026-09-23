@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 7485,
+    "totalLessons": 7486,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -23,7 +23,7 @@
     "mixedSchemaTracks": 0,
     "version2SchemaTracks": 23,
     "lessonsWithoutLevel": 0,
-    "rampOverBudgetLessons": 41,
+    "rampOverBudgetLessons": 40,
     "scriptRampOverBudgetLessons": 31,
     "lessonsOpeningMultipleScripts": 0,
     "scriptClosureViolations": 252,
@@ -40,7 +40,7 @@
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 243,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 5951,
+    "drivableLessons": 5952,
     "drivablePercent": 80,
     "chaptersWithoutDrivablePrefix": 241,
     "unexplainedModalityOverrides": 0
@@ -4276,9 +4276,9 @@
       {
         "language": "telugu",
         "status": "version-2",
-        "lessonCount": 371,
+        "lessonCount": 372,
         "versions": {
-          "2": 371
+          "2": 372
         }
       },
       {
@@ -5207,9 +5207,9 @@
     }
   },
   "levels": {
-    "totalLessons": 7485,
+    "totalLessons": 7486,
     "byLevel": {
-      "pre-A1": 3968,
+      "pre-A1": 3969,
       "A1": 2492,
       "A2": 941,
       "B1": 39,
@@ -5537,9 +5537,9 @@
       },
       {
         "language": "telugu",
-        "lessonCount": 371,
+        "lessonCount": 372,
         "byLevel": {
-          "pre-A1": 296,
+          "pre-A1": 297,
           "A1": 58,
           "A2": 17,
           "B1": 0,
@@ -5836,13 +5836,6 @@
         "lessonId": "TA-W01-abugida-va-ka",
         "language": "tamil",
         "chapter": 5,
-        "atoms": 4,
-        "budget": 3
-      },
-      {
-        "lessonId": "TE-C08-dayachesi",
-        "language": "telugu",
-        "chapter": 8,
         "atoms": 4,
         "budget": 3
       },
@@ -6461,10 +6454,10 @@
       },
       {
         "language": "telugu",
-        "lessonCount": 371,
-        "measurable": 371,
+        "lessonCount": 372,
+        "measurable": 372,
         "unmeasurable": 0,
-        "lessonViolations": 1,
+        "lessonViolations": 0,
         "chapterViolations": 5
       },
       {
@@ -7040,7 +7033,7 @@
           "language": "telugu",
           "script": "telugu",
           "latinScript": false,
-          "lessonCount": 371,
+          "lessonCount": 372,
           "totalGlyphs": 64,
           "lessonViolations": 3,
           "systemViolations": 0,
@@ -7076,7 +7069,7 @@
       }
     },
     "summary": {
-      "lessonViolations": 41,
+      "lessonViolations": 40,
       "chapterViolations": 61,
       "unmeasurableLessons": 98,
       "measurablePercent": 99,
@@ -14116,7 +14109,7 @@
         "atom": "TE-ETYMON-C10-VAARAM-01",
         "language": "telugu",
         "introducedBy": "TE-C10-vaaram",
-        "introducedAt": 80,
+        "introducedAt": 81,
         "missed": [
           "R1",
           "R2",
@@ -14168,7 +14161,7 @@
         "atom": "TE-GRAMMAR-C42-ADJ-SYSTEM",
         "language": "telugu",
         "introducedBy": "TE-C42-adjective-system",
-        "introducedAt": 167,
+        "introducedAt": 168,
         "missed": [
           "R1",
           "R2",
@@ -14259,7 +14252,7 @@
         "atom": "TE-PRAGMATICS-C10-VAARAM-02",
         "language": "telugu",
         "introducedBy": "TE-C10-vaaram",
-        "introducedAt": 80,
+        "introducedAt": 81,
         "missed": [
           "R1",
           "R2",
@@ -14272,7 +14265,7 @@
         "atom": "TE-SCRIPT-RECOG-133",
         "language": "telugu",
         "introducedBy": "TE-S133-vowel-sign-au",
-        "introducedAt": 209,
+        "introducedAt": 210,
         "missed": [
           "R1",
           "R2",
@@ -40542,7 +40535,7 @@
         "atom": "TE-ETYMON-C15-NEELLU-BIYYAM-01",
         "language": "telugu",
         "introducedBy": "TE-C15-neellu-biyyam",
-        "introducedAt": 92,
+        "introducedAt": 93,
         "missed": [
           "R2",
           "R3",
@@ -40554,7 +40547,7 @@
         "atom": "TE-ETYMON-C15-NEELLU-BIYYAM-02",
         "language": "telugu",
         "introducedBy": "TE-C15-neellu-biyyam",
-        "introducedAt": 92,
+        "introducedAt": 93,
         "missed": [
           "R2",
           "R3",
@@ -40566,7 +40559,7 @@
         "atom": "TE-ETYMON-C16-NELALU-02",
         "language": "telugu",
         "introducedBy": "TE-C16-nelalu",
-        "introducedAt": 94,
+        "introducedAt": 95,
         "missed": [
           "R2",
           "R3",
@@ -40578,7 +40571,7 @@
         "atom": "TE-ETYMON-C22-PACHA-PASUPU-01",
         "language": "telugu",
         "introducedBy": "TE-C22-pacha-pasupu",
-        "introducedAt": 111,
+        "introducedAt": 112,
         "missed": [
           "R1",
           "R2",
@@ -40590,7 +40583,7 @@
         "atom": "TE-ETYMON-C22-PACHA-PASUPU-02",
         "language": "telugu",
         "introducedBy": "TE-C22-pacha-pasupu",
-        "introducedAt": 111,
+        "introducedAt": 112,
         "missed": [
           "R1",
           "R2",
@@ -40602,7 +40595,7 @@
         "atom": "TE-ETYMON-C25-SHUBHA-RATRI-01",
         "language": "telugu",
         "introducedBy": "TE-C25-shubha-ratri",
-        "introducedAt": 116,
+        "introducedAt": 117,
         "missed": [
           "R1",
           "R2",
@@ -40614,7 +40607,7 @@
         "atom": "TE-ETYMON-C40-BHOJANAM-02",
         "language": "telugu",
         "introducedBy": "TE-C40-bhojanam",
-        "introducedAt": 154,
+        "introducedAt": 155,
         "missed": [
           "R1",
           "R2",
@@ -40794,7 +40787,7 @@
         "atom": "TE-GRAMMAR-C41-DEIXIS-SYSTEM",
         "language": "telugu",
         "introducedBy": "TE-C41-deixis-system",
-        "introducedAt": 161,
+        "introducedAt": 162,
         "missed": [
           "R1",
           "R2",
@@ -41082,7 +41075,7 @@
         "atom": "TE-LEX-C14-RUTUVULU-01",
         "language": "telugu",
         "introducedBy": "TE-C14-rutuvulu",
-        "introducedAt": 90,
+        "introducedAt": 91,
         "missed": [
           "R2",
           "R3",
@@ -41094,7 +41087,7 @@
         "atom": "TE-LEX-C16-NELALU-01",
         "language": "telugu",
         "introducedBy": "TE-C16-nelalu",
-        "introducedAt": 94,
+        "introducedAt": 95,
         "missed": [
           "R2",
           "R3",
@@ -41106,7 +41099,7 @@
         "atom": "TE-LEX-C40-BHOJANAM-01",
         "language": "telugu",
         "introducedBy": "TE-C40-bhojanam",
-        "introducedAt": 154,
+        "introducedAt": 155,
         "missed": [
           "R1",
           "R2",
@@ -41118,7 +41111,7 @@
         "atom": "TE-LEX-C42-ADJ-02",
         "language": "telugu",
         "introducedBy": "TE-C42-small",
-        "introducedAt": 163,
+        "introducedAt": 164,
         "missed": [
           "R2",
           "R3",
@@ -41130,7 +41123,7 @@
         "atom": "TE-LEX-C42-ADJ-03",
         "language": "telugu",
         "introducedBy": "TE-C42-good",
-        "introducedAt": 164,
+        "introducedAt": 165,
         "missed": [
           "R2",
           "R3",
@@ -41142,7 +41135,7 @@
         "atom": "TE-LEX-C42-ADJ-04",
         "language": "telugu",
         "introducedBy": "TE-C42-new",
-        "introducedAt": 165,
+        "introducedAt": 166,
         "missed": [
           "R2",
           "R3",
@@ -41154,7 +41147,7 @@
         "atom": "TE-LEX-C42-ADJ-05",
         "language": "telugu",
         "introducedBy": "TE-C42-old",
-        "introducedAt": 166,
+        "introducedAt": 167,
         "missed": [
           "R2",
           "R3",
@@ -41166,7 +41159,7 @@
         "atom": "TE-LEX-COME",
         "language": "telugu",
         "introducedBy": "TE-C43-come",
-        "introducedAt": 168,
+        "introducedAt": 169,
         "missed": [
           "R2",
           "R3",
@@ -41178,7 +41171,7 @@
         "atom": "TE-LEX-GIVE",
         "language": "telugu",
         "introducedBy": "TE-C43-give",
-        "introducedAt": 171,
+        "introducedAt": 172,
         "missed": [
           "R1",
           "R2",
@@ -41190,7 +41183,7 @@
         "atom": "TE-LEX-GRANDFATHER",
         "language": "telugu",
         "introducedBy": "TE-C45-grandfather",
-        "introducedAt": 176,
+        "introducedAt": 177,
         "missed": [
           "R2",
           "R3",
@@ -41202,7 +41195,7 @@
         "atom": "TE-LEX-GRANDMOTHER",
         "language": "telugu",
         "introducedBy": "TE-C45-grandmother",
-        "introducedAt": 177,
+        "introducedAt": 178,
         "missed": [
           "R2",
           "R3",
@@ -41214,7 +41207,7 @@
         "atom": "TE-LEX-HUSBAND",
         "language": "telugu",
         "introducedBy": "TE-C45-husband",
-        "introducedAt": 178,
+        "introducedAt": 179,
         "missed": [
           "R2",
           "R3",
@@ -41226,7 +41219,7 @@
         "atom": "TE-LEX-LISTEN",
         "language": "telugu",
         "introducedBy": "TE-C44-listen",
-        "introducedAt": 173,
+        "introducedAt": 174,
         "missed": [
           "R2",
           "R3",
@@ -41238,7 +41231,7 @@
         "atom": "TE-LEX-LOOK",
         "language": "telugu",
         "introducedBy": "TE-C44-look",
-        "introducedAt": 172,
+        "introducedAt": 173,
         "missed": [
           "R2",
           "R3",
@@ -41250,7 +41243,7 @@
         "atom": "TE-LEX-SIT",
         "language": "telugu",
         "introducedBy": "TE-C43-sit",
-        "introducedAt": 169,
+        "introducedAt": 170,
         "missed": [
           "R2",
           "R3",
@@ -41262,7 +41255,7 @@
         "atom": "TE-LEX-SPEAK",
         "language": "telugu",
         "introducedBy": "TE-C44-speak",
-        "introducedAt": 174,
+        "introducedAt": 175,
         "missed": [
           "R2",
           "R3",
@@ -41274,7 +41267,7 @@
         "atom": "TE-LEX-STAND",
         "language": "telugu",
         "introducedBy": "TE-C43-stand",
-        "introducedAt": 170,
+        "introducedAt": 171,
         "missed": [
           "R2",
           "R3",
@@ -41286,7 +41279,7 @@
         "atom": "TE-LEX-WIFE",
         "language": "telugu",
         "introducedBy": "TE-C45-wife",
-        "introducedAt": 179,
+        "introducedAt": 180,
         "missed": [
           "R2",
           "R3",
@@ -41298,7 +41291,7 @@
         "atom": "TE-LEX-WRITE",
         "language": "telugu",
         "introducedBy": "TE-C44-write",
-        "introducedAt": 175,
+        "introducedAt": 176,
         "missed": [
           "R2",
           "R3",
@@ -41322,7 +41315,7 @@
         "atom": "TE-PRAGMATICS-C14-RUTUVULU-02",
         "language": "telugu",
         "introducedBy": "TE-C14-rutuvulu",
-        "introducedAt": 90,
+        "introducedAt": 91,
         "missed": [
           "R2",
           "R3",
@@ -41334,7 +41327,7 @@
         "atom": "TE-PRAGMATICS-C25-SHUBHA-RATRI-02",
         "language": "telugu",
         "introducedBy": "TE-C25-shubha-ratri",
-        "introducedAt": 116,
+        "introducedAt": 117,
         "missed": [
           "R1",
           "R2",
@@ -41346,7 +41339,7 @@
         "atom": "TE-PRAGMATICS-C31-SUBHA-MADHYAHNAM-REGISTER-02",
         "language": "telugu",
         "introducedBy": "TE-C31-subha-madhyahnam-register",
-        "introducedAt": 125,
+        "introducedAt": 126,
         "missed": [
           "R1",
           "R2",
@@ -41367,10 +41360,22 @@
         "revisits": 1
       },
       {
+        "atom": "TE-SCRIPT-RECOG-110",
+        "language": "telugu",
+        "introducedBy": "TE-S110-letter-ya",
+        "introducedAt": 67,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "TE-SCRIPT-RECOG-130",
         "language": "telugu",
         "introducedBy": "TE-S130-letter-tha",
-        "introducedAt": 134,
+        "introducedAt": 135,
         "missed": [
           "R1",
           "R2",
@@ -41382,7 +41387,7 @@
         "atom": "TE-SCRIPT-RECOG-132",
         "language": "telugu",
         "introducedBy": "TE-S132-letter-nya",
-        "introducedAt": 206,
+        "introducedAt": 207,
         "missed": [
           "R2",
           "R3",
@@ -41394,7 +41399,7 @@
         "atom": "TE-SCRIPT-RECOG-138",
         "language": "telugu",
         "introducedBy": "TE-S138-letter-gha",
-        "introducedAt": 98,
+        "introducedAt": 99,
         "missed": [
           "R1",
           "R3",
@@ -41406,7 +41411,7 @@
         "atom": "TE-SCRIPT-RECOG-139",
         "language": "telugu",
         "introducedBy": "TE-S139-letter-ddha",
-        "introducedAt": 105,
+        "introducedAt": 106,
         "missed": [
           "R1",
           "R3",
@@ -41442,7 +41447,7 @@
         "atom": "TE-SCRIPT-RECOG-155",
         "language": "telugu",
         "introducedBy": "TE-S155-letter-ttha",
-        "introducedAt": 99,
+        "introducedAt": 100,
         "missed": [
           "R2",
           "R3",
@@ -41466,7 +41471,7 @@
         "atom": "TE-SCRIPT-RECOG-159",
         "language": "telugu",
         "introducedBy": "TE-S159-letter-sha",
-        "introducedAt": 81,
+        "introducedAt": 82,
         "missed": [
           "R1",
           "R2",
@@ -41478,7 +41483,7 @@
         "atom": "TE-SCRIPT-RECOG-160",
         "language": "telugu",
         "introducedBy": "TE-S160-letter-pha",
-        "introducedAt": 101,
+        "introducedAt": 102,
         "missed": [
           "R2",
           "R3",
@@ -67648,7 +67653,7 @@
         "atom": "TE-ETYMON-C09-KSHAMINCHANDI-01",
         "language": "telugu",
         "introducedBy": "TE-C09-kshaminchandi",
-        "introducedAt": 78,
+        "introducedAt": 79,
         "missed": [
           "R2",
           "R3"
@@ -67659,7 +67664,7 @@
         "atom": "TE-ETYMON-C09-KSHAMINCHANDI-02",
         "language": "telugu",
         "introducedBy": "TE-C09-kshaminchandi",
-        "introducedAt": 78,
+        "introducedAt": 79,
         "missed": [
           "R2",
           "R3"
@@ -67670,7 +67675,7 @@
         "atom": "TE-ETYMON-C11-RANGULU-02",
         "language": "telugu",
         "introducedBy": "TE-C11-rangulu",
-        "introducedAt": 84,
+        "introducedAt": 85,
         "missed": [
           "R2",
           "R4"
@@ -67681,7 +67686,7 @@
         "atom": "TE-ETYMON-C12-KUTUMBAM-02",
         "language": "telugu",
         "introducedBy": "TE-C12-kutumbam",
-        "introducedAt": 86,
+        "introducedAt": 87,
         "missed": [
           "R2",
           "R4"
@@ -67692,7 +67697,7 @@
         "atom": "TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-01",
         "language": "telugu",
         "introducedBy": "TE-C17-madhyaahnam-ardharaatri",
-        "introducedAt": 97,
+        "introducedAt": 98,
         "missed": [
           "R1",
           "R4"
@@ -67703,7 +67708,7 @@
         "atom": "TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-02",
         "language": "telugu",
         "introducedBy": "TE-C17-madhyaahnam-ardharaatri",
-        "introducedAt": 97,
+        "introducedAt": 98,
         "missed": [
           "R1",
           "R4"
@@ -67714,7 +67719,7 @@
         "atom": "TE-ETYMON-C19-VAYASU-01",
         "language": "telugu",
         "introducedBy": "TE-C19-vayasu",
-        "introducedAt": 106,
+        "introducedAt": 107,
         "missed": [
           "R2",
           "R4"
@@ -67725,7 +67730,7 @@
         "atom": "TE-ETYMON-C20-PADAKONDU-IRAVAI-01",
         "language": "telugu",
         "introducedBy": "TE-C20-padakondu-iravai",
-        "introducedAt": 107,
+        "introducedAt": 108,
         "missed": [
           "R2",
           "R3"
@@ -67736,7 +67741,7 @@
         "atom": "TE-ETYMON-C20-PADAKONDU-IRAVAI-02",
         "language": "telugu",
         "introducedBy": "TE-C20-padakondu-iravai",
-        "introducedAt": 107,
+        "introducedAt": 108,
         "missed": [
           "R2",
           "R3"
@@ -67747,7 +67752,7 @@
         "atom": "TE-ETYMON-C20-VATAVARANAM-01",
         "language": "telugu",
         "introducedBy": "TE-C20-vatavaranam",
-        "introducedAt": 108,
+        "introducedAt": 109,
         "missed": [
           "R1",
           "R2"
@@ -67758,7 +67763,7 @@
         "atom": "TE-ETYMON-C21-KUKKA-PILLI-01",
         "language": "telugu",
         "introducedBy": "TE-C21-kukka-pilli",
-        "introducedAt": 109,
+        "introducedAt": 110,
         "missed": [
           "R2",
           "R3"
@@ -67769,7 +67774,7 @@
         "atom": "TE-ETYMON-C21-KUKKA-PILLI-02",
         "language": "telugu",
         "introducedBy": "TE-C21-kukka-pilli",
-        "introducedAt": 109,
+        "introducedAt": 110,
         "missed": [
           "R2",
           "R3"
@@ -67780,7 +67785,7 @@
         "atom": "TE-ETYMON-C24-RATRI-01",
         "language": "telugu",
         "introducedBy": "TE-C24-ratri",
-        "introducedAt": 114,
+        "introducedAt": 115,
         "missed": [
           "R2",
           "R3"
@@ -67791,7 +67796,7 @@
         "atom": "TE-ETYMON-C24-RATRI-02",
         "language": "telugu",
         "introducedBy": "TE-C24-ratri",
-        "introducedAt": 114,
+        "introducedAt": 115,
         "missed": [
           "R2",
           "R3"
@@ -67802,7 +67807,7 @@
         "atom": "TE-ETYMON-C26-UDAYAM-01",
         "language": "telugu",
         "introducedBy": "TE-C26-udayam",
-        "introducedAt": 118,
+        "introducedAt": 119,
         "missed": [
           "R2",
           "R3"
@@ -67813,7 +67818,7 @@
         "atom": "TE-ETYMON-C27-SAYANTRAM-01",
         "language": "telugu",
         "introducedBy": "TE-C27-sayantram",
-        "introducedAt": 120,
+        "introducedAt": 121,
         "missed": [
           "R2",
           "R3"
@@ -67824,7 +67829,7 @@
         "atom": "TE-ETYMON-C27-SAYANTRAM-02",
         "language": "telugu",
         "introducedBy": "TE-C27-sayantram",
-        "introducedAt": 120,
+        "introducedAt": 121,
         "missed": [
           "R2",
           "R3"
@@ -67835,7 +67840,7 @@
         "atom": "TE-ETYMON-C28-MADHYAHNAM-WIDENED-02",
         "language": "telugu",
         "introducedBy": "TE-C28-madhyahnam-widened",
-        "introducedAt": 121,
+        "introducedAt": 122,
         "missed": [
           "R2",
           "R3"
@@ -67846,7 +67851,7 @@
         "atom": "TE-ETYMON-C29-SUBHODAYAM-01",
         "language": "telugu",
         "introducedBy": "TE-C29-subhodayam",
-        "introducedAt": 122,
+        "introducedAt": 123,
         "missed": [
           "R2",
           "R3"
@@ -67857,7 +67862,7 @@
         "atom": "TE-ETYMON-C30-SUBHA-SAYANTRAM-01",
         "language": "telugu",
         "introducedBy": "TE-C30-subha-sayantram",
-        "introducedAt": 123,
+        "introducedAt": 124,
         "missed": [
           "R2",
           "R3"
@@ -67868,7 +67873,7 @@
         "atom": "TE-ETYMON-C33-ANUKO-03",
         "language": "telugu",
         "introducedBy": "TE-C33-anuko",
-        "introducedAt": 132,
+        "introducedAt": 133,
         "missed": [
           "R2",
           "R3"
@@ -67879,7 +67884,7 @@
         "atom": "TE-ETYMON-C33-ARTHAM-CESUKO-03",
         "language": "telugu",
         "introducedBy": "TE-C33-artham-cesuko",
-        "introducedAt": 133,
+        "introducedAt": 134,
         "missed": [
           "R2",
           "R3"
@@ -67890,7 +67895,7 @@
         "atom": "TE-ETYMON-C33-RAAYU-02",
         "language": "telugu",
         "introducedBy": "TE-C33-raayu",
-        "introducedAt": 136,
+        "introducedAt": 137,
         "missed": [
           "R2",
           "R3"
@@ -67901,7 +67906,7 @@
         "atom": "TE-ETYMON-C34-ADUGU-02",
         "language": "telugu",
         "introducedBy": "TE-C34-adugu",
-        "introducedAt": 138,
+        "introducedAt": 139,
         "missed": [
           "R2",
           "R3"
@@ -67912,7 +67917,7 @@
         "atom": "TE-ETYMON-C34-ADUGU-03",
         "language": "telugu",
         "introducedBy": "TE-C34-adugu",
-        "introducedAt": 138,
+        "introducedAt": 139,
         "missed": [
           "R2",
           "R3"
@@ -67923,7 +67928,7 @@
         "atom": "TE-ETYMON-C34-ISHTAM-03",
         "language": "telugu",
         "introducedBy": "TE-C34-ishtam",
-        "introducedAt": 140,
+        "introducedAt": 141,
         "missed": [
           "R2",
           "R3"
@@ -67934,7 +67939,7 @@
         "atom": "TE-ETYMON-C34-SAHAYAM-CEYU-02",
         "language": "telugu",
         "introducedBy": "TE-C34-sahayam-ceyu",
-        "introducedAt": 139,
+        "introducedAt": 140,
         "missed": [
           "R2",
           "R3"
@@ -67945,7 +67950,7 @@
         "atom": "TE-ETYMON-C34-TIISUKO-02",
         "language": "telugu",
         "introducedBy": "TE-C34-tiisuko",
-        "introducedAt": 137,
+        "introducedAt": 138,
         "missed": [
           "R2",
           "R3"
@@ -67956,7 +67961,7 @@
         "atom": "TE-ETYMON-C35-KUTUMBAM-02",
         "language": "telugu",
         "introducedBy": "TE-C35-kutumbam",
-        "introducedAt": 141,
+        "introducedAt": 142,
         "missed": [
           "R2",
           "R3"
@@ -67967,7 +67972,7 @@
         "atom": "TE-ETYMON-C35-SNEHITUDU-02",
         "language": "telugu",
         "introducedBy": "TE-C35-snehitudu",
-        "introducedAt": 142,
+        "introducedAt": 143,
         "missed": [
           "R2",
           "R3"
@@ -67978,7 +67983,7 @@
         "atom": "TE-ETYMON-C36-KODUKU-02",
         "language": "telugu",
         "introducedBy": "TE-C36-koduku",
-        "introducedAt": 143,
+        "introducedAt": 144,
         "missed": [
           "R2",
           "R3"
@@ -67989,7 +67994,7 @@
         "atom": "TE-ETYMON-C36-KUUTURU-02",
         "language": "telugu",
         "introducedBy": "TE-C36-kuuturu",
-        "introducedAt": 144,
+        "introducedAt": 145,
         "missed": [
           "R2",
           "R3"
@@ -68000,7 +68005,7 @@
         "atom": "TE-ETYMON-C37-CEVI-02",
         "language": "telugu",
         "introducedBy": "TE-C37-cevi",
-        "introducedAt": 146,
+        "introducedAt": 147,
         "missed": [
           "R2",
           "R3"
@@ -68011,7 +68016,7 @@
         "atom": "TE-ETYMON-C37-KANNU-02",
         "language": "telugu",
         "introducedBy": "TE-C37-kannu",
-        "introducedAt": 145,
+        "introducedAt": 146,
         "missed": [
           "R2",
           "R3"
@@ -68022,7 +68027,7 @@
         "atom": "TE-ETYMON-C37-MUKKU-02",
         "language": "telugu",
         "introducedBy": "TE-C37-mukku",
-        "introducedAt": 147,
+        "introducedAt": 148,
         "missed": [
           "R2",
           "R3"
@@ -68033,7 +68038,7 @@
         "atom": "TE-ETYMON-C37-NORU-02",
         "language": "telugu",
         "introducedBy": "TE-C37-noru",
-        "introducedAt": 148,
+        "introducedAt": 149,
         "missed": [
           "R2",
           "R3"
@@ -68044,7 +68049,7 @@
         "atom": "TE-ETYMON-C38-GUNDE-02",
         "language": "telugu",
         "introducedBy": "TE-C38-gunde",
-        "introducedAt": 149,
+        "introducedAt": 150,
         "missed": [
           "R2",
           "R3"
@@ -68055,7 +68060,7 @@
         "atom": "TE-ETYMON-C38-HRUDAYAM-02",
         "language": "telugu",
         "introducedBy": "TE-C38-hrudayam",
-        "introducedAt": 150,
+        "introducedAt": 151,
         "missed": [
           "R2",
           "R3"
@@ -68066,7 +68071,7 @@
         "atom": "TE-ETYMON-C39-PAALU-02",
         "language": "telugu",
         "introducedBy": "TE-C39-paalu",
-        "introducedAt": 152,
+        "introducedAt": 153,
         "missed": [
           "R2",
           "R3"
@@ -68077,7 +68082,7 @@
         "atom": "TE-ETYMON-C39-TII-02",
         "language": "telugu",
         "introducedBy": "TE-C39-tii",
-        "introducedAt": 151,
+        "introducedAt": 152,
         "missed": [
           "R2",
           "R3"
@@ -68088,7 +68093,7 @@
         "atom": "TE-GRAMMAR-C17-MADHYAAHNAM-ARDHARAATRI-03",
         "language": "telugu",
         "introducedBy": "TE-C17-madhyaahnam-ardharaatri",
-        "introducedAt": 97,
+        "introducedAt": 98,
         "missed": [
           "R1",
           "R4"
@@ -68099,7 +68104,7 @@
         "atom": "TE-GRAMMAR-C19-VAYASU-02",
         "language": "telugu",
         "introducedBy": "TE-C19-vayasu",
-        "introducedAt": 106,
+        "introducedAt": 107,
         "missed": [
           "R2",
           "R4"
@@ -68110,7 +68115,7 @@
         "atom": "TE-GRAMMAR-C20-VATAVARANAM-02",
         "language": "telugu",
         "introducedBy": "TE-C20-vatavaranam",
-        "introducedAt": 108,
+        "introducedAt": 109,
         "missed": [
           "R1",
           "R2"
@@ -68121,7 +68126,7 @@
         "atom": "TE-GRAMMAR-C32-CUUDU-02",
         "language": "telugu",
         "introducedBy": "TE-C32-cuudu",
-        "introducedAt": 130,
+        "introducedAt": 131,
         "missed": [
           "R1",
           "R3"
@@ -68132,7 +68137,7 @@
         "atom": "TE-GRAMMAR-C32-RAA-02",
         "language": "telugu",
         "introducedBy": "TE-C32-raa",
-        "introducedAt": 128,
+        "introducedAt": 129,
         "missed": [
           "R1",
           "R3"
@@ -68143,7 +68148,7 @@
         "atom": "TE-GRAMMAR-C33-CADUVU-02",
         "language": "telugu",
         "introducedBy": "TE-C33-caduvu",
-        "introducedAt": 135,
+        "introducedAt": 136,
         "missed": [
           "R2",
           "R3"
@@ -68154,7 +68159,7 @@
         "atom": "TE-GRAMMAR-C34-ISHTAM-02",
         "language": "telugu",
         "introducedBy": "TE-C34-ishtam",
-        "introducedAt": 140,
+        "introducedAt": 141,
         "missed": [
           "R2",
           "R3"
@@ -68170,13 +68175,13 @@
           "R2",
           "R3"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "TE-LEX-C11-RANGULU-01",
         "language": "telugu",
         "introducedBy": "TE-C11-rangulu",
-        "introducedAt": 84,
+        "introducedAt": 85,
         "missed": [
           "R2",
           "R4"
@@ -68187,7 +68192,7 @@
         "atom": "TE-LEX-C12-KUTUMBAM-01",
         "language": "telugu",
         "introducedBy": "TE-C12-kutumbam",
-        "introducedAt": 86,
+        "introducedAt": 87,
         "missed": [
           "R2",
           "R4"
@@ -68198,7 +68203,7 @@
         "atom": "TE-LEX-C13-SHARIRA-BHAGALU-01",
         "language": "telugu",
         "introducedBy": "TE-C13-sharira-bhagalu",
-        "introducedAt": 88,
+        "introducedAt": 89,
         "missed": [
           "R2",
           "R4"
@@ -68209,7 +68214,7 @@
         "atom": "TE-LEX-C31-SUBHA-MADHYAHNAM-01",
         "language": "telugu",
         "introducedBy": "TE-C31-subha-madhyahnam",
-        "introducedAt": 124,
+        "introducedAt": 125,
         "missed": [
           "R2",
           "R3"
@@ -68220,7 +68225,7 @@
         "atom": "TE-LEX-C32-RAA-01",
         "language": "telugu",
         "introducedBy": "TE-C32-raa",
-        "introducedAt": 128,
+        "introducedAt": 129,
         "missed": [
           "R2",
           "R3"
@@ -68231,7 +68236,7 @@
         "atom": "TE-LEX-C32-VELLU-01",
         "language": "telugu",
         "introducedBy": "TE-C32-vellu",
-        "introducedAt": 127,
+        "introducedAt": 128,
         "missed": [
           "R2",
           "R3"
@@ -68242,7 +68247,7 @@
         "atom": "TE-LEX-C33-ARTHAM-CESUKO-01",
         "language": "telugu",
         "introducedBy": "TE-C33-artham-cesuko",
-        "introducedAt": 133,
+        "introducedAt": 134,
         "missed": [
           "R2",
           "R3"
@@ -68253,7 +68258,7 @@
         "atom": "TE-LEX-C33-CADUVU-01",
         "language": "telugu",
         "introducedBy": "TE-C33-caduvu",
-        "introducedAt": 135,
+        "introducedAt": 136,
         "missed": [
           "R2",
           "R3"
@@ -68264,7 +68269,7 @@
         "atom": "TE-LEX-C33-RAAYU-01",
         "language": "telugu",
         "introducedBy": "TE-C33-raayu",
-        "introducedAt": 136,
+        "introducedAt": 137,
         "missed": [
           "R2",
           "R3"
@@ -68275,7 +68280,7 @@
         "atom": "TE-LEX-C34-ADUGU-01",
         "language": "telugu",
         "introducedBy": "TE-C34-adugu",
-        "introducedAt": 138,
+        "introducedAt": 139,
         "missed": [
           "R2",
           "R3"
@@ -68286,7 +68291,7 @@
         "atom": "TE-LEX-C34-ISHTAM-01",
         "language": "telugu",
         "introducedBy": "TE-C34-ishtam",
-        "introducedAt": 140,
+        "introducedAt": 141,
         "missed": [
           "R2",
           "R3"
@@ -68297,7 +68302,7 @@
         "atom": "TE-LEX-C34-SAHAYAM-CEYU-01",
         "language": "telugu",
         "introducedBy": "TE-C34-sahayam-ceyu",
-        "introducedAt": 139,
+        "introducedAt": 140,
         "missed": [
           "R2",
           "R3"
@@ -68308,7 +68313,7 @@
         "atom": "TE-LEX-C34-TIISUKO-01",
         "language": "telugu",
         "introducedBy": "TE-C34-tiisuko",
-        "introducedAt": 137,
+        "introducedAt": 138,
         "missed": [
           "R2",
           "R3"
@@ -68319,7 +68324,7 @@
         "atom": "TE-LEX-C35-KUTUMBAM-01",
         "language": "telugu",
         "introducedBy": "TE-C35-kutumbam",
-        "introducedAt": 141,
+        "introducedAt": 142,
         "missed": [
           "R2",
           "R3"
@@ -68330,7 +68335,7 @@
         "atom": "TE-LEX-C35-SNEHITUDU-01",
         "language": "telugu",
         "introducedBy": "TE-C35-snehitudu",
-        "introducedAt": 142,
+        "introducedAt": 143,
         "missed": [
           "R2",
           "R3"
@@ -68341,7 +68346,7 @@
         "atom": "TE-LEX-C36-KODUKU-01",
         "language": "telugu",
         "introducedBy": "TE-C36-koduku",
-        "introducedAt": 143,
+        "introducedAt": 144,
         "missed": [
           "R2",
           "R3"
@@ -68352,7 +68357,7 @@
         "atom": "TE-LEX-C36-KUUTURU-01",
         "language": "telugu",
         "introducedBy": "TE-C36-kuuturu",
-        "introducedAt": 144,
+        "introducedAt": 145,
         "missed": [
           "R2",
           "R3"
@@ -68363,7 +68368,7 @@
         "atom": "TE-LEX-C37-CEVI-01",
         "language": "telugu",
         "introducedBy": "TE-C37-cevi",
-        "introducedAt": 146,
+        "introducedAt": 147,
         "missed": [
           "R2",
           "R3"
@@ -68374,7 +68379,7 @@
         "atom": "TE-LEX-C37-KANNU-01",
         "language": "telugu",
         "introducedBy": "TE-C37-kannu",
-        "introducedAt": 145,
+        "introducedAt": 146,
         "missed": [
           "R2",
           "R3"
@@ -68385,7 +68390,7 @@
         "atom": "TE-LEX-C37-MUKKU-01",
         "language": "telugu",
         "introducedBy": "TE-C37-mukku",
-        "introducedAt": 147,
+        "introducedAt": 148,
         "missed": [
           "R2",
           "R3"
@@ -68396,7 +68401,7 @@
         "atom": "TE-LEX-C37-NORU-01",
         "language": "telugu",
         "introducedBy": "TE-C37-noru",
-        "introducedAt": 148,
+        "introducedAt": 149,
         "missed": [
           "R2",
           "R3"
@@ -68407,7 +68412,7 @@
         "atom": "TE-LEX-C38-GUNDE-01",
         "language": "telugu",
         "introducedBy": "TE-C38-gunde",
-        "introducedAt": 149,
+        "introducedAt": 150,
         "missed": [
           "R2",
           "R3"
@@ -68418,7 +68423,7 @@
         "atom": "TE-LEX-C38-HRUDAYAM-01",
         "language": "telugu",
         "introducedBy": "TE-C38-hrudayam",
-        "introducedAt": 150,
+        "introducedAt": 151,
         "missed": [
           "R2",
           "R3"
@@ -68429,7 +68434,7 @@
         "atom": "TE-LEX-C39-PAALU-01",
         "language": "telugu",
         "introducedBy": "TE-C39-paalu",
-        "introducedAt": 152,
+        "introducedAt": 153,
         "missed": [
           "R2",
           "R3"
@@ -68440,7 +68445,7 @@
         "atom": "TE-LEX-C39-TII-01",
         "language": "telugu",
         "introducedBy": "TE-C39-tii",
-        "introducedAt": 151,
+        "introducedAt": 152,
         "missed": [
           "R2",
           "R3"
@@ -68451,7 +68456,7 @@
         "atom": "TE-LEX-C41-DEIXIS-03",
         "language": "telugu",
         "introducedBy": "TE-C41-here",
-        "introducedAt": 157,
+        "introducedAt": 158,
         "missed": [
           "R2",
           "R3"
@@ -68462,7 +68467,7 @@
         "atom": "TE-LEX-C41-DEIXIS-04",
         "language": "telugu",
         "introducedBy": "TE-C41-there",
-        "introducedAt": 158,
+        "introducedAt": 159,
         "missed": [
           "R2",
           "R3"
@@ -68473,7 +68478,7 @@
         "atom": "TE-LEX-C41-DEIXIS-05",
         "language": "telugu",
         "introducedBy": "TE-C41-who",
-        "introducedAt": 159,
+        "introducedAt": 160,
         "missed": [
           "R2",
           "R3"
@@ -68484,7 +68489,7 @@
         "atom": "TE-LEX-C41-DEIXIS-06",
         "language": "telugu",
         "introducedBy": "TE-C41-where",
-        "introducedAt": 160,
+        "introducedAt": 161,
         "missed": [
           "R2",
           "R3"
@@ -68495,7 +68500,7 @@
         "atom": "TE-LEX-C42-ADJ-01",
         "language": "telugu",
         "introducedBy": "TE-C42-big",
-        "introducedAt": 162,
+        "introducedAt": 163,
         "missed": [
           "R3",
           "R4"
@@ -68506,7 +68511,7 @@
         "atom": "TE-LEX-C46-ASK-01",
         "language": "telugu",
         "introducedBy": "TE-C46-fruit",
-        "introducedAt": 180,
+        "introducedAt": 181,
         "missed": [
           "R3",
           "R4"
@@ -68517,7 +68522,7 @@
         "atom": "TE-LEX-C46-ASK-02",
         "language": "telugu",
         "introducedBy": "TE-C46-cloth",
-        "introducedAt": 181,
+        "introducedAt": 182,
         "missed": [
           "R3",
           "R4"
@@ -68528,7 +68533,7 @@
         "atom": "TE-LEX-C46-ASK-04",
         "language": "telugu",
         "introducedBy": "TE-C46-salt",
-        "introducedAt": 183,
+        "introducedAt": 184,
         "missed": [
           "R3",
           "R4"
@@ -68539,7 +68544,7 @@
         "atom": "TE-LEX-C47-BODY-01",
         "language": "telugu",
         "introducedBy": "TE-C47-leg",
-        "introducedAt": 185,
+        "introducedAt": 186,
         "missed": [
           "R3",
           "R4"
@@ -68550,7 +68555,7 @@
         "atom": "TE-LEX-C47-BODY-02",
         "language": "telugu",
         "introducedBy": "TE-C47-tooth",
-        "introducedAt": 186,
+        "introducedAt": 187,
         "missed": [
           "R3",
           "R4"
@@ -68561,7 +68566,7 @@
         "atom": "TE-LEX-C47-BODY-03",
         "language": "telugu",
         "introducedBy": "TE-C47-hair",
-        "introducedAt": 187,
+        "introducedAt": 188,
         "missed": [
           "R3",
           "R4"
@@ -68572,7 +68577,7 @@
         "atom": "TE-LEX-C47-BODY-04",
         "language": "telugu",
         "introducedBy": "TE-C47-finger",
-        "introducedAt": 188,
+        "introducedAt": 189,
         "missed": [
           "R3",
           "R4"
@@ -68583,7 +68588,7 @@
         "atom": "TE-LEX-C47-BODY-05",
         "language": "telugu",
         "introducedBy": "TE-C47-stomach",
-        "introducedAt": 189,
+        "introducedAt": 190,
         "missed": [
           "R3",
           "R4"
@@ -68594,7 +68599,7 @@
         "atom": "TE-LEX-C48-ROLE-02",
         "language": "telugu",
         "introducedBy": "TE-C48-student",
-        "introducedAt": 191,
+        "introducedAt": 192,
         "missed": [
           "R3",
           "R4"
@@ -68605,7 +68610,7 @@
         "atom": "TE-LEX-C48-ROLE-03",
         "language": "telugu",
         "introducedBy": "TE-C48-doctor",
-        "introducedAt": 192,
+        "introducedAt": 193,
         "missed": [
           "R3",
           "R4"
@@ -68616,7 +68621,7 @@
         "atom": "TE-LEX-C48-ROLE-05",
         "language": "telugu",
         "introducedBy": "TE-C48-guest",
-        "introducedAt": 194,
+        "introducedAt": 195,
         "missed": [
           "R3",
           "R4"
@@ -68627,7 +68632,7 @@
         "atom": "TE-LEX-C49-REPLY-01",
         "language": "telugu",
         "introducedBy": "TE-C49-true",
-        "introducedAt": 195,
+        "introducedAt": 196,
         "missed": [
           "R3",
           "R4"
@@ -68638,7 +68643,7 @@
         "atom": "TE-LEX-C49-REPLY-02",
         "language": "telugu",
         "introducedBy": "TE-C49-enough",
-        "introducedAt": 196,
+        "introducedAt": 197,
         "missed": [
           "R3",
           "R4"
@@ -68649,7 +68654,7 @@
         "atom": "TE-LEX-C49-REPLY-03",
         "language": "telugu",
         "introducedBy": "TE-C49-certainly",
-        "introducedAt": 197,
+        "introducedAt": 198,
         "missed": [
           "R3",
           "R4"
@@ -68660,7 +68665,7 @@
         "atom": "TE-LEX-C49-REPLY-04",
         "language": "telugu",
         "introducedBy": "TE-C49-perhaps",
-        "introducedAt": 198,
+        "introducedAt": 199,
         "missed": [
           "R3",
           "R4"
@@ -68671,7 +68676,7 @@
         "atom": "TE-LEX-C49-REPLY-05",
         "language": "telugu",
         "introducedBy": "TE-C49-alright",
-        "introducedAt": 199,
+        "introducedAt": 200,
         "missed": [
           "R3",
           "R4"
@@ -68682,7 +68687,7 @@
         "atom": "TE-LEX-C50-LEAVE-01",
         "language": "telugu",
         "introducedBy": "TE-C50-now",
-        "introducedAt": 200,
+        "introducedAt": 201,
         "missed": [
           "R3",
           "R4"
@@ -68693,7 +68698,7 @@
         "atom": "TE-LEX-C50-LEAVE-02",
         "language": "telugu",
         "introducedBy": "TE-C50-day-after",
-        "introducedAt": 201,
+        "introducedAt": 202,
         "missed": [
           "R3",
           "R4"
@@ -68704,7 +68709,7 @@
         "atom": "TE-LEX-C50-LEAVE-03",
         "language": "telugu",
         "introducedBy": "TE-C50-journey",
-        "introducedAt": 202,
+        "introducedAt": 203,
         "missed": [
           "R3",
           "R4"
@@ -68715,7 +68720,7 @@
         "atom": "TE-LEX-C50-LEAVE-04",
         "language": "telugu",
         "introducedBy": "TE-C50-set-out",
-        "introducedAt": 203,
+        "introducedAt": 204,
         "missed": [
           "R3",
           "R4"
@@ -68726,7 +68731,7 @@
         "atom": "TE-LEX-C50-LEAVE-05",
         "language": "telugu",
         "introducedBy": "TE-C50-farewell",
-        "introducedAt": 204,
+        "introducedAt": 205,
         "missed": [
           "R3",
           "R4"
@@ -68737,7 +68742,7 @@
         "atom": "TE-LEX-C51-COURTESY-01",
         "language": "telugu",
         "introducedBy": "TE-C51-gratitude",
-        "introducedAt": 205,
+        "introducedAt": 206,
         "missed": [
           "R3",
           "R4"
@@ -68748,7 +68753,7 @@
         "atom": "TE-LEX-C51-COURTESY-02",
         "language": "telugu",
         "introducedBy": "TE-C51-favour",
-        "introducedAt": 207,
+        "introducedAt": 208,
         "missed": [
           "R3",
           "R4"
@@ -68759,7 +68764,7 @@
         "atom": "TE-LEX-C51-COURTESY-03",
         "language": "telugu",
         "introducedBy": "TE-C51-respect",
-        "introducedAt": 208,
+        "introducedAt": 209,
         "missed": [
           "R3",
           "R4"
@@ -68770,7 +68775,7 @@
         "atom": "TE-LEX-C51-COURTESY-04",
         "language": "telugu",
         "introducedBy": "TE-C51-blessing",
-        "introducedAt": 210,
+        "introducedAt": 211,
         "missed": [
           "R3",
           "R4"
@@ -68781,7 +68786,7 @@
         "atom": "TE-LEX-C51-COURTESY-05",
         "language": "telugu",
         "introducedBy": "TE-C51-salutation",
-        "introducedAt": 211,
+        "introducedAt": 212,
         "missed": [
           "R3",
           "R4"
@@ -68792,7 +68797,7 @@
         "atom": "TE-LEX-C52-WELCOME-03",
         "language": "telugu",
         "introducedBy": "TE-C52-muggu",
-        "introducedAt": 214,
+        "introducedAt": 215,
         "missed": [
           "R3",
           "R4"
@@ -68803,7 +68808,7 @@
         "atom": "TE-LEX-C52-WELCOME-04",
         "language": "telugu",
         "introducedBy": "TE-C52-flower",
-        "introducedAt": 215,
+        "introducedAt": 216,
         "missed": [
           "R3",
           "R4"
@@ -68814,7 +68819,7 @@
         "atom": "TE-LEX-C52-WELCOME-05",
         "language": "telugu",
         "introducedBy": "TE-C52-garland",
-        "introducedAt": 216,
+        "introducedAt": 217,
         "missed": [
           "R3",
           "R4"
@@ -68825,7 +68830,7 @@
         "atom": "TE-LEX-C53-SKY-01",
         "language": "telugu",
         "introducedBy": "TE-C53-sky",
-        "introducedAt": 217,
+        "introducedAt": 218,
         "missed": [
           "R3",
           "R4"
@@ -68836,7 +68841,7 @@
         "atom": "TE-LEX-C53-SKY-02",
         "language": "telugu",
         "introducedBy": "TE-C53-sun",
-        "introducedAt": 218,
+        "introducedAt": 219,
         "missed": [
           "R3",
           "R4"
@@ -68847,7 +68852,7 @@
         "atom": "TE-LEX-C53-SKY-03",
         "language": "telugu",
         "introducedBy": "TE-C53-moon",
-        "introducedAt": 219,
+        "introducedAt": 220,
         "missed": [
           "R3",
           "R4"
@@ -68858,7 +68863,7 @@
         "atom": "TE-LEX-C53-SKY-04",
         "language": "telugu",
         "introducedBy": "TE-C53-star",
-        "introducedAt": 220,
+        "introducedAt": 221,
         "missed": [
           "R3",
           "R4"
@@ -68869,7 +68874,7 @@
         "atom": "TE-LEX-C53-SKY-05",
         "language": "telugu",
         "introducedBy": "TE-C53-cloud",
-        "introducedAt": 221,
+        "introducedAt": 222,
         "missed": [
           "R3",
           "R4"
@@ -68880,7 +68885,7 @@
         "atom": "TE-LEX-C54-TREE-01",
         "language": "telugu",
         "introducedBy": "TE-C54-tree",
-        "introducedAt": 222,
+        "introducedAt": 223,
         "missed": [
           "R3",
           "R4"
@@ -68891,7 +68896,7 @@
         "atom": "TE-LEX-C54-TREE-02",
         "language": "telugu",
         "introducedBy": "TE-C54-branch",
-        "introducedAt": 223,
+        "introducedAt": 224,
         "missed": [
           "R3",
           "R4"
@@ -68902,7 +68907,7 @@
         "atom": "TE-LEX-C54-TREE-03",
         "language": "telugu",
         "introducedBy": "TE-C54-root",
-        "introducedAt": 224,
+        "introducedAt": 225,
         "missed": [
           "R3",
           "R4"
@@ -68913,7 +68918,7 @@
         "atom": "TE-LEX-C54-TREE-04",
         "language": "telugu",
         "introducedBy": "TE-C54-seed",
-        "introducedAt": 225,
+        "introducedAt": 226,
         "missed": [
           "R3",
           "R4"
@@ -68924,7 +68929,7 @@
         "atom": "TE-LEX-C54-TREE-05",
         "language": "telugu",
         "introducedBy": "TE-C54-seedling",
-        "introducedAt": 226,
+        "introducedAt": 227,
         "missed": [
           "R3",
           "R4"
@@ -68935,7 +68940,7 @@
         "atom": "TE-LEX-C55-ROAD-02",
         "language": "telugu",
         "introducedBy": "TE-C55-tank",
-        "introducedAt": 228,
+        "introducedAt": 229,
         "missed": [
           "R3",
           "R4"
@@ -68946,7 +68951,7 @@
         "atom": "TE-LEX-C55-ROAD-03",
         "language": "telugu",
         "introducedBy": "TE-C55-hill",
-        "introducedAt": 229,
+        "introducedAt": 230,
         "missed": [
           "R3",
           "R4"
@@ -68957,7 +68962,7 @@
         "atom": "TE-LEX-C55-ROAD-04",
         "language": "telugu",
         "introducedBy": "TE-C55-village",
-        "introducedAt": 230,
+        "introducedAt": 231,
         "missed": [
           "R3",
           "R4"
@@ -68968,7 +68973,7 @@
         "atom": "TE-LEX-C55-ROAD-05",
         "language": "telugu",
         "introducedBy": "TE-C55-path",
-        "introducedAt": 231,
+        "introducedAt": 232,
         "missed": [
           "R3",
           "R4"
@@ -68979,7 +68984,7 @@
         "atom": "TE-LEX-C56-HOUSE-01",
         "language": "telugu",
         "introducedBy": "TE-C56-mat",
-        "introducedAt": 232,
+        "introducedAt": 233,
         "missed": [
           "R3",
           "R4"
@@ -68990,7 +68995,7 @@
         "atom": "TE-LEX-C56-HOUSE-02",
         "language": "telugu",
         "introducedBy": "TE-C56-basket",
-        "introducedAt": 233,
+        "introducedAt": 234,
         "missed": [
           "R3",
           "R4"
@@ -69001,7 +69006,7 @@
         "atom": "TE-LEX-C56-HOUSE-03",
         "language": "telugu",
         "introducedBy": "TE-C56-knife",
-        "introducedAt": 234,
+        "introducedAt": 235,
         "missed": [
           "R3",
           "R4"
@@ -69012,7 +69017,7 @@
         "atom": "TE-LEX-C56-HOUSE-04",
         "language": "telugu",
         "introducedBy": "TE-C56-vessel",
-        "introducedAt": 235,
+        "introducedAt": 236,
         "missed": [
           "R3",
           "R4"
@@ -69023,7 +69028,7 @@
         "atom": "TE-LEX-C56-HOUSE-05",
         "language": "telugu",
         "introducedBy": "TE-C56-box",
-        "introducedAt": 236,
+        "introducedAt": 237,
         "missed": [
           "R3",
           "R4"
@@ -69034,7 +69039,7 @@
         "atom": "TE-LEX-C57-BODY-01",
         "language": "telugu",
         "introducedBy": "TE-C57-neck",
-        "introducedAt": 237,
+        "introducedAt": 238,
         "missed": [
           "R3",
           "R4"
@@ -69045,7 +69050,7 @@
         "atom": "TE-LEX-C57-BODY-02",
         "language": "telugu",
         "introducedBy": "TE-C57-back",
-        "introducedAt": 238,
+        "introducedAt": 239,
         "missed": [
           "R3",
           "R4"
@@ -69056,7 +69061,7 @@
         "atom": "TE-LEX-C57-BODY-03",
         "language": "telugu",
         "introducedBy": "TE-C57-lip",
-        "introducedAt": 239,
+        "introducedAt": 240,
         "missed": [
           "R3",
           "R4"
@@ -69067,7 +69072,7 @@
         "atom": "TE-LEX-C57-BODY-04",
         "language": "telugu",
         "introducedBy": "TE-C57-nail",
-        "introducedAt": 240,
+        "introducedAt": 241,
         "missed": [
           "R3",
           "R4"
@@ -69078,7 +69083,7 @@
         "atom": "TE-LEX-C57-BODY-05",
         "language": "telugu",
         "introducedBy": "TE-C57-bone",
-        "introducedAt": 241,
+        "introducedAt": 242,
         "missed": [
           "R3",
           "R4"
@@ -69089,7 +69094,7 @@
         "atom": "TE-LEX-C58-REPLY-01",
         "language": "telugu",
         "introducedBy": "TE-C58-a-little",
-        "introducedAt": 242,
+        "introducedAt": 243,
         "missed": [
           "R3",
           "R4"
@@ -69100,7 +69105,7 @@
         "atom": "TE-LEX-C58-REPLY-02",
         "language": "telugu",
         "introducedBy": "TE-C58-more",
-        "introducedAt": 243,
+        "introducedAt": 244,
         "missed": [
           "R3",
           "R4"
@@ -69111,7 +69116,7 @@
         "atom": "TE-LEX-C58-REPLY-03",
         "language": "telugu",
         "introducedBy": "TE-C58-less",
-        "introducedAt": 244,
+        "introducedAt": 245,
         "missed": [
           "R3",
           "R4"
@@ -69122,7 +69127,7 @@
         "atom": "TE-LEX-C58-REPLY-04",
         "language": "telugu",
         "introducedBy": "TE-C58-no-thanks",
-        "introducedAt": 245,
+        "introducedAt": 246,
         "missed": [
           "R3",
           "R4"
@@ -69133,7 +69138,7 @@
         "atom": "TE-LEX-C58-REPLY-05",
         "language": "telugu",
         "introducedBy": "TE-C58-thats-all",
-        "introducedAt": 246,
+        "introducedAt": 247,
         "missed": [
           "R3",
           "R4"
@@ -69144,7 +69149,7 @@
         "atom": "TE-LEX-C59-WEATHER-02",
         "language": "telugu",
         "introducedBy": "TE-C59-mist",
-        "introducedAt": 248,
+        "introducedAt": 249,
         "missed": [
           "R3",
           "R4"
@@ -69155,7 +69160,7 @@
         "atom": "TE-LEX-C59-WEATHER-03",
         "language": "telugu",
         "introducedBy": "TE-C59-sand",
-        "introducedAt": 249,
+        "introducedAt": 250,
         "missed": [
           "R3",
           "R4"
@@ -69166,7 +69171,7 @@
         "atom": "TE-LEX-C59-WEATHER-04",
         "language": "telugu",
         "introducedBy": "TE-C59-mud",
-        "introducedAt": 250,
+        "introducedAt": 251,
         "missed": [
           "R3",
           "R4"
@@ -69177,7 +69182,7 @@
         "atom": "TE-LEX-C59-WEATHER-05",
         "language": "telugu",
         "introducedBy": "TE-C59-fire",
-        "introducedAt": 251,
+        "introducedAt": 252,
         "missed": [
           "R3",
           "R4"
@@ -69188,7 +69193,7 @@
         "atom": "TE-LEX-C60-ANIMAL-01",
         "language": "telugu",
         "introducedBy": "TE-C60-buffalo",
-        "introducedAt": 252,
+        "introducedAt": 253,
         "missed": [
           "R3",
           "R4"
@@ -69199,7 +69204,7 @@
         "atom": "TE-LEX-C60-ANIMAL-02",
         "language": "telugu",
         "introducedBy": "TE-C60-goat",
-        "introducedAt": 253,
+        "introducedAt": 254,
         "missed": [
           "R3",
           "R4"
@@ -69210,7 +69215,7 @@
         "atom": "TE-LEX-C60-ANIMAL-03",
         "language": "telugu",
         "introducedBy": "TE-C60-hen",
-        "introducedAt": 254,
+        "introducedAt": 255,
         "missed": [
           "R3",
           "R4"
@@ -69221,7 +69226,7 @@
         "atom": "TE-LEX-C60-ANIMAL-04",
         "language": "telugu",
         "introducedBy": "TE-C60-ant",
-        "introducedAt": 255,
+        "introducedAt": 256,
         "missed": [
           "R3",
           "R4"
@@ -69232,7 +69237,7 @@
         "atom": "TE-LEX-C60-ANIMAL-05",
         "language": "telugu",
         "introducedBy": "TE-C60-bird",
-        "introducedAt": 256,
+        "introducedAt": 257,
         "missed": [
           "R3",
           "R4"
@@ -69243,7 +69248,7 @@
         "atom": "TE-LEX-C61-KITCHEN-01",
         "language": "telugu",
         "introducedBy": "TE-C61-curd",
-        "introducedAt": 257,
+        "introducedAt": 258,
         "missed": [
           "R3",
           "R4"
@@ -69254,7 +69259,7 @@
         "atom": "TE-LEX-C61-KITCHEN-02",
         "language": "telugu",
         "introducedBy": "TE-C61-ghee",
-        "introducedAt": 258,
+        "introducedAt": 259,
         "missed": [
           "R3",
           "R4"
@@ -69265,7 +69270,7 @@
         "atom": "TE-LEX-C61-KITCHEN-03",
         "language": "telugu",
         "introducedBy": "TE-C61-oil",
-        "introducedAt": 259,
+        "introducedAt": 260,
         "missed": [
           "R3",
           "R4"
@@ -69276,7 +69281,7 @@
         "atom": "TE-LEX-C61-KITCHEN-04",
         "language": "telugu",
         "introducedBy": "TE-C61-sugar",
-        "introducedAt": 260,
+        "introducedAt": 261,
         "missed": [
           "R3",
           "R4"
@@ -69287,7 +69292,7 @@
         "atom": "TE-LEX-C61-KITCHEN-05",
         "language": "telugu",
         "introducedBy": "TE-C61-chilli",
-        "introducedAt": 261,
+        "introducedAt": 262,
         "missed": [
           "R3",
           "R4"
@@ -69298,7 +69303,7 @@
         "atom": "TE-LEX-C62-MADE-01",
         "language": "telugu",
         "introducedBy": "TE-C62-thread",
-        "introducedAt": 262,
+        "introducedAt": 263,
         "missed": [
           "R3",
           "R4"
@@ -69309,7 +69314,7 @@
         "atom": "TE-LEX-C62-MADE-02",
         "language": "telugu",
         "introducedBy": "TE-C62-needle",
-        "introducedAt": 263,
+        "introducedAt": 264,
         "missed": [
           "R3",
           "R4"
@@ -69320,7 +69325,7 @@
         "atom": "TE-LEX-C62-MADE-03",
         "language": "telugu",
         "introducedBy": "TE-C62-broom",
-        "introducedAt": 264,
+        "introducedAt": 265,
         "missed": [
           "R3",
           "R4"
@@ -69331,7 +69336,7 @@
         "atom": "TE-LEX-C62-MADE-04",
         "language": "telugu",
         "introducedBy": "TE-C62-umbrella",
-        "introducedAt": 265,
+        "introducedAt": 266,
         "missed": [
           "R3",
           "R4"
@@ -69342,7 +69347,7 @@
         "atom": "TE-LEX-C62-MADE-05",
         "language": "telugu",
         "introducedBy": "TE-C62-mirror",
-        "introducedAt": 266,
+        "introducedAt": 267,
         "missed": [
           "R3",
           "R4"
@@ -69353,7 +69358,7 @@
         "atom": "TE-LEX-C63-HEALTH-01",
         "language": "telugu",
         "introducedBy": "TE-C63-hunger",
-        "introducedAt": 267,
+        "introducedAt": 268,
         "missed": [
           "R3",
           "R4"
@@ -69364,7 +69369,7 @@
         "atom": "TE-LEX-C63-HEALTH-02",
         "language": "telugu",
         "introducedBy": "TE-C63-sleep",
-        "introducedAt": 268,
+        "introducedAt": 269,
         "missed": [
           "R3",
           "R4"
@@ -69375,7 +69380,7 @@
         "atom": "TE-LEX-C63-HEALTH-03",
         "language": "telugu",
         "introducedBy": "TE-C63-cough",
-        "introducedAt": 269,
+        "introducedAt": 270,
         "missed": [
           "R3",
           "R4"
@@ -69386,7 +69391,7 @@
         "atom": "TE-LEX-C63-HEALTH-04",
         "language": "telugu",
         "introducedBy": "TE-C63-disease",
-        "introducedAt": 270,
+        "introducedAt": 271,
         "missed": [
           "R3",
           "R4"
@@ -69397,7 +69402,7 @@
         "atom": "TE-LEX-C63-HEALTH-05",
         "language": "telugu",
         "introducedBy": "TE-C63-health",
-        "introducedAt": 271,
+        "introducedAt": 272,
         "missed": [
           "R3",
           "R4"
@@ -69408,7 +69413,7 @@
         "atom": "TE-LEX-C64-JOIN-01",
         "language": "telugu",
         "introducedBy": "TE-C64-also",
-        "introducedAt": 272,
+        "introducedAt": 273,
         "missed": [
           "R3",
           "R4"
@@ -69419,7 +69424,7 @@
         "atom": "TE-LEX-C64-JOIN-02",
         "language": "telugu",
         "introducedBy": "TE-C64-only",
-        "introducedAt": 273,
+        "introducedAt": 274,
         "missed": [
           "R3",
           "R4"
@@ -69430,7 +69435,7 @@
         "atom": "TE-LEX-C64-JOIN-03",
         "language": "telugu",
         "introducedBy": "TE-C64-in-that-case",
-        "introducedAt": 274,
+        "introducedAt": 275,
         "missed": [
           "R3",
           "R4"
@@ -69441,7 +69446,7 @@
         "atom": "TE-LEX-C64-JOIN-04",
         "language": "telugu",
         "introducedBy": "TE-C64-after",
-        "introducedAt": 275,
+        "introducedAt": 276,
         "missed": [
           "R3",
           "R4"
@@ -69452,7 +69457,7 @@
         "atom": "TE-LEX-C64-JOIN-05",
         "language": "telugu",
         "introducedBy": "TE-C64-still",
-        "introducedAt": 276,
+        "introducedAt": 277,
         "missed": [
           "R3",
           "R4"
@@ -69463,7 +69468,7 @@
         "atom": "TE-LEX-C65-MANNERS-01",
         "language": "telugu",
         "introducedBy": "TE-C65-welcome",
-        "introducedAt": 277,
+        "introducedAt": 278,
         "missed": [
           "R3",
           "R4"
@@ -69474,7 +69479,7 @@
         "atom": "TE-LEX-C65-MANNERS-02",
         "language": "telugu",
         "introducedBy": "TE-C65-manners",
-        "introducedAt": 278,
+        "introducedAt": 279,
         "missed": [
           "R3",
           "R4"
@@ -69485,7 +69490,7 @@
         "atom": "TE-LEX-C65-MANNERS-03",
         "language": "telugu",
         "introducedBy": "TE-C65-request",
-        "introducedAt": 279,
+        "introducedAt": 280,
         "missed": [
           "R3",
           "R4"
@@ -69496,7 +69501,7 @@
         "atom": "TE-LEX-C65-MANNERS-04",
         "language": "telugu",
         "introducedBy": "TE-C65-permission",
-        "introducedAt": 280,
+        "introducedAt": 281,
         "missed": [
           "R3",
           "R4"
@@ -69507,7 +69512,7 @@
         "atom": "TE-LEX-C65-MANNERS-05",
         "language": "telugu",
         "introducedBy": "TE-C65-trust",
-        "introducedAt": 281,
+        "introducedAt": 282,
         "missed": [
           "R3",
           "R4"
@@ -69518,7 +69523,7 @@
         "atom": "TE-LEX-C66-FIELD-01",
         "language": "telugu",
         "introducedBy": "TE-C66-field",
-        "introducedAt": 282,
+        "introducedAt": 283,
         "missed": [
           "R3",
           "R4"
@@ -69529,7 +69534,7 @@
         "atom": "TE-LEX-C66-FIELD-02",
         "language": "telugu",
         "introducedBy": "TE-C66-paddy",
-        "introducedAt": 283,
+        "introducedAt": 284,
         "missed": [
           "R3",
           "R4"
@@ -69540,7 +69545,7 @@
         "atom": "TE-LEX-C66-FIELD-03",
         "language": "telugu",
         "introducedBy": "TE-C66-grass",
-        "introducedAt": 284,
+        "introducedAt": 285,
         "missed": [
           "R3",
           "R4"
@@ -69551,7 +69556,7 @@
         "atom": "TE-LEX-C66-FIELD-04",
         "language": "telugu",
         "introducedBy": "TE-C66-threshing-floor",
-        "introducedAt": 285,
+        "introducedAt": 286,
         "missed": [
           "R3",
           "R4"
@@ -69562,7 +69567,7 @@
         "atom": "TE-LEX-C66-FIELD-05",
         "language": "telugu",
         "introducedBy": "TE-C66-harvest",
-        "introducedAt": 286,
+        "introducedAt": 287,
         "missed": [
           "R3",
           "R4"
@@ -69573,7 +69578,7 @@
         "atom": "TE-LEX-C67-WALL-01",
         "language": "telugu",
         "introducedBy": "TE-C67-wall",
-        "introducedAt": 287,
+        "introducedAt": 288,
         "missed": [
           "R3",
           "R4"
@@ -69584,7 +69589,7 @@
         "atom": "TE-LEX-C67-WALL-02",
         "language": "telugu",
         "introducedBy": "TE-C67-roof",
-        "introducedAt": 288,
+        "introducedAt": 289,
         "missed": [
           "R3",
           "R4"
@@ -69595,7 +69600,7 @@
         "atom": "TE-LEX-C67-WALL-03",
         "language": "telugu",
         "introducedBy": "TE-C67-threshold",
-        "introducedAt": 289,
+        "introducedAt": 290,
         "missed": [
           "R3",
           "R4"
@@ -69606,7 +69611,7 @@
         "atom": "TE-LEX-C67-WALL-04",
         "language": "telugu",
         "introducedBy": "TE-C67-step",
-        "introducedAt": 290,
+        "introducedAt": 291,
         "missed": [
           "R3",
           "R4"
@@ -69616,8 +69621,8 @@
       {
         "atom": "TE-PRAGMATICS-C08-DAYACHESI-03",
         "language": "telugu",
-        "introducedBy": "TE-C08-dayachesi",
-        "introducedAt": 76,
+        "introducedBy": "TE-C08-andi",
+        "introducedAt": 77,
         "missed": [
           "R2",
           "R3"
@@ -69628,7 +69633,7 @@
         "atom": "TE-PRAGMATICS-C09-KSHAMINCHANDI-03",
         "language": "telugu",
         "introducedBy": "TE-C09-kshaminchandi",
-        "introducedAt": 78,
+        "introducedAt": 79,
         "missed": [
           "R2",
           "R3"
@@ -69639,7 +69644,7 @@
         "atom": "TE-PRAGMATICS-C26-UDAYAM-02",
         "language": "telugu",
         "introducedBy": "TE-C26-udayam",
-        "introducedAt": 118,
+        "introducedAt": 119,
         "missed": [
           "R2",
           "R3"
@@ -69650,7 +69655,7 @@
         "atom": "TE-PRAGMATICS-C28-MADHYAHNAM-WIDENED-01",
         "language": "telugu",
         "introducedBy": "TE-C28-madhyahnam-widened",
-        "introducedAt": 121,
+        "introducedAt": 122,
         "missed": [
           "R2",
           "R3"
@@ -69661,7 +69666,7 @@
         "atom": "TE-PRAGMATICS-C29-SUBHODAYAM-02",
         "language": "telugu",
         "introducedBy": "TE-C29-subhodayam",
-        "introducedAt": 122,
+        "introducedAt": 123,
         "missed": [
           "R2",
           "R3"
@@ -69672,7 +69677,7 @@
         "atom": "TE-PRAGMATICS-C30-SUBHA-SAYANTRAM-02",
         "language": "telugu",
         "introducedBy": "TE-C30-subha-sayantram",
-        "introducedAt": 123,
+        "introducedAt": 124,
         "missed": [
           "R2",
           "R3"
@@ -69683,7 +69688,7 @@
         "atom": "TE-PRAGMATICS-C31-SUBHA-MADHYAHNAM-REGISTER-01",
         "language": "telugu",
         "introducedBy": "TE-C31-subha-madhyahnam-register",
-        "introducedAt": 125,
+        "introducedAt": 126,
         "missed": [
           "R1",
           "R3"
@@ -69713,21 +69718,10 @@
         "revisits": 4
       },
       {
-        "atom": "TE-SCRIPT-RECOG-110",
-        "language": "telugu",
-        "introducedBy": "TE-S110-letter-ya",
-        "introducedAt": 67,
-        "missed": [
-          "R1",
-          "R4"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "TE-SCRIPT-RECOG-121",
         "language": "telugu",
         "introducedBy": "TE-S121-letter-lla",
-        "introducedAt": 104,
+        "introducedAt": 105,
         "missed": [
           "R3",
           "R4"
@@ -69738,7 +69732,7 @@
         "atom": "TE-SCRIPT-RECOG-128",
         "language": "telugu",
         "introducedBy": "TE-S128-letter-bha",
-        "introducedAt": 117,
+        "introducedAt": 118,
         "missed": [
           "R2",
           "R3"
@@ -69749,7 +69743,7 @@
         "atom": "TE-SCRIPT-RECOG-129",
         "language": "telugu",
         "introducedBy": "TE-S129-letter-vocalic-r",
-        "introducedAt": 119,
+        "introducedAt": 120,
         "missed": [
           "R1",
           "R3"
@@ -69760,7 +69754,7 @@
         "atom": "TE-SCRIPT-RECOG-131",
         "language": "telugu",
         "introducedBy": "TE-S131-vowel-sign-vocalic-r",
-        "introducedAt": 153,
+        "introducedAt": 154,
         "missed": [
           "R1",
           "R2"
@@ -69777,17 +69771,6 @@
           "R3"
         ],
         "revisits": 3
-      },
-      {
-        "atom": "TE-SCRIPT-RECOG-152",
-        "language": "telugu",
-        "introducedBy": "TE-S152-letter-tta",
-        "introducedAt": 21,
-        "missed": [
-          "R1",
-          "R4"
-        ],
-        "revisits": 4
       },
       {
         "atom": "TE-SCRIPT-RECOG-154",
@@ -87045,7 +87028,7 @@
         "atom": "TE-ETYMON-C23-ROJU-01",
         "language": "telugu",
         "introducedBy": "TE-C23-roju",
-        "introducedAt": 112,
+        "introducedAt": 113,
         "missed": [
           "R3"
         ],
@@ -87055,7 +87038,7 @@
         "atom": "TE-GRAMMAR-C18-GANTA-03",
         "language": "telugu",
         "introducedBy": "TE-C18-ganta",
-        "introducedAt": 103,
+        "introducedAt": 104,
         "missed": [
           "R3"
         ],
@@ -87065,7 +87048,7 @@
         "atom": "TE-GRAMMAR-C32-TELUSU-02",
         "language": "telugu",
         "introducedBy": "TE-C32-telusu",
-        "introducedAt": 131,
+        "introducedAt": 132,
         "missed": [
           "R3"
         ],
@@ -87075,7 +87058,7 @@
         "atom": "TE-GRAMMAR-C32-UNDU-02",
         "language": "telugu",
         "introducedBy": "TE-C32-undu",
-        "introducedAt": 126,
+        "introducedAt": 127,
         "missed": [
           "R3"
         ],
@@ -87085,7 +87068,7 @@
         "atom": "TE-GRAMMAR-C32-VELLU-02",
         "language": "telugu",
         "introducedBy": "TE-C32-vellu",
-        "introducedAt": 127,
+        "introducedAt": 128,
         "missed": [
           "R3"
         ],
@@ -87095,7 +87078,7 @@
         "atom": "TE-GRAMMAR-C33-ANUKO-02",
         "language": "telugu",
         "introducedBy": "TE-C33-anuko",
-        "introducedAt": 132,
+        "introducedAt": 133,
         "missed": [
           "R3"
         ],
@@ -87105,7 +87088,7 @@
         "atom": "TE-GRAMMAR-C33-ARTHAM-CESUKO-02",
         "language": "telugu",
         "introducedBy": "TE-C33-artham-cesuko",
-        "introducedAt": 133,
+        "introducedAt": 134,
         "missed": [
           "R3"
         ],
@@ -87115,7 +87098,7 @@
         "atom": "TE-GRAMMAR-C76-JUDGE-03",
         "language": "telugu",
         "introducedBy": "TE-C76-itisgood",
-        "introducedAt": 334,
+        "introducedAt": 335,
         "missed": [
           "R3"
         ],
@@ -87125,7 +87108,7 @@
         "atom": "TE-GRAMMAR-C77-FROM-01",
         "language": "telugu",
         "introducedBy": "TE-C77-from",
-        "introducedAt": 337,
+        "introducedAt": 338,
         "missed": [
           "R3"
         ],
@@ -87135,7 +87118,7 @@
         "atom": "TE-GRAMMAR-C77-FROM-05",
         "language": "telugu",
         "introducedBy": "TE-C77-thirty",
-        "introducedAt": 341,
+        "introducedAt": 342,
         "missed": [
           "R3"
         ],
@@ -87145,7 +87128,7 @@
         "atom": "TE-GRAMMAR-C78-YESNO-01",
         "language": "telugu",
         "introducedBy": "TE-C78-isit",
-        "introducedAt": 342,
+        "introducedAt": 343,
         "missed": [
           "R3"
         ],
@@ -87155,7 +87138,7 @@
         "atom": "TE-GRAMMAR-C78-YESNO-03",
         "language": "telugu",
         "introducedBy": "TE-C78-dontknow",
-        "introducedAt": 344,
+        "introducedAt": 345,
         "missed": [
           "R3"
         ],
@@ -87165,7 +87148,7 @@
         "atom": "TE-GRAMMAR-C79-WHO-01",
         "language": "telugu",
         "introducedBy": "TE-C79-friends",
-        "introducedAt": 347,
+        "introducedAt": 348,
         "missed": [
           "R3"
         ],
@@ -87175,7 +87158,7 @@
         "atom": "TE-GRAMMAR-C79-WHO-03",
         "language": "telugu",
         "introducedBy": "TE-C79-he",
-        "introducedAt": 349,
+        "introducedAt": 350,
         "missed": [
           "R3"
         ],
@@ -87185,7 +87168,7 @@
         "atom": "TE-GRAMMAR-C79-WHO-04",
         "language": "telugu",
         "introducedBy": "TE-C79-me",
-        "introducedAt": 350,
+        "introducedAt": 351,
         "missed": [
           "R3"
         ],
@@ -87195,7 +87178,7 @@
         "atom": "TE-GRAMMAR-C82-ORDINAL-06",
         "language": "telugu",
         "introducedBy": "TE-C82-eleventh",
-        "introducedAt": 367,
+        "introducedAt": 368,
         "missed": [
           "R1"
         ],
@@ -87205,7 +87188,7 @@
         "atom": "TE-LEX-C18-GANTA-01",
         "language": "telugu",
         "introducedBy": "TE-C18-ganta",
-        "introducedAt": 103,
+        "introducedAt": 104,
         "missed": [
           "R3"
         ],
@@ -87215,7 +87198,7 @@
         "atom": "TE-LEX-C32-CUUDU-01",
         "language": "telugu",
         "introducedBy": "TE-C32-cuudu",
-        "introducedAt": 130,
+        "introducedAt": 131,
         "missed": [
           "R3"
         ],
@@ -87225,7 +87208,7 @@
         "atom": "TE-LEX-C32-TELUSU-01",
         "language": "telugu",
         "introducedBy": "TE-C32-telusu",
-        "introducedAt": 131,
+        "introducedAt": 132,
         "missed": [
           "R3"
         ],
@@ -87235,7 +87218,7 @@
         "atom": "TE-LEX-C32-UNDU-01",
         "language": "telugu",
         "introducedBy": "TE-C32-undu",
-        "introducedAt": 126,
+        "introducedAt": 127,
         "missed": [
           "R3"
         ],
@@ -87245,7 +87228,7 @@
         "atom": "TE-LEX-C33-ANUKO-01",
         "language": "telugu",
         "introducedBy": "TE-C33-anuko",
-        "introducedAt": 132,
+        "introducedAt": 133,
         "missed": [
           "R3"
         ],
@@ -87255,7 +87238,7 @@
         "atom": "TE-LEX-C41-DEIXIS-01",
         "language": "telugu",
         "introducedBy": "TE-C41-this",
-        "introducedAt": 155,
+        "introducedAt": 156,
         "missed": [
           "R3"
         ],
@@ -87265,7 +87248,7 @@
         "atom": "TE-LEX-C41-DEIXIS-02",
         "language": "telugu",
         "introducedBy": "TE-C41-that",
-        "introducedAt": 156,
+        "introducedAt": 157,
         "missed": [
           "R3"
         ],
@@ -87275,7 +87258,7 @@
         "atom": "TE-LEX-C46-ASK-03",
         "language": "telugu",
         "introducedBy": "TE-C46-lamp",
-        "introducedAt": 182,
+        "introducedAt": 183,
         "missed": [
           "R3"
         ],
@@ -87285,7 +87268,7 @@
         "atom": "TE-LEX-C46-ASK-05",
         "language": "telugu",
         "introducedBy": "TE-C46-book",
-        "introducedAt": 184,
+        "introducedAt": 185,
         "missed": [
           "R3"
         ],
@@ -87295,7 +87278,7 @@
         "atom": "TE-LEX-C48-ROLE-01",
         "language": "telugu",
         "introducedBy": "TE-C48-teacher",
-        "introducedAt": 190,
+        "introducedAt": 191,
         "missed": [
           "R3"
         ],
@@ -87305,7 +87288,7 @@
         "atom": "TE-LEX-C48-ROLE-04",
         "language": "telugu",
         "introducedBy": "TE-C48-farmer",
-        "introducedAt": 193,
+        "introducedAt": 194,
         "missed": [
           "R3"
         ],
@@ -87315,7 +87298,7 @@
         "atom": "TE-LEX-C52-WELCOME-01",
         "language": "telugu",
         "introducedBy": "TE-C52-door",
-        "introducedAt": 212,
+        "introducedAt": 213,
         "missed": [
           "R3"
         ],
@@ -87325,7 +87308,7 @@
         "atom": "TE-LEX-C52-WELCOME-02",
         "language": "telugu",
         "introducedBy": "TE-C52-chair",
-        "introducedAt": 213,
+        "introducedAt": 214,
         "missed": [
           "R3"
         ],
@@ -87335,7 +87318,7 @@
         "atom": "TE-LEX-C55-ROAD-01",
         "language": "telugu",
         "introducedBy": "TE-C55-river",
-        "introducedAt": 227,
+        "introducedAt": 228,
         "missed": [
           "R3"
         ],
@@ -87345,7 +87328,7 @@
         "atom": "TE-LEX-C59-WEATHER-01",
         "language": "telugu",
         "introducedBy": "TE-C59-wind",
-        "introducedAt": 247,
+        "introducedAt": 248,
         "missed": [
           "R3"
         ],
@@ -87355,7 +87338,7 @@
         "atom": "TE-LEX-C67-WALL-05",
         "language": "telugu",
         "introducedBy": "TE-C67-window",
-        "introducedAt": 291,
+        "introducedAt": 292,
         "missed": [
           "R3"
         ],
@@ -87365,7 +87348,7 @@
         "atom": "TE-LEX-C68-SOUND-01",
         "language": "telugu",
         "introducedBy": "TE-C68-sound",
-        "introducedAt": 292,
+        "introducedAt": 293,
         "missed": [
           "R3"
         ],
@@ -87375,7 +87358,7 @@
         "atom": "TE-LEX-C68-SOUND-02",
         "language": "telugu",
         "introducedBy": "TE-C68-voice",
-        "introducedAt": 293,
+        "introducedAt": 294,
         "missed": [
           "R3"
         ],
@@ -87385,7 +87368,7 @@
         "atom": "TE-LEX-C68-SOUND-03",
         "language": "telugu",
         "introducedBy": "TE-C68-song",
-        "introducedAt": 294,
+        "introducedAt": 295,
         "missed": [
           "R3"
         ],
@@ -87395,7 +87378,7 @@
         "atom": "TE-LEX-C68-SOUND-04",
         "language": "telugu",
         "introducedBy": "TE-C68-shout",
-        "introducedAt": 295,
+        "introducedAt": 296,
         "missed": [
           "R3"
         ],
@@ -87405,7 +87388,7 @@
         "atom": "TE-LEX-C68-SOUND-05",
         "language": "telugu",
         "introducedBy": "TE-C68-message",
-        "introducedAt": 296,
+        "introducedAt": 297,
         "missed": [
           "R3"
         ],
@@ -87415,7 +87398,7 @@
         "atom": "TE-LEX-C73-TASTE-03",
         "language": "telugu",
         "introducedBy": "TE-C73-bitter",
-        "introducedAt": 319,
+        "introducedAt": 320,
         "missed": [
           "R3"
         ],
@@ -87425,7 +87408,7 @@
         "atom": "TE-LEX-C73-TASTE-04",
         "language": "telugu",
         "introducedBy": "TE-C73-pungent",
-        "introducedAt": 320,
+        "introducedAt": 321,
         "missed": [
           "R3"
         ],
@@ -87435,7 +87418,7 @@
         "atom": "TE-LEX-C73-TASTE-05",
         "language": "telugu",
         "introducedBy": "TE-C73-astringent",
-        "introducedAt": 321,
+        "introducedAt": 322,
         "missed": [
           "R3"
         ],
@@ -87445,7 +87428,7 @@
         "atom": "TE-LEX-C76-JUDGE-01",
         "language": "telugu",
         "introducedBy": "TE-C76-very",
-        "introducedAt": 332,
+        "introducedAt": 333,
         "missed": [
           "R3"
         ],
@@ -87455,7 +87438,7 @@
         "atom": "TE-LEX-C76-JUDGE-02",
         "language": "telugu",
         "introducedBy": "TE-C76-bad",
-        "introducedAt": 333,
+        "introducedAt": 334,
         "missed": [
           "R3"
         ],
@@ -87465,7 +87448,7 @@
         "atom": "TE-LEX-C76-JUDGE-03",
         "language": "telugu",
         "introducedBy": "TE-C76-itisgood",
-        "introducedAt": 334,
+        "introducedAt": 335,
         "missed": [
           "R3"
         ],
@@ -87475,7 +87458,7 @@
         "atom": "TE-LEX-C76-JUDGE-05",
         "language": "telugu",
         "introducedBy": "TE-C76-difficult",
-        "introducedAt": 336,
+        "introducedAt": 337,
         "missed": [
           "R3"
         ],
@@ -87485,7 +87468,7 @@
         "atom": "TE-LEX-C77-FROM-01",
         "language": "telugu",
         "introducedBy": "TE-C77-from",
-        "introducedAt": 337,
+        "introducedAt": 338,
         "missed": [
           "R3"
         ],
@@ -87495,7 +87478,7 @@
         "atom": "TE-LEX-C77-FROM-02",
         "language": "telugu",
         "introducedBy": "TE-C77-town",
-        "introducedAt": 338,
+        "introducedAt": 339,
         "missed": [
           "R3"
         ],
@@ -87505,7 +87488,7 @@
         "atom": "TE-LEX-C77-FROM-03",
         "language": "telugu",
         "introducedBy": "TE-C77-country",
-        "introducedAt": 339,
+        "introducedAt": 340,
         "missed": [
           "R3"
         ],
@@ -87515,7 +87498,7 @@
         "atom": "TE-LEX-C77-FROM-04",
         "language": "telugu",
         "introducedBy": "TE-C77-india",
-        "introducedAt": 340,
+        "introducedAt": 341,
         "missed": [
           "R3"
         ],
@@ -87525,7 +87508,7 @@
         "atom": "TE-LEX-C77-FROM-05",
         "language": "telugu",
         "introducedBy": "TE-C77-thirty",
-        "introducedAt": 341,
+        "introducedAt": 342,
         "missed": [
           "R3"
         ],
@@ -87535,7 +87518,7 @@
         "atom": "TE-LEX-C78-YESNO-01",
         "language": "telugu",
         "introducedBy": "TE-C78-isit",
-        "introducedAt": 342,
+        "introducedAt": 343,
         "missed": [
           "R3"
         ],
@@ -87545,7 +87528,7 @@
         "atom": "TE-LEX-C78-YESNO-02",
         "language": "telugu",
         "introducedBy": "TE-C78-doyouknow",
-        "introducedAt": 343,
+        "introducedAt": 344,
         "missed": [
           "R3"
         ],
@@ -87555,7 +87538,7 @@
         "atom": "TE-LEX-C78-YESNO-03",
         "language": "telugu",
         "introducedBy": "TE-C78-dontknow",
-        "introducedAt": 344,
+        "introducedAt": 345,
         "missed": [
           "R3"
         ],
@@ -87565,7 +87548,7 @@
         "atom": "TE-LEX-C78-YESNO-04",
         "language": "telugu",
         "introducedBy": "TE-C78-didntunderstand",
-        "introducedAt": 345,
+        "introducedAt": 346,
         "missed": [
           "R3"
         ],
@@ -87575,7 +87558,7 @@
         "atom": "TE-LEX-C78-YESNO-05",
         "language": "telugu",
         "introducedBy": "TE-C78-isthere",
-        "introducedAt": 346,
+        "introducedAt": 347,
         "missed": [
           "R3"
         ],
@@ -87585,7 +87568,7 @@
         "atom": "TE-LEX-C79-WHO-01",
         "language": "telugu",
         "introducedBy": "TE-C79-friends",
-        "introducedAt": 347,
+        "introducedAt": 348,
         "missed": [
           "R3"
         ],
@@ -87595,7 +87578,7 @@
         "atom": "TE-LEX-C79-WHO-02",
         "language": "telugu",
         "introducedBy": "TE-C79-our",
-        "introducedAt": 348,
+        "introducedAt": 349,
         "missed": [
           "R3"
         ],
@@ -87605,7 +87588,7 @@
         "atom": "TE-LEX-C79-WHO-03",
         "language": "telugu",
         "introducedBy": "TE-C79-he",
-        "introducedAt": 349,
+        "introducedAt": 350,
         "missed": [
           "R3"
         ],
@@ -87615,7 +87598,7 @@
         "atom": "TE-LEX-C79-WHO-04",
         "language": "telugu",
         "introducedBy": "TE-C79-me",
-        "introducedAt": 350,
+        "introducedAt": 351,
         "missed": [
           "R3"
         ],
@@ -87625,7 +87608,7 @@
         "atom": "TE-LEX-C82-ORDINAL-02",
         "language": "telugu",
         "introducedBy": "TE-C82-seventh",
-        "introducedAt": 363,
+        "introducedAt": 364,
         "missed": [
           "R2"
         ],
@@ -87635,7 +87618,7 @@
         "atom": "TE-LEX-C82-ORDINAL-03",
         "language": "telugu",
         "introducedBy": "TE-C82-eighth",
-        "introducedAt": 364,
+        "introducedAt": 365,
         "missed": [
           "R2"
         ],
@@ -87645,7 +87628,7 @@
         "atom": "TE-LEX-C82-ORDINAL-04",
         "language": "telugu",
         "introducedBy": "TE-C82-ninth",
-        "introducedAt": 365,
+        "introducedAt": 366,
         "missed": [
           "R2"
         ],
@@ -87655,7 +87638,7 @@
         "atom": "TE-PRAGMATICS-C18-GANTA-02",
         "language": "telugu",
         "introducedBy": "TE-C18-ganta",
-        "introducedAt": 103,
+        "introducedAt": 104,
         "missed": [
           "R3"
         ],
@@ -87665,7 +87648,7 @@
         "atom": "TE-PRAGMATICS-C23-ROJU-02",
         "language": "telugu",
         "introducedBy": "TE-C23-roju",
-        "introducedAt": 112,
+        "introducedAt": 113,
         "missed": [
           "R3"
         ],
@@ -87765,7 +87748,7 @@
         "atom": "TE-SCRIPT-RECOG-112",
         "language": "telugu",
         "introducedBy": "TE-S112-letter-ca",
-        "introducedAt": 77,
+        "introducedAt": 78,
         "missed": [
           "R4"
         ],
@@ -87785,7 +87768,7 @@
         "atom": "TE-SCRIPT-RECOG-114",
         "language": "telugu",
         "introducedBy": "TE-S114-letter-la",
-        "introducedAt": 82,
+        "introducedAt": 83,
         "missed": [
           "R4"
         ],
@@ -87795,7 +87778,7 @@
         "atom": "TE-SCRIPT-RECOG-115",
         "language": "telugu",
         "introducedBy": "TE-S115-vowel-sign-e",
-        "introducedAt": 85,
+        "introducedAt": 86,
         "missed": [
           "R4"
         ],
@@ -87805,7 +87788,7 @@
         "atom": "TE-SCRIPT-RECOG-116",
         "language": "telugu",
         "introducedBy": "TE-S116-letter-da",
-        "introducedAt": 87,
+        "introducedAt": 88,
         "missed": [
           "R4"
         ],
@@ -87815,7 +87798,7 @@
         "atom": "TE-SCRIPT-RECOG-117",
         "language": "telugu",
         "introducedBy": "TE-S117-letter-va",
-        "introducedAt": 89,
+        "introducedAt": 90,
         "missed": [
           "R4"
         ],
@@ -87825,7 +87808,7 @@
         "atom": "TE-SCRIPT-RECOG-118",
         "language": "telugu",
         "introducedBy": "TE-S118-letter-ga",
-        "introducedAt": 91,
+        "introducedAt": 92,
         "missed": [
           "R4"
         ],
@@ -87835,7 +87818,7 @@
         "atom": "TE-SCRIPT-RECOG-119",
         "language": "telugu",
         "introducedBy": "TE-S119-vowel-sign-ii",
-        "introducedAt": 93,
+        "introducedAt": 94,
         "missed": [
           "R4"
         ],
@@ -87875,7 +87858,7 @@
         "atom": "TE-SCRIPT-RECOG-124",
         "language": "telugu",
         "introducedBy": "TE-S124-letter-e",
-        "introducedAt": 110,
+        "introducedAt": 111,
         "missed": [
           "R3"
         ],
@@ -87895,7 +87878,7 @@
         "atom": "TE-SCRIPT-RECOG-126",
         "language": "telugu",
         "introducedBy": "TE-S126-letter-nna",
-        "introducedAt": 113,
+        "introducedAt": 114,
         "missed": [
           "R2"
         ],
@@ -87905,7 +87888,7 @@
         "atom": "TE-SCRIPT-RECOG-127",
         "language": "telugu",
         "introducedBy": "TE-S127-letter-ja",
-        "introducedAt": 115,
+        "introducedAt": 116,
         "missed": [
           "R2"
         ],
@@ -87925,7 +87908,7 @@
         "atom": "TE-SCRIPT-RECOG-135",
         "language": "telugu",
         "introducedBy": "TE-S135-letter-i",
-        "introducedAt": 79,
+        "introducedAt": 80,
         "missed": [
           "R4"
         ],
@@ -87935,7 +87918,7 @@
         "atom": "TE-SCRIPT-RECOG-136",
         "language": "telugu",
         "introducedBy": "TE-S136-vowel-sign-ai",
-        "introducedAt": 95,
+        "introducedAt": 96,
         "missed": [
           "R3"
         ],
@@ -87945,7 +87928,7 @@
         "atom": "TE-SCRIPT-RECOG-137",
         "language": "telugu",
         "introducedBy": "TE-S137-letter-kha",
-        "introducedAt": 96,
+        "introducedAt": 97,
         "missed": [
           "R3"
         ],
@@ -88050,6 +88033,16 @@
           "R4"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "TE-SCRIPT-RECOG-152",
+        "language": "telugu",
+        "introducedBy": "TE-S152-letter-tta",
+        "introducedAt": 21,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 4
       },
       {
         "atom": "UR-DIALOGUE-NAME-EXCHANGE",
@@ -94398,7 +94391,7 @@
       {
         "lessonId": "TE-C32-tinu",
         "language": "telugu",
-        "position": 129,
+        "position": 130,
         "word": "భోజనం",
         "taughtBy": "TE-C40-bhojanam",
         "lessonsEarly": 25
@@ -94710,7 +94703,7 @@
       {
         "lessonId": "TE-C32-cuudu",
         "language": "telugu",
-        "position": 130,
+        "position": 131,
         "word": "కన్ను",
         "taughtBy": "TE-C37-kannu",
         "lessonsEarly": 15
@@ -94718,7 +94711,7 @@
       {
         "lessonId": "TE-C34-ishtam",
         "language": "telugu",
-        "position": 140,
+        "position": 141,
         "word": "ఇది",
         "taughtBy": "TE-C41-this",
         "lessonsEarly": 15
@@ -94774,7 +94767,7 @@
       {
         "lessonId": "TE-C35-kutumbam",
         "language": "telugu",
-        "position": 141,
+        "position": 142,
         "word": "ఇది",
         "taughtBy": "TE-C41-this",
         "lessonsEarly": 14
@@ -95414,7 +95407,7 @@
       {
         "lessonId": "TE-C26-udayam",
         "language": "telugu",
-        "position": 118,
+        "position": 119,
         "word": "శుభోదయం",
         "taughtBy": "TE-C29-subhodayam",
         "lessonsEarly": 4
@@ -96838,7 +96831,7 @@
       {
         "lessonId": "TE-C19-vayasu",
         "language": "telugu",
-        "position": 106,
+        "position": 107,
         "word": "ఇరవై",
         "taughtBy": "TE-C20-padakondu-iravai",
         "lessonsEarly": 1
@@ -96846,7 +96839,7 @@
       {
         "lessonId": "TE-C41-here",
         "language": "telugu",
-        "position": 157,
+        "position": 158,
         "word": "అక్కడ",
         "taughtBy": "TE-C41-there",
         "lessonsEarly": 1
@@ -96854,7 +96847,7 @@
       {
         "lessonId": "TE-C41-this",
         "language": "telugu",
-        "position": 155,
+        "position": 156,
         "word": "అది",
         "taughtBy": "TE-C41-that",
         "lessonsEarly": 1
@@ -96862,7 +96855,7 @@
       {
         "lessonId": "TE-C41-who",
         "language": "telugu",
-        "position": 159,
+        "position": 160,
         "word": "ఎక్కడ",
         "taughtBy": "TE-C41-where",
         "lessonsEarly": 1
@@ -97081,7 +97074,7 @@
       },
       {
         "language": "telugu",
-        "lessonCount": 371,
+        "lessonCount": 372,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
@@ -97110,9 +97103,9 @@
       "neverRevisitedPercent": 5,
       "missedByWindow": {
         "R1": 1751,
-        "R2": 4196,
+        "R2": 4197,
         "R3": 5887,
-        "R4": 4441
+        "R4": 4440
       },
       "forwardReferences": 913
     }
@@ -97317,7 +97310,7 @@
       {
         "language": "telugu",
         "script": "telugu",
-        "lessonCount": 371,
+        "lessonCount": 372,
         "scriptLessons": 67,
         "taughtGlyphs": 64,
         "shownGlyphs": 64,
@@ -118555,11 +118548,11 @@
       },
       {
         "language": "telugu",
-        "lessonCount": 371,
-        "atomMeasurableLessons": 371,
+        "lessonCount": 372,
+        "atomMeasurableLessons": 372,
         "atomMeasurementBlindLessons": 0,
         "durationViolations": 0,
-        "atomLessonSpikes": 1,
+        "atomLessonSpikes": 0,
         "atomChapterSpikes": 5,
         "glyphLessonSpikes": 3,
         "scriptSystemSpikes": 0,
@@ -118576,9 +118569,9 @@
         "reinforcementWindowMisses": 898,
         "reinforcementMissesByWindow": {
           "R1": 99,
-          "R2": 168,
+          "R2": 169,
           "R3": 365,
-          "R4": 266
+          "R4": 265
         },
         "payoffSurprises": 0,
         "writingPracticeLessons": 103,
@@ -118595,7 +118588,7 @@
           {
             "language": "telugu",
             "kind": "atom-step",
-            "count": 6,
+            "count": 5,
             "unit": "lesson/chapter spike(s)",
             "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
           },
@@ -118974,13 +118967,6 @@
         "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
       },
       {
-        "language": "telugu",
-        "kind": "atom-step",
-        "count": 6,
-        "unit": "lesson/chapter spike(s)",
-        "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
-      },
-      {
         "language": "malayalam",
         "kind": "atom-step",
         "count": 5,
@@ -118996,6 +118982,13 @@
       },
       {
         "language": "russian",
+        "kind": "atom-step",
+        "count": 5,
+        "unit": "lesson/chapter spike(s)",
+        "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+      },
+      {
+        "language": "telugu",
         "kind": "atom-step",
         "count": 5,
         "unit": "lesson/chapter spike(s)",
@@ -120061,11 +120054,6 @@
             "shortfall": 79
           },
           {
-            "criterion": "atom-budget",
-            "detail": "1 lesson(s) at or below pre-A1 exceed the new-atom budget",
-            "shortfall": 1
-          },
-          {
             "criterion": "reinforcement",
             "detail": "50 atom(s) at or below pre-A1 are revisited fewer than twice (46 etymology hook(s) waived)",
             "shortfall": 50
@@ -120119,11 +120107,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 7485,
-    "voice": 5409,
+    "totalLessons": 7486,
+    "voice": 5410,
     "sight": 827,
     "pen": 1249,
-    "coreVoice": 5951,
+    "coreVoice": 5952,
     "lessonsWithWritingSegments": 766,
     "drivablePercent": 80,
     "tracks": [
@@ -142718,13 +142706,13 @@
       },
       {
         "language": "telugu",
-        "lessonCount": 371,
-        "voice": 260,
+        "lessonCount": 372,
+        "voice": 261,
         "sight": 44,
         "pen": 67,
-        "coreVoice": 294,
+        "coreVoice": 295,
         "drivablePercent": 79,
-        "drivablePrefixTotal": 254,
+        "drivablePrefixTotal": 255,
         "chapters": [
           {
             "language": "telugu",
@@ -142839,16 +142827,17 @@
           {
             "language": "telugu",
             "chapter": 8,
-            "lessonCount": 2,
-            "voice": 0,
+            "lessonCount": 3,
+            "voice": 1,
             "sight": 1,
             "pen": 1,
-            "coreVoice": 1,
+            "coreVoice": 2,
             "modalities": [
+              "voice",
               "sight",
               "pen"
             ],
-            "drivablePrefix": 1,
+            "drivablePrefix": 2,
             "firstNonVoiceLesson": "TE-S112-letter-ca"
           },
           {
@@ -144955,7 +144944,7 @@
     "underspentPercent": 89
   },
   "infoDump": {
-    "lessons": 7485,
+    "lessons": 7486,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -144963,7 +144952,7 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 7485,
+    "lessons": 7486,
     "measuredLessons": 3806,
     "idiomMeasuredLessons": 3806,
     "senseMeasuredLessons": 3807,
@@ -144976,14 +144965,14 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 7034,
-    "usesBeforeIntroduction": 23708,
-    "technicalUsesBeforeIntroduction": 6063,
-    "technicalLessons": 3351,
+    "lessonsUsingTerms": 7035,
+    "usesBeforeIntroduction": 23711,
+    "technicalUsesBeforeIntroduction": 6064,
+    "technicalLessons": 3352,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 1912
+        "lessons": 1913
       },
       {
         "term": "noun",
@@ -145008,7 +144997,7 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 7485,
+    "lessonsScanned": 7486,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
