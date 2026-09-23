@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "When You Are Lost",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:21337294fe59ce52",
+  "sourceHash": "fnv1a64:e1376b07810debca",
   "lessons": [
     {
       "id": "UR-C22-kahna",
@@ -652,6 +652,143 @@
             {
               "kind": "speech",
               "text": "Four chapters ago this book could not deny a sentence, ask a yes-or-no question, join two nouns, give a reason, or say that it had not understood. Say the sentence chapter one promised and never delivered. (maiṅ nahīṅ samajhtā.) Say the question that asks for a repeat. (کیا کہا؟ (kyā kahā?)) And say the four members of the k- family. (kyā, kahāṅ, kyūṅ, kaun.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R22-second-pass-one-mark-apart",
+      "sequence": 1205,
+      "title": "One mark apart",
+      "headword": "ق · ک · ت · ٹ · گ",
+      "romanization": "qāf · kāf · te · ṭe · gāf",
+      "gloss": "second pass over the letters that differ by one mark, and the page they let you read",
+      "script": "urdu-nastaliq",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:337582865cbfd981",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script: three pairs the eye has to separate"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: three pairs the eye has to separate until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cover the page. Which two letters share a scoop and differ only in what sits above it, and which of the two curls the tongue back?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script: three pairs the eye has to separate",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ق, ک, ت, ٹ, گ, ک."
+            },
+            {
+              "kind": "speech",
+              "text": "Urdu spends very little ink on these differences, and each one changes the word:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the pair",
+                "what separates them"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "the pair: ق qāf, ک kāf. what separates them: the throat — qāf is drawn further back.",
+                "the pair: ت te, ٹ ṭe. what separates them: two dots above, against a small raised loop.",
+                "the pair: گ gāf, ک kāf. what separates them: one extra stroke laid across the top."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "ق and ک are the pair to be honest about: relaxed speech often merges them, and careful or formal speech keeps them apart, so the letters stay distinct on the page whatever the mouth does. ت and ٹ never merge — the dots mean the plain dental t, the loop means the retroflex the tongue curls back for, and the two make different words."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at قمیض and name its four letters from the right edge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **قمیض** and name its four letters from the right edge]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at جوتا and say which of its letters is the plain dental t",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **جوتا** and say which of its letters is the plain dental *t*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at گرمی and name the letter that opens it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **گرمی** and name the letter that opens it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the first-meeting page again, aloud, without the romanization",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the first-meeting page again, aloud, without the romanization]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What separates ق from ک? (How far back in the throat it is said.) What separates ت from ٹ? (Two dots against a raised loop.) What does the loop mean? (The retroflex — the tongue curls back.) And what does گ add to ک? (One stroke across the top.)"
             }
           ]
         }

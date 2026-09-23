@@ -1,0 +1,11 @@
+{
+  "id": "LA-C47-second-pass-honest-gaps",
+  "pathSegment": "LA-PATH-032",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "LA-EXT-061-CONSOLIDATION",
+      "order": 0
+    }
+  ]
+}

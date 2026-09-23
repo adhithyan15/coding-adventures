@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C47-second-pass-honest-gaps",
+    "language": "latin",
+    "chapter": 47,
+    "sequence": 1145,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:85d0395b9d0cbf8a"
+  },
+  "findings": []
+}

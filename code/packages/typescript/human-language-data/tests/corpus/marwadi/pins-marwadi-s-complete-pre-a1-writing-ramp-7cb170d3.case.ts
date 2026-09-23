@@ -193,6 +193,11 @@ it("pins Marwadi's complete pre-A1 writing ramp", () => {
     // absence is the finding rather than an oversight: this track teaches no
     // conjunction at all -- no and, but, because or or -- so a lesson asking for
     // connected sentences would ask for something the book has not paid for.
+    // HL-C428's second-pass refusal lesson: it asks the hand to write
+    // कोनी। and पाछे मिलसू। from the sound with the page covered, which is the
+    // stage the chapter's own four-skill lesson already marks. A stage may
+    // repeat; the ORDER assertion still forbids one arriving early.
+    "dictation-transcription",
     "controlled-composition",
     "timed-assessment-production",
   ]);

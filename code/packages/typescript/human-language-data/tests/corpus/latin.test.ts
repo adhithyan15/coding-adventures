@@ -22,7 +22,12 @@ it("pins Latin lesson-content budgets", () =>
     // 168 -> 171: the three writing stages Latin had never proven. No new atoms
     // in any of them -- they practise the joiners the track already teaches and
     // add only what the stages are: a choice with no model, a clock, and a join.
-    lessons: 171,
+    //
+    // 171 -> 173: HL-C428, two `review` lessons closing the track's reinforcement
+    // debt -- the social phrases sorted by what Latin attests, and the three
+    // words that closed three chapters. No new atoms.
+    //
+    lessons: 173,
     idioms: 16,
     senses: 6,
     cultureClaims: 17,

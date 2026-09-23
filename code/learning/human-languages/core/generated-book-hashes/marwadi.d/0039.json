@@ -1,13 +1,14 @@
 {
   "language": "marwadi",
   "chapter": 39,
-  "sourceHash": "fnv1a64:1f3119f470502a5c",
+  "sourceHash": "fnv1a64:ce5344596e6f1467",
   "lessonIds": [
     "MW-C39-hear-koni",
     "MW-C39-koni",
     "MW-R39-refuse-price",
     "MW-C39-refusal-four",
-    "MW-R39-script-close"
+    "MW-R39-script-close",
+    "MW-R39-refusal-second-pass"
   ],
   "tex": "marwadi/book/chapters/ch39-saying-no.tex"
 }

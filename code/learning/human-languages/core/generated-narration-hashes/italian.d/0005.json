@@ -1,19 +1,20 @@
 {
   "language": "italian",
   "chapter": 5,
-  "sourceHash": "fnv1a64:7577e64790f4e58f",
+  "sourceHash": "fnv1a64:76e363fc8a0b2975",
   "lessonIds": [
     "IT-C05-parlare",
     "IT-C05-abitare",
     "IT-C05-lavorare",
     "IT-C05-parlo-italiano",
-    "IT-C05-practice"
+    "IT-C05-practice",
+    "IT-C05-second-pass-first-conversation"
   ],
-  "voiceLessons": 4,
+  "voiceLessons": 5,
   "drivablePrefix": 2,
   "text": "italian/narration/ch05.txt",
   "json": "italian/narration/ch05.json",
-  "textHash": "fnv1a64:6d44cdd003fa5243",
-  "jsonHash": "fnv1a64:055ab7a00ce209a4",
+  "textHash": "fnv1a64:4435074ec9565c2c",
+  "jsonHash": "fnv1a64:242c4842d1dbba5f",
   "findings": []
 }

@@ -1,0 +1,11 @@
+{
+  "id": "MW-R39-refusal-second-pass",
+  "pathSegment": "MW-PATH-032",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "MW-EXT-046-REFUSAL",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C15-second-pass-spellable",
+  "pathSegment": "FA-PATH-016",
+  "pathOrder": 10,
+  "extensions": [
+    {
+      "id": "FA-EXT-030-CONSOLIDATION",
+      "order": 0
+    }
+  ]
+}

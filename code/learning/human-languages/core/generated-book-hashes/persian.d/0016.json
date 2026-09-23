@@ -1,14 +1,15 @@
 {
   "language": "persian",
   "chapter": 16,
-  "sourceHash": "fnv1a64:96f214510661c2ab",
+  "sourceHash": "fnv1a64:e86a728ca86e92d5",
   "lessonIds": [
     "FA-C16-yek",
     "FA-C16-do",
     "FA-C16-se",
     "FA-C16-chahar",
     "FA-C16-panj",
-    "FA-C16-practice"
+    "FA-C16-practice",
+    "FA-C16-second-pass-counting-people"
   ],
   "tex": "persian/book/chapters/ch16-count-five.tex"
 }

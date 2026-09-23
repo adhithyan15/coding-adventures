@@ -20,7 +20,11 @@ it("pins Marwadi lesson-content budgets", () =>
     // the track teaches no conjunction at all -- no and, but, because or or --
     // so a lesson asking for connected sentences would be asking for something
     // the book has not paid for.
-    lessons: 346,
+    //
+    // 346 -> 347: HL-C428, one `review` lesson giving the four-skill refusal its
+    // second revisit. No new atom.
+    //
+    lessons: 347,
     idioms: 7,
     senses: 3,
     cultureClaims: 5,

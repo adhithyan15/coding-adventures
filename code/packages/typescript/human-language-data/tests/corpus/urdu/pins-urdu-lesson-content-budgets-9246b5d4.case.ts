@@ -38,7 +38,11 @@ it("pins Urdu lesson-content budgets", () =>
     //
     // 159 -> 162: chapter 33, the reading rung. No new word, and no new LETTER:
     // every glyph in all three lessons is one the script ladder has taught.
-    lessons: 162,
+    //
+    // 162 -> 164: HL-C428, two `review` lessons -- the letters that differ by one
+    // mark, and the layers an Urdu word can arrive from. No new atoms.
+    //
+    lessons: 164,
     idioms: 2,
     senses: 4,
     cultureClaims: 4,

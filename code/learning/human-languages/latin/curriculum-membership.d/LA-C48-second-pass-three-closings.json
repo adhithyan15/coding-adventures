@@ -1,0 +1,11 @@
+{
+  "id": "LA-C48-second-pass-three-closings",
+  "pathSegment": "LA-PATH-032",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "LA-EXT-061-CONSOLIDATION",
+      "order": 1
+    }
+  ]
+}

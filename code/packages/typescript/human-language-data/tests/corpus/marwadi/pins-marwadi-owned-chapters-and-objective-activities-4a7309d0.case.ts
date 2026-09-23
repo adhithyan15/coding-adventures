@@ -11,12 +11,12 @@ import {
 
 it("pins Marwadi-owned chapters and objective activities", () => {
   const lessons = loadTrackLessons("marwadi");
-  expect(lessons).toHaveLength(346);
+  expect(lessons).toHaveLength(347);
   expect(new Set(lessons.map((lesson) => Number(lesson.frontmatter.chapter)))).toEqual(
     new Set(Array.from({ length: 42 }, (unused, index) => index + 1)),
   );
   const activities = lessons.flatMap((lesson) => compileLessonActivities(lesson.blocks));
-  expect(activities).toHaveLength(346);
+  expect(activities).toHaveLength(347);
   expect(lessons.every((lesson) => compileLessonActivities(lesson.blocks).length === 1)).toBe(true);
   expect(activities.map((activity) => activity.id).sort()).toEqual([
     "MW-C01-practice-answer",
@@ -311,6 +311,7 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-R36-transport-numbered-fare",
     "MW-R37-count-fifteen-odd",
     "MW-R38-count-twenty-down",
+    "MW-R39-refusal-second-pass-close",
     "MW-R39-refuse-price-turn",
     "MW-R39-script-close-four",
     "MW-W01-aa-matra-change",
@@ -370,7 +371,7 @@ it("pins Marwadi-owned chapters and objective activities", () => {
   const closure = measureScriptClosure(lessons);
   expect(closure.violations.filter((violation) => violation.language === "marwadi")).toEqual([]);
   expect(closure.tracks.find((track) => track.language === "marwadi")).toMatchObject({
-    lessonCount: 346,
+    lessonCount: 347,
     neverTaughtGlyphs: 0,
     violations: 0,
   });

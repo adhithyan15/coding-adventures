@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:7577e64790f4e58f",
+  "sourceHash": "fnv1a64:76e363fc8a0b2975",
   "lessons": [
     {
       "id": "IT-C05-parlare",
@@ -812,6 +812,136 @@
             {
               "kind": "speech",
               "text": "What are the three singular -are endings? (-o / -i / -a.) Give the \"I\" forms of the three verbs. (Parlo, abito, lavoro.) Which languages drop the subject pronoun, and which keep it, and why? (Drop: ES/IT — distinct endings; keep: FR — silent endings, DE — grammar.) Italian now moves in real sentences."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C05-second-pass-first-conversation",
+      "sequence": 325,
+      "title": "One conversation, from hello to goodbye",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "the three exchanges you have built, run end to end as one conversation, with prego doing its fourth job",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3e389cfe580c47d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have practised three exchanges one at a time. Nothing has yet asked you to run them together, which is what a real conversation is."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the three, joined up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One formal meeting, first word to last:"
+            },
+            {
+              "kind": "speech",
+              "text": "— Buongiorno. Come sta? — Bene, grazie. E Lei? Come si chiama? — Prego? — Come si chiama? — Mi chiamo Anna. Piacere. — Piacere. Arrivederci, a domani!"
+            },
+            {
+              "kind": "speech",
+              "text": "The third line is the one to notice. Prego? on a rising voice is not the prego that answers grazie — it is the repair for a sentence you did not catch, and a first conversation in a new language needs it more than any other line in the exchange."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built — three chapters in one view",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "informal, formal",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "informal, formal: Come stai, Come sta, asking how someone is.",
+                "informal, formal: Come ti chiami, Come si chiama, asking a name.",
+                "informal, formal: Ciao, Arrivederci, leaving."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The first two rows differ in the verb ending, not in an added polite word. The third row is the exception that proves it: arrivederci is \"until we re-see each other\", a domani \"until tomorrow\", a presto \"until soon\". Italian takes its leave by naming the next meeting, as au revoir and auf Wiedersehen do."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole formal meeting above, both voices, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole formal meeting above, both voices, without stopping]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it informally — every verb ending moves",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it informally — every verb ending moves]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ASK",
+              "instruction": "rising Prego?, then the question you missed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ASK: rising *Prego?*, then the question you missed]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does Italian mark formal against informal? (In the verb ending.) What does a rising Prego? ask for? (A repeat.) What do arrivederci, a domani and a presto share? (Each names the next meeting.) Which word answers piacere? (Piacere.)"
             }
           ]
         }

@@ -1,13 +1,14 @@
 {
   "language": "latin",
   "chapter": 47,
-  "sourceHash": "fnv1a64:8856c9ca5f0998ec",
+  "sourceHash": "fnv1a64:a0fec791309d5c00",
   "lessonIds": [
     "LA-C47-sal",
     "LA-C47-mel",
     "LA-C47-lac",
     "LA-C47-ovum",
-    "LA-C47-piscis"
+    "LA-C47-piscis",
+    "LA-C47-second-pass-honest-gaps"
   ],
   "tex": "latin/book/chapters/ch47-mensa.tex"
 }
