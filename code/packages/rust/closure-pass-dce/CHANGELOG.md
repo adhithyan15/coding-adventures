@@ -2,6 +2,166 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.31.0] - 2026-09-23
+
+### Fixed - `debugger` statements are no longer stripped (CCR-053)
+
+Two sweeps removed `debugger;` from block bodies and from the program body at
+SIMPLE and ADVANCED. Both were justified in-code as
+
+> a development-only breakpoint with no effect on a shipped program, so
+> removing it is a sound size win (this matches upstream Closure)
+
+**Neither half of that is true.** Measured against the pinned oracle
+(`closure-compiler-v20260915`, sha256 verified):
+
+| Input at SIMPLE | upstream | us, before |
+|---|---|---|
+| `debugger;` | `debugger;` | *(empty)* |
+| `function f(){debugger}f();` | `function f(){debugger}f();` | `function f(){}f();` |
+| `if(true){debugger;}console.log(1);` | `debugger;console.log(1);` | `console.log(1);` |
+| `debugger;console.log(1);` | `debugger;console.log(1);` | `console.log(1);` |
+
+Upstream keeps `debugger` **at SIMPLE wherever it is reachable**. And it is not
+effect-free: `debugger` breaks into an attached debugger, so removing it
+changes what the program does — not a size win to take unilaterally.
+
+What upstream *does* do is drop it as **collateral**, when the enclosing
+statement is removed for independent reasons. There are three such cases, not
+two: after a `return`, after a `throw`, and inside `if (false) { … }`. The
+first draft of this change probed only `return` and `if (false)`, asserted
+"both still work", and regressed the `throw` family — the surviving `debugger`
+blocked truncation of the whole dead tail, so live-looking dead code after it
+survived too. `DebuggerStatement` is now whitelisted in
+`tail_is_safe_to_truncate`: an *unreachable* `debugger` can never fire, so
+dropping it is a genuine no-op, which is the other side of the same line this
+change draws around reachable ones.
+
+**At ADVANCED the rule is narrower**, and the first draft over-generalised.
+Upstream eliminates a call whose body is *only* a `debugger`, treating it as
+pure for call-elimination:
+
+| Input at ADVANCED | upstream |
+|---|---|
+| `function f(){debugger}f();` | *(empty)* |
+| `(function(){debugger})();` | *(empty)* |
+| `debugger;console.log(1);` | `debugger;console.log(1);` |
+
+We do not do that, so `function f(){debugger}f();` no longer matches upstream at
+ADVANCED where it previously did — but it matched only because the strip
+emptied the body, not because our purity analysis was right. That is recorded
+rather than papered over.
+
+**At SIMPLE, on a nine-shape reachable set, `main` matched upstream on 0 and
+this change matches on 6.** An earlier revision of this entry claimed "the seven
+reachable shapes go from 2 of 7 to 7 of 7" without listing them; that number did
+not survive re-measurement, so the set is enumerated here and the three
+residuals are named. Compared three binaries — the pinned jar, a build of
+`origin/main`, and this branch — byte for byte:
+
+| Input at SIMPLE | upstream | `main` | after | |
+|---|---|---|---|---|
+| `debugger;` | `debugger;` | *(empty)* | `debugger;` | fixed |
+| `function f(){debugger}f();` | `function f(){debugger}f();` | `function f(){}f();` | matches | fixed |
+| `if(true){debugger;}console.log(1);` | `debugger;console.log(1);` | `console.log(1);` | matches | fixed |
+| `debugger;console.log(1);` | `debugger;console.log(1);` | `console.log(1);` | matches | fixed |
+| `function unused(){debugger}debugger;` | `function unused(){debugger}debugger;` | `function unused(){};` | matches | fixed |
+| `if(false){debugger;}debugger;` | `debugger;` | *(empty)* | `debugger;` | fixed |
+| `while(c){debugger}` | `for(;c;)debugger;` | `for(;c;);` | `for(;c;){debugger};` | residual |
+| `for(var i=0;i<1;i++){debugger}` | `for(var i=0;i<1;i++)debugger;` | `for(var i=0;i<1;i++);` | `for(var i=0;i<1;i++){debugger};` | residual |
+| `try{debugger}catch(e){}` | `try{debugger}catch(a){};` | `try{}catch(e){};` | `try{debugger}catch(e){};` | residual |
+
+**None of the three residuals is about `debugger`.** The first two are CCR-088
+(#15925): we unwrap a single-statement substatement block only when the
+statement is an expression statement, so `var`, `let`, `throw`, `return`,
+function declarations and `debugger` all keep their braces where upstream drops
+them. The third is CCR-022 (#15856): upstream renames the catch parameter and we
+do not. All three were invisible before this change only because the strip was
+emptying the block first.
+
+**The dead-tail shapes go from 2 of 5 to 1 of 5.** Two earlier revisions of this
+entry got this count wrong — first as "1 of 5 → 4 of 5", then as "stays at 1 of
+5" — so the full three-binary measurement is given rather than a summary:
+
+| Input at SIMPLE | upstream | `main` | after | |
+|---|---|---|---|---|
+| `function f(){throw 1;debugger;}f();` | `function f(){throw 1;}f();` | `function f(){throw 1}f();` | `function f(){throw 1}f();` | differs, both |
+| `function f(){throw 1;debugger;g();}f();` | `function f(){throw 1;}f();` | `function f(){throw 1}f();` | `function f(){throw 1}f();` | differs, both |
+| `function f(){throw 1;{debugger;}}f();` | `function f(){throw 1;}f();` | `function f(){throw 1}f();` | `function f(){throw 1}f();` | differs, both |
+| `function f(){return 1;debugger;}f();` | `function f(){return 1}f();` | matches | matches | matches, both |
+| `for(var c=0;c<1;c++){continue;debugger}` | `for(var c=0;c<1;c++);` | matches | `for(var c=0;c<1;c++){continue;debugger};` | **lost** |
+
+The single loss is row 5, and it is one of the three accidental matches
+tabulated below rather than a new defect.
+
+The three `throw` rows differ on a **pre-existing emitter gap that has nothing
+to do with `debugger`**: we omit the `;` after a block-final `throw`. The
+control `function f(){throw 1;}f();`, with no `debugger` anywhere, already
+diverges the same way. That gap is filed as CCR-084 (#15919). What this change
+actually fixed in that family is real but is a shape fix, not a byte fix: row 2
+previously leaked `g()` — live-looking dead code — into the output, and now
+truncates the whole tail.
+
+**Three byte matches that `main` had by accident are lost.** All three are
+pre-existing truncation gaps that unconditional stripping used to paper over:
+
+| Input at SIMPLE | upstream | `main` | after |
+|---|---|---|---|
+| `for(var c=0;c<1;c++){continue;debugger}` | `for(var c=0;c<1;c++);` | matched | `…{continue;debugger};` |
+| `throw 1;debugger;` | `throw 1;` | matched | `throw 1;debugger;` |
+| `{throw 1;debugger;}` | `throw 1;` | matched | `throw 1;debugger;` |
+
+The first is a dead tail after `continue`, which `closure-pass-dce` never
+truncates — filed as CCR-082 (#15878). The other two are a dead tail at
+**program** level, which `dce_program` never truncates either; the control
+`throw 1;console.log(1);` already diverged on `main`, so that gap is likewise
+pre-existing and is filed as CCR-086 (#15923). In all three cases `main` was
+right only because the strip happened to empty the enclosing construct; each
+gets the same input wrong the moment the dead tail is anything other than a
+`debugger`. Removing the accident makes the real gaps visible, which is the
+correct trade, but it is a byte-level regression on those three shapes and is
+recorded as one.
+
+### Tests
+
+The four stripping tests are **retargeted, not deleted** — the behaviour they
+covered still needs pinning, in the opposite direction:
+
+- `strips_debugger_statement_from_block` → `preserves_debugger_statement_in_block`
+- `strips_top_level_debugger_statement` → `preserves_top_level_debugger_statement`
+- `block_of_only_debuggers_becomes_empty` → `a_block_of_only_debuggers_is_not_emptied`
+- `preserves_braceless_if_consequent_debugger` kept, with its comment corrected:
+  it used to pin a *limitation* of the list-scoped sweep and now pins ordinary
+  correct behaviour. This one passes identically with and without the change,
+  so it is cover, not proof; its assertion that the consequent is still a
+  `DebuggerStatement` (rather than merely that *some* statement survived) is
+  what makes it the only test covering that leaf arm of `dce_tagged_statement`.
+
+Two new tests cover the `DebuggerStatement` arm of `tail_is_safe_to_truncate`,
+which is the code that repairs the `throw`-tail regression and had **no**
+coverage at all:
+
+- `unreachable_debugger_after_throw_does_not_block_truncation`
+- `unreachable_debugger_does_not_shield_the_dead_code_behind_it`
+
+Both were checked for vacuity by removing the whitelist entry and re-running:
+they are the only two of the 82 that go red, and they go red together.
+
+The two CV tombstone tests likewise assert the inverse: a surviving `debugger`
+must carry **no** deletion record. Provenance that reports a deletion which did
+not happen is the same defect class as CCR-041.
+
+`disabled_log_still_removes_code_without_panicking` keeps its subject — the
+disabled-CV-log path — and swaps its vehicle from a `debugger` statement to a
+stray `EmptyStatement`, which is still swept. The test was never about the
+statement kind. Its `cv` id is load-bearing: `record_deletion` iterates
+`removed.iter().flatten()`, so a `cv: None` would skip the loop entirely and
+leave the test vacuous. Confirmed non-vacuous by instrumenting the loop. The
+comment's claim that this pins the "delete against a missing entry" case has
+been corrected — `CVLog::delete` returns early on `!self.enabled`, before the
+`entries.get_mut` lookup, so that branch is never reached.
+
+
 ## [0.30.0] - 2026-07-25
 
 ### Added - drop a `void` operator in statement position

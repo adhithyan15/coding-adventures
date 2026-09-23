@@ -4,6 +4,59 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - `debugger` survives SIMPLE and ADVANCED (CCR-053)
+
+Depends on `closure-pass-dce` 0.31.0, which stops stripping `debugger`
+statements. Upstream keeps them at SIMPLE wherever they are reachable; we
+deleted them, which silently changed what a program does under an attached
+debugger. (At ADVANCED the rule is narrower — upstream eliminates a call whose
+body is only a `debugger` — and we do not match that; see the pass changelog.)
+
+This was found by the CCR-081 sweep rather than by reading the flag surface:
+`simple-debugger` was one of 59 fixtures whose golden disagreed with the oracle
+as that sweep stood on 2026-09-21, and reading the side-by-side named the cause
+outright. (Completing the sweep's nine incomplete invocations on 2026-09-23
+revised that count to 67 — see the backlog's CCR-081 row. The 59 is left as the
+number that was true when this was found.)
+
+`tests/diff/simple-debugger` is corrected — golden and commentary. Its header
+claimed the strip "matched the upstream Closure Compiler"; it did not. The
+fixture still does **not** match upstream byte-for-byte, because upstream also
+renames the parameter (`function log(a)`) and we do not — that is CCR-022, and
+it is now the *only* remaining difference on that input.
+
+`simple_debugger_did_not_fall_back_to_whitespace_only` is a regression guard
+against the typed pipeline silently stopping, and it asserted two transforms a
+WHITESPACE_ONLY fallback would not perform: the `1 + 2` constant-fold, and the
+`debugger` strip. Losing the strip leaves the fold as the only positive signal
+on this input, so the second assertion is now its inverse — `debugger` must be
+**present** — which guards CCR-053 itself. A future pass that starts deleting
+them again fails there rather than quietly shipping.
+
+**Three byte matches are lost**, all of them accidents of the unconditional
+strip, and all of them exposing pre-existing truncation gaps rather than new
+defects:
+
+| Input at SIMPLE | upstream | before | after |
+|---|---|---|---|
+| `for(var c=0;c<1;c++){continue;debugger}` | `for(var c=0;c<1;c++);` | matched | `…{continue;debugger};` |
+| `throw 1;debugger;` | `throw 1;` | matched | `throw 1;debugger;` |
+| `{throw 1;debugger;}` | `throw 1;` | matched | `throw 1;debugger;` |
+
+Dead code after `continue` is never truncated (CCR-082, #15878); a dead tail at
+program level is never truncated either (CCR-086, #15923). Both gaps predate
+this change — the controls `for(var c=0;c<1;c++){continue;g()}` and
+`throw 1;console.log(1);` already diverged before it — and both are wrong for
+any dead tail that is not a `debugger`. Stripping merely hid them on this one
+input shape.
+
+**Consumers who want `debugger` removed now need their own step.** The strip was
+documented behaviour, however wrongly justified, so anyone relying on `closurec`
+to keep breakpoints out of a shipped bundle should add an explicit pass. There
+is no flag for it — matching upstream means not doing it, and upstream has no
+flag either.
+
+
 ### Added - five ladder rungs for CCR-078, and the fix it stopped me shipping
 
 **No behaviour change.** This is measurement, and the reason it is only

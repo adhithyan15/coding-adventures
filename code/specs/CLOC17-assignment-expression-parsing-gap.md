@@ -35,8 +35,11 @@ function f(p){ log(p); } f(1); a = 2;
 The two outputs happen to coincide on `f` here (open-world SIMPLE never inlines
 `f` either way); the load-bearing difference is elsewhere — e.g. arithmetic
 folds and dead code drop in the typed pipeline but survive verbatim under the
-whitespace fallback. See CLOC24's `simple-debugger` oracle for a case where the
-two diverge visibly (`debugger;` stripped vs. kept).
+whitespace fallback. (An earlier revision of this paragraph pointed at CLOC24's
+`simple-debugger` oracle as a case where the two diverge visibly, "`debugger;`
+stripped vs. kept". That is no longer true: CCR-053 reverted the strip on
+2026-09-23, so both paths keep the `debugger;` and the `1 + 2` ⇒ `3` fold is the
+only signal that fixture carries.)
 
 The single `a = 2;` forces fallback for the entire program. Verified on
 `closurec --compilation_level SIMPLE` (2026-06-19).

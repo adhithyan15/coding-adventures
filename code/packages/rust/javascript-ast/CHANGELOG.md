@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.42.1] - 2026-09-23
+
+### Fixed — `DebuggerStatement` rustdoc asserted a behaviour that never existed — CCR-053
+
+The doc comment on `DebuggerStatement` told readers that `closure-pass-dce` "strips `debugger`
+statements from statement lists at SIMPLE/ADVANCED (CLOC24, matching the upstream Closure
+Compiler), while WHITESPACE_ONLY — which never runs that pass — keeps it." Both halves were
+wrong. Upstream Closure keeps a reachable `debugger` at SIMPLE; it removes one only as
+collateral, when the statement enclosing it is removed (after a `return` or a `throw`, or
+inside a folded-away `if (false)`). CCR-053 removed the stripping sweeps from `closure-pass-dce`
+accordingly, so all three levels now preserve a reachable `debugger` and the contrast the doc
+drew between WHITESPACE_ONLY and the other two no longer exists either.
+
+Rewritten to state what the node is and why it may not be dropped: "does nothing if no debugger
+is attached" is not the same as "is a no-op", because attachment is not known at compile time.
+The retracted claim is quoted in place rather than deleted, since this doc is the most likely
+place a future implementer looks before re-adding the optimization. Documentation only — no
+type, field, or accessor changed; PATCH.
+
 ## [0.42.0] - 2026-07-14
 
 ### Added — `FunctionParam::AssignmentPattern` (`name = expr` default parameter) — CLOC12.191 PR1
