@@ -823,9 +823,17 @@ export function renderCurriculumGapReport(report: CurriculumGapReport): string {
           //
           // This is the whole backlog, derived. The gate already computes a
           // blocker per track with a shortfall in the criterion's own units; all
-          // that was missing was printing it. Sorting by shortfall ASCENDING
-          // makes the row order the priority order: the track nearest a rung it
-          // has not yet cleared is the cheapest real progress available.
+          // that was missing was printing it.
+          //
+          // GROUPED BY CRITERION, then sorted by shortfall ascending WITHIN a
+          // group -- because "in the criterion's own units" means shortfalls
+          // are NOT comparable across criteria. A first version sorted on the
+          // bare number, and the claim written beside it ("the row order is the
+          // priority order") was false the moment two criteria appeared: a
+          // track blocked by `spine-nodes short 1` would sort above one needing
+          // 79 headwords, while being the single track that authoring lessons
+          // cannot advance at all. Every row happens to be vocabulary-blocked
+          // today, so nothing would have caught it.
           //
           // That ordering is not decoration. When this was first printed it
           // showed telugu 79 and tamil 92 short of pre-A1 — the two tracks
@@ -834,7 +842,9 @@ export function renderCurriculumGapReport(report: CurriculumGapReport): string {
           // hindi (101). A count that hides which track is closest is how that
           // happens.
           "",
-          "per-track ladder (HL09 §3.1), nearest the next rung first:",
+          "per-track ladder (HL09 §3.1), grouped by blocking criterion, " +
+            "nearest the next rung first within each group " +
+            "(shortfalls are in each criterion's own units, so they do not compare across groups):",
           ...[...report.levelGate.tracks]
             .map((track) => {
               const next = track.inProgressAt ?? "C2";
@@ -847,9 +857,16 @@ export function renderCurriculumGapReport(report: CurriculumGapReport): string {
               // target.
               const scoped = vocabulary ? target - vocabulary.shortfall : target;
               const worst = [...track.blockers].sort((a, b) => b.shortfall - a.shortfall)[0];
-              return { track, next, target, scoped, worst, rank: worst?.shortfall ?? -1 };
+              // A track with no blocker has cleared C2 and belongs at the end,
+              // not at the front where a shortfall of -1 would have put it.
+              return { track, next, target, scoped, worst, group: worst?.criterion ?? "\uffff" };
             })
-            .sort((a, b) => a.rank - b.rank || a.track.language.localeCompare(b.track.language))
+            .sort(
+              (a, b) =>
+                a.group.localeCompare(b.group) ||
+                (a.worst?.shortfall ?? 0) - (b.worst?.shortfall ?? 0) ||
+                a.track.language.localeCompare(b.track.language),
+            )
             .map(({ track, next, target, scoped, worst }) => {
               const complete = track.attained ?? "none";
               const blocker = worst

@@ -324,17 +324,39 @@ describe("the first rung anybody actually climbed", () => {
       expect(rows.some((r) => r.trimStart().startsWith(`${track.language} `))).toBe(true);
     }
 
-    // The ordering is the claim. Parsing the shortfall back out of the rendered
-    // text checks the renderer rather than re-deriving it from the gate, which
-    // would pass even if the sort were dropped.
-    const shortfalls = rows.map((r) => Number(/short (\d+)$/.exec(r)?.[1] ?? "-1"));
-    expect(shortfalls.every((n) => n >= 0)).toBe(true);
-    expect([...shortfalls].sort((a, b) => a - b)).toEqual(shortfalls);
+    // The ordering is the claim, and it is ordering WITHIN a criterion group.
+    // Shortfalls are in each criterion's own units -- headwords, spine nodes,
+    // atoms -- so comparing them across groups is meaningless, and a first
+    // version that sorted on the bare number would have ranked a track needing
+    // one spine node above one needing 79 headwords. Parsing both the criterion
+    // and the shortfall back out of the rendered text checks the renderer
+    // rather than re-deriving from the gate, which would pass even if the sort
+    // were dropped.
+    const parsed = rows.map((r) => {
+      const m = /— ([a-z-]+) short (\d+)$/.exec(r);
+      // A track that has cleared C2 renders "no blocker — ladder complete" and
+      // has no shortfall at all. None exists today; asserting every row parses
+      // would silently become wrong the first time one does.
+      return m ? { criterion: m[1]!, shortfall: Number(m[2]) } : null;
+    });
+    const blocked = parsed.filter((p): p is { criterion: string; shortfall: number } => p !== null);
+    expect(blocked.length).toBeGreaterThan(1);
 
-    // Anti-vacuity: a single-track corpus, or an already-sorted one by
-    // accident, would satisfy the assertion above having checked nothing.
-    expect(rows.length).toBeGreaterThan(1);
-    expect(new Set(shortfalls).size).toBeGreaterThan(1);
+    // Groups are contiguous...
+    const order = blocked.map((p) => p.criterion);
+    expect(order).toEqual([...order].sort());
+    // ...and within each one, shortfall ascends.
+    for (const criterion of new Set(order)) {
+      const within = blocked.filter((p) => p.criterion === criterion).map((p) => p.shortfall);
+      expect([...within].sort((a, b) => a - b)).toEqual(within);
+    }
+    // Any unblocked row sorts last, never first.
+    const firstComplete = parsed.indexOf(null);
+    if (firstComplete !== -1) expect(parsed.slice(firstComplete).every((p) => p === null)).toBe(true);
+
+    // Anti-vacuity: an already-sorted corpus by accident would satisfy the
+    // assertions above having checked nothing.
+    expect(new Set(blocked.map((p) => p.shortfall)).size).toBeGreaterThan(1);
   });
 
   it("scopes each row's vocabulary to at-or-below the level in progress", () => {

@@ -25,9 +25,18 @@ per-track ladder (HL09 §3.1), nearest the next rung first:
 
 #### The ordering is the point, not decoration
 
-Rows sort by shortfall **ascending**, so reading down the list is reading the
-backlog in priority order: the track nearest a rung it has not cleared is the
-cheapest real progress available.
+Rows group by blocking criterion, then sort by shortfall **ascending within a
+group**, so reading down a group is reading that part of the backlog in priority
+order: the track nearest a rung it has not cleared is the cheapest real progress
+available.
+
+The grouping is not cosmetic. A first version sorted on the bare shortfall, and
+the sentence written beside it — *"the row order is the priority order"* — was
+false the moment two criteria appeared: shortfalls are in each criterion's own
+units, so a track blocked by `spine-nodes short 1` would sort above one needing
+79 headwords, while being the single track that authoring lessons **cannot**
+advance at all. Every row is vocabulary-blocked today, so nothing in the corpus
+or the tests would have caught it; security review did.
 
 That is not hypothetical. The first run showed **telugu 79** and **tamil 92**
 short of pre-A1 — the two tracks nearest the first structurally complete level
