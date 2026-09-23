@@ -22,6 +22,31 @@ gentleness measurement: 98 lesson(s) remain atom-measurement blind
 VOCABULARY vs HL09 §3.1 targets: spanish 1020/1200 at-or-below A2 (1069 total), hindi 199/300 at-or-below pre-A1 (351 total), malayalam 172/300 at-or-below pre-A1 (315 total), tamil 208/300 at-or-below pre-A1 (288 total), telugu 221/300 at-or-below pre-A1 (284 total); 21 of 23 tracks short of the level they are working on
 levels with STRUCTURAL COVERAGE COMPLETE (HL09 §3.1 — coverage complete, performance UNVERIFIED): 1 track at A1 (spanish); 23 track(s) touch a level whose coverage is not complete
   ^ these five criteria measure the CORPUS — headwords, verbs, spine nodes, reinforcement windows, writing stages. None measures a learner. No track has had a single exam item scored against it, so no line above claims a reader can pass anything.
+
+per-track ladder (HL09 §3.1), grouped by blocking criterion, nearest the next rung first within each group (shortfalls are in each criterion's own units, so they do not compare across groups):
+  telugu      touches A2     complete none   working pre-A1 vocabulary 221/300 — vocabulary short 79
+  tamil       touches A2     complete none   working pre-A1 vocabulary 208/300 — vocabulary short 92
+  hindi       touches A2     complete none   working pre-A1 vocabulary 199/300 — vocabulary short 101
+  sanskrit    touches A2     complete none   working pre-A1 vocabulary 184/300 — vocabulary short 116
+  kannada     touches A2     complete none   working pre-A1 vocabulary 179/300 — vocabulary short 121
+  malayalam   touches A2     complete none   working pre-A1 vocabulary 172/300 — vocabulary short 128
+  spanish     touches C2     complete A1     working A2     vocabulary 1020/1200 — vocabulary short 180
+  german      touches A2     complete none   working pre-A1 vocabulary 99/300 — vocabulary short 201
+  latin       touches A2     complete none   working pre-A1 vocabulary 79/300 — vocabulary short 221
+  marwadi     touches A1     complete none   working pre-A1 vocabulary 76/300 — vocabulary short 224
+  gujarati    touches A2     complete none   working pre-A1 vocabulary 75/300 — vocabulary short 225
+  bengali     touches A2     complete none   working pre-A1 vocabulary 64/300 — vocabulary short 236
+  italian     touches A2     complete none   working pre-A1 vocabulary 63/300 — vocabulary short 237
+  urdu        touches A2     complete none   working pre-A1 vocabulary 60/300 — vocabulary short 240
+  arabic      touches A2     complete none   working pre-A1 vocabulary 53/300 — vocabulary short 247
+  punjabi     touches A2     complete none   working pre-A1 vocabulary 53/300 — vocabulary short 247
+  marathi     touches A2     complete none   working pre-A1 vocabulary 49/300 — vocabulary short 251
+  russian     touches A2     complete none   working pre-A1 vocabulary 49/300 — vocabulary short 251
+  chinese     touches A2     complete none   working pre-A1 vocabulary 48/300 — vocabulary short 252
+  french      touches A2     complete none   working pre-A1 vocabulary 47/300 — vocabulary short 253
+  portuguese  touches A2     complete none   working pre-A1 vocabulary 47/300 — vocabulary short 253
+  japanese    touches A1     complete none   working pre-A1 vocabulary 44/300 — vocabulary short 256
+  persian     touches A2     complete none   working pre-A1 vocabulary 43/300 — vocabulary short 257
 0 of 1650 book chapters without an HL05 capability; 87 payoffs below the 0.5 representativeness floor; 10 tracks already clean
 
 Longest effective lessons:
