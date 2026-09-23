@@ -815,6 +815,69 @@ export function renderCurriculumGapReport(report: CurriculumGapReport): string {
           `  ^ these five criteria measure the CORPUS — headwords, verbs, spine nodes, ` +
             `reinforcement windows, writing stages. None measures a learner. No track has had a ` +
             `single exam item scored against it, so no line above claims a reader can pass anything.`,
+          // EVERY TRACK, NEAREST THE NEXT RUNG FIRST — and the reason it is a
+          // table rather than another summary line is that the summary above is
+          // true and useless for deciding what to do next. "23 track(s) touch a
+          // level whose coverage is not complete" names no track, no criterion
+          // and no distance, so the only way to act on it was to write a script.
+          //
+          // This is the whole backlog, derived. The gate already computes a
+          // blocker per track with a shortfall in the criterion's own units; all
+          // that was missing was printing it.
+          //
+          // GROUPED BY CRITERION, then sorted by shortfall ascending WITHIN a
+          // group -- because "in the criterion's own units" means shortfalls
+          // are NOT comparable across criteria. A first version sorted on the
+          // bare number, and the claim written beside it ("the row order is the
+          // priority order") was false the moment two criteria appeared: a
+          // track blocked by `spine-nodes short 1` would sort above one needing
+          // 79 headwords, while being the single track that authoring lessons
+          // cannot advance at all. Every row happens to be vocabulary-blocked
+          // today, so nothing would have caught it.
+          //
+          // That ordering is not decoration. When this was first printed it
+          // showed telugu 79 and tamil 92 short of pre-A1 — the two tracks
+          // nearest the first structurally complete level any non-pilot track
+          // would reach — while recent effort had gone to malayalam (128) and
+          // hindi (101). A count that hides which track is closest is how that
+          // happens.
+          "",
+          "per-track ladder (HL09 §3.1), grouped by blocking criterion, " +
+            "nearest the next rung first within each group " +
+            "(shortfalls are in each criterion's own units, so they do not compare across groups):",
+          ...[...report.levelGate.tracks]
+            .map((track) => {
+              const next = track.inProgressAt ?? "C2";
+              const target = report.levelGate!.vocabularyTargets[next];
+              const vocabulary = track.blockers.find((b) => b.criterion === "vocabulary");
+              // The AT-OR-BELOW count, not the track total, for the reason the
+              // vocabulary line above already gives: the total is context and
+              // the scoped number is the one to author against. A track with no
+              // vocabulary blocker is not short, so its scoped count is its
+              // target.
+              const scoped = vocabulary ? target - vocabulary.shortfall : target;
+              const worst = [...track.blockers].sort((a, b) => b.shortfall - a.shortfall)[0];
+              // A track with no blocker has cleared C2 and belongs at the end,
+              // not at the front where a shortfall of -1 would have put it.
+              return { track, next, target, scoped, worst, group: worst?.criterion ?? "\uffff" };
+            })
+            .sort(
+              (a, b) =>
+                a.group.localeCompare(b.group) ||
+                (a.worst?.shortfall ?? 0) - (b.worst?.shortfall ?? 0) ||
+                a.track.language.localeCompare(b.track.language),
+            )
+            .map(({ track, next, target, scoped, worst }) => {
+              const complete = track.attained ?? "none";
+              const blocker = worst
+                ? `${worst.criterion} short ${worst.shortfall}`
+                : "no blocker — ladder complete";
+              return (
+                `  ${track.language.padEnd(11)} touches ${String(track.touches ?? "-").padEnd(6)} ` +
+                `complete ${complete.padEnd(6)} working ${next.padEnd(6)} ` +
+                `vocabulary ${scoped}/${target} — ${blocker}`
+              );
+            }),
         ]
       : []),
     ...(report.chapters
