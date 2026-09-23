@@ -93,13 +93,79 @@ commit. A changed golden must be updated to the captured bytes and carry an
 decline keeps the prior golden and requires a `documented_decline` review.
 Unreviewed non-equal results fail the offline verifier.
 
+## The `upstream_refuses` cohort
+
+Twelve fixtures carry the `upstream_refuses` disposition rather than
+`upstream_golden`, in the set `non-minify-upstream-refuses-v20260915`. For
+these, the pinned oracle does not disagree with the golden — it **refuses the
+input**: nonzero exit, empty stdout, a named `JSC_` diagnostic. There is no
+upstream output the golden could have come from, so `upstream_golden` is not
+merely unverified for them, it is *unachievable*. Their `expected.stdout`
+records what `closurec` does with input upstream declines.
+
+| Diagnostic | Count | Fixtures |
+|---|---:|---|
+| `JSC_UNSUPPORTED_LANGUAGE_FEATURE` | 4 | the four `simple-private-*` class-element fixtures |
+| `JSC_INVALID_MODULE_PATH` | 3 | `simple-export`, `simple-import`, `simple-importexpr` |
+| `JSC_PARSE_ERROR` | 2 | `simple-newtarget`, `simple-try-catch` |
+| `JSC_CANNOT_CONVERT` | 1 | `simple-importmeta` |
+| `JSC_INVALID_SUPER_ACCESS` | 1 | `simple-super` |
+| `JSC_USE_OF_WITH` | 1 | `simple-with` |
+
+Whether `closurec` *should* refuse what upstream refuses is an open product
+decision, CCR-075 ([#15860](https://github.com/adhithyan15/coding-adventures/issues/15860)).
+This disposition does not settle it. It exists so the corpus stops asserting
+upstream provenance it cannot have. The two `JSC_PARSE_ERROR` cases are the
+sharpest input to that decision, because a syntax error is not a matter of
+upstream's taste.
+
+### The recorded claim is narrow on purpose
+
+The evidence records only that upstream refuses **as invoked** — with the
+fixture's own `flags.txt`, verbatim. It is *not* the broader claim that no
+invocation could produce the golden. That broader claim is also true for the
+three ES-module fixtures, whose goldens preserve `import`/`export` syntax that
+upstream rewrites under every resolver setting tried, but it quantifies over a
+hand search that no script can re-run, so it lives on
+[#15868](https://github.com/adhithyan15/coding-adventures/issues/15868) instead
+of in a file the test suite trusts.
+
+The practical consequence is that `simple-importmeta` is in this set even
+though its refusal is only a missing flag (`--chunk_output_type=ES_MODULES`).
+Completing its invocation is real work that changes its `flags.txt` and its
+golden; until someone does that, the recorded fact is the refusal.
+
+### Regenerating the evidence
+
+`tests/oracle/upstream-refusals-v20260915.json` is **captured, never written by
+hand** — the standing lesson of CCR-079
+([#15866](https://github.com/adhithyan15/coding-adventures/issues/15866)) is
+that a ledger the gate trusts, whose values a human typed, is an assertion
+wearing evidence's clothes.
+
+```sh
+export CLOSURE_ORACLE_JAR=/absolute/path/to/closure-compiler-v20260915.jar
+code/scripts/capture-upstream-refusals.sh
+```
+
+The script verifies the JAR's SHA-256 against the pin first, and fails loudly
+if any listed fixture has started *succeeding* — good news, but it must be a
+deliberate edit rather than a silently shrinking evidence file. `oracle_manifest`
+then cross-checks the report against the manifest: the fixture lists must match
+exactly in both directions, the release and JAR hash must be the pinned ones,
+and every entry must be a real refusal. Reading that JSON keeps the
+never-execute-Java rule intact — the Java ran when a maintainer generated the
+report, exactly as the JAR download did.
+
 ## Change the ledger
 
 When adding or renaming a `tests/diff/` directory:
 
 1. add it to exactly one fixture set;
 2. identify its Rust harness;
-3. choose an honest disposition and current-provenance status;
+3. choose an honest disposition and current-provenance status — including
+   `upstream_refuses` when the oracle rejects the input outright, which needs a
+   captured entry in the refusal report rather than a hand-written claim;
 4. attach a command only when an upstream comparison exists; and
 5. run the verifier and the full closurec suite.
 

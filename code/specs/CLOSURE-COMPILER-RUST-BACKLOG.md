@@ -465,10 +465,22 @@ syntax is a narrower front-end question that can be settled without waiting on
 the policy decision.
 
 Completing the nine "incomplete invocations" on 2026-09-23 added **three more**
-to that pile, for eleven in total. `simple-import`, `simple-export` and
-`simple-importexpr` have goldens that preserve ES-module syntax verbatim
-(`import{a,b as c}from"y";a(3);`). Upstream never emits that: an unresolvable
-bare specifier is refused, and a resolvable one is rewritten (`1(3);export{};`).
-No invocation produces the golden, so the `upstream_golden` disposition is
-**unachievable** for them rather than merely unverified — the same class as the
-eight refusals, not the 67 divergences.
+to that pile. `simple-import`, `simple-export` and `simple-importexpr` have
+goldens that preserve ES-module syntax verbatim (`import{a,b as c}from"y";a(3);`).
+Upstream never emits that: an unresolvable bare specifier is refused, and a
+resolvable one is rewritten (`1(3);export{};`). No invocation produces the
+golden, so the `upstream_golden` disposition is **unachievable** for them rather
+than merely unverified — the same class as the eight refusals, not the 67
+divergences.
+
+**Resolved 2026-09-23.** Those fixtures now carry a new disposition,
+`upstream_refuses`, in the set `non-minify-upstream-refuses-v20260915`; the
+source set drops to 126 and the 797 total is unchanged. The cohort is **twelve,
+not eleven** — `simple-importmeta` was filed under "completable by a flag"
+because `--chunk_output_type=ES_MODULES` does make upstream compile it, but it
+still refuses under its own recorded invocation, which is what the disposition
+records. The evidence is captured by `code/scripts/capture-upstream-refusals.sh`
+into `tests/oracle/upstream-refusals-v20260915.json` and cross-checked by
+`oracle_manifest`; the recorded predicate is the narrow, re-runnable "refuses as
+invoked", not the hand-searched "no invocation could ever produce this", which
+stays on the issue where it can be argued with.
