@@ -1,8 +1,8 @@
 Bengali, chapter 21: The Face on the Page.
-5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+6 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 5.
+Lesson 1 of 6.
 চোখ (chokh) — eye, read.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -33,7 +33,7 @@ How many pieces in চোখ (chokh)? (Three.) Which sign sits on both sides of 
 Source: Unicode Bengali chart.
 
 
-Lesson 2 of 5.
+Lesson 2 of 6.
 নাক (nāk) — nose, read.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -66,7 +66,7 @@ What happens to ক's inherent vowel at the end of নাক (nāk)? (It is gone
 Source: Unicode Bengali chart.
 
 
-Lesson 3 of 5.
+Lesson 3 of 6.
 মুখ (mukh) — mouth, read.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -96,7 +96,7 @@ What happens to the breath at the end of মুখ (mukh)? (It comes out — the
 Source: Unicode Bengali chart.
 
 
-Lesson 4 of 5.
+Lesson 4 of 6.
 ৃ (-ri) — the vowel that used to be an r.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -126,7 +126,7 @@ Is ৃ (-ri) a consonant or a vowel sign? (A vowel sign.) What does it say in Be
 Source: Unicode Bengali chart.
 
 
-Lesson 5 of 5.
+Lesson 5 of 6.
 হৃদয় (hridoy) — heart, and the face read whole.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -160,3 +160,30 @@ Wrap-up Recall.
 [pause 3 seconds]
 How many pieces in হৃদয় (hridoy)? (Four.) How many of them were bought for this word? (One — the hook.) Which letter is wearing a dot? (য়.) And name the four words of this chapter in Bengali. (চোখ (chokh), নাক (nāk), মুখ (mukh), হৃদয় (hridoy).)
 Source: Unicode Bengali chart.
+
+
+Lesson 6 of 6.
+Six words, read cold — second pass over the six words the script lessons taught you to read, and the sign that came last.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: the sign that came last until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 3 seconds]
+The verb for what you are doing this second, in Bengali script. Say it before you look.
+
+Reading: the six, with nothing beside them.
+পড়া, দুধ, ভাই, পরিবার, হওয়া, হৃদয় (hridoy).
+Read down the line and say each one aloud before checking:
+[a table of 3 rows, read aloud]
+word: পড়া, দুধ, to read, milk.
+word: ভাই, পরিবার, brother, family.
+word: হওয়া, হৃদয় (hridoy), to be, heart.
+Each was taught with its own point attached. পরিবার is where the inherent vowel is finally heard rather than explained. ভাই is an independent vowel sitting in the middle of a word, where nothing prepares you for it. দুধ is the plain-against-breathy pair inside one short word.
+
+Script: the sign that came last.
+ৃ (-ri).
+হৃদয় (hridoy) needed a sign nothing before it had needed: ৃ (-ri), for a vowel that was once an r and is no longer one. It is the last piece of the reading ladder, and it exists for a sound that has moved away from the letter that records it — the same drift you meet in every script old enough to have one.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which of the six is the longest, and what does it let you hear? (পরিবার — the inherent vowel.) Where does ভাই put an independent vowel? (In the middle of the word.) Which word needed ৃ (-ri)? (হৃদয় (hridoy).) And what was that sign once? (An r — it is not one now.)

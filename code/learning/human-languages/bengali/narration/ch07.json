@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2d09f5a06cd3e0f1",
+  "sourceHash": "fnv1a64:417ae23117990be4",
   "lessons": [
     {
       "id": "BN-C04-abar",
@@ -650,6 +650,135 @@
             {
               "kind": "speech",
               "text": "You're leaving a friend and expect to see them next week. Which goodbye fits, and how does Bengali phrase \"we'll meet\"? (Ābār dækhā hôbe; impersonally — \"a seeing will happen.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R08-second-pass-four-exchanges",
+      "sequence": 505,
+      "title": "Four exchanges, and two ways to leave",
+      "headword": "(practice)",
+      "romanization": "",
+      "gloss": "second pass over the four chapter exchanges, and the two goodbyes that differ by one word",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a606eec2990ce305",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four chapters, four exchanges, each practised once in the chapter that taught it. From memory: the first thing you say on meeting someone, and the last thing you say on leaving."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the two goodbyes differ by one word",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "আবার দেখা হবে (ābār dækhā hôbe), we'll meet again.",
+                "কাল দেখা হবে (kāl dækhā hôbe), see you tomorrow."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "দেখা হবে (dækhā hôbe) — \"a meeting will happen\" — does the work in both. What changes is the one word in front: again, or tomorrow. Neither goodbye says goodbye; both name the next meeting, and the front word is how far off it is."
+            },
+            {
+              "kind": "speech",
+              "text": "কাল is the one to keep an eye on. It is the same word for yesterday and tomorrow, and only the verb around it tells you which way time is running."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the greeting exchange, both voices",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the greeting exchange, both voices]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask how someone is, and answer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask how someone is, and answer]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "give your name, and ask for theirs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: give your name, and ask for theirs]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "leave someone you will see tomorrow, then someone you may not",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: leave someone you will see tomorrow, then someone you may not]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What do both goodbyes share? (দেখা হবে (dækhā hôbe) — a meeting will happen.) What changes between them? (The word in front — again, or tomorrow.) What is odd about কাল? (It is also yesterday.) And what tells you which one is meant? (The verb around it.)"
             }
           ]
         }

@@ -1,19 +1,20 @@
 {
   "language": "bengali",
   "chapter": 30,
-  "sourceHash": "fnv1a64:8af5c99dc39bf5b9",
+  "sourceHash": "fnv1a64:c5dacb86c665def6",
   "lessonIds": [
     "BN-C19-je",
     "BN-C19-jokhon",
     "BN-C19-abar-bolben",
     "BN-C19-dhire",
+    "BN-R30-second-pass-slowly-and-two-signs",
     "BN-R19-lost-and-found"
   ],
-  "voiceLessons": 5,
-  "drivablePrefix": 5,
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
   "text": "bengali/narration/ch30.txt",
   "json": "bengali/narration/ch30.json",
-  "textHash": "fnv1a64:2e39d26a566f8b2a",
-  "jsonHash": "fnv1a64:edc69c27ef34f824",
+  "textHash": "fnv1a64:0006f9e759559745",
+  "jsonHash": "fnv1a64:0e99f0ba0c17ada4",
   "findings": []
 }

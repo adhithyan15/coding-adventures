@@ -3,7 +3,8 @@
   "spine_node": "SPINE-MEET-GREET",
   "before": [],
   "inline": [
-    "BN-EXT-001-INLINE-SCRIPT"
+    "BN-EXT-001-INLINE-SCRIPT",
+    "BN-EXT-039-CONSOLIDATION"
   ],
   "after": [
     "BN-EXT-018-SCRIPT-FIRST-PIECES",

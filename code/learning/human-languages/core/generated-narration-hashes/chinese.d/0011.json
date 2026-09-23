@@ -1,17 +1,19 @@
 {
   "language": "chinese",
   "chapter": 11,
-  "sourceHash": "fnv1a64:395664a6a3b64bdd",
+  "sourceHash": "fnv1a64:950d48762c305900",
   "lessonIds": [
     "ZH-W11-qing",
     "ZH-C11-qing",
-    "ZH-C11-practice"
+    "ZH-C11-practice",
+    "ZH-C11-second-pass-eight-exchanges",
+    "ZH-C11-second-pass-character-and-word"
   ],
   "voiceLessons": 2,
   "drivablePrefix": 0,
   "text": "chinese/narration/ch11.txt",
   "json": "chinese/narration/ch11.json",
-  "textHash": "fnv1a64:debd1e52601ba7ff",
-  "jsonHash": "fnv1a64:343c4343076ee1e7",
+  "textHash": "fnv1a64:932e3c2dbfcd477e",
+  "jsonHash": "fnv1a64:9273b03dfe2de1b6",
   "findings": []
 }

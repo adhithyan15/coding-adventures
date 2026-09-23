@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C11-second-pass-eight-exchanges",
+    "language": "chinese",
+    "chapter": 11,
+    "sequence": 680,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:133e9a90e731368f"
+  },
+  "findings": []
+}

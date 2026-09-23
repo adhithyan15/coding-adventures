@@ -3,8 +3,8 @@
   "language": "bengali",
   "chapter": 30,
   "title": "When You Are Lost",
-  "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8af5c99dc39bf5b9",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:c5dacb86c665def6",
   "lessons": [
     {
       "id": "BN-C19-je",
@@ -564,6 +564,88 @@
             {
               "kind": "speech",
               "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R30-second-pass-slowly-and-two-signs",
+      "sequence": 1575,
+      "title": "ধীরে (dhīre) — the word you will need most",
+      "headword": "ধীরে",
+      "romanization": "dhīre",
+      "gloss": "second pass over the repair word, and the two readings that had no second pass of their own",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f945c59a4a2598e6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Someone is speaking faster than you can follow. One word, and it is usually said twice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: said twice, and that is the idiom",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ধীরে (dhīre) — slowly. On its own it is an ordinary adverb. Doubled, ধীরে (dhīre) ধীরে (dhīre), it is the everyday way to ask for it: Bengali repeats a word to soften and to spread it out, and a single ধীরে (dhīre) can sound like an instruction where the doubled one sounds like a request."
+            },
+            {
+              "kind": "speech",
+              "text": "It is half of the repair kit. The other half asks someone to say it again; this half asks them to say it at a speed you can follow, and of the two it is the one a beginner reaches for more often."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "comprehension",
+          "title": "Reading: the two that had no second look",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পড়া, হৃদয়."
+            },
+            {
+              "kind": "speech",
+              "text": "Both were taught once and read once. Say each aloud, then say what makes the second one harder than the first: হৃদয় carries ৃ, a sign for a vowel that used to be an r, and nothing else in the word warns you it is coming."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you ask someone to slow down? (ধীরে (dhīre) ধীরে (dhīre) — doubled.) What does the doubling do? (Softens it into a request.) Which of the two words above needs ৃ? (হৃদয়.) And what did that sign once write? (An r.)"
             }
           ]
         }

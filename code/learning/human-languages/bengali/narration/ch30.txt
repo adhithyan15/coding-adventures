@@ -1,8 +1,8 @@
 Bengali, chapter 30: When You Are Lost.
-5 lessons. All 5 can be done entirely by ear.
+6 lessons. All 6 can be done entirely by ear.
 
 
-Lesson 1 of 5.
+Lesson 1 of 6.
 যে (je) — that.
 
 Warm-up.
@@ -35,7 +35,7 @@ What does যে attach to the verb in front of it? (A whole sentence, as its ob
 Source: Unicode Bengali chart.
 
 
-Lesson 2 of 5.
+Lesson 2 of 6.
 যখন (jôkhon) — when.
 
 Warm-up.
@@ -70,7 +70,7 @@ Which word answers যখন (jôkhon), and does a Bengali speaker leave it out?
 Source: Unicode Bengali chart.
 
 
-Lesson 3 of 5.
+Lesson 3 of 6.
 আবার বলবেন (ābār bôlben) — say it again.
 
 Warm-up.
@@ -103,7 +103,7 @@ Which ending makes this a polite request, and where was it taught? (-বেন, 
 Source: Unicode Bengali chart.
 
 
-Lesson 4 of 5.
+Lesson 4 of 6.
 ধীরে (dhīre) — slowly.
 
 Warm-up.
@@ -136,7 +136,27 @@ What did ধীরে (dhīre) mean in Sanskrit before it meant slowly? (Steady,
 Source: Unicode Bengali chart.
 
 
-Lesson 5 of 5.
+Lesson 5 of 6.
+ধীরে (dhīre) — the word you will need most.
+
+Warm-up.
+[pause 3 seconds]
+Someone is speaking faster than you can follow. One word, and it is usually said twice.
+
+You'll want to know: said twice, and that is the idiom.
+ধীরে (dhīre) — slowly. On its own it is an ordinary adverb. Doubled, ধীরে (dhīre) ধীরে (dhīre), it is the everyday way to ask for it: Bengali repeats a word to soften and to spread it out, and a single ধীরে (dhīre) can sound like an instruction where the doubled one sounds like a request.
+It is half of the repair kit. The other half asks someone to say it again; this half asks them to say it at a speed you can follow, and of the two it is the one a beginner reaches for more often.
+
+Reading: the two that had no second look.
+পড়া, হৃদয়.
+Both were taught once and read once. Say each aloud, then say what makes the second one harder than the first: হৃদয় carries ৃ, a sign for a vowel that used to be an r, and nothing else in the word warns you it is coming.
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you ask someone to slow down? (ধীরে (dhīre) ধীরে (dhīre) — doubled.) What does the doubling do? (Softens it into a request.) Which of the two words above needs ৃ? (হৃদয়.) And what did that sign once write? (An r.)
+
+
+Lesson 6 of 6.
 When you are lost — an opinion, a moment in time, and what to say when the conversation has got away from you.
 
 Warm-up.

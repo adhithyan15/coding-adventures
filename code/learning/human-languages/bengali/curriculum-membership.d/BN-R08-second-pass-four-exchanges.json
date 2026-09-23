@@ -1,0 +1,11 @@
+{
+  "id": "BN-R08-second-pass-four-exchanges",
+  "pathSegment": "BN-PATH-003A",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-003-CONSOLIDATION",
+      "order": 1
+    }
+  ]
+}
