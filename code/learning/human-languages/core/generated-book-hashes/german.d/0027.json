@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 27,
-  "sourceHash": "fnv1a64:0aef8239d3af6a58",
+  "sourceHash": "fnv1a64:3f19223c2d8fdc3e",
   "lessonIds": [
     "GE-C14-alt",
     "GE-C14-jahr",
@@ -9,7 +9,8 @@
     "GE-C14-wie-alt-bist-du",
     "GE-C14-alter",
     "GE-C14-alter-sein-haben",
-    "GE-C14-alter-practice"
+    "GE-C14-alter-practice",
+    "GE-R14-was-der-kalender-liegen-liess"
   ],
   "tex": "german/book/chapters/ch27-alter.tex"
 }

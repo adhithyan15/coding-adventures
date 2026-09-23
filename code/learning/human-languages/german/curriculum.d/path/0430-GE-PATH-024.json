@@ -3,5 +3,7 @@
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "before": [],
   "inline": [],
-  "after": []
+  "after": [
+    "GE-EXT-024-CONSOLIDATION"
+  ]
 }

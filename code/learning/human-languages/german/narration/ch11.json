@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "The German Weekend",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:761e7e109d83b508",
+  "sourceHash": "fnv1a64:0ddd375377b66473",
   "lessons": [
     {
       "id": "GE-C07-sonne",
@@ -837,6 +837,155 @@
             {
               "kind": "speech",
               "text": "Run all seven without prompting. Which day has no god? (Mittwoch.) Which is not a Germanic word at all? (Samstag — the Sabbath.) Which day did the Church rename in Romance but leave alone here? (Sonntag.) Which day has two names? (Saturday — Samstag and Sonnabend.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-R07-spaet-und-was-drin-steckt",
+      "sequence": 242,
+      "title": "spät — one short word with two spelling rules inside it",
+      "headword": "spät · später · bis morgen · Gute Nacht",
+      "romanization": "spät · später · bis morgen · Gute Nacht",
+      "gloss": "the four things you say as a day ends, and the two marks hiding inside the first of them",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:6b2b5ec129f22af3",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say spät. Listen to how it starts — the sp is not the sp of English spade. Say what your mouth does instead."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: the end of a day, in four moves",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The week is in your mouth now. These four are what you say when one of its days is running out."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it is late — es ist spät",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it is late — *es ist spät*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "later, not now — später",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: later, not now — *später*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "until tomorrow — bis morgen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: until tomorrow — *bis morgen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the last thing, at the door — Gute Nacht",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the last thing, at the door — *Gute Nacht*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Gute Nacht is not the night-time Guten Abend. It is spoken on parting, not on arriving — you say it to someone who is leaving or going to bed, and saying it on entering a room at ten at night is the kind of mistake that gets you a puzzled look rather than a correction."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: two marks, two different jobs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Both marks are in words you have been saying for weeks, and they do opposite kinds of work:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "mark",
+                "what it is",
+                "what it tells you"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "mark: ä in spät. what it is: two dots that were once an e. what it tells you: grammar — a changed vowel, marking a form.",
+                "mark: ß in Fuß. what it is: two s's written as one letter. what it tells you: sound — the vowel in front of it is long."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The umlaut is a grammatical signal: it marks that something has happened to the word. The eszett is a phonetic one: it tells you how long to hold the vowel before it. One points backwards at the word's history, the other forwards at your mouth."
+            },
+            {
+              "kind": "speech",
+              "text": "That is why spät becomes später changes nothing about the ä. The comparative is built by adding -er, and the vowel was already what it was."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the two marks tells you about a sound, and which about grammar? (ß is sound — a long vowel before it; umlaut is grammar.) What were the two dots, originally? (An e.) Say goodbye to someone you will see the next day. (Bis morgen.)"
             }
           ]
         }

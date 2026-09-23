@@ -1,0 +1,11 @@
+{
+  "id": "GE-R07-spaet-und-was-drin-steckt",
+  "pathSegment": "GE-PATH-035-B",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "GE-EXT-035-B-WOCHENENDE",
+      "order": 6
+    }
+  ]
+}

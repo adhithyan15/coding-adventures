@@ -1,12 +1,13 @@
 {
   "language": "german",
   "chapter": 43,
-  "sourceHash": "fnv1a64:3af8f6f944f1d9de",
+  "sourceHash": "fnv1a64:b62ed5de8d9feb61",
   "lessonIds": [
     "GE-C30-auge",
     "GE-C30-ohr",
     "GE-C30-mund",
-    "GE-C30-nase"
+    "GE-C30-nase",
+    "GE-R30-kopf-und-haupt"
   ],
   "tex": "german/book/chapters/ch43-face-parts.tex"
 }

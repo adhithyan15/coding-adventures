@@ -1,0 +1,11 @@
+{
+  "id": "GE-R30-kopf-und-haupt",
+  "pathSegment": "GE-PATH-033",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-033-LANGUAGE-SPECIFIC",
+      "order": 4
+    }
+  ]
+}

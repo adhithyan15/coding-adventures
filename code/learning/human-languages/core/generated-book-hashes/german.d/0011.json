@@ -1,14 +1,15 @@
 {
   "language": "german",
   "chapter": 11,
-  "sourceHash": "fnv1a64:d1df458c6f96dbf9",
+  "sourceHash": "fnv1a64:773f24d1da00917c",
   "lessonIds": [
     "GE-C07-sonne",
     "GE-C07-sonntag",
     "GE-C07-sabbat",
     "GE-C07-samstag",
     "GE-C07-sonnabend",
-    "GE-C07-wochentage-2"
+    "GE-C07-wochentage-2",
+    "GE-R07-spaet-und-was-drin-steckt"
   ],
   "tex": "german/book/chapters/ch11-wochenende.tex"
 }
