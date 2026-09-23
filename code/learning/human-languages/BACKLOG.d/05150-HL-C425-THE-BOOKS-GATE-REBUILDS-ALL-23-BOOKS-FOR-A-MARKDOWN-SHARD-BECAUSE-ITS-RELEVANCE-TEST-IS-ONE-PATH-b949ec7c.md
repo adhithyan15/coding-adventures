@@ -21,6 +21,27 @@ live inside that tree. A commit touching only two backlog shards produced
 Observed on a commit whose entire diff was two `BACKLOG.d/*.md` files plus one
 `lessons.d/*.md` outside the tree.
 
+### It also manufactures red checks, which is the part that actually costs something
+
+Measured three times on this branch, on #15904 and #15905. The all-books build
+takes ~24 minutes, so a documentation-only PR that is pushed to again within
+that window has its build **cancelled** by the supersession — and the gate,
+correctly, refuses `cancelled`:
+
+```
+detect=success relevant=true build=cancelled
+##[error]Unexpected books gate state: relevant=true build=cancelled
+```
+
+Had the change been correctly irrelevant, the same push would have taken the
+gate's other legitimate branch, `false:skipped`, and passed. So the
+over-trigger converts an ordinary supersession into a **red check on a
+documentation commit** — three times here, each needing a log read to confirm it
+was not a defect.
+
+That is the real cost, and it is larger than the CI minutes: a gate that goes
+red for a reason unrelated to the diff is a gate people learn to skim past.
+
 ### The bias is the right way round, which is why this is low priority
 
 Over-building is the fail-safe direction. A relevance test that misses a real
