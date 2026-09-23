@@ -3,7 +3,8 @@
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "before": [],
   "inline": [
-    "GU-EXT-042-REPAIR-FIVE"
+    "GU-EXT-042-REPAIR-FIVE",
+    "GU-EXT-052-CONSOLIDATION"
   ],
   "after": []
 }

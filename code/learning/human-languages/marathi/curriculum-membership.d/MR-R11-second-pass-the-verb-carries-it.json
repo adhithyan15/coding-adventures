@@ -1,0 +1,11 @@
+{
+  "id": "MR-R11-second-pass-the-verb-carries-it",
+  "pathSegment": "MR-PATH-010",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "MR-EXT-040-FAREWELL-CARE-AND-CONSOLIDATION",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "MR-R65-second-pass-pha-danda-au",
+    "language": "marathi",
+    "chapter": 65,
+    "sequence": 2685,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fdbea54967f9a6a2",
+    "detachableSegments": [
+      "Script: three marks, three different kinds of fact"
+    ]
+  },
+  "findings": []
+}

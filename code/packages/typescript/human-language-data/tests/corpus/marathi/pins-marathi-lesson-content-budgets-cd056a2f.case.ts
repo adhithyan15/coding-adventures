@@ -184,7 +184,12 @@ it("pins Marathi lesson-content budgets", () =>
     // ai -- and nothing about a word like that announces that one of its four
     // shapes had never been drawn. The fifth lesson is the cold-retrieval review,
     // there for the same measured reason as chapter 64's.
-    lessons: 364,
+    //
+    // 364 -> 366: HL-C432, two `review` lessons closing the track's
+    // reinforcement debt -- the first meeting retrieved as one exchange, and
+    // the three script marks of chapters 64-65. No new atoms, no new headwords.
+    //
+    lessons: 366,
     idioms: 5,
     senses: 4,
     // 7 -> 8: MR-CULTURE-SHUBH-FORMAL-WRITTEN-REGISTER-01. The shubh greetings

@@ -215,9 +215,22 @@ describe("direct curriculum lesson owners", () => {
     // nothing that is not this change: the six lessons joining their segments'
     // derived `lessons` lists, three new `-CONSOLIDATION` extension nodes, and
     // those ids appearing in their segments' `after` lists.
-    expect(digest).toBe("647640baed1b6633b57379bc28380f3d43a06fe09020f1a18251f19774450df4");
+    //
+    // 7517 -> 7520 is HL-C432: THREE `review` lessons taking gujarati and
+    // marathi to zero pre-A1 reinforcement debt, which finishes the small-debt
+    // half of HL-C428's sweep. Gujarati needed only one because all thirteen of
+    // its thin atoms sit below sequence 1820 and one lesson at 1825 reaches
+    // them all. None of the three introduces an atom or a headword.
+    //
+    // Attribution by reconstruction AND structural diff. A clean worktree at
+    // b34f182c78 reproduced 647640ba... and 7517 byte for byte. Dumping the
+    // loaded graph from both trees and diffing gives 40 changed lines and
+    // nothing that is not this change: the three lessons joining their
+    // segments' derived `lessons` lists, two new `-CONSOLIDATION` extension
+    // nodes, and those ids in their segments' `inline` lists.
+    expect(digest).toBe("87df31a5d69602d7071d673a3cb69b2d158d3490ac6bbc36733e275ba0dd588e");
     expect(curricula.flatMap((curriculum) => curriculum.path).flatMap((path) => path.lessons))
-      .toHaveLength(7517);
+      .toHaveLength(7520);
   });
 
   it("keeps the canonical curriculum shards free of derived lesson arrays", () => {

@@ -1,8 +1,8 @@
 Marathi, chapter 11: Farewells.
-6 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+7 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 6.
+Lesson 1 of 7.
 पुन्हा (punhā) — "again".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -32,7 +32,7 @@ Wrap-up Recall.
 What does punhā mean, and from what Sanskrit word? ("Again"; from punar.)
 
 
-Lesson 2 of 6.
+Lesson 2 of 7.
 भेटू (bheṭū) — "(let's / we'll) meet".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -62,7 +62,7 @@ Wrap-up Recall.
 What does bheṭū pack into one word? ("(we/let's) will meet" — the "we" lives in the verb ending.)
 
 
-Lesson 3 of 6.
+Lesson 3 of 7.
 पुन्हा भेटू (punhā bheṭū) — "see you again".
 
 Warm-up.
@@ -88,7 +88,7 @@ Wrap-up Recall.
 What does punhā bheṭū literally promise? ("We'll meet again" — return, not farewell.)
 
 
-Lesson 4 of 6.
+Lesson 4 of 7.
 उद्या भेटू (udyā bheṭū) — "see you tomorrow".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -119,7 +119,7 @@ Wrap-up Recall.
 How does Marathi's udyā differ from Hindi's kal? (udyā is only "tomorrow"; Marathi uses a separate word kāl for "yesterday.")
 
 
-Lesson 5 of 6.
+Lesson 5 of 7.
 काळजी घ्या (kāḷjī ghyā) — "take care".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -149,7 +149,7 @@ Wrap-up Recall.
 Which special Marathi letter sits in kāḷjī, and who else keeps it? (The retroflex ळ ḷa; also kept by the Dravidian languages and Gujarati.)
 
 
-Lesson 6 of 6.
+Lesson 6 of 7.
 Chapter 11 recap — farewells.
 
 Warm-up.
@@ -180,3 +180,31 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What does every Marathi goodbye have in common? (None says "farewell" — each is a return or a caring wish.) Next chapter: the first real verbs — mī marāṭhī bolto.
+
+
+Lesson 7 of 7.
+आहे (āhe) — one verb, reshaped for whoever is speaking.
+
+Warm-up.
+[pause 3 seconds]
+Give your name, then ask for someone else's, respectfully. Both sentences end on the same word.
+
+Grammar Lens: the verb carries the person.
+Three chapters have been quietly teaching one thing:
+[a table of 3 rows, read aloud]
+मी आहे mī āhe, I am.
+तू आहेस tū āhes, you are, familiar.
+तुम्ही आहात tumhī āhāt, you are, respectful.
+One verb, three shapes. And the agreement does not stop at the verb — कसे in तुम्ही कसे आहात? is plural to match the respectful तुम्ही, and बरा in मी बरा आहे (āhe) takes the speaker's own gender. The person and the gender spread outward from the verb across the whole sentence.
+
+What you've built — the first meeting, end to end.
+Every sentence puts the verb last:
+— तुमचं नाव काय आहे (āhe)? — your name what is? — माझं नाव … आहे (āhe). भेटून आनंद झाला. — तुम्ही कसे आहात? — मी बरा आहे (āhe). — धन्यवाद. — काही हरकत नाही. — उद्या भेटू (udyā bheṭū).
+भेटू is the one to notice at the end. It carries we inside it — no separate word is needed — and unlike the present tense it does not split by gender: everyone says bheṭū.
+
+You'll want to know: नाव, and a sound that leaned.
+नाव came from a Sanskrit form with an m where Marathi now has a v. Marathi softened many old consonants that way, and spotting the lean lets you read a Sanskrit word straight into its Marathi shape.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Where does a Marathi sentence put its verb? (Last.) What changes between आहे (āhe), आहेस and आहात? (Who is being spoken to — the verb carries it.) Which word inside बरा changes with the speaker? (Its ending — it takes your gender.) What hides inside भेटू (bheṭū)? (We, with no separate word.) And what did the m of the older form become? (V.)

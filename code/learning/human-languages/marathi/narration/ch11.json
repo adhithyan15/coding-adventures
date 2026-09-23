@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2f5cee2e44a107d6",
+  "sourceHash": "fnv1a64:9dbdac61e89a479e",
   "lessons": [
     {
       "id": "MR-C04-punha",
@@ -747,6 +747,117 @@
             {
               "kind": "speech",
               "text": "What does every Marathi goodbye have in common? (None says \"farewell\" — each is a return or a caring wish.) Next chapter: the first real verbs — mī marāṭhī bolto."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R11-second-pass-the-verb-carries-it",
+      "sequence": 362,
+      "title": "आहे (āhe) — one verb, reshaped for whoever is speaking",
+      "headword": "आहे",
+      "romanization": "āhe",
+      "gloss": "second pass over the first meeting — one verb reshaped for each person, and the endings that agree with it",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:86ba437c1be20188",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give your name, then ask for someone else's, respectfully. Both sentences end on the same word."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the verb carries the person",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three chapters have been quietly teaching one thing:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "मी आहे mī āhe, I am.",
+                "तू आहेस tū āhes, you are, familiar.",
+                "तुम्ही आहात tumhī āhāt, you are, respectful."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "One verb, three shapes. And the agreement does not stop at the verb — कसे in तुम्ही कसे आहात? is plural to match the respectful तुम्ही, and बरा in मी बरा आहे (āhe) takes the speaker's own gender. The person and the gender spread outward from the verb across the whole sentence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built — the first meeting, end to end",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every sentence puts the verb last:"
+            },
+            {
+              "kind": "speech",
+              "text": "— तुमचं नाव काय आहे (āhe)? — your name what is? — माझं नाव … आहे (āhe). भेटून आनंद झाला. — तुम्ही कसे आहात? — मी बरा आहे (āhe). — धन्यवाद. — काही हरकत नाही. — उद्या भेटू (udyā bheṭū)."
+            },
+            {
+              "kind": "speech",
+              "text": "भेटू is the one to notice at the end. It carries we inside it — no separate word is needed — and unlike the present tense it does not split by gender: everyone says bheṭū."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "input",
+          "title": "You'll want to know: नाव, and a sound that leaned",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाव came from a Sanskrit form with an m where Marathi now has a v. Marathi softened many old consonants that way, and spotting the lean lets you read a Sanskrit word straight into its Marathi shape."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does a Marathi sentence put its verb? (Last.) What changes between आहे (āhe), आहेस and आहात? (Who is being spoken to — the verb carries it.) Which word inside बरा changes with the speaker? (Its ending — it takes your gender.) What hides inside भेटू (bheṭū)? (We, with no separate word.) And what did the m of the older form become? (V.)"
             }
           ]
         }

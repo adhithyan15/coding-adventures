@@ -73,16 +73,16 @@ canonical `sequence` order.
 | 205-212 | 32 | Inside the House | `GU-C28-hear-baarnun` -> `GU-C28-hear-baari` -> `GU-C28-hear-khurshi` -> `GU-C28-hear-chaavi` -> `GU-C28-hear-divo` -> `GU-C28-house-five` -> `GU-C28-baari` -> `GU-R28-house-five-r1` |
 | 213-220 | 33 | Sun, Sky, and River | `GU-C29-hear-sooraj` -> `GU-C29-hear-chandra` -> `GU-C29-hear-aakaash` -> `GU-C29-hear-varsaad` -> `GU-C29-hear-nadi` -> `GU-C29-sky-five` -> `GU-C29-nadi` -> `GU-R29-sky-five-r1` |
 | 221-228 | 34 | People, Paper, and a Book | `GU-C30-hear-chhokro` -> `GU-C30-hear-chhokri` -> `GU-C30-hear-maanas` -> `GU-C30-hear-pustak` -> `GU-C30-hear-kaagal` -> `GU-C30-people-five` -> `GU-C30-kaagal` -> `GU-R30-people-five-r1` |
-| 229-233 | 35 | The Word for Not, and the Word for Sorry | `GU-C31-nathi` -> `GU-C31-samajto-nathi` -> `GU-W08-pha` -> `GU-C31-maaf` -> `GU-C31-repair-five` |
-| 234-238 | 36 | And, Or, But | `GU-C32-ane` -> `GU-C32-ane-clauses` -> `GU-C32-ane-write` -> `GU-C32-athava` -> `GU-C32-pan` |
-| 239-243 | 37 | The Word That Carries a Thought | `GU-C33-ke` -> `GU-C33-vichaarun-ke` -> `GU-C33-ke-write` -> `GU-C33-jaanun-ke` -> `GU-C33-ke-checkpoint` |
-| 244-248 | 38 | Because, and Therefore | `GU-C34-kemke` -> `GU-C34-kem-kemke` -> `GU-C34-kemke-write` -> `GU-C34-maate` -> `GU-C34-tethi` |
-| 249-253 | 39 | If, and When | `GU-C35-jo` -> `GU-C35-jo-to` -> `GU-C35-jo-write` -> `GU-C35-jyaare` -> `GU-C35-condition-checkpoint` |
-| 254-258 | 40 | He, She, We, and the One Who | `GU-C36-te` -> `GU-C36-ame-aapne` -> `GU-C36-te-write` -> `GU-C36-je` -> `GU-C36-je-te` |
-| 259-263 | 41 | Who, Where, When, How Many | `GU-C37-kon` -> `GU-C37-kyaan` -> `GU-C37-kyaan-write` -> `GU-C37-kyaare` -> `GU-C37-ketla` |
-| 264-269 | 42 | Which One in the Line | `GU-C38-panchmu` -> `GU-C38-triju` -> `GU-C38-biju` -> `GU-C38-chothu` -> `GU-C38-pahelu` -> `GU-R38-first-to-fifth` |
-| 270-277 | 43 | Past Five, and the Balance Turns Over | `GU-C39-chha` -> `GU-C39-saat` -> `GU-W22-ttha` -> `GU-C39-aath` -> `GU-C39-nav` -> `GU-C39-das` -> `GU-C39-ordinal-reach` -> `GU-R39-one-to-ten` |
-| 278-280 | 44 | Reading — Six Words, Six Lines, and a Whole Meeting | `GU-C44-words` -> `GU-C44-lines` -> `GU-C44-pehli-vanchan` |
+| 229-234 | 35 | The Word for Not, and the Word for Sorry | `GU-C31-nathi` -> `GU-C31-samajto-nathi` -> `GU-W08-pha` -> `GU-C31-maaf` -> `GU-C31-repair-five` -> `GU-R35-second-pass-read-it-or-repair-it` |
+| 235-239 | 36 | And, Or, But | `GU-C32-ane` -> `GU-C32-ane-clauses` -> `GU-C32-ane-write` -> `GU-C32-athava` -> `GU-C32-pan` |
+| 240-244 | 37 | The Word That Carries a Thought | `GU-C33-ke` -> `GU-C33-vichaarun-ke` -> `GU-C33-ke-write` -> `GU-C33-jaanun-ke` -> `GU-C33-ke-checkpoint` |
+| 245-249 | 38 | Because, and Therefore | `GU-C34-kemke` -> `GU-C34-kem-kemke` -> `GU-C34-kemke-write` -> `GU-C34-maate` -> `GU-C34-tethi` |
+| 250-254 | 39 | If, and When | `GU-C35-jo` -> `GU-C35-jo-to` -> `GU-C35-jo-write` -> `GU-C35-jyaare` -> `GU-C35-condition-checkpoint` |
+| 255-259 | 40 | He, She, We, and the One Who | `GU-C36-te` -> `GU-C36-ame-aapne` -> `GU-C36-te-write` -> `GU-C36-je` -> `GU-C36-je-te` |
+| 260-264 | 41 | Who, Where, When, How Many | `GU-C37-kon` -> `GU-C37-kyaan` -> `GU-C37-kyaan-write` -> `GU-C37-kyaare` -> `GU-C37-ketla` |
+| 265-270 | 42 | Which One in the Line | `GU-C38-panchmu` -> `GU-C38-triju` -> `GU-C38-biju` -> `GU-C38-chothu` -> `GU-C38-pahelu` -> `GU-R38-first-to-fifth` |
+| 271-278 | 43 | Past Five, and the Balance Turns Over | `GU-C39-chha` -> `GU-C39-saat` -> `GU-W22-ttha` -> `GU-C39-aath` -> `GU-C39-nav` -> `GU-C39-das` -> `GU-C39-ordinal-reach` -> `GU-R39-one-to-ten` |
+| 279-281 | 44 | Reading — Six Words, Six Lines, and a Whole Meeting | `GU-C44-words` -> `GU-C44-lines` -> `GU-C44-pehli-vanchan` |
 
 ## Current boundary
 

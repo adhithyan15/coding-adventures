@@ -1,14 +1,15 @@
 {
   "language": "marathi",
   "chapter": 11,
-  "sourceHash": "fnv1a64:93fe7274067892d8",
+  "sourceHash": "fnv1a64:872cba1032bd8334",
   "lessonIds": [
     "MR-C04-punha",
     "MR-C04-bhetu",
     "MR-C04-punha-bhetu",
     "MR-C04-udya-bhetu",
     "MR-C04-kalji-ghya",
-    "MR-C04-practice"
+    "MR-C04-practice",
+    "MR-R11-second-pass-the-verb-carries-it"
   ],
   "tex": "marathi/book/chapters/ch11-farewells.tex"
 }

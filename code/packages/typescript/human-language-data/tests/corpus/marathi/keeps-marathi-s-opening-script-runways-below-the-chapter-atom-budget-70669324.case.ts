@@ -128,7 +128,12 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     // inside chapters that already existed.
     ["9", 10],
     ["10", 6],
-    ["11", 6],
+    // 6 -> 7 and, below, 65: 5 -> 6. HL-C432 adds one `review` lesson to each --
+    // the first meeting retrieved as one exchange, and the three script marks
+    // from chapter 64-65. `chapterSizes` counts LESSONS, not atoms, and both
+    // lessons introduce none, so the chapter atom budget this test is named for
+    // is untouched.
+    ["11", 7],
     ["12", 5],
     ["13", 10],
     ["14", 6],
@@ -243,7 +248,7 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     ["64", 4],
     // Chapter 65: the four standing vowels plus the review that keeps the last
     // of them from being an atom nothing revisits.
-    ["65", 5],
+    ["65", 6],
     // Chapter 66: the four parts of the day, the whole day, and the review that
     // keeps the last of them from being an atom nothing revisits.
     ["66", 6],
