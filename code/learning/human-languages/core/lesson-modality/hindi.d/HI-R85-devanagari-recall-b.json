@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "HI-R85-devanagari-recall-b",
+    "language": "hindi",
+    "chapter": 85,
+    "sequence": 3302,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff02ed5a36633010",
+    "detachableSegments": [
+      "Script: five consonants, and the retroflex row they belong to"
+    ]
+  },
+  "findings": []
+}

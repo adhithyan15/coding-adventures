@@ -1,17 +1,19 @@
 {
   "language": "hindi",
   "chapter": 85,
-  "sourceHash": "fnv1a64:871fbb318e97e487",
+  "sourceHash": "fnv1a64:ca796eb6c13697a6",
   "lessonIds": [
     "HI-C78-signs",
     "HI-C78-notices",
-    "HI-C78-pehla-paath"
+    "HI-C78-pehla-paath",
+    "HI-R85-devanagari-recall-a",
+    "HI-R85-devanagari-recall-b"
   ],
   "voiceLessons": 2,
   "drivablePrefix": 0,
   "text": "hindi/narration/ch85.txt",
   "json": "hindi/narration/ch85.json",
-  "textHash": "fnv1a64:c8abf65a1627416b",
-  "jsonHash": "fnv1a64:8551b1b319bfc5b3",
+  "textHash": "fnv1a64:f7a63d074838dbc7",
+  "jsonHash": "fnv1a64:2683139d578f967e",
   "findings": []
 }

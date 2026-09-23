@@ -314,9 +314,35 @@ describe("direct curriculum lesson owners", () => {
     // existing segment whose `spine_node` already matched its content, so
     // malayalam needed no new chapter and none of the four-part chapter
     // registration HL-C436 and HL-C437 required.
-    expect(digest).toBe("98e3031ab021e795e9b7c8aede41ccf38af1edbb321122efafcc1a4fa6b876b8");
+    //
+    // 7550 -> 7555 is HL-C439: FIVE `review` lessons taking hindi to zero pre-A1
+    // reinforcement debt. 44 thin atoms and 54 retrieval slots, because TEN of
+    // the 44 had never been revisited at all and each of those costs TWO lessons
+    // rather than one -- `practisedAtoms` is a set per lesson, so an atom cannot
+    // earn two revisits from one page however many times that page names it.
+    //
+    // The five split by where the debt sat, not by chapter: 22 script atoms went
+    // into two recall pages in chapter 85 (`HI-PATH-78-READING`), the twelve
+    // atoms of the opening chapters 1-4 into chapter 89, ten scattered leftovers
+    // -- a body word, a person word in three registers, two things in a house,
+    // two form fields and the two named meals -- into chapter 94, and the ten
+    // zero-revisit atoms got their SECOND pass on the book's last page, chapter
+    // 105. 12 + 10 + 10 + 22 slots from the first four, and the last one closes
+    // the remaining ten. 54 exactly.
+    //
+    // Attribution by reconstruction AND structural diff. A clean worktree at
+    // 32d9f83927 reproduced 98e3031a... and 7550 byte for byte. Dumping the
+    // loaded graph from both trees and diffing gives TWENTY-SIX changed lines and
+    // nothing that is not this change: five lessons joining their segments' and
+    // extensions' derived `lessons` lists, twice each, with four previous last
+    // elements gaining a trailing comma on each side.
+    //
+    // Like HL-C438 and unlike HL-C436 and HL-C437, no new graph node of any kind
+    // -- no segment, no extension, no chapter. Every one of the five was appended
+    // to an existing segment whose `spine_node` already matched its content.
+    expect(digest).toBe("998a8193731e307f593e26679988fec8f413411439ba9b0e6e785b8c47257ac4");
     expect(curricula.flatMap((curriculum) => curriculum.path).flatMap((path) => path.lessons))
-      .toHaveLength(7550);
+      .toHaveLength(7555);
   });
 
   it("keeps the canonical curriculum shards free of derived lesson arrays", () => {

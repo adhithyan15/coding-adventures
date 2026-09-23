@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 94,
-  "sourceHash": "fnv1a64:e75e10403c00ec21",
+  "sourceHash": "fnv1a64:edec8f9f544f5b8c",
   "lessonIds": [
     "HI-C86-ham",
     "HI-C86-ve",
@@ -9,7 +9,8 @@
     "HI-C86-aapko-use",
     "HI-C86-koi-article",
     "HI-C86-repaso-sarvanam",
-    "HI-C86-sintesis-sarvanam"
+    "HI-C86-sintesis-sarvanam",
+    "HI-R94-met-once-and-left-there"
   ],
   "tex": "hindi/book/chapters/ch94-sarvanam.tex"
 }
