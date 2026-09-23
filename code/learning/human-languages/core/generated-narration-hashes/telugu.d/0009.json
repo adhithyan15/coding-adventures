@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 9,
-  "sourceHash": "fnv1a64:c22ba1a1d24d59d9",
+  "sourceHash": "fnv1a64:05bd920225440169",
   "lessonIds": [
     "TE-C09-kshaminchandi",
     "TE-S135-letter-i"
@@ -11,6 +11,6 @@
   "text": "telugu/narration/ch09.txt",
   "json": "telugu/narration/ch09.json",
   "textHash": "fnv1a64:f877cf803f5a74d5",
-  "jsonHash": "fnv1a64:d022a61718a8ae50",
+  "jsonHash": "fnv1a64:4f724b6fc2fe5a95",
   "findings": []
 }

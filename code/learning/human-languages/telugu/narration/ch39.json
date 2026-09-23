@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Tea and Milk, Two Roads",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:a0bbc1f45d7947fd",
+  "sourceHash": "fnv1a64:ca7cff89a255b5dc",
   "lessons": [
     {
       "id": "TE-C39-tii",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d81817b985e17547",
+      "sourceHash": "fnv1a64:d2e6746cd86cbb29",
       "notice": null,
       "blocks": [
         {
