@@ -435,8 +435,11 @@ fn dce_program(prog: &Program, st: &mut DceState) -> Program {
     // and its siblings. Upstream keeps `debugger` at SIMPLE wherever it is
     // reachable, and removes it only as collateral when the enclosing statement
     // goes (after a `return`, or a `throw`, or inside `if (false) { … }`).
-    // Both of those still work, because they are ordinary reachability and
-    // branch folding rather than anything specific to `debugger`.
+    // All three of those still work, because they are ordinary reachability and
+    // branch folding rather than anything specific to `debugger`. The `throw`
+    // case in particular is load-bearing: a surviving `debugger` in a dead tail
+    // would otherwise block whole-tail truncation, which is why
+    // `tail_is_safe_to_truncate` whitelists it.
     //
     // It is also not a no-op to remove: `debugger` is observable behaviour —
     // it breaks into an attached debugger — so dropping it changes what the
@@ -444,9 +447,10 @@ fn dce_program(prog: &Program, st: &mut DceState) -> Program {
 
     // Strip stray top-level `EmptyStatement`s (`;`) — CLOC12.195.
     //
-    // Like `debugger`, an empty statement at statement-list position is a pure
-    // no-op, so the program body needs its own sweep separate from
-    // `dce_block_statement`'s (which already does this for block bodies). These
+    // An empty statement at statement-list position is a pure no-op — unlike
+    // `debugger` just above, which is observable and therefore kept — so the
+    // program body needs its own sweep separate from `dce_block_statement`'s
+    // (which already does this for block bodies). These
     // arise from a hand-written `;`, from `constant-fold`/`fold-control-flow`
     // folding `if (false) …;` / `while (false) …;` to an `EmptyStatement`, and
     // from the trailing `;` a flattened block leaves behind
@@ -2259,9 +2263,15 @@ mod tests {
         // The cv id is load-bearing and the first attempt at this swap omitted
         // it: `record_deletion` iterates `removed.iter().flatten()`, so a
         // statement with `cv: None` is skipped and `cv.delete` is never
-        // reached — the test would have passed while exercising nothing. On a
-        // disabled log `create` returns a usable id but stores no entry, which
-        // is exactly the "delete against a missing entry" case this pins.
+        // reached — the test would have passed while exercising nothing.
+        //
+        // What this pins, precisely: the deletion-recording loop runs, and
+        // calls `delete` with an id the disabled log never stored, and the
+        // whole path is a safe no-op. It does NOT reach the missing-entry
+        // lookup — `CVLog::delete` returns early on `!self.enabled`, before
+        // `entries.get_mut` — and that lookup could not panic anyway, since it
+        // is an `if let Some`. An earlier revision of this comment claimed the
+        // missing-entry branch was the subject; it is not.
         let mut log = CVLog::new(false);
         let empty = Statement::empty_statement(EmptyStatement {
             cv: Some(log.create(None)),
@@ -2567,6 +2577,77 @@ mod tests {
         );
         let new_block = extract_function_body(&out);
         assert_eq!(new_block.body.len(), 1, "the if must survive");
+        // Assert the consequent is still the `debugger`, not merely that *some*
+        // statement survived. A length check alone passes if the consequent is
+        // swapped for an `EmptyStatement`, and this is the only test covering
+        // the `DebuggerStatement` leaf arm of `dce_tagged_statement`.
+        match &new_block.body[0] {
+            Statement::Tagged(TaggedStatement::IfStatement(if_s)) => assert!(
+                matches!(
+                    &*if_s.consequent,
+                    Statement::Tagged(TaggedStatement::DebuggerStatement(_))
+                ),
+                "the consequent must still be the debugger; got {:?}",
+                if_s.consequent
+            ),
+            other => panic!("expected the if to survive; got {other:?}"),
+        }
+    }
+
+    // CCR-053 regression cover for the `DebuggerStatement` arm of
+    // `tail_is_safe_to_truncate`.
+    //
+    // These two are the shapes that actually broke. The first draft of CCR-053
+    // probed `return` and `if (false)`, asserted "both still work", and never
+    // probed `throw` — so a `debugger` surviving in a post-`throw` tail silently
+    // blocked whole-tail truncation and leaked the rest of the dead code into
+    // the output. The whitelist entry that fixes it had no test at all until
+    // now; a length assertion on the truncated body is what carries both.
+    //
+    // Why dropping it is sound: `is_terminator` matches only `return` and
+    // `throw`, both of which leave the enclosing function unconditionally, so
+    // nothing in the tail can ever execute. An UNREACHABLE `debugger` can never
+    // break into anything. That is the exact complement of the rule above — a
+    // REACHABLE `debugger` is observable and is never removed.
+
+    #[test]
+    fn unreachable_debugger_after_throw_does_not_block_truncation() {
+        // function () { throw x; debugger; } → { throw x; }
+        let body = vec![throw_stmt(ident("x")), debugger_stmt()];
+        let prog = program_with_function(body, Some("block.1"));
+        let (out, contribs, changed, _) = run_pass(prog);
+        assert!(changed, "the dead tail must be truncated");
+        assert!(
+            contribs.iter().any(|c| c.tag == "removed-dead-code"),
+            "expected removed-dead-code; got {contribs:?}"
+        );
+        let new_block = extract_function_body(&out);
+        assert_eq!(
+            new_block.body.len(),
+            1,
+            "only the throw may survive; got {:?}",
+            new_block.body
+        );
+    }
+
+    #[test]
+    fn unreachable_debugger_does_not_shield_the_dead_code_behind_it() {
+        // function () { throw x; debugger; y; } → { throw x; }
+        //
+        // This is the regression proper. With `DebuggerStatement` missing from
+        // the whitelist the tail was judged unsafe to truncate, so `y;` — real
+        // dead code — survived into the output alongside the `debugger`.
+        let body = vec![throw_stmt(ident("x")), debugger_stmt(), expr_stmt(ident("y"))];
+        let prog = program_with_function(body, Some("block.1"));
+        let (out, _contribs, changed, _) = run_pass(prog);
+        assert!(changed, "the dead tail must be truncated");
+        let new_block = extract_function_body(&out);
+        assert_eq!(
+            new_block.body.len(),
+            1,
+            "the debugger must not shield `y;` from truncation; got {:?}",
+            new_block.body
+        );
     }
 
     #[test]

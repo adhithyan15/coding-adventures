@@ -30,6 +30,29 @@ on this input, so the second assertion is now its inverse — `debugger` must be
 **present** — which guards CCR-053 itself. A future pass that starts deleting
 them again fails there rather than quietly shipping.
 
+**Three byte matches are lost**, all of them accidents of the unconditional
+strip, and all of them exposing pre-existing truncation gaps rather than new
+defects:
+
+| Input at SIMPLE | upstream | before | after |
+|---|---|---|---|
+| `for(var c=0;c<1;c++){continue;debugger}` | `for(var c=0;c<1;c++);` | matched | `…{continue;debugger};` |
+| `throw 1;debugger;` | `throw 1;` | matched | `throw 1;debugger;` |
+| `{throw 1;debugger;}` | `throw 1;` | matched | `throw 1;debugger;` |
+
+Dead code after `continue` is never truncated (CCR-082, #15878); a dead tail at
+program level is never truncated either (CCR-086, #15923). Both gaps predate
+this change — the controls `for(var c=0;c<1;c++){continue;g()}` and
+`throw 1;console.log(1);` already diverged before it — and both are wrong for
+any dead tail that is not a `debugger`. Stripping merely hid them on this one
+input shape.
+
+**Consumers who want `debugger` removed now need their own step.** The strip was
+documented behaviour, however wrongly justified, so anyone relying on `closurec`
+to keep breakpoints out of a shipped bundle should add an explicit pass. There
+is no flag for it — matching upstream means not doing it, and upstream has no
+flag either.
+
 
 ### Added - five ladder rungs for CCR-078, and the fix it stopped me shipping
 

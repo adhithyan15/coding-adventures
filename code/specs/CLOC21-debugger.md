@@ -27,6 +27,17 @@ This change makes `debugger` representable and **preserves** it verbatim. The
 value is that the *rest* of a program containing `debugger` now gets the full
 SIMPLE/ADVANCED optimization pipeline instead of degrading to whitespace-only.
 
+> **Retracted 2026-09-23 (CCR-053).** The paragraph below claimed upstream
+> Closure removes `debugger` at SIMPLE and ADVANCED. Measured against the
+> pinned oracle (`closure-compiler-v20260915`), that is false: upstream
+> **keeps** a reachable `debugger` at both levels, and removes one only as
+> collateral when the statement enclosing it goes — after a `return` or a
+> `throw`, or inside a folded-away `if (false)`. The follow-up it anticipated
+> (CLOC24) was therefore built on a false premise, and has been reverted; see
+> `CLOC24-strip-debugger.md`, which carries the full rebuttal. Preserving
+> `debugger` — what this spec actually shipped — was the correct behaviour all
+> along.
+
 The upstream Closure Compiler **removes** `debugger` statements at SIMPLE and
 ADVANCED. Stripping is intentionally deferred to a focused follow-up: it is a
 behaviour change (it removes a debugging affordance) and is cleanly separable
@@ -76,17 +87,21 @@ design.
 
 * **`simple-debugger`** — at SIMPLE: surrounding arithmetic folds and
   `function log` is KEPT — SIMPLE is open-world and never inlines or removes a
-  top-level name (that inline is ADVANCED-only). The `debugger;` statement was
-  preserved verbatim as of CLOC21; CLOC24 later made it **stripped** at
-  SIMPLE/ADVANCED, which is the current fixture behavior. A companion assertion
-  proves the output is NOT the whitespace fallback (the `1 + 2` ⇒ `3` fold, and
-  post-CLOC24 the `debugger;` strip, can only come from the typed pipeline).
+  top-level name (that inline is ADVANCED-only). The `debugger;` statement is
+  **preserved verbatim**, as it has been since CLOC21. CLOC24 briefly made it
+  stripped; CCR-053 reverted that on 2026-09-23 after measuring the oracle, so
+  the fixture is back to the CLOC21 behaviour described here. A companion
+  assertion proves the output is NOT the whitespace fallback — the `1 + 2` ⇒ `3`
+  fold is now the only signal, since the `debugger;` no longer distinguishes the
+  two paths (both keep it).
 
 ## Out of scope (future work)
 
-* **Stripping `debugger`** at SIMPLE/ADVANCED to match upstream Closure — a
+* ~~**Stripping `debugger`** at SIMPLE/ADVANCED to match upstream Closure — a
   focused follow-up (a behaviour change, cleanly separable from this PR).
-  **Delivered in CLOC24.**
+  **Delivered in CLOC24.**~~ **Withdrawn (CCR-053, 2026-09-23):** upstream does
+  not strip `debugger`, so there is nothing here to match. CLOC24 shipped and
+  has been reverted.
 * `ForInStatement`, `ForOfStatement`, and `WithStatement` remain the last
   bridge-unsupported Phase-2 statements; they follow the same playbook (with
   more involved left-binding handling for the for-in/of forms).

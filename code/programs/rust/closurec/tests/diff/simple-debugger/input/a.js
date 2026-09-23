@@ -12,9 +12,10 @@
 //     fixture claimed that matched upstream Closure. Measured against the
 //     pinned oracle, it does not: upstream keeps `debugger` at SIMPLE and
 //     ADVANCED wherever it is reachable, and drops it only as collateral when
-//     the enclosing statement goes — after a `return`, or inside
-//     `if (false) { … }`. Both of those still happen here, because they are
-//     ordinary reachability and branch folding.
+//     the enclosing statement goes — after a `return`, after a `throw`, or
+//     inside `if (false) { … }`. All three of those still happen, because they
+//     are ordinary reachability and branch folding rather than anything
+//     specific to `debugger`.
 //
 //     It is also not a free size win: `debugger` is observable behaviour, so
 //     removing it changes what the program does under an attached debugger.
