@@ -1,0 +1,72 @@
+// DraftEditor.mil — interface (J3b of #14416; spec
+// code/specs/mosaic-pkg-draft-editor.md).
+//
+// The plain editing surface three products need: an optional one-line
+// title, a multi-line body, and labelled actions.
+//
+//   Title
+//   ┌──────────────────────────────────┐
+//   │ First light                      │   title   (only if title-label)
+//   └──────────────────────────────────┘
+//   Entry
+//   ┌──────────────────────────────────┐
+//   │ Walked to the lighthouse before  │   body    (multi-line, grows)
+//   │ breakfast. The fog had …         │
+//   └──────────────────────────────────┘
+//   [ Save ] [ Delete ] [ Cancel ]         actions (each only if labelled)
+//
+// It is CONTROLLED: every keystroke emits the whole new text and the host
+// owns the draft; Save commits it. That is how Journal, TaskApp's notes and
+// Engram's note buffer already work, so adopting this changes no host logic.
+//
+// Why every label is a slot
+// -------------------------
+// The component draws no English of its own, so hosts localise, and a label
+// doubles as its field's accessible name — the two can never disagree.
+//
+// Why label-gated parts
+// ---------------------
+// An empty `title-label` removes the title field (Engram's focused field has
+// no title); an empty action label removes that button. The component can
+// therefore never draw an unnamed field or an unnamed button.
+//
+// Why no body placeholder and no preview
+// --------------------------------------
+// The multi-line primitive's placeholder is literal-only on React,
+// WebComponent and SwiftUI (UI25), so a slot-bound one would vanish there; the
+// visible body label does that job. A markdown preview is a `node` slot with
+// real costs (no .msl styling, one surface per native host, unescaped on the
+// HTML backend); it belongs to the one product that wants it (Journal),
+// composed beside this component, not inside it.
+
+component DraftEditor {
+  // Label of the one-line title field; "" = no title field. Also its
+  // accessible name.
+  slot title-label : text ;
+
+  // The title text (host-owned draft).
+  slot title-value : text ;
+
+  // Hint shown in an empty title field.
+  slot title-placeholder : text ;
+
+  // Label of the multi-line body; REQUIRED. Also its accessible name.
+  slot body-label : text ;
+
+  // The body text (host-owned draft). Markdown, if the host wants it.
+  slot body-value : text ;
+
+  // Action labels; "" = that action is not offered.
+  slot save-label : text ;
+  slot delete-label : text ;
+  slot cancel-label : text ;
+
+  // Fired on every edit with the whole new text.
+  emit onTitleChange ( value : text ) ;
+  emit onBodyChange ( value : text ) ;
+
+  // Fired when the matching action is activated.
+  emit onSave ;
+  emit onDelete ;
+  emit onCancel ;
+}
