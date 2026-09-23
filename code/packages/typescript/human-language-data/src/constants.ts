@@ -2,6 +2,44 @@
 import type { Script } from "./types.js";
 
 /**
+ * Every ECMAScript line terminator, in ONE place because three parsers need it.
+ *
+ * `.` cannot match LF, CR, U+2028 or U+2029 — those four code points are
+ * exactly the set `.` excludes — so a pattern ending in `$` can never reach the
+ * end of a chunk that still contains one. Split them off first and a line can
+ * never contain one, which is what lets a line pattern drop the `\s*` that
+ * makes it backtrack.
+ *
+ * It lives here, rather than beside the parser that first needed it, because
+ * `mock-stem-coverage.ts` imports from `spanish-a1-mock-audit-cli.ts` and both
+ * need this — exporting it from either would close an import cycle around a
+ * value used at module scope. `constants.ts` imports only `types.js`.
+ *
+ * It is shared rather than written out three times because it was NOT shared,
+ * and the asymmetry was the bug: `parseMockPaper` was hardened to split on all
+ * four while the two answer-key readers stayed on `/\r?\n/`. A key with lone-CR
+ * endings then collapsed to a single line, matched no rows, and the audit
+ * reported `objectiveFailed: 0` for items it had never read — a gate that reads
+ * nothing must not report success. `\v`, `\f` and U+0085 are deliberately
+ * absent: `.` matches all three, so they cannot make `$` unreachable, and
+ * splitting on them would break a line that legitimately contains one.
+ *
+ * CRLF is the leading alternative so the pair is consumed as one terminator
+ * rather than as two, which would insert an empty line between every row.
+ */
+// `Object.freeze`, for the reason `AUDIT_DIR` one module over is frozen: a
+// `const` binding is immutable, the object it names is not. `constants.ts` is
+// re-exported wholesale by `index.ts`, so this regex is public, and a
+// `LINE_TERMINATORS[Symbol.split] = () => [...]` from anywhere in the realm
+// makes all three parsers see one line and return zero rows -- including the
+// gate, whose zero reads as a clean bill of health. Same-realm code could
+// equally patch `RegExp.prototype`, so this is depth rather than a boundary,
+// but it costs nothing: `split` works on a frozen regex (`String.prototype
+// .split` builds its own sticky clone and never writes `lastIndex` on this
+// object), and the hijack becomes a `TypeError`.
+export const LINE_TERMINATORS: RegExp = Object.freeze(/\r\n|[\r\n\u2028\u2029]/);
+
+/**
  * Which script each track is written in. HL01 imagines each track eventually
  * declaring this itself (a `track.json`); until then this map is the single
  * source of truth, kept here where it's easy to find and easy to extend when a
@@ -159,7 +197,41 @@ export const MAX_ETYMOLOGY_HOOK = 120;
  */
 export function stripControlCharacters(value: string): string {
   return value.replace(
-    /[\u0000-\u0008\u000b-\u001f\u007f-\u009f]/g,
+    // C0, C1 -- and the INVISIBLE FORMATTING characters, which are neither.
+    //
+    // The C0/C1 ranges were enough while every caller passed a filename. They
+    // stopped being enough when `assertAnswerKeyParse` began printing a line of
+    // FILE CONTENT into a CI message, which is a far wider door: U+202E
+    // (RIGHT-TO-LEFT OVERRIDE) reverses the rendering of everything after it in
+    // most terminals and log viewers, so a crafted table row can make the tail
+    // of the gate's own failure message read as something else --
+    //
+    //     first "| 1 | a | b | <U+202E>detcejer swor elbat 0"
+    //
+    // -- which renders as though the message said no rows were rejected. It
+    // cannot break onto a second line, so this is presentation spoofing rather
+    // than log forgery, and the same Trojan-Source class that CVE-2021-42574
+    // named for source code. The isolates and embeddings (U+2066-U+2069,
+    // U+202A-U+202E), the bidi marks (U+200E, U+200F, U+061C), and the
+    // invisible spaces (U+200B, U+00AD, U+180E, U+FEFF) go with it.
+    //
+    // U+2028 and U+2029 are here too, and they are the reason a first draft of
+    // this was incomplete. `JSON.stringify` does NOT escape them -- verified,
+    // `JSON.stringify("\u2028").includes("\\u2028")` is false -- so the quoting
+    // layer that this function's docstring leans on to stop a forged second log
+    // line does not stop these two, which ARE line terminators. That is the
+    // exact failure the docstring claims to close.
+    //
+    // U+200C and U+200D are deliberately NOT here. ZWNJ is ORTHOGRAPHICALLY
+    // REQUIRED in Persian and Urdu -- `می‌رود` strips to `میرود`, a different
+    // word -- and ZWJ likewise in Devanagari conjuncts. This repo has persian,
+    // urdu, hindi, marathi, marwadi and sanskrit tracks. Every caller of this
+    // function is display-only today, so stripping them would corrupt no data,
+    // but it would print two distinct lexemes identically in
+    // `mock-stem-coverage-cli` and `root-ledger` -- and a strip that makes
+    // different words look the same is the same class of harm as a bidi
+    // override, pointed the other way.
+    /[\u0000-\u0008\u000b-\u001f\u007f-\u009f\u00ad\u061c\u180e\u200b\u200e\u200f\u2028\u2029\u202a-\u202e\u2066-\u2069\ufeff]/g,
     "",
   );
 }

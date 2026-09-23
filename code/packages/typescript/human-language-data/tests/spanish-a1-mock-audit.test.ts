@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { defaultCurriculumRoot } from "../src/loader.js";
 import {
+  assertAnswerKeyParse,
   buildSpanishA1MockAudit,
+  parseAnswerKeyRows,
   runSpanishA1MockAudit,
 } from "../src/spanish-a1-mock-audit-cli.js";
 
@@ -102,17 +104,83 @@ describe("Spanish A2 book-bounded mock audit", () => {
   it("pins the CURRENT DEBT: the exam names the vocabulary that is still missing", () => {
     const audit = buildSpanishA1MockAudit(defaultCurriculumRoot(), "A2");
     expect(audit.level).toBe("A2");
-    expect(audit.objectiveFailed).toBe(6);
+    // 6 -> 48, AND THE RISE IS THE POINT. This is the one movement the note
+    // below forbids, taken deliberately, because the instrument was wrong in
+    // the direction that flatters us. HL-C421 found that a `requires` row lists
+    // the words of the AUDIO PASSAGE and never the words of the question stem
+    // or the answer options, so an item could pass while a candidate could not
+    // read the sentence they have to choose between.
+    //
+    // FORTY-SEVEN lexemes were added, across FORTY-THREE of the hundred rows
+    // the gate reads (fifty per mock).
+    //
+    // THE NUMBER DID NOT CONVERGE, AND THAT IS THE REAL FINDING.
+    // 6 -> 15 -> 17 -> 32 -> 48, across three rounds of adversarial review,
+    // each of which found MORE untaught words in items that were passing:
+    //
+    //     round 1   3 more    the count went 15 -> 17
+    //     round 2  17 more    the count went 17 -> 32
+    //     round 3  18 more    the count went 32 -> 48
+    //
+    // Three passes, thirty-eight corrections, and every single one in the same
+    // direction: the narrowing had been too generous. A method that is wrong
+    // three times running in one direction is not nearly right; it is BIASED,
+    // and the bias is toward flattering the corpus. 48 is where the search
+    // stopped, not where the truth is.
+    //
+    // The three false clears worth naming, because they show how the rules
+    // failed rather than that they did:
+    //
+    //   `espacio`   cleared by a 3-CHARACTER PREFIX rule matching the taught
+    //               `esperar`. Unrelated words. Mock 2 item 5, option (a).
+    //   `ahorro`    cleared as a relative of a verb -- but `ahorrar` is not
+    //               taught either. Mock 1 item 23, option (c).
+    //   `mejor`     held back on the false claim that it "is a headword". The
+    //               only headword containing it is `pasar a mejor vida`, which
+    //               sits on SPINE-READ-CULTURAL-WEIGHT and derives to C2, so it
+    //               is outside this gate's own taught set. It belongs with
+    //               creer/explicar: taught, but above the ceiling.
+    //
+    // Round 3's additions are the ones that should worry a reader most,
+    // because several sit in the KEYED option -- the correct answer turns on a
+    // word the course never teaches: `sitio` (m1 12, m2 6), `prever` (m1
+    // enunciado A), `sustituir` (m1 enunciado B), `obligatorio` (m2 9),
+    // `inscribirse` (m2 12), `acudir` (m2 49), `comunicar`/`interrumpir`
+    // (m2 50).
+    //
+    // `afirmar` was also held back as exam apparatus. It IS apparatus in the
+    // two instruction lines, but mock 1 item 41 is a scored statement --
+    // "Afirma que sin el curso no le daran el puesto" -- and that row already
+    // lists curso, puesto and dar from the same stem, so the row does read the
+    // stem and singling out one word was inconsistent.
+    //
+    // THREE EXCLUSIONS STAND, each because the book itself supplies the word:
+    // `escolar` from the taught `la escuela`; `comedor`, which ES-C297-tenedor
+    // does not merely make derivable but GLOSSES OUTRIGHT -- "A comedor is
+    // where the eating is done" -- at chapter 297, pre-A1; and `coger`, which
+    // appears in a message body rather than a stem or option and is therefore
+    // outside what this pass measures.
+    //
+    // Every word added is load-bearing. Most sit in an option a candidate must
+    // weigh; SEVEN sit in the STEM -- `alumno` (m1 22), `mejor` (m2 5),
+    // `practicar` and `infancia` (m1 18), `trescientos` (m1 24), `quejarse`
+    // (m2 17), `costumbre` (m2 19) -- so those questions cannot be read at all.
+    //
+    // The honest consequence: "the A2 vocabulary programme is complete" was
+    // false. It was complete against an instrument that only read the passage.
+    expect(audit.objectiveFailed).toBe(48);
     expect(audit.mocks.map(({ reading, listening, objectiveFailed }) => ({
       reading,
       listening,
       objectiveFailed,
     }))).toEqual([
-      { reading: 24, listening: 23, objectiveFailed: 3 },
-      { reading: 22, listening: 25, objectiveFailed: 3 },
+      { reading: 12, listening: 13, objectiveFailed: 25 },
+      { reading: 10, listening: 17, objectiveFailed: 23 },
     ]);
-    // THIS NUMBER MUST ONLY EVER FALL. A rise means a mock gained an item the
-    // corpus cannot support.
+    // THIS NUMBER MUST ONLY EVER FALL, with one exception already spent above:
+    // a rise is allowed when it is the MEASUREMENT being corrected to be
+    // harsher, never when it is the corpus losing ground. A rise means a mock
+    // gained an item the corpus cannot support.
     //
     // 191 -> 161 -> 146 -> 126 -> 107 -> 85 -> 68 -> 54 -> 39 -> 35 -> 31 ->
     // 27 -> 23 -> 19 -> 15 -> 11 -> 8 -> 6 -> 4 are the eighteen vocabulary tranches: 431-436,
@@ -338,7 +406,106 @@ describe("Spanish A2 book-bounded mock audit", () => {
     // `explicar`, `creer` or `problema`, which are ALREADY TAUGHT and excluded
     // only because their spine node derives above A2. See BACKLOG.d HL-C418
     // and HL-C420; do not teach them a second time.
-    expect(audit.missingObjectiveLexemes).toHaveLength(4);
+    //
+    // 4 -> 51, and the note above predicted exactly this: "Expect this to
+    // recur: the exactness asserted above was always a property of the ROWS,
+    // not of the papers." The list is no longer four already-taught words
+    // blocked on a spine decision; it is five such words plus 46 that are
+    // not headwords at or below A2:
+    //
+    //     taught, but above this gate's ceiling (HL-C418, HL-C420, HL-C422)
+    //       creer, explicar, problema, responder, mejor
+    //     not a headword at or below A2, newly visible because the rows now
+    //     read the question rather than only the passage
+    //       aburrido, acudir, adelantado, afirmar, ahorro, alquiler, alumno,
+    //       calzado, cancelar, comprender, comunicar, concreto, costumbre,
+    //       descartar, disponible, equipaje, error, espacio, finalidad, ganar,
+    //       infancia, iniciativa, inscribirse, interrumpir, jardinero, justo,
+    //       material, mejora, multa, obligatorio, parecido, practicar, prever,
+    //       profesional, prometer, quejarse, recuperar, resolver, rápido,
+    //       sitio, sustituir, trescientos, título, utilizar, variedad, vigilar
+    //
+    // The second group is authorable vocabulary work, and its existence
+    // retracts the claim that the A2 programme had run out of words. It had
+    // run out of words THE PASSAGE NEEDED.
+    //
+    // "NOT A HEADWORD AT OR BELOW A2", precisely -- not "never taught
+    // anywhere", and not "zero occurrences in the curriculum", both of which
+    // earlier drafts of this comment claimed and both of which are false.
+    // `alquiler` is glossed in ES-C441-contrato, `espacio` in
+    // ES-C57-es-inicial, `mejora` in ES-C466-visible -- the very lesson that
+    // supplies `visible` to the same row; `aburrido` appears in CHANGELOG.md
+    // and roadmap.md prose, where it is named as untaught; `resolver` appears
+    // in a grammar-cells.json overlay no lesson references. Counting all of
+    // them missing is still right, because this gate is headword-only by
+    // construction and `glossed-not-taught.ts` treats body presence as a
+    // REVIEW QUEUE rather than a teaching claim; but the wording has to say
+    // what the measurement measures. HL-C422 argues the rule itself.
+    //
+    // `mejora`, not `mejorar`: mock 1 item 23 reads "la mejora de las notas",
+    // a deverbal NOUN. An earlier draft listed the infinitive, which appears
+    // nowhere in the item -- lemmatising across a part-of-speech boundary,
+    // which would have let a future `mejorar` headword flip the item to
+    // passing while the option stayed unreadable.
+    //
+    // THIS LIST IS A FLOOR AND THE SEARCH FOR IT DID NOT CONVERGE. See the
+    // note above: three rounds of review found 3, then 17, then 18 more, every
+    // correction in the same direction. Do not read 51 as the answer; read it
+    // as the largest number anyone has yet demonstrated.
+    expect(audit.missingObjectiveLexemes).toHaveLength(51);
+    expect(audit.missingObjectiveLexemes).toEqual([
+      "aburrido",
+      "acudir",
+      "adelantado",
+      "afirmar",
+      "ahorro",
+      "alquiler",
+      "alumno",
+      "calzado",
+      "cancelar",
+      "comprender",
+      "comunicar",
+      "concreto",
+      "costumbre",
+      "creer",
+      "descartar",
+      "disponible",
+      "equipaje",
+      "error",
+      "espacio",
+      "explicar",
+      "finalidad",
+      "ganar",
+      "infancia",
+      "iniciativa",
+      "inscribirse",
+      "interrumpir",
+      "jardinero",
+      "justo",
+      "material",
+      "mejor",
+      "mejora",
+      "multa",
+      "obligatorio",
+      "parecido",
+      "practicar",
+      "prever",
+      "problema",
+      "profesional",
+      "prometer",
+      "quejarse",
+      "recuperar",
+      "resolver",
+      "responder",
+      "rápido",
+      "sitio",
+      "sustituir",
+      "trescientos",
+      "título",
+      "utilizar",
+      "variedad",
+      "vigilar",
+    ]);
   });
 
   it("measures a LARGER taught set than A1, which is what makes it a different gate", () => {
@@ -355,5 +522,377 @@ describe("Spanish A2 book-bounded mock audit", () => {
 
   it("keeps the committed report canonical and current", () => {
     expect(runSpanishA1MockAudit(["--check", "--level", "A2"], defaultCurriculumRoot())).toBe(0);
+  });
+});
+
+describe("parseAnswerKeyRows", () => {
+  // The rows this parser drops are the rows the gate never scores, and a row
+  // the gate never scores is an item it reports as fine. Every case below is a
+  // FAIL-OPEN shape: the audit comes back cleaner than the corpus is.
+  const key = (body: string) => `## Prueba 1\n\n| # | Clave | Requiere |\n|---|---|---|\n${body}`;
+  const clean = { unscored: [], malformed: [], declared: new Map() };
+
+  it("reads a well-formed row", () => {
+    expect(parseAnswerKeyRows(key("| 1 | b | casa, perro |"))).toEqual({
+      rows: [{ paper: 1, item: 1, requires: ["casa", "perro"] }],
+      ...clean,
+    });
+  });
+
+  it.each([
+    ["a lone CR", "\r"],
+    ["U+2028", "\u2028"],
+    ["U+2029", "\u2029"],
+  ])("does not lose every row to %s endings", (_label, terminator) => {
+    // `.` cannot match any of these, so under `/\r?\n/` the whole file
+    // collapsed to ONE line, `$` was unreachable, and the parser returned
+    // nothing -- from which the audit reports `objectiveFailed: 0`,
+    // `reading: 0`, `listening: 0`. A clean bill of health for items it never
+    // read, and `--write` would persist it. This is why the terminator is
+    // shared with `mock-stem-coverage.ts` rather than spelled out twice.
+    const text = ["## Prueba 1", "| 1 | b | casa |", "| 2 | a | perro |"].join(terminator);
+    expect(parseAnswerKeyRows(text)).toEqual({
+      rows: [
+        { paper: 1, item: 1, requires: ["casa"] },
+        { paper: 1, item: 2, requires: ["perro"] },
+      ],
+      ...clean,
+    });
+  });
+
+  it("keeps CRLF as one terminator rather than two", () => {
+    // The alternation puts `\r\n` first for this. Splitting it as two would
+    // insert an empty line between every row -- harmless here, but the same
+    // ordering bug in a parser that counts lines is not.
+    expect(parseAnswerKeyRows("## Prueba 1\r\n| 1 | b | casa |").rows).toEqual([
+      { paper: 1, item: 1, requires: ["casa"] },
+    ]);
+  });
+
+  it("scores an empty requirement column as NEITHER a pass nor a failure", () => {
+    // Both obvious answers hide something, which is why this row is reported
+    // instead of scored:
+    //   `[""]`  -- the item FAILS on a requirement nobody wrote (what `+` ->
+    //             `*` produced before any filter);
+    //   `[]`    -- `[].every(...)` is `true`, so the item PASSES
+    //             unconditionally and counts toward `reading` (what filtering
+    //             alone produced, and the FAIL-OPEN direction).
+    expect(parseAnswerKeyRows(key("| 7 | b |  |"))).toEqual({
+      rows: [],
+      unscored: [{ paper: 1, item: 7 }],
+      malformed: [],
+      declared: new Map(),
+    });
+  });
+
+  it("drops the empty entry a trailing comma leaves behind, and still scores the row", () => {
+    expect(parseAnswerKeyRows(key("| 7 | b | casa, |"))).toEqual({
+      rows: [{ paper: 1, item: 7, requires: ["casa"] }],
+      ...clean,
+    });
+  });
+
+  it("reports a numbered row the pattern rejected instead of losing it", () => {
+    // ONE TRAILING SPACE after the closing pipe. That is the whole defect: the
+    // row vanishes, and a vanished row is an item the gate never scores, which
+    // downstream is indistinguishable from an item that passed. A guard that
+    // only fires when EVERY row is lost never sees this.
+    const text = ["## Prueba 1", "| 1 | b | casa |", "| 2 | a | perro | "].join("\n");
+    expect(parseAnswerKeyRows(text)).toEqual({
+      rows: [{ paper: 1, item: 1, requires: ["casa"] }],
+      unscored: [],
+      malformed: ["| 2 | a | perro | "],
+      declared: new Map(),
+    });
+  });
+
+  it("does not mistake a table header or separator for a malformed row", () => {
+    // `malformed` only collects lines that open `| <digits> |`. A header or a
+    // `|---|` separator must not trip the guard, or the gate refuses every
+    // real key.
+    expect(parseAnswerKeyRows(key("| 1 | b | casa |")).malformed).toEqual([]);
+  });
+
+  it("scores Prueba 1 and 2 and ignores rows under any other heading", () => {
+    const text = [
+      "## Prueba 1", "| 1 | b | casa |",
+      "## Prueba 2", "| 2 | a | perro |",
+      "## Prueba 3", "| 3 | c | gato |",
+    ].join("\n");
+    expect(parseAnswerKeyRows(text)).toEqual({
+      rows: [
+        { paper: 1, item: 1, requires: ["casa"] },
+        { paper: 2, item: 2, requires: ["perro"] },
+      ],
+      ...clean,
+    });
+  });
+
+  it("returns nothing for text with no rows, which the file reader turns into a throw", () => {
+    // The pure parser is allowed to come back empty; "" is a legitimate input
+    // to a parser. `parseAnswerKey` is the one that refuses, because "" is not
+    // a legitimate answer key and a gate that read nothing must not report
+    // success.
+    expect(parseAnswerKeyRows("")).toEqual({ rows: [], ...clean });
+    expect(parseAnswerKeyRows("## Prueba 1\n\nno table here")).toEqual({ rows: [], ...clean });
+  });
+
+  it("stays flat on a long line rather than backtracking", () => {
+    // The old `\s*([^|]+)\s*\|$` measured CUBIC on this shape: 1.1s at
+    // n=2000, 8.7s at n=4000, 29s at n=6000. It is reachable because
+    // `buildSpanishA1MockAudit` is exported and takes a caller-supplied
+    // `root`. A generous ceiling, so the test pins the complexity class rather
+    // than a machine's speed.
+    const started = Date.now();
+    expect(parseAnswerKeyRows(`|1||${" ".repeat(8000)}`).rows).toEqual([]);
+    expect(Date.now() - started).toBeLessThan(1000);
+  });
+});
+
+describe("answer-key headings", () => {
+  it("resets the paper on a heading that is not `## Prueba <digit>`", () => {
+    // LIVE IN THE CORPUS, not hypothetical: `a2/mock-{1,2}-answer-key.md` write
+    // `## Pruebas 3 and 4` -- PLURAL, so `(\d)` cannot follow the `s` -- above a
+    // section whose own text says it is "not read by the audit". The old
+    // `if (heading) paper = ...` could only SET, never clear, so `paper` stayed
+    // 2 and any numbered table there was scored as listening. The A1 keys were
+    // safe only by luck: they spell `## Prueba 3` and `## Prueba 4`, which
+    // match and reset.
+    const text = [
+      "## Prueba 2", "| 26 | a | perro |",
+      "## Pruebas 3 and 4", "| 51 | b | ayuntamiento |",
+    ].join("\n");
+    expect(parseAnswerKeyRows(text).rows).toEqual([
+      { paper: 2, item: 26, requires: ["perro"] },
+    ]);
+  });
+
+  it("reads the item count the heading states about itself", () => {
+    // The file says how big it is. That is the one invariant here that does not
+    // depend on anticipating the shape of the damage.
+    const text = "## Prueba 1 · Comprensión de lectura (25 items)\n| 1 | b | casa |";
+    expect(parseAnswerKeyRows(text).declared).toEqual(new Map([[1, 25]]));
+  });
+
+  it("tolerates a heading that states no count", () => {
+    expect(parseAnswerKeyRows("## Prueba 1\n| 1 | b | casa |").declared).toEqual(new Map());
+  });
+});
+
+describe("looksLikeDataRow, via the malformed bucket", () => {
+  const under = (row: string) => parseAnswerKeyRows(`## Prueba 1\n${row}`).malformed;
+
+  it.each([
+    ["one trailing space", "| 2 | a | perro | "],
+    ["one leading space", " | 2 | a | perro |"],
+    ["a bolded item number", "| **2** | a | perro |"],
+    ["an item label with a suffix", "| 2a | a | perro |"],
+  ])("flags a row broken by %s", (_label, row) => {
+    // The first detector was a PREFIX test, `/^\|\s*\d+\s*\|/`, which needed the
+    // pipe at index 0 and a bare ASCII digit right after it -- blind to every
+    // edit but the trailing space it was written for. Bold inside these tables
+    // is already house style: `pre-a1/mock-1-answer-key.md` writes
+    // `| 21 | **gracias** | *gracias* |`.
+    expect(under(row)).toEqual([row]);
+  });
+
+  it.each([
+    ["a table header", "| # | Clave | Requiere |"],
+    ["a separator", "|---|---|---|"],
+    ["prose", "Not objectively keyed."],
+    ["a two-column numbered table", "| 1 | ***onru*** |"],
+  ])("does not flag %s", (_label, line) => {
+    // The digit in the first cell is what separates a data row from the
+    // furniture; the pipe ARITY is what separates this table from another one.
+    // Flagging the header or the separator would make the gate refuse every
+    // real key. Measured rather than assumed: a `cells.length >= 4` draft
+    // flagged a line in 177 of the 8670 markdown files under
+    // `human-languages/`, and requiring this table's three columns brings that
+    // to 100 -- none of them among the six keys `parseAnswerKey` opens, all of
+    // which flag zero lines.
+    expect(under(line)).toEqual([]);
+  });
+});
+
+describe("assertAnswerKeyParse", () => {
+  // Exported and taking a parse rather than a path because every hole in these
+  // guards, across FIVE rounds of review, was found by reading -- the only way
+  // in was a run over the real corpus.
+  //
+  // The checks used to be a pile of partial ones (zero rows, then adjacency,
+  // then span, then a conditional count) and each round found a hole at the
+  // join between two of them. They are now ONE set equality against what the
+  // headings declare, so every test below is the same failure seen from a
+  // different side.
+  const parse = (over: Partial<Parameters<typeof assertAnswerKeyParse>[0]> = {}) => ({
+    rows: [
+      { paper: 1, item: 1, requires: ["casa"] },
+      { paper: 2, item: 2, requires: ["perro"] },
+    ],
+    unscored: [],
+    malformed: [],
+    declared: new Map<number, number>([[1, 1], [2, 1]]),
+    ...over,
+  });
+  // Prueba 1 is 1..2 and Prueba 2 is 3..4, so a test can move one item without
+  // also tripping the count.
+  const two = (rows: { paper: number; item: number; requires: string[] }[]) =>
+    parse({ rows, declared: new Map([[1, 2], [2, 2]]) });
+  const full = [
+    { paper: 1, item: 1, requires: ["casa"] },
+    { paper: 1, item: 2, requires: ["gato"] },
+    { paper: 2, item: 3, requires: ["perro"] },
+    { paper: 2, item: 4, requires: ["sol"] },
+  ];
+
+  it("accepts a complete parse", () => {
+    expect(() => assertAnswerKeyParse(parse(), "key.md")).not.toThrow();
+    expect(() => assertAnswerKeyParse(two(full), "key.md")).not.toThrow();
+  });
+
+  it("names the rejected line rather than only counting it", () => {
+    // "1 table row rejected" tells a maintainer that something is wrong and
+    // nothing about where, in a file of 160 lines.
+    expect(() => assertAnswerKeyParse(parse({ malformed: ["| 2 | a | perro | "] }), "key.md"))
+      .toThrow(/first "\| 2 \| a \| perro \| "/);
+  });
+
+  it("refuses an item that states no requirements", () => {
+    expect(() => assertAnswerKeyParse(parse({ unscored: [{ paper: 1, item: 7 }] }), "key.md"))
+      .toThrow(/item\(s\) 1\.7 state no requirements/);
+  });
+
+  it("refuses an empty parse", () => {
+    expect(() => assertAnswerKeyParse(parse({ rows: [] }), "key.md"))
+      .toThrow(/parsed no answer-key rows/);
+  });
+
+  it("REQUIRES a declared count rather than skipping the check without one", () => {
+    // This read `count !== undefined && ...`, so the one guard that does not
+    // depend on anticipating the damage switched itself off whenever a heading
+    // stopped saying `(25 items)` -- silently. Both edits that do that are
+    // ordinary: `## Prueba 3 · Expresión e interacción escritas` in the same
+    // file already carries no count, and `ítems` is the correct Spanish
+    // spelling. Either one, plus a lost row, gave a clean bill of health.
+    expect(() => assertAnswerKeyParse(parse({ declared: new Map() }), "key.md"))
+      .toThrow(/Prueba 1 heading declares no item count/);
+  });
+
+  // Each of these pins a hole that a PARTIAL check let through, and the
+  // declared counts are set so that a count comparison alone cannot fire --
+  // the point is that the set equality catches them, not the arithmetic.
+  it("catches a lost FIRST row", () => {
+    // `findIndex((item, index) => index > 0 && ...)` never examines index 0, so
+    // `[2, 3, ..., 25]` read as perfectly contiguous. The span check that
+    // replaced it is blind here too: `[2,3]` has span 2 and length 2.
+    expect(() => assertAnswerKeyParse(two(full.filter((row) => row.item !== 1)), "key.md"))
+      .toThrow(/Prueba 1 declares 2 items 1-2, but parsed is missing 1/);
+  });
+
+  it("catches a lost LAST row", () => {
+    expect(() => assertAnswerKeyParse(two(full.filter((row) => row.item !== 4)), "key.md"))
+      .toThrow(/Prueba 2 declares 2 items 3-4, but parsed is missing 4/);
+  });
+
+  it("catches a duplicate that fills the gap a drop left", () => {
+    // `[1, 1, 3]` -- span 3, length 3. The SPAN check passed this, and the
+    // adjacency check it replaced had caught it, so that round was a strict
+    // regression. An ordinary copy-paste over the next row does exactly this.
+    const rows = [
+      { paper: 1, item: 1, requires: ["casa"] },
+      { paper: 1, item: 1, requires: ["gato"] },
+      ...full.filter((row) => row.paper === 2),
+    ];
+    expect(() => assertAnswerKeyParse(two(rows), "key.md"))
+      .toThrow(/Prueba 1 declares 2 items 1-2, but parsed is missing 2 duplicates 1/);
+  });
+
+  it("catches a renumbered paper whose count is still right", () => {
+    // Every count is correct and the numbers are contiguous; they are simply
+    // the wrong numbers. No aggregate check can see this.
+    const rows = full.map((row) => (row.paper === 2 ? { ...row, item: row.item + 1 } : row));
+    expect(() => assertAnswerKeyParse(two(rows), "key.md"))
+      .toThrow(/Prueba 2 declares 2 items 3-4, but parsed is missing 3 has unexpected 5/);
+  });
+
+  it("anchors Prueba 2 to the end of Prueba 1 rather than to 1", () => {
+    // The papers number straight through -- 1..25 then 26..50 -- so the second
+    // paper's expected run depends on the first's declared size. A key whose
+    // Prueba 2 restarted at 1 would otherwise look fine.
+    const rows = full.map((row) => (row.paper === 2 ? { ...row, item: row.item - 2 } : row));
+    expect(() => assertAnswerKeyParse(two(rows), "key.md"))
+      .toThrow(/Prueba 2 declares 2 items 3-4/);
+  });
+
+  it("refuses a scored paper whose heading declares ZERO items", () => {
+    // `(0 items)` makes the expected set EMPTY, and an empty expectation
+    // matches an empty parse -- so the paper is skipped entirely and its items
+    // are never scored. The per-paper `parsed no Prueba N rows` check that the
+    // set equality replaced caught this unconditionally; deleting it alongside
+    // the others reopened the hole.
+    //
+    // It was asymmetric, too: `(0 items)` on Prueba 1 is caught incidentally,
+    // because the anchor never advances and Prueba 2's run then starts at the
+    // wrong place. Only the LAST paper failed open -- and stubbing out a
+    // not-yet-authored paper as `(0 items)` is ordinary editorial work.
+    const rows = [{ paper: 1, item: 1, requires: ["casa"] }];
+    expect(() => assertAnswerKeyParse(parse({ rows, declared: new Map([[1, 1], [2, 0]]) }), "key.md"))
+      .toThrow(/Prueba 2 heading declares 0 items, outside 1-1000/);
+  });
+
+  it("refuses a declared count large enough to abort the process", () => {
+    // `Array.from({ length: count })` does the work BEFORE anything caps the
+    // message. `(999999999 items)` aborted outright -- FATAL ERROR, exit 134,
+    // uncatchable, no gate message at all -- while `(99999999999 items)` was
+    // SAFE, because `ArrayCreate` rejects a length at or above 2^32 with a
+    // plain RangeError. The merely enormous number was the dangerous one.
+    expect(() => assertAnswerKeyParse(parse({ declared: new Map([[1, 999999999], [2, 1]]) }), "key.md"))
+      .toThrow(/Prueba 1 heading declares 999999999 items, outside 1-1000/);
+  });
+
+  it("sanitises the name it was handed rather than trusting the caller", () => {
+    // This function is EXPORTED and `package.json` declares no `exports` map --
+    // the same deep-import argument `spanishMockDir` hardens against. A `\r`
+    // in the name would otherwise forge a second log line. The in-repo caller
+    // passes the RAW path, because `reportableFilename` quotes and so is not
+    // idempotent.
+    expect(() => assertAnswerKeyParse(parse({ rows: [] }), "a\r\nFORGED"))
+      .toThrow(/^"a\\nFORGED": parsed no answer-key rows$/);
+  });
+
+  it("truncates a long list of missing items rather than printing all of them", () => {
+    const rows = [{ paper: 1, item: 1, requires: ["casa"] }, { paper: 2, item: 21, requires: ["sol"] }];
+    expect(() => assertAnswerKeyParse(parse({ rows, declared: new Map([[1, 20], [2, 1]]) }), "key.md"))
+      .toThrow(/is missing 2, 3, 4, 5, 6, \.\.\./);
+  });
+});
+
+describe("a pipe inside the requirement cell", () => {
+  // `([^|]*)` takes the LAST pipe-delimited run, so a stray pipe silently
+  // TRUNCATES the requirement list -- and a shorter list is the fail-open
+  // direction, because there is less for `taught` to miss.
+  //
+  // Two checks, because neither sees the other's case. A first version used
+  // one (comparing the regex capture to the last split piece) and was
+  // worthless: both take the last run, so they agree by construction. My own
+  // attack matrix caught that, not review.
+  const rows = (row: string) =>
+    parseAnswerKeyRows(`## Prueba 1 (2 items)\n| 1 | a | casa | perro |\n${row}`);
+
+  it("rejects a row split by an inline-code pipe, on cell count", () => {
+    const row = "| 2 | b | casa | `a|b`, gato |";
+    expect(rows(row).malformed).toEqual([row]);
+  });
+
+  it("rejects a row hiding a pipe behind a backslash escape", () => {
+    // Here the split and the regex disagree in OPPOSITE directions, so the
+    // cell counts come out equal and the arity check sees nothing -- while
+    // `([^|]*)` still stops at the escaped pipe and drops `casa`.
+    const row = "| 2 | b | casa | casa \\| gato |";
+    expect(rows(row).malformed).toEqual([row]);
+  });
+
+  it("keeps a row whose cell count matches its table", () => {
+    expect(rows("| 2 | b | casa | gato |").rows).toHaveLength(2);
   });
 });
