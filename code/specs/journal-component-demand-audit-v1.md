@@ -98,6 +98,16 @@ silently drops children nested inside `HostButton`**, emitting a self-closing
 prescribed pattern produces a working card everywhere and an empty button on
 Windows.
 
+**Follow-up (J3a, RecordList).** Nesting *primitive* children in a
+`HostButton` does not share that result. A `Column` of `Text` nested in a
+`HostButton` emits an **empty** button on seven of eight backends (React,
+WebComponent, HTML, SwiftUI, Compose, Flutter and Qt; only XAML keeps the
+children), and the native-complete degradation report stays clean. The probe
+above nested a *package component*, which this does not re-test. The practical
+consequence is the same either way: a row cannot yet be one large button
+around several fields, so `RecordList` makes its title the button instead.
+The silent drop is tracked in the Mosaic program backlog.
+
 ### 3. EntryEditor — split pane, markdown left, live preview right
 
 Closest existing component: `NoteEditor` (`mosaic-pkg-note-editor`).

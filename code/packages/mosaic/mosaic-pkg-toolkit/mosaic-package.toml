@@ -15,7 +15,7 @@
 
 [package]
 name        = "mosaic-pkg-toolkit"
-version     = "0.15.0"
+version     = "0.16.0"
 description = "Bootstrap-shaped Mosaic UI component library — ready-made components composed purely from UI29 kernel primitives"
 license     = "MIT OR Apache-2.0"
 
@@ -39,13 +39,15 @@ license     = "MIT OR Apache-2.0"
 # v0.14: EmptyState ("nothing here yet"; #15440).
 # v0.15: SegmentedControl, Tabs, ListGroup report the kernel selected state
 #        (UI86, #15420); SegmentedControl `options` becomes list<text>.
+# v0.16: RecordList (multi-field, groupable rows; J3a of #14416).
 # Remaining Tier-1 (Card, Container) blocked on UI29-2 children
 # pass-through spec; ship when that lands.
 exports = [
   "Accordion", "Alert", "Badge", "Breadcrumb", "Button", "ButtonGroup",
   "Checkbox", "DropdownMenu", "EmptyState", "Field", "Input", "InputGroup",
   "ListGroup", "Modal", "Nav", "Navbar", "NumberInput", "Pagination",
-  "Radio", "SegmentedControl", "Select", "Spinner", "Tabs", "Toast", "Tooltip",
+  "Radio", "RecordList", "SegmentedControl", "Select", "Spinner", "Tabs", "Toast",
+  "Tooltip",
 ]
 
 [dependencies]
