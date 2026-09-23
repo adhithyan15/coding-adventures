@@ -1,0 +1,11 @@
+{
+  "id": "PA-R48-forms-residence-and-work",
+  "pathSegment": "PA-PATH-048-FORMS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-048-FORMS",
+      "order": 1
+    }
+  ]
+}

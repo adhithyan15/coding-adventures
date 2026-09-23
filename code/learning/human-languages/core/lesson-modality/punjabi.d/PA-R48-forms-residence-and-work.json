@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-R48-forms-residence-and-work",
+    "language": "punjabi",
+    "chapter": 48,
+    "sequence": 2640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a07377038b61080"
+  },
+  "findings": []
+}
