@@ -60,3 +60,38 @@ had to be corrected, because shortfalls are in each criterion's own units — 79
 headwords and 50 atoms are not comparable and neither is "nearer". Whatever
 replaces the current layout must keep that: units do not compare across groups,
 and a combined ordering across criteria would be the same error in a new place.
+
+---
+
+### MEASURED ACROSS THE CORPUS (2026-09-23), and it is worse than this entry estimated
+
+This entry was filed from one track and guessed that "how many other tracks are
+understated is unknown". HL-C428 took the measurement. Reading the gate per
+track rather than the ladder:
+
+| criterion | tracks it blocks |
+|---|---|
+| vocabulary | 23 |
+| verb-vocabulary | 16 |
+| reinforcement | 15 |
+| atom-budget | 8 |
+| spine-nodes | 2 |
+
+**Sixty-four blockers across twenty-three tracks. The ladder shows
+twenty-three**, one per track, and every one of them says `vocabulary`.
+
+So the understatement is not occasional. **Every track is understated**, and two
+whole criteria are invisible in the planning numbers this project works from:
+
+- **verb-vocabulary** — the level wants five verbs at or below it, and sixteen
+  tracks do not have them. It has never appeared in a plan.
+- **atom-budget** — eight tracks: french, german, italian, kannada, malayalam,
+  persian, tamil, urdu.
+
+Two tracks — telugu and marwadi — are genuinely down to one blocker, and for
+those two the ladder happens to be right.
+
+**This raises the entry's severity.** Any per-track estimate taken from the
+ladder, including "Telugu is 79 words from pre-A1", is a lower bound on a number
+nobody has seen. The fix is unchanged; what has changed is that it should come
+before the next planning decision rather than after it.

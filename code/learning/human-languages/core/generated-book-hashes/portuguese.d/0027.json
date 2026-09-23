@@ -1,13 +1,14 @@
 {
   "language": "portuguese",
   "chapter": 27,
-  "sourceHash": "fnv1a64:8ba9d6a6f3ae99ea",
+  "sourceHash": "fnv1a64:29d2e6886468a406",
   "lessonIds": [
     "PT-C27-primeiro",
     "PT-C27-segundo",
     "PT-C27-terceiro",
     "PT-C27-quarto",
-    "PT-C27-quinto"
+    "PT-C27-quinto",
+    "PT-C27-second-pass-greet-ask-close"
   ],
   "tex": "portuguese/book/chapters/ch27-ordinais.tex"
 }

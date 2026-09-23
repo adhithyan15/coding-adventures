@@ -3,8 +3,8 @@
   "language": "latin",
   "chapter": 47,
   "title": "Salt, Honey, Milk, Egg, Fish",
-  "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d676959c2c77b678",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:3bd3e9bce8caabec",
   "lessons": [
     {
       "id": "LA-C47-sal",
@@ -563,6 +563,145 @@
             {
               "kind": "speech",
               "text": "What sound does Latin p correspond to in inherited English words? (F — Grimm's Law.) Give two more pairs. (Pater/father, pēs/foot.) And why does Pisces keep its p? (It is a loan, not inherited.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C47-second-pass-honest-gaps",
+      "sequence": 1145,
+      "title": "Attested, or agreed on",
+      "headword": "ignōsce mihi · nihil est · quōmodo · bene · tū/vōs",
+      "romanization": "ignōsce mihi · nihil est · quōmodo · bene · tū/vōs",
+      "gloss": "second pass over the social phrases, sorted by what Latin actually attests and what it does not",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:85d0395b9d0cbf8a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "From memory: the reply to grātiās, and the one-word answer to how are you. Then hold the question this lesson asks of both — would a Roman have said it in that job?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: three shelves, not one",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "quōmodo, fully classical, in Cicero and Seneca — \"by what manner\".",
+                "bene, attested standing alone in Plautus, though in a drinking toast.",
+                "nihil est, real words, real texts — but never attested answering thanks."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "ignōsce mihi belongs on the first shelf: a plain imperative of ignōscere, \"to overlook, pardon.\" Beside it Latin kept an impersonal form with no \"you\" in it at all — paenitet mē, \"it grieves me\" — which is where English gets penitent and repent."
+            },
+            {
+              "kind": "speech",
+              "text": "The middle shelf is the interesting one. bene on its own is genuinely attested; what is not attested is bene answering how are you, because that exchange is itself a modern habit. A phrase can be real and its job modern, and those are two different claims."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: tū and vōs carry no politeness",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tū is one person, vōs is more than one, and in Classical Latin that is the whole of it. There is no formal-against-familiar dimension — addressing one powerful person as vōs had not started yet."
+            },
+            {
+              "kind": "speech",
+              "text": "It started in Late Latin, and French vous is that habit's direct descendant. German solved the same problem separately and reached for a different pronoun altogether. So the polite plural is real, and it is younger than the Latin you are reading."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ignōsce mihi, then the impersonal one beside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ignōsce mihi*, then the impersonal one beside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nihil est — then say what is modern about it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nihil est* — then say what is modern about it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tū to one person, vōs to several, with no change of respect",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tū* to one person, *vōs* to several, with no change of respect]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "quōmodo, and which two words fused to make it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *quōmodo*, and which two words fused to make it]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the three is fully classical in its job? (Quōmodo.) What is modern about nihil est? (The job — no text shows it answering thanks.) Where is bene attested alone? (A drinking toast in Plautus.) And what did vōs mean to a Roman? (More than one person — no politeness in it.)"
             }
           ]
         }

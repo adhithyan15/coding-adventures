@@ -176,9 +176,23 @@ describe("direct curriculum lesson owners", () => {
     // joining their segments' derived `lessons` lists, four new
     // `TE-EXT-0xx-CONSOLIDATION` extension nodes, and those four ids appearing
     // in their segments' `inline` lists. No existing lesson moved node.
-    expect(digest).toBe("0a3858424ed10a1a6c5bd9e6cc6775e812b72ee469cb90921107bbb8db98a20c");
+    //
+    // 7495 -> 7505 is HL-C428: TEN `review` lessons across SIX tracks -- marwadi,
+    // persian, portuguese, italian, urdu and latin -- applying HL-C426's finding
+    // to the rest of the corpus. Those six carried 36 atoms between them that the
+    // pre-A1 gate counts as revisited fewer than twice, and all six now carry
+    // none. As with HL-C426 none of the ten introduces an atom or a headword.
+    //
+    // Attribution by reconstruction AND structural diff. A clean worktree at
+    // 5112463d2c reproduced 0a385842... and 7495 byte for byte. Dumping the loaded
+    // graph from both trees and diffing gives 122 changed lines and nothing that
+    // is not this change: the ten lessons joining their segments' derived
+    // `lessons` lists, six new `-CONSOLIDATION` extension nodes, and those six ids
+    // appearing in their segments' `inline` or `after` lists. No existing lesson
+    // moved node.
+    expect(digest).toBe("7d8ceaa9e16677a43e0be86f433d44cd5e6e23018ef13e4e1250af52468f11b3");
     expect(curricula.flatMap((curriculum) => curriculum.path).flatMap((path) => path.lessons))
-      .toHaveLength(7495);
+      .toHaveLength(7505);
   });
 
   it("keeps the canonical curriculum shards free of derived lesson arrays", () => {

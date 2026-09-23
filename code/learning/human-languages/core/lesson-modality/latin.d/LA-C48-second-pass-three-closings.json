@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C48-second-pass-three-closings",
+    "language": "latin",
+    "chapter": 48,
+    "sequence": 1165,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e0964392431c6bb1"
+  },
+  "findings": []
+}

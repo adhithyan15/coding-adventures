@@ -17,7 +17,11 @@ it("pins Italian lesson-content budgets", () =>
     // 145 -> 147: the two writing stages Italian did not prove. A delayed copy
     // of `ciao` with the model covered, and a dictation of it from the sound.
     // No new atoms: both practise the three the greeting already introduced.
-    lessons: 147,
+    //
+    // 147 -> 148: HL-C428, one `review` lesson that gives chapter 2-4's practice
+    // atoms their second revisit. No new atom, no new headword.
+    //
+    lessons: 148,
     idioms: 4,
     senses: 9,
     cultureClaims: 11,

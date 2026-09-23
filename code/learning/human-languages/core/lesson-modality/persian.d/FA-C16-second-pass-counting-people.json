@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C16-second-pass-counting-people",
+    "language": "persian",
+    "chapter": 16,
+    "sequence": 755,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f8d8f52046e4d16e"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C27-second-pass-greet-ask-close",
+  "pathSegment": "PT-PATH-031",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-034-CONSOLIDATION",
+      "order": 0
+    }
+  ]
+}

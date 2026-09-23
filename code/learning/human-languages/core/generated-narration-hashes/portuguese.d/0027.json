@@ -1,19 +1,20 @@
 {
   "language": "portuguese",
   "chapter": 27,
-  "sourceHash": "fnv1a64:d62a10596021459a",
+  "sourceHash": "fnv1a64:d7c6516e39fa0db6",
   "lessonIds": [
     "PT-C27-primeiro",
     "PT-C27-segundo",
     "PT-C27-terceiro",
     "PT-C27-quarto",
-    "PT-C27-quinto"
+    "PT-C27-quinto",
+    "PT-C27-second-pass-greet-ask-close"
   ],
-  "voiceLessons": 4,
+  "voiceLessons": 5,
   "drivablePrefix": 2,
   "text": "portuguese/narration/ch27.txt",
   "json": "portuguese/narration/ch27.json",
-  "textHash": "fnv1a64:df257241fc5e656b",
-  "jsonHash": "fnv1a64:41002016e756558f",
+  "textHash": "fnv1a64:5e059a805644fcee",
+  "jsonHash": "fnv1a64:d44f22235056d224",
   "findings": []
 }

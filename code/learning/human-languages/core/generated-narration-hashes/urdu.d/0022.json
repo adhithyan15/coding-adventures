@@ -1,18 +1,19 @@
 {
   "language": "urdu",
   "chapter": 22,
-  "sourceHash": "fnv1a64:21337294fe59ce52",
+  "sourceHash": "fnv1a64:e1376b07810debca",
   "lessonIds": [
     "UR-C22-kahna",
     "UR-C22-kya-kaha",
     "UR-C22-aram-se",
-    "UR-R22-when-you-are-lost"
+    "UR-R22-when-you-are-lost",
+    "UR-R22-second-pass-one-mark-apart"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 4,
   "text": "urdu/narration/ch22.txt",
   "json": "urdu/narration/ch22.json",
-  "textHash": "fnv1a64:8c56987cfda0cad1",
-  "jsonHash": "fnv1a64:94d4b97b9c69001e",
+  "textHash": "fnv1a64:1e6e5bae993c0f19",
+  "jsonHash": "fnv1a64:3702acdf1488b36a",
   "findings": []
 }

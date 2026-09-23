@@ -1,8 +1,8 @@
 Latin, chapter 47: Salt, Honey, Milk, Egg, Fish.
-5 lessons. All 5 can be done entirely by ear.
+6 lessons. All 6 can be done entirely by ear.
 
 
-Lesson 1 of 5.
+Lesson 1 of 6.
 sāl — a cousin of English salt, and the word a Roman soldier's salary was named for.
 
 Warm-up.
@@ -27,7 +27,7 @@ Wrap-up Recall.
 Is English salt a cousin or a loan? (A cousin.) Name three loans from the same root. (Salad, sauce, sausage, salsa.) And how solid is the salary story? (Standard, not proven — the word is from sāl, the salt payment is Pliny's account.)
 
 
-Lesson 2 of 5.
+Lesson 2 of 6.
 mel — the root of mellifluous and marmalade, and of molasses by way of Portuguese.
 
 Warm-up.
@@ -53,7 +53,7 @@ Wrap-up Recall.
 What does mellifluous literally say? (Flowing with honey.) Which two food words came through Portuguese? (Marmalade, molasses.) And is English honey related? (No — Germanic, from a root meaning golden.)
 
 
-Lesson 3 of 5.
+Lesson 3 of 6.
 lac — the root of lactose, lettuce and, at one remove, of the Milky Way itself.
 
 Warm-up.
@@ -79,7 +79,7 @@ Wrap-up Recall.
 What is lettuce named for? (Its milky sap.) What does galaxy mean? (Milky — the same root, through Greek.) And what is the Milky Way a translation of? (Greek galaxías, Latin via lactea.)
 
 
-Lesson 4 of 5.
+Lesson 4 of 6.
 ōvum — a cousin of English egg, with two sound changes that hide the relationship completely.
 
 Warm-up.
@@ -105,7 +105,7 @@ Wrap-up Recall.
 Are ōvum and egg related? (Yes — cousins, heavily disguised.) What was the native English word? (Æg, plural eyren.) And why do we say egg? (It is the Norse form, and it won.)
 
 
-Lesson 5 of 5.
+Lesson 5 of 6.
 piscis — and the single clearest demonstration in this book of the sound law linking Latin to English.
 
 Warm-up.
@@ -133,3 +133,37 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What sound does Latin p correspond to in inherited English words? (F — Grimm's Law.) Give two more pairs. (Pater/father, pēs/foot.) And why does Pisces keep its p? (It is a loan, not inherited.)
+
+
+Lesson 6 of 6.
+Attested, or agreed on — second pass over the social phrases, sorted by what Latin actually attests and what it does not.
+
+Warm-up.
+[pause 3 seconds]
+From memory: the reply to grātiās, and the one-word answer to how are you. Then hold the question this lesson asks of both — would a Roman have said it in that job?
+
+You'll want to know: three shelves, not one.
+[a table of 3 rows, read aloud]
+quōmodo, fully classical, in Cicero and Seneca — "by what manner".
+bene, attested standing alone in Plautus, though in a drinking toast.
+nihil est, real words, real texts — but never attested answering thanks.
+ignōsce mihi belongs on the first shelf: a plain imperative of ignōscere, "to overlook, pardon." Beside it Latin kept an impersonal form with no "you" in it at all — paenitet mē, "it grieves me" — which is where English gets penitent and repent.
+The middle shelf is the interesting one. bene on its own is genuinely attested; what is not attested is bene answering how are you, because that exchange is itself a modern habit. A phrase can be real and its job modern, and those are two different claims.
+
+Why it's said this way: tū and vōs carry no politeness.
+tū is one person, vōs is more than one, and in Classical Latin that is the whole of it. There is no formal-against-familiar dimension — addressing one powerful person as vōs had not started yet.
+It started in Late Latin, and French vous is that habit's direct descendant. German solved the same problem separately and reached for a different pronoun altogether. So the polite plural is real, and it is younger than the Latin you are reading.
+
+Guided Practice.
+[your turn — say: ignōsce mihi, then the impersonal one beside it]
+[pause 8 seconds for the answer]
+[your turn — say: nihil est — then say what is modern about it]
+[pause 8 seconds for the answer]
+[your turn — say: tū to one person, vōs to several, with no change of respect]
+[pause 8 seconds for the answer]
+[your turn — say: quōmodo, and which two words fused to make it]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which of the three is fully classical in its job? (Quōmodo.) What is modern about nihil est? (The job — no text shows it answering thanks.) Where is bene attested alone? (A drinking toast in Plautus.) And what did vōs mean to a Roman? (More than one person — no politeness in it.)
