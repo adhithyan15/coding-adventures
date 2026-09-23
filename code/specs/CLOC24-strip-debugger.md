@@ -1,14 +1,18 @@
 # CLOC24 — strip `debugger` at SIMPLE/ADVANCED
 
-> **Status: SUPERSEDED by CCR-053 (2026-09-21).** This spec's central premise
+> **Status: SUPERSEDED by CCR-053 (2026-09-23).** This spec's central premise
 > is false and the transform it specifies has been reverted.
 >
 > It asserted that removing `debugger;` at SIMPLE/ADVANCED matches the upstream
 > Closure Compiler. Measured against the pinned oracle
-> (`closure-compiler-v20260915`), upstream **keeps** `debugger` at both levels
-> wherever it is reachable, and removes it only as collateral when the
-> enclosing statement is removed anyway — after a `return` or `throw`, or
-> inside `if (false) { … }`.
+> (`closure-compiler-v20260915`), upstream **keeps** a reachable `debugger` at
+> SIMPLE, and removes it only as collateral when the enclosing statement is
+> removed anyway — after a `return` or `throw`, or inside `if (false) { … }`.
+> At ADVANCED the rule is narrower rather than absent: upstream additionally
+> eliminates a call whose body is *only* a `debugger`, so
+> `function f(){debugger}f();` does go to nothing there. That is
+> call-elimination treating the body as pure, not the statement-list sweep this
+> spec proposed, and `closurec` does not do it.
 >
 > The soundness argument below is also wrong on its own terms: `debugger` is
 > observable behaviour, since it breaks into an attached debugger. Removing it

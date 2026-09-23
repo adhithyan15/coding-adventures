@@ -21,9 +21,12 @@ forced a WHITESPACE_ONLY fallback):
   pipeline ran rather than the WHITESPACE_ONLY fallback, which emits
   `var x=1+2;` verbatim.
 * **`debugger;` preserved** — measured against the pinned oracle, upstream
-  Closure keeps `debugger` at SIMPLE and ADVANCED wherever it is reachable,
-  and removes it only as collateral when the enclosing statement goes anyway
-  (after a `return` or `throw`, or inside `if (false) { … }`). It is also not
+  Closure keeps a reachable `debugger` at SIMPLE, and removes it only as
+  collateral when the enclosing statement goes anyway (after a `return` or
+  `throw`, or inside `if (false) { … }`). At ADVANCED the rule is narrower
+  rather than absent: upstream also eliminates a call whose body is *only* a
+  `debugger`, which is call-elimination treating the body as pure rather than
+  a `debugger` sweep, and which we do not do. It is also not
   effect-free: it breaks into an attached debugger, so removing it changes
   observable behaviour.
 * **`log` kept** — SIMPLE is open-world and never inlines or deletes an

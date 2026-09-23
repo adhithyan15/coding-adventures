@@ -430,7 +430,7 @@ fn dce_program(prog: &Program, st: &mut DceState) -> Program {
         .collect();
 
     // NOTE (CCR-053): `debugger` statements are NOT stripped here, and were
-    // until 2026-09-21. The removed code claimed it was "matching upstream
+    // until 2026-09-23. The removed code claimed it was "matching upstream
     // Closure exactly". It was not — see `preserves_debugger_statement_in_block`
     // and its siblings. Upstream keeps `debugger` at SIMPLE wherever it is
     // reachable, and removes it only as collateral when the enclosing statement
@@ -2495,9 +2495,13 @@ mod tests {
     // as "matching upstream Closure exactly".
     //
     // That was measured against the pinned oracle and is false: upstream keeps
-    // `debugger` at both levels wherever it is reachable. They are retargeted
-    // rather than deleted, because the behaviour they cover still needs pinning
-    // — just in the opposite direction.
+    // a reachable `debugger` at SIMPLE. (At ADVANCED the rule is narrower —
+    // upstream eliminates a call whose body is only a `debugger`, so
+    // `function f(){debugger}f();` does go to nothing there. That is
+    // call-elimination treating the body as pure, not a `debugger` sweep, and
+    // we do not do it.) They are retargeted rather than deleted, because the
+    // behaviour they cover still needs pinning — just in the opposite
+    // direction.
 
     #[test]
     fn preserves_debugger_statement_in_block() {

@@ -79,17 +79,20 @@ them. The third is CCR-022 (#15856): upstream renames the catch parameter and we
 do not. All three were invisible before this change only because the strip was
 emptying the block first.
 
-**The dead-tail shapes stay at 1 of 5**, and an earlier revision of this entry
-claimed 1 of 5 → 4 of 5. That was wrong, and the measurement is worth stating in
-full because the reason is an unrelated defect:
+**The dead-tail shapes go from 2 of 5 to 1 of 5.** Two earlier revisions of this
+entry got this count wrong — first as "1 of 5 → 4 of 5", then as "stays at 1 of
+5" — so the full three-binary measurement is given rather than a summary:
 
-| Input at SIMPLE | upstream | us, after | |
-|---|---|---|---|
-| `function f(){throw 1;debugger;}f();` | `function f(){throw 1;}f();` | `function f(){throw 1}f();` | differs |
-| `function f(){throw 1;debugger;g();}f();` | `function f(){throw 1;}f();` | `function f(){throw 1}f();` | differs |
-| `function f(){throw 1;{debugger;}}f();` | `function f(){throw 1;}f();` | `function f(){throw 1}f();` | differs |
-| `function f(){return 1;debugger;}f();` | `function f(){return 1}f();` | same | matches |
-| `for(var c=0;c<1;c++){continue;debugger}` | `for(var c=0;c<1;c++);` | `for(var c=0;c<1;c++){continue;debugger};` | differs |
+| Input at SIMPLE | upstream | `main` | after | |
+|---|---|---|---|---|
+| `function f(){throw 1;debugger;}f();` | `function f(){throw 1;}f();` | `function f(){throw 1}f();` | `function f(){throw 1}f();` | differs, both |
+| `function f(){throw 1;debugger;g();}f();` | `function f(){throw 1;}f();` | `function f(){throw 1}f();` | `function f(){throw 1}f();` | differs, both |
+| `function f(){throw 1;{debugger;}}f();` | `function f(){throw 1;}f();` | `function f(){throw 1}f();` | `function f(){throw 1}f();` | differs, both |
+| `function f(){return 1;debugger;}f();` | `function f(){return 1}f();` | matches | matches | matches, both |
+| `for(var c=0;c<1;c++){continue;debugger}` | `for(var c=0;c<1;c++);` | matches | `for(var c=0;c<1;c++){continue;debugger};` | **lost** |
+
+The single loss is row 5, and it is one of the three accidental matches
+tabulated below rather than a new defect.
 
 The three `throw` rows differ on a **pre-existing emitter gap that has nothing
 to do with `debugger`**: we omit the `;` after a block-final `throw`. The

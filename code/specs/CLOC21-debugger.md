@@ -7,8 +7,11 @@
 
 ## Why this spec exists
 
-`debugger;` is a breakpoint hook: it pauses execution if a debugger is attached
-and is otherwise a no-op. It was a Phase-2 statement gap. The grammar already
+`debugger;` is a breakpoint hook: it pauses execution if a debugger is attached,
+and does nothing if one is not. (That is **not** the same as "is a no-op" —
+whether a debugger is attached is not known at compile time, so the statement is
+observable and a pass may not drop it for size. An earlier revision of this line
+used the "otherwise a no-op" phrasing, and CLOC24 was built on it.) It was a Phase-2 statement gap. The grammar already
 *parsed* it, but the typed AST had no node to represent it, so the
 parser→typed-AST **bridge** declined (`UnsupportedSyntax`) and the CLI fell back
 to **`WHITESPACE_ONLY`** — applying zero real optimization to *any* program that
@@ -30,9 +33,14 @@ SIMPLE/ADVANCED optimization pipeline instead of degrading to whitespace-only.
 > **Retracted 2026-09-23 (CCR-053).** The paragraph below claimed upstream
 > Closure removes `debugger` at SIMPLE and ADVANCED. Measured against the
 > pinned oracle (`closure-compiler-v20260915`), that is false: upstream
-> **keeps** a reachable `debugger` at both levels, and removes one only as
+> **keeps** a reachable `debugger` at SIMPLE, and removes one only as
 > collateral when the statement enclosing it goes — after a `return` or a
-> `throw`, or inside a folded-away `if (false)`. The follow-up it anticipated
+> `throw`, or inside a folded-away `if (false)`. At ADVANCED the rule is
+> narrower rather than absent: upstream additionally eliminates a call whose
+> body is *only* a `debugger` (`function f(){debugger}f();` → nothing), which
+> is call-elimination treating the body as pure rather than a `debugger` sweep.
+> We do not do that, so do not read "upstream keeps it" as covering ADVANCED
+> unconditionally. The follow-up it anticipated
 > (CLOC24) was therefore built on a false premise, and has been reverted; see
 > `CLOC24-strip-debugger.md`, which carries the full rebuttal. Preserving
 > `debugger` — what this spec actually shipped — was the correct behaviour all
@@ -74,9 +82,12 @@ exactly like `return`/`throw`/expression statements.
 
 ## Per-pass handling
 
-A `debugger;` has no children, binds nothing, and references nothing, so every
-pass treats it exactly like `EmptyStatement`: a no-op that is carried through
-unchanged. It is grouped with the other childless leaf statements in each
+A `debugger;` has no children, binds nothing, and references nothing, so most
+passes carry it through unchanged. **It is not interchangeable with
+`EmptyStatement`, and an earlier revision of this paragraph said it was**: `dce`
+sweeps a stray `EmptyStatement` out of a statement list and deliberately does
+*not* sweep a `DebuggerStatement`, because an empty statement is a genuine
+no-op and a `debugger` is observable (CCR-053). It is grouped with the other childless leaf statements in each
 pass's statement match (`constant-fold`, `fold-control-flow`, `dce`,
 `inline-variables`, `inline`, `rename`, `rename-globals`, `rename-properties`)
 and in the scope analyzer. These arms exist only to keep the matches exhaustive

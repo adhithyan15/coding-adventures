@@ -13,8 +13,11 @@ debugger. (At ADVANCED the rule is narrower — upstream eliminates a call whose
 body is only a `debugger` — and we do not match that; see the pass changelog.)
 
 This was found by the CCR-081 sweep rather than by reading the flag surface:
-`simple-debugger` was one of 59 fixtures whose golden disagrees with the oracle,
-and reading the side-by-side named the cause outright.
+`simple-debugger` was one of 59 fixtures whose golden disagreed with the oracle
+as that sweep stood on 2026-09-21, and reading the side-by-side named the cause
+outright. (Completing the sweep's nine incomplete invocations on 2026-09-23
+revised that count to 67 — see the backlog's CCR-081 row. The 59 is left as the
+number that was true when this was found.)
 
 `tests/diff/simple-debugger` is corrected — golden and commentary. Its header
 claimed the strip "matched the upstream Closure Compiler"; it did not. The

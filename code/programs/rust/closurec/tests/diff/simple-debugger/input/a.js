@@ -10,9 +10,11 @@
 //     at SIMPLE).
 //   * `debugger;` is KEPT. CLOC24 removed it, and both the pass and this
 //     fixture claimed that matched upstream Closure. Measured against the
-//     pinned oracle, it does not: upstream keeps `debugger` at SIMPLE and
-//     ADVANCED wherever it is reachable, and drops it only as collateral when
-//     the enclosing statement goes — after a `return`, after a `throw`, or
+//     pinned oracle, it does not: upstream keeps a reachable `debugger` at
+//     SIMPLE (at ADVANCED the rule is narrower rather than absent — it also
+//     eliminates a call whose body is only a `debugger`, which we do not do),
+//     and drops it only as collateral when the enclosing statement goes —
+//     after a `return`, after a `throw`, or
 //     inside `if (false) { … }`. All three of those still happen, because they
 //     are ordinary reachability and branch folding rather than anything
 //     specific to `debugger`.
