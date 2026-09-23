@@ -132,3 +132,38 @@ keeping the old id avoids that at the cost of a misleading name.
 membership shard, path wiring, then regeneration — and it clears one blocker of
 three on its own. Costed rather than guessed, so the next attempt starts from
 the shape above instead of rediscovering the two validator refusals.
+
+---
+
+### The split, costed properly (2026-09-23) — it needs a placement decision, not a mechanical fix
+
+The earlier note said the split was cheap because chapter 8 holds one lesson and
+all three dependents name `dayachesi` directly. That part is right, and it fixes
+the churn question: **put the new lesson BEFORE `dayachesi` and make it a
+prerequisite, keep the atom id, and no dependent needs editing** — everything
+requiring `dayachesi` reaches the atom transitively. Verified: all three
+dependents require both `TE-PRAGMATICS-…-03` and `TE-SCRIPT-…-04`, so a later
+lesson would have forced three edits; an earlier one forces none.
+
+Sequence insertion is also clean — slots 344–348 are free, and script lessons
+already interleave with word lessons (`TE-S164` at 331, `TE-S134` at 335,
+`TE-S112` at 355 around `dayachesi` at 350).
+
+**What is not settled is where the atom should live**, and that is a question
+about Telugu's structure rather than about this lesson:
+
+| option | cost | problem |
+|---|---|---|
+| `writing` lesson in chapter 8, on `TE-PATH-013` | cheapest; no dependent edits | that segment is `SPINE-POLITE-REQUEST-REPAIR`. Filing script content on a politeness node is the **same category error HL-C420 objects to** |
+| script track (`TE-S…`, chapter 1, `TE-PATH-100`) | no dependent edits; established pattern; extension is `stage: pre-A1` | the extension's canDo is *"pick out each of these Telugu characters inside the words I already say"* — **character recognition**. This atom is a RULE about vowel signs, and every sibling atom is `TE-SCRIPT-RECOG-<n>` for one character |
+| move `TE-PRAGMATICS-…-03` instead, to a new chapter-8 `grammar` lesson | right node, real content (the respectful `‑ండి` ending deserves its own lesson), `grammar` is exempt from `CONTENT_TYPES` so no headword | the `‑ండి` point must come **after** `dayachesi` pedagogically, so three dependents need their prerequisites widened |
+
+The third is the best pedagogy and the only one with a real cost; the first two
+are cheap and each files knowledge under a heading that does not describe it.
+
+**Not chosen here.** Telugu has no home for a script *generalisation* as opposed
+to a script *character*, and inventing one — or deciding this rule is really
+character-recognition after all — is a curriculum judgement about the track. It
+is the same class as HL-C420's "what does the shared spine mean by handle
+travel" and HL-C418's "does A2 give reasons", and it should be argued on the
+structure, not on one atom-budget point.
