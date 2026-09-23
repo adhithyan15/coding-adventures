@@ -1,12 +1,13 @@
 {
   "language": "malayalam",
   "chapter": 70,
-  "sourceHash": "fnv1a64:27a51208e21bbc58",
+  "sourceHash": "fnv1a64:f1254f93b0068aa3",
   "lessonIds": [
     "ML-C70-um",
     "ML-C70-um-more",
     "ML-C70-o",
-    "ML-R70-cherkkuka"
+    "ML-R70-cherkkuka",
+    "ML-R70-script-recall-last-nine"
   ],
   "tex": "malayalam/book/chapters/ch70-joining-things-together.tex"
 }
