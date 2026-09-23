@@ -4,7 +4,7 @@
   "chapter": 74,
   "title": "And, But, Or",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:a0cb2f4e5aba79ad",
+  "sourceHash": "fnv1a64:48543cb1a53396f6",
   "lessons": [
     {
       "id": "TE-C74-and",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea93eff0f8c870a2",
+      "sourceHash": "fnv1a64:70f60553b95fba3c",
       "notice": null,
       "blocks": [
         {

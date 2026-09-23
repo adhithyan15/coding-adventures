@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "TE-C74-and",
+    "id": "TE-C08-andi",
     "language": "telugu",
-    "chapter": 74,
-    "sequence": 2530,
+    "chapter": 8,
+    "sequence": 352,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:70f60553b95fba3c"
+    "sourceHash": "fnv1a64:6108860e63ff1a02"
   },
   "findings": []
 }

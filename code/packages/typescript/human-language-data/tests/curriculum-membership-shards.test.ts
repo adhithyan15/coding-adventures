@@ -145,9 +145,24 @@ describe("direct curriculum lesson owners", () => {
     // (22 of them with empty `segments`, because only Spanish realizes the rung
     // today), and the 44 `ES-PATH-4xx` ids moving from one node's derived
     // `segments` list to the other's.
-    expect(digest).toBe("5a445a654557fa8b1577fd8f36f82b75b8f6b3ce17b6853faf07a80fa5756932");
+    //
+    // 7485 -> 7486 is HL-C424: ONE Telugu lesson, `TE-C08-andi`, splitting the
+    // respectful `-andi` ending out of `TE-C08-dayachesi`, which introduced four
+    // atoms against a budget of three. It is the first entry here that is not a
+    // Spanish vocabulary tranche, and the first for a track other than Spanish.
+    //
+    // Attribution by reconstruction AND structural diff, as for HL-C417. A clean
+    // worktree at 29907337c4 reproduced 5a445a65... and 7485 byte for byte.
+    // Dumping the loaded graph from both trees and diffing gives SIXTEEN changed
+    // lines and nothing that is not this change: `TE-C08-andi` joins
+    // `TE-PATH-013`'s lessons, that segment's `inline` gains
+    // `TE-EXT-013-POLITENESS`, and the extension node appears with its single
+    // lesson. `TE-C09-kshaminchandi` moving from pathOrder 1 to 2 does not
+    // appear, because order is positional in the derived list and both lessons
+    // are in it.
+    expect(digest).toBe("40c1fd079fd5859811fdbd0ae2c510c4230076281dd73f2e71d0f928ec94f722");
     expect(curricula.flatMap((curriculum) => curriculum.path).flatMap((path) => path.lessons))
-      .toHaveLength(7485);
+      .toHaveLength(7486);
   });
 
   it("keeps the canonical curriculum shards free of derived lesson arrays", () => {

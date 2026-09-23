@@ -9,7 +9,7 @@ headword: క్షమించండి
 gloss: please forgive / sorry (kṣamin̄caṇḍi — from kṣamin̄cu "to forgive," Sanskrit kṣamā + respectful -aṇḍi)
 romanization: "kṣamin̄caṇḍi"
 concept_tag: COURTESY-SORRY
-prerequisites: [TE-C08-dayachesi]
+prerequisites: [TE-C08-dayachesi, TE-C08-andi]
 sounds: [telugu-conjunct-kssa, telugu-anusvara]
 roots: [kshama-sanskrit]
 etymology_hook: "క్షమించండి kṣamin̄caṇḍi ← Sanskrit kṣamā 'forgiveness' + Telugu verb-making -in̄cu + the SAME respectful -aṇḍi ending from దయచేసి...ండి"
