@@ -2,6 +2,29 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename` crate will be documented in this file.
 
+## [0.22.2] - 2026-09-23
+
+### Fixed — the catch-param test section called two different things "soundness" — CCR-022
+
+The `catch-param soundness (CLOC19)` heading over this crate's catch tests
+covered two rules without separating them: that nothing may be renamed *onto* a
+catch binding, and that the binding itself is never renamed. Only the first is a
+soundness requirement — `fresh_name_avoids_colliding_with_catch_param` pins the
+case where dropping it miscompiles the handler. The second is a conservative
+choice we made.
+
+Measured against the pinned oracle, upstream Closure renames catch parameters at
+both SIMPLE and ADVANCED, and satisfies the first rule by choosing a
+non-colliding fresh name rather than by reserving the original; with `a` through
+`d` already taken it hands the catch binding `e`. Renaming stays correct across
+shadowing too. So reserving is sound but not required, and it costs us output
+size wherever a catch binding has a long name — part of CCR-022 (#15856).
+
+No behaviour change and no test changed: the code already did the right thing
+and the individual test comments were already accurate. Only the section header
+overclaimed, and it now says which rule is which and points at the probes in
+`code/specs/CLOC19-try-catch.md`. Comment only; PATCH.
+
 ## [0.22.1] - 2026-07-19
 
 ### Changed — test goldens updated for `closure-emitter` 0.55.0

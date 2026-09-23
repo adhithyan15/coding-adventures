@@ -4,6 +4,71 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - the `advanced-try-catch-rename` fixture claimed a soundness rule upstream contradicts (CCR-022)
+
+The fixture's input comment opened "ADVANCED-level renaming SOUNDNESS across a
+catch binding" and said the crux of try/catch support is that the renamer **must**
+treat the catch parameter as reserved, listing two rules:
+
+> 1. It must never itself be renamed (catch params are not in the local-rename set), and
+> 2. No other local may be renamed to a name that collides with it
+
+Its README went further: "If either guard were missing, `err` would collide with
+a generated short name and miscompile the handler." The CLOC19 spec said the same
+in a **MUST** list.
+
+**Only (2) is a soundness requirement.** Measured against the pinned oracle
+(`closure-compiler-v20260915`, sha256 verified before use), with externs for the
+free globals and a value use to stop the inliner:
+
+```js
+function process(value) {
+  var temp = value + 1;
+  try { compute(temp); } catch (err) { report(err, temp); }
+  return temp;
+}
+sink(process);
+```
+
+```
+SIMPLE   : function process(a){a+=1;try{compute(a)}catch(b){report(b,a)}return a}sink(process);
+ADVANCED : sink(function(a){a+=1;try{compute(a)}catch(b){report(b,a)}return a});
+```
+
+`err` becomes `b`. Upstream renames catch parameters at both levels, and does not
+miscompile. Two further probes show why (1) and (2) are different rules rather
+than two halves of one:
+
+```
+in : function f(a1,a2,a3){var x=a1+a2+a3;try{compute(x)}catch(err){report(err,x,a1,a2,a3)}return x}sink(f);
+out: function f(b,c,d){var a=b+c+d;try{compute(a)}catch(e){report(e,a,b,c,d)}return a}sink(f);
+
+in : var err=1;function f(v){try{compute(v)}catch(err){report(err)}return err}sink(f);
+out: var err=1;function f(a){try{compute(a)}catch(b){report(b)}return err}sink(f);
+```
+
+With `a` through `d` taken the catch binding gets `e` — upstream satisfies (2) by
+**choosing a non-colliding fresh name**, not by reserving the original. And the
+rename stays correct when the catch binding shadows an outer `err`.
+
+**No behaviour change.** `closurec` still reserves catch parameters, the golden
+is unchanged, and no test changed. What changed is the justification: reserving
+is now described as the conservative choice it is rather than as a law, in the
+fixture input, the fixture README, `code/specs/CLOC19-try-catch.md`, and the
+`closure-pass-rename` test-section header that grouped both rules under
+"soundness". The retracted claims are quoted in place rather than deleted, since
+the spec is where someone would look before changing this.
+
+The parity cost is real: upstream emits shorter output wherever a catch binding
+has a long name. That belongs to CCR-022 (#15856), which currently frames catch
+params as a binding kind our renamer *skips* — incompleteness. The probes say it
+is a **divergence**, and at SIMPLE as well as ADVANCED, so closing it means
+changing this fixture's golden rather than only adding a code path. The fixture
+is also now labelled for what it is: a regression test for our rule, not an
+oracle for upstream's, which does not produce this output at all — it inlines
+`process` away entirely.
+
+
 ### Changed - twelve fixtures are dispositioned `upstream_refuses`, not `upstream_golden` (CCR-081)
 
 The `non-minify-unverified-stdout` set carried 138 fixtures under

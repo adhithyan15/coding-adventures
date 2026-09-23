@@ -25,8 +25,25 @@ ADVANCED renaming safe in the presence of `try`/`catch`:
 * The catch binding **`err` is preserved verbatim**: it is never
   renamed (catch params are not in the local-rename set) and no other
   local is ever aliased onto it (the catch param joins the fresh-name
-  avoid set). If either guard were missing, `err` would collide with a
-  generated short name and miscompile the handler.
+  avoid set).
+
+**Only the second guard is a soundness requirement.** Without it, a
+generated short name could alias the caught value and miscompile the
+handler — that is the case
+`fresh_name_avoids_colliding_with_catch_param` pins. The first guard is
+a conservative choice. An earlier revision of this file claimed that
+dropping *either* would miscompile; that is false for the first, and
+upstream Closure is the counterexample: measured against the pinned
+oracle it renames catch parameters at both SIMPLE and ADVANCED, and
+satisfies the second guard by choosing a non-colliding fresh name
+instead of reserving the original.
+
+So this fixture is a regression test for a rule `closurec` chose, not an
+oracle for upstream's behaviour. Upstream does not emit this output:
+it inlines `process` away entirely, and the catch binding in what
+survives is renamed. The parity cost is tracked as CCR-022
+([#15856](https://github.com/adhithyan15/coding-adventures/issues/15856));
+the probes are in `code/specs/CLOC19-try-catch.md`.
 
 Regenerate the expected file after an intentional behavior change:
 

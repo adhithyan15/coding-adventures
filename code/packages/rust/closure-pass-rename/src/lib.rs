@@ -2017,7 +2017,18 @@ mod tests {
         );
     }
 
-    // ---- catch-param soundness (CLOC19) -----------------------
+    // ---- catch-param handling (CLOC19) -------------------------
+    //
+    // Two rules, and only one of them is a soundness requirement.
+    // Nothing may be renamed ONTO the catch binding — that is the
+    // `fresh_name_avoids_colliding_with_catch_param` case below, and
+    // dropping it miscompiles the handler. Leaving the binding itself
+    // unrenamed is a conservative choice rather than a requirement:
+    // upstream Closure renames catch params at both SIMPLE and ADVANCED
+    // and satisfies the first rule by picking a non-colliding fresh
+    // name instead. See code/specs/CLOC19-try-catch.md, "(1) is ours,
+    // not a law", for the oracle probes; the parity cost is CCR-022
+    // (#15856).
 
     #[test]
     fn rewrites_param_use_inside_catch_body() {

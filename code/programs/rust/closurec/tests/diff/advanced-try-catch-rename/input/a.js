@@ -1,9 +1,8 @@
-// ADVANCED-level renaming SOUNDNESS across a catch binding (CLOC19).
+// ADVANCED-level renaming across a catch binding (CLOC19).
 //
-// The crux of try/catch support is that the catch parameter is a
-// declared binding that the renamer must treat as RESERVED:
+// `closurec` treats the catch parameter as RESERVED:
 //
-//   1. It must never itself be renamed (catch params are not in the
+//   1. It is never itself renamed (catch params are not in the
 //      local-rename set), and
 //   2. No other local may be renamed to a name that collides with it
 //      (the catch param joins the fresh-name avoid set).
@@ -14,6 +13,23 @@
 // binding `err` is preserved verbatim and never aliased to `a`/`b`/`c`.
 // `report(err, temp)` becomes `report(err, b)` — proving the rewrite
 // reaches into the catch body while leaving the catch param alone.
+//
+// ONLY (2) IS A SOUNDNESS REQUIREMENT. An earlier version of this
+// comment called both of them "the crux of try/catch support" and said
+// the renamer "must" treat the binding as reserved. Measured against
+// the pinned oracle, upstream Closure renames catch parameters at both
+// SIMPLE and ADVANCED — `err` becomes `b` on this very input — and it
+// satisfies (2) by picking a fresh name that does not collide rather
+// than by reserving the original. Renaming a catch binding is sound;
+// reserving it is one conservative way to be sound, and it is the way
+// we chose.
+//
+// So this fixture pins OUR rule, not upstream's. Upstream does not
+// produce this output at all: it inlines `process` away entirely, and
+// what survives has the catch binding renamed. The parity cost of (1)
+// is tracked as CCR-022 (#15856), and closing it means changing this
+// fixture's golden, not just adding a code path. Full probes are in
+// code/specs/CLOC19-try-catch.md under "(1) is ours, not a law".
 function process(value) {
   var temp = value + 1;
   try {
