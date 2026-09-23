@@ -842,9 +842,39 @@ export function renderCurriculumGapReport(report: CurriculumGapReport): string {
           // hindi (101). A count that hides which track is closest is how that
           // happens.
           "",
-          "per-track ladder (HL09 §3.1), grouped by blocking criterion, " +
-            "nearest the next rung first within each group " +
-            "(shortfalls are in each criterion's own units, so they do not compare across groups):",
+          // WHY EVERY BLOCKER, AND NOT THE WORST ONE (HL-C427)
+          //
+          // This printed ONE blocker per track, chosen by
+          // `sort((a, b) => b.shortfall - a.shortfall)[0]` and called the worst.
+          // Shortfalls are in each criterion\'s own units, and the units differ by
+          // two orders of magnitude: vocabulary counts headwords (79-257),
+          // reinforcement counts atoms (13-78), verb-vocabulary counts verbs
+          // (1-29), atom-budget counts lessons (1-5), spine-nodes counts nodes (1).
+          //
+          // So `vocabulary` won for all 23 tracks, every time, and
+          // `verb-vocabulary` and `atom-budget` could NEVER be shown. They were not
+          // occasionally hidden -- they were structurally unprintable, and neither
+          // has ever appeared in a plan. Measured when this was fixed: the gate
+          // holds 64 blockers across 23 tracks (vocabulary 23, verb-vocabulary 16,
+          // reinforcement 15, atom-budget 8, spine-nodes 2) and this ladder showed
+          // 23 of them.
+          //
+          // §3.1 is a CONJUNCTION, so showing the first failing criterion presents
+          // a necessary condition as if it were sufficient. Every per-track
+          // estimate taken from the old ladder -- "telugu is 79 words from pre-A1"
+          // among them -- was a lower bound on a number nobody had seen.
+          //
+          // The irony is that the unit rule was already known here: the test for
+          // this block says a first version "would have ranked a track needing one
+          // spine node above one needing 79 headwords". The guard was applied to
+          // the row ORDERING and not to the SELECTION, one line apart.
+          //
+          // Grouping by criterion had to go with it: a track with four blockers
+          // cannot sit in one group. Rows now order by HOW MANY criteria are left,
+          // which is unit-free and is the honest reading of "nearest".
+          "per-track ladder (HL09 §3.1), fewest criteria left first, " +
+            "every blocker listed because §3.1 is a conjunction " +
+            "(shortfalls are in each criterion's own units and never compare across criteria):",
           ...[...report.levelGate.tracks]
             .map((track) => {
               const next = track.inProgressAt ?? "C2";
@@ -856,26 +886,32 @@ export function renderCurriculumGapReport(report: CurriculumGapReport): string {
               // vocabulary blocker is not short, so its scoped count is its
               // target.
               const scoped = vocabulary ? target - vocabulary.shortfall : target;
-              const worst = [...track.blockers].sort((a, b) => b.shortfall - a.shortfall)[0];
-              // A track with no blocker has cleared C2 and belongs at the end,
-              // not at the front where a shortfall of -1 would have put it.
-              return { track, next, target, scoped, worst, group: worst?.criterion ?? "\uffff" };
+              // Sorted by criterion NAME, not by shortfall: the numbers are in
+              // different units, so any ordering among them would be the same
+              // mistake this block exists to correct.
+              const blockers = [...track.blockers].sort((a, b) =>
+                a.criterion.localeCompare(b.criterion),
+              );
+              return { track, next, target, scoped, blockers };
             })
             .sort(
               (a, b) =>
-                a.group.localeCompare(b.group) ||
-                (a.worst?.shortfall ?? 0) - (b.worst?.shortfall ?? 0) ||
+                // A track with no blocker has cleared C2; zero sorts first, which
+                // is correct here -- it has the fewest criteria left of anyone.
+                a.blockers.length - b.blockers.length ||
                 a.track.language.localeCompare(b.track.language),
             )
-            .map(({ track, next, target, scoped, worst }) => {
+            .map(({ track, next, target, scoped, blockers }) => {
               const complete = track.attained ?? "none";
-              const blocker = worst
-                ? `${worst.criterion} short ${worst.shortfall}`
-                : "no blocker — ladder complete";
+              const summary =
+                blockers.length === 0
+                  ? "no blocker — ladder complete"
+                  : `${blockers.length} blocker${blockers.length === 1 ? "" : "s"}: ` +
+                    blockers.map((b) => `${b.criterion} ${b.shortfall}`).join(", ");
               return (
                 `  ${track.language.padEnd(11)} touches ${String(track.touches ?? "-").padEnd(6)} ` +
                 `complete ${complete.padEnd(6)} working ${next.padEnd(6)} ` +
-                `vocabulary ${scoped}/${target} — ${blocker}`
+                `vocabulary ${scoped}/${target} — ${summary}`
               );
             }),
         ]

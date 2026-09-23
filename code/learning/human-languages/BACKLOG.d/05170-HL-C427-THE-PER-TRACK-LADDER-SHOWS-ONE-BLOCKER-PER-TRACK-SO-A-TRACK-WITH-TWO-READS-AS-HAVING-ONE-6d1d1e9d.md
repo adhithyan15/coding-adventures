@@ -1,6 +1,6 @@
 ## HL-C427-6d1d1e9d — The per-track ladder shows one blocker per track, so a track with two reads as having one
 
-**Status: OPEN.** Found while clearing Telugu's reinforcement debt (HL-C426), by
+**Status: CLOSED (2026-09-23) — fixed, see RESOLVED below.** Found while clearing Telugu's reinforcement debt (HL-C426), by
 reading the gate's JSON after the ladder had already been trusted for a
 planning decision.
 
@@ -95,3 +95,74 @@ those two the ladder happens to be right.
 ladder, including "Telugu is 79 words from pre-A1", is a lower bound on a number
 nobody has seen. The fix is unchanged; what has changed is that it should come
 before the next planning decision rather than after it.
+
+---
+
+### RESOLVED (2026-09-23) — fixed, and the mechanism was worse than "shows one"
+
+The defect was not that the ladder showed one blocker. It was **which** one:
+
+```ts
+const worst = [...track.blockers].sort((a, b) => b.shortfall - a.shortfall)[0];
+```
+
+It took the blocker with the numerically largest shortfall. Shortfalls are in
+each criterion's own units and those units differ by two orders of magnitude:
+
+| criterion | unit | observed range |
+|---|---|---|
+| vocabulary | headwords | 79 – 257 |
+| reinforcement | atoms | 13 – 78 |
+| verb-vocabulary | verbs | 1 – 29 |
+| atom-budget | lessons | 1 – 5 |
+| spine-nodes | nodes | 1 |
+
+So `vocabulary` won on every track, every time, and **`verb-vocabulary` and
+`atom-budget` were not occasionally hidden — they were unprintable.** No corpus
+state could have produced a ladder row naming either of them. That is why
+neither has ever appeared in a plan.
+
+### The rule was already written down, one line from the code that broke it
+
+`tests/level-gate.test.ts` said so itself:
+
+> a first version that sorted on the bare number would have ranked a track
+> needing one spine node above one needing 79 headwords
+
+The guard against comparing across units was applied to the row **ordering** and
+not to the **selection** of which blocker a row shows. Both live in the same
+expression.
+
+### The fix
+
+Every blocker is printed. Grouping by criterion went with it — a track with four
+blockers cannot sit in one group — and rows now order by **how many criteria are
+left**, which is unit-free and is the honest reading of "nearest the next rung".
+
+Within a row the blockers are sorted by criterion **name**, deliberately: any
+ordering over the numbers would be the same mistake in a new place.
+
+```
+marwadi     … 1 blocker:  vocabulary 224
+telugu      … 1 blocker:  vocabulary 79
+hindi       … 2 blockers: reinforcement 44, vocabulary 101
+…
+german      … 4 blockers: atom-budget 5, reinforcement 37, verb-vocabulary 2, vocabulary 201
+```
+
+The old test asserted criterion groups were contiguous and shortfall ascended
+within a group. Both were true of a one-blocker renderer, and both were
+satisfiable while 41 of the corpus's 64 blockers went unmentioned. It is now
+**set equality against the gate, per track**, in both directions, plus an
+anti-vacuity assertion that more than one track renders more than one blocker.
+
+Mutation-checked: restoring the `sort(...)[0]` selection fails on the first
+track with two blockers, which today is twenty-one of twenty-three.
+
+### What this changes downstream
+
+Nothing in the corpus and every estimate taken from it. The planning numbers
+this project has used are all lower bounds, and two criteria now enter planning
+for the first time: **verb-vocabulary blocks sixteen tracks** and
+**atom-budget eight**. Re-cost before the next content tranche rather than
+after it.
