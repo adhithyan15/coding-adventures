@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 2,
-  "sourceHash": "fnv1a64:ee31b1aa4e8eec99",
+  "sourceHash": "fnv1a64:01f94d7ca8af6f81",
   "lessonIds": [
     "KA-C02-hesaru",
     "KA-C02-nanna",
@@ -12,7 +12,8 @@
     "KA-S111-vowel-sign-e",
     "KA-C02-santosha",
     "KA-S02-vowel-sign-u",
-    "KA-C02-practice"
+    "KA-C02-practice",
+    "KA-R02-second-pass-the-name-exchange"
   ],
   "tex": "kannada/book/chapters/ch02-introductions.tex"
 }

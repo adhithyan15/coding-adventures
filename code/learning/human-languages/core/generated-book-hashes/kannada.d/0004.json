@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 4,
-  "sourceHash": "fnv1a64:7856a7d2613e1c50",
+  "sourceHash": "fnv1a64:f3d029726049ae79",
   "lessonIds": [
     "KA-C04-hoogu",
     "KA-S04-vowel-sign-i",
@@ -10,7 +10,8 @@
     "KA-C04-matte-sigona",
     "KA-S113-letter-lla",
     "KA-S110-letter-ba",
-    "KA-C04-practice"
+    "KA-C04-practice",
+    "KA-R04-second-pass-going-and-coming-back"
   ],
   "tex": "kannada/book/chapters/ch04-farewells.tex"
 }

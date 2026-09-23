@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R02-second-pass-the-name-exchange",
+    "language": "kannada",
+    "chapter": 2,
+    "sequence": 141,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a7bc278e7b441338"
+  },
+  "findings": []
+}

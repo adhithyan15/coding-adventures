@@ -1,8 +1,8 @@
 Kannada, chapter 4: Farewells.
-8 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+9 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 8.
+Lesson 1 of 9.
 ಹೋಗು (hōgu) — "go," and ಬಾ (come).
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -31,7 +31,7 @@ Wrap-up Recall.
 What do hōgu and bā mean, and why will you need both to part? ("Go" and "come"; the Kannada goodbye is "I'll go and come back.")
 
 
-Lesson 2 of 8.
+Lesson 2 of 9.
 ◌ಿ — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ಿ and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -69,7 +69,7 @@ Wrap-up Recall.
 Which character is this — ◌ಿ? What vowel does it put on the consonant it attaches to — and what does it take off? (Puts i on; takes the built-in a off.) Name one word you already say that contains it.
 
 
-Lesson 3 of 8.
+Lesson 3 of 9.
 ಹೋಗಿ ಬರುತ್ತೇನೆ (hōgi baruttēne) — "I'll go and come back".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -110,7 +110,7 @@ Wrap-up Recall.
 What does the Kannada goodbye literally promise, and how do you answer? ("I'll go and come back"; reply hōgi banni, "go and come back".)
 
 
-Lesson 4 of 8.
+Lesson 4 of 9.
 ನಾಳೆ ಸಿಗೋಣ (nāḷe sigōṇa) — "see you tomorrow".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -139,7 +139,7 @@ Wrap-up Recall.
 What are the two pieces of nāḷe sigōṇa, and what Tamil word shares the "day" root? (Nāḷe "tomorrow" + sigu "meet"; Tamil nāḷai — both from nāḷ "day.")
 
 
-Lesson 5 of 8.
+Lesson 5 of 9.
 ಮತ್ತೆ ಸಿಗೋಣ (matte sigōṇa) — "we'll meet again".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -166,7 +166,7 @@ Wrap-up Recall.
 What does the phrase mean, and which native verb does Kannada use for "meet"? ("We'll meet again"; sigu — where Tamil borrowed the Sanskrit sandi.)
 
 
-Lesson 6 of 8.
+Lesson 6 of 9.
 ಳ (ḷa) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಳ and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -201,7 +201,7 @@ Wrap-up Recall.
 Which character is this — ಳ? What sound does it carry? (ḷa.) Name one word you already say that contains it.
 
 
-Lesson 7 of 8.
+Lesson 7 of 9.
 ಬ (ba) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಬ and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -236,7 +236,7 @@ Wrap-up Recall.
 Which character is this — ಬ? What sound does it carry? (ba.) Name one word you already say that contains it.
 
 
-Lesson 8 of 8.
+Lesson 8 of 9.
 Chapter 4 — The farewells.
 
 Warm-up.
@@ -272,3 +272,31 @@ matte "again" — where Tamil borrowed Sanskrit sandi for "meet," Kannada kept s
 Wrap-up Recall.
 [pause 3 seconds]
 Why does Kannada never say a plain "I'm leaving," and what does its everyday goodbye promise instead? (It sounds too final; hōgi baruttēne promises "I'll go and come back.")
+
+
+Lesson 9 of 9.
+ಹೋಗಿ ಬರುತ್ತೇನೆ (hōgi baruttēne) — nobody says goodbye.
+
+Warm-up.
+[pause 3 seconds]
+The ordinary Kannada goodbye. Say it, then say what it literally claims you are about to do.
+
+Why it's said this way.
+ಹೋಗಿ ಬರುತ್ತೇನೆ (hōgi baruttēne) is I will go and come back, and it is said by the person leaving even when they have no plan to return. Announcing a departure as final is the thing being avoided; the phrase is a small refusal to treat a parting as one.
+Notice what is missing from it. There is no ನಾನು — no I — because the verb ending -ತ್ತೇನೆ already carries the person. Kannada drops the pronoun wherever the verb has already said it, which is the same economy the name exchange showed by dropping the verb is outright.
+
+Guided Practice: leaving, three ways.
+[pause 1 second]
+[your turn — say: the ordinary goodbye — hōgi baruttēne]
+[pause 8 seconds for the answer]
+[your turn — say: name tomorrow — nāḷe sigōṇa]
+[pause 8 seconds for the answer]
+[your turn — say: leave the day open — matte sigōṇa]
+[pause 8 seconds for the answer]
+[your turn — say: wave away an apology — paravāgilla]
+[pause 8 seconds for the answer]
+Sigōṇa is let us meet, and it takes us with it: both of these arrange a meeting rather than promising one person's return.
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does the everyday goodbye literally say? (I will go and come back.) Why is nānu absent from it? (The verb ending already carries the person.) And which phrase answers both a thank-you and an apology? (Paravāgilla.)

@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "KA-R81-signs-that-hang",
+    "language": "kannada",
+    "chapter": 81,
+    "sequence": 2960,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ef1e04c2b474990",
+    "detachableSegments": [
+      "Script: six signs and two marks"
+    ]
+  },
+  "findings": []
+}

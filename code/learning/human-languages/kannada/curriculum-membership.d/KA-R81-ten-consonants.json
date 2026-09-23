@@ -1,0 +1,11 @@
+{
+  "id": "KA-R81-ten-consonants",
+  "pathSegment": "KA-PATH-81-LEFTOVERS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-81-LEFTOVERS",
+      "order": 2
+    }
+  ]
+}

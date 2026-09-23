@@ -260,9 +260,26 @@ describe("direct curriculum lesson owners", () => {
     // and extensions' derived `lessons` lists, ONE new extension node
     // (`GE-EXT-024-CONSOLIDATION`, the only target segment that carried no
     // extension at all), and that id joining `GE-PATH-024`'s `after` list.
-    expect(digest).toBe("e4e3c86418433c31ee84ed2f81509beb8cea6d09a8d132d2def1b2f97824f67c");
+    //
+    // 7533 -> 7539 is HL-C436: SIX `review` lessons taking kannada to zero
+    // pre-A1 reinforcement debt. Kannada is the cheapest track of the programme
+    // per atom -- 41 thin atoms but only THREE with zero revisits, so 44
+    // retrieval slots against sanskrit's 45 for 28 atoms. What made it work was
+    // not the count: 23 of the 41 are script-recognition atoms on ONE segment,
+    // so three of the six lessons are a script recall and the chapter spread
+    // that looked expensive collapsed.
+    //
+    // Attribution by reconstruction AND structural diff. A clean worktree at
+    // 61c1d2a914 reproduced e4e3c864... and 7533 byte for byte. Dumping the
+    // loaded graph from both trees and diffing gives 50 changed lines and
+    // nothing that is not this change: the six lessons joining their segments'
+    // and extensions' derived `lessons` lists, and one new chapter-81 segment
+    // plus its extension (`KA-PATH-81-LEFTOVERS` / `KA-EXT-81-LEFTOVERS`),
+    // which follow the chapter 77-80 script-recall pattern this track already
+    // uses rather than inventing a shape.
+    expect(digest).toBe("8fe09909a2ccac895d32aebd98af70916fb3e90289380f330fae20d22427cc9f");
     expect(curricula.flatMap((curriculum) => curriculum.path).flatMap((path) => path.lessons))
-      .toHaveLength(7533);
+      .toHaveLength(7539);
   });
 
   it("keeps the canonical curriculum shards free of derived lesson arrays", () => {

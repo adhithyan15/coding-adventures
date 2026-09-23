@@ -3,8 +3,8 @@
   "language": "kannada",
   "chapter": 20,
   "title": "Numbers 11–20 and Weather",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:9d78a4f845c3cb1b",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:079c5c2ba3a92877",
   "lessons": [
     {
       "id": "KA-C20-hannondu-ippattu",
@@ -115,6 +115,134 @@
             {
               "kind": "speech",
               "text": "How are Kannada's teens built? (ಹತ್ತು (ten) + a digit, compounded.) Does ಇಪ್ಪತ್ತು (twenty) have a compositional \"two-tens\" origin? (Yes — Proto-Dravidian ir- \"two\" + paHtu \"ten.\") Can you still spot modern eraḍu or modern hattu inside it today? (No — the old bound \"two\" root and the un-lenited middle-of-word \"ten\" root look different from their modern standalone descendants.) Do Sanskrit's vimshati or Latin's vīgintī have any compositional origin like this at all? (No — neither has a buried \"two-ten\" history the way Kannada's does.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R20-second-pass-what-the-dative-carries",
+      "sequence": 481,
+      "title": "ನನಗೆ — one ending, and the sentences that have no subject",
+      "headword": "ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು",
+      "romanization": "nanage kannaḍa gottu",
+      "gloss": "second pass over the suffix that carries knowing, wanting and age alike — and the sentence built with no subject at all",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e2b964aa9afd733d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say that you know Kannada. Then say that you speak it. Only one of the two sentences has a subject — say which."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು (nanage kannaḍa gottu) is to-me Kannada known. There is no I in it and no verb to know: knowing is something that is the case for you, not something you do."
+            },
+            {
+              "kind": "speech",
+              "text": "That one idea runs much further than it looks, and age is where it surfaces again. Kannada asks your age how-much? rather than how old are you — the years are a quantity attached to a person, not a property the person performs. The same suffix, the same shape of thought:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what you mean",
+                "how Kannada builds it"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "what you mean: I know Kannada. how Kannada builds it: to-me Kannada known.",
+                "what you mean: how old are you. how Kannada builds it: your age how-much."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "English needs a different verb for each — know, be — and Kannada needs neither."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: one suffix per job",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Where Latin fuses number and case into one ending you cannot take apart, Kannada adds one visible suffix per job, and they stack in order. A reader who can find the seams can read a long word they have never met."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "that you speak Kannada, with its subject — nānu kannaḍa mātanāḍuttēne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: that you speak Kannada, with its subject — *nānu kannaḍa mātanāḍuttēne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "that you know it, without one — nanage kannaḍa gottu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: that you know it, without one — *nanage kannaḍa gottu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "that it is no trouble — paravāgilla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: that it is no trouble — *paravāgilla*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the two sentences about Kannada has no subject? (The one about knowing.) How many jobs does a single Kannada suffix do? (One — they stack rather than fuse.)"
             }
           ]
         }

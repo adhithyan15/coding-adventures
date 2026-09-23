@@ -1,0 +1,10 @@
+{
+  "id": "KA-EXT-81-LEFTOVERS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can recognise every Kannada character this book taught early and never asked for again.",
+  "prerequisites": [
+    "KA-EXT-80-BREATH"
+  ]
+}
