@@ -88,7 +88,7 @@ same tag and the first spelling wins. 1–64 chars; no control characters.
 "Control characters" here, and in journal names, also covers the invisible
 formatting characters — zero-width spaces and joiners (U+200B–U+200F,
 U+2060–U+2069), bidirectional overrides (U+202A–U+202E), and the byte-order
-mark. They draw as nothing, so without this rule `Work` and `Wo​rk` would look
+mark. They draw as nothing, so without this rule `Work` and `Wo<U+200B>rk` would look
 identical and still count as different names.
 
 ## Commands
