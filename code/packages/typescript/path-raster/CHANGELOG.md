@@ -1,5 +1,26 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- The edge-bucketing regression test no longer measures the machine. It used to
+  raster one shape onto a 256-row canvas and an 8192-row canvas and assert
+  `tall < max(400, short * 8)`. Two problems. The `short * 8` clause never bound
+  anything — the real ratio is 14–22x even on an idle 4-core box, because the
+  band spans the whole canvas so the sweep visits every row and the O(rows) term
+  dominates regardless of how edges are filed; "the two are close" was not true.
+  That left the 400 ms stopwatch as the only live clause, and a stopwatch
+  measures the box: 64–90 ms idle, 129–160 ms under 3x CPU oversubscription, and
+  516 ms on a CI runner building the whole repository in parallel, where it went
+  red against correct code.
+- The test now holds the canvas tall and varies the edge count instead, which is
+  what bucketing actually changes and is independent of machine speed, since
+  both halves run back to back under the same load. Measured: 1.3–1.5x bucketed
+  idle, 1.4–2.3x bucketed under 3x oversubscription, and **49.7x with bucketing
+  defeated at a quarter of the edge count**. The bound is 8x, in the middle of
+  that gap. No production code changed.
+
 ## 0.1.0 — the first rasterizer in the repo
 
 `fillPath` and `strokePath`, onto a `PixelContainer`, with no dependency outside
