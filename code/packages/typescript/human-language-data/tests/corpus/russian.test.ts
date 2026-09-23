@@ -25,7 +25,14 @@ it("pins Russian lesson-content budgets", () =>
     // 142 -> 145: chapter 27, the reading rung -- six words off a board, six
     // lines you would say to a stranger, and a 27-word passage. No new word and
     // no new letter: Russian had already taught its whole alphabet.
-    lessons: 145,
+    //
+    // 145 -> 148: HL-C431, three `review` lessons closing the track's
+    // reinforcement debt -- the four opening letters against the verb Russian
+    // leaves out, the question family, and ли retrieved four chapters on. The
+    // third exists because ли had NO later revisit at all and the gate wants
+    // two. No new atoms and no new headwords.
+    //
+    lessons: 148,
     idioms: 0,
     senses: 4,
     cultureClaims: 10,

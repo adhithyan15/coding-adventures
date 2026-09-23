@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Eyes, Nose, Mouth, Stomach",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:c85d0960b36d5a97",
+  "sourceHash": "fnv1a64:8461320dbb6910dd",
   "lessons": [
     {
       "id": "FR-C31-oeil",
@@ -560,6 +560,109 @@
             {
               "kind": "speech",
               "text": "Say \"my stomach hurts.\" (J'ai mal au ventre.) What English word literally means \"belly-speaker\"? (Ventriloquist — venter + loquī.) Is ventre's nasal the same vowel as la main's? (No — a different nasal vowel, despite both being spelled with a nasal consonant.) Name the four body words this chapter added to the head and the hand. (L'œil (les yeux), le nez, la bouche, le ventre.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-R35-second-pass-marks-from-cold",
+      "sequence": 1125,
+      "title": "The three marks, from cold",
+      "headword": "le ventre",
+      "romanization": "le ventre",
+      "gloss": "the three marks retrieved thirty chapters on, and the noun that closed the body words",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:5d4e1d76dbb94afa",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script: the three marks, thirty chapters later"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: the three marks, thirty chapters later until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word that closed four chapters of everyday nouns — the stomach. Say it with its article."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le ventre, and the nasal it shares",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le ventre — masculine, and nasal like la main, but reaching that nasal through a different vowel. Two body words, two routes to the same kind of sound, and the gender is not predictable from either."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script: the three marks, thirty chapters later",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ê ç ï."
+            },
+            {
+              "kind": "speech",
+              "text": "Cover the page and say what each one does before checking. They were taught three pages apart and have not been asked for since, which makes this the first real test of them:"
+            },
+            {
+              "kind": "speech",
+              "text": "ê records a letter that is gone. English usually still has it."
+            },
+            {
+              "kind": "speech",
+              "text": "ç keeps a c soft where it would otherwise harden."
+            },
+            {
+              "kind": "speech",
+              "text": "ï splits two vowels that would otherwise be read as one."
+            },
+            {
+              "kind": "speech",
+              "text": "One is history, one is sound, one is grouping. Sorting them that way is what stops them blurring into a single topic called accents."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which mark is a piece of history rather than an instruction? (The circumflex.) Which one changes a consonant? (The cédille.) Which one changes how two letters group? (The tréma.) And what gender is ventre? (Masculine — and nothing about the word says so.)"
             }
           ]
         }

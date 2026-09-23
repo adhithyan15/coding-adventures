@@ -174,7 +174,15 @@ it("pins French lesson-content budgets", () =>
     // 277 -> 280: the three writing stages French had never proven, on the
     // SPINE-SAY-WHY node where parce que already lives. No new atoms in any --
     // they practise the joiners and the SVO rule the track already teaches.
-    lessons: 280,
+    //
+    // 280 -> 283: HL-C431, three `review` lessons closing the track's
+    // reinforcement debt -- the courtesy set with the three à-farewells, the
+    // three accent marks, and those marks again thirty chapters on. No new
+    // atoms, no new headwords, and no `hl-activity`: the objective-activity
+    // ledger below pins French's eight exactly, and a review lesson must not
+    // extend it.
+    //
+    lessons: 283,
     idioms: 3,
     senses: 7,
     cultureClaims: 27,

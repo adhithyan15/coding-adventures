@@ -203,9 +203,21 @@ describe("direct curriculum lesson owners", () => {
     // nothing that is not this change: the six lessons joining their segments'
     // derived `lessons` lists, three new `-CONSOLIDATION` extension nodes, and
     // those three ids appearing in their segments' `inline` lists.
-    expect(digest).toBe("e0968596c2f411e08e39cc31672a3c89d3f229724eea6a42bb176474d5a9947f");
+    //
+    // 7511 -> 7517 is HL-C431: SIX `review` lessons taking french and russian to
+    // zero pre-A1 reinforcement debt. Three each, and in both tracks the third
+    // exists because an atom had NO later revisit at all: french's three accent
+    // marks and russian's `ли`. No new atoms and no new headwords.
+    //
+    // Attribution by reconstruction AND structural diff. A clean worktree at
+    // 444726ca3b reproduced e0968596... and 7511 byte for byte. Dumping the
+    // loaded graph from both trees and diffing gives 63 changed lines and
+    // nothing that is not this change: the six lessons joining their segments'
+    // derived `lessons` lists, three new `-CONSOLIDATION` extension nodes, and
+    // those ids appearing in their segments' `after` lists.
+    expect(digest).toBe("647640baed1b6633b57379bc28380f3d43a06fe09020f1a18251f19774450df4");
     expect(curricula.flatMap((curriculum) => curriculum.path).flatMap((path) => path.lessons))
-      .toHaveLength(7511);
+      .toHaveLength(7517);
   });
 
   it("keeps the canonical curriculum shards free of derived lesson arrays", () => {

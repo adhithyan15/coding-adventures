@@ -5,5 +5,7 @@
   "inline": [
     "FR-EXT-028-LANGUAGE-SPECIFIC"
   ],
-  "after": []
+  "after": [
+    "FR-EXT-048-CONSOLIDATION"
+  ]
 }

@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "The Words That Ask, and the Word That Points Back",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0c3c70c854a56ddf",
+  "sourceHash": "fnv1a64:af3c4fc4899b0cf5",
   "lessons": [
     {
       "id": "RU-C22-kto",
@@ -870,6 +870,139 @@
             {
               "kind": "speech",
               "text": "Name the two jobs ли (li) does. (It makes a yes-or-no question, and it embeds one as whether.) Which word have you been carrying it inside since the joining chapter? (That is или.) Does Russian change the word order to embed a question? (No — the same ли (li) does both.) And one look back: which drink came overland? (That is чай.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-R22-second-pass-the-question-family",
+      "sequence": 1145,
+      "title": "One stem, a whole family of questions",
+      "headword": "какой · который · ли",
+      "romanization": "kakóy, kotóryy, li",
+      "gloss": "second pass over the question family, the word that hangs a clause on a noun, and the particle that doubts",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a286ab570fa89c4b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word for which, what kind of — the one this chapter finally taught after naming it two chapters earlier. Say it before reading on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: they are all one stem with different endings",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The question words are not a list to memorise separately. Every one of them is the same ancient question-stem wearing a different ending: кто (kto) who, что what, какой (kakóy) which, как how, and the rest of the set beside them."
+            },
+            {
+              "kind": "speech",
+              "text": "Once the stem is visible, a word you have not met is half-readable on sight — which is what a family is for, and why the chapter taught them together rather than one per page."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: который hangs a clause, ли hangs a doubt",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two of the family do more than ask:"
+            },
+            {
+              "kind": "speech",
+              "text": "который (katóryy) — who, which, that. It takes a whole clause and hangs it on a noun, which is how a sentence stops being short."
+            },
+            {
+              "kind": "speech",
+              "text": "ли — whether. You met it six chapters earlier welded inside или, and the book left it alone until it could stand on its own."
+            },
+            {
+              "kind": "speech",
+              "text": "ли is the one to hold. It marks a question you are not asking out loud — a doubt reported rather than posed — and English reaches for whether in the same place. Its relative который (katóryy) has the same cousin in English whether, which is a link worth keeping because it makes both words feel less arbitrary."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "four members of the question family, and the stem they share",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: four members of the question family, and the stem they share]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a noun, then hang a clause on it with который (katóryy)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a noun, then hang a clause on it with который]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a doubt with ли, and the word English would use",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a doubt with ли, and the word English would use]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "where ли (li) was hiding before this chapter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: where ли was hiding before this chapter]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What do the question words share? (One ancient stem, different endings.) What does который (katóryy) do to a noun? (Hangs a whole clause on it.) What does ли (li) mark? (Whether — a question not asked out loud.) And where had you already met ли (li)? (Inside или.)"
             }
           ]
         }

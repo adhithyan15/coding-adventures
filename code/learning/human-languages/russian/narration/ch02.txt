@@ -1,8 +1,8 @@
 Russian, chapter 2: Introducing yourself.
-10 lessons. You can do the first 8 of them in the car; after that you will want to have stopped.
+11 lessons. You can do the first 8 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 10.
+Lesson 1 of 11.
 я (ya) — "I".
 
 Warm-up.
@@ -36,7 +36,7 @@ Wrap-up Recall.
 Say "I". (Я — one letter, said ya.) What must you not mistake it for? (A Latin R — the shape is a coincidence.) Why has it changed so little in meaning? (Pronouns are the least borrowable words a language has.) Name three relatives. (Ego, ich, I — and Greek egṓ.) What did Russian's come from? (Proto-Slavic azъ, with a j- added at the front and the ending lost.) Next: the two words for "you."
 
 
-Lesson 2 of 10.
+Lesson 2 of 11.
 ты, вы (ty, vy) — the two words for "you".
 
 Warm-up.
@@ -69,7 +69,7 @@ Wrap-up Recall.
 Say "I". (Я.) What are the two words for "you", and what splits them? (Ты informal, вы formal — or plural.) Why is ты familiar to an English speaker's ear? (It's the same word as thou, which left standard English through the 1600s.) Next: why plural вы became polite.
 
 
-Lesson 3 of 10.
+Lesson 3 of 11.
 Why plural вы became polite — why a plural pronoun addresses one person respectfully.
 
 Warm-up.
@@ -106,7 +106,7 @@ Why can вы address one person? (A plural became respectful.) Which language sh
 Which Russian form is safest with an adult when you are unsure?
 
 
-Lesson 4 of 10.
+Lesson 4 of 11.
 меня зовут… (menyá zovút) — "my name is…"
 
 Warm-up.
@@ -148,7 +148,7 @@ Wrap-up Recall.
 Say "my name is Anna." (Меня зовут Анна.) What does it literally mean? ("They call me Anna.") Which two words is it missing? (Any word for my, and any word for name.) Who are "they"? (Nobody — a bare plural verb meaning "people in general," like English they say.) Why меня and not я (ya)? (Because it's the object — Russian changes a word's shape for its job. That's case.) Next: asking someone else's name.
 
 
-Lesson 5 of 10.
+Lesson 5 of 11.
 как вас зовут? (kak vas zovút) — "what's your name?"
 
 Warm-up.
@@ -182,7 +182,7 @@ Wrap-up Recall.
 Ask a stranger's name. (Как вас зовут?) And a friend's? (Как тебя зовут?) What does как mean, and why does it matter? (How — Russian asks how they call you, about an action, where English asks what, about a possession.) Give the three object forms. (Меня, тебя, вас.) Next: compare how several languages frame the same question.
 
 
-Lesson 6 of 10.
+Lesson 6 of 11.
 Why Russian asks how, not what — naming as an action across Russian, French, and Spanish.
 
 Warm-up.
@@ -214,7 +214,7 @@ Which three languages ask "how"? (Russian, French, Spanish.) Which asks "what"? 
 Which language in this comparison asks what instead of how?
 
 
-Lesson 7 of 10.
+Lesson 7 of 11.
 очень приятно (óchen priyátno) — "pleased to meet you".
 
 Warm-up.
@@ -252,7 +252,7 @@ Wrap-up Recall.
 Say "pleased to meet you." (Очень приятно.) What does it literally mean? ("Very pleasant" — no "I am," no "to meet you.") What is приятно related to? (Slavic prijati "to favour" becomes приятель "friend" — and, from the same PIE root preyH-, English friend and German Freund.) And free? (Most likely the same family — originally "belonging to the beloved household," i.e. not a slave.) Next: putting the chapter together.
 
 
-Lesson 8 of 10.
+Lesson 8 of 11.
 Chapter 2 practice — run the exchange.
 
 Warm-up.
@@ -290,7 +290,7 @@ Wrap-up Recall.
 Run the formal exchange from memory, then switch it for one friend. Which two pieces changed? (The greeting, and вас becomes тебя.) Which word never moved? (Зовут.) Which form do you choose for an adult you have just met, and why? (Вы — a plural used as respect, and the safer default.) Who is doing the calling in меня зовут? (Nobody in particular — a bare plural verb.) And why is the question как rather than что? (Russian asks how people call you.)
 
 
-Lesson 9 of 10.
+Lesson 9 of 11.
 Chapter 2 practice — the two person shapes.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -329,7 +329,7 @@ Wrap-up Recall.
 Give the three pairs. Which shape answers "who receives the calling"? (The object form.) Do you need the six-case table yet? (No — only these earned pairs.)
 
 
-Lesson 10 of 10.
+Lesson 10 of 11.
 Chapter 2 practice — what Russian leaves out.
 
 Warm-up.
@@ -356,3 +356,39 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which sentence demonstrates the zero copula? (Очень приятно.) Why do the naming sentences not count? (They contain зовут.) Does Russian lack a present form of "be" entirely? (No: есть exists; the linking use is normally omitted here.)
+
+
+Lesson 11 of 11.
+с н б д (s n b d) — four letters, two kinds of trouble.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: two that lie, two that are only new until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 3 seconds]
+The long polite greeting, from memory, and who you would say it to. Then say who you would not.
+
+Script: two that lie, two that are only new.
+[a table of 4 rows, read aloud]
+letter: с. the trouble: looks like a Latin c, says s.
+letter: н. the trouble: looks like a Latin n, says n — but the shape is not the one you expect.
+letter: б. the trouble: a genuinely new shape, says b.
+letter: д. the trouble: a genuinely new shape, says d.
+Two kinds of difficulty, needing different handling. с and н are false friends: your eye reads those shapes already, and reads them wrong, so the work is unlearning. б and д arrive with nothing attached, so the work is only learning. The second kind is easier, and mixing the two up is why the first kind keeps catching people out.
+
+Grammar Lens: the verb that is not there.
+Russian leaves out the present tense of to be. Where English needs am, is or are, Russian sets the two halves of the sentence side by side and stops.
+The person words are the other half of that. Subject and object forms differ, and with no verb to carry the person, the pronoun is doing more work than its English counterpart — which is why the shapes are worth drilling rather than recognising.
+
+Guided Practice.
+[your turn — say: the polite greeting, then the courtesy exchange that follows it]
+[pause 8 seconds for the answer]
+[your turn — look: at с and н, and say which Latin letter each one is pretending to be]
+[pause 8 seconds for the answer]
+[your turn — say: б and д, and note that neither is pretending anything]
+[pause 8 seconds for the answer]
+[your turn — say: a sentence with no verb in it, and say what English would have added]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which two of the four are false friends, and why is that harder? (с and н — you have to unlearn a reading, not only learn one.) What does Russian leave out of a present-tense sentence? (The verb to be.) And what does that put on the pronoun? (More work — it carries the person alone.)
