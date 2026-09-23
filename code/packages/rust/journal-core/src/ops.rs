@@ -249,7 +249,10 @@ fn journal_name(
     Ok(name)
 }
 
+// Every lookup checks the id first: a "not found" error echoes the id it was
+// given, so an id that was never validated must not reach one.
 fn entry_mut<'a>(state: &'a mut JournalState, id: &EntryId) -> Result<&'a mut Entry, OpError> {
+    check_id(id.as_str())?;
     state
         .entries
         .get_mut(id)
@@ -257,6 +260,7 @@ fn entry_mut<'a>(state: &'a mut JournalState, id: &EntryId) -> Result<&'a mut En
 }
 
 fn require_journal(state: &JournalState, id: &JournalId) -> Result<(), OpError> {
+    check_id(id.as_str())?;
     if state.journals.contains_key(id) {
         Ok(())
     } else {
@@ -265,6 +269,7 @@ fn require_journal(state: &JournalState, id: &JournalId) -> Result<(), OpError> 
 }
 
 fn require_entry(state: &JournalState, id: &EntryId) -> Result<(), OpError> {
+    check_id(id.as_str())?;
     if state.entries.contains_key(id) {
         Ok(())
     } else {
@@ -398,6 +403,7 @@ pub fn apply(state: &mut JournalState, cmd: Command, now_ms: u64) -> Result<(), 
             e.updated_at_ms = now_ms;
         }
         Command::DeleteEntry { id } => {
+            check_id(id.as_str())?;
             if state.entries.remove(&id).is_none() {
                 return Err(OpError::EntryNotFound(id));
             }
@@ -702,6 +708,57 @@ mod tests {
                 OpError::InvalidId,
             );
         }
+    }
+
+    #[test]
+    fn looked_up_ids_are_checked_before_any_error_can_echo_them() {
+        let mut s = with_entry();
+        let evil = "\u{1b}[31mred\n";
+        rejects(
+            &mut s,
+            Command::MoveEntry {
+                id: e("e1"),
+                journal: j(evil),
+            },
+            OpError::InvalidId,
+        );
+        rejects(
+            &mut s,
+            Command::MoveEntry {
+                id: e(evil),
+                journal: j("personal"),
+            },
+            OpError::InvalidId,
+        );
+        rejects(
+            &mut s,
+            Command::DeleteEntry { id: e(evil) },
+            OpError::InvalidId,
+        );
+        rejects(
+            &mut s,
+            Command::SetStarred {
+                id: e(evil),
+                starred: true,
+            },
+            OpError::InvalidId,
+        );
+        rejects(
+            &mut s,
+            Command::DeleteJournal {
+                id: j(evil),
+                move_entries_to: None,
+            },
+            OpError::InvalidId,
+        );
+        rejects(
+            &mut s,
+            Command::RenameJournal {
+                id: j(evil),
+                name: "X".into(),
+            },
+            OpError::InvalidId,
+        );
     }
 
     #[test]

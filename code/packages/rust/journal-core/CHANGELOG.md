@@ -26,11 +26,12 @@ All notable changes to `journal-core` are documented here.
   folded→original offset map, with bounded work per hit), `tag_counts`, and
   `month_activity`. All take one `EntryFilter` (journal, tag, starred-only).
 - **Hardening from the pre-push security review**: ids must be 1–64 bytes of
-  printable ASCII (`InvalidId`, which does not echo the id); at most 1,000
+  printable ASCII, checked before every lookup so no error echoes an unchecked id (`InvalidId`); at most 1,000
   journals (`TooManyJournals`); `validate` checks names with a set rather than a
   quadratic list scan; search reads ≤ 1,024 query characters and ≤ 16 distinct
   terms; dates are limited to years 0–9999 so the civil arithmetic cannot
-  overflow; names and tags also refuse zero-width and bidi-override characters;
+  overflow; names and tags also refuse zero-width, bidi-override, soft-hyphen and
+  blank-filler characters;
   `JournalState::new` validates its first journal and returns `Result`.
 - Optional `serde` feature: camelCase JSON, bare-string ids, ISO dates, tags as
   their display string, commands tagged by `type`.

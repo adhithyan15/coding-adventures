@@ -168,6 +168,7 @@ impl JournalState {
             if &e.id != id {
                 return Err(OpError::IdMismatch(id.to_string()));
             }
+            crate::ops::check_id(e.journal.as_str())?;
             if !self.journals.contains_key(&e.journal) {
                 return Err(OpError::JournalNotFound(e.journal.clone()));
             }
@@ -303,6 +304,13 @@ mod tests {
                 ..
             })
         ));
+
+        let mut hostile_ref = base.clone();
+        let mut h = entry.clone();
+        h.tags.clear();
+        h.journal = JournalId::from("\u{1b}[31m");
+        hostile_ref.entries.insert(h.id.clone(), h);
+        assert_eq!(hostile_ref.validate(), Err(OpError::InvalidId));
 
         let mut wrong_key = base.clone();
         wrong_key

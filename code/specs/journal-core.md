@@ -77,6 +77,8 @@ Ids are minted by the host, but the core still checks them: 1–64 bytes of
 printable ASCII (a UUID v7 is 36). Ids are echoed into errors and host logs and
 used as map keys, so an id carrying a newline or a terminal escape, or one
 megabytes long, is refused (`InvalidId`, which deliberately does not echo it).
+Ids are checked before every lookup too, not only on creation, because a
+"not found" error echoes the id it was given.
 
 ### Tag
 

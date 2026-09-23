@@ -67,12 +67,26 @@ pub(crate) fn has_control(s: &str) -> bool {
     s.chars().any(|c| c.is_control() || is_invisible_format(c))
 }
 
-/// Zero-width and bidirectional-override characters (Unicode category Cf in the
-/// ranges that can make two labels render identically), plus the byte-order mark.
+/// Characters that draw as nothing inside a word (zero-width spaces and joiners,
+/// bidirectional marks and overrides, the soft hyphen, the byte-order mark, the
+/// Hangul and braille "blank" fillers) and so can make two labels render
+/// identically.
 fn is_invisible_format(c: char) -> bool {
     matches!(
         c,
-        '\u{200B}'..='\u{200F}' | '\u{202A}'..='\u{202E}' | '\u{2060}'..='\u{2069}' | '\u{FEFF}'
+        '\u{00AD}'
+            | '\u{034F}'
+            | '\u{061C}'
+            | '\u{115F}'
+            | '\u{1160}'
+            | '\u{180E}'
+            | '\u{200B}'..='\u{200F}'
+            | '\u{202A}'..='\u{202E}'
+            | '\u{2060}'..='\u{2069}'
+            | '\u{2800}'
+            | '\u{3164}'
+            | '\u{FEFF}'
+            | '\u{FFA0}'
     )
 }
 
@@ -117,5 +131,10 @@ mod tests {
         assert!(has_control("\u{202E}kroW"));
         assert!(has_control("\u{FEFF}Work"));
         assert!(has_control("a\u{2066}b"));
+        for c in [
+            '\u{00AD}', '\u{034F}', '\u{061C}', '\u{3164}', '\u{2800}', '\u{FFA0}',
+        ] {
+            assert!(has_control(&format!("Wo{c}rk")), "{c:?}");
+        }
     }
 }
