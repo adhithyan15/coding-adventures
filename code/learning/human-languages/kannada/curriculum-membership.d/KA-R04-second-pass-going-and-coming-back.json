@@ -1,0 +1,11 @@
+{
+  "id": "KA-R04-second-pass-going-and-coming-back",
+  "pathSegment": "KA-PATH-009",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "KA-EXT-009-CONSOLIDATION",
+      "order": 1
+    }
+  ]
+}

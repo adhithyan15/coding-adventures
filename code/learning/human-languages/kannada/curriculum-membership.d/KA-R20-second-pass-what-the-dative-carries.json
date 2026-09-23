@@ -1,0 +1,11 @@
+{
+  "id": "KA-R20-second-pass-what-the-dative-carries",
+  "pathSegment": "KA-PATH-021",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-021-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}
