@@ -1,16 +1,29 @@
 package executor
 
 import (
+	"encoding/json"
 	"os"
 	"path/filepath"
 	"runtime"
 	"strings"
+	"sync"
 	"testing"
+	"time"
 
 	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/cache"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
 )
+
+// containsString reports whether want appears in keys.
+func containsString(keys []string, want string) bool {
+	for _, k := range keys {
+		if k == want {
+			return true
+		}
+	}
+	return false
+}
 
 // makeFixture creates a temporary directory tree for testing.
 func makeFixture(t *testing.T, tree map[string]string) string {
@@ -1096,5 +1109,232 @@ func TestClippyStepFor(t *testing.T) {
 				t.Fatalf("clippyStepFor(%v) = (%q, %v), want (%q, %v)", tc.commands, got, ok, tc.want, tc.wantOK)
 			}
 		})
+	}
+}
+
+// --- B07: shared-directory safety -------------------------------------
+//
+// These cover the race that blocked PRs #15839 and #15858: a package that
+// reads a sibling's node_modules through file: link resolution, scheduled
+// beside a package that reinstalls into that same directory.
+
+// writeTestPackageJSON writes a manifest with the given file: dependencies.
+func writeTestPackageJSON(t *testing.T, dir string, fileDeps map[string]string) {
+	t.Helper()
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		t.Fatalf("mkdir %s: %v", dir, err)
+	}
+	deps := make(map[string]string, len(fileDeps))
+	for name, rel := range fileDeps {
+		deps[name] = "file:" + rel
+	}
+	body, err := json.Marshal(map[string]any{"dependencies": deps})
+	if err != nil {
+		t.Fatalf("marshal: %v", err)
+	}
+	if err := os.WriteFile(filepath.Join(dir, "package.json"), body, 0o644); err != nil {
+		t.Fatalf("write package.json: %v", err)
+	}
+}
+
+// TestReadKeysCoverTransitiveFileDeps is the blog's exact shape: a BUILD
+// naming no relative path, reaching three packages deep through file: links.
+// Before B07 this package acquired no lock for any of them.
+func TestReadKeysCoverTransitiveFileDeps(t *testing.T) {
+	root := t.TempDir()
+	blog := filepath.Join(root, "blog")
+	cli := filepath.Join(root, "forme-cli")
+	sm := filepath.Join(root, "state-machine")
+	dg := filepath.Join(root, "directed-graph")
+
+	writeTestPackageJSON(t, blog, map[string]string{"@ca/forme-cli": "../forme-cli"})
+	writeTestPackageJSON(t, cli, map[string]string{"@ca/state-machine": "../state-machine"})
+	writeTestPackageJSON(t, sm, map[string]string{"@ca/directed-graph": "../directed-graph"})
+	writeTestPackageJSON(t, dg, nil)
+
+	pkg := discovery.Package{
+		Name:          "unknown/blog",
+		Path:          blog,
+		BuildCommands: []string{"npm install --silent && npm run clean && npm run build"},
+	}
+	pathToPkg := map[string]string{
+		cli: "typescript/forme-cli",
+		sm:  "typescript/state-machine",
+		dg:  "typescript/directed-graph",
+	}
+
+	// The defect, stated directly: the text scan that produces WRITE keys
+	// sees nothing here, because the BUILD names no relative path. This is
+	// why the blog raced against packages reinstalling its dependencies.
+	writeKeys := buildResourceKeys(pkg, pathToPkg)
+	for _, unexpected := range []string{
+		"typescript/directed-graph",
+		"typescript/forme-cli",
+		"typescript/state-machine",
+	} {
+		if containsString(writeKeys, unexpected) {
+			t.Fatalf("precondition changed: write keys %v now contain %q, "+
+				"so this test no longer covers the text-scan blind spot",
+				writeKeys, unexpected)
+		}
+	}
+
+	// What B07 adds: the same packages, reached through the file: closure.
+	keys := buildReadResourceKeys(pkg, pathToPkg)
+	for _, want := range []string{
+		"typescript/directed-graph",
+		"typescript/forme-cli",
+		"typescript/state-machine",
+	} {
+		if !containsString(keys, want) {
+			t.Errorf("read keys %v missing %q", keys, want)
+		}
+	}
+}
+
+// TestReadKeysSkipNonNodePackages: a Rust or Go package cannot participate in
+// the node_modules race, so its key set must be untouched by B07.
+func TestReadKeysSkipNonNodePackages(t *testing.T) {
+	root := t.TempDir()
+	crate := filepath.Join(root, "crate")
+	dep := filepath.Join(root, "dep")
+	writeTestPackageJSON(t, crate, map[string]string{"@ca/dep": "../dep"})
+	writeTestPackageJSON(t, dep, nil)
+
+	pkg := discovery.Package{
+		Name:          "rust/crate",
+		Path:          crate,
+		BuildCommands: []string{"cargo test --all-features"},
+	}
+	if keys := buildReadResourceKeys(pkg, map[string]string{dep: "rust/dep"}); len(keys) != 0 {
+		t.Errorf("non-npm package should take no read keys, got %v", keys)
+	}
+}
+
+// TestReadKeysTolerateMissingManifest: key derivation runs for every package
+// on every build, so an unreadable manifest must yield nothing, not a panic.
+func TestReadKeysTolerateMissingManifest(t *testing.T) {
+	root := t.TempDir()
+	pkg := discovery.Package{
+		Name:          "typescript/nope",
+		Path:          filepath.Join(root, "absent"),
+		BuildCommands: []string{"npm ci --quiet"},
+	}
+	if keys := buildReadResourceKeys(pkg, map[string]string{}); len(keys) != 0 {
+		t.Errorf("missing manifest should yield no read keys, got %v", keys)
+	}
+
+	bad := filepath.Join(root, "bad")
+	if err := os.MkdirAll(bad, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(bad, "package.json"), []byte("{not json"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	pkg.Path = bad
+	if keys := buildReadResourceKeys(pkg, map[string]string{}); len(keys) != 0 {
+		t.Errorf("malformed manifest should yield no read keys, got %v", keys)
+	}
+}
+
+// TestWriterExcludesReader is the property the whole change exists for.
+func TestWriterExcludesReader(t *testing.T) {
+	locker := newBuildResourceLocker()
+
+	releaseWriter := locker.Acquire([]string{"typescript/state-machine"}, nil)
+
+	readerIn := make(chan struct{})
+	go func() {
+		release := locker.Acquire(nil, []string{"typescript/state-machine"})
+		close(readerIn)
+		release()
+	}()
+
+	select {
+	case <-readerIn:
+		t.Fatal("reader entered while a writer held the same key")
+	case <-time.After(50 * time.Millisecond):
+	}
+
+	releaseWriter()
+
+	select {
+	case <-readerIn:
+	case <-time.After(2 * time.Second):
+		t.Fatal("reader never entered after the writer released")
+	}
+}
+
+// TestReadersShareAKey: the reason this uses RWMutex at all. 232 packages
+// read typescript/directed-graph; exclusive reader locks would serialise
+// nearly the whole TypeScript tree.
+func TestReadersShareAKey(t *testing.T) {
+	locker := newBuildResourceLocker()
+
+	releaseFirst := locker.Acquire(nil, []string{"typescript/directed-graph"})
+	defer releaseFirst()
+
+	secondIn := make(chan struct{})
+	go func() {
+		release := locker.Acquire(nil, []string{"typescript/directed-graph"})
+		close(secondIn)
+		release()
+	}()
+
+	select {
+	case <-secondIn:
+	case <-time.After(2 * time.Second):
+		t.Fatal("a second reader blocked on a key already held for reading")
+	}
+}
+
+// TestWriteBeatsRead: taking both modes on one key would self-deadlock,
+// because sync.RWMutex is not reentrant.
+func TestWriteBeatsRead(t *testing.T) {
+	locker := newBuildResourceLocker()
+
+	done := make(chan struct{})
+	go func() {
+		release := locker.Acquire(
+			[]string{"typescript/state-machine"},
+			[]string{"typescript/state-machine", "typescript/directed-graph"},
+		)
+		release()
+		close(done)
+	}()
+
+	select {
+	case <-done:
+	case <-time.After(2 * time.Second):
+		t.Fatal("acquiring one key for both read and write deadlocked")
+	}
+}
+
+// TestOverlappingKeySetsDoNotDeadlock exercises the sorted-acquisition
+// invariant under -race with intersecting key sets.
+func TestOverlappingKeySetsDoNotDeadlock(t *testing.T) {
+	locker := newBuildResourceLocker()
+	keys := []string{"a", "b", "c", "d", "e"}
+
+	var wg sync.WaitGroup
+	for i := 0; i < 40; i++ {
+		wg.Add(1)
+		go func(n int) {
+			defer wg.Done()
+			// Deliberately unsorted and overlapping, in varying order.
+			writes := []string{keys[(n+2)%len(keys)], keys[n%len(keys)]}
+			reads := []string{keys[(n+4)%len(keys)], keys[(n+1)%len(keys)]}
+			release := locker.Acquire(writes, reads)
+			release()
+		}(i)
+	}
+
+	finished := make(chan struct{})
+	go func() { wg.Wait(); close(finished) }()
+
+	select {
+	case <-finished:
+	case <-time.After(10 * time.Second):
+		t.Fatal("overlapping key sets deadlocked")
 	}
 }

@@ -42,7 +42,9 @@
 package executor
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
 	"os/exec"
 	"path/filepath"
 	"regexp"
@@ -608,7 +610,10 @@ func ExecuteBuilds(
 				defer wg.Done()
 				semaphore <- struct{}{}        // acquire
 				defer func() { <-semaphore }() // release
-				releaseResources := resourceLocker.Acquire(buildResourceKeys(p, pathToPkg))
+				releaseResources := resourceLocker.Acquire(
+					buildResourceKeys(p, pathToPkg),
+					buildReadResourceKeys(p, pathToPkg),
+				)
 				defer releaseResources()
 
 				tracker.Send(progress.Event{Type: progress.Started, Name: p.Name})
@@ -682,47 +687,231 @@ func collectTransitivePredecessors(node string, graph *directedgraph.Graph) map[
 	return visited
 }
 
+// maxManifestBytes bounds a package.json read. Real manifests in this repo
+// are a few KB; anything past 4 MB is not a manifest we need to parse.
+const maxManifestBytes = 4 << 20
+
 var relPathRe = regexp.MustCompile(`(?:\.\.?[/\\][^ \t\r\n"'&|;()]+)+`)
 
+// buildResourceLocker hands out one RWMutex per resource key.
+//
+// Two kinds of access are distinguished, and the distinction is what makes
+// this affordable (see B07). A package whose BUILD text names `../X` runs an
+// install *into* X, which `npm ci` begins by deleting — that is a WRITE and
+// must be exclusive. A package that merely resolves `file:`-linked imports
+// out of X needs X to sit still for the duration, but does not mind other
+// readers — that is a READ and may be shared.
+//
+// Using exclusive locks for both would be a cure worse than the disease:
+// `typescript/directed-graph` is read by 232 packages, so an exclusive lock
+// per reader would serialise nearly the whole TypeScript tree.
 type buildResourceLocker struct {
 	mu    sync.Mutex
-	locks map[string]*sync.Mutex
+	locks map[string]*sync.RWMutex
 }
 
 func newBuildResourceLocker() *buildResourceLocker {
-	return &buildResourceLocker{locks: make(map[string]*sync.Mutex)}
+	return &buildResourceLocker{locks: make(map[string]*sync.RWMutex)}
 }
 
-func (l *buildResourceLocker) Acquire(keys []string) func() {
-	if len(keys) == 0 {
+// Acquire takes write locks on writeKeys and read locks on readKeys,
+// returning a release function.
+//
+// Both sets are merged into ONE sorted sequence before anything is taken.
+// That total order is what makes multi-key acquisition deadlock-free: two
+// goroutines with overlapping key sets always contend in the same direction.
+// A key present in both sets is taken for writing only — the stronger claim
+// subsumes the weaker, and taking both would self-deadlock on a non-reentrant
+// RWMutex.
+func (l *buildResourceLocker) Acquire(writeKeys, readKeys []string) func() {
+	exclusive := make(map[string]bool, len(writeKeys))
+	for _, k := range writeKeys {
+		exclusive[k] = true
+	}
+
+	ordered := make([]string, 0, len(writeKeys)+len(readKeys))
+	seen := make(map[string]bool, len(writeKeys)+len(readKeys))
+	for _, k := range append(append([]string{}, writeKeys...), readKeys...) {
+		if !seen[k] {
+			seen[k] = true
+			ordered = append(ordered, k)
+		}
+	}
+
+	if len(ordered) == 0 {
 		return func() {}
 	}
 
-	sort.Strings(keys)
-	acquired := make([]*sync.Mutex, 0, len(keys))
-	for _, key := range keys {
+	sort.Strings(ordered)
+	held := make([]func(), 0, len(ordered))
+	for _, key := range ordered {
 		lock := l.lockFor(key)
-		lock.Lock()
-		acquired = append(acquired, lock)
+		if exclusive[key] {
+			lock.Lock()
+			held = append(held, lock.Unlock)
+		} else {
+			lock.RLock()
+			held = append(held, lock.RUnlock)
+		}
 	}
 
 	return func() {
-		for i := len(acquired) - 1; i >= 0; i-- {
-			acquired[i].Unlock()
+		for i := len(held) - 1; i >= 0; i-- {
+			held[i]()
 		}
 	}
 }
 
-func (l *buildResourceLocker) lockFor(key string) *sync.Mutex {
+func (l *buildResourceLocker) lockFor(key string) *sync.RWMutex {
 	l.mu.Lock()
 	defer l.mu.Unlock()
 
 	lock, ok := l.locks[key]
 	if !ok {
-		lock = &sync.Mutex{}
+		lock = &sync.RWMutex{}
 		l.locks[key] = lock
 	}
 	return lock
+}
+
+// buildReadResourceKeys returns the packages whose `node_modules` this
+// package's build READS but never writes.
+//
+// The need for this is not visible in BUILD text. `code/sites/blog/BUILD` is
+// `npm install --silent && npm run clean && ...` and names no relative path
+// at all, yet `npm run clean` runs `forme` under tsx, and tsx resolves a
+// chain of `file:`-linked imports (forme-cli -> cli-builder -> state-machine
+// -> directed-graph). Node resolves a linked package's imports from its REAL
+// path, so every directory along that chain must have a populated
+// `node_modules` at that instant — while 113 other BUILD files are entitled
+// to run `npm ci` into one of them, which starts by deleting it.
+//
+// The closure walked here is the same one forme-cli/bin/bootstrap.mjs
+// computes for its install ordering: `file:` specifiers in dependencies,
+// devDependencies, optionalDependencies and peerDependencies, followed
+// transitively.
+//
+// Scope is deliberately npm-only. This is a `node_modules` problem; other
+// ecosystems' shared state is covered by the `global:` keys above.
+func buildReadResourceKeys(pkg discovery.Package, pathToPkg map[string]string) []string {
+	if !usesNodeModules(pkg) {
+		return nil
+	}
+
+	found := make(map[string]bool)
+	visited := make(map[string]bool)
+	var walk func(dir string)
+	walk = func(dir string) {
+		if visited[dir] {
+			return
+		}
+		visited[dir] = true
+
+		for _, target := range fileDependencyDirs(dir) {
+			// Only ever step into a directory the discovery pass already
+			// identified as a package. A `file:` specifier is just text from
+			// a manifest, so "file:../../../../etc" resolves happily outside
+			// the checkout; confining the walk to known packages means a
+			// hostile or simply wrong specifier can neither send us
+			// traversing the filesystem nor point the read below at an
+			// arbitrary path. Nothing is lost: a file: dependency that is not
+			// a discovered package has no BUILD, so nothing can reinstall
+			// into it and there is no lock worth taking.
+			name, known := pathToPkg[target]
+			if !known {
+				continue
+			}
+			if name != pkg.Name {
+				found[name] = true
+			}
+			walk(target)
+		}
+	}
+	walk(filepath.Clean(pkg.Path))
+
+	keys := make([]string, 0, len(found))
+	for name := range found {
+		keys = append(keys, name)
+	}
+	sort.Strings(keys)
+	return keys
+}
+
+// nodeToolRe matches a BUILD command that drives a Node package manager or
+// runner, as a whole word so `npmlike-thing` does not match.
+//
+// The list is wider than `npm` on purpose. The directory at risk is
+// `node_modules`, and anything that installs into it or resolves imports out
+// of it is exposed -- a package driving `tsx` or `pnpm` directly is in the
+// same position as one driving `npm`, and gating on `npm ` alone would leave
+// it taking no read locks at all.
+var nodeToolRe = regexp.MustCompile(`(^|[ 	;&|(])(npm|npx|pnpm|yarn|tsx|vite|vitest|node)([ 	]|$)`)
+
+// usesNodeModules reports whether any BUILD command drives a Node tool, and
+// so could install into or resolve out of a shared node_modules. Packages
+// that touch none cannot participate in the race.
+func usesNodeModules(pkg discovery.Package) bool {
+	for _, command := range pkg.BuildCommands {
+		if nodeToolRe.MatchString(command) {
+			return true
+		}
+	}
+	return false
+}
+
+// fileDependencyDirs reads one package.json and returns the absolute
+// directories named by its `file:` dependency specifiers.
+//
+// A missing or malformed package.json yields nothing rather than an error:
+// key derivation runs for every package on every build, and a package
+// without a readable manifest simply has no file: links to protect.
+func fileDependencyDirs(dir string) []string {
+	// Reject anything that is not a plain, plausibly-sized file BEFORE
+	// reading it. This runs inside the build goroutine, after a semaphore
+	// slot has been taken, so a read that never returns does not just fail
+	// one package -- it burns a worker slot and the level's WaitGroup never
+	// completes, hanging the build until CI kills the job. A package.json
+	// symlinked to /dev/zero reads without EOF, and a FIFO blocks forever;
+	// Lstat rejects the symlink without following it and rejects the FIFO
+	// outright.
+	path := filepath.Join(dir, "package.json")
+	info, err := os.Lstat(path)
+	if err != nil || !info.Mode().IsRegular() || info.Size() > maxManifestBytes {
+		return nil
+	}
+
+	raw, err := os.ReadFile(path)
+	if err != nil {
+		return nil
+	}
+
+	var manifest struct {
+		Dependencies         map[string]string `json:"dependencies"`
+		DevDependencies      map[string]string `json:"devDependencies"`
+		OptionalDependencies map[string]string `json:"optionalDependencies"`
+		PeerDependencies     map[string]string `json:"peerDependencies"`
+	}
+	if err := json.Unmarshal(raw, &manifest); err != nil {
+		return nil
+	}
+
+	var dirs []string
+	for _, section := range []map[string]string{
+		manifest.Dependencies,
+		manifest.DevDependencies,
+		manifest.OptionalDependencies,
+		manifest.PeerDependencies,
+	} {
+		for _, spec := range section {
+			if !strings.HasPrefix(spec, "file:") {
+				continue
+			}
+			rel := strings.TrimPrefix(spec, "file:")
+			dirs = append(dirs, filepath.Clean(filepath.Join(dir, filepath.FromSlash(rel))))
+		}
+	}
+	sort.Strings(dirs)
+	return dirs
 }
 
 func buildResourceKeys(pkg discovery.Package, pathToPkg map[string]string) []string {
