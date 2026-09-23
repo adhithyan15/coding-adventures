@@ -1805,31 +1805,6 @@ fn emit_branch_jsx(
 // Input primitive (UI25)
 // =====================================================================
 
-/// Lower a moslayout `Input` node to an `<input>` or `<textarea>` JSX line.
-///
-/// ## Property handling
-///
-/// | Moslayout prop           | JSX attribute                                            |
-/// |---|---|
-/// | `multiline: true`        | switches element to `<textarea />`                       |
-/// | `value: slot: x`         | `value={x}` (camelCased)                                 |
-/// | `read-only: slot: x`     | `readOnly={x}` (camelCased)                              |
-/// | `read-only: true`/`false`| `readOnly={true}` / `readOnly={false}`                   |
-/// | `max-length: 100`        | `maxLength={100}`                                        |
-/// | `onChange: emit: onX`    | `onChange={e => dispatch({type: "x", value: e.target.value})}` |
-/// | `onCommit: emit: onX`    | `onKeyDown` handler with an `e.key === "Enter"` branch   |
-/// | `onCancel: emit: onX`    | `onKeyDown` handler with an `e.key === "Escape"` branch  |
-///
-/// `onCommit` and `onCancel` are merged into a *single* `onKeyDown`
-/// handler — that keeps the generated JSX small and matches the
-/// UI25 §10 React generated-output example.
-///
-/// ## Known limitations (tracked separately)
-///
-/// - **payload-mapped emits** — only `onChange` gets a `value` payload here
-///   (it's the canonical Input case). A general `connects: onX(p: text) -> emit onY(p: p)`
-///   syntax in moslayout would let other emits carry payloads; that is
-///   tracked as a separate grammar change.
 /// Append `aria-label` for a text field's portable `a11y-label` (UI29: an
 /// authored name must reach the native naming surface on every backend).
 /// Shared by `HostInput` and the legacy `Input` — including its `<textarea>`
@@ -1864,6 +1839,31 @@ fn push_text_field_aria_label(
     Ok(())
 }
 
+/// Lower a moslayout `Input` node to an `<input>` or `<textarea>` JSX line.
+///
+/// ## Property handling
+///
+/// | Moslayout prop           | JSX attribute                                            |
+/// |---|---|
+/// | `multiline: true`        | switches element to `<textarea />`                       |
+/// | `value: slot: x`         | `value={x}` (camelCased)                                 |
+/// | `read-only: slot: x`     | `readOnly={x}` (camelCased)                              |
+/// | `read-only: true`/`false`| `readOnly={true}` / `readOnly={false}`                   |
+/// | `max-length: 100`        | `maxLength={100}`                                        |
+/// | `onChange: emit: onX`    | `onChange={e => dispatch({type: "x", value: e.target.value})}` |
+/// | `onCommit: emit: onX`    | `onKeyDown` handler with an `e.key === "Enter"` branch   |
+/// | `onCancel: emit: onX`    | `onKeyDown` handler with an `e.key === "Escape"` branch  |
+///
+/// `onCommit` and `onCancel` are merged into a *single* `onKeyDown`
+/// handler — that keeps the generated JSX small and matches the
+/// UI25 §10 React generated-output example.
+///
+/// ## Known limitations (tracked separately)
+///
+/// - **payload-mapped emits** — only `onChange` gets a `value` payload here
+///   (it's the canonical Input case). A general `connects: onX(p: text) -> emit onY(p: p)`
+///   syntax in moslayout would let other emits carry payloads; that is
+///   tracked as a separate grammar change.
 fn emit_input_jsx(
     node: &LayoutNode,
     indent: usize,
