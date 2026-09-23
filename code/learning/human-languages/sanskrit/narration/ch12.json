@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "The Face, Part One",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d7ca21b2ab0edaba",
+  "sourceHash": "fnv1a64:b3ee8602ae73ab32",
   "lessons": [
     {
       "id": "SA-C12-akshi",
@@ -646,6 +646,159 @@
             {
               "kind": "speech",
               "text": "Which two language families both claim मुखम्? (Dravidian, and Indo-European — unsettled.) Name मुखम्'s two Gujarati descendants and which is तत्सम, which तद्भव. (mukh, तत्सम; moḍhũ, तद्भव.) Name this chapter's three words for the face. (Akṣi, karṇaḥ, mukham.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R12-second-pass-what-sanskrit-leaves-out",
+      "sequence": 575,
+      "title": "अस्मि, असि, अस्ति — and the words you are allowed to drop",
+      "headword": "अहं कुशली अस्मि",
+      "romanization": "ahaṁ kuśalī asmi",
+      "gloss": "second pass over one verb in three persons, the pronoun you may drop, the copula you may not, and a day that needs no preposition",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed728c46c078b88e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say that you are well. Then say it again with the word for I taken out, and notice that nothing was lost."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one verb, three shapes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One verb, and the person is in its ending rather than in front of it:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "the verb",
+                "with a subject"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "person: I. the verb: अस्मि asmi. with a subject: ahaṁ kuśalī asmi.",
+                "person: you (familiar). the verb: असि asi. with a subject: tvam kuśalī asi.",
+                "person: he, she, your honour. the verb: अस्ति asti. with a subject: bhavān kathaṁ asti?"
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The third row is why the respectful word costs more than a swap. Bhavān is a third-person word, so it takes the third-person verb — the courtesy reaches the end of the sentence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two rules that look alike and are opposites:"
+            },
+            {
+              "kind": "speech",
+              "text": "The pronoun may go. Asmi already says I. Putting aham in front of it adds emphasis, not information."
+            },
+            {
+              "kind": "speech",
+              "text": "The copula usually stays. Mama nāma … asti keeps its asti where many of India's modern languages would still need theirs and where Russian would drop it outright."
+            },
+            {
+              "kind": "speech",
+              "text": "And one place where the second rule bends: in tava nāma kim? the asti goes, because the question-word is doing the work alone."
+            },
+            {
+              "kind": "speech",
+              "text": "So the test is not does Sanskrit like short sentences. It is what is already carried elsewhere in the sentence — by a verb ending, or by a question word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "you are well, the short way — kuśalī asmi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: you are well, the short way — *kuśalī asmi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wave away a thank-you — na cintā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: wave away a thank-you — *na cintā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tomorrow — śvaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: tomorrow — *śvaḥ*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Śvaḥ is the pattern's limit case: one word, and it means the day after this one. No preposition, no counting, nothing to hang it on. Some meanings are lexical, and no amount of grammar predicts them."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which is safer to drop in Sanskrit — the pronoun, or the verb to be? (The pronoun.) What licenses dropping asti in tava nāma kim? (The question word carries it.)"
             }
           ]
         }

@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "SA-R29-second-pass-how-this-book-argues",
+    "language": "sanskrit",
+    "chapter": 29,
+    "sequence": 1425,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:825accb4e91d2826",
+    "detachableSegments": [
+      "Script: two marks, read inside words you already say"
+    ]
+  },
+  "findings": []
+}

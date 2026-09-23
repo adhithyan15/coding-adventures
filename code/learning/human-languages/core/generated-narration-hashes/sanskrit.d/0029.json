@@ -1,19 +1,20 @@
 {
   "language": "sanskrit",
   "chapter": 29,
-  "sourceHash": "fnv1a64:d849ed5a67fdf16f",
+  "sourceHash": "fnv1a64:969299e1a03b3d3c",
   "lessonIds": [
     "SA-C29-please",
     "SA-C29-pardon",
     "SA-C29-bow",
     "SA-C29-favour",
-    "SA-C29-fortunate"
+    "SA-C29-fortunate",
+    "SA-R29-second-pass-how-this-book-argues"
   ],
   "voiceLessons": 5,
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch29.txt",
   "json": "sanskrit/narration/ch29.json",
-  "textHash": "fnv1a64:36d13fc270a76e31",
-  "jsonHash": "fnv1a64:b07a7489000b8c73",
+  "textHash": "fnv1a64:41e2813789a2131b",
+  "jsonHash": "fnv1a64:9b17500a0716d5d5",
   "findings": []
 }

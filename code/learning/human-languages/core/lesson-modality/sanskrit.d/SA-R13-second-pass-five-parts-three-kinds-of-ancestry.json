@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R13-second-pass-five-parts-three-kinds-of-ancestry",
+    "language": "sanskrit",
+    "chapter": 13,
+    "sequence": 595,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe8cc53ed6dcfec0"
+  },
+  "findings": []
+}

@@ -1,8 +1,8 @@
 Sanskrit, chapter 11: The People You'd Introduce.
-6 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+7 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 6.
+Lesson 1 of 7.
 मित्रम् (mitram) — "friend," and the god of the given word.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -40,7 +40,7 @@ Wrap-up Recall.
 What does the root behind मित्रम् mean, and what god shares it? ("To bind"; Mithra, the covenant god.) Is मित्र in Hindi तत्सम or तद्भव? (तत्सम.) What gender is mitram, and why is that surprising? (Neuter — it names a person, but gender tracks the word's class, not the person.)
 
 
-Lesson 2 of 6.
+Lesson 2 of 7.
 कुटुम्बम् (kuṭumbam) — "family," a word that made a round trip.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -75,7 +75,7 @@ Wrap-up Recall.
 Which direction did कुटुम्बम् (kuṭumbam) travel first — into Sanskrit, or out of it? (Into it — a Dravidian loanword.) What Tamil word is it compared to, and what does it literally build on? (kuṭimai, "family, lineage," on kuṭi, "a hut.") Which languages later borrowed the Sanskrit-shaped form back? (Kannada, Telugu, Tamil.)
 
 
-Lesson 3 of 6.
+Lesson 3 of 7.
 ह — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ह and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -120,7 +120,7 @@ Wrap-up Recall.
 Which character is this — ह? What sound does it carry? (ha.) Name one word you already say that contains it.
 
 
-Lesson 4 of 6.
+Lesson 4 of 7.
 भ्राता (bhrātā) — "brother," the same word, worn two ways.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -157,7 +157,7 @@ Wrap-up Recall.
 Is English brother a cousin of भ्राता (bhrātā), or the same word? (The same word, unbroken from PIE.) Which two daughter languages wore it down to bhāi? (Bengali, Gujarati.) What gender is भ्राता (bhrātā), unlike every noun before it this chapter? (Masculine.)
 
 
-Lesson 5 of 6.
+Lesson 5 of 7.
 भगिनी (bhaginī) — "sister," one with a share.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -197,7 +197,7 @@ Wrap-up Recall.
 What does भगिनी literally mean? ("One with a share.") What is the actual PIE cousin of English sister, and why is it not the word we learned? (स्वसृ — attested, but never the living word.) Which two daughter languages descend from भगिनी instead? (Bengali, Gujarati.) Name this chapter's four people. (Mitram, kuṭumbam, bhrātā, bhaginī.)
 
 
-Lesson 6 of 6.
+Lesson 6 of 7.
 ए — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ए and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -239,3 +239,47 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which character is this — ए? What sound does it carry? (e.) Name one word you already say that contains it.
+
+
+Lesson 7 of 7.
+तव नाम किम्? (tava nāma kim?) — and the reason you might not say it that way.
+
+Warm-up.
+[pause 3 seconds]
+Two words for you. Say the familiar one. Then say the one you would use on meeting a stranger, and say what is strange about it.
+
+The exchange.
+[pause 1 second]
+Six turns, and the only thing that moves is how much respect is in the air.
+[your turn — say: the familiar question — tava nāma kim?]
+[pause 8 seconds for the answer]
+[your turn — say: the same question to someone you have not met — bhavataḥ nāma kim?]
+[pause 8 seconds for the answer]
+[your turn — say: the answer, with your own name in it — mama nāma … asti]
+[pause 8 seconds for the answer]
+[your turn — say: agree that you understood — ām]
+[pause 8 seconds for the answer]
+[your turn — say: that meeting them is a joy — ānandaḥ]
+[pause 8 seconds for the answer]
+[pause 2 seconds]
+
+Why it's said this way.
+Bhavān is not a second-person word wearing a polite coat. It is a third-person word — your honour — and it drags the whole sentence with it: the verb turns third-person, and tava becomes bhavataḥ.
+That is worth holding beside the way you already know a language to do this:
+[a table of 3 rows, read aloud]
+the word for you. familiar: tvam. respectful: bhavān.
+grammatical person. familiar: second. respectful: third.
+your, in the question. familiar: tava. respectful: bhavataḥ.
+Making respect out of the third person is a different device from making it out of the plural. Both end in the same place — you avoid pointing straight at the person — and only one of them changes the verb.
+
+Across the family.
+Four things the greetings carry that no translation of them carries:
+the greeting is a bow — the hands come together, and the word says so.
+thanks is spoken rarely between intimates, because it puts distance in.
+welcoming someone in is a duty owed to a guest, not a pleasantry.
+ām agrees; it does not merely acknowledge that you heard.
+Each of these is about what the word does between two people. Say the wrong one at the wrong moment and the grammar stays perfect.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which grammatical person does bhavān take? (Third.) Between close friends, is thanking a warm thing to do or a distancing one? (Distancing.)

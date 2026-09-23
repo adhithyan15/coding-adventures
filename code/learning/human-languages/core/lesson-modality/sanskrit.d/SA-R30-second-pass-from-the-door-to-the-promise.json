@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "SA-R30-second-pass-from-the-door-to-the-promise",
+    "language": "sanskrit",
+    "chapter": 30,
+    "sequence": 1475,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2114d09b507c1786",
+    "detachableSegments": [
+      "Script: one letter, read cold"
+    ]
+  },
+  "findings": []
+}

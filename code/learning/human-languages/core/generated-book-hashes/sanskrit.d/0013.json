@@ -1,11 +1,12 @@
 {
   "language": "sanskrit",
   "chapter": 13,
-  "sourceHash": "fnv1a64:e73b9076a04d5987",
+  "sourceHash": "fnv1a64:52d71e9564d7d933",
   "lessonIds": [
     "SA-C13-nasika",
     "SA-S212-letter-dha",
-    "SA-C13-hridayam"
+    "SA-C13-hridayam",
+    "SA-R13-second-pass-five-parts-three-kinds-of-ancestry"
   ],
   "tex": "sanskrit/book/chapters/ch13-face-nouns-2.tex"
 }

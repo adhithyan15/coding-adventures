@@ -1,14 +1,15 @@
 {
   "language": "sanskrit",
   "chapter": 11,
-  "sourceHash": "fnv1a64:3817fa6f56d41106",
+  "sourceHash": "fnv1a64:ebace33190ee62d2",
   "lessonIds": [
     "SA-C11-mitram",
     "SA-C11-kutumbam",
     "SA-S114-letter-ha",
     "SA-C11-bhrata",
     "SA-C11-bhagini",
-    "SA-S211-letter-e"
+    "SA-S211-letter-e",
+    "SA-R11-second-pass-the-whole-first-meeting"
   ],
   "tex": "sanskrit/book/chapters/ch11-people-nouns.tex"
 }
