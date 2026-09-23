@@ -51,13 +51,50 @@ With `a` through `d` taken the catch binding gets `e` — upstream satisfies (2)
 **choosing a non-colliding fresh name**, not by reserving the original. And the
 rename stays correct when the catch binding shadows an outer `err`.
 
+Two limits on that evidence, since "upstream does it" is not "it is always
+safe". With `eval` in the handler upstream renames anyway and ships a
+miscompile — `catch(err){eval("report(err)")}` becomes `catch(b){eval("report(err)")}`,
+and the string still names a binding that no longer exists. And upstream
+*refuses* `with (o) { report(err) }` (`JSC_USE_OF_WITH`) and a handler that
+redeclares its own binding (`JSC_REDECLARED_VARIABLE_ERROR`) rather than
+renaming them. So the probes show reserving is not required; they do not show
+renaming is safe under `eval`.
+
 **No behaviour change.** `closurec` still reserves catch parameters, the golden
-is unchanged, and no test changed. What changed is the justification: reserving
+is unchanged, and no existing test changed. What changed is the justification: reserving
 is now described as the conservative choice it is rather than as a law, in the
 fixture input, the fixture README, `code/specs/CLOC19-try-catch.md`, and the
 `closure-pass-rename` test-section header that grouped both rules under
 "soundness". The retracted claims are quoted in place rather than deleted, since
 the spec is where someone would look before changing this.
+
+One test was **added**, in `closure-pass-rename`. An earlier draft of this entry
+said `fresh_name_avoids_colliding_with_catch_param` pins the avoid-set guard.
+Review showed it does not: its handler body is `use(a, longName)`, so the catch
+binding reaches the avoid set through the body walk whether or not the explicit
+insertion exists, and deleting `out.insert(param.name)` left all 48 tests in
+that crate green. `fresh_name_avoids_catch_param_unused_in_its_own_body` closes
+the gap with a handler that never mentions its own binding
+(`catch (a) { use(longName); }`), where only the explicit insertion can keep
+`longName` off `a`. Verified by deleting the guard: that test, and only that
+test, goes red. Retracting a vague overclaim and replacing it with a sharper
+false one is the failure mode this series keeps hitting; this is the third
+instance, and the fix is the test rather than softer wording.
+
+**Under its own `flags.txt` upstream produces nothing on this fixture.** It
+passes no externs and `compute`/`report` are free globals, so the oracle exits 2
+with two `JSC_UNDEFINED_VARIABLE` errors and zero bytes of stdout. The
+"inlines `process` away entirely" result above needs externs added. That also
+means this fixture satisfies the predicate of the `upstream_refuses`
+disposition added in CCR-081 while still sitting in
+`non-minify-unverified-stdout` as `upstream_golden` — it was excluded because
+its refusal is harness incompleteness, but the recorded predicate does not draw
+that distinction. Raised on #15868 rather than changed here.
+
+The `ladder_t4_try_catch_{simple,advanced}` fixture READMEs had already recorded
+this divergence ("upstream renames the catch parameter `e` to `a`, which
+closurec skips"), so this correction is catching up with evidence the repo
+already had rather than reporting a new discovery.
 
 The parity cost is real: upstream emits shorter output wherever a catch binding
 has a long name. That belongs to CCR-022 (#15856), which currently frames catch

@@ -9,9 +9,24 @@ All notable changes to the `coding-adventures-closure-pass-rename` crate will be
 The `catch-param soundness (CLOC19)` heading over this crate's catch tests
 covered two rules without separating them: that nothing may be renamed *onto* a
 catch binding, and that the binding itself is never renamed. Only the first is a
-soundness requirement — `fresh_name_avoids_colliding_with_catch_param` pins the
-case where dropping it miscompiles the handler. The second is a conservative
-choice we made.
+soundness requirement. The second is a conservative choice we made.
+
+### Added — a test that actually pins the avoid-set guard
+
+Review found that `fresh_name_avoids_colliding_with_catch_param`, which reads as
+though it pins the first rule, does not: its handler body is `use(a, longName)`,
+so the catch binding `a` reaches the avoid set through
+`collect_all_idents_block(&h.body, …)` whether or not the explicit
+`out.insert(param.name)` exists. Deleting that insertion left all 48 tests in
+this crate green. The same blind spot applies to the upstream port
+`fresh_name_avoids_catch_binding`, which uses the identical input.
+
+`fresh_name_avoids_catch_param_unused_in_its_own_body` closes it with a handler
+that never mentions its own binding — `catch (a) { use(longName); }` — so only
+the explicit insertion can supply the name. Without the guard the allocator
+hands `longName` the name `a` and `use(a)` silently starts reading the caught
+exception. Verified by deleting the guard: that test, and only that test, goes
+red.
 
 Measured against the pinned oracle, upstream Closure renames catch parameters at
 both SIMPLE and ADVANCED, and satisfies the first rule by choosing a

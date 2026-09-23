@@ -18,11 +18,12 @@
 // comment called both of them "the crux of try/catch support" and said
 // the renamer "must" treat the binding as reserved. Measured against
 // the pinned oracle, upstream Closure renames catch parameters at both
-// SIMPLE and ADVANCED — `err` becomes `b` on this very input — and it
+// SIMPLE and ADVANCED, and it
 // satisfies (2) by picking a fresh name that does not collide rather
-// than by reserving the original. Renaming a catch binding is sound;
-// reserving it is one conservative way to be sound, and it is the way
-// we chose.
+// than by reserving the original. Renaming a catch binding is sound
+// under the same assumptions the rest of the renamer already makes (no
+// `eval` reading the name, no `with`); reserving it is one conservative
+// way to satisfy (2), and it is the way we chose.
 //
 // So this fixture pins OUR rule, not upstream's. Upstream does not
 // produce this output at all: it inlines `process` away entirely, and

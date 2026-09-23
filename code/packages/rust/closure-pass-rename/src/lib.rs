@@ -2020,9 +2020,13 @@ mod tests {
     // ---- catch-param handling (CLOC19) -------------------------
     //
     // Two rules, and only one of them is a soundness requirement.
-    // Nothing may be renamed ONTO the catch binding — that is the
-    // `fresh_name_avoids_colliding_with_catch_param` case below, and
-    // dropping it miscompiles the handler. Leaving the binding itself
+    // Nothing may be renamed ONTO the catch binding — dropping the
+    // avoid-set insertion miscompiles the handler, which
+    // `fresh_name_avoids_catch_param_unused_in_its_own_body` below pins.
+    // (Its older sibling `fresh_name_avoids_colliding_with_catch_param`
+    // reads like it pins this and does not: that input mentions the
+    // catch binding inside its own handler, so the body walk adds the
+    // name anyway.) Leaving the binding itself
     // unrenamed is a conservative choice rather than a requirement:
     // upstream Closure renames catch params at both SIMPLE and ADVANCED
     // and satisfies the first rule by picking a non-colliding fresh
@@ -2070,6 +2074,28 @@ mod tests {
                 "function f(longName) { try { risky(); } catch (a) { use(a, longName); } }"
             ),
             "function f(b){try{risky()}catch(a){use(a,b)}};"
+        );
+    }
+
+    #[test]
+    fn fresh_name_avoids_catch_param_unused_in_its_own_body() {
+        // The case that actually pins the avoid-set guard.
+        //
+        // `fresh_name_avoids_colliding_with_catch_param` above looks like it
+        // does, and a review found it does not: its handler body is
+        // `use(a, longName)`, so the catch param `a` reaches the avoid set via
+        // `collect_all_idents_block(&h.body, …)` whether or not the explicit
+        // insertion exists. Deleting `out.insert(param.name)` leaves all 48
+        // tests in this crate green.
+        //
+        // Here the handler never mentions its own binding, so the body walk
+        // cannot see `a` and only the explicit insertion can. Without it the
+        // allocator hands `longName` the name `a`, and `use(a)` in the handler
+        // silently starts reading the caught exception instead of the param —
+        // a miscompile with no syntax error to catch it.
+        assert_eq!(
+            rename_source("function f(longName) { try { risky(); } catch (a) { use(longName); } }"),
+            "function f(b){try{risky()}catch(a){use(b)}};"
         );
     }
 

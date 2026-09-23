@@ -95,9 +95,17 @@ Every pass that renames or removes bindings must treat it as such. Concretely:
    passes keep statements *after* a try/catch reachable.
 
 If (2) is missing, a generated short name can alias the caught value and
-miscompile the handler. The regression test
-`fresh_name_avoids_colliding_with_catch_param` pins the killer case: with a catch
-param literally named `a`, the function's own param renames to `b`, not `a`.
+miscompile the handler. The regression test that pins it is
+`fresh_name_avoids_catch_param_unused_in_its_own_body`: the handler is
+`catch (a) { use(longName); }`, which never mentions its own binding, so only
+the explicit avoid-set insertion can keep `longName` off `a`.
+
+Note which test that is. `fresh_name_avoids_colliding_with_catch_param` reads as
+though it pins the same guard and does not — its handler is `use(a, longName)`,
+so `a` reaches the avoid set through the body walk regardless, and deleting
+`out.insert(param.name)` left the whole crate green. The upstream port
+`fresh_name_avoids_catch_binding` shares the blind spot. Both are still useful
+as end-to-end cover; neither discriminates the guard.
 
 ### (1) is ours, not a law — corrected 2026-09-23
 
@@ -127,8 +135,9 @@ probes show why that is safe, and they are the reason (1) and (2) are not the
 same rule:
 
 ```
-in : function f(a1,a2,a3){var x=a1+a2+a3;try{compute(x)}catch(err){report(err,x,a1,a2,a3)}return x}sink(f);
-out: function f(b,c,d){var a=b+c+d;try{compute(a)}catch(e){report(e,a,b,c,d)}return a}sink(f);
+in            : function f(a1,a2,a3){var x=a1+a2+a3;try{compute(x)}catch(err){report(err,x,a1,a2,a3)}return x}sink(f);
+out (SIMPLE)  : function f(b,c,d){var a=b+c+d;try{compute(a)}catch(e){report(e,a,b,c,d)}return a}sink(f);
+out (ADVANCED): sink(function(b,c,d){var a=b+c+d;try{compute(a)}catch(e){report(e,a,b,c,d)}return a});
 ```
 
 With `a` through `d` already taken, upstream gives the catch binding `e`. It
@@ -137,14 +146,34 @@ mechanism from reserving the original one. And renaming stays correct across
 shadowing:
 
 ```
-in : var err=1;function f(v){try{compute(v)}catch(err){report(err)}return err}sink(f);
-out: var err=1;function f(a){try{compute(a)}catch(b){report(b)}return err}sink(f);
+in            : var err=1;function f(v){try{compute(v)}catch(err){report(err)}return err}sink(f);
+out (SIMPLE)  : var err=1;function f(a){try{compute(a)}catch(b){report(b)}return err}sink(f);
+out (ADVANCED): sink(function(a){try{compute(a)}catch(b){report(b)}return 1});
 ```
 
-The inner binding becomes `b` while the outer `err` reference is untouched.
+The inner binding becomes `b` while the outer `err` reference keeps its own
+identity — at SIMPLE it survives verbatim, and at ADVANCED it is constant-folded
+to `1`, which is the same fact seen through one more pass.
 
 So reserving the catch param is a sound way to satisfy (2), and it is the one we
-implement, but it is not the only one and it is not required. It has a cost:
+implement, but it is not the only one and it is not required.
+
+Two limits on how far this evidence reaches, since "upstream does it" is not the
+same as "it is always safe":
+
+* **`eval` in the handler defeats any rename, and upstream renames anyway.**
+  `function f(v){try{compute(v)}catch(err){eval("report(err)")}return v}sink(f);`
+  compiles at both levels to `…catch(b){eval("report(err)")}…` — the string still
+  names `err`, which no longer exists. Upstream ships that miscompile by policy,
+  the same way it does for any renamed binding an `eval` string reaches. So the
+  probes show renaming is not *required* to be avoided; they do not show it is
+  safe in the presence of `eval`, and neither does our reserving rule make us
+  safe there for any other local.
+* **Upstream refuses two of the hard cases rather than renaming them.**
+  `with (o) { report(err) }` is `JSC_USE_OF_WITH`, and a handler that
+  redeclares its binding (`catch (err) { var err = err + 1; }`) is
+  `JSC_REDECLARED_VARIABLE_ERROR`, at both levels. Its evidence therefore covers
+  only the subset of JavaScript it accepts. It has a cost:
 upstream emits shorter output than we do wherever a catch binding has a long
 name, which is part of **CCR-022**
 ([#15856](https://github.com/adhithyan15/coding-adventures/issues/15856)).

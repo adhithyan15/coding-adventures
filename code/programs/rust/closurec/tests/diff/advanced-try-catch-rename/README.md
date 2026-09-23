@@ -1,7 +1,8 @@
 # Fixture: `advanced-try-catch-rename`
 
-End-to-end oracle for `--compilation_level ADVANCED` renaming soundness
-across a `catch` binding (CLOC19).
+Regression test for `closurec`'s `--compilation_level ADVANCED` renaming
+across a `catch` binding (CLOC19). **Not an oracle** — see the note below on
+what upstream actually does with this input.
 
 | File | Role |
 |------|------|
@@ -10,11 +11,10 @@ across a `catch` binding (CLOC19).
 | `expected.stdout` | The renamed output (see below) |
 
 ```text
-function c(a){var b;b=a + 1;try{compute(b)}catch(err){report(err,b)}return b};c(7);
+function c(a){var b=a+1;try{compute(b)}catch(err){report(err,b)}return b}c(7);
 ```
 
-This fixture pins the **catch-param-soundness** guarantee that makes
-ADVANCED renaming safe in the presence of `try`/`catch`:
+This fixture pins how `closurec` renames in the presence of `try`/`catch`:
 
 * `process` ⇒ `c`, `value` ⇒ `a`, `temp` ⇒ `b` — ordinary local/global
   renaming.
@@ -39,11 +39,32 @@ satisfies the second guard by choosing a non-colliding fresh name
 instead of reserving the original.
 
 So this fixture is a regression test for a rule `closurec` chose, not an
-oracle for upstream's behaviour. Upstream does not emit this output:
-it inlines `process` away entirely, and the catch binding in what
-survives is renamed. The parity cost is tracked as CCR-022
-([#15856](https://github.com/adhithyan15/coding-adventures/issues/15856));
-the probes are in `code/specs/CLOC19-try-catch.md`.
+oracle for upstream's behaviour.
+
+**Under this fixture's own `flags.txt`, upstream produces nothing at all.**
+`--compilation_level ADVANCED --js input/a.js` passes no externs, and
+`compute`/`report` are free globals, so the pinned oracle exits 2 with two
+`JSC_UNDEFINED_VARIABLE` errors and zero bytes of stdout. *With externs
+added* it compiles and inlines `process` away entirely — ADVANCED gives
+`try{compute(8)}catch(a){report(a,8)};`, folding `7 + 1`, dropping the
+function, and renaming the catch binding. Either way, the bytes in
+`expected.stdout` are ours.
+
+That refusal also means this fixture satisfies the predicate of the
+`upstream_refuses` disposition added in CCR-081
+([#15868](https://github.com/adhithyan15/coding-adventures/issues/15868)),
+while still sitting in `non-minify-unverified-stdout` as `upstream_golden`.
+It was left out of that cohort because its refusal is harness
+incompleteness — adding externs fixes it — but the recorded predicate does
+not draw that distinction. See #15868 for the follow-up.
+
+The parity cost of reserving the catch binding is tracked as CCR-022
+([#15856](https://github.com/adhithyan15/coding-adventures/issues/15856)).
+The `ladder_t4_try_catch_{simple,advanced}` fixtures had already recorded
+the same divergence ("upstream renames the catch parameter `e` to `a`, which
+closurec skips"), so this is a correction catching up with evidence the repo
+already had, not a new discovery. Full probes are in
+`code/specs/CLOC19-try-catch.md`.
 
 Regenerate the expected file after an intentional behavior change:
 
